@@ -81,17 +81,31 @@ utils.parseCSV = function(str) {
   return arr;
 };
 
-utils.getValueColor = function(value) {
-  if (value > 100000) {
-    return 0xff0f00; //red
-  } else if (value < 100000 && value > 10000) {
-    return 0xffce08; //orange
-  } else if (value < 10000 && value > 5000) {
-    return 0xebff0a; //yellow
-  } else if (value < 5000 && value > 1000) {
-    return 0x55e238; //green
-  } else if (value < 1000 && value > 0) {
-    return 0x005cff; //blue
+utils.getColourValue = function(value, scale) {
+  if (viewport.scaled < 8) {
+    if (value > 100000) {
+      return 0xff0f00; //red
+    } else if (value < 100000 && value > 10000) {
+      return 0xffce08; //orange
+    } else if (value < 10000 && value > 5000) {
+      return 0xebff0a; //yellow
+    } else if (value < 5000 && value > 1000) {
+      return 0x55e238; //green
+    } else if (value < 1000 && value > 0) {
+      return 0x005cff; //blue
+    }
+  } else if (viewport.scaled > 8) {
+    if (value > 1000) {
+      return 0xff0f00; //red
+    } else if (value < 1000 && value > 100) {
+      return 0xffce08; //orange
+    } else if (value < 100 && value > 20) {
+      return 0xebff0a; //yellow
+    } else if (value < 20 && value > 10) {
+      return 0x55e238; //green
+    } else if (value < 10 && value > 0) {
+      return 0x005cff; //blue
+    }
   }
 };
 

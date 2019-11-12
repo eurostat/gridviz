@@ -9,9 +9,13 @@ var csvURL = "assets/csv/pop_5km.csv"; //csv with xmin and y min coords of grid 
 var ATTRIBUTE1_COLUMN = 2;
 var X_COLUMN = 0; //column index for x coordinates
 var Y_COLUMN = 1; //column index for y coordinates
-size = 1.04; //fillRect() width/height in pixels
-csvArray = [];
-graphicsArray = [];
+cellSize = 1.04; //fillRect() width/height in pixels
+csvArray = []; //array of csv grid cells
+graphicsLayers = []; //PixiJS Graphics Objects
+mapDefinition = null; //Viewport map width, height and center
+currentLevel = 0;
+level1Graphics = [];
+initialGraphics = [];
 
 app = new PIXI.Application({
   width: window.innerWidth - 10,
@@ -47,25 +51,37 @@ viewport
   .wheel()
   .decelerate();
 
-//get csv points
+// define scroll event
+viewport.on("wheel", e => {
+  var scale = e.viewport.scaled;
+  console.log("scale: " + scale);
+  this.changeGraphicsForCurrentScale(scale);
+});
+
+// get csv points for initial scale
 utils.showLoading();
 utils.getCSV(csvURL, data => {
   let arr = utils.parseCSV(data);
   csvArray = arr;
+  this.initialGraphics = arr;
   this.drawCSVGrid();
 });
+
+function invertYcoord(c) {
+  c[Y_COLUMN] = -Math.abs(c[Y_COLUMN]);
+}
 
 //define the map width, height and center in its local coords
 function getMapDefinition() {
   //find the extent of the csv points (min and max coords)
   var minX, minY, maxX, maxY;
   for (var i = 1; i < csvArray.length; i++) {
-    var p = csvArray[i]; //csv point
-    p[Y_COLUMN] = -Math.abs(p[Y_COLUMN]); // Y coordinates are converted to negative
+    var p = csvArray[i]; //csv point // Y coordinates are converted to negative
+    this.invertYcoord(p);
     var easting = parseInt(p[X_COLUMN]); //x_min
     var northing = parseInt(p[Y_COLUMN]); //y_min
     if (i === 1) {
-      // if first point
+      // if first cell
       minX = maxX = easting; //easting
       minY = maxY = northing; //northing
     } else {
@@ -94,12 +110,14 @@ function drawCSVGrid() {
   utils.clearStage();
 
   //map width, height and center
-  var mapDefinition = this.getMapDefinition();
+  if (!this.mapDefinition) {
+    this.mapDefinition = this.getMapDefinition();
+  }
 
   // to find the scale that will fit the canvas get the min scale to fit height or width
   const scale = Math.min(
-    app.view.width / mapDefinition.mapWidth,
-    app.view.height / mapDefinition.mapHeight
+    app.view.width / this.mapDefinition.mapWidth,
+    app.view.height / this.mapDefinition.mapHeight
   );
 
   // draw the squares based on the csvPoints, centered on the canvas
@@ -110,47 +128,73 @@ function drawCSVGrid() {
   //loop through groups
   for (var i = 0; i < groups.length; i++) {
     // Add graphics layer to viewport https://pixijs.io/examples/#/graphics/simple.js
-    var groupGraphics = new PIXI.Graphics(); //for mouse events //for each CSV point
-    /* groupGraphics.interactive = true; */
+    var graphicsLayer = new PIXI.Graphics(); //for mouse events //for each CSV point
+    this.graphicsLayers.push(graphicsLayer);
+    /* graphicsLayer.interactive = true; */
 
     //for each csv point
     for (var g = 0; g < groups[i].length; g++) {
-      var id = utils.generateUniqueId();
+      /* var id = utils.generateUniqueId(); */
       var cell = groups[i][g];
+
       var easting = cell[X_COLUMN];
       var northing = cell[Y_COLUMN];
-      var x = (easting - mapDefinition.mapCenterX) * scale + app.view.width / 2;
+      var x =
+        (easting - this.mapDefinition.mapCenterX) * scale + app.view.width / 2;
       var y =
-        (northing - mapDefinition.mapCenterY) * scale + app.view.height / 2;
+        (northing - this.mapDefinition.mapCenterY) * scale +
+        app.view.height / 2;
       //simple colour scheme based on cell attribute
-      var colour = utils.getValueColor(cell[ATTRIBUTE1_COLUMN]);
+      var colour = utils.getColourValue(cell[ATTRIBUTE1_COLUMN], scale);
       //canvas drawing functions
-      groupGraphics.beginFill(colour, 1);
-      groupGraphics.drawRect(x, y, this.size, this.size);
-      groupGraphics.endFill();
+      graphicsLayer.beginFill(colour, 1);
+      graphicsLayer.drawRect(x, y, this.cellSize, this.cellSize);
+      graphicsLayer.endFill();
     }
 
-    groupGraphics.on("click", function(event) {
+    /*     graphicsLayer.on("click", function(event) {
       //click event doesnt show individual cell attributes, only their x and y
       console.log(event);
-    });
-    viewport.addChild(groupGraphics);
+    }); */
+    viewport.addChild(graphicsLayer);
   }
   utils.hideLoading();
 }
 
-//attempt to redraw grid cells with new size
-/* function redraw() {
-  utils.showLoading();
-  for (var i = 0; i < this.graphicsArray.length; i++) {
-    var graphic = this.graphicsArray[i];
-    for (var g = 0; g < graphic.geometry.graphicsData.length; g++) {
-      //get each shape of each group of graphics
-      var shape = graphic.geometry.graphicsData[g].shape;
-      shape.height = this.size;
-      shape.width = this.size;
+function clearAllGraphicsLayers() {
+  for (var i = 0; i < this.graphicsLayers.length; i++) {
+    this.graphicsLayers[i].clear();
+  }
+}
+
+function changeGraphicsForCurrentScale(scale) {
+  if (scale >= 8) {
+    if (this.currentLevel !== 1) {
+      this.currentLevel = 1;
+      this.clearAllGraphicsLayers();
+      this.cellSize = 0.2;
+      utils.getCSV("assets/csv/wales_1km.csv", data => {
+        let arr = utils.parseCSV(data);
+        csvArray = arr;
+        this.level1Graphics = arr;
+        //invert Y coordinates
+        for (var i = 1; i < csvArray.length; i++) {
+          var p = csvArray[i]; //csv point
+          this.invertYcoord(p); // Y coordinates are converted to negative
+        }
+
+        //draw grid
+        this.drawCSVGrid();
+      });
+    }
+  } else if (scale <= 8) {
+    if (this.currentLevel !== 0) {
+      this.currentLevel = 0;
+      this.clearAllGraphicsLayers();
+      this.cellSize = 1.04;
+      csvArray = this.initialGraphics;
+      //draw grid
+      this.drawCSVGrid();
     }
   }
-  app.renderer.render(app.stage);
-  utils.hideLoading();
-} */
+}
