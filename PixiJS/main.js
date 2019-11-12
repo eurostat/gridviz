@@ -16,47 +16,8 @@ mapDefinition = null; //Viewport map width, height and center
 currentLevel = 0;
 level1Graphics = [];
 initialGraphics = [];
-
-app = new PIXI.Application({
-  width: window.innerWidth - 10,
-  height: window.innerHeight - 10
-});
-document.body.appendChild(app.view);
-app.view.id = "grid-canvas";
-
-// create viewport (viewer) to add pan and zoom capability to pixijs
-const viewport = new Viewport.Viewport({
-  screenWidth: window.innerWidth,
-  screenHeight: window.innerHeight,
-  worldWidth: window.innerHeight + 1000,
-  worldHeight: window.innerHeight + 1000,
-  interaction: app.renderer.plugins.interaction // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
-});
-
-//restrict viewport
-/* viewport.clamp({
-  left: viewport.worldWidth - 20000,
-  right: viewport.worldWidth + 20000,
-  top: -20000,
-  bottom: +20000
-}); */
-
-// add the viewport to the stage
-app.stage.addChild(viewport);
-
-// activate plugins
-viewport
-  .drag()
-  .pinch()
-  .wheel()
-  .decelerate();
-
-// define scroll event
-viewport.on("wheel", e => {
-  var scale = e.viewport.scaled;
-  console.log("scale: " + scale);
-  this.changeGraphicsForCurrentScale(scale);
-});
+initialXScale = null;
+initialYScale = null;
 
 // get csv points for initial scale
 utils.showLoading();
@@ -64,12 +25,12 @@ utils.getCSV(csvURL, data => {
   let arr = utils.parseCSV(data);
   csvArray = arr;
   this.initialGraphics = arr;
+  //map width, height and center
+  if (!this.mapDefinition) {
+    this.mapDefinition = this.getMapDefinition();
+  }
   this.drawCSVGrid();
 });
-
-function invertYcoord(c) {
-  c[Y_COLUMN] = -Math.abs(c[Y_COLUMN]);
-}
 
 //define the map width, height and center in its local coords
 function getMapDefinition() {
@@ -77,7 +38,8 @@ function getMapDefinition() {
   var minX, minY, maxX, maxY;
   for (var i = 1; i < csvArray.length; i++) {
     var p = csvArray[i]; //csv point // Y coordinates are converted to negative
-    this.invertYcoord(p);
+    /* this.invertYcoord(p); */
+    p[Y_COLUMN] = utils.invertNumber(p[Y_COLUMN]);
     var easting = parseInt(p[X_COLUMN]); //x_min
     var northing = parseInt(p[Y_COLUMN]); //y_min
     if (i === 1) {
@@ -109,11 +71,6 @@ function getMapDefinition() {
 function drawCSVGrid() {
   utils.clearStage();
 
-  //map width, height and center
-  if (!this.mapDefinition) {
-    this.mapDefinition = this.getMapDefinition();
-  }
-
   // to find the scale that will fit the canvas get the min scale to fit height or width
   const scale = Math.min(
     app.view.width / this.mapDefinition.mapWidth,
@@ -136,35 +93,43 @@ function drawCSVGrid() {
     for (var g = 0; g < groups[i].length; g++) {
       /* var id = utils.generateUniqueId(); */
       var cell = groups[i][g];
+      if (isNaN(cell[X_COLUMN]) == false) {
+        var easting = cell[X_COLUMN];
+        var northing = cell[Y_COLUMN];
 
-      var easting = cell[X_COLUMN];
-      var northing = cell[Y_COLUMN];
-      var x =
-        (easting - this.mapDefinition.mapCenterX) * scale + app.view.width / 2;
-      var y =
-        (northing - this.mapDefinition.mapCenterY) * scale +
-        app.view.height / 2;
-      //simple colour scheme based on cell attribute
-      var colour = utils.getColourValue(cell[ATTRIBUTE1_COLUMN], scale);
-      //canvas drawing functions
-      graphicsLayer.beginFill(colour, 1);
-      graphicsLayer.drawRect(x, y, this.cellSize, this.cellSize);
-      graphicsLayer.endFill();
+        var x = getScreenXFromGeo(easting, scale);
+        var y = getScreenYFromGeo(northing, scale);
+
+        //simple colour scheme based on cell attribute
+        var colour = utils.getColourValue(
+          cell[ATTRIBUTE1_COLUMN],
+          viewport.scaled
+        );
+        //canvas drawing functions
+        graphicsLayer.beginFill(colour, 1);
+        graphicsLayer.drawRect(x, y, this.cellSize, this.cellSize);
+        graphicsLayer.endFill();
+      }
     }
-
-    /*     graphicsLayer.on("click", function(event) {
-      //click event doesnt show individual cell attributes, only their x and y
-      console.log(event);
-    }); */
     viewport.addChild(graphicsLayer);
   }
   utils.hideLoading();
 }
 
-function clearAllGraphicsLayers() {
-  for (var i = 0; i < this.graphicsLayers.length; i++) {
-    this.graphicsLayers[i].clear();
-  }
+// convert geographic X coordinate into screen coordinate
+// taken from https://stackoverflow.com/questions/44969880/draw-polygon-canvas-from-coordinates-map
+function getScreenXFromGeo(easting, scale) {
+  return (easting - this.mapDefinition.mapCenterX) * scale + app.view.width / 2;
+  //var x = parseInt(easting) / this.initialXScale;
+}
+// convert geographic Y coordinate into screen coordinate
+// taken from https://stackoverflow.com/questions/44969880/draw-polygon-canvas-from-coordinates-map
+function getScreenYFromGeo(northing, scale) {
+  return (
+    (northing - this.mapDefinition.mapCenterY) * scale + app.view.height / 2
+  );
+
+  /* var y = parseInt(northing) / this.initialYScale; */
 }
 
 function changeGraphicsForCurrentScale(scale) {
@@ -180,7 +145,7 @@ function changeGraphicsForCurrentScale(scale) {
         //invert Y coordinates
         for (var i = 1; i < csvArray.length; i++) {
           var p = csvArray[i]; //csv point
-          this.invertYcoord(p); // Y coordinates are converted to negative
+          p[Y_COLUMN] = utils.invertNumber(p[Y_COLUMN]); // Y coordinates are converted to negative
         }
 
         //draw grid

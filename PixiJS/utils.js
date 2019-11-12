@@ -106,19 +106,9 @@ utils.getColourValue = function(value, scale) {
     } else if (value < 10 && value > 0) {
       return 0x005cff; //blue
     }
+  } else {
+    return 0x005cff; //blue
   }
-};
-
-utils.splitArrayIntoChunks = function(arr, chunk_size) {
-  arr
-    .map(function(e, i) {
-      if (i !== 0) {
-        return i % chunk_size === 0 ? arr.slice(i, i + chunk_size) : null;
-      }
-    })
-    .filter(function(e) {
-      return e;
-    });
 };
 
 utils.chunk = function(array, size) {
@@ -145,6 +135,9 @@ utils.clearStage = function() {
   for (var i = viewport.children.length - 1; i >= 0; i--) {
     viewport.removeChild(viewport.children[i]);
   }
+};
+utils.invertNumber = function(c) {
+  return -Math.abs(c);
 };
 utils.generateUniqueId = function() {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
