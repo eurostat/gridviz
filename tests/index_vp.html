@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Test</title>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.5/pixi.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pixi-viewport@4.3.3/dist/viewport.min.js"></script>
+
+<body>
+    <script type="text/javascript">
+        //see doc: http://pixijs.download/release/docs/index.html
+        //https://github.com/davidfig/pixi-viewport
+        //https://davidfig.github.io/pixi-viewport/jsdoc/
+
+
+
+        //create a fake dataset of 40*40 tiles of random cells. Each tile contains 25*25 cells
+        //the cell resolution is a 1km. coordinate of grid origin is 1000'000,5000'000
+        //the grid width is thus 1000'000 m
+        var tiles = [];
+        for (var i = 0; i < 40; i++)
+            for (var j = 0; j < 40; j++) {
+                var tile = { x: i, y: j, cells: [] };
+                tiles.push(tile);
+                for (var x = 0; x < 25; x++)
+                    for (var y = 0; y < 25; y++) {
+                        var xc = 1000 * (i * 25 + x) + 1000000;
+                        var yc = 1000 * (j * 25 + y) + 5000000;
+                        var cell = { x: xc, y: yc, val: i + j + 100 * Math.random() };
+                        tile.cells.push(cell);
+                    }
+            }
+
+        //value to color
+        var valueToColor = function (value) {
+            if (value > 90) return 0xff0f00; //red
+            if (value > 80) return 0xffce08; //orange
+            if (value > 60) return 0xebff0a; //yellow
+            if (value > 40) return 0x55e238; //green
+            return 0x005cff; //blue
+        };
+
+
+
+        let type = "WebGL"
+        if (!PIXI.utils.isWebGLSupported()) type = "canvas"
+
+        //create application and add it to page
+        let app = new PIXI.Application({
+            width: 1200,
+            height: 500,
+            antialias: true
+        }
+        );
+        document.body.appendChild(app.view);
+
+        app.renderer.backgroundColor = 0x061639;
+
+        // create viewport
+        const viewport = new Viewport.Viewport({
+            screenWidth: 1200,
+            screenHeight: 500,
+            worldWidth: 2000000,
+            worldHeight: 6000000, //TODO use top/bottom/right/left instead ?
+            interaction: app.renderer.plugins.interaction
+        })
+
+        // add the viewport to the stage
+        app.stage.addChild(viewport)
+
+        // activate plugins
+        viewport
+            .drag()
+            .pinch()
+            .wheel()
+            .decelerate()
+
+
+
+
+        //draw tiles
+        for (var i = 0; i < tiles.length; i++) {
+            var tile = tiles[i];
+            let gr = new PIXI.Graphics();
+            for (var j = 0; j < tile.cells.length; j++) {
+                var cell = tile.cells[j];
+                //draw cell
+                gr.beginFill(valueToColor(cell.val));
+                gr.drawRect(tile.x * 25 + cell.x, tile.y * 25 + cell.y, 1000, 1000);
+                gr.endFill();
+            }
+            viewport.addChild(gr);
+        }
+
+        //viewport.setZoom(0.005);
+        //viewport.ensureVisible(1000000, 5000000, 1000000, 1000000);
+        //viewport.fit();
+        viewport.moveCenter(1500000, 5500000);
+        viewport.fitWorld(true);
+
+
+        viewport.on("wheel", e => {
+            //console.log(e);
+        });
+
+        viewport.on("clicked", e => {
+            console.log(e.world);
+        });
+        //TODO no event for mouse move ?
+
+
+        console.log(viewport.toScreen(1500000, 5500000));
+        console.log(viewport.toWorld(600, 250));
+        //OK
+
+        console.log(viewport.getVisibleBounds());
+        //use that to find the tiles to load and show
+        //use that to load tiles:
+        //load an image and run the `setup` function when it's done
+        //PIXI.loader
+        //    .add("images/cat.png")
+        //    .load(setup);
+
+
+
+        //TODO find a way to invert y axis... but how?
+
+    </script>
+</body>
+
+</html>
