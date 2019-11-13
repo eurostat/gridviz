@@ -6,34 +6,43 @@
 //Change cell size depending on second variable, defined by column index specified by user
 
 var csvURL = "assets/csv/pop_5km.csv"; //csv with xmin and y min coords of grid cells
-var ATTRIBUTE1_COLUMN = 2;
+var ATTR_COLUMN = 2;
 var X_COLUMN = 0; //column index for x coordinates
 var Y_COLUMN = 1; //column index for y coordinates
-cellSize = 1.04; //fillRect() width/height in pixels
-csvArray = []; //array of csv grid cells
-graphicsLayers = []; //PixiJS Graphics Objects
-mapDefinition = null; //Viewport map width, height and center
+var cellSize = 1.04; //fillRect() width/height in pixels
+mapBounds = null; //Viewport map width, height and center
 currentLevel = 0;
-level1Graphics = [];
-initialGraphics = [];
-initialXScale = null;
-initialYScale = null;
 
-// get csv points for initial scale
-utils.showLoading();
-utils.getCSV(csvURL, data => {
-  let arr = utils.parseCSV(data);
-  csvArray = arr;
-  this.initialGraphics = arr;
-  //map width, height and center
-  if (!this.mapDefinition) {
-    this.mapDefinition = this.getMapDefinition();
-  }
-  this.drawCSVGrid();
-});
+this.init();
+
+function init() {
+  //create application and add it to page
+  app = new PIXI.Application({
+    width: window.innerWidth - 10,
+    height: window.innerHeight - 10,
+    antialias: true
+  });
+  document.body.appendChild(app.view);
+  app.view.id = "grid-canvas";
+
+  //initialize the viewport and its added functionality
+  viewportManager.init();
+
+  // get the first csv file and draw cells using its points
+  utils.showLoading(); //loading spinner
+  utils.getCSV(csvURL, data => {
+    var csvArray = utils.parseCSV(data);
+    //map width, height and center
+    if (!this.mapBounds) {
+      this.mapBounds = this.getMapBoundsFromCSV(csvArray);
+    }
+    //draw cells
+    this.drawGraphics(csvArray);
+  });
+}
 
 //define the map width, height and center in its local coords
-function getMapDefinition() {
+function getMapBoundsFromCSV(csvArray) {
   //find the extent of the csv points (min and max coords)
   var minX, minY, maxX, maxY;
   for (var i = 1; i < csvArray.length; i++) {
@@ -68,13 +77,13 @@ function getMapDefinition() {
 }
 
 // add CSV points as graphics to the viewport
-function drawCSVGrid() {
-  utils.clearStage();
+function drawGraphics(csvArray) {
+  viewportManager.clearViewport();
 
   // to find the scale that will fit the canvas get the min scale to fit height or width
   const scale = Math.min(
-    app.view.width / this.mapDefinition.mapWidth,
-    app.view.height / this.mapDefinition.mapHeight
+    app.view.width / this.mapBounds.mapWidth,
+    app.view.height / this.mapBounds.mapHeight
   );
 
   // draw the squares based on the csvPoints, centered on the canvas
@@ -86,7 +95,7 @@ function drawCSVGrid() {
   for (var i = 0; i < groups.length; i++) {
     // Add graphics layer to viewport https://pixijs.io/examples/#/graphics/simple.js
     var graphicsLayer = new PIXI.Graphics(); //for mouse events //for each CSV point
-    this.graphicsLayers.push(graphicsLayer);
+    viewportManager.graphicsLayers.push(graphicsLayer);
     /* graphicsLayer.interactive = true; */
 
     //for each csv point
@@ -101,9 +110,9 @@ function drawCSVGrid() {
         var y = getScreenYFromGeo(northing, scale);
 
         //simple colour scheme based on cell attribute
-        var colour = utils.getColourValue(
-          cell[ATTRIBUTE1_COLUMN],
-          viewport.scaled
+        var colour = utils.valueToColour(
+          cell[ATTR_COLUMN],
+          viewportManager.viewport.scaled
         );
         //canvas drawing functions
         graphicsLayer.beginFill(colour, 1);
@@ -111,7 +120,7 @@ function drawCSVGrid() {
         graphicsLayer.endFill();
       }
     }
-    viewport.addChild(graphicsLayer);
+    viewportManager.viewport.addChild(graphicsLayer);
   }
   utils.hideLoading();
 }
@@ -119,29 +128,23 @@ function drawCSVGrid() {
 // convert geographic X coordinate into screen coordinate
 // taken from https://stackoverflow.com/questions/44969880/draw-polygon-canvas-from-coordinates-map
 function getScreenXFromGeo(easting, scale) {
-  return (easting - this.mapDefinition.mapCenterX) * scale + app.view.width / 2;
-  //var x = parseInt(easting) / this.initialXScale;
+  return (easting - this.mapBounds.mapCenterX) * scale + app.view.width / 2;
 }
 // convert geographic Y coordinate into screen coordinate
 // taken from https://stackoverflow.com/questions/44969880/draw-polygon-canvas-from-coordinates-map
 function getScreenYFromGeo(northing, scale) {
-  return (
-    (northing - this.mapDefinition.mapCenterY) * scale + app.view.height / 2
-  );
-
-  /* var y = parseInt(northing) / this.initialYScale; */
+  return (northing - this.mapBounds.mapCenterY) * scale + app.view.height / 2;
 }
 
 function changeGraphicsForCurrentScale(scale) {
   if (scale >= 8) {
     if (this.currentLevel !== 1) {
       this.currentLevel = 1;
-      this.clearAllGraphicsLayers();
+      viewportManager.clearAllGraphicsLayers();
       this.cellSize = 0.2;
       utils.getCSV("assets/csv/wales_1km.csv", data => {
         let arr = utils.parseCSV(data);
         csvArray = arr;
-        this.level1Graphics = arr;
         //invert Y coordinates
         for (var i = 1; i < csvArray.length; i++) {
           var p = csvArray[i]; //csv point
@@ -149,17 +152,16 @@ function changeGraphicsForCurrentScale(scale) {
         }
 
         //draw grid
-        this.drawCSVGrid();
+        this.drawGraphics();
       });
     }
   } else if (scale <= 8) {
     if (this.currentLevel !== 0) {
       this.currentLevel = 0;
-      this.clearAllGraphicsLayers();
+      viewportManager.clearAllGraphicsLayers();
       this.cellSize = 1.04;
-      csvArray = this.initialGraphics;
       //draw grid
-      this.drawCSVGrid();
+      this.drawGraphics();
     }
   }
 }

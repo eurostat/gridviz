@@ -81,8 +81,8 @@ utils.parseCSV = function(str) {
   return arr;
 };
 
-utils.getColourValue = function(value, scale) {
-  if (viewport.scaled < 8) {
+utils.valueToColour = function(value, scale) {
+  if (viewportManager.viewport.scaled < 8) {
     if (value > 100000) {
       return 0xff0f00; //red
     } else if (value < 100000 && value > 10000) {
@@ -94,7 +94,7 @@ utils.getColourValue = function(value, scale) {
     } else if (value < 1000 && value > 0) {
       return 0x005cff; //blue
     }
-  } else if (viewport.scaled > 8) {
+  } else if (viewportManager.viewport.scaled > 8) {
     if (value > 1000) {
       return 0xff0f00; //red
     } else if (value < 1000 && value > 100) {
@@ -129,12 +129,6 @@ utils.showLoading = function() {
 };
 utils.hideLoading = function() {
   document.getElementById("loading-gif").style.display = "none";
-};
-utils.clearStage = function() {
-  var viewport = app.stage.children[0];
-  for (var i = viewport.children.length - 1; i >= 0; i--) {
-    viewport.removeChild(viewport.children[i]);
-  }
 };
 utils.invertNumber = function(c) {
   return -Math.abs(c);
