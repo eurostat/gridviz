@@ -19,7 +19,7 @@
       //TODO load and show few of the real tiles 
       const nb = 20;
       const tileSize = 32;
-      const resolution = 1000;
+      const resolution = 10000;
       console.log("Build fake dataset...");
       var tiles = [];
       for (var i = 0; i < nb; i++)
@@ -80,33 +80,40 @@
 
       console.log("Draw...");
 
-      //draw tiles
-      for (var i = 0; i < tiles.length; i++) {
-        var tile = tiles[i];
+      drawTile = function(tile) {
         let gr = new PIXI.Graphics();
         for (var j = 0; j < tile.cells.length; j++) {
           var cell = tile.cells[j];
           //draw cell
+          gr.x = tile.x * tileSize;
+          gr.y = tile.y * tileSize;
           gr.beginFill(valueToColor(cell.val));
           gr.drawRect(
-            tile.x * tileSize + cell.x,
-            tile.y * tileSize + cell.y,
+            cell.x,
+            cell.y,
             resolution,
             resolution
           );
           gr.endFill();
         }
         viewport.addChild(gr);
+      };
+
+      //draw tiles
+      for (var i = 0; i < tiles.length; i++) {
+        var tile = tiles[i];
+        drawTile(tile);
       }
 
-      console.log("Last things...");
 
-      //viewport.setZoom(0.005);
-      //viewport.ensureVisible(1000000, 5000000, 1000000, 1000000);
-      //viewport.fit();
+      //interpretation of scaled factor:
+      //pixelSizeM = 1/scaled
+      //a grid cell is represented as a single pixel when scaled = 1/resolution
+      //viewport.scaled = 0.0001;
+      viewport.setZoom(0.0001, true);
       viewport.moveCenter(1500000, 5500000);
-      //TODO understand how scale works
-      viewport.fitWorld(true);
+      //console.log(viewport.scaled);
+
 
       viewport.on("wheel", e => {
         console.log(e);
@@ -119,8 +126,8 @@
       });
       //TODO no event for mouse move ?
 
-      console.log(viewport.toScreen(1500000, 5500000));
-      console.log(viewport.toWorld(600, 250));
+      //console.log(viewport.toScreen(1500000, 5500000));
+      //console.log(viewport.toWorld(600, 250));
       //OK
 
       console.log(viewport.getVisibleBounds());
