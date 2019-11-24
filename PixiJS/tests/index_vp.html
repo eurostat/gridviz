@@ -13,19 +13,23 @@
       //https://github.com/davidfig/pixi-viewport
       //https://davidfig.github.io/pixi-viewport/jsdoc/
 
-      //create a fake dataset of 40*40 tiles of random cells. Each tile contains 25*25 cells
-      //the cell resolution is a 1km. coordinate of grid origin is 1000'000,5000'000
-      //the grid width is thus 1000'000 m
+      //create a fake dataset of random cells.
+      //coordinate of grid origin is 1000'000,5000'000
+      //TODO use tile coordinates + in draw also
+      //TODO load and show few of the real tiles 
+      const nb = 20;
+      const tileSize = 32;
+      const resolution = 1000;
       console.log("Build fake dataset...");
       var tiles = [];
-      for (var i = 0; i < 40; i++)
-        for (var j = 0; j < 40; j++) {
+      for (var i = 0; i < nb; i++)
+        for (var j = 0; j < nb; j++) {
           var tile = { x: i, y: j, cells: [] };
           tiles.push(tile);
-          for (var x = 0; x < 25; x++)
-            for (var y = 0; y < 25; y++) {
-              var xc = 1000 * (i * 25 + x) + 1000000;
-              var yc = 1000 * (j * 25 + y) + 5000000;
+          for (var x = 0; x < tileSize; x++)
+            for (var y = 0; y < tileSize; y++) {
+              var xc = resolution * (i * tileSize + x) + 1000000;
+              var yc = resolution * (j * tileSize + y) + 5000000;
               var cell = { x: xc, y: yc, val: i + j + 100 * Math.random() };
               tile.cells.push(cell);
             }
@@ -85,10 +89,10 @@
           //draw cell
           gr.beginFill(valueToColor(cell.val));
           gr.drawRect(
-            tile.x * 25 + cell.x,
-            tile.y * 25 + cell.y,
-            1000.01,
-            1000.01
+            tile.x * tileSize + cell.x,
+            tile.y * tileSize + cell.y,
+            resolution,
+            resolution
           );
           gr.endFill();
         }
@@ -101,14 +105,17 @@
       //viewport.ensureVisible(1000000, 5000000, 1000000, 1000000);
       //viewport.fit();
       viewport.moveCenter(1500000, 5500000);
+      //TODO understand how scale works
       viewport.fitWorld(true);
 
       viewport.on("wheel", e => {
-        //console.log(e);
+        console.log(e);
+        //TODO
       });
 
       viewport.on("clicked", e => {
         console.log(e.world);
+        //TODO show stat value
       });
       //TODO no event for mouse move ?
 
