@@ -20,6 +20,8 @@
       const nb = 20;
       const tileSize = 32;
       const resolution = 10000;
+      const origin = {x:1000000, y:5000000};
+
       console.log("Build fake dataset...");
       var tiles = [];
       for (var i = 0; i < nb; i++)
@@ -27,12 +29,8 @@
           var tile = { x: i, y: j, cells: [] };
           tiles.push(tile);
           for (var x = 0; x < tileSize; x++)
-            for (var y = 0; y < tileSize; y++) {
-              var xc = resolution * (i * tileSize + x) + 1000000;
-              var yc = resolution * (j * tileSize + y) + 5000000;
-              var cell = { x: xc, y: yc, val: i + j + 100 * Math.random() };
-              tile.cells.push(cell);
-            }
+            for (var y = 0; y < tileSize; y++)
+              tile.cells.push( { x: x, y: y, val: i + j + 100 * Math.random() } );
         }
 
       console.log("Build application...");
@@ -80,17 +78,22 @@
 
       console.log("Draw...");
 
+
+
+
       drawTile = function(tile) {
         let gr = new PIXI.Graphics();
         for (var j = 0; j < tile.cells.length; j++) {
           var cell = tile.cells[j];
           //draw cell
-          gr.x = tile.x * tileSize;
-          gr.y = tile.y * tileSize;
+          gr.x = origin.x + tile.x * tileSize * resolution;
+          gr.y = origin.y + tile.y * tileSize * resolution;
+          //TODO fix that:
+          //gr.scale = resolution;
           gr.beginFill(valueToColor(cell.val));
           gr.drawRect(
-            cell.x,
-            cell.y,
+            resolution * cell.x,
+            resolution * cell.y,
             resolution,
             resolution
           );
@@ -104,6 +107,9 @@
         var tile = tiles[i];
         drawTile(tile);
       }
+
+
+
 
 
       //interpretation of scaled factor:
