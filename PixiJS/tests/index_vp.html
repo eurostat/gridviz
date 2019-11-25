@@ -15,31 +15,28 @@
     //https://davidfig.github.io/pixi-viewport/jsdoc/
 
     const z = 1;
-    const tileSize = Math.pow(2,8-z);
-    const resolution = 10000;
+    const tileSize = Math.pow(2, 8 - z);
+    const res = 10000;
     const origin = { x: 0, y: 0 };
-
-    console.log("Build application...");
+    const tileCache = {};
 
     let type = "WebGL";
     if (!PIXI.utils.isWebGLSupported()) type = "canvas";
 
     //create application and add it to page
     let app = new PIXI.Application({
-      width: 1200,
+      width: 1000,
       height: 500,
       antialias: true
     });
     document.body.appendChild(app.view);
 
-    app.renderer.backgroundColor = 0x061639;
+    app.renderer.backgroundColor = 0x333333;
 
     // create viewport
     const viewport = new Viewport.Viewport({
-      screenWidth: 1200,
+      screenWidth: 1000,
       screenHeight: 500,
-      //worldWidth: 2000000,
-      //worldHeight: 6000000, //TODO use top/bottom/right/left instead ?
       interaction: app.renderer.plugins.interaction
     });
 
@@ -50,22 +47,20 @@
     viewport
       .drag()
       .pinch()
-      .wheel({percent:2.0, smooth:5})
+      .wheel({ percent: 10.0, smooth: 5 }) //TODO make it two
       //.decelerate()
       ;
 
-    console.log("Draw...");
-
-
-
-
     //value to color
     var valueToColor = function (value) {
-      if (value > 1000) return 0xff0f00; //red
-      if (value > 500) return 0xffce08; //orange
-      if (value > 100) return 0xebff0a; //yellow
-      if (value > 0) return 0x55e238; //green
-      return 0xffffff; //white
+      if (value > 100000) return 0xff0000;
+      if (value > 50000) return 0xff2222;
+      if (value > 20000) return 0xff4444;
+      if (value > 10000) return 0xff6666;
+      if (value > 5000) return 0xff8888;
+      if (value > 2000) return 0xffaaaa;
+      if (value > 0) return 0xffcccc;
+      return 0xffffff;
     };
 
     drawTile = function (tile) {
@@ -73,66 +68,84 @@
       for (var j = 0; j < tile.cells.length; j++) {
         var cell = tile.cells[j];
         //draw cell
-        gr.x = origin.x + tile.x * tileSize * resolution;
-        gr.y = origin.y + tile.y * tileSize * resolution;
-        gr.y = gr.y;
-        //TODO fix that:
-        //gr.scale = resolution;
+        gr.x = origin.x + tile.x * tileSize * res;
+        gr.y = origin.y + tile.y * tileSize * res;
+        gr.y = -gr.y;
+        //TODO fix that: gr.scale = res;
         gr.beginFill(valueToColor(cell.val));
-        gr.drawRect(
-          resolution * cell.x,
-          resolution * cell.y,
-          resolution,
-          resolution
-        );
+        gr.drawRect(res * cell.x, -res * cell.y, res, res);
+        //test drawRoundedRect ?
         gr.endFill();
       }
       viewport.addChild(gr);
     };
 
 
+    var refresh = function (clear) {
+      if (clear)
+        viewport.removeChildren();
+
+      var bounds = viewport.getVisibleBounds(),
+        tileXMin = Math.floor((bounds.x - origin.x) / (res * tileSize)),
+        tileXMax = Math.floor((bounds.x + bounds.width - origin.x) / (res * tileSize)) + 1,
+        tileYMin = Math.floor((-bounds.y - origin.y) / (res * tileSize)),
+        tileYMax = Math.floor((-bounds.y + bounds.height - origin.y) / (res * tileSize)) + 1
+        ;
+
+      //TODO check the y !
+      //console.log(tileXMin, tileXMax, tileYMin, tileYMax)
+
+      for (var x = tileXMin; x <= tileXMax; x++)
+        for (var y = tileYMin; y <= tileYMax; y++) {
+          //check if tile exists in cache
+          var tile = tileCache[x + "_" + y + "_" + z];
+          if (tile) {
+            drawTile(tile);
+            continue;
+          }
+          (function (x, y, z) {
+            var testCSV = "https://raw.githubusercontent.com/eurostat/EuroGridLayer/master/PixiJS/tests/csvTiles/assets/csv/tiles/pop_grid_2011_10km/" + z + "/" + x + "/" + y + ".csv";
+
+            //try to use that instead:
+            //PIXI.loader
+            //    .add("images/cat.png")
+            //    .load(setup);
+
+            getCSV(testCSV, data => {
+              data = parseCSV(data);
+              //build
+              var tile = { x: x, y: y, cells: [] };
+              for (var i = 1; i < data.length; i++) {
+                var line = data[i];
+                tile.cells.push({ x: line[0], y: line[1], val: line[2] });
+              }
+              //store tile in cache
+              tileCache[x + "_" + y + "_" + z] = tile;
+              //draw tile
+              drawTile(tile);
+            });
+          })(x, y, z);
+        }
 
 
-
-    //interpretation of scaled factor:
-    //pixelSizeM = 1/scaled
-    //a grid cell is represented as a single pixel when scaled = 1/resolution
-    //viewport.scaled = 0.0001;
-    viewport.setZoom(0.0001, true);
-    viewport.moveCenter(2304777, 1764954);
-    //console.log(viewport.scaled);
+    };
 
 
     viewport.on("wheel", e => {
-      console.log(e);
-      //TODO
+      //console.log(e);
+      refresh();
+    });
+
+    viewport.on("moved-end", e => {
+      //console.log(e);
+      refresh();
     });
 
     viewport.on("clicked", e => {
-      console.log(e.world);
-      //TODO show stat value
+      //console.log(e);
+      console.log(tileCache);
+      refresh();
     });
-    //TODO no event for mouse move ?
-
-
-    //console.log(viewport.getVisibleBounds());
-    //use that to find the tiles to load and show
-    //use that to load tiles:
-    //load an image and run the `setup` function when it's done
-    //PIXI.loader
-    //    .add("images/cat.png")
-    //    .load(setup);
-
-    //TODO find a way to invert y axis... but how?
-
-
-
-
-
-
-
-
-
 
 
     //xmlhttp request for csv files
@@ -142,10 +155,7 @@
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
           try {
             var data = xmlhttp.responseText;
-          } catch (err) {
-            /* console.log(err.message + " in " + xmlhttp.responseText); */
-            return;
-          }
+          } catch (err) { return; }
           callback(data);
         }
       };
@@ -217,27 +227,15 @@
 
 
 
+    //interpretation of scaled factor:
+    //pixelSizeM = 1/scaled
+    //a grid cell is represented as a single pixel when scaled = 1/res
+    //viewport.scaled = 0.0001;
+    viewport.setZoom(0.0001, true);
+    viewport.moveCenter(4304777, -3064954);
+    //console.log(viewport.scaled);
 
-
-    for (var x = 0; x < 10; x++)
-      for (var y = 0; y < 10; y++) {
-        (function (x,y,z) {
-          var testCSV = "https://raw.githubusercontent.com/eurostat/EuroGridLayer/master/PixiJS/tests/csvTiles/assets/csv/tiles/pop_grid_2011_10km/" + z + "/" + x + "/" + y + ".csv";
-          getCSV(testCSV, data => {
-            data = parseCSV(data);
-            //build
-            var tile = { x: x, y: y, cells: [] };
-            for (var i = 1; i < data.length; i++) {
-              var line = data[i];
-              tile.cells.push({ x: line[0], y: line[1], val: line[2] });
-            }
-            //draw tile
-            drawTile(tile);
-          });
-        })(x,y,z);
-      }
-
-
+    refresh();
 
   </script>
 </body>
