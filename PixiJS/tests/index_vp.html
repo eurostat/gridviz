@@ -14,7 +14,8 @@
     //https://github.com/davidfig/pixi-viewport
     //https://davidfig.github.io/pixi-viewport/jsdoc/
 
-    const tileSize = 64;
+    const z = 1;
+    const tileSize = Math.pow(2,8-z);
     const resolution = 10000;
     const origin = { x: 0, y: 0 };
 
@@ -220,8 +221,8 @@
 
     for (var x = 0; x < 10; x++)
       for (var y = 0; y < 10; y++) {
-        (function (x,y) {
-          var testCSV = "https://raw.githubusercontent.com/eurostat/EuroGridLayer/master/PixiJS/tests/csvTiles/assets/csv/tiles/pop_grid_2011_10km/2/" + x + "/" + y + ".csv";
+        (function (x,y,z) {
+          var testCSV = "https://raw.githubusercontent.com/eurostat/EuroGridLayer/master/PixiJS/tests/csvTiles/assets/csv/tiles/pop_grid_2011_10km/" + z + "/" + x + "/" + y + ".csv";
           getCSV(testCSV, data => {
             data = parseCSV(data);
             //build
@@ -233,7 +234,7 @@
             //draw tile
             drawTile(tile);
           });
-        })(x,y);
+        })(x,y,z);
       }
 
 
