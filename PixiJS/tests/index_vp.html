@@ -19,17 +19,17 @@
     //https://davidfig.github.io/pixi-viewport/jsdoc/
 
 
+
+    //TODO dynamic zoom level selection?
+    //z=0 when the screen resolution is equal to the grid resolution, that is when a pixel on the screen has a size equal to the resolution
+    const z = 2;
+    const tileSize = Math.pow(2, 8 - z);
+
     //specs of the grid service
     const gridServiceBaseURL = "https://raw.githubusercontent.com/eurostat/EuroGridLayer/master/PixiJS/tests/csvTiles/assets/csv/tiles/pop_grid_2011_10km/"
     const res = 10000;
     const origin = { x: 0, y: 0 };
-    const tileFrameLimits = { xMin: 0, xMax: 10, yMin: 0, yMax: 10 };
-
-
-    //TODO dynamic zoom level selection?
-    //z=0 when the screen resolution is equal to the grid resolution, that is when a pixel on the screen has a size equal to the resolution
-    const z = 1;
-    const tileSize = Math.pow(2, 8 - z);
+    const tileFrameLimits = { xMin: 0, xMax: z*10, yMin: 0, yMax: z*10 };
 
 
     //the cache structure for the grid tiles
@@ -120,11 +120,13 @@
         let fcol = valueToColor(cell.val);
 
         //draw the cell
-        gr.beginFill(fcol);
+        gr.lineStyle(0);
+        gr.beginFill(fcol, 1);
         gr.drawRect(cell.x, cell.y, 1, 1);
         //TODO find why this does not work !
-        //gr.drawRoundedRect(cell.x, -cell.y, 0.8, 0.8, 0.2);
-        //gr.drawCircle(cell.x, -cell.y, 1);
+        //see https://pixijs.io/examples/#/graphics/simple.js
+        //gr.drawRoundedRect(cell.x, cell.y, 0.8, 0.8, 0.2);
+        //gr.drawCircle(cell.x, cell.y, 0.5);
         gr.endFill();
       }
       viewport.addChild(gr);
@@ -162,7 +164,7 @@
             //tag tile as being loaded in the cache
             tileCache.store(z, x, y, "loading");
             d3.csv(gridServiceBaseURL + z + "/" + x + "/" + y + ".csv")
-              .row(function (d) { return { x: d.x, y: d.y, val: +d.val }; })
+              .row(function (d) { return { x: +d.x, y: +d.y, val: +d.val }; })
               .get(function (error, cells) {
                 if (!cells) {
                   //no tile was found: keep that info in the cache to avoid asking again
