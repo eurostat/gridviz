@@ -8,7 +8,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.5/pixi.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pixi-viewport@4.3.3/dist/viewport.min.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://d3js.org/d3-queue.v3.min.js"></script>
 <script src="https://d3js.org/d3-color.v1.min.js"></script>
 <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -21,6 +20,7 @@
 
 
     //TODO dynamic zoom level selection?
+    //z=0 when the screen resolution is equal to the grid resolution, that is when a pixel on the screen has a size equal to the resolution
     const z = 1;
     const tileSize = Math.pow(2, 8 - z);
     const res = 10000;
@@ -159,18 +159,15 @@
 
     viewport.on("clicked", e => {
       //console.log(e);
-      console.log(tileCache);
+    console.log(viewport.scaled);
+    //console.log(tileCache);
       //refresh();
     });
 
 
-    //interpretation of scaled factor:
-    //pixelSizeM = 1/scaled
-    //a grid cell is represented as a single pixel when scaled = 1/res
-    //viewport.scaled = 0.0001;
+    //interpretation of scaled factor: pixelSizeM = 1/scaled. a grid cell is represented as a single pixel when scaled = 1/res
     viewport.setZoom(0.001, true);
     viewport.moveCenter(4304777, -3064954);
-    //console.log(viewport.scaled);
 
     refresh();
 
