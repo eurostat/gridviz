@@ -18,13 +18,14 @@
     //https://github.com/davidfig/pixi-viewport
     //https://davidfig.github.io/pixi-viewport/jsdoc/
 
-    //TODO define tiling frame - to limit number of queries
     //TODO dynamic zoom level selection?
     //z=0 when the screen resolution is equal to the grid resolution, that is when a pixel on the screen has a size equal to the resolution
     const z = 1;
     const tileSize = Math.pow(2, 8 - z);
     const res = 10000;
     const origin = { x: 0, y: 0 };
+    //TODO make that dynamic
+    const tileFrameLimits = { xMin: 0, xMax: 10, yMin: 0, yMax: 10 };
 
     const tileCache = {
       cache: {},
@@ -51,7 +52,7 @@
     });
     document.body.appendChild(app.view);
 
-    app.renderer.backgroundColor = 0x333333;
+    app.renderer.backgroundColor = 0x000000;
 
     // create viewport
     const viewport = new Viewport.Viewport({
@@ -109,6 +110,10 @@
         tileYMax = Math.floor((-bn.y - origin.y) / (res * tileSize)) + 1,
         tileYMin = Math.floor((-bn.y - bn.height - origin.y) / (res * tileSize))
         ;
+      tileXMin = Math.max(tileXMin, tileFrameLimits.xMin);
+      tileXMax = Math.min(tileXMax, tileFrameLimits.xMax);
+      tileYMin = Math.max(tileYMin, tileFrameLimits.yMin);
+      tileYMax = Math.min(tileYMax, tileFrameLimits.yMax);
 
       for (var x = tileXMin; x <= tileXMax; x++)
         for (var y = tileYMin; y <= tileYMax; y++) {
@@ -159,8 +164,8 @@
 
     viewport.on("clicked", e => {
       //console.log(e);
-    console.log(viewport.scaled);
-    //console.log(tileCache);
+      console.log(viewport.scaled);
+      //console.log(tileCache);
       //refresh();
     });
 
