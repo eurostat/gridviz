@@ -74,6 +74,7 @@
 
 
     //value to color
+    //TODO decompose into value to class function and class to style
     var valueToColor = function (value) {
       var t = value / 1400000;
       t = Math.pow(t, 0.2);
@@ -82,18 +83,30 @@
       return PIXI.utils.string2hex(d3.rgb(d3.interpolateCubehelixDefault(t)).formatHex());
     };
 
+
     drawTile = function (tile) {
+
+      //use one graphics per tile
       let gr = new PIXI.Graphics();
+
+      //move and scale the tile graphics to the right place
+      var dx = origin.x + tile.x * tileSize * res,
+        dy = origin.y + tile.y * tileSize * res;
+      gr.setTransform(dx, -dy, res, res, 0, 0, 0, 0, 0);
+
+      //draw the cells
       for (var j = 0; j < tile.cells.length; j++) {
+
+        //get cell
         var cell = tile.cells[j];
-        //draw cell
-        gr.x = origin.x + tile.x * tileSize * res;
-        gr.y = origin.y + tile.y * tileSize * res;
-        gr.y = -gr.y;
-        //TODO use something like: gr.scale = res;
-        gr.beginFill(valueToColor(cell.val));
-        gr.drawRect(res * cell.x, -res * cell.y, res, res);
-        //gr.drawRoundedRect(res * cell.x, -res * cell.y, res*0.8, res*0.8, res*0.2);
+
+        //draw the cell
+        let fcol = valueToColor(cell.val);
+        gr.beginFill(fcol);
+        gr.drawRect(cell.x, -cell.y, 1, 1);
+        //TODO find why this does not work !
+        //gr.drawRoundedRect(cell.x, -cell.y, 0.8, 0.8, 0.2);
+        //gr.drawCircle(cell.x, -cell.y, 1);
         gr.endFill();
       }
       viewport.addChild(gr);
