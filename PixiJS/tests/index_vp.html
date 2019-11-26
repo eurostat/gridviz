@@ -65,10 +65,11 @@
 
     app.renderer.backgroundColor = 0x000000;
 
+
     // create viewport
     const viewport = new Viewport.Viewport({
-      screenWidth: 1500,
-      screenHeight: 600,
+      screenWidth: app.view.width,
+      screenHeight: app.view.height,
       interaction: app.renderer.plugins.interaction
     });
 
