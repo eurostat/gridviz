@@ -18,7 +18,7 @@
     //https://github.com/davidfig/pixi-viewport
     //https://davidfig.github.io/pixi-viewport/jsdoc/
 
-
+    //TODO define tiling frame - to limit number of queries
     //TODO dynamic zoom level selection?
     //z=0 when the screen resolution is equal to the grid resolution, that is when a pixel on the screen has a size equal to the resolution
     const z = 1;
@@ -92,7 +92,7 @@
         //TODO use something like: gr.scale = res;
         gr.beginFill(valueToColor(cell.val));
         gr.drawRect(res * cell.x, -res * cell.y, res, res);
-        //test drawRoundedRect ?
+        //gr.drawRoundedRect(res * cell.x, -res * cell.y, res*0.8, res*0.8, res*0.2);
         gr.endFill();
       }
       viewport.addChild(gr);
