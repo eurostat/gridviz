@@ -7,6 +7,8 @@
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.1.5/pixi.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pixi-viewport@4.3.3/dist/viewport.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3-queue.v3.min.js"></script>
 
 <body>
   <script type="text/javascript">
@@ -18,7 +20,20 @@
     const tileSize = Math.pow(2, 8 - z);
     const res = 10000;
     const origin = { x: 0, y: 0 };
-    const tileCache = {};
+
+    const tileCache = {
+      cache : {},
+      store : function (z, x, y, tile) {
+        if(!this.cache[z]) this.cache[z] = {};
+        if(!this.cache[z][x]) this.cache[z][x] = {};
+        this.cache[z][x][y] = tile;
+      },
+      getTile : function (z, x, y) {
+        if(!this.cache[z]) this.cache[z] = {};
+        if(!this.cache[z][x]) this.cache[z][x] = {};
+        return this.cache[z][x][y];
+      }
+    };
 
     let type = "WebGL";
     if (!PIXI.utils.isWebGLSupported()) type = "canvas";
@@ -95,35 +110,37 @@
       //TODO check the y !
       //console.log(tileXMin, tileXMax, tileYMin, tileYMax)
 
+
       for (var x = tileXMin; x <= tileXMax; x++)
         for (var y = tileYMin; y <= tileYMax; y++) {
           //check if tile exists in cache
-          var tile = tileCache[x + "_" + y + "_" + z];
+          var tile = tileCache.getTile(z,x,y);
+          //if there is no tile there or it is already loading, continue
+          if (tile === "none" || tile === "loading") continue;
+          //if the tile was already loaded into the cach, draw it
           if (tile) {
             drawTile(tile);
             continue;
           }
+          //get the tile
           (function (x, y, z) {
-            var testCSV = "https://raw.githubusercontent.com/eurostat/EuroGridLayer/master/PixiJS/tests/csvTiles/assets/csv/tiles/pop_grid_2011_10km/" + z + "/" + x + "/" + y + ".csv";
-
-            //try to use that instead:
-            //PIXI.loader
-            //    .add("images/cat.png")
-            //    .load(setup);
-
-            getCSV(testCSV, data => {
-              data = parseCSV(data);
-              //build
-              var tile = { x: x, y: y, cells: [] };
-              for (var i = 1; i < data.length; i++) {
-                var line = data[i];
-                tile.cells.push({ x: line[0], y: line[1], val: line[2] });
-              }
-              //store tile in cache
-              tileCache[x + "_" + y + "_" + z] = tile;
-              //draw tile
-              drawTile(tile);
-            });
+            //tag tile as being loaded in the cache
+            tileCache.store(z,x,y,"loading");
+            d3.csv("https://raw.githubusercontent.com/eurostat/EuroGridLayer/master/PixiJS/tests/csvTiles/assets/csv/tiles/pop_grid_2011_10km/" + z + "/" + x + "/" + y + ".csv")
+              .row(function (d) { return { x: d.x, y: d.y, val: +d.val }; })
+              .get(function (error, cells) {
+                if (!cells) {
+                  //no tile was found: keep that info in the cache to avoid asking again
+                  tileCache.store(z,x,y,"none");
+                  return;
+                }
+                //make tile
+                var tile = { x: x, y: y, cells: cells };
+                //store tile in cache
+                tileCache.store(z,x,y,tile);
+                //draw tile
+                drawTile(tile);
+              });
           })(x, y, z);
         }
 
@@ -146,85 +163,6 @@
       console.log(tileCache);
       refresh();
     });
-
-
-    //xmlhttp request for csv files
-    const getCSV = (url, callback) => {
-      var xmlhttp = new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-          try {
-            var data = xmlhttp.responseText;
-          } catch (err) { return; }
-          callback(data);
-        }
-      };
-      xmlhttp.open("GET", url, true);
-      xmlhttp.send();
-    };
-
-    // parseCSV and convert to array
-    const parseCSV = (str) => {
-      var arr = [];
-      var quote = false; // true means we're inside a quoted field
-
-      // iterate over each character, keep track of current row and column (of the returned array)
-      for (var row = 0, col = 0, c = 0; c < str.length; c++) {
-        var cc = str[c],
-          nc = str[c + 1]; // current character, next character
-        arr[row] = arr[row] || []; // create a new row if necessary
-        arr[row][col] = arr[row][col] || ""; // create a new column (start with empty string) if necessary
-
-        // If the current character is a quotation mark, and we're inside a
-        // quoted field, and the next character is also a quotation mark,
-        // add a quotation mark to the current column and skip the next character
-        if (cc == '"' && quote && nc == '"') {
-          arr[row][col] += cc;
-          ++c;
-          continue;
-        }
-
-        // If it's just one quotation mark, begin/end quoted field
-        if (cc == '"') {
-          quote = !quote;
-          continue;
-        }
-
-        // If it's a comma and we're not in a quoted field, move on to the next column
-        if (cc == "," || (cc == ";" && !quote)) {
-          ++col;
-          continue;
-        }
-
-        // If it's a newline (CRLF) and we're not in a quoted field, skip the next character
-        // and move on to the next row and move to column 0 of that new row
-        if (cc == "\r" && nc == "\n" && !quote) {
-          ++row;
-          col = 0;
-          ++c;
-          continue;
-        }
-
-        // If it's a newline (LF or CR) and we're not in a quoted field,
-        // move on to the next row and move to column 0 of that new row
-        if (cc == "\n" && !quote) {
-          ++row;
-          col = 0;
-          continue;
-        }
-        if (cc == "\r" && !quote) {
-          ++row;
-          col = 0;
-          continue;
-        }
-
-        // Otherwise, append the current character to the current column
-        arr[row][col] += cc;
-      }
-      return arr;
-    };
-
-
 
 
     //interpretation of scaled factor:
