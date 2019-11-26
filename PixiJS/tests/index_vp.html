@@ -9,12 +9,16 @@
 <script src="https://cdn.jsdelivr.net/npm/pixi-viewport@4.3.3/dist/viewport.min.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://d3js.org/d3-queue.v3.min.js"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
 <body>
   <script type="text/javascript">
     //see doc: http://pixijs.download/release/docs/index.html
     //https://github.com/davidfig/pixi-viewport
     //https://davidfig.github.io/pixi-viewport/jsdoc/
+
 
     //TODO dynamic zoom level selection?
     const z = 1;
@@ -23,15 +27,15 @@
     const origin = { x: 0, y: 0 };
 
     const tileCache = {
-      cache : {},
-      store : function (z, x, y, tile) {
-        if(!this.cache[z]) this.cache[z] = {};
-        if(!this.cache[z][x]) this.cache[z][x] = {};
+      cache: {},
+      store: function (z, x, y, tile) {
+        if (!this.cache[z]) this.cache[z] = {};
+        if (!this.cache[z][x]) this.cache[z][x] = {};
         this.cache[z][x][y] = tile;
       },
-      getTile : function (z, x, y) {
-        if(!this.cache[z]) this.cache[z] = {};
-        if(!this.cache[z][x]) this.cache[z][x] = {};
+      getTile: function (z, x, y) {
+        if (!this.cache[z]) this.cache[z] = {};
+        if (!this.cache[z][x]) this.cache[z][x] = {};
         return this.cache[z][x][y];
       }
     };
@@ -41,7 +45,7 @@
 
     //create application and add it to page
     let app = new PIXI.Application({
-      width: 1000,
+      width: 1200,
       height: 500,
       antialias: true
     });
@@ -51,7 +55,7 @@
 
     // create viewport
     const viewport = new Viewport.Viewport({
-      screenWidth: 1000,
+      screenWidth: 1200,
       screenHeight: 500,
       interaction: app.renderer.plugins.interaction
     });
@@ -67,19 +71,14 @@
       //.decelerate()
       ;
 
+
     //value to color
-    //TODO use d3 there
     var valueToColor = function (value) {
-      if (value > 180000) return 0xff0000;
-      if (value > 100000) return 0xff1111;
-      if (value > 50000) return 0xff2222;
-      if (value > 45000) return 0xff1111;
-      if (value > 20000) return 0xff4444;
-      if (value > 10000) return 0xff6666;
-      if (value > 5000) return 0xff8888;
-      if (value > 2000) return 0xffaaaa;
-      if (value > 0) return 0xffcccc;
-      return 0xffffff;
+      var t = value / 1400000;
+      t = Math.pow(t, 0.2);
+      if (t > 1) console.log(value);
+      //see https://github.com/d3/d3-scale-chromatic
+      return PIXI.utils.string2hex(d3.rgb(d3.interpolateCubehelixDefault(t)).formatHex());
     };
 
     drawTile = function (tile) {
@@ -104,21 +103,17 @@
       if (clear)
         viewport.removeChildren();
 
-      var bounds = viewport.getVisibleBounds(),
-        tileXMin = Math.floor((bounds.x - origin.x) / (res * tileSize)),
-        tileXMax = Math.floor((bounds.x + bounds.width - origin.x) / (res * tileSize)) + 1,
-        tileYMin = Math.floor((-bounds.y - origin.y) / (res * tileSize)),
-        tileYMax = Math.floor((-bounds.y + bounds.height - origin.y) / (res * tileSize)) + 1
+      var bn = viewport.getVisibleBounds(),
+        tileXMin = Math.floor((bn.x - origin.x) / (res * tileSize)),
+        tileXMax = Math.floor((bn.x + bn.width - origin.x) / (res * tileSize)) + 1,
+        tileYMax = Math.floor((-bn.y - origin.y) / (res * tileSize)) + 1,
+        tileYMin = Math.floor((-bn.y - bn.height - origin.y) / (res * tileSize))
         ;
-
-      //TODO check the y !
-      //console.log(tileXMin, tileXMax, tileYMin, tileYMax)
-
 
       for (var x = tileXMin; x <= tileXMax; x++)
         for (var y = tileYMin; y <= tileYMax; y++) {
           //check if tile exists in cache
-          var tile = tileCache.getTile(z,x,y);
+          var tile = tileCache.getTile(z, x, y);
           //if there is no tile there or it is already loading, continue
           if (tile === "none" || tile === "loading") continue;
           //if the tile was already loaded into the cach, draw it
@@ -129,19 +124,19 @@
           //get the tile
           (function (x, y, z) {
             //tag tile as being loaded in the cache
-            tileCache.store(z,x,y,"loading");
+            tileCache.store(z, x, y, "loading");
             d3.csv("https://raw.githubusercontent.com/eurostat/EuroGridLayer/master/PixiJS/tests/csvTiles/assets/csv/tiles/pop_grid_2011_10km/" + z + "/" + x + "/" + y + ".csv")
               .row(function (d) { return { x: d.x, y: d.y, val: +d.val }; })
               .get(function (error, cells) {
                 if (!cells) {
                   //no tile was found: keep that info in the cache to avoid asking again
-                  tileCache.store(z,x,y,"none");
+                  tileCache.store(z, x, y, "none");
                   return;
                 }
                 //make tile
                 var tile = { x: x, y: y, cells: cells };
                 //store tile in cache
-                tileCache.store(z,x,y,tile);
+                tileCache.store(z, x, y, tile);
                 //draw tile
                 drawTile(tile);
               });
@@ -154,18 +149,18 @@
 
     viewport.on("wheel", e => {
       //console.log(e);
-      refresh();
+      refresh(true);
     });
 
     viewport.on("moved-end", e => {
       //console.log(e);
-      refresh();
+      refresh(true);
     });
 
     viewport.on("clicked", e => {
       //console.log(e);
       console.log(tileCache);
-      refresh();
+      //refresh();
     });
 
 
@@ -173,7 +168,7 @@
     //pixelSizeM = 1/scaled
     //a grid cell is represented as a single pixel when scaled = 1/res
     //viewport.scaled = 0.0001;
-    viewport.setZoom(0.0001, true);
+    viewport.setZoom(0.001, true);
     viewport.moveCenter(4304777, -3064954);
     //console.log(viewport.scaled);
 
