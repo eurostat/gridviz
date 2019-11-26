@@ -16,6 +16,7 @@
     //https://github.com/davidfig/pixi-viewport
     //https://davidfig.github.io/pixi-viewport/jsdoc/
 
+    //TODO dynamic zoom level selection?
     const z = 1;
     const tileSize = Math.pow(2, 8 - z);
     const res = 10000;
@@ -67,9 +68,12 @@
       ;
 
     //value to color
+    //TODO use d3 there
     var valueToColor = function (value) {
-      if (value > 100000) return 0xff0000;
+      if (value > 180000) return 0xff0000;
+      if (value > 100000) return 0xff1111;
       if (value > 50000) return 0xff2222;
+      if (value > 45000) return 0xff1111;
       if (value > 20000) return 0xff4444;
       if (value > 10000) return 0xff6666;
       if (value > 5000) return 0xff8888;
@@ -86,7 +90,7 @@
         gr.x = origin.x + tile.x * tileSize * res;
         gr.y = origin.y + tile.y * tileSize * res;
         gr.y = -gr.y;
-        //TODO fix that: gr.scale = res;
+        //TODO use something like: gr.scale = res;
         gr.beginFill(valueToColor(cell.val));
         gr.drawRect(res * cell.x, -res * cell.y, res, res);
         //test drawRoundedRect ?
