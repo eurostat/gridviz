@@ -18,26 +18,37 @@
     //https://github.com/davidfig/pixi-viewport
     //https://davidfig.github.io/pixi-viewport/jsdoc/
 
+
+    //specs of the grid service
+    const gridServiceBaseURL = "https://raw.githubusercontent.com/eurostat/EuroGridLayer/master/PixiJS/tests/csvTiles/assets/csv/tiles/pop_grid_2011_10km/"
+    const res = 10000;
+    const origin = { x: 0, y: 0 };
+    const tileFrameLimits = { xMin: 0, xMax: 10, yMin: 0, yMax: 10 };
+
+
     //TODO dynamic zoom level selection?
     //z=0 when the screen resolution is equal to the grid resolution, that is when a pixel on the screen has a size equal to the resolution
     const z = 1;
     const tileSize = Math.pow(2, 8 - z);
-    const res = 10000;
-    const origin = { x: 0, y: 0 };
-    //TODO make that dynamic
-    const tileFrameLimits = { xMin: 0, xMax: 10, yMin: 0, yMax: 10 };
 
+
+    //the cache structure for the grid tiles
+    //these are indexed by z>x>y
+    //when a tile has been requested and was not found, a tag "none" is set.
+    //when a http request has been sent to retrieve a tile but the response has not been received yet, a tag "loading" is set.
     const tileCache = {
       cache: {},
-      store: function (z, x, y, tile) {
-        if (!this.cache[z]) this.cache[z] = {};
-        if (!this.cache[z][x]) this.cache[z][x] = {};
-        this.cache[z][x][y] = tile;
-      },
+      //retrieve a tile from its position in the tile structure
       getTile: function (z, x, y) {
         if (!this.cache[z]) this.cache[z] = {};
         if (!this.cache[z][x]) this.cache[z][x] = {};
         return this.cache[z][x][y];
+      },
+      //add a tile to the cache, once received
+      store: function (z, x, y, tile) {
+        if (!this.cache[z]) this.cache[z] = {};
+        if (!this.cache[z][x]) this.cache[z][x] = {};
+        this.cache[z][x][y] = tile;
       }
     };
 
@@ -46,8 +57,8 @@
 
     //create application and add it to page
     let app = new PIXI.Application({
-      width: 1200,
-      height: 500,
+      width: 1500,
+      height: 600,
       antialias: true
     });
     document.body.appendChild(app.view);
@@ -56,13 +67,16 @@
 
     // create viewport
     const viewport = new Viewport.Viewport({
-      screenWidth: 1200,
-      screenHeight: 500,
+      screenWidth: 1500,
+      screenHeight: 600,
       interaction: app.renderer.plugins.interaction
     });
 
     // add the viewport to the stage
     app.stage.addChild(viewport);
+
+    //TODO try to use that to fix the y orientation at the source
+    viewport.setTransform(0, 0, 1, -1, 0, 0, 0, 0, 0);
 
     // activate plugins
     viewport
@@ -74,7 +88,7 @@
 
 
     //value to color
-    //TODO decompose into value to class function and class to style
+    //TODO decompose into 'value to class' function and 'class to style'. Use d3 for that
     var valueToColor = function (value) {
       var t = value / 1400000;
       t = Math.pow(t, 0.2);
@@ -84,15 +98,16 @@
     };
 
 
+    //draw a tile
     drawTile = function (tile) {
 
       //use one graphics per tile
       let gr = new PIXI.Graphics();
 
-      //move and scale the tile graphics to the right place
-      var dx = origin.x + tile.x * tileSize * res,
-        dy = origin.y + tile.y * tileSize * res;
-      gr.setTransform(dx, -dy, res, res, 0, 0, 0, 0, 0);
+      //move and scale the tile graphics to draw each cell as a 1 pixel size element in the tile coordinates
+      var dx = origin.x + tile.x * tileSize * res;
+      var dy = origin.y + tile.y * tileSize * res;
+      gr.setTransform(dx, -dy, res, -res, 0, 0, 0, 0, 0);
 
       //draw the cells
       for (var j = 0; j < tile.cells.length; j++) {
@@ -100,10 +115,12 @@
         //get cell
         var cell = tile.cells[j];
 
-        //draw the cell
+        //get cell drawing style
         let fcol = valueToColor(cell.val);
+
+        //draw the cell
         gr.beginFill(fcol);
-        gr.drawRect(cell.x, -cell.y, 1, 1);
+        gr.drawRect(cell.x, cell.y, 1, 1);
         //TODO find why this does not work !
         //gr.drawRoundedRect(cell.x, -cell.y, 0.8, 0.8, 0.2);
         //gr.drawCircle(cell.x, -cell.y, 1);
@@ -143,7 +160,7 @@
           (function (x, y, z) {
             //tag tile as being loaded in the cache
             tileCache.store(z, x, y, "loading");
-            d3.csv("https://raw.githubusercontent.com/eurostat/EuroGridLayer/master/PixiJS/tests/csvTiles/assets/csv/tiles/pop_grid_2011_10km/" + z + "/" + x + "/" + y + ".csv")
+            d3.csv(gridServiceBaseURL + z + "/" + x + "/" + y + ".csv")
               .row(function (d) { return { x: d.x, y: d.y, val: +d.val }; })
               .get(function (error, cells) {
                 if (!cells) {
@@ -176,10 +193,11 @@
     });
 
     viewport.on("clicked", e => {
-      //console.log(e);
+      console.log(e);
       console.log(viewport.scaled);
       //console.log(tileCache);
       //refresh();
+      //TODO retrieve and show cell value under the click
     });
 
 
