@@ -120,15 +120,17 @@
         let fcol = valueToColor(cell.val);
 
         //draw the cell
-        gr.lineStyle(0);
-        gr.beginFill(fcol, 1);
-        gr.drawRect(cell.x, cell.y, 1, 1);
-        //TODO find why this does not work !
-        //see https://pixijs.io/examples/#/graphics/simple.js
-        //see https://codingthesmartway.com/async-programming-with-javascript-callbacks-promises-and-async-await/
-        //gr.drawRoundedRect(cell.x, cell.y, 0.8, 0.8, 0.2);
-        //gr.drawCircle(cell.x, cell.y, 0.5);
-        gr.endFill();
+        {
+          gr.lineStyle(0);
+          gr.beginFill(fcol, 1);
+          gr.drawRect(cell.x, cell.y, 1, 1);
+          //TODO find why this does not work !
+          //see https://pixijs.io/examples/#/graphics/simple.js
+          //see https://codingthesmartway.com/async-programming-with-javascript-callbacks-promises-and-async-await/
+          //gr.drawRoundedRect(cell.x, cell.y, 0.8, 0.8, 0.2);
+          //gr.drawCircle(cell.x, cell.y, 0.5);
+          gr.endFill();
+        }
       }
       viewport.addChild(gr);
     };
@@ -198,7 +200,8 @@
 
     viewport.on("clicked", e => {
       console.log(e);
-      console.log(viewport.scaled);
+      //console.log(viewport.scaled);
+      //console.log(app);
       //console.log(tileCache);
       //refresh();
       //TODO retrieve and show cell value under the click
