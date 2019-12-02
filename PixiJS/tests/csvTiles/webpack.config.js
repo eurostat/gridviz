@@ -2,7 +2,7 @@
 var webpack = require('webpack');
 module.exports = {
     mode: 'development',
-    entry: ["./globals.js", './index.js'],
+    entry: ["./globals.js", './app.js'],
     output: {
         filename: 'main.js',
         publicPath: 'dist'
