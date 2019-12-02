@@ -18,10 +18,7 @@
         let app = new PIXI.Application({
             width: 1000,         // default: 800
             height: 1000,        // default: 600
-            antialias: true,    // default: false
-            transparent: false, // default: false
-            resolution: 1       // default: 1  <- check that !
-            //forceCanvas: true,
+            antialias: true    // default: false
         }
         );
         document.body.appendChild(app.view);
@@ -55,28 +52,24 @@
 
         //draw tiles
         //each cell has a size of 1 pixel
-        for (var i = 0; i < tiles.length; i++) {
-            var tile = tiles[i];
+        //test that instead? http://pixijs.download/release/docs/PIXI.ParticleContainer.html
+        for (let i = 0; i < tiles.length; i++) {
+            let tile = tiles[i];
             let gr = new PIXI.Graphics();
             for (var j = 0; j < tile.cells.length; j++) {
                 var cell = tile.cells[j];
                 //draw cell
                 gr.beginFill( valueToColor(cell.val) );
                 gr.drawRect(tile.x * 25 + cell.x, tile.y * 25 + cell.y, 1, 1);
+                //gr.drawCircle(tile.x * 25 + cell.x, tile.y * 25 + cell.y, 10);
                 gr.endFill();
             }
             app.stage.addChild(gr);
-        }
-        //gr.destroy();
+    }
+    //gr.destroy();
         //var tile = new PIXI.Container();
 
-        //use that to load tiles:
-        //load an image and run the `setup` function when it's done
-        //PIXI.loader
-        //    .add("images/cat.png")
-        //    .load(setup);
-
-        //console.log(viewport);
+        console.log(app);
 
 
     </script>
