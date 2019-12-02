@@ -2,12 +2,11 @@
   "name": "csv-tiles",
   "version": "1.0.0",
   "description": "PixiJS viewer that loads tiled grid data as csv files",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --open",
+    "start": "webpack-dev-server --open --watch",
     "build": "webpack --progress --mode=production",
-    "watch": "webpack --progress --watch",
     "server": "webpack-dev-server --open"
   },
   "author": "",
