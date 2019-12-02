@@ -9,4 +9,5 @@ This particular project uses node.js and webpack as development tools.
 - Install node.js
 - run 'npm install' from the command line
 - Then run 'npm start' to launch a dev server
+- Navigate to http://localhost:8080/
   See package.json for more info.

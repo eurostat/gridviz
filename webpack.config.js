@@ -4,8 +4,9 @@ module.exports = {
   mode: "development",
   entry: ["./globals.js", "./index.js"],
   output: {
-    filename: "main.js",
+    filename: "bundle.js",
     publicPath: "dist"
   },
-  watch: true
+  watch: true,
+  devtool: "inline-source-map"
 };
