@@ -78,6 +78,7 @@ const drawTile = function (tile) {
  * @param {*} clear - whether to clear the viewport or not
  */
 const refresh = function (clear) {
+    console.log(app);
     if (clear)
         viewport.removeChildren();
 
