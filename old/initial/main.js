@@ -5,11 +5,15 @@
 //Add dynamic legend/symbology for cells in current view
 //Change cell size depending on second variable, defined by column index specified by user
 
-var csvURL = "assets/csv/pop_5km.csv"; //csv with xmin and y min coords of grid cells
+var csvURL = "../assets/csv/pop_2km.csv"; //csv with xmin and y min coords of grid cells
 var ATTR_COLUMN = 2;
 var X_COLUMN = 0; //column index for x coordinates
 var Y_COLUMN = 1; //column index for y coordinates
-var cellSize = 1.04; //fillRect() width/height in pixels
+const cellSizes = {
+  "2km": 0.4,
+  "5km": 1.04
+};
+var cellSize = 0.4; //fillRect() width/height in pixels
 mapBounds = null; //Viewport map width, height and center
 currentLevel = 0;
 
