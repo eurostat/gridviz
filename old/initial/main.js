@@ -5,6 +5,7 @@
 //Add dynamic legend/symbology for cells in current view
 //Change cell size depending on second variable, defined by column index specified by user
 
+const BASE_URL = "http://s-est-tpol.net1.cec.eu.int/gridded-statistics/";
 const INITIAL_CSV_URL = "../assets/csv/pop_5km.csv"; //csv with xmin and y min coords of grid cells
 const ATTR_COLUMN = 2;
 const X_COLUMN = 0; //column index for x coordinates
@@ -13,7 +14,7 @@ const cellSizes = {
   "2km": 0.4,
   "5km": 1.04
 };
-let cellSize = cellSizes["5km"]; //fillRect() width/height in pixels
+var cellSize = cellSizes["5km"]; //fillRect() width/height in pixels
 mapBounds = null; //Viewport map width, height and center
 currentLevel = 0;
 
@@ -22,7 +23,7 @@ const z = 2;
 const tileSize = Math.pow(2, 8 - z);
 
 //specifications of the grid data service
-const gridServiceBaseURL = "../../assets/tiles/pop_grid_2011_2km/";
+const gridServiceBaseURL = BASE_URL + "tiles/pop_grid_2011_2km/";
 const res = 2000; //2km
 const origin = { x: 0, y: 0 };
 const tileFrameLimits = { xMin: 0, xMax: z * 10, yMin: 0, yMax: z * 10 };
@@ -93,6 +94,7 @@ function getMapBoundsFromCSV(csvArray) {
 // add CSV points as graphics to the viewport
 function drawGraphics(csvArray) {
   viewportManager.clearViewport();
+  console.info("viewport cleared");
 
   // to find the scale that will fit the canvas get the min scale to fit height or width
   const scale = Math.min(
@@ -151,6 +153,7 @@ function getScreenYFromGeo(northing, scale) {
 }
 
 //TILING LOGIC:
+//
 //
 //
 //
@@ -269,12 +272,16 @@ var refresh = function(clear) {
     }
 };
 
-/* viewportManager.viewport.on("wheel", e => {
+viewportManager.viewport.on("wheel", e => {
   //console.log(e);
-  refresh(true);
+  if (viewportManager.viewport.scaled > 5) {
+    refresh(true);
+  }
 });
 
 viewportManager.viewport.on("moved-end", e => {
   //console.log(e);
-  refresh(true);
-}); */
+  if (viewportManager.viewport.scaled > 5) {
+    refresh(true);
+  }
+});
