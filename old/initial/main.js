@@ -5,17 +5,27 @@
 //Add dynamic legend/symbology for cells in current view
 //Change cell size depending on second variable, defined by column index specified by user
 
-var csvURL = "../assets/csv/pop_2km.csv"; //csv with xmin and y min coords of grid cells
-var ATTR_COLUMN = 2;
-var X_COLUMN = 0; //column index for x coordinates
-var Y_COLUMN = 1; //column index for y coordinates
+const INITIAL_CSV_URL = "../assets/csv/pop_5km.csv"; //csv with xmin and y min coords of grid cells
+const ATTR_COLUMN = 2;
+const X_COLUMN = 0; //column index for x coordinates
+const Y_COLUMN = 1; //column index for y coordinates
 const cellSizes = {
   "2km": 0.4,
   "5km": 1.04
 };
-var cellSize = 0.4; //fillRect() width/height in pixels
+let cellSize = cellSizes["5km"]; //fillRect() width/height in pixels
 mapBounds = null; //Viewport map width, height and center
 currentLevel = 0;
+
+//TODO fix how to choose this z parameter
+const z = 2;
+const tileSize = Math.pow(2, 8 - z);
+
+//specifications of the grid data service
+const gridServiceBaseURL = "../../assets/tiles/pop_grid_2011_2km/";
+const res = 2000; //2km
+const origin = { x: 0, y: 0 };
+const tileFrameLimits = { xMin: 0, xMax: z * 10, yMin: 0, yMax: z * 10 };
 
 this.init();
 
@@ -34,7 +44,7 @@ function init() {
 
   // get the first csv file and draw cells using its points
   utils.showLoading(); //loading spinner
-  utils.getCSV(csvURL, data => {
+  utils.getCSV(INITIAL_CSV_URL, data => {
     var csvArray = utils.parseCSV(data);
     //map width, height and center
     if (!this.mapBounds) {
@@ -140,32 +150,131 @@ function getScreenYFromGeo(northing, scale) {
   return (northing - this.mapBounds.mapCenterY) * scale + app.view.height / 2;
 }
 
-function changeGraphicsForCurrentScale(scale) {
-  if (scale >= 8) {
-    if (this.currentLevel !== 1) {
-      this.currentLevel = 1;
-      viewportManager.clearAllGraphicsLayers();
-      this.cellSize = 0.2;
-      utils.getCSV("assets/csv/wales_1km.csv", data => {
-        let arr = utils.parseCSV(data);
-        csvArray = arr;
-        //invert Y coordinates
-        for (var i = 1; i < csvArray.length; i++) {
-          var p = csvArray[i]; //csv point
-          p[Y_COLUMN] = utils.invertNumber(p[Y_COLUMN]); // Y coordinates are converted to negative
-        }
+//TILING LOGIC:
+//
+//
+//
+//the cache structure for the grid tiles. the tiles are indexed by z>x>y
+//when a tile has been requested and was not found, a tag "none" is set
+//when a http request has been sent to retrieve a tile but the response has not been received yet, a tag "loading" is set.
+const tileCache = {
+  cache: {},
+  //retrieve a tile from its position in the tile structure
+  getTile: function(z, x, y) {
+    if (!this.cache[z]) this.cache[z] = {};
+    if (!this.cache[z][x]) this.cache[z][x] = {};
+    return this.cache[z][x][y];
+  },
+  //add a tile to the cache, once received
+  store: function(z, x, y, tile) {
+    if (!this.cache[z]) this.cache[z] = {};
+    if (!this.cache[z][x]) this.cache[z][x] = {};
+    this.cache[z][x][y] = tile;
+  }
+};
 
-        //draw grid
-        this.drawGraphics();
-      });
-    }
-  } else if (scale <= 8) {
-    if (this.currentLevel !== 0) {
-      this.currentLevel = 0;
-      viewportManager.clearAllGraphicsLayers();
-      this.cellSize = 1.04;
-      //draw grid
-      this.drawGraphics();
+//value to color
+//TODO decompose into 'value to class' function and 'class to style'. Use d3 for that
+var valueToColor = function(value) {
+  var t = value / 1400000;
+  t = Math.pow(t, 0.2);
+  if (t > 1) console.log(value);
+  //see https://github.com/d3/d3-scale-chromatic
+  return PIXI.utils.string2hex(
+    d3.rgb(d3.interpolateCubehelixDefault(t)).formatHex()
+  );
+};
+
+//draw a tile
+const drawTile = function(tile) {
+  //use one graphics per tile
+  let gr = new PIXI.Graphics();
+
+  //move and scale the tile graphics to draw each cell as a 1 pixel size element in the tile coordinates
+  var dx = origin.x + tile.x * tileSize * res;
+  var dy = origin.y + tile.y * tileSize * res;
+  /*     gr.setTransform(dx, -dy, res, -res, 0, 0, 0, 0, 0);  */
+
+  //draw the cells
+  for (var j = 0; j < tile.cells.length; j++) {
+    //get cell
+    var cell = tile.cells[j];
+
+    //get cell drawing style
+    let fcol = valueToColor(cell.val);
+
+    //draw the cell
+    {
+      gr.lineStyle(0);
+      gr.beginFill(fcol, 1);
+      /*             gr.drawRect(cell.x, cell.y, 1, 1);
+       */ gr.drawRect(dx + cell.x * res, -cell.y * res - dy, res, res);
+      //TODO find why this does not work !
+      //see https://pixijs.io/examples/#/graphics/simple.js
+      //see https://codingthesmartway.com/async-programming-with-javascript-callbacks-promises-and-async-await/
+      //gr.drawRoundedRect(cell.x, cell.y, 0.8, 0.8, 0.2);
+      //gr.drawCircle(cell.x, cell.y, 0.5);
+      gr.endFill();
     }
   }
-}
+  viewportManager.viewport.addChild(gr);
+};
+
+var refresh = function(clear) {
+  if (clear) {
+    viewportManager.viewport.removeChildren();
+  }
+
+  var bn = viewportManager.viewport.getVisibleBounds(),
+    tileXMin = Math.floor((bn.x - origin.x) / (res * tileSize)),
+    tileXMax = Math.floor((bn.x + bn.width - origin.x) / (res * tileSize)) + 1,
+    tileYMax = Math.floor((-bn.y - origin.y) / (res * tileSize)) + 1,
+    tileYMin = Math.floor((-bn.y - bn.height - origin.y) / (res * tileSize));
+  tileXMin = Math.max(tileXMin, tileFrameLimits.xMin);
+  tileXMax = Math.min(tileXMax, tileFrameLimits.xMax);
+  tileYMin = Math.max(tileYMin, tileFrameLimits.yMin);
+  tileYMax = Math.min(tileYMax, tileFrameLimits.yMax);
+
+  for (var x = tileXMin; x <= tileXMax; x++)
+    for (var y = tileYMin; y <= tileYMax; y++) {
+      //check if tile exists in cache
+      var tile = tileCache.getTile(z, x, y);
+      //if there is no tile there or it is already loading, continue
+      if (tile === "none" || tile === "loading") continue;
+      //if the tile was already loaded into the cach, draw it
+      if (tile) {
+        drawTile(tile);
+        continue;
+      }
+      //get the tile
+      (function(x, y, z) {
+        //tag tile as being loaded in the cache
+        tileCache.store(z, x, y, "loading");
+
+        d3.csv(gridServiceBaseURL + z + "/" + x + "/" + y + ".csv")
+          //.row(function (d) { return { x: +d.x, y: +d.y, val: +d.val }; })
+          .then(function(cells) {
+            //make tile
+            var tile = { x: x, y: y, cells: cells };
+            //store tile in cache
+            tileCache.store(z, x, y, tile);
+            //draw tile
+            drawTile(tile);
+          })
+          .catch(function(error) {
+            //no tile was found: keep that info in the cache to avoid asking again
+            tileCache.store(z, x, y, "none");
+          });
+      })(x, y, z);
+    }
+};
+
+/* viewportManager.viewport.on("wheel", e => {
+  //console.log(e);
+  refresh(true);
+});
+
+viewportManager.viewport.on("moved-end", e => {
+  //console.log(e);
+  refresh(true);
+}); */

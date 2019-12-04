@@ -83,6 +83,7 @@ utils.parseCSV = function(str) {
 
 utils.valueToColour = function(value, scale) {
   if (viewportManager.viewport.scaled < 8) {
+    //2km grid
     if (value > 100000) {
       return 0xff0f00; //red
     } else if (value < 100000 && value > 10000) {
@@ -95,6 +96,7 @@ utils.valueToColour = function(value, scale) {
       return 0x005cff; //blue
     }
   } else if (viewportManager.viewport.scaled > 8) {
+    //1km grid
     if (value > 1000) {
       return 0xff0f00; //red
     } else if (value < 1000 && value > 100) {
