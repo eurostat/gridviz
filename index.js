@@ -50,7 +50,6 @@ viewport
   .pinch()
   .wheel() //TODO make it two
   /* .wheel({ percent: 10.0, smooth: 5 }) */
-
   .decelerate();
 
 //the cache structure for the grid tiles. the tiles are indexed by z>x>y

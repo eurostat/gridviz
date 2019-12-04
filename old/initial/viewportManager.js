@@ -9,12 +9,9 @@ viewportManager.init = function() {
 
   // create viewport (viewer) to add pan and zoom capability to pixijs
   const viewport = new Viewport.Viewport({
-    screenWidth: window.innerWidth,
-    screenHeight: window.innerHeight,
-    worldWidth: 6000000,
-    worldHeight: 5000000,
-    antialias: true,
-    interaction: app.renderer.plugins.interaction // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
+    screenWidth: app.view.width,
+    screenHeight: app.view.height,
+    interaction: app.renderer.plugins.interaction
   });
   viewportManager.viewport = viewport;
 

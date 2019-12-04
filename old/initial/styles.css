@@ -39,6 +39,7 @@ canvas {
   left: 1%;
   position: absolute;
   color: white;
+  font-family: sans-serif;
 }
 .no-margin {
   margin-top: 0px;
