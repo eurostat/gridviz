@@ -45,32 +45,54 @@
     const pointsGeometry = new THREE.Geometry();
     const colors = [];
 
-    for (var i = 0; i < 754000; i++) {
-        var x = Math.random() * 100 + 0; //x/y vector ranges are -1 to +1
-        var y = Math.random() * 100 + 0;
 
-        const vertex = new THREE.Vector3(x, y, 0);
+    this.getCSV("../assets/csv/pop_2km.csv", data => {
+        var csvArray = parseCSV(data);
+        for (var i = 1; i < csvArray.length; i++) {
+            let cell = csvArray[i];
+            var x = parseInt(cell[0]) / 100;
+            var y = parseInt(cell[1]) / 100;
+            /*             var x = Math.random() * 100 + 0;
+                        var y = Math.random() * 100 + 0; */
+            const vertex = new THREE.Vector3(x, y, 0);
+            pointsGeometry.vertices.push(vertex);
+            const color = new THREE.Color(valueToColor(cell[2]));
+            colors.push(color);
+        }
 
-
-        pointsGeometry.vertices.push(vertex);
-        const color = new THREE.Color();
-        color.setHSL(Math.random(), 1.0, 0.5);
-        colors.push(color);
-    }
-    pointsGeometry.colors = colors;
-    pointsMaterial = new THREE.PointsMaterial({
-        // map: spriteMap,
-        size: point_size,
-        // transparent: true,
-        // blending: THREE.AdditiveBlending,
-        sizeAttenuation: false,
-        vertexColors: THREE.VertexColors,
+        pointsGeometry.colors = colors;
+        pointsMaterial = new THREE.PointsMaterial({
+            // map: spriteMap,
+            size: point_size,
+            // transparent: true,
+            // blending: THREE.AdditiveBlending,
+            sizeAttenuation: false,
+            vertexColors: THREE.VertexColors,
+        });
+        const points = new THREE.Points(pointsGeometry, pointsMaterial);
+        const pointsContainer = new THREE.Object3D();
+        pointsContainer.add(points);
+        scene.add(pointsContainer);
     });
-    const points = new THREE.Points(pointsGeometry, pointsMaterial);
-    const pointsContainer = new THREE.Object3D();
-    pointsContainer.add(points);
-    scene.add(pointsContainer);
 
+    var valueToColor = function (value) {
+        /*         if (value > 100000) {
+                    return 0xff0f00; //red
+                } else if (value > 10000) {
+                    return 0xffce08; //orange
+                } else if (value > 5000) {
+                    return 0xebff0a; //yellow
+                } else if (value > 1000) {
+                    return 0x55e238; //green
+                } else if (value > 0) {
+                    return 0x005cff; //blue
+                } */
+        var value = value / 1400000;
+        value = Math.pow(value, 0.2);
+        //see https://github.com/d3/d3-scale-chromatic
+        let rgb = d3.interpolateCubehelixDefault(value);
+        return rgb;
+    };
 
     // Set up zoom behavior
     const zoom = d3.zoom()
@@ -106,12 +128,12 @@
                     const pos = camera.position.clone().add(dir.multiplyScalar(distance));
 
 
-                    if (camera.position.z < 20) {
-                        scale = (20 - camera.position.z) / camera.position.z;
-                        pointsMaterial.setValues({ size: point_size + 3 * scale });
-                    } else if (camera.position.z >= 20 && pointsMaterial.size !== point_size) {
+                    /* if (camera.position.z < 20) { */
+/*                         scale = (20 - camera.position.z) / camera.position.z;
+                        pointsMaterial.setValues({ size: point_size + 3 * scale }); */
+/*                     } else if (camera.position.z >= 20 && pointsMaterial.size !== point_size) { */
                         pointsMaterial.setValues({ size: point_size });
-                    }
+                 /*    } */
 
                     // Set the camera to new coordinates
                     camera.position.set(pos.x, pos.y, new_z);
@@ -139,6 +161,7 @@
     // Sync d3 zoom with camera z position
     zoom.scaleTo(view, far_plane);
 
+
     // Three.js render loop
     function animate() {
         requestAnimationFrame(animate);
@@ -165,4 +188,84 @@
                 height / 2 + r * Math.sin(a) - height / 2
             ];
         };
-    }</script>
+    }
+
+
+    function getCSV(url, callback) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                try {
+                    var data = xmlhttp.responseText;
+                } catch (err) {
+                    console.log(err.message + " in " + xmlhttp.responseText);
+                    return;
+                }
+                callback(data);
+            }
+        };
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+    };
+
+
+    function parseCSV(str) {
+        var arr = [];
+        var quote = false; // true means we're inside a quoted field
+
+        // iterate over each character, keep track of current row and column (of the returned array)
+        for (var row = 0, col = 0, c = 0; c < str.length; c++) {
+            var cc = str[c],
+                nc = str[c + 1]; // current character, next character
+            arr[row] = arr[row] || []; // create a new row if necessary
+            arr[row][col] = arr[row][col] || ""; // create a new column (start with empty string) if necessary
+
+            // If the current character is a quotation mark, and we're inside a
+            // quoted field, and the next character is also a quotation mark,
+            // add a quotation mark to the current column and skip the next character
+            if (cc == '"' && quote && nc == '"') {
+                arr[row][col] += cc;
+                ++c;
+                continue;
+            }
+
+            // If it's just one quotation mark, begin/end quoted field
+            if (cc == '"') {
+                quote = !quote;
+                continue;
+            }
+
+            // If it's a comma and we're not in a quoted field, move on to the next column
+            if (cc == "," || (cc == ";" && !quote)) {
+                ++col;
+                continue;
+            }
+
+            // If it's a newline (CRLF) and we're not in a quoted field, skip the next character
+            // and move on to the next row and move to column 0 of that new row
+            if (cc == "\r" && nc == "\n" && !quote) {
+                ++row;
+                col = 0;
+                ++c;
+                continue;
+            }
+
+            // If it's a newline (LF or CR) and we're not in a quoted field,
+            // move on to the next row and move to column 0 of that new row
+            if (cc == "\n" && !quote) {
+                ++row;
+                col = 0;
+                continue;
+            }
+            if (cc == "\r" && !quote) {
+                ++row;
+                col = 0;
+                continue;
+            }
+
+            // Otherwise, append the current character to the current column
+            arr[row][col] += cc;
+        }
+        return arr;
+    };
+</script>

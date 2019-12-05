@@ -1,8 +1,8 @@
 var utils = {};
 
-utils.getCSV = function(url, callback) {
+utils.getCSV = function (url, callback) {
   var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
+  xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       try {
         var data = xmlhttp.responseText;
@@ -17,11 +17,11 @@ utils.getCSV = function(url, callback) {
   xmlhttp.send();
 };
 
-utils.getRadianAngle = function(degreeValue) {
+utils.getRadianAngle = function (degreeValue) {
   return (degreeValue * Math.PI) / 180;
 };
 
-utils.parseCSV = function(str) {
+utils.parseCSV = function (str) {
   var arr = [];
   var quote = false; // true means we're inside a quoted field
 
@@ -81,18 +81,18 @@ utils.parseCSV = function(str) {
   return arr;
 };
 
-utils.valueToColour = function(value, scale) {
+utils.valueToColour = function (value, scale) {
   if (viewportManager.viewport.scaled < 8) {
     //2km grid
     if (value > 100000) {
       return 0xff0f00; //red
-    } else if (value < 100000 && value > 10000) {
+    } else if (value > 10000) {
       return 0xffce08; //orange
-    } else if (value < 10000 && value > 5000) {
+    } else if (value > 5000) {
       return 0xebff0a; //yellow
-    } else if (value < 5000 && value > 1000) {
+    } else if (value > 1000) {
       return 0x55e238; //green
-    } else if (value < 1000 && value > 0) {
+    } else if (value > 0) {
       return 0x005cff; //blue
     }
   } else if (viewportManager.viewport.scaled > 8) {
@@ -113,7 +113,7 @@ utils.valueToColour = function(value, scale) {
   }
 };
 
-utils.chunk = function(array, size) {
+utils.chunk = function (array, size) {
   const chunked_arr = [];
   for (let i = 0; i < array.length; i++) {
     const last = chunked_arr[chunked_arr.length - 1];
@@ -126,17 +126,17 @@ utils.chunk = function(array, size) {
   return chunked_arr;
 };
 
-utils.showLoading = function() {
+utils.showLoading = function () {
   document.getElementById("loading-gif").style.display = "block";
 };
-utils.hideLoading = function() {
+utils.hideLoading = function () {
   document.getElementById("loading-gif").style.display = "none";
 };
-utils.invertNumber = function(c) {
+utils.invertNumber = function (c) {
   return -Math.abs(c);
 };
-utils.generateUniqueId = function() {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+utils.generateUniqueId = function () {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
     var r = (Math.random() * 16) | 0,
       v = c == "x" ? r : (r & 0x3) | 0x8;
     return v.toString(16);
