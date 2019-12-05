@@ -1,41 +1,51 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Test</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/two.js/0.6.0/two.min.js"></script>
-  </head>
-  <style>
-    body {
-      margin: 0 !important;
+
+<head>
+  <meta charset="utf-8" />
+  <title>Test</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/two.js/0.6.0/two.min.js"></script>
+</head>
+<style>
+  body {
+    margin: 0 !important;
+  }
+</style>
+
+<body>
+  <div id="draw-shapes"></div>
+</body>
+
+<script>
+  // Make an instance of two and place it on the page.
+  var elem = document.getElementById("draw-shapes");
+  var params = { width: window.innerWidth, height: window.innerHeight, type: Two.Types.canvas };
+  var two = new Two(params).appendTo(elem);
+
+  // two has convenience methods to create shapes.
+
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
     }
-  </style>
+    return color;
+  }
 
-  <body>
-    <div id="draw-shapes"></div>
-  </body>
+  var rects = []
+  for (var i = 0; i < 10000; i++) {
+    var x = Math.floor(Math.random() * window.innerWidth - 10) + 1;
+    var y = Math.floor(Math.random() * window.innerHeight - 10) + 1;
+    var rect = two.makeRectangle(x, y, 10, 10);
+    /*    rect.fill = getRandomColor(); */
+    /*   rects.push(rect); */
+  }
+  // Don't forget to tell two to render everything
+  // to the screen
+  /*   var group = two.makeGroup([rects]); */
+  two.update();
 
-  <script>
-    // Make an instance of two and place it on the page.
-    var elem = document.getElementById("draw-shapes");
-    var params = { width: 900, height: 1800 };
-    var two = new Two(params).appendTo(elem);
+</script>
 
-    // two has convenience methods to create shapes.
-    var circle = two.makeCircle(72, 100, 50);
-    var rect = two.makeRectangle(213, 100, 100, 100);
-
-    // The object returned has many stylable properties:
-    circle.fill = "#FF8000";
-    circle.stroke = "orangered"; // Accepts all valid css color
-    circle.linewidth = 5;
-
-    rect.fill = "rgb(0, 200, 255)";
-    rect.opacity = 0.75;
-    rect.noStroke();
-
-    // Don't forget to tell two to render everything
-    // to the screen
-    two.update();
-  </script>
 </html>

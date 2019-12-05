@@ -12,8 +12,9 @@ const z = 2;
 const tileSize = Math.pow(2, 8 - z);
 
 //specifications of the grid data service
-const gridServiceBaseURL = globals.BASE_URL + globals.TILESETS["5km"];
-const res = 10000;
+var cellSize = "2km";
+const gridServiceBaseURL = globals.BASE_URL + globals.TILESETS[grid];
+const res = 5000;
 const origin = { x: 0, y: 0 };
 const tileFrameLimits = { xMin: 0, xMax: z * 10, yMin: 0, yMax: z * 10 };
 
@@ -139,7 +140,7 @@ var refresh = function(clear) {
   tileYMin = Math.max(tileYMin, tileFrameLimits.yMin);
   tileYMax = Math.min(tileYMax, tileFrameLimits.yMax);
 
-  for (var x = tileXMin; x <= tileXMax; x++)
+  for (var x = tileXMin; x <= tileXMax; x++) {
     for (var y = tileYMin; y <= tileYMax; y++) {
       //check if tile exists in cache
       var tile = tileCache.getTile(z, x, y);
@@ -150,11 +151,12 @@ var refresh = function(clear) {
         drawTile(tile);
         continue;
       }
+
       //get the tile
       (function(x, y, z) {
         //tag tile as being loaded in the cache
         tileCache.store(z, x, y, "loading");
-
+        //tile http request
         d3.csv(gridServiceBaseURL + z + "/" + x + "/" + y + ".csv")
           //.row(function (d) { return { x: +d.x, y: +d.y, val: +d.val }; })
           .then(function(cells) {
@@ -171,6 +173,7 @@ var refresh = function(clear) {
           });
       })(x, y, z);
     }
+  }
 };
 
 viewport.on("wheel", e => {

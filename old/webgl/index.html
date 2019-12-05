@@ -1,0 +1,121 @@
+<!-- https://dannywoodz.wordpress.com/2014/11/18/webgl-drawing-a-2d-shape/-->
+<!doctype html>
+<html>
+
+<head>
+  <title>Pure WebGL rendering</title>
+  <script type="x-shader/x-vertex" id="vertex-shader">
+    precision mediump float;
+    attribute vec2 pos;
+    void main() {
+      gl_Position = vec4(pos, 0.0, 1.0);
+    }
+    </script>
+  <script type="x-shader/x-fragment" id="fragment-shader">
+    precision mediump float;
+    void main() {
+      gl_FragColor = vec4(1.0);
+    }
+    </script>
+  <script type="text/javascript">
+
+    function render(gl, scene) {
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.useProgram(scene.program);
+      gl.bindBuffer(gl.ARRAY_BUFFER, scene.object.vertexBuffer);
+      gl.drawArrays(
+        scene.object.primitiveType, 0,
+        scene.object.vertexCount);
+      gl.bindBuffer(gl.ARRAY_BUFFER, null);
+      gl.useProgram(null);
+      requestAnimationFrame(function () {
+        render(gl, scene);
+      });
+    }
+
+    function createProgram(gl, shaderSpecs) {
+      var program = gl.createProgram();
+      for (var i = 0; i < shaderSpecs.length; i++) {
+        var spec = shaderSpecs[i];
+        var shader = gl.createShader(spec.type);
+        var source = document.getElementById(spec.container).text;
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          throw gl.getShaderInfoLog(shader);
+        }
+        gl.attachShader(program, shader);
+        gl.deleteShader(shader);
+      }
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        throw gl.getProgramInfoLog(program);
+      }
+      return program;
+    }
+
+    function init() {
+      var surface = document.getElementById('rendering-surface');
+      surface.height = window.innerHeight - 10;
+      surface.width = window.innerWidth - 10;
+      var gl = surface.getContext('webgl');
+      gl.viewport(0, 0, surface.width, surface.height);
+      gl.clearColor(1.0, 0.0, 0.0, 1.0);
+
+      var program = createProgram(
+        gl,
+        [{ container: 'vertex-shader', type: gl.VERTEX_SHADER },
+        { container: 'fragment-shader', type: gl.FRAGMENT_SHADER }]
+      );
+
+
+      var squareVertices = [
+        +0.01, +0.01, //top right x/y
+        -0.01, +0.01, //top left x/y
+        +0.01, -0.01, // bottom right x/y
+        -0.01, -0.01 // bottom left x/y
+      ];
+
+      gl.useProgram(program);
+
+      var square = {
+        vertexCount: 4,
+        primitiveType: gl.TRIANGLE_STRIP
+      };
+
+      var vertexBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+      program.positionAttribute = gl.getAttribLocation(program, 'pos');
+      gl.enableVertexAttribArray(program.positionAttribute);
+      gl.vertexAttribPointer(
+        program.positionAttribute, 2, gl.FLOAT, false, 0, 0
+      );
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array(squareVertices),
+        gl.STATIC_DRAW
+      );
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, null);
+      gl.useProgram(null);
+
+      square.vertexBuffer = vertexBuffer;
+
+      var scene = {
+        program: program,
+        object: square,
+      };
+
+      requestAnimationFrame(function () {
+        render(gl, scene);
+      });
+    }
+  </script>
+</head>
+
+<body onLoad="init()">
+  <canvas id="rendering-surface" />
+</body>
+
+</html>
