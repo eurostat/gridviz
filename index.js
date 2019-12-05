@@ -12,14 +12,12 @@ const z = 2;
 const tileSize = Math.pow(2, 8 - z);
 
 //specifications of the grid data service
-const gridServiceBaseURL = globals.initial_CSV_URL;
+const gridServiceBaseURL = globals.BASE_URL + globals.TILESETS["5km"];
 const res = 10000;
 const origin = { x: 0, y: 0 };
 const tileFrameLimits = { xMin: 0, xMax: z * 10, yMin: 0, yMax: z * 10 };
 
 //create application
-
-let type = "WebGL";
 if (!PIXI.utils.isWebGLSupported()) PIXI = require("pixi.js-legacy");
 
 //create application and add it to page
@@ -71,6 +69,9 @@ const tileCache = {
   }
 };
 
+//pool of graphics
+let graphicsPool = [];
+
 //value to color
 //TODO decompose into 'value to class' function and 'class to style'. Use d3 for that
 var valueToColor = function(value) {
@@ -116,11 +117,16 @@ const drawTile = function(tile) {
     }
   }
   viewport.addChild(gr);
+  graphicsPool.push(gr);
 };
 
 var refresh = function(clear) {
   if (clear) {
     viewport.removeChildren();
+    //destroy graphics to prevent memory leak
+    graphicsPool.forEach(g => {
+      g.clear();
+    });
   }
 
   var bn = viewport.getVisibleBounds(),
@@ -139,7 +145,7 @@ var refresh = function(clear) {
       var tile = tileCache.getTile(z, x, y);
       //if there is no tile there or it is already loading, continue
       if (tile === "none" || tile === "loading") continue;
-      //if the tile was already loaded into the cach, draw it
+      //if the tile was already loaded into the cache, draw it
       if (tile) {
         drawTile(tile);
         continue;
