@@ -1,0 +1,193 @@
+<script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r82/three.min.js"></script>
+<script src="orbitControls.js"></script>
+
+
+<body></body>
+<script>
+    var scene, renderer, camera;
+    var cube;
+    var controls;
+
+    init();
+    animate();
+
+    function init() {
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        renderer.setSize(width, height);
+        document.body.appendChild(renderer.domElement);
+
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(20, width / height, 1, 10000);
+        camera.position.set(0, 0, 10000);
+        camera.lookAt(new THREE.Vector3(20, 20, 1));
+
+        const near_plane = 10;
+        const far_plane = 1000;
+
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        var tmaterial = new THREE.PointsMaterial({
+            color: 0xff0000,
+            size: 1,
+            opacity: 1
+        });
+
+        var tgeometry = new THREE.Geometry();
+        var pointCloud = new THREE.Points(tgeometry, tmaterial);
+        scene.add(pointCloud);
+
+        //load points
+
+        for (var i = 0; i < 700000; i++) {
+            x = (Math.random() * 400) - 1;
+            y = (Math.random() * 400) - 1;
+            z = 1;
+            tgeometry.vertices.push(new THREE.Vector3(x, y, z));
+        }
+        const colors = [];
+        /* this.getCSV("../assets/csv/pop_2km.csv", data => {
+                var csvArray = parseCSV(data);
+                for (var i = 1; i < csvArray.length; i++) {
+                    let cell = csvArray[i];
+                    var x = parseInt(cell[0]) / 1000;
+                    var y = parseInt(cell[1]) / 1000;
+        let z = 1;
+                    tgeometry.vertices.push(new THREE.Vector3(x, y, z)); 
+             } 
+            });  */
+        /*         pointsGeometry.colors = colors;
+                pointsMaterial = new THREE.PointsMaterial({
+                    // map: spriteMap,
+                    size: point_size,
+                    // transparent: true,
+                    // blending: THREE.AdditiveBlending,
+                    sizeAttenuation: true,
+                    vertexColors: THREE.VertexColors,
+                });
+                const points = new THREE.Points(pointsGeometry, pointsMaterial);
+                const pointsContainer = new THREE.Object3D();
+                pointsContainer.add(points);
+                scene.add(pointsContainer); */
+
+
+        tgeometry.verticesNeedUpdate = true;
+        tgeometry.elementsNeedUpdate = true;
+        tgeometry.computeVertexNormals();
+        renderer.render(scene, camera);
+
+        window.addEventListener('resize', onWindowResize, false);
+    }
+
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function animate() {
+        controls.update();
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+    }
+
+    function valueToColor(value) {
+        if (value > 10000) {
+            return 0xff0f00; //red
+        } else if (value > 5000) {
+            return 0xffce08; //orange
+        } else if (value > 1000) {
+            return 0xebff0a; //yellow
+        } else if (value > 100) {
+            return 0x55e238; //green
+        } else if (value > 0) {
+            return 0x005cff; //blue
+        }
+        /*         var value = value / 1400000;
+                value = Math.pow(value, 0.2);
+                //see https://github.com/d3/d3-scale-chromatic
+                // https://npmdoc.github.io/node-npmdoc-d3-scale/build/apidoc.html
+                let rgb = d3.interpolateTurbo(value);
+                return rgb; */
+    };
+
+    function getCSV(url, callback) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                try {
+                    var data = xmlhttp.responseText;
+                } catch (err) {
+                    console.log(err.message + " in " + xmlhttp.responseText);
+                    return;
+                }
+                callback(data);
+            }
+        };
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+    };
+
+
+    function parseCSV(str) {
+        var arr = [];
+        var quote = false; // true means we're inside a quoted field
+
+        // iterate over each character, keep track of current row and column (of the returned array)
+        for (var row = 0, col = 0, c = 0; c < str.length; c++) {
+            var cc = str[c],
+                nc = str[c + 1]; // current character, next character
+            arr[row] = arr[row] || []; // create a new row if necessary
+            arr[row][col] = arr[row][col] || ""; // create a new column (start with empty string) if necessary
+
+            // If the current character is a quotation mark, and we're inside a
+            // quoted field, and the next character is also a quotation mark,
+            // add a quotation mark to the current column and skip the next character
+            if (cc == '"' && quote && nc == '"') {
+                arr[row][col] += cc;
+                ++c;
+                continue;
+            }
+
+            // If it's just one quotation mark, begin/end quoted field
+            if (cc == '"') {
+                quote = !quote;
+                continue;
+            }
+
+            // If it's a comma and we're not in a quoted field, move on to the next column
+            if (cc == "," || (cc == ";" && !quote)) {
+                ++col;
+                continue;
+            }
+
+            // If it's a newline (CRLF) and we're not in a quoted field, skip the next character
+            // and move on to the next row and move to column 0 of that new row
+            if (cc == "\r" && nc == "\n" && !quote) {
+                ++row;
+                col = 0;
+                ++c;
+                continue;
+            }
+
+            // If it's a newline (LF or CR) and we're not in a quoted field,
+            // move on to the next row and move to column 0 of that new row
+            if (cc == "\n" && !quote) {
+                ++row;
+                col = 0;
+                continue;
+            }
+            if (cc == "\r" && !quote) {
+                ++row;
+                col = 0;
+                continue;
+            }
+
+            // Otherwise, append the current character to the current column
+            arr[row][col] += cc;
+        }
+        return arr;
+    };
+</script>

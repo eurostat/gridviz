@@ -1,16 +1,33 @@
 <!-- https://codepen.io/GrantCuster/pen/rGGRRp-->
 
 <meta charset="utf-8">
+<style>
+    #loading-gif {
+        top: 48%;
+        left: 48%;
+        position: absolute;
+        z-index: 999;
+    }
+</style>
 
 <body>
+    <div id="loading-gif">
+        <img src="../assets/images/loading.gif" height="50" />
+    </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script src="//rawgit.com/mrdoob/stats.js/master/build/stats.min.js"></script>
+<script src="orbitControls.js"></script>
 <script>
     const width = window.innerWidth - 25;
     const height = window.innerHeight - 25;
-    const point_size = 1;
+    const point_size = 0.001;
+    const near_plane = 1;
+    const far_plane = 300;
 
     // Add canvas
     let renderer = new THREE.WebGLRenderer();
@@ -24,20 +41,20 @@
     stats.dom.style.right = '0px'
     document.body.appendChild(stats.dom);
 
-    const near_plane = 2;
-    const far_plane = 100;
 
     // Set up camera and scene
     let camera = new THREE.PerspectiveCamera(
-        20,
+        45, //angle
         width / height,
         near_plane,
         far_plane
     );
-    camera.position.set(0, 0, far_plane);
+    camera.position.set(0.9, 0.9, far_plane);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xffffff);
+    scene.background = new THREE.Color(0x000000);
+
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     let pointsMaterial;
 
@@ -45,16 +62,17 @@
     const pointsGeometry = new THREE.Geometry();
     const colors = [];
 
-
-    this.getCSV("../assets/csv/pop_2km.csv", data => {
+    this.showLoading();
+    this.getCSV("../assets/csv/pop_1km_new.csv", data => {
         var csvArray = parseCSV(data);
         for (var i = 1; i < csvArray.length; i++) {
             let cell = csvArray[i];
-            var x = parseInt(cell[0]) / 100;
-            var y = parseInt(cell[1]) / 100;
+            var x = (parseInt(cell[1]) / 100) - 35;
+            var y = (parseInt(cell[0]) / 100) - 35;
+            var z = parseInt(cell[2]) / 7000
             /*             var x = Math.random() * 100 + 0;
                         var y = Math.random() * 100 + 0; */
-            const vertex = new THREE.Vector3(x, y, 0);
+            const vertex = new THREE.Vector3(x, y, z);
             pointsGeometry.vertices.push(vertex);
             const color = new THREE.Color(valueToColor(cell[2]));
             colors.push(color);
@@ -66,36 +84,38 @@
             size: point_size,
             // transparent: true,
             // blending: THREE.AdditiveBlending,
-            sizeAttenuation: false,
+            sizeAttenuation: true,
             vertexColors: THREE.VertexColors,
         });
         const points = new THREE.Points(pointsGeometry, pointsMaterial);
         const pointsContainer = new THREE.Object3D();
         pointsContainer.add(points);
         scene.add(pointsContainer);
+        this.hideLoading();
     });
 
-    var valueToColor = function (value) {
-        /*         if (value > 100000) {
-                    return 0xff0f00; //red
-                } else if (value > 10000) {
-                    return 0xffce08; //orange
-                } else if (value > 5000) {
-                    return 0xebff0a; //yellow
-                } else if (value > 1000) {
-                    return 0x55e238; //green
-                } else if (value > 0) {
-                    return 0x005cff; //blue
-                } */
-        var value = value / 1400000;
-        value = Math.pow(value, 0.2);
-        //see https://github.com/d3/d3-scale-chromatic
-        let rgb = d3.interpolateCubehelixDefault(value);
-        return rgb;
+    function valueToColor(value) {
+        if (value > 10000) {
+            return 0xff0f00; //red
+        } else if (value > 5000) {
+            return 0xffce08; //orange
+        } else if (value > 1000) {
+            return 0xebff0a; //yellow
+        } else if (value > 100) {
+            return 0x55e238; //green
+        } else if (value > 0) {
+            return 0x005cff; //blue
+        }
+        /*         var value = value / 1400000;
+                value = Math.pow(value, 0.2);
+                //see https://github.com/d3/d3-scale-chromatic
+                // https://npmdoc.github.io/node-npmdoc-d3-scale/build/apidoc.html
+                let rgb = d3.interpolateTurbo(value);
+                return rgb; */
     };
 
     // Set up zoom behavior
-    const zoom = d3.zoom()
+    /* const zoom = d3.zoom()
         .scaleExtent([near_plane, far_plane])
         .wheelDelta(function wheelDelta() {
             // this inverts d3 zoom direction, which makes it the rith zoom direction for setting the camera
@@ -128,12 +148,12 @@
                     const pos = camera.position.clone().add(dir.multiplyScalar(distance));
 
 
-                    /* if (camera.position.z < 20) { */
-/*                         scale = (20 - camera.position.z) / camera.position.z;
-                        pointsMaterial.setValues({ size: point_size + 3 * scale }); */
-/*                     } else if (camera.position.z >= 20 && pointsMaterial.size !== point_size) { */
+                    if (camera.position.z < 20) {
+                        scale = (20 - camera.position.z) / camera.position.z;
+                        pointsMaterial.setValues({ size: point_size + 3 * scale });
+                    } else if (camera.position.z >= 20 && pointsMaterial.size !== point_size) {
                         pointsMaterial.setValues({ size: point_size });
-                 /*    } */
+                    }
 
                     // Set the camera to new coordinates
                     camera.position.set(pos.x, pos.y, new_z);
@@ -159,7 +179,7 @@
     view.on('dblclick.zoom', null);
 
     // Sync d3 zoom with camera z position
-    zoom.scaleTo(view, far_plane);
+    zoom.scaleTo(view, far_plane); */
 
 
     // Three.js render loop
@@ -189,6 +209,13 @@
             ];
         };
     }
+
+    function showLoading() {
+        document.getElementById("loading-gif").style.display = "block";
+    };
+    function hideLoading() {
+        document.getElementById("loading-gif").style.display = "none";
+    };
 
 
     function getCSV(url, callback) {
