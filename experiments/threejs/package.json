@@ -1,0 +1,21 @@
+{
+  "name": "threejs-experiments",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/.bin/webpack main.js --mode=development --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "stats.js": "^0.17.0",
+    "three": "^0.111.0",
+    "three.map.control": "^1.6.0"
+  }
+}
