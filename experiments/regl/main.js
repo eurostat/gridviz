@@ -23,13 +23,13 @@ const getMousePosition = event => {
     return pos;
 };
 
-canvas.addEventListener("wheel", event => {
+/* canvas.addEventListener("wheel", event => {
     event.preventDefault();
     mouse = getMousePosition(event);
     var direction = event.deltaY < 0 ? 1 : -1;
     zoomFactor = 1 + direction * 0.1;
     updateTransform();
-});
+}); */
 
 function scale(transform, scale, viewCenter1) {
     var inverted = mat3.create();
