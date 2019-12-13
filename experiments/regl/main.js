@@ -4,7 +4,12 @@ const csvURL = "../assets/csv/pop_1km_new.csv";
 const width = window.innerWidth;
 const height = window.innerHeight;
 const pointWidth = 1;
-const canvas = document.getElementById("c");
+
+// initialize regl
+createREGL({
+    // callback when regl is initialized
+    onDone: init,
+});
 
 const getMousePosition = event => {
     var canvas = event.currentTarget;
@@ -44,23 +49,23 @@ function scale(transform, scale, viewCenter1) {
     mat3.translate(transform, transform, [-modelShift[0], -modelShift[1]]); // correct for the shift
 }
 
+function map(a, p) {
+    return [a[0] * p[0] + a[3] * p[1] + a[6], a[1] * p[0] + a[4] * p[1] + a[6]];
+}
+
 var transform = mat3.create();
 function updateTransform() {
     scale(transform, zoomFactor, mouse);
 }
 
-// initialize regl
-createREGL({
-    // callback when regl is initialized
-    onDone: init,
-});
 
 function init(err, regl) {
+    console.log(regl);
     d3.csv(csvURL)
         .then(function (cells) {
             console.log("X; ", (parseInt(cells[1].X) / 10), "Y; ", (parseInt(cells[1].Y) / 10))
             points = cells.map(cell => ({
-                x: (parseInt(cell.X) / 10), //conversion to screen coordinates
+                x: (parseInt(cell.X) / 10), //TODO: conversion to screen coordinates
                 y: (parseInt(cell.Y) / 10),
                 color: valueToColor(cell.TOT_P),
             }));
