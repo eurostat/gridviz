@@ -17,7 +17,7 @@ const initializeCommands = (regl, commands) => {
   return initialized;
 };
 
-const networkGL = (graph, options) => {
+const gridGL = (graph, options) => {
   var nodes = {};
   var layout = forceLayout(graph, {});
 
@@ -70,7 +70,7 @@ const networkGL = (graph, options) => {
         nodes[a].pos.x,
         nodes[a].pos.y
       ]);
-      cmds["circle"]([
+      cmds["point"]([
         {
           points: points,
           color: [0, 0, 0, 1.0],
@@ -85,4 +85,4 @@ const networkGL = (graph, options) => {
   }
 };
 
-export default networkGL;
+export default gridGL;

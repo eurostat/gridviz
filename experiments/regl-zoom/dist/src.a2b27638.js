@@ -19529,7 +19529,7 @@ exports.vec4 = vec4;
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-},{"./common.js":"node_modules/gl-matrix/esm/common.js","./mat2.js":"node_modules/gl-matrix/esm/mat2.js","./mat2d.js":"node_modules/gl-matrix/esm/mat2d.js","./mat3.js":"node_modules/gl-matrix/esm/mat3.js","./mat4.js":"node_modules/gl-matrix/esm/mat4.js","./quat.js":"node_modules/gl-matrix/esm/quat.js","./quat2.js":"node_modules/gl-matrix/esm/quat2.js","./vec2.js":"node_modules/gl-matrix/esm/vec2.js","./vec3.js":"node_modules/gl-matrix/esm/vec3.js","./vec4.js":"node_modules/gl-matrix/esm/vec4.js"}],"src/network-gl/commands.js":[function(require,module,exports) {
+},{"./common.js":"node_modules/gl-matrix/esm/common.js","./mat2.js":"node_modules/gl-matrix/esm/mat2.js","./mat2d.js":"node_modules/gl-matrix/esm/mat2d.js","./mat3.js":"node_modules/gl-matrix/esm/mat3.js","./mat4.js":"node_modules/gl-matrix/esm/mat4.js","./quat.js":"node_modules/gl-matrix/esm/quat.js","./quat2.js":"node_modules/gl-matrix/esm/quat2.js","./vec2.js":"node_modules/gl-matrix/esm/vec2.js","./vec3.js":"node_modules/gl-matrix/esm/vec3.js","./vec4.js":"node_modules/gl-matrix/esm/vec4.js"}],"src/grid-gl/commands.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19537,10 +19537,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var drawCircles = function drawCircles(regl) {
+//webGL logic
+var drawPoints = function drawPoints(regl) {
   return {
+    // Shaders in regl are just strings.  You can use glslify or whatever you want
+    // to define them.  No need to manually create shader objects.
     frag: "\n      precision mediump float;\n      uniform vec4 color;\n      void main () {\n        float r = 0.0, delta = 0.0, alpha = 1.0;\n        vec2 cxy = 2.0 * gl_PointCoord - 1.0;\n        r = dot(cxy, cxy);\n        if (r > 1.0) {\n            discard;\n        }\n        gl_FragColor = color * alpha;\n      }",
-    vert: "\n      precision highp float;\n      attribute vec2 position;\n\n      uniform mat3 transform;\n      uniform float scale;\n      uniform vec2 mouse;\n      uniform int size;\n\n      uniform float pixelRatio;\n      uniform float stageWidth;\n      uniform float stageHeight;\n\n      vec2 normalizeCoords(vec2 position) {\n        float x = (position[0] + (stageWidth  / 2.0));\n        float y = (position[1] + (stageHeight / 2.0));\n\n        return vec2(\n            2.0 * ((x / stageWidth ) - 0.5),\n            2.0 * ((y / stageHeight) - 0.5)\n        );\n      }\n\n      void main () {\n        gl_PointSize = 10.0;\n        vec3 final = transform * vec3(normalizeCoords(position), 1);\n        gl_Position = vec4(final.xy, 0, 1);\n      }",
+    vert: "\n      precision highp float;\n      attribute vec2 position;\n\n      uniform mat3 transform;\n      uniform float scale;\n      uniform vec2 mouse;\n      uniform int size;\n\n      uniform float pixelRatio;\n      uniform float stageWidth;\n      uniform float stageHeight;\n\n\n\n      void main () {\n        gl_PointSize = 10.0;\n        vec3 final = transform * vec3(normalizeCoords(position), 1);\n        gl_Position = vec4(final.xy, 0, 1);\n      }",
+    // Here we define the vertex attributes for the above shader
     attributes: {
       // There will be a position value for each point
       // we pass in
@@ -19561,7 +19565,7 @@ var drawCircles = function drawCircles(regl) {
 };
 
 var cmds = {
-  circle: drawCircles
+  point: drawPoints
 };
 var _default = cmds;
 exports.default = _default;
@@ -26069,7 +26073,7 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./zoom":"node_modules/d3-zoom/src/zoom.js","./transform":"node_modules/d3-zoom/src/transform.js"}],"src/network-gl/index.js":[function(require,module,exports) {
+},{"./zoom":"node_modules/d3-zoom/src/zoom.js","./transform":"node_modules/d3-zoom/src/transform.js"}],"src/grid-gl/grid.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26107,7 +26111,7 @@ var initializeCommands = function initializeCommands(regl, commands) {
   return initialized;
 };
 
-var networkGL = function networkGL(graph, options) {
+var gridGL = function gridGL(graph, options) {
   var nodes = {};
   var layout = (0, _ngraph.default)(graph, {});
   graph.forEachNode(function (node) {
@@ -26153,7 +26157,7 @@ var networkGL = function networkGL(graph, options) {
       var points = Object.keys(nodes).map(function (a, i) {
         return [nodes[a].pos.x, nodes[a].pos.y];
       });
-      cmds["circle"]([{
+      cmds["point"]([{
         points: points,
         color: [0, 0, 0, 1.0],
         transform: transform
@@ -26166,9 +26170,9 @@ var networkGL = function networkGL(graph, options) {
   }
 };
 
-var _default = networkGL;
+var _default = gridGL;
 exports.default = _default;
-},{"ngraph.forcelayout":"node_modules/ngraph.forcelayout/index.js","ngraph.physics.simulator":"node_modules/ngraph.physics.simulator/index.js","regl":"node_modules/regl/dist/regl.js","gl-matrix":"node_modules/gl-matrix/esm/index.js","./commands":"src/network-gl/commands.js","d3-zoom":"node_modules/d3-zoom/src/index.js","d3-selection":"node_modules/d3-selection/src/index.js"}],"node_modules/ngraph.graph/node_modules/ngraph.events/index.js":[function(require,module,exports) {
+},{"ngraph.forcelayout":"node_modules/ngraph.forcelayout/index.js","ngraph.physics.simulator":"node_modules/ngraph.physics.simulator/index.js","regl":"node_modules/regl/dist/regl.js","gl-matrix":"node_modules/gl-matrix/esm/index.js","./commands":"src/grid-gl/commands.js","d3-zoom":"node_modules/d3-zoom/src/index.js","d3-selection":"node_modules/d3-selection/src/index.js"}],"node_modules/ngraph.graph/node_modules/ngraph.events/index.js":[function(require,module,exports) {
 module.exports = function(subject) {
   validateSubject(subject);
 
@@ -26864,32 +26868,31 @@ function makeLinkId(fromId, toId) {
 },{"ngraph.events":"node_modules/ngraph.graph/node_modules/ngraph.events/index.js"}],"src/index.js":[function(require,module,exports) {
 "use strict";
 
-var _networkGl = _interopRequireDefault(require("./network-gl"));
+var _grid = _interopRequireDefault(require("./grid-gl/grid"));
 
 var _ngraph = _interopRequireDefault(require("ngraph.graph"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var canvas = document.createElement("canvas");
-canvas.width = 400;
-canvas.height = 400;
-canvas.style.borderStyle = "solid";
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+/* canvas.style.borderStyle = "solid"; */
+
 document.body.appendChild(canvas);
 var graph = (0, _ngraph.default)();
 graph.beginUpdate();
-graph.addLink(0, 1);
-graph.addLink(1, 2);
-graph.addLink(2, 0);
-graph.addLink(3, 1);
-graph.addLink(4, 1);
-graph.addLink(4, 2);
-graph.addLink(5, 4);
+
+for (var y = 0; y < 2500; y++) {
+  graph.addLink(Math.random(), Math.random());
+}
+
 graph.endUpdate();
-var vis = (0, _networkGl.default)(graph, {
+var vis = (0, _grid.default)(graph, {
   canvas: canvas
 });
 vis.render();
-},{"./network-gl":"src/network-gl/index.js","ngraph.graph":"node_modules/ngraph.graph/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./grid-gl/grid":"src/grid-gl/grid.js","ngraph.graph":"node_modules/ngraph.graph/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -26917,7 +26920,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56754" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57932" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -1,5 +1,8 @@
-const drawCircles = regl => {
+//webGL logic
+const drawPoints = regl => {
   return {
+    // Shaders in regl are just strings.  You can use glslify or whatever you want
+    // to define them.  No need to manually create shader objects.
     frag: `
       precision mediump float;
       uniform vec4 color;
@@ -26,22 +29,14 @@ const drawCircles = regl => {
       uniform float stageWidth;
       uniform float stageHeight;
 
-      vec2 normalizeCoords(vec2 position) {
-        float x = (position[0] + (stageWidth  / 2.0));
-        float y = (position[1] + (stageHeight / 2.0));
 
-        return vec2(
-            2.0 * ((x / stageWidth ) - 0.5),
-            2.0 * ((y / stageHeight) - 0.5)
-        );
-      }
 
       void main () {
         gl_PointSize = 10.0;
         vec3 final = transform * vec3(normalizeCoords(position), 1);
         gl_Position = vec4(final.xy, 0, 1);
       }`,
-
+    // Here we define the vertex attributes for the above shader
     attributes: {
       // There will be a position value for each point
       // we pass in
@@ -55,7 +50,7 @@ const drawCircles = regl => {
       stageHeight: regl.context("drawingBufferHeight")
     },
 
-    count: function(context, props) {
+    count: function (context, props) {
       // set the count based on the number of points we have
       return props.points.length;
     },
@@ -65,7 +60,7 @@ const drawCircles = regl => {
 };
 
 const cmds = {
-  circle: drawCircles
+  point: drawPoints
 };
 
 export default cmds;
