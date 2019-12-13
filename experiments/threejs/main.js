@@ -1,21 +1,40 @@
 
 var THREE = require('three');
 var Stats = require("stats.js");
-/* require("./orbitControls"); */
+var d3 = require("d3");
+import { MapControls } from './controls/OrbitControls.js';
+/* var OrbitControls = require('three-orbit-controls')(THREE) */
 
-const width = window.innerWidth - 25;
-const height = window.innerHeight - 25;
-const point_size = 0.001;
-const near_plane = 1;
-const far_plane = 300;
+//threejs scene / camera
+const width = window.innerWidth;
+const height = window.innerHeight;
+const near_plane = 0.1;
+const far_plane = 150;
+const initial_camera_position = {
+    x: 0.9,
+    y: 0.9,
+    z: 10
+}
+const initial_camera_lookAt = new THREE.Vector3(0, 0, 0)
+
+//threejs point layer
+var pointCloud;
+var point_attenuation = false;
+var point_size = 0.06;
+
+//raycasting variables
+var mouse = new THREE.Vector2();
+var intersection = null;
+var threshold = 0.009;
 
 // Add canvas
 let renderer = new THREE.WebGLRenderer();
+renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(width, height);
 document.body.appendChild(renderer.domElement);
 
 // Add stats box
-stats = new Stats();
+var stats = new Stats();
 stats.dom.style.position = 'absolute';
 stats.dom.style.top = '0px';
 stats.dom.style.right = '0px'
@@ -23,41 +42,46 @@ document.body.appendChild(stats.dom);
 
 
 // Set up camera and scene
-/*     let camera = new THREE.OrthographicCamera(
-        45, //fov — Camera frustum vertical field of view.
-        width / height, //aspect — Camera frustum aspect ratio
-        near_plane, //near — Camera frustum near plane
-        far_plane//far — Camera frustum far plane
-    ); */
-var camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, 1, 1000);
+let camera = new THREE.PerspectiveCamera(
+    45, //fov — Camera frustum vertical field of view.
+    width / height, //aspect — Camera frustum aspect ratio
+    near_plane, //near — Camera frustum near plane
+    far_plane//far — Camera frustum far plane
+);
+/* var camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, near_plane, far_plane);
+ */
 
 
-// That's it. panZoom wil now listen to events from `container`. You can pan and
-// zoom with your mouse or fingers (on touch device)
-
-/* camera.position.set(0.9, 0.9, far_plane);
-camera.lookAt(new THREE.Vector3(0, 0, 0)); */
+camera.position.set(initial_camera_position.x, initial_camera_position.y, initial_camera_position.z);
+camera.position.normalize();
+camera.lookAt(initial_camera_lookAt);
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
 
+//for identifying points
+var raycaster = new THREE.Raycaster();
+raycaster.params.Points.threshold = threshold;
+
+document.addEventListener('click', onDocumentClick, false);
 
 // To turn on a map-like navigation:
-var createPanZoom = require('three.map.control');
-
-// We assume that three.js scene is hosted inside DOM element `container`
-var panZoom = createPanZoom(camera, renderer.domElement);
-
-/* controls = new THREE.OrbitControls(camera, renderer.domElement); */
+/* var createPanZoom = require('three.map.control');
+var panZoom = createPanZoom(camera, renderer.domElement); */
+//second attempt
+/* var controls = new MapControls(camera, renderer.domElement); */
 
 let pointsMaterial;
 
 var cells = [];
+//TODO use BufferGeometry() rather than Geometry()
+//see https://threejsfundamentals.org/threejs/lessons/threejs-custom-buffergeometry.html
 const pointsGeometry = new THREE.Geometry();
 const colors = [];
 
 showLoading();
 getCSV("../assets/csv/pop_1km_new.csv", data => {
     var csvArray = parseCSV(data);
+    //add geometries
     for (var i = 1; i < csvArray.length; i++) {
         let cell = csvArray[i];
         var x = (parseInt(cell[1]) / 100) - 35;
@@ -66,6 +90,7 @@ getCSV("../assets/csv/pop_1km_new.csv", data => {
         /*             var x = Math.random() * 100 + 0;
                     var y = Math.random() * 100 + 0; */
         const vertex = new THREE.Vector3(x, y, z);
+        vertex.userData = { "population": cell[2] };
         pointsGeometry.vertices.push(vertex);
         const color = new THREE.Color(valueToColor(cell[2]));
         colors.push(color);
@@ -77,13 +102,30 @@ getCSV("../assets/csv/pop_1km_new.csv", data => {
         size: point_size,
         // transparent: true,
         // blending: THREE.AdditiveBlending,
-        sizeAttenuation: true,
+        sizeAttenuation: point_attenuation,
         vertexColors: THREE.VertexColors,
     });
-    const points = new THREE.Points(pointsGeometry, pointsMaterial);
+    pointCloud = new THREE.Points(pointsGeometry, pointsMaterial);
+    pointCloud.geometry.boundingBox = null;
     const pointsContainer = new THREE.Object3D();
-    pointsContainer.add(points);
+    pointsContainer.add(pointCloud);
     scene.add(pointsContainer);
+
+    /*     var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
+        geometry.translate( 0, 0.5, 0 );
+        var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+        for ( var i = 0; i < 500; i ++ ) {
+            var mesh = new THREE.Mesh( geometry, material );
+            mesh.position.x = Math.random() * 1600 - 800;
+            mesh.position.y = 0;
+            mesh.position.z = Math.random() * 1600 - 800;
+            mesh.scale.x = 20;
+            mesh.scale.y = Math.random() * 80 + 10;
+            mesh.scale.z = 20;
+            mesh.updateMatrix();
+            mesh.matrixAutoUpdate = false;
+            scene.add( mesh );
+        } */
     hideLoading();
 });
 
@@ -108,7 +150,7 @@ function valueToColor(value) {
 };
 
 // Set up zoom behavior
-/* const zoom = d3.zoom()
+const zoom = d3.zoom()
     .scaleExtent([near_plane, far_plane])
     .wheelDelta(function wheelDelta() {
         // this inverts d3 zoom direction, which makes it the rith zoom direction for setting the camera
@@ -140,10 +182,10 @@ function valueToColor(value) {
                 const distance = (new_z - camera.position.z) / dir.z;
                 const pos = camera.position.clone().add(dir.multiplyScalar(distance));
 
-
+                let scale;
                 if (camera.position.z < 20) {
                     scale = (20 - camera.position.z) / camera.position.z;
-                    pointsMaterial.setValues({ size: point_size + 3 * scale });
+                    pointsMaterial.setValues({ size: point_size * scale });
                 } else if (camera.position.z >= 20 && pointsMaterial.size !== point_size) {
                     pointsMaterial.setValues({ size: point_size });
                 }
@@ -172,7 +214,7 @@ view.call(zoom);
 view.on('dblclick.zoom', null);
 
 // Sync d3 zoom with camera z position
-zoom.scaleTo(view, far_plane); */
+zoom.scaleTo(view, far_plane);
 
 
 // Three.js render loop
@@ -191,16 +233,27 @@ function getCurrentScale() {
     return currentScale
 }
 
-// Point generator function
-function phyllotaxis(radius) {
-    const theta = Math.PI * (3 - Math.sqrt(5));
-    return function (i) {
-        const r = radius * Math.sqrt(i), a = theta * i;
-        return [
-            width / 2 + r * Math.cos(a) - width / 2,
-            height / 2 + r * Math.sin(a) - height / 2
-        ];
-    };
+// Click event
+var newColor = new THREE.Color();
+newColor.setRGB(1, 1, 1);
+function onDocumentClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    //mouse over points raycaster
+    if (pointCloud) {
+        raycaster.setFromCamera(mouse, camera);
+        var intersections = raycaster.intersectObject(pointCloud, false);
+        intersection = (intersections.length) > 0 ? intersections[0] : null;
+        //highlight logic
+        if (intersection !== null) {
+            //change colour of identified point
+            let index = intersection.index;
+            pointCloud.geometry.colors[index] = newColor;
+            pointCloud.geometry.colorsNeedUpdate = true;
+        }
+    }
 }
 
 function showLoading() {

@@ -1,4 +1,4 @@
-var THREE = require("three");
+
 /**
  * @author qiao / https://github.com/qiao
  * @author mrdoob / http://mrdoob.com
@@ -775,20 +775,20 @@ THREE.OrbitControls = function (object, domElement) {
 
     /*         https://stackoverflow.com/questions/39145687/zooming-based-on-the-position-of-cursor-in-mousewheel/44195085
      *//*     function onMouseWheel(event) {
-         var factor = 15;
-         var mX = (event.clientX / window.innerWidth) * 2 - 1;
-         var mY = -(event.clientY / window.innerHeight) * 2 + 1;
-         var vector = new THREE.Vector3(mX, mY, 0.1);
-         vector.unproject(camera);
-         vector.sub(camera.position);
-         if (event.deltaY < 0) {
-             camera.position.addVectors(camera.position, vector.setLength(factor));
-             controls.target.addVectors(controls.target, vector.setLength(factor));
-         } else {
-             camera.position.subVectors(camera.position, vector.setLength(factor));
-             controls.target.subVectors(controls.target, vector.setLength(factor));
-         }
-     }; */
+        var factor = 15;
+        var mX = (event.clientX / window.innerWidth) * 2 - 1;
+        var mY = -(event.clientY / window.innerHeight) * 2 + 1;
+        var vector = new THREE.Vector3(mX, mY, 0.1);
+        vector.unproject(camera);
+        vector.sub(camera.position);
+        if (event.deltaY < 0) {
+            camera.position.addVectors(camera.position, vector.setLength(factor));
+            controls.target.addVectors(controls.target, vector.setLength(factor));
+        } else {
+            camera.position.subVectors(camera.position, vector.setLength(factor));
+            controls.target.subVectors(controls.target, vector.setLength(factor));
+        }
+    }; */
 
     function onKeyDown(event) {
 
