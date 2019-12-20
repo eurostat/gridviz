@@ -1,0 +1,19 @@
+<ux-layout-app-shell headerAppFullName="Grid Stat" headerAppShortName="App"
+    [headerUserInfos]="(userState | async)?.fullName" (headerLanguageChanged)="onLanguageChanged($event)"
+    [navBarNotificationLinks]="notificationLinks" [navBarTopMenuLinks]="menuLinks" footerAppVersion="@eui.version"
+    footerAppReleaseDate="@timestamp@" [isNavBarMuted]="true">
+
+    <uxAppShellNavBarItemsContent>
+        <ux-layout-nav-bar-action-item iconClass="fa fa-info-circle">
+            <ul>
+                <li><a href="http://www.google.be" target="_blank">About</a></li>
+                <li><a>Contact</a></li>
+            </ul>
+            <ul>
+                <li><a>Legal notice</a></li>
+                <li><a>...</a></li>
+            </ul>
+        </ux-layout-nav-bar-action-item>
+    </uxAppShellNavBarItemsContent>
+
+</ux-layout-app-shell>

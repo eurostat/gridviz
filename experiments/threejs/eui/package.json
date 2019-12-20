@@ -1,0 +1,49 @@
+{
+    "name": "eui-angular-app",
+    "version": "7.14.4",
+    "license": "EUPL-1.1",
+    "scripts": {
+        "ng": "ng",
+        "e2e": "ng e2e",
+        "stylelint": "stylelint \"src/**/*.scss\"",
+        "tslint": "tslint \"src/**/*.ts\"",
+        "clean": "rimraf out-tsc dist packages/**/dist/** packages/**/out-tsc/** packages/**/src/lib/**/*.js packages/**/src/lib/**/*.js.map",
+        "start-mock-server-mean": "nodemon --ext js --watch ./mock/mean ./mock/mean/server.js",
+        "start-mock-server": "nodemon --ext js --watch ./mock/json ./mock/json/server.js",
+        "start-serve": "eui-scripts serve-app --configuration=proxy-mock",
+        "start": "npm run clean && npm-run-all --parallel start-mock-server start-serve",
+        "start-mean": "npm run clean && npm-run-all --parallel start-mock-server-mean start-serve",
+        "start-proxy": "npm run clean && eui-scripts serve-app --configuration=proxy",
+        "start-openid": "npm run clean && eui-scripts serve-app --configuration=local-openid",
+        "build": "eui-scripts build-app",
+        "build-dev": "eui-scripts build-app --configuration=dev",
+        "build-prod": "eui-scripts build-app --configuration=production",
+        "build-prod-skip-test": "eui-scripts build-app --configuration=production --extraWebpackConfig --skipTest",
+        "build-prod-ci": "ncp tsconfig-ci.json tsconfig.json && npm run build-prod",
+        "build-prod-stats": "eui-scripts build-app --configuration=production --extraWebpackConfig --statsJson",
+        "pkg:init": "eui-cli -m",
+        "pkg:clean": "eui-scripts clean-package",
+        "pkg:clean-all": "eui-scripts clean-all",
+        "pkg:test": "eui-scripts test-package",
+        "pkg:build": "eui-scripts build-package",
+        "pkg:build-deps": "eui-scripts build-deps",
+        "pkg:build-all": "eui-scripts build-all",
+        "pkg:build-element": "eui-scripts build-element",
+        "build-prod:all": "npm run pkg:build-all && npm run build",
+        "pkg:publish": "eui-scripts publish",
+        "pkg:publish-all": "eui-scripts publish-all",
+        "generate-changelog": "eui-scripts generate-changelog"
+    },
+    "private": true,
+    "dependencies": {
+        "@eui/deps-base": "7.14.4",
+        "stats.js": "^0.17.0",
+        "three": "^0.111.0",
+        "typescript": "^3.7.3"
+    },
+    "devDependencies": {
+        "@types/node": "~8.9.4",
+        "@types/offscreencanvas": "^2019.6.0",
+        "@types/webgl2": "0.0.5"
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "openIdConnect": {
+        "enabled": true,
+        "stripIdTokenFromLocation": true,
+        "maximumRequestRetries": 1,
+        "metadataUrl": "https://webgate.ec.europa.eu/cas/oauth2/.well-known/openid-configuration",
+        "spaClientId": "your-webapp-EU-Login-PROD-client-ID-here",
+        "spaRedirectUrl": "https://your-production-server-url/",
+        "apiGatewayAccessTokenUrl": "https://api.tech.ec.europa.eu/gateway/token",
+        "apiGatewayAccessTokenAudienceId": "DFlp4emQ6jCLjNw8U7ko18zNjb9bwJ3ACrnP89iPsVv4zcChOEVRPHCT88Q7jPpNGCFa0hJEtV77rBj6L1XvOt-Jj71zxYb8yr7ujzQt669zSG",
+        "apiGatewayConsumerKey": "API-Gateway-production-URL-consumer-key-here",
+        "apiGatewayServices": {
+        },
+        "services": {
+        }
+    }
+}

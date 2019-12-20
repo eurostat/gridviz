@@ -1,0 +1,29 @@
+{
+    "paths": {
+        "packages": "packages"
+    },
+    "npm": {
+        "registry": {
+            "default": {
+                "uri": "https://webgate.ec.europa.eu/CITnet/nexus/repository/npm-YOUR_DG/"
+            },
+            "aliases": {
+                "citnet": {
+                    "uri": "https://webgate.ec.europa.eu/CITnet/nexus/repository/npm-YOUR_DG/"
+                },
+                "verdaccio": {
+                    "uri": "http://localhost:4873/",
+                    "inPublishAll": false
+                }
+            }
+        }
+    },
+    "projects": {
+        "app": {
+            "name": "app",
+            "folder": "."
+        }
+    },
+    "packages": {
+    }
+}

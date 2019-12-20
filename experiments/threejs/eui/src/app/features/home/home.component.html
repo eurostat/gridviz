@@ -1,0 +1,22 @@
+<div id="page-title">
+    <h2>{{ 'page.home.title' | translate }}</h2>
+</div>
+
+<ux-panel label="Panel">
+    Panel content
+</ux-panel>
+
+<ux-action-box titleLabel="Action box">
+    <ng-template uxTemplate="actions-content">
+        <div class="p-3">Custom action box content</div>
+    </ng-template>
+
+    <ux-panel label="Container">
+        <p>
+            this is the container related to the <strong>ux-action-box</strong> component
+        </p>
+    </ux-panel>
+</ux-action-box>
+
+
+<gisco-viewer></gisco-viewer>

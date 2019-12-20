@@ -1,0 +1,24 @@
+{
+  "extends":"stylelint-config-standard",
+  "plugins": [
+    "stylelint-order",
+    "stylelint-scss"
+  ],
+  "rules": {
+	"order/order": [
+	    "custom-properties",
+		"declarations"
+	],
+	"order/properties-alphabetical-order": true,
+
+    "at-rule-empty-line-before": "never",
+    "no-descending-specificity": null,
+    "no-duplicate-selectors": null,
+    "font-family-no-missing-generic-family-keyword": null,
+    "indentation": 4,
+    "selector-type-no-unknown": null,
+    "at-rule-no-unknown": [true, {
+        ignoreAtRules: ['at-root', 'content', 'each', 'else', 'extend', 'for', 'function', 'if', 'include', 'mixin', 'return', 'warn', 'while']
+    }]
+  }
+}
