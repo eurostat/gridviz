@@ -3,77 +3,40 @@ var THREE = require('three');
 var Stats = require("stats.js");
 var d3 = require("d3");
 import { MapControls } from './controls/OrbitControls.js';
+var viewer = require("./viewer.js");
 /* var OrbitControls = require('three-orbit-controls')(THREE) */
-
-//threejs scene / camera
-const width = window.innerWidth;
-const height = window.innerHeight;
-const near_plane = 0.1;
-const far_plane = 150;
-const initial_camera_position = {
-    x: 0.9,
-    y: 0.9,
-    z: 10
-}
-const initial_camera_lookAt = new THREE.Vector3(0, 0, 0)
-
-//threejs point layer
 var pointCloud;
-var point_attenuation = false;
-var point_size = 0.06;
-
 //raycasting variables
 var mouse = new THREE.Vector2();
 var intersection = null;
-var threshold = 0.009;
+//viewer constructor options
+const viewerOptions = {
+    pixelRatio: window.devicePixelRatio,
+    width : window.innerWidth,
+    height : window.innerHeight,
+    near_plane : 0.1,
+    far_plane : 150,
+    initial_camera_position: {
+        x: 0.9,
+        y: 0.9,
+        z: 10,
+    },
+    initial_camera_lookAt: new THREE.Vector3(0, 0, 0),
+    field_of_view: 45,
+    raycaster_threshold: 0.009,
+    statsBox: true,
+    point_size: 0.009,
+    point_attenuation: false
+}
 
-// Add canvas
-let renderer = new THREE.WebGLRenderer();
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(width, height);
-document.body.appendChild(renderer.domElement);
-
-// Add stats box
-var stats = new Stats();
-stats.dom.style.position = 'absolute';
-stats.dom.style.top = '0px';
-stats.dom.style.right = '0px'
-document.body.appendChild(stats.dom);
-
-
-// Set up camera and scene
-let camera = new THREE.PerspectiveCamera(
-    45, //fov — Camera frustum vertical field of view.
-    width / height, //aspect — Camera frustum aspect ratio
-    near_plane, //near — Camera frustum near plane
-    far_plane//far — Camera frustum far plane
-);
-/* var camera = new THREE.OrthographicCamera(width / - 2, width / 2, height / 2, height / - 2, near_plane, far_plane);
- */
-
-
-camera.position.set(initial_camera_position.x, initial_camera_position.y, initial_camera_position.z);
-camera.position.normalize();
-camera.lookAt(initial_camera_lookAt);
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000);
-
-//for identifying points
-var raycaster = new THREE.Raycaster();
-raycaster.params.Points.threshold = threshold;
+var viewer = new viewer.default(viewerOptions);
 
 document.addEventListener('click', onDocumentClick, false);
-
-// To turn on a map-like navigation:
-/* var createPanZoom = require('three.map.control');
-var panZoom = createPanZoom(camera, renderer.domElement); */
-//second attempt
-/* var controls = new MapControls(camera, renderer.domElement); */
 
 let pointsMaterial;
 
 var cells = [];
-//TODO use BufferGeometry() rather than Geometry()
+//TODO use BufferGeometry() rather than Geometry()?
 //see https://threejsfundamentals.org/threejs/lessons/threejs-custom-buffergeometry.html
 const pointsGeometry = new THREE.Geometry();
 const colors = [];
@@ -87,8 +50,6 @@ getCSV("../assets/csv/pop_2km.csv", data => {
         var x = (parseInt(cell[0]) / 100) - 35;
         var y = (parseInt(cell[1]) / 100) - 35;
         var z = 0;
-        /*             var x = Math.random() * 100 + 0;
-                    var y = Math.random() * 100 + 0; */
         const vertex = new THREE.Vector3(x, y, z);
         vertex.userData = { "population": cell[2] };
         pointsGeometry.vertices.push(vertex);
@@ -99,17 +60,17 @@ getCSV("../assets/csv/pop_2km.csv", data => {
     pointsGeometry.colors = colors;
     pointsMaterial = new THREE.PointsMaterial({
         // map: spriteMap,
-        size: point_size,
+        size: viewerOptions.point_size,
         // transparent: true,
         // blending: THREE.AdditiveBlending,
-        sizeAttenuation: point_attenuation,
+        sizeAttenuation: viewerOptions.point_attenuation,
         vertexColors: THREE.VertexColors,
     });
     pointCloud = new THREE.Points(pointsGeometry, pointsMaterial);
     pointCloud.geometry.boundingBox = null;
     const pointsContainer = new THREE.Object3D();
     pointsContainer.add(pointCloud);
-    scene.add(pointsContainer);
+    viewer.scene.add(pointsContainer);
 
     /*     var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
         geometry.translate( 0, 0.5, 0 );
@@ -141,17 +102,11 @@ function valueToColor(value) {
     } else if (value > 0) {
         return 0x005cff; //blue
     }
-    /*         var value = value / 1400000;
-            value = Math.pow(value, 0.2);
-            //see https://github.com/d3/d3-scale-chromatic
-            // https://npmdoc.github.io/node-npmdoc-d3-scale/build/apidoc.html
-            let rgb = d3.interpolateTurbo(value);
-            return rgb; */
 };
 
 // Set up zoom behavior
 const zoom = d3.zoom()
-    .scaleExtent([near_plane, far_plane])
+    .scaleExtent([viewerOptions.near_plane, viewerOptions.far_plane])
     .wheelDelta(function wheelDelta() {
         // this inverts d3 zoom direction, which makes it the rith zoom direction for setting the camera
         return d3.event.deltaY * (d3.event.deltaMode ? 120 : 1) / 500;
@@ -163,7 +118,7 @@ const zoom = d3.zoom()
             // Get z from D3
             const new_z = event.transform.k;
 
-            if (new_z !== camera.position.z) {
+            if (new_z !== viewer.camera.position.z) {
 
                 // Handle a zoom event
                 const { clientX, clientY } = event.sourceEvent;
@@ -173,63 +128,63 @@ const zoom = d3.zoom()
                 // zoom level.
                 // Code from WestLangley https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z/13091694#13091694
                 const vector = new THREE.Vector3(
-                    clientX / width * 2 - 1,
-                    - (clientY / height) * 2 + 1,
+                    clientX / viewerOptions.width * 2 - 1,
+                    - (clientY / viewerOptions.height) * 2 + 1,
                     1
                 );
-                vector.unproject(camera);
-                const dir = vector.sub(camera.position).normalize();
-                const distance = (new_z - camera.position.z) / dir.z;
-                const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+                vector.unproject(viewer.camera);
+                const dir = vector.sub(viewer.camera.position).normalize();
+                const distance = (new_z - viewer.camera.position.z) / dir.z;
+                const pos = viewer.camera.position.clone().add(dir.multiplyScalar(distance));
 
                 let scale;
-                if (camera.position.z < 20) {
-                    scale = (20 - camera.position.z) / camera.position.z;
-                    pointsMaterial.setValues({ size: point_size * scale });
-                } else if (camera.position.z >= 20 && pointsMaterial.size !== point_size) {
-                    pointsMaterial.setValues({ size: point_size });
+                if (viewer.camera.position.z < 20) {
+                    scale = (20 - viewer.camera.position.z) / viewer.camera.position.z;
+                    pointsMaterial.setValues({ size: viewerOptions.point_size * scale });
+                } else if (viewer.camera.position.z >= 20 && pointsMaterial.size !== viewerOptions.point_size) {
+                    pointsMaterial.setValues({ size: viewerOptions.point_size });
                 }
 
-                // Set the camera to new coordinates
-                camera.position.set(pos.x, pos.y, new_z);
+                // Set the viewer.camera to new coordinates
+                viewer.camera.position.set(pos.x, pos.y, new_z);
 
             } else {
 
                 // Handle panning
                 const { movementX, movementY } = event.sourceEvent;
 
-                // Adjust mouse movement by current scale and set camera
+                // Adjust mouse movement by current scale and set viewer.camera
                 const current_scale = getCurrentScale();
-                camera.position.set(camera.position.x - movementX / current_scale, camera.position.y +
-                    movementY / current_scale, camera.position.z);
+                viewer.camera.position.set(viewer.camera.position.x - movementX / current_scale, viewer.camera.position.y +
+                    movementY / current_scale, viewer.camera.position.z);
             }
         }
     });
 
 // Add zoom listener
-const view = d3.select(renderer.domElement);
+const view = d3.select(viewer.renderer.domElement);
 view.call(zoom);
 
 // Disable double click to zoom because I'm not handling it in Three.js
 view.on('dblclick.zoom', null);
 
 // Sync d3 zoom with camera z position
-zoom.scaleTo(view, far_plane);
+zoom.scaleTo(view, viewerOptions.far_plane);
 
 
 // Three.js render loop
 function animate() {
     requestAnimationFrame(animate);
-    renderer.render(scene, camera);
-    stats.update();
+    viewer.renderer.render(viewer.scene, viewer.camera);
+    viewer.stats.update();
 }
 animate();
 
 // From https://github.com/anvaka/three.map.control, used for panning
 function getCurrentScale() {
-    var vFOV = camera.fov * Math.PI / 180
-    var scale_height = 2 * Math.tan(vFOV / 2) * camera.position.z
-    var currentScale = height / scale_height
+    var vFOV = viewer.camera.fov * Math.PI / 180;
+    var scale_height = 2 * Math.tan(vFOV / 2) * viewer.camera.position.z;
+    var currentScale = viewerOptions.height / scale_height;
     return currentScale
 }
 
@@ -243,8 +198,8 @@ function onDocumentClick(event) {
     mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
     //mouse over points raycaster
     if (pointCloud) {
-        raycaster.setFromCamera(mouse, camera);
-        var intersections = raycaster.intersectObject(pointCloud, false);
+        viewer.raycaster.setFromCamera(mouse, viewer.camera);
+        var intersections = viewer.raycaster.intersectObject(pointCloud, false);
         intersection = (intersections.length) > 0 ? intersections[0] : null;
         //highlight logic
         if (intersection !== null) {
