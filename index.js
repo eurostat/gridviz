@@ -12,11 +12,19 @@ const z = 2;
 const tileSize = Math.pow(2, 8 - z);
 
 //specifications of the grid data service
-var cellSize = "2km";
+var cellSize = "5km";
 const gridServiceBaseURL = globals.BASE_URL + globals.TILESETS[grid];
 const res = 5000;
-const origin = { x: 0, y: 0 };
-const tileFrameLimits = { xMin: 0, xMax: z * 10, yMin: 0, yMax: z * 10 };
+const origin = {
+  x: 0,
+  y: 0
+};
+const tileFrameLimits = {
+  xMin: 0,
+  xMax: z * 10,
+  yMin: 0,
+  yMax: z * 10
+};
 
 //create application
 if (!PIXI.utils.isWebGLSupported()) PIXI = require("pixi.js-legacy");
@@ -57,13 +65,13 @@ viewport
 const tileCache = {
   cache: {},
   //retrieve a tile from its position in the tile structure
-  getTile: function(z, x, y) {
+  getTile: function (z, x, y) {
     if (!this.cache[z]) this.cache[z] = {};
     if (!this.cache[z][x]) this.cache[z][x] = {};
     return this.cache[z][x][y];
   },
   //add a tile to the cache, once received
-  store: function(z, x, y, tile) {
+  store: function (z, x, y, tile) {
     if (!this.cache[z]) this.cache[z] = {};
     if (!this.cache[z][x]) this.cache[z][x] = {};
     this.cache[z][x][y] = tile;
@@ -75,7 +83,7 @@ let graphicsPool = [];
 
 //value to color
 //TODO decompose into 'value to class' function and 'class to style'. Use d3 for that
-var valueToColor = function(value) {
+var valueToColor = function (value) {
   var t = value / 1400000;
   t = Math.pow(t, 0.2);
   if (t > 1) console.log(value);
@@ -86,7 +94,7 @@ var valueToColor = function(value) {
 };
 
 //draw a tile
-const drawTile = function(tile) {
+const drawTile = function (tile) {
   //use one graphics per tile
   let gr = new PIXI.Graphics();
 
@@ -108,7 +116,8 @@ const drawTile = function(tile) {
       gr.lineStyle(0);
       gr.beginFill(fcol, 1);
       /*             gr.drawRect(cell.x, cell.y, 1, 1);
-       */ gr.drawRect(dx + cell.x * res, -cell.y * res - dy, res, res);
+       */
+      gr.drawRect(dx + cell.x * res, -cell.y * res - dy, res, res);
       //TODO find why this does not work !
       //see https://pixijs.io/examples/#/graphics/simple.js
       //see https://codingthesmartway.com/async-programming-with-javascript-callbacks-promises-and-async-await/
@@ -121,7 +130,7 @@ const drawTile = function(tile) {
   graphicsPool.push(gr);
 };
 
-var refresh = function(clear) {
+var refresh = function (clear) {
   if (clear) {
     viewport.removeChildren();
     //destroy graphics to prevent memory leak
@@ -153,21 +162,25 @@ var refresh = function(clear) {
       }
 
       //get the tile
-      (function(x, y, z) {
+      (function (x, y, z) {
         //tag tile as being loaded in the cache
         tileCache.store(z, x, y, "loading");
         //tile http request
         d3.csv(gridServiceBaseURL + z + "/" + x + "/" + y + ".csv")
           //.row(function (d) { return { x: +d.x, y: +d.y, val: +d.val }; })
-          .then(function(cells) {
+          .then(function (cells) {
             //make tile
-            var tile = { x: x, y: y, cells: cells };
+            var tile = {
+              x: x,
+              y: y,
+              cells: cells
+            };
             //store tile in cache
             tileCache.store(z, x, y, tile);
             //draw tile
             drawTile(tile);
           })
-          .catch(function(error) {
+          .catch(function (error) {
             //no tile was found: keep that info in the cache to avoid asking again
             tileCache.store(z, x, y, "none");
           });

@@ -154,23 +154,23 @@ function mapLayout(points, width, height, cellsData) {
     var extentGeoJson = {
       type: "LineString",
       coordinates: [
-        [lngExtent[0], latExtent[0]],
-        [lngExtent[1], latExtent[1]]
+        [lngExtent[0] * 1000, latExtent[0] * 1000],
+        [lngExtent[1] * 1000, latExtent[1] * 1000]
       ]
     };
     /* var projection = d3.geoMercator().fitSize([width, height], extentGeoJson); */
     //TODO: project from EPSG to webgl screen coords
     var projection = d3
-      .geoTransverseMercator()
-      .fitSize([width, height], extentGeoJson);
+      .geoAzimuthalEqualAreaRaw()
+    //.fitSize([width, height], extentGeoJson);
     data.forEach(function (d, i) {
       var cell = cellsData[i];
-      /*       var location = projection([cell.x, cell.y]);
-            d.x = location[0];
-            d.y = location[1]; */
+      var location = projection([cell.x * 1000, cell.y * 1000]);
+      d.x = location[0];
+      d.y = location[1];
 
-      d.x = (parseInt(cell.y) / 5); //convert & center coords
-      d.y = ((parseInt(cell.x) / 5) * -1) + height; //invert the y coordinates and add height for centering
+      //d.x = (parseInt(cell.y) / 3); //convert & center coords
+      //d.y = ((parseInt(cell.x) / 3) * -1) + height; //invert the y coordinates and add height for centering
     });
   }
   projectData(points);

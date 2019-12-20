@@ -1,14 +1,14 @@
 const width = window.innerWidth;
 const height = window.innerHeight;
-var numPoints = 100000;
-var pointWidth = 3;
+var numPoints = 50000;
+var pointWidth = 1.5;
 const pointMargin = 1;
 var duration = 5000;
 var delayByIndex;
 var maxDuration; // include max delay in here
 var delayAtEnd = 0; // how long to stay at a final frame before animating again (in seconds)
 imgURL = "image.json";
-csvURL = "../../assets/csv/pop_5km.csv";
+csvURL = "../../assets/csv/pop_10km.csv";
 
 function main(regl, cellsData, imgData) {
   const toMap = points => mapLayout(points, width, height, cellsData);
@@ -215,7 +215,7 @@ function main(regl, cellsData, imgData) {
     if (currentLayout === 0) {
       pointWidth = 3;
     } else {
-      pointWidth = 2;
+      pointWidth = 1.5;
     }
 
     // copy layout x y to end positions
@@ -304,6 +304,7 @@ loadData(width, height).then(({
 }) => {
   console.log('data has loaded. initializing regl...');
   console.log("number of cells in csv file:", cellsData.length); //toPhoto will throw an error if there are less pixels than numPoints
+  console.log("number of points in image file:", imgData.length); //toPhoto will throw an error if there are less pixels than numPoints
   delayByIndex = 500 / numPoints;
   maxDuration = duration + delayByIndex * numPoints;
 

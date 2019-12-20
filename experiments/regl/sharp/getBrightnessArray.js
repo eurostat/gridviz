@@ -5,7 +5,7 @@ const convert = require("color-convert");
 
 var metadata = null; //input image metadata
 var desiredRes = 100000; //desired resolution (used for downsampling / upsampling)
-var inputImgURL = "input/eurostat_upscaled.png"; //input image URL
+var inputImgURL = "input/test.png"; //input image URL
 var outputImgURL = "../animated/image.json";
 
 sharp(inputImgURL)
