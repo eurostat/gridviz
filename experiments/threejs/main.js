@@ -79,13 +79,13 @@ const pointsGeometry = new THREE.Geometry();
 const colors = [];
 
 showLoading();
-getCSV("../assets/csv/pop_1km_new.csv", data => {
+getCSV("../assets/csv/pop_2km.csv", data => {
     var csvArray = parseCSV(data);
     //add geometries
     for (var i = 1; i < csvArray.length; i++) {
         let cell = csvArray[i];
-        var x = (parseInt(cell[1]) / 100) - 35;
-        var y = (parseInt(cell[0]) / 100) - 35;
+        var x = (parseInt(cell[0]) / 100) - 35;
+        var y = (parseInt(cell[1]) / 100) - 35;
         var z = 0;
         /*             var x = Math.random() * 100 + 0;
                     var y = Math.random() * 100 + 0; */

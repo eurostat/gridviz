@@ -78,8 +78,8 @@ function loadData(width, height) {
           return {
             value: d.value,
             class: cellClass,
-            y: +d.x,
-            x: +d.y
+            y: +d.y,
+            x: +d.x
           };
         },
         args[1]
@@ -161,16 +161,16 @@ function mapLayout(points, width, height, cellsData) {
     /* var projection = d3.geoMercator().fitSize([width, height], extentGeoJson); */
     //TODO: project from EPSG to webgl screen coords
     var projection = d3
-      .geoAzimuthalEqualAreaRaw()
+    /*       .geoAzimuthalEqualArea() */
     //.fitSize([width, height], extentGeoJson);
     data.forEach(function (d, i) {
       var cell = cellsData[i];
-      var location = projection([cell.x * 1000, cell.y * 1000]);
-      d.x = location[0];
-      d.y = location[1];
+      /*       var location = projection([cell.x * 1000, cell.y * 1000]); */
+      /*       d.x = location[0];
+            d.y = location[1]; */
 
-      //d.x = (parseInt(cell.y) / 3); //convert & center coords
-      //d.y = ((parseInt(cell.x) / 3) * -1) + height; //invert the y coordinates and add height for centering
+      d.x = (parseInt(cell.x) / 3); //convert & center coords
+      d.y = ((parseInt(cell.y) / 3) * -1) + height; //invert the y coordinates and add height for centering
     });
   }
   projectData(points);

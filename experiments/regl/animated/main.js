@@ -1,14 +1,16 @@
 const width = window.innerWidth;
 const height = window.innerHeight;
-var numPoints = 50000;
-var pointWidth = 1.5;
+var numPoints = 166000;
+var pointWidth = 1;
 const pointMargin = 1;
 var duration = 5000;
 var delayByIndex;
 var maxDuration; // include max delay in here
 var delayAtEnd = 0; // how long to stay at a final frame before animating again (in seconds)
+var pointWidths = [1, 1, 2, 2]; //in order of layouts
 imgURL = "image.json";
-csvURL = "../../assets/csv/pop_10km.csv";
+csvURL = "../../assets/csv/pop_5km.csv";
+
 
 function main(regl, cellsData, imgData) {
   const toMap = points => mapLayout(points, width, height, cellsData);
@@ -31,9 +33,9 @@ function main(regl, cellsData, imgData) {
       d.color = [0, 0, 0];
     });
   };
-
+  const layouts = [toPhyllotaxis, toMap, toBars, toArea]; //order of animations
   /*   const layouts = [toPhyllotaxis, toMap, toArea, toBars, toPhoto, toBlack]; */
-  const layouts = [toPhoto, toMap, toBars, toArea];
+
   let currentLayout = 0;
 
   // wrap d3 color scales so they produce vec3s with values 0-1
@@ -211,12 +213,9 @@ function main(regl, cellsData, imgData) {
     // layout points
     layout(points);
 
-    //change point width according to 
-    if (currentLayout === 0) {
-      pointWidth = 3;
-    } else {
-      pointWidth = 1.5;
-    }
+    //change point width according to layout
+    pointWidth = pointWidths[currentLayout];
+
 
     // copy layout x y to end positions
     const colorScale = colorScales[currentColorScale];
