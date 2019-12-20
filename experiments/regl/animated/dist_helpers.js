@@ -3,6 +3,7 @@ function toVectorColor(colorStr) {
   return [rgb.r / 255, rgb.g / 255, rgb.b / 255];
 }
 
+//it appears that for this to work the image has to be "width":365,"height":274 and have the same amount of pixels as numPoints
 function expandImageData(compressed, width, height) {
   var imgAspect = compressed.width / compressed.height;
   var scaledWidth = width;
@@ -18,6 +19,7 @@ function expandImageData(compressed, width, height) {
     .range([yTranslate, scaledHeight + yTranslate]);
   var hue = 205;
   var saturation = 0.74;
+  //each array value is a brightness score (L value of HSL)
   var points = compressed.points.map(function (d, i) {
     return {
       x: xScale(Math.round(i % compressed.width)),
@@ -84,8 +86,8 @@ function loadData(width, height) {
       );
     };
     d3.queue()
-      .defer(cellsCsv, "../../assets/csv/pop_5km.csv")
-      .defer(d3.json, "img.json")
+      .defer(cellsCsv, csvURL)
+      .defer(d3.json, imgURL)
       .await(function (err, cellsData, imgData) {
         if (err) {
           console.error("Something went wrong loading data", err);
@@ -273,6 +275,7 @@ function swarmLayout(points, width, height, cellsData) {
 }
 
 function randomLayout(points, width, height, cellsData) {
+  mapLayout(points, width, height, cellsData);
   points.forEach(function (d, i) {
     d.y = Math.random() * height;
     d.x = Math.random() * width;

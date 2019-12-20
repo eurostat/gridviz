@@ -1,14 +1,16 @@
 const width = window.innerWidth;
 const height = window.innerHeight;
+var numPoints = 100000;
+var pointWidth = 3;
+const pointMargin = 1;
+var duration = 5000;
+var delayByIndex;
+var maxDuration; // include max delay in here
+var delayAtEnd = 0; // how long to stay at a final frame before animating again (in seconds)
+imgURL = "image.json";
+csvURL = "../../assets/csv/pop_5km.csv";
 
 function main(regl, cellsData, imgData) {
-  const numPoints = 100000;
-  const pointWidth = 2;
-  const pointMargin = 1;
-  var duration = 1500;
-  const delayByIndex = 500 / numPoints;
-  const maxDuration = duration + delayByIndex * numPoints; // include max delay in here
-
   const toMap = points => mapLayout(points, width, height, cellsData);
   const toBars = points => barsLayout(points, width, height, cellsData);
   const toSwarm = points => swarmLayout(points, width, height, cellsData);
@@ -31,7 +33,7 @@ function main(regl, cellsData, imgData) {
   };
 
   /*   const layouts = [toPhyllotaxis, toMap, toArea, toBars, toPhoto, toBlack]; */
-  const layouts = [toRandom, toMap, toBars];
+  const layouts = [toPhoto, toMap, toBars, toArea];
   let currentLayout = 0;
 
   // wrap d3 color scales so they produce vec3s with values 0-1
@@ -175,7 +177,6 @@ function main(regl, cellsData, imgData) {
         delayByIndex: regl.prop('delayByIndex'),
         duration: regl.prop('duration'),
         numPoints: numPoints,
-        rotation: [0, 1],
         // animationRadius: 0,// 15.0,
         // tick: (reglprops) => { // increase multiplier for faster animation speed
         // 	// console.log(reglprops);
@@ -209,6 +210,13 @@ function main(regl, cellsData, imgData) {
 
     // layout points
     layout(points);
+
+    //change point width according to 
+    if (currentLayout === 0) {
+      pointWidth = 3;
+    } else {
+      pointWidth = 2;
+    }
 
     // copy layout x y to end positions
     const colorScale = colorScales[currentColorScale];
@@ -252,8 +260,7 @@ function main(regl, cellsData, imgData) {
         startTime,
       });
 
-      // how long to stay at a final frame before animating again (in seconds)
-      const delayAtEnd = 3;
+
 
       // if we have exceeded the maximum duration, move on to the next animation
       if (time - startTime > maxDuration / 1000 + delayAtEnd) {
@@ -296,6 +303,9 @@ loadData(width, height).then(({
   imgData
 }) => {
   console.log('data has loaded. initializing regl...');
+  console.log("number of cells in csv file:", cellsData.length); //toPhoto will throw an error if there are less pixels than numPoints
+  delayByIndex = 500 / numPoints;
+  maxDuration = duration + delayByIndex * numPoints;
 
   // initialize regl
   createREGL({
