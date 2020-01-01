@@ -169,8 +169,9 @@ function mapLayout(points, width, height, cellsData) {
       /*       d.x = location[0];
             d.y = location[1]; */
 
-      d.x = (parseInt(cell.x) / 3); //convert & center coords
-      d.y = ((parseInt(cell.y) / 3) * -1) + height; //invert the y coordinates and add height for centering
+      //TODO: dynamically convert coordinates based on screen size
+      d.x = (parseInt(cell.x) / 4); //convert & center coords
+      d.y = ((parseInt(cell.y) / 4) * -1) + height + 300; //invert the y coordinates and add height for centering
     });
   }
   projectData(points);

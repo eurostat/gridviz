@@ -1,13 +1,13 @@
 const width = window.innerWidth;
 const height = window.innerHeight;
-var numPoints = 166000;
+var numPoints = 100000;
 var pointWidth = 1;
 const pointMargin = 1;
 var duration = 5000;
 var delayByIndex;
 var maxDuration; // include max delay in here
 var delayAtEnd = 0; // how long to stay at a final frame before animating again (in seconds)
-var pointWidths = [1, 1, 2, 2]; //in same order as layouts
+var pointWidths = [1, 1, 1, 1]; //in same order as layouts
 imgURL = "image.json";
 csvURL = "../../assets/csv/pop_5km.csv";
 
