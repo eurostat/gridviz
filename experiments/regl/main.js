@@ -1,6 +1,6 @@
 
 //REGL API DOCUMENTATION: http://regl.party/api
-const csvURL = "../assets/csv/pop_1km_new.csv";
+const csvURL = "../assets/csv/pop_1km.csv";
 const width = window.innerWidth;
 const height = window.innerHeight;
 const pointWidth = 1;
