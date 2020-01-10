@@ -1,0 +1,27 @@
+{
+  "name": "threejs-experiments",
+  "version": "1.0.0",
+  "description": "",
+  "main": "js/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack js/main.js --mode=development --watch",
+    "server": "webpack-dev-server --mode development",
+    "build": "webpack --mode production"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0",
+    "webpack-livereload-plugin": "^2.2.0"
+  },
+  "dependencies": {
+    "d3": "^5.14.2",
+    "stats.js": "^0.17.0",
+    "three": "^0.111.0",
+    "three-orbit-controls": "^82.1.0",
+    "three.map.control": "^1.6.0"
+  }
+}
