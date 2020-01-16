@@ -7,10 +7,9 @@ var duration = 5000;
 var delayByIndex;
 var maxDuration; // include max delay in here
 var delayAtEnd = 0; // how long to stay at a final frame before animating again (in seconds)
-var pointWidths = [1, 1, 1, 1]; //in same order as layouts
+var pointWidths = [2, 2, 2, 2]; //in same order as layouts
 imgURL = "image.json";
 csvURL = "../../assets/csv/pop_5km.csv";
-
 
 function main(regl, cellsData, imgData) {
   const toMap = points => mapLayout(points, width, height, cellsData);
@@ -55,10 +54,9 @@ function main(regl, cellsData, imgData) {
     d3.scaleSequential(d3.interpolateViridis),
     d3.scaleSequential(d3.interpolateMagma),
     d3.scaleSequential(d3.interpolateInferno),
-    d3.scaleSequential(d3.interpolateCool),
+    d3.scaleSequential(d3.interpolateCool)
   ].map(wrapColorScale);
   let currentColorScale = 0;
-
 
   // function to compile a draw points regl func
   function createDrawPoints(points) {
@@ -169,15 +167,15 @@ function main(regl, cellsData, imgData) {
         positionEnd: points.map(d => [d.tx, d.ty]),
         colorStart: points.map(d => d.colorStart),
         colorEnd: points.map(d => d.colorEnd),
-        index: d3.range(points.length),
+        index: d3.range(points.length)
       },
 
       uniforms: {
-        pointWidth: regl.prop('pointWidth'),
-        stageWidth: regl.prop('stageWidth'),
-        stageHeight: regl.prop('stageHeight'),
-        delayByIndex: regl.prop('delayByIndex'),
-        duration: regl.prop('duration'),
+        pointWidth: regl.prop("pointWidth"),
+        stageWidth: regl.prop("stageWidth"),
+        stageHeight: regl.prop("stageHeight"),
+        delayByIndex: regl.prop("delayByIndex"),
+        duration: regl.prop("duration"),
         numPoints: numPoints,
         // animationRadius: 0,// 15.0,
         // tick: (reglprops) => { // increase multiplier for faster animation speed
@@ -186,15 +184,11 @@ function main(regl, cellsData, imgData) {
         // 	return 0; // disable ambient animation
         // },
         // time in milliseconds since the prop startTime (i.e. time elapsed)
-        elapsed: ({
-          time
-        }, {
-          startTime = 0
-        }) => (time - startTime) * 1000,
+        elapsed: ({ time }, { startTime = 0 }) => (time - startTime) * 1000
       },
 
       count: points.length,
-      primitive: 'points',
+      primitive: "points"
     });
 
     return drawPoints;
@@ -216,7 +210,6 @@ function main(regl, cellsData, imgData) {
     //change point width according to layout
     pointWidth = pointWidths[currentLayout];
 
-
     // copy layout x y to end positions
     const colorScale = colorScales[currentColorScale];
     points.forEach((d, i) => {
@@ -231,9 +224,7 @@ function main(regl, cellsData, imgData) {
 
     // start an animation loop
     let startTime = null; // in seconds
-    const frameLoop = regl.frame(({
-      time
-    }) => {
+    const frameLoop = regl.frame(({ time }) => {
       // keep track of start time so we can get time elapsed
       // this is important since time doesn't reset when starting new animations
       if (startTime === null) {
@@ -244,9 +235,8 @@ function main(regl, cellsData, imgData) {
       regl.clear({
         // background color (black)
         color: [0, 0, 0, 1],
-        depth: 1,
+        depth: 1
       });
-
 
       // draw the points using our created regl func
       // note that the arguments are available via `regl.prop`.
@@ -256,10 +246,8 @@ function main(regl, cellsData, imgData) {
         stageHeight: height,
         duration,
         delayByIndex,
-        startTime,
+        startTime
       });
-
-
 
       // if we have exceeded the maximum duration, move on to the next animation
       if (time - startTime > maxDuration / 1000 + delayAtEnd) {
@@ -277,7 +265,6 @@ function main(regl, cellsData, imgData) {
             d.colorEnd = [0, 0, 0];
           });
         }
-
 
         animate(layouts[currentLayout], points);
       }
@@ -297,11 +284,8 @@ function main(regl, cellsData, imgData) {
   animate(layouts[currentLayout], points);
 }
 
-loadData(width, height).then(({
-  cellsData,
-  imgData
-}) => {
-  console.log('data has loaded. initializing regl...');
+loadData(width, height).then(({ cellsData, imgData }) => {
+  console.log("data has loaded. initializing regl...");
   console.log("number of cells in csv file:", cellsData.length); //toPhoto will throw an error if there are less pixels than numPoints
   console.log("number of points in image file:", imgData.length); //toPhoto will throw an error if there are less pixels than numPoints
   delayByIndex = 500 / numPoints;
@@ -312,10 +296,10 @@ loadData(width, height).then(({
     // callback when regl is initialized
     onDone: (err, regl) => {
       if (err) {
-        console.error('Error initializing regl', err);
+        console.error("Error initializing regl", err);
         return;
       }
       main(regl, cellsData, imgData);
-    },
+    }
   });
 });
