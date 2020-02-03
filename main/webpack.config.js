@@ -11,6 +11,6 @@ module.exports = {
   plugins: [
     new LiveReloadPlugin()
   ],
-  watch: true,
+  watch: false,
   devtool: "inline-source-map"
 };

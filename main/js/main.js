@@ -27,8 +27,8 @@ const viewerOptions = {
   field_of_view: 45,
   raycaster_threshold: 0.009,
   statsBox: true,
-  point_size: 1,
-  point_attenuation: false
+  point_size: 0.001,
+  point_attenuation: true
 };
 
 init();

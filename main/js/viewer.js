@@ -54,13 +54,8 @@ export default class Viewer {
 
     //for identifying points
     this.raycaster = new THREE.Raycaster();
-    this.raycaster.params.Points.threshold =
-      options.raycaster_threshold || 0.009;
-    this.camera.position.set(
-      options.initial_camera_position.x,
-      options.initial_camera_position.y,
-      options.initial_camera_position.z
-    );
+    this.raycaster.params.Points.threshold = options.raycaster_threshold || 0.009;
+    this.camera.position.set(options.initial_camera_position.x, options.initial_camera_position.y, options.initial_camera_position.z);
     this.addClickEvent();
     this._defineZoom(options);
   }
@@ -121,17 +116,11 @@ export default class Viewer {
             // Find the x and y coordinates for where that vector intersects the new
             // zoom level.
             // Code from WestLangley https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z/13091694#13091694
-            const vector = new THREE.Vector3(
-              (clientX / options.width) * 2 - 1,
-              -(clientY / options.height) * 2 + 1,
-              1
-            );
+            const vector = new THREE.Vector3((clientX / options.width) * 2 - 1, -(clientY / options.height) * 2 + 1, 1);
             vector.unproject(this.camera);
             const dir = vector.sub(this.camera.position).normalize();
             const distance = (new_z - this.camera.position.z) / dir.z;
-            const pos = this.camera.position
-              .clone()
-              .add(dir.multiplyScalar(distance)); //adds direction to zoom
+            const pos = this.camera.position.clone().add(dir.multiplyScalar(distance)); //adds direction to zoom
 
             let scale;
             if (this.camera.position.z < 20) {
@@ -139,10 +128,7 @@ export default class Viewer {
               this.pointsMaterial.setValues({
                 size: options.point_size * scale
               });
-            } else if (
-              this.camera.position.z >= 20 &&
-              this.pointsMaterial.size !== options.point_size
-            ) {
+            } else if (this.camera.position.z >= 20 && this.pointsMaterial.size !== options.point_size) {
               this.pointsMaterial.setValues({
                 size: options.point_size
               });
@@ -150,14 +136,6 @@ export default class Viewer {
 
             // Set the this.camera to new coordinates
             this.camera.position.set(pos.x, pos.y, new_z);
-            console.info(
-              "zoom event: new camera position:",
-              pos.x,
-              ",",
-              pos.y,
-              ",",
-              pos.z
-            );
           } else {
             // Handle panning
             const { movementX, movementY } = event.sourceEvent;
