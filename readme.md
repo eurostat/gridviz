@@ -7,7 +7,7 @@ After numerous experiments, we concluded that WebGL was the best method for achi
 
 In terms of performance, funnily enough Three.js has been the best at rendering a 2D grid.
 
-## [Live demo](https://eurostat.github.io/EuroGridLayer/main)
+## [Live demo](https://eurostat.github.io/EuroGridVisualizer/main)
 
 ## Installation
 
