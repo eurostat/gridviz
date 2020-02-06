@@ -49,13 +49,13 @@ function init() {
   const colors = [];
 
   utils.showLoading();
-  getCSV("./assets/csv/pop_1km.csv", data => {
+  getCSV("./assets/csv/pop_2km.csv", data => {
     var csvArray = parseCSV(data);
     //add geometries
     for (var i = 1; i < csvArray.length; i++) {
       let cell = csvArray[i];
-      var x = parseInt(cell[1]) / 100 - 35; //TODO: convert to screen coords properly
-      var y = parseInt(cell[0]) / 100 - 35;
+      var x = parseInt(cell[0]) / 100 - 35; //TODO: convert to screen coords properly
+      var y = parseInt(cell[1]) / 100 - 35;
       var z = 0;
       const vertex = new THREE.Vector3(x, y, z);
       vertex.userData = {
