@@ -6,8 +6,8 @@
 //Change cell size depending on second variable, defined by column index specified by user
 
 const BASE_URL = "http://s-est-tpol.net1.cec.eu.int/gridded-statistics/";
-var INITIAL_CSV_URL = "../assets/csv/pop_5km.csv"; //csv with xmin and y min coords of grid cells
-const SECOND_CSV_URL = "../assets/csv/pop_2km.csv";
+var INITIAL_CSV_URL = "../../assets/csv/pop_5km.csv"; //csv with xmin and y min coords of grid cells
+const SECOND_CSV_URL = "../../assets/csv/pop_2km.csv";
 const ATTR_COLUMN = 2;
 const X_COLUMN = 0; //column index for x coordinates
 const Y_COLUMN = 1; //column index for y coordinates
