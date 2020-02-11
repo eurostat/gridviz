@@ -1,17 +1,17 @@
 // webpack.config.js
 //var webpack = require("webpack");
-//var LiveReloadPlugin = require("webpack-livereload-plugin");
+var LiveReloadPlugin = require("webpack-livereload-plugin");
 module.exports = {
   mode: "development",
-  entry: ["./js/main.js"],
+  entry: ["./src/main.js"],
   output: {
     filename: "bundle.js",
     publicPath: "dist"
   },
-  //plugins: [new LiveReloadPlugin()],
+  plugins: [new LiveReloadPlugin()],
   watch: false,
   optimization: {
     usedExports: true
-  }
-  //devtool: "inline-source-map"
+  },
+  devtool: "inline-source-map"
 };
