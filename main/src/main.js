@@ -12,8 +12,13 @@ let viz_width = width;
 let height = window.innerHeight;
 
 let fov = 40;
-let near = 0.00100;
+let near = 0.001;
 let far = 0.1;
+let raycaster_threshold =  0.00002;
+
+//offset for EPSG3035 to vector3 transformation
+let offsetX = -0.04;
+let offsetY = -0.03;
 
 //colouring
 let color_scheme = d3.interpolateTurbo;
@@ -24,6 +29,7 @@ let camera = new THREE.PerspectiveCamera(fov, width / height, near, far);
 let scene;
 let points;
 let hoverContainer;
+let cells = [];
 
 window.addEventListener("resize", () => {
   width = window.innerWidth;
@@ -64,7 +70,7 @@ setUpZoom();
 d3.csv("./assets/csv/pop_2km.csv").then(csv => {
   colorScale.domain(d3.extent(csv, d => d.value));
 
-  let cells = [];
+ 
   for (let i = 0; i < csv.length; i++) {
     let position = [csv[i].x, csv[i].y]; // EPSG:3035
     let value = csv[i].value;
@@ -78,10 +84,10 @@ d3.csv("./assets/csv/pop_2km.csv").then(csv => {
     // Set vector coordinates from data
     let coords = [cell.position[0], cell.position[1]];
     // TODO: find a cleaner way of converting EPSG 3035 to Vector3. Values must be between -1 and 1
-    let vectorCoords = new THREE.Vector3(coords[0] / 100000 , coords[1] / 100000 , 0);
+    let vectorCoords = new THREE.Vector3(coords[0] / 100000 + offsetX, coords[1] / 100000 + offsetY, 0);
     // in Threejs, colors and vertices are added to the geometry object in separate, corresponding arrays
     pointsGeometry.vertices.push(vectorCoords);
-    let hex = color_scheme(colorScale(cell.value));
+    let hex = color_scheme(colorScale(cell.value)); //d3 scale-chromatic
     cell.color = hex; //for tooltip
     colors.push(new THREE.Color(hex));
   }
@@ -102,7 +108,7 @@ d3.csv("./assets/csv/pop_2km.csv").then(csv => {
   hoverContainer = new THREE.Object3D();
   scene.add(hoverContainer);
 
-  /* view.on("mousemove", () => {
+   view.on("click", () => {
   let [mouseX, mouseY] = d3.mouse(view.node());
   let mouse_position = [mouseX, mouseY];
   checkIntersects(mouse_position);
@@ -110,7 +116,7 @@ d3.csv("./assets/csv/pop_2km.csv").then(csv => {
 
 view.on("mouseleave", () => {
   removeHighlights();
-}); */
+}); 
   document.getElementById("loading-gif").style.display = "none";
 
   animate();
@@ -154,7 +160,7 @@ function toRadians(angle) {
 // Hover and tooltip interaction
 
 const raycaster = new THREE.Raycaster();
-raycaster.params.Points.threshold = 10;
+raycaster.params.Points.threshold = raycaster_threshold;
 
 function mouseToThree(mouseX, mouseY) {
   return new THREE.Vector3((mouseX / viz_width) * 2 - 1, -(mouseY / height) * 2 + 1, 1);
@@ -168,9 +174,9 @@ function checkIntersects(mouse_position) {
     let sorted_intersects = sortIntersectsByDistanceToRay(intersects);
     let intersect = sorted_intersects[0];
     let index = intersect.index;
-    let datum = generated_points[index];
-    highlightPoint(datum);
-    showTooltip(mouse_position, datum);
+    let cell = cells[index];
+    highlightPoint(cell);
+    showTooltip(mouse_position, cell);
   } else {
     removeHighlights();
     hideTooltip();
@@ -181,18 +187,17 @@ function sortIntersectsByDistanceToRay(intersects) {
   return _.sortBy(intersects, "distanceToRay");
 }
 
-function highlightPoint(datum) {
+function highlightPoint(cell) {
   removeHighlights();
 
   let geometry = new THREE.Geometry();
-  geometry.vertices.push(new THREE.Vector3(datum.position[0], datum.position[1], 0));
-  geometry.colors = [new THREE.Color(color_array[datum.group])];
+  geometry.vertices.push(new THREE.Vector3(cell.position[0], cell.position[1], 0));
+  geometry.colors = [new THREE.Color(color_array[1])];
 
   let material = new THREE.PointsMaterial({
-    size: 26,
+    size: point_size,
     sizeAttenuation: false,
     vertexColors: THREE.VertexColors,
-    map: circle_sprite,
     transparent: true
   });
 
@@ -209,33 +214,33 @@ let tooltip_state = { display: "none" };
 
 let tooltip_template = document.createRange()
   .createContextualFragment(`<div id="tooltip" style="display: none; position: absolute; pointer-events: none; font-size: 13px; width: 120px; text-align: center; line-height: 1; padding: 6px; background: white; font-family: sans-serif;">
+     <div id="label_tip" style="padding: 4px; margin-bottom: 4px;"></div>
   <div id="point_tip" style="padding: 4px; margin-bottom: 4px;"></div>
-  <div id="group_tip" style="padding: 4px;"></div>
 </div>`);
 document.body.append(tooltip_template);
 
 let $tooltip = document.querySelector("#tooltip");
 let $point_tip = document.querySelector("#point_tip");
-let $group_tip = document.querySelector("#group_tip");
+let $label_tip = document.querySelector("#label_tip");
 
 function updateTooltip() {
   $tooltip.style.display = tooltip_state.display;
   $tooltip.style.left = tooltip_state.left + "px";
   $tooltip.style.top = tooltip_state.top + "px";
-  $point_tip.innerText = tooltip_state.name;
-  $point_tip.style.background = color_array[tooltip_state.group];
-  $group_tip.innerText = `Group ${tooltip_state.group}`;
+  //$point_tip.innerText = tooltip_state.name;
+  $point_tip.style.background = tooltip_state.color;
+  $label_tip.innerText = `Population: ${tooltip_state.name}`;
 }
 
-function showTooltip(mouse_position, datum) {
+function showTooltip(mouse_position, cell) {
   let tooltip_width = 120;
   let x_offset = -tooltip_width / 2;
   let y_offset = 30;
   tooltip_state.display = "block";
   tooltip_state.left = mouse_position[0] + x_offset;
   tooltip_state.top = mouse_position[1] + y_offset;
-  tooltip_state.name = datum.name;
-  tooltip_state.group = datum.group;
+  tooltip_state.name = cell.value;
+  tooltip_state.color = cell.color;
   updateTooltip();
 }
 
