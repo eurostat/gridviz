@@ -1,36 +1,84 @@
 // This is a companion pen to go along with https://beta.observablehq.com/@grantcuster/using-three-js-for-2d-data-visualization. It shows a three.js pan and zoom example using d3-zoom working on 100,000 points. The code isn't very organized here so I recommend you check out the notebook to read about what is going on.
-import * as THREE from "three";
-import * as d3 from "d3";
-import Stats from "stats.js";
+//import * as THREE from "three";
+import * as d3ScaleChromatic from "d3-scale-chromatic";
+import * as d3Scale from "d3-scale";
+import * as d3Zoom from "d3-zoom";
+import * as d3Selection from "d3-selection";
+import * as d3Fetch from "d3-fetch";
+import * as d3Array from "d3-array";
+import * as THREE from "three/src/constants";
+
+import { Scene, PerspectiveCamera, WebGLRenderer, Points, PointsMaterial, Geometry, Vector3, Color, Raycaster, Object3D } from "three";
+
+//import Stats from "stats.js";
 import { sortBy } from "lodash";
 //var dsv = require("d3-dsv");
 
-let point_size = 0.00005;
+//1km
+//let point_size = 0.0000271;
 
-let width = window.innerWidth;
+//2km
+//let point_size = 0.00005;
+
+//5km
+//let point_size = 0.0001375;
+
+let grids = {
+  "1km": {
+    point_size: 0.0000271,
+    raycaster_threshold: 0.00002,
+    cache: []
+  },
+  "2km": {
+    point_size: 0.00005,
+    raycaster_threshold: 0.00002,
+    cache: []
+  },
+  "5km": {
+    point_size: 0.0001375,
+    raycaster_threshold: 0.00002,
+    cache: []
+  }
+};
+
+var resolution = grids["5km"]; //inital view is of the 5km grid
+
+let width = window.innerWidth - 5;
 let viz_width = width;
-let height = window.innerHeight;
+let height = window.innerHeight - 5;
 
 let fov = 40;
 let near = 0.001;
 let far = 0.1;
-let raycaster_threshold =  0.00002;
+let raycaster_threshold = 0.00002;
 
 //offset for EPSG3035 to vector3 transformation
 let offsetX = -0.04;
 let offsetY = -0.03;
 
 //colouring
-let color_scheme = d3.interpolateTurbo;
-let colorScale = d3.scaleSqrt();
+let color_scheme = d3ScaleChromatic.interpolateTurbo;
+let colorScale = d3Scale.scaleSqrt();
+let background_color = 0x000;
 
 // Set up camera and scene
-let camera = new THREE.PerspectiveCamera(fov, width / height, near, far);
+let camera = new PerspectiveCamera(fov, width / height, near, far);
 let scene;
 let points;
-let hoverContainer;
+let tooltip_container;
 let cells = [];
 
+let color_array = ["#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#6a3d9a", "#cab2d6", "#ffff99"];
+
+// Add canvas to DOM
+let renderer = new WebGLRenderer();
+renderer.setSize(width, height);
+document.body.appendChild(renderer.domElement);
+
+// for zoom
+const view = d3Selection.select(renderer.domElement);
+
+// adjust camera and renderer upon window resize
 window.addEventListener("resize", () => {
   width = window.innerWidth;
   viz_width = width;
@@ -41,91 +89,171 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix();
 });
 
-let color_array = ["#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#6a3d9a", "#cab2d6", "#ffff99"];
-
-// Add canvas
-let renderer = new THREE.WebGLRenderer();
-renderer.setSize(width, height);
-document.body.appendChild(renderer.domElement);
-
-let zoom = d3
-  .zoom()
-  .scaleExtent([getScaleFromZ(far), getScaleFromZ(near)])
-  .on("zoom", () => {
-    let d3_transform = d3.event.transform;
-    zoomHandler(d3_transform);
-  });
-
-const view = d3.select(renderer.domElement);
-function setUpZoom() {
-  view.call(zoom);
-  let initial_scale = getScaleFromZ(far);
-  var initial_transform = d3.zoomIdentity.translate(viz_width / 2, height / 2).scale(initial_scale);
-  zoom.transform(view, initial_transform);
-  camera.position.set(0, 0, far);
+init();
+function init() {
+  initScene();
+  setUpZoom();
+  addTooltipContainer();
+  addMouseEventsToView();
+  loadInitialGrid("5km");
+  addClickEventsToResButtons();
 }
-setUpZoom();
 
-// set up data
-d3.csv("./assets/csv/pop_2km.csv").then(csv => {
-  colorScale.domain(d3.extent(csv, d => d.value));
+// initialize three.js scene
+function initScene() {
+  scene = new Scene();
+  scene.background = new Color(background_color);
+}
 
- 
-  for (let i = 0; i < csv.length; i++) {
-    let position = [csv[i].x, csv[i].y]; // EPSG:3035
-    let value = csv[i].value;
-    let point = { position, value };
-    cells.push(point);
+function loadInitialGrid(res) {
+  showLoading();
+  requestGrid(res).then(() => {
+    // calculate extent for colour scale
+    updateColorScale();
+    // add initial grid to the scene
+    addPointsToScene();
+    hideLoading();
+    //add other grids to cache
+    addRemainingGridsToCache();
+  });
+}
+
+function addRemainingGridsToCache() {
+  requestGrid("2km").then(() => {
+    requestGrid("1km");
+  });
+}
+
+function changeRes(res) {
+  showLoading();
+  resolution = grids[res];
+  console.log(grids, resolution);
+
+  //remove existing points layer > load new points into cache if required > add new resolution to scene
+  if (grids[res].cache.length > 0) {
+    showLoading();
+    // remove current points layer
+    scene.remove(points);
+    points = null;
+    // add chosen resolution as points layer
+    addPointsToScene();
+  } else {
+    if (points) {
+      scene.remove(points);
+      points = null;
+    }
+  }
+}
+
+function requestGrid(res) {
+  return d3Fetch.csv("./assets/csv/pop_" + res + ".csv").then(
+    csv => {
+      addGridToCache(csv, res);
+    },
+    err => console.log(err)
+  );
+}
+
+function addGridToCache(csv, res) {
+  if (csv) {
+    for (let i = 0; i < csv.length; i++) {
+      let position = [csv[i].x, csv[i].y]; // EPSG:3035
+      let value = csv[i].value;
+      let point = { position, value };
+      grids[res].cache.push(point);
+    }
+  }
+}
+
+function updateColorScale() {
+  colorScale.domain(d3Array.extent(resolution.cache, d => d.value));
+}
+
+function addPointsToScene() {
+  // add grid to cache if required
+  // At the moment the entire file is loaded into a cache. Here is where the tiling logic needs to be applied..
+  if (!resolution.cache.length > 0) {
   }
 
-  let pointsGeometry = new THREE.Geometry();
+  let pointsGeometry = new Geometry();
   let colors = [];
-  for (let cell of cells) {
+  for (let cell of resolution.cache) {
     // Set vector coordinates from data
     let coords = [cell.position[0], cell.position[1]];
     // TODO: find a cleaner way of converting EPSG 3035 to Vector3. Values must be between -1 and 1
-    let vectorCoords = new THREE.Vector3(coords[0] / 100000 + offsetX, coords[1] / 100000 + offsetY, 0);
+    let vectorCoords = new Vector3(coords[0] / 100000 + offsetX, coords[1] / 100000 + offsetY, 0);
     // in Threejs, colors and vertices are added to the geometry object in separate, corresponding arrays
     pointsGeometry.vertices.push(vectorCoords);
     let hex = color_scheme(colorScale(cell.value)); //d3 scale-chromatic
     cell.color = hex; //for tooltip
-    colors.push(new THREE.Color(hex));
+    colors.push(new Color(hex));
   }
   pointsGeometry.colors = colors;
 
-  let pointsMaterial = new THREE.PointsMaterial({
-    size: point_size,
+  let pointsMaterial = new PointsMaterial({
+    size: resolution.point_size,
     sizeAttenuation: true,
+    //https://github.com/mrdoob/three.js/blob/master/src/constants.js
     vertexColors: THREE.VertexColors
   });
 
-  points = new THREE.Points(pointsGeometry, pointsMaterial);
-
-  scene = new THREE.Scene();
+  points = new Points(pointsGeometry, pointsMaterial);
   scene.add(points);
-  scene.background = new THREE.Color(0x000);
-
-  hoverContainer = new THREE.Object3D();
-  scene.add(hoverContainer);
-
-   view.on("click", () => {
-  let [mouseX, mouseY] = d3.mouse(view.node());
-  let mouse_position = [mouseX, mouseY];
-  checkIntersects(mouse_position);
-});
-
-view.on("mouseleave", () => {
-  removeHighlights();
-}); 
-  document.getElementById("loading-gif").style.display = "none";
-
+  hideLoading();
   animate();
-});
+}
 
 // Three.js render loop
 function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
+}
+
+// add d3's zoom
+function setUpZoom() {
+  // define zoom
+  let zoom = d3Zoom
+    .zoom()
+    .scaleExtent([getScaleFromZ(far), getScaleFromZ(near)])
+    .on("zoom", () => {
+      let d3_transform = d3Selection.event.transform;
+      zoomHandler(d3_transform);
+    });
+  view.call(zoom);
+  let initial_scale = getScaleFromZ(far);
+  var initial_transform = d3Zoom.zoomIdentity.translate(viz_width / 2, height / 2).scale(initial_scale);
+  zoom.transform(view, initial_transform);
+  camera.position.set(0, 0, far);
+}
+
+// add events to 'change resolution' buttons
+function addClickEventsToResButtons() {
+  let res_buttons = document.getElementsByName("resBtn");
+  res_buttons.forEach(b => addClickEventToBtn(b));
+  function addClickEventToBtn(btn) {
+    btn.addEventListener("click", function() {
+      console.log(btn);
+      changeRes(btn.value);
+    });
+  }
+}
+
+function addTooltipContainer() {
+  tooltip_container = new Object3D();
+  scene.add(tooltip_container);
+}
+
+function addMouseEventsToView() {
+  // show population value on click
+  view.on("click", () => {
+    let [mouseX, mouseY] = d3Selection.mouse(view.node());
+    let mouse_position = [mouseX, mouseY];
+    checkIntersects(mouse_position);
+  });
+
+  view.on("mouseleave", () => {
+    removeHighlights();
+  });
 }
 
 function zoomHandler(d3_transform) {
@@ -157,13 +285,12 @@ function toRadians(angle) {
   return angle * (Math.PI / 180);
 }
 
-// Hover and tooltip interaction
-
-const raycaster = new THREE.Raycaster();
+// Click and tooltip interaction
+const raycaster = new Raycaster();
 raycaster.params.Points.threshold = raycaster_threshold;
 
 function mouseToThree(mouseX, mouseY) {
-  return new THREE.Vector3((mouseX / viz_width) * 2 - 1, -(mouseY / height) * 2 + 1, 1);
+  return new Vector3((mouseX / viz_width) * 2 - 1, -(mouseY / height) * 2 + 1, 1);
 }
 
 function checkIntersects(mouse_position) {
@@ -174,7 +301,7 @@ function checkIntersects(mouse_position) {
     let sorted_intersects = sortIntersectsByDistanceToRay(intersects);
     let intersect = sorted_intersects[0];
     let index = intersect.index;
-    let cell = cells[index];
+    let cell = resolution.cache[index];
     highlightPoint(cell);
     showTooltip(mouse_position, cell);
   } else {
@@ -190,23 +317,24 @@ function sortIntersectsByDistanceToRay(intersects) {
 function highlightPoint(cell) {
   removeHighlights();
 
-  let geometry = new THREE.Geometry();
-  geometry.vertices.push(new THREE.Vector3(cell.position[0], cell.position[1], 0));
-  geometry.colors = [new THREE.Color(color_array[1])];
+  let geometry = new Geometry();
+  // FIXME
+  geometry.vertices.push(new Vector3(cell.position[0], cell.position[1], 0));
+  geometry.colors = [new Color(color_array[1])];
 
-  let material = new THREE.PointsMaterial({
-    size: point_size,
+  let material = new PointsMaterial({
+    size: resolution.point_size,
     sizeAttenuation: false,
     vertexColors: THREE.VertexColors,
     transparent: true
   });
 
-  let point = new THREE.Points(geometry, material);
-  hoverContainer.add(point);
+  let point = new Points(geometry, material);
+  tooltip_container.add(point);
 }
 
 function removeHighlights() {
-  hoverContainer.remove(...hoverContainer.children);
+  tooltip_container.remove(...tooltip_container.children);
 }
 
 // Initial tooltip state
@@ -247,4 +375,11 @@ function showTooltip(mouse_position, cell) {
 function hideTooltip() {
   tooltip_state.display = "none";
   updateTooltip();
+}
+
+function showLoading() {
+  document.getElementById("loading-gif").style.display = "block";
+}
+function hideLoading() {
+  document.getElementById("loading-gif").style.display = "none";
 }

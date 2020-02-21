@@ -35,3 +35,34 @@ body {
 #tooltip:hover #tooltiptext {
   display: block;
 }
+
+/*  BUTTON GROUP */
+.btn-group {
+  position:absolute;
+  bottom:2%;
+  right:2%;
+}
+.btn-group button {
+  background-color: #004494; /* EU blue */
+  border: 1px solid gray;
+  color: white; 
+  padding: 10px 24px; 
+  cursor: pointer; 
+  float: left; 
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #012f63;
+}
