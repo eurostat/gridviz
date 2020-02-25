@@ -6,22 +6,12 @@ import * as d3Zoom from "d3-zoom";
 import * as d3Selection from "d3-selection";
 import * as d3Fetch from "d3-fetch";
 import * as d3Array from "d3-array";
+import * as d3Format from "d3-format";
+//import * as d3 from "d3";
 import * as THREE from "three/src/constants";
-
+import * as LEGEND from "d3-svg-legend";
 import { Scene, PerspectiveCamera, WebGLRenderer, Points, PointsMaterial, Geometry, Vector3, Color, Raycaster, Object3D } from "three";
-
-//import Stats from "stats.js";
 import { sortBy } from "lodash";
-//var dsv = require("d3-dsv");
-
-//1km
-//let point_size = 0.0000271;
-
-//2km
-//let point_size = 0.00005;
-
-//5km
-//let point_size = 0.0001375;
 
 let grids = {
   "1km": {
@@ -30,7 +20,7 @@ let grids = {
     cache: []
   },
   "2km": {
-    point_size: 0.00005,
+    point_size: 0.000055,
     raycaster_threshold: 0.00002,
     cache: []
   },
@@ -57,6 +47,7 @@ let offsetX = -0.04;
 let offsetY = -0.03;
 
 //colouring
+let array_extent = null; //d3array.extent of grid
 let color_scheme = d3ScaleChromatic.interpolateTurbo;
 let colorScale = d3Scale.scaleSqrt();
 let background_color = 0x000;
@@ -69,6 +60,8 @@ let tooltip_container;
 let cells = [];
 
 let color_array = ["#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#6a3d9a", "#cab2d6", "#ffff99"];
+
+let grid_legend = null;
 
 // Add canvas to DOM
 let renderer = new WebGLRenderer();
@@ -118,31 +111,26 @@ function loadInitialGrid(res) {
   });
 }
 
+// TODO: replace this with Tiling Logic.
 function addRemainingGridsToCache() {
   requestGrid("2km").then(() => {
-    requestGrid("1km");
+    //requestGrid("1km"); //too much
   });
 }
 
 function changeRes(res) {
   showLoading();
   resolution = grids[res];
-  console.log(grids, resolution);
-
-  //remove existing points layer > load new points into cache if required > add new resolution to scene
-  if (grids[res].cache.length > 0) {
-    showLoading();
-    // remove current points layer
-    scene.remove(points);
-    points = null;
-    // add chosen resolution as points layer
-    addPointsToScene();
-  } else {
-    if (points) {
-      scene.remove(points);
-      points = null;
-    }
-  }
+  //update color scale (d3.scaleChromatic)
+  updateColorScale();
+  // remove current points layer
+  /*   scene.remove(points);
+  // empty points object
+  points = null; */
+  // add chosen resolution as points layer
+  addPointsToScene();
+  //update raycaster
+  raycaster.params.Points.threshold = resolution.raycaster_threshold;
 }
 
 function requestGrid(res) {
@@ -150,7 +138,7 @@ function requestGrid(res) {
     csv => {
       addGridToCache(csv, res);
     },
-    err => console.log(err)
+    err => console.error(err)
   );
 }
 
@@ -166,21 +154,29 @@ function addGridToCache(csv, res) {
 }
 
 function updateColorScale() {
-  colorScale.domain(d3Array.extent(resolution.cache, d => d.value));
+  array_extent = d3Array.extent(resolution.cache, d => d.value);
+  colorScale.domain(array_extent);
 }
 
 function addPointsToScene() {
   // add grid to cache if required
-  // At the moment the entire file is loaded into a cache. Here is where the tiling logic needs to be applied..
-  if (!resolution.cache.length > 0) {
-  }
+  // At the moment the entire file is loaded into a cache. Here is where tiling logic needs to be applied..
 
-  let pointsGeometry = new Geometry();
-  let colors = [];
+  let pointsGeometry = new Geometry(); /*   var bufferGeometry = new THREE.BufferGeometry();
+  var positions = new Float32Array(vertices.length * 3);
+  for (var i = 0; i < vertices.length; i++) {
+    positions[i * 3] = vertices[i].x;
+    positions[i * 3 + 1] = vertices[i].y;
+    positions[i * 3 + 2] = vertices[i].z;
+  }
+  indices = [0, 1, 2, 0, 2, 3];
+  bufferGeometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+  bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1)); */ //threejs recommends using BufferGeometry for performance //Buffer geometry
+  /*   let geometry = new THREE.BufferGeometry(); */ let colors = [];
   for (let cell of resolution.cache) {
     // Set vector coordinates from data
     let coords = [cell.position[0], cell.position[1]];
-    // TODO: find a cleaner way of converting EPSG 3035 to Vector3. Values must be between -1 and 1
+    // TODO: find a cleaner way of converting EPSG 3035 to Vector3 xyz. Values must be between -1 and 1
     let vectorCoords = new Vector3(coords[0] / 100000 + offsetX, coords[1] / 100000 + offsetY, 0);
     // in Threejs, colors and vertices are added to the geometry object in separate, corresponding arrays
     pointsGeometry.vertices.push(vectorCoords);
@@ -197,10 +193,48 @@ function addPointsToScene() {
     vertexColors: THREE.VertexColors
   });
 
-  points = new Points(pointsGeometry, pointsMaterial);
+  if (!points) {
+    points = new Points(pointsGeometry, pointsMaterial);
+  } else {
+    points.geometry = pointsGeometry;
+    points.material = pointsMaterial;
+  }
+
   scene.add(points);
+  if (grid_legend) {
+    // update existing legend
+    updateLegend();
+  } else {
+    //create new legend
+    addLegend();
+  }
   hideLoading();
   animate();
+}
+
+function addLegend() {
+  var scale = d3Scale.scaleSequentialSqrt(d3ScaleChromatic.interpolateTurbo).domain(array_extent);
+  var svg = d3Selection.select("#legend");
+  let format = d3Format.format(".0f");
+
+  svg
+    .append("g")
+    .attr("class", "legendSqrt")
+    .attr("transform", "translate(10,10)"); //padding
+
+  grid_legend = LEGEND.legendColor()
+    .shapeWidth(40)
+    .cells(10)
+    .labelFormat(format)
+    .orient("horizontal")
+    .scale(scale)
+    .title("Total Population");
+
+  svg.select(".legendSqrt").call(grid_legend);
+}
+function updateLegend() {
+  var l = d3Selection.selectAll(".legendSqrt").remove();
+  setTimeout(addLegend(), 1000);
 }
 
 // Three.js render loop
@@ -232,10 +266,18 @@ function addClickEventsToResButtons() {
   res_buttons.forEach(b => addClickEventToBtn(b));
   function addClickEventToBtn(btn) {
     btn.addEventListener("click", function() {
-      console.log(btn);
-      changeRes(btn.value);
+      showLoading();
+      unselectOtherButtons(res_buttons);
+      btn.classList.add("active");
+      setTimeout(function() {
+        changeRes(btn.value);
+      }, 100);
     });
   }
+}
+
+function unselectOtherButtons(elements) {
+  elements.forEach(b => b.classList.remove("active"));
 }
 
 function addTooltipContainer() {
@@ -287,7 +329,7 @@ function toRadians(angle) {
 
 // Click and tooltip interaction
 const raycaster = new Raycaster();
-raycaster.params.Points.threshold = raycaster_threshold;
+raycaster.params.Points.threshold = resolution.raycaster_threshold;
 
 function mouseToThree(mouseX, mouseY) {
   return new Vector3((mouseX / viz_width) * 2 - 1, -(mouseY / height) * 2 + 1, 1);

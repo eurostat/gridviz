@@ -38,17 +38,21 @@ body {
 
 /*  BUTTON GROUP */
 .btn-group {
-  position:absolute;
-  bottom:2%;
-  right:2%;
+  position: absolute;
+  bottom: 2%;
+  right: 2%;
 }
 .btn-group button {
   background-color: #004494; /* EU blue */
   border: 1px solid gray;
-  color: white; 
-  padding: 10px 24px; 
-  cursor: pointer; 
-  float: left; 
+  color: white;
+  padding: 10px 24px;
+  cursor: pointer;
+  float: left;
+}
+
+.active {
+  border: 4px solid white !important;
 }
 
 /* Clear floats (clearfix hack) */
@@ -65,4 +69,26 @@ body {
 /* Add a background color on hover */
 .btn-group button:hover {
   background-color: #012f63;
+}
+
+/* LEGEND */
+#legend {
+  z-index: 99999999999999999;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 12px;
+  fill: white;
+  height: 65px;
+  width: 480px;
+  padding-top: 5px;
+}
+/* legend cells */
+rect.swatch {
+  stroke: white;
+  stroke-width: 0.5px;
+}
+
+.legendTitle {
+  font-size: 15px;
 }
