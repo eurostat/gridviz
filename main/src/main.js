@@ -8,59 +8,79 @@ import * as d3Fetch from "d3-fetch";
 import * as d3Array from "d3-array";
 import * as d3Format from "d3-format";
 //import * as d3 from "d3";
-import * as THREE from "three/src/constants";
 import * as LEGEND from "d3-svg-legend";
-import { Scene, PerspectiveCamera, WebGLRenderer, Points, PointsMaterial, Geometry, Vector3, Color, Raycaster, Object3D } from "three";
-import { sortBy } from "lodash";
 
+import {
+  Scene,
+  PerspectiveCamera,
+  WebGLRenderer,
+  Points,
+  PointsMaterial,
+  Geometry,
+  Vector3,
+  Color,
+  Raycaster,
+  Object3D,
+  Float32BufferAttribute,
+  BufferGeometry,
+  LineBasicMaterial,
+  Line
+} from "three";
+import * as THREE from "three/src/constants";
+import { Line2 } from "../lib/lines/Line2";
+import { LineSegments2 } from "../lib/lines/LineSegments2";
+import { LineGeometry } from "../lib/lines/LineGeometry";
+import { LineMaterial } from "../lib/lines/LineMaterial";
+import { sortBy } from "lodash";
+import * as TopoJSON from "topojson";
+
+// datasets
 let grids = {
   "1km": {
-    point_size: 0.0000271,
-    raycaster_threshold: 0.00002,
+    point_size: 0.0271,
+    raycaster_threshold: 0.02,
     cache: []
   },
   "2km": {
-    point_size: 0.000055,
-    raycaster_threshold: 0.00002,
+    point_size: 0.055,
+    raycaster_threshold: 0.02,
     cache: []
   },
   "5km": {
-    point_size: 0.0001375,
-    raycaster_threshold: 0.00002,
+    point_size: 0.1375,
+    raycaster_threshold: 0.02,
     cache: []
   }
 };
+// set inital grid
+var resolution = grids["5km"];
 
-var resolution = grids["5km"]; //inital view is of the 5km grid
-
+// three.js scene params
 let width = window.innerWidth - 5;
 let viz_width = width;
 let height = window.innerHeight - 5;
-
 let fov = 40;
-let near = 0.001;
-let far = 0.1;
-let raycaster_threshold = 0.00002;
-
-//offset for EPSG3035 to vector3 transformation
-let offsetX = -0.04;
-let offsetY = -0.03;
-
-//colouring
-let array_extent = null; //d3array.extent of grid
-let color_scheme = d3ScaleChromatic.interpolateTurbo;
-let colorScale = d3Scale.scaleSqrt();
-let background_color = 0x000;
+let near = 1;
+let far = 100;
+let raycaster_threshold = 0.02;
 
 // Set up camera and scene
 let camera = new PerspectiveCamera(fov, width / height, near, far);
 let scene;
 let points;
 let tooltip_container;
-let cells = [];
 
-let color_array = ["#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#6a3d9a", "#cab2d6", "#ffff99"];
+//offset for EPSG3035 to vector3 transformation
+let offsetX = -40;
+let offsetY = -30;
 
+//colouring
+let array_extent = null; //d3array.extent of grid
+let color_scheme = d3ScaleChromatic.interpolateTurbo;
+let colorScale = d3Scale.scaleSqrt();
+let background_color = 0xffffff;
+
+// d3-legend
 let grid_legend = null;
 
 // Add canvas to DOM
@@ -89,6 +109,7 @@ function init() {
   addTooltipContainer();
   addMouseEventsToView();
   loadInitialGrid("5km");
+  loadBoundariesJSON();
   addClickEventsToResButtons();
 }
 
@@ -116,6 +137,91 @@ function addRemainingGridsToCache() {
   requestGrid("2km").then(() => {
     //requestGrid("1km"); //too much
   });
+}
+
+function loadBoundariesJSON() {
+  let boundariesURL = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/2016/3035/20M/0.json";
+  d3Fetch.json(boundariesURL).then(json => {
+    let features = TopoJSON.feature(json, json.objects.nutsbn).features;
+    addBoundariesToScene(features);
+  });
+}
+
+function addBoundariesToScene(features) {
+  for (let i = 0; i < features.length; i++) {
+    let coords = [];
+    let feature = features[i];
+    // each feature.coordinates array
+    for (let c = 0; c < feature.geometry.coordinates.length; c++) {
+      if (feature.geometry.type == "LineString") {
+        let xyz = toScreenCoordinates(feature.geometry.coordinates[c]);
+        coords.push(xyz);
+      } else if (feature.geometry.type == "Polygon") {
+        let xyz = toScreenCoordinates(feature.geometry.coordinates[c][s]);
+        coords.push(xyz);
+      } else if (feature.geometry.type == "MultiPolygon") {
+        let coords = [];
+        for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
+          for (let m = 0; m < feature.geometry.coordinates[c][s].length; m++) {
+            let xyz = toScreenCoordinates(feature.geometry.coordinates[c][s][m]);
+            coords.push(xyz);
+          }
+        }
+      }
+      if (feature.geometry.type !== "LineString") {
+        drawBoundary(coords);
+      }
+    }
+    if (feature.geometry.type == "LineString") {
+      drawBoundary(coords);
+    }
+  }
+}
+
+function drawBoundary(coords) {
+  let line_geom = new LineGeometry();
+  let positions = [];
+  let colors = [];
+  let color = new Color("#000");
+  for (var i = 0; i < coords.length; i++) {
+    //line_geom.vertices.push(new Vector3(coords[i].x, coords[i].y, 0.001));
+    positions.push(coords[i].x, coords[i].y, 0.001);
+    colors.push(color.r, color.g, color.b);
+  }
+  line_geom.setPositions(positions);
+  line_geom.setColors(colors);
+
+  /*   var line_material = new LineBasicMaterial({
+    color: 0x000000,
+    linewidth: 2
+  }); */
+  let line_material = new LineMaterial({
+    //color: 0xffffff,
+    linewidth: 0.002, // in pixels - a value too large will break the app
+    vertexColors: THREE.VertexColors
+    //resolution:  // to be set by renderer, eventually
+    //dashed: false
+  });
+  var line = new Line2(line_geom, line_material);
+  scene.add(line);
+}
+
+function toScreenCoordinates(coords) {
+  // EPSG 3035 to WebGL
+  return {
+    x: coords[0] / 100000 + offsetX,
+    y: coords[1] / 100000 + offsetY,
+    z: 0
+  };
+}
+
+function fromScreenCoordinates(coords) {
+  // WebGL to EPSG 3035
+  return {
+    x: (coords[0] - offsetX) * 100000,
+    y: (coords[1] - offsetY) * 100000,
+    z: 0
+  };
 }
 
 function changeRes(res) {
@@ -162,29 +268,36 @@ function addPointsToScene() {
   // add grid to cache if required
   // At the moment the entire file is loaded into a cache. Here is where tiling logic needs to be applied..
 
-  let pointsGeometry = new Geometry(); /*   var bufferGeometry = new THREE.BufferGeometry();
-  var positions = new Float32Array(vertices.length * 3);
-  for (var i = 0; i < vertices.length; i++) {
-    positions[i * 3] = vertices[i].x;
-    positions[i * 3 + 1] = vertices[i].y;
-    positions[i * 3 + 2] = vertices[i].z;
-  }
-  indices = [0, 1, 2, 0, 2, 3];
-  bufferGeometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
-  bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1)); */ //threejs recommends using BufferGeometry for performance //Buffer geometry
-  /*   let geometry = new THREE.BufferGeometry(); */ let colors = [];
-  for (let cell of resolution.cache) {
+  //let pointsGeometry = new Geometry();
+  //threejs recommends using BufferGeometry for performance
+  /*   indices = [0, 1, 2, 0, 2, 3];
+  bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));  */
+
+  let geometry = new BufferGeometry();
+  let colors = [];
+  let positions = [];
+  for (var i = 0; i < resolution.cache.length; i++) {
     // Set vector coordinates from data
-    let coords = [cell.position[0], cell.position[1]];
+    let coords = [resolution.cache[i].position[0], resolution.cache[i].position[1]];
     // TODO: find a cleaner way of converting EPSG 3035 to Vector3 xyz. Values must be between -1 and 1
-    let vectorCoords = new Vector3(coords[0] / 100000 + offsetX, coords[1] / 100000 + offsetY, 0);
-    // in Threejs, colors and vertices are added to the geometry object in separate, corresponding arrays
-    pointsGeometry.vertices.push(vectorCoords);
-    let hex = color_scheme(colorScale(cell.value)); //d3 scale-chromatic
-    cell.color = hex; //for tooltip
-    colors.push(new Color(hex));
+    let x = coords[0] / 100 + offsetX;
+    let y = coords[1] / 100 + offsetY;
+    let z = 0;
+    //let vectorCoords = new Vector3(x,y,z);
+    //pointsGeometry.vertices.push(vectorCoords);
+    positions.push(x, y, z);
+
+    let hex = color_scheme(colorScale(resolution.cache[i].value)); //d3 scale-chromatic
+    resolution.cache[i].color = hex; //for tooltip
+    let color = new Color(hex);
+    colors.push(color.r, color.g, color.b);
   }
-  pointsGeometry.colors = colors;
+  //pointsGeometry.colors = colors;
+
+  //buffer geometry attributes
+  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  geometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
+  geometry.computeBoundingSphere();
 
   let pointsMaterial = new PointsMaterial({
     size: resolution.point_size,
@@ -194,9 +307,9 @@ function addPointsToScene() {
   });
 
   if (!points) {
-    points = new Points(pointsGeometry, pointsMaterial);
+    points = new Points(geometry, pointsMaterial);
   } else {
-    points.geometry = pointsGeometry;
+    points.geometry = geometry;
     points.material = pointsMaterial;
   }
 
@@ -215,7 +328,7 @@ function addPointsToScene() {
 function addLegend() {
   var scale = d3Scale.scaleSequentialSqrt(d3ScaleChromatic.interpolateTurbo).domain(array_extent);
   var svg = d3Selection.select("#legend");
-  let format = d3Format.format(".0f");
+  let format = d3Format.format(".0s");
 
   svg
     .append("g")
@@ -223,8 +336,8 @@ function addLegend() {
     .attr("transform", "translate(10,10)"); //padding
 
   grid_legend = LEGEND.legendColor()
-    .shapeWidth(40)
-    .cells(10)
+    .shapeWidth(30)
+    .cells(13)
     .labelFormat(format)
     .orient("horizontal")
     .scale(scale)
@@ -304,6 +417,20 @@ function zoomHandler(d3_transform) {
   let y = (d3_transform.y - height / 2) / scale;
   let z = getZFromScale(scale);
   camera.position.set(x, y, z);
+  //get topoNames
+  //getPlacenames()
+}
+
+function getPlacenames() {
+  //http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo
+  //let north =
+  //let URL =
+  d3Fetch.json(URL).then(
+    json => {
+      console.log(json);
+    },
+    err => console.error(err)
+  );
 }
 
 function getScaleFromZ(camera_z_position) {
@@ -344,7 +471,7 @@ function checkIntersects(mouse_position) {
     let intersect = sorted_intersects[0];
     let index = intersect.index;
     let cell = resolution.cache[index];
-    highlightPoint(cell);
+    //highlightPoint(cell);
     showTooltip(mouse_position, cell);
   } else {
     removeHighlights();
@@ -362,7 +489,7 @@ function highlightPoint(cell) {
   let geometry = new Geometry();
   // FIXME
   geometry.vertices.push(new Vector3(cell.position[0], cell.position[1], 0));
-  geometry.colors = [new Color(color_array[1])];
+  geometry.colors = [new Color("#ffffff")];
 
   let material = new PointsMaterial({
     size: resolution.point_size,
