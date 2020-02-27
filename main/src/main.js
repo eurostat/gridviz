@@ -78,7 +78,8 @@ let offsetY = -30;
 let array_extent = null; //d3array.extent of grid
 let color_scheme = d3ScaleChromatic.interpolateTurbo;
 let colorScale = d3Scale.scaleSqrt();
-let background_color = 0xffffff;
+let background_color = 0x000000;
+let border_color = 0xffffff;
 
 // d3-legend
 let grid_legend = null;
@@ -142,38 +143,40 @@ function addRemainingGridsToCache() {
 function loadBoundariesJSON() {
   let boundariesURL = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/2016/3035/20M/0.json";
   d3Fetch.json(boundariesURL).then(json => {
+    let newArray = json.objects.nutsrg.geometries.filter((v, i) => {
+      return v.properties.id !== "TR";
+    });
+    json.objects.nutsbn.geometries = newArray;
+
     let features = TopoJSON.feature(json, json.objects.nutsbn).features;
     addBoundariesToScene(features);
   });
 }
 
 function addBoundariesToScene(features) {
+  let coords = [];
   for (let i = 0; i < features.length; i++) {
-    let coords = [];
     let feature = features[i];
-    // each feature.coordinates array
     for (let c = 0; c < feature.geometry.coordinates.length; c++) {
-      if (feature.geometry.type == "LineString") {
-        let xyz = toScreenCoordinates(feature.geometry.coordinates[c]);
-        coords.push(xyz);
-      } else if (feature.geometry.type == "Polygon") {
-        let xyz = toScreenCoordinates(feature.geometry.coordinates[c][s]);
-        coords.push(xyz);
-      } else if (feature.geometry.type == "MultiPolygon") {
-        let coords = [];
+      coords = [];
+      if (feature.geometry.type == "Polygon") {
+        //each polygon:
         for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
+          let xyz = toScreenCoordinates(feature.geometry.coordinates[c][s]);
+          coords.push(xyz);
+        }
+        drawBoundary(coords);
+      } else if (feature.geometry.type == "MultiPolygon") {
+        for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
+          coords = [];
+          //each polygon in multipolygon:
           for (let m = 0; m < feature.geometry.coordinates[c][s].length; m++) {
             let xyz = toScreenCoordinates(feature.geometry.coordinates[c][s][m]);
             coords.push(xyz);
           }
+          drawBoundary(coords);
         }
       }
-      if (feature.geometry.type !== "LineString") {
-        drawBoundary(coords);
-      }
-    }
-    if (feature.geometry.type == "LineString") {
-      drawBoundary(coords);
     }
   }
 }
@@ -182,7 +185,7 @@ function drawBoundary(coords) {
   let line_geom = new LineGeometry();
   let positions = [];
   let colors = [];
-  let color = new Color("#000");
+  let color = new Color(border_color);
   for (var i = 0; i < coords.length; i++) {
     //line_geom.vertices.push(new Vector3(coords[i].x, coords[i].y, 0.001));
     positions.push(coords[i].x, coords[i].y, 0.001);
@@ -197,7 +200,7 @@ function drawBoundary(coords) {
   }); */
   let line_material = new LineMaterial({
     //color: 0xffffff,
-    linewidth: 0.002, // in pixels - a value too large will break the app
+    linewidth: 0.001, // in pixels - a value too large will break the app
     vertexColors: THREE.VertexColors
     //resolution:  // to be set by renderer, eventually
     //dashed: false

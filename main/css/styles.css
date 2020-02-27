@@ -44,7 +44,7 @@ body {
 }
 .btn-group button {
   background-color: #004494; /* EU blue */
-  border: 1px solid gray;
+  border: 4px solid #004494;
   color: white;
   padding: 10px 24px;
   cursor: pointer;
@@ -69,6 +69,16 @@ body {
 /* Add a background color on hover */
 .btn-group button:hover {
   background-color: #012f63;
+}
+
+#btn2km {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+#btn5km {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 /* LEGEND */
