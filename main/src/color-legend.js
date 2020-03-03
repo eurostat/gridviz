@@ -143,6 +143,7 @@ export function legend({
         .attr("fill", "currentColor")
         .attr("text-anchor", "start")
         .attr("font-weight", "bold")
+        .attr("font-size", "16")
         .text(title)
     );
 

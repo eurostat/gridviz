@@ -1,5 +1,6 @@
 body {
   margin: 0px;
+  font-family: "roboto_condensedbold", Arial, sans-serif;
 }
 
 #loading-gif {
@@ -99,6 +100,33 @@ rect.swatch {
   stroke-width: 0.5px;
 }
 
-.legendTitle {
-  font-size: 15px;
+/* Placenames  */
+.placename {
+  color: #fff;
+  font-family: sans-serif;
+  padding: 2px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* Color scheme select  */
+#color-dropdown-container {
+  float: right;
+  display: inline-flex;
+  line-height: 30px;
+}
+.dropdown-label {
+  color: white;
+}
+
+#header-bar {
+  padding: 10px;
+  height: 3vh;
+  background-color: #004494;
+  color: white;
+}
+#app-title {
+  font-size: 30px;
+  font-weight: bold;
+  float: left;
+  line-height: 30px;
 }

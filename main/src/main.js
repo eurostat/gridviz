@@ -23,18 +23,39 @@ import {
   Object3D,
   Float32BufferAttribute,
   BufferGeometry,
-  LineBasicMaterial,
-  Line
+  Group
+  //LineBasicMaterial,
+  //Line
 } from "three";
 import * as THREE from "three/src/constants";
+// extra Three.js modules not included in main build
 import { Line2 } from "../lib/lines/Line2";
 import { LineSegments2 } from "../lib/lines/LineSegments2";
 import { LineGeometry } from "../lib/lines/LineGeometry";
 import { LineMaterial } from "../lib/lines/LineMaterial";
+import { CSS2DRenderer, CSS2DObject } from "../lib/CSS2D/CSS2DRenderer";
+
+// helpers
 import { sortBy } from "lodash";
 import * as TopoJSON from "topojson";
 
+//boundaries json
+let nuts_20m_URL = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/2016/3035/20M/0.json";
+let nuts_10m_URL = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/2016/3035/10M/0.json";
+let nuts_simplification = "20M"; //current nuts2json
+let nuts_scale_threshold = 100; //scale at which nuts2json changes simplification
+let line_material = null;
+let line_width = 0.002; //GL.LINE height
+let line_z = 0.002; //line vertices z coordinate
+let boundaries_group = null; //THREE.Group for nuts borders
+
+//threejs points object params
+let points_material = null;
+let points_geometry = null;
+let point_z = 0.001;
+
 // datasets
+//TODO: adjust 2km & 1km raycaster_thresholds
 let grids = {
   "1km": {
     point_size: 0.0271,
@@ -56,23 +77,21 @@ let grids = {
 var resolution = grids["5km"];
 
 // three.js scene params
-let width = window.innerWidth - 5;
-let viz_width = width;
-let height = window.innerHeight - 5;
+let viz_width = window.innerWidth - 5; //account for additional DOM elements
+let viz_height = window.innerHeight - 5;
 let fov = 40;
-let near = 1;
-let far = 100;
+let near = 0.001; //minScale
+let far = 100; //maxScale
 let raycaster_threshold = 0.02;
 
 // Set up camera and scene
-let camera = new PerspectiveCamera(fov, width / height, near, far);
+let camera = new PerspectiveCamera(fov, viz_width / viz_height, near, far);
 let scene;
 let points;
 let tooltip_container;
 
 //offset for EPSG3035 to vector3 transformation
-let offsetX = -40;
-let offsetY = -30;
+let offset = { x: -40, y: -30 };
 
 //colouring
 let array_extent = null; //d3array.extent of grid
@@ -84,34 +103,53 @@ let border_color = 0xffffff;
 // d3-legend
 let grid_legend = null;
 
-// Add canvas to DOM
+//tooltip
+let tooltip_state = null;
+
+// Add renderer canvas to DOM
 let renderer = new WebGLRenderer();
-renderer.setSize(width, height);
+renderer.setSize(viz_width, viz_height);
 document.body.appendChild(renderer.domElement);
+
+// placenames
+let label_height = 0.001; //placenames z value
+let label_nodes = [];
+let currentExtent = null; //3035 bbox
+
+// placenames CSS renderer
+let labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(viz_width, viz_height);
+labelRenderer.domElement.style.position = "absolute";
+labelRenderer.domElement.style.top = 0;
+document.body.appendChild(labelRenderer.domElement);
 
 // for zoom
 const view = d3Selection.select(renderer.domElement);
 
 // adjust camera and renderer upon window resize
 window.addEventListener("resize", () => {
-  width = window.innerWidth;
-  viz_width = width;
-  height = window.innerHeight;
+  viz_width = window.innerWidth;
+  viz_height = window.innerHeight;
 
-  renderer.setSize(width, height);
-  camera.aspect = width / height;
+  renderer.setSize(viz_width, viz_height);
+  camera.aspect = viz_width / viz_height;
   camera.updateProjectionMatrix();
 });
 
 init();
 function init() {
   initScene();
-  setUpZoom();
+  setUpPanAndZoom();
   addTooltipContainer();
-  addMouseEventsToView();
+  addEventListeners();
   loadInitialGrid("5km");
-  loadBoundariesJSON();
+  loadBoundariesJSON(nuts_20m_URL);
+}
+
+function addEventListeners() {
+  addMouseEventsToView();
   addClickEventsToResButtons();
+  addChangeEventToDropdowns();
 }
 
 // initialize three.js scene
@@ -140,14 +178,12 @@ function addRemainingGridsToCache() {
   });
 }
 
-function loadBoundariesJSON() {
-  let boundariesURL = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/2016/3035/20M/0.json";
-  d3Fetch.json(boundariesURL).then(json => {
+function loadBoundariesJSON(url) {
+  d3Fetch.json(url).then(json => {
     let newArray = json.objects.nutsrg.geometries.filter((v, i) => {
-      return v.properties.id !== "TR";
+      return v.properties.id !== "TR"; //omit Turkey
     });
     json.objects.nutsbn.geometries = newArray;
-
     let features = TopoJSON.feature(json, json.objects.nutsbn).features;
     addBoundariesToScene(features);
   });
@@ -155,75 +191,82 @@ function loadBoundariesJSON() {
 
 function addBoundariesToScene(features) {
   let coords = [];
+  let initial = true;
+  if (!boundaries_group) {
+    boundaries_group = new Group();
+    boundaries_group.renderOrder = 999; //always on top
+  } else {
+    //empty current boundaries group
+    for (var i = boundaries_group.children.length - 1; i >= 0; i--) {
+      boundaries_group.remove(boundaries_group.children[i]);
+    }
+    initial = false;
+  }
+
+  // GEOJSON to ThreeJS
   for (let i = 0; i < features.length; i++) {
     let feature = features[i];
     for (let c = 0; c < feature.geometry.coordinates.length; c++) {
       coords = [];
       if (feature.geometry.type == "Polygon") {
-        //each polygon:
         for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
-          let xyz = toScreenCoordinates(feature.geometry.coordinates[c][s]);
+          let xyz = toWorldCoordinates(feature.geometry.coordinates[c][s]);
           coords.push(xyz);
         }
-        drawBoundary(coords);
+        boundaries_group.add(createLineFromCoords(coords));
       } else if (feature.geometry.type == "MultiPolygon") {
         for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
-          coords = [];
           //each polygon in multipolygon:
+          coords = [];
           for (let m = 0; m < feature.geometry.coordinates[c][s].length; m++) {
-            let xyz = toScreenCoordinates(feature.geometry.coordinates[c][s][m]);
+            let xyz = toWorldCoordinates(feature.geometry.coordinates[c][s][m]);
             coords.push(xyz);
           }
-          drawBoundary(coords);
+          boundaries_group.add(createLineFromCoords(coords));
         }
       }
     }
   }
+  if (initial) {
+    scene.add(boundaries_group);
+  }
 }
 
-function drawBoundary(coords) {
+function createLineFromCoords(coords) {
   let line_geom = new LineGeometry();
   let positions = [];
   let colors = [];
   let color = new Color(border_color);
   for (var i = 0; i < coords.length; i++) {
-    //line_geom.vertices.push(new Vector3(coords[i].x, coords[i].y, 0.001));
-    positions.push(coords[i].x, coords[i].y, 0.001);
+    positions.push(coords[i].x, coords[i].y, line_z);
     colors.push(color.r, color.g, color.b);
   }
   line_geom.setPositions(positions);
   line_geom.setColors(colors);
-
-  /*   var line_material = new LineBasicMaterial({
-    color: 0x000000,
-    linewidth: 2
-  }); */
-  let line_material = new LineMaterial({
-    //color: 0xffffff,
-    linewidth: 0.001, // in pixels - a value too large will break the app
-    vertexColors: THREE.VertexColors
-    //resolution:  // to be set by renderer, eventually
-    //dashed: false
-  });
-  var line = new Line2(line_geom, line_material);
-  scene.add(line);
+  if (!line_material) {
+    line_material = new LineMaterial({
+      linewidth: line_width,
+      vertexColors: THREE.VertexColors
+    });
+  }
+  //line2 allows custom linewidth (but not currently included in main threejs build)
+  return new Line2(line_geom, line_material);
 }
 
-function toScreenCoordinates(coords) {
-  // EPSG 3035 to WebGL
+// EPSG 3035 to WebGL
+function toWorldCoordinates(coords) {
   return {
-    x: coords[0] / 100000 + offsetX,
-    y: coords[1] / 100000 + offsetY,
+    x: coords[0] / 100000 + offset.x,
+    y: coords[1] / 100000 + offset.y,
     z: 0
   };
 }
 
-function fromScreenCoordinates(coords) {
-  // WebGL to EPSG 3035
+// WebGL to EPSG 3035
+function fromWorldCoordinates(coords) {
   return {
-    x: (coords[0] - offsetX) * 100000,
-    y: (coords[1] - offsetY) * 100000,
-    z: 0
+    x: (coords[0] - offset.x) * 100000,
+    y: (coords[1] - offset.y) * 100000
   };
 }
 
@@ -232,11 +275,7 @@ function changeRes(res) {
   resolution = grids[res];
   //update color scale (d3.scaleChromatic)
   updateColorScale();
-  // remove current points layer
-  /*   scene.remove(points);
-  // empty points object
-  points = null; */
-  // add chosen resolution as points layer
+  // add or update points layer
   addPointsToScene();
   //update raycaster
   raycaster.params.Points.threshold = resolution.raycaster_threshold;
@@ -266,62 +305,76 @@ function updateColorScale() {
   array_extent = d3Array.extent(resolution.cache, d => d.value);
   colorScale.domain(array_extent);
 }
+function onChangeColourScheme(scheme) {
+  color_scheme = d3ScaleChromatic[scheme];
+  updatePointsColors();
+  updateLegend();
+}
 
-function addPointsToScene() {
-  // add grid to cache if required
-  // At the moment the entire file is loaded into a cache. Here is where tiling logic needs to be applied..
-
-  //let pointsGeometry = new Geometry();
-  //threejs recommends using BufferGeometry for performance
-  /*   indices = [0, 1, 2, 0, 2, 3];
-  bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));  */
-
-  let geometry = new BufferGeometry();
+function updatePointsColors() {
   let colors = [];
-  let positions = [];
   for (var i = 0; i < resolution.cache.length; i++) {
-    // Set vector coordinates from data
-    let coords = [resolution.cache[i].position[0], resolution.cache[i].position[1]];
-    // TODO: find a cleaner way of converting EPSG 3035 to Vector3 xyz. Values must be between -1 and 1
-    let x = coords[0] / 100 + offsetX;
-    let y = coords[1] / 100 + offsetY;
-    let z = 0;
-    //let vectorCoords = new Vector3(x,y,z);
-    //pointsGeometry.vertices.push(vectorCoords);
-    positions.push(x, y, z);
-
     let hex = color_scheme(colorScale(resolution.cache[i].value)); //d3 scale-chromatic
     resolution.cache[i].color = hex; //for tooltip
     let color = new Color(hex);
     colors.push(color.r, color.g, color.b);
   }
-  //pointsGeometry.colors = colors;
+  //update colors
+  points_geometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
+  points_geometry.computeBoundingSphere();
+  points.geometry = points_geometry;
+}
 
-  //buffer geometry attributes
-  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
-  geometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
-  geometry.computeBoundingSphere();
-
-  let pointsMaterial = new PointsMaterial({
-    size: resolution.point_size,
-    sizeAttenuation: true,
-    //https://github.com/mrdoob/three.js/blob/master/src/constants.js
-    vertexColors: THREE.VertexColors
-  });
-
-  if (!points) {
-    points = new Points(geometry, pointsMaterial);
-  } else {
-    points.geometry = geometry;
-    points.material = pointsMaterial;
+function addPointsToScene() {
+  //threejs recommends using BufferGeometry instead of Geometry for performance
+  /*   indices = [0, 1, 2, 0, 2, 3];
+  bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));  */
+  if (!points_geometry) {
+    points_geometry = new BufferGeometry();
   }
 
-  scene.add(points);
+  let colors = [];
+  let positions = [];
+  for (var i = 0; i < resolution.cache.length; i++) {
+    // Set vector coordinates from data
+    let coords = [resolution.cache[i].position[0], resolution.cache[i].position[1]];
+    let x = coords[0] / 100 + offset.x; //not using toWorldCoordinates() here because zeros have been removed from the csv file
+    let y = coords[1] / 100 + offset.y;
+    let z = point_z;
+    positions.push(x, y, z);
+    let hex = color_scheme(colorScale(resolution.cache[i].value)); //d3 scale-chromatic
+    resolution.cache[i].color = hex; //for tooltip
+    let color = new Color(hex);
+    colors.push(color.r, color.g, color.b);
+  }
+  //set buffer geometry attributes
+  points_geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  points_geometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
+  points_geometry.computeBoundingSphere();
+  //create or reuse points Material
+  if (!points_material) {
+    points_material = new PointsMaterial({
+      size: resolution.point_size,
+      sizeAttenuation: true,
+      //https://github.com/mrdoob/three.js/blob/master/src/constants.js
+      vertexColors: THREE.VertexColors
+    });
+  } else {
+    points_material.size = resolution.point_size;
+  }
+  //create or reuse points object
+  if (!points) {
+    points = new Points(points_geometry, points_material);
+    points.renderOrder = 1; //bottom
+    scene.add(points);
+  } else {
+    points.geometry = points_geometry;
+    points.material = points_material;
+  }
+  //create or update legend
   if (grid_legend) {
-    // update existing legend
     updateLegend();
   } else {
-    //create new legend
     addLegend();
   }
   hideLoading();
@@ -329,7 +382,7 @@ function addPointsToScene() {
 }
 
 function addLegend() {
-  var scale = d3Scale.scaleSequentialSqrt(d3ScaleChromatic.interpolateTurbo).domain(array_extent);
+  var legendScale = d3Scale.scaleSequentialSqrt(color_scheme).domain(array_extent);
   var svg = d3Selection.select("#legend");
   let format = d3Format.format(".0s");
 
@@ -343,7 +396,7 @@ function addLegend() {
     .cells(13)
     .labelFormat(format)
     .orient("horizontal")
-    .scale(scale)
+    .scale(legendScale)
     .title("Total Population");
 
   svg.select(".legendSqrt").call(grid_legend);
@@ -357,23 +410,7 @@ function updateLegend() {
 function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
-}
-
-// add d3's zoom
-function setUpZoom() {
-  // define zoom
-  let zoom = d3Zoom
-    .zoom()
-    .scaleExtent([getScaleFromZ(far), getScaleFromZ(near)])
-    .on("zoom", () => {
-      let d3_transform = d3Selection.event.transform;
-      zoomHandler(d3_transform);
-    });
-  view.call(zoom);
-  let initial_scale = getScaleFromZ(far);
-  var initial_transform = d3Zoom.zoomIdentity.translate(viz_width / 2, height / 2).scale(initial_scale);
-  zoom.transform(view, initial_transform);
-  camera.position.set(0, 0, far);
+  labelRenderer.render(scene, camera);
 }
 
 // add events to 'change resolution' buttons
@@ -390,6 +427,13 @@ function addClickEventsToResButtons() {
       }, 100);
     });
   }
+}
+
+function addChangeEventToDropdowns() {
+  let sel = document.getElementById("schemes");
+  sel.addEventListener("change", function(e) {
+    onChangeColourScheme(e.currentTarget.value);
+  });
 }
 
 function unselectOtherButtons(elements) {
@@ -414,26 +458,199 @@ function addMouseEventsToView() {
   });
 }
 
-function zoomHandler(d3_transform) {
-  let scale = d3_transform.k;
-  let x = -(d3_transform.x - viz_width / 2) / scale;
-  let y = (d3_transform.y - height / 2) / scale;
-  let z = getZFromScale(scale);
-  camera.position.set(x, y, z);
-  //get topoNames
-  //getPlacenames()
+// add d3's zoom
+function setUpPanAndZoom() {
+  // define zoom
+  let zoom = d3Zoom
+    .zoom()
+    .scaleExtent([getScaleFromZ(far), getScaleFromZ(near)])
+    .on("zoom", () => {
+      let event = d3Selection.event;
+      if (event) zoomHandler(event);
+    })
+    .on("end", () => {
+      let event = d3Selection.event;
+      if (event) zoomEnd(event);
+    });
+
+  view.call(zoom);
+
+  let initial_scale = getScaleFromZ(far);
+  var initial_transform = d3Zoom.zoomIdentity.translate(viz_width / 2, viz_height / 2).scale(initial_scale);
+  zoom.transform(view, initial_transform);
+
+  //initial camera position
+  camera.position.set(0, 0, far);
 }
 
-function getPlacenames() {
-  //http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo
-  //let north =
-  //let URL =
-  d3Fetch.json(URL).then(
-    json => {
-      console.log(json);
-    },
-    err => console.error(err)
-  );
+function zoomHandler(event) {
+  let scale = event.transform.k;
+  let x = -(event.transform.x - viz_width / 2) / scale;
+  let y = (event.transform.y - viz_height / 2) / scale;
+  let z = getZFromScale(scale);
+  camera.position.set(x, y, z);
+}
+
+function zoomEnd(event) {
+  hideTooltip();
+  let scale = event.transform.k;
+  // get placenames
+  if (points) {
+    //placenames are added to the points object
+    getPlacenames(scale);
+  }
+
+  //change nuts simplification (or not) based on current scale
+  if (scale > nuts_scale_threshold && nuts_simplification !== "10M") {
+    loadBoundariesJSON(nuts_10m_URL);
+    nuts_simplification = "10M";
+  } else if (scale < nuts_scale_threshold && nuts_simplification !== "20M") {
+    loadBoundariesJSON(nuts_20m_URL);
+    nuts_simplification = "20M";
+  }
+}
+
+function getPlacenames(scale) {
+  let where;
+  // labelling thresholds
+  if (scale > 0 && scale < 1) {
+    where = "POPL_2011>1000000";
+  } else if (scale > 1 && scale < 2) {
+    where = "POPL_2011>1000000";
+  } else if (scale > 2 && scale < 4) {
+    where = "POPL_2011>1000000";
+  } else if (scale > 4 && scale < 8) {
+    where = "POPL_2011>1000000";
+  } else if (scale > 8 && scale < 16) {
+    where = "POPL_2011>1000000";
+  } else if (scale > 16 && scale < 32) {
+    where = "POPL_2011>1000000";
+  } else if (scale > 32 && scale < 64) {
+    where = "POPL_2011>1000000";
+  } else if (scale > 64 && scale < 128) {
+    where = "POPL_2011>300000";
+  } else if (scale > 128 && scale < 256) {
+    where = "POPL_2011>300000";
+  } else if (scale > 256 && scale < 512) {
+    where = "POPL_2011>10000";
+  } else if (scale > 512 && scale < 1024) {
+    where = "POPL_2011>10000";
+  } else if (scale > 1024) {
+    where = "POPL_2011>10000";
+  }
+  let envelope = getCurrentViewExtent();
+  currentExtent = envelope;
+  //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
+  let baseURL = "https://ec.europa.eu/regio/regiogis/gis/arcgis/rest/services/Urban/urban_centres_towns/MapServer/0/query?";
+  let URL =
+    baseURL +
+    "where=" +
+    where +
+    "&geometry=" +
+    envelope.xmin +
+    "," +
+    envelope.ymin +
+    "," +
+    envelope.xmax +
+    "," +
+    envelope.ymax +
+    "&geometryType=esriGeometryEnvelope&f=json&outFields=city_town_name,POPL_2011&resultRecordCount=200";
+  let uri = encodeURI(URL);
+  d3Fetch.json(uri).then(res => {
+    if (res.features.length > 0) {
+      addPlacenamesToScene(res.features);
+    }
+  });
+}
+
+function addPlacenamesToScene(placenames) {
+  removePlacenamesFromScene();
+  for (let p = 0; p < placenames.length; p++) {
+    let label = createPlacenameLabelObject(placenames[p]);
+    // TODO: group objects manually
+    points.add(label);
+  }
+}
+
+function removePlacenamesFromScene() {
+  // remove label objects from points layer
+  for (var i = points.children.length - 1; i >= 0; i--) {
+    points.remove(points.children[i]);
+  }
+}
+
+function createPlacenameLabelObject(placename) {
+  var placeDiv = document.createElement("div");
+  placeDiv.className = "placename";
+  placeDiv.textContent = placename.attributes.city_town_name;
+  placeDiv.style.marginTop = "-1em";
+  //label_nodes.push(placeDiv);
+  var placeLabel = new CSS2DObject(placeDiv);
+  let pos = toWorldCoordinates([placename.geometry.x, placename.geometry.y]);
+  placeLabel.position.set(pos.x, pos.y, label_height);
+  return placeLabel;
+}
+
+function getCurrentViewExtent() {
+  let z = 0.5;
+  let padding = 10; // making sure the screen coords hit the scene
+  //https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z
+
+  /*   var elem = renderer.domElement, 
+  boundingRect = elem.getBoundingClientRect(),
+  x = (clientX - boundingRect.left) * (elem.width / boundingRect.width),
+  y = (clientY - boundingRect.top) * (elem.height / boundingRect.height);
+
+var vector = new THREE.Vector3( 
+  ( x / viz_width ) * 2 - 1, 
+  - ( y / viz_height ) * 2 + 1, 
+  0.5 
+);
+
+projector.unprojectVector( vector, camera ); */
+
+  //let bottomLeftVector = mouseToThree(padding, viz_height - padding); //screen x,y
+  //let topRightVector = mouseToThree(viz_width - padding, padding); //screen x,y
+
+  //let bottomLeftWorld = getWorldCoordsFromVector(bottomLeftVector);
+  //let topRightWorld = getWorldCoordsFromVector(topRightVector);
+
+  let bottomLeftWorld = getWorldCoordsFromScreen(10, 700);
+  let topRightWorld = getWorldCoordsFromScreen(1000, 10);
+
+  let BL = fromWorldCoordinates([bottomLeftWorld.x, bottomLeftWorld.y]);
+  let TR = fromWorldCoordinates([topRightWorld.x, topRightWorld.y]);
+
+  // FIXME: currently returning full european extent
+  return {
+    xmin: 1053668.5589,
+    ymin: 1645342.8583,
+    xmax: 5724066.4412,
+    ymax: 5901309.0137
+  };
+  /*   return {
+    xmin: BL.x,
+    ymin: BL.y,
+    xmax: TR.x,
+    ymax: TR.y
+  }; */
+}
+
+// get the position of a canvas event in world coords
+function getWorldCoordsFromScreen(clientX, clientY) {
+  var vec = new Vector3(); // create once and reuse
+  var pos = new Vector3(); // create once and reuse
+
+  vec.set((clientX / window.innerWidth) * 2 - 1, -(clientY / window.innerHeight) * 2 + 1, 0.5);
+
+  vec.unproject(camera);
+
+  vec.sub(camera.position).normalize();
+
+  var distance = -camera.position.z / vec.z;
+
+  pos.copy(camera.position).add(vec.multiplyScalar(distance));
+  return pos;
 }
 
 function getScaleFromZ(camera_z_position) {
@@ -441,14 +658,14 @@ function getScaleFromZ(camera_z_position) {
   let half_fov_radians = toRadians(half_fov);
   let half_fov_height = Math.tan(half_fov_radians) * camera_z_position;
   let fov_height = half_fov_height * 2;
-  let scale = height / fov_height; // Divide visualization height by height derived from field of view
+  let scale = viz_height / fov_height; // Divide visualization height by height derived from field of view
   return scale;
 }
 
 function getZFromScale(scale) {
   let half_fov = fov / 2;
   let half_fov_radians = toRadians(half_fov);
-  let scale_height = height / scale;
+  let scale_height = viz_height / scale;
   let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
   return camera_z_position;
 }
@@ -462,7 +679,7 @@ const raycaster = new Raycaster();
 raycaster.params.Points.threshold = resolution.raycaster_threshold;
 
 function mouseToThree(mouseX, mouseY) {
-  return new Vector3((mouseX / viz_width) * 2 - 1, -(mouseY / height) * 2 + 1, 1);
+  return new Vector3((mouseX / viz_width) * 2 - 1, -(mouseY / viz_height) * 2 + 1, 0.5);
 }
 
 function checkIntersects(mouse_position) {
@@ -510,7 +727,7 @@ function removeHighlights() {
 }
 
 // Initial tooltip state
-let tooltip_state = { display: "none" };
+tooltip_state = { display: "none" };
 
 let tooltip_template = document.createRange()
   .createContextualFragment(`<div id="tooltip" style="display: none; position: absolute; pointer-events: none; font-size: 13px; width: 120px; text-align: center; line-height: 1; padding: 6px; background: white; font-family: sans-serif;">
@@ -545,10 +762,19 @@ function showTooltip(mouse_position, cell) {
 }
 
 function hideTooltip() {
-  tooltip_state.display = "none";
-  updateTooltip();
+  if (tooltip_state) {
+    tooltip_state.display = "none";
+    updateTooltip();
+  }
 }
 
+function hideObject(object) {
+  object.traverse(function(child) {
+    if (child instanceof Points) {
+      child.visible = false;
+    }
+  });
+}
 function showLoading() {
   document.getElementById("loading-gif").style.display = "block";
 }
