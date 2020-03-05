@@ -26,8 +26,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>//@author Joseph Davies
-import * as d3ScaleChromatic from "d3-scale-chromatic";
+            <pre class="prettyprint source linenums"><code>import * as d3ScaleChromatic from "d3-scale-chromatic";
 import * as d3Scale from "d3-scale";
 import * as d3Zoom from "d3-zoom";
 import * as d3Selection from "d3-selection";
@@ -46,11 +45,14 @@ import { CSS2DRenderer, CSS2DObject } from "../assets/js/CSS2D/CSS2DRenderer";
 import { sortBy } from "lodash";
 import * as TopoJSON from "topojson";
 import * as CONSTANTS from "./constants.js";
+import "./styles.css";
 
 /**
  * Creates a 2D Three.js scene for visualizing point data derived from gridded statistics.
  *
- *
+ * @author Joseph Davies
+ * @requires "THREE"
+ * @requires "D3"
  * @param {} options
  * @param {HTMLElement} [options.container_element = document.body] - The DOM element used for the THREE.js renderer.
  * @param {number} [options.background_color = 0x000000] - THREE.Scene background color (hexidecimal).
@@ -66,8 +68,9 @@ export function createViewer(options) {
     background_color: 0x000000,
     border_color: 0xffffff, //0x97dbf2
     color_scheme: "interpolateTurbo",
-    show_legend: true, //pending
-    show_color_scheme_selector: true //pending
+    show_legend: true,
+    show_color_scheme_selector: true,
+    csv_endpoint: "https://raw.githubusercontent.com/eurostat/EuroGridViz/master/assets/csv/pop_"
   };
 
   // initial states
@@ -89,6 +92,7 @@ export function createViewer(options) {
   let show_color_scheme_selector = options.show_color_scheme_selector || default_options.show_color_scheme_selector;
   let color_scheme = d3ScaleChromatic[options.color_scheme] || d3ScaleChromatic[default_options.color_scheme];
   let border_color = options.border_color || default_options.border_color;
+  let csv_endpoint = options.csv_endpoint || default_options.csv_endpoint;
 
   // other variables
   let line_material,
@@ -99,6 +103,7 @@ export function createViewer(options) {
     viz_height,
     camera,
     scene,
+    raycaster,
     points,
     tooltip_container,
     tooltip_template,
@@ -119,6 +124,9 @@ export function createViewer(options) {
   viz_height = container_element.clientHeight || window.innerHeight;
   viz_width = container_element.clientWidth || window.innerWidth;
 
+  createLoadingSpinner();
+
+  //build viewer
   createLabelRenderer();
   createWebGLRenderer();
   createCamera();
@@ -126,7 +134,14 @@ export function createViewer(options) {
   createScene();
   addPanAndZoom();
   createTooltipContainer();
+  createResolutionButtons();
+  if (show_color_scheme_selector) {
+    createColorSchemeDropdown();
+  }
+
   addEventListeners();
+
+  //load initial data
   loadInitialGrid("5km");
   loadBordersJson(CONSTANTS.nuts_20m_URL);
 
@@ -167,7 +182,7 @@ export function createViewer(options) {
    */
   function createRaycaster() {
     // Click and tooltip interaction
-    const raycaster = new Raycaster();
+    raycaster = new Raycaster();
     raycaster.params.Points.threshold = grid_config.raycaster_threshold;
   }
 
@@ -181,7 +196,9 @@ export function createViewer(options) {
     //change grid_config
     addClickEventsToResButtons();
     //change color scheme
-    addChangeEventToDropdowns();
+    if (show_color_scheme_selector) {
+      addChangeEventToColorDropdown();
+    }
     //screen resize
     addResizeEvent();
   }
@@ -217,7 +234,7 @@ export function createViewer(options) {
    * @returns Promise
    */
   function requestGrid(res) {
-    return d3Fetch.csv("../assets/csv/pop_" + res + ".csv").then(
+    return d3Fetch.csv(csv_endpoint + res + ".csv").then(
       csv => {
         addGridToCache(csv, res);
       },
@@ -430,7 +447,7 @@ export function createViewer(options) {
   }
 
   /**
-   * create or update points layer
+   * create or update THREE.js points layer
    *
    */
   function addPointsToScene() {
@@ -484,7 +501,7 @@ export function createViewer(options) {
       if (grid_legend) {
         updateLegend();
       } else {
-        addLegend();
+        createLegend();
       }
     }
     hideLoading();
@@ -492,14 +509,126 @@ export function createViewer(options) {
   }
 
   /**
-   * add svg legend to DOM
+   * CSS3 animation spinner to indicate loading
    *
    */
-  function addLegend() {
-    var legendScale = d3Scale.scaleSequentialSqrt(color_scheme).domain(array_extent);
-    var svg = d3Selection.select("#legend");
-    let format = d3Format.format(".0s");
+  function createLoadingSpinner() {
+    let spinner = document.createElement("div");
+    spinner.id = "egv-loading-spinner";
+    spinner.classList.add("lds-ring");
+    let child1 = document.createElement("div");
+    spinner.appendChild(child1);
+    let child2 = document.createElement("div");
+    spinner.appendChild(child2);
+    let child3 = document.createElement("div");
+    spinner.appendChild(child3);
+    let child4 = document.createElement("div");
+    spinner.appendChild(child4);
+    container_element.appendChild(spinner);
+  }
 
+  /**
+   * Creates HTML button elements to allow the user to switch between grid resolutions
+   *
+   */
+  function createResolutionButtons() {
+    let button_container = document.createElement("div");
+    button_container.classList.add("egv-btn-group");
+    let btn2km = document.createElement("button");
+    btn2km.value = "2km";
+    btn2km.name = "resBtn";
+    btn2km.innerHTML = "2km";
+    let btn5km = document.createElement("button");
+    btn5km.value = "5km";
+    btn5km.name = "resBtn";
+    btn5km.innerHTML = "5km";
+    btn5km.classList.add("egv-active");
+    button_container.appendChild(btn2km);
+    button_container.appendChild(btn5km);
+    container_element.appendChild(button_container);
+  }
+
+  /**
+   * Creates an HTML Select element for the different D3 Scale-Chromatic functions
+   *
+   */
+  function createColorSchemeDropdown() {
+    let schemes = [
+      { value: "interpolateBrBG", innerText: "Brown-blue-green" },
+      { value: "interpolatePRGn", innerText: "Purple-green" },
+      { value: "interpolatePiYG", innerText: "Pink-green" },
+      { value: "interpolatePuOr", innerText: "Purple-orange" },
+      { value: "interpolateRdBu", innerText: "Red-blue" },
+      { value: "interpolateRdGy", innerText: "Red-grey" },
+      { value: "interpolateRdYlBu", innerText: "Red-yellow-blue" },
+      { value: "interpolateRdYlGn", innerText: "Red-yellow-green" },
+      { value: "interpolateSpectral", innerText: "Spectral" },
+      { value: "interpolateBlues", innerText: "Blues" },
+      { value: "interpolateGreens", innerText: "Greens" },
+      { value: "interpolateGreys", innerText: "Greys" },
+      { value: "interpolateOranges", innerText: "Oranges" },
+      { value: "interpolatePurples", innerText: "Purples" },
+      { value: "interpolateReds", innerText: "Reds" },
+      { value: "interpolateTurbo", innerText: "Turbo" },
+      { value: "interpolateViridis", innerText: "Viridis" },
+      { value: "interpolateInferno", innerText: "Inferno" },
+      { value: "interpolateMagma", innerText: "Magma" },
+      { value: "interpolatePlasma", innerText: "Plasma" },
+      { value: "interpolateCividis", innerText: "Cividis" },
+      { value: "interpolateWarm", innerText: "Warm" },
+      { value: "interpolateCool", innerText: "Cool" },
+      { value: "interpolateCubehelixDefault", innerText: "CubehelixDefault" },
+      { value: "interpolateBuGn", innerText: "Blue-green" },
+      { value: "interpolateBuPu", innerText: "Blue-purple" },
+      { value: "interpolateGnBu", innerText: "Green-blue" },
+      { value: "interpolateOrRd", innerText: "Orange-red" },
+      { value: "interpolatePuBuGn", innerText: "Purple-blue-green" },
+      { value: "interpolatePuBu", innerText: "Purple-blue" },
+      { value: "interpolatePuRd", innerText: "Purple-red" },
+      { value: "interpolateRdPu", innerText: "Red-purple" },
+      { value: "interpolateYlGnBu", innerText: "Yellow-green-blue" },
+      { value: "interpolateYlGn", innerText: "Yellow-green" },
+      { value: "interpolateYlOrBr", innerText: "Yellow-orange-brown" },
+      { value: "interpolateYlOrRd", innerText: "Yellow-orange-red" },
+      { value: "interpolateRainbow", innerText: "Rainbow" },
+      { value: "interpolateSinebow", innerText: "Sinebow" }
+    ];
+    let dropdown_container = document.createElement("div");
+    dropdown_container.id = "egv-dropdown-container";
+    let select = document.createElement("select");
+    select.id = "schemes";
+    let label = document.createElement("label");
+    label.for = "schemes";
+    label.classList.add("egv-dropdown-label");
+    label.innerText = "Colour Scheme: ";
+
+    for (let i = 0; i &lt; schemes.length; i++) {
+      let scheme = schemes[i];
+      let option = document.createElement("option");
+      option.value = scheme.value;
+      option.innerText = scheme.innerText;
+      select.appendChild(option);
+    }
+    select.value = "interpolateTurbo";
+    dropdown_container.appendChild(label);
+    dropdown_container.appendChild(select);
+    container_element.appendChild(dropdown_container);
+  }
+
+  /**
+   * Add svg legend to DOM using d3-svg-legend
+   *
+   */
+  function createLegend() {
+    let legendScale = d3Scale.scaleSequentialSqrt(color_scheme).domain(array_extent);
+    let svg;
+    if (document.getElementById("egv-legend")) {
+      svg = d3Selection.select("#egv-legend");
+    } else {
+      svg = d3Selection.create("svg").attr("id", "egv-legend");
+      container_element.appendChild(svg.node());
+    }
+    let format = d3Format.format(".0s");
     svg
       .append("g")
       .attr("class", "legendSqrt")
@@ -522,7 +651,7 @@ export function createViewer(options) {
    */
   function updateLegend() {
     var l = d3Selection.selectAll(".legendSqrt").remove();
-    setTimeout(addLegend(), 1000);
+    setTimeout(createLegend(), 1000);
   }
 
   /**
@@ -541,32 +670,27 @@ export function createViewer(options) {
    */
   function addClickEventsToResButtons() {
     let res_buttons = document.getElementsByName("resBtn");
-    res_buttons.forEach(
-      b =>
-        function() {
-          btn.addEventListener("click", function() {
-            showLoading();
-            unselectOtherButtons(res_buttons);
-            btn.classList.add("active");
-            setTimeout(function() {
-              changeRes(btn.value);
-            }, 100);
-          });
-        }
-    );
+    res_buttons.forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        showLoading();
+        unselectOtherButtons(res_buttons);
+        btn.classList.add("egv-active");
+        setTimeout(function() {
+          changeRes(btn.value);
+        }, 100);
+      });
+    });
   }
 
   /**
    * Add change event to color-scheme selector
    *
    */
-  function addChangeEventToDropdowns() {
-    if (show_color_scheme_selector) {
-      let sel = document.getElementById("schemes");
-      sel.addEventListener("change", function(e) {
-        onChangeColorScheme(e.currentTarget.value);
-      });
-    }
+  function addChangeEventToColorDropdown() {
+    let sel = document.getElementById("schemes");
+    sel.addEventListener("change", function(e) {
+      onChangeColorScheme(e.currentTarget.value);
+    });
   }
 
   /**
@@ -575,7 +699,7 @@ export function createViewer(options) {
    * @param {*} elements
    */
   function unselectOtherButtons(elements) {
-    elements.forEach(b => b.classList.remove("active"));
+    elements.forEach(b => b.classList.remove("egv-active"));
   }
 
   function createTooltipContainer() {
@@ -740,7 +864,7 @@ export function createViewer(options) {
    */
   function createPlacenameLabelObject(placename) {
     var placeDiv = document.createElement("div");
-    placeDiv.className = "placename";
+    placeDiv.className = "egv-placename";
     placeDiv.textContent = placename.attributes.city_town_name;
     placeDiv.style.marginTop = "-1em";
     var placeLabel = new CSS2DObject(placeDiv);
@@ -940,7 +1064,7 @@ export function createViewer(options) {
    *
    */
   function showLoading() {
-    document.getElementById("loading-gif").style.display = "block";
+    document.getElementById("egv-loading-spinner").style.display = "block";
   }
 
   /**
@@ -948,7 +1072,7 @@ export function createViewer(options) {
    *
    */
   function hideLoading() {
-    document.getElementById("loading-gif").style.display = "none";
+    document.getElementById("egv-loading-spinner").style.display = "none";
   }
 
   /**
@@ -982,7 +1106,7 @@ export function createViewer(options) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Mar 05 2020 11:00:30 GMT+0100 (GMT+01:00)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Mar 05 2020 15:18:36 GMT+0100 (GMT+01:00)
 </footer>
 
 <script> prettyPrint(); </script>
