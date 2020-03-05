@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>GEOSTAT Visualizer</title>
+    <link rel="shortcut icon" href="../assets/images/favicon.ico" />
+  </head>
+
+  <body>
+    <div id="viz-container" style="height:100vh; width:100vw"></div>
+    <div id="loading-gif">
+      <img src="../assets/images/loading.gif" height="50" />
+    </div>
+
+    <div class="btn-group">
+      <!-- <button id="btn1km" value="1km" name="resBtn">1km²</button> -->
+      <button id="btn2km" value="2km" name="resBtn">2km²</button>
+      <button id="btn5km" value="5km" name="resBtn" class="active">5km²</button>
+    </div>
+
+    <svg id="legend"></svg>
+  </body>
+  <script src="../build/eurogridviz.js"></script>
+  <script src="./example.js"></script>
+</html>
