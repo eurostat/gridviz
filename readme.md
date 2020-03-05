@@ -1,19 +1,61 @@
-# Gridded statistics visualization tool
+# EuroGridViz
 
-The aim of this project is to effectively render gridded statistics client-side.  
-After numerous experiments, we concluded that WebGL was the best method for achieving this.
+Gridded statistics visualization tool.
 
 ![alt text](https://github.com/eurostat/EuroGridLayer/blob/master/assets/images/preview.png "Eurostat population grid")
 
-In terms of performance, funnily enough Three.js has been the best at rendering a 2D grid.
+## [Live demo](https://eurostat.github.io/EuroGridViz/examples/basic/index.html)
 
-## [Live demo](https://eurostat.github.io/EuroGridVisualizer/main)
+## Description
 
-## Installation
+EuroGridViz allows you to visualize large gridded datasets on the browser. Unlike raster-based approaches, this tool utilizes WebGL through Three.js in order to render eveything client-side.
 
-This particular project uses node.js and webpack as development tools.
+## Installation & Usage
 
-- In the 'main' folder, with node.js installed:
-- run 'npm install' from the command line
-- Then run 'npm start' to launch a dev server and navigate to http://localhost:8080/
-  See package.json for more info.
+The project works both in browsers and in node.js
+
+#### Node
+
+Within a node.js project simply run the following command:
+
+`npm install eurogridviz --save`
+
+Then import:
+
+```javascript
+import * as EuroGridViz from "eurogridviz";
+
+EuroGridViz.createViewer({
+  container: document.getElementById("viz-container"),
+  background_color: 0x000000,
+  border_color: 0xffffff, //0x97dbf2
+  color_scheme: "interpolateTurbo",
+  legend: true,
+  color_scheme_selector: true
+});
+```
+
+#### Browsers
+
+As a standalone script use:
+
+```html
+<script src="https://unpkg.com/eurogridviz/build/eurogridviz.min.js"></script>
+```
+
+Then:
+
+```javascript
+EuroGridViz.createViewer({
+  container: document.getElementById("viz-container"),
+  background_color: 0x000000,
+  border_color: 0xffffff, //0x97dbf2
+  color_scheme: "interpolateTurbo",
+  legend: true,
+  color_scheme_selector: true
+});
+```
+
+## Parameters
+
+Coming soon...

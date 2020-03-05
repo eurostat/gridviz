@@ -40,8 +40,9 @@ export function createViewer(options) {
     background_color: 0x000000,
     border_color: 0xffffff, //0x97dbf2
     color_scheme: "interpolateTurbo",
-    show_legend: true, //pending
-    show_color_scheme_selector: true //pending
+    show_legend: true,
+    show_color_scheme_selector: true,
+    csv_endpoint: "https://raw.githubusercontent.com/eurostat/EuroGridViz/master/assets/csv/pop_"
   };
 
   // initial states
@@ -63,6 +64,7 @@ export function createViewer(options) {
   let show_color_scheme_selector = options.show_color_scheme_selector || default_options.show_color_scheme_selector;
   let color_scheme = d3ScaleChromatic[options.color_scheme] || d3ScaleChromatic[default_options.color_scheme];
   let border_color = options.border_color || default_options.border_color;
+  let csv_endpoint = options.csv_endpoint || default_options.csv_endpoint;
 
   // other variables
   let line_material,
@@ -204,7 +206,7 @@ export function createViewer(options) {
    * @returns Promise
    */
   function requestGrid(res) {
-    return d3Fetch.csv("../assets/csv/pop_" + res + ".csv").then(
+    return d3Fetch.csv(csv_endpoint + res + ".csv").then(
       csv => {
         addGridToCache(csv, res);
       },
