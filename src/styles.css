@@ -38,12 +38,12 @@ body {
 }
 
 /*  BUTTON GROUP */
-.btn-group {
+.egv-btn-group {
   position: absolute;
   bottom: 2%;
   right: 2%;
 }
-.btn-group button {
+.egv-btn-group button {
   background-color: #004494; /* EU blue */
   border: 4px solid #004494;
   color: white;
@@ -52,41 +52,41 @@ body {
   float: left;
 }
 
-.active {
+.egv-active {
   border: 4px solid white !important;
 }
 
 /* Clear floats (clearfix hack) */
-.btn-group:after {
+.egv-btn-group:after {
   content: "";
   clear: both;
   display: table;
 }
 
-.btn-group button:not(:last-child) {
+.egv-btn-group button:not(:last-child) {
   border-right: none; /* Prevent double borders */
 }
 
 /* Add a background color on hover */
-.btn-group button:hover {
+.egv-btn-group button:hover {
   background-color: #012f63;
 }
 
-#btn2km {
+#egv-btn2km {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   z-index: 9999;
 }
 
-#btn5km {
+#egv-btn5km {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   z-index: 9999;
 }
 
 /* LEGEND */
-#legend {
-  z-index: 99999999999999999;
+#egv-legend {
+  z-index: 9999;
   position: absolute;
   bottom: 10px;
   left: 10px;
@@ -103,7 +103,8 @@ rect.swatch {
 }
 
 /* Placenames  */
-.placename {
+.egv-placename {
+  z-index: 9;
   color: #fff;
   font-family: sans-serif;
   padding: 2px;
@@ -111,26 +112,56 @@ rect.swatch {
 }
 
 /* Color scheme select  */
-#color-dropdown-container {
+#egv-dropdown-container {
+  z-index: 9999;
   position: absolute;
   top: 10px;
   right: 10px;
 }
-.dropdown-label {
+.egv-dropdown-label {
+  z-index: 9999;
   color: white;
   margin-right: 10px;
 }
 
-#header-bar {
-  padding: 10px;
-  height: 3vh;
-  background-color: #004494;
-  color: white;
-  z-index: 9999;
+/* LOADING SPINNER */
+#egv-loading-spinner {
+  position: absolute;
+  top: 47%;
+  left: 47%;
 }
-#app-title {
-  font-size: 30px;
-  font-weight: bold;
-  float: left;
-  line-height: 30px;
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

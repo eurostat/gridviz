@@ -94,6 +94,8 @@ export function createViewer(options) {
   viz_height = container_element.clientHeight || window.innerHeight;
   viz_width = container_element.clientWidth || window.innerWidth;
 
+  createLoadingSpinner();
+
   //build viewer
   createLabelRenderer();
   createWebGLRenderer();
@@ -102,7 +104,10 @@ export function createViewer(options) {
   createScene();
   addPanAndZoom();
   createTooltipContainer();
-  if (show_color_scheme_selector) createColorSchemeDropdown();
+  createResolutionButtons();
+  if (show_color_scheme_selector) {
+    createColorSchemeDropdown();
+  }
 
   addEventListeners();
 
@@ -412,7 +417,7 @@ export function createViewer(options) {
   }
 
   /**
-   * create or update points layer
+   * create or update THREE.js points layer
    *
    */
   function addPointsToScene() {
@@ -473,7 +478,45 @@ export function createViewer(options) {
     animate();
   }
 
-  function createResolutionButtons() {}
+  /**
+   * CSS3 animation spinner to indicate loading
+   *
+   */
+  function createLoadingSpinner() {
+    let spinner = document.createElement("div");
+    spinner.id = "egv-loading-spinner";
+    spinner.classList.add("lds-ring");
+    let child1 = document.createElement("div");
+    spinner.appendChild(child1);
+    let child2 = document.createElement("div");
+    spinner.appendChild(child2);
+    let child3 = document.createElement("div");
+    spinner.appendChild(child3);
+    let child4 = document.createElement("div");
+    spinner.appendChild(child4);
+    container_element.appendChild(spinner);
+  }
+
+  /**
+   * Creates HTML button elements to allow the user to switch between grid resolutions
+   *
+   */
+  function createResolutionButtons() {
+    let button_container = document.createElement("div");
+    button_container.classList.add("egv-btn-group");
+    let btn2km = document.createElement("button");
+    btn2km.value = "2km";
+    btn2km.name = "resBtn";
+    btn2km.innerHTML = "2km";
+    let btn5km = document.createElement("button");
+    btn5km.value = "5km";
+    btn5km.name = "resBtn";
+    btn5km.innerHTML = "5km";
+    btn5km.classList.add("egv-active");
+    button_container.appendChild(btn2km);
+    button_container.appendChild(btn5km);
+    container_element.appendChild(button_container);
+  }
 
   /**
    * Creates an HTML Select element for the different D3 Scale-Chromatic functions
@@ -521,12 +564,12 @@ export function createViewer(options) {
       { value: "interpolateSinebow", innerText: "Sinebow" }
     ];
     let dropdown_container = document.createElement("div");
-    dropdown_container.id = "color-dropdown-container";
+    dropdown_container.id = "egv-dropdown-container";
     let select = document.createElement("select");
     select.id = "schemes";
     let label = document.createElement("label");
     label.for = "schemes";
-    label.classList.add("dropdown-label");
+    label.classList.add("egv-dropdown-label");
     label.innerText = "Colour Scheme: ";
 
     for (let i = 0; i < schemes.length; i++) {
@@ -536,6 +579,7 @@ export function createViewer(options) {
       option.innerText = scheme.innerText;
       select.appendChild(option);
     }
+    select.value = "interpolateTurbo";
     dropdown_container.appendChild(label);
     dropdown_container.appendChild(select);
     container_element.appendChild(dropdown_container);
@@ -546,10 +590,15 @@ export function createViewer(options) {
    *
    */
   function createLegend() {
-    var legendScale = d3Scale.scaleSequentialSqrt(color_scheme).domain(array_extent);
-    var svg = d3Selection.select("#legend");
+    let legendScale = d3Scale.scaleSequentialSqrt(color_scheme).domain(array_extent);
+    let svg;
+    if (document.getElementById("egv-legend")) {
+      svg = d3Selection.select("#egv-legend");
+    } else {
+      svg = d3Selection.create("svg").attr("id", "egv-legend");
+      container_element.appendChild(svg.node());
+    }
     let format = d3Format.format(".0s");
-
     svg
       .append("g")
       .attr("class", "legendSqrt")
@@ -591,19 +640,16 @@ export function createViewer(options) {
    */
   function addClickEventsToResButtons() {
     let res_buttons = document.getElementsByName("resBtn");
-    res_buttons.forEach(
-      b =>
-        function() {
-          btn.addEventListener("click", function() {
-            showLoading();
-            unselectOtherButtons(res_buttons);
-            btn.classList.add("active");
-            setTimeout(function() {
-              changeRes(btn.value);
-            }, 100);
-          });
-        }
-    );
+    res_buttons.forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        showLoading();
+        unselectOtherButtons(res_buttons);
+        btn.classList.add("egv-active");
+        setTimeout(function() {
+          changeRes(btn.value);
+        }, 100);
+      });
+    });
   }
 
   /**
@@ -623,7 +669,7 @@ export function createViewer(options) {
    * @param {*} elements
    */
   function unselectOtherButtons(elements) {
-    elements.forEach(b => b.classList.remove("active"));
+    elements.forEach(b => b.classList.remove("egv-active"));
   }
 
   function createTooltipContainer() {
@@ -788,7 +834,7 @@ export function createViewer(options) {
    */
   function createPlacenameLabelObject(placename) {
     var placeDiv = document.createElement("div");
-    placeDiv.className = "placename";
+    placeDiv.className = "egv-placename";
     placeDiv.textContent = placename.attributes.city_town_name;
     placeDiv.style.marginTop = "-1em";
     var placeLabel = new CSS2DObject(placeDiv);
@@ -988,7 +1034,7 @@ export function createViewer(options) {
    *
    */
   function showLoading() {
-    document.getElementById("loading-gif").style.display = "block";
+    document.getElementById("egv-loading-spinner").style.display = "block";
   }
 
   /**
@@ -996,7 +1042,7 @@ export function createViewer(options) {
    *
    */
   function hideLoading() {
-    document.getElementById("loading-gif").style.display = "none";
+    document.getElementById("egv-loading-spinner").style.display = "none";
   }
 
   /**
