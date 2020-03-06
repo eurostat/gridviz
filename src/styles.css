@@ -1,4 +1,5 @@
-body {
+.egv-container {
+  position: relative !important;
   margin: 0px;
   font-family: "roboto_condensedbold", Arial, sans-serif;
 }

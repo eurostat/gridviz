@@ -40,8 +40,8 @@ export function createViewer(options) {
   let viewer = {};
   let default_options = {
     container_element: document.body,
-    height: "600",
-    width: "600",
+    height: window.innerHeight,
+    width: window.innerWidth,
     background_color: "#000",
     border_color: "#ffffff",
     color_scheme: "interpolateTurbo",
@@ -68,8 +68,6 @@ export function createViewer(options) {
 
   // apply user-defined options or set defaults
   viewer.container_element = options.container || default_options.container_element;
-  if (!viewer.container_element.style.width) viewer.container_element.style.width = default_options.width;
-  if (!viewer.container_element.style.height) viewer.container_element.style.height = default_options.height;
   viewer.background_color = options.background_color || default_options.background_color;
   viewer.show_legend = options.legend !== false;
   viewer.show_color_scheme_selector = options.color_scheme_selector !== false;
@@ -77,6 +75,14 @@ export function createViewer(options) {
   viewer.border_color = options.border_color || default_options.border_color;
   viewer.csv_endpoint = options.csv_endpoint || default_options.csv_endpoint;
   viewer.legend_orientation = options.legend_orientation || default_options.legend_orientation;
+
+  //set height and width
+  viewer.container_element.style.width = options.width + "px" || default_options.width;
+  viewer.viz_width = options.width || default_options.width;
+  viewer.container_element.style.height = options.height + "px" || default_options.height;
+  viewer.viz_height = options.height || default_options.height;
+
+  viewer.container_element.classList.add("egv-container");
 
   // other variables
   let line_material,
@@ -106,10 +112,6 @@ export function createViewer(options) {
   //fixes resize bug, but placenames loose background styling
   //container_element.style.lineHeight = 0;
 
-  // set initial container dimensions
-  viz_height = viewer.container_element.clientHeight || window.innerHeight;
-  viz_width = viewer.container_element.clientWidth || window.innerWidth;
-
   Utils.createLoadingSpinner(viewer.container_element);
 
   //build viewer
@@ -137,7 +139,7 @@ export function createViewer(options) {
    */
   function createWebGLRenderer() {
     renderer = new WebGLRenderer();
-    renderer.setSize(viz_width, viz_height);
+    renderer.setSize(viewer.viz_width, viewer.viz_height);
     viewer.container_element.appendChild(renderer.domElement);
     view = d3Selection.select(renderer.domElement);
   }
@@ -148,7 +150,7 @@ export function createViewer(options) {
    */
   function createLabelRenderer() {
     labelRenderer = new CSS2DRenderer();
-    labelRenderer.setSize(viz_width, viz_height);
+    labelRenderer.setSize(viewer.viz_width, viewer.viz_height);
     labelRenderer.domElement.style.position = "absolute";
     //labelRenderer.domElement.style.top = "0px";
     viewer.container_element.appendChild(labelRenderer.domElement);
@@ -159,7 +161,7 @@ export function createViewer(options) {
    *
    */
   function createCamera() {
-    camera = new PerspectiveCamera(CONSTANTS.fov, viz_width / viz_height, CONSTANTS.near, CONSTANTS.far);
+    camera = new PerspectiveCamera(CONSTANTS.fov, viewer.viz_width / viewer.viz_height, CONSTANTS.near, CONSTANTS.far);
   }
 
   /**
@@ -725,7 +727,7 @@ export function createViewer(options) {
     view.call(zoom);
 
     let initial_scale = getScaleFromZ(CONSTANTS.far);
-    var initial_transform = d3Zoom.zoomIdentity.translate(viz_width / 2, viz_height / 2).scale(initial_scale);
+    var initial_transform = d3Zoom.zoomIdentity.translate(viewer.viz_width / 2, viewer.viz_height / 2).scale(initial_scale);
     zoom.transform(view, initial_transform);
 
     //initial camera position
@@ -734,8 +736,8 @@ export function createViewer(options) {
 
   function zoomHandler(event) {
     let scale = event.transform.k;
-    let x = -(event.transform.x - viz_width / 2) / scale;
-    let y = (event.transform.y - viz_height / 2) / scale;
+    let x = -(event.transform.x - viewer.viz_width / 2) / scale;
+    let y = (event.transform.y - viewer.viz_height / 2) / scale;
     let z = getZFromScale(scale);
     camera.position.set(x, y, z);
   }
@@ -857,15 +859,15 @@ export function createViewer(options) {
     y = (clientY - boundingRect.top) * (elem.height / boundingRect.height);
   
   var vector = new THREE.Vector3( 
-    ( x / viz_width ) * 2 - 1, 
-    - ( y / viz_height ) * 2 + 1, 
+    ( x / viewer.viz_width ) * 2 - 1, 
+    - ( y / viewer.viz_height ) * 2 + 1, 
     0.5 
   );
   
   projector.unprojectVector( vector, camera ); */
 
-    //let bottomLeftVector = mouseToThree(padding, viz_height - padding); //screen x,y
-    //let topRightVector = mouseToThree(viz_width - padding, padding); //screen x,y
+    //let bottomLeftVector = mouseToThree(padding, viewer.viz_height - padding); //screen x,y
+    //let topRightVector = mouseToThree(viewer.viz_width - padding, padding); //screen x,y
 
     //let bottomLeftWorld = getWorldCoordsFromVector(bottomLeftVector);
     //let topRightWorld = getWorldCoordsFromVector(topRightVector);
@@ -913,14 +915,14 @@ export function createViewer(options) {
     let half_fov_radians = toRadians(half_fov);
     let half_fov_height = Math.tan(half_fov_radians) * camera_z_position;
     let fov_height = half_fov_height * 2;
-    let scale = viz_height / fov_height; // Divide visualization height by height derived from field of view
+    let scale = viewer.viz_height / fov_height; // Divide visualization height by height derived from field of view
     return scale;
   }
 
   function getZFromScale(scale) {
     let half_fov = CONSTANTS.fov / 2;
     let half_fov_radians = toRadians(half_fov);
-    let scale_height = viz_height / scale;
+    let scale_height = viewer.viz_height / scale;
     let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
     return camera_z_position;
   }
@@ -930,7 +932,7 @@ export function createViewer(options) {
   }
 
   function mouseToThree(mouseX, mouseY) {
-    return new Vector3((mouseX / viz_width) * 2 - 1, -(mouseY / viz_height) * 2 + 1, 0.5);
+    return new Vector3((mouseX / viewer.viz_width) * 2 - 1, -(mouseY / viewer.viz_height) * 2 + 1, 0.5);
   }
 
   function checkIntersects(mouse_position) {
@@ -1038,11 +1040,11 @@ export function createViewer(options) {
    */
   function addResizeEvent() {
     window.addEventListener("resize", () => {
-      viz_width = viewer.container_element.clientWidth;
-      viz_height = viewer.container_element.clientHeight;
-      labelRenderer.setSize(viz_width, viz_height);
-      renderer.setSize(viz_width, viz_height);
-      camera.aspect = viz_width / viz_height;
+      viewer.viz_width = viewer.container_element.clientWidth;
+      viewer.viz_height = viewer.container_element.clientHeight;
+      labelRenderer.setSize(viewer.viz_width, viewer.viz_height);
+      renderer.setSize(viewer.viz_width, viewer.viz_height);
+      camera.aspect = viewer.viz_width / viewer.viz_height;
       camera.updateProjectionMatrix();
     });
   }

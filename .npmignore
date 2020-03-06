@@ -4,3 +4,7 @@ package-lock.json/
 experiments/
 assets/
 docs/
+examples/
+webpack.config.dev.js
+webpack.config.prod.js
+src/

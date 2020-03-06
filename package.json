@@ -1,6 +1,6 @@
 {
   "name": "eurogridviz",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "Visualization tool for gridded statistics",
   "main": "build/eurogridviz.min.js",
   "scripts": {
@@ -29,8 +29,6 @@
     "d3-svg-legend": "^2.25.6",
     "stats.js": "^0.17.0",
     "three": "^0.111.0",
-    "three-orbit-controls": "^82.1.0",
-    "three.map.control": "^1.6.0",
     "topojson": "^3.0.2"
   }
 }
