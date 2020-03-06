@@ -77,9 +77,9 @@ export function createViewer(options) {
   viewer.legend_orientation = options.legend_orientation || default_options.legend_orientation;
 
   //set height and width
-  viewer.container_element.style.width = options.width + "px" || default_options.width;
+  viewer.container_element.style.width = options.width + "px" || default_options.width + "px";
   viewer.viz_width = options.width || default_options.width;
-  viewer.container_element.style.height = options.height + "px" || default_options.height;
+  viewer.container_element.style.height = options.height + "px" || default_options.height + "px";
   viewer.viz_height = options.height || default_options.height;
 
   viewer.container_element.classList.add("egv-container");
@@ -108,9 +108,15 @@ export function createViewer(options) {
     loading_spinner,
     renderer;
 
+  //TODO list:
+  //
+  //Resize bug:
   //https://stackoverflow.com/questions/41814539/html-div-height-keeps-growing-on-window-resize-event
-  //fixes resize bug, but placenames loose background styling
-  //container_element.style.lineHeight = 0;
+  //container_element.style.lineHeight = 0; fixes resize bug, but placenames loose background styling.
+  //
+  //apply setters to options params
+  //datasourceURL with scale-resolution thresholds
+  //
 
   Utils.createLoadingSpinner(viewer.container_element);
 
@@ -1035,7 +1041,7 @@ export function createViewer(options) {
   }
 
   /**
-   * redefine width and height of viewer, taking into account margins
+   * redefine width and height of viewer, currently only works with default_options values
    *
    */
   function addResizeEvent() {
