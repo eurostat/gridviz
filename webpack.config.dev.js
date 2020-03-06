@@ -5,10 +5,10 @@ module.exports = {
   mode: "development",
   entry: "./src/index.js",
   output: {
-    filename: "eurogridviz.js",
+    filename: "gridviz.js",
     publicPath: "build",
-    library: "EuroGridViz",
-    libraryTarget:'umd',
+    library: "GridViz",
+    libraryTarget: "umd",
     path: path.resolve(__dirname, "build")
   },
   module: {

@@ -1,5 +1,5 @@
 let container_div = document.getElementById("viz-container");
-EuroGridViz.createViewer({
+GridViz.createViewer({
   container: container_div,
   // height: window.innerHeight,
   // width: window.innerWidth,

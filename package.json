@@ -1,18 +1,18 @@
 {
-  "name": "eurogridviz",
+  "name": "gridviz",
   "version": "1.0.6",
   "description": "Visualization tool for gridded statistics",
-  "main": "build/eurogridviz.min.js",
+  "main": "build/gridviz.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build-dev",
     "build": "npm run build-prod",
-    "docs": "./node_modules/.bin/jsdoc src/eurogridviz.js -d docs",
+    "docs": "./node_modules/.bin/jsdoc src/gridviz.js -d docs",
     "server": "webpack-dev-server --mode development",
     "build-dev": "webpack --config webpack.config.dev.js",
     "build-prod": "webpack --config webpack.config.prod.js"
   },
-  "files": "build/eurogridviz.min.js",
+  "files": "build/gridviz.min.js",
   "author": "Joseph Davies",
   "license": "EUPL",
   "devDependencies": {
@@ -27,7 +27,6 @@
   "dependencies": {
     "d3": "^5.14.2",
     "d3-svg-legend": "^2.25.6",
-    "stats.js": "^0.17.0",
     "three": "^0.111.0",
     "topojson": "^3.0.2"
   }
