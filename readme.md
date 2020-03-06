@@ -1,6 +1,6 @@
 # GridViz
 
-Gridded statistics visualization tool.
+A JavaScript Library for visualizing gridded statistics from CSV files. From any given CSV file, GridViz will build a Three.js viewer capable of visualizing hundreds of thousands of grid cells.
 
 ![alt text](https://raw.githubusercontent.com/eurostat/GridViz/master/assets/images/preview.png "Eurostat population grid")
 
