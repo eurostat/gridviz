@@ -1,1 +1,1 @@
-export { createViewer } from "./eurogridviz.js";
+export { createViewer } from "./gridviz.js";

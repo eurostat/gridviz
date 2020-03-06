@@ -3,9 +3,9 @@ module.exports = {
   mode: "production",
   entry: ["./src/index.js"],
   output: {
-    filename: "eurogridviz.min.js",
+    filename: "gridviz.min.js",
     publicPath: "build",
-    library: "EuroGridViz",
+    library: "GridViz",
     libraryTarget: "umd",
     path: path.resolve(__dirname, "build")
   },
