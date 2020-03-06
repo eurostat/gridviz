@@ -16,7 +16,9 @@ import { LineMaterial } from "../assets/js/lines/LineMaterial";
 import { CSS2DRenderer, CSS2DObject } from "../assets/js/CSS2D/CSS2DRenderer";
 import { sortBy } from "lodash";
 import * as TopoJSON from "topojson";
+
 import * as CONSTANTS from "./constants.js";
+import * as Utils from "../utils/utils";
 import "./styles.css";
 
 /**
@@ -35,13 +37,20 @@ import "./styles.css";
  * @description User defined parameters
  */
 export function createViewer(options) {
+  let viewer = {};
   let default_options = {
     container_element: document.body,
-    background_color: 0x000000,
-    border_color: 0xffffff, //0x97dbf2
+    height: "600",
+    width: "600",
+    background_color: "#000",
+    border_color: "#ffffff",
     color_scheme: "interpolateTurbo",
-    show_legend: true,
-    show_color_scheme_selector: true,
+    legend: true,
+    legend_orientation: "horizontal",
+    color_scheme_selector: true,
+    center: null, //defaults as first or randomly selected point
+    zoom: null,
+    title: null,
     csv_endpoint: "https://raw.githubusercontent.com/eurostat/EuroGridViz/master/assets/csv/pop_"
   };
 
@@ -58,13 +67,16 @@ export function createViewer(options) {
   let grid_config = CONSTANTS.grid_configs["5km"];
 
   // apply user-defined options or set defaults
-  let container_element = options.container || default_options.container;
-  let background_color = options.background_color || default_options.background_color;
-  let show_legend = options.show_legend || default_options.show_legend;
-  let show_color_scheme_selector = options.show_color_scheme_selector || default_options.show_color_scheme_selector;
-  let color_scheme = d3ScaleChromatic[options.color_scheme] || d3ScaleChromatic[default_options.color_scheme];
-  let border_color = options.border_color || default_options.border_color;
-  let csv_endpoint = options.csv_endpoint || default_options.csv_endpoint;
+  viewer.container_element = options.container || default_options.container_element;
+  if (!viewer.container_element.style.width) viewer.container_element.style.width = default_options.width;
+  if (!viewer.container_element.style.height) viewer.container_element.style.height = default_options.height;
+  viewer.background_color = options.background_color || default_options.background_color;
+  viewer.show_legend = options.legend !== false;
+  viewer.show_color_scheme_selector = options.color_scheme_selector !== false;
+  viewer.color_scheme = options.color_scheme || default_options.color_scheme;
+  viewer.border_color = options.border_color || default_options.border_color;
+  viewer.csv_endpoint = options.csv_endpoint || default_options.csv_endpoint;
+  viewer.legend_orientation = options.legend_orientation || default_options.legend_orientation;
 
   // other variables
   let line_material,
@@ -86,6 +98,8 @@ export function createViewer(options) {
     grid_legend,
     view,
     labelRenderer,
+    schemes_select,
+    loading_spinner,
     renderer;
 
   //https://stackoverflow.com/questions/41814539/html-div-height-keeps-growing-on-window-resize-event
@@ -93,21 +107,21 @@ export function createViewer(options) {
   //container_element.style.lineHeight = 0;
 
   // set initial container dimensions
-  viz_height = container_element.clientHeight || window.innerHeight;
-  viz_width = container_element.clientWidth || window.innerWidth;
+  viz_height = viewer.container_element.clientHeight || window.innerHeight;
+  viz_width = viewer.container_element.clientWidth || window.innerWidth;
 
-  createLoadingSpinner();
+  Utils.createLoadingSpinner(viewer.container_element);
 
   //build viewer
+  createScene();
   createLabelRenderer();
   createWebGLRenderer();
   createCamera();
   createRaycaster();
-  createScene();
   addPanAndZoom();
   createTooltipContainer();
   createResolutionButtons();
-  if (show_color_scheme_selector) {
+  if (viewer.show_color_scheme_selector) {
     createColorSchemeDropdown();
   }
 
@@ -124,7 +138,7 @@ export function createViewer(options) {
   function createWebGLRenderer() {
     renderer = new WebGLRenderer();
     renderer.setSize(viz_width, viz_height);
-    container_element.appendChild(renderer.domElement);
+    viewer.container_element.appendChild(renderer.domElement);
     view = d3Selection.select(renderer.domElement);
   }
 
@@ -137,7 +151,7 @@ export function createViewer(options) {
     labelRenderer.setSize(viz_width, viz_height);
     labelRenderer.domElement.style.position = "absolute";
     //labelRenderer.domElement.style.top = "0px";
-    container_element.appendChild(labelRenderer.domElement);
+    viewer.container_element.appendChild(labelRenderer.domElement);
   }
 
   /**
@@ -168,7 +182,7 @@ export function createViewer(options) {
     //change grid_config
     addClickEventsToResButtons();
     //change color scheme
-    if (show_color_scheme_selector) {
+    if (viewer.show_color_scheme_selector) {
       addChangeEventToColorDropdown();
     }
     //screen resize
@@ -180,8 +194,8 @@ export function createViewer(options) {
    *
    */
   function createScene() {
-    scene = new Scene();
-    scene.background = new Color(background_color);
+    viewer.scene = new Scene();
+    viewer.scene.background = new Color(viewer.background_color);
   }
 
   /**
@@ -190,12 +204,12 @@ export function createViewer(options) {
    * @param {*} res
    */
   function loadInitialGrid(res) {
-    showLoading();
+    Utils.showLoading();
     requestGrid(res).then(() => {
       updateColorScale();
       addPointsToScene();
       addRemainingGridsToCache();
-      hideLoading();
+      Utils.hideLoading();
     });
   }
 
@@ -206,7 +220,7 @@ export function createViewer(options) {
    * @returns Promise
    */
   function requestGrid(res) {
-    return d3Fetch.csv(csv_endpoint + res + ".csv").then(
+    return d3Fetch.csv(viewer.csv_endpoint + res + ".csv").then(
       csv => {
         addGridToCache(csv, res);
       },
@@ -284,7 +298,7 @@ export function createViewer(options) {
       }
     }
     if (initial) {
-      scene.add(boundaries_group);
+      viewer.scene.add(boundaries_group);
     }
   }
 
@@ -298,7 +312,7 @@ export function createViewer(options) {
     let line_geom = new LineGeometry();
     let positions = [];
     let colors = [];
-    let color = new Color(border_color);
+    let color = new Color(viewer.border_color);
     for (var i = 0; i < coords.length; i++) {
       positions.push(coords[i].x, coords[i].y, CONSTANTS.line_z);
       colors.push(color.r, color.g, color.b);
@@ -350,7 +364,7 @@ export function createViewer(options) {
   function changeRes(res) {
     resolution = res;
     grid_config = CONSTANTS.grid_configs[res];
-    showLoading();
+    Utils.showLoading();
     updateColorScale();
     // add or update points layer
     addPointsToScene();
@@ -393,9 +407,9 @@ export function createViewer(options) {
    * @param {*} scheme
    */
   function onChangeColorScheme(scheme) {
-    color_scheme = d3ScaleChromatic[scheme];
+    viewer.color_scheme = scheme;
     updatePointsColors();
-    if (show_legend) {
+    if (viewer.show_legend) {
       updateLegend();
     }
   }
@@ -407,7 +421,7 @@ export function createViewer(options) {
   function updatePointsColors() {
     let colors = [];
     for (var i = 0; i < grid_cache[resolution].length; i++) {
-      let hex = color_scheme(colorScale(grid_cache[resolution][i].value)); //d3 scale-chromatic
+      let hex = d3ScaleChromatic[viewer.color_scheme](colorScale(grid_cache[resolution][i].value)); //d3 scale-chromatic
       grid_cache[resolution][i].color = hex; //for tooltip
       let color = new Color(hex);
       colors.push(color.r, color.g, color.b);
@@ -439,7 +453,7 @@ export function createViewer(options) {
       let y = coords[1] / 100 + CONSTANTS.coordinate_offset.y;
       let z = CONSTANTS.point_z;
       positions.push(x, y, z);
-      let hex = color_scheme(colorScale(grid_cache[resolution][i].value)); //d3 scale-chromatic
+      let hex = d3ScaleChromatic[viewer.color_scheme](colorScale(grid_cache[resolution][i].value)); //d3 scale-chromatic
       grid_cache[resolution][i].color = hex; //for tooltip
       let color = new Color(hex);
       colors.push(color.r, color.g, color.b);
@@ -463,40 +477,21 @@ export function createViewer(options) {
     if (!points) {
       points = new Points(points_geometry, points_material);
       points.renderOrder = 1; //bottom
-      scene.add(points);
+      viewer.scene.add(points);
     } else {
       points.geometry = points_geometry;
       points.material = points_material;
     }
     //create or update legend
-    if (show_legend) {
+    if (viewer.show_legend) {
       if (grid_legend) {
         updateLegend();
       } else {
         createLegend();
       }
     }
-    hideLoading();
+    Utils.hideLoading();
     animate();
-  }
-
-  /**
-   * CSS3 animation spinner to indicate loading
-   *
-   */
-  function createLoadingSpinner() {
-    let spinner = document.createElement("div");
-    spinner.id = "egv-loading-spinner";
-    spinner.classList.add("lds-ring");
-    let child1 = document.createElement("div");
-    spinner.appendChild(child1);
-    let child2 = document.createElement("div");
-    spinner.appendChild(child2);
-    let child3 = document.createElement("div");
-    spinner.appendChild(child3);
-    let child4 = document.createElement("div");
-    spinner.appendChild(child4);
-    container_element.appendChild(spinner);
   }
 
   /**
@@ -505,19 +500,20 @@ export function createViewer(options) {
    */
   function createResolutionButtons() {
     let button_container = document.createElement("div");
-    button_container.classList.add("egv-btn-group");
+    button_container.classList.add("egv-btn-group", "egv-plugin");
     let btn2km = document.createElement("button");
     btn2km.value = "2km";
     btn2km.name = "resBtn";
     btn2km.innerHTML = "2km";
+    btn2km.classList.add("egv-button");
     let btn5km = document.createElement("button");
     btn5km.value = "5km";
     btn5km.name = "resBtn";
     btn5km.innerHTML = "5km";
-    btn5km.classList.add("egv-active");
+    btn5km.classList.add("egv-active", "egv-button");
     button_container.appendChild(btn2km);
     button_container.appendChild(btn5km);
-    container_element.appendChild(button_container);
+    viewer.container_element.appendChild(button_container);
   }
 
   /**
@@ -567,8 +563,9 @@ export function createViewer(options) {
     ];
     let dropdown_container = document.createElement("div");
     dropdown_container.id = "egv-dropdown-container";
-    let select = document.createElement("select");
-    select.id = "schemes";
+    dropdown_container.classList.add("egv-plugin");
+    schemes_select = document.createElement("select");
+    schemes_select.id = "schemes";
     let label = document.createElement("label");
     label.for = "schemes";
     label.classList.add("egv-dropdown-label");
@@ -579,12 +576,12 @@ export function createViewer(options) {
       let option = document.createElement("option");
       option.value = scheme.value;
       option.innerText = scheme.innerText;
-      select.appendChild(option);
+      schemes_select.appendChild(option);
     }
-    select.value = "interpolateTurbo";
+    schemes_select.value = viewer.color_scheme;
     dropdown_container.appendChild(label);
-    dropdown_container.appendChild(select);
-    container_element.appendChild(dropdown_container);
+    dropdown_container.appendChild(schemes_select);
+    viewer.container_element.appendChild(dropdown_container);
   }
 
   /**
@@ -592,13 +589,18 @@ export function createViewer(options) {
    *
    */
   function createLegend() {
-    let legendScale = d3Scale.scaleSequentialSqrt(color_scheme).domain(array_extent);
+    let legendScale = d3Scale.scaleSequentialSqrt(d3ScaleChromatic[viewer.color_scheme]).domain(array_extent);
     let svg;
     if (document.getElementById("egv-legend")) {
       svg = d3Selection.select("#egv-legend");
     } else {
       svg = d3Selection.create("svg").attr("id", "egv-legend");
-      container_element.appendChild(svg.node());
+      viewer.container_element.appendChild(svg.node());
+    }
+    if (viewer.legend_orientation == "horizontal") {
+      svg.attr("class", "egv-legend-horizontal egv-plugin");
+    } else {
+      svg.attr("class", "egv-legend-vertical egv-plugin");
     }
     let format = d3Format.format(".0s");
     svg
@@ -610,7 +612,7 @@ export function createViewer(options) {
       .shapeWidth(30)
       .cells(13)
       .labelFormat(format)
-      .orient("horizontal")
+      .orient(viewer.legend_orientation)
       .scale(legendScale)
       .title("Total Population");
 
@@ -632,8 +634,8 @@ export function createViewer(options) {
    */
   function animate() {
     requestAnimationFrame(animate);
-    renderer.render(scene, camera);
-    labelRenderer.render(scene, camera);
+    renderer.render(viewer.scene, camera);
+    labelRenderer.render(viewer.scene, camera);
   }
 
   /**
@@ -644,7 +646,7 @@ export function createViewer(options) {
     let res_buttons = document.getElementsByName("resBtn");
     res_buttons.forEach(function(btn) {
       btn.addEventListener("click", function() {
-        showLoading();
+        Utils.showLoading();
         unselectOtherButtons(res_buttons);
         btn.classList.add("egv-active");
         setTimeout(function() {
@@ -659,8 +661,7 @@ export function createViewer(options) {
    *
    */
   function addChangeEventToColorDropdown() {
-    let sel = document.getElementById("schemes");
-    sel.addEventListener("change", function(e) {
+    schemes_select.addEventListener("change", function(e) {
       onChangeColorScheme(e.currentTarget.value);
     });
   }
@@ -684,13 +685,13 @@ export function createViewer(options) {
        <div id="label_tip" style="padding: 4px; margin-bottom: 4px;"></div>
     <div id="point_tip" style="padding: 4px; margin-bottom: 4px;"></div>
   </div>`);
-    container_element.append(tooltip_template);
+    viewer.container_element.append(tooltip_template);
 
     tooltip = document.querySelector("#tooltip");
     point_tip = document.querySelector("#point_tip");
     label_tip = document.querySelector("#label_tip");
     tooltip_container = new Object3D();
-    scene.add(tooltip_container);
+    viewer.scene.add(tooltip_container);
   }
 
   function addMouseEventsToView() {
@@ -1032,33 +1033,19 @@ export function createViewer(options) {
   }
 
   /**
-   *
-   *
-   */
-  function showLoading() {
-    document.getElementById("egv-loading-spinner").style.display = "block";
-  }
-
-  /**
-   *
-   *
-   */
-  function hideLoading() {
-    document.getElementById("egv-loading-spinner").style.display = "none";
-  }
-
-  /**
    * redefine width and height of viewer, taking into account margins
    *
    */
   function addResizeEvent() {
     window.addEventListener("resize", () => {
-      viz_width = container_element.clientWidth;
-      viz_height = container_element.clientHeight;
+      viz_width = viewer.container_element.clientWidth;
+      viz_height = viewer.container_element.clientHeight;
       labelRenderer.setSize(viz_width, viz_height);
       renderer.setSize(viz_width, viz_height);
       camera.aspect = viz_width / viz_height;
       camera.updateProjectionMatrix();
     });
   }
+
+  return viewer;
 }

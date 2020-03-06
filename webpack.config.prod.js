@@ -5,6 +5,8 @@ module.exports = {
   output: {
     filename: "eurogridviz.min.js",
     publicPath: "build",
+    library: "EuroGridViz",
+    libraryTarget: "umd",
     path: path.resolve(__dirname, "build")
   },
   module: {

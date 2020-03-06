@@ -1,9 +1,10 @@
 let container_div = document.getElementById("viz-container");
 EuroGridViz.createViewer({
   container: container_div,
-  background_color: 0x000000,
-  border_color: 0xffffff, //0x97dbf2
+  background_color: "#b7b7b7",
+  border_color: "#ffffff",
   color_scheme: "interpolateTurbo",
+  color_scheme_selector: true,
   legend: true,
-  color_scheme_selector: true
+  legend_orientation: "horizontal"
 });

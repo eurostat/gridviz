@@ -8,6 +8,7 @@ module.exports = {
     filename: "eurogridviz.js",
     publicPath: "build",
     library: "EuroGridViz",
+    libraryTarget:'umd',
     path: path.resolve(__dirname, "build")
   },
   module: {

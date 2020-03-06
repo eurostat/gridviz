@@ -37,6 +37,14 @@ body {
   display: block;
 }
 
+.egv-plugin {
+  background-color: #efefef;
+  color: black;
+  fill: black;
+  border: 2px solid #888888;
+  border-radius: 5px;
+}
+
 /*  BUTTON GROUP */
 .egv-btn-group {
   position: absolute;
@@ -44,16 +52,18 @@ body {
   right: 2%;
 }
 .egv-btn-group button {
-  background-color: #004494; /* EU blue */
-  border: 4px solid #004494;
-  color: white;
+  /* EU blue */
   padding: 10px 24px;
   cursor: pointer;
   float: left;
 }
 
 .egv-active {
-  border: 4px solid white !important;
+  background-color: #efefef !important;
+}
+
+.egv-button {
+  background-color: #5a5a5a;
 }
 
 /* Clear floats (clearfix hack) */
@@ -69,7 +79,7 @@ body {
 
 /* Add a background color on hover */
 .egv-btn-group button:hover {
-  background-color: #012f63;
+  background-color: #345881;
 }
 
 #egv-btn2km {
@@ -91,9 +101,15 @@ body {
   bottom: 10px;
   left: 10px;
   font-size: 12px;
-  fill: white;
+}
+.egv-legend-horizontal {
   height: 65px;
-  width: 480px;
+  width: 441px;
+  padding-top: 5px;
+}
+.egv-legend-vertical {
+  height: 255px;
+  width: 105px;
   padding-top: 5px;
 }
 /* legend cells */
@@ -117,10 +133,10 @@ rect.swatch {
   position: absolute;
   top: 10px;
   right: 10px;
+  padding: 8px;
 }
 .egv-dropdown-label {
   z-index: 9999;
-  color: white;
   margin-right: 10px;
 }
 
