@@ -89,10 +89,7 @@ export function createViewer(options) {
     boundaries_group, //THREE.Group for nuts borders
     points_material,
     points_geometry,
-    viz_width, //account for additional DOM elements
-    viz_height,
     camera,
-    scene,
     raycaster,
     points,
     tooltip_container,
@@ -105,7 +102,6 @@ export function createViewer(options) {
     view,
     labelRenderer,
     schemes_select,
-    loading_spinner,
     renderer;
 
   //TODO list:
