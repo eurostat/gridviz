@@ -103,6 +103,7 @@ export function createViewer(options) {
 
   //CRS
   viewer.EPSG = options.EPSG || default_options.EPSG;
+  viewer.bounds = [2426378.0132, 1528101.2618, 6293974.6215, 5446513.5222]; //EPSG 3035
 
   //data
   viewer.data = options.data || default_options.data;
@@ -152,9 +153,6 @@ export function createViewer(options) {
     schemes_select,
     renderer;
 
-  //threejs shaders
-  let pointsBaseMaterial = generatePointTexture();
-
   // initial states
   let nuts_simplification = "20M"; //current nuts2json
   let tooltip_state = {
@@ -165,6 +163,7 @@ export function createViewer(options) {
   let grid_caches = {};
   let grid_configs = {};
   let grid_config = defineGridConfig();
+  let initial_zoom = true; //indicate whether
 
   Utils.createLoadingSpinner(viewer.container_element);
 
@@ -237,9 +236,9 @@ export function createViewer(options) {
 
     //camera = new OrthographicCamera(left, right, top, bottom, 1, 2000);
 
-    // let x = (6293974 + 2426378) / 2 //xmin + xmax /2
-    // let y = (5446513 + 1528101) / 2 //ymin + ymax /2
-    // let z = viewer.zoom;
+    // let x = (6293974 + 2426378) / 2
+    // let y = (5446513 + 1528101) / 2
+    // let z = 1000;
     // camera.position.set(x, y, z);
   }
 
@@ -587,12 +586,8 @@ export function createViewer(options) {
     //create or reuse points Material
     if (!points_material) {
       // Attempting to apply custom point sizes
-      let uniforms = {
-        time: { type: "f", value: 1.0 },
-        resolution: { type: "v2", value: new Vector2() }
-      };
       points_material = new ShaderMaterial({
-        uniforms: uniforms,
+        //uniforms: uniforms,
         fragmentShader: fragmentShader(),
         vertexShader: vertexShader()
       });
@@ -629,37 +624,25 @@ export function createViewer(options) {
 
   function fragmentShader() {
     return `
+    varying float color;
+
     void main() {
-      gl_FragColor = vec4(0.8, 0.2, 0, 1);
+      gl_FragColor = color;
     }
 `;
   }
 
   function vertexShader() {
     return `
-    attribute vec2 a_position;
-  
+    varying float color;
+    varying float size;
+
     void main() {
-      gl_Position = vec4(a_position, 0, 1);
+      vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+      gl_PointSize = size;
+      gl_Position = projectionMatrix * mvPosition;
     }
   `;
-  }
-
-  function generatePointTexture() {
-    let canvas = document.createElement("canvas");
-    canvas.width = canvas.height = 64;
-    let ctx = canvas.getContext("2d");
-    let tex = new Texture(canvas);
-    ctx.beginPath();
-    //ctx.arc(canvas.width / 2, canvas.height / 2, canvas.height / 2 - 3, 0, 2 * Math.PI);
-    ctx.fillRect(canvas.width / 2, canvas.height / 2, canvas.width, canvas.height);
-    ctx.fillStyle = "#FFFFFF";
-    ctx.fill();
-    tex.needsUpdate = true;
-    if (tex.minFilter !== THREE.NearestFilter && tex.minFilter !== THREE.LinearFilter) {
-      tex.minFilter = THREE.NearestFilter;
-    }
-    return tex;
   }
 
   /**
@@ -917,7 +900,8 @@ export function createViewer(options) {
       display: "none"
     };
 
-    tooltip_template = document.createRange().createContextualFragment(`<div id="tooltip" style="display: none; position: absolute; pointer-events: none; font-size: 13px; width: 120px; text-align: center; line-height: 1; padding: 6px; background: white; font-family: sans-serif;">
+    tooltip_template = document.createRange()
+      .createContextualFragment(`<div id="tooltip" style="display: none; position: absolute; pointer-events: none; z-index:999; border-radius:5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); font-size: 13px; width: 120px; text-align: center; line-height: 1; padding: 6px; background: white; font-family: sans-serif;">
       <div id="label_tip" style="padding: 4px; margin-bottom: 4px;"></div>
   <div id="point_tip" style="padding: 4px; margin-bottom: 4px;"></div>
 </div>`);
@@ -936,6 +920,7 @@ export function createViewer(options) {
       let [mouseX, mouseY] = d3Selection.mouse(view.node());
       let mouse_position = [mouseX, mouseY];
       checkIntersects(mouse_position);
+      console.log(camera.position);
     });
 
     view.on("mouseleave", () => {
@@ -944,11 +929,15 @@ export function createViewer(options) {
   }
 
   // add d3's zoom
+
   function addPanAndZoom() {
     // define zoom
+    //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
+    let farScale = getScaleFromZ(viewer.far);
+    let nearScale = getScaleFromZ(viewer.near);
     let zoom = d3Zoom
       .zoom()
-      .scaleExtent([getScaleFromZ(viewer.far), getScaleFromZ(viewer.near)])
+      .scaleExtent([farScale, nearScale])
       .on("zoom", () => {
         let event = d3Selection.event;
         if (event) zoomHandler(event);
@@ -957,70 +946,86 @@ export function createViewer(options) {
         let event = d3Selection.event;
         if (event) zoomEnd(event);
       });
-
     view.call(zoom);
 
-    //let initial_scale = getScaleFromZ(viewer.far);
     let initial_scale = getScaleFromZ(viewer.far);
     var initial_transform = d3Zoom.zoomIdentity.translate(viewer.viz_width / 2, viewer.viz_height / 2).scale(initial_scale);
     zoom.transform(view, initial_transform);
+
+    //initial camera position
+    camera.position.set(viewer.center[0], viewer.center[1], viewer.zoom);
   }
 
   function zoomHandler(event) {
+    let scale = event.transform.k;
+    // let x = -(event.transform.x - viewer.viz_width / 2) / scale;
+    // let y = (event.transform.y - viewer.viz_height / 2) / scale;
+    // let z = getZFromScale(scale);
+    // camera.position.set(x, y, z);
+
     if (event.sourceEvent) {
-      let scale = event.transform.k;
-      let x = -(event.transform.x - viewer.viz_width / 2) / scale;
-      let y = (event.transform.y - viewer.viz_height / 2) / scale;
-      let z = getZFromScale(scale);
-      camera.position.set(x, y, z);
+      let new_z = getZFromScale(scale);
+      //if zoom
+      if (new_z !== camera.position.z) {
+        // Handle a zoom event
+        const { clientX, clientY } = event.sourceEvent;
+        // Code from WestLangley https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z/13091694#13091694
+        const vector = new Vector3((clientX / viewer.viz_width) * 2 - 1, -(clientY / viewer.viz_height) * 2 + 1, 1);
+        vector.unproject(camera);
+        const dir = vector.sub(camera.position).normalize();
+        const distance = (new_z - camera.position.z) / dir.z;
+        const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+        // Set the camera to new coordinates
+        camera.position.set(pos.x, pos.y, new_z);
+      } else {
+        // If panning
+        const { movementX, movementY } = event.sourceEvent;
+
+        // Adjust mouse movement by current scale and set camera
+        const current_scale = getScaleFromZ(camera.position.z);
+        camera.position.set(camera.position.x - movementX / current_scale, camera.position.y + movementY / current_scale, camera.position.z);
+      }
     }
-
-    // if (event.sourceEvent) {
-    //   let new_z = getZFromScale(event.transform.k);
-    //   //if zoom
-    //   if (new_z !== camera.position.z) {
-    //     // Handle a zoom event
-    //     const {
-    //       clientX,
-    //       clientY
-    //     } = event.sourceEvent;
-    //     // Code from WestLangley https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z/13091694#13091694
-    //     const vector = new Vector3((clientX / viewer.viz_width) * 2 - 1, -(clientY / viewer.viz_height) * 2 + 1, 1);
-    //     vector.unproject(camera);
-    //     const dir = vector.sub(camera.position).normalize();
-    //     const distance = (new_z - camera.position.z) / dir.z;
-    //     const pos = camera.position.clone().add(dir.multiplyScalar(distance));
-    //     // Set the camera to new coordinates
-    //     camera.position.set(pos.x, pos.y, new_z);
-    //   } else {
-    //     // If panning
-    //     const {
-    //       movementX,
-    //       movementY
-    //     } = event.sourceEvent;
-
-    //     // Adjust mouse movement by current scale and set camera
-    //     const current_scale = getCurrentScale();
-    //     camera.position.set(camera.position.x - movementX / current_scale, camera.position.y + movementY / current_scale, camera.position.z);
-    //   }
-    // }
   }
 
-  // From https://github.com/anvaka/three.map.control, used for panning
-  function getCurrentScale() {
-    var vFOV = (camera.fov * Math.PI) / 180;
-    var scale_height = 2 * Math.tan(vFOV / 2) * camera.position.z;
-    var currentScale = viewer.viz_height / scale_height;
-    return currentScale;
+  function getScaleFromZ(z) {
+    // let vFOV = (camera.fov * Math.PI) / 180;
+    // let scale_height = 2 * Math.tan(vFOV / 2) * z;
+    // let scale = viewer.viz_height / scale_height;
+    // return scale;
+
+    let half_fov = CONSTANTS.fov / 2;
+    let half_fov_radians = toRadians(half_fov);
+    let half_fov_height = Math.tan(half_fov_radians) * z;
+    let fov_height = half_fov_height * 2;
+    let scale = viewer.viz_height / fov_height; // Divide visualization height by height derived from field of view
+    return scale;
+  }
+
+  function getZFromScale(scale) {
+    // let half_fov = CONSTANTS.fov / 2;
+    // let half_fov_radians = toRadians(half_fov);
+    // let scale_height = viewer.viz_height / scale;
+    // let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
+    // return camera_z_position;
+    let half_fov = CONSTANTS.fov / 2;
+    let half_fov_radians = toRadians(half_fov);
+    let scale_height = viewer.viz_height / scale;
+    let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
+    return camera_z_position;
   }
 
   function zoomEnd(event) {
     hideTooltip();
     let scale = getScaleFromZ(event.transform.k);
-    // get placenames
+    // get placenames at certain zoom levels
     if (points) {
-      //placenames are added to the points object
-      getPlacenames(scale);
+      if (scale > 0 && scale < viewer.resolution * 256) {
+        //placenames are added to the points object
+        getPlacenames(scale);
+      } else {
+        removePlacenamesFromScene();
+      }
     }
 
     //change nuts simplification (or not) based on current scale
@@ -1188,28 +1193,6 @@ projector.unprojectVector( vector, camera ); */
     return pos;
   }
 
-  function getScaleFromZ(z) {
-    let vFOV = (camera.fov * Math.PI) / 180;
-    let scale_height = 2 * Math.tan(vFOV / 2) * z;
-    let scale = viewer.viz_height / scale_height;
-    return scale;
-
-    // let half_fov = CONSTANTS.fov / 2;
-    // let half_fov_radians = toRadians(half_fov);
-    // let half_fov_height = Math.tan(half_fov_radians) * camera_z_position;
-    // let fov_height = half_fov_height * 2;
-    // let scale = viewer.viz_height / fov_height; // Divide visualization height by height derived from field of view
-    // return scale;
-  }
-
-  function getZFromScale(scale) {
-    let half_fov = CONSTANTS.fov / 2;
-    let half_fov_radians = toRadians(half_fov);
-    let scale_height = viewer.viz_height / scale;
-    let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
-    return camera_z_position;
-  }
-
   function toRadians(angle) {
     return angle * (Math.PI / 180);
   }
@@ -1272,7 +1255,9 @@ projector.unprojectVector( vector, camera ); */
     tooltip.style.top = tooltip_state.top + "px";
     //point_tip.innerText = tooltip_state.name;
     point_tip.style.background = tooltip_state.color;
-    label_tip.innerHTML = `<strong>${viewer.value_column}:</strong> ${tooltip_state.name}`;
+    label_tip.innerHTML = `<strong>${viewer.value_column}:</strong> ${tooltip_state.name} <br> 
+    <strong>x:</strong> ${tooltip_state.coords[0]} <br> 
+    <strong>y:</strong> ${tooltip_state.coords[1]} <br> `;
   }
 
   /**
@@ -1289,6 +1274,7 @@ projector.unprojectVector( vector, camera ); */
     tooltip_state.left = mouse_position[0] + x_offset;
     tooltip_state.top = mouse_position[1] + y_offset;
     tooltip_state.name = cell.value;
+    tooltip_state.coords = cell.position;
     tooltip_state.color = cell.color;
     updateTooltip();
   }
@@ -1299,8 +1285,8 @@ projector.unprojectVector( vector, camera ); */
    */
   function hideTooltip() {
     if (tooltip && tooltip_state) {
-      tooltip_state.display = "none";
-      updateTooltip();
+      tooltip.style.display = "none";
+      //updateTooltip();
     }
   }
 
