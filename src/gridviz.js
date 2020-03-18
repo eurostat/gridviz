@@ -6,7 +6,25 @@ import * as d3Fetch from "d3-fetch";
 import * as d3Array from "d3-array";
 import * as d3Format from "d3-format";
 import * as LEGEND from "d3-svg-legend";
-import { Scene, OrthographicCamera, PerspectiveCamera, WebGLRenderer, Points, PointsMaterial, Geometry, Vector3, Vector2, Color, Raycaster, Object3D, Float32BufferAttribute, BufferGeometry, Group, Texture, ShaderMaterial } from "three";
+import {
+  Scene,
+  OrthographicCamera,
+  PerspectiveCamera,
+  WebGLRenderer,
+  Points,
+  PointsMaterial,
+  Geometry,
+  Vector3,
+  Vector2,
+  Color,
+  Raycaster,
+  Object3D,
+  Float32BufferAttribute,
+  BufferGeometry,
+  Group,
+  Texture,
+  ShaderMaterial
+} from "three";
 import * as THREE from "three/src/constants";
 // extra Three.js modules not included in main build
 import { Line2 } from "../assets/js/lines/Line2";
@@ -57,7 +75,7 @@ export function createViewer(options) {
     containerElement: document.body,
     height: window.innerHeight,
     width: window.innerWidth,
-    backgroundColor: "#000",
+    backgroundColor: "#b7b7b7",
     borderColor: "#ffffff",
     colorScheme: "interpolateTurbo",
     legend: true,
@@ -65,21 +83,29 @@ export function createViewer(options) {
     legendTitle: "",
     colorSchemeSelector: true,
     EPSG: 3035, //used to determine grid rendering, placenames, and nuts2json requests.
-    //center:null, //default - If not specified then should default as first or randomly selected point
-    center: [4369000, 2834000], //EPSG:3035
+    center: null, //default - If not specified then should default as first or randomly selected point
+    //center: [4369000, 2834000], //EPSG:3035
+    //center: [4369, 2834], //EPSG:3035 with zeros removed
     //center: [1328169.8035,6308195.0703], //EPSG:3857
     //center: [9.997559,49.681847], //EPSG:4326
     valueColumn: "value",
+    colorColumn: "value",
+    sizeColumn: null,
     title: null,
     nuts2json: true, //show topojson borders of europe (available in 3035, 3857, 4258 or 4326)
+
     //"../../assets/csv/3035/pop_2011_3035_5km.csv"
     //"../../assets/csv/3857/pop_2011_3857_5km.csv"
     //"../../assets/csv/4326/pop_2011_4326_5km.csv"
     //TODO: get resolution (UNIT) from https://spatialreference.org/
+    /*     data: [{
+    url: "../../assets/csv/3035/pop_2011_3035_5km.csv",
+    cellSize: 5000
+  }] */
     data: [
       {
-        url: "../../assets/csv/3035/pop_2011_3035_5km.csv",
-        cellSize: 10801
+        url: "../../assets/csv/3035/pop_2km.csv",
+        cellSize: 2 //without zeros removed would be 2000
       }
     ]
     //data: [{ url: "../../assets/csv/3857/pop_2011_3857_5km.csv", cellSize:5000 }]
@@ -94,20 +120,23 @@ export function createViewer(options) {
   // TODO: validate & sanitize params
 
   //set container height and width
-  viewer.container_element = options.container || default_options.containerElement;
+  viewer.container_element =
+    options.container || default_options.containerElement;
   viewer.container_element.classList.add("egv-container");
-  viewer.container_element.style.width = options.width + "px" || default_options.width + "px";
+  viewer.container_element.style.width =
+    options.width + "px" || default_options.width + "px";
   viewer.viz_width = options.width || default_options.width;
-  viewer.container_element.style.height = options.height + "px" || default_options.height + "px";
+  viewer.container_element.style.height =
+    options.height + "px" || default_options.height + "px";
   viewer.viz_height = options.height || default_options.height;
 
   //CRS
   viewer.EPSG = options.EPSG || default_options.EPSG;
-  viewer.bounds = [2426378.0132, 1528101.2618, 6293974.6215, 5446513.5222]; //EPSG 3035
 
   //data
   viewer.data = options.data || default_options.data;
-  viewer.value_column = options.valueColumn || default_options.valueColumn;
+  viewer.color_column = options.colorColumn || default_options.colorColumn;
+  viewer.size_column = options.sizeColumn || default_options.sizeColumn;
   viewer.resolution = viewer.data[0].cellSize; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
 
   //camera
@@ -119,12 +148,14 @@ export function createViewer(options) {
   viewer.zoom = options.zoom || viewer.far - 1; //initial camera position Z
 
   //styles
-  viewer.background_color = options.backgroundColor || default_options.backgroundColor;
+  viewer.background_color =
+    options.backgroundColor || default_options.backgroundColor;
   viewer.show_legend = options.legend !== false;
   viewer.show_color_scheme_selector = options.colorSchemeSelector !== false;
   viewer.color_scheme = options.colorScheme || default_options.colorScheme;
   viewer.border_color = options.borderColor || default_options.borderColor;
-  viewer.legend_orientation = options.legendOrientation || default_options.legendOrientation;
+  viewer.legend_orientation =
+    options.legendOrientation || default_options.legendOrientation;
   viewer.legend_title = options.legendTitle || default_options.legendTitle;
   //definition of generic accessors based on the name of each parameter name
   // for (var p in out)
@@ -183,7 +214,13 @@ export function createViewer(options) {
 
   //load initial data
   loadGrid(viewer.data[0]);
-  loadBordersJson(CONSTANTS.nuts_base_URL + viewer.EPSG + "/" + nuts_simplification + "/0.json");
+  loadBordersJson(
+    CONSTANTS.nuts_base_URL +
+      viewer.EPSG +
+      "/" +
+      nuts_simplification +
+      "/0.json"
+  );
 
   /**
    * Create renderer for three.js scene and append to container element.
@@ -213,9 +250,21 @@ export function createViewer(options) {
    *
    */
   function createCamera() {
-    camera = new PerspectiveCamera(viewer.fov, viewer.aspect, viewer.near, viewer.far);
-    camera.position.set(viewer.center[0], viewer.center[1], viewer.zoom); // Set initial camera position
-    camera.lookAt(new Vector3(viewer.center[0], viewer.center[1], 0)); // Set initial camera position
+    camera = new PerspectiveCamera(
+      viewer.fov,
+      viewer.aspect,
+      viewer.near,
+      viewer.far
+    );
+
+    //if user hasnt specified center, move camera to cell halfway through grid cache array
+    if (!viewer.center) {
+      camera.position.set(0, 0, viewer.zoom); // Set initial camera position
+      camera.lookAt(new Vector3(0, 0, 0)); // Set initial camera position
+    } else {
+      camera.position.set(viewer.center[0], viewer.center[1], viewer.zoom); // Set initial camera position
+      camera.lookAt(new Vector3(viewer.center[0], viewer.center[1], 0)); // Set initial camera position
+    }
 
     //orthographic
     //https://discourse.threejs.org/t/why-does-pointsmaterial-size-does-not-correspond-with-geographic-grid-cell-size/13408
@@ -298,7 +347,7 @@ export function createViewer(options) {
    *
    */
   function definePointSize() {
-    return viewer.resolution; //INVESTIGATE: why does threejs pointSize value not correspond with the grid resolution?
+    return viewer.resolution * 1.05; //INVESTIGATE: why does threejs pointSize value not correspond with the grid resolution?
   }
 
   /**
@@ -307,7 +356,7 @@ export function createViewer(options) {
    *
    */
   function defineFar() {
-    return viewer.resolution * 1000;
+    return viewer.resolution * 2000;
   }
 
   /**
@@ -322,7 +371,21 @@ export function createViewer(options) {
         err => {
           if (!err) {
             updateColorScale();
-            updatePointSizeScale();
+            if (viewer.size_column) {
+              updatePointSizeScale();
+            }
+
+            if (!viewer.center) {
+              let index = parseInt(grid_caches[viewer.resolution].length / 2);
+              let c = grid_caches[viewer.resolution][index];
+              viewer.center = c.position;
+              camera.position.set(
+                viewer.center[0],
+                viewer.center[1],
+                viewer.zoom
+              );
+              camera.lookAt(new Vector3(viewer.center[0], viewer.center[1], 0)); // Set initial camera position
+            }
             addPointsToScene();
           }
 
@@ -331,7 +394,9 @@ export function createViewer(options) {
         err => console.log(err)
       );
     } else {
-      console.error("Please specify grid cell size in the units of its coordinate system");
+      console.error(
+        "Please specify grid cell size in the units of its coordinate system"
+      );
     }
   }
 
@@ -345,10 +410,12 @@ export function createViewer(options) {
     return d3Fetch.csv(grid.url).then(
       csv => {
         //validate csv
-        if (csv[0].x && csv[0].y && csv[0][viewer.value_column]) {
+        if (csv[0].x && csv[0].y && csv[0][viewer.color_column]) {
           addGridToCache(csv, grid.cellSize);
         } else {
-          return console.error("Incorrect csv format. Please use coordinate columns with names 'x' and 'y'");
+          return console.error(
+            "Incorrect csv format. Please use coordinate columns with names 'x' and 'y'"
+          );
         }
       },
       err => console.error(err)
@@ -365,7 +432,7 @@ export function createViewer(options) {
     if (csv) {
       for (let i = 0; i < csv.length; i++) {
         let position = [csv[i].x, csv[i].y];
-        let value = csv[i][viewer.value_column];
+        let value = csv[i][viewer.color_column];
         let point = {
           position,
           value
@@ -435,7 +502,11 @@ export function createViewer(options) {
           for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
             //each polygon in multipolygon:
             coords = [];
-            for (let m = 0; m < feature.geometry.coordinates[c][s].length; m++) {
+            for (
+              let m = 0;
+              m < feature.geometry.coordinates[c][s].length;
+              m++
+            ) {
               let xyz = {
                 x: feature.geometry.coordinates[c][s][m][0],
                 y: feature.geometry.coordinates[c][s][m][1],
@@ -490,7 +561,9 @@ export function createViewer(options) {
     grid_config = grid_configs[res];
     Utils.showLoading();
     updateColorScale();
-    updatePointSizeScale();
+    if (viewer.size_column) {
+      updatePointSizeScale();
+    }
     // add or update points layer
     addPointsToScene();
     //update raycaster
@@ -507,7 +580,9 @@ export function createViewer(options) {
   }
 
   function updatePointSizeScale() {
-    pointSizeScale.domain(array_extent).range([0, 5000]);
+    pointSizeScale
+      .domain(array_extent)
+      .range([viewer.resolution / 2, viewer.resolution]);
   }
 
   /**
@@ -530,7 +605,9 @@ export function createViewer(options) {
   function updatePointsColors() {
     let colors = [];
     for (var i = 0; i < grid_caches[viewer.resolution].length; i++) {
-      let hex = d3ScaleChromatic[viewer.color_scheme](colorScale(grid_caches[viewer.resolution][i].value)); //d3 scale-chromatic
+      let hex = d3ScaleChromatic[viewer.color_scheme](
+        colorScale(grid_caches[viewer.resolution][i].value)
+      ); //d3 scale-chromatic
       if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
       }
@@ -539,7 +616,10 @@ export function createViewer(options) {
       if (color) colors.push(color.r, color.g, color.b);
     }
     //update colors
-    points_geometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
+    points_geometry.setAttribute(
+      "color",
+      new Float32BufferAttribute(colors, 3)
+    );
     points_geometry.computeBoundingSphere();
     points.geometry = points_geometry;
   }
@@ -551,7 +631,7 @@ export function createViewer(options) {
   function addPointsToScene() {
     //threejs recommends using BufferGeometry instead of Geometry for performance
     /*   indices = [0, 1, 2, 0, 2, 3];
-  bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));  */
+bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));  */
     if (!points_geometry) {
       points_geometry = new BufferGeometry();
     }
@@ -561,7 +641,10 @@ export function createViewer(options) {
     let sizes = [];
     for (var i = 0; i < grid_caches[viewer.resolution].length; i++) {
       // Set vector coordinates from data
-      let coords = [grid_caches[viewer.resolution][i].position[0], grid_caches[viewer.resolution][i].position[1]];
+      let coords = [
+        grid_caches[viewer.resolution][i].position[0],
+        grid_caches[viewer.resolution][i].position[1]
+      ];
       let x = parseFloat(coords[0]);
       let y = parseFloat(coords[1]);
       let z = CONSTANTS.point_z;
@@ -575,11 +658,21 @@ export function createViewer(options) {
 
       positions.push(x, y, z);
       colors.push(color.r, color.g, color.b);
-      sizes.push(pointSizeScale(indicator));
+      if (viewer.size_column) {
+        sizes.push(pointSizeScale(indicator));
+      } else {
+        sizes.push(grid_config.point_size);
+      }
     }
     //set buffer geometry attributes
-    points_geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
-    points_geometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
+    points_geometry.setAttribute(
+      "position",
+      new Float32BufferAttribute(positions, 3)
+    );
+    points_geometry.setAttribute(
+      "color",
+      new Float32BufferAttribute(colors, 3)
+    );
     //Variable point size will affect raycasting: https://github.com/mrdoob/three.js/issues/5105
     points_geometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
     points_geometry.computeBoundingSphere();
@@ -587,16 +680,21 @@ export function createViewer(options) {
     if (!points_material) {
       // Attempting to apply custom point sizes
       points_material = new ShaderMaterial({
-        //uniforms: uniforms,
+        uniforms: {
+          thing: {
+            value: 1000.0
+          }
+        },
         fragmentShader: fragmentShader(),
-        vertexShader: vertexShader()
+        vertexShader: vertexShader(),
+        vertexColors: THREE.VertexColors
       });
-      //using threejs object
-      // points_material = new PointsMaterial({
-      //   size: grid_config.point_size,
-      //   sizeAttenuation: true,
-      //   //https://github.com/mrdoob/three.js/blob/master/src/constants.js
-      //   vertexColors: THREE.VertexColors
+      //using threejs PointsMaterial
+      //points_material = new PointsMaterial({
+      //size: grid_config.point_size,
+      // sizeAttenuation: true,
+      //https://github.com/mrdoob/three.js/blob/master/src/constants.js
+      // vertexColors: THREE.VertexColors
       // });
     } else {
       points_material.size = grid_config.point_size;
@@ -624,25 +722,29 @@ export function createViewer(options) {
 
   function fragmentShader() {
     return `
-    varying float color;
+  varying vec3 vColor;
 
-    void main() {
-      gl_FragColor = color;
-    }
+  void main() {
+    gl_FragColor = vec4( vColor.rgb, 1.0 );
+  }
 `;
   }
 
   function vertexShader() {
     return `
-    varying float color;
-    varying float size;
+  uniform float thing;
+  attribute float size;
+  float scale;
+  varying vec3 vColor;
 
-    void main() {
-      vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-      gl_PointSize = size;
-      gl_Position = projectionMatrix * mvPosition;
-    }
-  `;
+  void main() {
+    vColor = color;
+    vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+    //TODO: change 900.0 to uniform
+    gl_PointSize = size * (thing / -mvPosition.z );
+    gl_Position = projectionMatrix * mvPosition;
+  }
+`;
   }
 
   /**
@@ -832,7 +934,9 @@ export function createViewer(options) {
    *
    */
   function createLegend() {
-    let legendScale = d3Scale.scaleSequentialSqrt(d3ScaleChromatic[viewer.color_scheme]).domain(array_extent);
+    let legendScale = d3Scale
+      .scaleSequentialSqrt(d3ScaleChromatic[viewer.color_scheme])
+      .domain(array_extent);
     let svg;
     if (document.getElementById("egv-legend")) {
       svg = d3Selection.select("#egv-legend");
@@ -902,8 +1006,8 @@ export function createViewer(options) {
 
     tooltip_template = document.createRange()
       .createContextualFragment(`<div id="tooltip" style="display: none; position: absolute; pointer-events: none; z-index:999; border-radius:5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); font-size: 13px; width: 120px; text-align: center; line-height: 1; padding: 6px; background: white; font-family: sans-serif;">
-      <div id="label_tip" style="padding: 4px; margin-bottom: 4px;"></div>
-  <div id="point_tip" style="padding: 4px; margin-bottom: 4px;"></div>
+    <div id="label_tip" style="padding: 4px; margin-bottom: 4px;"></div>
+<div id="point_tip" style="padding: 4px; margin-bottom: 4px;"></div>
 </div>`);
     viewer.container_element.append(tooltip_template);
 
@@ -920,7 +1024,7 @@ export function createViewer(options) {
       let [mouseX, mouseY] = d3Selection.mouse(view.node());
       let mouse_position = [mouseX, mouseY];
       checkIntersects(mouse_position);
-      console.log(camera.position);
+      console.log("Camera:", camera.position);
     });
 
     view.on("mouseleave", () => {
@@ -949,11 +1053,14 @@ export function createViewer(options) {
     view.call(zoom);
 
     let initial_scale = getScaleFromZ(viewer.far);
-    var initial_transform = d3Zoom.zoomIdentity.translate(viewer.viz_width / 2, viewer.viz_height / 2).scale(initial_scale);
+    var initial_transform = d3Zoom.zoomIdentity
+      .translate(viewer.viz_width / 2, viewer.viz_height / 2)
+      .scale(initial_scale);
     zoom.transform(view, initial_transform);
 
     //initial camera position
-    camera.position.set(viewer.center[0], viewer.center[1], viewer.zoom);
+
+    //camera.position.set(viewer.center[0], viewer.center[1], viewer.zoom);
   }
 
   function zoomHandler(event) {
@@ -970,7 +1077,11 @@ export function createViewer(options) {
         // Handle a zoom event
         const { clientX, clientY } = event.sourceEvent;
         // Code from WestLangley https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z/13091694#13091694
-        const vector = new Vector3((clientX / viewer.viz_width) * 2 - 1, -(clientY / viewer.viz_height) * 2 + 1, 1);
+        const vector = new Vector3(
+          (clientX / viewer.viz_width) * 2 - 1,
+          -(clientY / viewer.viz_height) * 2 + 1,
+          1
+        );
         vector.unproject(camera);
         const dir = vector.sub(camera.position).normalize();
         const distance = (new_z - camera.position.z) / dir.z;
@@ -983,7 +1094,11 @@ export function createViewer(options) {
 
         // Adjust mouse movement by current scale and set camera
         const current_scale = getScaleFromZ(camera.position.z);
-        camera.position.set(camera.position.x - movementX / current_scale, camera.position.y + movementY / current_scale, camera.position.z);
+        camera.position.set(
+          camera.position.x - movementX / current_scale,
+          camera.position.y + movementY / current_scale,
+          camera.position.z
+        );
       }
     }
   }
@@ -1030,12 +1145,30 @@ export function createViewer(options) {
 
     //change nuts simplification (or not) based on current scale
     //URL themes: 2016/3035/20M/0.json
-    if (scale > CONSTANTS.nuts_scale_threshold && nuts_simplification !== "10M") {
+    if (
+      scale < CONSTANTS.nuts_scale_threshold &&
+      nuts_simplification !== "10M"
+    ) {
       nuts_simplification = "10M";
-      loadBordersJson(CONSTANTS.nuts_base_URL + viewer.EPSG + "/" + nuts_simplification + "/0.json");
-    } else if (scale < CONSTANTS.nuts_scale_threshold && nuts_simplification !== "20M") {
+      loadBordersJson(
+        CONSTANTS.nuts_base_URL +
+          viewer.EPSG +
+          "/" +
+          nuts_simplification +
+          "/0.json"
+      );
+    } else if (
+      scale > CONSTANTS.nuts_scale_threshold &&
+      nuts_simplification !== "20M"
+    ) {
       nuts_simplification = "20M";
-      loadBordersJson(CONSTANTS.nuts_base_URL + viewer.EPSG + "/" + nuts_simplification + "/0.json");
+      loadBordersJson(
+        CONSTANTS.nuts_base_URL +
+          viewer.EPSG +
+          "/" +
+          nuts_simplification +
+          "/0.json"
+      );
     }
   }
 
@@ -1061,7 +1194,7 @@ export function createViewer(options) {
     } else if (scale > r * 16 && scale < r * 32) {
       where = "POPL_2011>10000";
     } else if (scale > r * 32 && scale < r * 64) {
-      where = "POPL_2011>300000";
+      where = "POPL_2011>200000";
     } else if (scale > r * 64 && scale < r * 128) {
       where = "POPL_2011>300000";
     } else if (scale > r * 128 && scale < r * 256) {
@@ -1078,7 +1211,21 @@ export function createViewer(options) {
     //currentExtent = envelope;
     //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
     let URL =
-      CONSTANTS.placenames_base_URL + "where=" + where + "&outSR={'wkid':" + viewer.EPSG + "}" + "&geometry=" + envelope.xmin + "," + envelope.ymin + "," + envelope.xmax + "," + envelope.ymax + "&geometryType=esriGeometryEnvelope&f=json&outFields=city_town_name,POPL_2011&resultRecordCount=200";
+      CONSTANTS.placenames_base_URL +
+      "where=" +
+      where +
+      "&outSR={'wkid':" +
+      viewer.EPSG +
+      "}" +
+      "&geometry=" +
+      envelope.xmin +
+      "," +
+      envelope.ymin +
+      "," +
+      envelope.xmax +
+      "," +
+      envelope.ymax +
+      "&geometryType=esriGeometryEnvelope&f=json&outFields=city_town_name,POPL_2011&resultRecordCount=200";
     let uri = encodeURI(URL);
     d3Fetch.json(uri).then(
       res => {
@@ -1130,7 +1277,11 @@ export function createViewer(options) {
     placeDiv.textContent = placename.attributes.city_town_name;
     placeDiv.style.marginTop = "-1em";
     var placeLabel = new CSS2DObject(placeDiv);
-    placeLabel.position.set(placename.geometry.x, placename.geometry.y, CONSTANTS.label_height);
+    placeLabel.position.set(
+      placename.geometry.x,
+      placename.geometry.y,
+      CONSTANTS.label_height
+    );
     return placeLabel;
   }
 
@@ -1140,14 +1291,14 @@ export function createViewer(options) {
     //https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z
 
     /*   var elem = renderer.domElement, 
-  boundingRect = elem.getBoundingClientRect(),
-  x = (clientX - boundingRect.left) * (elem.width / boundingRect.width),
-  y = (clientY - boundingRect.top) * (elem.height / boundingRect.height);
+boundingRect = elem.getBoundingClientRect(),
+x = (clientX - boundingRect.left) * (elem.width / boundingRect.width),
+y = (clientY - boundingRect.top) * (elem.height / boundingRect.height);
 
 var vector = new THREE.Vector3( 
-  ( x / viewer.viz_width ) * 2 - 1, 
-  - ( y / viewer.viz_height ) * 2 + 1, 
-  0.5 
+( x / viewer.viz_width ) * 2 - 1, 
+- ( y / viewer.viz_height ) * 2 + 1, 
+0.5 
 );
 
 projector.unprojectVector( vector, camera ); */
@@ -1169,11 +1320,11 @@ projector.unprojectVector( vector, camera ); */
       ymax: 5901309.0137
     };
     /*   return {
-    xmin: BL.x,
-    ymin: BL.y,
-    xmax: TR.x,
-    ymax: TR.y
-  }; */
+  xmin: BL.x,
+  ymin: BL.y,
+  xmax: TR.x,
+  ymax: TR.y
+}; */
   }
 
   // get the position of a canvas event in world coords
@@ -1181,7 +1332,11 @@ projector.unprojectVector( vector, camera ); */
     var vec = new Vector3(); // create once and reuse
     var pos = new Vector3(); // create once and reuse
 
-    vec.set((clientX / window.innerWidth) * 2 - 1, -(clientY / window.innerHeight) * 2 + 1, 0.5);
+    vec.set(
+      (clientX / window.innerWidth) * 2 - 1,
+      -(clientY / window.innerHeight) * 2 + 1,
+      0.5
+    );
 
     vec.unproject(camera);
 
@@ -1198,7 +1353,11 @@ projector.unprojectVector( vector, camera ); */
   }
 
   function mouseToThree(mouseX, mouseY) {
-    return new Vector3((mouseX / viewer.viz_width) * 2 - 1, -(mouseY / viewer.viz_height) * 2 + 1, 0.5);
+    return new Vector3(
+      (mouseX / viewer.viz_width) * 2 - 1,
+      -(mouseY / viewer.viz_height) * 2 + 1,
+      0.5
+    );
   }
 
   function checkIntersects(mouse_position) {
@@ -1208,6 +1367,7 @@ projector.unprojectVector( vector, camera ); */
     if (intersects[0]) {
       let sorted_intersects = sortIntersectsByDistanceToRay(intersects);
       let intersect = sorted_intersects[0];
+      console.log("Intersect", intersect);
       let index = intersect.index;
       let cell = grid_caches[viewer.resolution][index];
       //highlightPoint(cell);
@@ -1255,9 +1415,9 @@ projector.unprojectVector( vector, camera ); */
     tooltip.style.top = tooltip_state.top + "px";
     //point_tip.innerText = tooltip_state.name;
     point_tip.style.background = tooltip_state.color;
-    label_tip.innerHTML = `<strong>${viewer.value_column}:</strong> ${tooltip_state.name} <br> 
-    <strong>x:</strong> ${tooltip_state.coords[0]} <br> 
-    <strong>y:</strong> ${tooltip_state.coords[1]} <br> `;
+    label_tip.innerHTML = `<strong>${viewer.color_column}:</strong> ${tooltip_state.name} <br> 
+  <strong>x:</strong> ${tooltip_state.coords[0]} <br> 
+  <strong>y:</strong> ${tooltip_state.coords[1]} <br> `;
   }
 
   /**

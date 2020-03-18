@@ -16,7 +16,7 @@ GridViz.createViewer({
   //center: [4369000, 2834000],
   height: window.innerHeight,
   width: window.innerWidth,
-  backgroundColor: "#b7b7b7",
+  backgroundColor: "#000",
   borderColor: "#ffffff",
   colorScheme: "interpolateTurbo",
   colorSchemeSelector: true,
