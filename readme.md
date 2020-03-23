@@ -2,12 +2,13 @@
 
 A JavaScript Library for visualizing gridded statistics from CSV files. From any given CSV file, GridViz will build a Three.js viewer capable of visualizing hundreds of thousands of grid cells.
 
-![Example](assets/images/previews/preview1.png){:height="150px" width="150px"}
-![Example](assets/images/previews/preview2.png)<!-- .element height="50%" width="50%" -->
-![Example](assets/images/previews/preview3.png)<!-- .element height="50%" width="50%" -->
-![Example](assets/images/previews/preview4.png)<!-- .element height="50%" width="50%" -->
-![Example](assets/images/previews/preview5.png)<!-- .element height="50%" width="50%" -->
-![Example](assets/images/previews/preview6.png)<!-- .element height="50%" width="50%" -->
+<img src="assets/images/previews/preview1.png" alt="preview" width="200"/>
+<img src="assets/images/previews/preview2.png" alt="preview" width="200"/>
+<img src="assets/images/previews/preview3.png" alt="preview" width="200"/>
+<img src="assets/images/previews/preview4.png" alt="preview" width="200"/>
+<img src="assets/images/previews/preview5.png" alt="preview" width="200"/>
+<img src="assets/images/previews/preview6.png" alt="preview" width="200"/>
+
 
 ## [Live demo](https://eurostat.github.io/GridViz/examples/basic/index.html)
 
