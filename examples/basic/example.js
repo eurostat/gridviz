@@ -14,7 +14,7 @@ GridViz.createViewer({
   colorColumn: "value", // csv column which you wish to visualize
   //sizeColumn: "value", // csv column which you wish to visualize
   EPSG: 3035,
-  //center: [4369000, 2834000],
+  center: [4369000, 2834000],
   height: window.innerHeight,
   width: window.innerWidth,
   backgroundColor: "#000",

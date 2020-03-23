@@ -348,7 +348,7 @@ export function createViewer(options) {
    *
    */
   function definePointSize() {
-    return viewer.resolution * 1.05; //INVESTIGATE: why does threejs pointSize value not correspond with the grid resolution?
+    return viewer.resolution; //INVESTIGATE: why does threejs pointSize value not correspond with the grid resolution?
   }
 
   /**
