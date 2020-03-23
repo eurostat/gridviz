@@ -4,11 +4,11 @@ A JavaScript Library for visualizing gridded statistics from CSV files. From any
 
 <div>
   <img src="assets/images/previews/preview6.png" alt="preview" width="100%"/>
-<img src="assets/images/previews/preview1.png" alt="preview" width="50%"/>
-<img src="assets/images/previews/preview2.png" alt="preview" width="50%"/>
-<img src="assets/images/previews/preview3.png" alt="preview" width="50%"/>
-<img src="assets/images/previews/preview4.png" alt="preview" width="50%"/>
-<img src="assets/images/previews/preview5.png" alt="preview" width="50%"/>
+<img src="assets/images/previews/preview1.png" alt="preview" width="49.7%"/>
+<img src="assets/images/previews/preview2.png" alt="preview" width="49.7%"/>
+<img src="assets/images/previews/preview3.png" alt="preview" width="49.7%"/>
+<img src="assets/images/previews/preview4.png" alt="preview" width="49.7%"/>
+<img src="assets/images/previews/preview5.png" alt="preview" width="49.7%"/>
 </div>
 
 ## [Live demo](https://eurostat.github.io/GridViz/examples/basic/index.html)
