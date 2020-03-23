@@ -88,8 +88,7 @@ export function createViewer(options) {
     //center: [4369, 2834], //EPSG:3035 with zeros removed
     //center: [1328169.8035,6308195.0703], //EPSG:3857
     //center: [9.997559,49.681847], //EPSG:4326
-    valueColumn: "value",
-    colorColumn: "value",
+    colorColumn: null,
     sizeColumn: null,
     title: null,
     nuts2json: true, //show topojson borders of europe (available in 3035, 3857, 4258 or 4326)
@@ -98,16 +97,18 @@ export function createViewer(options) {
     //"../../assets/csv/3857/pop_2011_3857_5km.csv"
     //"../../assets/csv/4326/pop_2011_4326_5km.csv"
     //TODO: get resolution (UNIT) from https://spatialreference.org/
-    /*     data: [{
-    url: "../../assets/csv/3035/pop_2011_3035_5km.csv",
-    cellSize: 5000
-  }] */
     data: [
       {
-        url: "../../assets/csv/3035/pop_2km.csv",
-        cellSize: 2 //without zeros removed would be 2000
+        url: "../../assets/csv/3035/pop_2011_3035_5km.csv",
+        cellSize: 5000
       }
     ]
+    // data: [
+    //   {
+    //     url: "../../assets/csv/3035/pop_2km.csv",
+    //     cellSize: 2 //without zeros removed would be 2000
+    //   }
+    // ]
     //data: [{ url: "../../assets/csv/3857/pop_2011_3857_5km.csv", cellSize:5000 }]
     // data: [{
     //   url: "../../assets/csv/3035/France_2015_1km_over80.csv",
@@ -378,7 +379,10 @@ export function createViewer(options) {
             if (!viewer.center) {
               let index = parseInt(grid_caches[viewer.resolution].length / 2);
               let c = grid_caches[viewer.resolution][index];
-              viewer.center = c.position;
+              viewer.center = [
+                parseFloat(c.position[0]),
+                parseFloat(c.position[1])
+              ];
               camera.position.set(
                 viewer.center[0],
                 viewer.center[1],
@@ -582,7 +586,7 @@ export function createViewer(options) {
   function updatePointSizeScale() {
     pointSizeScale
       .domain(array_extent)
-      .range([viewer.resolution / 2, viewer.resolution]);
+      .range([viewer.resolution / 3, viewer.resolution / 1.5]); //minSize, maxSize
   }
 
   /**
@@ -1200,7 +1204,7 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
     } else if (scale > r * 128 && scale < r * 256) {
       where = "POPL_2011>1000000";
     } else if (scale > r * 256 && scale < r * 512) {
-      where = "1=2";
+      where = "POPL_2011>1000000";
     } else if (scale > r * 512 && scale < r * 1024) {
       where = "1=2";
     } else if (scale > r * 1024) {

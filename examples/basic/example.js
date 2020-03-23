@@ -11,7 +11,8 @@ GridViz.createViewer({
   //   cellSize: 2000,
   //   tiled: false
   // }],
-  //valueColumn: "value", // csv column which you wish to visualize
+  colorColumn: "value", // csv column which you wish to visualize
+  //sizeColumn: "value", // csv column which you wish to visualize
   EPSG: 3035,
   //center: [4369000, 2834000],
   height: window.innerHeight,
