@@ -8,3 +8,4 @@ examples/
 webpack.config.dev.js
 webpack.config.prod.js
 src/
+.vscode/

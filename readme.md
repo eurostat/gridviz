@@ -2,7 +2,12 @@
 
 Gridded statistics visualization tool.
 
-![alt text](https://raw.githubusercontent.com/eurostat/GridViz/master/assets/images/preview.png "Eurostat population grid")
+[![Example](assets/images/preview1.png)]
+[![Example](assets/images/preview2.png)]
+[![Example](assets/images/preview3.png)]
+[![Example](assets/images/preview4.png)]
+[![Example](assets/images/preview5.png)]
+[![Example](assets/images/preview6.png)]
 
 ## [Live demo](https://eurostat.github.io/GridViz/examples/basic/index.html)
 
