@@ -15,7 +15,7 @@ A JavaScript Library for visualizing gridded statistics from CSV files. From any
 
 ## Description
 
-GridViz allows you to visualize large gridded datasets on the browser. Unlike raster-based approaches, this tool utilizes WebGL through Three.js in order to render eveything client-side.
+GridViz is a JavaScript library which allows you to visualize large gridded datasets. Unlike traditional raster-based approaches, this tool utilizes WebGL through Three.js in order to render eveything client-side.
 
 ## Installation & Usage
 
