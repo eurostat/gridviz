@@ -63,107 +63,77 @@ import "./styles.css";
  * @param {number} [options.background_color = 0x000000] - THREE.Scene background color (hexidecimal).
  * @param {number} [options.border_color = 0xffffff] - THREE.Line2 color (hexidecimal).
  * @param {string} [options.color_scheme = "interpolateTurbo"] - D3 Scale-Chromatic color scheme to use for cell-coloring.
- * @param {boolean} [options.show_legend = true] - THREE.Line2 color (hexidecimal).
- * @param {boolean} [options.show_color_scheme_selector = true] - THREE.Line2 color (hexidecimal).
+ * @param {boolean} [options.showLegend = true] - THREE.Line2 color (hexidecimal).
+ * @param {boolean} [options.showColorSchemeSelector = true] - THREE.Line2 color (hexidecimal).
  * @description User defined parameters
  */
-export function createViewer(options) {
+export function viewer(options) {
   //output object
   let viewer = {};
 
-  let default_options = {
-    containerElement: document.body,
-    height: window.innerHeight,
-    width: window.innerWidth,
-    backgroundColor: "#b7b7b7",
-    borderColor: "#ffffff",
-    colorScheme: "interpolateTurbo",
-    legend: true,
-    legendOrientation: "vertical",
-    legendTitle: "",
-    colorSchemeSelector: true,
-    EPSG: 3035, //used to determine grid rendering, placenames, and nuts2json requests.
-    center: null, //default - If not specified then should default as first or randomly selected point
-    //center: [4369000, 2834000], //EPSG:3035
-    //center: [4369, 2834], //EPSG:3035 with zeros removed
-    //center: [1328169.8035,6308195.0703], //EPSG:3857
-    //center: [9.997559,49.681847], //EPSG:4326
-    colorColumn: null,
-    sizeColumn: null,
-    title: null,
-    nuts2json: true, //show topojson borders of europe (available in 3035, 3857, 4258 or 4326)
-
-    //"../../assets/csv/3035/pop_2011_3035_5km.csv"
-    //"../../assets/csv/3857/pop_2011_3857_5km.csv"
-    //"../../assets/csv/4326/pop_2011_4326_5km.csv"
-    //TODO: get resolution (UNIT) from https://spatialreference.org/
-    data: [
-      {
-        url: "../../assets/csv/3035/pop_2011_3035_5km.csv",
-        cellSize: 5000
-      }
-    ]
-    // data: [
-    //   {
-    //     url: "../../assets/csv/3035/pop_2km.csv",
-    //     cellSize: 2 //without zeros removed would be 2000
-    //   }
-    // ]
-    //data: [{ url: "../../assets/csv/3857/pop_2011_3857_5km.csv", cellSize:5000 }]
-    // data: [{
-    //   url: "../../assets/csv/3035/France_2015_1km_over80.csv",
-    //   cellSize: 10800,
-    //   tiled: false
-    // }]
-  };
-
-  // apply user-defined options or set defaults
-  // TODO: validate & sanitize params
-
-  //set container height and width
-  viewer.container_element =
-    options.container || default_options.containerElement;
-  viewer.container_element.classList.add("egv-container");
-  viewer.container_element.style.width =
-    options.width + "px" || default_options.width + "px";
-  viewer.viz_width = options.width || default_options.width;
-  viewer.container_element.style.height =
-    options.height + "px" || default_options.height + "px";
-  viewer.viz_height = options.height || default_options.height;
-
-  //CRS
-  viewer.EPSG = options.EPSG || default_options.EPSG;
-
+  viewer.container_ = document.body,
+    viewer.height_ = window.innerHeight,
+    viewer.width_ = window.innerWidth,
+    viewer.backgroundColor_ = "#b7b7b7",
+    viewer.borderColor_ = "#ffffff",
+    viewer.colorScheme_ = "interpolateTurbo",
+    viewer.legend_ = true,
+    viewer.legendOrientation_ = "vertical",
+    viewer.legendTitle_ = "",
+    viewer.colorSchemeSelector_ = true,
+    viewer.EPSG_ = 3035, //used to determine grid rendering, placenames, and nuts2json requests.
+    viewer.center_ = null, //default - If not specified then should default as first or randomly selected point
+    //center= [4369000, 2834000], //EPSG=3035
+    //center= [4369, 2834], //EPSG=3035 with zeros removed
+    //center= [1328169.8035,6308195.0703], //EPSG=3857
+    //center= [9.997559,49.681847], //EPSG=4326
+    viewer.colorColumn_ = null,
+    viewer.sizeColumn_ = null,
+    viewer.title_ = null,
+    viewer.nuts2json = true; //show topojson borders of europe (available in 3035, 3857, 4258 or 4326)
+  //"../../assets/csv/3035/pop_2011_3035_5km.csv"
+  //"../../assets/csv/3857/pop_2011_3857_5km.csv"
+  //"../../assets/csv/4326/pop_2011_4326_5km.csv"
+  //TODO: get resolution (UNIT) from https://spatialreference.org/
+  viewer.data_ = [
+    {
+      url: "../../assets/csv/3035/pop_2011_3035_5km.csv",
+      cellSize: 5000
+    }
+  ]
+  // data: [
+  //   {
+  //     url: "../../assets/csv/3035/pop_2km.csv",
+  //     cellSize: 2 //without zeros removed would be 2000
+  //   }
+  // ]
+  //data: [{ url: "../../assets/csv/3857/pop_2011_3857_5km.csv", cellSize:5000 }]
+  // data: [{
+  //   url: "../../assets/csv/3035/France_2015_1km_over80.csv",
+  //   cellSize: 10800,
+  //   tiled: false
+  // }]
   //data
-  viewer.data = options.data || default_options.data;
-  viewer.color_column = options.colorColumn || default_options.colorColumn;
-  viewer.size_column = options.sizeColumn || default_options.sizeColumn;
-  viewer.resolution = viewer.data[0].cellSize; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
-
+  viewer.resolution_ = viewer.data_[0].cellSize; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
   //camera
-  viewer.near = CONSTANTS.near;
-  viewer.far = defineFar(); //set min zoom
-  viewer.fov = CONSTANTS.fov;
-  viewer.aspect = viewer.viz_width / viewer.viz_height;
-  viewer.center = options.center || default_options.center;
-  viewer.zoom = options.zoom || viewer.far - 1; //initial camera position Z
+  viewer.near_ = CONSTANTS.near;
+  viewer.far_ = defineFar(); //set min zoom
+  viewer.fov_ = CONSTANTS.fov;
+  viewer.aspect_ = viewer.width_ / viewer.height_;
+  viewer.zoom_ = viewer.far_ - 1; //initial camera position Z
+  //set container height and width
+  viewer.container_.classList.add("egv-container");
+  viewer.container_.style.width =
+    viewer.width_ + "px";
+  viewer.container_.style.height =
+    viewer.height_ + "px";
 
-  //styles
-  viewer.background_color =
-    options.backgroundColor || default_options.backgroundColor;
-  viewer.show_legend = options.legend !== false;
-  viewer.show_color_scheme_selector = options.colorSchemeSelector !== false;
-  viewer.color_scheme = options.colorScheme || default_options.colorScheme;
-  viewer.border_color = options.borderColor || default_options.borderColor;
-  viewer.legend_orientation =
-    options.legendOrientation || default_options.legendOrientation;
-  viewer.legend_title = options.legendTitle || default_options.legendTitle;
   //definition of generic accessors based on the name of each parameter name
-  // for (var p in out)
-  // (function () {
-  //   var p_ = p;
-  //   out[p_.substring(0, p_.length - 1)] = function (v) { if (!arguments.length) return out[p_]; out[p_] = v; return out; };
-  // })();
+  for (var p in viewer)
+    (function () {
+      var p_ = p;
+      viewer[p_.substring(0, p_.length - 1)] = function (v) { if (!arguments.length) return viewer[p_]; viewer[p_] = v; return viewer; };
+    })();
 
   // other variables
   let line_material,
@@ -197,31 +167,35 @@ export function createViewer(options) {
   let grid_config = defineGridConfig();
   let initial_zoom = true; //indicate whether
 
-  Utils.createLoadingSpinner(viewer.container_element);
+  Utils.createLoadingSpinner(viewer.container_);
 
-  //build viewer
-  createScene();
-  if (!label_renderer) createLabelRenderer();
-  if (!renderer) createWebGLRenderer();
-  createCamera();
-  createRaycaster();
-  addPanAndZoom();
-  createTooltipContainer();
-  if (viewer.show_color_scheme_selector) {
-    createColorSchemeDropdown();
-  }
+  //clear canvas, build threejs viewer and append grid
+  viewer.build = function () {
+    createScene();
+    if (!label_renderer) createLabelRenderer();
+    if (!renderer) createWebGLRenderer();
+    createCamera();
+    createRaycaster();
+    addPanAndZoom();
+    createTooltipContainer();
+    if (viewer.colorSchemeSelector_) {
+      createColorSchemeDropdown();
+    }
 
-  addEventListeners();
+    addEventListeners();
 
-  //load initial data
-  loadGrid(viewer.data[0]);
-  loadBordersJson(
-    CONSTANTS.nuts_base_URL +
-      viewer.EPSG +
+    //load initial data
+    loadGrid(viewer.data_[0]);
+    loadBordersJson(
+      CONSTANTS.nuts_base_URL +
+      viewer.EPSG_ +
       "/" +
       nuts_simplification +
       "/0.json"
-  );
+    );
+    return viewer;
+  };
+
 
   /**
    * Create renderer for three.js scene and append to container element.
@@ -229,8 +203,8 @@ export function createViewer(options) {
    */
   function createWebGLRenderer() {
     renderer = new WebGLRenderer();
-    renderer.setSize(viewer.viz_width, viewer.viz_height);
-    viewer.container_element.appendChild(renderer.domElement);
+    renderer.setSize(viewer.width_, viewer.height_);
+    viewer.container_.appendChild(renderer.domElement);
     view = d3Selection.select(renderer.domElement); //for d3 mouse events
   }
 
@@ -240,10 +214,10 @@ export function createViewer(options) {
    */
   function createLabelRenderer() {
     label_renderer = new CSS2DRenderer();
-    label_renderer.setSize(viewer.viz_width, viewer.viz_height);
+    label_renderer.setSize(viewer.width_, viewer.height_);
     label_renderer.domElement.style.position = "absolute";
     //label_renderer.domElement.style.top = "0px";
-    viewer.container_element.appendChild(label_renderer.domElement);
+    viewer.container_.appendChild(label_renderer.domElement);
   }
 
   /**
@@ -252,19 +226,19 @@ export function createViewer(options) {
    */
   function createCamera() {
     camera = new PerspectiveCamera(
-      viewer.fov,
-      viewer.aspect,
-      viewer.near,
-      viewer.far
+      viewer.fov_,
+      viewer.aspect_,
+      viewer.near_,
+      viewer.far_
     );
 
     //if user hasnt specified center, move camera to cell halfway through grid cache array
-    if (!viewer.center) {
-      camera.position.set(0, 0, viewer.zoom); // Set initial camera position
+    if (!viewer.center_) {
+      camera.position.set(0, 0, viewer.zoom_); // Set initial camera position
       camera.lookAt(new Vector3(0, 0, 0)); // Set initial camera position
     } else {
-      camera.position.set(viewer.center[0], viewer.center[1], viewer.zoom); // Set initial camera position
-      camera.lookAt(new Vector3(viewer.center[0], viewer.center[1], 0)); // Set initial camera position
+      camera.position.set(viewer.center_[0], viewer.center_[1], viewer.zoom_); // Set initial camera position
+      camera.lookAt(new Vector3(viewer.center_[0], viewer.center_[1], 0)); // Set initial camera position
     }
 
     //orthographic
@@ -310,7 +284,7 @@ export function createViewer(options) {
     //show population value on click
     addMouseEventsToView();
     //change color scheme
-    if (viewer.show_color_scheme_selector) {
+    if (viewer.colorSchemeSelector_) {
       addChangeEventToColorDropdown();
     }
     //screen resize
@@ -323,7 +297,7 @@ export function createViewer(options) {
    */
   function createScene() {
     viewer.scene = new Scene();
-    viewer.scene.background = new Color(viewer.background_color);
+    viewer.scene.background = new Color(viewer.backgroundColor_);
   }
 
   function defineGridConfig() {
@@ -339,7 +313,7 @@ export function createViewer(options) {
    *
    */
   function defineRaycasterThreshold() {
-    return viewer.resolution;
+    return viewer.resolution_;
   }
 
   /**
@@ -348,7 +322,7 @@ export function createViewer(options) {
    *
    */
   function definePointSize() {
-    return viewer.resolution; //INVESTIGATE: why does threejs pointSize value not correspond with the grid resolution?
+    return viewer.resolution_; //INVESTIGATE: why does threejs pointSize value not correspond with the grid resolution?
   }
 
   /**
@@ -357,7 +331,7 @@ export function createViewer(options) {
    *
    */
   function defineFar() {
-    return viewer.resolution * 2000;
+    return viewer.resolution_ * 2000;
   }
 
   /**
@@ -372,23 +346,23 @@ export function createViewer(options) {
         err => {
           if (!err) {
             updateColorScale();
-            if (viewer.size_column) {
+            if (viewer.sizeColumn_) {
               updatePointSizeScale();
             }
 
-            if (!viewer.center) {
-              let index = parseInt(grid_caches[viewer.resolution].length / 2);
-              let c = grid_caches[viewer.resolution][index];
-              viewer.center = [
+            if (!viewer.center_) {
+              let index = parseInt(grid_caches[viewer.resolution_].length / 2);
+              let c = grid_caches[viewer.resolution_][index];
+              viewer.center_ = [
                 parseFloat(c.position[0]),
                 parseFloat(c.position[1])
               ];
               camera.position.set(
-                viewer.center[0],
-                viewer.center[1],
-                viewer.zoom
+                viewer.center_[0],
+                viewer.center_[1],
+                viewer.zoom_
               );
-              camera.lookAt(new Vector3(viewer.center[0], viewer.center[1], 0)); // Set initial camera position
+              camera.lookAt(new Vector3(viewer.center_[0], viewer.center_[1], 0)); // Set initial camera position
             }
             addPointsToScene();
           }
@@ -414,7 +388,7 @@ export function createViewer(options) {
     return d3Fetch.csv(grid.url).then(
       csv => {
         //validate csv
-        if (csv[0].x && csv[0].y && csv[0][viewer.color_column]) {
+        if (csv[0].x && csv[0].y && csv[0][viewer.colorColumn_]) {
           addGridToCache(csv, grid.cellSize);
         } else {
           return console.error(
@@ -436,7 +410,7 @@ export function createViewer(options) {
     if (csv) {
       for (let i = 0; i < csv.length; i++) {
         let position = [csv[i].x, csv[i].y];
-        let value = csv[i][viewer.color_column];
+        let value = csv[i][viewer.colorColumn_];
         let point = {
           position,
           value
@@ -538,7 +512,7 @@ export function createViewer(options) {
     let line_geom = new LineGeometry();
     let positions = [];
     let colors = [];
-    let color = new Color(viewer.border_color);
+    let color = new Color(viewer.borderColor_);
     for (var i = 0; i < coords.length; i++) {
       positions.push(coords[i].x, coords[i].y, CONSTANTS.line_z);
       colors.push(color.r, color.g, color.b);
@@ -565,7 +539,7 @@ export function createViewer(options) {
     grid_config = grid_configs[res];
     Utils.showLoading();
     updateColorScale();
-    if (viewer.size_column) {
+    if (viewer.sizeColumn_) {
       updatePointSizeScale();
     }
     // add or update points layer
@@ -579,14 +553,14 @@ export function createViewer(options) {
    *
    */
   function updateColorScale() {
-    array_extent = d3Array.extent(grid_caches[viewer.resolution], d => d.value);
+    array_extent = d3Array.extent(grid_caches[viewer.resolution_], d => d.value);
     colorScale.domain(array_extent);
   }
 
   function updatePointSizeScale() {
     pointSizeScale
       .domain(array_extent)
-      .range([viewer.resolution / 3, viewer.resolution / 1.5]); //minSize, maxSize
+      .range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
   }
 
   /**
@@ -595,9 +569,9 @@ export function createViewer(options) {
    * @param {*} scheme
    */
   function onChangeColorScheme(scheme) {
-    viewer.color_scheme = scheme;
+    viewer.colorScheme_ = scheme;
     updatePointsColors();
-    if (viewer.show_legend) {
+    if (viewer.legend_) {
       updateLegend();
     }
   }
@@ -608,14 +582,14 @@ export function createViewer(options) {
    */
   function updatePointsColors() {
     let colors = [];
-    for (var i = 0; i < grid_caches[viewer.resolution].length; i++) {
-      let hex = d3ScaleChromatic[viewer.color_scheme](
-        colorScale(grid_caches[viewer.resolution][i].value)
+    for (var i = 0; i < grid_caches[viewer.resolution_].length; i++) {
+      let hex = d3ScaleChromatic[viewer.colorScheme_](
+        colorScale(grid_caches[viewer.resolution_][i].value)
       ); //d3 scale-chromatic
       if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
       }
-      grid_caches[viewer.resolution][i].color = hex; //for tooltip
+      grid_caches[viewer.resolution_][i].color = hex; //for tooltip
       let color = new Color(hex);
       if (color) colors.push(color.r, color.g, color.b);
     }
@@ -643,26 +617,26 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
     let colors = [];
     let positions = [];
     let sizes = [];
-    for (var i = 0; i < grid_caches[viewer.resolution].length; i++) {
+    for (var i = 0; i < grid_caches[viewer.resolution_].length; i++) {
       // Set vector coordinates from data
       let coords = [
-        grid_caches[viewer.resolution][i].position[0],
-        grid_caches[viewer.resolution][i].position[1]
+        grid_caches[viewer.resolution_][i].position[0],
+        grid_caches[viewer.resolution_][i].position[1]
       ];
       let x = parseFloat(coords[0]);
       let y = parseFloat(coords[1]);
       let z = CONSTANTS.point_z;
-      let indicator = grid_caches[viewer.resolution][i].value;
-      let hex = d3ScaleChromatic[viewer.color_scheme](colorScale(indicator)); //d3 scale-chromatic
+      let indicator = grid_caches[viewer.resolution_][i].value;
+      let hex = d3ScaleChromatic[viewer.colorScheme_](colorScale(indicator)); //d3 scale-chromatic
       if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
       }
-      grid_caches[viewer.resolution][i].color = hex; //for tooltip
+      grid_caches[viewer.resolution_][i].color = hex; //for tooltip
       let color = new Color(hex);
 
       positions.push(x, y, z);
       colors.push(color.r, color.g, color.b);
-      if (viewer.size_column) {
+      if (viewer.sizeColumn_) {
         sizes.push(pointSizeScale(indicator));
       } else {
         sizes.push(grid_config.point_size);
@@ -713,7 +687,7 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
       points.material = points_material;
     }
     //create or update legend
-    if (viewer.show_legend) {
+    if (viewer.legend_) {
       if (grid_legend) {
         updateLegend();
       } else {
@@ -927,10 +901,10 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
       option.innerText = scheme.innerText;
       schemes_select.appendChild(option);
     }
-    schemes_select.value = viewer.color_scheme;
+    schemes_select.value = viewer.colorScheme_;
     dropdown_container.appendChild(label);
     dropdown_container.appendChild(schemes_select);
-    viewer.container_element.appendChild(dropdown_container);
+    viewer.container_.appendChild(dropdown_container);
   }
 
   /**
@@ -939,16 +913,16 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
    */
   function createLegend() {
     let legendScale = d3Scale
-      .scaleSequentialSqrt(d3ScaleChromatic[viewer.color_scheme])
+      .scaleSequentialSqrt(d3ScaleChromatic[viewer.colorScheme_])
       .domain(array_extent);
     let svg;
     if (document.getElementById("egv-legend")) {
       svg = d3Selection.select("#egv-legend");
     } else {
       svg = d3Selection.create("svg").attr("id", "egv-legend");
-      viewer.container_element.appendChild(svg.node());
+      viewer.container_.appendChild(svg.node());
     }
-    if (viewer.legend_orientation == "horizontal") {
+    if (viewer.legendOrientation_ == "horizontal") {
       svg.attr("class", "egv-legend-horizontal egv-plugin");
     } else {
       svg.attr("class", "egv-legend-vertical egv-plugin");
@@ -963,9 +937,9 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
       .shapeWidth(30)
       .cells(13)
       .labelFormat(format)
-      .orient(viewer.legend_orientation)
+      .orient(viewer.legendOrientation_)
       .scale(legendScale)
-      .title(viewer.legend_title);
+      .title(viewer.legendTitle_);
 
     svg.select(".legendSqrt").call(grid_legend);
   }
@@ -997,7 +971,7 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
    *
    */
   function addChangeEventToColorDropdown() {
-    schemes_select.addEventListener("change", function(e) {
+    schemes_select.addEventListener("change", function (e) {
       onChangeColorScheme(e.currentTarget.value);
     });
   }
@@ -1013,7 +987,7 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
     <div id="label_tip" style="padding: 4px; margin-bottom: 4px;"></div>
 <div id="point_tip" style="padding: 4px; margin-bottom: 4px;"></div>
 </div>`);
-    viewer.container_element.append(tooltip_template);
+    viewer.container_.append(tooltip_template);
 
     tooltip = document.querySelector("#tooltip");
     point_tip = document.querySelector("#point_tip");
@@ -1041,8 +1015,8 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
   function addPanAndZoom() {
     // define zoom
     //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
-    let farScale = getScaleFromZ(viewer.far);
-    let nearScale = getScaleFromZ(viewer.near);
+    let farScale = getScaleFromZ(viewer.far_);
+    let nearScale = getScaleFromZ(viewer.near_);
     let zoom = d3Zoom
       .zoom()
       .scaleExtent([farScale, nearScale])
@@ -1056,21 +1030,21 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
       });
     view.call(zoom);
 
-    let initial_scale = getScaleFromZ(viewer.far);
+    let initial_scale = getScaleFromZ(viewer.far_);
     var initial_transform = d3Zoom.zoomIdentity
-      .translate(viewer.viz_width / 2, viewer.viz_height / 2)
+      .translate(viewer.width_ / 2, viewer.height_ / 2)
       .scale(initial_scale);
     zoom.transform(view, initial_transform);
 
     //initial camera position
 
-    //camera.position.set(viewer.center[0], viewer.center[1], viewer.zoom);
+    //camera.position.set(viewer.center_[0], viewer.center_[1], viewer.zoom_);
   }
 
   function zoomHandler(event) {
     let scale = event.transform.k;
-    // let x = -(event.transform.x - viewer.viz_width / 2) / scale;
-    // let y = (event.transform.y - viewer.viz_height / 2) / scale;
+    // let x = -(event.transform.x - viewer.width_ / 2) / scale;
+    // let y = (event.transform.y - viewer.height_ / 2) / scale;
     // let z = getZFromScale(scale);
     // camera.position.set(x, y, z);
 
@@ -1082,8 +1056,8 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
         const { clientX, clientY } = event.sourceEvent;
         // Code from WestLangley https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z/13091694#13091694
         const vector = new Vector3(
-          (clientX / viewer.viz_width) * 2 - 1,
-          -(clientY / viewer.viz_height) * 2 + 1,
+          (clientX / viewer.width_) * 2 - 1,
+          -(clientY / viewer.height_) * 2 + 1,
           1
         );
         vector.unproject(camera);
@@ -1110,26 +1084,26 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
   function getScaleFromZ(z) {
     // let vFOV = (camera.fov * Math.PI) / 180;
     // let scale_height = 2 * Math.tan(vFOV / 2) * z;
-    // let scale = viewer.viz_height / scale_height;
+    // let scale = viewer.height_ / scale_height;
     // return scale;
 
     let half_fov = CONSTANTS.fov / 2;
     let half_fov_radians = toRadians(half_fov);
     let half_fov_height = Math.tan(half_fov_radians) * z;
     let fov_height = half_fov_height * 2;
-    let scale = viewer.viz_height / fov_height; // Divide visualization height by height derived from field of view
+    let scale = viewer.height_ / fov_height; // Divide visualization height by height derived from field of view
     return scale;
   }
 
   function getZFromScale(scale) {
     // let half_fov = CONSTANTS.fov / 2;
     // let half_fov_radians = toRadians(half_fov);
-    // let scale_height = viewer.viz_height / scale;
+    // let scale_height = viewer.height_ / scale;
     // let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
     // return camera_z_position;
     let half_fov = CONSTANTS.fov / 2;
     let half_fov_radians = toRadians(half_fov);
-    let scale_height = viewer.viz_height / scale;
+    let scale_height = viewer.height_ / scale;
     let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
     return camera_z_position;
   }
@@ -1139,7 +1113,7 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
     let scale = getScaleFromZ(event.transform.k);
     // get placenames at certain zoom levels
     if (points) {
-      if (scale > 0 && scale < viewer.resolution * 256) {
+      if (scale > 0 && scale < viewer.resolution_ * 256) {
         //placenames are added to the points object
         getPlacenames(scale);
       } else {
@@ -1156,10 +1130,10 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
       nuts_simplification = "10M";
       loadBordersJson(
         CONSTANTS.nuts_base_URL +
-          viewer.EPSG +
-          "/" +
-          nuts_simplification +
-          "/0.json"
+        viewer.EPSG_ +
+        "/" +
+        nuts_simplification +
+        "/0.json"
       );
     } else if (
       scale > CONSTANTS.nuts_scale_threshold &&
@@ -1168,10 +1142,10 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
       nuts_simplification = "20M";
       loadBordersJson(
         CONSTANTS.nuts_base_URL +
-          viewer.EPSG +
-          "/" +
-          nuts_simplification +
-          "/0.json"
+        viewer.EPSG_ +
+        "/" +
+        nuts_simplification +
+        "/0.json"
       );
     }
   }
@@ -1183,7 +1157,7 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
    */
   function getPlacenames(scale) {
     let where;
-    let r = viewer.resolution;
+    let r = viewer.resolution_;
     // labelling thresholds
     if (scale > 0 && scale < r) {
       where = "POPL_2011>10000";
@@ -1219,7 +1193,7 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
       "where=" +
       where +
       "&outSR={'wkid':" +
-      viewer.EPSG +
+      viewer.EPSG_ +
       "}" +
       "&geometry=" +
       envelope.xmin +
@@ -1300,15 +1274,15 @@ x = (clientX - boundingRect.left) * (elem.width / boundingRect.width),
 y = (clientY - boundingRect.top) * (elem.height / boundingRect.height);
 
 var vector = new THREE.Vector3( 
-( x / viewer.viz_width ) * 2 - 1, 
-- ( y / viewer.viz_height ) * 2 + 1, 
+( x / viewer.width_ ) * 2 - 1, 
+- ( y / viewer.height_ ) * 2 + 1, 
 0.5 
 );
 
 projector.unprojectVector( vector, camera ); */
 
-    //let bottomLeftVector = mouseToThree(padding, viewer.viz_height - padding); //screen x,y
-    //let topRightVector = mouseToThree(viewer.viz_width - padding, padding); //screen x,y
+    //let bottomLeftVector = mouseToThree(padding, viewer.height_ - padding); //screen x,y
+    //let topRightVector = mouseToThree(viewer.width_ - padding, padding); //screen x,y
 
     //let bottomLeftWorld = getWorldCoordsFromVector(bottomLeftVector);
     //let topRightWorld = getWorldCoordsFromVector(topRightVector);
@@ -1358,8 +1332,8 @@ projector.unprojectVector( vector, camera ); */
 
   function mouseToThree(mouseX, mouseY) {
     return new Vector3(
-      (mouseX / viewer.viz_width) * 2 - 1,
-      -(mouseY / viewer.viz_height) * 2 + 1,
+      (mouseX / viewer.width_) * 2 - 1,
+      -(mouseY / viewer.height_) * 2 + 1,
       0.5
     );
   }
@@ -1373,7 +1347,7 @@ projector.unprojectVector( vector, camera ); */
       let intersect = sorted_intersects[0];
       console.log("Intersect", intersect);
       let index = intersect.index;
-      let cell = grid_caches[viewer.resolution][index];
+      let cell = grid_caches[viewer.resolution_][index];
       //highlightPoint(cell);
       showTooltip(mouse_position, cell);
     } else {
@@ -1419,7 +1393,7 @@ projector.unprojectVector( vector, camera ); */
     tooltip.style.top = tooltip_state.top + "px";
     //point_tip.innerText = tooltip_state.name;
     point_tip.style.background = tooltip_state.color;
-    label_tip.innerHTML = `<strong>${viewer.color_column}:</strong> ${tooltip_state.name} <br> 
+    label_tip.innerHTML = `<strong>${viewer.colorColumn_}:</strong> ${tooltip_state.name} <br> 
   <strong>x:</strong> ${tooltip_state.coords[0]} <br> 
   <strong>y:</strong> ${tooltip_state.coords[1]} <br> `;
   }
@@ -1460,7 +1434,7 @@ projector.unprojectVector( vector, camera ); */
    * @param {*} object
    */
   function hideObject(object) {
-    object.traverse(function(child) {
+    object.traverse(function (child) {
       if (child instanceof Points) {
         child.visible = false;
       }
@@ -1473,11 +1447,11 @@ projector.unprojectVector( vector, camera ); */
    */
   function addResizeEvent() {
     window.addEventListener("resize", () => {
-      viewer.viz_width = viewer.container_element.clientWidth;
-      viewer.viz_height = viewer.container_element.clientHeight;
-      label_renderer.setSize(viewer.viz_width, viewer.viz_height);
-      renderer.setSize(viewer.viz_width, viewer.viz_height);
-      camera.aspect = viewer.viz_width / viewer.viz_height;
+      viewer.width_ = viewer.container_.clientWidth;
+      viewer.height_ = viewer.container_.clientHeight;
+      label_renderer.setSize(viewer.width_, viewer.height_);
+      renderer.setSize(viewer.width_, viewer.height_);
+      camera.aspect = viewer.width_ / viewer.height_;
       camera.updateProjectionMatrix();
     });
   }

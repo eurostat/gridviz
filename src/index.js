@@ -1,1 +1,1 @@
-export { createViewer } from "./gridviz.js";
+export { viewer } from "./gridviz.js";
