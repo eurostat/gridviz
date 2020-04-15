@@ -15,20 +15,31 @@
   let containerDiv = document.getElementById("viz-container");
   GridViz.viewer()
     .container(containerDiv)
-    // data() [{
-    //   url() "https()//raw.githubusercontent.com/eurostat/GridViz/development/assets/csv/3035/pop_2011_3035_5km.csv"
-    //   cellSize() 10800,
-    //   tiled() false,
-    // }],
-    // data() [{
-    //   url() "../../assets/csv/3035/France_2015_1km_over80.csv",
-    //   cellSize() 2000,
-    //   tiled() false
-    // }],
+    // data: [
+    //   {
+    //     url: "../../assets/csv/3035/pop_2km.csv",
+    //     cellSize: 2 //without zeros removed would be 2000
+    //   }
+    // ]
+    // data: [{
+    //   url: "../../assets/csv/3035/France_2015_1km_over80.csv",
+    //   cellSize: 10800,
+    //   tiled: false
+    // }]
+    //data([{ url: "../../assets/csv/3857/pop_2011_3857_5km.csv", cellSize:5000 }])
+    // .data([
+    //   {
+    //     url: "../../assets/csv/3035/pop_2011_3035_5km.csv",
+    //     cellSize: 5000
+    //   }
+    // ])
     .colorColumn("value")  // csv column which you wish to visualize
     //sizeColumn() "value" // csv column which you wish to visualize
     .EPSG(3035)
-    .center([4369000, 2834000])
+    .center([4369000, 2834000])//EPSG=3035
+    //center([4369, 2834]), //EPSG=3035 with zeros removed
+    //center([1328169.8035,6308195.0703]), //EPSG=3857
+    //center([9.997559,49.681847]), //EPSG=4326
     .height(window.innerHeight)
     .width(window.innerWidth)
     .backgroundColor("#000")
