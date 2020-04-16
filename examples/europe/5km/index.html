@@ -10,15 +10,15 @@
 <body style="margin:0;">
   <div id="viz-container"></div>
 </body>
-<script src="../../build/gridviz.js"></script>
+<script src="../../../build/gridviz.js"></script>
 <script>
   let containerDiv = document.getElementById("viz-container");
   GridViz.viewer()
     .container(containerDiv)
     .data([
       {
-        url: "../../assets/csv/Europe/5km/3035/pop_2011_3035_5km.csv",
-        cellSize: 1000
+        url: "../../../assets/csv/Europe/5km/3035/pop_2011_3035_5km.csv",
+        cellSize: 5000
       }
     ])
     .colorColumn("value")  // csv column which you wish to visualize
@@ -29,11 +29,14 @@
     .width(window.innerWidth)
     .backgroundColor("#000")
     .borderColor("#ffffff")
+    .backgroundColor("#000")
+    .borderColor("#ffffff")
     .colorScheme("interpolateInferno")
     .colorSchemeSelector(true)
-    .legend(true)
-    .legendOrientation("vertical")
-    .legendTitle("Population per 5 km²")
+    .legend({
+      title: "Total population per 5 km² (2011)",
+      titleWidth: 130
+    })
     .build()
 </script>
 
