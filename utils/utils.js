@@ -5,7 +5,7 @@ let loading_spinner;
  */
 export function createLoadingSpinner(container) {
   loading_spinner = document.createElement("div");
-  loading_spinner.id = "egv-loading-spinner";
+  loading_spinner.id = "gridviz-loading-spinner";
   loading_spinner.classList.add("lds-ring");
   let child1 = document.createElement("div");
   loading_spinner.appendChild(child1);

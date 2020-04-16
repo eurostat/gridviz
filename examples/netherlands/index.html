@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>GridViz Example</title>
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+</head>
+
+<body style="margin:0;">
+    <div id="viz-container"></div>
+</body>
+<script src="../../build/gridviz.js"></script>
+<script src="https://d3js.org/d3-format.v1.min.js"></script>
+<script>
+    let containerDiv = document.getElementById("viz-container");
+    GridViz.viewer()
+        .container(containerDiv)
+        .data([{
+            url: "../../assets/csv/Netherlands/100m/inwoner_2018.csv",
+            cellSize: 1.1,
+            tiled: false
+        }])
+        .colorColumn("INWONER")  // csv column which you wish to visualize
+        .EPSG(3035)//actually 28992 but set as 3035 so placenames load
+        .center([1421, 4546])//EPSG=3035
+        .height(window.innerHeight)
+        .width(window.innerWidth)
+        .backgroundColor("#000")
+        .borderColor("#ffffff")
+        .colorScheme("interpolateTurbo")
+        .colorSchemeSelector(true)
+        .legend({
+            title: "Total Inhabitants (2018)",
+            titleWidth: 100,
+            format: d3.format(',.0f')
+        })
+        .build()
+</script>
+
+</html>

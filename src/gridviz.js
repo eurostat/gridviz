@@ -71,32 +71,43 @@ export function viewer(options) {
   //output object
   let viewer = {};
 
-  viewer.container_ = document.body,
-    viewer.height_ = window.innerHeight,
-    viewer.width_ = window.innerWidth,
-    viewer.backgroundColor_ = "#b7b7b7",
-    viewer.borderColor_ = "#ffffff",
-    viewer.colorScheme_ = "interpolateTurbo",
-    viewer.legend_ = true,
-    viewer.legendOrientation_ = "vertical",
-    viewer.legendTitle_ = "",
-    viewer.colorSchemeSelector_ = true,
-    viewer.EPSG_ = 3035, //used to determine grid rendering, placenames, and nuts2json requests.
-    viewer.center_ = null, //default - If not specified then should default as first or randomly selected point
-    viewer.colorColumn_ = null,
-    viewer.sizeColumn_ = null,
-    viewer.title_ = null,
-    viewer.nuts2json = true; //show topojson borders of europe (available in 3035, 3857, 4258 or 4326)
+  viewer.container_ = document.body;
+  viewer.height_ = window.innerHeight;
+  viewer.width_ = window.innerWidth;
+  viewer.backgroundColor_ = "#b7b7b7";
+  viewer.borderColor_ = "#ffffff";
+  viewer.colorScheme_ = "interpolateTurbo";
+  viewer.colors_ = null;
+  viewer.stops_ = null;
 
-  //TODO: get resolution (UNIT) from https://spatialreference.org/
-  viewer.data_ = [
-    {
-      url: "../../assets/csv/3035/pop_2011_3035_5km.csv",
-      cellSize: 5000
-    }
-  ];
+  //d3-legend.susielu.com
+  viewer.legend_ = {
+    orientation: "vertical",
+    title: "Legend",
+    titleWidth: 50,
+    width: null,
+    format: d3Format.format(".0s"),
+    cells: 13,
+    shapeWidth: 30
+  };
+
+  viewer.colorSchemeSelector_ = true;
+  viewer.EPSG_ = 3035; //used to determine grid rendering; placenames; and nuts2json requests.
+  viewer.center_ = null; //default - If not specified then should default as first or randomly selected point
+  viewer.colorColumn_ = null;
+  viewer.sizeColumn_ = null;
+  viewer.title_ = null;
+  viewer.nuts2json = true; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
+  viewer.data_ = null;
   //data
   viewer.resolution_ = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
+  //camera
+  viewer.camera = {}
+  viewer.camera.near_ = null;
+  viewer.camera.far_ = null; //set min zoom
+  viewer.camera.fov_ = null;
+  viewer.camera.aspect_ = null;
+  viewer.camera.zoom_ = null; //initial camera position Z
 
   //definition of generic accessors based on the name of each parameter name
   for (var p in viewer)
@@ -104,6 +115,14 @@ export function viewer(options) {
       var p_ = p;
       viewer[p_.substring(0, p_.length - 1)] = function (v) { if (!arguments.length) return viewer[p_]; viewer[p_] = v; return viewer; };
     })();
+
+  //override some accesors
+  viewer.legend = function (v) {
+    for (let key in v) {
+      viewer.legend_[key] = v[key];
+    }
+    return viewer;
+  };
 
   // other variables
   let lineMaterial,
@@ -141,7 +160,7 @@ export function viewer(options) {
   //clear canvas, build threejs viewer and append grid
   viewer.build = function () {
     //set container height and width
-    viewer.container_.classList.add("egv-container");
+    viewer.container_.classList.add("gridviz-container");
     viewer.container_.style.width =
       viewer.width_ + "px";
     viewer.container_.style.height =
@@ -208,12 +227,11 @@ export function viewer(options) {
    */
   function createCamera() {
     //camera
-    viewer.camera = {}
     viewer.camera.near_ = CONSTANTS.near;
     viewer.camera.far_ = defineFar(); //set min zoom
     viewer.camera.fov_ = CONSTANTS.fov;
     viewer.camera.aspect_ = viewer.width_ / viewer.height_;
-    viewer.camera.zoom_ = viewer.camera.far_ - 1; //initial camera position Z
+    viewer.camera.zoom_ = viewer.camera.far_ / 2; //initial camera position Z
     camera = new PerspectiveCamera(
       viewer.camera.fov_,
       viewer.camera.aspect_,
@@ -378,6 +396,7 @@ export function viewer(options) {
       csv => {
         //validate csv
         if (csv[0].x && csv[0].y && csv[0][viewer.colorColumn_]) {
+          console.log("Cells:" + csv.length)
           addGridToCache(csv, grid.cellSize);
         } else {
           return console.error(
@@ -874,13 +893,13 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
       }
     ];
     let dropdown_container = document.createElement("div");
-    dropdown_container.id = "egv-dropdown-container";
-    dropdown_container.classList.add("egv-plugin");
+    dropdown_container.id = "gridviz-dropdown-container";
+    dropdown_container.classList.add("gridviz-plugin");
     schemesSelect = document.createElement("select");
     schemesSelect.id = "schemes";
     let label = document.createElement("label");
     label.for = "schemes";
-    label.classList.add("egv-dropdown-label");
+    label.classList.add("gridviz-dropdown-label");
     label.innerText = "Colour Scheme: ";
 
     for (let i = 0; i < schemes.length; i++) {
@@ -905,32 +924,33 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
       .scaleSequentialSqrt(d3ScaleChromatic[viewer.colorScheme_])
       .domain(valuesExtent);
     let svg;
-    if (document.getElementById("egv-legend")) {
-      svg = d3Selection.select("#egv-legend");
+    if (document.getElementById("gridviz-legend")) {
+      svg = d3Selection.select("#gridviz-legend");
     } else {
-      svg = d3Selection.create("svg").attr("id", "egv-legend");
+      svg = d3Selection.create("svg").attr("id", "gridviz-legend");
       viewer.container_.appendChild(svg.node());
     }
-    if (viewer.legendOrientation_ == "horizontal") {
-      svg.attr("class", "egv-legend-horizontal egv-plugin");
+    if (viewer.legend.orientation == "horizontal") {
+      svg.attr("class", "gridviz-legend-horizontal gridviz-plugin");
     } else {
-      svg.attr("class", "egv-legend-vertical egv-plugin");
+      svg.attr("class", "gridviz-legend-vertical gridviz-plugin");
     }
-    let format = d3Format.format(".0s");
     svg
       .append("g")
       .attr("class", "legendSqrt")
-      .attr("transform", "translate(10,10)"); //padding
+      .attr("transform", "translate(10,15)"); //padding
 
     gridLegend = LEGEND.legendColor()
-      .shapeWidth(30)
-      .cells(13)
-      .labelFormat(format)
-      .orient(viewer.legendOrientation_)
+      .shapeWidth(viewer.legend_.shapeWidth)
+      .cells(viewer.legend_.cells)
+      .labelFormat(viewer.legend_.format)
+      .orient(viewer.legend_.orientation)
       .scale(legendScale)
-      .title(viewer.legendTitle_);
+      .title(viewer.legend_.title)
+      .titleWidth(viewer.legend_.titleWidth)
 
     svg.select(".legendSqrt").call(gridLegend);
+
   }
 
   /**
@@ -1019,7 +1039,7 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
       });
     view.call(zoom);
 
-    let initial_scale = getScaleFromZ(viewer.camera.far_);
+    let initial_scale = getScaleFromZ(viewer.camera.zoom_);
     var initial_transform = d3Zoom.zoomIdentity
       .translate(viewer.width_ / 2, viewer.height_ / 2)
       .scale(initial_scale);
@@ -1145,35 +1165,7 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
    * @param {*} scale
    */
   function getPlacenames(scale) {
-    let where;
-    let r = viewer.resolution_;
-    // labelling thresholds
-    if (scale > 0 && scale < r) {
-      where = "POPL_2011>10000";
-    } else if (scale > r && scale < r * 2) {
-      where = "POPL_2011>10000";
-    } else if (scale > r * 2 && scale < r * 4) {
-      where = "POPL_2011>10000";
-    } else if (scale > r * 4 && scale < r * 8) {
-      where = "POPL_2011>10000";
-    } else if (scale > r * 8 && scale < r * 16) {
-      where = "POPL_2011>10000";
-    } else if (scale > r * 16 && scale < r * 32) {
-      where = "POPL_2011>10000";
-    } else if (scale > r * 32 && scale < r * 64) {
-      where = "POPL_2011>200000";
-    } else if (scale > r * 64 && scale < r * 128) {
-      where = "POPL_2011>300000";
-    } else if (scale > r * 128 && scale < r * 256) {
-      where = "POPL_2011>1000000";
-    } else if (scale > r * 256 && scale < r * 512) {
-      where = "POPL_2011>1000000";
-    } else if (scale > r * 512 && scale < r * 1024) {
-      where = "1=2";
-    } else if (scale > r * 1024) {
-      where = "1=2";
-    }
-
+    let where = defineWhereParameter()
     let envelope = getCurrentViewExtent();
     //currentExtent = envelope;
     //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
@@ -1209,6 +1201,36 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
     );
   }
 
+  function defineWhereParameter(scale) {
+    let r = viewer.resolution_;
+    // labelling thresholds
+    if (scale > 0 && scale < r) {
+      return where = "POPL_2011>10000";
+    } else if (scale > r && scale < r * 2) {
+      return where = "POPL_2011>10000";
+    } else if (scale > r * 2 && scale < r * 4) {
+      return where = "POPL_2011>10000";
+    } else if (scale > r * 4 && scale < r * 8) {
+      return where = "POPL_2011>10000";
+    } else if (scale > r * 8 && scale < r * 16) {
+      return where = "POPL_2011>10000";
+    } else if (scale > r * 16 && scale < r * 32) {
+      return where = "POPL_2011>10000";
+    } else if (scale > r * 32 && scale < r * 64) {
+      return where = "POPL_2011>200000";
+    } else if (scale > r * 64 && scale < r * 128) {
+      return where = "POPL_2011>300000";
+    } else if (scale > r * 128 && scale < r * 256) {
+      return where = "POPL_2011>1000000";
+    } else if (scale > r * 256 && scale < r * 512) {
+      return where = "POPL_2011>1000000";
+    } else if (scale > r * 512 && scale < r * 1024) {
+      return where = "1=2";
+    } else if (scale > r * 1024) {
+      return where = "1=2";
+    }
+  }
+
   /**
    * Appends placename labels from JSON features to the viewer
    *
@@ -1240,7 +1262,7 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
    */
   function createPlacenameLabelObject(placename) {
     var placeDiv = document.createElement("div");
-    placeDiv.className = "egv-placename";
+    placeDiv.className = "gridviz-placename";
     placeDiv.textContent = placename.attributes.city_town_name;
     placeDiv.style.marginTop = "-1em";
     var placeLabel = new CSS2DObject(placeDiv);

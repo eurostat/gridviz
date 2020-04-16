@@ -1,4 +1,4 @@
-.egv-container {
+.gridviz-container {
   position: relative !important;
   margin: 0px;
   font-family: "roboto_condensedbold", Arial, sans-serif;
@@ -38,78 +38,79 @@
   display: block;
 }
 
-.egv-plugin {
+.gridviz-plugin {
   background-color: #efefef;
   color: black;
   fill: black;
-  border: 2px solid #888888;
-  border-radius: 5px;
+  /* border: 2px solid #888888; */
+  border-radius: 1px;
 }
 
 /*  BUTTON GROUP */
-.egv-btn-group {
+.gridviz-btn-group {
   position: absolute;
   bottom: 2%;
   right: 2%;
 }
-.egv-btn-group button {
+.gridviz-btn-group button {
   /* EU blue */
   padding: 10px 24px;
   cursor: pointer;
   float: left;
 }
 
-.egv-active {
+.gridviz-active {
   background-color: #efefef !important;
 }
 
-.egv-button {
+.gridviz-button {
   background-color: #5a5a5a;
 }
 
 /* Clear floats (clearfix hack) */
-.egv-btn-group:after {
+.gridviz-btn-group:after {
   content: "";
   clear: both;
   display: table;
 }
 
-.egv-btn-group button:not(:last-child) {
+.gridviz-btn-group button:not(:last-child) {
   border-right: none; /* Prevent double borders */
 }
 
 /* Add a background color on hover */
-.egv-btn-group button:hover {
+.gridviz-btn-group button:hover {
   background-color: #345881;
 }
 
-#egv-btn2km {
+#gridviz-btn2km {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   z-index: 9999;
 }
 
-#egv-btn5km {
+#gridviz-btn5km {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   z-index: 9999;
 }
 
 /* LEGEND */
-#egv-legend {
+#gridviz-legend {
   z-index: 9999;
   position: absolute;
   bottom: 10px;
   left: 10px;
-  font-size: 12px;
+  /* font-size: 12px; */
+  opacity:0.8;
 }
-.egv-legend-horizontal {
+.gridviz-legend-horizontal {
   height: 65px;
   width: 441px;
   padding-top: 5px;
 }
-.egv-legend-vertical {
-  height: 255px;
+.gridviz-legend-vertical {
+  height: 321px;
   width: 105px;
   padding-top: 5px;
 }
@@ -120,7 +121,7 @@ rect.swatch {
 }
 
 /* Placenames  */
-.egv-placename {
+.gridviz-placename {
   z-index: 9;
   color: #fff;
   font-family: sans-serif;
@@ -129,20 +130,20 @@ rect.swatch {
 }
 
 /* Color scheme select  */
-#egv-dropdown-container {
+#gridviz-dropdown-container {
   z-index: 9999;
   position: absolute;
   top: 10px;
   right: 10px;
   padding: 8px;
 }
-.egv-dropdown-label {
+.gridviz-dropdown-label {
   z-index: 9999;
   margin-right: 10px;
 }
 
 /* LOADING SPINNER */
-#egv-loading-spinner {
+#gridviz-loading-spinner {
   position: absolute;
   top: 47%;
   left: 47%;

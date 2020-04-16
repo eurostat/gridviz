@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>GridViz Example</title>
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+</head>
+
+<body style="margin:0;">
+    <div id="viz-container"></div>
+</body>
+<script src="../../build/gridviz.js"></script>
+<script src="https://d3js.org/d3-format.v1.min.js"></script>
+<script>
+    let containerDiv = document.getElementById("viz-container");
+    GridViz.viewer()
+        .container(containerDiv)
+        .data([{
+            url: "../../assets/csv/France/1km/2015_Ind_80p.csv",
+            cellSize: 1000,
+            tiled: false
+        }])
+        .colorColumn("Ind_80p")  // csv column which you wish to visualize
+        .EPSG(3035)
+        .center([3709000, 2624000])//EPSG=3035
+        .height(window.innerHeight)
+        .width(window.innerWidth)
+        .backgroundColor("#000")
+        .borderColor("#ffffff")
+        .colorScheme("interpolateInferno")
+        .colorSchemeSelector(true)
+        .legend({
+            title: "Total population over 80 years of age (2015)",
+            titleWidth: 100,
+            format: d3.format(',.0f')
+        })
+        .build()
+</script>
+
+</html>
