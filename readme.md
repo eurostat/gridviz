@@ -10,8 +10,11 @@ A JavaScript Library for visualizing gridded statistics from CSV files. From any
 <img src="assets/images/previews/preview4.png" alt="preview" width="49.7%" height="210px"/>
 
 </div>
-
-## [Live demo](https://eurostat.github.io/GridViz/examples/basic/index.html)
+## Examples
+[Europe - 5km² Population Grid](https://eurostat.github.io/GridViz/examples/europe/5km/index.html) - [Data Source](https://ec.europa.eu/eurostat/web/gisco)
+[Netherlands - Inhabitants per 100m²](https://eurostat.github.io/GridViz/examples/netherlands/index.html) - [Data Source](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken)
+[France - 1km² Population Grid](https://eurostat.github.io/GridViz/examples/france/index.html) - [Data Source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)
+[France - Inhabitants over 80 years of age per 1km²](https://eurostat.github.io/GridViz/examples/france/population-over-80.html) - [Data Source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)
 
 ## Description
 
