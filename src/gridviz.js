@@ -77,9 +77,12 @@ export function viewer(options) {
   viewer.width_ = window.innerWidth;
   viewer.backgroundColor_ = "#b7b7b7";
   viewer.borderColor_ = "#ffffff";
+  viewer.highlightColor_ = "#37f2d6"
 
   //d3-legend.susielu.com
   viewer.legend_ = {
+    width: 140,
+    height: 320,
     orientation: "vertical",
     title: "Legend",
     titleWidth: 50,
@@ -98,8 +101,6 @@ export function viewer(options) {
   viewer.colorScaleFunction_ = "scaleSequentialSqrt"; //scaleSequential or scaleDiverging & their respective variants
   viewer.colorScale_ = null; //requires .range and .domain functions
   viewer.sizeScale_ = null;  //requires .range and .domain functions
-
-
 
   viewer.EPSG_ = 3035; //used to determine grid rendering; placenames; and nuts2json requests.
   viewer.center_ = null; //default - If not specified then should default as first or randomly selected point
@@ -141,6 +142,7 @@ export function viewer(options) {
     camera,
     raycaster,
     points,
+    previousIntersect,
     tooltipContainer,
     tooltipTemplate,
     tooltip,
@@ -962,19 +964,19 @@ export function viewer(options) {
    *
    */
   function createLegend() {
-    let svg;
+    let legendContainer;
     if (document.getElementById("gridviz-legend")) {
-      svg = d3Selection.select("#gridviz-legend");
+      legendContainer = d3Selection.select("#gridviz-legend");
     } else {
-      svg = d3Selection.create("svg").attr("id", "gridviz-legend");
-      viewer.container_.appendChild(svg.node());
+      legendContainer = d3Selection.create("svg").attr("id", "gridviz-legend");
+      viewer.container_.appendChild(legendContainer.node());
     }
     if (viewer.legend.orientation == "horizontal") {
-      svg.attr("class", "gridviz-legend-horizontal gridviz-plugin");
+      legendContainer.attr("class", "gridviz-legend-horizontal gridviz-plugin");
     } else {
-      svg.attr("class", "gridviz-legend-vertical gridviz-plugin");
+      legendContainer.attr("class", "gridviz-legend-vertical gridviz-plugin");
     }
-    svg
+    let legend = legendContainer
       .append("g")
       .attr("class", "legendSqrt")
       .attr("transform", "translate(10,15)"); //padding
@@ -988,8 +990,33 @@ export function viewer(options) {
       .title(viewer.legend_.title)
       .titleWidth(viewer.legend_.titleWidth)
 
-    svg.select(".legendSqrt").call(gridLegend);
+    if (viewer.thresholdValues_) {
+      gridLegend.labels(thresholdLabels)
+    }
 
+    legendContainer.select(".legendSqrt").call(gridLegend);
+
+    //adjust width/height
+    legendContainer.style("height", viewer.legend_.height + "px");
+    legendContainer.style("width", viewer.legend_.width + "px");
+    //legend.style("height", viewer.legend_.height +"px");
+
+  }
+
+  function thresholdLabels({
+    i,
+    genLength,
+    generatedLabels,
+    labelDelimiter
+  }) {
+    if (i === 0) {
+      const values = generatedLabels[i].split(` ${labelDelimiter} `)
+      return `Less than ${values[1]}`
+    } else if (i === genLength - 1) {
+      const values = generatedLabels[i].split(` ${labelDelimiter} `)
+      return `${values[0]} or more`
+    }
+    return generatedLabels[i]
   }
 
   /**
@@ -1403,7 +1430,7 @@ export function viewer(options) {
       console.log("Intersect", intersect);
       let index = intersect.index;
       let cell = gridCaches[viewer.resolution_][index];
-      //highlightPoint(cell);
+      highlightPoint(intersect);
       showTooltip(mouse_position, cell);
     } else {
       removeHighlights();
@@ -1415,23 +1442,52 @@ export function viewer(options) {
     return _.sortBy(intersects, "distanceToRay");
   }
 
-  function highlightPoint(cell) {
+  function highlightPoint(intersect) {
     removeHighlights();
 
-    let geometry = new Geometry();
-    // FIXME
-    geometry.vertices.push(new Vector3(cell.position[0], cell.position[1], 0));
-    geometry.colors = [new Color("#ffffff")];
+    let colors = intersect.object.geometry.attributes.color.array;
 
-    let material = new PointsMaterial({
-      size: gridConfig.point_size,
-      sizeAttenuation: true,
-      vertexColors: THREE.VertexColors,
-      transparent: true
-    });
+    //reset previous intersect colours back to their original values
+    if (previousIntersect) {
+      colors[previousIntersect.colourIndex] = previousIntersect.color.r;
+      colors[previousIntersect.colourIndex + 1] = previousIntersect.color.g;
+      colors[previousIntersect.colourIndex + 2] = previousIntersect.color.b;
+    }
 
-    let point = new Points(geometry, material);
-    tooltipContainer.add(point);
+    //position in geometry colour attribute float32Array
+    let colourIndex = intersect.index * 3
+    let r = colors[colourIndex];
+    let g = colors[colourIndex + 1];
+    let b = colors[colourIndex + 2];
+
+    previousIntersect = {
+      colourIndex: colourIndex,
+      color: { r: r, g: g, b: b }
+    }
+
+    //highlight
+    let newColor = new Color(viewer.highlightColor_);
+    colors[colourIndex] = newColor.r;
+    colors[colourIndex + 1] = newColor.g;
+    colors[colourIndex + 2] = newColor.b;
+
+    intersect.object.geometry.attributes.color.needsUpdate = true;
+
+    //add new cell
+    // let geometry = new Geometry();
+    // // FIXME
+    // geometry.vertices.push(new Vector3(cell.position[0], cell.position[1], 0));
+    // geometry.colors = [new Color("#ffffff")];
+
+    // let material = new PointsMaterial({
+    //   size: gridConfig.point_size,
+    //   sizeAttenuation: true,
+    //   vertexColors: THREE.VertexColors,
+    //   transparent: true
+    // });
+
+    // let point = new Points(geometry, material);
+    // tooltipContainer.add(point);
   }
 
   function removeHighlights() {
