@@ -71,14 +71,12 @@ export function viewer(options) {
   //output object
   let viewer = {};
 
+  //styles
   viewer.container_ = document.body;
   viewer.height_ = window.innerHeight;
   viewer.width_ = window.innerWidth;
   viewer.backgroundColor_ = "#b7b7b7";
   viewer.borderColor_ = "#ffffff";
-  viewer.colorScheme_ = "interpolateTurbo";
-  viewer.colors_ = null;
-  viewer.stops_ = null;
 
   //d3-legend.susielu.com
   viewer.legend_ = {
@@ -91,13 +89,24 @@ export function viewer(options) {
     shapeWidth: 30
   };
 
+  //d3 Scale stuff
+  viewer.colorScheme_ = "interpolateTurbo";
+  viewer.colors_ = null;
+  viewer.thresholdValues_ = null;
   viewer.colorSchemeSelector_ = true;
+  viewer.d3ScaleSelector_ = false;
+  viewer.colorScaleFunction_ = "scaleSequentialSqrt"; //scaleSequential or scaleDiverging & their respective variants
+  viewer.colorScale_ = null; //requires .range and .domain functions
+  viewer.sizeScale_ = null;  //requires .range and .domain functions
+
+
+
   viewer.EPSG_ = 3035; //used to determine grid rendering; placenames; and nuts2json requests.
   viewer.center_ = null; //default - If not specified then should default as first or randomly selected point
   viewer.colorColumn_ = null;
   viewer.sizeColumn_ = null;
   viewer.title_ = null;
-  viewer.nuts2json = true; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
+  viewer.nuts2json_ = false; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
   viewer.data_ = null;
   //data
   viewer.resolution_ = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
@@ -149,8 +158,6 @@ export function viewer(options) {
   let tooltip_state = {
     display: "none"
   };
-  let colorScale = d3Scale.scaleSqrt();
-  let pointSizeScale = d3Scale.scaleSqrt();
   let gridCaches = {};
   let gridConfigs = {};
   let gridConfig = {};
@@ -159,43 +166,64 @@ export function viewer(options) {
 
   //clear canvas, build threejs viewer and append grid
   viewer.build = function () {
-    //set container height and width
-    viewer.container_.classList.add("gridviz-container");
-    viewer.container_.style.width =
-      viewer.width_ + "px";
-    viewer.container_.style.height =
-      viewer.height_ + "px";
-    //set resolution
-    if (!viewer.resolution_) {
-      viewer.resolution_ = viewer.data_[0].cellSize
-    }
-    gridConfig = defineGridConfig();
+    let valid = validateInputs();
 
-    createScene();
-    if (!labelRenderer) createLabelRenderer();
-    if (!renderer) createWebGLRenderer();
+    if (valid) {
+      //set container height and width
+      viewer.container_.classList.add("gridviz-container");
+      viewer.container_.style.width =
+        viewer.width_ + "px";
+      viewer.container_.style.height =
+        viewer.height_ + "px";
+      //set resolution
+      if (!viewer.resolution_) {
+        viewer.resolution_ = viewer.data_[0].cellSize
+      }
+      gridConfig = defineGridConfig();
 
-    createCamera();
-    createRaycaster();
-    addPanAndZoom();
-    createTooltipContainer();
-    if (viewer.colorSchemeSelector_) {
-      createColorSchemeDropdown();
-    }
+      createScene();
+      if (!labelRenderer) createLabelRenderer();
+      if (!renderer) createWebGLRenderer();
 
-    //load initial data
-    loadGrid(viewer.data_[0]);
-    loadBordersJson(
-      CONSTANTS.nuts_base_URL +
-      viewer.EPSG_ +
-      "/" +
-      nuts_simplification +
-      "/0.json"
-    );
+      createCamera();
+      createRaycaster();
+      addPanAndZoom();
+      createTooltipContainer();
+      if (viewer.colorSchemeSelector_) {
+        createColorSchemeDropdown();
+      }
 
-    addEventListeners();
-    return viewer;
+      //load initial data
+      loadGrid(viewer.data_[0]);
+
+      if (viewer.nuts2json_) {
+        loadBordersJson(
+          CONSTANTS.nuts_base_URL +
+          viewer.EPSG_ +
+          "/" +
+          nuts_simplification +
+          "/0.json"
+        );
+      }
+
+
+      addEventListeners();
+      return viewer;
+    } else { return }
   };
+
+  function validateInputs() {
+    if (viewer.colors_ && viewer.thresholdValues_) {
+      if (viewer.colors_.length !== viewer.thresholdValues_.length) {
+        alert("The number of colors and thesholdvalues must be equal")
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
 
 
   /**
@@ -352,10 +380,10 @@ export function viewer(options) {
       requestGrid(grid).then(
         err => {
           if (!err) {
-            updateColorScale();
-            if (viewer.sizeColumn_) {
-              updatePointSizeScale();
-            }
+            //define scales
+            viewer.valuesExtent = d3Array.extent(gridCaches[viewer.resolution_], d => d.value);
+            viewer.colorScale_ = defineColorScale();
+            if (viewer.sizeColumn_) viewer.sizeScale_ = defineSizeScale();
 
             if (!viewer.center_) {
               let index = parseInt(gridCaches[viewer.resolution_].length / 2);
@@ -425,6 +453,46 @@ export function viewer(options) {
         };
         if (!gridCaches[res]) gridCaches[res] = [];
         gridCaches[res].push(point);
+      }
+    }
+  }
+
+  //any scale accepted by d3-legend.susielu.com
+  function defineColorScale() {
+    if (viewer.colors_ && viewer.thresholdValues_) {
+      return d3Scale
+        .scaleThreshold()
+        .domain(viewer.thresholdValues_)
+        .range(viewer.colors_);
+    } else {
+      if (viewer.colorScaleFunction_ == "scaleDiverging") {
+        return d3Scale[viewer.colorScaleFunction_](d3ScaleChromatic[viewer.colorScheme_]).domain([viewer.valuesExtent[0], 0, viewer.valuesExtent[1]])
+      } else {
+        return d3Scale[viewer.colorScaleFunction_](d3ScaleChromatic[viewer.colorScheme_]).domain(viewer.valuesExtent)
+      }
+    }
+  }
+
+
+  function defineSizeScale() {
+    if (viewer.colors_) {
+      return d3Scale
+        .scaleThreshold()
+        .domain(viewer.thresholdValues_)
+        .range(viewer.colors_);
+    } else {
+      if (viewer.thresholdValues_) {
+        return d3Scale
+          .scaleDiverging()
+          .domain([viewer.valuesExtent[0], 0, viewer.valuesExtent[1]])
+          .interpolator(d3ScaleChromatic[viewer.colorScheme_]);
+        //.range();
+      } else {
+        //default scale
+        return d3Scale
+        [viewer.colorScaleFunction_]()
+          .domain(viewer.valuesExtent)
+          .range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
       }
     }
   }
@@ -537,39 +605,6 @@ export function viewer(options) {
     return new Line2(line_geom, lineMaterial);
   }
 
-  /**
-   * Change grid gridConfig
-   *
-   * @param {*} res
-   */
-  function changeRes(res) {
-    resolution = res;
-    gridConfig = gridConfigs[res];
-    Utils.showLoading();
-    updateColorScale();
-    if (viewer.sizeColumn_) {
-      updatePointSizeScale();
-    }
-    // add or update points layer
-    addPointsToScene();
-    //update raycaster
-    raycaster.params.Points.threshold = gridConfig.raycaster_threshold;
-  }
-
-  /**
-   * Update colorScale domain
-   *
-   */
-  function updateColorScale() {
-    valuesExtent = d3Array.extent(gridCaches[viewer.resolution_], d => d.value);
-    colorScale.domain(valuesExtent);
-  }
-
-  function updatePointSizeScale() {
-    pointSizeScale
-      .domain(valuesExtent)
-      .range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
-  }
 
   /**
    * Color scheme dropdown event handler
@@ -578,12 +613,16 @@ export function viewer(options) {
    */
   function onChangeColorScheme(scheme) {
     viewer.colorScheme_ = scheme;
+    viewer.colorScale_ = defineColorScale();
     updatePointsColors();
     if (viewer.legend_) {
       updateLegend();
     }
   }
 
+  function updateColorScale() {
+
+  }
   /**
    * rebuild color array
    *
@@ -591,9 +630,7 @@ export function viewer(options) {
   function updatePointsColors() {
     let colors = [];
     for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
-      let hex = d3ScaleChromatic[viewer.colorScheme_](
-        colorScale(gridCaches[viewer.resolution_][i].value)
-      ); //d3 scale-chromatic
+      let hex = viewer.colorScale_(gridCaches[viewer.resolution_][i].value); //d3 scale-chromatic
       if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
       }
@@ -617,7 +654,7 @@ export function viewer(options) {
   function addPointsToScene() {
     //threejs recommends using BufferGeometry instead of Geometry for performance
     /*   indices = [0, 1, 2, 0, 2, 3];
-bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));  */
+  bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));  */
     if (!pointsGeometry) {
       pointsGeometry = new BufferGeometry();
     }
@@ -635,7 +672,7 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
       let y = parseFloat(coords[1]);
       let z = CONSTANTS.point_z;
       let indicator = gridCaches[viewer.resolution_][i].value;
-      let hex = d3ScaleChromatic[viewer.colorScheme_](colorScale(indicator)); //d3 scale-chromatic
+      let hex = viewer.colorScale_(indicator); //d3 scale-chromatic
       if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
       }
@@ -643,9 +680,14 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
       let color = new Color(hex);
 
       positions.push(x, y, z);
-      colors.push(color.r, color.g, color.b);
+      if (!isNaN(color.r) && !isNaN(color.g) && !isNaN(color.b)) {
+        colors.push(color.r, color.g, color.b);
+      } else {
+        let blk = new Color("#000");
+        colors.push(blk.r, blk.g, blk.b)
+      }
       if (viewer.sizeColumn_) {
-        sizes.push(pointSizeScale(indicator));
+        sizes.push(viewer.pointSizeScale_(indicator));
       } else {
         sizes.push(gridConfig.point_size);
       }
@@ -920,9 +962,6 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
    *
    */
   function createLegend() {
-    let legendScale = d3Scale
-      .scaleSequentialSqrt(d3ScaleChromatic[viewer.colorScheme_])
-      .domain(valuesExtent);
     let svg;
     if (document.getElementById("gridviz-legend")) {
       svg = d3Selection.select("#gridviz-legend");
@@ -945,7 +984,7 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
       .cells(viewer.legend_.cells)
       .labelFormat(viewer.legend_.format)
       .orient(viewer.legend_.orientation)
-      .scale(legendScale)
+      .scale(viewer.colorScale_)
       .title(viewer.legend_.title)
       .titleWidth(viewer.legend_.titleWidth)
 
@@ -1132,30 +1171,32 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
 
     //change nuts simplification (or not) based on current scale
     //URL themes: 2016/3035/20M/0.json
-    if (
-      scale < CONSTANTS.nuts_scale_threshold &&
-      nuts_simplification !== "10M"
-    ) {
-      nuts_simplification = "10M";
-      loadBordersJson(
-        CONSTANTS.nuts_base_URL +
-        viewer.EPSG_ +
-        "/" +
-        nuts_simplification +
-        "/0.json"
-      );
-    } else if (
-      scale > CONSTANTS.nuts_scale_threshold &&
-      nuts_simplification !== "20M"
-    ) {
-      nuts_simplification = "20M";
-      loadBordersJson(
-        CONSTANTS.nuts_base_URL +
-        viewer.EPSG_ +
-        "/" +
-        nuts_simplification +
-        "/0.json"
-      );
+    if (viewer.nuts2json_) {
+      if (
+        scale < CONSTANTS.nuts_scale_threshold &&
+        nuts_simplification !== "10M"
+      ) {
+        nuts_simplification = "10M";
+        loadBordersJson(
+          CONSTANTS.nuts_base_URL +
+          viewer.EPSG_ +
+          "/" +
+          nuts_simplification +
+          "/0.json"
+        );
+      } else if (
+        scale > CONSTANTS.nuts_scale_threshold &&
+        nuts_simplification !== "20M"
+      ) {
+        nuts_simplification = "20M";
+        loadBordersJson(
+          CONSTANTS.nuts_base_URL +
+          viewer.EPSG_ +
+          "/" +
+          nuts_simplification +
+          "/0.json"
+        );
+      }
     }
   }
 
@@ -1165,7 +1206,7 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
    * @param {*} scale
    */
   function getPlacenames(scale) {
-    let where = defineWhereParameter()
+    let where = defineWhereParameter(scale)
     let envelope = getCurrentViewExtent();
     //currentExtent = envelope;
     //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
@@ -1205,29 +1246,31 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
     let r = viewer.resolution_;
     // labelling thresholds
     if (scale > 0 && scale < r) {
-      return where = "POPL_2011>10000";
+      return "POPL_2011>10000";
     } else if (scale > r && scale < r * 2) {
-      return where = "POPL_2011>10000";
+      return "POPL_2011>10000";
     } else if (scale > r * 2 && scale < r * 4) {
-      return where = "POPL_2011>10000";
+      return "POPL_2011>10000";
     } else if (scale > r * 4 && scale < r * 8) {
-      return where = "POPL_2011>10000";
+      return "POPL_2011>10000";
     } else if (scale > r * 8 && scale < r * 16) {
-      return where = "POPL_2011>10000";
+      return "POPL_2011>10000";
     } else if (scale > r * 16 && scale < r * 32) {
-      return where = "POPL_2011>10000";
+      return "POPL_2011>10000";
     } else if (scale > r * 32 && scale < r * 64) {
-      return where = "POPL_2011>200000";
+      return "POPL_2011>200000";
     } else if (scale > r * 64 && scale < r * 128) {
-      return where = "POPL_2011>300000";
+      return "POPL_2011>300000";
     } else if (scale > r * 128 && scale < r * 256) {
-      return where = "POPL_2011>1000000";
+      return "POPL_2011>1000000";
     } else if (scale > r * 256 && scale < r * 512) {
-      return where = "POPL_2011>1000000";
+      return "POPL_2011>1000000";
     } else if (scale > r * 512 && scale < r * 1024) {
-      return where = "1=2";
+      return "1=2";
     } else if (scale > r * 1024) {
-      return where = "1=2";
+      return "1=2";
+    } else {
+      return "1=1";
     }
   }
 
@@ -1280,26 +1323,27 @@ bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));
     //https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z
 
     /*   var elem = renderer.domElement, 
-boundingRect = elem.getBoundingClientRect(),
-x = (clientX - boundingRect.left) * (elem.width / boundingRect.width),
-y = (clientY - boundingRect.top) * (elem.height / boundingRect.height);
-
-var vector = new THREE.Vector3( 
-( x / viewer.width_ ) * 2 - 1, 
-- ( y / viewer.height_ ) * 2 + 1, 
-0.5 
-);
-
-projector.unprojectVector( vector, camera ); */
+  boundingRect = elem.getBoundingClientRect(),
+  x = (clientX - boundingRect.left) * (elem.width / boundingRect.width),
+  y = (clientY - boundingRect.top) * (elem.height / boundingRect.height);
+  
+  var vector = new THREE.Vector3( 
+  ( x / viewer.width_ ) * 2 - 1, 
+  - ( y / viewer.height_ ) * 2 + 1, 
+  0.5 
+  );
+  
+  projector.unprojectVector( vector, camera ); */
 
     //let bottomLeftVector = mouseToThree(padding, viewer.height_ - padding); //screen x,y
     //let topRightVector = mouseToThree(viewer.width_ - padding, padding); //screen x,y
 
     //let bottomLeftWorld = getWorldCoordsFromVector(bottomLeftVector);
     //let topRightWorld = getWorldCoordsFromVector(topRightVector);
-
-    let bottomLeftWorld = getWorldCoordsFromScreen(10, 700);
-    let topRightWorld = getWorldCoordsFromScreen(1000, 10);
+    let clientBottomLeft = [10, 700];
+    let clientBottomRight = [1000, 10];
+    let bottomLeftWorld = getWorldCoordsFromScreen(10, 700); //client x,y
+    let topRightWorld = getWorldCoordsFromScreen(1000, 10); //client x,y
 
     // FIXME: currently returning full european extent in EPSG 3035
     return {
@@ -1313,7 +1357,7 @@ projector.unprojectVector( vector, camera ); */
   ymin: BL.y,
   xmax: TR.x,
   ymax: TR.y
-}; */
+  }; */
   }
 
   // get the position of a canvas event in world coords

@@ -30,9 +30,10 @@
         .borderColor("#ffffff")
         .colorScheme("interpolateInferno")
         .colorSchemeSelector(true)
+        .nuts2json(true) //loads borders topojson
         .legend({
             title: "Total population per km² (2015)",
-            titleWidth: 100,
+            titleWidth: 110,
             format: d3.format(',.0f')
         })
         .build()
