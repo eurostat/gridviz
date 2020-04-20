@@ -29,9 +29,10 @@
         .zoom(4200)
         .height(window.innerHeight)
         .width(window.innerWidth)
-        .backgroundColor("#ffffff")
+        .backgroundColor("#cccccc")
         .borderColor("#000")
         .colorScheme("interpolateInferno")
+        .colorScaleFunction("scaleSequentialLog") //scaleSequential or scaleDiverging & their respective variants
         .colorSchemeSelector(true)
         .legend({
             title: "Total population per 5 km² (2011)",
