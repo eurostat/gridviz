@@ -1398,18 +1398,18 @@ export function viewer(options) {
     let topRightWorld = getWorldCoordsFromScreen(clientBottomRight); //client x,y
 
     // FIXME: currently returning full european extent in EPSG 3035
+    // return {
+    //   xmin: 1053668.5589,
+    //   ymin: 1645342.8583,
+    //   xmax: 5724066.4412,
+    //   ymax: 5901309.0137
+    // };
     return {
-      xmin: 1053668.5589,
-      ymin: 1645342.8583,
-      xmax: 5724066.4412,
-      ymax: 5901309.0137
+      xmin: bottomLeftWorld.x,
+      ymin: bottomLeftWorld.y,
+      xmax: topRightWorld.x,
+      ymax: topRightWorld.y
     };
-    /*   return {
-  xmin: BL.x,
-  ymin: BL.y,
-  xmax: TR.x,
-  ymax: TR.y
-  }; */
   }
 
   // get the position of a canvas event in world coords
