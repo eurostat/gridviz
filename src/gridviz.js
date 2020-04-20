@@ -1213,7 +1213,7 @@ export function viewer(options) {
     let scale = getScaleFromZ(event.transform.k);
     // get placenames at certain zoom levels
     if (points) {
-      if (scale > 0 && scale < viewer.resolution_ * 256) {
+      if (scale > 0 && scale < viewer.camera.far_) {
         //placenames are added to the points object
         getPlacenames(scale);
       } else {
@@ -1298,9 +1298,9 @@ export function viewer(options) {
     let r = viewer.resolution_;
     // labelling thresholds
     if (scale > 0 && scale < r) {
-      return "POPL_2011>10000";
+      return "POPL_2011>10";
     } else if (scale > r && scale < r * 2) {
-      return "POPL_2011>10000";
+      return "POPL_2011>1000";
     } else if (scale > r * 2 && scale < r * 4) {
       return "POPL_2011>10000";
     } else if (scale > r * 4 && scale < r * 8) {
@@ -1318,9 +1318,9 @@ export function viewer(options) {
     } else if (scale > r * 256 && scale < r * 512) {
       return "POPL_2011>1000000";
     } else if (scale > r * 512 && scale < r * 1024) {
-      return "1=2";
+      return "POPL_2011>1000000";
     } else if (scale > r * 1024) {
-      return "1=2";
+      return "POPL_2011>1000000";
     } else {
       return "1=1";
     }
@@ -1361,11 +1361,19 @@ export function viewer(options) {
     placeDiv.textContent = placename.attributes.city_town_name;
     placeDiv.style.marginTop = "-1em";
     var placeLabel = new CSS2DObject(placeDiv);
-    placeLabel.position.set(
-      placename.geometry.x,
-      placename.geometry.y,
-      CONSTANTS.label_height
-    );
+    if (viewer.zerosRemoved_) {
+      placeLabel.position.set(
+        placename.geometry.x / 1000,
+        placename.geometry.y / 1000,
+        CONSTANTS.label_height
+      );
+    } else {
+      placeLabel.position.set(
+        placename.geometry.x,
+        placename.geometry.y,
+        CONSTANTS.label_height
+      );
+    }
     return placeLabel;
   }
 
@@ -1392,24 +1400,34 @@ export function viewer(options) {
 
     //let bottomLeftWorld = getWorldCoordsFromVector(bottomLeftVector);
     //let topRightWorld = getWorldCoordsFromVector(topRightVector);
-    let clientBottomLeft = [10, 700];
-    let clientBottomRight = [1000, 10];
+    var elem = renderer.domElement;
+    let clientBottomLeft = [elem.clientLeft, elem.clientHeight];
+    let clientTopRight = [elem.clientWidth, elem.clientTop];
     let bottomLeftWorld = getWorldCoordsFromScreen(clientBottomLeft); //client x,y
-    let topRightWorld = getWorldCoordsFromScreen(clientBottomRight); //client x,y
+    let topRightWorld = getWorldCoordsFromScreen(clientTopRight); //client x,y
 
-    // FIXME: currently returning full european extent in EPSG 3035
+    // full european extent in EPSG 3035:
     // return {
     //   xmin: 1053668.5589,
     //   ymin: 1645342.8583,
     //   xmax: 5724066.4412,
     //   ymax: 5901309.0137
     // };
-    return {
-      xmin: bottomLeftWorld.x,
-      ymin: bottomLeftWorld.y,
-      xmax: topRightWorld.x,
-      ymax: topRightWorld.y
-    };
+    if (viewer.zerosRemoved_) {
+      return {
+        xmin: bottomLeftWorld.x * 1000,
+        ymin: bottomLeftWorld.y * 1000,
+        xmax: topRightWorld.x * 1000,
+        ymax: topRightWorld.y * 1000
+      };
+    } else {
+      return {
+        xmin: bottomLeftWorld.x,
+        ymin: bottomLeftWorld.y,
+        xmax: topRightWorld.x,
+        ymax: topRightWorld.y
+      };
+    }
   }
 
   // get the position of a canvas event in world coords
