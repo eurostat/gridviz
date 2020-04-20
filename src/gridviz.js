@@ -103,8 +103,10 @@ export function viewer(options) {
   viewer.colorScale_ = null; //requires .range and .domain functions
   viewer.sizeScale_ = null;  //requires .range and .domain functions
 
+  //data params
   viewer.EPSG_ = 3035; //used to determine grid rendering; placenames; and nuts2json requests.
   viewer.center_ = null; //default - If not specified then should default as first or randomly selected point
+  viewer.zerosRemoved_ = false; //to make EPSG 3035 files lighter, the final 3 zeros of each x/y coordinate are often removed. 
   viewer.colorColumn_ = null;
   viewer.sizeColumn_ = null;
   viewer.title_ = null;
@@ -1392,8 +1394,8 @@ export function viewer(options) {
     //let topRightWorld = getWorldCoordsFromVector(topRightVector);
     let clientBottomLeft = [10, 700];
     let clientBottomRight = [1000, 10];
-    let bottomLeftWorld = getWorldCoordsFromScreen(10, 700); //client x,y
-    let topRightWorld = getWorldCoordsFromScreen(1000, 10); //client x,y
+    let bottomLeftWorld = getWorldCoordsFromScreen(clientBottomLeft); //client x,y
+    let topRightWorld = getWorldCoordsFromScreen(clientBottomRight); //client x,y
 
     // FIXME: currently returning full european extent in EPSG 3035
     return {
@@ -1411,7 +1413,7 @@ export function viewer(options) {
   }
 
   // get the position of a canvas event in world coords
-  function getWorldCoordsFromScreen(clientX, clientY) {
+  function getWorldCoordsFromScreen([clientX, clientY]) {
     var vec = new Vector3(); // create once and reuse
     var pos = new Vector3(); // create once and reuse
 
@@ -1539,13 +1541,22 @@ export function viewer(options) {
    * @param {*} cell
    */
   function showTooltip(mouse_position, cell) {
-    let tooltip_width = 120;
-    //let x_offset = -tooltip_width / 2;
     let x_offset = 15;
     let y_offset = -90;
+    let tooltipWidth = parseInt(tooltip.style.width.replace("px", ""));
+    let tooltipHeight = 100;//tooltip.style.height;
+    let left = mouse_position[0] + x_offset;
+    let top = mouse_position[1] + y_offset
+    if (left > viewer.width_ - tooltipWidth) {
+      left = left - (tooltipWidth + 40);
+    }
+    if (top < 0) {
+      top = top + (tooltipHeight);
+    }
+
     tooltip_state.display = "block";
-    tooltip_state.left = mouse_position[0] + x_offset;
-    tooltip_state.top = mouse_position[1] + y_offset;
+    tooltip_state.left = left
+    tooltip_state.top = top;
     tooltip_state.name = cell.value;
     tooltip_state.coords = cell.position;
     tooltip_state.color = cell.color;
