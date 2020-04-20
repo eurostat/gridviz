@@ -98,7 +98,8 @@ export function viewer(options) {
   viewer.thresholdValues_ = null;
   viewer.colorSchemeSelector_ = true;
   viewer.d3ScaleSelector_ = false;
-  viewer.colorScaleFunction_ = "scaleSequentialSqrt"; //scaleSequential or scaleDiverging & their respective variants
+  viewer.colorScaleFunction_ = "scaleSequential"; //scaleSequential or scaleDiverging & their respective variants
+  viewer.sizeScaleFunction = "scaleSqrt"; //scaleSequential or scaleDiverging & their respective variants
   viewer.colorScale_ = null; //requires .range and .domain functions
   viewer.sizeScale_ = null;  //requires .range and .domain functions
 
@@ -117,7 +118,7 @@ export function viewer(options) {
   viewer.camera.far_ = null; //set min zoom
   viewer.camera.fov_ = null;
   viewer.camera.aspect_ = null;
-  viewer.camera.zoom_ = null; //initial camera position Z
+  viewer.zoom_ = null; //initial camera position Z
 
   //definition of generic accessors based on the name of each parameter name
   for (var p in viewer)
@@ -190,6 +191,7 @@ export function viewer(options) {
       createCamera();
       createRaycaster();
       addPanAndZoom();
+      //setUpZoom();
       createTooltipContainer();
       if (viewer.colorSchemeSelector_) {
         createColorSchemeDropdown();
@@ -261,7 +263,7 @@ export function viewer(options) {
     viewer.camera.far_ = defineFar(); //set min zoom
     viewer.camera.fov_ = CONSTANTS.fov;
     viewer.camera.aspect_ = viewer.width_ / viewer.height_;
-    viewer.camera.zoom_ = viewer.camera.far_ / 2; //initial camera position Z
+    viewer.camera.zoom_ = viewer.zoom_ || viewer.camera.far_ / 2; //initial camera position Z
     camera = new PerspectiveCamera(
       viewer.camera.fov_,
       viewer.camera.aspect_,
@@ -477,26 +479,9 @@ export function viewer(options) {
 
 
   function defineSizeScale() {
-    if (viewer.colors_) {
-      return d3Scale
-        .scaleThreshold()
-        .domain(viewer.thresholdValues_)
-        .range(viewer.colors_);
-    } else {
-      if (viewer.thresholdValues_) {
-        return d3Scale
-          .scaleDiverging()
-          .domain([viewer.valuesExtent[0], 0, viewer.valuesExtent[1]])
-          .interpolator(d3ScaleChromatic[viewer.colorScheme_]);
-        //.range();
-      } else {
-        //default scale
-        return d3Scale
-        [viewer.colorScaleFunction_]()
-          .domain(viewer.valuesExtent)
-          .range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
-      }
-    }
+    //default scale
+    let func = d3Scale[viewer.sizeScaleFunction];
+    return func().domain(viewer.valuesExtent).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
   }
 
   /**
@@ -689,7 +674,7 @@ export function viewer(options) {
         colors.push(blk.r, blk.g, blk.b)
       }
       if (viewer.sizeColumn_) {
-        sizes.push(viewer.pointSizeScale_(indicator));
+        sizes.push(viewer.sizeScale_(indicator));
       } else {
         sizes.push(gridConfig.point_size);
       }
@@ -1085,13 +1070,51 @@ export function viewer(options) {
     });
   }
 
+  //taken from observableHQ & works on mobile:
+  function setUpZoom() {
+    let d3_zoom = d3Zoom.zoom()
+      .scaleExtent([getScaleFromZ1(viewer.camera.far_), getScaleFromZ1(viewer.camera.near_)])
+      .on('zoom', () => {
+        let d3_transform = d3Selection.event.transform;
+        zoomHandler1(d3_transform);
+      });
+    view.call(d3_zoom);
+    let initial_scale = getScaleFromZ1(viewer.camera.far_);
+    var initial_transform = d3Zoom.zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
+    d3_zoom.transform(view, initial_transform);
+    camera.position.set(0, 0, viewer.camera.far_);
+  }
+  function zoomHandler1(d3_transform) {
+    let scale = d3_transform.k;
+    let x = -(d3_transform.x - viewer.width_ / 2) / scale;
+    let y = (d3_transform.y - viewer.height_ / 2) / scale;
+    let z = getZFromScale1(scale);
+    camera.position.set(x, y, z);
+  }
+  function getScaleFromZ1(camera_z_position) {
+    let half_fov = viewer.camera.fov_ / 2;
+    let half_fov_radians = toRadians(half_fov);
+    let half_fov_height = Math.tan(half_fov_radians) * camera_z_position;
+    let fov_height = half_fov_height * 2;
+    let scale = viewer.height_ / fov_height; // Divide visualization height by height derived from field of view
+    return scale;
+  }
+  function getZFromScale1(scale) {
+    let half_fov = viewer.camera.fov_ / 2;
+    let half_fov_radians = toRadians(half_fov);
+    let scale_height = viewer.height_ / scale;
+    let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
+    return camera_z_position;
+  }
+
+  //taken from elsewhere & DOESNT work on mobile:
   // add d3's zoom
 
   function addPanAndZoom() {
     // define zoom
     //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
-    let farScale = getScaleFromZ(viewer.camera.far_);
-    let nearScale = getScaleFromZ(viewer.camera.near_);
+    let farScale = getScaleFromZ1(viewer.camera.far_);
+    let nearScale = getScaleFromZ1(viewer.camera.near_);
     let zoom = d3Zoom
       .zoom()
       .scaleExtent([farScale, nearScale])
@@ -1105,7 +1128,7 @@ export function viewer(options) {
       });
     view.call(zoom);
 
-    let initial_scale = getScaleFromZ(viewer.camera.zoom_);
+    let initial_scale = getScaleFromZ1(viewer.camera.zoom_);
     var initial_transform = d3Zoom.zoomIdentity
       .translate(viewer.width_ / 2, viewer.height_ / 2)
       .scale(initial_scale);
