@@ -78,6 +78,7 @@ export function viewer(options) {
   viewer.backgroundColor_ = "#b7b7b7";
   viewer.borderColor_ = "#ffffff";
   viewer.highlightColor_ = "#37f2d6"
+  viewer.loadingIcon_ = "ripple"; //ripple | ring
 
   //d3-legend.susielu.com
   viewer.legend_ = {
@@ -167,7 +168,7 @@ export function viewer(options) {
   let gridConfigs = {};
   let gridConfig = {};
 
-  Utils.createLoadingSpinner(viewer.container_);
+  Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
 
   //clear canvas, build threejs viewer and append grid
   viewer.build = function () {
@@ -265,7 +266,7 @@ export function viewer(options) {
     viewer.camera.far_ = defineFar(); //set min zoom
     viewer.camera.fov_ = CONSTANTS.fov;
     viewer.camera.aspect_ = viewer.width_ / viewer.height_;
-    viewer.camera.zoom_ = viewer.zoom_ || viewer.camera.far_ / 2; //initial camera position Z
+    viewer.camera.zoom_ = viewer.zoom_ || viewer.camera.far_ / 2 - 1; //initial camera position Z
     camera = new PerspectiveCamera(
       viewer.camera.fov_,
       viewer.camera.aspect_,
@@ -533,11 +534,21 @@ export function viewer(options) {
         coords = [];
         if (feature.geometry.type == "Polygon") {
           for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
-            let xyz = {
-              x: feature.geometry.coordinates[c][s][0],
-              y: feature.geometry.coordinates[c][s][1],
-              z: CONSTANTS.line_z
-            };
+            let xyz;
+            if (viewer.zerosRemoved_) {
+              xyz = {
+                x: feature.geometry.coordinates[c][s][0] / 1000,
+                y: feature.geometry.coordinates[c][s][1] / 1000,
+                z: CONSTANTS.line_z
+              };
+            } else {
+              xyz = {
+                x: feature.geometry.coordinates[c][s][0],
+                y: feature.geometry.coordinates[c][s][1],
+                z: CONSTANTS.line_z
+              };
+            }
+
             coords.push(xyz);
           }
           boundariesGroup.add(createLineFromCoords(coords));
@@ -550,11 +561,20 @@ export function viewer(options) {
               m < feature.geometry.coordinates[c][s].length;
               m++
             ) {
-              let xyz = {
-                x: feature.geometry.coordinates[c][s][m][0],
-                y: feature.geometry.coordinates[c][s][m][1],
-                z: CONSTANTS.line_z
-              };
+              let xyz;
+              if (viewer.zerosRemoved_) {
+                xyz = {
+                  x: feature.geometry.coordinates[c][s][m][0] / 1000,
+                  y: feature.geometry.coordinates[c][s][m][1] / 1000,
+                  z: CONSTANTS.line_z
+                };
+              } else {
+                xyz = {
+                  x: feature.geometry.coordinates[c][s][m][0],
+                  y: feature.geometry.coordinates[c][s][m][1],
+                  z: CONSTANTS.line_z
+                };
+              }
               coords.push(xyz);
             }
             boundariesGroup.add(createLineFromCoords(coords));

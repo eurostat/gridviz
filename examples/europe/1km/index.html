@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>GridViz Example</title>
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+</head>
+
+<body style="margin:0;">
+    <div id="viz-container"></div>
+</body>
+<script src="../../../build/gridviz.js"></script>
+<script>
+    let containerDiv = document.getElementById("viz-container");
+    GridViz.viewer()
+        .container(containerDiv)
+        .data([
+            {
+                url: "../../../assets/csv/Europe/1km/pop_1km.csv",
+                cellSize: 1.1
+            }
+        ])
+        .zerosRemoved(true) //last 3 zeros were removed from dataset for efficiency
+        .colorColumn("value")  // csv column which you wish to visualize
+        .sizeColumn("value")  // csv column which you wish to visualize
+        .zoom(200)
+        .EPSG(3035)
+        .nuts2json(true) //loads borders topojson
+        .center([4369, 3230])//EPSG=3035 with last 3 zeros removed
+        .height(window.innerHeight)
+        .width(window.innerWidth)
+        .backgroundColor("#000")
+        .borderColor("#ffffff")
+        .colorScheme("interpolateInferno")
+        .colorScaleFunction("scaleSequentialSqrt") //scaleSequential or scaleDiverging & their respective variants
+        .colorSchemeSelector(true)
+        .legend({
+            height: 300,
+            title: "Total population per km² (2011)",
+            titleWidth: 130,
+            cells: 10
+        })
+        .build()
+</script>
+
+</html>
