@@ -78,7 +78,7 @@ export function viewer(options) {
   viewer.backgroundColor_ = "#b7b7b7";
   viewer.borderColor_ = "#ffffff";
   viewer.highlightColor_ = "#37f2d6"
-  viewer.loadingIcon_ = "ripple"; //ripple | ring
+  viewer.loadingIcon_ = "ring"; //ripple | ring | ellipsis | roller
 
   //d3-legend.susielu.com
   viewer.legend_ = {
@@ -168,10 +168,11 @@ export function viewer(options) {
   let gridConfigs = {};
   let gridConfig = {};
 
-  Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
+
 
   //clear canvas, build threejs viewer and append grid
   viewer.build = function () {
+    Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
     let valid = validateInputs();
 
     if (valid) {
@@ -1322,23 +1323,23 @@ export function viewer(options) {
     } else if (scale > r && scale < r * 2) {
       return "POPL_2011>1000";
     } else if (scale > r * 2 && scale < r * 4) {
-      return "POPL_2011>10000";
+      return "POPL_2011>2500";
     } else if (scale > r * 4 && scale < r * 8) {
-      return "POPL_2011>10000";
+      return "POPL_2011>5000";
     } else if (scale > r * 8 && scale < r * 16) {
-      return "POPL_2011>10000";
+      return "POPL_2011>7500";
     } else if (scale > r * 16 && scale < r * 32) {
       return "POPL_2011>10000";
     } else if (scale > r * 32 && scale < r * 64) {
-      return "POPL_2011>200000";
+      return "POPL_2011>20000";
     } else if (scale > r * 64 && scale < r * 128) {
-      return "POPL_2011>300000";
+      return "POPL_2011>100000";
     } else if (scale > r * 128 && scale < r * 256) {
-      return "POPL_2011>1000000";
+      return "POPL_2011>250000";
     } else if (scale > r * 256 && scale < r * 512) {
-      return "POPL_2011>1000000";
+      return "POPL_2011>500000";
     } else if (scale > r * 512 && scale < r * 1024) {
-      return "POPL_2011>1000000";
+      return "POPL_2011>750000";
     } else if (scale > r * 1024) {
       return "POPL_2011>1000000";
     } else {
