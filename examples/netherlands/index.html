@@ -22,11 +22,13 @@
             tiled: false
         }])
         .colorColumn("INWONER")  // csv column which you wish to visualize
-        .EPSG(28992)//actually 28992 but set as 3035 so placenames load
-        .center([1421, 4546])//EPSG=3035
+        .zerosRemoved(true)
+        .nuts2json(false) // does not support 28992
+        .center([1421, 4546])//EPSG=28992
+        .placenamesEPSG(28992)
         .height(window.innerHeight)
         .width(window.innerWidth)
-        .backgroundColor("#000")
+        .backgroundColor("#444444")
         .borderColor("#ffffff")
         .colors(["#2d50a0", "#6487c3", "#aab9e1", "#f0cd91", "#e6a532", "#d76e2d", "red"])
         .thresholdValues([10, 20, 40, 80, 200, 300, 900])

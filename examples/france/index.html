@@ -22,8 +22,11 @@
             tiled: false
         }])
         .colorColumn("Ind")  // csv column which you wish to visualize
-        .EPSG(3035)
         .center([3709000, 2624000])//EPSG=3035
+        .nuts2json(true)
+        .nuts2jsonCountry("FR")
+        .nuts2jsonEPSG(3035)
+        .placenamesCountry("FR")
         .height(window.innerHeight)
         .width(window.innerWidth)
         .backgroundColor("#000")

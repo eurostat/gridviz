@@ -105,15 +105,21 @@ export function viewer(options) {
   viewer.sizeScale_ = null;  //requires .range and .domain functions
 
   //data params
-  viewer.EPSG_ = 3035; //used to determine grid rendering; placenames; and nuts2json requests.
+  viewer.placenamesEPSG_ = 3035; //used to determine grid rendering; placenames;
+  viewer.placenamesCountry_ = false;
   viewer.center_ = null; //default - If not specified then should default as first or randomly selected point
   viewer.zerosRemoved_ = false; //to make EPSG 3035 files lighter, the final 3 zeros of each x/y coordinate are often removed. 
   viewer.colorColumn_ = null;
   viewer.sizeColumn_ = null;
   viewer.title_ = null;
+
+  //borders using nuts2json
   viewer.nuts2json_ = false; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
+  viewer.nuts2jsonEPSG_ = 3035;
+  viewer.nuts2jsonCountry_ = false; // only show borders of given country code
+  viewer.nutsLevel_ = 0;
+  // grid data
   viewer.data_ = null;
-  //data
   viewer.resolution_ = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
   //camera
   viewer.camera = {}
@@ -207,10 +213,10 @@ export function viewer(options) {
       if (viewer.nuts2json_) {
         loadBordersJson(
           CONSTANTS.nuts_base_URL +
-          viewer.EPSG_ +
+          viewer.nuts2jsonEPSG_ +
           "/" +
           nuts_simplification +
-          "/0.json"
+          "/" + viewer.nutsLevel_ + ".json"
         );
       }
 
@@ -374,7 +380,7 @@ export function viewer(options) {
    *
    */
   function defineFar() {
-    return viewer.resolution_ * 2000;
+    return viewer.resolution_ * 3000;
   }
 
   /**
@@ -496,9 +502,16 @@ export function viewer(options) {
   function loadBordersJson(url) {
     d3Fetch.json(url).then(
       json => {
-        let newArray = json.objects.nutsrg.geometries.filter((v, i) => {
-          return v.properties.id !== "TR"; //omit Turkey
-        });
+        let newArray;
+        if (viewer.nuts2jsonCountry_) {
+          newArray = json.objects.nutsrg.geometries.filter((v, i) => {
+            return v.properties.id == viewer.nuts2jsonCountry_; //omit Turkey
+          });
+        } else {
+          newArray = json.objects.nutsrg.geometries.filter((v, i) => {
+            return v.properties.id !== "TR"; //omit Turkey
+          });
+        }
         json.objects.nutsbn.geometries = newArray;
         let features = TopoJSON.feature(json, json.objects.nutsbn).features;
         addBoundariesToScene(features);
@@ -1252,7 +1265,7 @@ export function viewer(options) {
         nuts_simplification = "10M";
         loadBordersJson(
           CONSTANTS.nuts_base_URL +
-          viewer.EPSG_ +
+          viewer.nuts2jsonEPSG_ +
           "/" +
           nuts_simplification +
           "/0.json"
@@ -1264,7 +1277,7 @@ export function viewer(options) {
         nuts_simplification = "20M";
         loadBordersJson(
           CONSTANTS.nuts_base_URL +
-          viewer.EPSG_ +
+          viewer.nuts2jsonEPSG_ +
           "/" +
           nuts_simplification +
           "/0.json"
@@ -1288,7 +1301,7 @@ export function viewer(options) {
       "where=" +
       where +
       "&outSR={'wkid':" +
-      viewer.EPSG_ +
+      viewer.placenamesEPSG_ +
       "}" +
       "&geometry=" +
       envelope.xmin +
@@ -1299,6 +1312,8 @@ export function viewer(options) {
       "," +
       envelope.ymax +
       "&geometryType=esriGeometryEnvelope&f=json&outFields=city_town_name,POPL_2011&resultRecordCount=200";
+
+    //manage multiple calls by replicating angular's .unsubscribe() somehow
     let uri = encodeURI(URL);
     d3Fetch.json(uri).then(
       res => {
@@ -1317,33 +1332,37 @@ export function viewer(options) {
 
   function defineWhereParameter(scale) {
     let r = viewer.resolution_;
+    let where = "";
+    if (viewer.placenamesCountry_) {
+      where = where + "CNTR_CODE='" + viewer.placenamesCountry_ + "' AND "
+    }
     // labelling thresholds
     if (scale > 0 && scale < r) {
-      return "POPL_2011>10";
+      return where + "POPL_2011>10";
     } else if (scale > r && scale < r * 2) {
-      return "POPL_2011>1000";
+      return where + "POPL_2011>1000";
     } else if (scale > r * 2 && scale < r * 4) {
-      return "POPL_2011>2500";
+      return where + "POPL_2011>2500";
     } else if (scale > r * 4 && scale < r * 8) {
-      return "POPL_2011>5000";
+      return where + "POPL_2011>5000";
     } else if (scale > r * 8 && scale < r * 16) {
-      return "POPL_2011>7500";
+      return where + "POPL_2011>7500";
     } else if (scale > r * 16 && scale < r * 32) {
-      return "POPL_2011>10000";
+      return where + "POPL_2011>10000";
     } else if (scale > r * 32 && scale < r * 64) {
-      return "POPL_2011>20000";
+      return where + "POPL_2011>20000";
     } else if (scale > r * 64 && scale < r * 128) {
-      return "POPL_2011>100000";
+      return where + "POPL_2011>100000";
     } else if (scale > r * 128 && scale < r * 256) {
-      return "POPL_2011>250000";
+      return where + "POPL_2011>250000";
     } else if (scale > r * 256 && scale < r * 512) {
-      return "POPL_2011>500000";
+      return where + "POPL_2011>500000";
     } else if (scale > r * 512 && scale < r * 1024) {
-      return "POPL_2011>750000";
+      return where + "POPL_2011>750000";
     } else if (scale > r * 1024) {
-      return "POPL_2011>1000000";
+      return where + "POPL_2011>1000000";
     } else {
-      return "1=1";
+      return where + "1=1";
     }
   }
 
