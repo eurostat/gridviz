@@ -108,7 +108,7 @@ export function viewer(options) {
   viewer.placenamesEPSG_ = 3035; //used to determine grid rendering; placenames;
   viewer.placenamesCountry_ = false;
   viewer.center_ = null; //default - If not specified then should default as first or randomly selected point
-  viewer.zerosRemoved_ = false; //to make EPSG 3035 files lighter, the final 3 zeros of each x/y coordinate are often removed. 
+  viewer.zerosRemoved_ = 0; //to make EPSG 3035 files lighter, the final 3 zeros of each x/y coordinate are often removed. 
   viewer.colorColumn_ = null;
   viewer.sizeColumn_ = null;
   viewer.title_ = null;
@@ -550,9 +550,10 @@ export function viewer(options) {
           for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
             let xyz;
             if (viewer.zerosRemoved_) {
+              let d = Number('1E' + viewer.zerosRemoved_);
               xyz = {
-                x: feature.geometry.coordinates[c][s][0] / 1000,
-                y: feature.geometry.coordinates[c][s][1] / 1000,
+                x: feature.geometry.coordinates[c][s][0] / d,
+                y: feature.geometry.coordinates[c][s][1] / d,
                 z: CONSTANTS.line_z
               };
             } else {
@@ -577,9 +578,10 @@ export function viewer(options) {
             ) {
               let xyz;
               if (viewer.zerosRemoved_) {
+                let d = Number('1E' + viewer.zerosRemoved_);
                 xyz = {
-                  x: feature.geometry.coordinates[c][s][m][0] / 1000,
-                  y: feature.geometry.coordinates[c][s][m][1] / 1000,
+                  x: feature.geometry.coordinates[c][s][m][0] / d,
+                  y: feature.geometry.coordinates[c][s][m][1] / d,
                   z: CONSTANTS.line_z
                 };
               } else {
@@ -791,7 +793,6 @@ export function viewer(options) {
   void main() {
     vColor = color;
     vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-    //TODO: change 900.0 to uniform
     gl_PointSize = size * (thing / -mvPosition.z );
     gl_Position = projectionMatrix * mvPosition;
   }
@@ -1098,7 +1099,7 @@ export function viewer(options) {
       let [mouseX, mouseY] = d3Selection.mouse(view.node());
       let mouse_position = [mouseX, mouseY];
       checkIntersects(mouse_position);
-      console.log("Clicked:", camera.position);
+      //console.log("Camera pos:", camera.position);
     });
 
     view.on("mouseleave", () => {
@@ -1300,9 +1301,9 @@ export function viewer(options) {
       CONSTANTS.placenames_base_URL +
       "where=" +
       where +
-      "&outSR={'wkid':" +
+      "&outSR=" +
       viewer.placenamesEPSG_ +
-      "}" +
+      "&inSR=" + viewer.placenamesEPSG_ +
       "&geometry=" +
       envelope.xmin +
       "," +
@@ -1402,9 +1403,10 @@ export function viewer(options) {
     placeDiv.style.marginTop = "-1em";
     var placeLabel = new CSS2DObject(placeDiv);
     if (viewer.zerosRemoved_) {
+      let d = Number('1E' + viewer.zerosRemoved_);
       placeLabel.position.set(
-        placename.geometry.x / 1000,
-        placename.geometry.y / 1000,
+        placename.geometry.x / d,
+        placename.geometry.y / d,
         CONSTANTS.label_height
       );
     } else {
@@ -1454,11 +1456,12 @@ export function viewer(options) {
     //   ymax: 5901309.0137
     // };
     if (viewer.zerosRemoved_) {
+      let d = Number('1E' + viewer.zerosRemoved_);
       return {
-        xmin: bottomLeftWorld.x * 1000,
-        ymin: bottomLeftWorld.y * 1000,
-        xmax: topRightWorld.x * 1000,
-        ymax: topRightWorld.y * 1000
+        xmin: bottomLeftWorld.x * d,
+        ymin: bottomLeftWorld.y * d,
+        xmax: topRightWorld.x * d,
+        ymax: topRightWorld.y * d
       };
     } else {
       return {
