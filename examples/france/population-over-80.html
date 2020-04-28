@@ -29,7 +29,10 @@
         .borderColor("#ffffff")
         .colorScheme("interpolateInferno")
         .colorSchemeSelector(true)
-        .nuts2json(false) //loads borders topojson
+        .nuts2json(true)
+        .nuts2jsonCountry("FR")
+        .nuts2jsonEPSG(3035)
+        .placenamesCountry("FR")
         .legend({
             title: "Population over 80 years of age per km² (2015)",
             titleWidth: 150,
