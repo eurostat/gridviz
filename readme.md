@@ -29,6 +29,8 @@ A JavaScript Library for visualizing gridded statistics from CSV files. From an 
 
 GridViz is a JavaScript library which allows you to visualize large gridded datasets. Unlike traditional raster-based approaches, this tool utilizes WebGL through Three.js in order to render eveything client-side.
 
+For colouring, you can use any of D3's scale chromatic colour schemes, or define them yourself by passing an array to the colors method along with the threshold values they correspond with.
+
 ## Installation & Usage
 
 Coming soon...
