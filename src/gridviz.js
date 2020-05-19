@@ -97,7 +97,7 @@ export function viewer(options) {
   viewer.colorScheme_ = "interpolateTurbo";
   viewer.colors_ = null;
   viewer.thresholdValues_ = null;
-  viewer.colorSchemeSelector_ = true;
+  viewer.colorSchemeSelector_ = false;
   viewer.d3ScaleSelector_ = false;
   viewer.colorScaleFunction_ = "scaleSequential"; //scaleSequential or scaleDiverging & their respective variants
   viewer.sizeScaleFunction = "scaleSqrt"; //scaleSequential or scaleDiverging & their respective variants
@@ -1590,7 +1590,7 @@ export function viewer(options) {
     tooltip.style.top = tooltip_state.top + "px";
     //pointTip.innerText = tooltip_state.name;
     pointTip.style.background = tooltip_state.color;
-    labelTip.innerHTML = `<strong>${viewer.colorColumn_}:</strong> ${tooltip_state.name} <br> 
+    labelTip.innerHTML = `<strong>${viewer.colorColumn_}:</strong> ${tooltip_state.colorValue.toLocaleString()} <br> 
   <strong>x:</strong> ${tooltip_state.coords[0]} <br> 
   <strong>y:</strong> ${tooltip_state.coords[1]} <br> `;
   }
@@ -1618,7 +1618,7 @@ export function viewer(options) {
     tooltip_state.display = "block";
     tooltip_state.left = left
     tooltip_state.top = top;
-    tooltip_state.name = cell.value;
+    tooltip_state.colorValue = cell.value;
     tooltip_state.coords = cell.position;
     tooltip_state.color = cell.color;
     updateTooltip();

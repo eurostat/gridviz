@@ -21,7 +21,7 @@
                 cellSize: 1000
             }
         ])
-        .colorColumn("TOTAL_ESTA")  // csv column which you wish to visualize
+        .colorColumn("NIGHTS_TOT")  // csv column which you wish to visualize
         .zoom(500000) //initial camera Z value
         .nuts2json(true) //loads borders topojson
         .nuts2jsonCountry("HR")
@@ -34,9 +34,10 @@
         .colorScaleFunction("scaleSequentialSqrt") //scaleSequential or scaleDiverging & their respective variants
         .colorSchemeSelector(true)
         .legend({
-            height: 300,
-            title: "Total nights in tourist accommodation per km²",
-            titleWidth: 130,
+            height: 290,
+            width: 150,
+            title: "Total tourist nights per km² (2017)",
+            titleWidth: 150,
             cells: 10
         })
         .build()
