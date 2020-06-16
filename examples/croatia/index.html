@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>GridViz Example</title>
+    <title>Croatian Tourism Grid</title>
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
 </head>
 
@@ -15,6 +15,7 @@
     let containerDiv = document.getElementById("viz-container");
     GridViz.viewer()
         .container(containerDiv)
+        .title("Tourism Grid of Croatia")
         .data([
             {
                 url: "../../assets/csv/Croatia/croatia_tourism_grid.csv",
@@ -24,7 +25,15 @@
         .colorColumn("NIGHTS_TOT")  // csv column which you wish to visualize
         .zoom(500000) //initial camera Z value
         .nuts2json(true) //loads borders topojson
-        .nuts2jsonCountry("HR")
+        .nuts2jsonCountry("HR") //filter nuts2json
+        .placenamesCountry("HR") //filter placenames
+        .placenameThresholds({ //"scale": population
+            "450000": 200000,
+            "200000": 10000,
+            "100000": 5000,
+            "10000": 5000,
+            "1000": 500
+        })
         .center([4755000, 2369000])//EPSG=3035
         .height(window.innerHeight)
         .width(window.innerWidth)

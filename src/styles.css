@@ -3,6 +3,14 @@
   margin: 0px;
   font-family: "roboto_condensedbold", Arial, sans-serif;
 }
+.gridviz-title {
+  position:absolute;
+  top:2%;
+  left:2%;
+  font-size: 38px;
+  font-weight:bold;
+  color:white;
+}
 
 #loading-gif {
   top: 48%;

@@ -107,6 +107,7 @@ export function viewer(options) {
   //data params
   viewer.placenamesEPSG_ = 3035; //used to determine grid rendering; placenames;
   viewer.placenamesCountry_ = false;
+  viewer.placenameThresholds_ = null;
   viewer.center_ = null; //default - If not specified then should default as first or randomly selected point
   viewer.zerosRemoved_ = 0; //to make EPSG 3035 files lighter, the final 3 zeros of each x/y coordinate are often removed. 
   viewer.colorColumn_ = null;
@@ -193,6 +194,9 @@ export function viewer(options) {
         viewer.resolution_ = viewer.data_[0].cellSize
       }
       gridConfig = defineGridConfig();
+      if (viewer.title_) {
+        addTitleToDOM();
+      }
 
       createScene();
       if (!labelRenderer) createLabelRenderer();
@@ -223,7 +227,10 @@ export function viewer(options) {
 
       addEventListeners();
       return viewer;
-    } else { return }
+    } else {
+      console.error("invalid inputs");
+      return
+    }
   };
 
   function validateInputs() {
@@ -237,6 +244,13 @@ export function viewer(options) {
     } else {
       return true;
     }
+  }
+
+  function addTitleToDOM() {
+    let node = document.createElement("div");
+    node.classList.add("gridviz-title");
+    node.innerHTML = viewer.title_;
+    viewer.container_.appendChild(node);
   }
 
 
@@ -1337,33 +1351,49 @@ export function viewer(options) {
     if (viewer.placenamesCountry_) {
       where = where + "CNTR_CODE='" + viewer.placenamesCountry_ + "' AND "
     }
-    // labelling thresholds
-    if (scale > 0 && scale < r) {
-      return where + "POPL_2011>10";
-    } else if (scale > r && scale < r * 2) {
-      return where + "POPL_2011>1000";
-    } else if (scale > r * 2 && scale < r * 4) {
-      return where + "POPL_2011>2500";
-    } else if (scale > r * 4 && scale < r * 8) {
-      return where + "POPL_2011>5000";
-    } else if (scale > r * 8 && scale < r * 16) {
-      return where + "POPL_2011>7500";
-    } else if (scale > r * 16 && scale < r * 32) {
-      return where + "POPL_2011>10000";
-    } else if (scale > r * 32 && scale < r * 64) {
-      return where + "POPL_2011>20000";
-    } else if (scale > r * 64 && scale < r * 128) {
-      return where + "POPL_2011>100000";
-    } else if (scale > r * 128 && scale < r * 256) {
-      return where + "POPL_2011>250000";
-    } else if (scale > r * 256 && scale < r * 512) {
-      return where + "POPL_2011>500000";
-    } else if (scale > r * 512 && scale < r * 1024) {
-      return where + "POPL_2011>750000";
-    } else if (scale > r * 1024) {
-      return where + "POPL_2011>1000000";
+    // labelling thresholds by population - either custom values or by scale
+    return getPopulationThresholdFromScale(scale, where)
+  }
+
+  function getPopulationThresholdFromScale(scale, where) {
+    //user-defined thresholds
+    if (viewer.placenameThresholds_) {
+      let thresholds = Object.keys(viewer.placenameThresholds_);
+      for (let i = 0; i < thresholds.length; i++) {
+        let t = thresholds[i];
+        if (scale > parseInt(t) && scale < parseInt(thresholds[i + 1])) {
+          return where + "POPL_2011>" + viewer.placenameThresholds_[t];
+        }
+      }
     } else {
-      return where + "1=1";
+      //default values
+      if (scale > 0 && scale < r) {
+        return where + "POPL_2011>10";
+      } else if (scale > r && scale < r * 2) {
+        return where + "POPL_2011>1000";
+      } else if (scale > r * 2 && scale < r * 4) {
+        return where + "POPL_2011>2500";
+      } else if (scale > r * 4 && scale < r * 8) {
+        return where + "POPL_2011>5000";
+      } else if (scale > r * 8 && scale < r * 16) {
+        return where + "POPL_2011>7500";
+      } else if (scale > r * 16 && scale < r * 32) {
+        return where + "POPL_2011>10000";
+      } else if (scale > r * 32 && scale < r * 64) {
+        return where + "POPL_2011>20000";
+      } else if (scale > r * 64 && scale < r * 128) {
+        return where + "POPL_2011>100000";
+      } else if (scale > r * 128 && scale < r * 256) {
+        return where + "POPL_2011>250000";
+      } else if (scale > r * 256 && scale < r * 512) {
+        return where + "POPL_2011>500000";
+      } else if (scale > r * 512 && scale < r * 1024) {
+        return where + "POPL_2011>750000";
+      } else if (scale > r * 1024) {
+        return where + "POPL_2011>1000000";
+      } else {
+        return where + "1=1";
+      }
     }
   }
 
