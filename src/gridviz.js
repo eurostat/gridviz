@@ -71,6 +71,9 @@ export function viewer(options) {
   //output object
   let viewer = {};
 
+  //dev
+  viewer.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
+
   //styles
   viewer.container_ = document.body;
   viewer.height_ = window.innerHeight;
@@ -97,12 +100,22 @@ export function viewer(options) {
   viewer.colorScheme_ = "interpolateTurbo";
   viewer.colors_ = null;
   viewer.thresholdValues_ = null;
-  viewer.colorSchemeSelector_ = false;
-  viewer.d3ScaleSelector_ = false;
   viewer.colorScaleFunction_ = "scaleSequential"; //scaleSequential or scaleDiverging & their respective variants
   viewer.sizeScaleFunction = "scaleSqrt"; //scaleSequential or scaleDiverging & their respective variants
   viewer.colorScale_ = null; //requires .range and .domain functions
   viewer.sizeScale_ = null;  //requires .range and .domain functions
+
+  //dropdowns
+  viewer.colorSchemeSelector_ = false;
+  viewer.colorFieldSelectorLabel_ = "Color field: "
+  viewer.colorFieldSelector_ = false;
+  viewer.sizeFieldSelector_ = false;
+  viewer.sizeFieldSelectorLabel_ = "Size field: ";
+  viewer.d3ScaleSelector_ = false;
+
+  //attribution/sources
+  viewer.sources_ = null
+
 
   //data params
   viewer.placenamesEPSG_ = 3035; //used to determine grid rendering; placenames;
@@ -110,8 +123,8 @@ export function viewer(options) {
   viewer.placenameThresholds_ = null;
   viewer.center_ = null; //default - If not specified then should default as first or randomly selected point
   viewer.zerosRemoved_ = 0; //to make EPSG 3035 files lighter, the final 3 zeros of each x/y coordinate are often removed. 
-  viewer.colorColumn_ = null;
-  viewer.sizeColumn_ = null;
+  viewer.colorField_ = null;
+  viewer.sizeField_ = null;
   viewer.title_ = null;
 
   //borders using nuts2json
@@ -164,7 +177,6 @@ export function viewer(options) {
     gridLegend,
     view,
     labelRenderer,
-    schemesSelect,
     renderer;
 
   let tooltip_state = {
@@ -196,6 +208,9 @@ export function viewer(options) {
       if (viewer.title_) {
         addTitleToDOM();
       }
+      if (viewer.sources_) {
+        addSourcesToDOM();
+      }
 
       createScene();
       if (!labelRenderer) createLabelRenderer();
@@ -209,6 +224,7 @@ export function viewer(options) {
       if (viewer.colorSchemeSelector_) {
         createColorSchemeDropdown();
       }
+
 
       //load initial data
       loadGrid(viewer.gridData_[0]);
@@ -255,6 +271,13 @@ export function viewer(options) {
     let node = document.createElement("div");
     node.classList.add("gridviz-title");
     node.innerHTML = viewer.title_;
+    viewer.container_.appendChild(node);
+  }
+
+  function addSourcesToDOM() {
+    let node = document.createElement("div");
+    node.classList.add("gridviz-sources");
+    node.innerHTML = viewer.sources_;
     viewer.container_.appendChild(node);
   }
 
@@ -353,7 +376,7 @@ export function viewer(options) {
     addMouseEventsToView();
     //change color scheme
     if (viewer.colorSchemeSelector_) {
-      addChangeEventToColorDropdown();
+      addChangeEventToColorSchemeDropdown();
     }
     //screen resize
     addResizeEvent();
@@ -414,9 +437,9 @@ export function viewer(options) {
         err => {
           if (!err) {
             //define scales
-            viewer.valuesExtent = d3Array.extent(gridCaches[viewer.resolution_], d => d.value);
+            viewer.valuesExtent = d3Array.extent(gridCaches[viewer.resolution_], d => d[viewer.colorField_]);
             viewer.colorScale_ = defineColorScale();
-            if (viewer.sizeColumn_) viewer.sizeScale_ = defineSizeScale();
+            if (viewer.sizeField_) viewer.sizeScale_ = defineSizeScale();
 
             if (!viewer.center_) {
               let index = parseInt(gridCaches[viewer.resolution_].length / 2);
@@ -433,6 +456,12 @@ export function viewer(options) {
               camera.lookAt(new Vector3(viewer.center_[0], viewer.center_[1], 0)); // Set initial camera position
             }
             addPointsToScene();
+            if (viewer.colorFieldSelector_) {
+              createColorFieldDropdown();
+            }
+            if (viewer.sizeFieldSelector_) {
+              createSizeFieldDropdown();
+            }
           }
 
           Utils.hideLoading();
@@ -456,7 +485,7 @@ export function viewer(options) {
     return d3Fetch.csv(grid.url).then(
       csv => {
         //validate csv
-        if (csv[0].x && csv[0].y && csv[0][viewer.colorColumn_]) {
+        if (csv[0].x && csv[0].y && csv[0][viewer.colorField_]) {
           console.log("Cells:" + csv.length)
           addGridToCache(csv, grid.cellSize);
         } else {
@@ -479,13 +508,13 @@ export function viewer(options) {
     if (csv) {
       for (let i = 0; i < csv.length; i++) {
         let position = [csv[i].x, csv[i].y];
-        let value = csv[i][viewer.colorColumn_];
+        let value = csv[i][viewer.colorField_];
         let point = {
           position,
           value
         };
         if (!gridCaches[res]) gridCaches[res] = [];
-        gridCaches[res].push(point);
+        gridCaches[res].push(csv[i]);
       }
     }
   }
@@ -650,20 +679,6 @@ export function viewer(options) {
   }
 
 
-  /**
-   * Color scheme dropdown event handler
-   *
-   * @param {*} scheme
-   */
-  function onChangeColorScheme(scheme) {
-    viewer.colorScheme_ = scheme;
-    viewer.colorScale_ = defineColorScale();
-    updatePointsColors();
-    if (viewer.legend_) {
-      updateLegend();
-    }
-  }
-
   function updateColorScale() {
 
   }
@@ -674,7 +689,7 @@ export function viewer(options) {
   function updatePointsColors() {
     let colors = [];
     for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
-      let hex = viewer.colorScale_(gridCaches[viewer.resolution_][i].value); //d3 scale-chromatic
+      let hex = viewer.colorScale_(gridCaches[viewer.resolution_][i][viewer.colorField_]); //d3 scale-chromatic
       if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
       }
@@ -709,14 +724,14 @@ export function viewer(options) {
     for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
       // Set vector coordinates from data
       let coords = [
-        gridCaches[viewer.resolution_][i].position[0],
-        gridCaches[viewer.resolution_][i].position[1]
+        gridCaches[viewer.resolution_][i].x,
+        gridCaches[viewer.resolution_][i].y
       ];
       let x = parseFloat(coords[0]);
       let y = parseFloat(coords[1]);
       let z = CONSTANTS.point_z;
-      let indicator = gridCaches[viewer.resolution_][i].value;
-      let hex = viewer.colorScale_(indicator); //d3 scale-chromatic
+      let indicator = gridCaches[viewer.resolution_][i][viewer.colorField_];
+      let hex = viewer.colorScale_(parseFloat(indicator)); //d3 scale-chromatic
       if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
       }
@@ -730,8 +745,8 @@ export function viewer(options) {
         let blk = new Color("#000");
         colors.push(blk.r, blk.g, blk.b)
       }
-      if (viewer.sizeColumn_) {
-        sizes.push(viewer.sizeScale_(indicator));
+      if (viewer.sizeField_) {
+        sizes.push(viewer.sizeScale_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
       } else {
         sizes.push(gridConfig.point_size);
       }
@@ -978,26 +993,89 @@ export function viewer(options) {
       }
     ];
     let dropdown_container = document.createElement("div");
-    dropdown_container.id = "gridviz-dropdown-container";
+    dropdown_container.id = "gridviz-colorscheme-dropdown-container";
     dropdown_container.classList.add("gridviz-plugin");
-    schemesSelect = document.createElement("select");
-    schemesSelect.id = "schemes";
+    viewer.schemesSelect = document.createElement("select");
+    viewer.schemesSelect.id = "schemes";
     let label = document.createElement("label");
     label.for = "schemes";
     label.classList.add("gridviz-dropdown-label");
-    label.innerText = "Colour Scheme: ";
+    label.innerText = "Colour scheme: ";
 
     for (let i = 0; i < schemes.length; i++) {
       let scheme = schemes[i];
       let option = document.createElement("option");
       option.value = scheme.value;
       option.innerText = scheme.innerText;
-      schemesSelect.appendChild(option);
+      viewer.schemesSelect.appendChild(option);
     }
-    schemesSelect.value = viewer.colorScheme_;
+    viewer.schemesSelect.value = viewer.colorScheme_;
     dropdown_container.appendChild(label);
-    dropdown_container.appendChild(schemesSelect);
+    dropdown_container.appendChild(viewer.schemesSelect);
     viewer.container_.appendChild(dropdown_container);
+  }
+
+  /**
+ * Creates an HTML Select element which allows the user to select the csv field used for colouring(colorField)
+ *
+ */
+  function createColorFieldDropdown() {
+    let dropdown_container = document.createElement("div");
+    dropdown_container.id = "gridviz-colorfield-dropdown-container";
+    dropdown_container.classList.add("gridviz-plugin");
+    viewer.colorFieldSelect = document.createElement("select");
+    viewer.colorFieldSelect.id = "colorFields";
+    let label = document.createElement("label");
+    label.for = "colorFields";
+    label.classList.add("gridviz-dropdown-label");
+    label.innerText = "Colour field: ";
+
+    let fields = Object.keys(gridCaches[viewer.resolution_][0]);
+    for (let i = 0; i < fields.length; i++) {
+      let field = fields[i];
+      if (field.toLowerCase() !== "x" && field.toLowerCase() !== "y" && field !== "color") {
+        let option = document.createElement("option");
+        option.value = field;
+        option.innerText = field;
+        viewer.colorFieldSelect.appendChild(option);
+      }
+    }
+    viewer.colorFieldSelect.value = viewer.colorField_;
+    dropdown_container.appendChild(label);
+    dropdown_container.appendChild(viewer.colorFieldSelect);
+    viewer.container_.appendChild(dropdown_container);
+    addChangeEventToColorFieldDropdown();
+  }
+
+
+  /**
+* Creates an HTML Select element which allows the user to select the csv field used for sizing the cells (sizeField)
+*
+*/
+  function createSizeFieldDropdown() {
+    let dropdown_container = document.createElement("div");
+    dropdown_container.id = "gridviz-sizefield-dropdown-container";
+    dropdown_container.classList.add("gridviz-plugin");
+    viewer.sizeFieldSelect = document.createElement("select");
+    viewer.sizeFieldSelect.id = "sizeFields";
+    let label = document.createElement("label");
+    label.for = "sizeFields";
+    label.classList.add("gridviz-dropdown-label");
+    label.innerText = "Colour field: ";
+
+    let fields = Object.keys(gridCaches[viewer.resolution_][0]);
+    for (let i = 0; i < fields.length; i++) {
+      let field = fields[i];
+      let option = document.createElement("option");
+      option.value = field;
+      option.innerText = field;
+      viewer.sizeFieldSelect.appendChild(option);
+    }
+    viewer.sizeFieldSelect.value = viewer.sizeField_;
+    dropdown_container.appendChild(label);
+    dropdown_container.appendChild(viewer.sizeFieldSelect);
+    viewer.container_.appendChild(dropdown_container);
+    addChangeEventToSizeFieldDropdown()
   }
 
   /**
@@ -1086,10 +1164,70 @@ export function viewer(options) {
    * Add change event to color-scheme selector
    *
    */
-  function addChangeEventToColorDropdown() {
-    schemesSelect.addEventListener("change", function (e) {
+  function addChangeEventToColorSchemeDropdown() {
+    viewer.schemesSelect.addEventListener("change", function (e) {
       onChangeColorScheme(e.currentTarget.value);
     });
+  }
+
+  /**
+ * Color scheme dropdown event handler
+ *
+ * @param {*} scheme
+ */
+  function onChangeColorScheme(scheme) {
+    viewer.colorScheme_ = scheme;
+    viewer.colorScale_ = defineColorScale();
+    updatePointsColors();
+    if (viewer.legend_) {
+      updateLegend();
+    }
+  }
+
+  /**
+ * Add change event to color-field selector
+ *
+ */
+  function addChangeEventToColorFieldDropdown() {
+    viewer.colorFieldSelect.addEventListener("change", function (e) {
+      onChangeColorField(e.currentTarget.value);
+    });
+  }
+
+  /**
+ * Color csv field dropdown event handler
+ *
+ * @param {*} field
+ */
+  function onChangeColorField(field) {
+    viewer.colorField_ = field;
+    updatePointsColors();
+    if (viewer.legend_) {
+      updateLegend();
+    }
+  }
+
+  /**
+* Add change event to siz-field selector
+*
+*/
+  function addChangeEventToSizeFieldDropdown() {
+    viewer.sizeFieldSelect.addEventListener("change", function (e) {
+      onChangeSizeField(e.currentTarget.value);
+    });
+  }
+
+  /**
+  * Color csv field dropdown event handler
+  *
+  * @param {*} field
+  */
+  function onChangeSizeField(field) {
+    viewer.sizeField_ = field;
+    updatePointsSizes();
+    if (viewer.legend_) {
+      updateLegend();
+    }
   }
 
   function createTooltipContainer() {
@@ -1262,6 +1400,9 @@ export function viewer(options) {
   function zoomEnd(event) {
     hideTooltip();
     let scale = getScaleFromZ(event.transform.k);
+    if (viewer.debugPlacenames_) {
+      console.info(scale);
+    }
     // get placenames at certain zoom levels
     if (points) {
       if (scale > 0 && scale < viewer.camera.far_) {
@@ -1354,7 +1495,11 @@ export function viewer(options) {
       where = where + "CNTR_CODE='" + viewer.placenamesCountry_ + "' AND "
     }
     // labelling thresholds by population - either custom values or by scale
-    return where + getPopulationParameterFromScale(scale, where)
+    let popFilter = getPopulationParameterFromScale(scale)
+    if (viewer.debugPlacenames_) {
+      console.info(popFilter);
+    }
+    return where + popFilter;
   }
 
   /**
@@ -1419,10 +1564,12 @@ export function viewer(options) {
    * @param {*} placenames
    */
   function addPlacenamesToScene(placenames) {
-    for (let p = 0; p < placenames.length; p++) {
-      let label = createPlacenameLabelObject(placenames[p]);
-      // TODO: group objects manually (THREE.group())
-      points.add(label);
+    if (points) {
+      for (let p = 0; p < placenames.length; p++) {
+        let label = createPlacenameLabelObject(placenames[p]);
+        // TODO: group objects manually (THREE.group())
+        points.add(label);
+      }
     }
   }
 
@@ -1431,7 +1578,7 @@ export function viewer(options) {
    * It seems that the browsers JS garbage collector removes the DOM nodes
    */
   function removePlacenamesFromScene() {
-    if (points.children.length > 0) {
+    if (points && points.children.length > 0) {
       for (var i = points.children.length - 1; i >= 0; i--) {
         points.remove(points.children[i]);
       }
@@ -1638,7 +1785,7 @@ export function viewer(options) {
     tooltip.style.top = tooltip_state.top + "px";
     //pointTip.innerText = tooltip_state.name;
     pointTip.style.background = tooltip_state.color;
-    labelTip.innerHTML = `<strong>${viewer.colorColumn_}:</strong> ${tooltip_state.colorValue.toLocaleString()} <br> 
+    labelTip.innerHTML = `<strong>${viewer.colorField_}:</strong> ${tooltip_state.colorValue.toLocaleString()} <br> 
   <strong>x:</strong> ${tooltip_state.coords[0]} <br> 
   <strong>y:</strong> ${tooltip_state.coords[1]} <br> `;
   }
@@ -1666,8 +1813,8 @@ export function viewer(options) {
     tooltip_state.display = "block";
     tooltip_state.left = left
     tooltip_state.top = top;
-    tooltip_state.colorValue = cell.value;
-    tooltip_state.coords = cell.position;
+    tooltip_state.colorValue = cell[viewer.colorField_];
+    tooltip_state.coords = [cell.x, cell.y];
     tooltip_state.color = cell.color;
     updateTooltip();
   }

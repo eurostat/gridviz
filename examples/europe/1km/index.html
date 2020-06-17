@@ -22,8 +22,8 @@
             }
         ])
         .zerosRemoved(3) //last 3 zeros were removed from dataset to improve efficiency
-        .colorColumn("value")  // csv column which you wish to visualize
-        .sizeColumn("value")  // csv column which you wish to visualize
+        .colorField("value")  // csv column which you wish to visualize
+        .sizeField("value")  // csv column which you wish to visualize
         .zoom(200)
         .nuts2json(true) //loads borders topojson
         .center([4369, 3230])//EPSG=3035 with last 3 zeros removed

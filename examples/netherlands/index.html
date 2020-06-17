@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>GridViz Example</title>
+    <title>Netherlands 100m grid</title>
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
 </head>
 
@@ -16,12 +16,14 @@
     let containerDiv = document.getElementById("viz-container");
     GridViz.viewer()
         .container(containerDiv)
+        .title("100 x 100m statistics of the Netherlands, 2018")
         .gridData([{
-            url: "../../assets/csv/Netherlands/100m/inwoner_2018.csv",
+            url: "../../assets/csv/Netherlands/100m/NL_census.csv",
             cellSize: 1.1,
             tiled: false
         }])
-        .colorColumn("INWONER")  // csv column which you wish to visualize
+        .sources("Source: <a target='__blank' href='https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken'>Statistics Netherlands</a>")
+        .colorField("Inhabitants")  // csv column which you wish to visualize
         .zerosRemoved(2)
         .nuts2json(false) // does not support 28992 - use method to load custom geojson
         //.nuts2jsonCountry("NL")
@@ -42,6 +44,8 @@
         .colors(["#2d50a0", "#6487c3", "#aab9e1", "#f0cd91", "#e6a532", "#d76e2d", "red"])
         .thresholdValues([10, 20, 40, 80, 200, 300, 900])
         .colorSchemeSelector(false)
+        .colorFieldSelector(true)
+        .colorFieldSelectorLabel("Indicator: ")
         .legend({
             width: 160,
             height: 220,

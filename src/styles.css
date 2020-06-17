@@ -11,6 +11,21 @@
   font-weight:bold;
   color:white;
 }
+.gridviz-sources {
+  position:absolute;
+  bottom:2%;
+  right:1%;
+  font-size: 12px;
+  font-weight:bold;
+  color:white;
+}
+.gridviz-sources a{
+  color:white;
+}
+.gridviz-sources a:hover{
+  color:lightblue;
+  cursor:pointer;
+}
 
 #loading-gif {
   top: 48%;
@@ -137,8 +152,22 @@ rect.swatch {
   background: rgba(0, 0, 0, 0.6);
 }
 
-/* Color scheme select  */
-#gridviz-dropdown-container {
+/* dropdowns  */
+#gridviz-colorscheme-dropdown-container {
+  z-index: 9999;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px;
+}
+#gridviz-colorfield-dropdown-container {
+  z-index: 9999;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px;
+}
+#gridviz-sizefield-dropdown-container {
   z-index: 9999;
   position: absolute;
   top: 10px;
