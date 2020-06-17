@@ -11,19 +11,19 @@
     <div id="viz-container"></div>
 </body>
 <script src="../../build/gridviz.js"></script>
-<script src="https://d3js.org/d3-format.v1.min.js"></script>
 <script>
     let containerDiv = document.getElementById("viz-container");
     GridViz.viewer()
         .container(containerDiv)
-        .data([{
+        .gridData([{
             url: "../../assets/csv/France/1km/2015_Ind.csv",
             cellSize: 1000,
             tiled: false
         }])
-        .colorColumn("Ind")  // csv column which you wish to visualize
+        .colorColumn("Ind")  // csv column used to calculate the colour of each cell
         .center([3709000, 2624000])//EPSG=3035
         .nuts2json(true)
+        .nutsLevel(3)
         .nuts2jsonCountry("FR")
         .nuts2jsonEPSG(3035)
         .placenamesCountry("FR")
@@ -38,7 +38,7 @@
             title: "Total population per km² (2015)",
             height: 350,
             titleWidth: 110,
-            format: d3.format(',.0f')
+            format: ',.0f'
         })
         .build()
 </script>

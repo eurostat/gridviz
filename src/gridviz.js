@@ -88,7 +88,7 @@ export function viewer(options) {
     title: "Legend",
     titleWidth: 50,
     width: null,
-    format: d3Format.format(".0s"),
+    format: ".0s",
     cells: 13,
     shapeWidth: 30
   };
@@ -119,8 +119,9 @@ export function viewer(options) {
   viewer.nuts2jsonEPSG_ = 3035;
   viewer.nuts2jsonCountry_ = false; // only show borders of given country code
   viewer.nutsLevel_ = 0;
+  viewer.nuts_simplification_ = "20M"; //current nuts2json simplification
   // grid data
-  viewer.data_ = null;
+  viewer.gridData_ = null;
   viewer.resolution_ = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
   //camera
   viewer.camera = {}
@@ -166,8 +167,6 @@ export function viewer(options) {
     schemesSelect,
     renderer;
 
-  // initial states
-  let nuts_simplification = "20M"; //current nuts2json
   let tooltip_state = {
     display: "none"
   };
@@ -191,7 +190,7 @@ export function viewer(options) {
         viewer.height_ + "px";
       //set resolution
       if (!viewer.resolution_) {
-        viewer.resolution_ = viewer.data_[0].cellSize
+        viewer.resolution_ = viewer.gridData_[0].cellSize
       }
       gridConfig = defineGridConfig();
       if (viewer.title_) {
@@ -212,20 +211,26 @@ export function viewer(options) {
       }
 
       //load initial data
-      loadGrid(viewer.data_[0]);
+      loadGrid(viewer.gridData_[0]);
+
 
       if (viewer.nuts2json_) {
         loadBordersJson(
           CONSTANTS.nuts_base_URL +
           viewer.nuts2jsonEPSG_ +
           "/" +
-          nuts_simplification +
+          viewer.nuts_simplification_ +
           "/" + viewer.nutsLevel_ + ".json"
         );
       }
 
-
       addEventListeners();
+
+      //request initial placenames
+      // view.transition().call(viewer.zoom.scaleBy, 1.000001);//sets initial scale properly (otherwise it starts as 0.0something)
+      // let scale = getScaleFromZ(camera.position.z);
+      getPlacenames(camera.position.z);
+
       return viewer;
     } else {
       console.error("invalid inputs");
@@ -519,7 +524,7 @@ export function viewer(options) {
         let newArray;
         if (viewer.nuts2jsonCountry_) {
           newArray = json.objects.nutsrg.geometries.filter((v, i) => {
-            return v.properties.id == viewer.nuts2jsonCountry_; //omit Turkey
+            return v.properties.id.indexOf(viewer.nuts2jsonCountry_) !== -1; //apply user-defined filter
           });
         } else {
           newArray = json.objects.nutsrg.geometries.filter((v, i) => {
@@ -528,7 +533,7 @@ export function viewer(options) {
         }
         json.objects.nutsbn.geometries = newArray;
         let features = TopoJSON.feature(json, json.objects.nutsbn).features;
-        addBoundariesToScene(features);
+        addBordersToScene(features);
       },
       err => {
         console.error(err);
@@ -541,7 +546,7 @@ export function viewer(options) {
    *
    * @param {*} features
    */
-  function addBoundariesToScene(features) {
+  function addBordersToScene(features) {
     let coords = [];
     let initial = true;
     if (!boundariesGroup) {
@@ -1020,7 +1025,7 @@ export function viewer(options) {
     gridLegend = LEGEND.legendColor()
       .shapeWidth(viewer.legend_.shapeWidth)
       .cells(viewer.legend_.cells)
-      .labelFormat(viewer.legend_.format)
+      .labelFormat(d3Format.format(viewer.legend_.format))
       .orient(viewer.legend_.orientation)
       .scale(viewer.colorScale_)
       .title(viewer.legend_.title)
@@ -1121,28 +1126,28 @@ export function viewer(options) {
     });
   }
 
-  //taken from observableHQ & works on mobile:
-  function setUpZoom() {
+  //functions taken from observableHQ & work on mobile:
+  function setUpZoomMobile() {
     let d3_zoom = d3Zoom.zoom()
-      .scaleExtent([getScaleFromZ1(viewer.camera.far_), getScaleFromZ1(viewer.camera.near_)])
+      .scaleExtent([getScaleFromZMobile(viewer.camera.far_), getScaleFromZMobile(viewer.camera.near_)])
       .on('zoom', () => {
         let d3_transform = d3Selection.event.transform;
-        zoomHandler1(d3_transform);
+        zoomHandlerMobile(d3_transform);
       });
     view.call(d3_zoom);
-    let initial_scale = getScaleFromZ1(viewer.camera.far_);
+    let initial_scale = getScaleFromZMobile(viewer.camera.far_);
     var initial_transform = d3Zoom.zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
     d3_zoom.transform(view, initial_transform);
     camera.position.set(0, 0, viewer.camera.far_);
   }
-  function zoomHandler1(d3_transform) {
+  function zoomHandlerMobile(d3_transform) {
     let scale = d3_transform.k;
     let x = -(d3_transform.x - viewer.width_ / 2) / scale;
     let y = (d3_transform.y - viewer.height_ / 2) / scale;
-    let z = getZFromScale1(scale);
+    let z = getZFromScaleMobile(scale);
     camera.position.set(x, y, z);
   }
-  function getScaleFromZ1(camera_z_position) {
+  function getScaleFromZMobile(camera_z_position) {
     let half_fov = viewer.camera.fov_ / 2;
     let half_fov_radians = toRadians(half_fov);
     let half_fov_height = Math.tan(half_fov_radians) * camera_z_position;
@@ -1150,7 +1155,7 @@ export function viewer(options) {
     let scale = viewer.height_ / fov_height; // Divide visualization height by height derived from field of view
     return scale;
   }
-  function getZFromScale1(scale) {
+  function getZFromScaleMobile(scale) {
     let half_fov = viewer.camera.fov_ / 2;
     let half_fov_radians = toRadians(half_fov);
     let scale_height = viewer.height_ / scale;
@@ -1160,13 +1165,12 @@ export function viewer(options) {
 
   //taken from elsewhere & DOESNT work on mobile:
   // add d3's zoom
-
   function addPanAndZoom() {
     // define zoom
     //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
-    let farScale = getScaleFromZ1(viewer.camera.far_);
-    let nearScale = getScaleFromZ1(viewer.camera.near_);
-    let zoom = d3Zoom
+    let farScale = getScaleFromZMobile(viewer.camera.far_);
+    let nearScale = getScaleFromZMobile(viewer.camera.near_);
+    viewer.zoom = d3Zoom
       .zoom()
       .scaleExtent([farScale, nearScale])
       .on("zoom", () => {
@@ -1177,16 +1181,14 @@ export function viewer(options) {
         let event = d3Selection.event;
         if (event) zoomEnd(event);
       });
-    view.call(zoom);
+    view.call(viewer.zoom);
 
-    let initial_scale = getScaleFromZ1(viewer.camera.zoom_);
+    let initial_scale = getScaleFromZMobile(viewer.camera.zoom_);
     var initial_transform = d3Zoom.zoomIdentity
       .translate(viewer.width_ / 2, viewer.height_ / 2)
       .scale(initial_scale);
-    zoom.transform(view, initial_transform);
-
+    viewer.zoom.transform(view, initial_transform);
     //initial camera position
-
     //camera.position.set(viewer.center_[0], viewer.center_[1], viewer.camera.zoom_);
   }
 
@@ -1275,27 +1277,27 @@ export function viewer(options) {
     if (viewer.nuts2json_) {
       if (
         scale < CONSTANTS.nuts_scale_threshold &&
-        nuts_simplification !== "10M"
+        viewer.nuts_simplification_ !== "10M"
       ) {
-        nuts_simplification = "10M";
+        viewer.nuts_simplification_ = "10M";
         loadBordersJson(
           CONSTANTS.nuts_base_URL +
           viewer.nuts2jsonEPSG_ +
           "/" +
-          nuts_simplification +
-          "/0.json"
+          viewer.nuts_simplification_ +
+          "/" + viewer.nutsLevel_ + ".json"
         );
       } else if (
         scale > CONSTANTS.nuts_scale_threshold &&
-        nuts_simplification !== "20M"
+        viewer.nuts_simplification_ !== "20M"
       ) {
-        nuts_simplification = "20M";
+        viewer.nuts_simplification_ = "20M";
         loadBordersJson(
           CONSTANTS.nuts_base_URL +
           viewer.nuts2jsonEPSG_ +
           "/" +
-          nuts_simplification +
-          "/0.json"
+          viewer.nuts_simplification_ +
+          "/" + viewer.nutsLevel_ + ".json"
         );
       }
     }
@@ -1352,47 +1354,61 @@ export function viewer(options) {
       where = where + "CNTR_CODE='" + viewer.placenamesCountry_ + "' AND "
     }
     // labelling thresholds by population - either custom values or by scale
-    return getPopulationThresholdFromScale(scale, where)
+    return where + getPopulationParameterFromScale(scale, where)
   }
 
-  function getPopulationThresholdFromScale(scale, where) {
+  /**
+   * Defines the population parameter for the request to the placenmes service. If viewer.populationThresholds_ are not set, it uses default thresholds
+   *
+   * @param {*} scale
+   */
+  function getPopulationParameterFromScale(scale) {
     //user-defined thresholds
     if (viewer.placenameThresholds_) {
       let thresholds = Object.keys(viewer.placenameThresholds_);
       for (let i = 0; i < thresholds.length; i++) {
         let t = thresholds[i];
-        if (scale > parseInt(t) && scale < parseInt(thresholds[i + 1])) {
-          return where + "POPL_2011>" + viewer.placenameThresholds_[t];
+        if (thresholds[i + 1]) { //if not last threshold
+          if (scale < parseInt(thresholds[0])) { //below first threshold
+            return "POPL_2011>" + viewer.placenameThresholds_[thresholds[0]];
+          } else if (scale > parseInt(t) && scale < parseInt(thresholds[i + 1])) {
+            // if current scale is between thresholds
+            return "POPL_2011>" + viewer.placenameThresholds_[t];
+          }
+        } else {
+          // if last threshold
+          return "POPL_2011>" + viewer.placenameThresholds_[t];
         }
       }
     } else {
       //default values
+      let r = viewer.resolution_
       if (scale > 0 && scale < r) {
-        return where + "POPL_2011>10";
+        return "POPL_2011>10";
       } else if (scale > r && scale < r * 2) {
-        return where + "POPL_2011>1000";
+        return "POPL_2011>1000";
       } else if (scale > r * 2 && scale < r * 4) {
-        return where + "POPL_2011>2500";
+        return "POPL_2011>2500";
       } else if (scale > r * 4 && scale < r * 8) {
-        return where + "POPL_2011>5000";
+        return "POPL_2011>5000";
       } else if (scale > r * 8 && scale < r * 16) {
-        return where + "POPL_2011>7500";
+        return "POPL_2011>7500";
       } else if (scale > r * 16 && scale < r * 32) {
-        return where + "POPL_2011>10000";
+        return "POPL_2011>10000";
       } else if (scale > r * 32 && scale < r * 64) {
-        return where + "POPL_2011>20000";
+        return "POPL_2011>20000";
       } else if (scale > r * 64 && scale < r * 128) {
-        return where + "POPL_2011>100000";
+        return "POPL_2011>100000";
       } else if (scale > r * 128 && scale < r * 256) {
-        return where + "POPL_2011>250000";
+        return "POPL_2011>250000";
       } else if (scale > r * 256 && scale < r * 512) {
-        return where + "POPL_2011>500000";
+        return "POPL_2011>500000";
       } else if (scale > r * 512 && scale < r * 1024) {
-        return where + "POPL_2011>750000";
+        return "POPL_2011>750000";
       } else if (scale > r * 1024) {
-        return where + "POPL_2011>1000000";
+        return "POPL_2011>1000000";
       } else {
-        return where + "1=1";
+        return "1=1";
       }
     }
   }
@@ -1415,8 +1431,10 @@ export function viewer(options) {
    * It seems that the browsers JS garbage collector removes the DOM nodes
    */
   function removePlacenamesFromScene() {
-    for (var i = points.children.length - 1; i >= 0; i--) {
-      points.remove(points.children[i]);
+    if (points.children.length > 0) {
+      for (var i = points.children.length - 1; i >= 0; i--) {
+        points.remove(points.children[i]);
+      }
     }
   }
 

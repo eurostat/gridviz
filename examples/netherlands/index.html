@@ -16,17 +16,25 @@
     let containerDiv = document.getElementById("viz-container");
     GridViz.viewer()
         .container(containerDiv)
-        .data([{
+        .gridData([{
             url: "../../assets/csv/Netherlands/100m/inwoner_2018.csv",
             cellSize: 1.1,
             tiled: false
         }])
         .colorColumn("INWONER")  // csv column which you wish to visualize
         .zerosRemoved(2)
-        .nuts2json(false) // does not support 28992
+        .nuts2json(false) // does not support 28992 - use method to load custom geojson
+        //.nuts2jsonCountry("NL")
         .center([1421, 4546])//EPSG=28992 with 2 zeros removed
         .placenamesEPSG(28992)
         .placenamesCountry("NL")
+        .placenameThresholds({ //"scale": population
+            "1500": 100000,
+            "1250": 100000,
+            "1000": 50000,
+            "500": 10000,
+            "250": 500
+        })
         .height(window.innerHeight)
         .width(window.innerWidth)
         .backgroundColor("#2b2b2b")
@@ -39,7 +47,7 @@
             height: 220,
             title: "Total Inhabitants per 100m² (2018)",
             titleWidth: 110,
-            format: d3.format(',.0f')
+            format: ',.0f'
         })
         .build()
 </script>
