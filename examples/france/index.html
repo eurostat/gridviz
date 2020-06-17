@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>GridViz Example</title>
+    <title>1km² Grid of France</title>
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
 </head>
 
@@ -20,6 +20,8 @@
             cellSize: 1000,
             tiled: false
         }])
+        .title("1km² Grid of France")
+        .sources("Source: <a target='__blank' href='https://insee.fr/fr/accueil'>INSEE</a>")
         .colorField("Ind")  // csv column used to calculate the colour of each cell
         .center([3709000, 2624000])//EPSG=3035
         .nuts2json(true)
