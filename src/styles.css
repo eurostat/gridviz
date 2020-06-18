@@ -44,7 +44,7 @@
 /* Tooltip text */
 #tooltip #tooltiptext {
   display: none;
-  width: 120px;
+  /* width: 120px; */
   background-color: black;
   color: #fff;
   text-align: center;
@@ -104,18 +104,6 @@
 /* Add a background color on hover */
 .gridviz-btn-group button:hover {
   background-color: #345881;
-}
-
-#gridviz-btn2km {
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  z-index: 9999;
-}
-
-#gridviz-btn5km {
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  z-index: 9999;
 }
 
 /* LEGEND */

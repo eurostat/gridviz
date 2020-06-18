@@ -436,7 +436,7 @@ export function viewer(options) {
    *
    */
   function defineFar() {
-    return viewer.resolution_ * 3000;
+    return viewer.resolution_ * 4000;
   }
 
   /**
@@ -697,6 +697,9 @@ export function viewer(options) {
   function updateColorScale() {
     viewer.colorScale_ = defineColorScale();
   }
+  function updateSizeScale() {
+    viewer.sizeScale_ = defineSizeScale();
+  }
   /**
    * rebuild color array
    *
@@ -717,6 +720,25 @@ export function viewer(options) {
       "color",
       new Float32BufferAttribute(colors, 3)
     );
+    pointsGeometry.computeBoundingSphere();
+    points.geometry = pointsGeometry;
+  }
+
+  /**
+   * rebuild size array
+   *
+   */
+  function updatePointsSizes() {
+    let sizes = [];
+    for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
+      if (viewer.sizeField_ && viewer.sizeField_ !== "null") {
+        sizes.push(viewer.sizeScale_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
+      } else {
+        sizes.push(gridConfig.point_size);
+      }
+    }
+    //update sizes
+    pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
     pointsGeometry.computeBoundingSphere();
     points.geometry = pointsGeometry;
   }
@@ -1133,11 +1155,19 @@ export function viewer(options) {
     let fields = Object.keys(gridCaches[viewer.resolution_][0]);
     for (let i = 0; i < fields.length; i++) {
       let field = fields[i];
-      let option = document.createElement("option");
-      option.value = field;
-      option.innerText = field;
-      viewer.sizeFieldSelect.appendChild(option);
+      if (field.toLowerCase() !== "x" && field.toLowerCase() !== "y" && field !== "color") {
+        let option = document.createElement("option");
+        option.value = field;
+        option.innerText = field;
+        viewer.sizeFieldSelect.appendChild(option);
+      }
     }
+    //option for not using sizing
+    let option = document.createElement("option");
+    option.value = null;
+    option.innerText = "none";
+    viewer.sizeFieldSelect.appendChild(option);
+    //set initial value
     viewer.sizeFieldSelect.value = viewer.sizeField_;
     dropdown_container.appendChild(label);
     dropdown_container.appendChild(viewer.sizeFieldSelect);
@@ -1157,7 +1187,7 @@ export function viewer(options) {
       legendContainer = d3Selection.create("svg").attr("id", "gridviz-legend");
       viewer.container_.appendChild(legendContainer.node());
     }
-    if (viewer.legend.orientation == "horizontal") {
+    if (viewer.legend_.orientation == "horizontal") {
       legendContainer.attr("class", "gridviz-legend-horizontal gridviz-plugin");
     } else {
       legendContainer.attr("class", "gridviz-legend-vertical gridviz-plugin");
@@ -1316,6 +1346,7 @@ export function viewer(options) {
   */
   function onChangeSizeField(field) {
     viewer.sizeField_ = field;
+    updateSizeScale();
     updatePointsSizes();
     if (viewer.legend_) {
       updateLegend();
@@ -1329,7 +1360,7 @@ export function viewer(options) {
     };
 
     tooltipTemplate = document.createRange()
-      .createContextualFragment(`<div id="tooltip" style="display: none; position: absolute; pointer-events: none; z-index:999; border-radius:5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); font-size: 13px; width: 120px; text-align: center; line-height: 1; padding: 6px; background: white; font-family: sans-serif;">
+      .createContextualFragment(`<div id="tooltip" style="display: none; position: absolute; pointer-events: none; z-index:999; border-radius:5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); font-size: 13px; text-align: center; line-height: 1; padding: 6px; background: white; font-family: sans-serif;">
     <div id="labelTip" style="padding: 4px; margin-bottom: 4px;"></div>
 <div id="pointTip" style="padding: 4px; margin-bottom: 4px;"></div>
 </div>`);

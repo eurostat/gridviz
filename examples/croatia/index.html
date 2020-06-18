@@ -42,13 +42,17 @@
         .colorScheme("interpolatePlasma")
         .colorScaleFunction("scaleSequentialSqrt") //scaleSequential or scaleDiverging & their respective variants
         .colorSchemeSelector(true)
+        .colorScaleSelector(true)
+        .colorFieldSelector(true)
+        .colorScaleSelectorLabel("Scale: ")
+        .colorFieldSelectorLabel("Indicator: ")
         .legend({
             height: 290,
             width: 150,
             title: "Total tourist nights per km² (2017)",
             titleWidth: 150,
             cells: 10,
-            format: ',.0f'
+            format: ',.2r'
         })
         .build()
 </script>

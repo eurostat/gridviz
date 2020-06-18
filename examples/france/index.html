@@ -22,7 +22,7 @@
         }])
         .title("1km² Grid of France")
         .sources("Source: <a target='__blank' href='https://insee.fr/fr/accueil'>INSEE</a>")
-        .colorField("Ind")  // csv column used to calculate the colour of each cell
+
         .center([3709000, 2624000])//EPSG=3035
         .nuts2json(true)
         .nutsLevel(3)
@@ -32,18 +32,20 @@
         .placenameThresholds({ //"scale": population
             "1000000": 100000,
             "300000": 50000,
-            "200000": 30000,
-            "150000": 500,
-            "100000": 100
+            "150000": 30000,
+            "100000": 500,
         })
         .height(window.innerHeight)
         .width(window.innerWidth)
         .backgroundColor("#000")
         .borderColor("#ffffff")
         .colorScheme("interpolateInferno")
+        .colorField("Ind")  // csv column used to calculate the colour of each cell
         .colorSchemeSelector(true)
         .colorScaleSelector(true)
+        .colorFieldSelector(true)
         .colorScaleSelectorLabel("Scale: ")
+        .colorFieldSelectorLabel("Indicator: ")
         .nuts2json(true) //loads borders topojson
         .legend({
             title: "Total population per km² (2015)",
