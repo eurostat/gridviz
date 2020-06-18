@@ -153,7 +153,19 @@ rect.swatch {
 }
 
 /* dropdowns  */
-#gridviz-colorscheme-dropdown-container {
+.gridviz-selectors {
+  z-index: 9999;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px;
+}
+.gridviz-dropdown {
+  padding:8px;
+  background-color: #efefef;
+  color: black;
+}
+/* #gridviz-colorscheme-dropdown-container {
   z-index: 9999;
   position: absolute;
   top: 10px;
@@ -173,7 +185,7 @@ rect.swatch {
   top: 10px;
   right: 10px;
   padding: 8px;
-}
+} */
 .gridviz-dropdown-label {
   z-index: 9999;
   margin-right: 10px;

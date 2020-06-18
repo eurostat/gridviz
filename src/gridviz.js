@@ -107,6 +107,8 @@ export function viewer(options) {
 
   //dropdowns
   viewer.colorSchemeSelector_ = false;
+  viewer.colorScaleSelectorLabel_ = "Color scale: "
+  viewer.colorScaleSelector_ = false;
   viewer.colorFieldSelectorLabel_ = "Color field: "
   viewer.colorFieldSelector_ = false;
   viewer.sizeFieldSelector_ = false;
@@ -221,6 +223,8 @@ export function viewer(options) {
       addPanAndZoom();
       //setUpZoom();
       createTooltipContainer();
+
+      addSelectorsContainerToDOM();
       if (viewer.colorSchemeSelector_) {
         createColorSchemeDropdown();
       }
@@ -279,6 +283,12 @@ export function viewer(options) {
     node.classList.add("gridviz-sources");
     node.innerHTML = viewer.sources_;
     viewer.container_.appendChild(node);
+  }
+
+  function addSelectorsContainerToDOM() {
+    viewer.selectorsContainer = document.createElement("div");
+    viewer.selectorsContainer.classList.add("gridviz-selectors");
+    viewer.container_.appendChild(viewer.selectorsContainer);
   }
 
 
@@ -378,6 +388,10 @@ export function viewer(options) {
     if (viewer.colorSchemeSelector_) {
       addChangeEventToColorSchemeDropdown();
     }
+    //change scale
+    if (viewer.colorScaleSelector_) {
+      createColorScaleDropdown();
+    }
     //screen resize
     addResizeEvent();
   }
@@ -456,6 +470,7 @@ export function viewer(options) {
               camera.lookAt(new Vector3(viewer.center_[0], viewer.center_[1], 0)); // Set initial camera position
             }
             addPointsToScene();
+
             if (viewer.colorFieldSelector_) {
               createColorFieldDropdown();
             }
@@ -680,7 +695,7 @@ export function viewer(options) {
 
 
   function updateColorScale() {
-
+    viewer.colorScale_ = defineColorScale();
   }
   /**
    * rebuild color array
@@ -994,7 +1009,7 @@ export function viewer(options) {
     ];
     let dropdown_container = document.createElement("div");
     dropdown_container.id = "gridviz-colorscheme-dropdown-container";
-    dropdown_container.classList.add("gridviz-plugin");
+    dropdown_container.classList.add("gridviz-dropdown");
     viewer.schemesSelect = document.createElement("select");
     viewer.schemesSelect.id = "schemes";
     let label = document.createElement("label");
@@ -1012,7 +1027,59 @@ export function viewer(options) {
     viewer.schemesSelect.value = viewer.colorScheme_;
     dropdown_container.appendChild(label);
     dropdown_container.appendChild(viewer.schemesSelect);
-    viewer.container_.appendChild(dropdown_container);
+    viewer.selectorsContainer.appendChild(dropdown_container);
+  }
+
+
+  /**
+   * Creates an HTML Select element for the different D3 Scale functions used to generate the colours
+   * Accepted: scaleSequential or scaleDiverging & their respective variants
+   */
+  function createColorScaleDropdown() {
+    let scales = [
+      {
+        value: "scaleSequential",
+        innerText: "Sequential"
+      },
+      {
+        value: "scaleSequentialLog",
+        innerText: "Sequential logarithmic"
+      },
+      {
+        value: "scaleSequentialPow",
+        innerText: "Sequential exponential"
+      },
+      {
+        value: "scaleSequentialSqrt",
+        innerText: "Sequential square-root "
+      },
+      {
+        value: "scaleSequentialQuantile",
+        innerText: "Sequential quantile"
+      },
+    ];
+    let dropdown_container = document.createElement("div");
+    dropdown_container.id = "gridviz-colorscale-dropdown-container";
+    dropdown_container.classList.add("gridviz-dropdown");
+    viewer.colorScaleSelect = document.createElement("select");
+    viewer.colorScaleSelect.id = "scales";
+    let label = document.createElement("label");
+    label.for = "scales";
+    label.classList.add("gridviz-dropdown-label");
+    label.innerText = viewer.colorScaleSelectorLabel_;
+
+    for (let i = 0; i < scales.length; i++) {
+      let scale = scales[i];
+      let option = document.createElement("option");
+      option.value = scale.value;
+      option.innerText = scale.innerText;
+      viewer.colorScaleSelect.appendChild(option);
+    }
+    viewer.colorScaleSelect.value = viewer.colorScaleFunction_;
+    dropdown_container.appendChild(label);
+    dropdown_container.appendChild(viewer.colorScaleSelect);
+    viewer.selectorsContainer.appendChild(dropdown_container);
+    addChangeEventToColorScaleDropdown();
   }
 
   /**
@@ -1022,13 +1089,13 @@ export function viewer(options) {
   function createColorFieldDropdown() {
     let dropdown_container = document.createElement("div");
     dropdown_container.id = "gridviz-colorfield-dropdown-container";
-    dropdown_container.classList.add("gridviz-plugin");
+    dropdown_container.classList.add("gridviz-dropdown");
     viewer.colorFieldSelect = document.createElement("select");
     viewer.colorFieldSelect.id = "colorFields";
     let label = document.createElement("label");
     label.for = "colorFields";
     label.classList.add("gridviz-dropdown-label");
-    label.innerText = "Colour field: ";
+    label.innerText = viewer.colorFieldSelectorLabel_;
 
     let fields = Object.keys(gridCaches[viewer.resolution_][0]);
     for (let i = 0; i < fields.length; i++) {
@@ -1043,7 +1110,7 @@ export function viewer(options) {
     viewer.colorFieldSelect.value = viewer.colorField_;
     dropdown_container.appendChild(label);
     dropdown_container.appendChild(viewer.colorFieldSelect);
-    viewer.container_.appendChild(dropdown_container);
+    viewer.selectorsContainer.appendChild(dropdown_container);
     addChangeEventToColorFieldDropdown();
   }
 
@@ -1055,13 +1122,13 @@ export function viewer(options) {
   function createSizeFieldDropdown() {
     let dropdown_container = document.createElement("div");
     dropdown_container.id = "gridviz-sizefield-dropdown-container";
-    dropdown_container.classList.add("gridviz-plugin");
+    dropdown_container.classList.add("gridviz-dropdown");
     viewer.sizeFieldSelect = document.createElement("select");
     viewer.sizeFieldSelect.id = "sizeFields";
     let label = document.createElement("label");
     label.for = "sizeFields";
     label.classList.add("gridviz-dropdown-label");
-    label.innerText = "Colour field: ";
+    label.innerText = viewer.sizeFieldSelectorLabel_;
 
     let fields = Object.keys(gridCaches[viewer.resolution_][0]);
     for (let i = 0; i < fields.length; i++) {
@@ -1074,7 +1141,7 @@ export function viewer(options) {
     viewer.sizeFieldSelect.value = viewer.sizeField_;
     dropdown_container.appendChild(label);
     dropdown_container.appendChild(viewer.sizeFieldSelect);
-    viewer.container_.appendChild(dropdown_container);
+    viewer.selectorsContainer.appendChild(dropdown_container);
     addChangeEventToSizeFieldDropdown()
   }
 
@@ -1206,6 +1273,31 @@ export function viewer(options) {
       updateLegend();
     }
   }
+
+  /**
+* Add change event to color-scale selector
+*
+*/
+  function addChangeEventToColorScaleDropdown() {
+    viewer.colorScaleSelect.addEventListener("change", function (e) {
+      onChangeColorScale(e.currentTarget.value);
+    });
+  }
+
+  /**
+  * Color scale dropdown event handler
+  *
+  * @param {*} scale
+  */
+  function onChangeColorScale(scale) {
+    viewer.colorScaleFunction_ = scale;
+    updateColorScale();
+    updatePointsColors();
+    if (viewer.legend_) {
+      updateLegend();
+    }
+  }
+
 
   /**
 * Add change event to siz-field selector
