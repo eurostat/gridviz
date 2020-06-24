@@ -5,16 +5,24 @@
 }
 .gridviz-title {
   position:absolute;
-  top:2%;
-  left:2%;
+  top:10px;
+  left:10px;
   font-size: 38px;
+  font-weight:bold;
+  color:white;
+}
+.gridviz-subtitle {
+  position:absolute;
+  top:50px;
+  left:10px;
+  font-size: 20px;
   font-weight:bold;
   color:white;
 }
 .gridviz-cellcount {
   position:absolute;
-  top:8%;
-  left:2%;
+  top:75px;
+  left:10px;
   font-size: 16px;
   font-weight:bold;
   color:white;

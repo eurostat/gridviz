@@ -126,6 +126,7 @@ export function viewer(options) {
 
   //texts
   viewer.title_ = null;
+  viewer.subtitle_ = null;
   viewer.cellCount_ = null;
   viewer.sources_ = null
 
@@ -210,6 +211,9 @@ export function viewer(options) {
       if (viewer.title_) {
         addTitleToDOM();
       }
+      if (viewer.subtitle_) {
+        addSubtitleToDOM();
+      }
       if (viewer.sources_) {
         addSourcesToDOM();
       }
@@ -278,10 +282,18 @@ export function viewer(options) {
     viewer.container_.appendChild(node);
   }
 
+
+  function addSubtitleToDOM() {
+    let node = document.createElement("div");
+    node.classList.add("gridviz-subtitle");
+    node.innerHTML = viewer.subtitle_;
+    viewer.container_.appendChild(node);
+  }
+
   function addCellCountToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-cellcount");
-    node.innerHTML = "Cells: " + viewer.cellCount;
+    node.innerHTML = "Number of cells: " + formatNumber(viewer.cellCount);
     viewer.container_.appendChild(node);
   }
 
@@ -1939,6 +1951,12 @@ export function viewer(options) {
       -(mouseY / viewer.height_) * 2 + 1,
       0.5
     );
+  }
+
+  function formatNumber(n) {
+    return n
+      .toLocaleString("en")
+      .replace(/,/gi, " ")
   }
 
   function checkIntersects(mouse_position) {
