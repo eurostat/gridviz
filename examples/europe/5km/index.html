@@ -22,6 +22,7 @@
       }
     ])
     .title("5km² Grid of Europe")
+    .cellCount(true)
     .colorField("value")  // csv column which you wish to visualize
     //sizeColumn() "value" // csv column which you wish to visualize
     .nuts2json(false) //loads borders topojson
@@ -33,6 +34,9 @@
     .loadingIcon("ellipsis")
     .colorScheme("interpolateTurbo")
     .colorSchemeSelector(true)
+    .colorScaleSelector(true)
+    .colorFieldSelector(true)
+    .sizeFieldSelector(true)
     .legend({
       height: 350,
       title: "Total population per 5 km² (2011)",

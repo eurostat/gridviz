@@ -11,6 +11,14 @@
   font-weight:bold;
   color:white;
 }
+.gridviz-cellcount {
+  position:absolute;
+  top:8%;
+  left:2%;
+  font-size: 16px;
+  font-weight:bold;
+  color:white;
+}
 .gridviz-sources {
   position:absolute;
   bottom:2%;

@@ -115,9 +115,6 @@ export function viewer(options) {
   viewer.sizeFieldSelectorLabel_ = "Size field: ";
   viewer.d3ScaleSelector_ = false;
 
-  //attribution/sources
-  viewer.sources_ = null
-
   //data params
   viewer.placenamesEPSG_ = 3035; //used to determine grid rendering; placenames;
   viewer.placenamesCountry_ = false;
@@ -126,7 +123,11 @@ export function viewer(options) {
   viewer.zerosRemoved_ = 0; //to make EPSG 3035 files lighter, the final 3 zeros of each x/y coordinate are often removed. 
   viewer.colorField_ = null;
   viewer.sizeField_ = null;
+
+  //texts
   viewer.title_ = null;
+  viewer.cellCount_ = null;
+  viewer.sources_ = null
 
   //borders using nuts2json
   viewer.nuts2json_ = false; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
@@ -274,6 +275,13 @@ export function viewer(options) {
     let node = document.createElement("div");
     node.classList.add("gridviz-title");
     node.innerHTML = viewer.title_;
+    viewer.container_.appendChild(node);
+  }
+
+  function addCellCountToDOM() {
+    let node = document.createElement("div");
+    node.classList.add("gridviz-cellcount");
+    node.innerHTML = "Cells: " + viewer.cellCount;
     viewer.container_.appendChild(node);
   }
 
@@ -500,7 +508,10 @@ export function viewer(options) {
       csv => {
         //validate csv
         if (csv[0].x && csv[0].y && csv[0][viewer.colorField_]) {
-          console.log("Cells:" + csv.length)
+          viewer.cellCount = csv.length;
+          if (viewer.cellCount_) {
+            addCellCountToDOM();
+          }
           addGridToCache(csv, grid.cellSize);
         } else {
           return console.error(
@@ -1697,7 +1708,7 @@ export function viewer(options) {
       envelope.xmax +
       "," +
       envelope.ymax +
-      "&geometryType=esriGeometryEnvelope&f=json&outFields=city_town_name,POPL_2011&resultRecordCount=200";
+      "&geometryType=esriGeometryEnvelope&f=json&outFields=GISREGIO.CITIES_TOWNS_RG.STTL_NAME,GISREGIO.CITIES_TOWNS_RG.POPL_2011";
 
     //manage multiple calls by replicating angular's .unsubscribe() somehow
     let uri = encodeURI(URL);
@@ -1720,7 +1731,7 @@ export function viewer(options) {
     let r = viewer.resolution_;
     let where = "";
     if (viewer.placenamesCountry_) {
-      where = where + "CNTR_CODE='" + viewer.placenamesCountry_ + "' AND "
+      where = where + "GISREGIO.CITIES_TOWNS_RG.CNTR_CODE='" + viewer.placenamesCountry_ + "' AND "
     }
     // labelling thresholds by population - either custom values or by scale
     let popFilter = getPopulationParameterFromScale(scale)
@@ -1736,6 +1747,7 @@ export function viewer(options) {
    * @param {*} scale
    */
   function getPopulationParameterFromScale(scale) {
+    let populationFieldName = "GISREGIO.CITIES_TOWNS_RG.POPL_2011"
     //user-defined thresholds
     if (viewer.placenameThresholds_) {
       let thresholds = Object.keys(viewer.placenameThresholds_);
@@ -1743,43 +1755,43 @@ export function viewer(options) {
         let t = thresholds[i];
         if (thresholds[i + 1]) { //if not last threshold
           if (scale < parseInt(thresholds[0])) { //below first threshold
-            return "POPL_2011>" + viewer.placenameThresholds_[thresholds[0]];
+            return populationFieldName + ">" + viewer.placenameThresholds_[thresholds[0]];
           } else if (scale > parseInt(t) && scale < parseInt(thresholds[i + 1])) {
             // if current scale is between thresholds
-            return "POPL_2011>" + viewer.placenameThresholds_[t];
+            return populationFieldName + ">" + viewer.placenameThresholds_[t];
           }
         } else {
           // if last threshold
-          return "POPL_2011>" + viewer.placenameThresholds_[t];
+          return populationFieldName + ">" + viewer.placenameThresholds_[t];
         }
       }
     } else {
       //default values
       let r = viewer.resolution_
       if (scale > 0 && scale < r) {
-        return "POPL_2011>10";
+        return populationFieldName + ">10";
       } else if (scale > r && scale < r * 2) {
-        return "POPL_2011>1000";
+        return populationFieldName + ">1000";
       } else if (scale > r * 2 && scale < r * 4) {
-        return "POPL_2011>2500";
+        return populationFieldName + ">2500";
       } else if (scale > r * 4 && scale < r * 8) {
-        return "POPL_2011>5000";
+        return populationFieldName + ">5000";
       } else if (scale > r * 8 && scale < r * 16) {
-        return "POPL_2011>7500";
+        return populationFieldName + ">7500";
       } else if (scale > r * 16 && scale < r * 32) {
-        return "POPL_2011>10000";
+        return populationFieldName + ">10000";
       } else if (scale > r * 32 && scale < r * 64) {
-        return "POPL_2011>20000";
+        return populationFieldName + ">20000";
       } else if (scale > r * 64 && scale < r * 128) {
-        return "POPL_2011>100000";
+        return populationFieldName + ">100000";
       } else if (scale > r * 128 && scale < r * 256) {
-        return "POPL_2011>250000";
+        return populationFieldName + ">250000";
       } else if (scale > r * 256 && scale < r * 512) {
-        return "POPL_2011>500000";
+        return populationFieldName + ">500000";
       } else if (scale > r * 512 && scale < r * 1024) {
-        return "POPL_2011>750000";
+        return populationFieldName + ">750000";
       } else if (scale > r * 1024) {
-        return "POPL_2011>1000000";
+        return populationFieldName + ">1000000";
       } else {
         return "1=1";
       }
@@ -1822,7 +1834,7 @@ export function viewer(options) {
   function createPlacenameLabelObject(placename) {
     var placeDiv = document.createElement("div");
     placeDiv.className = "gridviz-placename";
-    placeDiv.textContent = placename.attributes.city_town_name;
+    placeDiv.textContent = placename.attributes["GISREGIO.CITIES_TOWNS_RG.STTL_NAME"];
     placeDiv.style.marginTop = "-1em";
     var placeLabel = new CSS2DObject(placeDiv);
     if (viewer.zerosRemoved_) {
