@@ -118,7 +118,6 @@ export function viewer(options) {
   //attribution/sources
   viewer.sources_ = null
 
-
   //data params
   viewer.placenamesEPSG_ = 3035; //used to determine grid rendering; placenames;
   viewer.placenamesCountry_ = false;
@@ -595,7 +594,7 @@ export function viewer(options) {
     let initial = true;
     if (!boundariesGroup) {
       boundariesGroup = new Group();
-      boundariesGroup.renderOrder = 999; //always on top
+      boundariesGroup.renderOrder = 999; //always on top of grid
     } else {
       //empty current boundaries group
       for (var i = boundariesGroup.children.length - 1; i >= 0; i--) {
@@ -664,6 +663,112 @@ export function viewer(options) {
     if (initial) {
       viewer.scene.add(boundariesGroup);
     }
+  }
+
+
+  viewer.addGeoJson = function (url) {
+    d3Fetch.json(url).then(
+      res => {
+        if (res.features) {
+          if (res.features.length > 0) {
+            addGeoJsonToScene(res.features);
+          }
+        }
+      },
+      err => {
+        console.error(err);
+      }
+    );
+  }
+
+  /**
+   * Add geojson to three.js scene
+   *
+   * @param {*} features //Geojson features
+   * 
+   */
+  function addGeoJsonToScene(features) {
+    let geojsonGroup = new Group();
+    geojsonGroup.renderOrder = 999; //always on top of grid
+    // GEOJSON to ThreeJS
+    for (let i = 0; i < features.length; i++) {
+      let feature = features[i];
+      let coords = [];
+      for (let c = 0; c < feature.geometry.coordinates.length; c++) {
+        if (feature.geometry.type == "Polygon") {
+          let coords = [];
+          for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
+            let xyz;
+            if (viewer.zerosRemoved_) {
+              let d = Number('1E' + viewer.zerosRemoved_);
+              xyz = {
+                x: feature.geometry.coordinates[c][s][0] / d,
+                y: feature.geometry.coordinates[c][s][1] / d,
+                z: CONSTANTS.line_z
+              };
+            } else {
+              xyz = {
+                x: feature.geometry.coordinates[c][s][0],
+                y: feature.geometry.coordinates[c][s][1],
+                z: CONSTANTS.line_z
+              };
+            }
+
+            coords.push(xyz);
+          }
+          geojsonGroup.add(createLineFromCoords(coords));
+        } else if (feature.geometry.type == "MultiPolygon") {
+          for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
+            //each polygon in multipolygon:
+            let coords = [];
+            for (
+              let m = 0;
+              m < feature.geometry.coordinates[c][s].length;
+              m++
+            ) {
+              let xyz;
+              if (viewer.zerosRemoved_) {
+                let d = Number('1E' + viewer.zerosRemoved_);
+                xyz = {
+                  x: feature.geometry.coordinates[c][s][m][0] / d,
+                  y: feature.geometry.coordinates[c][s][m][1] / d,
+                  z: CONSTANTS.line_z
+                };
+              } else {
+                xyz = {
+                  x: feature.geometry.coordinates[c][s][m][0],
+                  y: feature.geometry.coordinates[c][s][m][1],
+                  z: CONSTANTS.line_z
+                };
+              }
+              coords.push(xyz);
+            }
+            geojsonGroup.add(createLineFromCoords(coords));
+          }
+        } else if (feature.geometry.type == "LineString") {
+          let xyz;
+          if (viewer.zerosRemoved_) {
+            let d = Number('1E' + viewer.zerosRemoved_);
+            xyz = {
+              x: feature.geometry.coordinates[c][0] / d,
+              y: feature.geometry.coordinates[c][1] / d,
+              z: CONSTANTS.line_z
+            };
+          } else {
+            xyz = {
+              x: feature.geometry.coordinates[c][0],
+              y: feature.geometry.coordinates[c][1],
+              z: CONSTANTS.line_z
+            };
+          }
+          coords.push(xyz);
+        }
+      }
+      if (feature.geometry.type = "LineString") {
+        geojsonGroup.add(createLineFromCoords(coords));
+      }
+    }
+    viewer.scene.add(geojsonGroup);
   }
 
   /**

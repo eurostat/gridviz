@@ -13,18 +13,18 @@
 <script src="../../../build/gridviz.js"></script>
 <script>
   let containerDiv = document.getElementById("viz-container");
-  GridViz.viewer()
+  let viz = gridviz.viewer()
     .container(containerDiv)
     .gridData([
       {
         url: "../../../assets/csv/Europe/5km/3035/pop_2011_3035_5km.csv",
-        cellSize: 5500
+        cellSize: 5100
       }
     ])
     .title("5km² Grid of Europe")
     .colorField("value")  // csv column which you wish to visualize
     //sizeColumn() "value" // csv column which you wish to visualize
-    .nuts2json(true) //loads borders topojson
+    .nuts2json(false) //loads borders topojson
     .center([4369000, 3230000])//EPSG=3035
     .height(window.innerHeight)
     .width(window.innerWidth)
@@ -40,6 +40,8 @@
       cells: 15
     })
     .build()
+
+  viz.addGeoJson("../../../assets/geojson/NUTS_BN_03M_2021_3035_LEVL_0.geojson")
 </script>
 
 </html>
