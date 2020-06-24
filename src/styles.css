@@ -3,29 +3,26 @@
   margin: 0px;
   font-family: "roboto_condensedbold", Arial, sans-serif;
 }
-.gridviz-title {
+.gridviz-headings-container {
+  z-index:999999;
   position:absolute;
   top:10px;
   left:10px;
+  padding:15px;
+}
+.gridviz-title {
   font-size: 38px;
   font-weight:bold;
-  color:white;
 }
 .gridviz-subtitle {
-  position:absolute;
-  top:50px;
-  left:10px;
   font-size: 20px;
   font-weight:bold;
-  color:white;
+  margin-top:5px;
 }
 .gridviz-cellcount {
-  position:absolute;
-  top:75px;
-  left:10px;
   font-size: 16px;
   font-weight:bold;
-  color:white;
+  margin-top:10px;
 }
 .gridviz-sources {
   position:absolute;
@@ -78,7 +75,7 @@
 }
 
 .gridviz-plugin {
-  background-color: #efefef;
+  background-color: #efefefe8;
   color: black;
   fill: black;
   /* border: 2px solid #888888; */
@@ -129,7 +126,6 @@
   bottom: 10px;
   left: 10px;
   /* font-size: 12px; */
-  opacity:0.8;
 }
 .gridviz-legend-horizontal {
   height: 65px;
@@ -166,7 +162,6 @@ rect.swatch {
 }
 .gridviz-dropdown {
   padding:8px;
-  background-color: #efefef;
   color: black;
 }
 /* #gridviz-colorscheme-dropdown-container {

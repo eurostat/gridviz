@@ -208,6 +208,9 @@ export function viewer(options) {
         viewer.resolution_ = viewer.gridData_[0].cellSize
       }
       gridConfig = defineGridConfig();
+
+      addHeadingsContainerToDOM();
+
       if (viewer.title_) {
         addTitleToDOM();
       }
@@ -275,26 +278,32 @@ export function viewer(options) {
     }
   }
 
+  function addHeadingsContainerToDOM() {
+    viewer.headingsNode = document.createElement("div");
+    viewer.headingsNode.classList.add("gridviz-headings-container");
+    viewer.headingsNode.classList.add("gridviz-plugin");
+    viewer.container_.appendChild(viewer.headingsNode);
+  }
+
   function addTitleToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-title");
     node.innerHTML = viewer.title_;
-    viewer.container_.appendChild(node);
+    viewer.headingsNode.appendChild(node);
   }
-
 
   function addSubtitleToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-subtitle");
     node.innerHTML = viewer.subtitle_;
-    viewer.container_.appendChild(node);
+    viewer.headingsNode.appendChild(node);
   }
 
   function addCellCountToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-cellcount");
     node.innerHTML = "Number of cells: " + formatNumber(viewer.cellCount);
-    viewer.container_.appendChild(node);
+    viewer.headingsNode.appendChild(node);
   }
 
   function addSourcesToDOM() {
@@ -307,6 +316,7 @@ export function viewer(options) {
   function addSelectorsContainerToDOM() {
     viewer.selectorsContainer = document.createElement("div");
     viewer.selectorsContainer.classList.add("gridviz-selectors");
+    viewer.selectorsContainer.classList.add("gridviz-plugin");
     viewer.container_.appendChild(viewer.selectorsContainer);
   }
 
@@ -2043,7 +2053,7 @@ export function viewer(options) {
     tooltip.style.top = tooltip_state.top + "px";
     //pointTip.innerText = tooltip_state.name;
     pointTip.style.background = tooltip_state.color;
-    labelTip.innerHTML = `<strong>${viewer.colorField_}:</strong> ${tooltip_state.colorValue.toLocaleString()} <br> 
+    labelTip.innerHTML = `<strong>${viewer.colorField_}:</strong> ${formatNumber(tooltip_state.colorValue)} <br> 
   <strong>x:</strong> ${tooltip_state.coords[0]} <br> 
   <strong>y:</strong> ${tooltip_state.coords[1]} <br> `;
   }
