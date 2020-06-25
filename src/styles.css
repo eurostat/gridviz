@@ -120,11 +120,31 @@
 }
 
 /* LEGEND */
+/* continuous */
+.gridviz-legend-svg{
+  font-size:16px;
+  margin-top: 10px;
+}
+.gridviz-continuous-legend-title{
+  font-size:16px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+.legend-tick text{
+font-size:16px
+}
+.gridviz-legend-axis .domain{
+  visibility:hidden;
+}
+
+/* susie's color legend */
 #gridviz-legend {
   z-index: 9999;
   position: absolute;
   bottom: 10px;
-  left: 10px;
+  right: 10px;
+  padding:10px;
+  background:#efefefe8;
   /* font-size: 12px; */
 }
 .gridviz-legend-horizontal {
