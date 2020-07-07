@@ -1,10 +1,6 @@
-import * as d3ScaleChromatic from "d3-scale-chromatic";
-import * as d3Scale from "d3-scale";
-import * as d3Zoom from "d3-zoom";
-import * as d3Selection from "d3-selection";
-import * as d3Fetch from "d3-fetch";
-import * as d3Array from "d3-array";
-import * as d3Format from "d3-format";
+
+import * as d3 from "d3"
+import * as fc from "d3fc";
 import * as LEGEND from "d3-svg-legend";
 import {
   Scene,
@@ -71,6 +67,9 @@ export function viewer(options) {
   //output object
   let viewer = {};
 
+  //dev
+  viewer.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
+
   //styles
   viewer.container_ = document.body;
   viewer.height_ = window.innerHeight;
@@ -80,15 +79,16 @@ export function viewer(options) {
   viewer.highlightColor_ = "#37f2d6"
   viewer.loadingIcon_ = "ring"; //ripple | ring | ellipsis | roller
 
-  //d3-legend.susielu.com
+  // https://d3-legend.susielu.com vs https://blog.scottlogic.com/2019/03/13/how-to-create-a-continuous-colour-range-legend-using-d3-and-d3fc.html
   viewer.legend_ = {
+    type: "continuous", //cells vs continuous
     width: 140,
     height: 320,
     orientation: "vertical",
     title: "Legend",
     titleWidth: 50,
     width: null,
-    format: d3Format.format(".0s"),
+    format: ".0s",
     cells: 13,
     shapeWidth: 30
   };
@@ -97,29 +97,44 @@ export function viewer(options) {
   viewer.colorScheme_ = "interpolateTurbo";
   viewer.colors_ = null;
   viewer.thresholdValues_ = null;
-  viewer.colorSchemeSelector_ = true;
-  viewer.d3ScaleSelector_ = false;
   viewer.colorScaleFunction_ = "scaleSequential"; //scaleSequential or scaleDiverging & their respective variants
   viewer.sizeScaleFunction = "scaleSqrt"; //scaleSequential or scaleDiverging & their respective variants
   viewer.colorScale_ = null; //requires .range and .domain functions
   viewer.sizeScale_ = null;  //requires .range and .domain functions
 
+  //dropdowns
+  viewer.colorSchemeSelector_ = false;
+  viewer.colorScaleSelectorLabel_ = "Color scale: "
+  viewer.colorScaleSelector_ = false;
+  viewer.colorFieldSelectorLabel_ = "Color field: "
+  viewer.colorFieldSelector_ = false;
+  viewer.sizeFieldSelector_ = false;
+  viewer.sizeFieldSelectorLabel_ = "Size field: ";
+  viewer.d3ScaleSelector_ = false;
+
   //data params
   viewer.placenamesEPSG_ = 3035; //used to determine grid rendering; placenames;
   viewer.placenamesCountry_ = false;
+  viewer.placenameThresholds_ = null;
   viewer.center_ = null; //default - If not specified then should default as first or randomly selected point
   viewer.zerosRemoved_ = 0; //to make EPSG 3035 files lighter, the final 3 zeros of each x/y coordinate are often removed. 
-  viewer.colorColumn_ = null;
-  viewer.sizeColumn_ = null;
+  viewer.colorField_ = null;
+  viewer.sizeField_ = null;
+
+  //texts
   viewer.title_ = null;
+  viewer.subtitle_ = null;
+  viewer.cellCount_ = null;
+  viewer.sources_ = null
 
   //borders using nuts2json
   viewer.nuts2json_ = false; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
   viewer.nuts2jsonEPSG_ = 3035;
   viewer.nuts2jsonCountry_ = false; // only show borders of given country code
   viewer.nutsLevel_ = 0;
+  viewer.nuts_simplification_ = "20M"; //current nuts2json simplification
   // grid data
-  viewer.data_ = null;
+  viewer.gridData_ = null;
   viewer.resolution_ = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
   //camera
   viewer.camera = {}
@@ -158,15 +173,11 @@ export function viewer(options) {
     tooltip,
     pointTip,
     labelTip,
-    valuesExtent, //d3array.extent of grid
     gridLegend,
     view,
     labelRenderer,
-    schemesSelect,
     renderer;
 
-  // initial states
-  let nuts_simplification = "20M"; //current nuts2json
   let tooltip_state = {
     display: "none"
   };
@@ -190,9 +201,21 @@ export function viewer(options) {
         viewer.height_ + "px";
       //set resolution
       if (!viewer.resolution_) {
-        viewer.resolution_ = viewer.data_[0].cellSize
+        viewer.resolution_ = viewer.gridData_[0].cellSize
       }
       gridConfig = defineGridConfig();
+
+      addHeadingsContainerToDOM();
+
+      if (viewer.title_) {
+        addTitleToDOM();
+      }
+      if (viewer.subtitle_) {
+        addSubtitleToDOM();
+      }
+      if (viewer.sources_) {
+        addSourcesToDOM();
+      }
 
       createScene();
       if (!labelRenderer) createLabelRenderer();
@@ -203,27 +226,39 @@ export function viewer(options) {
       addPanAndZoom();
       //setUpZoom();
       createTooltipContainer();
+
+      addSelectorsContainerToDOM();
       if (viewer.colorSchemeSelector_) {
         createColorSchemeDropdown();
       }
 
+
       //load initial data
-      loadGrid(viewer.data_[0]);
+      loadGrid(viewer.gridData_[0]);
+
 
       if (viewer.nuts2json_) {
         loadBordersJson(
           CONSTANTS.nuts_base_URL +
           viewer.nuts2jsonEPSG_ +
           "/" +
-          nuts_simplification +
+          viewer.nuts_simplification_ +
           "/" + viewer.nutsLevel_ + ".json"
         );
       }
 
-
       addEventListeners();
+
+      //request initial placenames
+      // view.transition().call(viewer.zoom.scaleBy, 1.000001);//sets initial scale properly (otherwise it starts as 0.0something)
+      // let scale = getScaleFromZ(camera.position.z);
+      getPlacenames(camera.position.z);
+
       return viewer;
-    } else { return }
+    } else {
+      console.error("invalid inputs");
+      return
+    }
   };
 
   function validateInputs() {
@@ -239,6 +274,48 @@ export function viewer(options) {
     }
   }
 
+  function addHeadingsContainerToDOM() {
+    viewer.headingsNode = document.createElement("div");
+    viewer.headingsNode.classList.add("gridviz-headings-container");
+    viewer.headingsNode.classList.add("gridviz-plugin");
+    viewer.container_.appendChild(viewer.headingsNode);
+  }
+
+  function addTitleToDOM() {
+    let node = document.createElement("div");
+    node.classList.add("gridviz-title");
+    node.innerHTML = viewer.title_;
+    viewer.headingsNode.appendChild(node);
+  }
+
+  function addSubtitleToDOM() {
+    let node = document.createElement("div");
+    node.classList.add("gridviz-subtitle");
+    node.innerHTML = viewer.subtitle_;
+    viewer.headingsNode.appendChild(node);
+  }
+
+  function addCellCountToDOM() {
+    let node = document.createElement("div");
+    node.classList.add("gridviz-cellcount");
+    node.innerHTML = "Number of cells: " + formatNumber(viewer.cellCount);
+    viewer.headingsNode.appendChild(node);
+  }
+
+  function addSourcesToDOM() {
+    let node = document.createElement("div");
+    node.classList.add("gridviz-sources");
+    node.innerHTML = viewer.sources_;
+    viewer.container_.appendChild(node);
+  }
+
+  function addSelectorsContainerToDOM() {
+    viewer.selectorsContainer = document.createElement("div");
+    viewer.selectorsContainer.classList.add("gridviz-selectors");
+    viewer.selectorsContainer.classList.add("gridviz-plugin");
+    viewer.container_.appendChild(viewer.selectorsContainer);
+  }
+
 
   /**
    * Create renderer for three.js scene and append to container element.
@@ -248,7 +325,7 @@ export function viewer(options) {
     renderer = new WebGLRenderer();
     renderer.setSize(viewer.width_, viewer.height_);
     viewer.container_.appendChild(renderer.domElement);
-    view = d3Selection.select(renderer.domElement); //for d3 mouse events
+    view = d3.select(renderer.domElement); //for d3 mouse events
   }
 
   /**
@@ -334,7 +411,11 @@ export function viewer(options) {
     addMouseEventsToView();
     //change color scheme
     if (viewer.colorSchemeSelector_) {
-      addChangeEventToColorDropdown();
+      addChangeEventToColorSchemeDropdown();
+    }
+    //change scale
+    if (viewer.colorScaleSelector_) {
+      createColorScaleDropdown();
     }
     //screen resize
     addResizeEvent();
@@ -380,7 +461,7 @@ export function viewer(options) {
    *
    */
   function defineFar() {
-    return viewer.resolution_ * 3000;
+    return viewer.resolution_ * 4000;
   }
 
   /**
@@ -395,9 +476,9 @@ export function viewer(options) {
         err => {
           if (!err) {
             //define scales
-            viewer.valuesExtent = d3Array.extent(gridCaches[viewer.resolution_], d => d.value);
+            viewer.valuesExtent = d3.extent(gridCaches[viewer.resolution_], d => d[viewer.colorField_]);
             viewer.colorScale_ = defineColorScale();
-            if (viewer.sizeColumn_) viewer.sizeScale_ = defineSizeScale();
+            if (viewer.sizeField_) viewer.sizeScale_ = defineSizeScale();
 
             if (!viewer.center_) {
               let index = parseInt(gridCaches[viewer.resolution_].length / 2);
@@ -414,6 +495,13 @@ export function viewer(options) {
               camera.lookAt(new Vector3(viewer.center_[0], viewer.center_[1], 0)); // Set initial camera position
             }
             addPointsToScene();
+
+            if (viewer.colorFieldSelector_) {
+              createColorFieldDropdown();
+            }
+            if (viewer.sizeFieldSelector_) {
+              createSizeFieldDropdown();
+            }
           }
 
           Utils.hideLoading();
@@ -434,11 +522,14 @@ export function viewer(options) {
    * @returns Promise
    */
   function requestGrid(grid) {
-    return d3Fetch.csv(grid.url).then(
+    return d3.csv(grid.url).then(
       csv => {
         //validate csv
-        if (csv[0].x && csv[0].y && csv[0][viewer.colorColumn_]) {
-          console.log("Cells:" + csv.length)
+        if (csv[0].x && csv[0].y && csv[0][viewer.colorField_]) {
+          viewer.cellCount = csv.length;
+          if (viewer.cellCount_) {
+            addCellCountToDOM();
+          }
           addGridToCache(csv, grid.cellSize);
         } else {
           return console.error(
@@ -460,13 +551,13 @@ export function viewer(options) {
     if (csv) {
       for (let i = 0; i < csv.length; i++) {
         let position = [csv[i].x, csv[i].y];
-        let value = csv[i][viewer.colorColumn_];
+        let value = csv[i][viewer.colorField_];
         let point = {
           position,
           value
         };
         if (!gridCaches[res]) gridCaches[res] = [];
-        gridCaches[res].push(point);
+        gridCaches[res].push(csv[i]);
       }
     }
   }
@@ -474,15 +565,18 @@ export function viewer(options) {
   //any scale accepted by d3-legend.susielu.com
   function defineColorScale() {
     if (viewer.colors_ && viewer.thresholdValues_) {
-      return d3Scale
+      return d3
         .scaleThreshold()
         .domain(viewer.thresholdValues_)
         .range(viewer.colors_);
     } else {
+      let domain;
       if (viewer.colorScaleFunction_ == "scaleDiverging") {
-        return d3Scale[viewer.colorScaleFunction_](d3ScaleChromatic[viewer.colorScheme_]).domain([viewer.valuesExtent[0], 0, viewer.valuesExtent[1]])
+        domain = [viewer.valuesExtent[0], 0, viewer.valuesExtent[1]];
+        return d3[viewer.colorScaleFunction_](domain, d3[viewer.colorScheme_])
       } else {
-        return d3Scale[viewer.colorScaleFunction_](d3ScaleChromatic[viewer.colorScheme_]).domain(viewer.valuesExtent)
+        domain = viewer.valuesExtent;
+        return d3[viewer.colorScaleFunction_](domain, d3[viewer.colorScheme_])
       }
     }
   }
@@ -490,7 +584,7 @@ export function viewer(options) {
 
   function defineSizeScale() {
     //default scale
-    let func = d3Scale[viewer.sizeScaleFunction];
+    let func = d3[viewer.sizeScaleFunction];
     return func().domain(viewer.valuesExtent).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
   }
 
@@ -500,12 +594,12 @@ export function viewer(options) {
    * @param {*} url
    */
   function loadBordersJson(url) {
-    d3Fetch.json(url).then(
+    d3.json(url).then(
       json => {
         let newArray;
         if (viewer.nuts2jsonCountry_) {
           newArray = json.objects.nutsrg.geometries.filter((v, i) => {
-            return v.properties.id == viewer.nuts2jsonCountry_; //omit Turkey
+            return v.properties.id.indexOf(viewer.nuts2jsonCountry_) !== -1; //apply user-defined filter
           });
         } else {
           newArray = json.objects.nutsrg.geometries.filter((v, i) => {
@@ -514,7 +608,7 @@ export function viewer(options) {
         }
         json.objects.nutsbn.geometries = newArray;
         let features = TopoJSON.feature(json, json.objects.nutsbn).features;
-        addBoundariesToScene(features);
+        addBordersToScene(features);
       },
       err => {
         console.error(err);
@@ -527,12 +621,12 @@ export function viewer(options) {
    *
    * @param {*} features
    */
-  function addBoundariesToScene(features) {
+  function addBordersToScene(features) {
     let coords = [];
     let initial = true;
     if (!boundariesGroup) {
       boundariesGroup = new Group();
-      boundariesGroup.renderOrder = 999; //always on top
+      boundariesGroup.renderOrder = 999; //always on top of grid
     } else {
       //empty current boundaries group
       for (var i = boundariesGroup.children.length - 1; i >= 0; i--) {
@@ -603,6 +697,112 @@ export function viewer(options) {
     }
   }
 
+
+  viewer.addGeoJson = function (url) {
+    d3.json(url).then(
+      res => {
+        if (res.features) {
+          if (res.features.length > 0) {
+            addGeoJsonToScene(res.features);
+          }
+        }
+      },
+      err => {
+        console.error(err);
+      }
+    );
+  }
+
+  /**
+   * Add geojson to three.js scene
+   *
+   * @param {*} features //Geojson features
+   * 
+   */
+  function addGeoJsonToScene(features) {
+    let geojsonGroup = new Group();
+    geojsonGroup.renderOrder = 999; //always on top of grid
+    // GEOJSON to ThreeJS
+    for (let i = 0; i < features.length; i++) {
+      let feature = features[i];
+      let coords = [];
+      for (let c = 0; c < feature.geometry.coordinates.length; c++) {
+        if (feature.geometry.type == "Polygon") {
+          let coords = [];
+          for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
+            let xyz;
+            if (viewer.zerosRemoved_) {
+              let d = Number('1E' + viewer.zerosRemoved_);
+              xyz = {
+                x: feature.geometry.coordinates[c][s][0] / d,
+                y: feature.geometry.coordinates[c][s][1] / d,
+                z: CONSTANTS.line_z
+              };
+            } else {
+              xyz = {
+                x: feature.geometry.coordinates[c][s][0],
+                y: feature.geometry.coordinates[c][s][1],
+                z: CONSTANTS.line_z
+              };
+            }
+
+            coords.push(xyz);
+          }
+          geojsonGroup.add(createLineFromCoords(coords));
+        } else if (feature.geometry.type == "MultiPolygon") {
+          for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
+            //each polygon in multipolygon:
+            let coords = [];
+            for (
+              let m = 0;
+              m < feature.geometry.coordinates[c][s].length;
+              m++
+            ) {
+              let xyz;
+              if (viewer.zerosRemoved_) {
+                let d = Number('1E' + viewer.zerosRemoved_);
+                xyz = {
+                  x: feature.geometry.coordinates[c][s][m][0] / d,
+                  y: feature.geometry.coordinates[c][s][m][1] / d,
+                  z: CONSTANTS.line_z
+                };
+              } else {
+                xyz = {
+                  x: feature.geometry.coordinates[c][s][m][0],
+                  y: feature.geometry.coordinates[c][s][m][1],
+                  z: CONSTANTS.line_z
+                };
+              }
+              coords.push(xyz);
+            }
+            geojsonGroup.add(createLineFromCoords(coords));
+          }
+        } else if (feature.geometry.type == "LineString") {
+          let xyz;
+          if (viewer.zerosRemoved_) {
+            let d = Number('1E' + viewer.zerosRemoved_);
+            xyz = {
+              x: feature.geometry.coordinates[c][0] / d,
+              y: feature.geometry.coordinates[c][1] / d,
+              z: CONSTANTS.line_z
+            };
+          } else {
+            xyz = {
+              x: feature.geometry.coordinates[c][0],
+              y: feature.geometry.coordinates[c][1],
+              z: CONSTANTS.line_z
+            };
+          }
+          coords.push(xyz);
+        }
+      }
+      if (feature.geometry.type = "LineString") {
+        geojsonGroup.add(createLineFromCoords(coords));
+      }
+    }
+    viewer.scene.add(geojsonGroup);
+  }
+
   /**
    * Build threejs line geometry from world coords
    *
@@ -631,22 +831,11 @@ export function viewer(options) {
   }
 
 
-  /**
-   * Color scheme dropdown event handler
-   *
-   * @param {*} scheme
-   */
-  function onChangeColorScheme(scheme) {
-    viewer.colorScheme_ = scheme;
-    viewer.colorScale_ = defineColorScale();
-    updatePointsColors();
-    if (viewer.legend_) {
-      updateLegend();
-    }
-  }
-
   function updateColorScale() {
-
+    viewer.colorScale_ = defineColorScale();
+  }
+  function updateSizeScale() {
+    viewer.sizeScale_ = defineSizeScale();
   }
   /**
    * rebuild color array
@@ -655,7 +844,7 @@ export function viewer(options) {
   function updatePointsColors() {
     let colors = [];
     for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
-      let hex = viewer.colorScale_(gridCaches[viewer.resolution_][i].value); //d3 scale-chromatic
+      let hex = viewer.colorScale_(gridCaches[viewer.resolution_][i][viewer.colorField_]); //d3 scale-chromatic
       if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
       }
@@ -668,6 +857,25 @@ export function viewer(options) {
       "color",
       new Float32BufferAttribute(colors, 3)
     );
+    pointsGeometry.computeBoundingSphere();
+    points.geometry = pointsGeometry;
+  }
+
+  /**
+   * rebuild size array
+   *
+   */
+  function updatePointsSizes() {
+    let sizes = [];
+    for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
+      if (viewer.sizeField_ && viewer.sizeField_ !== "null") {
+        sizes.push(viewer.sizeScale_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
+      } else {
+        sizes.push(gridConfig.point_size);
+      }
+    }
+    //update sizes
+    pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
     pointsGeometry.computeBoundingSphere();
     points.geometry = pointsGeometry;
   }
@@ -690,14 +898,14 @@ export function viewer(options) {
     for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
       // Set vector coordinates from data
       let coords = [
-        gridCaches[viewer.resolution_][i].position[0],
-        gridCaches[viewer.resolution_][i].position[1]
+        gridCaches[viewer.resolution_][i].x,
+        gridCaches[viewer.resolution_][i].y
       ];
       let x = parseFloat(coords[0]);
       let y = parseFloat(coords[1]);
       let z = CONSTANTS.point_z;
-      let indicator = gridCaches[viewer.resolution_][i].value;
-      let hex = viewer.colorScale_(indicator); //d3 scale-chromatic
+      let indicator = gridCaches[viewer.resolution_][i][viewer.colorField_];
+      let hex = viewer.colorScale_(parseFloat(indicator)); //d3 scale-chromatic
       if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
       }
@@ -711,8 +919,8 @@ export function viewer(options) {
         let blk = new Color("#000");
         colors.push(blk.r, blk.g, blk.b)
       }
-      if (viewer.sizeColumn_) {
-        sizes.push(viewer.sizeScale_(indicator));
+      if (viewer.sizeField_) {
+        sizes.push(viewer.sizeScale_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
       } else {
         sizes.push(gridConfig.point_size);
       }
@@ -959,26 +1167,149 @@ export function viewer(options) {
       }
     ];
     let dropdown_container = document.createElement("div");
-    dropdown_container.id = "gridviz-dropdown-container";
-    dropdown_container.classList.add("gridviz-plugin");
-    schemesSelect = document.createElement("select");
-    schemesSelect.id = "schemes";
+    dropdown_container.id = "gridviz-colorscheme-dropdown-container";
+    dropdown_container.classList.add("gridviz-dropdown");
+    viewer.schemesSelect = document.createElement("select");
+    viewer.schemesSelect.id = "schemes";
     let label = document.createElement("label");
     label.for = "schemes";
     label.classList.add("gridviz-dropdown-label");
-    label.innerText = "Colour Scheme: ";
+    label.innerText = "Colour scheme: ";
 
     for (let i = 0; i < schemes.length; i++) {
       let scheme = schemes[i];
       let option = document.createElement("option");
       option.value = scheme.value;
       option.innerText = scheme.innerText;
-      schemesSelect.appendChild(option);
+      viewer.schemesSelect.appendChild(option);
     }
-    schemesSelect.value = viewer.colorScheme_;
+    viewer.schemesSelect.value = viewer.colorScheme_;
     dropdown_container.appendChild(label);
-    dropdown_container.appendChild(schemesSelect);
-    viewer.container_.appendChild(dropdown_container);
+    dropdown_container.appendChild(viewer.schemesSelect);
+    viewer.selectorsContainer.appendChild(dropdown_container);
+  }
+
+
+  /**
+   * Creates an HTML Select element for the different D3 Scale functions used to generate the colours
+   * Accepted: scaleSequential or scaleDiverging & their respective variants
+   */
+  function createColorScaleDropdown() {
+    let scales = [
+      {
+        value: "scaleSequential",
+        innerText: "Sequential"
+      },
+      {
+        value: "scaleSequentialLog",
+        innerText: "Sequential logarithmic"
+      },
+      {
+        value: "scaleSequentialPow",
+        innerText: "Sequential exponential"
+      },
+      {
+        value: "scaleSequentialSqrt",
+        innerText: "Sequential square-root "
+      },
+      {
+        value: "scaleSequentialQuantile",
+        innerText: "Sequential quantile"
+      },
+    ];
+    let dropdown_container = document.createElement("div");
+    dropdown_container.id = "gridviz-colorscale-dropdown-container";
+    dropdown_container.classList.add("gridviz-dropdown");
+    viewer.colorScaleSelect = document.createElement("select");
+    viewer.colorScaleSelect.id = "scales";
+    let label = document.createElement("label");
+    label.for = "scales";
+    label.classList.add("gridviz-dropdown-label");
+    label.innerText = viewer.colorScaleSelectorLabel_;
+
+    for (let i = 0; i < scales.length; i++) {
+      let scale = scales[i];
+      let option = document.createElement("option");
+      option.value = scale.value;
+      option.innerText = scale.innerText;
+      viewer.colorScaleSelect.appendChild(option);
+    }
+    viewer.colorScaleSelect.value = viewer.colorScaleFunction_;
+    dropdown_container.appendChild(label);
+    dropdown_container.appendChild(viewer.colorScaleSelect);
+    viewer.selectorsContainer.appendChild(dropdown_container);
+    addChangeEventToColorScaleDropdown();
+  }
+
+  /**
+ * Creates an HTML Select element which allows the user to select the csv field used for colouring(colorField)
+ *
+ */
+  function createColorFieldDropdown() {
+    let dropdown_container = document.createElement("div");
+    dropdown_container.id = "gridviz-colorfield-dropdown-container";
+    dropdown_container.classList.add("gridviz-dropdown");
+    viewer.colorFieldSelect = document.createElement("select");
+    viewer.colorFieldSelect.id = "colorFields";
+    let label = document.createElement("label");
+    label.for = "colorFields";
+    label.classList.add("gridviz-dropdown-label");
+    label.innerText = viewer.colorFieldSelectorLabel_;
+
+    let fields = Object.keys(gridCaches[viewer.resolution_][0]);
+    for (let i = 0; i < fields.length; i++) {
+      let field = fields[i];
+      if (field.toLowerCase() !== "x" && field.toLowerCase() !== "y" && field !== "color") {
+        let option = document.createElement("option");
+        option.value = field;
+        option.innerText = field;
+        viewer.colorFieldSelect.appendChild(option);
+      }
+    }
+    viewer.colorFieldSelect.value = viewer.colorField_;
+    dropdown_container.appendChild(label);
+    dropdown_container.appendChild(viewer.colorFieldSelect);
+    viewer.selectorsContainer.appendChild(dropdown_container);
+    addChangeEventToColorFieldDropdown();
+  }
+
+
+  /**
+* Creates an HTML Select element which allows the user to select the csv field used for sizing the cells (sizeField)
+*
+*/
+  function createSizeFieldDropdown() {
+    let dropdown_container = document.createElement("div");
+    dropdown_container.id = "gridviz-sizefield-dropdown-container";
+    dropdown_container.classList.add("gridviz-dropdown");
+    viewer.sizeFieldSelect = document.createElement("select");
+    viewer.sizeFieldSelect.id = "sizeFields";
+    let label = document.createElement("label");
+    label.for = "sizeFields";
+    label.classList.add("gridviz-dropdown-label");
+    label.innerText = viewer.sizeFieldSelectorLabel_;
+
+    let fields = Object.keys(gridCaches[viewer.resolution_][0]);
+    for (let i = 0; i < fields.length; i++) {
+      let field = fields[i];
+      if (field.toLowerCase() !== "x" && field.toLowerCase() !== "y" && field !== "color") {
+        let option = document.createElement("option");
+        option.value = field;
+        option.innerText = field;
+        viewer.sizeFieldSelect.appendChild(option);
+      }
+    }
+    //option for not using sizing
+    let option = document.createElement("option");
+    option.value = null;
+    option.innerText = "none";
+    viewer.sizeFieldSelect.appendChild(option);
+    //set initial value
+    viewer.sizeFieldSelect.value = viewer.sizeField_;
+    dropdown_container.appendChild(label);
+    dropdown_container.appendChild(viewer.sizeFieldSelect);
+    viewer.selectorsContainer.appendChild(dropdown_container);
+    addChangeEventToSizeFieldDropdown()
   }
 
   /**
@@ -986,27 +1317,36 @@ export function viewer(options) {
    *
    */
   function createLegend() {
+    if (viewer.legend_.type == "cells") {
+      createCellsLegend()
+    } else if (viewer.legend_.type == "continuous") {
+      createContinuousLegend()
+    }
+
+  }
+
+  function createCellsLegend() {
     let legendContainer;
     if (document.getElementById("gridviz-legend")) {
-      legendContainer = d3Selection.select("#gridviz-legend");
+      legendContainer = d3.select("#gridviz-legend");
     } else {
-      legendContainer = d3Selection.create("svg").attr("id", "gridviz-legend");
+      legendContainer = d3.create("svg").attr("id", "gridviz-legend");
       viewer.container_.appendChild(legendContainer.node());
     }
-    if (viewer.legend.orientation == "horizontal") {
+    if (viewer.legend_.orientation == "horizontal") {
       legendContainer.attr("class", "gridviz-legend-horizontal gridviz-plugin");
     } else {
       legendContainer.attr("class", "gridviz-legend-vertical gridviz-plugin");
     }
     let legend = legendContainer
       .append("g")
-      .attr("class", "legendSqrt")
+      .attr("class", "gridviz-legend-svg")
       .attr("transform", "translate(10,15)"); //padding
 
     gridLegend = LEGEND.legendColor()
       .shapeWidth(viewer.legend_.shapeWidth)
       .cells(viewer.legend_.cells)
-      .labelFormat(viewer.legend_.format)
+      .labelFormat(d3.format(viewer.legend_.format))
       .orient(viewer.legend_.orientation)
       .scale(viewer.colorScale_)
       .title(viewer.legend_.title)
@@ -1016,13 +1356,202 @@ export function viewer(options) {
       gridLegend.labels(thresholdLabels)
     }
 
-    legendContainer.select(".legendSqrt").call(gridLegend);
+    legendContainer.select(".gridviz-legend-svg").call(gridLegend);
 
     //adjust width/height
     legendContainer.style("height", viewer.legend_.height + "px");
     legendContainer.style("width", viewer.legend_.width + "px");
     //legend.style("height", viewer.legend_.height +"px");
+  }
 
+  //https://observablehq.com/@gabgrz/color-legend
+  function createContinuousLegend() {
+    let container;
+    if (document.getElementById("gridviz-legend")) {
+      container = d3.select("#gridviz-legend");
+    } else {
+      container = d3.create("div").attr("id", "gridviz-legend");
+      viewer.container_.appendChild(container.node());
+    }
+    //title
+    // let titleDiv = document.createElement("div");
+    // titleDiv.innerHTML = viewer.legend_.title;
+    // titleDiv.classList.add("continuous-legend-title")
+    // container.node().appendChild(titleDiv);
+
+    let legend = colorLegend({
+      color: viewer.colorScale_,
+      title: viewer.legend_.title,
+      tickFormat: ".0f"
+    });
+
+    container.node().appendChild(legend);
+
+    // const colourScale = d3
+    // 	.scaleSequential(d3.interpolateViridis)
+    // 	.domain([0, 22]);
+    // const domain = viewer.colorScale_.domain();
+    // let width = 100;
+    // let height = 150;
+    // const paddedDomain = fc.extentLinear()
+    //   .pad([0.1, 0.1])
+    //   .padUnit("percent")(domain);
+    // const [min, max] = paddedDomain;
+    // let expandedDomain = d3.range(min, max, (max - min) / height);
+    // const xScale = d3
+    //   .scaleBand()
+    //   .domain([0, 1])
+    //   .range([0, width]);
+    // const yScale = d3
+    //   .scaleLinear()
+    //   .domain(paddedDomain)
+    //   .range([height, 0]);
+    // const svgBar = fc
+    //   .autoBandwidth(fc.seriesSvgBar())
+    //   .xScale(xScale)
+    //   .yScale(yScale)
+    //   .crossValue(0)
+    //   .baseValue((_, i) => (i > 0 ? expandedDomain[i - 1] : 0))
+    //   .mainValue(d => d)
+    //   .decorate(selection => {
+    //     selection.selectAll("path").style("fill", d => viewer.colorScale_(d));
+    //   });
+    // const axisLabel = fc
+    //   .axisRight(yScale)
+    //   .tickValues([...domain, (domain[1] + domain[0]) / 2])
+    //   .tickSizeOuter(0)
+    // const legendSvg = container.append("svg")
+    //   .attr("height", height)
+    //   .attr("width", width)
+    //   .attr("class", "gridviz-legend-svg")
+    // const legendBar = legendSvg
+    //   .append("g")
+    //   .datum(expandedDomain)
+    //   .call(svgBar);
+    // const barWidth = Math.abs(legendBar.node().getBoundingClientRect().x);
+    // console.log("bar", barWidth);
+    // legendSvg.append("g")
+    //   .attr("class", "gridviz-legend-axis")
+    //   .attr("transform", `translate(${barWidth + 20})`)
+    //   .datum(expandedDomain)
+    //   .call(axisLabel)
+    //   .selectAll(".tick")
+    //   .attr("class", "legend-tick")
+    // container.style("margin", "1em");
+
+  }
+  function ramp(color, n = 256) {
+    const canvas = document.createElement("CANVAS")
+    canvas.width = n;
+    canvas.height = 1;
+    const context = canvas.getContext("2d");
+    for (let i = 0; i < n; ++i) {
+      context.fillStyle = color(i / (n - 1));
+      context.fillRect(i, 0, 1, 1);
+    }
+    return canvas;
+  }
+
+  function colorLegend({
+    color,
+    title,
+    tickSize = 6,
+    width = 500,
+    height = 44 + tickSize,
+    marginTop = 18,
+    marginRight = 0,
+    marginBottom = 16 + tickSize,
+    marginLeft = 0,
+    ticks = width / 64,
+    tickFormat,
+    tickValues
+  } = {}) {
+
+    const svg = d3.create("svg")
+      .attr("class", "gridviz-legend-svg")
+      // .attr("class", "gridviz-continuous-legend")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", [0, 0, width, height])
+      .style("overflow", "visible")
+      .style("display", "block");
+
+    let x;
+
+    // Continuous
+    if (color.interpolator) {
+      x = Object.assign(color.copy()
+        .interpolator(d3.interpolateRound(marginLeft, width - marginRight)),
+        { range() { return [marginLeft, width - marginRight]; } });
+
+      svg.append("image")
+        .attr("x", marginLeft)
+        .attr("y", marginTop)
+        .attr("width", width - marginLeft - marginRight)
+        .attr("height", height - marginTop - marginBottom)
+        .attr("preserveAspectRatio", "none")
+        .attr("xlink:href", ramp(color.interpolator()).toDataURL());
+
+      // scaleSequentialQuantile doesn’t implement ticks or tickFormat.
+      if (!x.ticks) {
+        if (tickValues === undefined) {
+          const n = Math.round(ticks + 1);
+          tickValues = d3.range(n).map(i => d3.quantile(color.domain(), i / (n - 1)));
+        }
+        if (typeof tickFormat !== "function") {
+          tickFormat = d3.format(tickFormat === undefined ? ",f" : tickFormat);
+        }
+      }
+    }
+
+    // Discrete
+    else if (color.invertExtent) {
+      const thresholds
+        = color.thresholds ? color.thresholds() // scaleQuantize
+          : color.quantiles ? color.quantiles() // scaleQuantile
+            : color.domain(); // scaleThreshold
+
+      const thresholdFormat
+        = tickFormat === undefined ? d => d
+          : typeof tickFormat === "string" ? d3.format(tickFormat)
+            : tickFormat;
+
+      x = d3.scaleLinear()
+        .domain([-1, color.range().length - 1])
+        .rangeRound([marginLeft, width - marginRight]);
+
+      svg.append("g")
+        .selectAll("rect")
+        .data(color.range())
+        .join("rect")
+        .attr("x", (d, i) => x(i - 1))
+        .attr("y", marginTop)
+        .attr("width", (d, i) => x(i) - x(i - 1))
+        .attr("height", height - marginTop - marginBottom)
+        .attr("fill", d => d);
+
+      tickValues = d3.range(thresholds.length);
+      tickFormat = i => thresholdFormat(thresholds[i], i);
+    }
+
+    svg.append("g")
+      .attr("transform", `translate(0, ${height - marginBottom})`)
+      .call(d3.axisBottom(x)
+        .ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined)
+        .tickFormat(typeof tickFormat === "function" ? tickFormat : undefined)
+        .tickSize(tickSize)
+        .tickValues(tickValues))
+      .call(g => g.selectAll(".tick line").attr("y1", marginTop + marginBottom - height))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.append("text")
+        .attr("y", marginTop + marginBottom - height - 10)
+        .attr("fill", "currentColor")
+        .attr("text-anchor", "start")
+        .attr("font-weight", "bold")
+        .attr("class", "gridviz-continuous-legend-title")
+        .text(title));
+
+    return svg.node();
   }
 
   function thresholdLabels({
@@ -1046,7 +1575,7 @@ export function viewer(options) {
    *
    */
   function updateLegend() {
-    var l = d3Selection.selectAll(".legendSqrt").remove();
+    var l = d3.selectAll(".gridviz-legend-svg").remove();
     setTimeout(createLegend(), 1000);
   }
 
@@ -1067,10 +1596,96 @@ export function viewer(options) {
    * Add change event to color-scheme selector
    *
    */
-  function addChangeEventToColorDropdown() {
-    schemesSelect.addEventListener("change", function (e) {
+  function addChangeEventToColorSchemeDropdown() {
+    viewer.schemesSelect.addEventListener("change", function (e) {
       onChangeColorScheme(e.currentTarget.value);
     });
+  }
+
+  /**
+ * Color scheme dropdown event handler
+ *
+ * @param {*} scheme
+ */
+  function onChangeColorScheme(scheme) {
+    viewer.colorScheme_ = scheme;
+    viewer.colorScale_ = defineColorScale();
+    updatePointsColors();
+    if (viewer.legend_) {
+      updateLegend();
+    }
+  }
+
+  /**
+ * Add change event to color-field selector
+ *
+ */
+  function addChangeEventToColorFieldDropdown() {
+    viewer.colorFieldSelect.addEventListener("change", function (e) {
+      onChangeColorField(e.currentTarget.value);
+    });
+  }
+
+  /**
+ * Color csv field dropdown event handler
+ *
+ * @param {*} field
+ */
+  function onChangeColorField(field) {
+    viewer.colorField_ = field;
+    updatePointsColors();
+    if (viewer.legend_) {
+      updateLegend();
+    }
+  }
+
+  /**
+* Add change event to color-scale selector
+*
+*/
+  function addChangeEventToColorScaleDropdown() {
+    viewer.colorScaleSelect.addEventListener("change", function (e) {
+      onChangeColorScale(e.currentTarget.value);
+    });
+  }
+
+  /**
+  * Color scale dropdown event handler
+  *
+  * @param {*} scale
+  */
+  function onChangeColorScale(scale) {
+    viewer.colorScaleFunction_ = scale;
+    updateColorScale();
+    updatePointsColors();
+    if (viewer.legend_) {
+      updateLegend();
+    }
+  }
+
+
+  /**
+* Add change event to siz-field selector
+*
+*/
+  function addChangeEventToSizeFieldDropdown() {
+    viewer.sizeFieldSelect.addEventListener("change", function (e) {
+      onChangeSizeField(e.currentTarget.value);
+    });
+  }
+
+  /**
+  * Color csv field dropdown event handler
+  *
+  * @param {*} field
+  */
+  function onChangeSizeField(field) {
+    viewer.sizeField_ = field;
+    updateSizeScale();
+    updatePointsSizes();
+    if (viewer.legend_) {
+      updateLegend();
+    }
   }
 
   function createTooltipContainer() {
@@ -1080,7 +1695,7 @@ export function viewer(options) {
     };
 
     tooltipTemplate = document.createRange()
-      .createContextualFragment(`<div id="tooltip" style="display: none; position: absolute; pointer-events: none; z-index:999; border-radius:5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); font-size: 13px; width: 120px; text-align: center; line-height: 1; padding: 6px; background: white; font-family: sans-serif;">
+      .createContextualFragment(`<div id="tooltip" style="display: none; position: absolute; pointer-events: none; z-index:999; border-radius:5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); font-size: 13px; text-align: center; line-height: 1; padding: 6px; background: white; font-family: sans-serif;">
     <div id="labelTip" style="padding: 4px; margin-bottom: 4px;"></div>
 <div id="pointTip" style="padding: 4px; margin-bottom: 4px;"></div>
 </div>`);
@@ -1096,7 +1711,7 @@ export function viewer(options) {
   function addMouseEventsToView() {
     // show population value on click
     view.on("click", () => {
-      let [mouseX, mouseY] = d3Selection.mouse(view.node());
+      let [mouseX, mouseY] = d3.mouse(view.node());
       let mouse_position = [mouseX, mouseY];
       checkIntersects(mouse_position);
       //console.log("Camera pos:", camera.position);
@@ -1107,28 +1722,28 @@ export function viewer(options) {
     });
   }
 
-  //taken from observableHQ & works on mobile:
-  function setUpZoom() {
-    let d3_zoom = d3Zoom.zoom()
-      .scaleExtent([getScaleFromZ1(viewer.camera.far_), getScaleFromZ1(viewer.camera.near_)])
+  //functions taken from observableHQ & work on mobile:
+  function setUpZoomMobile() {
+    let d3_zoom = d3.zoom()
+      .scaleExtent([getScaleFromZMobile(viewer.camera.far_), getScaleFromZMobile(viewer.camera.near_)])
       .on('zoom', () => {
-        let d3_transform = d3Selection.event.transform;
-        zoomHandler1(d3_transform);
+        let d3_transform = d3.event.transform;
+        zoomHandlerMobile(d3_transform);
       });
     view.call(d3_zoom);
-    let initial_scale = getScaleFromZ1(viewer.camera.far_);
-    var initial_transform = d3Zoom.zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
+    let initial_scale = getScaleFromZMobile(viewer.camera.far_);
+    var initial_transform = d3.zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
     d3_zoom.transform(view, initial_transform);
     camera.position.set(0, 0, viewer.camera.far_);
   }
-  function zoomHandler1(d3_transform) {
+  function zoomHandlerMobile(d3_transform) {
     let scale = d3_transform.k;
     let x = -(d3_transform.x - viewer.width_ / 2) / scale;
     let y = (d3_transform.y - viewer.height_ / 2) / scale;
-    let z = getZFromScale1(scale);
+    let z = getZFromScaleMobile(scale);
     camera.position.set(x, y, z);
   }
-  function getScaleFromZ1(camera_z_position) {
+  function getScaleFromZMobile(camera_z_position) {
     let half_fov = viewer.camera.fov_ / 2;
     let half_fov_radians = toRadians(half_fov);
     let half_fov_height = Math.tan(half_fov_radians) * camera_z_position;
@@ -1136,7 +1751,7 @@ export function viewer(options) {
     let scale = viewer.height_ / fov_height; // Divide visualization height by height derived from field of view
     return scale;
   }
-  function getZFromScale1(scale) {
+  function getZFromScaleMobile(scale) {
     let half_fov = viewer.camera.fov_ / 2;
     let half_fov_radians = toRadians(half_fov);
     let scale_height = viewer.height_ / scale;
@@ -1146,33 +1761,30 @@ export function viewer(options) {
 
   //taken from elsewhere & DOESNT work on mobile:
   // add d3's zoom
-
   function addPanAndZoom() {
     // define zoom
     //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
-    let farScale = getScaleFromZ1(viewer.camera.far_);
-    let nearScale = getScaleFromZ1(viewer.camera.near_);
-    let zoom = d3Zoom
+    let farScale = getScaleFromZMobile(viewer.camera.far_);
+    let nearScale = getScaleFromZMobile(viewer.camera.near_);
+    viewer.zoom = d3
       .zoom()
       .scaleExtent([farScale, nearScale])
       .on("zoom", () => {
-        let event = d3Selection.event;
+        let event = d3.event;
         if (event) zoomHandler(event);
       })
       .on("end", () => {
-        let event = d3Selection.event;
+        let event = d3.event;
         if (event) zoomEnd(event);
       });
-    view.call(zoom);
+    view.call(viewer.zoom);
 
-    let initial_scale = getScaleFromZ1(viewer.camera.zoom_);
-    var initial_transform = d3Zoom.zoomIdentity
+    let initial_scale = getScaleFromZMobile(viewer.camera.zoom_);
+    var initial_transform = d3.zoomIdentity
       .translate(viewer.width_ / 2, viewer.height_ / 2)
       .scale(initial_scale);
-    zoom.transform(view, initial_transform);
-
+    viewer.zoom.transform(view, initial_transform);
     //initial camera position
-
     //camera.position.set(viewer.center_[0], viewer.center_[1], viewer.camera.zoom_);
   }
 
@@ -1246,6 +1858,9 @@ export function viewer(options) {
   function zoomEnd(event) {
     hideTooltip();
     let scale = getScaleFromZ(event.transform.k);
+    if (viewer.debugPlacenames_) {
+      console.info(scale);
+    }
     // get placenames at certain zoom levels
     if (points) {
       if (scale > 0 && scale < viewer.camera.far_) {
@@ -1261,27 +1876,27 @@ export function viewer(options) {
     if (viewer.nuts2json_) {
       if (
         scale < CONSTANTS.nuts_scale_threshold &&
-        nuts_simplification !== "10M"
+        viewer.nuts_simplification_ !== "10M"
       ) {
-        nuts_simplification = "10M";
+        viewer.nuts_simplification_ = "10M";
         loadBordersJson(
           CONSTANTS.nuts_base_URL +
           viewer.nuts2jsonEPSG_ +
           "/" +
-          nuts_simplification +
-          "/0.json"
+          viewer.nuts_simplification_ +
+          "/" + viewer.nutsLevel_ + ".json"
         );
       } else if (
         scale > CONSTANTS.nuts_scale_threshold &&
-        nuts_simplification !== "20M"
+        viewer.nuts_simplification_ !== "20M"
       ) {
-        nuts_simplification = "20M";
+        viewer.nuts_simplification_ = "20M";
         loadBordersJson(
           CONSTANTS.nuts_base_URL +
           viewer.nuts2jsonEPSG_ +
           "/" +
-          nuts_simplification +
-          "/0.json"
+          viewer.nuts_simplification_ +
+          "/" + viewer.nutsLevel_ + ".json"
         );
       }
     }
@@ -1312,11 +1927,11 @@ export function viewer(options) {
       envelope.xmax +
       "," +
       envelope.ymax +
-      "&geometryType=esriGeometryEnvelope&f=json&outFields=city_town_name,POPL_2011&resultRecordCount=200";
+      "&geometryType=esriGeometryEnvelope&f=json&outFields=GISREGIO.CITIES_TOWNS_RG.STTL_NAME,GISREGIO.CITIES_TOWNS_RG.POPL_2011";
 
     //manage multiple calls by replicating angular's .unsubscribe() somehow
     let uri = encodeURI(URL);
-    d3Fetch.json(uri).then(
+    d3.json(uri).then(
       res => {
         if (res.features) {
           if (res.features.length > 0) {
@@ -1335,35 +1950,70 @@ export function viewer(options) {
     let r = viewer.resolution_;
     let where = "";
     if (viewer.placenamesCountry_) {
-      where = where + "CNTR_CODE='" + viewer.placenamesCountry_ + "' AND "
+      where = where + "GISREGIO.CITIES_TOWNS_RG.CNTR_CODE='" + viewer.placenamesCountry_ + "' AND "
     }
-    // labelling thresholds
-    if (scale > 0 && scale < r) {
-      return where + "POPL_2011>10";
-    } else if (scale > r && scale < r * 2) {
-      return where + "POPL_2011>1000";
-    } else if (scale > r * 2 && scale < r * 4) {
-      return where + "POPL_2011>2500";
-    } else if (scale > r * 4 && scale < r * 8) {
-      return where + "POPL_2011>5000";
-    } else if (scale > r * 8 && scale < r * 16) {
-      return where + "POPL_2011>7500";
-    } else if (scale > r * 16 && scale < r * 32) {
-      return where + "POPL_2011>10000";
-    } else if (scale > r * 32 && scale < r * 64) {
-      return where + "POPL_2011>20000";
-    } else if (scale > r * 64 && scale < r * 128) {
-      return where + "POPL_2011>100000";
-    } else if (scale > r * 128 && scale < r * 256) {
-      return where + "POPL_2011>250000";
-    } else if (scale > r * 256 && scale < r * 512) {
-      return where + "POPL_2011>500000";
-    } else if (scale > r * 512 && scale < r * 1024) {
-      return where + "POPL_2011>750000";
-    } else if (scale > r * 1024) {
-      return where + "POPL_2011>1000000";
+    // labelling thresholds by population - either custom values or by scale
+    let popFilter = getPopulationParameterFromScale(scale)
+    if (viewer.debugPlacenames_) {
+      console.info(popFilter);
+    }
+    return where + popFilter;
+  }
+
+  /**
+   * Defines the population parameter for the request to the placenmes service. If viewer.populationThresholds_ are not set, it uses default thresholds
+   *
+   * @param {*} scale
+   */
+  function getPopulationParameterFromScale(scale) {
+    let populationFieldName = "GISREGIO.CITIES_TOWNS_RG.POPL_2011"
+    //user-defined thresholds
+    if (viewer.placenameThresholds_) {
+      let thresholds = Object.keys(viewer.placenameThresholds_);
+      for (let i = 0; i < thresholds.length; i++) {
+        let t = thresholds[i];
+        if (thresholds[i + 1]) { //if not last threshold
+          if (scale < parseInt(thresholds[0])) { //below first threshold
+            return populationFieldName + ">" + viewer.placenameThresholds_[thresholds[0]];
+          } else if (scale > parseInt(t) && scale < parseInt(thresholds[i + 1])) {
+            // if current scale is between thresholds
+            return populationFieldName + ">" + viewer.placenameThresholds_[t];
+          }
+        } else {
+          // if last threshold
+          return populationFieldName + ">" + viewer.placenameThresholds_[t];
+        }
+      }
     } else {
-      return where + "1=1";
+      //default values
+      let r = viewer.resolution_
+      if (scale > 0 && scale < r) {
+        return populationFieldName + ">10";
+      } else if (scale > r && scale < r * 2) {
+        return populationFieldName + ">1000";
+      } else if (scale > r * 2 && scale < r * 4) {
+        return populationFieldName + ">2500";
+      } else if (scale > r * 4 && scale < r * 8) {
+        return populationFieldName + ">5000";
+      } else if (scale > r * 8 && scale < r * 16) {
+        return populationFieldName + ">7500";
+      } else if (scale > r * 16 && scale < r * 32) {
+        return populationFieldName + ">10000";
+      } else if (scale > r * 32 && scale < r * 64) {
+        return populationFieldName + ">20000";
+      } else if (scale > r * 64 && scale < r * 128) {
+        return populationFieldName + ">100000";
+      } else if (scale > r * 128 && scale < r * 256) {
+        return populationFieldName + ">250000";
+      } else if (scale > r * 256 && scale < r * 512) {
+        return populationFieldName + ">500000";
+      } else if (scale > r * 512 && scale < r * 1024) {
+        return populationFieldName + ">750000";
+      } else if (scale > r * 1024) {
+        return populationFieldName + ">1000000";
+      } else {
+        return "1=1";
+      }
     }
   }
 
@@ -1373,10 +2023,12 @@ export function viewer(options) {
    * @param {*} placenames
    */
   function addPlacenamesToScene(placenames) {
-    for (let p = 0; p < placenames.length; p++) {
-      let label = createPlacenameLabelObject(placenames[p]);
-      // TODO: group objects manually (THREE.group())
-      points.add(label);
+    if (points) {
+      for (let p = 0; p < placenames.length; p++) {
+        let label = createPlacenameLabelObject(placenames[p]);
+        // TODO: group objects manually (THREE.group())
+        points.add(label);
+      }
     }
   }
 
@@ -1385,8 +2037,10 @@ export function viewer(options) {
    * It seems that the browsers JS garbage collector removes the DOM nodes
    */
   function removePlacenamesFromScene() {
-    for (var i = points.children.length - 1; i >= 0; i--) {
-      points.remove(points.children[i]);
+    if (points && points.children.length > 0) {
+      for (var i = points.children.length - 1; i >= 0; i--) {
+        points.remove(points.children[i]);
+      }
     }
   }
 
@@ -1399,7 +2053,7 @@ export function viewer(options) {
   function createPlacenameLabelObject(placename) {
     var placeDiv = document.createElement("div");
     placeDiv.className = "gridviz-placename";
-    placeDiv.textContent = placename.attributes.city_town_name;
+    placeDiv.textContent = placename.attributes["GISREGIO.CITIES_TOWNS_RG.STTL_NAME"];
     placeDiv.style.marginTop = "-1em";
     var placeLabel = new CSS2DObject(placeDiv);
     if (viewer.zerosRemoved_) {
@@ -1506,6 +2160,12 @@ export function viewer(options) {
     );
   }
 
+  function formatNumber(n) {
+    return n
+      .toLocaleString("en")
+      .replace(/,/gi, " ")
+  }
+
   function checkIntersects(mouse_position) {
     let mouse_vector = mouseToThree(...mouse_position);
     raycaster.setFromCamera(mouse_vector, camera);
@@ -1590,7 +2250,7 @@ export function viewer(options) {
     tooltip.style.top = tooltip_state.top + "px";
     //pointTip.innerText = tooltip_state.name;
     pointTip.style.background = tooltip_state.color;
-    labelTip.innerHTML = `<strong>${viewer.colorColumn_}:</strong> ${tooltip_state.name} <br> 
+    labelTip.innerHTML = `<strong>${viewer.colorField_}:</strong> ${formatNumber(tooltip_state.colorValue)} <br> 
   <strong>x:</strong> ${tooltip_state.coords[0]} <br> 
   <strong>y:</strong> ${tooltip_state.coords[1]} <br> `;
   }
@@ -1618,8 +2278,8 @@ export function viewer(options) {
     tooltip_state.display = "block";
     tooltip_state.left = left
     tooltip_state.top = top;
-    tooltip_state.name = cell.value;
-    tooltip_state.coords = cell.position;
+    tooltip_state.colorValue = cell[viewer.colorField_];
+    tooltip_state.coords = [cell.x, cell.y];
     tooltip_state.color = cell.color;
     updateTooltip();
   }

@@ -14,14 +14,14 @@
 <script src="https://d3js.org/d3-format.v1.min.js"></script>
 <script>
     let containerDiv = document.getElementById("viz-container");
-    GridViz.viewer()
+    gridviz.viewer()
         .container(containerDiv)
-        .data([{
+        .gridData([{
             url: "../../assets/csv/France/1km/2015_Ind_80p.csv",
             cellSize: 1000,
             tiled: false
         }])
-        .colorColumn("Ind_80p")  // csv column which you wish to visualize
+        .colorField("Ind_80p")  // csv column which you wish to visualize
         .center([3709000, 2624000])//EPSG=3035
         .height(window.innerHeight)
         .width(window.innerWidth)
@@ -33,11 +33,18 @@
         .nuts2jsonCountry("FR")
         .nuts2jsonEPSG(3035)
         .placenamesCountry("FR")
+        .placenameThresholds({ //"scale": population
+            "1000000": 100000,
+            "300000": 50000,
+            "200000": 30000,
+            "150000": 500,
+            "100000": 100
+        })
         .legend({
             title: "Population over 80 years of age per km² (2015)",
             titleWidth: 150,
             width: 170,
-            format: d3.format(',.0f')
+            format: ',.0f'
         })
         .build()
 </script>

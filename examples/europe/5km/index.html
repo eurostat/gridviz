@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>GridViz Example</title>
+  <title>5km² Grid of Europe</title>
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
 </head>
 
@@ -13,18 +13,22 @@
 <script src="../../../build/gridviz.js"></script>
 <script>
   let containerDiv = document.getElementById("viz-container");
-  GridViz.viewer()
+  let viz = gridviz.viewer()
     .container(containerDiv)
-    .data([
+    .gridData([
       {
-        url: "../../../assets/csv/Europe/5km/3035/pop_2011_3035_5km.csv",
-        cellSize: 5000
+        url: "../../../assets/csv/Europe/5km/3035/pop_grid_5km_incl_uninhab.csv",
+        cellSize: 5
       }
     ])
-    .colorColumn("value")  // csv column which you wish to visualize
+    .zerosRemoved(3)
+    .title("5km² Grid of Europe")
+    .subtitle("With NUTS0 (3M)")
+    .cellCount(true)
+    .colorField("Population")  // csv column which you wish to visualize
     //sizeColumn() "value" // csv column which you wish to visualize
-    .nuts2json(true) //loads borders topojson
-    .center([4369000, 3230000])//EPSG=3035
+    .nuts2json(false) //loads borders topojson
+    .center([4369, 3230])//EPSG=3035
     .height(window.innerHeight)
     .width(window.innerWidth)
     .backgroundColor("#000")
@@ -32,13 +36,19 @@
     .loadingIcon("ellipsis")
     .colorScheme("interpolateTurbo")
     .colorSchemeSelector(true)
+    .colorScaleSelector(true)
+    .colorFieldSelector(true)
+    .sizeFieldSelector(true)
     .legend({
+      type: "continuous",
       height: 350,
       title: "Total population per 5 km² (2011)",
       titleWidth: 130,
       cells: 15
     })
     .build()
+
+  //viz.addGeoJson("../../../assets/geojson/NUTS_BN_03M_2021_3035_LEVL_0.geojson")
 </script>
 
 </html>

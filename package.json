@@ -1,6 +1,6 @@
 {
   "name": "gridviz",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Visualization tool for gridded statistics",
   "main": "build/gridviz.min.js",
   "scripts": {
@@ -30,6 +30,7 @@
   "dependencies": {
     "d3": "^5.14.2",
     "d3-svg-legend": "^2.25.6",
+    "d3fc": "^15.0.8",
     "three": "^0.111.0",
     "topojson": "^3.0.2"
   }

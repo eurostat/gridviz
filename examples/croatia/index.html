@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Croatian Tourism Grid</title>
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+</head>
+
+<body style="margin:0;">
+    <div id="viz-container"></div>
+</body>
+<script src="../../build/gridviz.js"></script>
+<script>
+    let containerDiv = document.getElementById("viz-container");
+    gridviz.viewer()
+        .container(containerDiv)
+        .title("Tourism Grid of Croatia")
+        .gridData([
+            {
+                url: "../../assets/csv/Croatia/croatia_tourism_grid.csv",
+                cellSize: 1000
+            }
+        ])
+        .colorField("NIGHTS_TOT")  // csv column which you wish to visualize
+        .zoom(500000) //initial camera Z value
+        .nuts2json(true) //loads borders topojson
+        .nuts2jsonCountry("HR") //filter nuts2json
+        .placenamesCountry("HR") //filter placenames
+        .placenameThresholds({ //"scale": population
+            "450000": 200000,
+            "200000": 10000,
+            "100000": 5000,
+            "10000": 5000,
+            "1000": 500
+        })
+        .center([4755000, 2369000])//EPSG=3035
+        .height(window.innerHeight)
+        .width(window.innerWidth)
+        .backgroundColor("#000")
+        .borderColor("#ffffff")
+        .colorScheme("interpolatePlasma")
+        .colorScaleFunction("scaleSequentialSqrt") //scaleSequential or scaleDiverging & their respective variants
+        .colorSchemeSelector(true)
+        .colorScaleSelector(true)
+        .colorFieldSelector(true)
+        .colorScaleSelectorLabel("Scale: ")
+        .colorFieldSelectorLabel("Indicator: ")
+        .legend({
+            height: 290,
+            width: 150,
+            title: "Total tourist nights per km² (2017)",
+            titleWidth: 150,
+            cells: 10,
+            format: ',.2r'
+        })
+        .build()
+</script>
+
+</html>

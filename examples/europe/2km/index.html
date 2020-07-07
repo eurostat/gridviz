@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>GridViz Example</title>
+    <title>2km² Grid of Europe</title>
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
 </head>
 
@@ -15,15 +15,15 @@
     let containerDiv = document.getElementById("viz-container");
     GridViz.viewer()
         .container(containerDiv)
-        .data([
+        .gridData([
             {
                 url: "../../../assets/csv/Europe/2km/pop_2km.csv",
                 cellSize: 2.1
             }
         ])
         .zerosRemoved(3) //last 3 zeros were removed from dataset for efficiency
-        .colorColumn("value")  // csv column which you wish to visualize
-        .sizeColumn("value")  // csv column which you wish to visualize
+        .colorField("value")  // csv column which you wish to visualize
+        .sizeField("value")  // csv column which you wish to visualize
         .nuts2json(true) //loads borders topojson
         .center([4369, 3230])//EPSG=3035 with last 3 zeros removed
         .zoom(500)

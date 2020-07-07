@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>GridViz Example</title>
+    <title>1km² Grid of Europe</title>
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
 </head>
 
@@ -13,18 +13,21 @@
 <script src="../../../build/gridviz.js"></script>
 <script>
     let containerDiv = document.getElementById("viz-container");
-    GridViz.viewer()
+    gridviz.viewer()
         .container(containerDiv)
-        .data([
+        .gridData([
             {
                 url: "../../../assets/csv/Europe/1km/pop_1km.csv",
                 cellSize: 1.1
             }
         ])
+        .title("1 km² Grid of Europe")
+        .subtitle("EPSG:3035")
+        .cellCount(true)
         .zerosRemoved(3) //last 3 zeros were removed from dataset to improve efficiency
-        .colorColumn("value")  // csv column which you wish to visualize
-        .sizeColumn("value")  // csv column which you wish to visualize
-        .zoom(200)
+        .colorField("Population")  // csv column which you wish to visualize
+        .sizeField("Population")  // csv column which you wish to visualize
+        // .zoom(200)
         .nuts2json(true) //loads borders topojson
         .center([4369, 3230])//EPSG=3035 with last 3 zeros removed
         .height(window.innerHeight)
@@ -34,6 +37,9 @@
         .colorScheme("interpolateInferno")
         .colorScaleFunction("scaleSequentialSqrt") //scaleSequential or scaleDiverging & their respective variants
         .colorSchemeSelector(true)
+        .colorScaleSelector(true)
+        .colorFieldSelector(true)
+        .sizeFieldSelector(true)
         .legend({
             height: 300,
             title: "Total population per km² (2011)",

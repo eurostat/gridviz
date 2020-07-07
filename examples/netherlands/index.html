@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>GridViz Example</title>
+    <title>Netherlands 100m grid</title>
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
 </head>
 
@@ -11,22 +11,33 @@
     <div id="viz-container"></div>
 </body>
 <script src="../../build/gridviz.js"></script>
-<script src="https://d3js.org/d3-format.v1.min.js"></script>
 <script>
     let containerDiv = document.getElementById("viz-container");
-    GridViz.viewer()
+    gridviz.viewer()
         .container(containerDiv)
-        .data([{
-            url: "../../assets/csv/Netherlands/100m/inwoner_2018.csv",
+        .title("100 x 100m statistics of the Netherlands, 2018")
+        .gridData([{
+            url: "../../assets/csv/Netherlands/100m/NL_census.csv",
             cellSize: 1.1,
             tiled: false
+
         }])
-        .colorColumn("INWONER")  // csv column which you wish to visualize
+        .cellCount(true)
+        .sources("Source: <a target='__blank' href='https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken'>Statistics Netherlands</a>")
+        .colorField("Inhabitants")  // csv column which you wish to visualize
         .zerosRemoved(2)
-        .nuts2json(false) // does not support 28992
+        .nuts2json(false) // does not support 28992 - use method to load custom geojson
+        //.nuts2jsonCountry("NL")
         .center([1421, 4546])//EPSG=28992 with 2 zeros removed
         .placenamesEPSG(28992)
         .placenamesCountry("NL")
+        .placenameThresholds({ //"scale": population
+            "1500": 100000,
+            "1250": 100000,
+            "1000": 50000,
+            "500": 10000,
+            "250": 500
+        })
         .height(window.innerHeight)
         .width(window.innerWidth)
         .backgroundColor("#2b2b2b")
@@ -34,12 +45,15 @@
         .colors(["#2d50a0", "#6487c3", "#aab9e1", "#f0cd91", "#e6a532", "#d76e2d", "red"])
         .thresholdValues([10, 20, 40, 80, 200, 300, 900])
         .colorSchemeSelector(false)
+        .colorFieldSelector(true)
+        .colorFieldSelectorLabel("Indicator: ")
         .legend({
+            type: "cells",
             width: 160,
             height: 220,
             title: "Total Inhabitants per 100m² (2018)",
             titleWidth: 110,
-            format: d3.format(',.0f')
+            format: ',.0f'
         })
         .build()
 </script>

@@ -3,6 +3,42 @@
   margin: 0px;
   font-family: "roboto_condensedbold", Arial, sans-serif;
 }
+.gridviz-headings-container {
+  z-index:999999;
+  position:absolute;
+  top:10px;
+  left:10px;
+  padding:15px;
+}
+.gridviz-title {
+  font-size: 28px;
+  font-weight:bold;
+}
+.gridviz-subtitle {
+  font-size: 20px;
+  font-weight:bold;
+  margin-top:5px;
+}
+.gridviz-cellcount {
+  font-size: 16px;
+  font-weight:bold;
+  margin-top:10px;
+}
+.gridviz-sources {
+  position:absolute;
+  bottom:2%;
+  right:1%;
+  font-size: 12px;
+  font-weight:bold;
+  color:white;
+}
+.gridviz-sources a{
+  color:white;
+}
+.gridviz-sources a:hover{
+  color:lightblue;
+  cursor:pointer;
+}
 
 #loading-gif {
   top: 48%;
@@ -21,7 +57,7 @@
 /* Tooltip text */
 #tooltip #tooltiptext {
   display: none;
-  width: 120px;
+  /* width: 120px; */
   background-color: black;
   color: #fff;
   text-align: center;
@@ -39,7 +75,7 @@
 }
 
 .gridviz-plugin {
-  background-color: #efefef;
+  background-color: #efefefe8;
   color: black;
   fill: black;
   /* border: 2px solid #888888; */
@@ -83,26 +119,33 @@
   background-color: #345881;
 }
 
-#gridviz-btn2km {
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  z-index: 9999;
-}
-
-#gridviz-btn5km {
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  z-index: 9999;
-}
-
 /* LEGEND */
+/* continuous */
+.gridviz-legend-svg{
+  font-size:16px;
+  margin-top: 10px;
+}
+.gridviz-continuous-legend-title{
+  font-size:16px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+.legend-tick text{
+font-size:16px
+}
+.gridviz-legend-axis .domain{
+  visibility:hidden;
+}
+
+/* susie's color legend */
 #gridviz-legend {
   z-index: 9999;
   position: absolute;
   bottom: 10px;
   left: 10px;
+  padding:10px;
+  background:#efefefe8;
   /* font-size: 12px; */
-  opacity:0.8;
 }
 .gridviz-legend-horizontal {
   height: 65px;
@@ -129,14 +172,39 @@ rect.swatch {
   background: rgba(0, 0, 0, 0.6);
 }
 
-/* Color scheme select  */
-#gridviz-dropdown-container {
+/* dropdowns  */
+.gridviz-selectors {
   z-index: 9999;
   position: absolute;
   top: 10px;
   right: 10px;
   padding: 8px;
 }
+.gridviz-dropdown {
+  padding:8px;
+  color: black;
+}
+/* #gridviz-colorscheme-dropdown-container {
+  z-index: 9999;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px;
+}
+#gridviz-colorfield-dropdown-container {
+  z-index: 9999;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px;
+}
+#gridviz-sizefield-dropdown-container {
+  z-index: 9999;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 8px;
+} */
 .gridviz-dropdown-label {
   z-index: 9999;
   margin-right: 10px;
