@@ -1,6 +1,6 @@
 # GridViz
 
-A JavaScript Library for visualizing gridded statistics from CSV files. From an x,y,indicator format CSV file, GridViz will build a Three.js viewer capable of visualizing millions of grid cells.
+A JavaScript Library for visualizing gridded statistics from CSV files. From an | x | y | indicator | format CSV file, GridViz will build a Three.js viewer capable of visualizing millions of grid cells.
 
 <div>
   <img src="assets/images/previews/preview6.png" alt="preview" width="100%"/>
