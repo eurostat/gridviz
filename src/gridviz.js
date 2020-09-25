@@ -133,7 +133,7 @@ export function viewer(options) {
   viewer.title_ = null;
   viewer.subtitle_ = null;
   viewer.cellCount_ = null;
-  viewer.sources_ = null
+  viewer.sourcesHTML_ = null
 
   //borders using nuts2json
   viewer.nuts2json_ = false; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
@@ -221,7 +221,7 @@ export function viewer(options) {
       if (viewer.subtitle_) {
         addSubtitleToDOM();
       }
-      if (viewer.sources_) {
+      if (viewer.sourcesHTML_) {
         addSourcesToDOM();
       }
 
@@ -313,7 +313,7 @@ export function viewer(options) {
   function addSourcesToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-sources");
-    node.innerHTML = viewer.sources_;
+    node.innerHTML = viewer.sourcesHTML_;
     viewer.container_.appendChild(node);
   }
 
@@ -492,8 +492,8 @@ export function viewer(options) {
               let index = parseInt(gridCaches[viewer.resolution_].length / 2);
               let c = gridCaches[viewer.resolution_][index];
               viewer.center_ = [
-                parseFloat(c.position[0]),
-                parseFloat(c.position[1])
+                parseFloat(c.x),
+                parseFloat(c.y)
               ];
               camera.position.set(
                 viewer.center_[0],
