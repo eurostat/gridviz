@@ -2,6 +2,7 @@ const path = require("path");
 module.exports = {
   mode: "production",
   entry: ["./src/index.js"],
+  devtool: false,
   output: {
     filename: "gridviz.min.js",
     publicPath: "build",
@@ -19,6 +20,7 @@ module.exports = {
   },
   watch: false,
   optimization: {
-    usedExports: true
+    usedExports: true,
+    minimize: true
   }
 };

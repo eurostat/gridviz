@@ -33,3 +33,13 @@ export function showLoading() {
 export function hideLoading() {
   loading_spinner.style.display = "none";
 }
+
+/**
+ * returns number with space as separator
+ *
+ */
+export function formatNumber(n) {
+  return n
+    .toLocaleString("en")
+    .replace(/,/gi, " ")
+}

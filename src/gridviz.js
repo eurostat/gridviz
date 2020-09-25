@@ -40,7 +40,7 @@ import { CSS2DRenderer, CSS2DObject } from "../assets/js/CSS2D/CSS2DRenderer";
 import { feature } from "topojson";
 //gridviz
 import * as CONSTANTS from "./constants.js";
-import * as Utils from "../utils/utils";
+import * as Utils from "./utils/utils";
 import "./styles.css";
 
 //TODO list:
@@ -306,7 +306,7 @@ export function viewer(options) {
   function addCellCountToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-cellcount");
-    node.innerHTML = "Number of cells: " + formatNumber(viewer.cellCount);
+    node.innerHTML = "Number of cells: " + Utils.formatNumber(viewer.cellCount);
     viewer.headingsNode.appendChild(node);
   }
 
@@ -1704,6 +1704,7 @@ export function viewer(options) {
       display: "none"
     };
 
+    //inject tooltip HTML to DOM
     tooltipTemplate = document.createRange()
       .createContextualFragment(`<div id="tooltip" style="display: none; position: absolute; pointer-events: none; z-index:999; border-radius:5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); font-size: 13px; text-align: center; line-height: 1; padding: 6px; background: white; font-family: sans-serif;">
     <div id="labelTip" style="padding: 4px; margin-bottom: 4px;"></div>
@@ -1719,7 +1720,7 @@ export function viewer(options) {
   }
 
   function addMouseEventsToView() {
-    // show population value on click
+    // show cell value on click
     view.on("click", () => {
       let [mouseX, mouseY] = mouse(view.node());
       let mouse_position = [mouseX, mouseY];
@@ -2170,12 +2171,6 @@ export function viewer(options) {
     );
   }
 
-  function formatNumber(n) {
-    return n
-      .toLocaleString("en")
-      .replace(/,/gi, " ")
-  }
-
   function checkIntersects(mouse_position) {
     let mouse_vector = mouseToThree(...mouse_position);
     raycaster.setFromCamera(mouse_vector, camera);
@@ -2265,7 +2260,7 @@ export function viewer(options) {
     tooltip.style.top = tooltip_state.top + "px";
     //pointTip.innerText = tooltip_state.name;
     pointTip.style.background = tooltip_state.color;
-    labelTip.innerHTML = `<strong>${viewer.colorField_}:</strong> ${formatNumber(tooltip_state.colorValue)} <br> 
+    labelTip.innerHTML = `<strong>${viewer.colorField_}:</strong> ${tooltip_state.colorValue} <br> 
   <strong>x:</strong> ${tooltip_state.coords[0]} <br> 
   <strong>y:</strong> ${tooltip_state.coords[1]} <br> `;
   }
@@ -2293,7 +2288,7 @@ export function viewer(options) {
     tooltip_state.display = "block";
     tooltip_state.left = left
     tooltip_state.top = top;
-    tooltip_state.colorValue = cell[viewer.colorField_];
+    tooltip_state.colorValue = Utils.formatNumber(parseFloat(cell[viewer.colorField_]));
     tooltip_state.coords = [cell.x, cell.y];
     tooltip_state.color = cell.color;
     updateTooltip();
