@@ -13,8 +13,9 @@
 <script src="../../../build/gridviz.js"></script>
 <script>
     let containerDiv = document.getElementById("viz-container");
-    GridViz.viewer()
+    gridviz.viewer()
         .container(containerDiv)
+        .title("2km² Grid of Europe")
         .gridData([
             {
                 url: "../../../assets/csv/Europe/2km/pop_2km.csv",

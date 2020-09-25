@@ -1,36 +1,44 @@
 
-import * as d3 from "d3"
-import * as fc from "d3fc";
+//d3.js
+import { zoom, zoomIdentity } from "d3-zoom";
+import * as d3scaleChromatic from "d3-scale-chromatic";
+import * as d3scale from "d3-scale";
+import { axisBottom } from "d3-axis";
+import { interpolateRound } from "d3-interpolate";
+import { json, csv } from "d3-fetch";
+import { format } from "d3-format";
+import { extent, range, quantile } from "d3-array";
+import { select, create, selectAll, mouse } from "d3-selection";
+import { event as currentEvent } from 'd3-selection';
+//library used for legend
 import * as LEGEND from "d3-svg-legend";
+//three.js
 import {
   Scene,
-  OrthographicCamera,
   PerspectiveCamera,
   WebGLRenderer,
   Points,
-  PointsMaterial,
-  Geometry,
   Vector3,
-  Vector2,
   Color,
   Raycaster,
   Object3D,
   Float32BufferAttribute,
   BufferGeometry,
   Group,
-  Texture,
   ShaderMaterial
+
 } from "three";
 import * as THREE from "three/src/constants";
 // extra Three.js modules not included in main build
 import { Line2 } from "../assets/js/lines/Line2";
-import { LineSegments2 } from "../assets/js/lines/LineSegments2";
 import { LineGeometry } from "../assets/js/lines/LineGeometry";
 import { LineMaterial } from "../assets/js/lines/LineMaterial";
 import { CSS2DRenderer, CSS2DObject } from "../assets/js/CSS2D/CSS2DRenderer";
-import { sortBy } from "lodash";
-import * as TopoJSON from "topojson";
-
+//lodash
+// import { sortBy } from "lodash";
+//topojson
+import { feature } from "topojson";
+//gridviz
 import * as CONSTANTS from "./constants.js";
 import * as Utils from "../utils/utils";
 import "./styles.css";
@@ -325,7 +333,7 @@ export function viewer(options) {
     renderer = new WebGLRenderer();
     renderer.setSize(viewer.width_, viewer.height_);
     viewer.container_.appendChild(renderer.domElement);
-    view = d3.select(renderer.domElement); //for d3 mouse events
+    view = select(renderer.domElement); //for d3 mouse events
   }
 
   /**
@@ -476,7 +484,7 @@ export function viewer(options) {
         err => {
           if (!err) {
             //define scales
-            viewer.valuesExtent = d3.extent(gridCaches[viewer.resolution_], d => d[viewer.colorField_]);
+            viewer.valuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.colorField_]);
             viewer.colorScale_ = defineColorScale();
             if (viewer.sizeField_) viewer.sizeScale_ = defineSizeScale();
 
@@ -522,7 +530,7 @@ export function viewer(options) {
    * @returns Promise
    */
   function requestGrid(grid) {
-    return d3.csv(grid.url).then(
+    return csv(grid.url).then(
       csv => {
         //validate csv
         if (csv[0].x && csv[0].y && csv[0][viewer.colorField_]) {
@@ -565,7 +573,7 @@ export function viewer(options) {
   //any scale accepted by d3-legend.susielu.com
   function defineColorScale() {
     if (viewer.colors_ && viewer.thresholdValues_) {
-      return d3
+      return d3scale
         .scaleThreshold()
         .domain(viewer.thresholdValues_)
         .range(viewer.colors_);
@@ -573,10 +581,10 @@ export function viewer(options) {
       let domain;
       if (viewer.colorScaleFunction_ == "scaleDiverging") {
         domain = [viewer.valuesExtent[0], 0, viewer.valuesExtent[1]];
-        return d3[viewer.colorScaleFunction_](domain, d3[viewer.colorScheme_])
+        return d3scale[viewer.colorScaleFunction_](domain, d3scaleChromatic[viewer.colorScheme_])
       } else {
         domain = viewer.valuesExtent;
-        return d3[viewer.colorScaleFunction_](domain, d3[viewer.colorScheme_])
+        return d3scale[viewer.colorScaleFunction_](domain, d3scaleChromatic[viewer.colorScheme_])
       }
     }
   }
@@ -584,7 +592,7 @@ export function viewer(options) {
 
   function defineSizeScale() {
     //default scale
-    let func = d3[viewer.sizeScaleFunction];
+    let func = d3scale[viewer.sizeScaleFunction];
     return func().domain(viewer.valuesExtent).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
   }
 
@@ -594,7 +602,7 @@ export function viewer(options) {
    * @param {*} url
    */
   function loadBordersJson(url) {
-    d3.json(url).then(
+    json(url).then(
       json => {
         let newArray;
         if (viewer.nuts2jsonCountry_) {
@@ -607,7 +615,7 @@ export function viewer(options) {
           });
         }
         json.objects.nutsbn.geometries = newArray;
-        let features = TopoJSON.feature(json, json.objects.nutsbn).features;
+        let features = feature(json, json.objects.nutsbn).features;
         addBordersToScene(features);
       },
       err => {
@@ -699,7 +707,7 @@ export function viewer(options) {
 
 
   viewer.addGeoJson = function (url) {
-    d3.json(url).then(
+    json(url).then(
       res => {
         if (res.features) {
           if (res.features.length > 0) {
@@ -719,7 +727,9 @@ export function viewer(options) {
    * @param {*} features //Geojson features
    * 
    */
+  let layerZ = 1;
   function addGeoJsonToScene(features) {
+    layerZ = layerZ + 0.002;
     let geojsonGroup = new Group();
     geojsonGroup.renderOrder = 999; //always on top of grid
     // GEOJSON to ThreeJS
@@ -736,13 +746,13 @@ export function viewer(options) {
               xyz = {
                 x: feature.geometry.coordinates[c][s][0] / d,
                 y: feature.geometry.coordinates[c][s][1] / d,
-                z: CONSTANTS.line_z
+                z: layerZ
               };
             } else {
               xyz = {
                 x: feature.geometry.coordinates[c][s][0],
                 y: feature.geometry.coordinates[c][s][1],
-                z: CONSTANTS.line_z
+                z: layerZ
               };
             }
 
@@ -764,13 +774,13 @@ export function viewer(options) {
                 xyz = {
                   x: feature.geometry.coordinates[c][s][m][0] / d,
                   y: feature.geometry.coordinates[c][s][m][1] / d,
-                  z: CONSTANTS.line_z
+                  z: layerZ
                 };
               } else {
                 xyz = {
                   x: feature.geometry.coordinates[c][s][m][0],
                   y: feature.geometry.coordinates[c][s][m][1],
-                  z: CONSTANTS.line_z
+                  z: layerZ
                 };
               }
               coords.push(xyz);
@@ -784,13 +794,13 @@ export function viewer(options) {
             xyz = {
               x: feature.geometry.coordinates[c][0] / d,
               y: feature.geometry.coordinates[c][1] / d,
-              z: CONSTANTS.line_z
+              z: layerZ
             };
           } else {
             xyz = {
               x: feature.geometry.coordinates[c][0],
               y: feature.geometry.coordinates[c][1],
-              z: CONSTANTS.line_z
+              z: layerZ
             };
           }
           coords.push(xyz);
@@ -815,7 +825,7 @@ export function viewer(options) {
     let colors = [];
     let color = new Color(viewer.borderColor_);
     for (var i = 0; i < coords.length; i++) {
-      positions.push(coords[i].x, coords[i].y, CONSTANTS.line_z);
+      positions.push(coords[i].x, coords[i].y, layerZ);
       colors.push(color.r, color.g, color.b);
     }
     line_geom.setPositions(positions);
@@ -1328,9 +1338,9 @@ export function viewer(options) {
   function createCellsLegend() {
     let legendContainer;
     if (document.getElementById("gridviz-legend")) {
-      legendContainer = d3.select("#gridviz-legend");
+      legendContainer = select("#gridviz-legend");
     } else {
-      legendContainer = d3.create("svg").attr("id", "gridviz-legend");
+      legendContainer = create("svg").attr("id", "gridviz-legend");
       viewer.container_.appendChild(legendContainer.node());
     }
     if (viewer.legend_.orientation == "horizontal") {
@@ -1346,7 +1356,7 @@ export function viewer(options) {
     gridLegend = LEGEND.legendColor()
       .shapeWidth(viewer.legend_.shapeWidth)
       .cells(viewer.legend_.cells)
-      .labelFormat(d3.format(viewer.legend_.format))
+      .labelFormat(format(viewer.legend_.format))
       .orient(viewer.legend_.orientation)
       .scale(viewer.colorScale_)
       .title(viewer.legend_.title)
@@ -1368,9 +1378,9 @@ export function viewer(options) {
   function createContinuousLegend() {
     let container;
     if (document.getElementById("gridviz-legend")) {
-      container = d3.select("#gridviz-legend");
+      container = select("#gridviz-legend");
     } else {
-      container = d3.create("div").attr("id", "gridviz-legend");
+      container = create("div").attr("id", "gridviz-legend");
       viewer.container_.appendChild(container.node());
     }
     //title
@@ -1388,7 +1398,7 @@ export function viewer(options) {
     container.node().appendChild(legend);
 
     // const colourScale = d3
-    // 	.scaleSequential(d3.interpolateViridis)
+    // 	.scaleSequential(d3scaleChromatic.interpolateViridis)
     // 	.domain([0, 22]);
     // const domain = viewer.colorScale_.domain();
     // let width = 100;
@@ -1397,7 +1407,7 @@ export function viewer(options) {
     //   .pad([0.1, 0.1])
     //   .padUnit("percent")(domain);
     // const [min, max] = paddedDomain;
-    // let expandedDomain = d3.range(min, max, (max - min) / height);
+    // let expandedDomain = d3scale.range(min, max, (max - min) / height);
     // const xScale = d3
     //   .scaleBand()
     //   .domain([0, 1])
@@ -1467,7 +1477,7 @@ export function viewer(options) {
     tickValues
   } = {}) {
 
-    const svg = d3.create("svg")
+    const svg = create("svg")
       .attr("class", "gridviz-legend-svg")
       // .attr("class", "gridviz-continuous-legend")
       .attr("width", width)
@@ -1481,7 +1491,7 @@ export function viewer(options) {
     // Continuous
     if (color.interpolator) {
       x = Object.assign(color.copy()
-        .interpolator(d3.interpolateRound(marginLeft, width - marginRight)),
+        .interpolator(interpolateRound(marginLeft, width - marginRight)),
         { range() { return [marginLeft, width - marginRight]; } });
 
       svg.append("image")
@@ -1496,10 +1506,10 @@ export function viewer(options) {
       if (!x.ticks) {
         if (tickValues === undefined) {
           const n = Math.round(ticks + 1);
-          tickValues = d3.range(n).map(i => d3.quantile(color.domain(), i / (n - 1)));
+          tickValues = range(n).map(i => quantile(color.domain(), i / (n - 1)));
         }
         if (typeof tickFormat !== "function") {
-          tickFormat = d3.format(tickFormat === undefined ? ",f" : tickFormat);
+          tickFormat = format(tickFormat === undefined ? ",f" : tickFormat);
         }
       }
     }
@@ -1513,10 +1523,10 @@ export function viewer(options) {
 
       const thresholdFormat
         = tickFormat === undefined ? d => d
-          : typeof tickFormat === "string" ? d3.format(tickFormat)
+          : typeof tickFormat === "string" ? format(tickFormat)
             : tickFormat;
 
-      x = d3.scaleLinear()
+      x = d3scale.scaleLinear()
         .domain([-1, color.range().length - 1])
         .rangeRound([marginLeft, width - marginRight]);
 
@@ -1530,13 +1540,13 @@ export function viewer(options) {
         .attr("height", height - marginTop - marginBottom)
         .attr("fill", d => d);
 
-      tickValues = d3.range(thresholds.length);
+      tickValues = range(thresholds.length);
       tickFormat = i => thresholdFormat(thresholds[i], i);
     }
 
     svg.append("g")
       .attr("transform", `translate(0, ${height - marginBottom})`)
-      .call(d3.axisBottom(x)
+      .call(axisBottom(x)
         .ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined)
         .tickFormat(typeof tickFormat === "function" ? tickFormat : undefined)
         .tickSize(tickSize)
@@ -1575,7 +1585,7 @@ export function viewer(options) {
    *
    */
   function updateLegend() {
-    var l = d3.selectAll(".gridviz-legend-svg").remove();
+    var l = selectAll(".gridviz-legend-svg").remove();
     setTimeout(createLegend(), 1000);
   }
 
@@ -1711,7 +1721,7 @@ export function viewer(options) {
   function addMouseEventsToView() {
     // show population value on click
     view.on("click", () => {
-      let [mouseX, mouseY] = d3.mouse(view.node());
+      let [mouseX, mouseY] = mouse(view.node());
       let mouse_position = [mouseX, mouseY];
       checkIntersects(mouse_position);
       //console.log("Camera pos:", camera.position);
@@ -1724,15 +1734,15 @@ export function viewer(options) {
 
   //functions taken from observableHQ & work on mobile:
   function setUpZoomMobile() {
-    let d3_zoom = d3.zoom()
+    let d3_zoom = zoom()
       .scaleExtent([getScaleFromZMobile(viewer.camera.far_), getScaleFromZMobile(viewer.camera.near_)])
       .on('zoom', () => {
-        let d3_transform = d3.event.transform;
+        let d3_transform = currentEvent.transform;
         zoomHandlerMobile(d3_transform);
       });
     view.call(d3_zoom);
     let initial_scale = getScaleFromZMobile(viewer.camera.far_);
-    var initial_transform = d3.zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
+    var initial_transform = zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
     d3_zoom.transform(view, initial_transform);
     camera.position.set(0, 0, viewer.camera.far_);
   }
@@ -1766,21 +1776,21 @@ export function viewer(options) {
     //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
     let farScale = getScaleFromZMobile(viewer.camera.far_);
     let nearScale = getScaleFromZMobile(viewer.camera.near_);
-    viewer.zoom = d3
-      .zoom()
-      .scaleExtent([farScale, nearScale])
-      .on("zoom", () => {
-        let event = d3.event;
-        if (event) zoomHandler(event);
-      })
-      .on("end", () => {
-        let event = d3.event;
-        if (event) zoomEnd(event);
-      });
+    viewer.zoom =
+      zoom()
+        .scaleExtent([farScale, nearScale])
+        .on("zoom", () => {
+          let event = currentEvent;
+          if (event) zoomHandler(event);
+        })
+        .on("end", () => {
+          let event = currentEvent;
+          if (event) zoomEnd(event);
+        });
     view.call(viewer.zoom);
 
     let initial_scale = getScaleFromZMobile(viewer.camera.zoom_);
-    var initial_transform = d3.zoomIdentity
+    var initial_transform = zoomIdentity
       .translate(viewer.width_ / 2, viewer.height_ / 2)
       .scale(initial_scale);
     viewer.zoom.transform(view, initial_transform);
@@ -1931,7 +1941,7 @@ export function viewer(options) {
 
     //manage multiple calls by replicating angular's .unsubscribe() somehow
     let uri = encodeURI(URL);
-    d3.json(uri).then(
+    json(uri).then(
       res => {
         if (res.features) {
           if (res.features.length > 0) {
@@ -2185,8 +2195,13 @@ export function viewer(options) {
   }
 
   function sortIntersectsByDistanceToRay(intersects) {
-    return _.sortBy(intersects, "distanceToRay");
+    return intersects.concat().sort(sortBy("distanceToRay"));
   }
+
+  //native replication of lodash's "sortBy"
+  const sortBy = (key) => {
+    return (a, b) => (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0);
+  };
 
   function highlightPoint(intersect) {
     removeHighlights();
