@@ -1,0 +1,11 @@
+#viz-container{
+    height:90vh!important;
+    overflow:hidden;
+    padding:0px;
+}
+#side-menu-title{
+height:4rem;
+}
+.selected {
+background-color:#d4d4d4!important;
+}

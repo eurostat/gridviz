@@ -203,17 +203,20 @@ export function viewer(options) {
     if (valid) {
       //set container height and width
       viewer.container_.classList.add("gridviz-container");
-      viewer.container_.style.width =
-        viewer.width_ + "px";
-      viewer.container_.style.height =
-        viewer.height_ + "px";
+      // viewer.container_.style.width =
+      //   viewer.width_ + "px";
+      // viewer.container_.style.height =
+      //   viewer.height_ + "px";
       //set resolution
       if (!viewer.resolution_) {
         viewer.resolution_ = viewer.gridData_[0].cellSize
       }
       gridConfig = defineGridConfig();
 
-      addHeadingsContainerToDOM();
+      if (viewer.title_ || viewer.subtitle_ || viewer.cellCount_) {
+        addHeadingsContainerToDOM();
+      }
+
 
       if (viewer.title_) {
         addTitleToDOM();
