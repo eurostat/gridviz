@@ -238,7 +238,10 @@ export function viewer(options) {
       //setUpZoom();
       createTooltipContainer();
 
-      addSelectorsContainerToDOM();
+      if (viewer.colorSchemeSelector_ || viewer.colorScaleSelector_ || viewer.sizeFieldSelector_) {
+        addSelectorsContainerToDOM();
+      }
+
       if (viewer.colorSchemeSelector_) {
         createColorSchemeDropdown();
       }

@@ -8,4 +8,11 @@ height:4rem;
 }
 .selected {
 background-color:#d4d4d4!important;
+color:black;
+}
+.list-group-item{
+    cursor:pointer;
+}
+.list-group-item:hover{
+    background-color:#d4d4d4!important;
 }
