@@ -1,11 +1,12 @@
 #viz-container{
-    height:90vh!important;
+    height:93vh!important;
     overflow:hidden;
     padding:0px;
 }
-#side-menu-title{
-height:4rem;
+#side-menu-title, nav.navbar.navbar-expand-lg.navbar-light.bg-light.border-bottom{
+height:7vh;
 }
+
 .selected {
 background-color:#d4d4d4!important;
 color:black;
