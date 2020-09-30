@@ -131,7 +131,7 @@ function addMouseEvents() {
                     }
                 ])
                 .center([4755000, 2369000])//EPSG=3035
-                //.zoom(500000) //initial camera Z value
+                .zoom(500000) //initial camera Z value
                 // .nuts2json(true) //loads borders topojson
                 // .nuts2jsonCountry("HR") //filter nuts2json
                 // .placenamesCountry("HR") //filter placenames
