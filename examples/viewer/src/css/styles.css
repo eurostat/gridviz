@@ -4,12 +4,15 @@
     padding:0px;
 }
 #side-menu-title, nav.navbar.navbar-expand-lg.navbar-light.bg-light.border-bottom{
-height:7vh;
+    height:7vh;
+}
+#side-menu-title{
+    align-items:center;
 }
 
 .selected {
-background-color:#d4d4d4!important;
-color:black;
+    background-color:#d4d4d4!important;
+    color:black;
 }
 .list-group-item{
     cursor:pointer;

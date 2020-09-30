@@ -40,8 +40,7 @@ function modules() {
   ])
     .pipe(gulp.dest('./vendor/jquery'));
   var gridviz = gulp.src([
-    './node_modules/gridviz/build/*',
-    '!./node_modules/gridviz/build/gridviz.js'
+    './node_modules/gridviz/build/*'
   ])
     .pipe(gulp.dest('./vendor/gridviz'));
   return merge(bootstrap, jquery, gridviz);
@@ -51,6 +50,7 @@ function modules() {
 function watchFiles() {
   gulp.watch("./**/*.css", browserSyncReload);
   gulp.watch("./**/*.html", browserSyncReload);
+  gulp.watch("./**/*.js", browserSyncReload);
 }
 
 // Define complex tasks

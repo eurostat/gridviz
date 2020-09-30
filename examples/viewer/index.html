@@ -24,7 +24,7 @@
 
 </head>
 <!-- gridviz -->
-<script src="vendor/gridviz/gridviz.min.js"></script>
+<script src="vendor/gridviz/gridviz.js"></script>
 
 <body>
 
@@ -42,12 +42,14 @@
       </div>
 
       <div class="list-group list-group-flush">
-        <li id="europe1km" class="list-group-item list-group-item-action bg-light">Europe 1km² Population Grid</li>
+        <li id="europe1km" class="list-group-item list-group-item-action bg-light hidden">Europe 1km² Population Grid
+        </li>
         <li id="europe2km" class="list-group-item list-group-item-action bg-light">Europe 2km² Population Grid</li>
         <li id="europe5km" class="list-group-item list-group-item-action bg-light">Europe 5km² Population Grid</li>
-        <li href="#" class="list-group-item list-group-item-action bg-light">Netherlands 100m² Census Data</li>
-        <li href="#" class="list-group-item list-group-item-action bg-light">Croatia 1km² Tourism Grid</li>
-        <li href="#" class="list-group-item list-group-item-action bg-light">France 1km² Census Data</li>
+        <li id="netherlands100m" class="list-group-item list-group-item-action bg-light">Netherlands 100m² Census Data
+        </li>
+        <li id="croatia1km" class="list-group-item list-group-item-action bg-light">Croatia 1km² Tourism Grid</li>
+        <li id="france1km" class="list-group-item list-group-item-action bg-light">France 1km² Census Data</li>
       </div>
     </div>
     <!-- /#sidebar-wrapper -->
@@ -106,49 +108,8 @@
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Menu Toggle Script -->
-  <script>
-    //menu toggle button
-    $("#menu-toggle").click(function (e) {
-      e.preventDefault();
-      $("#wrapper").toggleClass("toggled");
-      let btn = $("#menu-toggle-icon")
-      btn.toggleClass("fa-chevron-right");
-      btn.toggleClass("fa-chevron-left");
-    });
+  <script src="src/js/main.js">
 
-    //TOC layer toggle
-    $("#europe5km").click(function (e) {
-      e.preventDefault();
-      $("#europe5km").toggleClass("selected");
-
-      let viz = gridviz.viewer()
-        .container(document.getElementById("viz-container"))
-        .gridData([
-          {
-            url: "../../../assets/csv/Europe/5km/3035/pop_grid_5km_incl_uninhab.csv",
-            cellSize: 5
-          }
-        ])
-        .zerosRemoved(3)
-        .colorField("Population")  // csv column which you wish to visualize
-        //sizeColumn() "value" // csv column which you wish to visualize
-        .nuts2json(false) //loads borders topojson
-        .center([4369, 3230])//EPSG=3035
-        .height(window.innerHeight)
-        .width(window.innerWidth)
-        .backgroundColor("#000")
-        .borderColor("#ffffff")
-        .loadingIcon("ellipsis")
-        .legend({
-          type: "continuous",
-          height: 350,
-          title: "Total population per 5 km² (2011)",
-          titleWidth: 130,
-          cells: 15
-        })
-        .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
-        .build()
-    });
   </script>
 
 </body>

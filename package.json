@@ -2,7 +2,7 @@
   "name": "gridviz",
   "version": "1.0.2",
   "description": "Visualization tool for gridded statistics",
-  "main": "build/gridviz.min.js",
+  "main": "build/gridviz.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build-dev",
@@ -12,7 +12,9 @@
     "build-dev": "webpack --config webpack.config.dev.js",
     "build-prod": "webpack --config webpack.config.prod.js"
   },
-  "files": "build/gridviz.min.js",
+  "files": [
+    "build/gridviz.js"
+  ],
   "author": "Joseph Davies",
   "license": "EUPL",
   "bugs": {
