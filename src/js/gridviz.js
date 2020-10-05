@@ -473,6 +473,8 @@ export function viewer(options) {
     camera.aspect = viewer.camera.aspect_;
     camera.near = viewer.camera.near_;
     camera.far = viewer.camera.far_;
+
+    // TODO: redefine panAndZoom
   }
 
 
@@ -1809,7 +1811,7 @@ export function viewer(options) {
     //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
     let farScale = getScaleFromZMobile(viewer.camera.far_);
     let nearScale = getScaleFromZMobile(viewer.camera.near_);
-    viewer.zoom =
+    viewer.d3zoom =
       zoom()
         .scaleExtent([farScale, nearScale])
         .on("zoom", () => {
@@ -1820,13 +1822,13 @@ export function viewer(options) {
           let event = currentEvent;
           if (event) zoomEnd(event);
         });
-    view.call(viewer.zoom);
+    view.call(viewer.d3zoom);
 
     let initial_scale = getScaleFromZMobile(viewer.camera.zoom_);
     var initial_transform = zoomIdentity
       .translate(viewer.width_ / 2, viewer.height_ / 2)
       .scale(initial_scale);
-    viewer.zoom.transform(view, initial_transform);
+    viewer.d3zoom.transform(view, initial_transform);
   }
 
   function zoomHandler(event) {
