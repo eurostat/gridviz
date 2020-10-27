@@ -1,4 +1,6 @@
 # GridViz
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/gridviz)
+![npm](https://img.shields.io/npm/v/gridviz)
 
 A JavaScript Library for visualizing gridded statistics from CSV files. From an | x | y | indicator | format CSV file, GridViz will build a Three.js viewer capable of visualizing millions of grid cells on the fly.
 
