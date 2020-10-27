@@ -35,6 +35,19 @@ From a CSV file with x and y columns, gridviz will build a Three.js viewer capab
 
 For colouring, you can use any of D3's scale chromatic colour schemes, or define them yourself by passing an array to the colors method along with the threshold values they correspond with.
 
-## Installation & Usage
+## Installation
 
-Coming soon...
+### node.js
+
+'npm install nutsdorlingcartogram'
+
+then 
+```javascript
+gridviz = require("gridviz")
+```
+
+### standalone
+
+```javascript
+<script src="https://unpkg.com/gridviz/build/gridviz.min.js"></script>
+```
