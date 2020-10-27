@@ -37,9 +37,11 @@ For colouring, you can use any of D3's scale chromatic colour schemes, or define
 
 ## Installation
 
-### node.js
+### Node.js
 
-'npm install nutsdorlingcartogram'
+```console
+npm install nutsdorlingcartogram
+```
 
 then 
 ```javascript
