@@ -1,6 +1,7 @@
 # gridviz
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/gridviz)
 ![npm](https://img.shields.io/npm/v/gridviz)
+![license](https://img.shields.io/badge/license-EUPL-success)
 
 A JavaScript Library built for visualizing gridded statistics from CSV files. 
 
