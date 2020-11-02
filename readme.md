@@ -41,7 +41,7 @@ For colouring, you can use any of D3's scale chromatic colour schemes, or define
 ### Node.js
 
 ```Shell
-npm install nutsdorlingcartogram
+npm install gridviz
 ```
 
 then 
