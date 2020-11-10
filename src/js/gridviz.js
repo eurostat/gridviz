@@ -225,7 +225,13 @@ export function viewer(options) {
     return viewer;
   };
 
-  //if viewer has already been initialized, calls to zoom() method will move existing camera
+
+  /**
+ *
+ *
+ * @function zoom
+ * @description Sets the three.js camera z value. If the viewer has already been initialized, calls to zoom() method will move existing camera
+ */
   viewer.zoom = function (v) {
     if (v && viewer.scene) {
       viewer.zoom_ = v;
@@ -239,7 +245,13 @@ export function viewer(options) {
     return viewer;
   };
 
-  //clear canvas, build threejs viewer and append grid
+
+  /**
+   *
+   *
+   * @function build
+   * @description Clears the canvas, builds the three.js viewer and appends grid data
+   */
   viewer.build = function () {
     Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
     let valid = validateInputs();
@@ -326,6 +338,12 @@ export function viewer(options) {
     }
   };
 
+  /**
+*
+*
+* @function validateInputs
+* @description validates inputs when initializing the viewer
+*/
   function validateInputs() {
     if (viewer.colors_ && viewer.thresholdValues_) {
       if (viewer.colors_.length !== viewer.thresholdValues_.length) {
@@ -339,6 +357,12 @@ export function viewer(options) {
     }
   }
 
+  /**
+*
+*
+* @function addHeadingsContainerToDOM
+* @description adds a div container for viewer.title and viewer.subtitle texts
+*/
   function addHeadingsContainerToDOM() {
     viewer.headingsNode = document.createElement("div");
     viewer.headingsNode.classList.add("gridviz-headings-container");
@@ -346,6 +370,12 @@ export function viewer(options) {
     viewer.container_.appendChild(viewer.headingsNode);
   }
 
+  /**
+*
+*
+* @function addTitleToDOM
+* @description adds a div element for viewer.title to headings container 
+*/
   function addTitleToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-title");
@@ -353,6 +383,12 @@ export function viewer(options) {
     viewer.headingsNode.appendChild(node);
   }
 
+  /**
+*
+*
+* @function addSubtitleToDOM
+* @description adds a div element for viewer.subtitle to headings container 
+*/
   function addSubtitleToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-subtitle");
@@ -360,6 +396,12 @@ export function viewer(options) {
     viewer.headingsNode.appendChild(node);
   }
 
+  /**
+*
+*
+* @function addCellCountToDOM
+* @description adds a div element for viewer.cellCount to headings container 
+*/
   function addCellCountToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-cellcount");
@@ -367,6 +409,12 @@ export function viewer(options) {
     viewer.headingsNode.appendChild(node);
   }
 
+  /**
+*
+*
+* @function addSourcesToDOM
+* @description adds a div element showing viewer.sourcesHTML in the bottom right corner
+*/
   function addSourcesToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-sources");
@@ -374,6 +422,12 @@ export function viewer(options) {
     viewer.container_.appendChild(node);
   }
 
+  /**
+*
+*
+* @function addSelectorsContainerToDOM
+* @description adds a div container for the available dropdown selectors to the DOM
+*/
   function addSelectorsContainerToDOM() {
     viewer.selectorsContainer = document.createElement("div");
     viewer.selectorsContainer.classList.add("gridviz-selectors");
@@ -383,8 +437,8 @@ export function viewer(options) {
 
 
   /**
-   * Create renderer for three.js scene and append to container element.
-   *
+   * @description Create renderer for three.js scene and appends it to the container element.
+   * @function createWebGLRenderer
    */
   function createWebGLRenderer() {
     renderer = new WebGLRenderer();
@@ -394,8 +448,8 @@ export function viewer(options) {
   }
 
   /**
-   * Create renderer for placename labels. Uses CSS2DRenderer which is not currently in main Three.js build
-   *
+   * @description Creates renderer for placename labels. Uses CSS2DRenderer which is not currently included in main Three.js build
+   *@function createLabelRenderer
    */
   function createLabelRenderer() {
     labelRenderer = new CSS2DRenderer();
@@ -406,8 +460,8 @@ export function viewer(options) {
   }
 
   /**
-   * Initialize THREE camera object
-   *
+   * @description Initializes THREE camera object
+   * @function createCamera
    */
   function createCamera() {
     //camera
@@ -472,11 +526,12 @@ export function viewer(options) {
 
 
   /**
-   * Sets position and direction of camera
-   *
-   * @param {*} x three.js coord
-   * @param {*} y three.js coord
-   * @param {*} z three.js coord
+   * @function setCamera
+   * @description Sets position and direction of camera
+   * @param {number} x three.js coord
+   * @param {number} y three.js coord
+   * @param {number} z three.js coord
+   * 
    */
   function setCamera(x, y, z) {
     camera.position.set(x, y, viewer.camera.zoom_); // Set initial camera position
@@ -484,18 +539,18 @@ export function viewer(options) {
   }
 
   /**
-   * Initialize THREE.Raycaster object
-   *
+   * @description Initializes THREE.Raycaster object
+   * @function createRaycaster
    */
   function createRaycaster() {
     // Click and tooltip interaction
     raycaster = new Raycaster();
-    raycaster.params.Points.threshold = gridConfig.raycaster_threshold;
+    raycaster.params.Points.threshold = gridConfig.raycasterThreshold;
   }
 
   /**
-   * Add event listeners to DOM elements
-   *
+   * @description Adds event listeners to viewer, dropdowns and screen resize
+   * @function addEventListeners
    */
   function addEventListeners() {
     //show population value on click
@@ -513,24 +568,35 @@ export function viewer(options) {
   }
 
   /**
-   * Build THREE.Scene
-   *
+   *@description Build THREE.Scene
+   *@function createScene
    */
   function createScene() {
     viewer.scene = new Scene();
     viewer.scene.background = new Color(viewer.backgroundColor_);
   }
 
+  /**
+ * @typedef {Object} GridConfig
+ * @property {number} raycasterThreshold - The threshold for raycasting grid cells. Its value represents the distance from the center of the cell's point object.
+ * @property {number} pointSize - Three.js point size
+ */
+  /**
+ *@description defines the configuration object which the viewer uses to paint grid cells
+ *@function defineGridConfig
+ *@returns {GridConfig} 
+ */
   function defineGridConfig() {
     let config = {};
-    config.raycaster_threshold = defineRaycasterThreshold();
-    config.point_size = definePointSize();
+    config.raycasterThreshold = defineRaycasterThreshold();
+    config.pointSize = definePointSize();
     return config;
   }
 
   /**
-   * Define the threshold for raycasting grid cells at the specified resolution. Value represents the distance from the center of the cell's point object.
-   *
+   * 
+   * @description Defines the threshold for raycasting grid cells at the specified resolution. Value represents the distance from the center of the cell's point object.
+   *@function defineRaycasterThreshold
    *
    */
   function defineRaycasterThreshold() {
@@ -538,7 +604,7 @@ export function viewer(options) {
   }
 
   /**
-   * Define the point_size parameter for THREE.pointsLayer objects at the specified resolution
+   * Define the pointSize parameter for THREE.pointsLayer objects at the specified resolution
    *
    *
    */
@@ -992,7 +1058,7 @@ export function viewer(options) {
       if (viewer.sizeField_ && viewer.sizeField_ !== "null") {
         sizes.push(viewer.sizeScaleFunction_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
       } else {
-        sizes.push(gridConfig.point_size);
+        sizes.push(gridConfig.pointSize);
       }
     }
     //update sizes
@@ -1045,7 +1111,7 @@ export function viewer(options) {
       if (viewer.sizeField_) {
         sizes.push(viewer.sizeScaleFunction_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
       } else {
-        sizes.push(gridConfig.point_size);
+        sizes.push(gridConfig.pointSize);
       }
     }
     //set buffer geometry attributes
@@ -1075,13 +1141,13 @@ export function viewer(options) {
       });
       //using threejs PointsMaterial
       //pointsMaterial = new PointsMaterial({
-      //size: gridConfig.point_size,
+      //size: gridConfig.pointSize,
       // sizeAttenuation: true,
       //https://github.com/mrdoob/three.js/blob/master/src/constants.js
       // vertexColors: THREE.VertexColors
       // });
     } else {
-      pointsMaterial.size = gridConfig.point_size;
+      pointsMaterial.size = gridConfig.pointSize;
     }
     //create or reuse pointsLayer object
     if (!pointsLayer) {
@@ -2298,7 +2364,7 @@ export function viewer(options) {
     // geometry.colors = [new Color("#ffffff")];
 
     // let material = new PointsMaterial({
-    //   size: gridConfig.point_size,
+    //   size: gridConfig.pointSize,
     //   sizeAttenuation: true,
     //   vertexColors: THREE.VertexColors,
     //   transparent: true
