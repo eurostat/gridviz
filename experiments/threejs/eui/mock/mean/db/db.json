@@ -1,9 +1,0 @@
-{
-  "user-details": {
-    "id": 1,
-    "firstName": "John",
-    "lastName": "Doe",
-    "fullName": "John Doe"
-  },
-  "users": []
-}

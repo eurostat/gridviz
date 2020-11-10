@@ -1,8 +1,8 @@
 {
   "name": "gridviz",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Visualization tool for gridded statistics",
-  "main": "build/gridviz.js",
+  "main": "build/gridviz.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build-dev",
