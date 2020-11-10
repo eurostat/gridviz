@@ -51,37 +51,6 @@ import * as Utils from "./utils";
  * @description Generates a 2D Three.js scene for visualizing large point datasets using WebGL. The library follows a similar structure to that of d3, whereby parameters are set using a series of accessor functions, each of which returns the main viewer.
  * @requires "THREE"
  * @requires "D3"
- * @param {HTMLElement} [viewer.container_element() = document.body] - The DOM element used for the THREE.js renderer.
- * @param {number} [viewer.height = window.innerHeight] - The height value used for the threejs scene, camera, zoom, labels.
- * @param {number} [viewer.width = window.innerWidth] - The width value used for the threejs scene, camera, zoom, labels.
- * @param {number} [viewer.backgroundColor = "#b7b7b7"] - THREE.Scene background color (hexidecimal).
- * @param {number} [viewer.borderColor = "#ffffff"] - Hex string which is later converted to THREE.Line2 color (hexidecimal).
- * @param {string} [viewer.highlightColor = "#37f2d6"] - Hex string which is later converted to THREE.Line2 color (hexidecimal).
- * @param {string} [viewer.loadingIcon = "ring"] - CSS animation used for the loading icon, other options are: ripple | ring | ellipsis | roller.
- * @param {string} [viewer.colorSchemeName = "interpolateTurbo"] - Name of the d3-sclae-chromatic function name used for colouring cells.
- * @param {array} [viewer.colors = null] - Array of hex strings to be used in combination with viewer.thresholdValues for colouring.
- * @param {array} [viewer.thresholdValues = null] - Array of threshold values that are applied to the colour scaling function.
- * @param {function} [viewer.colorScaleFunction = d3.scaleSequential] - D3.scale function used for defining colour values. Current working functions seem to be scaleSequential or scaleDiverging & their respective variants.
- * @param {function} [viewer.sizeScaleFunction = d3.scaleSqrt] - D3.scale function used for defining colour values. Current working functions seem to be scaleSequential or scaleDiverging & their respective variants.
- * @param {boolean} [viewer.colorSchemeSelector = false] - Whether or not to build a simple html select input for the available d3-scale-chromatic colour schemes.
- * @param {boolean} [viewer.colorFieldSelector = false] - Whether or not to build a simple html select input showing the available fields in the csv file that can be used to drive cell colour.
- * @param {boolean} [viewer.sizeFieldSelector = false] - Whether or not to build a simple html select input showing the available fields in the csv file that can be used to drive cell size.
- * @param {boolean} [viewer.showLegend = true] - Build d3 colour legend.
- * @param {boolean} [viewer.showPlacenames = true] - Adds placenames to the viewer. Placename-scale thresholds currently defined by the user.
- * @param {boolean} [viewer.showColorSchemeSelector = true] - THREE.Line2 color (hexidecimal).
- * 
-
-* @param {string} [viewer.legend.type] - Type of legend to build. continuous | cells.
-* @param {number} [viewer.legend.width] - Legend width.
-* @param {number} [viewer.legend.height] - Legend height.
-* @param {string} [viewer.legend.orientation] - Legend orientation. "vertical" or "horizontal"
-* @param {string} [viewer.legend.title] - Legend title.
-* @param {number} [viewer.legend.titleWidth] - Legend title width. used for text wrapping
-* @param {string} [viewer.legend.format] - d3.format function for formatting tick values.
-* @param {string} [viewer.legend.cells] - Number of class cells. Only applicable to legends of type "cells"
-* @param {string} [viewer.legend.shapeWidth] - Width of class cells. Only applicable to legends of type "cells"
- * 
- * 
  * 
  */
 export function viewer(options) {

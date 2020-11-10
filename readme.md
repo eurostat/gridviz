@@ -37,11 +37,6 @@ From a CSV file with x and y columns, gridviz will build a Three.js viewer capab
 
 For colouring, you can use any of D3's scale chromatic colour schemes, or define them yourself by passing an array to the colors method along with the threshold values they correspond with.
 
-## Documentation
-
-For documentation see [docs](https://eurostat.github.io/gridviz/docs/)
-
-
 ## Installation
 
 ### Node.js
@@ -105,3 +100,6 @@ Most of these methods follow the pattern viewer.myMethod([value]): If a value is
 | viewer.showLegend([value])           | boolean                            | true                                                                                                                                          | Build d3 colour legend.                                                                                                                                                                                                                              |
 | viewer.legend([value])               | Object                             | { type:"continuous", width:140, height:320, orientation:"vertical", title:"Legend", titleWidth: 50, format:".0s", cells: 13, shapeWidth: 30 } | Builds a legend of either type "continuous" or "cells". Cells and shapewidth properties are only applicable to legends of type "cells".                                                                                                              |
 
+## Developer docs
+
+For source code documentation see [docs](https://eurostat.github.io/gridviz/docs/)
