@@ -101,7 +101,7 @@ export function viewer(options) {
   viewer.colorSchemeSelector_ = false;
   viewer.colorScaleSelectorLabel_ = "Color scale: "
   viewer.colorScaleSelector_ = false;
-  viewer.colorScaleSelectorDefault_ = "scaleSequential"
+  viewer.colorScaleSelectorDefault_ = viewer.colorScaleName_
   viewer.colorFieldSelectorLabel_ = "Color field: "
   viewer.colorFieldSelector_ = false;
   viewer.sizeFieldSelector_ = false;
@@ -1429,7 +1429,7 @@ export function viewer(options) {
       option.innerText = scale.innerText;
       viewer.colorScaleSelect.appendChild(option);
     }
-    viewer.colorScaleSelect.value = viewer.colorScaleSelectorDefault_;
+    viewer.colorScaleSelect.value = viewer.colorScaleName_;
     dropdown_container.appendChild(label);
     dropdown_container.appendChild(viewer.colorScaleSelect);
     viewer.selectorsContainer.appendChild(dropdown_container);
