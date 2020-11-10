@@ -8,10 +8,10 @@
 A JavaScript Library built for visualizing gridded statistics from CSV files. 
 
 <div>
-  <img src="assets/images/previews/preview6.png" alt="preview" width="49.7%" height="210px"/>
-<img src="assets/images/previews/preview5.png" alt="preview" width="49.7%" height="210px"/>
-<img src="assets/images/previews/preview2.png" alt="preview" width="49.7%" height="210px"/>
-<img src="assets/images/previews/preview4.png" alt="preview" width="49.7%" height="210px"/>
+  <img src="assets/images/previews/preview6.png" alt="preview" width="40.7%" height="210px"/>
+<img src="assets/images/previews/preview5.png" alt="preview" width="40.7%" height="210px"/>
+<img src="assets/images/previews/preview2.png" alt="preview" width="40.7%" height="210px"/>
+<img src="assets/images/previews/preview4.png" alt="preview" width="40.7%" height="210px"/>
 
 </div>
 
