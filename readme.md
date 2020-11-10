@@ -8,7 +8,7 @@
 A JavaScript Library built for visualizing gridded statistics from CSV files. 
 
 <div>
-  <img src="assets/images/previews/preview6.png" alt="preview" width="47.7%" height="10%"/>
+  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/previews/preview6.png" alt="preview" width="47.7%" height="10%"/>
 <img src="assets/images/previews/preview5.png" alt="preview" width="47.7%" height="10%"/>
 <img src="assets/images/previews/preview2.png" alt="preview" width="47.7%" height="10%"/>
 <img src="assets/images/previews/preview4.png" alt="preview" width="47.7%" height="10%"/>
