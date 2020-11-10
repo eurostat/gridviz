@@ -24,8 +24,9 @@
         ])
         .zerosRemoved(3) //last 3 zeros were removed from dataset for efficiency
         .colorField("value")  // csv column which you wish to visualize
-        .sizeField("value")  // csv column which you wish to visualize
+        .sizeField(false)  // csv column which you wish to visualize
         .nuts2json(true) //loads borders topojson
+        .cellCount(true)
         .center([4369, 3230])//EPSG=3035 with last 3 zeros removed
         .zoom(500)
         .height(window.innerHeight)
@@ -33,8 +34,7 @@
         .backgroundColor("#000")
         .loadingIcon("roller")
         .borderColor("#000")
-        .colorScheme("interpolateCividis")
-        .colorScaleFunction("scaleSequentialLog") //scaleSequential or scaleDiverging & their respective variants
+        .colorSchemeName("interpolateCividis")
         .colorSchemeSelector(true)
         .legend({
             height: 360,

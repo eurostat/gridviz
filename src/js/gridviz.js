@@ -1,5 +1,4 @@
-
-//d3.js
+// d3.js
 import { zoom, zoomIdentity } from "d3-zoom";
 import * as d3scaleChromatic from "d3-scale-chromatic";
 import * as d3scale from "d3-scale";
@@ -10,7 +9,6 @@ import { format } from "d3-format";
 import { extent, range, quantile } from "d3-array";
 import { select, create, selectAll, mouse } from "d3-selection";
 import { event as currentEvent } from 'd3-selection';
-//library used for legend
 import * as LEGEND from "d3-svg-legend";
 //three.js
 import {
@@ -29,31 +27,21 @@ import {
 
 } from "three";
 import * as THREE from "three/src/constants";
-// extra Three.js modules not included in main build
+// extra Three.js modules not included in main threejs build
 import { Line2 } from "./threejs/lines/Line2";
 import { LineGeometry } from "./threejs/lines/LineGeometry";
 import { LineMaterial } from "./threejs/lines/LineMaterial";
 import { CSS2DRenderer, CSS2DObject } from "./threejs/CSS2D/CSS2DRenderer";
-//lodash
-// import { sortBy } from "lodash";
-//topojson
+// for loading NUTS2json 
 import { feature } from "topojson";
-//gridviz
 import * as CONSTANTS from "./constants.js";
 import * as Utils from "./utils";
 
 
 //TODO list:
-//
 //Resize bug:
 //https://stackoverflow.com/questions/41814539/html-div-height-keeps-growing-on-window-resize-event
 //container_element.style.lineHeight = 0; fixes resize bug, but placenames loose background styling.
-//
-//Go to center instead of transforming coordinates
-//Apply setters to input options params
-// Placenames in different CRS
-//DatasourceURL (multiple grids must have defined scale-resolution thresholds)
-//FIX placenames 'extent' request parameter
 //
 
 /**
@@ -63,19 +51,35 @@ import * as Utils from "./utils";
  * @requires "THREE"
  * @requires "D3"
  * @param {} options
- * @param {HTMLElement} [options.container_element = document.body] - The DOM element used for the THREE.js renderer.
- * @param {number} [options.background_color = 0x000000] - THREE.Scene background color (hexidecimal).
- * @param {number} [options.border_color = 0xffffff] - THREE.Line2 color (hexidecimal).
- * @param {string} [options.color_scheme = "interpolateTurbo"] - D3 Scale-Chromatic color scheme to use for cell-coloring.
- * @param {boolean} [options.showLegend = true] - THREE.Line2 color (hexidecimal).
- * @param {boolean} [options.showColorSchemeSelector = true] - THREE.Line2 color (hexidecimal).
+ * @param {HTMLElement} [viewer.container_element = document.body] - The DOM element used for the THREE.js renderer.
+ * @param {number} [viewer.height = window.innerHeight] - The height value used for the threejs scene, camera, zoom, labels.
+ * @param {number} [viewer.width = window.innerWidth] - The width value used for the threejs scene, camera, zoom, labels.
+ * @param {number} [viewer.backgroundColor = "#b7b7b7"] - THREE.Scene background color (hexidecimal).
+ * @param {number} [viewer.borderColor = "#ffffff"] - Hex string which is later converted to THREE.Line2 color (hexidecimal).
+ * @param {string} [viewer.highlightColor = "#37f2d6"] - Hex string which is later converted to THREE.Line2 color (hexidecimal).
+ * @param {string} [viewer.loadingIcon = "ring"] - CSS animation used for the loading icon, other options are: ripple | ring | ellipsis | roller.
+ * @param {string} [viewer.colorSchemeName = "interpolateTurbo"] - Name of the d3-sclae-chromatic function name used for colouring cells.
+ * @param {array} [viewer.colors = null] - Array of hex strings to be used in combination with viewer.thresholdValues for colouring.
+ * @param {array} [viewer.thresholdValues = null] - Array of threshold values that are applied to the colour scaling function.
+ * @param {function} [viewer.colorScaleFunction = d3.scaleSequential] - D3.scale function used for defining colour values. Current working functions seem to be scaleSequential or scaleDiverging & their respective variants.
+ * @param {function} [viewer.sizeScaleFunction = d3.scaleSqrt] - D3.scale function used for defining colour values. Current working functions seem to be scaleSequential or scaleDiverging & their respective variants.
+ * @param {boolean} [viewer.colorSchemeSelector = false] - Whether or not to build a simple html select input for the available d3-scale-chromatic colour schemes.
+ * @param {boolean} [viewer.colorFieldSelector = false] - Whether or not to build a simple html select input showing the available fields in the csv file that can be used to drive cell colour.
+ * @param {boolean} [viewer.sizeFieldSelector = false] - Whether or not to build a simple html select input showing the available fields in the csv file that can be used to drive cell size.
+ * @param {boolean} [viewer.showLegend = true] - Build d3 colour legend.
+ * @param {boolean} [viewer.showPlacenames = true] - Adds placenames to the viewer. Placename-scale thresholds currently defined by the user.
+ * @param {boolean} [viewer.showColorSchemeSelector = true] - THREE.Line2 color (hexidecimal).
+ * 
+ *  
+ * @param {object} [viewer.legend = {type: "continuous", width: 140,height: 320, orientation: "vertical", title: "Legend",titleWidth: 50, width: null, format: ".0s", cells: 13, shapeWidth: 30}] - Builds d3 colour legend.
+
  * @description User defined parameters
  */
 export function viewer(options) {
   //output object
   let viewer = {};
 
-  //dev
+  //debugging
   viewer.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
 
   //styles
@@ -88,6 +92,8 @@ export function viewer(options) {
   viewer.loadingIcon_ = "ring"; //ripple | ring | ellipsis | roller
 
   // https://d3-legend.susielu.com vs https://blog.scottlogic.com/2019/03/13/how-to-create-a-continuous-colour-range-legend-using-d3-and-d3fc.html
+  viewer.showLegend_ = true;
+  // legend config
   viewer.legend_ = {
     type: "continuous", //cells vs continuous
     width: 140,
@@ -100,30 +106,36 @@ export function viewer(options) {
     cells: 13,
     shapeWidth: 30
   };
+  viewer.gridLegend; //legend stored here
 
   //d3 Scale stuff
-  viewer.colorScheme_ = "interpolateTurbo";
+  viewer.colorSchemeName_ = "interpolateTurbo";
+  viewer.sizeScaleName_ = "scaleSqrt";
+  viewer.colorScaleName_ = "scaleSequential";
+  viewer._defaultColorScaleFunction = d3scale[viewer.colorScaleName_];
+  viewer._defaultSizeScaleFunction = d3scale[viewer.sizeScaleName_];
   viewer.colors_ = null;
   viewer.thresholdValues_ = null;
-  viewer.colorScaleFunction_ = "scaleSequential"; //scaleSequential or scaleDiverging & their respective variants
-  viewer.sizeScaleFunction = "scaleSqrt"; //scaleSequential or scaleDiverging & their respective variants
-  viewer.colorScale_ = null; //requires .range and .domain functions
-  viewer.sizeScale_ = null;  //requires .range and .domain functions
+  viewer.colorScaleFunction_ = null;
+  viewer.sizeScaleFunction_ = null;
 
   //dropdowns
   viewer.colorSchemeSelector_ = false;
   viewer.colorScaleSelectorLabel_ = "Color scale: "
   viewer.colorScaleSelector_ = false;
+  viewer.colorScaleSelectorDefault_ = "scaleSequential"
   viewer.colorFieldSelectorLabel_ = "Color field: "
   viewer.colorFieldSelector_ = false;
   viewer.sizeFieldSelector_ = false;
   viewer.sizeFieldSelectorLabel_ = "Size field: ";
-  viewer.d3ScaleSelector_ = false;
 
-  //data params
+  // placenames
+  viewer.showPlacenames_ = false;
   viewer.placenamesEPSG_ = 3035; //used to determine grid rendering; placenames;
   viewer.placenamesCountry_ = false;
   viewer.placenameThresholds_ = null;
+
+  // dataset properties
   viewer.center_ = null; //default - If not specified then should default as first or randomly selected point
   viewer.zerosRemoved_ = 0; //to make EPSG 3035 files lighter, the final 3 zeros of each x/y coordinate are often removed. 
   viewer.colorField_ = null;
@@ -155,6 +167,7 @@ export function viewer(options) {
   //three.js scene
   viewer.scene = null;
   viewer.animating = false;
+
   // remaining variables
   let lineMaterial,
     boundariesGroup, //THREE.Group for nuts borders
@@ -169,7 +182,6 @@ export function viewer(options) {
     tooltip,
     pointTip,
     labelTip,
-    gridLegend,
     view,
     labelRenderer,
     renderer;
@@ -193,7 +205,7 @@ export function viewer(options) {
       viewer.legend_[key] = v[key];
     }
     //update legend if necessary
-    if (gridLegend) {
+    if (viewer.gridLegend) {
       updateLegend()
     }
     return viewer;
@@ -205,7 +217,11 @@ export function viewer(options) {
       viewer.gridData_ = v;
       viewer.resolution_ = v[0].cellSize
       gridConfig = defineGridConfig();
-      removePlacenamesFromScene(); //clear labels
+
+      if (viewer.showPlacenames_) {
+        removePlacenamesFromScene(); //clear labels
+      }
+
       redefineCamera();
       //clear previous grid
       loadGrid(v[0])
@@ -261,10 +277,7 @@ export function viewer(options) {
     if (valid) {
       //set container height and width
       viewer.container_.classList.add("gridviz-container");
-      // viewer.container_.style.width =
-      //   viewer.width_ + "px";
-      // viewer.container_.style.height =
-      //   viewer.height_ + "px";
+
       //set resolution
       if (!viewer.resolution_) {
         viewer.resolution_ = viewer.gridData_[0].cellSize
@@ -292,11 +305,18 @@ export function viewer(options) {
 
       createCamera();
       createRaycaster();
-      addPanAndZoom();
-      //setUpZoom();
+
+      if (/Mobi|Android/i.test(navigator.userAgent)) {
+        // mobile!
+        addMobilePanAndZoom()
+      } else {
+        addPanAndZoom();
+      }
+
+
       createTooltipContainer();
 
-      if (viewer.colorSchemeSelector_ || viewer.colorScaleSelector_ || viewer.sizeFieldSelector_) {
+      if (viewer.colorSchemeSelector_ || viewer.colorScaleSelector_ || viewer.sizeFieldSelector_ || viewer.colorFieldSelector_) {
         addSelectorsContainerToDOM();
       }
 
@@ -324,7 +344,10 @@ export function viewer(options) {
       //request initial placenames
       // view.transition().call(viewer.zoom.scaleBy, 1.000001);//sets initial scale properly (otherwise it starts as 0.0something)
       // let scale = getScaleFromZ(camera.position.z);
-      getPlacenames(camera.position.z);
+      if (viewer.showPlacenames_) {
+        getPlacenames(camera.position.z);
+      }
+
 
       return viewer;
     } else {
@@ -575,8 +598,8 @@ export function viewer(options) {
           if (!err) {
             //define scales
             viewer.valuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.colorField_]);
-            viewer.colorScale_ = defineColorScale();
-            if (viewer.sizeField_) viewer.sizeScale_ = defineSizeScale();
+            viewer.colorScaleFunction_ = defineColorScale();
+            if (viewer.sizeField_) viewer.sizeScaleFunction_ = defineSizeScale();
 
             if (!viewer.center_) {
               let index = parseInt(gridCaches[viewer.resolution_].length / 2);
@@ -664,21 +687,42 @@ export function viewer(options) {
         .range(viewer.colors_);
     } else {
       let domain;
-      if (viewer.colorScaleFunction_ == "scaleDiverging") {
-        domain = [viewer.valuesExtent[0], 0, viewer.valuesExtent[1]];
-        return d3scale[viewer.colorScaleFunction_](domain, d3scaleChromatic[viewer.colorScheme_])
-      } else {
+      // assign default if user doesnt specify their own function
+      if (!viewer.colorScaleFunction_) {
         domain = viewer.valuesExtent;
-        return d3scale[viewer.colorScaleFunction_](domain, d3scaleChromatic[viewer.colorScheme_])
+        return viewer._defaultColorScaleFunction(domain, d3scaleChromatic[viewer.colorSchemeName_]);
+      } else {
+        return viewer.colorScaleFunction_;
       }
     }
   }
 
+  // called when user selects a different colour scheme or scale function
+  function updateColorScaleFunction() {
+    let domain;
+    if (viewer.colorScaleName_ == "scaleDiverging") {
+      domain = [viewer.valuesExtent[0], 0, viewer.valuesExtent[1]];
+    } else {
+      domain = viewer.valuesExtent;
+    }
+    viewer.colorScaleFunction_ = d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
+  }
+
+  // called when user selects a different colour scheme or scale function
+  function updateSizeScaleFunction() {
+    let domain = viewer.valuesExtent;
+    viewer.sizeScaleFunction_ = d3scale[viewer.sizeScaleName_]().domain(domain).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]);
+  }
+
+
 
   function defineSizeScale() {
-    //default scale
-    let func = d3scale[viewer.sizeScaleFunction];
-    return func().domain(viewer.valuesExtent).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
+    // user-defined vs default scale
+    if (viewer.sizeScaleFunction_) {
+      return viewer.sizeScaleFunction_;
+    } else {
+      return viewer._defaultSizeScaleFunction().domain(viewer.valuesExtent).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
+    }
   }
 
   /**
@@ -927,10 +971,10 @@ export function viewer(options) {
 
 
   function updateColorScale() {
-    viewer.colorScale_ = defineColorScale();
+    updateColorScaleFunction();
   }
   function updateSizeScale() {
-    viewer.sizeScale_ = defineSizeScale();
+    updateSizeScaleFunction();
   }
 
   /**
@@ -940,7 +984,7 @@ export function viewer(options) {
   function updatePointsColors() {
     let colors = [];
     for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
-      let hex = viewer.colorScale_(gridCaches[viewer.resolution_][i][viewer.colorField_]); //d3 scale-chromatic
+      let hex = viewer.colorScaleFunction_(gridCaches[viewer.resolution_][i][viewer.colorField_]); //d3 scale-chromatic
       if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
       }
@@ -965,7 +1009,7 @@ export function viewer(options) {
     let sizes = [];
     for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
       if (viewer.sizeField_ && viewer.sizeField_ !== "null") {
-        sizes.push(viewer.sizeScale_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
+        sizes.push(viewer.sizeScaleFunction_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
       } else {
         sizes.push(gridConfig.point_size);
       }
@@ -1003,7 +1047,7 @@ export function viewer(options) {
       let y = parseFloat(coords[1]);
       let z = CONSTANTS.point_z;
       let indicator = gridCaches[viewer.resolution_][i][viewer.colorField_];
-      let hex = viewer.colorScale_(parseFloat(indicator)); //d3 scale-chromatic
+      let hex = viewer.colorScaleFunction_(parseFloat(indicator)); //d3 scale-chromatic
       if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
       }
@@ -1018,7 +1062,7 @@ export function viewer(options) {
         colors.push(blk.r, blk.g, blk.b)
       }
       if (viewer.sizeField_) {
-        sizes.push(viewer.sizeScale_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
+        sizes.push(viewer.sizeScaleFunction_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
       } else {
         sizes.push(gridConfig.point_size);
       }
@@ -1068,13 +1112,16 @@ export function viewer(options) {
       pointsLayer.material = pointsMaterial;
     }
     //create or update legend
-    if (viewer.legend_) {
-      if (gridLegend) {
-        updateLegend();
-      } else {
-        createLegend();
+    if (viewer.showLegend_) {
+      if (viewer.legend_) {
+        if (viewer.gridLegend) {
+          updateLegend();
+        } else {
+          createLegend();
+        }
       }
     }
+
     Utils.hideLoading();
     if (!viewer.animating) {
       animate();
@@ -1284,7 +1331,7 @@ export function viewer(options) {
       option.innerText = scheme.innerText;
       viewer.schemesSelect.appendChild(option);
     }
-    viewer.schemesSelect.value = viewer.colorScheme_;
+    viewer.schemesSelect.value = viewer.colorSchemeName_;
     dropdown_container.appendChild(label);
     dropdown_container.appendChild(viewer.schemesSelect);
     viewer.selectorsContainer.appendChild(dropdown_container);
@@ -1335,7 +1382,7 @@ export function viewer(options) {
       option.innerText = scale.innerText;
       viewer.colorScaleSelect.appendChild(option);
     }
-    viewer.colorScaleSelect.value = viewer.colorScaleFunction_;
+    viewer.colorScaleSelect.value = viewer.colorScaleSelectorDefault_;
     dropdown_container.appendChild(label);
     dropdown_container.appendChild(viewer.colorScaleSelect);
     viewer.selectorsContainer.appendChild(dropdown_container);
@@ -1444,20 +1491,20 @@ export function viewer(options) {
       .attr("class", "gridviz-legend-svg")
       .attr("transform", "translate(10,15)"); //padding
 
-    gridLegend = LEGEND.legendColor()
+    viewer.gridLegend = LEGEND.legendColor()
       .shapeWidth(viewer.legend_.shapeWidth)
       .cells(viewer.legend_.cells)
       .labelFormat(format(viewer.legend_.format))
       .orient(viewer.legend_.orientation)
-      .scale(viewer.colorScale_)
+      .scale(viewer.colorScaleFunction_)
       .title(viewer.legend_.title)
       .titleWidth(viewer.legend_.titleWidth)
 
     if (viewer.thresholdValues_) {
-      gridLegend.labels(thresholdLabels)
+      viewer.gridLegend.labels(thresholdLabels)
     }
 
-    legendContainer.select(".gridviz-legend-svg").call(gridLegend);
+    legendContainer.select(".gridviz-legend-svg").call(viewer.gridLegend);
 
     //adjust width/height
     legendContainer.style("height", viewer.legend_.height + "px");
@@ -1475,13 +1522,13 @@ export function viewer(options) {
       viewer.container_.appendChild(container.node());
     }
 
-    gridLegend = colorLegend({
-      color: viewer.colorScale_,
+    viewer.gridLegend = colorLegend({
+      color: viewer.colorScaleFunction_,
       title: viewer.legend_.title,
       tickFormat: ".0f"
     });
 
-    container.node().appendChild(gridLegend);
+    container.node().appendChild(viewer.gridLegend);
 
   }
   function ramp(color, n = 256) {
@@ -1652,8 +1699,8 @@ export function viewer(options) {
  * @param {*} scheme
  */
   function onChangeColorScheme(scheme) {
-    viewer.colorScheme_ = scheme;
-    viewer.colorScale_ = defineColorScale();
+    viewer.colorSchemeName_ = scheme;
+    updateColorScale();
     updatePointsColors();
     if (viewer.legend_) {
       updateLegend();
@@ -1699,7 +1746,7 @@ export function viewer(options) {
   * @param {*} scale
   */
   function onChangeColorScale(scale) {
-    viewer.colorScaleFunction_ = scale;
+    viewer.colorScaleName_ = scale;
     updateColorScale();
     updatePointsColors();
     if (viewer.legend_) {
@@ -1727,7 +1774,7 @@ export function viewer(options) {
     viewer.sizeField_ = field;
     updateSizeScale();
     updatePointsSizes();
-    if (viewer.legend_) {
+    if (viewer.gridLegend) {
       updateLegend();
     }
   }
@@ -1768,7 +1815,7 @@ export function viewer(options) {
   }
 
   //functions taken from observableHQ & work on mobile:
-  function setUpZoomMobile() {
+  function addMobilePanAndZoom() {
     let d3_zoom = zoom()
       .scaleExtent([getScaleFromZMobile(viewer.camera.far_), getScaleFromZMobile(viewer.camera.near_)])
       .on('zoom', () => {
@@ -1905,12 +1952,14 @@ export function viewer(options) {
       console.info(scale);
     }
     // get placenames at certain zoom levels
-    if (pointsLayer) {
-      if (scale > 0 && scale < viewer.camera.far_) {
-        //placenames are added to the pointsLayer object
-        getPlacenames(scale);
-      } else {
-        removePlacenamesFromScene();
+    if (viewer.showPlacenames_) {
+      if (pointsLayer) {
+        if (scale > 0 && scale < viewer.camera.far_) {
+          //placenames are added to the pointsLayer object
+          getPlacenames(scale);
+        } else {
+          removePlacenamesFromScene();
+        }
       }
     }
 

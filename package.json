@@ -1,6 +1,6 @@
 {
   "name": "gridviz",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Visualization tool for gridded statistics",
   "main": "build/gridviz.js",
   "scripts": {
@@ -8,17 +8,16 @@
     "start": "npm run build-dev",
     "build": "npm run build-prod",
     "docs": "./node_modules/.bin/jsdoc src/gridviz.js -d docs",
-    "server": "webpack-dev-server --mode development",
     "build-dev": "webpack --config webpack.config.dev.js",
     "build-prod": "webpack --config webpack.config.prod.js"
   },
   "files": [
-    "build/gridviz.js"
+    "build/gridviz.min.js"
   ],
   "author": "Joseph Davies",
   "license": "EUPL",
   "bugs": {
-    "url": "https://github.com/eurostat/GridViz/issues",
+    "url": "https://github.com/eurostat/gridviz/issues",
     "email": "Joseph.DAVIES@ext.ec.europa.eu"
   },
   "devDependencies": {

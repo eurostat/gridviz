@@ -47,7 +47,7 @@ function addMouseEvents() {
             //set new gridData on viewer
             viewer.colorField("value")
                 .zerosRemoved(3)
-                .colorScheme("interpolateTurbo")
+                .colorSchemeName("interpolateTurbo")
                 .gridData([
                     {
                         url: "../../../../assets/csv/Europe/2km/pop_2km.csv",
@@ -73,7 +73,7 @@ function addMouseEvents() {
                 .zerosRemoved(3)
                 .colors(null)
                 .thresholdValues(null)
-                .colorScheme("interpolateTurbo")
+                .colorSchemeName("interpolateTurbo")
                 .gridData([
                     {
                         url: "../../../assets/csv/Europe/5km/3035/pop_grid_5km_incl_uninhab.csv",
