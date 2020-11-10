@@ -1,4 +1,33 @@
-// d3.js
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>JSDoc: Source: gridviz.js</title>
+
+  <script src="scripts/prettify/prettify.js"> </script>
+  <script src="scripts/prettify/lang-css.js"> </script>
+  <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+  <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+  <div id="main">
+
+    <h1 class="page-title">Source: gridviz.js</h1>
+
+
+
+
+
+
+    <section>
+      <article>
+        <pre class="prettyprint source linenums"><code>// d3.js
 import { zoom, zoomIdentity } from "d3-zoom";
 import * as d3scaleChromatic from "d3-scale-chromatic";
 import * as d3scale from "d3-scale";
@@ -61,8 +90,8 @@ import * as Utils from "./utils";
  * @param {string} [viewer.colorSchemeName = "interpolateTurbo"] - Name of the d3-sclae-chromatic function name used for colouring cells.
  * @param {array} [viewer.colors = null] - Array of hex strings to be used in combination with viewer.thresholdValues for colouring.
  * @param {array} [viewer.thresholdValues = null] - Array of threshold values that are applied to the colour scaling function.
- * @param {function} [viewer.colorScaleFunction = d3.scaleSequential] - D3.scale function used for defining colour values. Current working functions seem to be scaleSequential or scaleDiverging & their respective variants.
- * @param {function} [viewer.sizeScaleFunction = d3.scaleSqrt] - D3.scale function used for defining colour values. Current working functions seem to be scaleSequential or scaleDiverging & their respective variants.
+ * @param {function} [viewer.colorScaleFunction = d3.scaleSequential] - D3.scale function used for defining colour values. Current working functions seem to be scaleSequential or scaleDiverging &amp; their respective variants.
+ * @param {function} [viewer.sizeScaleFunction = d3.scaleSqrt] - D3.scale function used for defining colour values. Current working functions seem to be scaleSequential or scaleDiverging &amp; their respective variants.
  * @param {boolean} [viewer.colorSchemeSelector = false] - Whether or not to build a simple html select input for the available d3-scale-chromatic colour schemes.
  * @param {boolean} [viewer.colorFieldSelector = false] - Whether or not to build a simple html select input showing the available fields in the csv file that can be used to drive cell colour.
  * @param {boolean} [viewer.sizeFieldSelector = false] - Whether or not to build a simple html select input showing the available fields in the csv file that can be used to drive cell size.
@@ -70,7 +99,7 @@ import * as Utils from "./utils";
  * @param {boolean} [viewer.showPlacenames = true] - Adds placenames to the viewer. Placename-scale thresholds currently defined by the user.
  * @param {boolean} [viewer.showColorSchemeSelector = true] - THREE.Line2 color (hexidecimal).
  * 
-
+ * @param {Object} [viewer.legend] - Builds d3 colour legend.
 * @param {string} [viewer.legend.type] - Type of legend to build. continuous | cells.
 * @param {number} [viewer.legend.width] - Legend width.
 * @param {number} [viewer.legend.height] - Legend height.
@@ -89,7 +118,7 @@ export function viewer(options) {
   let viewer = {};
 
   //debugging
-  viewer.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
+  viewer.debugPlacenames_ = false; //logs scale &amp; population filter values in the console upon zoom
 
   //styles
   viewer.container_ = document.body;
@@ -222,7 +251,7 @@ export function viewer(options) {
 
   //if gridData has already been added, this function now overwrites the gridData currently in the viewer.
   viewer.gridData = function (v) {
-    if (v && pointsLayer) {
+    if (v &amp;&amp; pointsLayer) {
       viewer.gridData_ = v;
       viewer.resolution_ = v[0].cellSize
       gridConfig = defineGridConfig();
@@ -244,7 +273,7 @@ export function viewer(options) {
 
   //if viewer has already been initialized, calls to center() method will move existing camera
   viewer.center = function (v) {
-    if (v && viewer.scene) {
+    if (v &amp;&amp; viewer.scene) {
       viewer.center_ = v;
       redefineCamera();
       setCamera(v[0], v[1], 0)
@@ -258,7 +287,7 @@ export function viewer(options) {
 
   //if viewer has already been initialized, calls to zoom() method will move existing camera
   viewer.zoom = function (v) {
-    if (v && viewer.scene) {
+    if (v &amp;&amp; viewer.scene) {
       viewer.zoom_ = v;
       redefineCamera();
       camera.position.set(camera.position.x, camera.position.y, v); // Set camera zoom (z position)
@@ -358,7 +387,7 @@ export function viewer(options) {
   };
 
   function validateInputs() {
-    if (viewer.colors_ && viewer.thresholdValues_) {
+    if (viewer.colors_ &amp;&amp; viewer.thresholdValues_) {
       if (viewer.colors_.length !== viewer.thresholdValues_.length) {
         alert("The number of colors and thesholdvalues must be equal")
         return false;
@@ -598,12 +627,9 @@ export function viewer(options) {
         err => {
           if (!err) {
             //define scales
-            viewer.colorValuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.colorField_]);
+            viewer.valuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.colorField_]);
             viewer.colorScaleFunction_ = defineColorScale();
-            if (viewer.sizeField_) {
-              viewer.sizeValuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.sizeField_]);
-              viewer.sizeScaleFunction_ = defineSizeScale();
-            }
+            if (viewer.sizeField_) viewer.sizeScaleFunction_ = defineSizeScale();
 
             if (!viewer.center_) {
               let index = parseInt(gridCaches[viewer.resolution_].length / 2);
@@ -645,7 +671,7 @@ export function viewer(options) {
     return csv(grid.url).then(
       csv => {
         //validate csv
-        if (csv[0].x && csv[0].y && csv[0][viewer.colorField_]) {
+        if (csv[0].x &amp;&amp; csv[0].y &amp;&amp; csv[0][viewer.colorField_]) {
           viewer.cellCount = csv.length;
           if (viewer.cellCount_) {
             addCellCountToDOM();
@@ -669,7 +695,7 @@ export function viewer(options) {
    */
   function addGridToCache(csv, res) {
     if (csv) {
-      for (let i = 0; i < csv.length; i++) {
+      for (let i = 0; i &lt; csv.length; i++) {
         let position = [csv[i].x, csv[i].y];
         let value = csv[i][viewer.colorField_];
         let point = {
@@ -684,7 +710,7 @@ export function viewer(options) {
 
   //any scale accepted by d3-legend.susielu.com
   function defineColorScale() {
-    if (viewer.colors_ && viewer.thresholdValues_) {
+    if (viewer.colors_ &amp;&amp; viewer.thresholdValues_) {
       return d3scale
         .scaleThreshold()
         .domain(viewer.thresholdValues_)
@@ -693,7 +719,7 @@ export function viewer(options) {
       let domain;
       // assign default if user doesnt specify their own function
       if (!viewer.colorScaleFunction_) {
-        domain = viewer.colorValuesExtent;
+        domain = viewer.valuesExtent;
         return viewer._defaultColorScaleFunction(domain, d3scaleChromatic[viewer.colorSchemeName_]);
       } else {
         return viewer.colorScaleFunction_;
@@ -705,25 +731,17 @@ export function viewer(options) {
   function updateColorScaleFunction() {
     let domain;
     if (viewer.colorScaleName_ == "scaleDiverging") {
-      domain = [viewer.colorValuesExtent[0], 0, viewer.colorValuesExtent[1]];
+      domain = [viewer.valuesExtent[0], 0, viewer.valuesExtent[1]];
     } else {
-      domain = viewer.colorValuesExtent;
+      domain = viewer.valuesExtent;
     }
     viewer.colorScaleFunction_ = d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
   }
 
   // called when user selects a different colour scheme or scale function
   function updateSizeScaleFunction() {
-    //create if didnt exist upon initialization
-    if (!viewer.sizeValuesExtent) {
-      viewer.sizeValuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.sizeField_]);
-      viewer.sizeScaleFunction_ = defineSizeScale();
-    } else {
-      //update
-      let domain = viewer.sizeValuesExtent;
-      viewer.sizeScaleFunction_ = d3scale[viewer.sizeScaleName_]().domain(domain).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]);
-    }
-
+    let domain = viewer.valuesExtent;
+    viewer.sizeScaleFunction_ = d3scale[viewer.sizeScaleName_]().domain(domain).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]);
   }
 
 
@@ -733,7 +751,7 @@ export function viewer(options) {
     if (viewer.sizeScaleFunction_) {
       return viewer.sizeScaleFunction_;
     } else {
-      return viewer._defaultSizeScaleFunction().domain(viewer.colorValuesExtent).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
+      return viewer._defaultSizeScaleFunction().domain(viewer.valuesExtent).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
     }
   }
 
@@ -785,12 +803,12 @@ export function viewer(options) {
     }
 
     // GEOJSON to ThreeJS
-    for (let i = 0; i < features.length; i++) {
+    for (let i = 0; i &lt; features.length; i++) {
       let feature = features[i];
-      for (let c = 0; c < feature.geometry.coordinates.length; c++) {
+      for (let c = 0; c &lt; feature.geometry.coordinates.length; c++) {
         coords = [];
         if (feature.geometry.type == "Polygon") {
-          for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
+          for (let s = 0; s &lt; feature.geometry.coordinates[c].length; s++) {
             let xyz;
             if (viewer.zerosRemoved_) {
               let d = Number('1E' + viewer.zerosRemoved_);
@@ -811,12 +829,12 @@ export function viewer(options) {
           }
           boundariesGroup.add(createLineFromCoords(coords));
         } else if (feature.geometry.type == "MultiPolygon") {
-          for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
+          for (let s = 0; s &lt; feature.geometry.coordinates[c].length; s++) {
             //each polygon in multipolygon:
             coords = [];
             for (
               let m = 0;
-              m < feature.geometry.coordinates[c][s].length;
+              m &lt; feature.geometry.coordinates[c][s].length;
               m++
             ) {
               let xyz;
@@ -874,13 +892,13 @@ export function viewer(options) {
     let geojsonGroup = new Group();
     geojsonGroup.renderOrder = 999; //always on top of grid
     // GEOJSON to ThreeJS
-    for (let i = 0; i < features.length; i++) {
+    for (let i = 0; i &lt; features.length; i++) {
       let feature = features[i];
       let coords = [];
-      for (let c = 0; c < feature.geometry.coordinates.length; c++) {
+      for (let c = 0; c &lt; feature.geometry.coordinates.length; c++) {
         if (feature.geometry.type == "Polygon") {
           let coords = [];
-          for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
+          for (let s = 0; s &lt; feature.geometry.coordinates[c].length; s++) {
             let xyz;
             if (viewer.zerosRemoved_) {
               let d = Number('1E' + viewer.zerosRemoved_);
@@ -901,12 +919,12 @@ export function viewer(options) {
           }
           geojsonGroup.add(createLineFromCoords(coords));
         } else if (feature.geometry.type == "MultiPolygon") {
-          for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
+          for (let s = 0; s &lt; feature.geometry.coordinates[c].length; s++) {
             //each polygon in multipolygon:
             let coords = [];
             for (
               let m = 0;
-              m < feature.geometry.coordinates[c][s].length;
+              m &lt; feature.geometry.coordinates[c][s].length;
               m++
             ) {
               let xyz;
@@ -965,7 +983,7 @@ export function viewer(options) {
     let positions = [];
     let colors = [];
     let color = new Color(viewer.borderColor_);
-    for (var i = 0; i < coords.length; i++) {
+    for (var i = 0; i &lt; coords.length; i++) {
       positions.push(coords[i].x, coords[i].y, layerZ);
       colors.push(color.r, color.g, color.b);
     }
@@ -995,7 +1013,7 @@ export function viewer(options) {
    */
   function updatePointsColors() {
     let colors = [];
-    for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
+    for (var i = 0; i &lt; gridCaches[viewer.resolution_].length; i++) {
       let hex = viewer.colorScaleFunction_(gridCaches[viewer.resolution_][i][viewer.colorField_]); //d3 scale-chromatic
       if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
@@ -1019,8 +1037,8 @@ export function viewer(options) {
    */
   function updatePointsSizes() {
     let sizes = [];
-    for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
-      if (viewer.sizeField_ && viewer.sizeField_ !== "null") {
+    for (var i = 0; i &lt; gridCaches[viewer.resolution_].length; i++) {
+      if (viewer.sizeField_ &amp;&amp; viewer.sizeField_ !== "null") {
         sizes.push(viewer.sizeScaleFunction_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
       } else {
         sizes.push(gridConfig.point_size);
@@ -1049,7 +1067,7 @@ export function viewer(options) {
     let colors = [];
     let positions = [];
     let sizes = [];
-    for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
+    for (var i = 0; i &lt; gridCaches[viewer.resolution_].length; i++) {
       // Set vector coordinates from data
       let coords = [
         gridCaches[viewer.resolution_][i].x,
@@ -1067,7 +1085,7 @@ export function viewer(options) {
       let color = new Color(hex);
 
       positions.push(x, y, z);
-      if (!isNaN(color.r) && !isNaN(color.g) && !isNaN(color.b)) {
+      if (!isNaN(color.r) &amp;&amp; !isNaN(color.g) &amp;&amp; !isNaN(color.b)) {
         colors.push(color.r, color.g, color.b);
       } else {
         let blk = new Color("#000");
@@ -1336,7 +1354,7 @@ export function viewer(options) {
     label.classList.add("gridviz-dropdown-label");
     label.innerText = "Colour scheme: ";
 
-    for (let i = 0; i < schemes.length; i++) {
+    for (let i = 0; i &lt; schemes.length; i++) {
       let scheme = schemes[i];
       let option = document.createElement("option");
       option.value = scheme.value;
@@ -1352,7 +1370,7 @@ export function viewer(options) {
 
   /**
    * Creates an HTML Select element for the different D3 Scale functions used to generate the colours
-   * Accepted: scaleSequential or scaleDiverging & their respective variants
+   * Accepted: scaleSequential or scaleDiverging &amp; their respective variants
    */
   function createColorScaleDropdown() {
     let scales = [
@@ -1387,7 +1405,7 @@ export function viewer(options) {
     label.classList.add("gridviz-dropdown-label");
     label.innerText = viewer.colorScaleSelectorLabel_;
 
-    for (let i = 0; i < scales.length; i++) {
+    for (let i = 0; i &lt; scales.length; i++) {
       let scale = scales[i];
       let option = document.createElement("option");
       option.value = scale.value;
@@ -1417,9 +1435,9 @@ export function viewer(options) {
     label.innerText = viewer.colorFieldSelectorLabel_;
 
     let fields = Object.keys(gridCaches[viewer.resolution_][0]);
-    for (let i = 0; i < fields.length; i++) {
+    for (let i = 0; i &lt; fields.length; i++) {
       let field = fields[i];
-      if (field.toLowerCase() !== "x" && field.toLowerCase() !== "y" && field !== "color") {
+      if (field.toLowerCase() !== "x" &amp;&amp; field.toLowerCase() !== "y" &amp;&amp; field !== "color") {
         let option = document.createElement("option");
         option.value = field;
         option.innerText = field;
@@ -1450,9 +1468,9 @@ export function viewer(options) {
     label.innerText = viewer.sizeFieldSelectorLabel_;
 
     let fields = Object.keys(gridCaches[viewer.resolution_][0]);
-    for (let i = 0; i < fields.length; i++) {
+    for (let i = 0; i &lt; fields.length; i++) {
       let field = fields[i];
-      if (field.toLowerCase() !== "x" && field.toLowerCase() !== "y" && field !== "color") {
+      if (field.toLowerCase() !== "x" &amp;&amp; field.toLowerCase() !== "y" &amp;&amp; field !== "color") {
         let option = document.createElement("option");
         option.value = field;
         option.innerText = field;
@@ -1548,7 +1566,7 @@ export function viewer(options) {
     canvas.width = n;
     canvas.height = 1;
     const context = canvas.getContext("2d");
-    for (let i = 0; i < n; ++i) {
+    for (let i = 0; i &lt; n; ++i) {
       context.fillStyle = color(i / (n - 1));
       context.fillRect(i, 0, 1, 1);
     }
@@ -1799,10 +1817,10 @@ export function viewer(options) {
 
     //inject tooltip HTML to DOM
     tooltipTemplate = document.createRange()
-      .createContextualFragment(`<div id="tooltip" style="display: none; position: absolute; pointer-events: none; z-index:999; border-radius:5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); font-size: 13px; text-align: center; line-height: 1; padding: 6px; background: white; font-family: sans-serif;">
-    <div id="labelTip" style="padding: 4px; margin-bottom: 4px;"></div>
-<div id="pointTip" style="padding: 4px; margin-bottom: 4px;"></div>
-</div>`);
+      .createContextualFragment(`&lt;div id="tooltip" style="display: none; position: absolute; pointer-events: none; z-index:999; border-radius:5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); font-size: 13px; text-align: center; line-height: 1; padding: 6px; background: white; font-family: sans-serif;">
+    &lt;div id="labelTip" style="padding: 4px; margin-bottom: 4px;">&lt;/div>
+&lt;div id="pointTip" style="padding: 4px; margin-bottom: 4px;">&lt;/div>
+&lt;/div>`);
     viewer.container_.append(tooltipTemplate);
 
     tooltip = document.querySelector("#tooltip");
@@ -1826,7 +1844,7 @@ export function viewer(options) {
     });
   }
 
-  //functions taken from observableHQ & work on mobile:
+  //functions taken from observableHQ &amp; work on mobile:
   function addMobilePanAndZoom() {
     let d3_zoom = zoom()
       .scaleExtent([getScaleFromZMobile(viewer.camera.far_), getScaleFromZMobile(viewer.camera.near_)])
@@ -1863,7 +1881,7 @@ export function viewer(options) {
     return camera_z_position;
   }
 
-  //taken from elsewhere & DOESNT work on mobile:
+  //taken from elsewhere &amp; DOESNT work on mobile:
   // add d3's zoom
   function addPanAndZoom() {
     // define zoom
@@ -1966,7 +1984,7 @@ export function viewer(options) {
     // get placenames at certain zoom levels
     if (viewer.showPlacenames_) {
       if (pointsLayer) {
-        if (scale > 0 && scale < viewer.camera.far_) {
+        if (scale > 0 &amp;&amp; scale &lt; viewer.camera.far_) {
           //placenames are added to the pointsLayer object
           getPlacenames(scale);
         } else {
@@ -1979,7 +1997,7 @@ export function viewer(options) {
     //URL themes: 2016/3035/20M/0.json
     if (viewer.nuts2json_) {
       if (
-        scale < CONSTANTS.nuts_scale_threshold &&
+        scale &lt; CONSTANTS.nuts_scale_threshold &amp;&amp;
         viewer.nutsSimplification_ !== "10M"
       ) {
         viewer.nutsSimplification_ = "10M";
@@ -1991,7 +2009,7 @@ export function viewer(options) {
           "/" + viewer.nutsLevel_ + ".json"
         );
       } else if (
-        scale > CONSTANTS.nuts_scale_threshold &&
+        scale > CONSTANTS.nuts_scale_threshold &amp;&amp;
         viewer.nutsSimplification_ !== "20M"
       ) {
         viewer.nutsSimplification_ = "20M";
@@ -2015,15 +2033,15 @@ export function viewer(options) {
     let where = defineWhereParameter(scale)
     let envelope = getCurrentViewExtent();
     //currentExtent = envelope;
-    //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
+    //ESRI Rest API envelope: &lt;xmin>,&lt;ymin>,&lt;xmax>,&lt;ymax> (bottom left x,y , top right x,y)
     let URL =
       CONSTANTS.placenames_base_URL +
       "where=" +
       where +
-      "&outSR=" +
+      "&amp;outSR=" +
       viewer.placenamesEPSG_ +
-      "&inSR=" + viewer.placenamesEPSG_ +
-      "&geometry=" +
+      "&amp;inSR=" + viewer.placenamesEPSG_ +
+      "&amp;geometry=" +
       envelope.xmin +
       "," +
       envelope.ymin +
@@ -2031,7 +2049,7 @@ export function viewer(options) {
       envelope.xmax +
       "," +
       envelope.ymax +
-      "&geometryType=esriGeometryEnvelope&f=json&outFields=GISREGIO.CITIES_TOWNS_RG.STTL_NAME,GISREGIO.CITIES_TOWNS_RG.POPL_2011";
+      "&amp;geometryType=esriGeometryEnvelope&amp;f=json&amp;outFields=GISREGIO.CITIES_TOWNS_RG.STTL_NAME,GISREGIO.CITIES_TOWNS_RG.POPL_2011";
 
     //manage multiple calls by replicating angular's .unsubscribe() somehow
     let uri = encodeURI(URL);
@@ -2074,12 +2092,12 @@ export function viewer(options) {
     //user-defined thresholds
     if (viewer.placenameThresholds_) {
       let thresholds = Object.keys(viewer.placenameThresholds_);
-      for (let i = 0; i < thresholds.length; i++) {
+      for (let i = 0; i &lt; thresholds.length; i++) {
         let t = thresholds[i];
         if (thresholds[i + 1]) { //if not last threshold
-          if (scale < parseInt(thresholds[0])) { //below first threshold
+          if (scale &lt; parseInt(thresholds[0])) { //below first threshold
             return populationFieldName + ">" + viewer.placenameThresholds_[thresholds[0]];
-          } else if (scale > parseInt(t) && scale < parseInt(thresholds[i + 1])) {
+          } else if (scale > parseInt(t) &amp;&amp; scale &lt; parseInt(thresholds[i + 1])) {
             // if current scale is between thresholds
             return populationFieldName + ">" + viewer.placenameThresholds_[t];
           }
@@ -2091,27 +2109,27 @@ export function viewer(options) {
     } else {
       //default values
       let r = viewer.resolution_
-      if (scale > 0 && scale < r) {
+      if (scale > 0 &amp;&amp; scale &lt; r) {
         return populationFieldName + ">10";
-      } else if (scale > r && scale < r * 2) {
+      } else if (scale > r &amp;&amp; scale &lt; r * 2) {
         return populationFieldName + ">1000";
-      } else if (scale > r * 2 && scale < r * 4) {
+      } else if (scale > r * 2 &amp;&amp; scale &lt; r * 4) {
         return populationFieldName + ">2500";
-      } else if (scale > r * 4 && scale < r * 8) {
+      } else if (scale > r * 4 &amp;&amp; scale &lt; r * 8) {
         return populationFieldName + ">5000";
-      } else if (scale > r * 8 && scale < r * 16) {
+      } else if (scale > r * 8 &amp;&amp; scale &lt; r * 16) {
         return populationFieldName + ">7500";
-      } else if (scale > r * 16 && scale < r * 32) {
+      } else if (scale > r * 16 &amp;&amp; scale &lt; r * 32) {
         return populationFieldName + ">10000";
-      } else if (scale > r * 32 && scale < r * 64) {
+      } else if (scale > r * 32 &amp;&amp; scale &lt; r * 64) {
         return populationFieldName + ">20000";
-      } else if (scale > r * 64 && scale < r * 128) {
+      } else if (scale > r * 64 &amp;&amp; scale &lt; r * 128) {
         return populationFieldName + ">100000";
-      } else if (scale > r * 128 && scale < r * 256) {
+      } else if (scale > r * 128 &amp;&amp; scale &lt; r * 256) {
         return populationFieldName + ">250000";
-      } else if (scale > r * 256 && scale < r * 512) {
+      } else if (scale > r * 256 &amp;&amp; scale &lt; r * 512) {
         return populationFieldName + ">500000";
-      } else if (scale > r * 512 && scale < r * 1024) {
+      } else if (scale > r * 512 &amp;&amp; scale &lt; r * 1024) {
         return populationFieldName + ">750000";
       } else if (scale > r * 1024) {
         return populationFieldName + ">1000000";
@@ -2128,7 +2146,7 @@ export function viewer(options) {
    */
   function addPlacenamesToScene(placenames) {
     if (pointsLayer) {
-      for (let p = 0; p < placenames.length; p++) {
+      for (let p = 0; p &lt; placenames.length; p++) {
         let label = createPlacenameLabelObject(placenames[p]);
         // TODO: group objects manually (THREE.group())
         pointsLayer.add(label);
@@ -2141,7 +2159,7 @@ export function viewer(options) {
    * It seems that the browsers JS garbage collector removes the DOM nodes
    */
   function removePlacenamesFromScene() {
-    if (pointsLayer && pointsLayer.children.length > 0) {
+    if (pointsLayer &amp;&amp; pointsLayer.children.length > 0) {
       for (var i = pointsLayer.children.length - 1; i >= 0; i--) {
         pointsLayer.remove(pointsLayer.children[i]);
       }
@@ -2353,9 +2371,9 @@ export function viewer(options) {
     tooltip.style.top = tooltip_state.top + "px";
     //pointTip.innerText = tooltip_state.name;
     pointTip.style.background = tooltip_state.color;
-    labelTip.innerHTML = `<strong>${viewer.colorField_}:</strong> ${tooltip_state.colorValue} <br> 
-  <strong>x:</strong> ${tooltip_state.coords[0]} <br> 
-  <strong>y:</strong> ${tooltip_state.coords[1]} <br> `;
+    labelTip.innerHTML = `&lt;strong>${viewer.colorField_}:&lt;/strong> ${tooltip_state.colorValue} &lt;br> 
+  &lt;strong>x:&lt;/strong> ${tooltip_state.coords[0]} &lt;br> 
+  &lt;strong>y:&lt;/strong> ${tooltip_state.coords[1]} &lt;br> `;
   }
 
   /**
@@ -2374,7 +2392,7 @@ export function viewer(options) {
     if (left > viewer.width_ - tooltipWidth) {
       left = left - (tooltipWidth + 40);
     }
-    if (top < 0) {
+    if (top &lt; 0) {
       top = top + (tooltipHeight);
     }
 
@@ -2392,7 +2410,7 @@ export function viewer(options) {
    *
    */
   function hideTooltip() {
-    if (tooltip && tooltip_state) {
+    if (tooltip &amp;&amp; tooltip_state) {
       tooltip.style.display = "none";
       //updateTooltip();
     }
@@ -2428,3 +2446,32 @@ export function viewer(options) {
 
   return viewer;
 }
+</code></pre>
+      </article>
+    </section>
+
+
+
+
+  </div>
+
+  <nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Global</h3>
+    <ul>
+      <li><a href="global.html#viewer">viewer</a></li>
+    </ul>
+  </nav>
+
+  <br class="clear">
+
+  <footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Nov 10 2020 14:31:31
+    GMT+0100 (CET)
+  </footer>
+
+  <script> prettyPrint(); </script>
+  <script src="scripts/linenumber.js"> </script>
+</body>
+
+</html>

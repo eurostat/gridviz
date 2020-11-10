@@ -104,7 +104,7 @@
     
 
     
-    <h4 class="name" id="createViewer"><span class="type-signature"></span>createViewer<span class="signature">(options)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="viewer"><span class="type-signature"></span>viewer<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -112,7 +112,7 @@
 
 
 <div class="description">
-    User defined parameters
+    Generates a 2D Three.js scene for visualizing large point datasets using WebGL. The library follows a similar structure to that of d3, whereby parameters are set using a series of accessor functions, each of which returns the main viewer.
 </div>
 
 
@@ -125,43 +125,6 @@
 
     <h5>Parameters:</h5>
     
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <h6>Properties</h6>
-                
 
 <table class="params">
     <thead>
@@ -189,7 +152,7 @@
 
         <tr>
             
-                <td class="name"><code>container_element</code></td>
+                <td class="name"><code>viewer.container_element()</code></td>
             
 
             <td class="type">
@@ -228,7 +191,7 @@
 
         <tr>
             
-                <td class="name"><code>background_color</code></td>
+                <td class="name"><code>viewer.height</code></td>
             
 
             <td class="type">
@@ -255,7 +218,85 @@
             
                 <td class="default">
                 
-                    0x000000
+                    window.innerHeight
+                
+                </td>
+            
+
+            <td class="description last">The height value used for the threejs scene, camera, zoom, labels.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer.width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    window.innerWidth
+                
+                </td>
+            
+
+            <td class="description last">The width value used for the threejs scene, camera, zoom, labels.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer.backgroundColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    "#b7b7b7"
                 
                 </td>
             
@@ -267,7 +308,7 @@
 
         <tr>
             
-                <td class="name"><code>border_color</code></td>
+                <td class="name"><code>viewer.borderColor</code></td>
             
 
             <td class="type">
@@ -294,19 +335,97 @@
             
                 <td class="default">
                 
-                    0xffffff
+                    "#ffffff"
                 
                 </td>
             
 
-            <td class="description last">THREE.Line2 color (hexidecimal).</td>
+            <td class="description last">Hex string which is later converted to THREE.Line2 color (hexidecimal).</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>color_scheme</code></td>
+                <td class="name"><code>viewer.highlightColor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    "#37f2d6"
+                
+                </td>
+            
+
+            <td class="description last">Hex string which is later converted to THREE.Line2 color (hexidecimal).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer.loadingIcon</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    "ring"
+                
+                </td>
+            
+
+            <td class="description last">CSS animation used for the loading icon, other options are: ripple | ring | ellipsis | roller.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer.colorSchemeName</code></td>
             
 
             <td class="type">
@@ -338,14 +457,365 @@
                 </td>
             
 
-            <td class="description last">D3 Scale-Chromatic color scheme to use for cell-coloring.</td>
+            <td class="description last">Name of the d3-sclae-chromatic function name used for colouring cells.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>show_legend</code></td>
+                <td class="name"><code>viewer.colors</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last">Array of hex strings to be used in combination with viewer.thresholdValues for colouring.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer.thresholdValues</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last">Array of threshold values that are applied to the colour scaling function.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer.colorScaleFunction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    d3.scaleSequential
+                
+                </td>
+            
+
+            <td class="description last">D3.scale function used for defining colour values. Current working functions seem to be scaleSequential or scaleDiverging & their respective variants.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer.sizeScaleFunction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    d3.scaleSqrt
+                
+                </td>
+            
+
+            <td class="description last">D3.scale function used for defining colour values. Current working functions seem to be scaleSequential or scaleDiverging & their respective variants.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer.colorSchemeSelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Whether or not to build a simple html select input for the available d3-scale-chromatic colour schemes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer.colorFieldSelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Whether or not to build a simple html select input showing the available fields in the csv file that can be used to drive cell colour.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer.sizeFieldSelector</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Whether or not to build a simple html select input showing the available fields in the csv file that can be used to drive cell size.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer.showLegend</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">Build d3 colour legend.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer.showPlacenames</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">Adds placenames to the viewer. Placename-scale thresholds currently defined by the user.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer.showColorSchemeSelector</code></td>
             
 
             <td class="type">
@@ -384,13 +854,13 @@
 
         <tr>
             
-                <td class="name"><code>show_color_scheme_selector</code></td>
+                <td class="name"><code>viewer.legend</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">Object</span>
 
 
             
@@ -411,12 +881,328 @@
             
                 <td class="default">
                 
-                    true
+                </td>
+            
+
+            <td class="description last">Builds d3 colour legend.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
                 
                 </td>
             
 
-            <td class="description last">THREE.Line2 color (hexidecimal).</td>
+            
+
+            <td class="description last">Type of legend to build. continuous | cells.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Legend width.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Legend height.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>orientation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Legend orientation. "vertical" or "horizontal"</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Legend title.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>titleWidth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Legend title width. used for text wrapping</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>format</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">d3.format function for formatting tick values.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cells</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Number of class cells. Only applicable to legends of type "cells"</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>shapeWidth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Width of class cells. Only applicable to legends of type "cells"</td>
         </tr>
 
     
@@ -471,7 +1257,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="eurogridviz.js.html">eurogridviz.js</a>, <a href="eurogridviz.js.html#line39">line 39</a>
+        <a href="gridviz.js.html">gridviz.js</a>, <a href="gridviz.js.html#line87">line 87</a>
     </li></ul></dd>
     
 
@@ -524,13 +1310,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#createViewer">createViewer</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#viewer">viewer</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Fri Mar 06 2020 10:54:17 GMT+0100 (GMT+01:00)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Nov 10 2020 14:31:31 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>
