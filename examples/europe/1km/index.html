@@ -26,9 +26,9 @@
         .cellCount(true)
         .zerosRemoved(3) //last 3 zeros were removed from dataset to improve efficiency
         .colorField("Population")  // csv column which you wish to visualize
-        .sizeField("Population")  // csv column which you wish to visualize
+        .sizeField(null)  // csv column which you wish to visualize
         // .zoom(200)
-        .nuts2json(true) //loads borders topojson
+        .nuts2json(false) //loads borders topojson
         .center([4369, 3230])//EPSG=3035 with last 3 zeros removed
         .height(window.innerHeight)
         .width(window.innerWidth)
@@ -45,7 +45,7 @@
             height: 300,
             title: "Total population per km² (2011)",
             titleWidth: 130,
-            cells: 10
+            ticks: 10
         })
         .build()
 </script>

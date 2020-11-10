@@ -1600,7 +1600,7 @@ export function viewer(options) {
     marginRight = 0,
     marginBottom = 16 + tickSize,
     marginLeft = 0,
-    ticks = width / 64,
+    ticks = viewer.legend_.ticks || width / 64,
     tickFormat,
     tickValues
   } = {}) {
