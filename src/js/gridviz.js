@@ -39,15 +39,12 @@ import * as Utils from "./utils";
 
 
 //TODO list:
-//Resize bug:
-//https://stackoverflow.com/questions/41814539/html-div-height-keeps-growing-on-window-resize-event
-//container_element.style.lineHeight = 0; fixes resize bug, but placenames loose background styling.
 //
 
 /**
  * Creates a 2D Three.js scene for visualizing point data derived from gridded statistics.
  *
- * @author Joseph Davies
+ * @author Joseph Davies, Julien Gaffuri
  * @description Generates a 2D Three.js scene for visualizing large point datasets using WebGL. The library follows a similar structure to that of d3, whereby parameters are set using a series of accessor functions, each of which returns the main viewer.
  * @requires "THREE"
  * @requires "D3"
@@ -62,7 +59,7 @@ export function viewer(options) {
 
   //styles
   viewer.container_ = document.body;
-  viewer.height_ = window.innerHeight;
+  viewer.height_ = window.innerHeight - 20; //takes container width/height
   viewer.width_ = window.innerWidth;
   viewer.backgroundColor_ = "#b7b7b7";
   viewer.borderColor_ = "#ffffff";
@@ -89,7 +86,7 @@ export function viewer(options) {
   //d3 Scale stuff
   viewer.colorSchemeName_ = "interpolateTurbo";
   viewer.sizeScaleName_ = "scaleSqrt";
-  viewer.colorScaleName_ = "scaleSequential";
+  viewer.colorScaleName_ = "scaleSequentialSqrt";
   viewer._defaultColorScaleFunction = d3scale[viewer.colorScaleName_];
   viewer._defaultSizeScaleFunction = d3scale[viewer.sizeScaleName_];
   viewer.colors_ = null;
@@ -131,9 +128,16 @@ export function viewer(options) {
   viewer.nuts2jsonCountry_ = false; // only show borders of given country code
   viewer.nutsLevel_ = 0;
   viewer.nutsSimplification_ = "20M"; //current nuts2json simplification
+
   // grid data
-  viewer.gridData_ = null;
+  /**
+ * @typedef {Object} Grid
+ * @property {number} url - URL of the csv file to retrieve
+ * @property {number} cellSize - Size of the cell in the same unit system as the coordinates. e.g 1 km² grid in EPSG:3035 with zerosRemoved set to 3 has a cellSize of 1 (without the zerosRemoved it would be 1000)
+ */
+  viewer.gridData_ = null; // type:Grid
   viewer.resolution_ = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
+
   //camera
   viewer.camera = {}
   viewer.camera.near_ = null;
@@ -227,11 +231,11 @@ export function viewer(options) {
 
 
   /**
- *
- *
- * @function zoom
- * @description Sets the three.js camera z value. If the viewer has already been initialized, calls to zoom() method will move existing camera
- */
+   *
+   *
+   * @function zoom
+   * @description Sets the three.js camera z value. If the viewer has already been initialized, calls to zoom() method will move existing camera
+   */
   viewer.zoom = function (v) {
     if (v && viewer.scene) {
       viewer.zoom_ = v;
@@ -251,7 +255,7 @@ export function viewer(options) {
    *
    * @function build
    * @description Clears the canvas, builds the three.js viewer and appends grid data
-   */
+  */
   viewer.build = function () {
     Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
     let valid = validateInputs();
@@ -260,16 +264,16 @@ export function viewer(options) {
       //set container height and width
       viewer.container_.classList.add("gridviz-container");
 
-      //set resolution
+      //set viewer resolution
       if (!viewer.resolution_) {
         viewer.resolution_ = viewer.gridData_[0].cellSize
       }
       gridConfig = defineGridConfig();
 
+      // add headings / sources texts
       if (viewer.title_ || viewer.subtitle_ || viewer.cellCount_) {
         addHeadingsContainerToDOM();
       }
-
 
       if (viewer.title_) {
         addTitleToDOM();
@@ -281,6 +285,7 @@ export function viewer(options) {
         addSourcesToDOM();
       }
 
+      // three.js initializations
       createScene();
       if (!labelRenderer) createLabelRenderer();
       if (!renderer) createWebGLRenderer();
@@ -295,22 +300,22 @@ export function viewer(options) {
         addPanAndZoom();
       }
 
-
+      // tooltip DOM element
       createTooltipContainer();
 
+      // dropdowns DOM container
       if (viewer.colorSchemeSelector_ || viewer.colorScaleSelector_ || viewer.sizeFieldSelector_ || viewer.colorFieldSelector_) {
         addSelectorsContainerToDOM();
       }
-
+      // colour selector added here. Data-dependent dropdowns added once grid data is loaded
       if (viewer.colorSchemeSelector_) {
         createColorSchemeDropdown();
       }
 
-
       //load initial data
       loadGrid(viewer.gridData_[0]);
 
-
+      // NUTS geometries
       if (viewer.nuts2json_) {
         loadBordersJson(
           CONSTANTS.nuts_base_URL +
@@ -321,17 +326,18 @@ export function viewer(options) {
         );
       }
 
+      // define viewer click, dropdown change and screen resize events
       addEventListeners();
 
       //request initial placenames
-      // view.transition().call(viewer.zoom.scaleBy, 1.000001);//sets initial scale properly (otherwise it starts as 0.0something)
+      // view.transition().call(viewer.zoom.scaleBy, 1.000001); //sets initial scale properly (otherwise it starts as 0.0something)
       // let scale = getScaleFromZ(camera.position.z);
       if (viewer.showPlacenames_) {
         getPlacenames(camera.position.z);
       }
 
-
       return viewer;
+
     } else {
       console.error("invalid inputs");
       return
@@ -339,11 +345,11 @@ export function viewer(options) {
   };
 
   /**
-*
-*
-* @function validateInputs
-* @description validates inputs when initializing the viewer
-*/
+  *
+  *
+  * @function validateInputs
+  * @description validates inputs when initializing the viewer
+  */
   function validateInputs() {
     if (viewer.colors_ && viewer.thresholdValues_) {
       if (viewer.colors_.length !== viewer.thresholdValues_.length) {
@@ -358,11 +364,11 @@ export function viewer(options) {
   }
 
   /**
-*
-*
-* @function addHeadingsContainerToDOM
-* @description adds a div container for viewer.title and viewer.subtitle texts
-*/
+  *
+  *
+  * @function addHeadingsContainerToDOM
+  * @description adds a div container for viewer.title and viewer.subtitle texts
+  */
   function addHeadingsContainerToDOM() {
     viewer.headingsNode = document.createElement("div");
     viewer.headingsNode.classList.add("gridviz-headings-container");
@@ -371,11 +377,11 @@ export function viewer(options) {
   }
 
   /**
-*
-*
-* @function addTitleToDOM
-* @description adds a div element for viewer.title to headings container 
-*/
+  *
+  *
+  * @function addTitleToDOM
+  * @description adds a div element for viewer.title to headings container 
+  */
   function addTitleToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-title");
@@ -384,11 +390,11 @@ export function viewer(options) {
   }
 
   /**
-*
-*
-* @function addSubtitleToDOM
-* @description adds a div element for viewer.subtitle to headings container 
-*/
+  *
+  *
+  * @function addSubtitleToDOM
+  * @description adds a div element for viewer.subtitle to headings container 
+  */
   function addSubtitleToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-subtitle");
@@ -397,11 +403,11 @@ export function viewer(options) {
   }
 
   /**
-*
-*
-* @function addCellCountToDOM
-* @description adds a div element for viewer.cellCount to headings container 
-*/
+  *
+  *
+  * @function addCellCountToDOM
+  * @description adds a div element for viewer.cellCount to headings container 
+  */
   function addCellCountToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-cellcount");
@@ -410,11 +416,11 @@ export function viewer(options) {
   }
 
   /**
-*
-*
-* @function addSourcesToDOM
-* @description adds a div element showing viewer.sourcesHTML in the bottom right corner
-*/
+  *
+  *
+  * @function addSourcesToDOM
+  * @description adds a div element showing viewer.sourcesHTML in the bottom right corner
+  */
   function addSourcesToDOM() {
     let node = document.createElement("div");
     node.classList.add("gridviz-sources");
@@ -423,16 +429,25 @@ export function viewer(options) {
   }
 
   /**
-*
-*
-* @function addSelectorsContainerToDOM
-* @description adds a div container for the available dropdown selectors to the DOM
-*/
+  *
+  *
+  * @function addSelectorsContainerToDOM
+  * @description adds a div container for the available dropdown selectors to the DOM
+  */
   function addSelectorsContainerToDOM() {
     viewer.selectorsContainer = document.createElement("div");
     viewer.selectorsContainer.classList.add("gridviz-selectors");
     viewer.selectorsContainer.classList.add("gridviz-plugin");
     viewer.container_.appendChild(viewer.selectorsContainer);
+  }
+
+  /**
+  *@description Build THREE.Scene
+  *@function createScene
+  */
+  function createScene() {
+    viewer.scene = new Scene();
+    viewer.scene.background = new Color(viewer.backgroundColor_);
   }
 
 
@@ -568,15 +583,6 @@ export function viewer(options) {
   }
 
   /**
-   *@description Build THREE.Scene
-   *@function createScene
-   */
-  function createScene() {
-    viewer.scene = new Scene();
-    viewer.scene.background = new Color(viewer.backgroundColor_);
-  }
-
-  /**
  * @typedef {Object} GridConfig
  * @property {number} raycasterThreshold - The threshold for raycasting grid cells. Its value represents the distance from the center of the cell's point object.
  * @property {number} pointSize - Three.js point size
@@ -621,17 +627,31 @@ export function viewer(options) {
     return viewer.resolution_ * 4000;
   }
 
+
+
   /**
-   * request grid, save it to the cache, and add it to the scene
-   *
-   * @param grid URL to csv file
+   * @function loadGrid
+   * @description request grid, save it to the cache, and add it to the scene
+   * @param {Grid}
    */
   function loadGrid(grid) {
     Utils.showLoading();
     if (grid.cellSize) {
       requestGrid(grid).then(
-        err => {
-          if (!err) {
+        csv => {
+          if (csv) {
+            //validate csv
+            if (csv[0].x && csv[0].y && csv[0][viewer.colorField_]) {
+              viewer.cellCount = csv.length;
+              if (viewer.cellCount_) {
+                addCellCountToDOM();
+              }
+              addGridToCache(csv, grid.cellSize);
+            } else {
+              return console.error(
+                "Incorrect csv format. Please use coordinate columns with names 'x' and 'y'"
+              );
+            }
             //define scales
             viewer.colorValuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.colorField_]);
             viewer.colorScaleFunction_ = defineColorScale();
@@ -640,6 +660,7 @@ export function viewer(options) {
               viewer.sizeScaleFunction_ = defineSizeScale();
             }
 
+            // if center is not specified by user, move camera to a cell half way along the array
             if (!viewer.center_) {
               let index = parseInt(gridCaches[viewer.resolution_].length / 2);
               let c = gridCaches[viewer.resolution_][index];
@@ -649,6 +670,7 @@ export function viewer(options) {
               ];
               setCamera(viewer.center_[0], viewer.center_[1], 0)
             }
+
             addPointsToScene();
 
             if (viewer.colorFieldSelector_) {
@@ -667,33 +689,19 @@ export function viewer(options) {
       console.error(
         "Please specify grid cell size in the units of its coordinate system"
       );
+      Utils.hideLoading();
     }
   }
 
   /**
    * TODO: replace with requestTile() and addTileToCache() for CSVTiles endpoint
-   *
-   *
+   * @function requestGrid
+   * @description fetches csv file and adds the data to the cache
+   * @param @param {"string"} [grid] URL of csv file
    * @returns Promise
    */
   function requestGrid(grid) {
-    return csv(grid.url).then(
-      csv => {
-        //validate csv
-        if (csv[0].x && csv[0].y && csv[0][viewer.colorField_]) {
-          viewer.cellCount = csv.length;
-          if (viewer.cellCount_) {
-            addCellCountToDOM();
-          }
-          addGridToCache(csv, grid.cellSize);
-        } else {
-          return console.error(
-            "Incorrect csv format. Please use coordinate columns with names 'x' and 'y'"
-          );
-        }
-      },
-      err => console.error(err)
-    );
+    return csv(grid.url).then();
   }
 
   /**
@@ -760,8 +768,6 @@ export function viewer(options) {
     }
 
   }
-
-
 
   function defineSizeScale() {
     // user-defined vs default scale
@@ -1834,15 +1840,15 @@ export function viewer(options) {
 
     //inject tooltip HTML to DOM
     tooltipTemplate = document.createRange()
-      .createContextualFragment(`<div id="tooltip" style="display: none; position: absolute; pointer-events: none; z-index:999; border-radius:5px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); font-size: 13px; text-align: center; line-height: 1; padding: 6px; background: white; font-family: sans-serif;">
-    <div id="labelTip" style="padding: 4px; margin-bottom: 4px;"></div>
-<div id="pointTip" style="padding: 4px; margin-bottom: 4px;"></div>
+      .createContextualFragment(`<div id="gridviz-tooltip">
+    <div id="gridviz-labeltip"></div>
+<div id="gridviz-pointtip"></div>
 </div>`);
     viewer.container_.append(tooltipTemplate);
 
-    tooltip = document.querySelector("#tooltip");
-    pointTip = document.querySelector("#pointTip");
-    labelTip = document.querySelector("#labelTip");
+    tooltip = document.querySelector("#gridviz-tooltip");
+    pointTip = document.querySelector("#gridviz-pointtip");
+    labelTip = document.querySelector("#gridviz-labeltip");
     tooltipContainer = new Object3D();
     viewer.scene.add(tooltipContainer);
   }
@@ -2453,7 +2459,7 @@ export function viewer(options) {
   function addResizeEvent() {
     window.addEventListener("resize", () => {
       viewer.width_ = viewer.container_.clientWidth;
-      viewer.height_ = viewer.container_.clientHeight;
+      viewer.height_ = viewer.container_.clientHeight - 4; //no idea why but an offset of -4 prevents the viewer from growing/shrinking upon resize
       labelRenderer.setSize(viewer.width_, viewer.height_);
       renderer.setSize(viewer.width_, viewer.height_);
       camera.aspect = viewer.width_ / viewer.height_;
