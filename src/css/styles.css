@@ -1,5 +1,14 @@
+/* MOBILE */
+@media only screen and (max-width: 600px) {
+.gridviz-selectors {
+  top: 1rem;
+  left: 10px;
+}
+}
+
+
 .gridviz-container {
-  height:100vh;
+  height:auto;
   overflow:hidden;
   position: relative !important;
   margin: 0px;
@@ -13,11 +22,11 @@
   padding:15px;
 }
 .gridviz-title {
-  font-size: 28px;
+  font-size: 2rem;
   font-weight:bold;
 }
 .gridviz-subtitle {
-  font-size: 20px;
+  font-size: 1rem;
   font-weight:bold;
   margin-top:5px;
 }
@@ -30,7 +39,7 @@
   position:absolute;
   bottom:2%;
   right:1%;
-  font-size: 12px;
+  font-size: 0.8rem;
   font-weight:bold;
   color:white;
 }
@@ -50,29 +59,32 @@
 }
 
 /* Tooltip container */
-#tooltip {
-  position: relative;
-  display: none;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+#gridviz-tooltip {
+  display: none; 
+  position: absolute; 
+  pointer-events: none; 
+  z-index:999; 
+  border-radius:5px; 
+  box-shadow: 0 1px 5px rgba(0,0,0,0.65); 
+  font-size: 13px; 
+  text-align: center; 
+  line-height: 1; 
+  padding: 6px; 
+  background: white; 
+  font-family: sans-serif;
 }
-
-/* Tooltip text */
-#tooltip #tooltiptext {
-  display: none;
-  /* width: 120px; */
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 6px;
-
-  /* Position the tooltip text - see examples below! */
-  position: absolute;
-  z-index: 1;
+#gridviz-labeltip {
+  color:black;
+  padding: 4px; 
+  margin-bottom: 4px;
+}
+#gridviz-pointtip {
+  padding: 4px; 
+  margin-bottom: 4px;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
-#tooltip:hover #tooltiptext {
+#gridviz-tooltip:hover {
   display: block;
 }
 
@@ -124,16 +136,16 @@
 /* LEGEND */
 /* continuous */
 .gridviz-legend-svg{
-  font-size:16px;
+  font-size:1rem;
   margin-top: 10px;
 }
 .gridviz-continuous-legend-title{
-  font-size:16px;
+  font-size:1rem;
   font-weight:bold;
   margin-bottom:10px;
 }
 .legend-tick text{
-font-size:16px
+font-size:1rem
 }
 .gridviz-legend-axis .domain{
   visibility:hidden;
@@ -147,7 +159,7 @@ font-size:16px
   left: 10px;
   padding:10px;
   background:#efefefe8;
-  /* font-size: 12px; */
+  max-width: 92%;
 }
 .gridviz-legend-horizontal {
   height: 65px;

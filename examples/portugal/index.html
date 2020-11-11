@@ -26,6 +26,7 @@
         .zoom(2000) //initial camera Z value
         .nuts2json(true) //loads nuts2json topojson boundaries
         .nuts2jsonCountry("PT") //filter nuts2json
+        .showPlacenames(true)
         .placenamesCountry("PT") //filter placenames
         .placenameThresholds({ //scale: population
             "800": 100000,
@@ -36,16 +37,15 @@
         .zerosRemoved(3)
         .sourcesHTML("Source: <a href='https://www.efgs.info/data/national/' target='_blank'>Statistics Portugal</a>")
         .center([2790, 2003])
-        .height(window.innerHeight)
-        .width(window.innerWidth)
         .backgroundColor("#000")
         .borderColor("#ffffff")
-        .colorSchemeName("interpolateBrBG") //d3-scale-chromatic
+        .colorSchemeName("interpolateViridis") //d3-scale-chromatic
         .colorSchemeSelector(true)
         .colorScaleSelector(true)
         .colorFieldSelector(true)
-        .colorScaleSelectorLabel("Scale: ")
-        .colorFieldSelectorLabel("Indicator: ")
+        .sizeFieldSelector(true)
+        .colorScaleSelectorLabel("Colour scale: ")
+        .colorFieldSelectorLabel("Colour field: ")
         .legend({
             height: 290,
             width: 150,

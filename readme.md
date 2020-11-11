@@ -62,6 +62,28 @@ Create a viewer using  ```let viewer = gridviz.viewer();``` and customise it wit
 
 Most of these methods follow the pattern viewer.myMethod([value]): If a value is specified, the method sets the parameter value and returns the viewer object itself. If no value is specified, then the method returns the current value of the parameter.
 
+Here's a barebones example that loads a CSV containing population data for a 5 km² grid of europe:
+
+```javascript
+    let viz = gridviz.viewer()
+        .container(containerDiv)
+        .gridData([
+            {
+                url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
+                cellSize: 5
+            }
+        ])
+        .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
+        .title("5km² Population Grid of Europe")
+        .colorField("value")  // csv column that will determine cell colour
+        .legend({
+            title: "Total population per 5 km² (2011)",
+            ticks: 6
+        })
+        .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
+        .build()
+```
+
 | Method                               | Type                               | Default                                                                                                                                       | Description                                                                                                                                                                                                                                          |
 | ------------------------------------ | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | viewer.container([value])            | HTMLElement                        | document.body                                                                                                                                 | The DOM element passed to the THREE.js renderer.                                                                                                                                                                                                     |
