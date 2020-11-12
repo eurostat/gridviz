@@ -13,17 +13,19 @@ A JavaScript library built for visualizing gridded statistics from CSV files usi
 
 ## Examples
 
-[Europe - 5km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/5km/index.html) | [data source](https://ec.europa.eu/eurostat/web/gisco) | [Code]()
+[Europe - 5km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/5km/index.html) | [data source](https://ec.europa.eu/eurostat/web/gisco) | [code](https://github.com/eurostat/gridviz/blob/master/examples/europe/5km/index.html) | 
 
-[Europe - 2km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/2km/index.html) | [data source](https://ec.europa.eu/eurostat/web/gisco)  
+[Europe - 2km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/2km/index.html) | [data source](https://ec.europa.eu/eurostat/web/gisco) | [code](https://github.com/eurostat/gridviz/blob/master/examples/europe/2km/index.html) |  
 
-[Europe - 1km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/1km/index.html) | [data source](https://ec.europa.eu/eurostat/web/gisco)  
+[Europe - 1km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/1km/index.html) | [data source](https://ec.europa.eu/eurostat/web/gisco) |  [code](https://github.com/eurostat/gridviz/blob/master/examples/europe/1km/index.html) | 
 
-[Netherlands - Inhabitants per 100m²](https://eurostat.github.io/gridviz/examples/netherlands/index.html) | [data source](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken)  
+[Netherlands - Inhabitants per 100m²](https://eurostat.github.io/gridviz/examples/netherlands/index.html) | [data source](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken)  | [code](https://github.com/eurostat/gridviz/blob/master/examples/netherlands/index.html) | 
 
-[France - 1km² Population Grid](https://eurostat.github.io/gridviz/examples/france/index.html) | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)  
+[France - 1km² Population Grid](https://eurostat.github.io/gridviz/examples/france/index.html) | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)  | [code](https://github.com/eurostat/gridviz/blob/master/examples/france/1km/index.html) | 
 
-[France - Inhabitants over 80 years of age per 1km²](https://eurostat.github.io/gridviz/examples/france/population-over-80.html) | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)   
+[France - Inhabitants over 80 years of age per 1km²](https://eurostat.github.io/gridviz/examples/france/population-over-80.html) | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)   |  [code](https://github.com/eurostat/gridviz/blob/master/examples/france/population-over-80.html) |    
+
+[Portugal census data](https://eurostat.github.io/gridviz/examples/portugal/index.html) | [data source](https://www.efgs.info/data/national/)   |  [code](https://github.com/eurostat/gridviz/blob/master/examples/portugal/index.html) | 
 
 ## Description
 
