@@ -5,7 +5,7 @@
 ![npm](https://img.shields.io/npm/v/gridviz)
 ![license](https://img.shields.io/badge/license-EUPL-success)
 
-A JavaScript Library built for visualizing gridded statistics from CSV files. 
+A JavaScript library built for visualizing gridded statistics from CSV files using WebGL and three.js. 
 
 <div>
   <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/previews/preview.gif" alt="preview" width="98%" height="10%"/>
@@ -27,11 +27,11 @@ A JavaScript Library built for visualizing gridded statistics from CSV files.
 
 ## Description
 
-Gridviz is a JavaScript library which allows you to visualize large gridded datasets. Unlike traditional raster-based approaches, this tool utilizes WebGL through Three.js in order to render eveything client-side.
+Gridviz is a JavaScript library which allows you to visualize large gridded datasets (or any csv file with x/y data) in the browser. Unlike traditional raster-based GIS approaches, this tool utilizes WebGL through three.js in order to render eveything client-side.
 
-From a CSV file with x and y columns, gridviz will build a Three.js viewer capable of visualizing millions of grid cells on the fly.
+From a CSV file with x and y columns, gridviz will build a viewer capable of visualizing millions of grid cells on the fly.
 
-For colouring, you can use any of D3's scale chromatic colour schemes, or define them yourself by passing an array to the colors method along with the threshold values they correspond with.
+For data-driven colouring and sizing, you can use [d3-scale](https://github.com/d3/d3-scale) and [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic).
 
 ## Installation
 
