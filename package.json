@@ -1,7 +1,20 @@
 {
   "name": "gridviz",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Visualization tool for gridded statistics",
+  "keywords": [
+    "statistics",
+    "grid",
+    "gridded",
+    "grids",
+    "gridded statistics",
+    "dataviz",
+    "csv",
+    "GIS",
+    "WebGL",
+    "d3",
+    "threejs"
+  ],
   "main": "build/gridviz.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,6 +29,11 @@
   ],
   "author": "Joseph Davies",
   "license": "EUPL",
+  "homepage": "https://github.com/eurostat/gridviz#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eurostat/gridviz"
+  },
   "bugs": {
     "url": "https://github.com/eurostat/gridviz/issues",
     "email": "Joseph.DAVIES@ext.ec.europa.eu"

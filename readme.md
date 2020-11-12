@@ -8,26 +8,22 @@
 A JavaScript Library built for visualizing gridded statistics from CSV files. 
 
 <div>
-  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/previews/preview6.png" alt="preview" width="47.7%" height="10%"/>
-<img src="assets/images/previews/preview5.png" alt="preview" width="47.7%" height="10%"/>
-<img src="assets/images/previews/preview2.png" alt="preview" width="47.7%" height="10%"/>
-<img src="assets/images/previews/preview4.png" alt="preview" width="47.7%" height="10%"/>
-
+  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/previews/preview.gif" alt="preview" width="98%" height="10%"/>
 </div>
 
 ## Examples
 
-[Europe - 5km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/5km/index.html) | [Data Source](https://ec.europa.eu/eurostat/web/gisco) 
+[Europe - 5km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/5km/index.html) | [data source](https://ec.europa.eu/eurostat/web/gisco) | [Code]()
 
-[Europe - 2km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/2km/index.html) | [Data Source](https://ec.europa.eu/eurostat/web/gisco)  
+[Europe - 2km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/2km/index.html) | [data source](https://ec.europa.eu/eurostat/web/gisco)  
 
-[Europe - 1km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/1km/index.html) | [Data Source](https://ec.europa.eu/eurostat/web/gisco)  
+[Europe - 1km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/1km/index.html) | [data source](https://ec.europa.eu/eurostat/web/gisco)  
 
-[Netherlands - Inhabitants per 100m²](https://eurostat.github.io/gridviz/examples/netherlands/index.html) | [Data Source](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken)  
+[Netherlands - Inhabitants per 100m²](https://eurostat.github.io/gridviz/examples/netherlands/index.html) | [data source](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken)  
 
-[France - 1km² Population Grid](https://eurostat.github.io/gridviz/examples/france/index.html) | [Data Source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)  
+[France - 1km² Population Grid](https://eurostat.github.io/gridviz/examples/france/index.html) | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)  
 
-[France - Inhabitants over 80 years of age per 1km²](https://eurostat.github.io/gridviz/examples/france/population-over-80.html) | [Data Source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)   
+[France - Inhabitants over 80 years of age per 1km²](https://eurostat.github.io/gridviz/examples/france/population-over-80.html) | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)   
 
 ## Description
 
