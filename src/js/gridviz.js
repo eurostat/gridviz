@@ -293,12 +293,6 @@ export function viewer(options) {
       createCamera();
       createRaycaster();
 
-      if (/Mobi|Android/i.test(navigator.userAgent)) {
-        // mobile!
-        addMobilePanAndZoom()
-      } else {
-        addPanAndZoom();
-      }
 
       // tooltip DOM element
       createTooltipContainer();
@@ -661,6 +655,7 @@ export function viewer(options) {
             }
 
             // if center is not specified by user, move camera to a cell half way along the array
+            // BUG: this causes a bug on mobile. It centers correctly but then goes haywire when you pan the maps
             if (!viewer.center_) {
               let index = parseInt(gridCaches[viewer.resolution_].length / 2);
               let c = gridCaches[viewer.resolution_][index];
@@ -669,6 +664,14 @@ export function viewer(options) {
                 parseFloat(c.y)
               ];
               setCamera(viewer.center_[0], viewer.center_[1], 0)
+            }
+
+            // define pan & zoom
+            if (/Mobi|Android/i.test(navigator.userAgent)) {
+              // mobile!
+              addMobilePanAndZoom()
+            } else {
+              addPanAndZoom();
             }
 
             addPointsToScene();
@@ -1868,6 +1871,7 @@ export function viewer(options) {
   }
 
   //functions taken from observableHQ & work on mobile:
+  let initialZoom = true;
   function addMobilePanAndZoom() {
     let d3_zoom = zoom()
       .scaleExtent([getScaleFromZMobile(viewer.camera.far_), getScaleFromZMobile(viewer.camera.near_)])
@@ -1877,16 +1881,32 @@ export function viewer(options) {
       });
     view.call(d3_zoom);
     let initial_scale = getScaleFromZMobile(viewer.camera.far_);
-    var initial_transform = zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
-    d3_zoom.transform(view, initial_transform);
-    camera.position.set(0, 0, viewer.camera.far_);
+    let translateX = viewer.center_[0];
+    let translateY = viewer.center_[1];
+    view.call(d3_zoom.transform, zoomIdentity.translate(translateX, translateY).scale(initial_scale))
+
+    // let initial_transform = zoomIdentity.translate(translateX, translateY).scale(initial_scale);
+    // d3_zoom.transform(view, initial_transform);
+    // initial mobile camera position
+
   }
   function zoomHandlerMobile(d3_transform) {
     let scale = d3_transform.k;
-    let x = -(d3_transform.x - viewer.width_ / 2) / scale;
-    let y = (d3_transform.y - viewer.height_ / 2) / scale;
+    let x = -(d3_transform.x) / scale;
+    let y = (d3_transform.y) / scale;
     let z = getZFromScaleMobile(scale);
-    camera.position.set(x, y, z);
+    // Handle panning
+    const { movementX, movementY } = currentEvent.sourceEvent
+    camera.position.set(camera.position.x - movementX / current_scale, camera.position.y +
+      movementY / current_scale, camera.position.z);
+
+    if (initialZoom) {
+      camera.position.set(viewer.center_[0], viewer.center_[1], viewer.camera.far_);
+      initialZoom = false;
+    } else {
+      camera.position.set(x, y, z);
+    }
+
   }
   function getScaleFromZMobile(camera_z_position) {
     let half_fov = viewer.camera.fov_ / 2;
@@ -1924,7 +1944,7 @@ export function viewer(options) {
         });
     view.call(viewer.d3zoom);
 
-    let initial_scale = getScaleFromZMobile(viewer.camera.zoom_);
+    let initial_scale = getScaleFromZ(viewer.camera.zoom_);
     var initial_transform = zoomIdentity
       .translate(viewer.width_ / 2, viewer.height_ / 2)
       .scale(initial_scale);
@@ -1933,11 +1953,6 @@ export function viewer(options) {
 
   function zoomHandler(event) {
     let scale = event.transform.k;
-    // let x = -(event.transform.x - viewer.width_ / 2) / scale;
-    // let y = (event.transform.y - viewer.height_ / 2) / scale;
-    // let z = getZFromScale(scale);
-    // camera.position.set(x, y, z);
-
     if (event.sourceEvent) {
       let new_z = getZFromScale(scale);
       //if zoom
@@ -1972,11 +1987,6 @@ export function viewer(options) {
   }
 
   function getScaleFromZ(z) {
-    // let vFOV = (camera.fov * Math.PI) / 180;
-    // let scale_height = 2 * Math.tan(vFOV / 2) * z;
-    // let scale = viewer.height_ / scale_height;
-    // return scale;
-
     let half_fov = CONSTANTS.fov / 2;
     let half_fov_radians = toRadians(half_fov);
     let half_fov_height = Math.tan(half_fov_radians) * z;
