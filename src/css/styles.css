@@ -16,9 +16,16 @@
     width: 100%!important;
     padding:8px!important;
   }
+  .gridviz-cellcount{
+    margin-top:1px!important;
+  }
   #gridviz-loading-spinner {
     position: absolute;
     left: 41% !important;
+  }
+  #gridviz-home-btn{
+    left:3px!important;
+    top: 55px!important;
   }
 }
 
@@ -67,11 +74,29 @@
   cursor:pointer;
 }
 
-#loading-gif {
-  top: 48%;
-  left: 48%;
-  position: absolute;
-  z-index: 999;
+.gridviz-icon-button{
+  position:absolute;
+  height: 25px;
+  width:25px;
+  padding:3px;
+  border-radius:4px;
+  border:1px grey;
+  background: #f2f2f2;
+  color:"black";
+  cursor: pointer;
+}
+.gridviz-icon-button:hover{
+  background: #e9e9e9
+}
+.gridviz-icon-button span.icon {
+  background: url(imgs/home.svg) no-repeat;
+  float: left;
+  width: 100%;
+  height: 100%;
+}
+#gridviz-home-btn{
+  top:130px;
+  left:10px;
 }
 
 /* Tooltip container */
@@ -112,43 +137,6 @@
   border-radius: 1px;
 }
 
-/*  BUTTON GROUP */
-.gridviz-btn-group {
-  position: absolute;
-  bottom: 2%;
-  right: 2%;
-}
-.gridviz-btn-group button {
-  /* EU blue */
-  padding: 10px 24px;
-  cursor: pointer;
-  float: left;
-}
-
-.gridviz-active {
-  background-color: #efefef !important;
-}
-
-.gridviz-button {
-  background-color: #5a5a5a;
-}
-
-/* Clear floats (clearfix hack) */
-.gridviz-btn-group:after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-.gridviz-btn-group button:not(:last-child) {
-  border-right: none; /* Prevent double borders */
-}
-
-/* Add a background color on hover */
-.gridviz-btn-group button:hover {
-  background-color: #345881;
-}
-
 /* LEGEND */
 /* continuous */
 .gridviz-legend-svg{
@@ -156,7 +144,7 @@
   margin-top: 5px;
 }
 .gridviz-continuous-legend-title{
-  /* font-size:1rem; */
+  font-size:0.8rem;
   font-weight:bold;
   margin-bottom:10px;
 }

@@ -119,7 +119,10 @@ export function viewer(options) {
   viewer.title_ = null;
   viewer.subtitle_ = null;
   viewer.cellCount_ = null;
-  viewer.sourcesHTML_ = null
+  viewer.sourcesHTML_ = null;
+
+  //buttons
+  viewer.homeButton_ = true;
 
   //borders using nuts2json
   viewer.nuts2json_ = false; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
@@ -286,21 +289,6 @@ export function viewer(options) {
       }
       gridConfig = defineGridConfig();
 
-      // add headings / sources texts
-      if (viewer.title_ || viewer.subtitle_ || viewer.cellCount_) {
-        addHeadingsContainerToDOM();
-      }
-
-      if (viewer.title_) {
-        addTitleToDOM();
-      }
-      if (viewer.subtitle_) {
-        addSubtitleToDOM();
-      }
-      if (viewer.sourcesHTML_) {
-        addSourcesToDOM();
-      }
-
       // three.js initializations
       createScene();
       if (!labelRenderer) createLabelRenderer();
@@ -310,11 +298,11 @@ export function viewer(options) {
       createRaycaster();
 
       // define pan & zoom
-      if (viewer._mobile) {
-        addMobilePanAndZoom()
-      } else {
-        addPanAndZoom();
-      }
+      // if (viewer._mobile) {
+      //   addMobilePanAndZoom()
+      // } else {
+      addPanAndZoom();
+      // }
 
       // tooltip DOM element
       createTooltipContainer();
@@ -341,9 +329,6 @@ export function viewer(options) {
           "/" + viewer.nutsLevel_ + ".json"
         );
       }
-
-      // define viewer click, dropdown change and screen resize events
-      addEventListeners();
 
       //request initial placenames
       // view.transition().call(viewer.zoom.scaleBy, 1.000001); //sets initial scale properly (otherwise it starts as 0.0something)
@@ -376,6 +361,29 @@ export function viewer(options) {
       }
     } else {
       return true;
+    }
+  }
+
+  function addInitialElementsToDOM() {
+    // add headings / sources texts
+    if (viewer.title_ || viewer.subtitle_ || viewer.cellCount_) {
+      addHeadingsContainerToDOM();
+    }
+    if (viewer.cellCount_) {
+      addCellCountToDOM();
+    }
+
+    if (viewer.title_) {
+      addTitleToDOM();
+    }
+    if (viewer.subtitle_) {
+      addSubtitleToDOM();
+    }
+    if (viewer.sourcesHTML_) {
+      addSourcesToDOM();
+    }
+    if (viewer.homeButton_) {
+      addHomeButtonToDOM();
     }
   }
 
@@ -445,6 +453,22 @@ export function viewer(options) {
   }
 
   /**
+*
+*
+* @function addHomeButtonToDOM
+* @description adds a button element with a home icon to the DOM
+*/
+  function addHomeButtonToDOM() {
+    viewer.homeButtonNode = document.createElement("div");
+    viewer.homeButtonNode.id = "gridviz-home-btn";
+    viewer.homeButtonNode.classList.add("gridviz-home-button", "gridviz-icon-button");
+    let icon = document.createElement("span")
+    icon.classList.add("icon")
+    viewer.homeButtonNode.appendChild(icon)
+    viewer.container_.appendChild(viewer.homeButtonNode);
+  }
+
+  /**
   *
   *
   * @function addSelectorsContainerToDOM
@@ -473,6 +497,10 @@ export function viewer(options) {
    */
   function createWebGLRenderer() {
     renderer = new WebGLRenderer();
+    if (viewer._mobile) {
+      renderer.setPixelRatio(window.devicePixelRatio);
+    }
+
     renderer.setSize(viewer.width_, viewer.height_);
     viewer.container_.appendChild(renderer.domElement);
     view = select(renderer.domElement); //for d3 mouse events
@@ -599,7 +627,165 @@ export function viewer(options) {
     }
     //screen resize
     addResizeEvent();
+    //zoom, home buttons etc
+    addButtonEvents();
   }
+
+  /**
+ * Add change event to color-scheme selector
+ *
+ */
+  function addChangeEventToColorSchemeDropdown() {
+    viewer.schemesSelect.addEventListener("change", function (e) {
+      onChangeColorScheme(e.currentTarget.value);
+    });
+  }
+
+  /**
+  * Color scheme dropdown event handler
+  *
+  * @param {*} scheme
+  */
+  function onChangeColorScheme(scheme) {
+    viewer.colorSchemeName_ = scheme;
+    updateColorScale();
+    updatePointsColors();
+    if (viewer.legend_) {
+      updateLegend();
+    }
+  }
+
+  /**
+  * Add change event to color-field selector
+  *
+  */
+  function addChangeEventToColorFieldDropdown() {
+    viewer.colorFieldSelect.addEventListener("change", function (e) {
+      onChangeColorField(e.currentTarget.value);
+    });
+  }
+
+  /**
+  * Color csv field dropdown event handler
+  *
+  * @param {*} field
+  */
+  function onChangeColorField(field) {
+    viewer.colorField_ = field;
+    updatePointsColors();
+    if (viewer.legend_) {
+      updateLegend();
+    }
+  }
+
+  /**
+  * Add change event to color-scale selector
+  *
+  */
+  function addChangeEventToColorScaleDropdown() {
+    viewer.colorScaleSelect.addEventListener("change", function (e) {
+      onChangeColorScale(e.currentTarget.value);
+    });
+  }
+
+  /**
+  * Color scale dropdown event handler
+  *
+  * @param {*} scale
+  */
+  function onChangeColorScale(scale) {
+    viewer.colorScaleName_ = scale;
+    updateColorScale();
+    updatePointsColors();
+    if (viewer.legend_) {
+      updateLegend();
+    }
+  }
+
+
+  /**
+  * Add change event to siz-field selector
+  *
+  */
+  function addChangeEventToSizeFieldDropdown() {
+    viewer.sizeFieldSelect.addEventListener("change", function (e) {
+      onChangeSizeField(e.currentTarget.value);
+    });
+  }
+
+  /**
+  * Color csv field dropdown event handler
+  *
+  * @param {*} field
+  */
+  function onChangeSizeField(field) {
+    viewer.sizeField_ = field;
+    updateSizeScale();
+    updatePointsSizes();
+    if (viewer.gridLegend) {
+      updateLegend();
+    }
+  }
+
+  /**
+ * redefine width and height of viewer, currently only works with default_options values
+ *
+ */
+  function addResizeEvent() {
+    window.addEventListener("resize", () => {
+      viewer.width_ = viewer.container_.clientWidth;
+      viewer.height_ = viewer.container_.clientHeight - 4; //no idea why but an offset of -4 prevents the viewer from growing/shrinking upon resize
+      labelRenderer.setSize(viewer.width_, viewer.height_);
+      renderer.setSize(viewer.width_, viewer.height_);
+      camera.aspect = viewer.width_ / viewer.height_;
+      camera.updateProjectionMatrix();
+    });
+  }
+
+  function addMouseEventsToView() {
+    // show cell value on click
+    view.on("click", () => {
+      let [mouseX, mouseY] = mouse(view.node());
+      let mouse_position = [mouseX, mouseY];
+      checkIntersects(mouse_position);
+      //console.log("Camera pos:", camera.position);
+    });
+
+    view.on("mouseleave", () => {
+      removeHighlights();
+    });
+  }
+
+  function addButtonEvents() {
+    viewer.homeButtonNode.addEventListener("click", () => {
+      viewWholeGrid();
+    })
+  }
+
+  function viewWholeGrid() {
+    let minViewerX = viewer.extentX[0];
+    let minViewerY = viewer.extentY[0];
+
+    if (viewer._mobile) {
+      let scale = getScaleFromZ(viewer.camera.far_)
+      viewer.d3zoom.scaleTo(view, scale);
+      viewer.d3zoom.translateTo(view,
+        parseInt(minViewerX) + viewer.width_ / 2,
+        parseInt(minViewerY) + viewer.height_ / 2);
+    } else {
+      // let initial_scale = getScaleFromZ(viewer.camera.far_);
+      // let initial_transform = zoomIdentity
+      //   .translate(viewer.width_ / 2, viewer.height_ / 2)
+      //   .scale(initial_scale);
+      // viewer.d3zoom.transform(view, initial_transform);
+      // let event = currentEvent;
+      // if (event) zoomHandler(event);
+      viewer.camera.position.set()
+    }
+
+  }
+
+  // end of event listeners
 
   /**
   * @typedef {Object} GridConfig
@@ -659,15 +845,20 @@ export function viewer(options) {
             //validate csv
             if (csv[0].x && csv[0].y && csv[0][viewer.colorField_]) {
               viewer.cellCount = csv.length;
-              if (viewer.cellCount_) {
-                addCellCountToDOM();
-              }
+
+              // add points to cache
               addGridToCache(csv, grid.cellSize);
             } else {
               return console.error(
                 "Incorrect csv format. Please use coordinate columns with names 'x' and 'y'"
               );
             }
+
+            // add HTMLElements to DOM
+            addInitialElementsToDOM();
+            // define viewer click, dropdown change and screen resize events
+            addEventListeners();
+
             //define scales
             viewer.colorValuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.colorField_]);
             viewer.colorScaleFunction_ = defineColorScale();
@@ -675,6 +866,10 @@ export function viewer(options) {
               viewer.sizeValuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.sizeField_]);
               viewer.sizeScaleFunction_ = defineSizeScale();
             }
+
+            //coordinates extent
+            viewer.extentX = extent(gridCaches[viewer.resolution_], d => d.x);
+            viewer.extentY = extent(gridCaches[viewer.resolution_], d => d.y);
 
             // if center is not specified by user, move camera to a cell half way along the array
             // BUG mobile
@@ -1764,7 +1959,8 @@ export function viewer(options) {
 
   /**
    * Three.js render loop
-   *
+   * @function animate
+   * 
    */
   function animate() {
     //let time = Date.now() * 0.005;
@@ -1775,101 +1971,6 @@ export function viewer(options) {
     labelRenderer.render(viewer.scene, camera);
   }
 
-  /**
-   * Add change event to color-scheme selector
-   *
-   */
-  function addChangeEventToColorSchemeDropdown() {
-    viewer.schemesSelect.addEventListener("change", function (e) {
-      onChangeColorScheme(e.currentTarget.value);
-    });
-  }
-
-  /**
-  * Color scheme dropdown event handler
-  *
-  * @param {*} scheme
-  */
-  function onChangeColorScheme(scheme) {
-    viewer.colorSchemeName_ = scheme;
-    updateColorScale();
-    updatePointsColors();
-    if (viewer.legend_) {
-      updateLegend();
-    }
-  }
-
-  /**
-  * Add change event to color-field selector
-  *
-  */
-  function addChangeEventToColorFieldDropdown() {
-    viewer.colorFieldSelect.addEventListener("change", function (e) {
-      onChangeColorField(e.currentTarget.value);
-    });
-  }
-
-  /**
-  * Color csv field dropdown event handler
-  *
-  * @param {*} field
-  */
-  function onChangeColorField(field) {
-    viewer.colorField_ = field;
-    updatePointsColors();
-    if (viewer.legend_) {
-      updateLegend();
-    }
-  }
-
-  /**
-  * Add change event to color-scale selector
-  *
-  */
-  function addChangeEventToColorScaleDropdown() {
-    viewer.colorScaleSelect.addEventListener("change", function (e) {
-      onChangeColorScale(e.currentTarget.value);
-    });
-  }
-
-  /**
-  * Color scale dropdown event handler
-  *
-  * @param {*} scale
-  */
-  function onChangeColorScale(scale) {
-    viewer.colorScaleName_ = scale;
-    updateColorScale();
-    updatePointsColors();
-    if (viewer.legend_) {
-      updateLegend();
-    }
-  }
-
-
-  /**
-  * Add change event to siz-field selector
-  *
-  */
-  function addChangeEventToSizeFieldDropdown() {
-    viewer.sizeFieldSelect.addEventListener("change", function (e) {
-      onChangeSizeField(e.currentTarget.value);
-    });
-  }
-
-  /**
-  * Color csv field dropdown event handler
-  *
-  * @param {*} field
-  */
-  function onChangeSizeField(field) {
-    viewer.sizeField_ = field;
-    updateSizeScale();
-    updatePointsSizes();
-    if (viewer.gridLegend) {
-      updateLegend();
-    }
-  }
 
   function createTooltipContainer() {
     // Initial tooltip state
@@ -1892,67 +1993,58 @@ export function viewer(options) {
     viewer.scene.add(tooltipContainer);
   }
 
-  function addMouseEventsToView() {
-    // show cell value on click
-    view.on("click", () => {
-      let [mouseX, mouseY] = mouse(view.node());
-      let mouse_position = [mouseX, mouseY];
-      checkIntersects(mouse_position);
-      //console.log("Camera pos:", camera.position);
-    });
 
-    view.on("mouseleave", () => {
-      removeHighlights();
-    });
-  }
 
   //functions taken from observableHQ & work on mobile:
+  //
+  // @deprecated 
   function addMobilePanAndZoom() {
-    let d3_zoom = zoom()
-      .scaleExtent([getScaleFromZMobile(viewer.camera.far_), getScaleFromZMobile(viewer.camera.near_)])
+    viewer.d3zoom = zoom()
+      .scaleExtent([getScaleFromZ(viewer.camera.far_), getScaleFromZ(viewer.camera.near_)])
       //.translateExtent([[-10000, -10000], [10000, 10000]]) // limit translating to this extent, world coords (i think)
       .on('zoom', () => {
         let d3_transform = currentEvent.transform;
         zoomHandlerMobile(d3_transform);
       });
-    view.call(d3_zoom);
-    let initial_scale = getScaleFromZMobile(viewer.camera.far_);
+    view.call(viewer.d3zoom);
+    let initial_scale = getScaleFromZ(viewer.camera.far_);
     let translateX = viewer.width_ / 2;
     let translateY = viewer.height_ / 2;
     // let translateX = 0
     // let translateY = 0
-    // let translateX = viewer.center_[0];
-    // let translateY = viewer.center_[1];
-    //view.call(d3_zoom.transform, zoomIdentity.translate(translateX, translateY).scale(initial_scale))
-
-    let initial_transform = zoomIdentity.translate(translateX, translateY).scale(initial_scale);
-    d3_zoom.transform(view, initial_transform);
-    // initial mobile camera position (not needed)
-    //camera.position.set(viewer.center_[0], viewer.center_[1], viewer.camera.far_);
+    let centerX = viewer.center_[0];
+    let centerY = viewer.center_[1];
+    //NL center[1720, 3900]
+    // EU 5 center [4369, 3230]
+    let offsetX = 0;
+    let offsetY = 0;
+    //view.call(viewer.d3zoom.transform, zoomIdentity.translate(translateX + offsetX, translateY + offsetY).scale(initial_scale))
+    viewer.d3zoom.scaleTo(view, initial_scale);
+    viewer.d3zoom.translateTo(view,
+      centerX + viewer.width_ / 2,
+      centerY + viewer.height_ / 2);
+    // let initial_transform = zoomIdentity.translate(translateX, translateY).scale(initial_scale);
+    // d3_zoom.transform(view, initial_transform);
   }
 
   function zoomHandlerMobile(d3_transform) {
     let scale = d3_transform.k;
     let x = -(d3_transform.x - viewer.width_ / 2) / scale;
     let y = (d3_transform.y - viewer.height_ / 2) / scale;
-    let z = getZFromScaleMobile(scale);
-    // Handle panning
-    // const { movementX, movementY } = currentEvent.sourceEvent
-    // camera.position.set(camera.position.x - movementX / current_scale, camera.position.y +
-    //   movementY / current_scale, camera.position.z);
-
+    let z = getZFromScale(scale);
     camera.position.set(x, y, z);
   }
 
-  function getScaleFromZMobile(camera_z_position) {
+  function getScaleFromZ(z) {
     let half_fov = viewer.camera.fov_ / 2;
     let half_fov_radians = toRadians(half_fov);
-    let half_fov_height = Math.tan(half_fov_radians) * camera_z_position;
+    let half_fov_height = Math.tan(half_fov_radians) * z;
     let fov_height = half_fov_height * 2;
     let scale = viewer.height_ / fov_height; // Divide visualization height by height derived from field of view
     return scale;
   }
-  function getZFromScaleMobile(scale) {
+
+  function getZFromScale(scale) {
     let half_fov = viewer.camera.fov_ / 2;
     let half_fov_radians = toRadians(half_fov);
     let scale_height = viewer.height_ / scale;
@@ -1965,26 +2057,49 @@ export function viewer(options) {
   function addPanAndZoom() {
     // define zoom
     //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
-    let farScale = getScaleFromZMobile(viewer.camera.far_);
-    let nearScale = getScaleFromZMobile(viewer.camera.near_);
+    let farScale = getScaleFromZ(viewer.camera.far_);
+    let nearScale = getScaleFromZ(viewer.camera.near_);
     viewer.d3zoom =
       zoom()
         .scaleExtent([farScale, nearScale])
         .on("zoom", () => {
-          let event = currentEvent;
-          if (event) zoomHandler(event);
+
+          if (viewer._mobile) {
+            let d3_transform = currentEvent.transform;
+            zoomHandlerMobile(d3_transform);
+          } else {
+            let event = currentEvent;
+            if (event) zoomHandler(event);
+          }
+
         })
         .on("end", () => {
-          let event = currentEvent;
-          if (event) zoomEnd(event);
-        });
-    view.call(viewer.d3zoom);
+          if (!viewer._mobile) {
+            let event = currentEvent;
+            if (event) zoomEnd(event);
+          }
 
-    let initial_scale = getScaleFromZ(viewer.camera.zoom_);
-    var initial_transform = zoomIdentity
-      .translate(viewer.width_ / 2, viewer.height_ / 2)
-      .scale(initial_scale);
-    viewer.d3zoom.transform(view, initial_transform);
+        });
+    if (viewer.mobile_) {
+      view.call(viewer.d3zoom);
+      let initial_scale = getScaleFromZ(viewer.camera.far_);
+      let translateX = viewer.width_ / 2;
+      let translateY = viewer.height_ / 2;
+      let centerX = viewer.center_[0];
+      let centerY = viewer.center_[1];
+      view.call(viewer.d3zoom.transform, zoomIdentity.translate(translateX + offsetX, translateY + offsetY).scale(initial_scale))
+      // viewer.d3zoom.scaleTo(view, initial_scale);
+      // viewer.d3zoom.translateTo(view,
+      //   centerX + viewer.width_ / 2,
+      //   centerY + viewer.height_ / 2);
+    } else {
+      view.call(viewer.d3zoom);
+      let initial_scale = getScaleFromZ(viewer.camera.zoom_);
+      var initial_transform = zoomIdentity
+        .translate(viewer.width_ / 2, viewer.height_ / 2)
+        .scale(initial_scale);
+      viewer.d3zoom.transform(view, initial_transform);
+    }
   }
 
   function zoomHandler(event) {
@@ -2022,27 +2137,7 @@ export function viewer(options) {
     }
   }
 
-  function getScaleFromZ(z) {
-    let half_fov = CONSTANTS.fov / 2;
-    let half_fov_radians = toRadians(half_fov);
-    let half_fov_height = Math.tan(half_fov_radians) * z;
-    let fov_height = half_fov_height * 2;
-    let scale = viewer.height_ / fov_height; // Divide visualization height by height derived from field of view
-    return scale;
-  }
 
-  function getZFromScale(scale) {
-    // let half_fov = CONSTANTS.fov / 2;
-    // let half_fov_radians = toRadians(half_fov);
-    // let scale_height = viewer.height_ / scale;
-    // let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
-    // return camera_z_position;
-    let half_fov = CONSTANTS.fov / 2;
-    let half_fov_radians = toRadians(half_fov);
-    let scale_height = viewer.height_ / scale;
-    let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
-    return camera_z_position;
-  }
 
   function zoomEnd(event) {
     hideTooltip();
@@ -2498,20 +2593,7 @@ export function viewer(options) {
     });
   }
 
-  /**
-   * redefine width and height of viewer, currently only works with default_options values
-   *
-   */
-  function addResizeEvent() {
-    window.addEventListener("resize", () => {
-      viewer.width_ = viewer.container_.clientWidth;
-      viewer.height_ = viewer.container_.clientHeight - 4; //no idea why but an offset of -4 prevents the viewer from growing/shrinking upon resize
-      labelRenderer.setSize(viewer.width_, viewer.height_);
-      renderer.setSize(viewer.width_, viewer.height_);
-      camera.aspect = viewer.width_ / viewer.height_;
-      camera.updateProjectionMatrix();
-    });
-  }
+
 
   return viewer;
 }

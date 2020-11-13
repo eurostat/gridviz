@@ -15,7 +15,13 @@ module.exports = {
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"]
-      }
+      },
+      {
+        loader: 'url-loader',
+        options: {
+          limit: 8192,
+        },
+      },
     ]
   },
   watch: false,

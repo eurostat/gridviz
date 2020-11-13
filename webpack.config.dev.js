@@ -16,6 +16,15 @@ module.exports = {
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"]
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        exclude: /node_modules/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: '[hash]-[name].[ext]',
+        },
       }
     ]
   },
