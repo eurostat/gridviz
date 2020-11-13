@@ -28,10 +28,10 @@ import {
 } from "three";
 import * as THREE from "three/src/constants";
 // extra Three.js modules not included in main threejs build
-import { Line2 } from "./threejs/lines/Line2";
-import { LineGeometry } from "./threejs/lines/LineGeometry";
-import { LineMaterial } from "./threejs/lines/LineMaterial";
-import { CSS2DRenderer, CSS2DObject } from "./threejs/CSS2D/CSS2DRenderer";
+import { Line2 } from "./lib/threejs/lines/Line2";
+import { LineGeometry } from "./lib/threejs/lines/LineGeometry";
+import { LineMaterial } from "./lib/threejs/lines/LineMaterial";
+import { CSS2DRenderer, CSS2DObject } from "./lib/threejs/CSS2D/CSS2DRenderer";
 // for loading NUTS2json 
 import { feature } from "topojson";
 import * as CONSTANTS from "./constants.js";
@@ -293,6 +293,13 @@ export function viewer(options) {
       createCamera();
       createRaycaster();
 
+      // define pan & zoom
+      if (/Mobi|Android/i.test(navigator.userAgent)) {
+        // mobile!
+        addMobilePanAndZoom()
+      } else {
+        addPanAndZoom();
+      }
 
       // tooltip DOM element
       createTooltipContainer();
@@ -311,7 +318,7 @@ export function viewer(options) {
 
       // NUTS geometries
       if (viewer.nuts2json_) {
-        loadBordersJson(
+        loadNuts2json(
           CONSTANTS.nuts_base_URL +
           viewer.nuts2jsonEPSG_ +
           "/" +
@@ -342,7 +349,7 @@ export function viewer(options) {
   *
   *
   * @function validateInputs
-  * @description validates inputs when initializing the viewer
+  * @description validates user inputs when initializing the viewer
   */
   function validateInputs() {
     if (viewer.colors_ && viewer.thresholdValues_) {
@@ -517,7 +524,10 @@ export function viewer(options) {
     // camera.position.set(x, y, z);
   }
 
-  //update camera configuration
+  /**
+ * @description Updates camera configuration. Called when user adds grid data, changes zoom, or changes center after initialization
+ * @function redefineCamera
+ */
   function redefineCamera() {
     viewer.camera.near_ = CONSTANTS.near;
     viewer.camera.far_ = defineFar(); //set min zoom
@@ -604,8 +614,8 @@ export function viewer(options) {
   }
 
   /**
-   * Define the pointSize parameter for THREE.pointsLayer objects at the specified resolution
-   *
+   * @description Defines the pointSize parameter for THREE.pointsLayer objects at the specified resolution
+   * @function definePointSize
    *
    */
   function definePointSize() {
@@ -613,19 +623,16 @@ export function viewer(options) {
   }
 
   /**
-   * Define the far parameter for THREE.camera.
-   * The far parameter represents the furthest possible distance that the camera can be from the plane (where z=0)
-   *
+   * @description Define the far parameter for THREE.camera. The far parameter represents the furthest possible distance that the camera can be from the plane (where z=0)
+   * @function defineFar
    */
   function defineFar() {
     return viewer.resolution_ * 4000;
   }
 
-
-
   /**
    * @function loadGrid
-   * @description request grid, save it to the cache, and add it to the scene
+   * @description request grid, save it to the cache, define the scales used for colouring and sizing, then add the cells (points) to the scene
    * @param {Grid}
    */
   function loadGrid(grid) {
@@ -655,7 +662,7 @@ export function viewer(options) {
             }
 
             // if center is not specified by user, move camera to a cell half way along the array
-            // BUG: this causes a bug on mobile. It centers correctly but then goes haywire when you pan the maps
+            // BUG mobile
             if (!viewer.center_) {
               let index = parseInt(gridCaches[viewer.resolution_].length / 2);
               let c = gridCaches[viewer.resolution_][index];
@@ -664,14 +671,6 @@ export function viewer(options) {
                 parseFloat(c.y)
               ];
               setCamera(viewer.center_[0], viewer.center_[1], 0)
-            }
-
-            // define pan & zoom
-            if (/Mobi|Android/i.test(navigator.userAgent)) {
-              // mobile!
-              addMobilePanAndZoom()
-            } else {
-              addPanAndZoom();
             }
 
             addPointsToScene();
@@ -697,20 +696,20 @@ export function viewer(options) {
   }
 
   /**
-   * TODO: replace with requestTile() and addTileToCache() for CSVTiles endpoint
+   * TODO: TILING: replace with requestTile() and addTileToCache() for CSVTiles endpoint
    * @function requestGrid
    * @description fetches csv file and adds the data to the cache
    * @param @param {"string"} [grid] URL of csv file
-   * @returns Promise
+   * @returns {Promise}
    */
   function requestGrid(grid) {
-    return csv(grid.url).then();
+    return csv(grid.url);
   }
 
   /**
    * TODO: replace with addTileToCache()
    *
-   * @param {*} csv
+   * @param {*} csv 
    * @param {*} res
    */
   function addGridToCache(csv, res) {
@@ -782,11 +781,11 @@ export function viewer(options) {
   }
 
   /**
-   * request nuts2json file then add it to the scene
-   *
-   * @param {*} url
+   * @description request nuts2json file then add it to the scene
+   * @function loadNuts2json
+   * @param {String} url of nuts2json file
    */
-  function loadBordersJson(url) {
+  function loadNuts2json(url) {
     json(url).then(
       json => {
         let newArray;
@@ -800,8 +799,10 @@ export function viewer(options) {
           });
         }
         json.objects.nutsbn.geometries = newArray;
+        //topojson to geojson
         let features = feature(json, json.objects.nutsbn).features;
-        addBordersToScene(features);
+        //add line geometries to viewer
+        addNuts2jsonToScene(features, true);
       },
       err => {
         console.error(err);
@@ -810,11 +811,12 @@ export function viewer(options) {
   }
 
   /**
-   * Create THREE.Group and append line geometries from GeoJSON features
+   * @description Create THREE.Group and append line geometries from nuts2json features
+   * @function addNuts2jsonToScene
+   * @param {Array} features geojson feature array
    *
-   * @param {*} features
    */
-  function addBordersToScene(features) {
+  function addNuts2jsonToScene(features) {
     let coords = [];
     let initial = true;
     if (!boundariesGroup) {
@@ -837,6 +839,7 @@ export function viewer(options) {
           for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
             let xyz;
             if (viewer.zerosRemoved_) {
+              // remove zeros from nuts2json coordinates to match gridData
               let d = Number('1E' + viewer.zerosRemoved_);
               xyz = {
                 x: feature.geometry.coordinates[c][s][0] / d,
@@ -890,13 +893,19 @@ export function viewer(options) {
     }
   }
 
-
-  viewer.addGeoJson = function (url) {
+  /**
+   * 
+   * @description Function exposed to user for adding geojson files to the viewer
+   * @param {String} url URL of geojson file to be added
+   * @param {Boolean} removeZeros whether or not to remove the amount of zeros specified in zerosRemoved_ from the geojson file to be loaded. E.g if your csv grid file has 3 trailing zeros removed but your geojson file doesnt
+   * @function addGeoJson
+   */
+  viewer.addGeoJson = function (url, removeZeros) {
     json(url).then(
       res => {
         if (res.features) {
           if (res.features.length > 0) {
-            addGeoJsonToScene(res.features);
+            addGeoJsonToScene(res.features, removeZeros);
           }
         }
       },
@@ -907,14 +916,15 @@ export function viewer(options) {
   }
 
   /**
-   * Add geojson to three.js scene
-   *
-   * @param {*} features //Geojson features
    * 
+   * @description Add geojson features to three.js scene. Currently accepts polygon, multipolygon or linestring
+   * @param {Array} features Geojson feature array
+   * @param {Boolean} removeZeros whether or not to remove the amount of zeros specified in zerosRemoved_ from the geojson file to be loaded. E.g if your csv grid file has 3 trailing zeros removed but your geojson file doesnt
+   * @function addGeoJsonToScene
    */
   let layerZ = 1;
-  function addGeoJsonToScene(features) {
-    layerZ = layerZ + 0.002;
+  function addGeoJsonToScene(features, removeZeros) {
+    layerZ = layerZ + 0.002; // increment draw order so that latest geojson is added on top of the rest.
     let geojsonGroup = new Group();
     geojsonGroup.renderOrder = 999; //always on top of grid
     // GEOJSON to ThreeJS
@@ -926,7 +936,7 @@ export function viewer(options) {
           let coords = [];
           for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
             let xyz;
-            if (viewer.zerosRemoved_) {
+            if (removeZeros && viewer.zerosRemoved_) {
               let d = Number('1E' + viewer.zerosRemoved_);
               xyz = {
                 x: feature.geometry.coordinates[c][s][0] / d,
@@ -954,7 +964,7 @@ export function viewer(options) {
               m++
             ) {
               let xyz;
-              if (viewer.zerosRemoved_) {
+              if (removeZeros && viewer.zerosRemoved_) {
                 let d = Number('1E' + viewer.zerosRemoved_);
                 xyz = {
                   x: feature.geometry.coordinates[c][s][m][0] / d,
@@ -974,7 +984,7 @@ export function viewer(options) {
           }
         } else if (feature.geometry.type == "LineString") {
           let xyz;
-          if (viewer.zerosRemoved_) {
+          if (removeZeros && viewer.zerosRemoved_) {
             let d = Number('1E' + viewer.zerosRemoved_);
             xyz = {
               x: feature.geometry.coordinates[c][0] / d,
@@ -999,10 +1009,10 @@ export function viewer(options) {
   }
 
   /**
-   * Build threejs line geometry from world coords
-   *
-   * @param {*} coords
-   * @returns Line2
+   * @description Build threejs line geometry from world coordinates
+   * @function createLineFromCoords
+   * @param {[x,y,z]} coords
+   * @returns {Line2}
    */
   function createLineFromCoords(coords) {
     let line_geom = new LineGeometry();
@@ -1034,8 +1044,8 @@ export function viewer(options) {
   }
 
   /**
-   * rebuild color array
-   *
+   * @description rebuilds array of point colours
+   * @function updatePointsColors
    */
   function updatePointsColors() {
     let colors = [];
@@ -1058,8 +1068,8 @@ export function viewer(options) {
   }
 
   /**
-   * rebuild size array
-   *
+   * @description rebuilds array which stores point sizes
+   * @function updatePointsSizes
    */
   function updatePointsSizes() {
     let sizes = [];
@@ -1077,10 +1087,8 @@ export function viewer(options) {
   }
 
   /**
-   * create or update THREE.js pointsLayer layer. 
-   * At the moment, only ONE pointsLayer layer at a time is handled by the viewer, 
-   * so a second call of gridviz.gridData() will overwrite the initial layer
-   *
+   * @description create or update THREE.js pointsLayer layer. At the moment, only ONE pointsLayer layer at a time is handled by the viewer, so a second call of gridviz.gridData() will overwrite the initial layer
+   * @function addPointsToScene
    */
   function addPointsToScene() {
     //threejs recommends using BufferGeometry instead of Geometry for performance
@@ -1185,6 +1193,10 @@ export function viewer(options) {
 
   }
 
+  /**
+* @description WebGL - Shader stage that will process a Fragment generated by the Rasterization into a set of colors and a single depth value
+* @function fragmentShader
+*/
   function fragmentShader() {
     return `
   varying vec3 vColor;
@@ -1195,6 +1207,10 @@ export function viewer(options) {
 `;
   }
 
+  /**
+ * @description WebGL - shader stage in the rendering pipeline that handles the processing of individual vertices
+ * @function vertexShader
+ */
   function vertexShader() {
     return `
   uniform float thing;
@@ -1212,8 +1228,8 @@ export function viewer(options) {
   }
 
   /**
-   * Creates an HTML Select element for the different D3 Scale-Chromatic functions
-   *
+   * @description Creates an HTML Select element for the different D3 Scale-Chromatic functions
+   * @function createColorSchemeDropdown
    */
   function createColorSchemeDropdown() {
     let schemes = [
@@ -1871,7 +1887,6 @@ export function viewer(options) {
   }
 
   //functions taken from observableHQ & work on mobile:
-  let initialZoom = true;
   function addMobilePanAndZoom() {
     let d3_zoom = zoom()
       .scaleExtent([getScaleFromZMobile(viewer.camera.far_), getScaleFromZMobile(viewer.camera.near_)])
@@ -1881,33 +1896,29 @@ export function viewer(options) {
       });
     view.call(d3_zoom);
     let initial_scale = getScaleFromZMobile(viewer.camera.far_);
-    let translateX = viewer.center_[0];
-    let translateY = viewer.center_[1];
-    view.call(d3_zoom.transform, zoomIdentity.translate(translateX, translateY).scale(initial_scale))
+    let translateX = viewer.width_ / 2;
+    let translateY = viewer.height_ / 2;
+    //view.call(d3_zoom.transform, zoomIdentity.translate(translateX, translateY).scale(initial_scale))
 
-    // let initial_transform = zoomIdentity.translate(translateX, translateY).scale(initial_scale);
-    // d3_zoom.transform(view, initial_transform);
+    let initial_transform = zoomIdentity.translate(translateX, translateY).scale(initial_scale);
+    d3_zoom.transform(view, initial_transform);
     // initial mobile camera position
-
+    //camera.position.set(0, 0, viewer.camera.far_);
   }
+
   function zoomHandlerMobile(d3_transform) {
     let scale = d3_transform.k;
-    let x = -(d3_transform.x) / scale;
-    let y = (d3_transform.y) / scale;
+    let x = -(d3_transform.x - viewer.width_ / 2) / scale;
+    let y = (d3_transform.y - viewer.height_ / 2) / scale;
     let z = getZFromScaleMobile(scale);
     // Handle panning
-    const { movementX, movementY } = currentEvent.sourceEvent
-    camera.position.set(camera.position.x - movementX / current_scale, camera.position.y +
-      movementY / current_scale, camera.position.z);
+    // const { movementX, movementY } = currentEvent.sourceEvent
+    // camera.position.set(camera.position.x - movementX / current_scale, camera.position.y +
+    //   movementY / current_scale, camera.position.z);
 
-    if (initialZoom) {
-      camera.position.set(viewer.center_[0], viewer.center_[1], viewer.camera.far_);
-      initialZoom = false;
-    } else {
-      camera.position.set(x, y, z);
-    }
-
+    camera.position.set(x, y, z);
   }
+
   function getScaleFromZMobile(camera_z_position) {
     let half_fov = viewer.camera.fov_ / 2;
     let half_fov_radians = toRadians(half_fov);
@@ -2034,7 +2045,7 @@ export function viewer(options) {
         viewer.nutsSimplification_ !== "10M"
       ) {
         viewer.nutsSimplification_ = "10M";
-        loadBordersJson(
+        loadNuts2json(
           CONSTANTS.nuts_base_URL +
           viewer.nuts2jsonEPSG_ +
           "/" +
@@ -2046,7 +2057,7 @@ export function viewer(options) {
         viewer.nutsSimplification_ !== "20M"
       ) {
         viewer.nutsSimplification_ = "20M";
-        loadBordersJson(
+        loadNuts2json(
           CONSTANTS.nuts_base_URL +
           viewer.nuts2jsonEPSG_ +
           "/" +
@@ -2237,13 +2248,13 @@ export function viewer(options) {
   boundingRect = elem.getBoundingClientRect(),
   x = (clientX - boundingRect.left) * (elem.width / boundingRect.width),
   y = (clientY - boundingRect.top) * (elem.height / boundingRect.height);
-  
+   
   var vector = new THREE.Vector3( 
   ( x / viewer.width_ ) * 2 - 1, 
   - ( y / viewer.height_ ) * 2 + 1, 
   0.5 
   );
-  
+   
   projector.unprojectVector( vector, camera ); */
 
     //let bottomLeftVector = mouseToThree(padding, viewer.height_ - padding); //screen x,y
