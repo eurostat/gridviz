@@ -21,7 +21,8 @@
   }
   #gridviz-loading-spinner {
     position: absolute;
-    left: 41% !important;
+    top: 41% !important;
+    left: 40% !important;
   }
   #gridviz-home-btn{
     left:3px!important;

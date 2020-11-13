@@ -2074,11 +2074,8 @@ export function viewer(options) {
 
         })
         .on("end", () => {
-          if (!viewer._mobile) {
-            let event = currentEvent;
-            if (event) zoomEnd(event);
-          }
-
+          let event = currentEvent;
+          if (event) zoomEnd(event);
         });
     if (viewer.mobile_) {
       view.call(viewer.d3zoom);
