@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <title>1km² Grid of France</title>
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 </head>
 
 <body style="margin:0;">
@@ -49,7 +50,6 @@
         .nuts2json(true) //loads borders topojson
         .legend({
             title: "Total population per km² (2015)",
-            height: 350,
             titleWidth: 110,
             format: ',.0f'
         })

@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <title>5km² Grid of Europe</title>
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" /> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
 </head>
 
@@ -25,7 +25,6 @@
     ])
     .zerosRemoved(3)
     .title("5km² Population Grid of Europe")
-    .subtitle("With NUTS0 (3M)")
     .cellCount(true)
     .colorField("Population")  // csv column which you wish to visualize
     //sizeColumn() "value" // csv column which you wish to visualize
@@ -44,7 +43,6 @@
     .sizeFieldSelector(true)
     .legend({
       type: "continuous",
-      height: 350,
       title: "Total population per 5 km² (2011)",
       titleWidth: 130,
       ticks: 6

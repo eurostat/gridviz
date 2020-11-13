@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <title>Netherlands 100m grid</title>
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 </head>
 
 <body style="margin:0;">
@@ -15,7 +16,7 @@
     let containerDiv = document.getElementById("viz-container");
     gridviz.viewer()
         .container(containerDiv)
-        .title("100 x 100m statistics of the Netherlands, 2018")
+        .title("100 x 100m statistics of the Netherlands")
         .gridData([{
             url: "../../assets/csv/Netherlands/100m/NL_census.csv",
             cellSize: 1.1,
@@ -47,8 +48,8 @@
         .colorFieldSelectorLabel("Colour field: ")
         .legend({
             type: "cells",
-            width: 160,
-            height: 220,
+            width: 130,
+            height: 170,
             title: "Total Inhabitants per 100m² (2018)",
             titleWidth: 110,
             format: ',.0f'

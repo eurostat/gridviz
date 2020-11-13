@@ -1,9 +1,25 @@
 /* MOBILE */
 @media only screen and (max-width: 600px) {
-.gridviz-selectors {
-  top: 1rem;
-  left: 10px;
-}
+  #gridviz-legend {
+    z-index: 9999;
+    position: absolute;
+    bottom: 0px!important;
+    left: 0px!important;
+    padding:5px!important;
+    background:#efefefe8;
+  }
+  .gridviz-headings-container {
+    z-index:999999;
+    position:absolute;
+    top:0px!important;
+    left:0px!important;
+    width: 100%!important;
+    padding:8px!important;
+  }
+  #gridviz-loading-spinner {
+    position: absolute;
+    left: 41% !important;
+  }
 }
 
 
@@ -22,16 +38,16 @@
   padding:15px;
 }
 .gridviz-title {
-  font-size: 2rem;
+  font-size: 1rem;
   font-weight:bold;
 }
 .gridviz-subtitle {
-  font-size: 1rem;
+  font-size: 0.7rem;
   font-weight:bold;
   margin-top:5px;
 }
 .gridviz-cellcount {
-  font-size: 16px;
+  font-size: 0.7rem;
   font-weight:bold;
   margin-top:10px;
 }
@@ -66,7 +82,7 @@
   z-index:999; 
   border-radius:5px; 
   box-shadow: 0 1px 5px rgba(0,0,0,0.65); 
-  font-size: 13px; 
+  font-size: 0.8rem; 
   text-align: center; 
   line-height: 1; 
   padding: 6px; 
@@ -136,16 +152,16 @@
 /* LEGEND */
 /* continuous */
 .gridviz-legend-svg{
-  font-size:1rem;
-  margin-top: 10px;
+  font-size:0.8rem;
+  margin-top: 5px;
 }
 .gridviz-continuous-legend-title{
-  font-size:1rem;
+  /* font-size:1rem; */
   font-weight:bold;
   margin-bottom:10px;
 }
 .legend-tick text{
-font-size:1rem
+/* font-size:1rem */
 }
 .gridviz-legend-axis .domain{
   visibility:hidden;
@@ -157,9 +173,8 @@ font-size:1rem
   position: absolute;
   bottom: 10px;
   left: 10px;
-  padding:10px;
+  padding:5px;
   background:#efefefe8;
-  max-width: 92%;
 }
 .gridviz-legend-horizontal {
   height: 65px;
