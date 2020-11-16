@@ -267,7 +267,14 @@ export function viewer(options) {
         viewer.width_ = viewer.container_.clientWidth
       }
       if (!viewer.height_) {
-        viewer.height_ = viewer.container_.clientHeight
+        if (viewer.container_.clientHeight == "0") {
+          //if container element has no defined height, use screen height
+          viewer.height_ = window.innerHeight;
+        } else {
+          viewer.height_ = viewer.container_.clientHeight
+        }
+
+
       }
       //force viewer width to be the same as the container width
       if (viewer.width_ != viewer.container_.clientWidth) {
@@ -284,7 +291,7 @@ export function viewer(options) {
         viewer.colorScaleSelector_ = false;
         viewer.colorSchemeSelector_ = false;
         if (viewer.legend_ && viewer.legend_.type == "continuous") {
-          viewer.legend_.width = window.screen.width - 10; //margin
+          viewer.legend_.width = viewer_.width - 10; //margin
           viewer.legend_.height = 50;
         }
       }
@@ -2034,6 +2041,7 @@ export function viewer(options) {
     viewer.d3zoom =
       zoom()
         .scaleExtent([farScale, nearScale])
+        .extent([[0, 0], [viewer.width_, viewer.height_]])
         .on("zoom", () => {
           let event = currentEvent;
           if (viewer._mobile) {
@@ -2041,7 +2049,6 @@ export function viewer(options) {
           } else {
             if (event) zoomHandler(event);
           }
-
         })
         .on("end", () => {
           let event = currentEvent;

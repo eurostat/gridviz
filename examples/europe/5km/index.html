@@ -1,57 +1,55 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>5km² Grid of Europe</title>
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+  </head>
 
-<head>
-  <meta charset="utf-8" />
-  <title>5km² Grid of Europe</title>
-  <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+  <body style="margin: 0">
+    <div id="viz-container"></div>
+  </body>
+  <script src="../../../build/gridviz.js"></script>
+  <script>
+    let containerDiv = document.getElementById("viz-container");
+    let viz = gridviz
+      .viewer()
+      .container(containerDiv)
+      .gridData([
+        {
+          url: "../../../assets/csv/Europe/5km/3035/pop_grid_5km_incl_uninhab.csv",
+          cellSize: 5.1,
+        },
+      ])
+      .zerosRemoved(3)
+      .title("5km² Population Grid of Europe")
+      .cellCount(true)
+      .colorField("Population") // csv column which you wish to visualize
+      //sizeColumn() "value" // csv column which you wish to visualize
+      .nuts2json(false) //loads borders topojson
+      .center([4369, 3230]) //EPSG=3035
+      // .height(window.innerHeight - 5)
+      // .width(window.innerWidth)
+      .backgroundColor("#000")
+      .highlightColor("orange")
+      .borderColor("#ffffff")
+      .loadingIcon("ellipsis")
+      .colorSchemeName("interpolateTurbo")
+      .colorScaleName("scaleSequentialSqrt")
+      .colorSchemeSelector(true)
+      .colorScaleSelector(true)
+      .colorFieldSelector(true)
+      .sizeFieldSelector(true)
+      .legend({
+        type: "continuous",
+        title: "Total population per 5 km² (2011)",
+        titleWidth: 130,
+        ticks: 6,
+      })
+      .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
+      .build();
 
-</head>
-
-<body style="margin:0;">
-  <div id="viz-container"></div>
-</body>
-<script src="../../../build/gridviz.js"></script>
-<script>
-  let containerDiv = document.getElementById("viz-container");
-  let viz = gridviz.viewer()
-    .container(containerDiv)
-    .gridData([
-      {
-        url: "../../../assets/csv/Europe/5km/3035/pop_grid_5km_incl_uninhab.csv",
-        cellSize: 5.1
-      }
-    ])
-    .zerosRemoved(3)
-    .title("5km² Population Grid of Europe")
-    .cellCount(true)
-    .colorField("Population")  // csv column which you wish to visualize
-    //sizeColumn() "value" // csv column which you wish to visualize
-    .nuts2json(false) //loads borders topojson
-    .center([4369, 3230])//EPSG=3035
-    .height(window.innerHeight - 5)
-    .width(window.innerWidth)
-    .backgroundColor("#000")
-    .highlightColor("orange")
-    .borderColor("#ffffff")
-    .loadingIcon("ellipsis")
-    .colorSchemeName("interpolateTurbo")
-    .colorScaleName("scaleSequentialSqrt")
-    .colorSchemeSelector(true)
-    .colorScaleSelector(true)
-    .colorFieldSelector(true)
-    .sizeFieldSelector(true)
-    .legend({
-      type: "continuous",
-      title: "Total population per 5 km² (2011)",
-      titleWidth: 130,
-      ticks: 6
-    })
-    .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
-    .build()
-
-  viz.addGeoJson("../../../assets/geojson/NUTS_BN_03M_2021_3035_LEVL_0.geojson")
-</script>
-
+    viz.addGeoJson("../../../assets/geojson/NUTS_BN_03M_2021_3035_LEVL_0.geojson");
+  </script>
 </html>
