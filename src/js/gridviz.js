@@ -59,8 +59,8 @@ export function viewer(options) {
 
   //styles
   viewer.container_ = document.body;
-  viewer.height_ = window.innerHeight - 20; //takes container width/height
-  viewer.width_ = window.innerWidth;
+  viewer.height_ = null; //takes container width/height
+  viewer.width_ = null;
   viewer.backgroundColor_ = "#b7b7b7";
   viewer.borderColor_ = "#ffffff";
   viewer.highlightColor_ = "#37f2d6"
@@ -258,26 +258,39 @@ export function viewer(options) {
    * @description Clears the canvas, builds the three.js viewer and appends grid data
   */
   viewer.build = function () {
-    //mobile logic
-    if (/Mobi|Android/i.test(navigator.userAgent)) {
-      viewer._mobile = true;
-      // saving screen space...
-      viewer.sourcesHTML_ = null
-      viewer.sizeFieldSelector_ = false;
-      viewer.colorFieldSelector_ = false;
-      viewer.colorScaleSelector_ = false;
-      viewer.colorSchemeSelector_ = false;
-      if (viewer.legend_ && viewer.legend_.type == "continuous") {
-        viewer.legend_.width = window.screen.width - 10; //margin
-        viewer.legend_.height = 50;
-      }
-
-    }
-
-    Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
     let valid = validateInputs();
 
     if (valid) {
+
+      //set width/height if unspecified by user
+      if (!viewer.width_) {
+        viewer.width_ = viewer.container_.clientWidth
+      }
+      if (!viewer.height_) {
+        viewer.height_ = viewer.container_.clientHeight
+      }
+      //force viewer width to be the same as the container width
+      if (viewer.width_ != viewer.container_.clientWidth) {
+        viewer.width_ = viewer.container_.clientWidth;
+      }
+
+      //mobile logic
+      if (/Mobi|Android/i.test(navigator.userAgent)) {
+        viewer._mobile = true;
+        // saving screen space...
+        viewer.sourcesHTML_ = null
+        viewer.sizeFieldSelector_ = false;
+        viewer.colorFieldSelector_ = false;
+        viewer.colorScaleSelector_ = false;
+        viewer.colorSchemeSelector_ = false;
+        if (viewer.legend_ && viewer.legend_.type == "continuous") {
+          viewer.legend_.width = window.screen.width - 10; //margin
+          viewer.legend_.height = 50;
+        }
+      }
+
+      Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
+
       //set container height and width
       viewer.container_.classList.add("gridviz-container");
 
@@ -2066,7 +2079,6 @@ export function viewer(options) {
       let z = getZFromScale(scale);
       setCamera(x, y, z);
     }
-
   }
 
   function zoomHandler(event) {
