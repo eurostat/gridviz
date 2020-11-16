@@ -1,6 +1,6 @@
 {
   "name": "gridviz",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Visualization tool for gridded statistics",
   "keywords": [
     "statistics",
@@ -27,7 +27,7 @@
   "files": [
     "build/gridviz.min.js"
   ],
-  "author": "Joseph Davies",
+  "author": "Joseph Davies, Julien Gaffuri",
   "license": "EUPL",
   "homepage": "https://github.com/eurostat/gridviz#readme",
   "repository": {

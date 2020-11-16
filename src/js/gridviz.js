@@ -222,7 +222,7 @@ export function viewer(options) {
     if (v && viewer.scene) {
       viewer.center_ = v;
       redefineCamera();
-      setCamera(v[0], v[1], 0)
+      setCamera(v[0], v[1], camera.position.z)
     } else {
       if (v) {
         viewer.center_ = v;
@@ -242,7 +242,7 @@ export function viewer(options) {
     if (v && viewer.scene) {
       viewer.zoom_ = v;
       redefineCamera();
-      camera.position.set(camera.position.x, camera.position.y, v); // Set camera zoom (z position)
+      setCamera(camera.position.x, camera.position.y, v); // Set camera zoom (z position)
     } else {
       if (v) {
         viewer.zoom_ = v;
@@ -250,7 +250,6 @@ export function viewer(options) {
     }
     return viewer;
   };
-
 
   /**
    *
@@ -274,7 +273,6 @@ export function viewer(options) {
       }
 
     }
-
 
     Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
     let valid = validateInputs();
@@ -340,6 +338,7 @@ export function viewer(options) {
       return viewer;
 
     } else {
+      Utils.hideLoading();
       console.error("invalid inputs");
       return
     }
@@ -369,15 +368,14 @@ export function viewer(options) {
     if (viewer.title_ || viewer.subtitle_ || viewer.cellCount_) {
       addHeadingsContainerToDOM();
     }
-    if (viewer.cellCount_) {
-      addCellCountToDOM();
-    }
-
     if (viewer.title_) {
       addTitleToDOM();
     }
     if (viewer.subtitle_) {
       addSubtitleToDOM();
+    }
+    if (viewer.cellCount_) {
+      addCellCountToDOM();
     }
     if (viewer.sourcesHTML_) {
       addSourcesToDOM();
@@ -528,7 +526,8 @@ export function viewer(options) {
     viewer.camera.far_ = defineFar(); //set min zoom
     viewer.camera.fov_ = CONSTANTS.fov;
     viewer.camera.aspect_ = viewer.width_ / viewer.height_;
-    viewer.camera.zoom_ = viewer.zoom_ || viewer.camera.far_ / 2 - 1; //initial camera position Z
+    viewer.camera.initialZ_ = viewer.camera.far_ / 2 - 1
+    viewer.camera.zoom_ = viewer.zoom_ || viewer.camera.initialZ_; //initial camera position Z
     camera = new PerspectiveCamera(
       viewer.camera.fov_,
       viewer.camera.aspect_,
@@ -537,9 +536,9 @@ export function viewer(options) {
     );
 
     if (!viewer.center_) {
-      setCamera(0, 0, 0.1)
+      setCamera(0, 0, viewer.camera.initialZ_)
     } else {
-      setCamera(viewer.center_[0], viewer.center_[1], 0.1)
+      setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
     }
 
     //orthographic
@@ -564,7 +563,6 @@ export function viewer(options) {
     // let x = (6293974 + 2426378) / 2
     // let y = (5446513 + 1528101) / 2
     // let z = 1000;
-    // camera.position.set(x, y, z);
   }
 
   /**
@@ -596,8 +594,8 @@ export function viewer(options) {
    * 
    */
   function setCamera(x, y, z) {
-    camera.position.set(x, y, viewer.camera.zoom_); // Set initial camera position
-    camera.lookAt(new Vector3(x, y, z)); // Set initial camera position
+    camera.position.set(x, y, z); // Set camera position
+    camera.lookAt(new Vector3(x, y, z)); // Set camera angle
   }
 
   /**
@@ -767,20 +765,26 @@ export function viewer(options) {
     let minViewerY = viewer.extentY[0];
 
     if (viewer._mobile) {
-      let scale = getScaleFromZ(viewer.camera.far_)
+      let scale = getScaleFromZ(viewer.camera.initialZ_)
       viewer.d3zoom.scaleTo(view, scale);
       viewer.d3zoom.translateTo(view,
-        parseInt(minViewerX) + viewer.width_ / 2,
-        parseInt(minViewerY) + viewer.height_ / 2);
+        parseInt(viewer.center_[0]) + viewer.width_ / 2,
+        parseInt(viewer.center_[1]) + viewer.height_ / 2);
+      setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
+
+      let initial_scale = getScaleFromZ(viewer.camera.far_);
+      let initial_transform = zoomIdentity
+        .translate(viewer.width_ / 2, viewer.height_ / 2)
+        .scale(initial_scale);
+      viewer.d3zoom.transform(view, initial_transform);
+
     } else {
-      // let initial_scale = getScaleFromZ(viewer.camera.far_);
-      // let initial_transform = zoomIdentity
-      //   .translate(viewer.width_ / 2, viewer.height_ / 2)
-      //   .scale(initial_scale);
-      // viewer.d3zoom.transform(view, initial_transform);
-      // let event = currentEvent;
-      // if (event) zoomHandler(event);
-      viewer.camera.position.set()
+      let scale = getScaleFromZ(viewer.camera.initialZ_)
+      viewer.d3zoom.scaleTo(view, scale);
+      viewer.d3zoom.translateTo(view,
+        parseInt(viewer.center_[0]) + viewer.width_ / 2,
+        parseInt(viewer.center_[1]) + viewer.height_ / 2);
+      setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
     }
 
   }
@@ -880,7 +884,7 @@ export function viewer(options) {
                 parseFloat(c.x),
                 parseFloat(c.y)
               ];
-              setCamera(viewer.center_[0], viewer.center_[1], 0)
+              setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
             }
 
             addPointsToScene();
@@ -1601,6 +1605,7 @@ export function viewer(options) {
     dropdown_container.classList.add("gridviz-dropdown");
     viewer.schemesSelect = document.createElement("select");
     viewer.schemesSelect.id = "schemes";
+    viewer.schemesSelect.classList.add("gridviz-select");
     let label = document.createElement("label");
     label.for = "schemes";
     label.classList.add("gridviz-dropdown-label");
@@ -1651,6 +1656,7 @@ export function viewer(options) {
     dropdown_container.id = "gridviz-colorscale-dropdown-container";
     dropdown_container.classList.add("gridviz-dropdown");
     viewer.colorScaleSelect = document.createElement("select");
+    viewer.colorScaleSelect.classList.add("gridviz-select");
     viewer.colorScaleSelect.id = "scales";
     let label = document.createElement("label");
     label.for = "scales";
@@ -1680,6 +1686,7 @@ export function viewer(options) {
     dropdown_container.id = "gridviz-colorfield-dropdown-container";
     dropdown_container.classList.add("gridviz-dropdown");
     viewer.colorFieldSelect = document.createElement("select");
+    viewer.colorFieldSelect.classList.add("gridviz-select");
     viewer.colorFieldSelect.id = "colorFields";
     let label = document.createElement("label");
     label.for = "colorFields";
@@ -1713,6 +1720,7 @@ export function viewer(options) {
     dropdown_container.id = "gridviz-sizefield-dropdown-container";
     dropdown_container.classList.add("gridviz-dropdown");
     viewer.sizeFieldSelect = document.createElement("select");
+    viewer.sizeFieldSelect.classList.add("gridviz-select");
     viewer.sizeFieldSelect.id = "sizeFields";
     let label = document.createElement("label");
     label.for = "sizeFields";
@@ -1760,7 +1768,7 @@ export function viewer(options) {
     if (document.getElementById("gridviz-legend")) {
       legendContainer = select("#gridviz-legend");
     } else {
-      legendContainer = create("svg").attr("id", "gridviz-legend");
+      legendContainer = create("div").attr("id", "gridviz-legend");
       viewer.container_.appendChild(legendContainer.node());
     }
     if (viewer.legend_.orientation == "horizontal") {
@@ -1804,6 +1812,7 @@ export function viewer(options) {
       container = select("#gridviz-legend");
     } else {
       container = create("div").attr("id", "gridviz-legend");
+      container.attr("class", "gridviz-plugin");
       viewer.container_.appendChild(container.node());
     }
 
@@ -1958,7 +1967,7 @@ export function viewer(options) {
   }
 
   /**
-   * Three.js render loop
+   *  @description Three.js render loop
    * @function animate
    * 
    */
@@ -1971,7 +1980,11 @@ export function viewer(options) {
     labelRenderer.render(viewer.scene, camera);
   }
 
-
+  /**
+   * @description Appends tooltip container to the scene
+   * @function createTooltipContainer
+   * 
+   */
   function createTooltipContainer() {
     // Initial tooltip state
     tooltip_state = {
@@ -1995,65 +2008,11 @@ export function viewer(options) {
 
 
 
-  //functions taken from observableHQ & work on mobile:
-  //
-  // @deprecated 
-  function addMobilePanAndZoom() {
-    viewer.d3zoom = zoom()
-      .scaleExtent([getScaleFromZ(viewer.camera.far_), getScaleFromZ(viewer.camera.near_)])
-      //.translateExtent([[-10000, -10000], [10000, 10000]]) // limit translating to this extent, world coords (i think)
-      .on('zoom', () => {
-        let d3_transform = currentEvent.transform;
-        zoomHandlerMobile(d3_transform);
-      });
-    view.call(viewer.d3zoom);
-    let initial_scale = getScaleFromZ(viewer.camera.far_);
-    let translateX = viewer.width_ / 2;
-    let translateY = viewer.height_ / 2;
-    // let translateX = 0
-    // let translateY = 0
-    let centerX = viewer.center_[0];
-    let centerY = viewer.center_[1];
-    //NL center[1720, 3900]
-    // EU 5 center [4369, 3230]
-    let offsetX = 0;
-    let offsetY = 0;
-    //view.call(viewer.d3zoom.transform, zoomIdentity.translate(translateX + offsetX, translateY + offsetY).scale(initial_scale))
-    viewer.d3zoom.scaleTo(view, initial_scale);
-    viewer.d3zoom.translateTo(view,
-      centerX + viewer.width_ / 2,
-      centerY + viewer.height_ / 2);
-    // let initial_transform = zoomIdentity.translate(translateX, translateY).scale(initial_scale);
-    // d3_zoom.transform(view, initial_transform);
-  }
-
-  function zoomHandlerMobile(d3_transform) {
-    let scale = d3_transform.k;
-    let x = -(d3_transform.x - viewer.width_ / 2) / scale;
-    let y = (d3_transform.y - viewer.height_ / 2) / scale;
-    let z = getZFromScale(scale);
-    camera.position.set(x, y, z);
-  }
-
-  function getScaleFromZ(z) {
-    let half_fov = viewer.camera.fov_ / 2;
-    let half_fov_radians = toRadians(half_fov);
-    let half_fov_height = Math.tan(half_fov_radians) * z;
-    let fov_height = half_fov_height * 2;
-    let scale = viewer.height_ / fov_height; // Divide visualization height by height derived from field of view
-    return scale;
-  }
-
-  function getZFromScale(scale) {
-    let half_fov = viewer.camera.fov_ / 2;
-    let half_fov_radians = toRadians(half_fov);
-    let scale_height = viewer.height_ / scale;
-    let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
-    return camera_z_position;
-  }
-
-  //taken from elsewhere & DOESNT work on mobile:
-  // add d3's zoom
+  /**
+   * @description Defines zoom functionality using d3.js
+   * @function addPanAndZoom
+   * 
+   */
   function addPanAndZoom() {
     // define zoom
     //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
@@ -2063,12 +2022,10 @@ export function viewer(options) {
       zoom()
         .scaleExtent([farScale, nearScale])
         .on("zoom", () => {
-
+          let event = currentEvent;
           if (viewer._mobile) {
-            let d3_transform = currentEvent.transform;
-            zoomHandlerMobile(d3_transform);
+            if (event) zoomHandlerMobile(event);
           } else {
-            let event = currentEvent;
             if (event) zoomHandler(event);
           }
 
@@ -2077,26 +2034,39 @@ export function viewer(options) {
           let event = currentEvent;
           if (event) zoomEnd(event);
         });
-    if (viewer.mobile_) {
-      view.call(viewer.d3zoom);
-      let initial_scale = getScaleFromZ(viewer.camera.far_);
-      let translateX = viewer.width_ / 2;
-      let translateY = viewer.height_ / 2;
-      let centerX = viewer.center_[0];
-      let centerY = viewer.center_[1];
-      view.call(viewer.d3zoom.transform, zoomIdentity.translate(translateX + offsetX, translateY + offsetY).scale(initial_scale))
-      // viewer.d3zoom.scaleTo(view, initial_scale);
-      // viewer.d3zoom.translateTo(view,
-      //   centerX + viewer.width_ / 2,
-      //   centerY + viewer.height_ / 2);
+
+    view.call(viewer.d3zoom);
+
+    if (viewer._mobile) {
+      let ext = [[0, 0], [view._groups[0][0].clientWidth, view._groups[0][0].clientHeight]]; //p value of translateBy defaults to the center of this extent.
+      let p = [viewer.width_ / 2, viewer.height_ / 2]; //screen coords of where [x,y] should appear
+      let scale = getScaleFromZ(viewer.camera.initialZ_)
+      viewer.d3zoom.scaleTo(view, scale, p);
+      let x = parseInt(viewer.center_[0]) + viewer.width_ / 2;
+      let y = parseInt(viewer.center_[1]) + viewer.height_ / 2;
+      viewer.d3zoom.translateTo(view, x, y, p);
+
+      setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
     } else {
-      view.call(viewer.d3zoom);
-      let initial_scale = getScaleFromZ(viewer.camera.zoom_);
-      var initial_transform = zoomIdentity
-        .translate(viewer.width_ / 2, viewer.height_ / 2)
-        .scale(initial_scale);
-      viewer.d3zoom.transform(view, initial_transform);
+      //initial zoom transform
+      let scale = getScaleFromZ(viewer.camera.initialZ_)
+      viewer.d3zoom.scaleTo(view, scale);
+      viewer.d3zoom.translateTo(view,
+        parseInt(viewer.center_[0]) + viewer.width_ / 2,
+        parseInt(viewer.center_[1]) + viewer.height_ / 2);
+      setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
     }
+  }
+
+  function zoomHandlerMobile(event) {
+    if (event.sourceEvent) {
+      let scale = event.transform.k;
+      let x = -(event.transform.x - viewer.width_ / 2) / scale;
+      let y = (event.transform.y - viewer.height_ / 2) / scale;
+      let z = getZFromScale(scale);
+      setCamera(x, y, z);
+    }
+
   }
 
   function zoomHandler(event) {
@@ -2118,14 +2088,14 @@ export function viewer(options) {
         const distance = (new_z - camera.position.z) / dir.z;
         const pos = camera.position.clone().add(dir.multiplyScalar(distance));
         // Set the camera to new coordinates
-        camera.position.set(pos.x, pos.y, new_z);
+        setCamera(pos.x, pos.y, new_z);
       } else {
         // If panning
         const { movementX, movementY } = event.sourceEvent;
 
         // Adjust mouse movement by current scale and set camera
         const current_scale = getScaleFromZ(camera.position.z);
-        camera.position.set(
+        setCamera(
           camera.position.x - movementX / current_scale,
           camera.position.y + movementY / current_scale,
           camera.position.z
@@ -2134,7 +2104,22 @@ export function viewer(options) {
     }
   }
 
+  function getScaleFromZ(z) {
+    let half_fov = viewer.camera.fov_ / 2;
+    let half_fov_radians = toRadians(half_fov);
+    let half_fov_height = Math.tan(half_fov_radians) * z;
+    let fov_height = half_fov_height * 2;
+    let scale = viewer.height_ / fov_height; // Divide visualization height by height derived from field of view
+    return scale;
+  }
 
+  function getZFromScale(scale) {
+    let half_fov = viewer.camera.fov_ / 2;
+    let half_fov_radians = toRadians(half_fov);
+    let scale_height = viewer.height_ / scale;
+    let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
+    return camera_z_position;
+  }
 
   function zoomEnd(event) {
     hideTooltip();
