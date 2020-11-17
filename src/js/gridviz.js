@@ -291,7 +291,7 @@ export function viewer(options) {
         viewer.colorScaleSelector_ = false;
         viewer.colorSchemeSelector_ = false;
         if (viewer.legend_ && viewer.legend_.type == "continuous") {
-          viewer.legend_.width = viewer_.width - 10; //margin
+          viewer.legend_.width = window.screen.width - 10; //margin
           viewer.legend_.height = 50;
         }
       }
