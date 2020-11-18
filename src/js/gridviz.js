@@ -746,8 +746,8 @@ export function viewer(options) {
   }
 
   /**
- * redefine width and height of viewer, currently only works with default_options values
- *
+ * @description redefine width and height of viewer when window is resized
+ * @function addResizeEvent
  */
   function addResizeEvent() {
     window.addEventListener("resize", () => {
@@ -760,6 +760,10 @@ export function viewer(options) {
     });
   }
 
+  /**
+* @description attach event listeners to the viewer
+* @function addMouseEventsToView
+*/
   function addMouseEventsToView() {
     // show cell value on click
     view.on("click", () => {
@@ -774,12 +778,21 @@ export function viewer(options) {
     });
   }
 
+  /**
+* @description attach event listeners to viewer buttons
+* @function addButtonEvents
+*/
   function addButtonEvents() {
     viewer.homeButtonNode.addEventListener("click", () => {
       viewWholeGrid();
     })
   }
 
+
+  /**
+* @description move camera to show the entire extent of the grid, and update the zoom transform
+* @function viewWholeGrid
+*/
   function viewWholeGrid() {
     let minViewerX = viewer.extentX[0];
     let minViewerY = viewer.extentY[0];
@@ -808,7 +821,6 @@ export function viewer(options) {
     }
 
   }
-
   // end of event listeners
 
   /**
@@ -961,7 +973,12 @@ export function viewer(options) {
     }
   }
 
-  //any scale accepted by d3-legend.susielu.com
+  /**
+   * 
+   * @function defineColorScale
+   * @description defines the initial color scale to be used when colouring grid cells
+   *
+   */
   function defineColorScale() {
     if (viewer.colors_ && viewer.thresholdValues_) {
       return d3scale
@@ -980,7 +997,13 @@ export function viewer(options) {
     }
   }
 
-  // called when user selects a different colour scheme or scale function
+
+  /**
+ * 
+ * @function updateColorScaleFunction
+ * @description called when user selects a different colour scheme or scale function
+ *
+ */
   function updateColorScaleFunction() {
     let domain;
     if (viewer.colorScaleName_ == "scaleDiverging") {
