@@ -1279,7 +1279,7 @@ export function viewer(options) {
   /**
    * @description Build threejs line geometry from world coordinates
    * @function createLineFromCoords
-   * @param {[x,y,z]} coords
+   * @param []  array of coord objects with values x,y,z
    * @returns {Line2}
    */
   function createLineFromCoords(coords) {
