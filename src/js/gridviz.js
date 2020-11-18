@@ -1014,7 +1014,13 @@ export function viewer(options) {
     viewer.colorScaleFunction_ = d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
   }
 
-  // called when user selects a different colour scheme or scale function
+
+  /**
+* 
+* @function updateColorScaleFunction
+* @description called when user selects a different colour scheme or scale function
+*
+*/
   function updateSizeScaleFunction() {
     //create if didnt exist upon initialization
     if (!viewer.sizeValuesExtent) {
@@ -1025,9 +1031,14 @@ export function viewer(options) {
       let domain = viewer.sizeValuesExtent;
       viewer.sizeScaleFunction_ = d3scale[viewer.sizeScaleName_]().domain(domain).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]);
     }
-
   }
 
+  /**
+* 
+* @function defineSizeScale
+* @description define initial scale function to be used when determining cell size
+*
+*/
   function defineSizeScale() {
     // user-defined vs default scale
     if (viewer.sizeScaleFunction_) {
