@@ -1816,7 +1816,7 @@ export function viewer(options) {
     if (document.getElementById("gridviz-legend")) {
       legendContainer = select("#gridviz-legend");
     } else {
-      legendContainer = create("div").attr("id", "gridviz-legend");
+      legendContainer = create("svg").attr("id", "gridviz-legend");
       viewer.container_.appendChild(legendContainer.node());
     }
     if (viewer.legend_.orientation == "horizontal") {
@@ -1824,10 +1824,12 @@ export function viewer(options) {
     } else {
       legendContainer.attr("class", "gridviz-legend-vertical gridviz-plugin");
     }
-    let legend = legendContainer
-      .append("g")
-      .attr("class", "gridviz-legend-svg")
-      .attr("transform", "translate(10,15)"); //padding
+    let legendSvg =
+      legendContainer.append("g")
+        .attr("class", "gridviz-legend-svg")
+        .attr("height", viewer.legend_.height)
+        .attr("width", viewer.legend_.width)
+        .attr("transform", "translate(10,15)"); //padding
 
     viewer.gridLegend = LEGEND.legendColor()
       .shapeWidth(viewer.legend_.shapeWidth)
@@ -1842,7 +1844,7 @@ export function viewer(options) {
       viewer.gridLegend.labels(thresholdLabels)
     }
 
-    legendContainer.select(".gridviz-legend-svg").call(viewer.gridLegend);
+    legendSvg.call(viewer.gridLegend);
 
     //adjust width/height
     if (!viewer.legend_.height) {
