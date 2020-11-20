@@ -61,7 +61,7 @@ export function viewer(options) {
   viewer.container_ = document.body;
   viewer.height_ = null; //takes container width/height
   viewer.width_ = null;
-  viewer.backgroundColor_ = "#b7b7b7";
+  viewer.backgroundColor_ = "#000";
   viewer.borderColor_ = "#ffffff";
   viewer.highlightColor_ = "#37f2d6"
   viewer.loadingIcon_ = "ring"; //ripple | ring | ellipsis | roller
@@ -122,7 +122,7 @@ export function viewer(options) {
   viewer.sourcesHTML_ = null;
 
   //buttons
-  viewer.homeButton_ = true;
+  viewer.homeButton_ = false;
 
   //borders using nuts2json
   viewer.nuts2json_ = false; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
@@ -264,12 +264,17 @@ export function viewer(options) {
 
       //set width/height if unspecified by user
       if (!viewer.width_) {
-        viewer.width_ = viewer.container_.clientWidth
+        if (viewer.container_.clientWidth == window.innerWidth) {
+          viewer.width_ = viewer.container_.clientWidth - 4;
+        } else {
+          viewer.width_ = viewer.container_.clientWidth
+        }
+
       }
       if (!viewer.height_) {
         if (viewer.container_.clientHeight == "0") {
           //if container element has no defined height, use screen height
-          viewer.height_ = window.innerHeight;
+          viewer.height_ = window.innerHeight - 4;
         } else {
           viewer.height_ = viewer.container_.clientHeight
         }
@@ -277,9 +282,9 @@ export function viewer(options) {
 
       }
       //force viewer width to be the same as the container width
-      if (viewer.width_ != viewer.container_.clientWidth) {
-        viewer.width_ = viewer.container_.clientWidth;
-      }
+      // if (viewer.width_ != viewer.container_.clientWidth) {
+      //   viewer.width_ = viewer.container_.clientWidth;
+      // }
 
       //mobile logic
       if (/Mobi|Android/i.test(navigator.userAgent)) {
@@ -300,6 +305,8 @@ export function viewer(options) {
 
       //set container height and width
       viewer.container_.classList.add("gridviz-container");
+      viewer.container_.style.width = viewer.width_;
+      viewer.container_.style.height = viewer.height_;
 
       //set viewer resolution
       if (!viewer.resolution_) {
@@ -314,13 +321,6 @@ export function viewer(options) {
 
       createCamera();
       createRaycaster();
-
-      // define pan & zoom
-      // if (viewer._mobile) {
-      //   addMobilePanAndZoom()
-      // } else {
-      addPanAndZoom();
-      // }
 
       // tooltip DOM element
       createTooltipContainer();
@@ -515,10 +515,9 @@ export function viewer(options) {
    */
   function createWebGLRenderer() {
     renderer = new WebGLRenderer();
-    if (viewer._mobile) {
-      renderer.setPixelRatio(window.devicePixelRatio);
-    }
-
+    // TODO: adjust for when the user loads gridviz into a small container
+    let pixelRatio = window.devicePixelRatio;
+    renderer.setPixelRatio(pixelRatio);
     renderer.setSize(viewer.width_, viewer.height_);
     viewer.container_.appendChild(renderer.domElement);
     view = select(renderer.domElement); //for d3 mouse events
@@ -783,9 +782,11 @@ export function viewer(options) {
 * @function addButtonEvents
 */
   function addButtonEvents() {
-    viewer.homeButtonNode.addEventListener("click", () => {
-      viewWholeGrid();
-    })
+    if (viewer.homeButton_) {
+      viewer.homeButtonNode.addEventListener("click", () => {
+        viewWholeGrid();
+      })
+    }
   }
 
 
@@ -919,6 +920,10 @@ export function viewer(options) {
               setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
             }
 
+            // define pan & zoom
+            addPanAndZoom();
+
+            //add cells to viewer
             addPointsToScene();
 
             if (viewer.colorFieldSelector_) {

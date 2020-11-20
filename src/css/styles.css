@@ -30,12 +30,11 @@
   }
 }
 
-
 .gridviz-container {
-  height:auto;
-  overflow:hidden;
-  position: relative !important;
-  margin: 0px;
+  /* height:auto; */
+  /* overflow:hidden;
+  position: absolute;
+  margin: 0px; */
   font-family: "roboto_condensedbold", Arial, sans-serif;
 }
 .gridviz-headings-container {
@@ -50,12 +49,12 @@
   font-weight:bold;
 }
 .gridviz-subtitle {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight:bold;
   margin-top:5px;
 }
 .gridviz-cellcount {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight:bold;
   margin-top:10px;
 }
