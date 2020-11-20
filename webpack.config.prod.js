@@ -17,11 +17,14 @@ module.exports = {
         use: ["style-loader", "css-loader"]
       },
       {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        exclude: /node_modules/,
         loader: 'url-loader',
         options: {
-          limit: 8192,
+          limit: 10000,
+          name: '[hash]-[name].[ext]',
         },
-      },
+      }
     ]
   },
   watch: false,
