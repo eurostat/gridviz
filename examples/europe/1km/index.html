@@ -1,54 +1,53 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <title>1km² Grid of Europe</title>
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-</head>
+    <meta name="viewport" content="width=device-width" />
+  </head>
 
-<body style="margin:0;">
+  <body style="margin: 0">
     <div id="viz-container"></div>
-</body>
-<script src="../../../build/gridviz.js"></script>
-<script>
+  </body>
+  <script src="../../../build/gridviz.js"></script>
+  <script>
     let containerDiv = document.getElementById("viz-container");
-    gridviz.viewer()
-        .container(containerDiv)
-        .gridData([
-            {
-                url: "../../../assets/csv/Europe/1km/pop_1km.csv",
-                cellSize: 1.1
-            }
-        ])
-        .title("1 km² Grid of Europe")
-        .subtitle("EPSG:3035")
-        .cellCount(true)
-        .zerosRemoved(3) //last 3 zeros were removed from dataset to improve efficiency
-        .colorField("Population")  // csv column which you wish to visualize
-        .sizeField(null)  // csv column which you wish to visualize
-        // .zoom(200)
-        .nuts2json(false) //loads borders topojson
-        .center([4369, 3230])//EPSG=3035 with last 3 zeros removed
-        .height(window.innerHeight)
-        .width(window.innerWidth)
-        .backgroundColor("#000")
-        .borderColor("#ffffff")
-        .highlightColor("red")
-        .colorSchemeName("interpolateCool")
-        .colorScaleName("scaleSequentialSqrt")
-        .colorSchemeSelector(true)
-        .colorScaleSelector(true)
-        .colorFieldSelector(true)
-        .sizeFieldSelector(true)
-        .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
-        .legend({
-            title: "Total population per km² (2011)",
-            titleWidth: 130,
-            ticks: 10
-        })
-        .build()
-</script>
-
+    gridviz
+      .viewer()
+      .container(containerDiv)
+      .gridData([
+        {
+          url: "../../../assets/csv/Europe/1km/pop_1km.csv",
+          cellSize: 1.01,
+        },
+      ])
+      .title("1 km² Grid of Europe")
+      .subtitle("EPSG:3035")
+      .cellCount(true)
+      .zerosRemoved(3) //last 3 zeros were removed from dataset to improve efficiency
+      .colorField("Population") // csv column which you wish to visualize
+      .sizeField(null) // csv column which you wish to visualize
+      // .zoom(200)
+      .nuts2json(false) //loads borders topojson
+      .center([4369, 3230]) //EPSG=3035 with last 3 zeros removed
+      .height(window.innerHeight - 4)
+      .width(window.innerWidth - 4)
+      .backgroundColor("#000")
+      .borderColor("#ffffff")
+      .highlightColor("red")
+      .colorSchemeName("interpolateCool")
+      .colorScaleName("scaleSequentialSqrt")
+      .colorSchemeSelector(true)
+      .colorScaleSelector(true)
+      .colorFieldSelector(true)
+      .sizeFieldSelector(true)
+      .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
+      .legend({
+        title: "Total population per km² (2011)",
+        titleWidth: 130,
+        ticks: 10,
+      })
+      .build();
+  </script>
 </html>
