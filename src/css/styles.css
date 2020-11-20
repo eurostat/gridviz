@@ -45,7 +45,7 @@
   padding:15px;
 }
 .gridviz-title {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight:bold;
 }
 .gridviz-subtitle {
@@ -196,7 +196,7 @@ rect.swatch {
 /* dropdowns  */
 .gridviz-selectors {
   width: 15%;
-  font-size:0.8rem;
+  font-size:1rem;
   z-index: 9999;
   position: absolute;
   top: 10px;
