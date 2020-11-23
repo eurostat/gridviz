@@ -751,7 +751,7 @@ export function viewer(options) {
   function addResizeEvent() {
     window.addEventListener("resize", () => {
       viewer.width_ = viewer.container_.clientWidth;
-      viewer.height_ = viewer.container_.clientHeight - 4; //no idea why but an offset of -4 prevents the viewer from growing/shrinking upon resize
+      viewer.height_ = viewer.container_.clientHeight;
       labelRenderer.setSize(viewer.width_, viewer.height_);
       renderer.setSize(viewer.width_, viewer.height_);
       camera.aspect = viewer.width_ / viewer.height_;
