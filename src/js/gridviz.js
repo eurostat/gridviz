@@ -708,7 +708,7 @@ export function viewer(options) {
   /**
   * Color scale dropdown event handler
   *
-  * @param {*} scale
+  * @param {String} scale name of d3-scale to be used
   */
   function onChangeColorScale(scale) {
     viewer.colorScaleName_ = scale;
@@ -721,8 +721,8 @@ export function viewer(options) {
 
 
   /**
-  * Add change event to siz-field selector
-  *
+  * @description Add change event to size-field selector
+  * @function addChangeEventToSizeFieldDropdown
   */
   function addChangeEventToSizeFieldDropdown() {
     viewer.sizeFieldSelect.addEventListener("change", function (e) {
