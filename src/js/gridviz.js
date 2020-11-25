@@ -71,9 +71,9 @@ export function viewer(options) {
   // legend config
   viewer.legend_ = {
     type: "continuous", //cells vs continuous
-    width: 440,
+    width: 300,
     height: null,
-    orientation: "vertical",
+    orientation: "horizontal",
     title: "Legend",
     titleWidth: 50,
     format: ".0s",
