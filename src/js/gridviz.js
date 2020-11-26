@@ -6,7 +6,7 @@ import { axisBottom } from "d3-axis";
 import { interpolateRound } from "d3-interpolate";
 import { json, csv } from "d3-fetch";
 import { format } from "d3-format";
-import { extent, range, quantile } from "d3-array";
+import { extent, range, quantile, min, max } from "d3-array";
 import { select, create, selectAll, mouse } from "d3-selection";
 import { event as currentEvent } from 'd3-selection';
 import * as LEGEND from "d3-svg-legend";
@@ -906,18 +906,23 @@ export function viewer(options) {
               if (viewer._mobile) {
                 let xDomain = extent(csv.map(c => parseFloat(c.x)));
                 let yDomain = extent(csv.map(c => parseFloat(c.y)));
-                viewer.xScale = d3scale.scaleLinear().domain(xDomain).range([-1, 1]);
-                viewer.yScale = d3scale.scaleLinear().domain(yDomain).range([-1, 1]);
+                let domain = [
+                  min([xDomain, yDomain], array => min(array)),
+                  max([xDomain, yDomain], array => max(array))
+                ];
+                viewer.mobileCoordScale = d3scale.scaleLinear().domain(domain).range([-1, 1]);
+                // viewer.mobileCoordScale = viewer.mobileCoordScale;
+                // viewer.mobileCoordScale = d3scale.scaleLinear().domain(yDomain).range([-1, 1]);
                 //update cell sizes and raycaster to fit new webgl-friendly coords
-                let newResolution = 0.01;
+                let newResolution = 0.003; //TODO define resolution based on scale
                 viewer.resolution_ = newResolution;
                 grid.cellSize = newResolution;
                 gridConfig.pointSize = newResolution;
                 gridConfig.raycasterThreshold = newResolution;
-                raycaster.params.Points.threshold = 0.5;
+                raycaster.params.Points.threshold = newResolution;
                 //scale center coords
-                viewer.center_[0] = viewer.xScale(viewer.center_[0]);
-                viewer.center_[1] = viewer.yScale(viewer.center_[1]);
+                viewer.center_[0] = viewer.mobileCoordScale(viewer.center_[0]);
+                viewer.center_[1] = viewer.mobileCoordScale(viewer.center_[1]);
               }
 
               // add points to cache
@@ -951,8 +956,8 @@ export function viewer(options) {
               let c = gridCaches[viewer.resolution_][index];
               if (viewer._mobile) {
                 viewer.center_ = [
-                  viewer.xScale(parseFloat(c.x)),
-                  viewer.yScale(parseFloat(c.y))
+                  viewer.mobileCoordScale(parseFloat(c.x)),
+                  viewer.mobileCoordScale(parseFloat(c.y))
                 ];
               } else {
                 viewer.center_ = [
@@ -1010,8 +1015,8 @@ export function viewer(options) {
       for (let i = 0; i < csv.length; i++) {
         let x, y;
         if (viewer._mobile) {
-          x = viewer.xScale(parseFloat(csv[i].x));
-          y = viewer.yScale(parseFloat(csv[i].y));
+          x = viewer.mobileCoordScale(parseFloat(csv[i].x));
+          y = viewer.mobileCoordScale(parseFloat(csv[i].y));
         } else {
           x = csv[i].x;
           y = csv[i].y;
@@ -2149,7 +2154,7 @@ export function viewer(options) {
     view.call(viewer.d3zoom);
 
     if (viewer._mobile) {
-      //due to a bug on mobile, where the camera shifts unexpectedly on the first pan or zoom event, we have to scale everything to a webgl-friendly range
+      //due to a bug on mobile, where the camera shifts unexpectedly on the first pan or zoom event, we have to scale everything to a webgl-friendly range and set the camera to 0,0
       let initial_scale = getScaleFromZ(viewer.camera.initialZ_);
       var initial_transform = zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
       viewer.d3zoom.transform(view, initial_transform);
@@ -2615,15 +2620,15 @@ export function viewer(options) {
   }
 
   /**
-   *
-   *
+   * @description Updates the innerHTML of the tooltip container
+   * @function updateTooltip
    */
   function updateTooltip() {
     let x, y;
     if (viewer._mobile) {
       //mobile coords are scaled to [-1,1], so we "unscale" them
-      x = viewer.xScale.invert(tooltip_state.coords[0])
-      y = viewer.yScale.invert(tooltip_state.coords[1])
+      x = viewer.mobileCoordScale.invert(tooltip_state.coords[0])
+      y = viewer.mobileCoordScale.invert(tooltip_state.coords[1])
     } else {
       x = tooltip_state.coords[0];
       y = tooltip_state.coords[1];
