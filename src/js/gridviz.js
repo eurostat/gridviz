@@ -34,12 +34,14 @@ import { LineMaterial } from "./lib/threejs/lines/LineMaterial";
 import { CSS2DRenderer, CSS2DObject } from "./lib/threejs/CSS2D/CSS2DRenderer";
 // for loading NUTS2json 
 import { feature } from "topojson";
+// library constants
 import * as CONSTANTS from "./constants.js";
+// utility functions
 import * as Utils from "./utils";
 
 
 //TODO list:
-//
+// - mobile pan & zoom bug
 
 /**
  * Creates a 2D Three.js scene for visualizing point data derived from gridded statistics.
@@ -63,7 +65,7 @@ export function viewer(options) {
   viewer.width_ = null;
   viewer.backgroundColor_ = "#000";
   viewer.borderColor_ = "#ffffff";
-  viewer.highlightColor_ = "#37f2d6"
+  viewer.highlightColor_ = "pink"
   viewer.loadingIcon_ = "ring"; //ripple | ring | ellipsis | roller
 
   // https://d3-legend.susielu.com vs https://blog.scottlogic.com/2019/03/13/how-to-create-a-continuous-colour-range-legend-using-d3-and-d3fc.html
@@ -80,7 +82,7 @@ export function viewer(options) {
     cells: 13,
     shapeWidth: 30
   };
-  viewer.gridLegend; //legend stored here
+  viewer._gridLegend; //legend stored here
 
   //d3 Scale stuff
   viewer.colorSchemeName_ = "interpolateTurbo";
@@ -189,7 +191,7 @@ export function viewer(options) {
       viewer.legend_[key] = v[key];
     }
     //update legend if necessary
-    if (viewer.gridLegend) {
+    if (viewer._gridLegend) {
       updateLegend()
     }
     return viewer;
@@ -219,11 +221,13 @@ export function viewer(options) {
 
   //if viewer has already been initialized, calls to center() method will move existing camera
   viewer.center = function (v) {
+    //if already previously set
     if (v && viewer.scene) {
       viewer.center_ = v;
       redefineCamera();
       setCamera(v[0], v[1], camera.position.z)
     } else {
+      //set initial
       if (v) {
         viewer.center_ = v;
       }
@@ -308,10 +312,17 @@ export function viewer(options) {
       viewer.container_.style.width = viewer.width_;
       viewer.container_.style.height = viewer.height_;
 
-      //set viewer resolution
+      //set viewer resolution from user input
       if (!viewer.resolution_) {
-        viewer.resolution_ = viewer.gridData_[0].cellSize
+        if (viewer._mobile) {
+          let cellScale = d3scale.scaleLinear().domain()
+          viewer.resolution_ = viewer.gridData_[0].cellSize
+        } else {
+          viewer.resolution_ = viewer.gridData_[0].cellSize
+        }
       }
+
+      //defines raycaster threshold and point size. See GridConfig typedef.
       gridConfig = defineGridConfig();
 
       // three.js initializations
@@ -349,8 +360,6 @@ export function viewer(options) {
       }
 
       //request initial placenames
-      // view.transition().call(viewer.zoom.scaleBy, 1.000001); //sets initial scale properly (otherwise it starts as 0.0something)
-      // let scale = getScaleFromZ(camera.position.z);
       if (viewer.showPlacenames_) {
         getPlacenames(camera.position.z);
       }
@@ -541,7 +550,7 @@ export function viewer(options) {
    */
   function createCamera() {
     //camera
-    viewer.camera.near_ = CONSTANTS.near;
+    viewer.camera.near_ = defineNear();
     viewer.camera.far_ = defineFar(); //set min zoom
     viewer.camera.fov_ = CONSTANTS.fov;
     viewer.camera.aspect_ = viewer.width_ / viewer.height_;
@@ -553,12 +562,6 @@ export function viewer(options) {
       viewer.camera.near_,
       viewer.camera.far_
     );
-
-    if (!viewer.center_) {
-      setCamera(0, 0, viewer.camera.initialZ_)
-    } else {
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
-    }
 
     //orthographic
     //https://discourse.threejs.org/t/why-does-pointsmaterial-size-does-not-correspond-with-geographic-grid-cell-size/13408
@@ -589,7 +592,7 @@ export function viewer(options) {
   * @function redefineCamera
   */
   function redefineCamera() {
-    viewer.camera.near_ = CONSTANTS.near;
+    viewer.camera.near_ = defineNear();
     viewer.camera.far_ = defineFar(); //set min zoom
     viewer.camera.fov_ = CONSTANTS.fov;
     viewer.camera.aspect_ = viewer.width_ / viewer.height_;
@@ -739,7 +742,7 @@ export function viewer(options) {
     viewer.sizeField_ = field;
     updateSizeScale();
     updatePointsSizes();
-    if (viewer.gridLegend) {
+    if (viewer._gridLegend) {
       updateLegend();
     }
   }
@@ -857,7 +860,7 @@ export function viewer(options) {
    *
    */
   function definePointSize() {
-    return viewer.resolution_; //INVESTIGATE: why does threejs pointSize value not correspond with the grid resolution?
+    return viewer.resolution_; //INVESTIGATE: why does threejs pointSize value not always correspond with the grid resolution?
   }
 
   /**
@@ -865,7 +868,23 @@ export function viewer(options) {
    * @function defineFar
    */
   function defineFar() {
-    return viewer.resolution_ * 4000;
+    if (viewer._mobile) {
+      return 5; //due to a bug with pan & zoom, we have to scale everything on mobile
+    } else {
+      return viewer.resolution_ * 4000;
+    }
+  }
+
+  /**
+ * @description Define the near parameter for THREE.camera. The near parameter represents the smallest possible distance that the camera can be from the plane (where z=0)
+ * @function defineNear
+ */
+  function defineNear() {
+    if (viewer._mobile) {
+      return 0.0001; //due to a bug with pan & zoom, we have to scale everything on mobile
+    } else {
+      return 1;
+    }
   }
 
   /**
@@ -882,6 +901,24 @@ export function viewer(options) {
             //validate csv
             if (csv[0].x && csv[0].y && csv[0][viewer.colorField_]) {
               viewer.cellCount = csv.length;
+
+              //as a temporary hacky fix for d3's pan and zoom not working correctly on mobile devices, we scale the coordinates to a webgl-friendly range
+              if (viewer._mobile) {
+                let xDomain = extent(csv.map(c => parseFloat(c.x)));
+                let yDomain = extent(csv.map(c => parseFloat(c.y)));
+                viewer.xScale = d3scale.scaleLinear().domain(xDomain).range([-1, 1]);
+                viewer.yScale = d3scale.scaleLinear().domain(yDomain).range([-1, 1]);
+                //update cell sizes and raycaster to fit new webgl-friendly coords
+                let newResolution = 0.01;
+                viewer.resolution_ = newResolution;
+                grid.cellSize = newResolution;
+                gridConfig.pointSize = newResolution;
+                gridConfig.raycasterThreshold = newResolution;
+                raycaster.params.Points.threshold = 0.5;
+                //scale center coords
+                viewer.center_[0] = viewer.xScale(viewer.center_[0]);
+                viewer.center_[1] = viewer.yScale(viewer.center_[1]);
+              }
 
               // add points to cache
               addGridToCache(csv, grid.cellSize);
@@ -909,15 +946,20 @@ export function viewer(options) {
             viewer.extentY = extent(gridCaches[viewer.resolution_], d => d.y);
 
             // if center is not specified by user, move camera to a cell half way along the array
-            // BUG mobile
             if (!viewer.center_) {
               let index = parseInt(gridCaches[viewer.resolution_].length / 2);
               let c = gridCaches[viewer.resolution_][index];
-              viewer.center_ = [
-                parseFloat(c.x),
-                parseFloat(c.y)
-              ];
-              setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
+              if (viewer._mobile) {
+                viewer.center_ = [
+                  viewer.xScale(parseFloat(c.x)),
+                  viewer.yScale(parseFloat(c.y))
+                ];
+              } else {
+                viewer.center_ = [
+                  parseFloat(c.x),
+                  parseFloat(c.y)
+                ];
+              }
             }
 
             // define pan & zoom
@@ -959,21 +1001,29 @@ export function viewer(options) {
 
   /**
    * TODO: replace with addTileToCache()
-   *
+   * @description adds the csv points to a cache object
    * @param {*} csv 
    * @param {*} res
    */
   function addGridToCache(csv, res) {
     if (csv) {
       for (let i = 0; i < csv.length; i++) {
-        let position = [csv[i].x, csv[i].y];
+        let x, y;
+        if (viewer._mobile) {
+          x = viewer.xScale(parseFloat(csv[i].x));
+          y = viewer.yScale(parseFloat(csv[i].y));
+        } else {
+          x = csv[i].x;
+          y = csv[i].y;
+        }
         let value = csv[i][viewer.colorField_];
         let point = {
-          position,
-          value
+          x,
+          y,
+          [viewer.colorField_]: value
         };
         if (!gridCaches[res]) gridCaches[res] = [];
-        gridCaches[res].push(csv[i]);
+        gridCaches[res].push(point);
       }
     }
   }
@@ -1451,7 +1501,7 @@ export function viewer(options) {
     //create or update legend
     if (viewer.showLegend_) {
       if (viewer.legend_) {
-        if (viewer.gridLegend) {
+        if (viewer._gridLegend) {
           updateLegend();
         } else {
           createLegend();
@@ -1842,7 +1892,7 @@ export function viewer(options) {
         .attr("width", viewer.legend_.width)
         .attr("transform", "translate(10,15)"); //padding
 
-    viewer.gridLegend = LEGEND.legendColor()
+    viewer._gridLegend = LEGEND.legendColor()
       .shapeWidth(viewer.legend_.shapeWidth)
       .cells(viewer.legend_.cells)
       .labelFormat(format(viewer.legend_.format))
@@ -1852,10 +1902,10 @@ export function viewer(options) {
       .titleWidth(viewer.legend_.titleWidth)
 
     if (viewer.thresholdValues_) {
-      viewer.gridLegend.labels(thresholdLabels)
+      viewer._gridLegend.labels(thresholdLabels)
     }
 
-    legendSvg.call(viewer.gridLegend);
+    legendSvg.call(viewer._gridLegend);
 
     //adjust width/height
     if (!viewer.legend_.height) {
@@ -1877,14 +1927,14 @@ export function viewer(options) {
       viewer.container_.appendChild(container.node());
     }
 
-    viewer.gridLegend = colorLegend({
+    viewer._gridLegend = colorLegend({
       color: viewer.colorScaleFunction_,
       title: viewer.legend_.title,
       tickFormat: ".0f",
       width: viewer.legend_.width,
     });
 
-    container.node().appendChild(viewer.gridLegend);
+    container.node().appendChild(viewer._gridLegend);
 
   }
   function ramp(color, n = 256) {
@@ -2099,15 +2149,12 @@ export function viewer(options) {
     view.call(viewer.d3zoom);
 
     if (viewer._mobile) {
-      let ext = [[0, 0], [view._groups[0][0].clientWidth, view._groups[0][0].clientHeight]]; //p value of translateBy defaults to the center of this extent.
-      let p = [viewer.width_ / 2, viewer.height_ / 2]; //screen coords of where [x,y] should appear
-      let scale = getScaleFromZ(viewer.camera.initialZ_)
-      viewer.d3zoom.scaleTo(view, scale, p);
-      let x = parseInt(viewer.center_[0]) + viewer.width_ / 2;
-      let y = parseInt(viewer.center_[1]) + viewer.height_ / 2;
-      viewer.d3zoom.translateTo(view, x, y, p);
+      //due to a bug on mobile, where the camera shifts unexpectedly on the first pan or zoom event, we have to scale everything to a webgl-friendly range
+      let initial_scale = getScaleFromZ(viewer.camera.initialZ_);
+      var initial_transform = zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
+      viewer.d3zoom.transform(view, initial_transform);
+      setCamera(0, 0, viewer.camera.initialZ_)
 
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
     } else {
       //initial zoom transform
       let scale = getScaleFromZ(viewer.camera.initialZ_)
@@ -2572,14 +2619,23 @@ export function viewer(options) {
    *
    */
   function updateTooltip() {
+    let x, y;
+    if (viewer._mobile) {
+      //mobile coords are scaled to [-1,1], so we "unscale" them
+      x = viewer.xScale.invert(tooltip_state.coords[0])
+      y = viewer.yScale.invert(tooltip_state.coords[1])
+    } else {
+      x = tooltip_state.coords[0];
+      y = tooltip_state.coords[1];
+    }
     tooltip.style.display = tooltip_state.display;
     tooltip.style.left = tooltip_state.left + "px";
     tooltip.style.top = tooltip_state.top + "px";
     //pointTip.innerText = tooltip_state.name;
     pointTip.style.background = tooltip_state.color;
     labelTip.innerHTML = `<strong>${viewer.colorField_}:</strong> ${tooltip_state.colorValue} <br> 
-  <strong>x:</strong> ${tooltip_state.coords[0]} <br> 
-  <strong>y:</strong> ${tooltip_state.coords[1]} <br> `;
+  <strong>x:</strong> ${x} <br> 
+  <strong>y:</strong> ${y} <br> `;
   }
 
   /**

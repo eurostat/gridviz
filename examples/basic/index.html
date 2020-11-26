@@ -9,7 +9,7 @@
 </head>
 
 <body style="margin: 0">
-  <div id="viz-container" style="height:100%; width:100%;"></div>
+  <div id="viz-container" style="height:500px; width:50%;"></div>
 </body>
 <script src="../../../build/gridviz.js"></script>
 <script>
@@ -18,8 +18,6 @@
   gridviz
     .viewer()
     .container(containerDiv)
-    // .height(300)
-    // .width(300)
     .gridData([
       {
         url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",

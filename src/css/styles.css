@@ -7,6 +7,7 @@
     left: 0px!important;
     padding:5px!important;
     background:#efefefe8;
+    max-width: 100% !important;
   }
   .gridviz-headings-container {
     z-index:999999;
