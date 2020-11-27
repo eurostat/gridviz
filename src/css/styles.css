@@ -241,6 +241,21 @@ rect.swatch {
   margin-right: 10px;
 }
 
+
+/* PROGRESS BAR */
+#gridviz-progress-bar {
+  position: absolute;
+  top: 47%;
+  left: 35%;
+  width: 30%;
+  background-color: grey;
+}
+#gridviz-progress-bar-bar {
+  width: 1%;
+  height: 30px;
+  background-color: green;
+}
+
 /* LOADING SPINNER */
 #gridviz-loading-spinner {
   position: absolute;
