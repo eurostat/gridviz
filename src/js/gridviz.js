@@ -79,7 +79,7 @@ export function viewer(options) {
     title: "Legend",
     titleWidth: 50,
     format: ".0s",
-    cells: 13,
+    cells: 5,
     shapeWidth: 30
   };
   viewer._gridLegend; //legend stored here
@@ -1020,23 +1020,17 @@ export function viewer(options) {
    */
   function addGridToCache(csv, res) {
     if (csv) {
-      for (let i = 0; i < csv.length; i++) {
-        let x, y;
-        if (viewer._mobile) {
-          x = viewer.mobileCoordScale(parseFloat(csv[i].x));
-          y = viewer.mobileCoordScale(parseFloat(csv[i].y));
-        } else {
-          x = csv[i].x;
-          y = csv[i].y;
+      if (viewer._mobile) {
+        for (let i = 0; i < csv.length; i++) {
+          //scale mobile coordinates to avoid d3 pan/zoom bug 
+          let point = csv[i];
+          point.x = viewer.mobileCoordScale(parseFloat(csv[i].x));
+          point.y = viewer.mobileCoordScale(parseFloat(csv[i].y));
+          if (!gridCaches[res]) gridCaches[res] = [];
+          gridCaches[res].push(point);
         }
-        let value = csv[i][viewer.colorField_];
-        let point = {
-          x,
-          y,
-          [viewer.colorField_]: value
-        };
-        if (!gridCaches[res]) gridCaches[res] = [];
-        gridCaches[res].push(point);
+      } else {
+        if (!gridCaches[res]) gridCaches[res] = csv
       }
     }
   }
