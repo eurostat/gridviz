@@ -1931,6 +1931,7 @@ export function viewer(options) {
 
   //https://observablehq.com/@gabgrz/color-legend
   function createContinuousLegend() {
+
     let container;
     if (document.getElementById("gridviz-legend")) {
       container = select("#gridviz-legend");
