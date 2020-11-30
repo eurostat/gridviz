@@ -4,9 +4,8 @@ export const placenames_base_URL = "https://ec.europa.eu/regio/regiogis/gis/arcg
 export const nuts_scale_threshold = 551689; //scale at which nuts2json changes simplification
 export const line_width = 0.0010; //GL.LINE height
 export const line_z = 0.002; //line vertices z coordinate
-export const point_z = 1; //threejs points object height
+export const point_z = 0.0001; //threejs points object height
 export const fov = 50;
-export const near = 1; //minScale
 export const coordinate_offset = {
     x: -40,
     y: -30

@@ -7,13 +7,14 @@
     left: 0px!important;
     padding:5px!important;
     background:#efefefe8;
+    max-width: 100% !important;
   }
   .gridviz-headings-container {
     z-index:999999;
     position:absolute;
     top:0px!important;
     left:0px!important;
-    width: 100%!important;
+    width: 98%!important;
     padding:8px!important;
   }
   .gridviz-cellcount{
@@ -32,9 +33,9 @@
 
 .gridviz-container {
   /* height:auto; */
-  /* overflow:hidden;
-  position: absolute;
-  margin: 0px; */
+   overflow:hidden;
+  position: relative;
+  margin: 0px; 
   font-family: "roboto_condensedbold", Arial, sans-serif;
 }
 .gridviz-headings-container {
@@ -59,8 +60,8 @@
   margin-top:10px;
 }
 .gridviz-sources {
-  position:absolute;
-  bottom:2%;
+ position:absolute; 
+  bottom:1%;
   right:1%;
   font-size: 0.8rem;
   font-weight:bold;
@@ -143,6 +144,15 @@ box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);;
 }
 
 /* LEGEND */
+#gridviz-legend {
+  z-index: 9999;
+  position: absolute;
+  bottom: 1%; 
+  max-width: 77%;
+  left: 1%;
+  padding:5px;
+}
+
 /* continuous */
 .gridviz-legend-svg{
   font-size:0.8rem;
@@ -160,14 +170,6 @@ box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);;
   visibility:hidden;
 }
 
-/* susie's color legend */
-#gridviz-legend {
-  z-index: 9999;
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  padding:5px;
-}
 .gridviz-legend-horizontal {
   height: 65px;
   width: 441px;
@@ -237,6 +239,21 @@ rect.swatch {
 .gridviz-dropdown-label {
   z-index: 9999;
   margin-right: 10px;
+}
+
+
+/* PROGRESS BAR */
+#gridviz-progress-bar {
+  position: absolute;
+  top: 47%;
+  left: 35%;
+  width: 30%;
+  background-color: grey;
+}
+#gridviz-progress-bar-bar {
+  width: 1%;
+  height: 30px;
+  background-color: green;
 }
 
 /* LOADING SPINNER */

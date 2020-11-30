@@ -19,12 +19,25 @@ export function createLoadingSpinner(container, type) {
   container.appendChild(loading_spinner);
 }
 
+export function createProgressBar(container) {
+  // <div id="myProgress">
+  // <div id="myBar"></div>
+  // </div>
+  loading_bar = document.createElement("div");
+  loading_bar.id = "gridviz-progress-bar";
+  let child1 = document.createElement("div");
+  child1.id = "gridviz-progress-bar-bar"
+  loading_bar.appendChild(child1);
+  container.appendChild(loading_bar);
+}
+
 /**
  *@function showLoading
  * @description show loading spinner
  */
 export function showLoading() {
-  loading_spinner.style.display = "block";
+  // loading_spinner.style.display = "block";
+  loading_bar.style.display = "block";
 }
 
 /**
@@ -32,7 +45,8 @@ export function showLoading() {
  * @function hideLoading
  */
 export function hideLoading() {
-  loading_spinner.style.display = "none";
+  //loading_spinner.style.display = "none";
+  loading_bar.style.display = "none";
 }
 
 /**
