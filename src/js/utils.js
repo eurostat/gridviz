@@ -1,4 +1,5 @@
 let loading_spinner;
+let loading_bar;
 
 /**
  * @description CSS3 animation spinner
@@ -36,8 +37,8 @@ export function createProgressBar(container) {
  * @description show loading spinner
  */
 export function showLoading() {
-  // loading_spinner.style.display = "block";
-  loading_bar.style.display = "block";
+  loading_spinner.style.display = "block";
+  //loading_bar.style.display = "block";
 }
 
 /**
@@ -45,8 +46,8 @@ export function showLoading() {
  * @function hideLoading
  */
 export function hideLoading() {
-  //loading_spinner.style.display = "none";
-  loading_bar.style.display = "none";
+  loading_spinner.style.display = "none";
+  //loading_bar.style.display = "none";
 }
 
 /**
