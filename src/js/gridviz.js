@@ -306,7 +306,7 @@ export function viewer(options) {
       }
 
       Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
-      // Utils.createProgressBar(viewer.container_);
+      //Utils.createProgressBar(viewer.container_);
 
       //set container height and width
       viewer.container_.classList.add("gridviz-container");
