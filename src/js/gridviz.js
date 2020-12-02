@@ -65,7 +65,7 @@ export function viewer(options) {
   viewer.width_ = null;
   viewer.backgroundColor_ = "#000";
   viewer.borderColor_ = "#ffffff";
-  viewer.highlightColor_ = "pink"
+  viewer.highlightColor_ = "cyan"
   viewer.loadingIcon_ = "ring"; //ripple | ring | ellipsis | roller
 
   // https://d3-legend.susielu.com vs https://blog.scottlogic.com/2019/03/13/how-to-create-a-continuous-colour-range-legend-using-d3-and-d3fc.html
@@ -299,10 +299,6 @@ export function viewer(options) {
         viewer.colorFieldSelector_ = false;
         viewer.colorScaleSelector_ = false;
         viewer.colorSchemeSelector_ = false;
-        if (viewer.legend_ && viewer.legend_.type == "continuous") {
-          viewer.legend_.width = window.screen.width - 10; //margin
-          viewer.legend_.height = 50;
-        }
       }
 
       Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
@@ -914,8 +910,29 @@ export function viewer(options) {
                 viewer.mobileCoordScale = d3scale.scaleLinear().domain(domain).range([-1, 1]);
                 // viewer.mobileCoordScale = viewer.mobileCoordScale;
                 // viewer.mobileCoordScale = d3scale.scaleLinear().domain(yDomain).range([-1, 1]);
+
                 //update cell sizes and raycaster to fit new webgl-friendly coords
-                let newResolution = 0.003; //TODO define resolution based on scale
+                //distance between two neighbouring cell x values is the new resolution
+
+                //first we have to sort the point by X to try to ensure they are neighbours
+                csv.sort(function (a, b) { return a.x - b.x });
+
+                //find next distinct X value
+                let x1 = csv[0].x;
+                let x2;
+                csv.some(function (cell) {
+                  if (cell.x !== x1) {
+                    x2 = cell.x;
+                    return true;
+                  }
+                });
+
+                //calculate difference between two distinct X coordinates in mobile coords
+                let difference = Math.abs(viewer.mobileCoordScale(x1) - viewer.mobileCoordScale(x2));
+                difference = difference * 2;
+
+                //let difference = Math.abs(viewer.center_[0] - viewer.mobileCoordScale(viewer.center_[0]))
+                let newResolution = difference; //TODO define resolution based on scale
                 viewer.resolution_ = newResolution;
                 grid.cellSize = newResolution;
                 gridConfig.pointSize = newResolution;
@@ -1938,8 +1955,12 @@ export function viewer(options) {
     viewer._gridLegend = colorLegend({
       color: viewer.colorScaleFunction_,
       title: viewer.legend_.title,
-      tickFormat: ".0f",
-      width: viewer.legend_.width,
+      tickSize: viewer.legend_.tickSize || 6,
+      width: viewer.legend_.width || 500,
+      marginTop: viewer.legend_.marginRight || 18,
+      marginRight: viewer.legend_.marginRight || 0,
+      marginLeft: viewer.legend_.marginLeft || 0,
+      tickFormat: viewer.legend_.tickFormat || ".0f",
     });
 
     container.node().appendChild(viewer._gridLegend);
@@ -1960,13 +1981,13 @@ export function viewer(options) {
   function colorLegend({
     color,
     title,
-    tickSize = 6,
-    width = 500,
+    tickSize,
+    width,
     height = viewer.legend_.height || 44 + tickSize,
-    marginTop = 18,
-    marginRight = 0,
-    marginBottom = 16 + tickSize,
-    marginLeft = 0,
+    marginTop,
+    marginRight,
+    marginBottom = viewer.legend_.marginBottom || 16 + tickSize,
+    marginLeft,
     ticks = viewer.legend_.ticks || width / 64,
     tickFormat,
     tickValues
@@ -2630,8 +2651,8 @@ export function viewer(options) {
     let x, y;
     if (viewer._mobile) {
       //mobile coords are scaled to [-1,1], so we "unscale" them
-      x = viewer.mobileCoordScale.invert(tooltip_state.coords[0])
-      y = viewer.mobileCoordScale.invert(tooltip_state.coords[1])
+      x = Math.round(viewer.mobileCoordScale.invert(tooltip_state.coords[0]))
+      y = Math.round(viewer.mobileCoordScale.invert(tooltip_state.coords[1]))
     } else {
       x = tooltip_state.coords[0];
       y = tooltip_state.coords[1];

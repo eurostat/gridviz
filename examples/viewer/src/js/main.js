@@ -200,7 +200,6 @@ function initializeViewer() {
         .width(containerNode.offsetWidth)
         .backgroundColor("#000")
         .borderColor("#ffffff")
-        .loadingIcon("ellipsis")
         .legend({
             type: "continuous",
             height: 350,

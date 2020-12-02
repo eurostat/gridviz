@@ -13,6 +13,14 @@
 </body>
 <script src="../../build/gridviz.js"></script>
 <script>
+    let legendWidth;
+    let legendHeight;
+    //mobile
+    if (window.screen.width < 600) {
+        legendWidth = window.screen.width - 10; //margin
+        legendHeight = 50;
+    }
+
     let containerDiv = document.getElementById("viz-container");
     let viewer = gridviz.viewer()
         .container(containerDiv)
@@ -49,10 +57,10 @@
         .colorFieldSelectorLabel("Colour field: ")
         .legend({
             title: "Inhabitants per km² (2011)",
-            orentation: "vertical",
             titleWidth: 150,
-            cells: 10,
-            format: ',.2r'
+            width: legendWidth,
+            height: legendHeight,
+            ticks: 12,
         })
         .build()
 </script>
