@@ -24,9 +24,12 @@
     margin-top:1px!important;
   }
   #gridviz-loading-spinner {
-    position: absolute;
     top: 45% !important;
     left: 45% !important;
+  }
+  #gridviz-loading-text {
+    top: 51% !important;
+    left: 0px;
   }
   #gridviz-home-btn{
     left:3px!important;
@@ -259,11 +262,23 @@ rect.swatch {
   background-color: green;
 }
 
+/* loading text  */
+#gridviz-loading-text {
+color:white;
+/* font-weight: bold; */
+font-style: italic;
+text-align: center;
+width:100%;
+position: absolute;
+top: 54%;
+left: 0px;
+}
 /* LOADING SPINNER */
 #gridviz-loading-spinner {
   position: absolute;
   top: 47%;
-  left: 50%;
+  left: 47%; 
+
 }
 .lds-ring {
   display: inline-block;

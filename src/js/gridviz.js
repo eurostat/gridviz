@@ -302,7 +302,7 @@ export function viewer(options) {
       }
 
       Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
-      //Utils.createProgressBar(viewer.container_);
+      Utils.createLoadingText(viewer.container_);
 
       //set container height and width
       viewer.container_.classList.add("gridviz-container");
@@ -1001,7 +1001,10 @@ export function viewer(options) {
 
           Utils.hideLoading();
         },
-        err => console.log(err)
+        err => {
+          Utils.hideLoading();
+          alert(err)
+        }
       );
     } else {
       console.error(
