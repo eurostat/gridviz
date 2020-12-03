@@ -1,5 +1,6 @@
 let loading_spinner;
 let loading_bar;
+let loading_text;
 
 /**
  * @description CSS3 animation spinner
@@ -32,13 +33,25 @@ export function createProgressBar(container) {
   container.appendChild(loading_bar);
 }
 
+
+export function createLoadingText(container) {
+  // <div id="myProgress">
+  // <div id="myBar"></div>
+  // </div>
+  loading_text = document.createElement("div");
+  loading_text.id = "gridviz-loading-text";
+  loading_text.innerHTML = "Large grids can take a while to load. Please wait."
+  container.appendChild(loading_text);
+}
+
+
 /**
  *@function showLoading
  * @description show loading spinner
  */
 export function showLoading() {
   loading_spinner.style.display = "block";
-  //loading_bar.style.display = "block";
+  loading_text.style.display = "block";
 }
 
 /**
@@ -47,7 +60,7 @@ export function showLoading() {
  */
 export function hideLoading() {
   loading_spinner.style.display = "none";
-  //loading_bar.style.display = "none";
+  loading_text.style.display = "none";
 }
 
 /**
