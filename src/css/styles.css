@@ -28,7 +28,7 @@
     left: 45% !important;
   }
   #gridviz-loading-text {
-    top: 51% !important;
+    top: 55% !important;
     left: 0px;
   }
   #gridviz-home-btn{
@@ -270,14 +270,14 @@ font-style: italic;
 text-align: center;
 width:100%;
 position: absolute;
-top: 54%;
+top: 58%;
 left: 0px;
 }
 /* LOADING SPINNER */
 #gridviz-loading-spinner {
   position: absolute;
   top: 47%;
-  left: 47%; 
+  left: 48%; 
 
 }
 .lds-ring {

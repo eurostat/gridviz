@@ -7,8 +7,7 @@ import { interpolateRound } from "d3-interpolate";
 import { json, csv } from "d3-fetch";
 import { format } from "d3-format";
 import { extent, range, quantile, min, max } from "d3-array";
-import { select, create, selectAll, mouse } from "d3-selection";
-import { event as currentEvent } from 'd3-selection';
+import { select, create, selectAll, pointer } from "d3-selection";
 import * as LEGEND from "d3-svg-legend";
 //three.js
 import {
@@ -766,7 +765,7 @@ export function viewer(options) {
   function addMouseEventsToView() {
     // show cell value on click
     view.on("click", () => {
-      let [mouseX, mouseY] = mouse(view.node());
+      let [mouseX, mouseY] = pointer(view.node());
       let mouse_position = [mouseX, mouseY];
       checkIntersects(mouse_position);
       //console.log("Camera pos:", camera.position);
@@ -907,17 +906,16 @@ export function viewer(options) {
                   min([xDomain, yDomain], array => min(array)),
                   max([xDomain, yDomain], array => max(array))
                 ];
-                viewer.mobileCoordScale = d3scale.scaleLinear().domain(domain).range([-1, 1]);
-                // viewer.mobileCoordScale = viewer.mobileCoordScale;
-                // viewer.mobileCoordScale = d3scale.scaleLinear().domain(yDomain).range([-1, 1]);
-
+                viewer.mobileCoordScaleX = d3scale.scaleLinear().domain(domain).range([-1, 1]);
+                viewer.mobileCoordScaleY = d3scale.scaleLinear().domain(domain).range([-1, 1]);
                 //update cell sizes and raycaster to fit new webgl-friendly coords
+
                 //distance between two neighbouring cell x values is the new resolution
 
-                //first we have to sort the point by X to try to ensure they are neighbours
+                // to try to ensure the cells are neighbours, first we have to sort the points by X
                 csv.sort(function (a, b) { return a.x - b.x });
 
-                //find next distinct X value
+                // then we use the first cell, and find the next cell with a distinct X value
                 let x1 = csv[0].x;
                 let x2;
                 csv.some(function (cell) {
@@ -927,20 +925,21 @@ export function viewer(options) {
                   }
                 });
 
-                //calculate difference between two distinct X coordinates in mobile coords
-                let difference = Math.abs(viewer.mobileCoordScale(x1) - viewer.mobileCoordScale(x2));
+                //we then calculate the difference between two distinct X coordinates in mobile coords
+                let difference = Math.abs(viewer.mobileCoordScaleX(x1) - viewer.mobileCoordScaleX(x2));
                 difference = difference * 2;
 
-                //let difference = Math.abs(viewer.center_[0] - viewer.mobileCoordScale(viewer.center_[0]))
-                let newResolution = difference; //TODO define resolution based on scale
+                //giving us our new cell size
+                let newResolution = difference;
+
                 viewer.resolution_ = newResolution;
                 grid.cellSize = newResolution;
                 gridConfig.pointSize = newResolution;
                 gridConfig.raycasterThreshold = newResolution;
                 raycaster.params.Points.threshold = newResolution;
                 //scale center coords
-                viewer.center_[0] = viewer.mobileCoordScale(viewer.center_[0]);
-                viewer.center_[1] = viewer.mobileCoordScale(viewer.center_[1]);
+                viewer.center_[0] = viewer.mobileCoordScaleX(viewer.center_[0]);
+                viewer.center_[1] = viewer.mobileCoordScaleY(viewer.center_[1]);
               }
 
               // add points to cache
@@ -974,8 +973,8 @@ export function viewer(options) {
               let c = gridCaches[viewer.resolution_][index];
               if (viewer._mobile) {
                 viewer.center_ = [
-                  viewer.mobileCoordScale(parseFloat(c.x)),
-                  viewer.mobileCoordScale(parseFloat(c.y))
+                  viewer.mobileCoordScaleX(parseFloat(c.x)),
+                  viewer.mobileCoordScaleY(parseFloat(c.y))
                 ];
               } else {
                 viewer.center_ = [
@@ -1044,8 +1043,8 @@ export function viewer(options) {
         for (let i = 0; i < csv.length; i++) {
           //scale mobile coordinates to avoid d3 pan/zoom bug 
           let point = csv[i];
-          point.x = viewer.mobileCoordScale(parseFloat(csv[i].x));
-          point.y = viewer.mobileCoordScale(parseFloat(csv[i].y));
+          point.x = viewer.mobileCoordScaleX(parseFloat(csv[i].x));
+          point.y = viewer.mobileCoordScaleY(parseFloat(csv[i].y));
           if (!gridCaches[res]) gridCaches[res] = [];
           gridCaches[res].push(point);
         }
@@ -1068,10 +1067,9 @@ export function viewer(options) {
         .domain(viewer.thresholdValues_)
         .range(viewer.colors_);
     } else {
-      let domain;
       // assign default if user doesnt specify their own function
       if (!viewer.colorScaleFunction_) {
-        domain = viewer.colorValuesExtent;
+        let domain = viewer.colorValuesExtent;
         return viewer._defaultColorScaleFunction(domain, d3scaleChromatic[viewer.colorSchemeName_]);
       } else {
         return viewer.colorScaleFunction_;
@@ -2165,16 +2163,16 @@ export function viewer(options) {
       zoom()
         .scaleExtent([farScale, nearScale])
         .extent([[0, 0], [viewer.width_, viewer.height_]])
-        .on("zoom", () => {
-          let event = currentEvent;
+        .on("zoom", (event) => {
+          // let event = currentEvent;
           if (viewer._mobile) {
             if (event) zoomHandlerMobile(event);
           } else {
             if (event) zoomHandler(event);
           }
         })
-        .on("end", () => {
-          let event = currentEvent;
+        .on("end", (event) => {
+          //let event = currentEvent;
           if (event) zoomEnd(event);
         });
 
@@ -2188,7 +2186,7 @@ export function viewer(options) {
       setCamera(0, 0, viewer.camera.initialZ_)
 
     } else {
-      //initial zoom transform
+      //initial desktop zoom transform
       let scale = getScaleFromZ(viewer.camera.initialZ_)
       viewer.d3zoom.scaleTo(view, scale);
       viewer.d3zoom.translateTo(view,
@@ -2310,7 +2308,7 @@ export function viewer(options) {
   }
 
   /**
-   * retrieves placenames by population according to the current scale, from an ArcGIS server endpoint.
+   * retrieves placenames by population according to the current scale, from an ArcGIS server endpoint (see constants).
    * TODO: send bounding box correctly (geometry xmin,ymin,xmax,ymax)
    * @param {*} scale
    */
@@ -2319,45 +2317,48 @@ export function viewer(options) {
     let envelope = getCurrentViewExtent();
     //currentExtent = envelope;
     //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
-    let URL =
-      CONSTANTS.placenames_base_URL +
-      "where=" +
-      where +
-      "&outSR=" +
-      viewer.placenamesEPSG_ +
-      "&inSR=" + viewer.placenamesEPSG_ +
-      "&geometry=" +
-      envelope.xmin +
-      "," +
-      envelope.ymin +
-      "," +
-      envelope.xmax +
-      "," +
-      envelope.ymax +
-      "&geometryType=esriGeometryEnvelope&f=json&outFields=GISREGIO.CITIES_TOWNS_RG.STTL_NAME,GISREGIO.CITIES_TOWNS_RG.POPL_2011";
 
-    //manage multiple calls by replicating angular's .unsubscribe() somehow
-    let uri = encodeURI(URL);
-    json(uri).then(
-      res => {
-        if (res.features) {
-          if (res.features.length > 0) {
-            removePlacenamesFromScene();
-            addPlacenamesToScene(res.features);
+    if (envelope) {
+      let URL =
+        CONSTANTS.placenames.baseURL +
+        "where=" +
+        where +
+        "&outSR=" +
+        viewer.placenamesEPSG_ +
+        "&inSR=" + viewer.placenamesEPSG_ +
+        "&geometry=" +
+        envelope.xmin +
+        "," +
+        envelope.ymin +
+        "," +
+        envelope.xmax +
+        "," +
+        envelope.ymax +
+        "&geometryType=esriGeometryEnvelope&f=json&outFields=" + CONSTANTS.placenames.townField + "," + CONSTANTS.placenames.populationField;
+
+      //TODO: manage multiple calls by replicating angular's .unsubscribe() somehow
+      let uri = encodeURI(URL);
+      json(uri).then(
+        res => {
+          if (res.features) {
+            if (res.features.length > 0) {
+              removePlacenamesFromScene();
+              addPlacenamesToScene(res.features);
+            }
           }
+        },
+        err => {
+          console.error(err);
         }
-      },
-      err => {
-        console.error(err);
-      }
-    );
+      );
+    }
   }
 
   function defineWhereParameter(scale) {
     let r = viewer.resolution_;
     let where = "";
     if (viewer.placenamesCountry_) {
-      where = where + "GISREGIO.CITIES_TOWNS_RG.CNTR_CODE='" + viewer.placenamesCountry_ + "' AND "
+      where = where + CONSTANTS.placenames.countryField + " = '" + viewer.placenamesCountry_ + "' AND "
     }
     // labelling thresholds by population - either custom values or by scale
     let popFilter = getPopulationParameterFromScale(scale)
@@ -2373,7 +2374,7 @@ export function viewer(options) {
    * @param {*} scale
    */
   function getPopulationParameterFromScale(scale) {
-    let populationFieldName = "GISREGIO.CITIES_TOWNS_RG.POPL_2011"
+    let populationFieldName = CONSTANTS.placenames.populationField;
     //user-defined thresholds
     if (viewer.placenameThresholds_) {
       let thresholds = Object.keys(viewer.placenameThresholds_);
@@ -2392,7 +2393,7 @@ export function viewer(options) {
         }
       }
     } else {
-      //default values
+      //default thresholds
       let r = viewer.resolution_
       if (scale > 0 && scale < r) {
         return populationFieldName + ">10";
@@ -2407,17 +2408,17 @@ export function viewer(options) {
       } else if (scale > r * 16 && scale < r * 32) {
         return populationFieldName + ">10000";
       } else if (scale > r * 32 && scale < r * 64) {
-        return populationFieldName + ">20000";
-      } else if (scale > r * 64 && scale < r * 128) {
         return populationFieldName + ">100000";
+      } else if (scale > r * 64 && scale < r * 128) {
+        return populationFieldName + ">300000";
       } else if (scale > r * 128 && scale < r * 256) {
-        return populationFieldName + ">250000";
-      } else if (scale > r * 256 && scale < r * 512) {
-        return populationFieldName + ">500000";
-      } else if (scale > r * 512 && scale < r * 1024) {
-        return populationFieldName + ">750000";
-      } else if (scale > r * 1024) {
         return populationFieldName + ">1000000";
+      } else if (scale > r * 256 && scale < r * 512) {
+        return populationFieldName + ">1000000";
+      } else if (scale > r * 512 && scale < r * 1024) {
+        return populationFieldName + ">2000000";
+      } else if (scale > r * 1024) {
+        return populationFieldName + ">2000000";
       } else {
         return "1=1";
       }
@@ -2460,24 +2461,50 @@ export function viewer(options) {
   function createPlacenameLabelObject(placename) {
     var placeDiv = document.createElement("div");
     placeDiv.className = "gridviz-placename";
-    placeDiv.textContent = placename.attributes["GISREGIO.CITIES_TOWNS_RG.STTL_NAME"];
+    placeDiv.textContent = placename.attributes[CONSTANTS.placenames.townField];
     placeDiv.style.marginTop = "-1em";
     var placeLabel = new CSS2DObject(placeDiv);
-    if (viewer.zerosRemoved_) {
-      let d = Number('1E' + viewer.zerosRemoved_);
-      placeLabel.position.set(
-        placename.geometry.x / d,
-        placename.geometry.y / d,
-        CONSTANTS.label_height
-      );
+
+    //scale mobile coords
+    if (viewer._mobile) {
+      if (viewer.zerosRemoved_) {
+        let d = Number('1E' + viewer.zerosRemoved_);
+        let x = viewer.mobileCoordScaleX(placename.geometry.x / d);
+        let y = viewer.mobileCoordScaleY(placename.geometry.y / d)
+        placeLabel.position.set(
+          x,
+          y,
+          CONSTANTS.label_height
+        );
+      } else {
+        placeLabel.position.set(
+          viewer.mobileCoordScaleX(placename.geometry.x),
+          viewer.mobileCoordScaleY(placename.geometry.y),
+          CONSTANTS.label_height
+        );
+      }
+      return placeLabel;
     } else {
-      placeLabel.position.set(
-        placename.geometry.x,
-        placename.geometry.y,
-        CONSTANTS.label_height
-      );
+      //desktop
+      if (viewer.zerosRemoved_) {
+        let d = Number('1E' + viewer.zerosRemoved_);
+        placeLabel.position.set(
+          placename.geometry.x / d,
+          placename.geometry.y / d,
+          CONSTANTS.label_height
+        );
+      } else {
+        placeLabel.position.set(
+          placename.geometry.x,
+          placename.geometry.y,
+          CONSTANTS.label_height
+        );
+      }
+      return placeLabel;
     }
-    return placeLabel;
+
+
+
   }
 
   function getCurrentViewExtent() {
@@ -2509,6 +2536,11 @@ export function viewer(options) {
     let bottomLeftWorld = getWorldCoordsFromScreen(clientBottomLeft); //client x,y
     let topRightWorld = getWorldCoordsFromScreen(clientTopRight); //client x,y
 
+    // if getting coords was unsuccessful, exit
+    if (!bottomLeftWorld || !topRightWorld) {
+      return
+    }
+
     // full european extent in EPSG 3035:
     // return {
     //   xmin: 1053668.5589,
@@ -2516,6 +2548,8 @@ export function viewer(options) {
     //   xmax: 5724066.4412,
     //   ymax: 5901309.0137
     // };
+
+    // if the user has reduced the filesize by removing trailing 0s from the csv, we simply add them back on before sending the placename queries
     if (viewer.zerosRemoved_) {
       let d = Number('1E' + viewer.zerosRemoved_);
       return {
@@ -2552,6 +2586,16 @@ export function viewer(options) {
     var distance = -camera.position.z / vec.z;
 
     pos.copy(camera.position).add(vec.multiplyScalar(distance));
+
+    if (viewer._mobile) {
+      if (viewer.mobileCoordScaleX && viewer.mobileCoordScaleY) {
+        pos.x = Math.round(viewer.mobileCoordScaleX.invert(pos.x))
+        pos.y = Math.round(viewer.mobileCoordScaleY.invert(pos.y))
+      } else {
+        return false
+      }
+    }
+
     return pos;
   }
 
@@ -2654,8 +2698,8 @@ export function viewer(options) {
     let x, y;
     if (viewer._mobile) {
       //mobile coords are scaled to [-1,1], so we "unscale" them
-      x = Math.round(viewer.mobileCoordScale.invert(tooltip_state.coords[0]))
-      y = Math.round(viewer.mobileCoordScale.invert(tooltip_state.coords[1]))
+      x = Math.round(viewer.mobileCoordScaleX.invert(tooltip_state.coords[0]))
+      y = Math.round(viewer.mobileCoordScaleY.invert(tooltip_state.coords[1]))
     } else {
       x = tooltip_state.coords[0];
       y = tooltip_state.coords[1];
