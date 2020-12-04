@@ -1,53 +1,62 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>1km² Grid of Europe</title>
-    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
-  </head>
 
-  <body style="margin: 0">
-    <div id="viz-container"></div>
-  </body>
-  <script src="../../../build/gridviz.js"></script>
-  <script>
-    let containerDiv = document.getElementById("viz-container");
-    gridviz
-      .viewer()
-      .container(containerDiv)
-      .gridData([
-        {
-          url: "../../../assets/csv/Europe/1km/pop_1km.csv",
-          cellSize: 1.01,
-        },
-      ])
-      .title("1 km² Grid of Europe")
-      .subtitle("EPSG:3035")
-      .cellCount(true)
-      .zerosRemoved(3) //last 3 zeros were removed from dataset to improve efficiency
-      .colorField("Population") // csv column which you wish to visualize
-      .sizeField(null) // csv column which you wish to visualize
-      // .zoom(200)
-      .nuts2json(false) //loads borders topojson
-      .center([4369, 3230]) //EPSG=3035 with last 3 zeros removed
-      .height(window.innerHeight - 4)
-      .width(window.innerWidth - 4)
-      .backgroundColor("#000")
-      .borderColor("#ffffff")
-      .highlightColor("red")
-      .colorSchemeName("interpolateCool")
-      .colorScaleName("scaleSequentialSqrt")
-      .colorSchemeSelector(true)
-      .colorScaleSelector(true)
-      .colorFieldSelector(true)
-      .sizeFieldSelector(true)
-      .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
-      .legend({
-        title: "Total population per km² (2011)",
-        titleWidth: 130,
-        ticks: 10,
-      })
-      .build();
-  </script>
+<head>
+  <meta charset="utf-8" />
+  <title>1km² Grid of Europe</title>
+  <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+  <meta name="viewport" content="width=device-width" />
+</head>
+
+<body style="margin: 0">
+  <div id="viz-container"></div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/d3-scale@3.2.3/dist/d3-scale.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@2.0.0/dist/d3-scale-chromatic.min.js"></script>
+<script src="../../../build/gridviz.js"></script>
+<script>
+  let domain = ["1", "9999"]; //cell population domain
+  let colorScale = d3.scaleSequentialSqrt(domain, d3.interpolateBlues)
+
+  let containerDiv = document.getElementById("viz-container");
+  gridviz
+    .viewer()
+    .container(containerDiv)
+    .gridData([
+      {
+        url: "../../../assets/csv/Europe/1km/pop_1km.csv",
+        cellSize: 1.01,
+      },
+    ])
+    .title("1 km² Grid of Europe")
+    // .subtitle("EPSG:3035")
+    .cellCount(true)
+    .zerosRemoved(3) //last 3 zeros were removed from dataset to improve efficiency
+    .colorField("Population") // csv column which you wish to visualize
+    .sizeField(null) // csv column which you wish to visualize
+    // .zoom(200)
+    .nuts2json(false) //loads borders topojson
+    .center([4369, 3230]) //EPSG=3035 with last 3 zeros removed
+    .height(window.innerHeight - 4)
+    .width(window.innerWidth - 4)
+    .backgroundColor("#000")
+    .borderColor("#ffffff")
+    .highlightColor("red")
+    .colorSchemeName("interpolateCool")
+    .colorScaleName("scaleSequentialSqrt")
+    //.colorScale(colorScale)
+    .colorSchemeSelector(true)
+    .colorScaleSelector(true)
+    .colorFieldSelector(true)
+    .sizeFieldSelector(true)
+    .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
+    .legend({
+      title: "Total population per km² (2011)",
+      titleWidth: 130,
+      ticks: 10,
+    })
+    .build();
+</script>
+
 </html>

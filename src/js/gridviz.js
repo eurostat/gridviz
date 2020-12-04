@@ -7,8 +7,7 @@ import { interpolateRound } from "d3-interpolate";
 import { json, csv } from "d3-fetch";
 import { format } from "d3-format";
 import { extent, range, quantile, min, max } from "d3-array";
-import { select, create, selectAll, mouse } from "d3-selection";
-import { event as currentEvent } from 'd3-selection';
+import { select, create, selectAll, pointer } from "d3-selection";
 import * as LEGEND from "d3-svg-legend";
 //three.js
 import {
@@ -766,7 +765,7 @@ export function viewer(options) {
   function addMouseEventsToView() {
     // show cell value on click
     view.on("click", () => {
-      let [mouseX, mouseY] = mouse(view.node());
+      let [mouseX, mouseY] = pointer(view.node());
       let mouse_position = [mouseX, mouseY];
       checkIntersects(mouse_position);
       //console.log("Camera pos:", camera.position);
@@ -907,17 +906,16 @@ export function viewer(options) {
                   min([xDomain, yDomain], array => min(array)),
                   max([xDomain, yDomain], array => max(array))
                 ];
-                viewer.mobileCoordScale = d3scale.scaleLinear().domain(domain).range([-1, 1]);
-                // viewer.mobileCoordScale = viewer.mobileCoordScale;
-                // viewer.mobileCoordScale = d3scale.scaleLinear().domain(yDomain).range([-1, 1]);
-
+                viewer.mobileCoordScaleX = d3scale.scaleLinear().domain(domain).range([-1, 1]);
+                viewer.mobileCoordScaleY = d3scale.scaleLinear().domain(domain).range([-1, 1]);
                 //update cell sizes and raycaster to fit new webgl-friendly coords
+
                 //distance between two neighbouring cell x values is the new resolution
 
-                //first we have to sort the point by X to try to ensure they are neighbours
+                // to try to ensure the cells are neighbours, first we have to sort the points by X
                 csv.sort(function (a, b) { return a.x - b.x });
 
-                //find next distinct X value
+                // then we use the first cell, and find the next cell with a distinct X value
                 let x1 = csv[0].x;
                 let x2;
                 csv.some(function (cell) {
@@ -927,20 +925,21 @@ export function viewer(options) {
                   }
                 });
 
-                //calculate difference between two distinct X coordinates in mobile coords
-                let difference = Math.abs(viewer.mobileCoordScale(x1) - viewer.mobileCoordScale(x2));
+                //we then calculate the difference between two distinct X coordinates in mobile coords
+                let difference = Math.abs(viewer.mobileCoordScaleX(x1) - viewer.mobileCoordScaleX(x2));
                 difference = difference * 2;
 
-                //let difference = Math.abs(viewer.center_[0] - viewer.mobileCoordScale(viewer.center_[0]))
-                let newResolution = difference; //TODO define resolution based on scale
+                //giving us our new cell size
+                let newResolution = difference;
+
                 viewer.resolution_ = newResolution;
                 grid.cellSize = newResolution;
                 gridConfig.pointSize = newResolution;
                 gridConfig.raycasterThreshold = newResolution;
                 raycaster.params.Points.threshold = newResolution;
                 //scale center coords
-                viewer.center_[0] = viewer.mobileCoordScale(viewer.center_[0]);
-                viewer.center_[1] = viewer.mobileCoordScale(viewer.center_[1]);
+                viewer.center_[0] = viewer.mobileCoordScaleX(viewer.center_[0]);
+                viewer.center_[1] = viewer.mobileCoordScaleY(viewer.center_[1]);
               }
 
               // add points to cache
@@ -974,8 +973,8 @@ export function viewer(options) {
               let c = gridCaches[viewer.resolution_][index];
               if (viewer._mobile) {
                 viewer.center_ = [
-                  viewer.mobileCoordScale(parseFloat(c.x)),
-                  viewer.mobileCoordScale(parseFloat(c.y))
+                  viewer.mobileCoordScaleX(parseFloat(c.x)),
+                  viewer.mobileCoordScaleY(parseFloat(c.y))
                 ];
               } else {
                 viewer.center_ = [
@@ -1044,8 +1043,8 @@ export function viewer(options) {
         for (let i = 0; i < csv.length; i++) {
           //scale mobile coordinates to avoid d3 pan/zoom bug 
           let point = csv[i];
-          point.x = viewer.mobileCoordScale(parseFloat(csv[i].x));
-          point.y = viewer.mobileCoordScale(parseFloat(csv[i].y));
+          point.x = viewer.mobileCoordScaleX(parseFloat(csv[i].x));
+          point.y = viewer.mobileCoordScaleY(parseFloat(csv[i].y));
           if (!gridCaches[res]) gridCaches[res] = [];
           gridCaches[res].push(point);
         }
@@ -1068,10 +1067,9 @@ export function viewer(options) {
         .domain(viewer.thresholdValues_)
         .range(viewer.colors_);
     } else {
-      let domain;
       // assign default if user doesnt specify their own function
       if (!viewer.colorScaleFunction_) {
-        domain = viewer.colorValuesExtent;
+        let domain = viewer.colorValuesExtent;
         return viewer._defaultColorScaleFunction(domain, d3scaleChromatic[viewer.colorSchemeName_]);
       } else {
         return viewer.colorScaleFunction_;
@@ -2165,16 +2163,16 @@ export function viewer(options) {
       zoom()
         .scaleExtent([farScale, nearScale])
         .extent([[0, 0], [viewer.width_, viewer.height_]])
-        .on("zoom", () => {
-          let event = currentEvent;
+        .on("zoom", (event) => {
+          // let event = currentEvent;
           if (viewer._mobile) {
             if (event) zoomHandlerMobile(event);
           } else {
             if (event) zoomHandler(event);
           }
         })
-        .on("end", () => {
-          let event = currentEvent;
+        .on("end", (event) => {
+          //let event = currentEvent;
           if (event) zoomEnd(event);
         });
 
@@ -2188,7 +2186,7 @@ export function viewer(options) {
       setCamera(0, 0, viewer.camera.initialZ_)
 
     } else {
-      //initial zoom transform
+      //initial desktop zoom transform
       let scale = getScaleFromZ(viewer.camera.initialZ_)
       viewer.d3zoom.scaleTo(view, scale);
       viewer.d3zoom.translateTo(view,
@@ -2310,7 +2308,7 @@ export function viewer(options) {
   }
 
   /**
-   * retrieves placenames by population according to the current scale, from an ArcGIS server endpoint.
+   * retrieves placenames by population according to the current scale, from an ArcGIS server endpoint (see constants).
    * TODO: send bounding box correctly (geometry xmin,ymin,xmax,ymax)
    * @param {*} scale
    */
@@ -2471,8 +2469,8 @@ export function viewer(options) {
     if (viewer._mobile) {
       if (viewer.zerosRemoved_) {
         let d = Number('1E' + viewer.zerosRemoved_);
-        let x = viewer.mobileCoordScale(placename.geometry.x / d);
-        let y = viewer.mobileCoordScale(placename.geometry.y / d)
+        let x = viewer.mobileCoordScaleX(placename.geometry.x / d);
+        let y = viewer.mobileCoordScaleY(placename.geometry.y / d)
         placeLabel.position.set(
           x,
           y,
@@ -2480,8 +2478,8 @@ export function viewer(options) {
         );
       } else {
         placeLabel.position.set(
-          viewer.mobileCoordScale(placename.geometry.x),
-          viewer.mobileCoordScale(placename.geometry.y),
+          viewer.mobileCoordScaleX(placename.geometry.x),
+          viewer.mobileCoordScaleY(placename.geometry.y),
           CONSTANTS.label_height
         );
       }
@@ -2590,9 +2588,9 @@ export function viewer(options) {
     pos.copy(camera.position).add(vec.multiplyScalar(distance));
 
     if (viewer._mobile) {
-      if (viewer.mobileCoordScale) {
-        pos.x = Math.round(viewer.mobileCoordScale.invert(pos.x))
-        pos.y = Math.round(viewer.mobileCoordScale.invert(pos.y))
+      if (viewer.mobileCoordScaleX && viewer.mobileCoordScaleY) {
+        pos.x = Math.round(viewer.mobileCoordScaleX.invert(pos.x))
+        pos.y = Math.round(viewer.mobileCoordScaleY.invert(pos.y))
       } else {
         return false
       }
@@ -2700,8 +2698,8 @@ export function viewer(options) {
     let x, y;
     if (viewer._mobile) {
       //mobile coords are scaled to [-1,1], so we "unscale" them
-      x = Math.round(viewer.mobileCoordScale.invert(tooltip_state.coords[0]))
-      y = Math.round(viewer.mobileCoordScale.invert(tooltip_state.coords[1]))
+      x = Math.round(viewer.mobileCoordScaleX.invert(tooltip_state.coords[0]))
+      y = Math.round(viewer.mobileCoordScaleY.invert(tooltip_state.coords[1]))
     } else {
       x = tooltip_state.coords[0];
       y = tooltip_state.coords[1];
