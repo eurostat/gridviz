@@ -2319,45 +2319,48 @@ export function viewer(options) {
     let envelope = getCurrentViewExtent();
     //currentExtent = envelope;
     //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
-    let URL =
-      CONSTANTS.placenames_base_URL +
-      "where=" +
-      where +
-      "&outSR=" +
-      viewer.placenamesEPSG_ +
-      "&inSR=" + viewer.placenamesEPSG_ +
-      "&geometry=" +
-      envelope.xmin +
-      "," +
-      envelope.ymin +
-      "," +
-      envelope.xmax +
-      "," +
-      envelope.ymax +
-      "&geometryType=esriGeometryEnvelope&f=json&outFields=GISREGIO.CITIES_TOWNS_RG.STTL_NAME,GISREGIO.CITIES_TOWNS_RG.POPL_2011";
 
-    //manage multiple calls by replicating angular's .unsubscribe() somehow
-    let uri = encodeURI(URL);
-    json(uri).then(
-      res => {
-        if (res.features) {
-          if (res.features.length > 0) {
-            removePlacenamesFromScene();
-            addPlacenamesToScene(res.features);
+    if (envelope) {
+      let URL =
+        CONSTANTS.placenames.baseURL +
+        "where=" +
+        where +
+        "&outSR=" +
+        viewer.placenamesEPSG_ +
+        "&inSR=" + viewer.placenamesEPSG_ +
+        "&geometry=" +
+        envelope.xmin +
+        "," +
+        envelope.ymin +
+        "," +
+        envelope.xmax +
+        "," +
+        envelope.ymax +
+        "&geometryType=esriGeometryEnvelope&f=json&outFields=" + CONSTANTS.placenames.townField + "," + CONSTANTS.placenames.populationField;
+
+      //TODO: manage multiple calls by replicating angular's .unsubscribe() somehow
+      let uri = encodeURI(URL);
+      json(uri).then(
+        res => {
+          if (res.features) {
+            if (res.features.length > 0) {
+              removePlacenamesFromScene();
+              addPlacenamesToScene(res.features);
+            }
           }
+        },
+        err => {
+          console.error(err);
         }
-      },
-      err => {
-        console.error(err);
-      }
-    );
+      );
+    }
   }
 
   function defineWhereParameter(scale) {
     let r = viewer.resolution_;
     let where = "";
     if (viewer.placenamesCountry_) {
-      where = where + "GISREGIO.CITIES_TOWNS_RG.CNTR_CODE='" + viewer.placenamesCountry_ + "' AND "
+      where = where + CONSTANTS.placenames.countryField + " = '" + viewer.placenamesCountry_ + "' AND "
     }
     // labelling thresholds by population - either custom values or by scale
     let popFilter = getPopulationParameterFromScale(scale)
@@ -2373,7 +2376,7 @@ export function viewer(options) {
    * @param {*} scale
    */
   function getPopulationParameterFromScale(scale) {
-    let populationFieldName = "GISREGIO.CITIES_TOWNS_RG.POPL_2011"
+    let populationFieldName = CONSTANTS.placenames.populationField;
     //user-defined thresholds
     if (viewer.placenameThresholds_) {
       let thresholds = Object.keys(viewer.placenameThresholds_);
@@ -2392,7 +2395,7 @@ export function viewer(options) {
         }
       }
     } else {
-      //default values
+      //default thresholds
       let r = viewer.resolution_
       if (scale > 0 && scale < r) {
         return populationFieldName + ">10";
@@ -2407,17 +2410,17 @@ export function viewer(options) {
       } else if (scale > r * 16 && scale < r * 32) {
         return populationFieldName + ">10000";
       } else if (scale > r * 32 && scale < r * 64) {
-        return populationFieldName + ">20000";
-      } else if (scale > r * 64 && scale < r * 128) {
         return populationFieldName + ">100000";
+      } else if (scale > r * 64 && scale < r * 128) {
+        return populationFieldName + ">300000";
       } else if (scale > r * 128 && scale < r * 256) {
-        return populationFieldName + ">250000";
-      } else if (scale > r * 256 && scale < r * 512) {
-        return populationFieldName + ">500000";
-      } else if (scale > r * 512 && scale < r * 1024) {
-        return populationFieldName + ">750000";
-      } else if (scale > r * 1024) {
         return populationFieldName + ">1000000";
+      } else if (scale > r * 256 && scale < r * 512) {
+        return populationFieldName + ">1000000";
+      } else if (scale > r * 512 && scale < r * 1024) {
+        return populationFieldName + ">2000000";
+      } else if (scale > r * 1024) {
+        return populationFieldName + ">2000000";
       } else {
         return "1=1";
       }
@@ -2460,24 +2463,50 @@ export function viewer(options) {
   function createPlacenameLabelObject(placename) {
     var placeDiv = document.createElement("div");
     placeDiv.className = "gridviz-placename";
-    placeDiv.textContent = placename.attributes["GISREGIO.CITIES_TOWNS_RG.STTL_NAME"];
+    placeDiv.textContent = placename.attributes[CONSTANTS.placenames.townField];
     placeDiv.style.marginTop = "-1em";
     var placeLabel = new CSS2DObject(placeDiv);
-    if (viewer.zerosRemoved_) {
-      let d = Number('1E' + viewer.zerosRemoved_);
-      placeLabel.position.set(
-        placename.geometry.x / d,
-        placename.geometry.y / d,
-        CONSTANTS.label_height
-      );
+
+    //scale mobile coords
+    if (viewer._mobile) {
+      if (viewer.zerosRemoved_) {
+        let d = Number('1E' + viewer.zerosRemoved_);
+        let x = viewer.mobileCoordScale(placename.geometry.x / d);
+        let y = viewer.mobileCoordScale(placename.geometry.y / d)
+        placeLabel.position.set(
+          x,
+          y,
+          CONSTANTS.label_height
+        );
+      } else {
+        placeLabel.position.set(
+          viewer.mobileCoordScale(placename.geometry.x),
+          viewer.mobileCoordScale(placename.geometry.y),
+          CONSTANTS.label_height
+        );
+      }
+      return placeLabel;
     } else {
-      placeLabel.position.set(
-        placename.geometry.x,
-        placename.geometry.y,
-        CONSTANTS.label_height
-      );
+      //desktop
+      if (viewer.zerosRemoved_) {
+        let d = Number('1E' + viewer.zerosRemoved_);
+        placeLabel.position.set(
+          placename.geometry.x / d,
+          placename.geometry.y / d,
+          CONSTANTS.label_height
+        );
+      } else {
+        placeLabel.position.set(
+          placename.geometry.x,
+          placename.geometry.y,
+          CONSTANTS.label_height
+        );
+      }
+      return placeLabel;
     }
-    return placeLabel;
+
+
+
   }
 
   function getCurrentViewExtent() {
@@ -2509,6 +2538,11 @@ export function viewer(options) {
     let bottomLeftWorld = getWorldCoordsFromScreen(clientBottomLeft); //client x,y
     let topRightWorld = getWorldCoordsFromScreen(clientTopRight); //client x,y
 
+    // if getting coords was unsuccessful, exit
+    if (!bottomLeftWorld || !topRightWorld) {
+      return
+    }
+
     // full european extent in EPSG 3035:
     // return {
     //   xmin: 1053668.5589,
@@ -2516,6 +2550,8 @@ export function viewer(options) {
     //   xmax: 5724066.4412,
     //   ymax: 5901309.0137
     // };
+
+    // if the user has reduced the filesize by removing trailing 0s from the csv, we simply add them back on before sending the placename queries
     if (viewer.zerosRemoved_) {
       let d = Number('1E' + viewer.zerosRemoved_);
       return {
@@ -2552,6 +2588,16 @@ export function viewer(options) {
     var distance = -camera.position.z / vec.z;
 
     pos.copy(camera.position).add(vec.multiplyScalar(distance));
+
+    if (viewer._mobile) {
+      if (viewer.mobileCoordScale) {
+        pos.x = Math.round(viewer.mobileCoordScale.invert(pos.x))
+        pos.y = Math.round(viewer.mobileCoordScale.invert(pos.y))
+      } else {
+        return false
+      }
+    }
+
     return pos;
   }
 

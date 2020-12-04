@@ -1,6 +1,11 @@
 //Boundaries json
 export const nuts_base_URL = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/2021/";
-export const placenames_base_URL = "https://ec.europa.eu/regio/regiogis/gis/arcgis/rest/services/Urban/urban_centres_towns-v2/MapServer/0/query?"
+export const placenames = {
+    baseURL: "https://ec.europa.eu/regio/regiogis/gis/arcgis/rest/services/Urban/urban_centres_towns_v3/MapServer/0/query?",
+    countryField: "REGIOMAP.CITIES_TOWNS_RG_LAEA.CNTR_CODE",
+    townField: "REGIOMAP.CITIES_TOWNS_RG_LAEA.STTL_NAME",
+    populationField: "REGIOMAP.CITIES_TOWNS_RG_LAEA.POPL_2011"
+}
 export const nuts_scale_threshold = 551689; //scale at which nuts2json changes simplification
 export const line_width = 0.0010; //GL.LINE height
 export const line_z = 0.002; //line vertices z coordinate
