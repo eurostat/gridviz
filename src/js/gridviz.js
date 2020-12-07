@@ -22,7 +22,8 @@ import {
   Float32BufferAttribute,
   BufferGeometry,
   Group,
-  ShaderMaterial
+  ShaderMaterial,
+  PointsMaterial
 
 } from "three";
 import * as THREE from "three/src/constants";
@@ -523,7 +524,8 @@ export function viewer(options) {
     // TODO: adjust for when the user loads gridviz into a small container
     let pixelRatio = window.devicePixelRatio;
     renderer.setPixelRatio(pixelRatio);
-    renderer.setSize(viewer.width_, viewer.height_);
+    let updateStyle = true;
+    renderer.setSize(viewer.width_, viewer.height_, updateStyle);
     viewer.container_.appendChild(renderer.domElement);
     view = select(renderer.domElement); //for d3 mouse events
   }
@@ -938,8 +940,11 @@ export function viewer(options) {
                 gridConfig.raycasterThreshold = newResolution;
                 raycaster.params.Points.threshold = newResolution;
                 //scale center coords
-                viewer.center_[0] = viewer.mobileCoordScaleX(viewer.center_[0]);
-                viewer.center_[1] = viewer.mobileCoordScaleY(viewer.center_[1]);
+                if (viewer.center_) {
+                  viewer.center_[0] = viewer.mobileCoordScaleX(viewer.center_[0]);
+                  viewer.center_[1] = viewer.mobileCoordScaleY(viewer.center_[1]);
+                }
+
               }
 
               // add points to cache
@@ -1493,24 +1498,26 @@ export function viewer(options) {
     pointsGeometry.computeBoundingSphere();
     //create or reuse pointsLayer Material
     if (!pointsMaterial) {
-      // Attempting to apply custom point sizes
+      // Apply custom point sizes, instead of using three.js pointsMaterial
       pointsMaterial = new ShaderMaterial({
         uniforms: {
-          thing: {
-            value: 1000.0
+          multiplier: {
+            value: 1000 //km TODO: define dynamically
           }
         },
         fragmentShader: fragmentShader(),
         vertexShader: vertexShader(),
         vertexColors: THREE.VertexColors
       });
+
       //using threejs PointsMaterial
-      //pointsMaterial = new PointsMaterial({
-      //size: gridConfig.pointSize,
-      // sizeAttenuation: true,
-      //https://github.com/mrdoob/three.js/blob/master/src/constants.js
-      // vertexColors: THREE.VertexColors
+      // pointsMaterial = new PointsMaterial({
+      //   size: gridConfig.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
+      //   sizeAttenuation: true,
+      //   //https://github.com/mrdoob/three.js/blob/master/src/constants.js
+      //   vertexColors: THREE.VertexColors
       // });
+
     } else {
       pointsMaterial.size = gridConfig.pointSize;
     }
@@ -1561,15 +1568,28 @@ export function viewer(options) {
   */
   function vertexShader() {
     return `
-  uniform float thing;
+  uniform float multiplier;
   attribute float size;
   float scale;
   varying vec3 vColor;
 
   void main() {
     vColor = color;
+
+    // mvPosition represents the vertex position in view space (model-view-position). It’s usually calculated like so:
     vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-    gl_PointSize = size * (thing / -mvPosition.z );
+
+    // manual 'point attenuation' attempt because threejs attenuation doesnt coincide with real world cellSize 
+    // (e.g. 1000 for 1km grid leaves space between cells)...
+    // this method works well on mobile & desktop, but not when appending the renderer to a container
+    gl_PointSize = size * (multiplier / -mvPosition.z ); 
+
+    // threejs attenuation (attenuation: true in pointer material)...
+    // does this: gl_PointSize *= ( scale / - mvPosition.z );
+    // works well in containers & desktop, but not mobile
+    // gl_PointSize = size;
+
+    //set position:
     gl_Position = projectionMatrix * mvPosition;
   }
 `;
@@ -2393,7 +2413,7 @@ export function viewer(options) {
         }
       }
     } else {
-      //default thresholds
+      //defaultthresholds
       let r = viewer.resolution_
       if (scale > 0 && scale < r) {
         return populationFieldName + ">10";
@@ -2404,11 +2424,11 @@ export function viewer(options) {
       } else if (scale > r * 4 && scale < r * 8) {
         return populationFieldName + ">5000";
       } else if (scale > r * 8 && scale < r * 16) {
-        return populationFieldName + ">7500";
-      } else if (scale > r * 16 && scale < r * 32) {
         return populationFieldName + ">10000";
+      } else if (scale > r * 16 && scale < r * 32) {
+        return populationFieldName + ">200000";
       } else if (scale > r * 32 && scale < r * 64) {
-        return populationFieldName + ">100000";
+        return populationFieldName + ">300000";
       } else if (scale > r * 64 && scale < r * 128) {
         return populationFieldName + ">300000";
       } else if (scale > r * 128 && scale < r * 256) {
@@ -2669,21 +2689,6 @@ export function viewer(options) {
 
     intersect.object.geometry.attributes.color.needsUpdate = true;
 
-    //add new cell
-    // let geometry = new Geometry();
-    // // FIXME
-    // geometry.vertices.push(new Vector3(cell.position[0], cell.position[1], 0));
-    // geometry.colors = [new Color("#ffffff")];
-
-    // let material = new PointsMaterial({
-    //   size: gridConfig.pointSize,
-    //   sizeAttenuation: true,
-    //   vertexColors: THREE.VertexColors,
-    //   transparent: true
-    // });
-
-    // let point = new Points(geometry, material);
-    // tooltipContainer.add(point);
   }
 
   function removeHighlights() {

@@ -154,8 +154,7 @@ box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);;
   z-index: 9999;
   position: absolute;
   bottom: 1%; 
-  max-width: 77%;
-  left: 1%;
+    left: 1%;
   padding:5px;
 }
 
