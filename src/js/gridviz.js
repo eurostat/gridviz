@@ -1506,7 +1506,7 @@ export function viewer(options) {
       pointsMaterial = new ShaderMaterial({
         uniforms: {
           multiplier: {
-            value: 1100 //km TODO: define dynamically. the extra meters prevent white lines across the screen flickering when zooming
+            value: 1060 //km TODO: define dynamically. the extra meters prevent white lines across the screen flickering when zooming
           }
         },
         fragmentShader: fragmentShader(),
@@ -2419,33 +2419,70 @@ export function viewer(options) {
     } else {
       //defaultthresholds
       let r = viewer.resolution_
-      if (scale > 0 && scale < r) {
-        return populationFieldName + ">10";
-      } else if (scale > r && scale < r * 2) {
-        return populationFieldName + ">1000";
-      } else if (scale > r * 2 && scale < r * 4) {
-        return populationFieldName + ">2500";
-      } else if (scale > r * 4 && scale < r * 8) {
-        return populationFieldName + ">5000";
-      } else if (scale > r * 8 && scale < r * 16) {
-        return populationFieldName + ">10000";
-      } else if (scale > r * 16 && scale < r * 32) {
-        return populationFieldName + ">200000";
-      } else if (scale > r * 32 && scale < r * 64) {
-        return populationFieldName + ">300000";
-      } else if (scale > r * 64 && scale < r * 128) {
-        return populationFieldName + ">300000";
-      } else if (scale > r * 128 && scale < r * 256) {
-        return populationFieldName + ">1000000";
-      } else if (scale > r * 256 && scale < r * 512) {
-        return populationFieldName + ">1000000";
-      } else if (scale > r * 512 && scale < r * 1024) {
-        return populationFieldName + ">2000000";
-      } else if (scale > r * 1024) {
-        return populationFieldName + ">2000000";
+
+      //mobile
+      if (viewer._mobile) {
+        if (scale > 0 && scale < r) {
+          return populationFieldName + ">10";
+        } else if (scale > r && scale < r * 2) {
+          return populationFieldName + ">1000";
+        } else if (scale > r * 2 && scale < r * 4) {
+          return populationFieldName + ">2500";
+        } else if (scale > r * 4 && scale < r * 8) {
+          return populationFieldName + ">5000";
+        } else if (scale > r * 8 && scale < r * 16) {
+          return populationFieldName + ">10000";
+        } else if (scale > r * 16 && scale < r * 32) {
+          return populationFieldName + ">200000";
+        } else if (scale > r * 32 && scale < r * 64) {
+          return populationFieldName + ">300000";
+        } else if (scale > r * 64 && scale < r * 128) {
+          return populationFieldName + ">300000";
+        } else if (scale > r * 128 && scale < r * 256) {
+          return populationFieldName + ">1000000";
+        } else if (scale > r * 256 && scale < r * 512) {
+          return populationFieldName + ">1000000";
+        } else if (scale > r * 512 && scale < r * 1024) {
+          return populationFieldName + ">2000000";
+        } else if (scale > r * 1024) {
+          return populationFieldName + ">2000000";
+        } else {
+          return "1=1";
+        }
+
       } else {
-        return "1=1";
+        //desktop
+        if (scale > 0 && scale < r) {
+          return populationFieldName + ">10";
+        } else if (scale > r && scale < r * 2) {
+          return populationFieldName + ">1000";
+        } else if (scale > r * 2 && scale < r * 4) {
+          return populationFieldName + ">2500";
+        } else if (scale > r * 4 && scale < r * 8) {
+          return populationFieldName + ">5000";
+        } else if (scale > r * 8 && scale < r * 16) {
+          return populationFieldName + ">10000";
+        } else if (scale > r * 16 && scale < r * 32) {
+          return populationFieldName + ">200000";
+        } else if (scale > r * 32 && scale < r * 64) {
+          return populationFieldName + ">300000";
+        } else if (scale > r * 64 && scale < r * 128) {
+          return populationFieldName + ">300000";
+        } else if (scale > r * 128 && scale < r * 256) {
+          return populationFieldName + ">1000000";
+        } else if (scale > r * 256 && scale < r * 512) {
+          return populationFieldName + ">1000000";
+        } else if (scale > r * 512 && scale < r * 1024) {
+          return populationFieldName + ">2000000";
+        } else if (scale > r * 1024) {
+          return populationFieldName + ">2000000";
+        } else {
+          return "1=1";
+        }
+
       }
+
+
     }
   }
 

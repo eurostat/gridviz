@@ -17,7 +17,6 @@
   .gridviz-headings-container, #gridviz-legend {
     border-radius: 0px !important;
     background-color:#ffffff !important;
-    padding:5px!important;
     max-width: 100% !important;
   }
   .gridviz-cellcount{
@@ -25,7 +24,7 @@
   }
   #gridviz-loading-spinner {
     top: 45% !important;
-    left: 45% !important;
+    left: 44% !important;
   }
   #gridviz-loading-text {
     top: 55% !important;
@@ -280,7 +279,7 @@ left: 0px;
 #gridviz-loading-spinner {
   position: absolute;
   top: 47%;
-  left: 48%; 
+  left: 47%; 
 
 }
 .lds-ring {
