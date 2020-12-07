@@ -1506,7 +1506,7 @@ export function viewer(options) {
       pointsMaterial = new ShaderMaterial({
         uniforms: {
           multiplier: {
-            value: 1050 //km TODO: define dynamically. the extra meters prevent white lines across the screen flickering when zooming
+            value: 1060 //km TODO: define dynamically. the extra meters prevent white lines across the screen flickering when zooming
           }
         },
         fragmentShader: fragmentShader(),
