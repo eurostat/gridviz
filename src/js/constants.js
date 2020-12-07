@@ -7,7 +7,7 @@ export const placenames = {
     populationField: "REGIOMAP.CITIES_TOWNS_RG_LAEA.POPL_2011"
 }
 export const nuts_scale_threshold = 551689; //scale at which nuts2json changes simplification
-export const line_width = 0.0020; //GL.LINE width
+export const line_width = 0.0012; //GL.LINE width
 export const line_z = 0.002; //line vertices z coordinate
 export const point_z = 0.0001; //threejs points object height
 export const fov = 50;
