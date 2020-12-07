@@ -84,8 +84,9 @@ export function viewer(options) {
   };
   viewer._gridLegend; //legend stored here
 
-  //d3 Scale stuff
+  //d3 Scaling & colouring stuff
   viewer.colorSchemeName_ = "interpolateTurbo";
+  viewer.reverseColorScheme_ = false;
   viewer.sizeScaleName_ = "scaleSqrt";
   viewer.colorScaleName_ = "scaleSequentialSqrt";
   viewer._defaultColorScaleFunction = d3scale[viewer.colorScaleName_];
@@ -1075,6 +1076,9 @@ export function viewer(options) {
       // assign default if user doesnt specify their own function
       if (!viewer.colorScaleFunction_) {
         let domain = viewer.colorValuesExtent;
+        if (viewer.reverseColorScheme_) {
+          domain = domain.reverse();
+        }
         return viewer._defaultColorScaleFunction(domain, d3scaleChromatic[viewer.colorSchemeName_]);
       } else {
         return viewer.colorScaleFunction_;
