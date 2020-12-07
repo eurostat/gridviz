@@ -764,8 +764,8 @@ export function viewer(options) {
 */
   function addMouseEventsToView() {
     // show cell value on click
-    view.on("click", () => {
-      let [mouseX, mouseY] = pointer(view.node());
+    view.on("click", (event) => {
+      let [mouseX, mouseY] = pointer(event);
       let mouse_position = [mouseX, mouseY];
       checkIntersects(mouse_position);
       //console.log("Camera pos:", camera.position);
