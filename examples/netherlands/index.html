@@ -28,14 +28,15 @@
         .nuts2json(false) // does not support 28992 - use method to load custom geojson
         //.nuts2jsonCountry("NL")
         .center([1720, 3900])//EPSG=28992 with 2 zeros removed
+        .showPlacenames(true)
         .placenamesEPSG(28992)
         .placenamesCountry("NL")
         .placenameThresholds({ //"scale": population
-            "1500": 100000,
+            "1500": 200000,
             "1250": 100000,
-            "1000": 50000,
-            "500": 10000,
-            "250": 500
+            "1000": 100000,
+            "500": 50000,
+            "250": 10000
         })
         .height(window.innerHeight)
         .width(window.innerWidth)
