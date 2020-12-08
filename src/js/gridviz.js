@@ -312,12 +312,11 @@ export function viewer(options) {
 
       //set viewer resolution from user input
       if (!viewer.resolution_) {
-        if (viewer._mobile) {
-          let cellScale = d3scale.scaleLinear().domain()
-          viewer.resolution_ = viewer.gridData_[0].cellSize
-        } else {
-          viewer.resolution_ = viewer.gridData_[0].cellSize
-        }
+        viewer.resolution_ = viewer.gridData_[0].cellSize;
+      }
+
+      if (viewer.showPlacenames_ && !viewer.placenameThresholds_) {
+        defineDefaultPlacenameThresholds();
       }
 
       //defines raycaster threshold and point size. See GridConfig typedef.
@@ -886,6 +885,51 @@ export function viewer(options) {
     }
   }
 
+  function defineDefaultPlacenameThresholds() {
+    let r = viewer.resolution_;
+    // scale : population
+    viewer.placenameThresholds_ = {
+      [r * 1024]: "2000000",
+      [r * 512]: "2000000",
+      [r * 256]: "2000000",
+      [r * 128]: "1000000",
+      [r * 64]: "1000000",
+      [r * 32]: "500000",
+      [r * 16]: "100000",
+      [r * 8]: "10000",
+      [r * 4]: "5000",
+      [r * 2]: "1000",
+      [r]: "10",
+    }
+    // if (scale > 0 && scale < r) {
+    //   return populationFieldName + ">10";
+    // } else if (scale > r && scale < r * 2) {
+    //   return populationFieldName + ">1000";
+    // } else if (scale > r * 2 && scale < r * 4) {
+    //   return populationFieldName + ">2500";
+    // } else if (scale > r * 4 && scale < r * 8) {
+    //   return populationFieldName + ">5000";
+    // } else if (scale > r * 8 && scale < r * 16) {
+    //   return populationFieldName + ">10000";
+    // } else if (scale > r * 16 && scale < r * 32) {
+    //   return populationFieldName + ">200000";
+    // } else if (scale > r * 32 && scale < r * 64) {
+    //   return populationFieldName + ">300000";
+    // } else if (scale > r * 64 && scale < r * 128) {
+    //   return populationFieldName + ">300000";
+    // } else if (scale > r * 128 && scale < r * 256) {
+    //   return populationFieldName + ">1000000";
+    // } else if (scale > r * 256 && scale < r * 512) {
+    //   return populationFieldName + ">1000000";
+    // } else if (scale > r * 512 && scale < r * 1024) {
+    //   return populationFieldName + ">2000000";
+    // } else if (scale > r * 1024) {
+    //   return populationFieldName + ">2000000";
+    // } else {
+    //   return "1=1";
+    // }
+  }
+
   /**
    * @function loadGrid
    * @description request grid, save it to the cache, define the scales used for colouring and sizing, then add the cells (points) to the scene
@@ -934,7 +978,7 @@ export function viewer(options) {
 
                 //giving us our new cell size
                 let newResolution = difference;
-
+                viewer.originalResolution = viewer.resolution_;
                 viewer.resolution_ = newResolution;
                 grid.cellSize = newResolution;
                 gridConfig.pointSize = newResolution;
@@ -2369,6 +2413,8 @@ export function viewer(options) {
               removePlacenamesFromScene();
               addPlacenamesToScene(res.features);
             }
+          } else {
+            removePlacenamesFromScene();
           }
         },
         err => {
@@ -2398,8 +2444,14 @@ export function viewer(options) {
    * @param {*} scale
    */
   function getPopulationParameterFromScale(scale) {
+    if (viewer._mobile) {
+      //scale up to desktop values
+      let factor = viewer.originalResolution / viewer.resolution_
+      scale = scale * factor;
+    }
+
     let populationFieldName = CONSTANTS.placenames.populationField;
-    //user-defined thresholds
+    //build query string from thresholds
     if (viewer.placenameThresholds_) {
       let thresholds = Object.keys(viewer.placenameThresholds_);
       for (let i = 0; i < thresholds.length; i++) {
@@ -2416,73 +2468,6 @@ export function viewer(options) {
           return populationFieldName + ">" + viewer.placenameThresholds_[t];
         }
       }
-    } else {
-      //defaultthresholds
-      let r = viewer.resolution_
-
-      //mobile
-      if (viewer._mobile) {
-        if (scale > 0 && scale < r) {
-          return populationFieldName + ">10";
-        } else if (scale > r && scale < r * 2) {
-          return populationFieldName + ">1000";
-        } else if (scale > r * 2 && scale < r * 4) {
-          return populationFieldName + ">2500";
-        } else if (scale > r * 4 && scale < r * 8) {
-          return populationFieldName + ">5000";
-        } else if (scale > r * 8 && scale < r * 16) {
-          return populationFieldName + ">10000";
-        } else if (scale > r * 16 && scale < r * 32) {
-          return populationFieldName + ">200000";
-        } else if (scale > r * 32 && scale < r * 64) {
-          return populationFieldName + ">300000";
-        } else if (scale > r * 64 && scale < r * 128) {
-          return populationFieldName + ">300000";
-        } else if (scale > r * 128 && scale < r * 256) {
-          return populationFieldName + ">1000000";
-        } else if (scale > r * 256 && scale < r * 512) {
-          return populationFieldName + ">1000000";
-        } else if (scale > r * 512 && scale < r * 1024) {
-          return populationFieldName + ">2000000";
-        } else if (scale > r * 1024) {
-          return populationFieldName + ">2000000";
-        } else {
-          return "1=1";
-        }
-
-      } else {
-        //desktop
-        if (scale > 0 && scale < r) {
-          return populationFieldName + ">10";
-        } else if (scale > r && scale < r * 2) {
-          return populationFieldName + ">1000";
-        } else if (scale > r * 2 && scale < r * 4) {
-          return populationFieldName + ">2500";
-        } else if (scale > r * 4 && scale < r * 8) {
-          return populationFieldName + ">5000";
-        } else if (scale > r * 8 && scale < r * 16) {
-          return populationFieldName + ">10000";
-        } else if (scale > r * 16 && scale < r * 32) {
-          return populationFieldName + ">200000";
-        } else if (scale > r * 32 && scale < r * 64) {
-          return populationFieldName + ">300000";
-        } else if (scale > r * 64 && scale < r * 128) {
-          return populationFieldName + ">300000";
-        } else if (scale > r * 128 && scale < r * 256) {
-          return populationFieldName + ">1000000";
-        } else if (scale > r * 256 && scale < r * 512) {
-          return populationFieldName + ">1000000";
-        } else if (scale > r * 512 && scale < r * 1024) {
-          return populationFieldName + ">2000000";
-        } else if (scale > r * 1024) {
-          return populationFieldName + ">2000000";
-        } else {
-          return "1=1";
-        }
-
-      }
-
-
     }
   }
 

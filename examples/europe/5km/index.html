@@ -18,7 +18,7 @@
   let legendHeight;
   //mobile
   if (window.screen.width < 600) {
-    legendWidth = window.screen.width - 10; //margin
+    legendWidth = window.screen.width - 30; //margin
     legendHeight = 50;
   }
 
@@ -37,15 +37,15 @@
     .cellCount(true)
     .colorField("Population") // csv column which you wish to visualize
     //sizeColumn() "value" // csv column which you wish to visualize
-    .nuts2json(true) //loads borders topojson
+    .nuts2json(false) //loads borders topojson
     .center([4369, 3230]) //EPSG=3035
     // .height(window.innerHeight - 5)
     // .width(window.innerWidth)
     .showPlacenames(true)
     .backgroundColor("#fcf6c2")
-    .borderColor("#000")
-    .colorSchemeName("interpolateRdBu") //d3-scale-chromatic
-    .reverseColorScheme(true)
+    .borderColor("#ffffff")
+    .colorSchemeName("interpolateViridis") //d3-scale-chromatic
+    // .reverseColorScheme(true)
 
     .colorScaleName("scaleSequentialSqrt")
     .colorSchemeSelector(true)

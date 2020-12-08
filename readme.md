@@ -78,7 +78,10 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
         .build()
 ```
 
+
 ## API
+
+
 | Method                          | Type        | Default            | Description                                                                                      |
 | ------------------------------- | ----------- | ------------------ | ------------------------------------------------------------------------------------------------ |
 | viewer.container([value])       | HTMLElement | document.body      | The DOM element passed to the THREE.js renderer.                                                 |
@@ -95,7 +98,9 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
 
 </br>
 
+
 ### Data
+
 
 | Method                               | Type                               | Default | Description                                                                                                                                                   |
 | ------------------------------------ | ---------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -151,6 +156,8 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
 | **legendConfig**.format           | string  | ".0s"                                   | d3.format string used to format the legend values                                                                                                                                                                                                  |
 | **legendConfig**.cells            | int     | 5                                       | Number of cells (for cell legends only)                                                                                                                                                                                                            |
 | **legendConfig**.shapeWidth       | int     | 30                                      | width in pixels of legend cell (for cell legends only)                                                                                                                                                                                             |
+
+<br>
 
 ## Developer docs
 
