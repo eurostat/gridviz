@@ -1243,15 +1243,14 @@ export function viewer(options) {
    * 
    * @description Function exposed to user for adding geojson files to the viewer
    * @param {String} url URL of geojson file to be added
-   * @param {Boolean} removeZeros whether or not to remove the amount of zeros specified in zerosRemoved_ from the geojson file to be loaded. E.g if your csv grid file has 3 trailing zeros removed but your geojson file doesnt
    * @function addGeoJson
    */
-  viewer.addGeoJson = function (url, removeZeros) {
+  viewer.addGeoJson = function (url) {
     json(url).then(
       res => {
         if (res.features) {
           if (res.features.length > 0) {
-            geojsonLayer.addGeoJsonToScene(res.features, viewer, removeZeros);
+            geojsonLayer.addGeoJsonToScene(res.features, viewer);
           }
         }
       },
