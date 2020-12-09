@@ -42,12 +42,12 @@
     .colorField("Population") // csv column which you wish to visualize
     .sizeField(null) // csv column which you wish to visualize
     // .zoom(200)
-    .nuts2json(false) //loads borders topojson
+    .nuts(false) //loads borders topojson
     .center([4369, 3230]) //EPSG=3035 with last 3 zeros removed
     .height(window.innerHeight - 4)
     .width(window.innerWidth - 4)
     .backgroundColor("#000")
-    .borderColor("#ffffff")
+    .lineColor("#ffffff")
     .highlightColor("red")
     .colorScaleFunction(colorScale)
     // following methods define the scales using gridviz

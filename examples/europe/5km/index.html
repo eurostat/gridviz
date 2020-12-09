@@ -37,13 +37,14 @@
     .cellCount(true)
     .colorField("Population") // csv column which you wish to visualize
     //sizeColumn() "value" // csv column which you wish to visualize
-    .nuts2json(false) //loads borders topojson
+    .nuts(false) //loads borders topojson
     .center([4369, 3230]) //EPSG=3035
+    .zoom(5000)
     // .height(window.innerHeight - 5)
     // .width(window.innerWidth)
     .showPlacenames(true)
     .backgroundColor("#fcf6c2")
-    .borderColor("#ffffff")
+    .lineColor("#ffffff")
     .colorSchemeName("interpolateViridis") //d3-scale-chromatic
     // .reverseColorScheme(true)
 

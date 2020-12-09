@@ -1,3 +1,6 @@
+@import "./tooltip.css";
+@import "./legend.css";
+
 /* MOBILE */
 @media only screen and (max-width: 600px) {
   #gridviz-legend {
@@ -105,35 +108,7 @@
   left:10px;
 }
 
-/* Tooltip container */
-#gridviz-tooltip {
-  display: none; 
-  position: absolute; 
-  pointer-events: none; 
-  z-index:999; 
-  border-radius:5px; 
-  box-shadow: 0 1px 5px rgba(0,0,0,0.65); 
-  font-size: 0.8rem; 
-  text-align: center; 
-  line-height: 1; 
-  padding: 6px; 
-  background: white; 
-  font-family: sans-serif;
-}
-#gridviz-labeltip {
-  color:black;
-  padding: 4px; 
-  margin-bottom: 4px;
-}
-#gridviz-pointtip {
-  padding: 4px; 
-  margin-bottom: 4px;
-}
 
-/* Show the tooltip text when you mouse over the tooltip container */
-#gridviz-tooltip:hover {
-  display: block;
-}
 
 .gridviz-plugin {
   background-color: #fff;
@@ -148,51 +123,7 @@ box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);;
   width:100%;
 }
 
-/* LEGEND */
-#gridviz-legend {
-  z-index: 9999;
-  position: absolute;
-  bottom: 1%; 
-  left: 1%;
 
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-
-/* continuous */
-.gridviz-legend-svg{
-  font-size:0.8rem;
-  margin-top: 5px;
-}
-.gridviz-continuous-legend-title{
-  font-size:0.8rem;
-  font-weight:bold;
-  margin-bottom:10px;
-}
-.legend-tick text{
-/* font-size:1rem */
-}
-.gridviz-legend-axis .domain{
-  visibility:hidden;
-}
-
-.gridviz-legend-horizontal {
-  height: 65px;
-  width: 441px;
-  padding-top: 5px;
-}
-.gridviz-legend-vertical {
-  height: 321px;
-  width: 140px;
-  padding-top: 5px;
-}
-/* legend cells */
-rect.swatch {
-  stroke: white;
-  stroke-width: 0.5px;
-}
 
 /* Placenames  */
 .gridviz-placename {

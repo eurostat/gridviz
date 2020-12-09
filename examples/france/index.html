@@ -19,21 +19,20 @@
         .gridData([{
             url: "../../assets/csv/France/1km/2015_Ind.csv",
             cellSize: 1000,
-            tiled: false
         }])
         .title("1km² Grid of France")
         .sourcesHTML("Source: <a target='__blank' href='https://insee.fr/fr/accueil'>INSEE</a>")
         .center([3709000, 2624000])//EPSG=3035
-        .nuts2json(true)
+        .nuts(true)
         .nutsLevel(3)
-        .nuts2jsonCountry("FR")
-        .nuts2jsonEPSG(3035)
+        .nutsCountry("FR")
+        .EPSG(3035)
         .showPlacenames(true)
         .placenamesCountry("FR")
         .height(window.innerHeight)
         .width(window.innerWidth)
         .backgroundColor("#000")
-        .borderColor("#ffffff")
+        .lineColor("#ffffff")
         .colorSchemeName("interpolateInferno")
         .colorField("Ind")  // csv column used to calculate the colour of each cell
         .colorSchemeSelector(true)
@@ -41,7 +40,7 @@
         .colorFieldSelector(true)
         .colorScaleSelectorLabel("Scale: ")
         .colorFieldSelectorLabel("Indicator: ")
-        .nuts2json(true) //loads borders topojson
+        .nuts(true) //loads borders topojson
         .legend({
             title: "Total population per km² (2015)",
             titleWidth: 110,

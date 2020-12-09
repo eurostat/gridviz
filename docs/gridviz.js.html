@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: gridviz.js</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
+<head>
+  <meta charset="utf-8">
+  <title>JSDoc: Source: gridviz.js</title>
+
+  <script src="scripts/prettify/prettify.js"> </script>
+  <script src="scripts/prettify/lang-css.js"> </script>
+  <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+  <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+  <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
 
 <body>
 
-<div id="main">
+  <div id="main">
 
     <h1 class="page-title">Source: gridviz.js</h1>
 
-    
 
 
 
-    
+
+
     <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>// d3.js
+      <article>
+        <pre class="prettyprint source linenums"><code>// d3.js
 import { zoom, zoomIdentity } from "d3-zoom";
 import * as d3scaleChromatic from "d3-scale-chromatic";
 import * as d3scale from "d3-scale";
@@ -90,7 +91,7 @@ export function viewer(options) {
   viewer.height_ = null; //takes container width/height
   viewer.width_ = null;
   viewer.backgroundColor_ = "#b7b7b7";
-  viewer.borderColor_ = "#ffffff";
+  viewer.lineColor_ = "#ffffff";
   viewer.highlightColor_ = "#37f2d6"
   viewer.loadingIcon_ = "ring"; //ripple | ring | ellipsis | roller
 
@@ -133,7 +134,7 @@ export function viewer(options) {
 
   // placenames
   viewer.showPlacenames_ = false;
-  viewer.placenamesEPSG_ = 3035; //used to determine grid rendering; placenames;
+  viewer.EPSG_ = 3035; //used to determine grid rendering; placenames;
   viewer.placenamesCountry_ = false;
   viewer.placenameThresholds_ = null;
 
@@ -154,7 +155,7 @@ export function viewer(options) {
 
   //borders using nuts2json
   viewer.nuts2json_ = false; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
-  viewer.nuts2jsonEPSG_ = 3035;
+  viewer.EPSG_ = 3035;
   viewer.nuts2jsonCountry_ = false; // only show borders of given country code
   viewer.nutsLevel_ = 0;
   viewer.nutsSimplification_ = "20M"; //current nuts2json simplification
@@ -369,7 +370,7 @@ export function viewer(options) {
       if (viewer.nuts2json_) {
         loadNuts2json(
           CONSTANTS.nuts_base_URL +
-          viewer.nuts2jsonEPSG_ +
+          viewer.EPSG_ +
           "/" +
           viewer.nutsSimplification_ +
           "/" + viewer.nutsLevel_ + ".json"
@@ -1314,7 +1315,7 @@ export function viewer(options) {
     let line_geom = new LineGeometry();
     let positions = [];
     let colors = [];
-    let color = new Color(viewer.borderColor_);
+    let color = new Color(viewer.lineColor_);
     for (var i = 0; i &lt; coords.length; i++) {
       positions.push(coords[i].x, coords[i].y, layerZ);
       colors.push(color.r, color.g, color.b);
@@ -2230,7 +2231,7 @@ export function viewer(options) {
         viewer.nutsSimplification_ = "10M";
         loadNuts2json(
           CONSTANTS.nuts_base_URL +
-          viewer.nuts2jsonEPSG_ +
+          viewer.EPSG_ +
           "/" +
           viewer.nutsSimplification_ +
           "/" + viewer.nutsLevel_ + ".json"
@@ -2242,7 +2243,7 @@ export function viewer(options) {
         viewer.nutsSimplification_ = "20M";
         loadNuts2json(
           CONSTANTS.nuts_base_URL +
-          viewer.nuts2jsonEPSG_ +
+          viewer.EPSG_ +
           "/" +
           viewer.nutsSimplification_ +
           "/" + viewer.nutsLevel_ + ".json"
@@ -2266,8 +2267,8 @@ export function viewer(options) {
       "where=" +
       where +
       "&amp;outSR=" +
-      viewer.placenamesEPSG_ +
-      "&amp;inSR=" + viewer.placenamesEPSG_ +
+      viewer.EPSG_ +
+      "&amp;inSR=" + viewer.EPSG_ +
       "&amp;geometry=" +
       envelope.xmin +
       "," +
@@ -2661,25 +2662,76 @@ export function viewer(options) {
   return viewer;
 }
 </code></pre>
-        </article>
+      </article>
     </section>
 
 
 
 
-</div>
+  </div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addCellCountToDOM">addCellCountToDOM</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addHeadingsContainerToDOM">addHeadingsContainerToDOM</a></li><li><a href="global.html#addHomeButtonToDOM">addHomeButtonToDOM</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addNuts2jsonToScene">addNuts2jsonToScene</a></li><li><a href="global.html#addPanAndZoom">addPanAndZoom</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#addSelectorsContainerToDOM">addSelectorsContainerToDOM</a></li><li><a href="global.html#addSourcesToDOM">addSourcesToDOM</a></li><li><a href="global.html#addSubtitleToDOM">addSubtitleToDOM</a></li><li><a href="global.html#addTitleToDOM">addTitleToDOM</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createColorSchemeDropdown">createColorSchemeDropdown</a></li><li><a href="global.html#createLabelRenderer">createLabelRenderer</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createRaycaster">createRaycaster</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#createWebGLRenderer">createWebGLRenderer</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineFar">defineFar</a></li><li><a href="global.html#defineGridConfig">defineGridConfig</a></li><li><a href="global.html#definePointSize">definePointSize</a></li><li><a href="global.html#defineRaycasterThreshold">defineRaycasterThreshold</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#redefineCamera">redefineCamera</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#setCamera">setCamera</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#validateInputs">validateInputs</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewer">viewer</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li></ul>
-</nav>
+  <nav>
+    <h2><a href="index.html">Home</a></h2>
+    <h3>Global</h3>
+    <ul>
+      <li><a href="global.html#addButtonEvents">addButtonEvents</a></li>
+      <li><a href="global.html#addCellCountToDOM">addCellCountToDOM</a></li>
+      <li><a href="global.html#addEventListeners">addEventListeners</a></li>
+      <li><a href="global.html#addGeoJson">addGeoJson</a></li>
+      <li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li>
+      <li><a href="global.html#addHeadingsContainerToDOM">addHeadingsContainerToDOM</a></li>
+      <li><a href="global.html#addHomeButtonToDOM">addHomeButtonToDOM</a></li>
+      <li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li>
+      <li><a href="global.html#addNuts2jsonToScene">addNuts2jsonToScene</a></li>
+      <li><a href="global.html#addPanAndZoom">addPanAndZoom</a></li>
+      <li><a href="global.html#addPointsToScene">addPointsToScene</a></li>
+      <li><a href="global.html#addResizeEvent">addResizeEvent</a></li>
+      <li><a href="global.html#addSelectorsContainerToDOM">addSelectorsContainerToDOM</a></li>
+      <li><a href="global.html#addSourcesToDOM">addSourcesToDOM</a></li>
+      <li><a href="global.html#addSubtitleToDOM">addSubtitleToDOM</a></li>
+      <li><a href="global.html#addTitleToDOM">addTitleToDOM</a></li>
+      <li><a href="global.html#animate">animate</a></li>
+      <li><a href="global.html#build">build</a></li>
+      <li><a href="global.html#createCamera">createCamera</a></li>
+      <li><a href="global.html#createColorSchemeDropdown">createColorSchemeDropdown</a></li>
+      <li><a href="global.html#createLabelRenderer">createLabelRenderer</a></li>
+      <li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li>
+      <li><a href="global.html#createRaycaster">createRaycaster</a></li>
+      <li><a href="global.html#createScene">createScene</a></li>
+      <li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li>
+      <li><a href="global.html#createWebGLRenderer">createWebGLRenderer</a></li>
+      <li><a href="global.html#defineColorScale">defineColorScale</a></li>
+      <li><a href="global.html#defineFar">defineFar</a></li>
+      <li><a href="global.html#defineGridConfig">defineGridConfig</a></li>
+      <li><a href="global.html#definePointSize">definePointSize</a></li>
+      <li><a href="global.html#defineRaycasterThreshold">defineRaycasterThreshold</a></li>
+      <li><a href="global.html#defineSizeScale">defineSizeScale</a></li>
+      <li><a href="global.html#fragmentShader">fragmentShader</a></li>
+      <li><a href="global.html#loadGrid">loadGrid</a></li>
+      <li><a href="global.html#loadNuts2json">loadNuts2json</a></li>
+      <li><a href="global.html#redefineCamera">redefineCamera</a></li>
+      <li><a href="global.html#requestGrid">requestGrid</a></li>
+      <li><a href="global.html#setCamera">setCamera</a></li>
+      <li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li>
+      <li><a href="global.html#updatePointsColors">updatePointsColors</a></li>
+      <li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li>
+      <li><a href="global.html#validateInputs">validateInputs</a></li>
+      <li><a href="global.html#vertexShader">vertexShader</a></li>
+      <li><a href="global.html#viewer">viewer</a></li>
+      <li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li>
+      <li><a href="global.html#zoom">zoom</a></li>
+    </ul>
+  </nav>
 
-<br class="clear">
+  <br class="clear">
 
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Wed Nov 18 2020 22:09:07 GMT+0100 (CET)
-</footer>
+  <footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Wed Nov 18 2020 22:09:07
+    GMT+0100 (CET)
+  </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+  <script> prettyPrint(); </script>
+  <script src="scripts/linenumber.js"> </script>
 </body>
+
 </html>
