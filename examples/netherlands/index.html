@@ -25,11 +25,11 @@
         .sourcesHTML("Source: <a target='__blank' href='https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken'>Statistics Netherlands</a>")
         .colorField("Inhabitants")  // csv column which you wish to visualize
         .zerosRemoved(2)
-        .nuts2json(false) // does not support 28992 - use method to load custom geojson
-        //.nuts2jsonCountry("NL")
+        .nuts(false) // does not support 28992 - use method to load custom geojson
+        //.nutsCountry("NL")
         .center([1720, 3900])//EPSG=28992 with 2 zeros removed
         .showPlacenames(true)
-        .placenamesEPSG(28992)
+        .EPSG(28992)
         .placenamesCountry("NL")
         .placenameThresholds({ //"scale": population
             "1500": 200000,
@@ -41,7 +41,7 @@
         .height(window.innerHeight)
         .width(window.innerWidth)
         .backgroundColor("#2b2b2b")
-        .borderColor("#ffffff")
+        .lineColor("#ffffff")
         .colors(["#2d50a0", "#6487c3", "#aab9e1", "#f0cd91", "#e6a532", "#d76e2d", "red"])
         .thresholdValues([10, 20, 40, 80, 200, 300, 900])
         .colorSchemeSelector(false)

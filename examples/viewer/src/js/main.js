@@ -99,7 +99,7 @@ function addMouseEvents() {
             }])
                 .center([1421, 4546])
                 .zerosRemoved(2)
-                .placenamesEPSG(28992)
+                .EPSG(28992)
                 .placenamesCountry("NL")
                 .placenameThresholds({ //"scale": population
                     "1500": 100000,
@@ -171,7 +171,7 @@ function addMouseEvents() {
             // .nuts2json(true)
             // .nutsLevel(3)
             // .nuts2jsonCountry("FR")
-            // .nuts2jsonEPSG(3035)
+            // .EPSG(3035)
         }
     });
 
@@ -199,7 +199,7 @@ function initializeViewer() {
         .height(containerNode.offsetHeight)
         .width(containerNode.offsetWidth)
         .backgroundColor("#000")
-        .borderColor("#ffffff")
+        .lineColor("#ffffff")
         .legend({
             type: "continuous",
             height: 350,

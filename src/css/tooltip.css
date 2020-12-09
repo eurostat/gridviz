@@ -1,0 +1,43 @@
+
+
+
+/* Tooltip container */
+#gridviz-tooltip {
+    display: none; 
+    position: absolute; 
+    pointer-events: none; 
+    z-index:999; 
+    border-radius:5px; 
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65); 
+    font-size: 0.8rem; 
+    text-align: center; 
+    line-height: 1; 
+    padding: 6px; 
+    background: white; 
+    font-family: sans-serif;
+  }
+  #gridviz-labeltip {
+    color:black;
+    padding: 4px; 
+    margin-bottom: 4px;
+  }
+  #gridviz-pointtip {
+    padding: 4px; 
+    margin-bottom: 4px;
+  }
+  
+  /* Show the tooltip text when you mouse over the tooltip container */
+  #gridviz-tooltip:hover {
+    display: block;
+  }
+
+
+  /* table */
+  #gridviz-labeltip > table{
+      border-spacing: 0px;
+  }
+#gridviz-labeltip > table >tbody>tr> th {
+    border-bottom: 1px solid lightgrey;
+    padding-bottom: 2px;
+    padding-top: 2px;
+}

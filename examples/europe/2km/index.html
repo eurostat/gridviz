@@ -27,13 +27,16 @@
     .zerosRemoved(3) //last 3 zeros were removed from dataset for efficiency
     .colorField("value") // csv column which you wish to visualize
     .sizeField(false) // csv column which you wish to visualize
-    .nuts2json(true) //loads borders topojson
+    .nuts(true) //loads borders topojson
+    .nutsLevel(3)
     .cellCount(true)
+    .showPlacenames(true)
     .center([4369, 3230]) //EPSG=3035 with last 3 zeros removed
     .zoom(500)
     .backgroundColor("#000")
-    .borderColor("white")
-    .colorSchemeName("interpolateCividis")
+    .lineColor("#bfbfbf")
+    .lineWidth(0.0010)
+    .colorSchemeName("interpolateViridis")
     .colorSchemeSelector(true)
     .legend({
       title: "Total population per 2 km² (2011)",

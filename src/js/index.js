@@ -1,2 +1,2 @@
 import "../css/styles.css";
-export { viewer } from "./gridviz.js";
+export { viewer } from "./core/gridviz.js";
