@@ -46,7 +46,6 @@ import {
   Vector3,
   Color,
   Raycaster,
-  Object3D,
   Float32BufferAttribute,
   BufferGeometry,
   Group,
@@ -56,7 +55,6 @@ import {
 } from "three";
 import * as THREE from "three/src/constants";
 // extra Three.js modules not included in main threejs build
-
 import { CSS2DRenderer, CSS2DObject } from "../lib/threejs/CSS2D/CSS2DRenderer";
 // for loading NUTS2json 
 import { feature } from "topojson";
@@ -64,9 +62,10 @@ import { feature } from "topojson";
 import * as CONSTANTS from "./constants.js";
 // utility functions
 import * as Utils from "./utils";
-// for adding geojson to viewer
-import * as geojsonLayer from "./layers/geojsonLayer.js"
-
+// gridviz modules
+import * as geojson from "./layers/geojson.js"
+import * as tooltip from "./tooltip/tooltip.js"
+import * as placenames from "./placenames/placenames.js"
 
 //TODO list:
 // - mobile pan &amp; zoom bug
@@ -173,12 +172,12 @@ export function viewer(options) {
   viewer.gridData_ = null; // type:Grid
   viewer.resolution_ = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
 
-  //camera
-  viewer.camera = {}
-  viewer.camera.near_ = null;
-  viewer.camera.far_ = null; //set min zoom
-  viewer.camera.fov_ = null;
-  viewer.camera.aspect_ = null;
+  //threejs camera
+  viewer.cameraConfig = {}
+  viewer.cameraConfig.near_ = null;
+  viewer.cameraConfig.far_ = null; //set min zoom
+  viewer.cameraConfig.fov_ = null;
+  viewer.cameraConfig.aspect_ = null;
   viewer.zoom_ = null; //initial camera position Z
 
   //three.js scene
@@ -192,20 +191,10 @@ export function viewer(options) {
     pointsGeometry,
     camera,
     raycaster,
-    pointsLayer,
     previousIntersect,
-    tooltipContainer,
-    tooltipTemplate,
-    tooltip,
-    pointTip,
-    labelTip,
-    view,
-    labelRenderer,
-    renderer;
+    view
 
-  let tooltip_state = {
-    display: "none"
-  };
+
   let gridCaches = {};
   let gridConfig = {};
 
@@ -228,15 +217,18 @@ export function viewer(options) {
     return viewer;
   };
 
+  //threejs layer that will contain the grid "points"
+  viewer.pointsLayer = null; //three.Points
+
   //if gridData has already been added, this function now overwrites the gridData currently in the viewer.
   viewer.gridData = function (v) {
-    if (v &amp;&amp; pointsLayer) {
+    if (v &amp;&amp; viewer.pointsLayer) {
       viewer.gridData_ = v;
       viewer.resolution_ = v[0].cellSize
       gridConfig = defineGridConfig();
 
       if (viewer.showPlacenames_) {
-        removePlacenamesFromScene(); //clear labels
+        removePlacenamesFromScene(viewer); //clear labels
       }
 
       redefineCamera();
@@ -277,7 +269,7 @@ export function viewer(options) {
     if (v &amp;&amp; viewer.scene) {
       viewer.zoom_ = v;
       redefineCamera();
-      setCamera(camera.position.x, camera.position.y, v); // Set camera zoom (z position)
+      setCamera(viewer.camera.position.x, viewer.camera.position.y, v); // Set camera zoom (z position)
     } else {
       if (v) {
         viewer.zoom_ = v;
@@ -354,14 +346,14 @@ export function viewer(options) {
 
       // three.js initializations
       createScene();
-      if (!labelRenderer) createLabelRenderer();
-      if (!renderer) createWebGLRenderer();
+      if (!viewer.labelRenderer) createLabelRenderer();
+      if (!viewer.renderer) createWebGLRenderer();
 
       createCamera();
       createRaycaster();
 
       // tooltip DOM element
-      createTooltipContainer();
+      tooltip.createTooltipContainer(viewer);
 
       // dropdowns DOM container
       if (viewer.colorSchemeSelector_ || viewer.colorScaleSelector_ || viewer.sizeFieldSelector_ || viewer.colorFieldSelector_) {
@@ -388,7 +380,7 @@ export function viewer(options) {
 
       //request initial placenames
       if (viewer.showPlacenames_) {
-        getPlacenames(camera.position.z);
+        placenames.getPlacenames(viewer);
       }
 
       return viewer;
@@ -550,14 +542,14 @@ export function viewer(options) {
    * @function createWebGLRenderer
    */
   function createWebGLRenderer() {
-    renderer = new WebGLRenderer();
+    viewer.renderer = new WebGLRenderer();
     // TODO: adjust for when the user loads gridviz into a small container
     let pixelRatio = window.devicePixelRatio;
-    renderer.setPixelRatio(pixelRatio);
+    viewer.renderer.setPixelRatio(pixelRatio);
     let updateStyle = true;
-    renderer.setSize(viewer.width_, viewer.height_, updateStyle);
-    viewer.container_.appendChild(renderer.domElement);
-    view = select(renderer.domElement); //for d3 mouse events
+    viewer.renderer.setSize(viewer.width_, viewer.height_, updateStyle);
+    viewer.container_.appendChild(viewer.renderer.domElement);
+    view = select(viewer.renderer.domElement); //for d3 mouse events
   }
 
   /**
@@ -565,11 +557,34 @@ export function viewer(options) {
    *@function createLabelRenderer
    */
   function createLabelRenderer() {
-    labelRenderer = new CSS2DRenderer();
-    labelRenderer.setSize(viewer.width_, viewer.height_);
-    labelRenderer.domElement.style.position = "absolute";
-    //labelRenderer.domElement.style.top = "0px";
-    viewer.container_.appendChild(labelRenderer.domElement);
+    viewer.labelRenderer = new CSS2DRenderer();
+    viewer.labelRenderer.setSize(viewer.width_, viewer.height_);
+    viewer.labelRenderer.domElement.style.position = "absolute";
+    //viewer.labelRenderer.domElement.style.top = "0px";
+    viewer.container_.appendChild(viewer.labelRenderer.domElement);
+  }
+
+  /**
+ * @description defines the configuration object we will use for the threejs camera
+ * @function defineCameraConfig
+ */
+  function defineCameraConfig() {
+    let config = {}
+    config.near_ = defineNear();
+    config.far_ = defineFar(); //set min zoom
+    config.fov_ = CONSTANTS.fov;
+    config.aspect_ = viewer.width_ / viewer.height_;
+
+    //initial camera position Z
+    //zoom doesnt work on mobile ...yet
+    if (viewer._mobile) {
+      config.initialZ_ = config.far_ / 2 - 1
+    } else {
+      config.initialZ_ = viewer.zoom_ || config.far_ / 2 - 1
+    }
+    config.zoom_ = viewer.zoom_ || config.initialZ_;
+
+    return config;
   }
 
   /**
@@ -577,24 +592,12 @@ export function viewer(options) {
    * @function createCamera
    */
   function createCamera() {
-    //camera
-    viewer.camera.near_ = defineNear();
-    viewer.camera.far_ = defineFar(); //set min zoom
-    viewer.camera.fov_ = CONSTANTS.fov;
-    viewer.camera.aspect_ = viewer.width_ / viewer.height_;
-    //zoom doesnt work on mobile ...yet
-    if (viewer._mobile) {
-      viewer.camera.initialZ_ = viewer.camera.far_ / 2 - 1
-    } else {
-      viewer.camera.initialZ_ = viewer.zoom_ || viewer.camera.far_ / 2 - 1
-    }
-
-    viewer.camera.zoom_ = viewer.zoom_ || viewer.camera.initialZ_; //initial camera position Z
-    camera = new PerspectiveCamera(
-      viewer.camera.fov_,
-      viewer.camera.aspect_,
-      viewer.camera.near_,
-      viewer.camera.far_
+    viewer.cameraConfig = defineCameraConfig();
+    viewer.camera = new PerspectiveCamera(
+      viewer.cameraConfig.fov_,
+      viewer.cameraConfig.aspect_,
+      viewer.cameraConfig.near_,
+      viewer.cameraConfig.far_
     );
 
     //orthographic
@@ -626,16 +629,12 @@ export function viewer(options) {
   * @function redefineCamera
   */
   function redefineCamera() {
-    viewer.camera.near_ = defineNear();
-    viewer.camera.far_ = defineFar(); //set min zoom
-    viewer.camera.fov_ = CONSTANTS.fov;
-    viewer.camera.aspect_ = viewer.width_ / viewer.height_;
-    viewer.camera.zoom_ = viewer.zoom_ || viewer.camera.far_ / 2 - 1; //initial camera position Z
+    let cameraConfig = defineCameraConfig()
 
-    camera.fov = viewer.camera.fov_;
-    camera.aspect = viewer.camera.aspect_;
-    camera.near = viewer.camera.near_;
-    camera.far = viewer.camera.far_;
+    viewer.camera.fov = cameraConfig.fov_;
+    viewer.camera.aspect = cameraConfig.aspect_;
+    viewer.camera.near = cameraConfig.near_;
+    viewer.camera.far = cameraConfig.far_;
 
     // TODO: redefine panAndZoom
   }
@@ -650,8 +649,8 @@ export function viewer(options) {
    * 
    */
   function setCamera(x, y, z) {
-    camera.position.set(x, y, z); // Set camera position
-    camera.lookAt(new Vector3(x, y, z)); // Set camera angle
+    viewer.camera.position.set(x, y, z); // Set camera position
+    viewer.camera.lookAt(new Vector3(x, y, z)); // Set camera angle
   }
 
   /**
@@ -789,10 +788,10 @@ export function viewer(options) {
     window.addEventListener("resize", () => {
       viewer.width_ = viewer.container_.clientWidth;
       viewer.height_ = viewer.container_.clientHeight;
-      labelRenderer.setSize(viewer.width_, viewer.height_);
-      renderer.setSize(viewer.width_, viewer.height_);
-      camera.aspect = viewer.width_ / viewer.height_;
-      camera.updateProjectionMatrix();
+      viewer.labelRenderer.setSize(viewer.width_, viewer.height_);
+      viewer.renderer.setSize(viewer.width_, viewer.height_);
+      viewer.camera.aspect = viewer.width_ / viewer.height_;
+      viewer.camera.updateProjectionMatrix();
     });
   }
 
@@ -811,17 +810,16 @@ export function viewer(options) {
         let index = intersect.index;
         let cell = gridCaches[viewer.resolution_][index];
         highlightPoint(intersect);
-        showTooltip(mouse_position, cell);
+        tooltip.showTooltip(viewer, mouse_position, cell);
       } else {
-        removeHighlights();
-        hideTooltip();
+        tooltip.hideTooltip();
       }
-      //console.log("Camera pos:", camera.position);
+      //console.log("Camera pos:", viewer.camera.position);
     });
 
-    view.on("mouseleave", () => {
-      removeHighlights();
-    });
+    // view.on("mouseleave", () => {
+
+    // });
   }
 
   /**
@@ -846,26 +844,26 @@ export function viewer(options) {
     let minViewerY = viewer.extentY[0];
 
     if (viewer._mobile) {
-      let scale = getScaleFromZ(viewer.camera.initialZ_)
+      let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
       viewer.d3zoom.scaleTo(view, scale);
       viewer.d3zoom.translateTo(view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
+      setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
 
-      let initial_scale = getScaleFromZ(viewer.camera.far_);
+      let initial_scale = getScaleFromZ(viewer.cameraConfig.far_);
       let initial_transform = zoomIdentity
         .translate(viewer.width_ / 2, viewer.height_ / 2)
         .scale(initial_scale);
       viewer.d3zoom.transform(view, initial_transform);
 
     } else {
-      let scale = getScaleFromZ(viewer.camera.initialZ_)
+      let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
       viewer.d3zoom.scaleTo(view, scale);
       viewer.d3zoom.translateTo(view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
+      setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
     }
 
   }
@@ -899,7 +897,7 @@ export function viewer(options) {
   }
 
   /**
-   * @description Defines the pointSize parameter for THREE.pointsLayer objects at the specified resolution
+   * @description Defines the pointSize parameter for THREE.viewer.pointsLayer objects at the specified resolution
    * @function definePointSize
    *
    */
@@ -1264,7 +1262,7 @@ export function viewer(options) {
    *
    */
   function addNuts2jsonToScene(features) {
-    geojsonLayer.addGeoJsonToScene(features, viewer);
+    geojson.addGeoJsonToScene(features, viewer);
   }
 
   /**
@@ -1278,7 +1276,7 @@ export function viewer(options) {
       res => {
         if (res.features) {
           if (res.features.length > 0) {
-            geojsonLayer.addGeoJsonToScene(res.features, viewer);
+            geojson.addGeoJsonToScene(res.features, viewer);
           }
         }
       },
@@ -1319,7 +1317,7 @@ export function viewer(options) {
       new Float32BufferAttribute(colors, 3)
     );
     pointsGeometry.computeBoundingSphere();
-    pointsLayer.geometry = pointsGeometry;
+    viewer.pointsLayer.geometry = pointsGeometry;
   }
 
   /**
@@ -1338,11 +1336,11 @@ export function viewer(options) {
     //update sizes
     pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
     pointsGeometry.computeBoundingSphere();
-    pointsLayer.geometry = pointsGeometry;
+    viewer.pointsLayer.geometry = pointsGeometry;
   }
 
   /**
-   * @description create or update THREE.js pointsLayer layer. At the moment, only ONE pointsLayer layer at a time is handled by the viewer, so a second call of gridviz.gridData() will overwrite the initial layer
+   * @description create or update THREE.js viewer.pointsLayer layer. At the moment, only ONE viewer.pointsLayer layer at a time is handled by the viewer, so a second call of gridviz.gridData() will overwrite the initial layer
    * @function addPointsToScene
    */
   function addPointsToScene() {
@@ -1398,7 +1396,7 @@ export function viewer(options) {
     //Variable point size will affect raycasting: https://github.com/mrdoob/three.js/issues/5105
     pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
     pointsGeometry.computeBoundingSphere();
-    //create or reuse pointsLayer Material
+    //create or reuse viewer.pointsLayer Material
     if (!pointsMaterial) {
       // Apply custom point sizes, instead of using three.js pointsMaterial
       pointsMaterial = new ShaderMaterial({
@@ -1423,14 +1421,14 @@ export function viewer(options) {
     } else {
       pointsMaterial.size = gridConfig.pointSize;
     }
-    //create or reuse pointsLayer object
-    if (!pointsLayer) {
-      pointsLayer = new Points(pointsGeometry, pointsMaterial);
-      pointsLayer.renderOrder = 1; //bottom
-      viewer.scene.add(pointsLayer);
+    //create or reuse viewer.pointsLayer object
+    if (!viewer.pointsLayer) {
+      viewer.pointsLayer = new Points(pointsGeometry, pointsMaterial);
+      viewer.pointsLayer.renderOrder = 1; //bottom
+      viewer.scene.add(viewer.pointsLayer);
     } else {
-      pointsLayer.geometry = pointsGeometry;
-      pointsLayer.material = pointsMaterial;
+      viewer.pointsLayer.geometry = pointsGeometry;
+      viewer.pointsLayer.material = pointsMaterial;
     }
     //create or update legend
     if (viewer.showLegend_) {
@@ -2036,40 +2034,12 @@ export function viewer(options) {
    */
   function animate() {
     //let time = Date.now() * 0.005;
-    //pointsLayer.position.x = 0.02 * time;
+    //viewer.pointsLayer.position.x = 0.02 * time;
     viewer.animating = true;
     requestAnimationFrame(animate);
-    renderer.render(viewer.scene, camera);
-    labelRenderer.render(viewer.scene, camera);
+    viewer.renderer.render(viewer.scene, viewer.camera);
+    viewer.labelRenderer.render(viewer.scene, viewer.camera);
   }
-
-  /**
-   * @description Appends tooltip container to the scene
-   * @function createTooltipContainer
-   * 
-   */
-  function createTooltipContainer() {
-    // Initial tooltip state
-    tooltip_state = {
-      display: "none"
-    };
-
-    //inject tooltip HTML to DOM
-    tooltipTemplate = document.createRange()
-      .createContextualFragment(`&lt;div id="gridviz-tooltip">
-    &lt;div id="gridviz-labeltip">&lt;/div>
-&lt;div id="gridviz-pointtip">&lt;/div>
-&lt;/div>`);
-    viewer.container_.append(tooltipTemplate);
-
-    tooltip = document.querySelector("#gridviz-tooltip");
-    pointTip = document.querySelector("#gridviz-pointtip");
-    labelTip = document.querySelector("#gridviz-labeltip");
-    tooltipContainer = new Object3D();
-    viewer.scene.add(tooltipContainer);
-  }
-
-
 
   /**
    * @description Defines zoom functionality using d3.js
@@ -2079,8 +2049,8 @@ export function viewer(options) {
   function addPanAndZoom() {
     // define zoom
     //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
-    let farScale = getScaleFromZ(viewer.camera.far_);
-    let nearScale = getScaleFromZ(viewer.camera.near_);
+    let farScale = getScaleFromZ(viewer.cameraConfig.far_);
+    let nearScale = getScaleFromZ(viewer.cameraConfig.near_);
     viewer.d3zoom =
       zoom()
         .scaleExtent([farScale, nearScale])
@@ -2102,19 +2072,19 @@ export function viewer(options) {
 
     if (viewer._mobile) {
       //due to a bug on mobile, where the camera shifts unexpectedly on the first pan or zoom event, we have to scale everything to a webgl-friendly range and set the camera to 0,0
-      let initial_scale = getScaleFromZ(viewer.camera.initialZ_);
+      let initial_scale = getScaleFromZ(viewer.cameraConfig.initialZ_);
       var initial_transform = zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
       viewer.d3zoom.transform(view, initial_transform);
-      setCamera(0, 0, viewer.camera.initialZ_)
+      setCamera(0, 0, viewer.cameraConfig.initialZ_)
 
     } else {
       //initial desktop zoom transform
-      let scale = getScaleFromZ(viewer.camera.initialZ_)
+      let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
       viewer.d3zoom.scaleTo(view, scale);
       viewer.d3zoom.translateTo(view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
+      setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
     }
   }
 
@@ -2133,7 +2103,7 @@ export function viewer(options) {
     if (event.sourceEvent) {
       let new_z = getZFromScale(scale);
       //if zoom
-      if (new_z !== camera.position.z) {
+      if (new_z !== viewer.camera.position.z) {
         // Handle a zoom event
         const { clientX, clientY } = event.sourceEvent;
         // Code from WestLangley https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z/13091694#13091694
@@ -2142,10 +2112,10 @@ export function viewer(options) {
           -(clientY / viewer.height_) * 2 + 1,
           1
         );
-        vector.unproject(camera);
-        const dir = vector.sub(camera.position).normalize();
-        const distance = (new_z - camera.position.z) / dir.z;
-        const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+        vector.unproject(viewer.camera);
+        const dir = vector.sub(viewer.camera.position).normalize();
+        const distance = (new_z - viewer.camera.position.z) / dir.z;
+        const pos = viewer.camera.position.clone().add(dir.multiplyScalar(distance));
         // Set the camera to new coordinates
         setCamera(pos.x, pos.y, new_z);
       } else {
@@ -2153,18 +2123,18 @@ export function viewer(options) {
         const { movementX, movementY } = event.sourceEvent;
 
         // Adjust mouse movement by current scale and set camera
-        const current_scale = getScaleFromZ(camera.position.z);
+        const current_scale = getScaleFromZ(viewer.camera.position.z);
         setCamera(
-          camera.position.x - movementX / current_scale,
-          camera.position.y + movementY / current_scale,
-          camera.position.z
+          viewer.camera.position.x - movementX / current_scale,
+          viewer.camera.position.y + movementY / current_scale,
+          viewer.camera.position.z
         );
       }
     }
   }
 
   function getScaleFromZ(z) {
-    let half_fov = viewer.camera.fov_ / 2;
+    let half_fov = viewer.cameraConfig.fov_ / 2;
     let half_fov_radians = toRadians(half_fov);
     let half_fov_height = Math.tan(half_fov_radians) * z;
     let fov_height = half_fov_height * 2;
@@ -2173,7 +2143,7 @@ export function viewer(options) {
   }
 
   function getZFromScale(scale) {
-    let half_fov = viewer.camera.fov_ / 2;
+    let half_fov = viewer.cameraConfig.fov_ / 2;
     let half_fov_radians = toRadians(half_fov);
     let scale_height = viewer.height_ / scale;
     let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
@@ -2181,19 +2151,19 @@ export function viewer(options) {
   }
 
   function zoomEnd(event) {
-    hideTooltip();
+    tooltip.hideTooltip();
     let scale = getScaleFromZ(event.transform.k);
     if (viewer.debugPlacenames_) {
       console.info(scale);
     }
     // get placenames at certain zoom levels
     if (viewer.showPlacenames_) {
-      if (pointsLayer) {
-        if (scale > 0 &amp;&amp; scale &lt; viewer.camera.far_) {
-          //placenames are added to the pointsLayer object
-          getPlacenames(scale);
+      if (viewer.pointsLayer) {
+        if (scale > 0 &amp;&amp; scale &lt; viewer.cameraConfig.far_) {
+          //placenames are added to the viewer.pointsLayer object
+          placenames.getPlacenames(viewer);
         } else {
-          removePlacenamesFromScene();
+          placenames.removePlacenamesFromScene(viewer);
         }
       }
     }
@@ -2229,275 +2199,8 @@ export function viewer(options) {
     // }
   }
 
-  /**
-   * retrieves placenames by population according to the current scale, from an ArcGIS server endpoint (see constants).
-   * TODO: send bounding box correctly (geometry xmin,ymin,xmax,ymax)
-   * @param {*} scale
-   */
-  function getPlacenames(scale) {
-    let where = defineWhereParameter(scale)
-    let envelope = getCurrentViewExtent();
-    //currentExtent = envelope;
-    //ESRI Rest API envelope: &lt;xmin>,&lt;ymin>,&lt;xmax>,&lt;ymax> (bottom left x,y , top right x,y)
-
-    if (envelope) {
-      let URL =
-        CONSTANTS.placenames.baseURL +
-        "where=" +
-        where +
-        "&amp;outSR=" +
-        viewer.EPSG_ +
-        "&amp;inSR=" + viewer.EPSG_ +
-        "&amp;geometry=" +
-        envelope.xmin +
-        "," +
-        envelope.ymin +
-        "," +
-        envelope.xmax +
-        "," +
-        envelope.ymax +
-        "&amp;geometryType=esriGeometryEnvelope&amp;f=json&amp;outFields=" + CONSTANTS.placenames.townField + "," + CONSTANTS.placenames.populationField;
-
-      //TODO: manage multiple calls by replicating angular's .unsubscribe() somehow
-      let uri = encodeURI(URL);
-      json(uri).then(
-        res => {
-          if (res.features) {
-            if (res.features.length > 0) {
-              removePlacenamesFromScene();
-              addPlacenamesToScene(res.features);
-            }
-          } else {
-            removePlacenamesFromScene();
-          }
-        },
-        err => {
-          console.error(err);
-        }
-      );
-    }
-  }
-
-  function defineWhereParameter(scale) {
-    let r = viewer.resolution_;
-    let where = "";
-    if (viewer.placenamesCountry_) {
-      where = where + CONSTANTS.placenames.countryField + " = '" + viewer.placenamesCountry_ + "' AND "
-    }
-    // labelling thresholds by population - either custom values or by scale
-    let popFilter = getPopulationParameterFromScale(scale)
-    if (viewer.debugPlacenames_) {
-      console.info(popFilter);
-    }
-    return where + popFilter;
-  }
-
-  /**
-   * Defines the population parameter for the request to the placenmes service. If viewer.populationThresholds_ are not set, it uses default thresholds
-   *
-   * @param {*} scale
-   */
-  function getPopulationParameterFromScale(scale) {
-    if (viewer._mobile) {
-      //scale up to desktop values
-      let factor = viewer.originalResolution / viewer.resolution_
-      scale = scale * factor;
-    }
-
-    let populationFieldName = CONSTANTS.placenames.populationField;
-    //build query string from thresholds
-    if (viewer.placenameThresholds_) {
-      let thresholds = Object.keys(viewer.placenameThresholds_);
-      for (let i = 0; i &lt; thresholds.length; i++) {
-        let t = thresholds[i];
-        if (thresholds[i + 1]) { //if not last threshold
-          if (scale &lt; parseInt(thresholds[0])) { //below first threshold
-            return populationFieldName + ">" + viewer.placenameThresholds_[thresholds[0]];
-          } else if (scale > parseInt(t) &amp;&amp; scale &lt; parseInt(thresholds[i + 1])) {
-            // if current scale is between thresholds
-            return populationFieldName + ">" + viewer.placenameThresholds_[t];
-          }
-        } else {
-          // if last threshold
-          return populationFieldName + ">" + viewer.placenameThresholds_[t];
-        }
-      }
-    }
-  }
-
-  /**
-   * Appends placename labels from JSON features to the viewer
-   *
-   * @param {*} placenames
-   */
-  function addPlacenamesToScene(placenames) {
-    if (pointsLayer) {
-      for (let p = 0; p &lt; placenames.length; p++) {
-        let label = createPlacenameLabelObject(placenames[p]);
-        // TODO: group objects manually (THREE.group())
-        pointsLayer.add(label);
-      }
-    }
-  }
-
-  /**
-   * Removes the placename CSS2DObjects from the THREE pointsLayer layer
-   * It seems that the browsers JS garbage collector removes the DOM nodes
-   */
-  function removePlacenamesFromScene() {
-    if (pointsLayer &amp;&amp; pointsLayer.children.length > 0) {
-      for (var i = pointsLayer.children.length - 1; i >= 0; i--) {
-        pointsLayer.remove(pointsLayer.children[i]);
-      }
-    }
-  }
-
-  /**
-   * Creates a CSS2DObject for a placename ESRI JSON object
-   *
-   * @param {*} placename
-   * @returns CSS2DObject
-   */
-  function createPlacenameLabelObject(placename) {
-    var placeDiv = document.createElement("div");
-    placeDiv.className = "gridviz-placename";
-    placeDiv.textContent = placename.attributes[CONSTANTS.placenames.townField];
-    placeDiv.style.marginTop = "-1em";
-    var placeLabel = new CSS2DObject(placeDiv);
-
-    //scale mobile coords
-    if (viewer._mobile) {
-      if (viewer.zerosRemoved_) {
-        let d = Number('1E' + viewer.zerosRemoved_);
-        let x = viewer.mobileCoordScaleX(placename.geometry.x / d);
-        let y = viewer.mobileCoordScaleY(placename.geometry.y / d)
-        placeLabel.position.set(
-          x,
-          y,
-          CONSTANTS.label_height
-        );
-      } else {
-        placeLabel.position.set(
-          viewer.mobileCoordScaleX(placename.geometry.x),
-          viewer.mobileCoordScaleY(placename.geometry.y),
-          CONSTANTS.label_height
-        );
-      }
-      return placeLabel;
-    } else {
-      //desktop
-      if (viewer.zerosRemoved_) {
-        let d = Number('1E' + viewer.zerosRemoved_);
-        placeLabel.position.set(
-          placename.geometry.x / d,
-          placename.geometry.y / d,
-          CONSTANTS.label_height
-        );
-      } else {
-        placeLabel.position.set(
-          placename.geometry.x,
-          placename.geometry.y,
-          CONSTANTS.label_height
-        );
-      }
-      return placeLabel;
-    }
 
 
-
-  }
-
-  function getCurrentViewExtent() {
-    //let z = 0.5;
-    //let padding = 10; // making sure the screen coords hit the scene
-    //https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z
-
-    /*   var elem = renderer.domElement, 
-  boundingRect = elem.getBoundingClientRect(),
-  x = (clientX - boundingRect.left) * (elem.width / boundingRect.width),
-  y = (clientY - boundingRect.top) * (elem.height / boundingRect.height);
-   
-  var vector = new THREE.Vector3( 
-  ( x / viewer.width_ ) * 2 - 1, 
-  - ( y / viewer.height_ ) * 2 + 1, 
-  0.5 
-  );
-   
-  projector.unprojectVector( vector, camera ); */
-
-    //let bottomLeftVector = mouseToThree(padding, viewer.height_ - padding); //screen x,y
-    //let topRightVector = mouseToThree(viewer.width_ - padding, padding); //screen x,y
-
-    //let bottomLeftWorld = getWorldCoordsFromVector(bottomLeftVector);
-    //let topRightWorld = getWorldCoordsFromVector(topRightVector);
-    var elem = renderer.domElement;
-    let clientBottomLeft = [elem.clientLeft, elem.clientHeight];
-    let clientTopRight = [elem.clientWidth, elem.clientTop];
-    let bottomLeftWorld = getWorldCoordsFromScreen(clientBottomLeft); //client x,y
-    let topRightWorld = getWorldCoordsFromScreen(clientTopRight); //client x,y
-
-    // if getting coords was unsuccessful, exit
-    if (!bottomLeftWorld || !topRightWorld) {
-      return
-    }
-
-    // full european extent in EPSG 3035:
-    // return {
-    //   xmin: 1053668.5589,
-    //   ymin: 1645342.8583,
-    //   xmax: 5724066.4412,
-    //   ymax: 5901309.0137
-    // };
-
-    // if the user has reduced the filesize by removing trailing 0s from the csv, we simply add them back on before sending the placename queries
-    if (viewer.zerosRemoved_) {
-      let d = Number('1E' + viewer.zerosRemoved_);
-      return {
-        xmin: bottomLeftWorld.x * d,
-        ymin: bottomLeftWorld.y * d,
-        xmax: topRightWorld.x * d,
-        ymax: topRightWorld.y * d
-      };
-    } else {
-      return {
-        xmin: bottomLeftWorld.x,
-        ymin: bottomLeftWorld.y,
-        xmax: topRightWorld.x,
-        ymax: topRightWorld.y
-      };
-    }
-  }
-
-  // get the position of a canvas event in world coords
-  function getWorldCoordsFromScreen([clientX, clientY]) {
-    var vec = new Vector3(); // create once and reuse
-    var pos = new Vector3(); // create once and reuse
-
-    vec.set(
-      (clientX / window.innerWidth) * 2 - 1,
-      -(clientY / window.innerHeight) * 2 + 1,
-      0.5
-    );
-
-    vec.unproject(camera);
-
-    vec.sub(camera.position).normalize();
-
-    var distance = -camera.position.z / vec.z;
-
-    pos.copy(camera.position).add(vec.multiplyScalar(distance));
-
-    if (viewer._mobile) {
-      if (viewer.mobileCoordScaleX &amp;&amp; viewer.mobileCoordScaleY) {
-        pos.x = Math.round(viewer.mobileCoordScaleX.invert(pos.x))
-        pos.y = Math.round(viewer.mobileCoordScaleY.invert(pos.y))
-      } else {
-        return false
-      }
-    }
-
-    return pos;
-  }
 
   function toRadians(angle) {
     return angle * (Math.PI / 180);
@@ -2513,8 +2216,8 @@ export function viewer(options) {
 
   function checkIntersects(mouse_position) {
     let mouse_vector = mouseToThree(...mouse_position);
-    raycaster.setFromCamera(mouse_vector, camera);
-    let intersects = raycaster.intersectObject(pointsLayer);
+    raycaster.setFromCamera(mouse_vector, viewer.camera);
+    let intersects = raycaster.intersectObject(viewer.pointsLayer);
     if (intersects[0]) {
       let sorted_intersects = sortIntersectsByDistanceToRay(intersects);
       let intersect = sorted_intersects[0];
@@ -2535,7 +2238,7 @@ export function viewer(options) {
   };
 
   function highlightPoint(intersect) {
-    removeHighlights();
+    //removeHighlights();
 
     let colors = intersect.object.geometry.attributes.color.array;
 
@@ -2567,173 +2270,8 @@ export function viewer(options) {
 
   }
 
-  function removeHighlights() {
-    tooltipContainer.remove(...tooltipContainer.children);
-  }
-
-  /**
-   * @description Updates the innerHTML of the tooltip container
-   * @function updateTooltip
-   */
-  function updateTooltip() {
-    let x, y;
-    if (viewer._mobile) {
-      //mobile coords are scaled to [-1,1], so we "unscale" them
-      x = Math.round(viewer.mobileCoordScaleX.invert(tooltip_state.coords[0]))
-      y = Math.round(viewer.mobileCoordScaleY.invert(tooltip_state.coords[1]))
-    } else {
-      x = tooltip_state.coords[0];
-      y = tooltip_state.coords[1];
-    }
-    if (viewer.zerosRemoved_) {
-      //add the zeros removed back on
-      let f = Number('1E' + viewer.zerosRemoved_);
-      x = Math.round(x * f);
-      y = Math.round(y * f);
-    }
-
-    tooltip.style.display = tooltip_state.display;
-    tooltip.style.left = tooltip_state.left + "px";
-    tooltip.style.top = tooltip_state.top + "px";
-    //pointTip.innerText = tooltip_state.name;
-    pointTip.style.background = tooltip_state.color;
-
-    // set tooltip attributes HTML
-    labelTip.innerHTML = `
-    &lt;table>
-     &lt;thead>&lt;/thead>
-     &lt;tbody>
-
-     &lt;tr>
-     &lt;th>&lt;strong>${viewer.colorField_}:&lt;/strong> &lt;/th>
-     &lt;th>${tooltip_state.colorValue}&lt;/th>
-     &lt;/tr>
 
 
-
-     &lt;tr>
-     &lt;th>&lt;strong>x:&lt;/strong> &lt;/th>
-     &lt;th>${x}&lt;/th>
-     &lt;/tr>
-
-     &lt;tr>
-     &lt;th>&lt;strong>y:&lt;/strong> &lt;/th>
-     &lt;th>${y}&lt;/th>
-     &lt;/tr>
-
-     &lt;tr>
-     &lt;th>&lt;strong>CRS:&lt;/strong> &lt;/th>
-     &lt;th>EPSG:${viewer.EPSG_}&lt;/th>
-     &lt;/tr>
-
-     &lt;tr id="tooltip_lau_name">
-
-     &lt;/tr>
-     &lt;tr id="tooltip_lau_id">
-
-     &lt;/tr>
-     &lt;tr id="tooltip_nuts_id">
-
-     &lt;/tr>
-
-
-     &lt;/tbody>
-    
-    &lt;/table>
-
-
-   `;
-
-    //fetch NUTS info using GISCO id service
-    if ([4326, 4258, 3035].includes(viewer.EPSG_)) {
-      let nutsNode = document.getElementById("tooltip_nuts_id");
-      let lauNode = document.getElementById("tooltip_lau_id");
-      let lauNameNode = document.getElementById("tooltip_lau_name");
-      let nutsRequest = `${CONSTANTS.nutsAPIBaseURL}nuts?x=${x}&amp;y=${y}&amp;proj=${viewer.EPSG_}&amp;year=2021&amp;level=3`;
-      let lauRequest = `${CONSTANTS.nutsAPIBaseURL}lau?x=${x}&amp;y=${y}&amp;proj=${viewer.EPSG_}&amp;year=2019&amp;level=3`;
-      //get NUTS
-      json(nutsRequest).then(
-        json => {
-
-          if (json.features.length > 0) {
-            //add NUTS id to tooltip table
-            let f = json.features[0];
-
-            nutsNode.innerHTML = `
-            &lt;th>&lt;strong>NUTS3 code:&lt;/strong>&lt;/th>
-            &lt;th>${f.properties.nuts_id}&lt;/th>
-            `;
-          }
-        },
-        err => {
-          console.log("no results found")
-          //console.error(err);
-        })
-
-      //get LAUs
-      json(lauRequest).then(
-        json => {
-
-          if (json.features.length > 0) {
-            //add lau id and name to tooltip table
-            let f = json.features[0];
-            lauNode.innerHTML = `
-              &lt;th>&lt;strong>LAU code:&lt;/strong>&lt;/th>
-              &lt;th>${f.properties.lau_id}&lt;/th>
-              `;
-            lauNameNode.innerHTML = `
-              &lt;th>&lt;strong>LAU:&lt;/strong>&lt;/th>
-              &lt;th>${f.properties.lau_name}&lt;/th>
-              `;
-          }
-        },
-        err => {
-          console.log("no results found")
-          //console.error(err);
-        })
-
-    }
-  }
-
-  /**
-   *
-   *
-   * @param {*} mouse_position
-   * @param {*} cell
-   */
-  function showTooltip(mouse_position, cell) {
-    let x_offset = 25;
-    let y_offset = -10;
-    let tooltipWidth = parseInt(tooltip.style.width.replace("px", ""));
-    let tooltipHeight = 100;//tooltip.style.height;
-    let left = mouse_position[0] + x_offset;
-    let top = mouse_position[1] + y_offset
-    if (left > viewer.width_ - tooltipWidth) {
-      left = left - (tooltipWidth + 40);
-    }
-    if (top &lt; 0) {
-      top = top + (tooltipHeight);
-    }
-
-    tooltip_state.display = "block";
-    tooltip_state.left = left
-    tooltip_state.top = top;
-    tooltip_state.colorValue = Utils.formatNumber(parseFloat(cell[viewer.colorField_]));
-    tooltip_state.coords = [cell.x, cell.y];
-    tooltip_state.color = cell.color;
-    updateTooltip();
-  }
-
-  /**
-   *
-   *
-   */
-  function hideTooltip() {
-    if (tooltip &amp;&amp; tooltip_state) {
-      tooltip.style.display = "none";
-      //updateTooltip();
-    }
-  }
 
   /**
    * Used for 'turning objects on and off'
@@ -2762,13 +2300,13 @@ export function viewer(options) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addCellCountToDOM">addCellCountToDOM</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addHeadingsContainerToDOM">addHeadingsContainerToDOM</a></li><li><a href="global.html#addHomeButtonToDOM">addHomeButtonToDOM</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addNuts2jsonToScene">addNuts2jsonToScene</a></li><li><a href="global.html#addPanAndZoom">addPanAndZoom</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#addSelectorsContainerToDOM">addSelectorsContainerToDOM</a></li><li><a href="global.html#addSourcesToDOM">addSourcesToDOM</a></li><li><a href="global.html#addSubtitleToDOM">addSubtitleToDOM</a></li><li><a href="global.html#addTitleToDOM">addTitleToDOM</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createColorSchemeDropdown">createColorSchemeDropdown</a></li><li><a href="global.html#createLabelRenderer">createLabelRenderer</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createRaycaster">createRaycaster</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#createWebGLRenderer">createWebGLRenderer</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineFar">defineFar</a></li><li><a href="global.html#defineGridConfig">defineGridConfig</a></li><li><a href="global.html#defineNear">defineNear</a></li><li><a href="global.html#definePointSize">definePointSize</a></li><li><a href="global.html#defineRaycasterThreshold">defineRaycasterThreshold</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#redefineCamera">redefineCamera</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#setCamera">setCamera</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#validateInputs">validateInputs</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewer">viewer</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addCellCountToDOM">addCellCountToDOM</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addHeadingsContainerToDOM">addHeadingsContainerToDOM</a></li><li><a href="global.html#addHomeButtonToDOM">addHomeButtonToDOM</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addNuts2jsonToScene">addNuts2jsonToScene</a></li><li><a href="global.html#addPanAndZoom">addPanAndZoom</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#addSelectorsContainerToDOM">addSelectorsContainerToDOM</a></li><li><a href="global.html#addSourcesToDOM">addSourcesToDOM</a></li><li><a href="global.html#addSubtitleToDOM">addSubtitleToDOM</a></li><li><a href="global.html#addTitleToDOM">addTitleToDOM</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createColorSchemeDropdown">createColorSchemeDropdown</a></li><li><a href="global.html#createLabelRenderer">createLabelRenderer</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createLoadingSpinner">createLoadingSpinner</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createRaycaster">createRaycaster</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#createWebGLRenderer">createWebGLRenderer</a></li><li><a href="global.html#defineCameraConfig">defineCameraConfig</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineFar">defineFar</a></li><li><a href="global.html#defineGridConfig">defineGridConfig</a></li><li><a href="global.html#defineNear">defineNear</a></li><li><a href="global.html#definePointSize">definePointSize</a></li><li><a href="global.html#defineRaycasterThreshold">defineRaycasterThreshold</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#formatNumber">formatNumber</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#getWorldCoordsFromScreen">getWorldCoordsFromScreen</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#redefineCamera">redefineCamera</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#setCamera">setCamera</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#validateInputs">validateInputs</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewer">viewer</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Wed Dec 09 2020 16:42:27 GMT+0100 (Central European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Dec 10 2020 12:01:40 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
