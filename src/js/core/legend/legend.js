@@ -6,10 +6,13 @@ import { ticks } from "d3-array";
 import { interpolateRound } from "d3-interpolate";
 import { axisBottom } from "d3-axis";
 import { format } from "d3-format";
+import * as d3scale from "d3-scale";
+import { range } from "d3-array";
 
 /**
-   * Add svg legend to DOM using d3-svg-legend
-   *
+   * 
+   * @function createLegend
+   * @description Add svg legend to DOM using d3-svg-legend
    */
 export function createLegend(viewer) {
     if (viewer.legend_.type == "cells") {
@@ -20,6 +23,11 @@ export function createLegend(viewer) {
 
 }
 
+/**
+   * 
+   * @function createCellsLegend 
+   * @description uses npm package 'd3-svg-legend' to build a "cells" style legend
+   */
 function createCellsLegend(viewer) {
     let legendContainer;
     if (document.getElementById("gridviz-legend")) {
@@ -64,7 +72,12 @@ function createCellsLegend(viewer) {
     //legend.style("height", viewer.legend_.height +"px");
 }
 
-//https://observablehq.com/@gabgrz/color-legend
+
+/**
+   * 
+   * @function createContinuousLegend
+   * @description creates a continuous color legend using d3. see https://observablehq.com/@gabgrz/color-legend
+   */
 function createContinuousLegend(viewer) {
 
     let container;
@@ -111,6 +124,11 @@ function ramp(color, n = 256) {
     return canvas;
 }
 
+/**
+   * 
+   * @function colorLegend
+   * @description see see https://observablehq.com/@gabgrz/color-legend
+   */
 function colorLegend({
     color,
     title,
@@ -213,6 +231,11 @@ function colorLegend({
     return svg.node();
 }
 
+/**
+   * 
+   * @function thresholdLabels
+   * @description generates labels for legends that use threshold scales
+   */
 function thresholdLabels({
     i,
     genLength,

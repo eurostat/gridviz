@@ -21,7 +21,7 @@ import {
   Float32BufferAttribute,
   BufferGeometry,
   ShaderMaterial,
-  //PointsMaterial
+  PointsMaterial
 } from "three";
 import * as THREE from "three/src/constants";
 // extra Three.js modules not included in main threejs build, used for labelling
@@ -884,7 +884,7 @@ export function viewer(options) {
     if (viewer._mobile) {
       return 5; //due to a bug with pan & zoom, we have to scale everything on mobile
     } else {
-      return viewer.resolution_ * 4000;
+      return viewer.resolution_ * 50000;
     }
   }
 
@@ -896,7 +896,7 @@ export function viewer(options) {
     if (viewer._mobile) {
       return 0.0001; //due to a bug with pan & zoom, we have to scale everything on mobile
     } else {
-      return 1;
+      return 0.01;
     }
   }
 
@@ -1325,6 +1325,7 @@ export function viewer(options) {
     let colors = [];
     let positions = [];
     let sizes = [];
+
     for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
       // Set vector coordinates from data
       let coords = [
@@ -1342,19 +1343,22 @@ export function viewer(options) {
       gridCaches[viewer.resolution_][i].color = hex; //for tooltip
       let color = new Color(hex);
 
-      positions.push(x, y, z);
-      if (!isNaN(color.r) && !isNaN(color.g) && !isNaN(color.b)) {
-        colors.push(color.r, color.g, color.b);
-      } else {
-        let blk = new Color("#000");
-        colors.push(blk.r, blk.g, blk.b)
+      if (!isNaN(x) && !isNaN(y)) {
+        positions.push(x, y, z);
+        if (!isNaN(color.r) && !isNaN(color.g) && !isNaN(color.b)) {
+          colors.push(color.r, color.g, color.b);
+        } else {
+          let blk = new Color("#000");
+          colors.push(blk.r, blk.g, blk.b)
+        }
+        if (viewer.sizeField_) {
+          sizes.push(viewer.sizeScaleFunction_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
+        } else {
+          sizes.push(gridConfig.pointSize);
+        }
       }
-      if (viewer.sizeField_) {
-        sizes.push(viewer.sizeScaleFunction_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
-      } else {
-        sizes.push(gridConfig.pointSize);
-      }
-    }
+    } //fin loop
+
     //set buffer geometry attributes
     pointsGeometry.setAttribute(
       "position",
@@ -1370,24 +1374,24 @@ export function viewer(options) {
     //create or reuse viewer.pointsLayer Material
     if (!pointsMaterial) {
       // Apply custom point sizes, instead of using three.js pointsMaterial
-      pointsMaterial = new ShaderMaterial({
-        uniforms: {
-          multiplier: {
-            value: 1050 //km TODO: define dynamically. the extra meters prevent white lines across the screen flickering when zooming
-          }
-        },
-        fragmentShader: fragmentShader(),
-        vertexShader: vertexShader(),
-        vertexColors: THREE.VertexColors
-      });
-
-      //using threejs PointsMaterial
-      // pointsMaterial = new PointsMaterial({
-      //   size: gridConfig.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
-      //   sizeAttenuation: true,
-      //   //https://github.com/mrdoob/three.js/blob/master/src/constants.js
+      // pointsMaterial = new ShaderMaterial({
+      //   uniforms: {
+      //     multiplier: {
+      //       value: 1050 //km TODO: define dynamically. the extra meters prevent white lines across the screen flickering when zooming
+      //     }
+      //   },
+      //   fragmentShader: fragmentShader(),
+      //   vertexShader: vertexShader(),
       //   vertexColors: THREE.VertexColors
       // });
+
+      //using threejs PointsMaterial
+      pointsMaterial = new PointsMaterial({
+        size: gridConfig.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
+        sizeAttenuation: true,
+        //https://github.com/mrdoob/three.js/blob/master/src/constants.js
+        vertexColors: THREE.VertexColors
+      });
 
     } else {
       pointsMaterial.size = gridConfig.pointSize;

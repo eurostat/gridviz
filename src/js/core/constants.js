@@ -8,7 +8,7 @@ export const placenames = {
 }
 export const nutsAPIBaseURL = "https://gisco-services.ec.europa.eu/id/";
 export const nuts_scale_threshold = 551689; //scale at which nuts2json changes simplification
-export const line_z = 0.002; //line vertices z coordinate
+export const line_z = 0.0001001; //line vertices z coordinate
 export const point_z = 0.0001; //threejs points object height
 export const fov = 50;
 export const coordinate_offset = {

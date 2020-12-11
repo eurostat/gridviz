@@ -5,8 +5,8 @@ import { Color, Group } from "three";
 import { Line2 } from "../../lib/threejs/lines/Line2";
 import { LineGeometry } from "../../lib/threejs/lines/LineGeometry";
 import { LineMaterial } from "../../lib/threejs/lines/LineMaterial";
-
 import * as THREE from "three/src/constants";
+import * as CONSTANTS from "../constants.js";
 
 let lineMaterial; // linematerial used for threejs webgl lines
 
@@ -17,7 +17,7 @@ let lineMaterial; // linematerial used for threejs webgl lines
  * @param {Object} viewer gridviz viewer
  * @function addGeoJsonToScene
  */
-let layerZ = 1;
+let layerZ = CONSTANTS.line_z;
 export function addGeoJsonToScene(features, viewer) {
     layerZ = layerZ + 0.002; // increment draw order so that latest geojson is added on top of the rest.
     let geojsonGroup = new Group();

@@ -104,7 +104,7 @@ function getPopulationParameterFromScale(viewer) {
                 }
             } else {
                 // if last threshold
-                return populationFieldName + ">" + viewer.placenameThresholds_[t];
+                return populationFieldName + ">" + viewer.placenameThresholds_[viewer.placenameThresholds_.length - 1];
             }
         }
     }
