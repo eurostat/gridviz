@@ -7,6 +7,56 @@ import { json } from "d3-fetch";
 import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
 
 /**
+   * @description Defines the default 'scale : population' thresholds which are used to generate the placename queries. E.g 10 : 10000 will define the population value of the placename query as 10 000 when the current viewer scale (or camera.position.z) is above 10 and below the next threshold.
+   * @function defineDefaultPlacenameThresholds
+   * @param {Object} viewer
+   */
+export function defineDefaultPlacenameThresholds(viewer) {
+    let r = viewer.resolution_;
+    // scale : population
+    viewer.placenameThresholds_ = {
+        [r * 1024]: "2000000",
+        [r * 512]: "2000000",
+        [r * 256]: "2000000",
+        [r * 128]: "1000000",
+        [r * 64]: "1000000",
+        [r * 32]: "500000",
+        [r * 16]: "100000",
+        [r * 8]: "10000",
+        [r * 4]: "5000",
+        [r * 2]: "1000",
+        [r]: "10",
+    }
+    // if (scale > 0 && scale < r) {
+    //   return populationFieldName + ">10";
+    // } else if (scale > r && scale < r * 2) {
+    //   return populationFieldName + ">1000";
+    // } else if (scale > r * 2 && scale < r * 4) {
+    //   return populationFieldName + ">2500";
+    // } else if (scale > r * 4 && scale < r * 8) {
+    //   return populationFieldName + ">5000";
+    // } else if (scale > r * 8 && scale < r * 16) {
+    //   return populationFieldName + ">10000";
+    // } else if (scale > r * 16 && scale < r * 32) {
+    //   return populationFieldName + ">200000";
+    // } else if (scale > r * 32 && scale < r * 64) {
+    //   return populationFieldName + ">300000";
+    // } else if (scale > r * 64 && scale < r * 128) {
+    //   return populationFieldName + ">300000";
+    // } else if (scale > r * 128 && scale < r * 256) {
+    //   return populationFieldName + ">1000000";
+    // } else if (scale > r * 256 && scale < r * 512) {
+    //   return populationFieldName + ">1000000";
+    // } else if (scale > r * 512 && scale < r * 1024) {
+    //   return populationFieldName + ">2000000";
+    // } else if (scale > r * 1024) {
+    //   return populationFieldName + ">2000000";
+    // } else {
+    //   return "1=1";
+    // }
+}
+
+/**
    * @description Retrieves placenames by population according to the current scale, from an ArcGIS server endpoint (see constants for baseURL).
    * @function getPlacenames
    * @param {*} scale
