@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Internet speed</title>
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+
+<body style="margin: 0">
+    <div id="viz-container"></div>
+</body>
+
+<script src="../../../../build/gridviz.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.3.0/d3.min.js"
+    integrity="sha512-wKo55+1oH5DGJ19ScVUHTtcZiqJuSnknSs8CgzzEm1lNftJRDXN/kWpF9Kx+vPam8HBeg53OxS0MYd0+Iz9cjQ=="
+    crossorigin="anonymous"></script>
+
+<script>
+
+    let containerDiv = document.getElementById("viz-container");
+    gridviz
+        .viewer()
+        .container(containerDiv)
+        .gridData([
+            {
+                url: "../../../../assets/csv/Ookla/ookla_dl_4326.csv",
+                cellSize: 0.00580, //https://github.com/teamookla/ookla-open-data
+            },
+        ])
+        .EPSG("4326")
+        .title("Average cellular download speed")
+        .cellCount(true)
+        .colorField("avg_d_kbps")
+        .sizeField(null)
+        .showPlacenames(true)
+        .nuts(true)
+        .nutsLevel(0)
+        .center([15.381, 38.225])
+        .colorSchemeName("interpolateBlues")
+        //.reverseColorScheme(true)
+        .colors(["red", "orange", "yellow", "cyan"])
+        .thresholdValues([1000, 10000, 50000, 100000])
+        .zoom(100)
+        .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
+        .legend({
+            title: "Average cellular download speed (kbps)",
+            titleWidth: 130,
+            ticks: 5,
+        })
+        .build();
+</script>
+
+</html>

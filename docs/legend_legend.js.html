@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: legend/legend.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: legend/legend.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// logic for creating either continous legends or "cell" legends
+
+import * as LEGEND from "d3-svg-legend";
+import { select, create, selectAll } from "d3-selection";
+import { ticks } from "d3-array";
+import { interpolateRound } from "d3-interpolate";
+import { axisBottom } from "d3-axis";
+import { format } from "d3-format";
+import * as d3scale from "d3-scale";
+import { range } from "d3-array";
+
+/**
+   * 
+   * @function createLegend
+   * @description Add svg legend to DOM using d3-svg-legend
+   */
+export function createLegend(viewer) {
+    if (viewer.legend_.type == "cells") {
+        createCellsLegend(viewer)
+    } else if (viewer.legend_.type == "continuous") {
+        createContinuousLegend(viewer)
+    }
+
+}
+
+/**
+   * 
+   * @function createCellsLegend 
+   * @description uses npm package 'd3-svg-legend' to build a "cells" style legend
+   */
+function createCellsLegend(viewer) {
+    let legendContainer;
+    if (document.getElementById("gridviz-legend")) {
+        legendContainer = select("#gridviz-legend");
+    } else {
+        legendContainer = create("svg").attr("id", "gridviz-legend");
+        viewer.container_.appendChild(legendContainer.node());
+    }
+    if (viewer.legend_.orientation == "horizontal") {
+        legendContainer.attr("class", "gridviz-legend-horizontal gridviz-plugin");
+    } else {
+        legendContainer.attr("class", "gridviz-legend-vertical gridviz-plugin");
+    }
+    let legendSvg =
+        legendContainer.append("g")
+            .attr("class", "gridviz-legend-svg")
+            .attr("height", viewer.legend_.height)
+            .attr("width", viewer.legend_.width)
+            .attr("transform", "translate(10,15)"); //padding
+
+    viewer._gridLegend = LEGEND.legendColor()
+        .shapeWidth(viewer.legend_.shapeWidth)
+        .cells(viewer.legend_.cells)
+        .labelFormat(format(viewer.legend_.format))
+        .orient(viewer.legend_.orientation)
+        .scale(viewer.colorScaleFunction_)
+        .title(viewer.legend_.title)
+        .titleWidth(viewer.legend_.titleWidth)
+
+    if (viewer.thresholdValues_) {
+        viewer._gridLegend.labels(thresholdLabels)
+    }
+
+    legendSvg.call(viewer._gridLegend);
+
+    //adjust width/height
+    if (!viewer.legend_.height) {
+        viewer.legend_.height = 320
+    }
+    legendContainer.style("height", viewer.legend_.height + "px");
+    legendContainer.style("width", viewer.legend_.width + "px");
+    //legend.style("height", viewer.legend_.height +"px");
+}
+
+
+/**
+   * 
+   * @function createContinuousLegend
+   * @description creates a continuous color legend using d3. see https://observablehq.com/@gabgrz/color-legend
+   */
+function createContinuousLegend(viewer) {
+
+    let container;
+    if (document.getElementById("gridviz-legend")) {
+        container = select("#gridviz-legend");
+    } else {
+        container = create("div").attr("id", "gridviz-legend");
+        container.attr("class", "gridviz-plugin");
+        viewer.container_.appendChild(container.node());
+    }
+
+    let tickSize = viewer.legend_.tickSize || 6;
+    let width = viewer.legend_.width || 500;
+    let height = viewer.legend_.height || 44 + tickSize;
+    let marginBottom = viewer.legend_.marginBottom || 16 + tickSize;
+    let ticks = viewer.legend_.ticks || width / 64;
+
+    viewer._gridLegend = colorLegend({
+        color: viewer.colorScaleFunction_,
+        title: viewer.legend_.title,
+        tickSize: tickSize,
+        width: width,
+        height: height,
+        marginBottom: marginBottom,
+        ticks: ticks,
+        marginTop: viewer.legend_.marginRight || 18,
+        marginRight: viewer.legend_.marginRight || 0,
+        marginLeft: viewer.legend_.marginLeft || 0,
+        tickFormat: viewer.legend_.tickFormat || ".0f",
+    });
+
+    container.node().appendChild(viewer._gridLegend);
+
+}
+function ramp(color, n = 256) {
+    const canvas = document.createElement("CANVAS")
+    canvas.width = n;
+    canvas.height = 1;
+    const context = canvas.getContext("2d");
+    for (let i = 0; i &lt; n; ++i) {
+        context.fillStyle = color(i / (n - 1));
+        context.fillRect(i, 0, 1, 1);
+    }
+    return canvas;
+}
+
+/**
+   * 
+   * @function colorLegend
+   * @description see see https://observablehq.com/@gabgrz/color-legend
+   */
+function colorLegend({
+    color,
+    title,
+    tickSize,
+    width,
+    height,
+    marginTop,
+    marginRight,
+    marginBottom,
+    marginLeft,
+    ticks,
+    tickFormat,
+    tickValues
+} = {}) {
+
+    const svg = create("svg")
+        .attr("class", "gridviz-legend-svg")
+        // .attr("class", "gridviz-continuous-legend")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", [0, 0, width, height])
+        .style("overflow", "visible")
+        .style("display", "block");
+
+    let x;
+
+    // Continuous
+    if (color.interpolator) {
+        x = Object.assign(color.copy()
+            .interpolator(interpolateRound(marginLeft, width - marginRight)),
+            { range() { return [marginLeft, width - marginRight]; } });
+
+        svg.append("image")
+            .attr("x", marginLeft)
+            .attr("y", marginTop)
+            .attr("width", width - marginLeft - marginRight)
+            .attr("height", height - marginTop - marginBottom)
+            .attr("preserveAspectRatio", "none")
+            .attr("xlink:href", ramp(color.interpolator()).toDataURL());
+
+        // scaleSequentialQuantile doesn’t implement ticks or tickFormat.
+        if (!x.ticks) {
+            if (tickValues === undefined) {
+                const n = Math.round(ticks + 1);
+                tickValues = range(n).map(i => quantile(color.domain(), i / (n - 1)));
+            }
+            if (typeof tickFormat !== "function") {
+                tickFormat = format(tickFormat === undefined ? ",f" : tickFormat);
+            }
+        }
+    }
+
+    // Discrete
+    else if (color.invertExtent) {
+        const thresholds
+            = color.thresholds ? color.thresholds() // scaleQuantize
+                : color.quantiles ? color.quantiles() // scaleQuantile
+                    : color.domain(); // scaleThreshold
+
+        const thresholdFormat
+            = tickFormat === undefined ? d => d
+                : typeof tickFormat === "string" ? format(tickFormat)
+                    : tickFormat;
+
+        x = d3scale.scaleLinear()
+            .domain([-1, color.range().length - 1])
+            .rangeRound([marginLeft, width - marginRight]);
+
+        svg.append("g")
+            .selectAll("rect")
+            .data(color.range())
+            .join("rect")
+            .attr("x", (d, i) => x(i - 1))
+            .attr("y", marginTop)
+            .attr("width", (d, i) => x(i) - x(i - 1))
+            .attr("height", height - marginTop - marginBottom)
+            .attr("fill", d => d);
+
+        tickValues = range(thresholds.length);
+        tickFormat = i => thresholdFormat(thresholds[i], i);
+    }
+
+    svg.append("g")
+        .attr("transform", `translate(0, ${height - marginBottom})`)
+        .call(axisBottom(x)
+            .ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined)
+            .tickFormat(typeof tickFormat === "function" ? tickFormat : undefined)
+            .tickSize(tickSize)
+            .tickValues(tickValues))
+        .call(g => g.selectAll(".tick line").attr("y1", marginTop + marginBottom - height))
+        .call(g => g.select(".domain").remove())
+        .call(g => g.append("text")
+            .attr("y", marginTop + marginBottom - height - 10)
+            .attr("fill", "currentColor")
+            .attr("text-anchor", "start")
+            .attr("font-weight", "bold")
+            .attr("class", "gridviz-continuous-legend-title")
+            .text(title));
+
+    return svg.node();
+}
+
+/**
+   * 
+   * @function thresholdLabels
+   * @description generates labels for legends that use threshold scales
+   */
+function thresholdLabels({
+    i,
+    genLength,
+    generatedLabels,
+    labelDelimiter
+}) {
+    if (i === 0) {
+        const values = generatedLabels[i].split(` ${labelDelimiter} `)
+        return `Less than ${values[1]}`
+    } else if (i === genLength - 1) {
+        const values = generatedLabels[i].split(` ${labelDelimiter} `)
+        return `${values[0]} or more`
+    }
+    return generatedLabels[i]
+}
+
+/**
+ * @description remove DOM element and rebuild legend
+ * @function updateLegend
+ */
+export function updateLegend(viewer) {
+    var l = selectAll(".gridviz-legend-svg").remove();
+    setTimeout(createLegend(viewer), 1000);
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addCellCountToDOM">addCellCountToDOM</a></li><li><a href="global.html#addChangeEventToColorFieldDropdown">addChangeEventToColorFieldDropdown</a></li><li><a href="global.html#addChangeEventToColorScaleDropdown">addChangeEventToColorScaleDropdown</a></li><li><a href="global.html#addChangeEventToColorSchemeDropdown">addChangeEventToColorSchemeDropdown</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addHeadingsContainerToDOM">addHeadingsContainerToDOM</a></li><li><a href="global.html#addHomeButtonToDOM">addHomeButtonToDOM</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addNuts2jsonToScene">addNuts2jsonToScene</a></li><li><a href="global.html#addPanAndZoom">addPanAndZoom</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#addSelectorsContainerToDOM">addSelectorsContainerToDOM</a></li><li><a href="global.html#addSourcesToDOM">addSourcesToDOM</a></li><li><a href="global.html#addSubtitleToDOM">addSubtitleToDOM</a></li><li><a href="global.html#addTitleToDOM">addTitleToDOM</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#colorLegend">colorLegend</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createCellsLegend">createCellsLegend</a></li><li><a href="global.html#createColorSchemeDropdown">createColorSchemeDropdown</a></li><li><a href="global.html#createContinuousLegend">createContinuousLegend</a></li><li><a href="global.html#createLabelRenderer">createLabelRenderer</a></li><li><a href="global.html#createLegend">createLegend</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createLoadingSpinner">createLoadingSpinner</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createRaycaster">createRaycaster</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#createWebGLRenderer">createWebGLRenderer</a></li><li><a href="global.html#defineCameraConfig">defineCameraConfig</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineDefaultPlacenameThresholds">defineDefaultPlacenameThresholds</a></li><li><a href="global.html#defineFar">defineFar</a></li><li><a href="global.html#defineGridConfig">defineGridConfig</a></li><li><a href="global.html#defineNear">defineNear</a></li><li><a href="global.html#definePointSize">definePointSize</a></li><li><a href="global.html#defineRaycasterThreshold">defineRaycasterThreshold</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#formatNumber">formatNumber</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#getWorldCoordsFromScreen">getWorldCoordsFromScreen</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#onChangeColorField">onChangeColorField</a></li><li><a href="global.html#onChangeColorScale">onChangeColorScale</a></li><li><a href="global.html#onChangeColorScheme">onChangeColorScheme</a></li><li><a href="global.html#redefineCamera">redefineCamera</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#setCamera">setCamera</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#thresholdLabels">thresholdLabels</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updateLegend">updateLegend</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#validateInputs">validateInputs</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewer">viewer</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Dec 11 2020 16:56:59 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

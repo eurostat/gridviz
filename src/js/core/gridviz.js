@@ -2,13 +2,10 @@
 import { zoom, zoomIdentity } from "d3-zoom";
 import * as d3scaleChromatic from "d3-scale-chromatic";
 import * as d3scale from "d3-scale";
-import { axisBottom } from "d3-axis";
-import { interpolateRound } from "d3-interpolate";
 import { json, csv } from "d3-fetch";
-import { format } from "d3-format";
-import { extent, range, quantile, min, max } from "d3-array";
-import { select, create, selectAll, pointer } from "d3-selection";
-import * as LEGEND from "d3-svg-legend";
+import { extent, min, max } from "d3-array";
+import { select, pointer } from "d3-selection";
+
 //three.js
 import {
   Scene,
@@ -18,30 +15,28 @@ import {
   Vector3,
   Color,
   Raycaster,
-  Object3D,
   Float32BufferAttribute,
   BufferGeometry,
-  Group,
   ShaderMaterial,
   PointsMaterial
-
 } from "three";
 import * as THREE from "three/src/constants";
-// extra Three.js modules not included in main threejs build
-
-import { CSS2DRenderer, CSS2DObject } from "../lib/threejs/CSS2D/CSS2DRenderer";
+// extra Three.js modules not included in main threejs build, used for labelling
+import { CSS2DRenderer } from "../lib/threejs/CSS2D/CSS2DRenderer";
 // for loading NUTS2json 
 import { feature } from "topojson";
 // library constants
 import * as CONSTANTS from "./constants.js";
 // utility functions
 import * as Utils from "./utils";
-// for adding geojson to viewer
-import * as geojsonLayer from "./layers/geojsonLayer.js"
-
+// gridviz modules
+import * as geojson from "./layers/geojson.js";
+import * as tooltip from "./tooltip/tooltip.js";
+import * as placenames from "./placenames/placenames.js";
+import * as legend from "./legend/legend.js";
 
 //TODO list:
-// - mobile pan & zoom bug
+// - mobile pan & zoom bug when using method center([x,y])
 
 /**
  * Creates a 2D Three.js scene for visualizing point data derived from gridded statistics.
@@ -145,12 +140,12 @@ export function viewer(options) {
   viewer.gridData_ = null; // type:Grid
   viewer.resolution_ = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
 
-  //camera
-  viewer.camera = {}
-  viewer.camera.near_ = null;
-  viewer.camera.far_ = null; //set min zoom
-  viewer.camera.fov_ = null;
-  viewer.camera.aspect_ = null;
+  //threejs camera
+  viewer.cameraConfig = {}
+  viewer.cameraConfig.near_ = null;
+  viewer.cameraConfig.far_ = null; //set min zoom
+  viewer.cameraConfig.fov_ = null;
+  viewer.cameraConfig.aspect_ = null;
   viewer.zoom_ = null; //initial camera position Z
 
   //three.js scene
@@ -164,20 +159,10 @@ export function viewer(options) {
     pointsGeometry,
     camera,
     raycaster,
-    pointsLayer,
     previousIntersect,
-    tooltipContainer,
-    tooltipTemplate,
-    tooltip,
-    pointTip,
-    labelTip,
-    view,
-    labelRenderer,
-    renderer;
+    view
 
-  let tooltip_state = {
-    display: "none"
-  };
+
   let gridCaches = {};
   let gridConfig = {};
 
@@ -195,20 +180,23 @@ export function viewer(options) {
     }
     //update legend if necessary
     if (viewer._gridLegend) {
-      updateLegend()
+      legend.updateLegend(viewer)
     }
     return viewer;
   };
 
+  //threejs layer that will contain the grid "points"
+  viewer.pointsLayer = null; //three.Points
+
   //if gridData has already been added, this function now overwrites the gridData currently in the viewer.
   viewer.gridData = function (v) {
-    if (v && pointsLayer) {
+    if (v && viewer.pointsLayer) {
       viewer.gridData_ = v;
       viewer.resolution_ = v[0].cellSize
       gridConfig = defineGridConfig();
 
       if (viewer.showPlacenames_) {
-        removePlacenamesFromScene(); //clear labels
+        removePlacenamesFromScene(viewer); //clear labels
       }
 
       redefineCamera();
@@ -249,7 +237,7 @@ export function viewer(options) {
     if (v && viewer.scene) {
       viewer.zoom_ = v;
       redefineCamera();
-      setCamera(camera.position.x, camera.position.y, v); // Set camera zoom (z position)
+      setCamera(viewer.camera.position.x, viewer.camera.position.y, v); // Set camera zoom (z position)
     } else {
       if (v) {
         viewer.zoom_ = v;
@@ -318,7 +306,7 @@ export function viewer(options) {
       }
 
       if (viewer.showPlacenames_ && !viewer.placenameThresholds_) {
-        defineDefaultPlacenameThresholds();
+        placenames.defineDefaultPlacenameThresholds(viewer);
       }
 
       //defines raycaster threshold and point size. See GridConfig typedef.
@@ -326,14 +314,14 @@ export function viewer(options) {
 
       // three.js initializations
       createScene();
-      if (!labelRenderer) createLabelRenderer();
-      if (!renderer) createWebGLRenderer();
+      if (!viewer.labelRenderer) createLabelRenderer();
+      if (!viewer.renderer) createWebGLRenderer();
 
       createCamera();
       createRaycaster();
 
       // tooltip DOM element
-      createTooltipContainer();
+      tooltip.createTooltipContainer(viewer);
 
       // dropdowns DOM container
       if (viewer.colorSchemeSelector_ || viewer.colorScaleSelector_ || viewer.sizeFieldSelector_ || viewer.colorFieldSelector_) {
@@ -360,7 +348,7 @@ export function viewer(options) {
 
       //request initial placenames
       if (viewer.showPlacenames_) {
-        getPlacenames(camera.position.z);
+        placenames.getPlacenames(viewer);
       }
 
       return viewer;
@@ -522,14 +510,14 @@ export function viewer(options) {
    * @function createWebGLRenderer
    */
   function createWebGLRenderer() {
-    renderer = new WebGLRenderer();
+    viewer.renderer = new WebGLRenderer();
     // TODO: adjust for when the user loads gridviz into a small container
     let pixelRatio = window.devicePixelRatio;
-    renderer.setPixelRatio(pixelRatio);
+    viewer.renderer.setPixelRatio(pixelRatio);
     let updateStyle = true;
-    renderer.setSize(viewer.width_, viewer.height_, updateStyle);
-    viewer.container_.appendChild(renderer.domElement);
-    view = select(renderer.domElement); //for d3 mouse events
+    viewer.renderer.setSize(viewer.width_, viewer.height_, updateStyle);
+    viewer.container_.appendChild(viewer.renderer.domElement);
+    view = select(viewer.renderer.domElement); //for d3 mouse events
   }
 
   /**
@@ -537,11 +525,34 @@ export function viewer(options) {
    *@function createLabelRenderer
    */
   function createLabelRenderer() {
-    labelRenderer = new CSS2DRenderer();
-    labelRenderer.setSize(viewer.width_, viewer.height_);
-    labelRenderer.domElement.style.position = "absolute";
-    //labelRenderer.domElement.style.top = "0px";
-    viewer.container_.appendChild(labelRenderer.domElement);
+    viewer.labelRenderer = new CSS2DRenderer();
+    viewer.labelRenderer.setSize(viewer.width_, viewer.height_);
+    viewer.labelRenderer.domElement.style.position = "absolute";
+    //viewer.labelRenderer.domElement.style.top = "0px";
+    viewer.container_.appendChild(viewer.labelRenderer.domElement);
+  }
+
+  /**
+ * @description defines the configuration object we will use for the threejs camera
+ * @function defineCameraConfig
+ */
+  function defineCameraConfig() {
+    let config = {}
+    config.near_ = defineNear();
+    config.far_ = defineFar(); //set min zoom
+    config.fov_ = CONSTANTS.fov;
+    config.aspect_ = viewer.width_ / viewer.height_;
+
+    //initial camera position Z
+    //zoom doesnt work on mobile ...yet
+    if (viewer._mobile) {
+      config.initialZ_ = config.far_ / 2 - 1
+    } else {
+      config.initialZ_ = viewer.zoom_ || config.far_ / 2 - 1
+    }
+    config.zoom_ = viewer.zoom_ || config.initialZ_;
+
+    return config;
   }
 
   /**
@@ -549,24 +560,12 @@ export function viewer(options) {
    * @function createCamera
    */
   function createCamera() {
-    //camera
-    viewer.camera.near_ = defineNear();
-    viewer.camera.far_ = defineFar(); //set min zoom
-    viewer.camera.fov_ = CONSTANTS.fov;
-    viewer.camera.aspect_ = viewer.width_ / viewer.height_;
-    //zoom doesnt work on mobile ...yet
-    if (viewer._mobile) {
-      viewer.camera.initialZ_ = viewer.camera.far_ / 2 - 1
-    } else {
-      viewer.camera.initialZ_ = viewer.zoom_ || viewer.camera.far_ / 2 - 1
-    }
-
-    viewer.camera.zoom_ = viewer.zoom_ || viewer.camera.initialZ_; //initial camera position Z
-    camera = new PerspectiveCamera(
-      viewer.camera.fov_,
-      viewer.camera.aspect_,
-      viewer.camera.near_,
-      viewer.camera.far_
+    viewer.cameraConfig = defineCameraConfig();
+    viewer.camera = new PerspectiveCamera(
+      viewer.cameraConfig.fov_,
+      viewer.cameraConfig.aspect_,
+      viewer.cameraConfig.near_,
+      viewer.cameraConfig.far_
     );
 
     //orthographic
@@ -598,16 +597,12 @@ export function viewer(options) {
   * @function redefineCamera
   */
   function redefineCamera() {
-    viewer.camera.near_ = defineNear();
-    viewer.camera.far_ = defineFar(); //set min zoom
-    viewer.camera.fov_ = CONSTANTS.fov;
-    viewer.camera.aspect_ = viewer.width_ / viewer.height_;
-    viewer.camera.zoom_ = viewer.zoom_ || viewer.camera.far_ / 2 - 1; //initial camera position Z
+    let cameraConfig = defineCameraConfig()
 
-    camera.fov = viewer.camera.fov_;
-    camera.aspect = viewer.camera.aspect_;
-    camera.near = viewer.camera.near_;
-    camera.far = viewer.camera.far_;
+    viewer.camera.fov = cameraConfig.fov_;
+    viewer.camera.aspect = cameraConfig.aspect_;
+    viewer.camera.near = cameraConfig.near_;
+    viewer.camera.far = cameraConfig.far_;
 
     // TODO: redefine panAndZoom
   }
@@ -622,8 +617,8 @@ export function viewer(options) {
    * 
    */
   function setCamera(x, y, z) {
-    camera.position.set(x, y, z); // Set camera position
-    camera.lookAt(new Vector3(x, y, z)); // Set camera angle
+    viewer.camera.position.set(x, y, z); // Set camera position
+    viewer.camera.lookAt(new Vector3(x, y, z)); // Set camera angle
   }
 
   /**
@@ -658,8 +653,8 @@ export function viewer(options) {
   }
 
   /**
- * Add change event to color-scheme selector
- *
+ * @description Add change event to color-scheme selector
+ * @function addChangeEventToColorSchemeDropdown
  */
   function addChangeEventToColorSchemeDropdown() {
     viewer.schemesSelect.addEventListener("change", function (e) {
@@ -668,22 +663,23 @@ export function viewer(options) {
   }
 
   /**
-  * Color scheme dropdown event handler
-  *
-  * @param {*} scheme
+  * @description Color scheme dropdown event handler. Updates point colours and legend
+  * @function onChangeColorScheme
+  * @param {String} scheme Name of the d3-scale-chromatic colour scheme
   */
   function onChangeColorScheme(scheme) {
+    tooltip.hideTooltip()
     viewer.colorSchemeName_ = scheme;
     updateColorScale();
     updatePointsColors();
     if (viewer.legend_) {
-      updateLegend();
+      legend.updateLegend();
     }
   }
 
   /**
-  * Add change event to color-field selector
-  *
+  * @description Adds change event to color-field select element
+  * @function addChangeEventToColorFieldDropdown
   */
   function addChangeEventToColorFieldDropdown() {
     viewer.colorFieldSelect.addEventListener("change", function (e) {
@@ -692,21 +688,21 @@ export function viewer(options) {
   }
 
   /**
-  * Color csv field dropdown event handler
-  *
+  * @description Color csv field dropdown event handler
+  * @function onChangeColorField
   * @param {*} field
   */
   function onChangeColorField(field) {
     viewer.colorField_ = field;
     updatePointsColors();
     if (viewer.legend_) {
-      updateLegend();
+      legend.updateLegend();
     }
   }
 
   /**
-  * Add change event to color-scale selector
-  *
+  * @description Add change event to color-scale selector
+  * @function addChangeEventToColorScaleDropdown
   */
   function addChangeEventToColorScaleDropdown() {
     viewer.colorScaleSelect.addEventListener("change", function (e) {
@@ -715,8 +711,8 @@ export function viewer(options) {
   }
 
   /**
-  * Color scale dropdown event handler
-  *
+  * @description Color scale dropdown event handler
+  * @function onChangeColorScale
   * @param {String} scale name of d3-scale to be used
   */
   function onChangeColorScale(scale) {
@@ -724,10 +720,9 @@ export function viewer(options) {
     updateColorScale();
     updatePointsColors();
     if (viewer.legend_) {
-      updateLegend();
+      legend.updateLegend();
     }
   }
-
 
   /**
   * @description Add change event to size-field selector
@@ -749,7 +744,7 @@ export function viewer(options) {
     updateSizeScale();
     updatePointsSizes();
     if (viewer._gridLegend) {
-      updateLegend();
+      legend.updateLegend();
     }
   }
 
@@ -761,10 +756,10 @@ export function viewer(options) {
     window.addEventListener("resize", () => {
       viewer.width_ = viewer.container_.clientWidth;
       viewer.height_ = viewer.container_.clientHeight;
-      labelRenderer.setSize(viewer.width_, viewer.height_);
-      renderer.setSize(viewer.width_, viewer.height_);
-      camera.aspect = viewer.width_ / viewer.height_;
-      camera.updateProjectionMatrix();
+      viewer.labelRenderer.setSize(viewer.width_, viewer.height_);
+      viewer.renderer.setSize(viewer.width_, viewer.height_);
+      viewer.camera.aspect = viewer.width_ / viewer.height_;
+      viewer.camera.updateProjectionMatrix();
     });
   }
 
@@ -783,17 +778,16 @@ export function viewer(options) {
         let index = intersect.index;
         let cell = gridCaches[viewer.resolution_][index];
         highlightPoint(intersect);
-        showTooltip(mouse_position, cell);
+        tooltip.showTooltip(viewer, mouse_position, cell);
       } else {
-        removeHighlights();
-        hideTooltip();
+        tooltip.hideTooltip();
       }
-      //console.log("Camera pos:", camera.position);
+      //console.log("Camera pos:", viewer.camera.position);
     });
 
-    view.on("mouseleave", () => {
-      removeHighlights();
-    });
+    // view.on("mouseleave", () => {
+
+    // });
   }
 
   /**
@@ -818,26 +812,26 @@ export function viewer(options) {
     let minViewerY = viewer.extentY[0];
 
     if (viewer._mobile) {
-      let scale = getScaleFromZ(viewer.camera.initialZ_)
+      let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
       viewer.d3zoom.scaleTo(view, scale);
       viewer.d3zoom.translateTo(view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
+      setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
 
-      let initial_scale = getScaleFromZ(viewer.camera.far_);
+      let initial_scale = getScaleFromZ(viewer.cameraConfig.far_);
       let initial_transform = zoomIdentity
         .translate(viewer.width_ / 2, viewer.height_ / 2)
         .scale(initial_scale);
       viewer.d3zoom.transform(view, initial_transform);
 
     } else {
-      let scale = getScaleFromZ(viewer.camera.initialZ_)
+      let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
       viewer.d3zoom.scaleTo(view, scale);
       viewer.d3zoom.translateTo(view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
+      setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
     }
 
   }
@@ -871,7 +865,7 @@ export function viewer(options) {
   }
 
   /**
-   * @description Defines the pointSize parameter for THREE.pointsLayer objects at the specified resolution
+   * @description Defines the pointSize parameter for THREE.viewer.pointsLayer objects at the specified resolution
    * @function definePointSize
    *
    */
@@ -887,7 +881,7 @@ export function viewer(options) {
     if (viewer._mobile) {
       return 5; //due to a bug with pan & zoom, we have to scale everything on mobile
     } else {
-      return viewer.resolution_ * 4000;
+      return viewer.resolution_ * 50000;
     }
   }
 
@@ -899,54 +893,11 @@ export function viewer(options) {
     if (viewer._mobile) {
       return 0.0001; //due to a bug with pan & zoom, we have to scale everything on mobile
     } else {
-      return 1;
+      return 0.01;
     }
   }
 
-  function defineDefaultPlacenameThresholds() {
-    let r = viewer.resolution_;
-    // scale : population
-    viewer.placenameThresholds_ = {
-      [r * 1024]: "2000000",
-      [r * 512]: "2000000",
-      [r * 256]: "2000000",
-      [r * 128]: "1000000",
-      [r * 64]: "1000000",
-      [r * 32]: "500000",
-      [r * 16]: "100000",
-      [r * 8]: "10000",
-      [r * 4]: "5000",
-      [r * 2]: "1000",
-      [r]: "10",
-    }
-    // if (scale > 0 && scale < r) {
-    //   return populationFieldName + ">10";
-    // } else if (scale > r && scale < r * 2) {
-    //   return populationFieldName + ">1000";
-    // } else if (scale > r * 2 && scale < r * 4) {
-    //   return populationFieldName + ">2500";
-    // } else if (scale > r * 4 && scale < r * 8) {
-    //   return populationFieldName + ">5000";
-    // } else if (scale > r * 8 && scale < r * 16) {
-    //   return populationFieldName + ">10000";
-    // } else if (scale > r * 16 && scale < r * 32) {
-    //   return populationFieldName + ">200000";
-    // } else if (scale > r * 32 && scale < r * 64) {
-    //   return populationFieldName + ">300000";
-    // } else if (scale > r * 64 && scale < r * 128) {
-    //   return populationFieldName + ">300000";
-    // } else if (scale > r * 128 && scale < r * 256) {
-    //   return populationFieldName + ">1000000";
-    // } else if (scale > r * 256 && scale < r * 512) {
-    //   return populationFieldName + ">1000000";
-    // } else if (scale > r * 512 && scale < r * 1024) {
-    //   return populationFieldName + ">2000000";
-    // } else if (scale > r * 1024) {
-    //   return populationFieldName + ">2000000";
-    // } else {
-    //   return "1=1";
-    // }
-  }
+
 
   /**
    * @function loadGrid
@@ -1236,7 +1187,7 @@ export function viewer(options) {
    *
    */
   function addNuts2jsonToScene(features) {
-    geojsonLayer.addGeoJsonToScene(features, viewer);
+    geojson.addGeoJsonToScene(features, viewer);
   }
 
   /**
@@ -1250,7 +1201,7 @@ export function viewer(options) {
       res => {
         if (res.features) {
           if (res.features.length > 0) {
-            geojsonLayer.addGeoJsonToScene(res.features, viewer);
+            geojson.addGeoJsonToScene(res.features, viewer);
           }
         }
       },
@@ -1291,7 +1242,7 @@ export function viewer(options) {
       new Float32BufferAttribute(colors, 3)
     );
     pointsGeometry.computeBoundingSphere();
-    pointsLayer.geometry = pointsGeometry;
+    viewer.pointsLayer.geometry = pointsGeometry;
   }
 
   /**
@@ -1310,11 +1261,11 @@ export function viewer(options) {
     //update sizes
     pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
     pointsGeometry.computeBoundingSphere();
-    pointsLayer.geometry = pointsGeometry;
+    viewer.pointsLayer.geometry = pointsGeometry;
   }
 
   /**
-   * @description create or update THREE.js pointsLayer layer. At the moment, only ONE pointsLayer layer at a time is handled by the viewer, so a second call of gridviz.gridData() will overwrite the initial layer
+   * @description create or update THREE.js viewer.pointsLayer layer. At the moment, only ONE viewer.pointsLayer layer at a time is handled by the viewer, so a second call of gridviz.gridData() will overwrite the initial layer
    * @function addPointsToScene
    */
   function addPointsToScene() {
@@ -1328,6 +1279,7 @@ export function viewer(options) {
     let colors = [];
     let positions = [];
     let sizes = [];
+
     for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
       // Set vector coordinates from data
       let coords = [
@@ -1345,19 +1297,22 @@ export function viewer(options) {
       gridCaches[viewer.resolution_][i].color = hex; //for tooltip
       let color = new Color(hex);
 
-      positions.push(x, y, z);
-      if (!isNaN(color.r) && !isNaN(color.g) && !isNaN(color.b)) {
-        colors.push(color.r, color.g, color.b);
-      } else {
-        let blk = new Color("#000");
-        colors.push(blk.r, blk.g, blk.b)
+      if (!isNaN(x) && !isNaN(y)) {
+        positions.push(x, y, z);
+        if (!isNaN(color.r) && !isNaN(color.g) && !isNaN(color.b)) {
+          colors.push(color.r, color.g, color.b);
+        } else {
+          let blk = new Color("#000");
+          colors.push(blk.r, blk.g, blk.b)
+        }
+        if (viewer.sizeField_) {
+          sizes.push(viewer.sizeScaleFunction_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
+        } else {
+          sizes.push(gridConfig.pointSize);
+        }
       }
-      if (viewer.sizeField_) {
-        sizes.push(viewer.sizeScaleFunction_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
-      } else {
-        sizes.push(gridConfig.pointSize);
-      }
-    }
+    } //fin loop
+
     //set buffer geometry attributes
     pointsGeometry.setAttribute(
       "position",
@@ -1370,7 +1325,7 @@ export function viewer(options) {
     //Variable point size will affect raycasting: https://github.com/mrdoob/three.js/issues/5105
     pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
     pointsGeometry.computeBoundingSphere();
-    //create or reuse pointsLayer Material
+    //create or reuse viewer.pointsLayer Material
     if (!pointsMaterial) {
       // Apply custom point sizes, instead of using three.js pointsMaterial
       pointsMaterial = new ShaderMaterial({
@@ -1384,7 +1339,7 @@ export function viewer(options) {
         vertexColors: THREE.VertexColors
       });
 
-      //using threejs PointsMaterial
+      //use threejs PointsMaterial instead:
       // pointsMaterial = new PointsMaterial({
       //   size: gridConfig.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
       //   sizeAttenuation: true,
@@ -1395,22 +1350,22 @@ export function viewer(options) {
     } else {
       pointsMaterial.size = gridConfig.pointSize;
     }
-    //create or reuse pointsLayer object
-    if (!pointsLayer) {
-      pointsLayer = new Points(pointsGeometry, pointsMaterial);
-      pointsLayer.renderOrder = 1; //bottom
-      viewer.scene.add(pointsLayer);
+    //create or reuse viewer.pointsLayer object
+    if (!viewer.pointsLayer) {
+      viewer.pointsLayer = new Points(pointsGeometry, pointsMaterial);
+      viewer.pointsLayer.renderOrder = 1; //bottom
+      viewer.scene.add(viewer.pointsLayer);
     } else {
-      pointsLayer.geometry = pointsGeometry;
-      pointsLayer.material = pointsMaterial;
+      viewer.pointsLayer.geometry = pointsGeometry;
+      viewer.pointsLayer.material = pointsMaterial;
     }
     //create or update legend
     if (viewer.showLegend_) {
       if (viewer.legend_) {
         if (viewer._gridLegend) {
-          updateLegend();
+          legend.updateLegend(viewer);
         } else {
-          createLegend();
+          legend.createLegend(viewer);
         }
       }
     }
@@ -1778,270 +1733,19 @@ export function viewer(options) {
     addChangeEventToSizeFieldDropdown()
   }
 
-  /**
-   * Add svg legend to DOM using d3-svg-legend
-   *
-   */
-  function createLegend() {
-    if (viewer.legend_.type == "cells") {
-      createCellsLegend()
-    } else if (viewer.legend_.type == "continuous") {
-      createContinuousLegend()
-    }
-
-  }
-
-  function createCellsLegend() {
-    let legendContainer;
-    if (document.getElementById("gridviz-legend")) {
-      legendContainer = select("#gridviz-legend");
-    } else {
-      legendContainer = create("svg").attr("id", "gridviz-legend");
-      viewer.container_.appendChild(legendContainer.node());
-    }
-    if (viewer.legend_.orientation == "horizontal") {
-      legendContainer.attr("class", "gridviz-legend-horizontal gridviz-plugin");
-    } else {
-      legendContainer.attr("class", "gridviz-legend-vertical gridviz-plugin");
-    }
-    let legendSvg =
-      legendContainer.append("g")
-        .attr("class", "gridviz-legend-svg")
-        .attr("height", viewer.legend_.height)
-        .attr("width", viewer.legend_.width)
-        .attr("transform", "translate(10,15)"); //padding
-
-    viewer._gridLegend = LEGEND.legendColor()
-      .shapeWidth(viewer.legend_.shapeWidth)
-      .cells(viewer.legend_.cells)
-      .labelFormat(format(viewer.legend_.format))
-      .orient(viewer.legend_.orientation)
-      .scale(viewer.colorScaleFunction_)
-      .title(viewer.legend_.title)
-      .titleWidth(viewer.legend_.titleWidth)
-
-    if (viewer.thresholdValues_) {
-      viewer._gridLegend.labels(thresholdLabels)
-    }
-
-    legendSvg.call(viewer._gridLegend);
-
-    //adjust width/height
-    if (!viewer.legend_.height) {
-      viewer.legend_.height = 320
-    }
-    legendContainer.style("height", viewer.legend_.height + "px");
-    legendContainer.style("width", viewer.legend_.width + "px");
-    //legend.style("height", viewer.legend_.height +"px");
-  }
-
-  //https://observablehq.com/@gabgrz/color-legend
-  function createContinuousLegend() {
-
-    let container;
-    if (document.getElementById("gridviz-legend")) {
-      container = select("#gridviz-legend");
-    } else {
-      container = create("div").attr("id", "gridviz-legend");
-      container.attr("class", "gridviz-plugin");
-      viewer.container_.appendChild(container.node());
-    }
-
-    viewer._gridLegend = colorLegend({
-      color: viewer.colorScaleFunction_,
-      title: viewer.legend_.title,
-      tickSize: viewer.legend_.tickSize || 6,
-      width: viewer.legend_.width || 500,
-      marginTop: viewer.legend_.marginRight || 18,
-      marginRight: viewer.legend_.marginRight || 0,
-      marginLeft: viewer.legend_.marginLeft || 0,
-      tickFormat: viewer.legend_.tickFormat || ".0f",
-    });
-
-    container.node().appendChild(viewer._gridLegend);
-
-  }
-  function ramp(color, n = 256) {
-    const canvas = document.createElement("CANVAS")
-    canvas.width = n;
-    canvas.height = 1;
-    const context = canvas.getContext("2d");
-    for (let i = 0; i < n; ++i) {
-      context.fillStyle = color(i / (n - 1));
-      context.fillRect(i, 0, 1, 1);
-    }
-    return canvas;
-  }
-
-  function colorLegend({
-    color,
-    title,
-    tickSize,
-    width,
-    height = viewer.legend_.height || 44 + tickSize,
-    marginTop,
-    marginRight,
-    marginBottom = viewer.legend_.marginBottom || 16 + tickSize,
-    marginLeft,
-    ticks = viewer.legend_.ticks || width / 64,
-    tickFormat,
-    tickValues
-  } = {}) {
-
-    const svg = create("svg")
-      .attr("class", "gridviz-legend-svg")
-      // .attr("class", "gridviz-continuous-legend")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewBox", [0, 0, width, height])
-      .style("overflow", "visible")
-      .style("display", "block");
-
-    let x;
-
-    // Continuous
-    if (color.interpolator) {
-      x = Object.assign(color.copy()
-        .interpolator(interpolateRound(marginLeft, width - marginRight)),
-        { range() { return [marginLeft, width - marginRight]; } });
-
-      svg.append("image")
-        .attr("x", marginLeft)
-        .attr("y", marginTop)
-        .attr("width", width - marginLeft - marginRight)
-        .attr("height", height - marginTop - marginBottom)
-        .attr("preserveAspectRatio", "none")
-        .attr("xlink:href", ramp(color.interpolator()).toDataURL());
-
-      // scaleSequentialQuantile doesn’t implement ticks or tickFormat.
-      if (!x.ticks) {
-        if (tickValues === undefined) {
-          const n = Math.round(ticks + 1);
-          tickValues = range(n).map(i => quantile(color.domain(), i / (n - 1)));
-        }
-        if (typeof tickFormat !== "function") {
-          tickFormat = format(tickFormat === undefined ? ",f" : tickFormat);
-        }
-      }
-    }
-
-    // Discrete
-    else if (color.invertExtent) {
-      const thresholds
-        = color.thresholds ? color.thresholds() // scaleQuantize
-          : color.quantiles ? color.quantiles() // scaleQuantile
-            : color.domain(); // scaleThreshold
-
-      const thresholdFormat
-        = tickFormat === undefined ? d => d
-          : typeof tickFormat === "string" ? format(tickFormat)
-            : tickFormat;
-
-      x = d3scale.scaleLinear()
-        .domain([-1, color.range().length - 1])
-        .rangeRound([marginLeft, width - marginRight]);
-
-      svg.append("g")
-        .selectAll("rect")
-        .data(color.range())
-        .join("rect")
-        .attr("x", (d, i) => x(i - 1))
-        .attr("y", marginTop)
-        .attr("width", (d, i) => x(i) - x(i - 1))
-        .attr("height", height - marginTop - marginBottom)
-        .attr("fill", d => d);
-
-      tickValues = range(thresholds.length);
-      tickFormat = i => thresholdFormat(thresholds[i], i);
-    }
-
-    svg.append("g")
-      .attr("transform", `translate(0, ${height - marginBottom})`)
-      .call(axisBottom(x)
-        .ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined)
-        .tickFormat(typeof tickFormat === "function" ? tickFormat : undefined)
-        .tickSize(tickSize)
-        .tickValues(tickValues))
-      .call(g => g.selectAll(".tick line").attr("y1", marginTop + marginBottom - height))
-      .call(g => g.select(".domain").remove())
-      .call(g => g.append("text")
-        .attr("y", marginTop + marginBottom - height - 10)
-        .attr("fill", "currentColor")
-        .attr("text-anchor", "start")
-        .attr("font-weight", "bold")
-        //.attr("font-size", viewer.legend_.fontSize)
-        .attr("class", "gridviz-continuous-legend-title")
-        .text(title));
-
-    return svg.node();
-  }
-
-  function thresholdLabels({
-    i,
-    genLength,
-    generatedLabels,
-    labelDelimiter
-  }) {
-    if (i === 0) {
-      const values = generatedLabels[i].split(` ${labelDelimiter} `)
-      return `Less than ${values[1]}`
-    } else if (i === genLength - 1) {
-      const values = generatedLabels[i].split(` ${labelDelimiter} `)
-      return `${values[0]} or more`
-    }
-    return generatedLabels[i]
-  }
-
-  /**
-   * remove DOM element and rebuild legend
-   *
-   */
-  function updateLegend() {
-    var l = selectAll(".gridviz-legend-svg").remove();
-    setTimeout(createLegend(), 1000);
-  }
-
-  /**
-   *  @description Three.js render loop
-   * @function animate
-   * 
-   */
+  /** 
+  * @description Three.js render loop
+  * @function animate
+  * 
+  */
   function animate() {
     //let time = Date.now() * 0.005;
-    //pointsLayer.position.x = 0.02 * time;
+    //viewer.pointsLayer.position.x = 0.02 * time;
     viewer.animating = true;
     requestAnimationFrame(animate);
-    renderer.render(viewer.scene, camera);
-    labelRenderer.render(viewer.scene, camera);
+    viewer.renderer.render(viewer.scene, viewer.camera);
+    viewer.labelRenderer.render(viewer.scene, viewer.camera);
   }
-
-  /**
-   * @description Appends tooltip container to the scene
-   * @function createTooltipContainer
-   * 
-   */
-  function createTooltipContainer() {
-    // Initial tooltip state
-    tooltip_state = {
-      display: "none"
-    };
-
-    //inject tooltip HTML to DOM
-    tooltipTemplate = document.createRange()
-      .createContextualFragment(`<div id="gridviz-tooltip">
-    <div id="gridviz-labeltip"></div>
-<div id="gridviz-pointtip"></div>
-</div>`);
-    viewer.container_.append(tooltipTemplate);
-
-    tooltip = document.querySelector("#gridviz-tooltip");
-    pointTip = document.querySelector("#gridviz-pointtip");
-    labelTip = document.querySelector("#gridviz-labeltip");
-    tooltipContainer = new Object3D();
-    viewer.scene.add(tooltipContainer);
-  }
-
-
 
   /**
    * @description Defines zoom functionality using d3.js
@@ -2051,8 +1755,8 @@ export function viewer(options) {
   function addPanAndZoom() {
     // define zoom
     //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
-    let farScale = getScaleFromZ(viewer.camera.far_);
-    let nearScale = getScaleFromZ(viewer.camera.near_);
+    let farScale = getScaleFromZ(viewer.cameraConfig.far_);
+    let nearScale = getScaleFromZ(viewer.cameraConfig.near_);
     viewer.d3zoom =
       zoom()
         .scaleExtent([farScale, nearScale])
@@ -2074,19 +1778,19 @@ export function viewer(options) {
 
     if (viewer._mobile) {
       //due to a bug on mobile, where the camera shifts unexpectedly on the first pan or zoom event, we have to scale everything to a webgl-friendly range and set the camera to 0,0
-      let initial_scale = getScaleFromZ(viewer.camera.initialZ_);
+      let initial_scale = getScaleFromZ(viewer.cameraConfig.initialZ_);
       var initial_transform = zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
       viewer.d3zoom.transform(view, initial_transform);
-      setCamera(0, 0, viewer.camera.initialZ_)
+      setCamera(0, 0, viewer.cameraConfig.initialZ_)
 
     } else {
       //initial desktop zoom transform
-      let scale = getScaleFromZ(viewer.camera.initialZ_)
+      let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
       viewer.d3zoom.scaleTo(view, scale);
       viewer.d3zoom.translateTo(view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.camera.initialZ_)
+      setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
     }
   }
 
@@ -2105,7 +1809,7 @@ export function viewer(options) {
     if (event.sourceEvent) {
       let new_z = getZFromScale(scale);
       //if zoom
-      if (new_z !== camera.position.z) {
+      if (new_z !== viewer.camera.position.z) {
         // Handle a zoom event
         const { clientX, clientY } = event.sourceEvent;
         // Code from WestLangley https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z/13091694#13091694
@@ -2114,10 +1818,10 @@ export function viewer(options) {
           -(clientY / viewer.height_) * 2 + 1,
           1
         );
-        vector.unproject(camera);
-        const dir = vector.sub(camera.position).normalize();
-        const distance = (new_z - camera.position.z) / dir.z;
-        const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+        vector.unproject(viewer.camera);
+        const dir = vector.sub(viewer.camera.position).normalize();
+        const distance = (new_z - viewer.camera.position.z) / dir.z;
+        const pos = viewer.camera.position.clone().add(dir.multiplyScalar(distance));
         // Set the camera to new coordinates
         setCamera(pos.x, pos.y, new_z);
       } else {
@@ -2125,18 +1829,18 @@ export function viewer(options) {
         const { movementX, movementY } = event.sourceEvent;
 
         // Adjust mouse movement by current scale and set camera
-        const current_scale = getScaleFromZ(camera.position.z);
+        const current_scale = getScaleFromZ(viewer.camera.position.z);
         setCamera(
-          camera.position.x - movementX / current_scale,
-          camera.position.y + movementY / current_scale,
-          camera.position.z
+          viewer.camera.position.x - movementX / current_scale,
+          viewer.camera.position.y + movementY / current_scale,
+          viewer.camera.position.z
         );
       }
     }
   }
 
   function getScaleFromZ(z) {
-    let half_fov = viewer.camera.fov_ / 2;
+    let half_fov = viewer.cameraConfig.fov_ / 2;
     let half_fov_radians = toRadians(half_fov);
     let half_fov_height = Math.tan(half_fov_radians) * z;
     let fov_height = half_fov_height * 2;
@@ -2145,7 +1849,7 @@ export function viewer(options) {
   }
 
   function getZFromScale(scale) {
-    let half_fov = viewer.camera.fov_ / 2;
+    let half_fov = viewer.cameraConfig.fov_ / 2;
     let half_fov_radians = toRadians(half_fov);
     let scale_height = viewer.height_ / scale;
     let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
@@ -2153,19 +1857,19 @@ export function viewer(options) {
   }
 
   function zoomEnd(event) {
-    hideTooltip();
+    tooltip.hideTooltip();
     let scale = getScaleFromZ(event.transform.k);
     if (viewer.debugPlacenames_) {
       console.info(scale);
     }
     // get placenames at certain zoom levels
     if (viewer.showPlacenames_) {
-      if (pointsLayer) {
-        if (scale > 0 && scale < viewer.camera.far_) {
-          //placenames are added to the pointsLayer object
-          getPlacenames(scale);
+      if (viewer.pointsLayer) {
+        if (scale > 0 && scale < viewer.cameraConfig.far_) {
+          //placenames are added to the viewer.pointsLayer object
+          placenames.getPlacenames(viewer);
         } else {
-          removePlacenamesFromScene();
+          placenames.removePlacenamesFromScene(viewer);
         }
       }
     }
@@ -2201,275 +1905,8 @@ export function viewer(options) {
     // }
   }
 
-  /**
-   * retrieves placenames by population according to the current scale, from an ArcGIS server endpoint (see constants).
-   * TODO: send bounding box correctly (geometry xmin,ymin,xmax,ymax)
-   * @param {*} scale
-   */
-  function getPlacenames(scale) {
-    let where = defineWhereParameter(scale)
-    let envelope = getCurrentViewExtent();
-    //currentExtent = envelope;
-    //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
-
-    if (envelope) {
-      let URL =
-        CONSTANTS.placenames.baseURL +
-        "where=" +
-        where +
-        "&outSR=" +
-        viewer.EPSG_ +
-        "&inSR=" + viewer.EPSG_ +
-        "&geometry=" +
-        envelope.xmin +
-        "," +
-        envelope.ymin +
-        "," +
-        envelope.xmax +
-        "," +
-        envelope.ymax +
-        "&geometryType=esriGeometryEnvelope&f=json&outFields=" + CONSTANTS.placenames.townField + "," + CONSTANTS.placenames.populationField;
-
-      //TODO: manage multiple calls by replicating angular's .unsubscribe() somehow
-      let uri = encodeURI(URL);
-      json(uri).then(
-        res => {
-          if (res.features) {
-            if (res.features.length > 0) {
-              removePlacenamesFromScene();
-              addPlacenamesToScene(res.features);
-            }
-          } else {
-            removePlacenamesFromScene();
-          }
-        },
-        err => {
-          console.error(err);
-        }
-      );
-    }
-  }
-
-  function defineWhereParameter(scale) {
-    let r = viewer.resolution_;
-    let where = "";
-    if (viewer.placenamesCountry_) {
-      where = where + CONSTANTS.placenames.countryField + " = '" + viewer.placenamesCountry_ + "' AND "
-    }
-    // labelling thresholds by population - either custom values or by scale
-    let popFilter = getPopulationParameterFromScale(scale)
-    if (viewer.debugPlacenames_) {
-      console.info(popFilter);
-    }
-    return where + popFilter;
-  }
-
-  /**
-   * Defines the population parameter for the request to the placenmes service. If viewer.populationThresholds_ are not set, it uses default thresholds
-   *
-   * @param {*} scale
-   */
-  function getPopulationParameterFromScale(scale) {
-    if (viewer._mobile) {
-      //scale up to desktop values
-      let factor = viewer.originalResolution / viewer.resolution_
-      scale = scale * factor;
-    }
-
-    let populationFieldName = CONSTANTS.placenames.populationField;
-    //build query string from thresholds
-    if (viewer.placenameThresholds_) {
-      let thresholds = Object.keys(viewer.placenameThresholds_);
-      for (let i = 0; i < thresholds.length; i++) {
-        let t = thresholds[i];
-        if (thresholds[i + 1]) { //if not last threshold
-          if (scale < parseInt(thresholds[0])) { //below first threshold
-            return populationFieldName + ">" + viewer.placenameThresholds_[thresholds[0]];
-          } else if (scale > parseInt(t) && scale < parseInt(thresholds[i + 1])) {
-            // if current scale is between thresholds
-            return populationFieldName + ">" + viewer.placenameThresholds_[t];
-          }
-        } else {
-          // if last threshold
-          return populationFieldName + ">" + viewer.placenameThresholds_[t];
-        }
-      }
-    }
-  }
-
-  /**
-   * Appends placename labels from JSON features to the viewer
-   *
-   * @param {*} placenames
-   */
-  function addPlacenamesToScene(placenames) {
-    if (pointsLayer) {
-      for (let p = 0; p < placenames.length; p++) {
-        let label = createPlacenameLabelObject(placenames[p]);
-        // TODO: group objects manually (THREE.group())
-        pointsLayer.add(label);
-      }
-    }
-  }
-
-  /**
-   * Removes the placename CSS2DObjects from the THREE pointsLayer layer
-   * It seems that the browsers JS garbage collector removes the DOM nodes
-   */
-  function removePlacenamesFromScene() {
-    if (pointsLayer && pointsLayer.children.length > 0) {
-      for (var i = pointsLayer.children.length - 1; i >= 0; i--) {
-        pointsLayer.remove(pointsLayer.children[i]);
-      }
-    }
-  }
-
-  /**
-   * Creates a CSS2DObject for a placename ESRI JSON object
-   *
-   * @param {*} placename
-   * @returns CSS2DObject
-   */
-  function createPlacenameLabelObject(placename) {
-    var placeDiv = document.createElement("div");
-    placeDiv.className = "gridviz-placename";
-    placeDiv.textContent = placename.attributes[CONSTANTS.placenames.townField];
-    placeDiv.style.marginTop = "-1em";
-    var placeLabel = new CSS2DObject(placeDiv);
-
-    //scale mobile coords
-    if (viewer._mobile) {
-      if (viewer.zerosRemoved_) {
-        let d = Number('1E' + viewer.zerosRemoved_);
-        let x = viewer.mobileCoordScaleX(placename.geometry.x / d);
-        let y = viewer.mobileCoordScaleY(placename.geometry.y / d)
-        placeLabel.position.set(
-          x,
-          y,
-          CONSTANTS.label_height
-        );
-      } else {
-        placeLabel.position.set(
-          viewer.mobileCoordScaleX(placename.geometry.x),
-          viewer.mobileCoordScaleY(placename.geometry.y),
-          CONSTANTS.label_height
-        );
-      }
-      return placeLabel;
-    } else {
-      //desktop
-      if (viewer.zerosRemoved_) {
-        let d = Number('1E' + viewer.zerosRemoved_);
-        placeLabel.position.set(
-          placename.geometry.x / d,
-          placename.geometry.y / d,
-          CONSTANTS.label_height
-        );
-      } else {
-        placeLabel.position.set(
-          placename.geometry.x,
-          placename.geometry.y,
-          CONSTANTS.label_height
-        );
-      }
-      return placeLabel;
-    }
 
 
-
-  }
-
-  function getCurrentViewExtent() {
-    //let z = 0.5;
-    //let padding = 10; // making sure the screen coords hit the scene
-    //https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z
-
-    /*   var elem = renderer.domElement, 
-  boundingRect = elem.getBoundingClientRect(),
-  x = (clientX - boundingRect.left) * (elem.width / boundingRect.width),
-  y = (clientY - boundingRect.top) * (elem.height / boundingRect.height);
-   
-  var vector = new THREE.Vector3( 
-  ( x / viewer.width_ ) * 2 - 1, 
-  - ( y / viewer.height_ ) * 2 + 1, 
-  0.5 
-  );
-   
-  projector.unprojectVector( vector, camera ); */
-
-    //let bottomLeftVector = mouseToThree(padding, viewer.height_ - padding); //screen x,y
-    //let topRightVector = mouseToThree(viewer.width_ - padding, padding); //screen x,y
-
-    //let bottomLeftWorld = getWorldCoordsFromVector(bottomLeftVector);
-    //let topRightWorld = getWorldCoordsFromVector(topRightVector);
-    var elem = renderer.domElement;
-    let clientBottomLeft = [elem.clientLeft, elem.clientHeight];
-    let clientTopRight = [elem.clientWidth, elem.clientTop];
-    let bottomLeftWorld = getWorldCoordsFromScreen(clientBottomLeft); //client x,y
-    let topRightWorld = getWorldCoordsFromScreen(clientTopRight); //client x,y
-
-    // if getting coords was unsuccessful, exit
-    if (!bottomLeftWorld || !topRightWorld) {
-      return
-    }
-
-    // full european extent in EPSG 3035:
-    // return {
-    //   xmin: 1053668.5589,
-    //   ymin: 1645342.8583,
-    //   xmax: 5724066.4412,
-    //   ymax: 5901309.0137
-    // };
-
-    // if the user has reduced the filesize by removing trailing 0s from the csv, we simply add them back on before sending the placename queries
-    if (viewer.zerosRemoved_) {
-      let d = Number('1E' + viewer.zerosRemoved_);
-      return {
-        xmin: bottomLeftWorld.x * d,
-        ymin: bottomLeftWorld.y * d,
-        xmax: topRightWorld.x * d,
-        ymax: topRightWorld.y * d
-      };
-    } else {
-      return {
-        xmin: bottomLeftWorld.x,
-        ymin: bottomLeftWorld.y,
-        xmax: topRightWorld.x,
-        ymax: topRightWorld.y
-      };
-    }
-  }
-
-  // get the position of a canvas event in world coords
-  function getWorldCoordsFromScreen([clientX, clientY]) {
-    var vec = new Vector3(); // create once and reuse
-    var pos = new Vector3(); // create once and reuse
-
-    vec.set(
-      (clientX / window.innerWidth) * 2 - 1,
-      -(clientY / window.innerHeight) * 2 + 1,
-      0.5
-    );
-
-    vec.unproject(camera);
-
-    vec.sub(camera.position).normalize();
-
-    var distance = -camera.position.z / vec.z;
-
-    pos.copy(camera.position).add(vec.multiplyScalar(distance));
-
-    if (viewer._mobile) {
-      if (viewer.mobileCoordScaleX && viewer.mobileCoordScaleY) {
-        pos.x = Math.round(viewer.mobileCoordScaleX.invert(pos.x))
-        pos.y = Math.round(viewer.mobileCoordScaleY.invert(pos.y))
-      } else {
-        return false
-      }
-    }
-
-    return pos;
-  }
 
   function toRadians(angle) {
     return angle * (Math.PI / 180);
@@ -2485,8 +1922,8 @@ export function viewer(options) {
 
   function checkIntersects(mouse_position) {
     let mouse_vector = mouseToThree(...mouse_position);
-    raycaster.setFromCamera(mouse_vector, camera);
-    let intersects = raycaster.intersectObject(pointsLayer);
+    raycaster.setFromCamera(mouse_vector, viewer.camera);
+    let intersects = raycaster.intersectObject(viewer.pointsLayer);
     if (intersects[0]) {
       let sorted_intersects = sortIntersectsByDistanceToRay(intersects);
       let intersect = sorted_intersects[0];
@@ -2507,7 +1944,7 @@ export function viewer(options) {
   };
 
   function highlightPoint(intersect) {
-    removeHighlights();
+    //removeHighlights();
 
     let colors = intersect.object.geometry.attributes.color.array;
 
@@ -2539,173 +1976,8 @@ export function viewer(options) {
 
   }
 
-  function removeHighlights() {
-    tooltipContainer.remove(...tooltipContainer.children);
-  }
-
-  /**
-   * @description Updates the innerHTML of the tooltip container
-   * @function updateTooltip
-   */
-  function updateTooltip() {
-    let x, y;
-    if (viewer._mobile) {
-      //mobile coords are scaled to [-1,1], so we "unscale" them
-      x = Math.round(viewer.mobileCoordScaleX.invert(tooltip_state.coords[0]))
-      y = Math.round(viewer.mobileCoordScaleY.invert(tooltip_state.coords[1]))
-    } else {
-      x = tooltip_state.coords[0];
-      y = tooltip_state.coords[1];
-    }
-    if (viewer.zerosRemoved_) {
-      //add the zeros removed back on
-      let f = Number('1E' + viewer.zerosRemoved_);
-      x = Math.round(x * f);
-      y = Math.round(y * f);
-    }
-
-    tooltip.style.display = tooltip_state.display;
-    tooltip.style.left = tooltip_state.left + "px";
-    tooltip.style.top = tooltip_state.top + "px";
-    //pointTip.innerText = tooltip_state.name;
-    pointTip.style.background = tooltip_state.color;
-
-    // set tooltip attributes HTML
-    labelTip.innerHTML = `
-    <table>
-     <thead></thead>
-     <tbody>
-
-     <tr>
-     <th><strong>${viewer.colorField_}:</strong> </th>
-     <th>${tooltip_state.colorValue}</th>
-     </tr>
 
 
-
-     <tr>
-     <th><strong>x:</strong> </th>
-     <th>${x}</th>
-     </tr>
-
-     <tr>
-     <th><strong>y:</strong> </th>
-     <th>${y}</th>
-     </tr>
-
-     <tr>
-     <th><strong>CRS:</strong> </th>
-     <th>EPSG:${viewer.EPSG_}</th>
-     </tr>
-
-     <tr id="tooltip_lau_name">
-
-     </tr>
-     <tr id="tooltip_lau_id">
-
-     </tr>
-     <tr id="tooltip_nuts_id">
-
-     </tr>
-
-
-     </tbody>
-    
-    </table>
-
-
-   `;
-
-    //fetch NUTS info using GISCO id service
-    if ([4326, 4258, 3035].includes(viewer.EPSG_)) {
-      let nutsNode = document.getElementById("tooltip_nuts_id");
-      let lauNode = document.getElementById("tooltip_lau_id");
-      let lauNameNode = document.getElementById("tooltip_lau_name");
-      let nutsRequest = `${CONSTANTS.nutsAPIBaseURL}nuts?x=${x}&y=${y}&proj=${viewer.EPSG_}&year=2021&level=3`;
-      let lauRequest = `${CONSTANTS.nutsAPIBaseURL}lau?x=${x}&y=${y}&proj=${viewer.EPSG_}&year=2019&level=3`;
-      //get NUTS
-      json(nutsRequest).then(
-        json => {
-
-          if (json.features.length > 0) {
-            //add NUTS id to tooltip table
-            let f = json.features[0];
-
-            nutsNode.innerHTML = `
-            <th><strong>NUTS3 code:</strong></th>
-            <th>${f.properties.nuts_id}</th>
-            `;
-          }
-        },
-        err => {
-          console.log("no results found")
-          //console.error(err);
-        })
-
-      //get LAUs
-      json(lauRequest).then(
-        json => {
-
-          if (json.features.length > 0) {
-            //add lau id and name to tooltip table
-            let f = json.features[0];
-            lauNode.innerHTML = `
-              <th><strong>LAU code:</strong></th>
-              <th>${f.properties.lau_id}</th>
-              `;
-            lauNameNode.innerHTML = `
-              <th><strong>LAU:</strong></th>
-              <th>${f.properties.lau_name}</th>
-              `;
-          }
-        },
-        err => {
-          console.log("no results found")
-          //console.error(err);
-        })
-
-    }
-  }
-
-  /**
-   *
-   *
-   * @param {*} mouse_position
-   * @param {*} cell
-   */
-  function showTooltip(mouse_position, cell) {
-    let x_offset = 25;
-    let y_offset = -10;
-    let tooltipWidth = parseInt(tooltip.style.width.replace("px", ""));
-    let tooltipHeight = 100;//tooltip.style.height;
-    let left = mouse_position[0] + x_offset;
-    let top = mouse_position[1] + y_offset
-    if (left > viewer.width_ - tooltipWidth) {
-      left = left - (tooltipWidth + 40);
-    }
-    if (top < 0) {
-      top = top + (tooltipHeight);
-    }
-
-    tooltip_state.display = "block";
-    tooltip_state.left = left
-    tooltip_state.top = top;
-    tooltip_state.colorValue = Utils.formatNumber(parseFloat(cell[viewer.colorField_]));
-    tooltip_state.coords = [cell.x, cell.y];
-    tooltip_state.color = cell.color;
-    updateTooltip();
-  }
-
-  /**
-   *
-   *
-   */
-  function hideTooltip() {
-    if (tooltip && tooltip_state) {
-      tooltip.style.display = "none";
-      //updateTooltip();
-    }
-  }
 
   /**
    * Used for 'turning objects on and off'
