@@ -27,7 +27,7 @@
         .zerosRemoved(2)
         .nuts(false) // does not support 28992 - use method to load custom geojson
         //.nutsCountry("NL")
-        .center([1720, 3900])//EPSG=28992 with 2 zeros removed
+        .center([1720, 4500])//EPSG=28992 with 2 zeros removed
         .showPlacenames(true)
         .EPSG(28992)
         .placenamesCountry("NL")
@@ -38,6 +38,7 @@
             "500": 50000,
             "250": 10000
         })
+        .zoom(5000)
         .height(window.innerHeight)
         .width(window.innerWidth)
         .backgroundColor("#2b2b2b")
@@ -52,7 +53,7 @@
             orientation: "vertical",
             width: 130,
             height: 170,
-            title: "Total Inhabitants per 100m² (2018)",
+            //title: "Total Inhabitants per 100m² (2018)",
             titleWidth: 110,
             format: ',.0f'
         })

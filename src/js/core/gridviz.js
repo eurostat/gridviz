@@ -673,7 +673,7 @@ export function viewer(options) {
     updateColorScale();
     updatePointsColors();
     if (viewer.legend_) {
-      legend.updateLegend();
+      legend.updateLegend(viewer);
     }
   }
 
@@ -696,7 +696,7 @@ export function viewer(options) {
     viewer.colorField_ = field;
     updatePointsColors();
     if (viewer.legend_) {
-      legend.updateLegend();
+      legend.updateLegend(viewer);
     }
   }
 
@@ -720,7 +720,7 @@ export function viewer(options) {
     updateColorScale();
     updatePointsColors();
     if (viewer.legend_) {
-      legend.updateLegend();
+      legend.updateLegend(viewer);
     }
   }
 
@@ -744,7 +744,7 @@ export function viewer(options) {
     updateSizeScale();
     updatePointsSizes();
     if (viewer._gridLegend) {
-      legend.updateLegend();
+      legend.updateLegend(viewer);
     }
   }
 
