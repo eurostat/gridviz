@@ -37,7 +37,8 @@
     .cellCount(true)
     .colorField("Population") // csv column which you wish to visualize
     //sizeColumn() "value" // csv column which you wish to visualize
-    .nuts(false) //loads borders topojson
+    .nuts(true) //loads borders topojson
+    .nutsLevel(0)
     .center([4369, 3230]) //EPSG=3035
     .zoom(5000)
     // .height(window.innerHeight - 5)
@@ -64,7 +65,7 @@
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
     .build();
 
-  viz.addGeoJson("../../../assets/geojson/NUTS_BN_03M_2021_3035_LEVL_0.geojson");
+  //viz.addGeoJson("../../../assets/geojson/NUTS_BN_03M_2021_3035_LEVL_0.geojson");
 </script>
 
 </html>

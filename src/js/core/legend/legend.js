@@ -7,7 +7,7 @@ import { interpolateRound } from "d3-interpolate";
 import { axisBottom } from "d3-axis";
 import { format } from "d3-format";
 import * as d3scale from "d3-scale";
-import { range } from "d3-array";
+import { range, quantile } from "d3-array";
 
 /**
    * 
@@ -127,7 +127,7 @@ function ramp(color, n = 256) {
 /**
    * 
    * @function colorLegend
-   * @description see see https://observablehq.com/@gabgrz/color-legend
+   * @description see https://observablehq.com/@gabgrz/color-legend
    */
 function colorLegend({
     color,
