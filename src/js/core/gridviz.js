@@ -2,10 +2,7 @@
 import { zoom, zoomIdentity } from "d3-zoom";
 import * as d3scaleChromatic from "d3-scale-chromatic";
 import * as d3scale from "d3-scale";
-
-
 import { json, csv } from "d3-fetch";
-
 import { extent, min, max } from "d3-array";
 import { select, pointer } from "d3-selection";
 
@@ -1331,24 +1328,24 @@ export function viewer(options) {
     //create or reuse viewer.pointsLayer Material
     if (!pointsMaterial) {
       // Apply custom point sizes, instead of using three.js pointsMaterial
-      // pointsMaterial = new ShaderMaterial({
-      //   uniforms: {
-      //     multiplier: {
-      //       value: 1050 //km TODO: define dynamically. the extra meters prevent white lines across the screen flickering when zooming
-      //     }
-      //   },
-      //   fragmentShader: fragmentShader(),
-      //   vertexShader: vertexShader(),
-      //   vertexColors: THREE.VertexColors
-      // });
-
-      //using threejs PointsMaterial
-      pointsMaterial = new PointsMaterial({
-        size: gridConfig.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
-        sizeAttenuation: true,
-        //https://github.com/mrdoob/three.js/blob/master/src/constants.js
+      pointsMaterial = new ShaderMaterial({
+        uniforms: {
+          multiplier: {
+            value: 1050 //km TODO: define dynamically. the extra meters prevent white lines across the screen flickering when zooming
+          }
+        },
+        fragmentShader: fragmentShader(),
+        vertexShader: vertexShader(),
         vertexColors: THREE.VertexColors
       });
+
+      //use threejs PointsMaterial instead:
+      // pointsMaterial = new PointsMaterial({
+      //   size: gridConfig.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
+      //   sizeAttenuation: true,
+      //   //https://github.com/mrdoob/three.js/blob/master/src/constants.js
+      //   vertexColors: THREE.VertexColors
+      // });
 
     } else {
       pointsMaterial.size = gridConfig.pointSize;
