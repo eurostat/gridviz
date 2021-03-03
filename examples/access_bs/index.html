@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>5km² Grid of Europe</title>
+  <title>Primary schools accessiblity</title>
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
   <meta name="viewport" content="width=device-width" />
 </head>
@@ -21,17 +21,17 @@
     .gridData([
       {
         url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
-        cellSize: 5,
+        cellSize: 1,
       },
     ])
     .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
-    .title("5km² Population Grid of Europe")
-    .colorField("value") // csv column that will determine cell colour
+    .title("Primary schools accessiblity")
+    .colorField("nearest") // csv column that will determine cell colour
     .legend({
-      title: "Total population per 5 km² (2011)",
+      title: "Travel time to nearest school (min)",
       ticks: 6,
     })
-    .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
+    //.sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
 </script>
 
