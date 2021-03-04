@@ -84,9 +84,7 @@ export function viewer(options) {
   viewer.colorSchemeName_ = "interpolateTurbo";
   viewer.reverseColorScheme_ = false;
   viewer.sizeScaleName_ = "scaleSqrt";
-  viewer.colorScaleName_ = "scaleSequentialSqrt";
-  viewer._defaultColorScaleFunction = d3scale[viewer.colorScaleName_];
-  viewer._defaultSizeScaleFunction = d3scale[viewer.sizeScaleName_];
+  viewer.colorScaleName_ = "scaleSequential";
   viewer.colors_ = null;
   viewer.thresholdValues_ = null;
   viewer.colorScaleFunction_ = null;
@@ -808,8 +806,8 @@ export function viewer(options) {
 * @function viewWholeGrid
 */
   function viewWholeGrid() {
-    let minViewerX = viewer.extentX[0];
-    let minViewerY = viewer.extentY[0];
+    //let minViewerX = viewer.extentX[0];
+    //let minViewerY = viewer.extentY[0];
 
     if (viewer._mobile) {
       let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
@@ -975,16 +973,16 @@ export function viewer(options) {
             addEventListeners();
 
             //define scales
-            viewer.colorValuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.colorField_]);
+            viewer.colorValuesExtent = extent(gridCaches[viewer.resolution_], d => parseFloat(d[viewer.colorField_]));
             viewer.colorScaleFunction_ = defineColorScale();
             if (viewer.sizeField_) {
-              viewer.sizeValuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.sizeField_]);
+              viewer.sizeValuesExtent = extent(gridCaches[viewer.resolution_], d => parseFloat(d[viewer.sizeField_]));
               viewer.sizeScaleFunction_ = defineSizeScale();
             }
 
             //coordinates extent
-            viewer.extentX = extent(gridCaches[viewer.resolution_], d => d.x);
-            viewer.extentY = extent(gridCaches[viewer.resolution_], d => d.y);
+            //viewer.extentX = extent(gridCaches[viewer.resolution_], d => parseFloat(d.x));
+            //viewer.extentY = extent(gridCaches[viewer.resolution_], d => parseFloat(d.y));
 
             // if center is not specified by user, move camera to a cell half way along the array
             if (!viewer.center_) {
@@ -1092,7 +1090,7 @@ export function viewer(options) {
         if (viewer.reverseColorScheme_) {
           domain = domain.reverse();
         }
-        return viewer._defaultColorScaleFunction(domain, d3scaleChromatic[viewer.colorSchemeName_]);
+        return d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
       } else {
         return viewer.colorScaleFunction_;
       }
@@ -1126,7 +1124,7 @@ export function viewer(options) {
   function updateSizeScaleFunction() {
     //create if didnt exist upon initialization
     if (!viewer.sizeValuesExtent) {
-      viewer.sizeValuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.sizeField_]);
+      viewer.sizeValuesExtent = extent(gridCaches[viewer.resolution_], d => parseFloat(d[viewer.sizeField_]));
       viewer.sizeScaleFunction_ = defineSizeScale();
     } else {
       //update
@@ -1146,7 +1144,7 @@ export function viewer(options) {
     if (viewer.sizeScaleFunction_) {
       return viewer.sizeScaleFunction_;
     } else {
-      return viewer._defaultSizeScaleFunction().domain(viewer.colorValuesExtent).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
+      return d3scale[viewer.sizeScaleName_]().domain(viewer.colorValuesExtent).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
     }
   }
 
