@@ -9,7 +9,7 @@
 </head>
 
 <body style="margin: 0">
-  <div id="viz-container" style="height:500px; width:50%;"></div>
+  <div id="viz-container" style="height:600px; width:100%;"></div>
 </body>
 <script src="../../build/gridviz.js"></script>
 <script>
@@ -20,13 +20,13 @@
     .container(containerDiv)
     .gridData([
       {
-        url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
+        url: "https://raw.githubusercontent.com/eurostat/gridviz/development/assets/csv/Europe/1km/accs.csv",
         cellSize: 1,
       },
     ])
     .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
     .title("Primary schools accessiblity")
-    .colorField("nearest") // csv column that will determine cell colour
+    .colorField("avg_time") // csv column that will determine cell colour
     .legend({
       title: "Travel time to nearest school (min)",
       ticks: 6,
