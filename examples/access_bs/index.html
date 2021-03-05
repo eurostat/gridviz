@@ -30,13 +30,16 @@
     .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
     .title("Primary schools accessiblity")
     .colorField("avg_time") // csv column that will determine cell colour
-    .colorScaleName("scaleSequentialSqrt")
-    .colorSchemeName("interpolateYlOrRd")
-    .reverseColorScheme(false)
-    .colorSchemeSelector(true)
-    .colorScaleSelector(true)
-    //.thresholdValues([5,10,15,20,25,30,35,40,45,50])
-    //.colors(['#a50026','#d73027','#f46d43','#fdae61','#fee090','#e0f3f8','#abd9e9','#74add1','#4575b4','#313695'].reverse()) //from colorbrewer
+
+    //.colorSchemeName("interpolateYlOrRd")
+    //.reverseColorScheme(false)
+    //.colorSchemeSelector(true)
+    .colors(['#a50026','#d73027','#f46d43','#fdae61','#fee090','#e0f3f8','#abd9e9','#74add1','#4575b4','#313695'].reverse()) //from colorbrewer
+
+    //.colorScaleSelector(true)
+    //.colorScaleName("scaleSequentialSqrt")
+    .thresholdValues([2,4,6,8,10,15,20,25,30,40])
+
     .legend({
       title: "Travel time to nearest school (min)",
       ticks: 12,
