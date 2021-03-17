@@ -59,7 +59,7 @@
     "d3-selection": "2.0.0",
     "d3-svg-legend": "2.25.6",
     "d3-zoom": "2.0.0",
-    "three": "0.111.0",
+    "three": "0.125.0",
     "topojson": "3.0.2"
   }
 }
