@@ -32,7 +32,7 @@
     .gridData([
       {
         url: "../../../assets/csv/Europe/1km/pop_1km.csv",
-        cellSize: 1,
+        cellSize: 0.99,
       },
     ])
     .title("1 km² Grid of Europe")
@@ -44,12 +44,15 @@
     // .zoom(200)
     .nuts(false) //loads borders topojson
     .center([4369, 3230]) //EPSG=3035 with last 3 zeros removed
+    .zoom(1500)
     .height(window.innerHeight - 4)
     .width(window.innerWidth - 4)
-    .backgroundColor("#000")
+    .backgroundColor("#97DBF2")
     .lineColor("#ffffff")
-    .highlightColor("red")
-    .colorScaleFunction(colorScale)
+    .highlightColor("cyan")
+    .colors(["#F1CE90","#EDBA5F","#E6A530","#D76327","#C64D24","#BA191F"])
+    .thresholdValues([1,55,20,200,500,5000])
+    //.colorScaleFunction(colorScale)
     // following methods define the scales using gridviz
     // .colorSchemeName("interpolateCool")
     // .colorScaleName("scaleSequentialSqrt")

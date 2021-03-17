@@ -20,7 +20,8 @@
     .container(containerDiv)
     .gridData([
       {
-        url: "https://raw.githubusercontent.com/eurostat/gridviz/development/assets/csv/Europe/1km/accs.csv",
+        // url: "https://raw.githubusercontent.com/eurostat/gridviz/development/assets/csv/Europe/1km/accs.csv",
+        url: "../../../assets/csv/Europe/1km/primary_school_acc.csv",
         cellSize: 1,
       },
     ])
@@ -43,6 +44,7 @@
     .legend({
       title: "Travel time to nearest school (min)",
       ticks: 12,
+      width: 500
     })
     //.sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
