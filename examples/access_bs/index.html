@@ -20,7 +20,8 @@
     .container(containerDiv)
     .gridData([
       {
-        url: "https://raw.githubusercontent.com/eurostat/gridviz/development/assets/csv/Europe/1km/accs.csv",
+        // url: "https://raw.githubusercontent.com/eurostat/gridviz/development/assets/csv/Europe/1km/accs.csv",
+        url: "../../../assets/csv/Europe/1km/primary_school_acc.csv",
         cellSize: 1,
       },
     ])
@@ -34,12 +35,13 @@
     .colorSchemeName("interpolateYlOrRd")
     .reverseColorScheme(false)
     .colorSchemeSelector(true)
-    .colorScaleSelector(true)
+    //.colorScaleSelector(true)
     //.thresholdValues([5,10,15,20,25,30,35,40,45,50])
     //.colors(['#a50026','#d73027','#f46d43','#fdae61','#fee090','#e0f3f8','#abd9e9','#74add1','#4575b4','#313695'].reverse()) //from colorbrewer
     .legend({
       title: "Travel time to nearest school (min)",
       ticks: 12,
+      width: 500
     })
     //.sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
