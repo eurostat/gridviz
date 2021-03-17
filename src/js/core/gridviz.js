@@ -542,7 +542,6 @@ export function viewer(options) {
     config.aspect_ = viewer.width_ / viewer.height_;
 
     //initial camera position Z
-    //zoom doesnt work on mobile ...yet
     if (viewer._mobile) {
       config.initialZ_ = config.far_ / 2 - 1
     } else {
