@@ -47,15 +47,15 @@
     .zoom(1500)
     .height(window.innerHeight - 4)
     .width(window.innerWidth - 4)
-    .backgroundColor("#97DBF2")
+    .backgroundColor("#000")
     .lineColor("#ffffff")
     .highlightColor("cyan")
-    .colors(["#F1CE90","#EDBA5F","#E6A530","#D76327","#C64D24","#BA191F"])
-    .thresholdValues([1,55,20,200,500,5000])
+    //.colors(["#F1CE90","#EDBA5F","#E6A530","#D76327","#C64D24","#BA191F"])
+    //.thresholdValues([1,55,20,200,500,5000])
     //.colorScaleFunction(colorScale)
     // following methods define the scales using gridviz
-    // .colorSchemeName("interpolateCool")
-    // .colorScaleName("scaleSequentialSqrt")
+     .colorSchemeName("interpolateMagma")
+     .colorScaleName("scaleSequentialLog")
     // .colorSchemeSelector(true)
     // .colorScaleSelector(true)
     // .colorFieldSelector(true)
@@ -64,7 +64,7 @@
     .legend({
       title: "Total population per km² (2011)",
       titleWidth: 130,
-      ticks: 5,
+      //ticks: 5,
     })
     .build();
 </script>

@@ -84,9 +84,10 @@ export function viewer(options) {
   viewer.colorSchemeName_ = "interpolateTurbo";
   viewer.reverseColorScheme_ = false;
   viewer.sizeScaleName_ = "scaleSqrt";
-  viewer.colorScaleName_ = "scaleSequential";
+  viewer.colorScaleName_ = "scaleSequentialSqrt";
+  viewer.colorScaleMidpoint_ = 0; // midpoint for diverging scales
   viewer.colors_ = null;
-  viewer.thresholdValues_ = null;
+  viewer.thresholdValues_ = null; // for threshold / quantile scales
   viewer.colorScaleFunction_ = null;
   viewer.sizeScaleFunction_ = null;
 
@@ -746,9 +747,9 @@ export function viewer(options) {
   }
 
   /**
- * @description redefine width and height of viewer when window is resized
- * @function addResizeEvent
- */
+   * @description redefine width and height of viewer when window is resized
+   * @function addResizeEvent
+   */
   function addResizeEvent() {
     window.addEventListener("resize", () => {
       viewer.width_ = viewer.container_.clientWidth;
@@ -761,9 +762,9 @@ export function viewer(options) {
   }
 
   /**
-* @description attach event listeners to the viewer
-* @function addMouseEventsToView
-*/
+  * @description attach event listeners to the viewer
+  * @function addMouseEventsToView
+  */
   function addMouseEventsToView() {
     // show cell value on click
     view.on("click", (event) => {
@@ -788,9 +789,9 @@ export function viewer(options) {
   }
 
   /**
-* @description attach event listeners to viewer buttons
-* @function addButtonEvents
-*/
+  * @description attach event listeners to viewer buttons
+  * @function addButtonEvents
+  */
   function addButtonEvents() {
     if (viewer.homeButton_) {
       viewer.homeButtonNode.addEventListener("click", () => {
@@ -801,9 +802,9 @@ export function viewer(options) {
 
 
   /**
-* @description move camera to show the entire extent of the grid, and update the zoom transform
-* @function viewWholeGrid
-*/
+  * @description move camera to show the entire extent of the grid, and update the zoom transform
+  * @function viewWholeGrid
+  */
   function viewWholeGrid() {
     //let minViewerX = viewer.extentX[0];
     //let minViewerY = viewer.extentY[0];
@@ -883,9 +884,9 @@ export function viewer(options) {
   }
 
   /**
- * @description Define the near parameter for THREE.camera. The near parameter represents the smallest possible distance that the camera can be from the plane (where z=0)
- * @function defineNear
- */
+   * @description Define the near parameter for THREE.camera. The near parameter represents the smallest possible distance that the camera can be from the plane (where z=0)
+   * @function defineNear
+   */
   function defineNear() {
     if (viewer._mobile) {
       return 0.0001; //due to a bug with pan & zoom, we have to scale everything on mobile
@@ -1085,11 +1086,28 @@ export function viewer(options) {
     } else {
       // assign default if user doesnt specify their own function
       if (!viewer.colorScaleFunction_) {
+
+        if (viewer.colorScaleName_ == "scaleSequentialLog") {
+          // fix 0 issue for log scales
+          if (viewer.colorValuesExtent[0]== 0) {
+            viewer.colorValuesExtent[0] = 0.1
+          }
+        }
+
         let domain = viewer.colorValuesExtent;
+
         if (viewer.reverseColorScheme_) {
           domain = domain.reverse();
         }
-        return d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
+        //apply thresholds if specified by user
+        if (viewer.colorScaleName_ == "scaleSequentialQuantile") {
+          // use threshold values as domain
+          return d3scale[viewer.colorScaleName_](viewer.thresholdValues_, d3scaleChromatic[viewer.colorSchemeName_])
+
+        }else {
+          return d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
+        }
+
       } else {
         return viewer.colorScaleFunction_;
       }
@@ -1098,28 +1116,35 @@ export function viewer(options) {
 
 
   /**
- * 
- * @function updateColorScaleFunction
- * @description called when user selects a different colour scheme or scale function
- *
- */
+   * 
+   * @function updateColorScaleFunction
+   * @description called when user selects a different colour scheme or scale function
+   *
+   */
   function updateColorScaleFunction() {
     let domain;
     if (viewer.colorScaleName_ == "scaleDiverging") {
-      domain = [viewer.colorValuesExtent[0], 0, viewer.colorValuesExtent[1]];
+      domain = [viewer.colorValuesExtent[0], viewer.colorScaleMidpoint, viewer.colorValuesExtent[1]];
     } else {
       domain = viewer.colorValuesExtent;
     }
-    viewer.colorScaleFunction_ = d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
+
+    //apply thresholds if specified by user
+    if (viewer.colorScaleName_ == "scaleSequentialQuantile") {
+      // use threshold values as domain
+      viewer.colorScaleFunction_ = d3scale[viewer.colorScaleName_](viewer.thresholdValues_, d3scaleChromatic[viewer.colorSchemeName_])
+    } else {
+      viewer.colorScaleFunction_ = d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
+    }
   }
 
 
   /**
-* 
-* @function updateColorScaleFunction
-* @description called when user selects a different colour scheme or scale function
-*
-*/
+  * 
+  * @function updateColorScaleFunction
+  * @description called when user selects a different colour scheme or scale function
+  *
+  */
   function updateSizeScaleFunction() {
     //create if didnt exist upon initialization
     if (!viewer.sizeValuesExtent) {
@@ -1133,11 +1158,11 @@ export function viewer(options) {
   }
 
   /**
-* 
-* @function defineSizeScale
-* @description define initial scale function to be used when determining cell size
-*
-*/
+  * 
+  * @function defineSizeScale
+  * @description define initial scale function to be used when determining cell size
+  *
+  */
   function defineSizeScale() {
     // user-defined vs default scale
     if (viewer.sizeScaleFunction_) {
