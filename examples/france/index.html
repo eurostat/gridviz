@@ -34,17 +34,19 @@
         .backgroundColor("#000")
         .lineColor("#ffffff")
         .colorSchemeName("interpolateInferno")
+        .colorScaleName("scaleSequentialLog")
         .colorField("Ind")  // csv column used to calculate the colour of each cell
         .colorSchemeSelector(true)
-        .colorScaleSelector(true)
-        .colorFieldSelector(true)
+        // .colorScaleSelector(true)
+        // .colorFieldSelector(true)
         .colorScaleSelectorLabel("Scale: ")
         .colorFieldSelectorLabel("Indicator: ")
         .nuts(true) //loads borders topojson
         .legend({
             title: "Total population per km² (2015)",
             titleWidth: 110,
-            format: ',.0f'
+            format: ',.0f',
+            ticks:5
         })
         .build()
 </script>

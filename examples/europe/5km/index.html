@@ -22,9 +22,6 @@
     legendHeight = 50;
   }
 
-  // log scale fix for 0 values
-  d3.scale.log().clamp(true).domain([0.1, max_y _value]).range([h, 0]).nice();
-
   let containerDiv = document.getElementById("viz-container");
   let viz = gridviz
     .viewer()
