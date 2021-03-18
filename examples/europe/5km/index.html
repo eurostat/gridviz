@@ -22,6 +22,9 @@
     legendHeight = 50;
   }
 
+  // log scale fix for 0 values
+  d3.scale.log().clamp(true).domain([0.1, max_y _value]).range([h, 0]).nice();
+
   let containerDiv = document.getElementById("viz-container");
   let viz = gridviz
     .viewer()
@@ -46,14 +49,14 @@
     .showPlacenames(true)
     .backgroundColor("#97DBF2")
     .lineColor("#000")
-    .colorSchemeName("interpolateYlOrRd") //d3-scale-chromatic
+    .colorSchemeName("interpolateMagma") //d3-scale-chromatic
     // .reverseColorScheme(true)
 
-    .colorScaleName("scaleSequentialSqrt")
-    .colorSchemeSelector(true)
-    .colorScaleSelector(true)
-    .colorFieldSelector(true)
-    .sizeFieldSelector(true)
+    .colorScaleName("scaleSequentialLog")
+    // .colorSchemeSelector(true)
+    // .colorScaleSelector(true)
+    // .colorFieldSelector(true)
+    // .sizeFieldSelector(true)
     .legend({
       type: "continuous",
       width: legendWidth,

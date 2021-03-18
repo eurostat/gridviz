@@ -39,16 +39,21 @@
         .nuts(true)
         .nutsLevel(0)
         .center([15.381, 38.225])
-        .colorSchemeName("interpolateBlues")
+        .colorSchemeSelector(true)
+        .colorScaleSelector(true)
+        .colorFieldSelector(true)
+        .sizeFieldSelector(true)
+        .colorSchemeName("interpolateViridis")
+        .colorScaleName("scaleThreshold")
+        .thresholdValues([10000, 50000, 100000])
         //.reverseColorScheme(true)
-        .colors(["red", "orange", "yellow", "cyan"])
-        .thresholdValues([1000, 10000, 50000, 100000])
+        .colors(['#d7191c','#dfe27c','#30afff'])
+        //.thresholdValues([1000, 10000, 50000, 10000, 100000])
         .zoom(100)
         .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
         .legend({
             title: "Average cellular download speed (kbps)",
             titleWidth: 130,
-            ticks: 5,
         })
         .build();
 </script>

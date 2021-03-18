@@ -43,12 +43,13 @@
         .center([2677, 1964])
         .backgroundColor("#fcf6c2")
         .lineColor("#000")
-        .colorSchemeName("interpolateRdYlGn") //d3-scale-chromatic
-        .reverseColorScheme(true)
-        .colorSchemeSelector(true)
-        .colorScaleSelector(true)
-        .colorFieldSelector(true)
-        .sizeFieldSelector(true)
+        .colorSchemeName("interpolateBlues") //d3-scale-chromatic
+        .colorScaleName("scaleSequentialLog") //d3-scale-chromatic
+        // .reverseColorScheme(true)
+        // .colorSchemeSelector(true)
+        // .colorScaleSelector(true)
+        // .colorFieldSelector(true)
+        // .sizeFieldSelector(true)
         .colorScaleSelectorLabel("Colour scale: ")
         .colorFieldSelectorLabel("Colour field: ")
         .legend({
@@ -56,7 +57,7 @@
             titleWidth: 150,
             width: legendWidth,
             height: legendHeight,
-            ticks: 12,
+            ticks:5
         })
         .build()
 </script>
