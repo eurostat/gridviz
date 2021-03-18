@@ -107,6 +107,7 @@ function createContinuousLegend(viewer) {
         marginRight: viewer.legend_.marginRight || 0,
         marginLeft: viewer.legend_.marginLeft || 0,
         tickFormat: viewer.legend_.tickFormat || ".0f",
+        tickValues: viewer.thresholdValues_ || undefined
     });
 
     container.node().appendChild(viewer._gridLegend);
