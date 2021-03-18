@@ -93,10 +93,10 @@ export function viewer(options) {
 
   //dropdowns
   viewer.colorSchemeSelector_ = false;
-  viewer.colorScaleSelectorLabel_ = "Color scale: "
+  viewer.colorScaleSelectorLabel_ = "Colour scale: "
   viewer.colorScaleSelector_ = false;
   viewer.colorScaleSelectorDefault_ = viewer.colorScaleName_
-  viewer.colorFieldSelectorLabel_ = "Color field: "
+  viewer.colorFieldSelectorLabel_ = "Colour field: "
   viewer.colorFieldSelector_ = false;
   viewer.sizeFieldSelector_ = false;
   viewer.sizeFieldSelectorLabel_ = "Size field: ";
@@ -1645,25 +1645,17 @@ export function viewer(options) {
   function createColorScaleDropdown() {
     let scales = [
       {
-        value: "scaleSequential",
-        innerText: "Sequential"
-      },
-      {
         value: "scaleSequentialLog",
-        innerText: "Sequential logarithmic"
+        innerText: "Logarithmic"
       },
       {
         value: "scaleSequentialPow",
-        innerText: "Sequential exponential"
+        innerText: "Exponential"
       },
       {
         value: "scaleSequentialSqrt",
-        innerText: "Sequential square-root "
-      },
-      {
-        value: "scaleSequentialQuantile",
-        innerText: "Sequential quantile"
-      },
+        innerText: "Square-root "
+      }
     ];
     let dropdown_container = document.createElement("div");
     dropdown_container.id = "gridviz-colorscale-dropdown-container";
