@@ -1123,6 +1123,14 @@ export function viewer(options) {
    */
   function updateColorScaleFunction() {
     let domain;
+    
+    if (viewer.colorScaleName_ == "scaleSequentialLog") {
+      // fix 0 issue for log scales
+      if (viewer.colorValuesExtent[0]== 0) {
+        viewer.colorValuesExtent[0] = 0.1
+      }
+    }
+
     if (viewer.colorScaleName_ == "scaleDiverging") {
       domain = [viewer.colorValuesExtent[0], viewer.colorScaleMidpoint, viewer.colorValuesExtent[1]];
     } else {
