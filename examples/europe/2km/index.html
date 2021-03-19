@@ -36,13 +36,14 @@
     .backgroundColor("#000")
     .lineColor("#bfbfbf")
     .lineWidth(0.0010)
-    .colorScaleName("scaleSequentialSqrt")
-    .colorSchemeName("interpolateViridis")
+    .colorSchemeName("interpolateViridis") //d3-scale-chromatic
+    .colorScaleName("scaleSequentialLog")
     .colorSchemeSelector(true)
+    .colorScaleSelector(true)
     .legend({
       title: "Total population per 2 km² (2011)",
       titleWidth: 130,
-      cells: 15,
+      ticks: 5,
     })
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
     .build();

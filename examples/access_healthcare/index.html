@@ -39,18 +39,18 @@
       .title("Healthcare accessiblity")
       .colorField("avg_time") // csv column that will determine cell colour
       .showPlacenames(true)
-      //.colorSchemeName("interpolateYlOrRd")
+      .colorSchemeName("interpolateCividis")
       //.reverseColorScheme(false)
-      //.colorSchemeSelector(true)
-      .colors(["#a50026", "#d73027", "#f46d43", "#fdae61", "#fee090", "#e0f3f8", "#abd9e9", "#74add1", "#4575b4", "#313695"].reverse()) //from colorbrewer
+      .colorSchemeSelector(true)
+      //.colors(["#a50026", "#d73027", "#f46d43", "#fdae61", "#fee090", "#e0f3f8", "#abd9e9", "#74add1", "#4575b4", "#313695"].reverse()) //from colorbrewer
 
       //.colorScaleSelector(true)
-      //.colorScaleName("scaleSequentialSqrt")
+      .colorScaleName("scaleSequentialQuantile")
       .thresholdValues([2, 4, 6, 8, 10, 15, 20, 25, 30, 40])
 
       .legend({
         title: "Travel time to nearest school (min)",
-        ticks: 12,
+        ticks: 10,
         width: legendWidth,
         height: legendHeight
       })

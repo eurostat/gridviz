@@ -23,6 +23,7 @@
         .title("1km² Grid of France")
         .sourcesHTML("Source: <a target='__blank' href='https://insee.fr/fr/accueil'>INSEE</a>")
         .center([3709000, 2624000])//EPSG=3035
+        .zoom(1000000)
         .nuts(true)
         .nutsLevel(3)
         .nutsCountry("FR")
@@ -33,12 +34,18 @@
         .width(window.innerWidth)
         .backgroundColor("#000")
         .lineColor("#ffffff")
-        .colorSchemeName("interpolateInferno")
+        .colorSchemeName("interpolateYlGnBu")
         .colorScaleName("scaleSequentialLog")
         .colorField("Ind")  // csv column used to calculate the colour of each cell
         .colorSchemeSelector(true)
-        // .colorScaleSelector(true)
-        // .colorFieldSelector(true)
+         .colorScaleSelector(true)
+         .placenameThresholds({ //"scale": population
+            "500000": 100000,
+            "175000": 50000,
+            "150000": 20000,
+            "100000": 10000,
+            "50000": 1000
+        })
         .colorScaleSelectorLabel("Scale: ")
         .colorFieldSelectorLabel("Indicator: ")
         .nuts(true) //loads borders topojson
@@ -46,8 +53,9 @@
             title: "Total population per km² (2015)",
             titleWidth: 110,
             format: ',.0f',
-            ticks:5
+            ticks:4
         })
+        .debugPlacenames(true)
         .build()
 </script>
 
