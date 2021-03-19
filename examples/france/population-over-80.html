@@ -23,27 +23,31 @@
         }])
         .colorField("Ind_80p")  // csv column which you wish to visualize
         .center([3709000, 2624000])//EPSG=3035
+        .zoom(1000000)
         .height(window.innerHeight)
         .width(window.innerWidth)
         .backgroundColor("#000")
         .lineColor("#ffffff")
         .colorSchemeName("interpolateInferno")
         .colorSchemeSelector(true)
+        .colorScaleSelector(true)
         .nuts(true)
         .nutsCountry("FR")
         .EPSG(3035)
+        .showPlacenames(true)
         .placenamesCountry("FR")
         .placenameThresholds({ //"scale": population
-            "1000000": 100000,
-            "300000": 50000,
-            "200000": 30000,
-            "150000": 500,
-            "100000": 100
+            "500000": 100000,
+            "175000": 50000,
+            "150000": 20000,
+            "100000": 10000,
+            "50000": 1000
         })
         .legend({
             title: "Population over 80 years of age per km² (2015)",
             titleWidth: 150,
-            format: ',.0f'
+            format: ',.0f',
+            ticks:6
         })
         .build()
 </script>

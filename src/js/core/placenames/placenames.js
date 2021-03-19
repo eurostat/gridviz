@@ -14,18 +14,19 @@ import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
 export function defineDefaultPlacenameThresholds(viewer) {
     let r = viewer.resolution_;
     // scale : population
+
     viewer.placenameThresholds_ = {
-        [r * 1024]: "2000000",
-        [r * 512]: "2000000",
-        [r * 256]: "2000000",
-        [r * 128]: "1000000",
-        [r * 64]: "1000000",
-        [r * 32]: "500000",
-        [r * 16]: "100000",
-        [r * 8]: "10000",
-        [r * 4]: "5000",
-        [r * 2]: "1000",
-        [r]: "10",
+        [r * 1024]: 1000000,
+        [r * 512]: 1000000,
+        [r * 256]: 500000,
+        [r * 128]: 250000,
+        [r * 64]: 150000,
+        [r * 32]: 100000,
+        [r * 16]: 50000,
+        [r * 8]: 10000,
+        [r * 4]: 5000,
+        [r * 2]: 1000,
+        [r]: 10,
     }
     // if (scale > 0 && scale < r) {
     //   return populationFieldName + ">10";
@@ -67,7 +68,7 @@ export function getPlacenames(viewer) {
     //currentExtent = envelope;
     //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
 
-    if (envelope) {
+    if (envelope && where) {
         let URL =
             CONSTANTS.placenames.baseURL +
             "where=" +
@@ -142,19 +143,25 @@ function getPopulationParameterFromScale(viewer) {
     let populationFieldName = CONSTANTS.placenames.populationField;
     //build query string from thresholds
     if (viewer.placenameThresholds_) {
-        let thresholds = Object.keys(viewer.placenameThresholds_);
-        for (let i = 0; i < thresholds.length; i++) {
-            let t = thresholds[i];
-            if (thresholds[i + 1]) { //if not last threshold
-                if (scale < parseInt(thresholds[0])) { //below first threshold
-                    return populationFieldName + ">" + viewer.placenameThresholds_[thresholds[0]];
-                } else if (scale > parseInt(t) && scale < parseInt(thresholds[i + 1])) {
+        // always ascending order
+        let scales = Object.keys(viewer.placenameThresholds_).sort((a, b)=>{return parseInt(a)-parseInt(b)});
+        let populations = Object.values(viewer.placenameThresholds_).sort((a, b)=>{return parseInt(a)-parseInt(b)});
+        for (let i = 0; i < scales.length; i++) {
+            let s = scales[i];
+            let p = populations[i];
+
+            
+
+            if (scales[i + 1]) { //if not last threshold
+                if (scale < parseInt(scales[0])) { //below first threshold
+                    return populationFieldName + ">" + p;
+                } else if (scale > parseInt(s) && scale < parseInt(scales[i + 1])) {
                     // if current scale is between thresholds
-                    return populationFieldName + ">" + viewer.placenameThresholds_[t];
+                    return populationFieldName + ">" + p;
                 }
             } else {
                 // if last threshold
-                return populationFieldName + ">" + viewer.placenameThresholds_[viewer.placenameThresholds_.length - 1];
+                return populationFieldName + ">" + p;
             }
         }
     }
