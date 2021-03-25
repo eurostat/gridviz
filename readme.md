@@ -160,6 +160,21 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
 
 <br>
 
+### Tooltip
+
+| Method / Object                   | Type    | Default                                | Description                                                                                                                                                                                       |
+| --------------------------------- | ------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| viewer.tooltip([**tooltipConfig**]) | Object  | See tooltipConfig default values below. |
+| **tooltipConfig**.eventType       | String  | "click"                                | The mouse event that will trigger the tooltip ("click" or "mousemove" being the most common, depending on the dataset). You might want to set showLAU and showNUTS to false when using mousemove. |
+| **tooltipConfig**.showLAU         | boolean | true                                   | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
+| **tooltipConfig**.showNUTS        | boolean | true                                   | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
+| **tooltipConfig**.showCoordinates | boolean | true                                   | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
+| **tooltipConfig**.showEPSG        | boolean | true                                   | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
+| **tooltipConfig**.xOffset         | int     | 15                                     | X offset in pixels from the mouse position                                                                                                                                                        |
+| **legendConfig**.yOffset          | int     | 15                                     | Y offset in pixels from the mouse position                                                                                                                                                        |
+
+<br>
+
 ## Developer docs
 
 For source code documentation see [docs](https://eurostat.github.io/gridviz/docs/)
