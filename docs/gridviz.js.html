@@ -30,17 +30,13 @@
 import { zoom, zoomIdentity } from "d3-zoom";
 import * as d3scaleChromatic from "d3-scale-chromatic";
 import * as d3scale from "d3-scale";
-
-
 import { json, csv } from "d3-fetch";
-
 import { extent, min, max } from "d3-array";
 import { select, pointer } from "d3-selection";
 
 //three.js
 import {
   Scene,
-  PerspectiveCamera,
   WebGLRenderer,
   Points,
   Vector3,
@@ -51,6 +47,7 @@ import {
   ShaderMaterial,
   PointsMaterial
 } from "three";
+
 import * as THREE from "three/src/constants";
 // extra Three.js modules not included in main threejs build, used for labelling
 import { CSS2DRenderer } from "../lib/threejs/CSS2D/CSS2DRenderer";
@@ -59,12 +56,13 @@ import { feature } from "topojson";
 // library constants
 import * as CONSTANTS from "./constants.js";
 // utility functions
-import * as Utils from "./utils";
+import * as Utils from "./utils/utils";
 // gridviz modules
 import * as geojson from "./layers/geojson.js";
-import * as tooltip from "./tooltip/tooltip.js";
-import * as placenames from "./placenames/placenames.js";
-import * as legend from "./legend/legend.js";
+import * as Tooltip from "./tooltip/tooltip.js";
+import * as Placenames from "./placenames/Placenames.js";
+import * as Legend from "./legend/legend.js";
+import * as Camera from "./camera/camera.js";
 
 //TODO list:
 // - mobile pan &amp; zoom bug when using method center([x,y])
@@ -79,6 +77,8 @@ import * as legend from "./legend/legend.js";
  * 
  */
 export function viewer(options) {
+  //TODO: move default configs to their respective modules
+
   //output object
   let viewer = {};
 
@@ -97,7 +97,8 @@ export function viewer(options) {
 
   // https://d3-legend.susielu.com vs https://blog.scottlogic.com/2019/03/13/how-to-create-a-continuous-colour-range-legend-using-d3-and-d3fc.html
   viewer.showLegend_ = true;
-  // legend config
+
+  // default legend config
   viewer.legend_ = {
     type: "continuous", //cells vs continuous
     width: 300,
@@ -111,24 +112,34 @@ export function viewer(options) {
   };
   viewer._gridLegend; //legend stored here
 
+  // default tooltip config
+  viewer.tooltip_ = {
+    eventType: "click", // click vs mouseover
+    showLAU: true,
+    showEPSG: true,
+    showNUTS: true,
+    showCoordinates: true,
+    xOffset: 15,
+    yOffset: 15
+  };
+
   //d3 Scaling &amp; colouring stuff
   viewer.colorSchemeName_ = "interpolateTurbo";
   viewer.reverseColorScheme_ = false;
   viewer.sizeScaleName_ = "scaleSqrt";
   viewer.colorScaleName_ = "scaleSequentialSqrt";
-  viewer._defaultColorScaleFunction = d3scale[viewer.colorScaleName_];
-  viewer._defaultSizeScaleFunction = d3scale[viewer.sizeScaleName_];
+  viewer.colorScaleMidpoint_ = 0; // midpoint for diverging scales
   viewer.colors_ = null;
-  viewer.thresholdValues_ = null;
+  viewer.thresholdValues_ = null; // for threshold / quantile scales
   viewer.colorScaleFunction_ = null;
   viewer.sizeScaleFunction_ = null;
 
   //dropdowns
   viewer.colorSchemeSelector_ = false;
-  viewer.colorScaleSelectorLabel_ = "Color scale: "
+  viewer.colorScaleSelectorLabel_ = "Colour scale: "
   viewer.colorScaleSelector_ = false;
   viewer.colorScaleSelectorDefault_ = viewer.colorScaleName_
-  viewer.colorFieldSelectorLabel_ = "Color field: "
+  viewer.colorFieldSelectorLabel_ = "Colour field: "
   viewer.colorFieldSelector_ = false;
   viewer.sizeFieldSelector_ = false;
   viewer.sizeFieldSelectorLabel_ = "Size field: ";
@@ -211,7 +222,13 @@ export function viewer(options) {
     }
     //update legend if necessary
     if (viewer._gridLegend) {
-      legend.updateLegend(viewer)
+      Legend.updateLegend(viewer)
+    }
+    return viewer;
+  };
+  viewer.tooltip = function (v) {
+    for (let key in v) {
+      viewer.tooltip_[key] = v[key];
     }
     return viewer;
   };
@@ -227,10 +244,10 @@ export function viewer(options) {
       gridConfig = defineGridConfig();
 
       if (viewer.showPlacenames_) {
-        removePlacenamesFromScene(viewer); //clear labels
+        Placenames.removePlacenamesFromScene(viewer); //clear labels
       }
 
-      redefineCamera();
+      Camera.redefineCamera(viewer);
       //clear previous grid
       loadGrid(v[0])
     } else {
@@ -246,8 +263,8 @@ export function viewer(options) {
     //if already previously set
     if (v &amp;&amp; viewer.scene) {
       viewer.center_ = v;
-      redefineCamera();
-      setCamera(v[0], v[1], camera.position.z)
+      Camera.redefineCamera(viewer);
+      Camera.setCamera(v[0], v[1], viewer.camera.position.z)
     } else {
       //set initial
       if (v) {
@@ -267,8 +284,8 @@ export function viewer(options) {
   viewer.zoom = function (v) {
     if (v &amp;&amp; viewer.scene) {
       viewer.zoom_ = v;
-      redefineCamera();
-      setCamera(viewer.camera.position.x, viewer.camera.position.y, v); // Set camera zoom (z position)
+      Camera.redefineCamera(viewer);
+      Camera.setCamera(viewer.camera.position.x, viewer.camera.position.y, v); // Set camera zoom (z position)
     } else {
       if (v) {
         viewer.zoom_ = v;
@@ -337,7 +354,7 @@ export function viewer(options) {
       }
 
       if (viewer.showPlacenames_ &amp;&amp; !viewer.placenameThresholds_) {
-        placenames.defineDefaultPlacenameThresholds(viewer);
+        Placenames.defineDefaultPlacenameThresholds(viewer);
       }
 
       //defines raycaster threshold and point size. See GridConfig typedef.
@@ -348,11 +365,11 @@ export function viewer(options) {
       if (!viewer.labelRenderer) createLabelRenderer();
       if (!viewer.renderer) createWebGLRenderer();
 
-      createCamera();
+      Camera.createCamera(viewer);
       createRaycaster();
 
       // tooltip DOM element
-      tooltip.createTooltipContainer(viewer);
+      Tooltip.createTooltipContainer(viewer);
 
       // dropdowns DOM container
       if (viewer.colorSchemeSelector_ || viewer.colorScaleSelector_ || viewer.sizeFieldSelector_ || viewer.colorFieldSelector_) {
@@ -379,15 +396,17 @@ export function viewer(options) {
 
       //request initial placenames
       if (viewer.showPlacenames_) {
-        placenames.getPlacenames(viewer);
+        Placenames.getPlacenames(viewer);
       }
 
       return viewer;
 
     } else {
       Utils.hideLoading();
-      console.error("invalid inputs");
-      return
+      let msg = "invalid inputs";
+      console.error(msg);
+      alert(msg)
+      return;
     }
   };
 
@@ -563,94 +582,9 @@ export function viewer(options) {
     viewer.container_.appendChild(viewer.labelRenderer.domElement);
   }
 
-  /**
- * @description defines the configuration object we will use for the threejs camera
- * @function defineCameraConfig
- */
-  function defineCameraConfig() {
-    let config = {}
-    config.near_ = defineNear();
-    config.far_ = defineFar(); //set min zoom
-    config.fov_ = CONSTANTS.fov;
-    config.aspect_ = viewer.width_ / viewer.height_;
-
-    //initial camera position Z
-    //zoom doesnt work on mobile ...yet
-    if (viewer._mobile) {
-      config.initialZ_ = config.far_ / 2 - 1
-    } else {
-      config.initialZ_ = viewer.zoom_ || config.far_ / 2 - 1
-    }
-    config.zoom_ = viewer.zoom_ || config.initialZ_;
-
-    return config;
-  }
-
-  /**
-   * @description Initializes THREE camera object
-   * @function createCamera
-   */
-  function createCamera() {
-    viewer.cameraConfig = defineCameraConfig();
-    viewer.camera = new PerspectiveCamera(
-      viewer.cameraConfig.fov_,
-      viewer.cameraConfig.aspect_,
-      viewer.cameraConfig.near_,
-      viewer.cameraConfig.far_
-    );
-
-    //orthographic
-    //https://discourse.threejs.org/t/why-does-pointsmaterial-size-does-not-correspond-with-geographic-grid-cell-size/13408
-    //left — Camera frustum left plane.
-    // right — Camera frustum right plane.
-    // top — Camera frustum top plane.
-    // bottom — Camera frustum bottom plane.
-    // near — Camera frustum near plane.
-    // far — Camera frustum far plane.
-    //3035 projected bounds 2426378.0132, 1528101.2618, 6293974.6215, 5446513.5222
-
-    // let width = 6293974 - 2426378;
-    // let height = 5446513 - 1528101; //ymin - ymax /2
-    // let left = width / -2;
-    // let right = width / 2;
-    // let top = height / 2;
-    // let bottom = height / -2;
-
-    //camera = new OrthographicCamera(left, right, top, bottom, 1, 2000);
-
-    // let x = (6293974 + 2426378) / 2
-    // let y = (5446513 + 1528101) / 2
-    // let z = 1000;
-  }
-
-  /**
-  * @description Updates camera configuration. Called when user adds grid data, changes zoom, or changes center after initialization
-  * @function redefineCamera
-  */
-  function redefineCamera() {
-    let cameraConfig = defineCameraConfig()
-
-    viewer.camera.fov = cameraConfig.fov_;
-    viewer.camera.aspect = cameraConfig.aspect_;
-    viewer.camera.near = cameraConfig.near_;
-    viewer.camera.far = cameraConfig.far_;
-
-    // TODO: redefine panAndZoom
-  }
 
 
-  /**
-   * @function setCamera
-   * @description Sets position and direction of camera
-   * @param {number} x three.js coord
-   * @param {number} y three.js coord
-   * @param {number} z three.js coord
-   * 
-   */
-  function setCamera(x, y, z) {
-    viewer.camera.position.set(x, y, z); // Set camera position
-    viewer.camera.lookAt(new Vector3(x, y, z)); // Set camera angle
-  }
+
 
   /**
    * @description Initializes THREE.Raycaster object
@@ -699,12 +633,12 @@ export function viewer(options) {
   * @param {String} scheme Name of the d3-scale-chromatic colour scheme
   */
   function onChangeColorScheme(scheme) {
-    tooltip.hideTooltip()
+    Tooltip.hideTooltip()
     viewer.colorSchemeName_ = scheme;
     updateColorScale();
     updatePointsColors();
     if (viewer.legend_) {
-      legend.updateLegend();
+      Legend.updateLegend(viewer);
     }
   }
 
@@ -725,9 +659,18 @@ export function viewer(options) {
   */
   function onChangeColorField(field) {
     viewer.colorField_ = field;
+
+    //update the extent/domain of the values of the new field 
+    viewer.colorValuesExtent = extent(gridCaches[viewer.resolution_], d => parseFloat(d[viewer.colorField_]));
+
+    //update the scale function used for colouring
+    updateColorScale();
+
+    //update the thee.js point colours
+
     updatePointsColors();
     if (viewer.legend_) {
-      legend.updateLegend();
+      Legend.updateLegend(viewer);
     }
   }
 
@@ -751,7 +694,7 @@ export function viewer(options) {
     updateColorScale();
     updatePointsColors();
     if (viewer.legend_) {
-      legend.updateLegend();
+      Legend.updateLegend(viewer);
     }
   }
 
@@ -775,14 +718,14 @@ export function viewer(options) {
     updateSizeScale();
     updatePointsSizes();
     if (viewer._gridLegend) {
-      legend.updateLegend();
+      Legend.updateLegend(viewer);
     }
   }
 
   /**
- * @description redefine width and height of viewer when window is resized
- * @function addResizeEvent
- */
+   * @description redefine width and height of viewer when window is resized
+   * @function addResizeEvent
+   */
   function addResizeEvent() {
     window.addEventListener("resize", () => {
       viewer.width_ = viewer.container_.clientWidth;
@@ -795,23 +738,23 @@ export function viewer(options) {
   }
 
   /**
-* @description attach event listeners to the viewer
-* @function addMouseEventsToView
-*/
+  * @description attach event listeners to the viewer
+  * @function addMouseEventsToView
+  */
   function addMouseEventsToView() {
     // show cell value on click
-    view.on("click", (event) => {
+    view.on(viewer.tooltip_.eventType, (event) => {
       let [mouseX, mouseY] = pointer(event);
       let mouse_position = [mouseX, mouseY];
       let intersect = checkIntersects(mouse_position);
       if (intersect) {
-        console.log("Intersect", intersect);
+        //console.log("Intersect", intersect); //for debugging intersects
         let index = intersect.index;
         let cell = gridCaches[viewer.resolution_][index];
         highlightPoint(intersect);
-        tooltip.showTooltip(viewer, mouse_position, cell);
+        Tooltip.showTooltip(viewer, mouse_position, cell);
       } else {
-        tooltip.hideTooltip();
+        Tooltip.hideTooltip();
       }
       //console.log("Camera pos:", viewer.camera.position);
     });
@@ -822,9 +765,9 @@ export function viewer(options) {
   }
 
   /**
-* @description attach event listeners to viewer buttons
-* @function addButtonEvents
-*/
+  * @description attach event listeners to viewer buttons
+  * @function addButtonEvents
+  */
   function addButtonEvents() {
     if (viewer.homeButton_) {
       viewer.homeButtonNode.addEventListener("click", () => {
@@ -835,12 +778,12 @@ export function viewer(options) {
 
 
   /**
-* @description move camera to show the entire extent of the grid, and update the zoom transform
-* @function viewWholeGrid
-*/
+  * @description move camera to show the entire extent of the grid, and update the zoom transform
+  * @function viewWholeGrid
+  */
   function viewWholeGrid() {
-    let minViewerX = viewer.extentX[0];
-    let minViewerY = viewer.extentY[0];
+    //let minViewerX = viewer.extentX[0];
+    //let minViewerY = viewer.extentY[0];
 
     if (viewer._mobile) {
       let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
@@ -848,7 +791,7 @@ export function viewer(options) {
       viewer.d3zoom.translateTo(view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
+      Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
 
       let initial_scale = getScaleFromZ(viewer.cameraConfig.far_);
       let initial_transform = zoomIdentity
@@ -862,7 +805,7 @@ export function viewer(options) {
       viewer.d3zoom.translateTo(view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
+      Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
     }
 
   }
@@ -904,29 +847,7 @@ export function viewer(options) {
     return viewer.resolution_; //INVESTIGATE: why does threejs pointSize value not always correspond with the grid resolution?
   }
 
-  /**
-   * @description Define the far parameter for THREE.camera. The far parameter represents the furthest possible distance that the camera can be from the plane (where z=0)
-   * @function defineFar
-   */
-  function defineFar() {
-    if (viewer._mobile) {
-      return 5; //due to a bug with pan &amp; zoom, we have to scale everything on mobile
-    } else {
-      return viewer.resolution_ * 50000;
-    }
-  }
 
-  /**
- * @description Define the near parameter for THREE.camera. The near parameter represents the smallest possible distance that the camera can be from the plane (where z=0)
- * @function defineNear
- */
-  function defineNear() {
-    if (viewer._mobile) {
-      return 0.0001; //due to a bug with pan &amp; zoom, we have to scale everything on mobile
-    } else {
-      return 0.01;
-    }
-  }
 
 
 
@@ -995,9 +916,11 @@ export function viewer(options) {
               // add points to cache
               addGridToCache(csv, grid.cellSize);
             } else {
-              return console.error(
-                "Incorrect csv format. Please use coordinate columns with names 'x' and 'y'"
-              );
+              Utils.hideLoading();
+              let msg = "Incorrect csv format. Please use coordinate columns with names 'x' and 'y'";
+              console.error(msg);
+              alert(msg)
+              return;
             }
 
             // add HTMLElements to DOM
@@ -1006,16 +929,16 @@ export function viewer(options) {
             addEventListeners();
 
             //define scales
-            viewer.colorValuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.colorField_]);
+            viewer.colorValuesExtent = extent(gridCaches[viewer.resolution_], d => parseFloat(d[viewer.colorField_]));
             viewer.colorScaleFunction_ = defineColorScale();
             if (viewer.sizeField_) {
-              viewer.sizeValuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.sizeField_]);
+              viewer.sizeValuesExtent = extent(gridCaches[viewer.resolution_], d => parseFloat(d[viewer.sizeField_]));
               viewer.sizeScaleFunction_ = defineSizeScale();
             }
 
             //coordinates extent
-            viewer.extentX = extent(gridCaches[viewer.resolution_], d => d.x);
-            viewer.extentY = extent(gridCaches[viewer.resolution_], d => d.y);
+            //viewer.extentX = extent(gridCaches[viewer.resolution_], d => parseFloat(d.x));
+            //viewer.extentY = extent(gridCaches[viewer.resolution_], d => parseFloat(d.y));
 
             // if center is not specified by user, move camera to a cell half way along the array
             if (!viewer.center_) {
@@ -1056,10 +979,11 @@ export function viewer(options) {
         }
       );
     } else {
-      console.error(
-        "Please specify grid cell size in the units of its coordinate system"
-      );
       Utils.hideLoading();
+      let msg = "Please specify grid cell size in the units of its coordinate system";
+      console.error(msg);
+      alert(msg)
+
     }
   }
 
@@ -1119,11 +1043,28 @@ export function viewer(options) {
     } else {
       // assign default if user doesnt specify their own function
       if (!viewer.colorScaleFunction_) {
+
+        if (viewer.colorScaleName_ == "scaleSequentialLog") {
+          // fix 0 issue for log scales
+          if (viewer.colorValuesExtent[0] == 0) {
+            viewer.colorValuesExtent[0] = 0.1
+          }
+        }
+
         let domain = viewer.colorValuesExtent;
+
         if (viewer.reverseColorScheme_) {
           domain = domain.reverse();
         }
-        return viewer._defaultColorScaleFunction(domain, d3scaleChromatic[viewer.colorSchemeName_]);
+        //apply thresholds if specified by user
+        if (viewer.colorScaleName_ == "scaleSequentialQuantile") {
+          // use threshold values as domain
+          return d3scale[viewer.colorScaleName_](viewer.thresholdValues_, d3scaleChromatic[viewer.colorSchemeName_])
+
+        } else {
+          return d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
+        }
+
       } else {
         return viewer.colorScaleFunction_;
       }
@@ -1132,32 +1073,47 @@ export function viewer(options) {
 
 
   /**
- * 
- * @function updateColorScaleFunction
- * @description called when user selects a different colour scheme or scale function
- *
- */
+   * 
+   * @function updateColorScaleFunction
+   * @description called when user selects a different colour scheme or scale function
+   *
+   */
   function updateColorScaleFunction() {
     let domain;
+
+    if (viewer.colorScaleName_ == "scaleSequentialLog") {
+      // fix 0 issue for log scales
+      if (viewer.colorValuesExtent[0] == 0) {
+        viewer.colorValuesExtent[0] = 0.1
+      }
+    }
+
     if (viewer.colorScaleName_ == "scaleDiverging") {
-      domain = [viewer.colorValuesExtent[0], 0, viewer.colorValuesExtent[1]];
+      domain = [viewer.colorValuesExtent[0], viewer.colorScaleMidpoint, viewer.colorValuesExtent[1]];
     } else {
       domain = viewer.colorValuesExtent;
     }
-    viewer.colorScaleFunction_ = d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
+
+    //apply thresholds if specified by user
+    if (viewer.colorScaleName_ == "scaleSequentialQuantile") {
+      // use threshold values as domain
+      viewer.colorScaleFunction_ = d3scale[viewer.colorScaleName_](viewer.thresholdValues_, d3scaleChromatic[viewer.colorSchemeName_])
+    } else {
+      viewer.colorScaleFunction_ = d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
+    }
   }
 
 
   /**
-* 
-* @function updateColorScaleFunction
-* @description called when user selects a different colour scheme or scale function
-*
-*/
+  * 
+  * @function updateColorScaleFunction
+  * @description called when user selects a different colour scheme or scale function
+  *
+  */
   function updateSizeScaleFunction() {
     //create if didnt exist upon initialization
     if (!viewer.sizeValuesExtent) {
-      viewer.sizeValuesExtent = extent(gridCaches[viewer.resolution_], d => d[viewer.sizeField_]);
+      viewer.sizeValuesExtent = extent(gridCaches[viewer.resolution_], d => parseFloat(d[viewer.sizeField_]));
       viewer.sizeScaleFunction_ = defineSizeScale();
     } else {
       //update
@@ -1167,17 +1123,17 @@ export function viewer(options) {
   }
 
   /**
-* 
-* @function defineSizeScale
-* @description define initial scale function to be used when determining cell size
-*
-*/
+  * 
+  * @function defineSizeScale
+  * @description define initial scale function to be used when determining cell size
+  *
+  */
   function defineSizeScale() {
     // user-defined vs default scale
     if (viewer.sizeScaleFunction_) {
       return viewer.sizeScaleFunction_;
     } else {
-      return viewer._defaultSizeScaleFunction().domain(viewer.colorValuesExtent).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
+      return d3scale[viewer.sizeScaleName_]().domain(viewer.colorValuesExtent).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]); //minSize, maxSize
     }
   }
 
@@ -1359,24 +1315,24 @@ export function viewer(options) {
     //create or reuse viewer.pointsLayer Material
     if (!pointsMaterial) {
       // Apply custom point sizes, instead of using three.js pointsMaterial
-      // pointsMaterial = new ShaderMaterial({
-      //   uniforms: {
-      //     multiplier: {
-      //       value: 1050 //km TODO: define dynamically. the extra meters prevent white lines across the screen flickering when zooming
-      //     }
-      //   },
-      //   fragmentShader: fragmentShader(),
-      //   vertexShader: vertexShader(),
-      //   vertexColors: THREE.VertexColors
-      // });
-
-      //using threejs PointsMaterial
-      pointsMaterial = new PointsMaterial({
-        size: gridConfig.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
-        sizeAttenuation: true,
-        //https://github.com/mrdoob/three.js/blob/master/src/constants.js
+      pointsMaterial = new ShaderMaterial({
+        uniforms: {
+          multiplier: {
+            value: 1050 //km TODO: define dynamically. the extra meters prevent white lines across the screen flickering when zooming
+          }
+        },
+        fragmentShader: fragmentShader(),
+        vertexShader: vertexShader(),
         vertexColors: THREE.VertexColors
       });
+
+      //use threejs PointsMaterial instead:
+      // pointsMaterial = new PointsMaterial({
+      //   size: gridConfig.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
+      //   sizeAttenuation: true,
+      //   //https://github.com/mrdoob/three.js/blob/master/src/constants.js
+      //   vertexColors: THREE.VertexColors
+      // });
 
     } else {
       pointsMaterial.size = gridConfig.pointSize;
@@ -1394,9 +1350,9 @@ export function viewer(options) {
     if (viewer.showLegend_) {
       if (viewer.legend_) {
         if (viewer._gridLegend) {
-          legend.updateLegend(viewer);
+          Legend.updateLegend(viewer);
         } else {
-          legend.createLegend(viewer);
+          Legend.createLegend(viewer);
         }
       }
     }
@@ -1646,25 +1602,17 @@ export function viewer(options) {
   function createColorScaleDropdown() {
     let scales = [
       {
-        value: "scaleSequential",
-        innerText: "Sequential"
-      },
-      {
         value: "scaleSequentialLog",
-        innerText: "Sequential logarithmic"
+        innerText: "Logarithmic"
       },
       {
         value: "scaleSequentialPow",
-        innerText: "Sequential exponential"
+        innerText: "Exponential"
       },
       {
         value: "scaleSequentialSqrt",
-        innerText: "Sequential square-root "
-      },
-      {
-        value: "scaleSequentialQuantile",
-        innerText: "Sequential quantile"
-      },
+        innerText: "Square-root "
+      }
     ];
     let dropdown_container = document.createElement("div");
     dropdown_container.id = "gridviz-colorscale-dropdown-container";
@@ -1812,7 +1760,7 @@ export function viewer(options) {
       let initial_scale = getScaleFromZ(viewer.cameraConfig.initialZ_);
       var initial_transform = zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
       viewer.d3zoom.transform(view, initial_transform);
-      setCamera(0, 0, viewer.cameraConfig.initialZ_)
+      Camera.setCamera(0, 0, viewer.cameraConfig.initialZ_)
 
     } else {
       //initial desktop zoom transform
@@ -1821,7 +1769,7 @@ export function viewer(options) {
       viewer.d3zoom.translateTo(view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
+      Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
     }
   }
 
@@ -1831,7 +1779,7 @@ export function viewer(options) {
       let x = -(event.transform.x - viewer.width_ / 2) / scale;
       let y = (event.transform.y - viewer.height_ / 2) / scale;
       let z = getZFromScale(scale);
-      setCamera(x, y, z);
+      Camera.setCamera(x, y, z);
     }
   }
 
@@ -1854,14 +1802,14 @@ export function viewer(options) {
         const distance = (new_z - viewer.camera.position.z) / dir.z;
         const pos = viewer.camera.position.clone().add(dir.multiplyScalar(distance));
         // Set the camera to new coordinates
-        setCamera(pos.x, pos.y, new_z);
+        Camera.setCamera(pos.x, pos.y, new_z);
       } else {
         // If panning
         const { movementX, movementY } = event.sourceEvent;
 
         // Adjust mouse movement by current scale and set camera
         const current_scale = getScaleFromZ(viewer.camera.position.z);
-        setCamera(
+        Camera.setCamera(
           viewer.camera.position.x - movementX / current_scale,
           viewer.camera.position.y + movementY / current_scale,
           viewer.camera.position.z
@@ -1888,7 +1836,7 @@ export function viewer(options) {
   }
 
   function zoomEnd(event) {
-    tooltip.hideTooltip();
+    Tooltip.hideTooltip();
     let scale = getScaleFromZ(event.transform.k);
     if (viewer.debugPlacenames_) {
       console.info(scale);
@@ -1898,42 +1846,13 @@ export function viewer(options) {
       if (viewer.pointsLayer) {
         if (scale > 0 &amp;&amp; scale &lt; viewer.cameraConfig.far_) {
           //placenames are added to the viewer.pointsLayer object
-          placenames.getPlacenames(viewer);
+          Placenames.getPlacenames(viewer);
         } else {
-          placenames.removePlacenamesFromScene(viewer);
+          Placenames.removePlacenamesFromScene(viewer);
         }
       }
     }
 
-    //change nuts simplification (or not) based on current scale
-    //URL themes: 2016/3035/20M/0.json
-    // if (viewer.nuts_) {
-    //   if (
-    //     scale &lt; CONSTANTS.nuts_scale_threshold &amp;&amp;
-    //     viewer.nutsSimplification_ !== "10M"
-    //   ) {
-    //     viewer.nutsSimplification_ = "10M";
-    //     loadNuts2json(
-    //       CONSTANTS.nuts_base_URL +
-    //       viewer.EPSG_ +
-    //       "/" +
-    //       viewer.nutsSimplification_ +
-    //       "/" + viewer.nutsLevel_ + ".json"
-    //     );
-    //   } else if (
-    //     scale > CONSTANTS.nuts_scale_threshold &amp;&amp;
-    //     viewer.nutsSimplification_ !== "20M"
-    //   ) {
-    //     viewer.nutsSimplification_ = "20M";
-    //     loadNuts2json(
-    //       CONSTANTS.nuts_base_URL +
-    //       viewer.EPSG_ +
-    //       "/" +
-    //       viewer.nutsSimplification_ +
-    //       "/" + viewer.nutsLevel_ + ".json"
-    //     );
-    //   }
-    // }
   }
 
 
@@ -2037,13 +1956,13 @@ export function viewer(options) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addCellCountToDOM">addCellCountToDOM</a></li><li><a href="global.html#addChangeEventToColorFieldDropdown">addChangeEventToColorFieldDropdown</a></li><li><a href="global.html#addChangeEventToColorScaleDropdown">addChangeEventToColorScaleDropdown</a></li><li><a href="global.html#addChangeEventToColorSchemeDropdown">addChangeEventToColorSchemeDropdown</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addHeadingsContainerToDOM">addHeadingsContainerToDOM</a></li><li><a href="global.html#addHomeButtonToDOM">addHomeButtonToDOM</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addNuts2jsonToScene">addNuts2jsonToScene</a></li><li><a href="global.html#addPanAndZoom">addPanAndZoom</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#addSelectorsContainerToDOM">addSelectorsContainerToDOM</a></li><li><a href="global.html#addSourcesToDOM">addSourcesToDOM</a></li><li><a href="global.html#addSubtitleToDOM">addSubtitleToDOM</a></li><li><a href="global.html#addTitleToDOM">addTitleToDOM</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#colorLegend">colorLegend</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createCellsLegend">createCellsLegend</a></li><li><a href="global.html#createColorSchemeDropdown">createColorSchemeDropdown</a></li><li><a href="global.html#createContinuousLegend">createContinuousLegend</a></li><li><a href="global.html#createLabelRenderer">createLabelRenderer</a></li><li><a href="global.html#createLegend">createLegend</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createLoadingSpinner">createLoadingSpinner</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createRaycaster">createRaycaster</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#createWebGLRenderer">createWebGLRenderer</a></li><li><a href="global.html#defineCameraConfig">defineCameraConfig</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineDefaultPlacenameThresholds">defineDefaultPlacenameThresholds</a></li><li><a href="global.html#defineFar">defineFar</a></li><li><a href="global.html#defineGridConfig">defineGridConfig</a></li><li><a href="global.html#defineNear">defineNear</a></li><li><a href="global.html#definePointSize">definePointSize</a></li><li><a href="global.html#defineRaycasterThreshold">defineRaycasterThreshold</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#formatNumber">formatNumber</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#getWorldCoordsFromScreen">getWorldCoordsFromScreen</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#onChangeColorField">onChangeColorField</a></li><li><a href="global.html#onChangeColorScale">onChangeColorScale</a></li><li><a href="global.html#onChangeColorScheme">onChangeColorScheme</a></li><li><a href="global.html#redefineCamera">redefineCamera</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#setCamera">setCamera</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#thresholdLabels">thresholdLabels</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updateLegend">updateLegend</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#validateInputs">validateInputs</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewer">viewer</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addCellCountToDOM">addCellCountToDOM</a></li><li><a href="global.html#addChangeEventToColorFieldDropdown">addChangeEventToColorFieldDropdown</a></li><li><a href="global.html#addChangeEventToColorScaleDropdown">addChangeEventToColorScaleDropdown</a></li><li><a href="global.html#addChangeEventToColorSchemeDropdown">addChangeEventToColorSchemeDropdown</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addHeadingsContainerToDOM">addHeadingsContainerToDOM</a></li><li><a href="global.html#addHomeButtonToDOM">addHomeButtonToDOM</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addNuts2jsonToScene">addNuts2jsonToScene</a></li><li><a href="global.html#addPanAndZoom">addPanAndZoom</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#addSelectorsContainerToDOM">addSelectorsContainerToDOM</a></li><li><a href="global.html#addSourcesToDOM">addSourcesToDOM</a></li><li><a href="global.html#addSubtitleToDOM">addSubtitleToDOM</a></li><li><a href="global.html#addTitleToDOM">addTitleToDOM</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#colorLegend">colorLegend</a></li><li><a href="global.html#createCellsLegend">createCellsLegend</a></li><li><a href="global.html#createColorSchemeDropdown">createColorSchemeDropdown</a></li><li><a href="global.html#createContinuousLegend">createContinuousLegend</a></li><li><a href="global.html#createLabelRenderer">createLabelRenderer</a></li><li><a href="global.html#createLegend">createLegend</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createRaycaster">createRaycaster</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#createWebGLRenderer">createWebGLRenderer</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineDefaultPlacenameThresholds">defineDefaultPlacenameThresholds</a></li><li><a href="global.html#defineGridConfig">defineGridConfig</a></li><li><a href="global.html#definePointSize">definePointSize</a></li><li><a href="global.html#defineRaycasterThreshold">defineRaycasterThreshold</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#ensureTooltipOnScreen">ensureTooltipOnScreen</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#onChangeColorField">onChangeColorField</a></li><li><a href="global.html#onChangeColorScale">onChangeColorScale</a></li><li><a href="global.html#onChangeColorScheme">onChangeColorScheme</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#thresholdLabels">thresholdLabels</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updateLegend">updateLegend</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#validateInputs">validateInputs</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewer">viewer</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Dec 11 2020 16:56:59 GMT+0100 (Central European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Mar 25 2021 17:04:03 GMT+0100 (GMT+01:00)
 </footer>
 
 <script> prettyPrint(); </script>

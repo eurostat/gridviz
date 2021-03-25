@@ -29,19 +29,35 @@
             <pre class="prettyprint source linenums"><code>//this file contains all the logic for creating and updating the tooltip
 
 import { Object3D } from "three";
-import * as Utils from "../utils";
+import * as Utils from "../utils/utils";
 import * as CONSTANTS from "../constants.js";
 import { json } from "d3-fetch";
 
 let tooltipContainer,
     tooltipTemplate,
     pointTip,
-    labelTip,
+    colorFieldTip,
+    crsTip,
+    xTip,
+    yTip,
+    LAUNameTip,
+    LAUCodeTip,
+    NUTSCodeTip,
     tooltip
 
 let tooltip_state = {
     display: "none"
 };
+
+// viewer.tooltip_ = {
+//     eventType: "click", // click vs mouseover
+//     showLAU: true,
+//     showEPSG: false,
+//     showNUTS: true,
+//     showCoordinates: true,
+//     xOffset: 15,
+//     yOffset: 15,
+//   };
 
 /**
 * @description Appends tooltip container to the scene
@@ -57,14 +73,36 @@ export function createTooltipContainer(viewer) {
     //inject tooltip HTML to DOM
     tooltipTemplate = document.createRange()
         .createContextualFragment(`&lt;div id="gridviz-tooltip">
-    &lt;div id="gridviz-labeltip">&lt;/div>
+    &lt;div id="gridviz-labeltip">
+
+    &lt;table>
+     &lt;thead>&lt;/thead>
+     &lt;tbody>
+     &lt;tr id="colorfieldtip">&lt;/tr>
+     &lt;tr id="xtip">&lt;/tr>
+     &lt;tr id="ytip">&lt;/tr>
+     &lt;tr id="crstip">&lt;/tr>
+     &lt;tr id="launametip">&lt;/tr>
+     &lt;tr id="laucodetip">&lt;/tr>
+     &lt;tr id="nutscodetip">&lt;/tr>
+     &lt;/tbody>
+    &lt;/table>
+   
+    &lt;/div>
 &lt;div id="gridviz-pointtip">&lt;/div>
 &lt;/div>`);
     viewer.container_.append(tooltipTemplate);
 
     tooltip = document.querySelector("#gridviz-tooltip");
     pointTip = document.querySelector("#gridviz-pointtip");
-    labelTip = document.querySelector("#gridviz-labeltip");
+    colorFieldTip = document.querySelector("#colorfieldtip");
+    xTip = document.querySelector("#xtip");
+    yTip = document.querySelector("#ytip");
+    crsTip = document.querySelector("#crstip");
+    LAUNameTip = document.querySelector("#launametip");
+    LAUCodeTip = document.querySelector("#laucodetip");
+    NUTSCodeTip = document.querySelector("#nutscodetip");
+
     tooltipContainer = new Object3D();
     viewer.scene.add(tooltipContainer);
 }
@@ -93,103 +131,143 @@ export function updateTooltip(viewer) {
         y = Math.round(y * f);
     }
 
+    // set tooltip position and display
     tooltip.style.display = tooltip_state.display;
     tooltip.style.left = tooltip_state.left + "px";
     tooltip.style.top = tooltip_state.top + "px";
-    //pointTip.innerText = tooltip_state.name;
     pointTip.style.background = tooltip_state.color;
 
     // set tooltip attributes HTML
-    labelTip.innerHTML = `
-    &lt;table>
-     &lt;thead>&lt;/thead>
-     &lt;tbody>
+    colorFieldTip.innerHTML = `&lt;th>&lt;strong>${viewer.colorField_}:&lt;/strong> &lt;/th>
+    &lt;th>${tooltip_state.colorValue}&lt;/th>`
 
-     &lt;tr>
-     &lt;th>&lt;strong>${viewer.colorField_}:&lt;/strong> &lt;/th>
-     &lt;th>${tooltip_state.colorValue}&lt;/th>
-     &lt;/tr>
+    if (viewer.tooltip_.showCoordinates) {
+        xTip.innerHTML = `&lt;th>&lt;strong>x:&lt;/strong>&lt;/th>
+        &lt;th>${x}&lt;/th>`
 
-     &lt;tr>
-     &lt;th>&lt;strong>x:&lt;/strong> &lt;/th>
-     &lt;th>${x}&lt;/th>
-     &lt;/tr>
+        yTip.innerHTML = `&lt;th>&lt;strong>y:&lt;/strong>&lt;/th>
+        &lt;th>${y}&lt;/th>`
+    }
 
-     &lt;tr>
-     &lt;th>&lt;strong>y:&lt;/strong> &lt;/th>
-     &lt;th>${y}&lt;/th>
-     &lt;/tr>
+    if (viewer.tooltip_.showEPSG) {
+        crsTip.innerHTML = `&lt;th>&lt;strong>CRS:&lt;/strong>&lt;/th>
+        &lt;th>EPSG:${viewer.EPSG_}&lt;/th>`
+    }
 
-     &lt;tr>
-     &lt;th>&lt;strong>CRS:&lt;/strong> &lt;/th>
-     &lt;th>EPSG:${viewer.EPSG_}&lt;/th>
-     &lt;/tr>
-
-     &lt;tr id="tooltip_lau_name">
-
-     &lt;/tr>
-     &lt;tr id="tooltip_lau_id">
-
-     &lt;/tr>
-     &lt;tr id="tooltip_nuts_id">
-
-     &lt;/tr>
-
-
-     &lt;/tbody>
-    
-    &lt;/table>
-   `;
-
-    //fetch NUTS info using GISCO id service
+    //fetch NUTS info using GISCO id REST API
     if ([4326, 4258, 3035].includes(viewer.EPSG_)) {
-        let nutsNode = document.getElementById("tooltip_nuts_id");
-        let lauNode = document.getElementById("tooltip_lau_id");
-        let lauNameNode = document.getElementById("tooltip_lau_name");
+
         let nutsRequest = `${CONSTANTS.nutsAPIBaseURL}nuts?x=${x}&amp;y=${y}&amp;proj=${viewer.EPSG_}&amp;year=2021&amp;level=3`;
         let lauRequest = `${CONSTANTS.nutsAPIBaseURL}lau?x=${x}&amp;y=${y}&amp;proj=${viewer.EPSG_}&amp;year=2019&amp;level=3`;
-        //get NUTS
-        json(nutsRequest).then(
-            json => {
 
-                if (json.features.length > 0) {
-                    //add NUTS id to tooltip table
-                    let f = json.features[0];
+        //get both (promise.all required to ensure tooltip on screen after both requests have resolved)
+        if (viewer.tooltip_.showLAU &amp;&amp; viewer.tooltip_.showNUTS) {
+            let promises = [json(nutsRequest), json(lauRequest)];
+            Promise.all(promises).then((res) => {
 
-                    nutsNode.innerHTML = `
+                if (res[0]) {
+                    if (res[0].features.length > 0) {
+                        //add NUTS id to tooltip table
+                        let f = res[0].features[0];
+
+                        NUTSCodeTip.innerHTML = `
+&lt;th>&lt;strong>NUTS3 code:&lt;/strong>&lt;/th>
+&lt;th>${f.properties.nuts_id}&lt;/th>
+`;
+                    }
+                }
+
+                if (res[1]) {
+                    if (res[1].features.length > 0) {
+                        //add lau id and name to tooltip table
+                        let f = res[1].features[0];
+                        LAUCodeTip.innerHTML = `
+          &lt;th>&lt;strong>LAU code:&lt;/strong>&lt;/th>
+          &lt;th>${f.properties.lau_id}&lt;/th>
+          `;
+                        LAUNameTip.innerHTML = `
+          &lt;th>&lt;strong>LAU:&lt;/strong>&lt;/th>
+          &lt;th>${f.properties.lau_name}&lt;/th>
+          `;
+                    }
+                }
+                ensureTooltipOnScreen(viewer);
+            })
+
+        } else {
+            //get NUTS
+            if (viewer.tooltip_.showLAU) {
+
+                json(nutsRequest).then(
+                    json => {
+                        if (json.features.length > 0) {
+                            //add NUTS id to tooltip table
+                            let f = json.features[0];
+
+                            NUTSCodeTip.innerHTML = `
             &lt;th>&lt;strong>NUTS3 code:&lt;/strong>&lt;/th>
             &lt;th>${f.properties.nuts_id}&lt;/th>
             `;
-                }
-            },
-            err => {
-                console.log("no results found")
-                //console.error(err);
-            })
+                        }
+                        ensureTooltipOnScreen(viewer);
+                    },
+                    err => {
+                        console.log("no LAU found");
+                        ensureTooltipOnScreen(viewer);
+                        //console.error(err);
+                    })
+            } else if (viewer.tooltip_.showNUTS) {
 
-        //get LAUs
-        json(lauRequest).then(
-            json => {
+                json(lauRequest).then(
+                    json => {
 
-                if (json.features.length > 0) {
-                    //add lau id and name to tooltip table
-                    let f = json.features[0];
-                    lauNode.innerHTML = `
+                        if (json.features.length > 0) {
+                            //add lau id and name to tooltip table
+                            let f = json.features[0];
+                            LAUCodeTip.innerHTML = `
               &lt;th>&lt;strong>LAU code:&lt;/strong>&lt;/th>
               &lt;th>${f.properties.lau_id}&lt;/th>
               `;
-                    lauNameNode.innerHTML = `
+                            LAUNameTip.innerHTML = `
               &lt;th>&lt;strong>LAU:&lt;/strong>&lt;/th>
               &lt;th>${f.properties.lau_name}&lt;/th>
               `;
-                }
-            },
-            err => {
-                console.log("no results found")
-                //console.error(err);
-            })
+                        }
+                        ensureTooltipOnScreen(viewer);
+                    },
+                    err => {
+                        console.log("no NUTS found");
+                        ensureTooltipOnScreen(viewer);
+                        //console.error(err);
+                    })
+            } else {
+                //dont need to wait for fetch
+                ensureTooltipOnScreen(viewer);
+            }
+        }
+    }
+
+
+
+
+}
+
+/**
+* @function ensureTooltipOnScreen
+* @description Prevents the tooltip from appearing off screen
+* @param {Object} viewer
+*/
+function ensureTooltipOnScreen(viewer) {
+    //too far right
+    if (tooltip.offsetLeft > viewer.width_ - tooltip.clientWidth) {
+        tooltip.style.left = tooltip.offsetLeft - (tooltip.clientWidth + viewer.tooltip_.xOffset * 2) + "px";
 
     }
+    //too far down
+    if (tooltip.offsetTop + tooltip.clientHeight > viewer.height_) {
+        tooltip.style.top = tooltip.offsetTop - (tooltip.clientHeight + viewer.tooltip_.yOffset * 2) + "px";
+    }
+
 }
 
 
@@ -197,22 +275,12 @@ export function updateTooltip(viewer) {
 * @function showTooltip
 * @description Shows the tooltip where the cell was clicked
 * @param {Object} viewer
-* @param {*} mouse_position
-* @param {*} cell
+* @param {*} mouse_position // {x,y}
+* @param {*} cell // cell object taken from the grid cache
 */
 export function showTooltip(viewer, mouse_position, cell) {
-    let x_offset = 25;
-    let y_offset = -10;
-    let tooltipWidth = parseInt(tooltip.style.width.replace("px", ""));
-    let tooltipHeight = 100;//tooltip.style.height;
-    let left = mouse_position[0] + x_offset;
-    let top = mouse_position[1] + y_offset
-    if (left > viewer.width_ - tooltipWidth) {
-        left = left - (tooltipWidth + 40);
-    }
-    if (top &lt; 0) {
-        top = top + (tooltipHeight);
-    }
+    let left = mouse_position[0] + viewer.tooltip_.xOffset;
+    let top = mouse_position[1] + viewer.tooltip_.yOffset;
 
     tooltip_state.display = "block";
     tooltip_state.left = left
@@ -242,13 +310,13 @@ export function hideTooltip() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addCellCountToDOM">addCellCountToDOM</a></li><li><a href="global.html#addChangeEventToColorFieldDropdown">addChangeEventToColorFieldDropdown</a></li><li><a href="global.html#addChangeEventToColorScaleDropdown">addChangeEventToColorScaleDropdown</a></li><li><a href="global.html#addChangeEventToColorSchemeDropdown">addChangeEventToColorSchemeDropdown</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addHeadingsContainerToDOM">addHeadingsContainerToDOM</a></li><li><a href="global.html#addHomeButtonToDOM">addHomeButtonToDOM</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addNuts2jsonToScene">addNuts2jsonToScene</a></li><li><a href="global.html#addPanAndZoom">addPanAndZoom</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#addSelectorsContainerToDOM">addSelectorsContainerToDOM</a></li><li><a href="global.html#addSourcesToDOM">addSourcesToDOM</a></li><li><a href="global.html#addSubtitleToDOM">addSubtitleToDOM</a></li><li><a href="global.html#addTitleToDOM">addTitleToDOM</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#colorLegend">colorLegend</a></li><li><a href="global.html#createCamera">createCamera</a></li><li><a href="global.html#createCellsLegend">createCellsLegend</a></li><li><a href="global.html#createColorSchemeDropdown">createColorSchemeDropdown</a></li><li><a href="global.html#createContinuousLegend">createContinuousLegend</a></li><li><a href="global.html#createLabelRenderer">createLabelRenderer</a></li><li><a href="global.html#createLegend">createLegend</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createLoadingSpinner">createLoadingSpinner</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createRaycaster">createRaycaster</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#createWebGLRenderer">createWebGLRenderer</a></li><li><a href="global.html#defineCameraConfig">defineCameraConfig</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineDefaultPlacenameThresholds">defineDefaultPlacenameThresholds</a></li><li><a href="global.html#defineFar">defineFar</a></li><li><a href="global.html#defineGridConfig">defineGridConfig</a></li><li><a href="global.html#defineNear">defineNear</a></li><li><a href="global.html#definePointSize">definePointSize</a></li><li><a href="global.html#defineRaycasterThreshold">defineRaycasterThreshold</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#formatNumber">formatNumber</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#getWorldCoordsFromScreen">getWorldCoordsFromScreen</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#onChangeColorField">onChangeColorField</a></li><li><a href="global.html#onChangeColorScale">onChangeColorScale</a></li><li><a href="global.html#onChangeColorScheme">onChangeColorScheme</a></li><li><a href="global.html#redefineCamera">redefineCamera</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#setCamera">setCamera</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#thresholdLabels">thresholdLabels</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updateLegend">updateLegend</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#validateInputs">validateInputs</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewer">viewer</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addCellCountToDOM">addCellCountToDOM</a></li><li><a href="global.html#addChangeEventToColorFieldDropdown">addChangeEventToColorFieldDropdown</a></li><li><a href="global.html#addChangeEventToColorScaleDropdown">addChangeEventToColorScaleDropdown</a></li><li><a href="global.html#addChangeEventToColorSchemeDropdown">addChangeEventToColorSchemeDropdown</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addHeadingsContainerToDOM">addHeadingsContainerToDOM</a></li><li><a href="global.html#addHomeButtonToDOM">addHomeButtonToDOM</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addNuts2jsonToScene">addNuts2jsonToScene</a></li><li><a href="global.html#addPanAndZoom">addPanAndZoom</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#addSelectorsContainerToDOM">addSelectorsContainerToDOM</a></li><li><a href="global.html#addSourcesToDOM">addSourcesToDOM</a></li><li><a href="global.html#addSubtitleToDOM">addSubtitleToDOM</a></li><li><a href="global.html#addTitleToDOM">addTitleToDOM</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#colorLegend">colorLegend</a></li><li><a href="global.html#createCellsLegend">createCellsLegend</a></li><li><a href="global.html#createColorSchemeDropdown">createColorSchemeDropdown</a></li><li><a href="global.html#createContinuousLegend">createContinuousLegend</a></li><li><a href="global.html#createLabelRenderer">createLabelRenderer</a></li><li><a href="global.html#createLegend">createLegend</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createRaycaster">createRaycaster</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#createWebGLRenderer">createWebGLRenderer</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineDefaultPlacenameThresholds">defineDefaultPlacenameThresholds</a></li><li><a href="global.html#defineGridConfig">defineGridConfig</a></li><li><a href="global.html#definePointSize">definePointSize</a></li><li><a href="global.html#defineRaycasterThreshold">defineRaycasterThreshold</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#ensureTooltipOnScreen">ensureTooltipOnScreen</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#onChangeColorField">onChangeColorField</a></li><li><a href="global.html#onChangeColorScale">onChangeColorScale</a></li><li><a href="global.html#onChangeColorScheme">onChangeColorScheme</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#thresholdLabels">thresholdLabels</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updateLegend">updateLegend</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#validateInputs">validateInputs</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewer">viewer</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri Dec 11 2020 16:56:59 GMT+0100 (Central European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Mar 25 2021 17:04:03 GMT+0100 (GMT+01:00)
 </footer>
 
 <script> prettyPrint(); </script>

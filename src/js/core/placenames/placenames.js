@@ -1,7 +1,7 @@
 // this file contains the logic required for loading placename labels into the viewer/
 // placenames are requested from an ArcGIS service provided by REGIO and are queried by using population thresholds according to the viewer's current scale
 
-import * as Utils from "../utils";
+import * as Utils from "../utils/utils";
 import * as CONSTANTS from "../constants.js";
 import { json } from "d3-fetch";
 import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
