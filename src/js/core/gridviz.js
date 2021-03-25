@@ -639,7 +639,9 @@ export function viewer(options) {
     viewer.colorValuesExtent = extent(gridCaches[viewer.resolution_], d => parseFloat(d[viewer.colorField_]));
 
     //update the scale function used for colouring
-    updateColorScale();
+    if (!viewer.colors_) {
+      updateColorScale();
+    }
 
     //update the thee.js point colours
     updatePointsColors();
