@@ -1,7 +1,7 @@
 //this file contains all the logic for creating and updating the tooltip
 
 import { Object3D } from "three";
-import * as Utils from "../utils";
+import * as Utils from "../utils/utils";
 import * as CONSTANTS from "../constants.js";
 import { json } from "d3-fetch";
 
@@ -21,6 +21,7 @@ let tooltip_state = {
     display: "none"
 };
 
+// example tooltip config
 // viewer.tooltip_ = {
 //     eventType: "click", // click vs mouseover
 //     showLAU: true,
@@ -78,7 +79,6 @@ export function createTooltipContainer(viewer) {
     tooltipContainer = new Object3D();
     viewer.scene.add(tooltipContainer);
 }
-
 
 
 /**
@@ -218,10 +218,6 @@ export function updateTooltip(viewer) {
             }
         }
     }
-
-
-
-
 }
 
 /**

@@ -9,12 +9,17 @@ import { format } from "d3-format";
 import * as d3scale from "d3-scale";
 import { range, quantile } from "d3-array";
 
+let title;
+
 /**
    * 
    * @function createLegend
    * @description Add svg legend to DOM using d3-svg-legend
    */
 export function createLegend(viewer) {
+    // title for color legend defaults to colorField
+    if (!viewer.legend_.title) title = viewer.colorField_; else title = viewer.legend_.title;
+
     if (viewer.legend_.type == "cells") {
         createCellsLegend(viewer)
     } else if (viewer.legend_.type == "continuous") {
@@ -48,13 +53,14 @@ function createCellsLegend(viewer) {
             .attr("width", viewer.legend_.width)
             .attr("transform", "translate(10,15)"); //padding
 
+
     viewer._gridLegend = LEGEND.legendColor()
         .shapeWidth(viewer.legend_.shapeWidth)
         .cells(viewer.legend_.cells)
         .labelFormat(format(viewer.legend_.format))
         .orient(viewer.legend_.orientation)
         .scale(viewer.colorScaleFunction_)
-        .title(viewer.legend_.title)
+        .title(title)
         .titleWidth(viewer.legend_.titleWidth)
 
     if (viewer.thresholdValues_) {
@@ -97,7 +103,7 @@ function createContinuousLegend(viewer) {
 
     viewer._gridLegend = colorLegend({
         color: viewer.colorScaleFunction_,
-        title: viewer.legend_.title,
+        title: title,
         tickSize: tickSize,
         width: width,
         height: height,
@@ -258,6 +264,7 @@ function thresholdLabels({
  * @function updateLegend
  */
 export function updateLegend(viewer) {
+    // TODO: make less hacky :)
     var l = selectAll(".gridviz-legend-svg").remove();
     setTimeout(createLegend(viewer), 1000);
 }
