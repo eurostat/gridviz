@@ -212,12 +212,14 @@ export function updateTooltip(viewer) {
                         ensureTooltipOnScreen(viewer);
                         //console.error(err);
                     })
+            } else {
+                //dont need to wait for fetch
+                ensureTooltipOnScreen(viewer);
             }
         }
-    } else {
-        //dont need to wait for fetch
-        ensureTooltipOnScreen(viewer);
     }
+
+
 
 
 }
@@ -230,12 +232,12 @@ export function updateTooltip(viewer) {
 function ensureTooltipOnScreen(viewer) {
     //too far right
     if (tooltip.offsetLeft > viewer.width_ - tooltip.clientWidth) {
-        tooltip.style.left = tooltip.offsetLeft - (tooltip.clientWidth + viewer.tooltip_.xOffset*2) + "px";
+        tooltip.style.left = tooltip.offsetLeft - (tooltip.clientWidth + viewer.tooltip_.xOffset * 2) + "px";
 
     }
     //too far down
     if (tooltip.offsetTop + tooltip.clientHeight > viewer.height_) {
-        tooltip.style.top = tooltip.offsetTop - (tooltip.clientHeight + viewer.tooltip_.yOffset*2) + "px";
+        tooltip.style.top = tooltip.offsetTop - (tooltip.clientHeight + viewer.tooltip_.yOffset * 2) + "px";
     }
 
 }

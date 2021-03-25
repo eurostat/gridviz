@@ -49,6 +49,8 @@ import * as Camera from "./camera/camera.js";
  * 
  */
 export function viewer(options) {
+  //TODO: move default configs to their respective modules
+
   //output object
   let viewer = {};
 
@@ -82,16 +84,16 @@ export function viewer(options) {
   };
   viewer._gridLegend; //legend stored here
 
-    // default tooltip config
-    viewer.tooltip_ = {
-      eventType: "click", // click vs mouseover
-      showLAU: true,
-      showEPSG: true,
-      showNUTS: true,
-      showCoordinates: true,
-      xOffset: 15,
-      yOffset: 15
-    };
+  // default tooltip config
+  viewer.tooltip_ = {
+    eventType: "click", // click vs mouseover
+    showLAU: true,
+    showEPSG: true,
+    showNUTS: true,
+    showCoordinates: true,
+    xOffset: 15,
+    yOffset: 15
+  };
 
   //d3 Scaling & colouring stuff
   viewer.colorSchemeName_ = "interpolateTurbo";
@@ -193,6 +195,12 @@ export function viewer(options) {
     //update legend if necessary
     if (viewer._gridLegend) {
       Legend.updateLegend(viewer)
+    }
+    return viewer;
+  };
+  viewer.tooltip = function (v) {
+    for (let key in v) {
+      viewer.tooltip_[key] = v[key];
     }
     return viewer;
   };
@@ -548,7 +556,7 @@ export function viewer(options) {
 
 
 
- 
+
 
   /**
    * @description Initializes THREE.Raycaster object
@@ -947,7 +955,7 @@ export function viewer(options) {
       let msg = "Please specify grid cell size in the units of its coordinate system";
       console.error(msg);
       alert(msg)
-      
+
     }
   }
 
@@ -1010,7 +1018,7 @@ export function viewer(options) {
 
         if (viewer.colorScaleName_ == "scaleSequentialLog") {
           // fix 0 issue for log scales
-          if (viewer.colorValuesExtent[0]== 0) {
+          if (viewer.colorValuesExtent[0] == 0) {
             viewer.colorValuesExtent[0] = 0.1
           }
         }
@@ -1025,7 +1033,7 @@ export function viewer(options) {
           // use threshold values as domain
           return d3scale[viewer.colorScaleName_](viewer.thresholdValues_, d3scaleChromatic[viewer.colorSchemeName_])
 
-        }else {
+        } else {
           return d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
         }
 
@@ -1044,10 +1052,10 @@ export function viewer(options) {
    */
   function updateColorScaleFunction() {
     let domain;
-    
+
     if (viewer.colorScaleName_ == "scaleSequentialLog") {
       // fix 0 issue for log scales
-      if (viewer.colorValuesExtent[0]== 0) {
+      if (viewer.colorValuesExtent[0] == 0) {
         viewer.colorValuesExtent[0] = 0.1
       }
     }
