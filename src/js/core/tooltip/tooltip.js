@@ -8,12 +8,28 @@ import { json } from "d3-fetch";
 let tooltipContainer,
     tooltipTemplate,
     pointTip,
-    labelTip,
+    colorFieldTip,
+    crsTip,
+    xTip,
+    yTip,
+    LAUNameTip,
+    LAUCodeTip,
+    NUTSCodeTip,
     tooltip
 
 let tooltip_state = {
     display: "none"
 };
+
+// viewer.tooltip_ = {
+//     eventType: "click", // click vs mouseover
+//     showLAU: true,
+//     showEPSG: false,
+//     showNUTS: true,
+//     showCoordinates: true,
+//     xOffset: 15,
+//     yOffset: 15,
+//   };
 
 /**
 * @description Appends tooltip container to the scene
@@ -29,14 +45,36 @@ export function createTooltipContainer(viewer) {
     //inject tooltip HTML to DOM
     tooltipTemplate = document.createRange()
         .createContextualFragment(`<div id="gridviz-tooltip">
-    <div id="gridviz-labeltip"></div>
+    <div id="gridviz-labeltip">
+
+    <table>
+     <thead></thead>
+     <tbody>
+     <tr id="colorfieldtip"></tr>
+     <tr id="xtip"></tr>
+     <tr id="ytip"></tr>
+     <tr id="crstip"></tr>
+     <tr id="launametip"></tr>
+     <tr id="laucodetip"></tr>
+     <tr id="nutscodetip"></tr>
+     </tbody>
+    </table>
+   
+    </div>
 <div id="gridviz-pointtip"></div>
 </div>`);
     viewer.container_.append(tooltipTemplate);
 
     tooltip = document.querySelector("#gridviz-tooltip");
     pointTip = document.querySelector("#gridviz-pointtip");
-    labelTip = document.querySelector("#gridviz-labeltip");
+    colorFieldTip = document.querySelector("#colorfieldtip");
+    xTip = document.querySelector("#xtip");
+    yTip = document.querySelector("#ytip");
+    crsTip = document.querySelector("#crstip");
+    LAUNameTip = document.querySelector("#launametip");
+    LAUCodeTip = document.querySelector("#laucodetip");
+    NUTSCodeTip = document.querySelector("#nutscodetip");
+
     tooltipContainer = new Object3D();
     viewer.scene.add(tooltipContainer);
 }
@@ -65,103 +103,143 @@ export function updateTooltip(viewer) {
         y = Math.round(y * f);
     }
 
+    // set tooltip position and display
     tooltip.style.display = tooltip_state.display;
     tooltip.style.left = tooltip_state.left + "px";
     tooltip.style.top = tooltip_state.top + "px";
-    //pointTip.innerText = tooltip_state.name;
     pointTip.style.background = tooltip_state.color;
 
     // set tooltip attributes HTML
-    labelTip.innerHTML = `
-    <table>
-     <thead></thead>
-     <tbody>
+    colorFieldTip.innerHTML = `<th><strong>${viewer.colorField_}:</strong> </th>
+    <th>${tooltip_state.colorValue}</th>`
 
-     <tr>
-     <th><strong>${viewer.colorField_}:</strong> </th>
-     <th>${tooltip_state.colorValue}</th>
-     </tr>
+    if (viewer.tooltip_.showCoordinates) {
+        xTip.innerHTML = `<th><strong>x:</strong></th>
+        <th>${x}</th>`
 
-     <tr>
-     <th><strong>x:</strong> </th>
-     <th>${x}</th>
-     </tr>
+        yTip.innerHTML = `<th><strong>y:</strong></th>
+        <th>${y}</th>`
+    }
 
-     <tr>
-     <th><strong>y:</strong> </th>
-     <th>${y}</th>
-     </tr>
+    if (viewer.tooltip_.showEPSG) {
+        crsTip.innerHTML = `<th><strong>CRS:</strong></th>
+        <th>EPSG:${viewer.EPSG_}</th>`
+    }
 
-     <tr>
-     <th><strong>CRS:</strong> </th>
-     <th>EPSG:${viewer.EPSG_}</th>
-     </tr>
-
-     <tr id="tooltip_lau_name">
-
-     </tr>
-     <tr id="tooltip_lau_id">
-
-     </tr>
-     <tr id="tooltip_nuts_id">
-
-     </tr>
-
-
-     </tbody>
-    
-    </table>
-   `;
-
-    //fetch NUTS info using GISCO id service
+    //fetch NUTS info using GISCO id REST API
     if ([4326, 4258, 3035].includes(viewer.EPSG_)) {
-        let nutsNode = document.getElementById("tooltip_nuts_id");
-        let lauNode = document.getElementById("tooltip_lau_id");
-        let lauNameNode = document.getElementById("tooltip_lau_name");
+
         let nutsRequest = `${CONSTANTS.nutsAPIBaseURL}nuts?x=${x}&y=${y}&proj=${viewer.EPSG_}&year=2021&level=3`;
         let lauRequest = `${CONSTANTS.nutsAPIBaseURL}lau?x=${x}&y=${y}&proj=${viewer.EPSG_}&year=2019&level=3`;
-        //get NUTS
-        json(nutsRequest).then(
-            json => {
 
-                if (json.features.length > 0) {
-                    //add NUTS id to tooltip table
-                    let f = json.features[0];
+        //get both (promise.all required to ensure tooltip on screen after both requests have resolved)
+        if (viewer.tooltip_.showLAU && viewer.tooltip_.showNUTS) {
+            let promises = [json(nutsRequest), json(lauRequest)];
+            Promise.all(promises).then((res) => {
 
-                    nutsNode.innerHTML = `
+                if (res[0]) {
+                    if (res[0].features.length > 0) {
+                        //add NUTS id to tooltip table
+                        let f = res[0].features[0];
+
+                        NUTSCodeTip.innerHTML = `
+<th><strong>NUTS3 code:</strong></th>
+<th>${f.properties.nuts_id}</th>
+`;
+                    }
+                }
+
+                if (res[1]) {
+                    if (res[1].features.length > 0) {
+                        //add lau id and name to tooltip table
+                        let f = res[1].features[0];
+                        LAUCodeTip.innerHTML = `
+          <th><strong>LAU code:</strong></th>
+          <th>${f.properties.lau_id}</th>
+          `;
+                        LAUNameTip.innerHTML = `
+          <th><strong>LAU:</strong></th>
+          <th>${f.properties.lau_name}</th>
+          `;
+                    }
+                }
+                ensureTooltipOnScreen(viewer);
+            })
+
+        } else {
+            //get NUTS
+            if (viewer.tooltip_.showLAU) {
+
+                json(nutsRequest).then(
+                    json => {
+                        if (json.features.length > 0) {
+                            //add NUTS id to tooltip table
+                            let f = json.features[0];
+
+                            NUTSCodeTip.innerHTML = `
             <th><strong>NUTS3 code:</strong></th>
             <th>${f.properties.nuts_id}</th>
             `;
-                }
-            },
-            err => {
-                console.log("no results found")
-                //console.error(err);
-            })
+                        }
+                        ensureTooltipOnScreen(viewer);
+                    },
+                    err => {
+                        console.log("no LAU found");
+                        ensureTooltipOnScreen(viewer);
+                        //console.error(err);
+                    })
+            } else if (viewer.tooltip_.showNUTS) {
 
-        //get LAUs
-        json(lauRequest).then(
-            json => {
+                json(lauRequest).then(
+                    json => {
 
-                if (json.features.length > 0) {
-                    //add lau id and name to tooltip table
-                    let f = json.features[0];
-                    lauNode.innerHTML = `
+                        if (json.features.length > 0) {
+                            //add lau id and name to tooltip table
+                            let f = json.features[0];
+                            LAUCodeTip.innerHTML = `
               <th><strong>LAU code:</strong></th>
               <th>${f.properties.lau_id}</th>
               `;
-                    lauNameNode.innerHTML = `
+                            LAUNameTip.innerHTML = `
               <th><strong>LAU:</strong></th>
               <th>${f.properties.lau_name}</th>
               `;
-                }
-            },
-            err => {
-                console.log("no results found")
-                //console.error(err);
-            })
+                        }
+                        ensureTooltipOnScreen(viewer);
+                    },
+                    err => {
+                        console.log("no NUTS found");
+                        ensureTooltipOnScreen(viewer);
+                        //console.error(err);
+                    })
+            } else {
+                //dont need to wait for fetch
+                ensureTooltipOnScreen(viewer);
+            }
+        }
+    }
+
+
+
+
+}
+
+/**
+* @function ensureTooltipOnScreen
+* @description Prevents the tooltip from appearing off screen
+* @param {Object} viewer
+*/
+function ensureTooltipOnScreen(viewer) {
+    //too far right
+    if (tooltip.offsetLeft > viewer.width_ - tooltip.clientWidth) {
+        tooltip.style.left = tooltip.offsetLeft - (tooltip.clientWidth + viewer.tooltip_.xOffset * 2) + "px";
 
     }
+    //too far down
+    if (tooltip.offsetTop + tooltip.clientHeight > viewer.height_) {
+        tooltip.style.top = tooltip.offsetTop - (tooltip.clientHeight + viewer.tooltip_.yOffset * 2) + "px";
+    }
+
 }
 
 
@@ -169,22 +247,12 @@ export function updateTooltip(viewer) {
 * @function showTooltip
 * @description Shows the tooltip where the cell was clicked
 * @param {Object} viewer
-* @param {*} mouse_position
-* @param {*} cell
+* @param {*} mouse_position // {x,y}
+* @param {*} cell // cell object taken from the grid cache
 */
 export function showTooltip(viewer, mouse_position, cell) {
-    let x_offset = 25;
-    let y_offset = -10;
-    let tooltipWidth = parseInt(tooltip.style.width.replace("px", ""));
-    let tooltipHeight = 100;//tooltip.style.height;
-    let left = mouse_position[0] + x_offset;
-    let top = mouse_position[1] + y_offset
-    if (left > viewer.width_ - tooltipWidth) {
-        left = left - (tooltipWidth + 40);
-    }
-    if (top < 0) {
-        top = top + (tooltipHeight);
-    }
+    let left = mouse_position[0] + viewer.tooltip_.xOffset;
+    let top = mouse_position[1] + viewer.tooltip_.yOffset;
 
     tooltip_state.display = "block";
     tooltip_state.left = left

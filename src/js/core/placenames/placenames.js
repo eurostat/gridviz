@@ -16,7 +16,7 @@ export function defineDefaultPlacenameThresholds(viewer) {
     // scale : population
 
     viewer.placenameThresholds_ = {
-        [r * 1024]: 1000000,
+        [r * 1024]: 1500000,
         [r * 512]: 1000000,
         [r * 256]: 500000,
         [r * 128]: 250000,
@@ -28,33 +28,7 @@ export function defineDefaultPlacenameThresholds(viewer) {
         [r * 2]: 1000,
         [r]: 10,
     }
-    // if (scale > 0 && scale < r) {
-    //   return populationFieldName + ">10";
-    // } else if (scale > r && scale < r * 2) {
-    //   return populationFieldName + ">1000";
-    // } else if (scale > r * 2 && scale < r * 4) {
-    //   return populationFieldName + ">2500";
-    // } else if (scale > r * 4 && scale < r * 8) {
-    //   return populationFieldName + ">5000";
-    // } else if (scale > r * 8 && scale < r * 16) {
-    //   return populationFieldName + ">10000";
-    // } else if (scale > r * 16 && scale < r * 32) {
-    //   return populationFieldName + ">200000";
-    // } else if (scale > r * 32 && scale < r * 64) {
-    //   return populationFieldName + ">300000";
-    // } else if (scale > r * 64 && scale < r * 128) {
-    //   return populationFieldName + ">300000";
-    // } else if (scale > r * 128 && scale < r * 256) {
-    //   return populationFieldName + ">1000000";
-    // } else if (scale > r * 256 && scale < r * 512) {
-    //   return populationFieldName + ">1000000";
-    // } else if (scale > r * 512 && scale < r * 1024) {
-    //   return populationFieldName + ">2000000";
-    // } else if (scale > r * 1024) {
-    //   return populationFieldName + ">2000000";
-    // } else {
-    //   return "1=1";
-    // }
+    
 }
 
 /**
@@ -103,6 +77,20 @@ export function getPlacenames(viewer) {
                 console.error(err);
             }
         );
+    }
+}
+
+/**
+ * 
+ * It seems that the browsers JS garbage collector removes the DOM nodes
+ * @function removePlacenamesFromScene
+ * @description Removes the placenames CSS2DObjects from the THREE pointsLayer layer
+ */
+ export function removePlacenamesFromScene(viewer) {
+    if (viewer.pointsLayer && viewer.pointsLayer.children.length > 0) {
+        for (var i = viewer.pointsLayer.children.length - 1; i >= 0; i--) {
+            viewer.pointsLayer.remove(viewer.pointsLayer.children[i]);
+        }
     }
 }
 
@@ -182,19 +170,6 @@ function addPlacenamesToScene(viewer, placenames) {
     }
 }
 
-/**
- * 
- * It seems that the browsers JS garbage collector removes the DOM nodes
- * @function removePlacenamesFromScene
- * @description Removes the placenames CSS2DObjects from the THREE pointsLayer layer
- */
-export function removePlacenamesFromScene(viewer) {
-    if (viewer.pointsLayer && viewer.pointsLayer.children.length > 0) {
-        for (var i = viewer.pointsLayer.children.length - 1; i >= 0; i--) {
-            viewer.pointsLayer.remove(viewer.pointsLayer.children[i]);
-        }
-    }
-}
 
 /**
  * Creates a CSS2DObject for a placename ESRI JSON object

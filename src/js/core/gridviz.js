@@ -9,7 +9,6 @@ import { select, pointer } from "d3-selection";
 //three.js
 import {
   Scene,
-  PerspectiveCamera,
   WebGLRenderer,
   Points,
   Vector3,
@@ -20,6 +19,7 @@ import {
   ShaderMaterial,
   PointsMaterial
 } from "three";
+
 import * as THREE from "three/src/constants";
 // extra Three.js modules not included in main threejs build, used for labelling
 import { CSS2DRenderer } from "../lib/threejs/CSS2D/CSS2DRenderer";
@@ -31,9 +31,10 @@ import * as CONSTANTS from "./constants.js";
 import * as Utils from "./utils";
 // gridviz modules
 import * as geojson from "./layers/geojson.js";
-import * as tooltip from "./tooltip/tooltip.js";
-import * as placenames from "./placenames/placenames.js";
-import * as legend from "./legend/legend.js";
+import * as Tooltip from "./tooltip/tooltip.js";
+import * as Placenames from "./placenames/Placenames.js";
+import * as Legend from "./legend/legend.js";
+import * as Camera from "./camera/camera.js";
 
 //TODO list:
 // - mobile pan & zoom bug when using method center([x,y])
@@ -48,6 +49,8 @@ import * as legend from "./legend/legend.js";
  * 
  */
 export function viewer(options) {
+  //TODO: move default configs to their respective modules
+
   //output object
   let viewer = {};
 
@@ -66,7 +69,8 @@ export function viewer(options) {
 
   // https://d3-legend.susielu.com vs https://blog.scottlogic.com/2019/03/13/how-to-create-a-continuous-colour-range-legend-using-d3-and-d3fc.html
   viewer.showLegend_ = true;
-  // legend config
+
+  // default legend config
   viewer.legend_ = {
     type: "continuous", //cells vs continuous
     width: 300,
@@ -79,6 +83,17 @@ export function viewer(options) {
     shapeWidth: 30
   };
   viewer._gridLegend; //legend stored here
+
+  // default tooltip config
+  viewer.tooltip_ = {
+    eventType: "click", // click vs mouseover
+    showLAU: true,
+    showEPSG: true,
+    showNUTS: true,
+    showCoordinates: true,
+    xOffset: 15,
+    yOffset: 15
+  };
 
   //d3 Scaling & colouring stuff
   viewer.colorSchemeName_ = "interpolateTurbo";
@@ -179,7 +194,13 @@ export function viewer(options) {
     }
     //update legend if necessary
     if (viewer._gridLegend) {
-      legend.updateLegend(viewer)
+      Legend.updateLegend(viewer)
+    }
+    return viewer;
+  };
+  viewer.tooltip = function (v) {
+    for (let key in v) {
+      viewer.tooltip_[key] = v[key];
     }
     return viewer;
   };
@@ -195,10 +216,10 @@ export function viewer(options) {
       gridConfig = defineGridConfig();
 
       if (viewer.showPlacenames_) {
-        removePlacenamesFromScene(viewer); //clear labels
+        Placenames.removePlacenamesFromScene(viewer); //clear labels
       }
 
-      redefineCamera();
+      Camera.redefineCamera(viewer);
       //clear previous grid
       loadGrid(v[0])
     } else {
@@ -214,8 +235,8 @@ export function viewer(options) {
     //if already previously set
     if (v && viewer.scene) {
       viewer.center_ = v;
-      redefineCamera();
-      setCamera(v[0], v[1], camera.position.z)
+      Camera.redefineCamera(viewer);
+      Camera.setCamera(v[0], v[1], viewer.camera.position.z)
     } else {
       //set initial
       if (v) {
@@ -235,8 +256,8 @@ export function viewer(options) {
   viewer.zoom = function (v) {
     if (v && viewer.scene) {
       viewer.zoom_ = v;
-      redefineCamera();
-      setCamera(viewer.camera.position.x, viewer.camera.position.y, v); // Set camera zoom (z position)
+      Camera.redefineCamera(viewer);
+      Camera.setCamera(viewer.camera.position.x, viewer.camera.position.y, v); // Set camera zoom (z position)
     } else {
       if (v) {
         viewer.zoom_ = v;
@@ -305,7 +326,7 @@ export function viewer(options) {
       }
 
       if (viewer.showPlacenames_ && !viewer.placenameThresholds_) {
-        placenames.defineDefaultPlacenameThresholds(viewer);
+        Placenames.defineDefaultPlacenameThresholds(viewer);
       }
 
       //defines raycaster threshold and point size. See GridConfig typedef.
@@ -316,11 +337,11 @@ export function viewer(options) {
       if (!viewer.labelRenderer) createLabelRenderer();
       if (!viewer.renderer) createWebGLRenderer();
 
-      createCamera();
+      Camera.createCamera(viewer);
       createRaycaster();
 
       // tooltip DOM element
-      tooltip.createTooltipContainer(viewer);
+      Tooltip.createTooltipContainer(viewer);
 
       // dropdowns DOM container
       if (viewer.colorSchemeSelector_ || viewer.colorScaleSelector_ || viewer.sizeFieldSelector_ || viewer.colorFieldSelector_) {
@@ -347,15 +368,17 @@ export function viewer(options) {
 
       //request initial placenames
       if (viewer.showPlacenames_) {
-        placenames.getPlacenames(viewer);
+        Placenames.getPlacenames(viewer);
       }
 
       return viewer;
 
     } else {
       Utils.hideLoading();
-      console.error("invalid inputs");
-      return
+      let msg = "invalid inputs";
+      console.error(msg);
+      alert(msg)
+      return;
     }
   };
 
@@ -531,93 +554,9 @@ export function viewer(options) {
     viewer.container_.appendChild(viewer.labelRenderer.domElement);
   }
 
-  /**
- * @description defines the configuration object we will use for the threejs camera
- * @function defineCameraConfig
- */
-  function defineCameraConfig() {
-    let config = {}
-    config.near_ = defineNear();
-    config.far_ = defineFar(); //set min zoom
-    config.fov_ = CONSTANTS.fov;
-    config.aspect_ = viewer.width_ / viewer.height_;
-
-    //initial camera position Z
-    if (viewer._mobile) {
-      config.initialZ_ = config.far_ / 2 - 1
-    } else {
-      config.initialZ_ = viewer.zoom_ || config.far_ / 2 - 1
-    }
-    config.zoom_ = viewer.zoom_ || config.initialZ_;
-
-    return config;
-  }
-
-  /**
-   * @description Initializes THREE camera object
-   * @function createCamera
-   */
-  function createCamera() {
-    viewer.cameraConfig = defineCameraConfig();
-    viewer.camera = new PerspectiveCamera(
-      viewer.cameraConfig.fov_,
-      viewer.cameraConfig.aspect_,
-      viewer.cameraConfig.near_,
-      viewer.cameraConfig.far_
-    );
-
-    //orthographic
-    //https://discourse.threejs.org/t/why-does-pointsmaterial-size-does-not-correspond-with-geographic-grid-cell-size/13408
-    //left — Camera frustum left plane.
-    // right — Camera frustum right plane.
-    // top — Camera frustum top plane.
-    // bottom — Camera frustum bottom plane.
-    // near — Camera frustum near plane.
-    // far — Camera frustum far plane.
-    //3035 projected bounds 2426378.0132, 1528101.2618, 6293974.6215, 5446513.5222
-
-    // let width = 6293974 - 2426378;
-    // let height = 5446513 - 1528101; //ymin - ymax /2
-    // let left = width / -2;
-    // let right = width / 2;
-    // let top = height / 2;
-    // let bottom = height / -2;
-
-    //camera = new OrthographicCamera(left, right, top, bottom, 1, 2000);
-
-    // let x = (6293974 + 2426378) / 2
-    // let y = (5446513 + 1528101) / 2
-    // let z = 1000;
-  }
-
-  /**
-  * @description Updates camera configuration. Called when user adds grid data, changes zoom, or changes center after initialization
-  * @function redefineCamera
-  */
-  function redefineCamera() {
-    let cameraConfig = defineCameraConfig()
-
-    viewer.camera.fov = cameraConfig.fov_;
-    viewer.camera.aspect = cameraConfig.aspect_;
-    viewer.camera.near = cameraConfig.near_;
-    viewer.camera.far = cameraConfig.far_;
-
-    // TODO: redefine panAndZoom
-  }
 
 
-  /**
-   * @function setCamera
-   * @description Sets position and direction of camera
-   * @param {number} x three.js coord
-   * @param {number} y three.js coord
-   * @param {number} z three.js coord
-   * 
-   */
-  function setCamera(x, y, z) {
-    viewer.camera.position.set(x, y, z); // Set camera position
-    viewer.camera.lookAt(new Vector3(x, y, z)); // Set camera angle
-  }
+
 
   /**
    * @description Initializes THREE.Raycaster object
@@ -666,12 +605,12 @@ export function viewer(options) {
   * @param {String} scheme Name of the d3-scale-chromatic colour scheme
   */
   function onChangeColorScheme(scheme) {
-    tooltip.hideTooltip()
+    Tooltip.hideTooltip()
     viewer.colorSchemeName_ = scheme;
     updateColorScale();
     updatePointsColors();
     if (viewer.legend_) {
-      legend.updateLegend(viewer);
+      Legend.updateLegend(viewer);
     }
   }
 
@@ -692,9 +631,18 @@ export function viewer(options) {
   */
   function onChangeColorField(field) {
     viewer.colorField_ = field;
+
+    //update the extent/domain of the values of the new field 
+    viewer.colorValuesExtent = extent(gridCaches[viewer.resolution_], d => parseFloat(d[viewer.colorField_]));
+
+    //update the scale function used for colouring
+    updateColorScale();
+
+    //update the thee.js point colours
+
     updatePointsColors();
     if (viewer.legend_) {
-      legend.updateLegend(viewer);
+      Legend.updateLegend(viewer);
     }
   }
 
@@ -718,7 +666,7 @@ export function viewer(options) {
     updateColorScale();
     updatePointsColors();
     if (viewer.legend_) {
-      legend.updateLegend(viewer);
+      Legend.updateLegend(viewer);
     }
   }
 
@@ -742,7 +690,7 @@ export function viewer(options) {
     updateSizeScale();
     updatePointsSizes();
     if (viewer._gridLegend) {
-      legend.updateLegend(viewer);
+      Legend.updateLegend(viewer);
     }
   }
 
@@ -767,18 +715,18 @@ export function viewer(options) {
   */
   function addMouseEventsToView() {
     // show cell value on click
-    view.on("click", (event) => {
+    view.on(viewer.tooltip_.eventType, (event) => {
       let [mouseX, mouseY] = pointer(event);
       let mouse_position = [mouseX, mouseY];
       let intersect = checkIntersects(mouse_position);
       if (intersect) {
-        console.log("Intersect", intersect);
+        //console.log("Intersect", intersect); //for debugging intersects
         let index = intersect.index;
         let cell = gridCaches[viewer.resolution_][index];
         highlightPoint(intersect);
-        tooltip.showTooltip(viewer, mouse_position, cell);
+        Tooltip.showTooltip(viewer, mouse_position, cell);
       } else {
-        tooltip.hideTooltip();
+        Tooltip.hideTooltip();
       }
       //console.log("Camera pos:", viewer.camera.position);
     });
@@ -815,7 +763,7 @@ export function viewer(options) {
       viewer.d3zoom.translateTo(view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
+      Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
 
       let initial_scale = getScaleFromZ(viewer.cameraConfig.far_);
       let initial_transform = zoomIdentity
@@ -829,7 +777,7 @@ export function viewer(options) {
       viewer.d3zoom.translateTo(view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
+      Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
     }
 
   }
@@ -871,29 +819,7 @@ export function viewer(options) {
     return viewer.resolution_; //INVESTIGATE: why does threejs pointSize value not always correspond with the grid resolution?
   }
 
-  /**
-   * @description Define the far parameter for THREE.camera. The far parameter represents the furthest possible distance that the camera can be from the plane (where z=0)
-   * @function defineFar
-   */
-  function defineFar() {
-    if (viewer._mobile) {
-      return 5; //due to a bug with pan & zoom, we have to scale everything on mobile
-    } else {
-      return viewer.resolution_ * 50000;
-    }
-  }
 
-  /**
-   * @description Define the near parameter for THREE.camera. The near parameter represents the smallest possible distance that the camera can be from the plane (where z=0)
-   * @function defineNear
-   */
-  function defineNear() {
-    if (viewer._mobile) {
-      return 0.0001; //due to a bug with pan & zoom, we have to scale everything on mobile
-    } else {
-      return 0.01;
-    }
-  }
 
 
 
@@ -962,9 +888,11 @@ export function viewer(options) {
               // add points to cache
               addGridToCache(csv, grid.cellSize);
             } else {
-              return console.error(
-                "Incorrect csv format. Please use coordinate columns with names 'x' and 'y'"
-              );
+              Utils.hideLoading();
+              let msg = "Incorrect csv format. Please use coordinate columns with names 'x' and 'y'";
+              console.error(msg);
+              alert(msg)
+              return;
             }
 
             // add HTMLElements to DOM
@@ -1023,10 +951,11 @@ export function viewer(options) {
         }
       );
     } else {
-      console.error(
-        "Please specify grid cell size in the units of its coordinate system"
-      );
       Utils.hideLoading();
+      let msg = "Please specify grid cell size in the units of its coordinate system";
+      console.error(msg);
+      alert(msg)
+
     }
   }
 
@@ -1089,7 +1018,7 @@ export function viewer(options) {
 
         if (viewer.colorScaleName_ == "scaleSequentialLog") {
           // fix 0 issue for log scales
-          if (viewer.colorValuesExtent[0]== 0) {
+          if (viewer.colorValuesExtent[0] == 0) {
             viewer.colorValuesExtent[0] = 0.1
           }
         }
@@ -1104,7 +1033,7 @@ export function viewer(options) {
           // use threshold values as domain
           return d3scale[viewer.colorScaleName_](viewer.thresholdValues_, d3scaleChromatic[viewer.colorSchemeName_])
 
-        }else {
+        } else {
           return d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
         }
 
@@ -1123,10 +1052,10 @@ export function viewer(options) {
    */
   function updateColorScaleFunction() {
     let domain;
-    
+
     if (viewer.colorScaleName_ == "scaleSequentialLog") {
       // fix 0 issue for log scales
-      if (viewer.colorValuesExtent[0]== 0) {
+      if (viewer.colorValuesExtent[0] == 0) {
         viewer.colorValuesExtent[0] = 0.1
       }
     }
@@ -1393,9 +1322,9 @@ export function viewer(options) {
     if (viewer.showLegend_) {
       if (viewer.legend_) {
         if (viewer._gridLegend) {
-          legend.updateLegend(viewer);
+          Legend.updateLegend(viewer);
         } else {
-          legend.createLegend(viewer);
+          Legend.createLegend(viewer);
         }
       }
     }
@@ -1803,7 +1732,7 @@ export function viewer(options) {
       let initial_scale = getScaleFromZ(viewer.cameraConfig.initialZ_);
       var initial_transform = zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
       viewer.d3zoom.transform(view, initial_transform);
-      setCamera(0, 0, viewer.cameraConfig.initialZ_)
+      Camera.setCamera(0, 0, viewer.cameraConfig.initialZ_)
 
     } else {
       //initial desktop zoom transform
@@ -1812,7 +1741,7 @@ export function viewer(options) {
       viewer.d3zoom.translateTo(view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
+      Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
     }
   }
 
@@ -1822,7 +1751,7 @@ export function viewer(options) {
       let x = -(event.transform.x - viewer.width_ / 2) / scale;
       let y = (event.transform.y - viewer.height_ / 2) / scale;
       let z = getZFromScale(scale);
-      setCamera(x, y, z);
+      Camera.setCamera(x, y, z);
     }
   }
 
@@ -1845,14 +1774,14 @@ export function viewer(options) {
         const distance = (new_z - viewer.camera.position.z) / dir.z;
         const pos = viewer.camera.position.clone().add(dir.multiplyScalar(distance));
         // Set the camera to new coordinates
-        setCamera(pos.x, pos.y, new_z);
+        Camera.setCamera(pos.x, pos.y, new_z);
       } else {
         // If panning
         const { movementX, movementY } = event.sourceEvent;
 
         // Adjust mouse movement by current scale and set camera
         const current_scale = getScaleFromZ(viewer.camera.position.z);
-        setCamera(
+        Camera.setCamera(
           viewer.camera.position.x - movementX / current_scale,
           viewer.camera.position.y + movementY / current_scale,
           viewer.camera.position.z
@@ -1879,7 +1808,7 @@ export function viewer(options) {
   }
 
   function zoomEnd(event) {
-    tooltip.hideTooltip();
+    Tooltip.hideTooltip();
     let scale = getScaleFromZ(event.transform.k);
     if (viewer.debugPlacenames_) {
       console.info(scale);
@@ -1889,42 +1818,13 @@ export function viewer(options) {
       if (viewer.pointsLayer) {
         if (scale > 0 && scale < viewer.cameraConfig.far_) {
           //placenames are added to the viewer.pointsLayer object
-          placenames.getPlacenames(viewer);
+          Placenames.getPlacenames(viewer);
         } else {
-          placenames.removePlacenamesFromScene(viewer);
+          Placenames.removePlacenamesFromScene(viewer);
         }
       }
     }
 
-    //change nuts simplification (or not) based on current scale
-    //URL themes: 2016/3035/20M/0.json
-    // if (viewer.nuts_) {
-    //   if (
-    //     scale < CONSTANTS.nuts_scale_threshold &&
-    //     viewer.nutsSimplification_ !== "10M"
-    //   ) {
-    //     viewer.nutsSimplification_ = "10M";
-    //     loadNuts2json(
-    //       CONSTANTS.nuts_base_URL +
-    //       viewer.EPSG_ +
-    //       "/" +
-    //       viewer.nutsSimplification_ +
-    //       "/" + viewer.nutsLevel_ + ".json"
-    //     );
-    //   } else if (
-    //     scale > CONSTANTS.nuts_scale_threshold &&
-    //     viewer.nutsSimplification_ !== "20M"
-    //   ) {
-    //     viewer.nutsSimplification_ = "20M";
-    //     loadNuts2json(
-    //       CONSTANTS.nuts_base_URL +
-    //       viewer.EPSG_ +
-    //       "/" +
-    //       viewer.nutsSimplification_ +
-    //       "/" + viewer.nutsLevel_ + ".json"
-    //     );
-    //   }
-    // }
   }
 
 

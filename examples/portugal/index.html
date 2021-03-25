@@ -37,6 +37,14 @@
         .nutsSimplification("10M") //loads nuts topojson boundaries
         .nutsCountry("PT") //filter nuts
         .showPlacenames(true)
+        .placenameThresholds({ //"scale": population
+            "1000": 100000,
+            "800": 50000,
+            "500": 40000,
+            "200": 25000,
+            "100": 10000,
+            "10": 500
+        })
         .placenamesCountry("PT") //filter placenames
         .zerosRemoved(3)
         .sourcesHTML("Source: <a href='https://www.efgs.info/data/national/' target='_blank'>Statistics Portugal</a>")

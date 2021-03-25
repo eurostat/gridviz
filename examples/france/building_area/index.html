@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Building area per 1km²</title>
+    <link rel="shortcut icon" href="../../../assets/images/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+  </head>
+
+  <body style="margin: 0">
+    <div id="viz-container"></div>
+  </body>
+  <script src="../../../build/gridviz.js"></script>
+  <script>
+    let containerDiv = document.getElementById("viz-container");
+    let viewer = gridviz
+      .viewer()
+      .container(containerDiv)
+      .cellCount(true)
+      .gridData([
+        {
+          url: "../../../assets/csv/France/1km/building_area.csv",
+          cellSize: 0.95,
+        },
+      ])
+      .title("Building area per km²")
+      //.sourcesHTML("Source: <a target='__blank' href='https://insee.fr/fr/accueil'>INSEE</a>")
+      //.center([3709, 2624]) // EPSG3035 with 3 trailing zeros removed
+      .zoom(1000)
+      .zerosRemoved(3)
+      .nuts(true)
+      .nutsLevel(3)
+      .nutsCountry("FR")
+      .EPSG(3035)
+      .showPlacenames(true)
+      .placenamesCountry("FR")
+      .height(window.innerHeight)
+      .width(window.innerWidth)
+      .backgroundColor("#000")
+      .lineColor("#ffffff")
+      .colorSchemeName("interpolateYlGnBu")
+      .colorScaleName("scaleSequentialLog")
+      .colorField("Total (m²)") // csv column used to calculate the colour of each cell
+      .colorSchemeSelector(true)
+      .colorScaleSelector(true)
+      .colorFieldSelector(true)
+      .placenameThresholds({
+        //"scale": population
+        500: 1000000,
+        200: 50000,
+        50: 10000,
+        20: 1000,
+      })
+      .colorScaleSelectorLabel("Scale: ")
+      .colorFieldSelectorLabel("Indicator: ")
+      .nuts(true) //loads borders topojson
+      .legend({
+        title: "Legend",
+        titleWidth: 110,
+        format: ",.0f",
+        ticks: 4,
+      })
+      .tooltip({
+        eventType: "mousemove", // click vs mousemove
+        showLAU: false,
+        showEPSG: false,
+        showNUTS: false,
+        showCoordinates: false,
+      })
+      .build();
+  </script>
+</html>

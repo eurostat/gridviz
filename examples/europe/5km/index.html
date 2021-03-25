@@ -60,6 +60,13 @@
       titleWidth: 130,
       ticks: 5,
     })
+    .tooltip({
+        eventType: "mousemove", // click vs mousemove
+        showLAU: false,
+        showEPSG: false,
+        showNUTS: false,
+        showCoordinates: false,
+      })
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
     .build();
 
