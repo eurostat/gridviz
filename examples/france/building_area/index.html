@@ -2,15 +2,15 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>1km² Grid of France</title>
-    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+    <title>Building area per 1km²</title>
+    <link rel="shortcut icon" href="../../../assets/images/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
   </head>
 
   <body style="margin: 0">
     <div id="viz-container"></div>
   </body>
-  <script src="../../build/gridviz.js"></script>
+  <script src="../../../build/gridviz.js"></script>
   <script>
     let containerDiv = document.getElementById("viz-container");
     let viewer = gridviz
@@ -19,7 +19,7 @@
       .cellCount(true)
       .gridData([
         {
-          url: "../../assets/csv/France/1km/building_area.csv",
+          url: "../../../assets/csv/France/1km/building_area.csv",
           cellSize: 0.95,
         },
       ])
@@ -40,7 +40,7 @@
       .lineColor("#ffffff")
       .colorSchemeName("interpolateYlGnBu")
       .colorScaleName("scaleSequentialLog")
-      .colorField("Total") // csv column used to calculate the colour of each cell
+      .colorField("Total (m²)") // csv column used to calculate the colour of each cell
       .colorSchemeSelector(true)
       .colorScaleSelector(true)
       .colorFieldSelector(true)
@@ -58,14 +58,14 @@
         title: "Legend",
         titleWidth: 110,
         format: ",.0f",
-        ticks: 5,
+        ticks: 4,
       })
       .tooltip({
         eventType: "mousemove", // click vs mousemove
         showLAU: false,
         showEPSG: false,
         showNUTS: false,
-        showCoordinates: true,
+        showCoordinates: false,
       })
       .build();
   </script>
