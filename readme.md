@@ -144,6 +144,21 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
 
 ### Legend
 
+Default:
+```javascript
+{
+    type: "continuous", //cells vs continuous
+    width: 300,
+    height: null,
+    orientation: "horizontal",
+    title: null, //if null, will default to the current colorField
+    titleWidth: 50,
+    format: ".0s",
+    cells: 5,
+    shapeWidth: 30
+}
+```
+
 | Method     / Object               | Type    | Default                                 | Description                                                                                                                                                                                                                                        |
 | --------------------------------- | ------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | viewer.showLegend([value])        | boolean | true                                    | Build d3 colour legend.                                                                                                                                                                                                                            |
@@ -161,6 +176,20 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
 <br>
 
 ### Tooltip
+
+Default:
+```javascript
+{
+    eventType: "click", // click vs mouseover
+    showLAU: true,
+    showEPSG: true,
+    showNUTS: true,
+    showCoordinates: true,
+    xOffset: 15,
+    yOffset: 15
+}
+```
+
 
 | Method / Object                   | Type    | Default                                | Description                                                                                                                                                                                       |
 | --------------------------------- | ------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
