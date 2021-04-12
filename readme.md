@@ -67,14 +67,13 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
                 cellSize: 5
             }
         ])
-        .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
+        .zerosRemoved(3) // To reduce file size, trailing zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
         .title("5km² Population Grid of Europe")
         .colorField("value")  // csv column that will determine cell colour
         .legend({
             title: "Total population per 5 km² (2011)",
             ticks: 6
         })
-        .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
         .build()
 ```
 
