@@ -29,7 +29,7 @@ Gridviz is a JavaScript library which allows you to visualize large gridded data
 
 From a CSV file with x and y columns, gridviz will build a viewer capable of visualizing millions of grid cells on the fly.
 
-For data-driven colouring and sizing, you can use [d3-scale](https://github.com/d3/d3-scale) and [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic).
+For data-driven colouring and sizing, you can use [d3-scale](https://github.com/d3/d3-scale) and [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic), or simply set your own colours and thresholds.
 
 ## Installation
 
