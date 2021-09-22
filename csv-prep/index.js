@@ -3,8 +3,8 @@ const csv = require('csv-parser');
 const fs = require('fs');
 
 //define input and output file locations
-const inputFilePath = "./input/filename.csv";
-const outputFilePath = "./output/filename.csv";
+const inputFilePath = "../assets/csv/Ookla/download_Q1_fixed.csv";
+const outputFilePath = "./download_Q1_fixed.csv";
 
 
 // set the headers you want for the output file..
@@ -13,7 +13,7 @@ const csvWriter = createCsvWriter({
     header: [
         { id: 'x', title: 'x' },
         { id: 'y', title: 'y' },
-        { id: 'someValue', title: 'someValue' },
+        { id: 'mbps', title: 'mbps' },
     ]
 });
 
@@ -26,9 +26,9 @@ fs.createReadStream(inputFilePath)
 
         // output row header : input row value
         output.push({
-            "x": parseInt(row.X), //Easting
-            "y": parseInt(row.Y), //Northing
-            "someValue": Math.floor(parseInt(row.avg_time) || '0'),
+            "x": parseFloat(parseFloat(row.X).toFixed(3)), 
+            "y": parseFloat(parseFloat(row.Y).toFixed(3)),
+            "mbps": Math.trunc(row.avg_d_kbps/1000),
         })
 
         // using geostat grid ids

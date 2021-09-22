@@ -79,7 +79,7 @@
   color:white;
 }
 .gridviz-sources a:hover{
-  color:lightblue;
+  color:lightblue !important;
   cursor:pointer;
 }
 
