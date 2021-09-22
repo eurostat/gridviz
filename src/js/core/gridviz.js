@@ -19,6 +19,7 @@ import {
   ShaderMaterial,
   PointsMaterial
 } from "three";
+import {WEBGL} from '../lib/threejs/WebGL'
 
 import * as THREE from "three/src/constants";
 // extra Three.js modules not included in main threejs build, used for labelling
@@ -62,10 +63,10 @@ export function viewer(options) {
   viewer.container_ = document.body;
   viewer.height_ = null; //takes container width/height
   viewer.width_ = null;
-  viewer.backgroundColor_ = "#000";
-  viewer.lineColor_ = "#ffffff";
+  viewer.backgroundColor_ = "#ffffff";
+  viewer.lineColor_ = "rgb(0, 0, 0)";
   viewer.lineWidth_ = 0.0012;
-  viewer.highlightColor_ = "cyan"
+  viewer.highlightColor_ = "yellow"
   viewer.loadingIcon_ = "ring"; //ripple | ring | ellipsis | roller
 
   // https://d3-legend.susielu.com vs https://blog.scottlogic.com/2019/03/13/how-to-create-a-continuous-colour-range-legend-using-d3-and-d3fc.html
@@ -87,17 +88,17 @@ export function viewer(options) {
 
   // default tooltip config
   viewer.tooltip_ = {
-    eventType: "click", // click vs mouseover
-    showLAU: true,
-    showEPSG: true,
-    showNUTS: true,
+    eventType: "mousemove", // click vs mousemove
+    showLAU: false,
+    showEPSG: false,
+    showNUTS: false,
     showCoordinates: true,
     xOffset: 15,
     yOffset: 15
   };
 
   //d3 Scaling & colouring stuff
-  viewer.colorSchemeName_ = "interpolateTurbo";
+  viewer.colorSchemeName_ = "interpolateBlues";
   viewer.reverseColorScheme_ = false;
   viewer.sizeScaleName_ = "scaleSqrt";
   viewer.colorScaleName_ = "scaleSequentialSqrt";
@@ -268,120 +269,127 @@ export function viewer(options) {
   };
 
   /**
-   *
+   *  TODO: return a promise once build is complete
    *
    * @function build
    * @description Clears the canvas, builds the three.js viewer and appends grid data
   */
   viewer.build = function () {
-    let valid = validateInputs();
+    //check if WebGL compatible device
+    if ( WEBGL.isWebGLAvailable() ) {
 
-    if (valid) {
+      // Initiate function or other initializations here
+      let valid = validateInputs();
 
-      //set width/height if unspecified by user
-      if (!viewer.width_) {
-        if (viewer.container_.clientWidth == window.innerWidth) {
-          viewer.width_ = viewer.container_.clientWidth - 4;
-        } else {
-          viewer.width_ = viewer.container_.clientWidth
+      if (valid) {
+  
+        //set width/height if unspecified by user
+        if (!viewer.width_) {
+          if (viewer.container_.clientWidth == window.innerWidth) {
+            viewer.width_ = viewer.container_.clientWidth - 4;
+          } else {
+            viewer.width_ = viewer.container_.clientWidth
+          }
+        }
+        if (!viewer.height_) {
+          if (viewer.container_.clientHeight == "0") {
+            //if container element has no defined height, use screen height
+            viewer.height_ = window.innerHeight - 4;
+          } else {
+            viewer.height_ = viewer.container_.clientHeight
+          }
         }
 
-      }
-      if (!viewer.height_) {
-        if (viewer.container_.clientHeight == "0") {
-          //if container element has no defined height, use screen height
-          viewer.height_ = window.innerHeight - 4;
-        } else {
-          viewer.height_ = viewer.container_.clientHeight
+        //mobile settings
+        if (/Mobi|Android/i.test(navigator.userAgent)) {
+          viewer._mobile = true;
+          // saving screen space...
+          viewer.sourcesHTML_ = null
+          viewer.sizeFieldSelector_ = false;
+          viewer.colorFieldSelector_ = false;
+          viewer.colorScaleSelector_ = false;
+          viewer.colorSchemeSelector_ = false;
         }
-
-
+  
+        Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
+        Utils.createLoadingText(viewer.container_);
+  
+        //set container height and width
+        viewer.container_.classList.add("gridviz-container");
+        viewer.container_.style.width = viewer.width_;
+        viewer.container_.style.height = viewer.height_;
+  
+        //set viewer resolution from user input
+        if (!viewer.resolution_) {
+          viewer.resolution_ = viewer.gridData_[0].cellSize;
+        }
+  
+        if (viewer.showPlacenames_ && !viewer.placenameThresholds_) {
+          Placenames.defineDefaultPlacenameThresholds(viewer);
+        }
+  
+        //defines raycaster threshold and point size. See GridConfig typedef.
+        gridConfig = defineGridConfig();
+  
+        // three.js initializations
+        createScene();
+        if (!viewer.labelRenderer) createLabelRenderer();
+        if (!viewer.renderer) createWebGLRenderer();
+  
+        Camera.createCamera(viewer);
+        createRaycaster();
+  
+        // tooltip DOM element
+        Tooltip.createTooltipContainer(viewer);
+  
+        // dropdowns DOM container
+        if (viewer.colorSchemeSelector_ || viewer.colorScaleSelector_ || viewer.sizeFieldSelector_ || viewer.colorFieldSelector_) {
+          addSelectorsContainerToDOM();
+        }
+        // colour selector added here. Data-dependent dropdowns added once grid data is loaded
+        if (viewer.colorSchemeSelector_) {
+          Dropdowns.createColorSchemeDropdown(viewer);
+          addChangeEventToColorSchemeDropdown();
+        }
+  
+        //load initial data
+        loadGrid(viewer.gridData_[0]);
+  
+        // NUTS geometries
+        if (viewer.nuts_) {
+          loadNuts2json(
+            CONSTANTS.nuts_base_URL +
+            viewer.EPSG_ +
+            "/" +
+            viewer.nutsSimplification_ +
+            "/" + viewer.nutsLevel_ + ".json"
+          );
+        }
+  
+        //request initial placenames
+        if (viewer.showPlacenames_) {
+          Placenames.getPlacenames(viewer);
+        }
+  
+        return viewer;
+  
+      } else {
+        Utils.hideLoading();
+        let msg = "invalid inputs";
+        console.error(msg);
+        alert(msg)
+        return;
       }
-      //force viewer width to be the same as the container width
-      // if (viewer.width_ != viewer.container_.clientWidth) {
-      //   viewer.width_ = viewer.container_.clientWidth;
-      // }
-
-      //mobile logic
-      if (/Mobi|Android/i.test(navigator.userAgent)) {
-        viewer._mobile = true;
-        // saving screen space...
-        viewer.sourcesHTML_ = null
-        viewer.sizeFieldSelector_ = false;
-        viewer.colorFieldSelector_ = false;
-        viewer.colorScaleSelector_ = false;
-        viewer.colorSchemeSelector_ = false;
-      }
-
-      Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
-      Utils.createLoadingText(viewer.container_);
-
-      //set container height and width
-      viewer.container_.classList.add("gridviz-container");
-      viewer.container_.style.width = viewer.width_;
-      viewer.container_.style.height = viewer.height_;
-
-      //set viewer resolution from user input
-      if (!viewer.resolution_) {
-        viewer.resolution_ = viewer.gridData_[0].cellSize;
-      }
-
-      if (viewer.showPlacenames_ && !viewer.placenameThresholds_) {
-        Placenames.defineDefaultPlacenameThresholds(viewer);
-      }
-
-      //defines raycaster threshold and point size. See GridConfig typedef.
-      gridConfig = defineGridConfig();
-
-      // three.js initializations
-      createScene();
-      if (!viewer.labelRenderer) createLabelRenderer();
-      if (!viewer.renderer) createWebGLRenderer();
-
-      Camera.createCamera(viewer);
-      createRaycaster();
-
-      // tooltip DOM element
-      Tooltip.createTooltipContainer(viewer);
-
-      // dropdowns DOM container
-      if (viewer.colorSchemeSelector_ || viewer.colorScaleSelector_ || viewer.sizeFieldSelector_ || viewer.colorFieldSelector_) {
-        addSelectorsContainerToDOM();
-      }
-      // colour selector added here. Data-dependent dropdowns added once grid data is loaded
-      if (viewer.colorSchemeSelector_) {
-        Dropdowns.createColorSchemeDropdown(viewer);
-        addChangeEventToColorSchemeDropdown();
-      }
-
-      //load initial data
-      loadGrid(viewer.gridData_[0]);
-
-      // NUTS geometries
-      if (viewer.nuts_) {
-        loadNuts2json(
-          CONSTANTS.nuts_base_URL +
-          viewer.EPSG_ +
-          "/" +
-          viewer.nutsSimplification_ +
-          "/" + viewer.nutsLevel_ + ".json"
-        );
-      }
-
-      //request initial placenames
-      if (viewer.showPlacenames_) {
-        Placenames.getPlacenames(viewer);
-      }
-
-      return viewer;
-
-    } else {
-      Utils.hideLoading();
-      let msg = "invalid inputs";
-      console.error(msg);
-      alert(msg)
-      return;
+    
+    } else {      
+      
+      // warn user that their device is not compatible with WebGL
+      const warning = WEBGL.getWebGLErrorMessage();
+      document.getElementById( 'container' ).appendChild( warning );
+    
     }
+
+    
   };
 
   /**
@@ -894,7 +902,7 @@ export function viewer(options) {
               addGridToCache(csv, grid.cellSize);
             } else {
               Utils.hideLoading();
-              let msg = "Incorrect csv format. Please use coordinate columns with names 'x' and 'y'";
+              let msg = "Incorrect csv format. Please use coordinate columns with names 'x' and 'y' and check that colorField is defined correctly.";
               console.error(msg);
               alert(msg)
               return;
@@ -1299,7 +1307,7 @@ export function viewer(options) {
         },
         fragmentShader: fragmentShader(),
         vertexShader: vertexShader(),
-        vertexColors: THREE.VertexColors
+        vertexColors: true
       });
 
       //use threejs PointsMaterial instead:
