@@ -151,7 +151,7 @@ export function viewer(options) {
  * @property {number} url - URL of the csv file to retrieve
  * @property {number} cellSize - Size of the cell in the same unit system as the coordinates. e.g 1 km² grid in EPSG:3035 with zerosRemoved set to 3 has a cellSize of 1 (without the zerosRemoved it would be 1000)
  */
-  viewer.gridData_ = null; // type:Grid
+  viewer.gridInfo_ = null; // type:Grid
   viewer.resolution_ = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
 
   //threejs camera
@@ -205,7 +205,7 @@ export function viewer(options) {
   //if gridData has already been added, this function now overwrites the gridData currently in the viewer.
   viewer.gridData = function (v) {
     if (v && viewer.pointsLayer) {
-      viewer.gridData_ = v;
+      viewer.gridInfo_ = v;
       viewer.resolution_ = v[0].cellSize
       viewer.raycasterThreshold = defineRaycasterThreshold();
       viewer.pointSize = definePointSize();
@@ -219,7 +219,7 @@ export function viewer(options) {
       loadGrid(v[0])
     } else {
       if (v) {
-        viewer.gridData_ = v;
+        viewer.gridInfo_ = v;
       }
     }
     return viewer;
@@ -314,7 +314,7 @@ export function viewer(options) {
   
         //set viewer resolution from user input
         if (!viewer.resolution_) {
-          viewer.resolution_ = viewer.gridData_[0].cellSize;
+          viewer.resolution_ = viewer.gridInfo_[0].cellSize;
         }
   
         if (viewer.showPlacenames_ && !viewer.placenameThresholds_) {
@@ -343,7 +343,7 @@ export function viewer(options) {
         }
   
         //load initial data
-        loadGrid(viewer.gridData_[0]);
+        loadGrid(viewer.gridInfo_[0]);
   
         // NUTS geometries
         if (viewer.nuts_) {
