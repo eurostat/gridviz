@@ -220,6 +220,7 @@ export function viewer(options) {
     } else {
       if (v) {
         viewer.gridInfo_ = v;
+        viewer.pointSize = v[0].cellSize;
       }
     }
     return viewer;
