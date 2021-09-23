@@ -12,7 +12,7 @@ let lineMaterial; // linematerial used for threejs webgl lines
 
 /**
  * 
- * @description Add geojson features to three.js scene. Currently accepts polygon, multipolygon or linestring
+ * @description Add geojson features to three.js scene. Currently only accepts polygon, multipolygon or linestring
  * @param {Array} features Geojson feature array
  * @param {Object} viewer gridviz viewer
  * @function addGeoJsonToScene

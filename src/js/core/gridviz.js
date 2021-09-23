@@ -10,14 +10,9 @@ import { select, pointer } from "d3-selection";
 import {
   Scene,
   WebGLRenderer,
-  Points,
   Vector3,
   Color,
   Raycaster,
-  Float32BufferAttribute,
-  BufferGeometry,
-  ShaderMaterial,
-  PointsMaterial
 } from "three";
 import {WEBGL} from '../lib/threejs/WebGL'
 
@@ -26,17 +21,20 @@ import * as THREE from "three/src/constants";
 import { CSS2DRenderer } from "../lib/threejs/CSS2D/CSS2DRenderer";
 // for loading NUTS2json 
 import { feature } from "topojson";
-// library constants
+// gridviz constants
 import * as CONSTANTS from "./constants.js";
 // utility functions
 import * as Utils from "./utils/utils";
 // gridviz modules
-import * as geojson from "./layers/geojson.js";
+import * as Geojson from "./layers/geojson.js";
 import * as Tooltip from "./tooltip/tooltip.js";
 import * as Placenames from "./placenames/placenames.js";
 import * as Legend from "./legend/legend.js";
 import * as Camera from "./camera/camera.js";
 import * as Dropdowns from "./gui/dropdowns.js";
+import * as Gui from "./gui/gui.js";
+import * as Buttons from "./gui/buttons.js";
+import * as Points from "./layers/points.js";
 
 //TODO list:
 // - mobile pan & zoom bug when using method center([x,y])
@@ -170,17 +168,11 @@ export function viewer(options) {
 
   // remaining variables
   let
-    boundariesGroup, //THREE.Group for nuts borders
-    pointsMaterial,
-    pointsGeometry,
-    camera,
-    raycaster,
     previousIntersect,
     view
 
 
   let gridCaches = {};
-  let gridConfig = {};
 
   //definition of generic accessors based on the name of each parameter name
   for (var p in viewer)
@@ -215,7 +207,8 @@ export function viewer(options) {
     if (v && viewer.pointsLayer) {
       viewer.gridData_ = v;
       viewer.resolution_ = v[0].cellSize
-      gridConfig = defineGridConfig();
+      viewer.raycasterThreshold = defineRaycasterThreshold();
+      viewer.pointSize = definePointSize();
 
       if (viewer.showPlacenames_) {
         Placenames.removePlacenamesFromScene(viewer); //clear labels
@@ -328,9 +321,6 @@ export function viewer(options) {
           Placenames.defineDefaultPlacenameThresholds(viewer);
         }
   
-        //defines raycaster threshold and point size. See GridConfig typedef.
-        gridConfig = defineGridConfig();
-  
         // three.js initializations
         createScene();
         if (!viewer.labelRenderer) createLabelRenderer();
@@ -344,7 +334,7 @@ export function viewer(options) {
   
         // dropdowns DOM container
         if (viewer.colorSchemeSelector_ || viewer.colorScaleSelector_ || viewer.sizeFieldSelector_ || viewer.colorFieldSelector_) {
-          addSelectorsContainerToDOM();
+          Gui.addSelectorsContainerToDOM(viewer);
         }
         // colour selector added here. Data-dependent dropdowns added once grid data is loaded
         if (viewer.colorSchemeSelector_) {
@@ -414,118 +404,25 @@ export function viewer(options) {
   function addInitialElementsToDOM() {
     // add headings / sources texts
     if (viewer.title_ || viewer.subtitle_ || viewer.cellCount_) {
-      addHeadingsContainerToDOM();
+      Gui.addHeadingsContainerToDOM(viewer);
     }
     if (viewer.title_) {
-      addTitleToDOM();
+      Gui.addTitleToDOM(viewer);
     }
     if (viewer.subtitle_) {
-      addSubtitleToDOM();
+      Gui.addSubtitleToDOM(viewer);
     }
     if (viewer.cellCount_) {
-      addCellCountToDOM();
+      Gui.addCellCountToDOM(viewer);
     }
     if (viewer.sourcesHTML_) {
-      addSourcesToDOM();
+      Gui.addSourcesToDOM(viewer);
     }
     if (viewer.homeButton_) {
-      addHomeButtonToDOM();
+      Buttons.addHomeButtonToDOM(viewer);
     }
   }
 
-  /**
-  *
-  *
-  * @function addHeadingsContainerToDOM
-  * @description adds a div container for viewer.title and viewer.subtitle texts
-  */
-  function addHeadingsContainerToDOM() {
-    viewer.headingsNode = document.createElement("div");
-    viewer.headingsNode.classList.add("gridviz-headings-container");
-    viewer.headingsNode.classList.add("gridviz-plugin");
-    viewer.container_.appendChild(viewer.headingsNode);
-  }
-
-  /**
-  *
-  *
-  * @function addTitleToDOM
-  * @description adds a div element for viewer.title to headings container 
-  */
-  function addTitleToDOM() {
-    let node = document.createElement("div");
-    node.classList.add("gridviz-title");
-    node.innerHTML = viewer.title_;
-    viewer.headingsNode.appendChild(node);
-  }
-
-  /**
-  *
-  *
-  * @function addSubtitleToDOM
-  * @description adds a div element for viewer.subtitle to headings container 
-  */
-  function addSubtitleToDOM() {
-    let node = document.createElement("div");
-    node.classList.add("gridviz-subtitle");
-    node.innerHTML = viewer.subtitle_;
-    viewer.headingsNode.appendChild(node);
-  }
-
-  /**
-  *
-  *
-  * @function addCellCountToDOM
-  * @description adds a div element for viewer.cellCount to headings container 
-  */
-  function addCellCountToDOM() {
-    let node = document.createElement("div");
-    node.classList.add("gridviz-cellcount");
-    node.innerHTML = "Number of cells: " + Utils.formatNumber(viewer.cellCount);
-    viewer.headingsNode.appendChild(node);
-  }
-
-  /**
-  *
-  *
-  * @function addSourcesToDOM
-  * @description adds a div element showing viewer.sourcesHTML in the bottom right corner
-  */
-  function addSourcesToDOM() {
-    let node = document.createElement("div");
-    node.classList.add("gridviz-sources");
-    node.innerHTML = viewer.sourcesHTML_;
-    viewer.container_.appendChild(node);
-  }
-
-  /**
-*
-*
-* @function addHomeButtonToDOM
-* @description adds a button element with a home icon to the DOM
-*/
-  function addHomeButtonToDOM() {
-    viewer.homeButtonNode = document.createElement("div");
-    viewer.homeButtonNode.id = "gridviz-home-btn";
-    viewer.homeButtonNode.classList.add("gridviz-home-button", "gridviz-icon-button");
-    let icon = document.createElement("span")
-    icon.classList.add("icon")
-    viewer.homeButtonNode.appendChild(icon)
-    viewer.container_.appendChild(viewer.homeButtonNode);
-  }
-
-  /**
-  *
-  *
-  * @function addSelectorsContainerToDOM
-  * @description adds a div container for the available dropdown selectors to the DOM
-  */
-  function addSelectorsContainerToDOM() {
-    viewer.selectorsContainer = document.createElement("div");
-    viewer.selectorsContainer.classList.add("gridviz-selectors");
-    viewer.selectorsContainer.classList.add("gridviz-plugin");
-    viewer.container_.appendChild(viewer.selectorsContainer);
-  }
 
   /**
   *@description Build THREE.Scene
@@ -564,18 +461,14 @@ export function viewer(options) {
     viewer.container_.appendChild(viewer.labelRenderer.domElement);
   }
 
-
-
-
-
   /**
    * @description Initializes THREE.Raycaster object
    * @function createRaycaster
    */
   function createRaycaster() {
     // for Click and tooltip interaction
-    raycaster = new Raycaster();
-    raycaster.params.Points.threshold = gridConfig.raycasterThreshold;
+    viewer.raycaster = new Raycaster();
+    viewer.raycaster.params.Points.threshold = defineRaycasterThreshold();
   }
 
   /**
@@ -619,7 +512,7 @@ export function viewer(options) {
     Tooltip.hideTooltip()
     viewer.colorSchemeName_ = scheme;
     updateColorScale();
-    updatePointsColors();
+    updatePointsColors(viewer, gridCaches[viewer.resolution_]);
     if (viewer.legend_) {
       Legend.updateLegend(viewer);
     }
@@ -652,7 +545,7 @@ export function viewer(options) {
     }
 
     //update the thee.js point colours
-    updatePointsColors();
+    updatePointsColors(viewer, gridCaches[viewer.resolution_]);
 
     if (viewer.legend_) {
       Legend.updateLegend(viewer);
@@ -677,7 +570,7 @@ export function viewer(options) {
   function onChangeColorScale(scale) {
     viewer.colorScaleName_ = scale;
     updateColorScale();
-    updatePointsColors();
+    updatePointsColors(viewer, gridCaches[viewer.resolution_]);
     if (viewer.legend_) {
       Legend.updateLegend(viewer);
     }
@@ -701,7 +594,7 @@ export function viewer(options) {
   function onChangeSizeField(field) {
     viewer.sizeField_ = field;
     updateSizeScale();
-    updatePointsSizes();
+    updatePointsSizes(viewer, gridCaches[viewer.resolution_]);
     if (viewer._gridLegend) {
       Legend.updateLegend(viewer);
     }
@@ -796,22 +689,6 @@ export function viewer(options) {
   }
   // end of event listeners
 
-  /**
-  * @typedef {Object} GridConfig
-  * @property {number} raycasterThreshold - The threshold for raycasting grid cells. Its value represents the distance from the center of the cell's point object.
-  * @property {number} pointSize - Three.js point size
-  */
-  /**
-  *@description defines the configuration object which the viewer uses to paint grid cells
-  *@function defineGridConfig
-  *@returns {GridConfig} 
-  */
-  function defineGridConfig() {
-    let config = {};
-    config.raycasterThreshold = defineRaycasterThreshold();
-    config.pointSize = definePointSize();
-    return config;
-  }
 
   /**
    * 
@@ -887,9 +764,8 @@ export function viewer(options) {
                 viewer.originalResolution = viewer.resolution_;
                 viewer.resolution_ = newResolution;
                 grid.cellSize = newResolution;
-                gridConfig.pointSize = newResolution;
-                gridConfig.raycasterThreshold = newResolution;
-                raycaster.params.Points.threshold = newResolution;
+                viewer.pointSize = newResolution;
+                viewer.raycaster.params.Points.threshold = newResolution;
                 //scale center coords
                 if (viewer.center_) {
                   viewer.center_[0] = viewer.mobileCoordScaleX(viewer.center_[0]);
@@ -1161,7 +1037,7 @@ export function viewer(options) {
    *
    */
   function addNuts2jsonToScene(features) {
-    geojson.addGeoJsonToScene(features, viewer);
+    Geojson.addGeoJsonToScene(features, viewer);
   }
 
   /**
@@ -1175,7 +1051,7 @@ export function viewer(options) {
       res => {
         if (res.features) {
           if (res.features.length > 0) {
-            geojson.addGeoJsonToScene(res.features, viewer);
+            Geojson.addGeoJsonToScene(res.features, viewer);
           }
         }
       },
@@ -1192,144 +1068,10 @@ export function viewer(options) {
     updateSizeScaleFunction();
   }
 
-  /**
-   * @description rebuilds array of point colours
-   * @function updatePointsColors
-   */
-  function updatePointsColors() {
-    let colors = [];
-    for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
-      let hex = viewer.colorScaleFunction_(gridCaches[viewer.resolution_][i][viewer.colorField_]); //d3 scale-chromatic
-      if (hex == "rgb(NaN, NaN, NaN)") {
-        hex = "#000"; //fallback to black
-      }
-      gridCaches[viewer.resolution_][i].color = hex; //for tooltip
-      let color = new Color(hex);
-      if (color) colors.push(color.r, color.g, color.b);
-    }
-    //update colors
-    pointsGeometry.setAttribute(
-      "color",
-      new Float32BufferAttribute(colors, 3)
-    );
-    pointsGeometry.computeBoundingSphere();
-    viewer.pointsLayer.geometry = pointsGeometry;
-  }
-
-  /**
-   * @description rebuilds array which stores point sizes
-   * @function updatePointsSizes
-   */
-  function updatePointsSizes() {
-    let sizes = [];
-    for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
-      if (viewer.sizeField_ && viewer.sizeField_ !== "null") {
-        sizes.push(viewer.sizeScaleFunction_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
-      } else {
-        sizes.push(gridConfig.pointSize);
-      }
-    }
-    //update sizes
-    pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
-    pointsGeometry.computeBoundingSphere();
-    viewer.pointsLayer.geometry = pointsGeometry;
-  }
-
-  /**
-   * @description create or update THREE.js viewer.pointsLayer layer. At the moment, only ONE viewer.pointsLayer layer at a time is handled by the viewer, so a second call of gridviz.gridData() will overwrite the initial layer
-   * @function addPointsToScene
-   */
   function addPointsToScene() {
-    //threejs recommends using BufferGeometry instead of Geometry for performance
-    /*   indices = [0, 1, 2, 0, 2, 3];
-  bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));  */
-    if (!pointsGeometry) {
-      pointsGeometry = new BufferGeometry();
-    }
 
-    let colors = [];
-    let positions = [];
-    let sizes = [];
+    Points.addPointsToScene(viewer,gridCaches[viewer.resolution_])
 
-    for (var i = 0; i < gridCaches[viewer.resolution_].length; i++) {
-      // Set vector coordinates from data
-      let coords = [
-        gridCaches[viewer.resolution_][i].x,
-        gridCaches[viewer.resolution_][i].y
-      ];
-      let x = parseFloat(coords[0]);
-      let y = parseFloat(coords[1]);
-      let z = CONSTANTS.point_z;
-      let indicator = gridCaches[viewer.resolution_][i][viewer.colorField_];
-      let hex = viewer.colorScaleFunction_(parseFloat(indicator)); //d3 scale-chromatic
-      if (hex == "rgb(NaN, NaN, NaN)") {
-        hex = "#000"; //fallback to black
-      }
-      gridCaches[viewer.resolution_][i].color = hex; //for tooltip
-      let color = new Color(hex);
-
-      if (!isNaN(x) && !isNaN(y)) {
-        positions.push(x, y, z);
-        if (!isNaN(color.r) && !isNaN(color.g) && !isNaN(color.b)) {
-          colors.push(color.r, color.g, color.b);
-        } else {
-          let blk = new Color("#000");
-          colors.push(blk.r, blk.g, blk.b)
-        }
-        if (viewer.sizeField_) {
-          sizes.push(viewer.sizeScaleFunction_(gridCaches[viewer.resolution_][i][viewer.sizeField_]));
-        } else {
-          sizes.push(gridConfig.pointSize);
-        }
-      }
-    } //fin loop
-
-    //set buffer geometry attributes
-    pointsGeometry.setAttribute(
-      "position",
-      new Float32BufferAttribute(positions, 3)
-    );
-    pointsGeometry.setAttribute(
-      "color",
-      new Float32BufferAttribute(colors, 3)
-    );
-    //Variable point size will affect raycasting: https://github.com/mrdoob/three.js/issues/5105
-    pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
-    pointsGeometry.computeBoundingSphere();
-    //create or reuse viewer.pointsLayer Material
-    if (!pointsMaterial) {
-      // Apply custom point sizes, instead of using three.js pointsMaterial
-      pointsMaterial = new ShaderMaterial({
-        uniforms: {
-          multiplier: {
-            value: 1050 //km TODO: define dynamically. the extra meters prevent white lines across the screen flickering when zooming
-          }
-        },
-        fragmentShader: fragmentShader(),
-        vertexShader: vertexShader(),
-        vertexColors: true
-      });
-
-      //use threejs PointsMaterial instead:
-      // pointsMaterial = new PointsMaterial({
-      //   size: gridConfig.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
-      //   sizeAttenuation: true,
-      //   //https://github.com/mrdoob/three.js/blob/master/src/constants.js
-      //   vertexColors: THREE.VertexColors
-      // });
-
-    } else {
-      pointsMaterial.size = gridConfig.pointSize;
-    }
-    //create or reuse viewer.pointsLayer object
-    if (!viewer.pointsLayer) {
-      viewer.pointsLayer = new Points(pointsGeometry, pointsMaterial);
-      viewer.pointsLayer.renderOrder = 1; //bottom
-      viewer.scene.add(viewer.pointsLayer);
-    } else {
-      viewer.pointsLayer.geometry = pointsGeometry;
-      viewer.pointsLayer.material = pointsMaterial;
-    }
     //create or update legend
     if (viewer.showLegend_) {
       if (viewer.legend_) {
@@ -1348,54 +1090,6 @@ export function viewer(options) {
 
   }
 
-  /**
-  * @description WebGL - Shader stage that will process a Fragment generated by the Rasterization into a set of colors and a single depth value
-  * @function fragmentShader
-  */
-  function fragmentShader() {
-    return `
-  varying vec3 vColor;
-
-  void main() {
-    gl_FragColor = vec4( vColor.rgb, 1.0 );
-  }
-`;
-  }
-
-  /**
-  * @description WebGL - shader stage in the rendering pipeline that handles the processing of individual vertices
-  * @function vertexShader
-  */
-  function vertexShader() {
-    return `
-  uniform float multiplier;
-  attribute float size;
-  float scale;
-  varying vec3 vColor;
-
-  void main() {
-    vColor = color;
-
-    // mvPosition represents the vertex position in view space (model-view-position). It’s usually calculated like so:
-    vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-
-    // manual 'point attenuation' attempt because threejs attenuation doesnt coincide with real world cellSize 
-    // (e.g. 1000 for 1km grid leaves space between cells)...
-    // this method works well on mobile & desktop, but not when appending the renderer to a container
-    gl_PointSize = size * (multiplier / -mvPosition.z ); 
-
-    // threejs attenuation (attenuation: true in pointer material)...
-    // does this: gl_PointSize *= ( scale / - mvPosition.z );
-    // works well in containers & desktop, but not mobile
-    // gl_PointSize = size;
-
-    //set position:
-    gl_Position = projectionMatrix * mvPosition;
-  }
-`;
-  }
-
-  
 
   /** 
   * @description Three.js render loop
@@ -1557,8 +1251,8 @@ export function viewer(options) {
 
   function checkIntersects(mouse_position) {
     let mouse_vector = mouseToThree(...mouse_position);
-    raycaster.setFromCamera(mouse_vector, viewer.camera);
-    let intersects = raycaster.intersectObject(viewer.pointsLayer);
+    viewer.raycaster.setFromCamera(mouse_vector, viewer.camera);
+    let intersects = viewer.raycaster.intersectObject(viewer.pointsLayer);
     if (intersects[0]) {
       let sorted_intersects = sortIntersectsByDistanceToRay(intersects);
       let intersect = sorted_intersects[0];
