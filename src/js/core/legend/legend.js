@@ -63,7 +63,7 @@ function createCellsLegend(viewer) {
         .title(title)
         .titleWidth(viewer.legend_.titleWidth)
 
-    if (viewer.thresholdValues_) {
+    if (viewer.thresholds_) {
         viewer._gridLegend.labels(thresholdLabels)
     }
 
@@ -113,7 +113,7 @@ function createContinuousLegend(viewer) {
         marginRight: viewer.legend_.marginRight || 0,
         marginLeft: viewer.legend_.marginLeft || 0,
         tickFormat: viewer.legend_.tickFormat || ".0f",
-        tickValues: viewer.thresholdValues_ || undefined
+        tickValues: viewer.thresholds_ || undefined
     });
 
     container.node().appendChild(viewer._gridLegend);

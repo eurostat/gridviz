@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Average broadband download speed</title>
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+
+</head>
+
+<body style="margin:0;">
+    <div id="viz-container"></div>
+</body>
+<script src="../../../build/gridviz.js"></script>
+<script>
+    let containerDiv = document.getElementById("viz-container");
+    let viz = gridviz.viewer()
+        .container(containerDiv)
+        .gridData([
+            {
+                url: "../../../assets/csv/Europe/ookla/ookla_dl_europe.csv",
+                cellSize: 400
+            }
+        ])
+        .title("Average broadband download speed")
+        .backgroundColor('#000')
+        .colors([
+            "#FF0000",
+            "#C0403E",
+            "#A0605D",
+            "#60A09A",
+            "#40C0B9",
+            "#00FFF6",
+    
+            'yellow'
+        ])
+        .EPSG("3035")
+        .showPlacenames(true)
+        .cellCount(true)
+        .thresholds([1, 10, 25, 50, 100, 1039, 1039])
+        .colorField("mbps")  // csv column which you wish to visualize
+        .legend({
+            title: "Average download speed in MB/s (Q1 2020)",
+            ticks: 6
+        })
+        .tooltip({
+            eventType: 'click'
+        })
+        .sourcesHTML("Source: <a target='__blank' href='https://github.com/teamookla/ookla-open-data'>Ookla open data</a>")
+        .build()
+</script>
+
+</html>

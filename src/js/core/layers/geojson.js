@@ -8,11 +8,11 @@ import { LineMaterial } from "../../lib/threejs/lines/LineMaterial";
 import * as THREE from "three/src/constants";
 import * as CONSTANTS from "../constants.js";
 
-let lineMaterial; // linematerial used for threejs webgl lines
+let lineMaterial; // line material used for all threejs webgl lines
 
 /**
  * 
- * @description Add geojson features to three.js scene. Currently accepts polygon, multipolygon or linestring
+ * @description Add geojson features to three.js scene. Currently only accepts polygon, multipolygon or linestring
  * @param {Array} features Geojson feature array
  * @param {Object} viewer gridviz viewer
  * @function addGeoJsonToScene
@@ -132,7 +132,7 @@ function createLineFromCoords(coords, lineColor, lineWidth) {
     if (!lineMaterial) {
         lineMaterial = new LineMaterial({
             linewidth: lineWidth,
-            vertexColors: THREE.VertexColors
+            vertexColors: true
         });
     }
     //line2 allows custom linewidth (but not currently included in main threejs build)

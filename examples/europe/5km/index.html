@@ -29,7 +29,7 @@
     .gridData([
       {
         url: "../../../assets/csv/Europe/5km/3035/pop_grid_5km_incl_uninhab.csv",
-        cellSize: 5,
+        cellSize: 6.1,
       },
     ])
     .zerosRemoved(3)
@@ -44,12 +44,29 @@
     // .height(window.innerHeight - 5)
     // .width(window.innerWidth)
     .showPlacenames(true)
-    .backgroundColor("#001747")
-    .lineColor("#000")
-    .colorSchemeName("interpolateCividis") //d3-scale-chromatic
-    .colorScaleName("scaleSequentialLog")
-    .colorSchemeSelector(true)
-    .colorScaleSelector(true)
+    .backgroundColor("#f7f7f7")
+    .lineColor('rgb(0, 0, 0)')
+    //.colorSchemeName("interpolateCividis") //d3-scale-chromatic
+    .colorScaleName("scaleThreshold")
+    .colors([
+    "#ffffcc",
+          "#c7e9b4",
+          "#7fcdbb",
+          "#41b6c4",
+          "#1d91c0",
+          "#225ea8",
+          "#0c2c84"
+        ])
+      .thresholds([1, 250, 750, 1500, 3000, 7500, 25000])
+      // .placenameThresholds({
+      //   5000: 8000000,
+      //   2000: 6000000,
+      //   1000: 5000000,
+      //   500: 1000000,
+      //   250: 1000000,
+      // })
+    //.colorSchemeSelector(true)
+    //.colorScaleSelector(true)
     // .colorFieldSelector(true)
     // .sizeFieldSelector(true)
     .legend({
@@ -61,7 +78,7 @@
       ticks: 5,
     })
     .tooltip({
-        eventType: "mousemove", // click vs mousemove
+        eventType: "click", // click vs mousemove
         showLAU: false,
         showEPSG: false,
         showNUTS: false,

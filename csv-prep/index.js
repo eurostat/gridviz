@@ -3,8 +3,8 @@ const csv = require('csv-parser');
 const fs = require('fs');
 
 //define input and output file locations
-const inputFilePath = "../assets/csv/Ookla/download_Q1_fixed.csv";
-const outputFilePath = "./download_Q1_fixed.csv";
+const inputFilePath = "../assets/csv/Europe/ookla/ookla_europe_dl_fixed_Q1_2020.csv";
+const outputFilePath = "./ookla_dl_europe.csv";
 
 
 // set the headers you want for the output file..
@@ -26,8 +26,8 @@ fs.createReadStream(inputFilePath)
 
         // output row header : input row value
         output.push({
-            "x": parseFloat(parseFloat(row.X).toFixed(3)), 
-            "y": parseFloat(parseFloat(row.Y).toFixed(3)),
+            "x": parseFloat(parseFloat(row.X).toFixed(0)), 
+            "y": parseFloat(parseFloat(row.Y).toFixed(0)),
             "mbps": Math.trunc(row.avg_d_kbps/1000),
         })
 
