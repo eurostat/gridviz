@@ -15,6 +15,7 @@
 <script src="../../../build/gridviz.js"></script>
 <script>
     let containerDiv = document.getElementById("viz-container");
+
     let viz = gridviz.viewer()
         .container(containerDiv)
         .gridData([
@@ -23,6 +24,7 @@
                 cellSize: 400
             }
         ])
+        .mobileCellSize(0.00011)
         .title("Average broadband download speed")
         .backgroundColor('#000')
         .colors([

@@ -14,7 +14,7 @@ import {
   Color,
   Raycaster,
 } from "three";
-import {WEBGL} from '../lib/threejs/WebGL'
+import { WEBGL } from '../lib/threejs/WebGL'
 
 import * as THREE from "three/src/constants";
 // extra Three.js modules not included in main threejs build, used for labelling
@@ -138,6 +138,7 @@ export function viewer(options) {
 
   //buttons
   viewer.homeButton_ = false;
+  viewer.zoomButtons_ = false;
 
   //borders using nuts2json
   viewer.nuts_ = false; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
@@ -166,13 +167,12 @@ export function viewer(options) {
   viewer.scene = null;
   viewer.animating = false;
 
-  // remaining variables
-  let
-    previousIntersect,
-    view
-
-
+  // other variables
+  let previousIntersect;
   let gridCaches = {};
+
+  //mobile stuff 
+  viewer.mobileCellSize_ = null;
 
   //definition of generic accessors based on the name of each parameter name
   for (var p in viewer)
@@ -270,13 +270,13 @@ export function viewer(options) {
   */
   viewer.build = function () {
     //check if WebGL compatible device
-    if ( WEBGL.isWebGLAvailable() ) {
+    if (WEBGL.isWebGLAvailable()) {
 
       // Initiate function or other initializations here
       let valid = validateInputs();
 
       if (valid) {
-  
+
         //set width/height if unspecified by user
         if (!viewer.width_) {
           if (viewer.container_.clientWidth == window.innerWidth) {
@@ -304,35 +304,35 @@ export function viewer(options) {
           viewer.colorScaleSelector_ = false;
           viewer.colorSchemeSelector_ = false;
         }
-  
+
         Utils.createLoadingSpinner(viewer.container_, viewer.loadingIcon_);
         Utils.createLoadingText(viewer.container_);
-  
+
         //set container height and width
         viewer.container_.classList.add("gridviz-container");
         viewer.container_.style.width = viewer.width_;
         viewer.container_.style.height = viewer.height_;
-  
+
         //set viewer resolution from user input
         if (!viewer.resolution_) {
           viewer.resolution_ = viewer.gridInfo_[0].cellSize;
         }
-  
+
         if (viewer.showPlacenames_ && !viewer.placenameThresholds_) {
           Placenames.defineDefaultPlacenameThresholds(viewer);
         }
-  
+
         // three.js initializations
         createScene();
         if (!viewer.labelRenderer) createLabelRenderer();
         if (!viewer.renderer) createWebGLRenderer();
-  
+
         Camera.createCamera(viewer);
         createRaycaster();
-  
+
         // tooltip DOM element
         Tooltip.createTooltipContainer(viewer);
-  
+
         // dropdowns DOM container
         if (viewer.colorSchemeSelector_ || viewer.colorScaleSelector_ || viewer.sizeFieldSelector_ || viewer.colorFieldSelector_) {
           Gui.addSelectorsContainerToDOM(viewer);
@@ -342,10 +342,10 @@ export function viewer(options) {
           Dropdowns.createColorSchemeDropdown(viewer);
           addChangeEventToColorSchemeDropdown();
         }
-  
+
         //load initial data
         loadGrid(viewer.gridInfo_[0]);
-  
+
         // NUTS geometries
         if (viewer.nuts_) {
           loadNuts2json(
@@ -356,14 +356,14 @@ export function viewer(options) {
             "/" + viewer.nutsLevel_ + ".json"
           );
         }
-  
+
         //request initial placenames
         if (viewer.showPlacenames_) {
           Placenames.getPlacenames(viewer);
         }
-  
+
         return viewer;
-  
+
       } else {
         Utils.hideLoading();
         let msg = "invalid inputs";
@@ -371,16 +371,16 @@ export function viewer(options) {
         alert(msg)
         return;
       }
-    
-    } else {      
-      
+
+    } else {
+
       // warn user that their device is not compatible with WebGL
       const warning = WEBGL.getWebGLErrorMessage();
-      document.getElementById( 'container' ).appendChild( warning );
-    
+      document.getElementById('container').appendChild(warning);
+
     }
 
-    
+
   };
 
   /**
@@ -422,6 +422,9 @@ export function viewer(options) {
     if (viewer.homeButton_) {
       Buttons.addHomeButtonToDOM(viewer);
     }
+    if (viewer.zoomButtons_) {
+      Buttons.addZoomButtonsToDOM(viewer);
+    }
   }
 
 
@@ -447,7 +450,7 @@ export function viewer(options) {
     let updateStyle = true;
     viewer.renderer.setSize(viewer.width_, viewer.height_, updateStyle);
     viewer.container_.appendChild(viewer.renderer.domElement);
-    view = select(viewer.renderer.domElement); //for d3 mouse events
+    viewer.view = select(viewer.renderer.domElement); //for d3 mouse events
   }
 
   /**
@@ -513,7 +516,7 @@ export function viewer(options) {
     Tooltip.hideTooltip()
     viewer.colorSchemeName_ = scheme;
     updateColorScale();
-    updatePointsColors(viewer, gridCaches[viewer.resolution_]);
+    Points.updatePointsColors(viewer, gridCaches[viewer.resolution_]);
     if (viewer.legend_) {
       Legend.updateLegend(viewer);
     }
@@ -546,7 +549,7 @@ export function viewer(options) {
     }
 
     //update the thee.js point colours
-    updatePointsColors(viewer, gridCaches[viewer.resolution_]);
+    Points.updatePointsColors(viewer, gridCaches[viewer.resolution_]);
 
     if (viewer.legend_) {
       Legend.updateLegend(viewer);
@@ -571,7 +574,7 @@ export function viewer(options) {
   function onChangeColorScale(scale) {
     viewer.colorScaleName_ = scale;
     updateColorScale();
-    updatePointsColors(viewer, gridCaches[viewer.resolution_]);
+    Points.updatePointsColors(viewer, gridCaches[viewer.resolution_]);
     if (viewer.legend_) {
       Legend.updateLegend(viewer);
     }
@@ -595,7 +598,7 @@ export function viewer(options) {
   function onChangeSizeField(field) {
     viewer.sizeField_ = field;
     updateSizeScale();
-    updatePointsSizes(viewer, gridCaches[viewer.resolution_]);
+    Points.updatePointsSizes(viewer, gridCaches[viewer.resolution_]);
     if (viewer._gridLegend) {
       Legend.updateLegend(viewer);
     }
@@ -622,7 +625,7 @@ export function viewer(options) {
   */
   function addMouseEventsToView() {
     // show cell value on click
-    view.on(viewer.tooltip_.eventType, (event) => {
+    viewer.view.on(viewer.tooltip_.eventType, (event) => {
       let [mouseX, mouseY] = pointer(event);
       let mouse_position = [mouseX, mouseY];
       let intersect = checkIntersects(mouse_position);
@@ -653,35 +656,67 @@ export function viewer(options) {
         viewWholeGrid();
       })
     }
+    if (viewer.zoomButtons_) {
+      viewer.zoominButtonNode.addEventListener("click", () => {
+        viewer.zoomIn(2);
+      })
+      viewer.zoomoutButtonNode.addEventListener("click", () => {
+        viewer.zoomOut(0.5);
+      })
+    }
   }
 
 
   /**
-  * @description move camera to show the entire extent of the grid, and update the zoom transform
+  * @description zoom in (reduce camera Z position)
+  * @function zoomIn
+  * @parameter scaleFactor 
+  */
+  viewer.zoomIn = function (scaleFactor) {
+    // when we zoom, we have to update both the threejs camera and the d3 zoom
+    viewer.view.transition().call(viewer.d3zoom.scaleBy, scaleFactor);
+    Camera.setCamera(viewer.camera.position.x, viewer.camera.position.y, viewer.camera.position.z / scaleFactor)
+  }
+
+  /**
+* @description zoom out (increase camera Z position)
+* @function zoomOut
+* @parameter scaleFactor 
+*/
+  viewer.zoomOut = function (scaleFactor) {
+    // when we zoom, we have to update both the threejs camera and the d3 zoom
+    viewer.view.transition().call(viewer.d3zoom.scaleBy, scaleFactor);
+    Camera.setCamera(viewer.camera.position.x, viewer.camera.position.y, viewer.camera.position.z / scaleFactor)
+  }
+
+
+  /**
+  * @description move camera to show the entire extent of the grid, and update the zoom transform. TODO: this theoretically should show the initial (home) zoom position, not necesarily the full extent.
   * @function viewWholeGrid
   */
   function viewWholeGrid() {
-    //let minViewerX = viewer.extentX[0];
-    //let minViewerY = viewer.extentY[0];
+    // when we zoom, we have to update both the threejs camera and the d3 zoom
 
     if (viewer._mobile) {
+
       let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
-      viewer.d3zoom.scaleTo(view, scale);
-      viewer.d3zoom.translateTo(view,
+      viewer.d3zoom.scaleTo(viewer.view, scale);
+      viewer.d3zoom.translateTo(viewer.view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
       Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
 
+      // mobile devices a transform
       let initial_scale = getScaleFromZ(viewer.cameraConfig.far_);
       let initial_transform = zoomIdentity
         .translate(viewer.width_ / 2, viewer.height_ / 2)
         .scale(initial_scale);
-      viewer.d3zoom.transform(view, initial_transform);
+      viewer.d3zoom.transform(viewer.view, initial_transform);
 
     } else {
       let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
-      viewer.d3zoom.scaleTo(view, scale);
-      viewer.d3zoom.translateTo(view,
+      viewer.d3zoom.scaleTo(viewer.view, scale);
+      viewer.d3zoom.translateTo(viewer.view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
       Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
@@ -730,18 +765,20 @@ export function viewer(options) {
               viewer.cellCount = csv.length;
 
               //as a temporary hacky fix for d3's pan and zoom not working correctly on mobile devices, we scale the coordinates to a webgl-friendly range
-              if (viewer._mobile) {
+              if (viewer._mobile && !viewer.mobileCellSize_) {
                 let xDomain = extent(csv.map(c => parseFloat(c.x)));
                 let yDomain = extent(csv.map(c => parseFloat(c.y)));
+
                 let domain = [
                   min([xDomain, yDomain], array => min(array)),
                   max([xDomain, yDomain], array => max(array))
-                ];
+                ]; // overall min and max values of both axis
+
                 viewer.mobileCoordScaleX = d3scale.scaleLinear().domain(domain).range([-1, 1]);
                 viewer.mobileCoordScaleY = d3scale.scaleLinear().domain(domain).range([-1, 1]);
                 //update cell sizes and raycaster to fit new webgl-friendly coords
 
-                //distance between two neighbouring cell x values is the new resolution
+                //distance in x coordinates between two neighbouring cells is the new resolution
 
                 // to try to ensure the cells are neighbours, first we have to sort the points by X
                 csv.sort(function (a, b) { return a.x - b.x });
@@ -756,8 +793,11 @@ export function viewer(options) {
                   }
                 });
 
-                //we then calculate the difference between two distinct X coordinates in mobile coords
-                let difference = Math.abs(viewer.mobileCoordScaleX(x1) - viewer.mobileCoordScaleX(x2));
+                //we then calculate the difference between two distinct X coordinates in mobile (webgl) coords
+                // note: THIS ONLY WORKS IF THE CELLS ARE NEXT TO EACH OTHER. For this to work all the time we would need the minimum distance between two X coordinates out of ALL neighbours
+                let mobileXCoord1 = viewer.mobileCoordScaleX(x1)
+                let mobileXCoord2 = viewer.mobileCoordScaleX(x2)
+                let difference = Math.abs(mobileXCoord1 - mobileXCoord2);
                 difference = difference * 2;
 
                 //giving us our new cell size
@@ -773,6 +813,29 @@ export function viewer(options) {
                   viewer.center_[1] = viewer.mobileCoordScaleY(viewer.center_[1]);
                 }
 
+              } else if (viewer._mobile && viewer.mobileCellSize_) {
+                // new mobile scale
+                let xDomain = extent(csv.map(c => parseFloat(c.x)));
+                let yDomain = extent(csv.map(c => parseFloat(c.y)));
+                let domain = [
+                  min([xDomain, yDomain], array => min(array)),
+                  max([xDomain, yDomain], array => max(array))
+                ]; // overall min and max values of both axis
+                viewer.mobileCoordScaleX = d3scale.scaleLinear().domain(domain).range([-1, 1]);
+                viewer.mobileCoordScaleY = d3scale.scaleLinear().domain(domain).range([-1, 1]);
+
+                //mobile cell size
+                viewer.originalResolution = viewer.resolution_;
+                let newResolution = viewer.mobileCellSize_;
+                viewer.resolution_ = newResolution;
+                grid.cellSize = newResolution;
+                viewer.pointSize = newResolution;
+                viewer.raycaster.params.Points.threshold = newResolution;
+                //scale center coords
+                if (viewer.center_) {
+                  viewer.center_[0] = viewer.mobileCoordScaleX(viewer.center_[0]);
+                  viewer.center_[1] = viewer.mobileCoordScaleY(viewer.center_[1]);
+                }
               }
 
               // add points to cache
@@ -826,11 +889,11 @@ export function viewer(options) {
             addPointsToScene();
 
             if (viewer.colorFieldSelector_) {
-              Dropdowns.createColorFieldDropdown(viewer,gridCaches);
+              Dropdowns.createColorFieldDropdown(viewer, gridCaches);
               addChangeEventToColorFieldDropdown();
             }
             if (viewer.sizeFieldSelector_) {
-              Dropdowns.createSizeFieldDropdown(viewer,gridCaches);
+              Dropdowns.createSizeFieldDropdown(viewer, gridCaches);
               addChangeEventToSizeFieldDropdown()
             }
           }
@@ -1071,7 +1134,7 @@ export function viewer(options) {
 
   function addPointsToScene() {
 
-    Points.addPointsToScene(viewer,gridCaches[viewer.resolution_])
+    Points.addPointsToScene(viewer, gridCaches[viewer.resolution_])
 
     //create or update legend
     if (viewer.showLegend_) {
@@ -1133,20 +1196,20 @@ export function viewer(options) {
           if (event) zoomEnd(event);
         });
 
-    view.call(viewer.d3zoom);
+    viewer.view.call(viewer.d3zoom);
 
     if (viewer._mobile) {
       //due to a bug on mobile, where the camera shifts unexpectedly on the first pan or zoom event, we have to scale everything to a webgl-friendly range and set the camera to 0,0
       let initial_scale = getScaleFromZ(viewer.cameraConfig.initialZ_);
       var initial_transform = zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
-      viewer.d3zoom.transform(view, initial_transform);
+      viewer.d3zoom.transform(viewer.view, initial_transform);
       Camera.setCamera(0, 0, viewer.cameraConfig.initialZ_)
 
     } else {
       //initial desktop zoom transform
       let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
-      viewer.d3zoom.scaleTo(view, scale);
-      viewer.d3zoom.translateTo(view,
+      viewer.d3zoom.scaleTo(viewer.view, scale);
+      viewer.d3zoom.translateTo(viewer.view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
         parseInt(viewer.center_[1]) + viewer.height_ / 2);
       Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
