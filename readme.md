@@ -5,7 +5,7 @@
 ![npm](https://img.shields.io/npm/v/gridviz)
 ![license](https://img.shields.io/badge/license-EUPL-success)
 
-A JavaScript library being developed for visualizing gridded statistics from CSV files using three.js and d3.js. 
+A JavaScript library for visualizing large amounts of gridded data using three.js and d3.js. 
 
 <div>
   <!-- <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/previews/preview.gif" alt="preview" width="98%" height="10%"/> -->
