@@ -102,7 +102,7 @@ export function viewer(options) {
   viewer.colorScaleName_ = "scaleSequentialSqrt";
   viewer.colorScaleMidpoint_ = 0; // midpoint for diverging scales
   viewer.colors_ = null;
-  viewer.thresholdValues_ = null; // for threshold / quantile scales
+  viewer.thresholds_ = null; // for threshold / quantile scales
   viewer.colorScaleFunction_ = null;
   viewer.sizeScaleFunction_ = null;
 
@@ -390,8 +390,8 @@ export function viewer(options) {
   * @description validates user inputs when initializing the viewer
   */
   function validateInputs() {
-    if (viewer.colors_ && viewer.thresholdValues_) {
-      if (viewer.colors_.length !== viewer.thresholdValues_.length) {
+    if (viewer.colors_ && viewer.thresholds_) {
+      if (viewer.colors_.length !== viewer.thresholds_.length) {
         alert("The number of colors and thesholdvalues must be equal")
         return false;
       } else {
@@ -899,10 +899,10 @@ export function viewer(options) {
    *
    */
   function defineColorScale() {
-    if (viewer.colors_ && viewer.thresholdValues_) {
+    if (viewer.colors_ && viewer.thresholds_) {
       return d3scale
         .scaleThreshold()
-        .domain(viewer.thresholdValues_)
+        .domain(viewer.thresholds_)
         .range(viewer.colors_);
     } else {
       // assign default if user doesnt specify their own function
@@ -923,7 +923,7 @@ export function viewer(options) {
         //apply thresholds if specified by user
         if (viewer.colorScaleName_ == "scaleSequentialQuantile") {
           // use threshold values as domain
-          return d3scale[viewer.colorScaleName_](viewer.thresholdValues_, d3scaleChromatic[viewer.colorSchemeName_])
+          return d3scale[viewer.colorScaleName_](viewer.thresholds_, d3scaleChromatic[viewer.colorSchemeName_])
 
         } else {
           return d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
@@ -961,7 +961,7 @@ export function viewer(options) {
     //apply thresholds if specified by user
     if (viewer.colorScaleName_ == "scaleSequentialQuantile") {
       // use threshold values as domain
-      viewer.colorScaleFunction_ = d3scale[viewer.colorScaleName_](viewer.thresholdValues_, d3scaleChromatic[viewer.colorSchemeName_])
+      viewer.colorScaleFunction_ = d3scale[viewer.colorScaleName_](viewer.thresholds_, d3scaleChromatic[viewer.colorSchemeName_])
     } else {
       viewer.colorScaleFunction_ = d3scale[viewer.colorScaleName_](domain, d3scaleChromatic[viewer.colorSchemeName_]);
     }
