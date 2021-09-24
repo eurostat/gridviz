@@ -15,7 +15,13 @@
 <script src="../../../build/gridviz.js"></script>
 <script>
     let containerDiv = document.getElementById("viz-container");
-
+    //mobile
+    let legendWidth;
+    let legendHeight;
+    if (window.screen.width < 600) {
+        legendWidth = window.screen.width - 30; //margin
+        legendHeight = 50;
+    }
     let viz = gridviz.viewer()
         .container(containerDiv)
         .gridData([
@@ -28,11 +34,11 @@
         .title("Average broadband download speed")
         .backgroundColor('#000')
         .colors([
-        "#c51b7d","#ad388a","#945497",
+            "#c51b7d", "#ad388a", "#945497",
             "#60A09A",
             "#40C0B9",
             "#00FFF6",
-    
+
             'yellow'
         ])
         .EPSG("3035")
@@ -42,7 +48,9 @@
         .colorField("mbps")  // csv column which you wish to visualize
         .legend({
             title: "Average download speed in MB/s (Q1 2020)",
-            ticks: 6
+            ticks: 6,
+            width: legendWidth,
+            height: legendHeight,
         })
         .tooltip({
             eventType: 'click'

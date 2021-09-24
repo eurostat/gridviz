@@ -280,7 +280,7 @@ export function viewer(options) {
         //set width/height if unspecified by user
         if (!viewer.width_) {
           if (viewer.container_.clientWidth == window.innerWidth) {
-            viewer.width_ = viewer.container_.clientWidth - 4;
+            viewer.width_ = viewer.container_.clientWidth - 2;
           } else {
             viewer.width_ = viewer.container_.clientWidth
           }
@@ -288,7 +288,7 @@ export function viewer(options) {
         if (!viewer.height_) {
           if (viewer.container_.clientHeight == "0") {
             //if container element has no defined height, use screen height
-            viewer.height_ = window.innerHeight - 4;
+            viewer.height_ = window.innerHeight - 2;
           } else {
             viewer.height_ = viewer.container_.clientHeight
           }
