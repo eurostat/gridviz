@@ -12,7 +12,6 @@ A JavaScript library being developed for visualizing large amounts of gridded da
   <a href="https://eurostat.github.io/gridviz/examples/europe/2km/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/2km.png" alt="preview" width="200px" height="200px"/></a>
   <a href="https://eurostat.github.io/gridviz/examples/europe/2km/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/berlin.png" alt="preview" width="200px" height="200px"/>
   <a href="https://eurostat.github.io/gridviz/examples/netherlands/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/nl.png" alt="preview" width="200px" height="200px"/>
-  <a href="https://eurostat.github.io/gridviz/examples/europe/ookla/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/ookla.png" alt="preview" width="200px" height="200px"/>
   <a href="https://eurostat.github.io/gridviz/examples/europe/1km/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/paris.png" alt="preview" width="200px" height="200px"/>
 </div>
 
