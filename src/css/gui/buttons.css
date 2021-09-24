@@ -1,0 +1,40 @@
+.gridviz-icon-button{
+    position:absolute;
+    height: 25px;
+    width:25px;
+    padding:3px;
+    border-radius:4px;
+    border:1px grey;
+    background: #f2f2f2;
+    color:"black";
+    cursor: pointer;
+  }
+  .gridviz-icon-button:hover{
+    background: lightgrey
+  }
+  .gridviz-icon-button span.icon {
+    float: left;
+    width: 100%;
+    height: 100%;
+  }
+  #gridviz-home-btn span.icon {
+    background: url(../icons/home.svg) no-repeat;
+  }
+  #gridviz-home-btn{
+    top:100px;
+    left:15px;
+  }
+  #gridviz-zoomin-btn span.icon {
+    background: url(../icons/plus.svg) no-repeat;
+  }
+  #gridviz-zoomout-btn span.icon {
+    background: url(../icons/minus.svg) no-repeat;
+  }
+  #gridviz-zoomin-btn{
+    top:150px;
+    left:15px;
+  }
+  #gridviz-zoomout-btn{
+    top:185px;
+    left:15px;
+  }

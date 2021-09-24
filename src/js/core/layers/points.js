@@ -170,9 +170,9 @@ export function updatePointsSizes(viewer, pointsArray) {
         }
     }
     //update sizes
-    pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
-    pointsGeometry.computeBoundingSphere();
-    viewer.pointsLayer.geometry = pointsGeometry;
+    viewer.pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
+    viewer.pointsGeometry.computeBoundingSphere();
+    viewer.pointsLayer.geometry = viewer.pointsGeometry;
 }
 
 
@@ -192,10 +192,10 @@ export function updatePointsColors(viewer, pointsArray) {
         if (color) colors.push(color.r, color.g, color.b);
     }
     //update colors
-    pointsGeometry.setAttribute(
+    viewer.pointsGeometry.setAttribute(
         "color",
         new Float32BufferAttribute(colors, 3)
     );
-    pointsGeometry.computeBoundingSphere();
+    viewer.pointsGeometry.computeBoundingSphere();
     viewer.pointsLayer.geometry = pointsGeometry;
 }

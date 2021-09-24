@@ -138,6 +138,7 @@ export function viewer(options) {
 
   //buttons
   viewer.homeButton_ = false;
+  viewer.zoomButtons_ = false;
 
   //borders using nuts2json
   viewer.nuts_ = false; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
@@ -422,6 +423,9 @@ export function viewer(options) {
     if (viewer.homeButton_) {
       Buttons.addHomeButtonToDOM(viewer);
     }
+    if (viewer.zoomButtons_) {
+      Buttons.addZoomButtonsToDOM(viewer);
+    }
   }
 
 
@@ -513,7 +517,7 @@ export function viewer(options) {
     Tooltip.hideTooltip()
     viewer.colorSchemeName_ = scheme;
     updateColorScale();
-    updatePointsColors(viewer, gridCaches[viewer.resolution_]);
+    Points.updatePointsColors(viewer, gridCaches[viewer.resolution_]);
     if (viewer.legend_) {
       Legend.updateLegend(viewer);
     }
@@ -546,7 +550,7 @@ export function viewer(options) {
     }
 
     //update the thee.js point colours
-    updatePointsColors(viewer, gridCaches[viewer.resolution_]);
+    Points.updatePointsColors(viewer, gridCaches[viewer.resolution_]);
 
     if (viewer.legend_) {
       Legend.updateLegend(viewer);
@@ -571,7 +575,7 @@ export function viewer(options) {
   function onChangeColorScale(scale) {
     viewer.colorScaleName_ = scale;
     updateColorScale();
-    updatePointsColors(viewer, gridCaches[viewer.resolution_]);
+    Points.updatePointsColors(viewer, gridCaches[viewer.resolution_]);
     if (viewer.legend_) {
       Legend.updateLegend(viewer);
     }
@@ -595,7 +599,7 @@ export function viewer(options) {
   function onChangeSizeField(field) {
     viewer.sizeField_ = field;
     updateSizeScale();
-    updatePointsSizes(viewer, gridCaches[viewer.resolution_]);
+    Points.updatePointsSizes(viewer, gridCaches[viewer.resolution_]);
     if (viewer._gridLegend) {
       Legend.updateLegend(viewer);
     }
@@ -653,11 +657,38 @@ export function viewer(options) {
         viewWholeGrid();
       })
     }
+    if (viewer.zoomButtons_) {
+      viewer.zoominButtonNode.addEventListener("click", () => {
+        zoomIn();
+      })
+      viewer.zoomoutButtonNode.addEventListener("click", () => {
+        zoomOut();
+      })
+    }
   }
 
 
   /**
-  * @description move camera to show the entire extent of the grid, and update the zoom transform
+  * @description zoom in (reduce camera Z position)
+  * @function zoomIn
+  */
+     function zoomIn() {
+
+
+    }
+
+      /**
+  * @description zoom out (increase camera Z position)
+  * @function zoomOut
+  */
+       function zoomOut() {
+
+
+      }
+
+
+  /**
+  * @description move camera to show the entire extent of the grid, and update the zoom transform. TODO: this theoretically should show the initial (home) zoom position, not necesarily the full extent.
   * @function viewWholeGrid
   */
   function viewWholeGrid() {

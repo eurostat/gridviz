@@ -15,12 +15,18 @@
 <script src="../../../build/gridviz.js"></script>
 <script>
     let containerDiv = document.getElementById("viz-container");
+    let cellSize;
+    if (window.innerWidth < 700) {
+        cellSize = 350;
+    } else {
+        cellSize = 400;
+    }
     let viz = gridviz.viewer()
         .container(containerDiv)
         .gridData([
             {
                 url: "../../../assets/csv/Europe/ookla/ookla_dl_europe.csv",
-                cellSize: 400
+                cellSize: cellSize
             }
         ])
         .title("Average broadband download speed")

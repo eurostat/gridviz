@@ -8,7 +8,12 @@
 A JavaScript library being developed for visualizing gridded statistics from CSV files using three.js and d3.js. 
 
 <div>
-  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/previews/preview.gif" alt="preview" width="98%" height="10%"/>
+  <!-- <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/previews/preview.gif" alt="preview" width="98%" height="10%"/> -->
+  <img src="./docs/screenshots/cropped/2km.PNG" alt="preview" width="250px" height="250px"/>
+  <img src="./docs/screenshots/cropped/berlin.PNG" alt="preview" width="250px" height="250px"/>
+  <img src="./docs/screenshots/cropped/nl.PNG" alt="preview" width="250px" height="250px"/>
+  <img src="./docs/screenshots/cropped/ookla.PNG" alt="preview" width="250px" height="250px"/>
+  <img src="./docs/screenshots/cropped/paris.PNG" alt="preview" width="250px" height="250px"/>
 </div>
 
 ## Examples
