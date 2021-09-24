@@ -22,7 +22,7 @@
   }
   #gridviz-home-btn{
     top:100px;
-    left:15px;
+    left:10px;
   }
   #gridviz-zoomin-btn span.icon {
     background: url(../icons/plus.svg) no-repeat;
@@ -32,9 +32,9 @@
   }
   #gridviz-zoomin-btn{
     top:150px;
-    left:15px;
+    left:10px;
   }
   #gridviz-zoomout-btn{
     top:185px;
-    left:15px;
+    left:10px;
   }

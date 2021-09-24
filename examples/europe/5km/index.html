@@ -37,8 +37,8 @@
     .cellCount(true)
     .colorField("Population") // csv column which you wish to visualize
     //sizeColumn() "value" // csv column which you wish to visualize
-    .nuts(true) //loads borders topojson
-    .nutsLevel(0)
+    //.nuts(true) //loads borders topojson
+    //.nutsLevel(0)
     .center([4369, 3230]) //EPSG=3035
     .zoom(5000)
     // .height(window.innerHeight - 5)
@@ -46,7 +46,7 @@
     .homeButton(true)
     .zoomButtons(true)
     .showPlacenames(true)
-    .backgroundColor("#f7f7f7")
+    .backgroundColor("#000")
     .lineColor('rgb(0, 0, 0)')
     //.colorSchemeName("interpolateCividis") //d3-scale-chromatic
     .colorScaleName("scaleThreshold")
@@ -59,7 +59,7 @@
       "#225ea8",
       "#0c2c84"
     ])
-    .thresholds([1, 250, 750, 1500, 3000, 7500, 25000])
+    .thresholds([1, 250, 750, 1500, 3000, 7500, 737000])
     // .placenameThresholds({
     //   5000: 8000000,
     //   2000: 6000000,

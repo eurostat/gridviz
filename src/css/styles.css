@@ -37,8 +37,20 @@
   }
   #gridviz-home-btn{
     left:3px!important;
-    top: 55px!important;
+    top: 75px!important;
   }
+  #gridviz-zoomin-btn{
+    left:3px!important;
+    top: 115px!important;
+  }
+  #gridviz-zoomout-btn{
+    left:3px!important;
+    top: 147px!important;
+  }
+}
+
+.gridviz-plugin, .gridviz-icon-button, #gridviz-tooltip {
+  opacity:0.9;
 }
 
 .gridviz-container {

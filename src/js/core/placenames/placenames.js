@@ -12,7 +12,7 @@ import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
    * @param {Object} viewer
    */
 export function defineDefaultPlacenameThresholds(viewer) {
-    let r = viewer.resolution_;
+    let r = viewer.resolution_ / window.devicePixelRatio;
     // scale : population
 
     viewer.placenameThresholds_ = {
