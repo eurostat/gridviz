@@ -9,11 +9,11 @@ A JavaScript library being developed for visualizing gridded statistics from CSV
 
 <div>
   <!-- <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/previews/preview.gif" alt="preview" width="98%" height="10%"/> -->
-  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/2km.PNG" alt="preview" width="250px" height="250px"/>
-  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/berlin.PNG" alt="preview" width="250px" height="250px"/>
-  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/nl.PNG" alt="preview" width="250px" height="250px"/>
-  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/ookla.PNG" alt="preview" width="250px" height="250px"/>
-  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/paris.PNG" alt="preview" width="250px" height="250px"/>
+  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/2km.png" alt="preview" width="250px" height="250px"/>
+  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/berlin.png" alt="preview" width="250px" height="250px"/>
+  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/nl.png" alt="preview" width="250px" height="250px"/>
+  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/ookla.png" alt="preview" width="250px" height="250px"/>
+  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/paris.png" alt="preview" width="250px" height="250px"/>
 </div>
 
 ## Examples
