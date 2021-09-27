@@ -197,5 +197,5 @@ export function updatePointsColors(viewer, pointsArray) {
         new Float32BufferAttribute(colors, 3)
     );
     viewer.pointsGeometry.computeBoundingSphere();
-    viewer.pointsLayer.geometry = pointsGeometry;
+    viewer.pointsLayer.geometry = viewer.pointsGeometry;
 }

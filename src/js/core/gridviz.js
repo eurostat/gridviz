@@ -16,7 +16,6 @@ import {
 } from "three";
 import { WEBGL } from '../lib/threejs/WebGL'
 
-import * as THREE from "three/src/constants";
 // extra Three.js modules not included in main threejs build, used for labelling
 import { CSS2DRenderer } from "../lib/threejs/CSS2D/CSS2DRenderer";
 // for loading NUTS2json 
@@ -280,7 +279,7 @@ export function viewer(options) {
         //set width/height if unspecified by user
         if (!viewer.width_) {
           if (viewer.container_.clientWidth == window.innerWidth) {
-            viewer.width_ = viewer.container_.clientWidth - 2;
+            viewer.width_ = viewer.container_.clientWidth - 1;
           } else {
             viewer.width_ = viewer.container_.clientWidth
           }
@@ -288,7 +287,7 @@ export function viewer(options) {
         if (!viewer.height_) {
           if (viewer.container_.clientHeight == "0") {
             //if container element has no defined height, use screen height
-            viewer.height_ = window.innerHeight - 2;
+            viewer.height_ = window.innerHeight - 1;
           } else {
             viewer.height_ = viewer.container_.clientHeight
           }
