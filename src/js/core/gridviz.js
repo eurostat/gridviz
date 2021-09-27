@@ -89,7 +89,7 @@ export function viewer(options) {
     showLAU: false,
     showEPSG: false,
     showNUTS: false,
-    showCoordinates: true,
+    showCoordinates: false,
     xOffset: 15,
     yOffset: 15
   };
