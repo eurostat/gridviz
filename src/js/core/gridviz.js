@@ -295,6 +295,7 @@ export function viewer(options) {
         }
 
         //mobile settings
+        // TODO: replace userAgent with screen threshold (apparently userAgent is no longer standard)
         if (/Mobi|Android/i.test(navigator.userAgent)) {
           viewer._mobile = true;
           // saving screen space...
