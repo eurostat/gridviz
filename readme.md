@@ -73,7 +73,7 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
             }
         ])
         .title("5km² Population Grid of Europe")
-        .colorField("value")  // The csv column that will determine cell colour
+        .colorField("population")  // The csv column that will determine cell colour
         .build()
 ```
 
