@@ -58,7 +58,7 @@
    overflow:hidden;
   position: relative;
   margin: 0px; 
-  font-family: "roboto_condensedbold", Arial, sans-serif;
+  font-family: sans-serif;
 }
 .gridviz-headings-container {
   z-index:999999;
@@ -72,13 +72,15 @@
   font-weight:bold;
 }
 .gridviz-subtitle {
-  font-size: 0.9rem;
-  font-weight:bold;
+  font-size: 0.8rem;
+  color: grey;
+  font-weight:normal;
   margin-top:5px;
 }
 .gridviz-cellcount {
-  font-size: 0.9rem;
-  font-weight:bold;
+  font-size: 0.8rem;
+  font-weight:normal;
+  color: grey;
   margin-top:10px;
 }
 .gridviz-sources {
