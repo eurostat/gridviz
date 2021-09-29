@@ -674,7 +674,7 @@ export function viewer(options) {
   */
   viewer.zoomIn = function (scaleFactor) {
     // when we zoom, we have to update both the threejs camera and the d3 zoom
-    viewer.view.transition().call(viewer.d3zoom.scaleBy, scaleFactor);
+    viewer.view.call(viewer.d3zoom.scaleBy, scaleFactor);
     Camera.setCamera(viewer.camera.position.x, viewer.camera.position.y, viewer.camera.position.z / scaleFactor)
   }
 
@@ -685,7 +685,7 @@ export function viewer(options) {
 */
   viewer.zoomOut = function (scaleFactor) {
     // when we zoom, we have to update both the threejs camera and the d3 zoom
-    viewer.view.transition().call(viewer.d3zoom.scaleBy, scaleFactor);
+    viewer.view.call(viewer.d3zoom.scaleBy, scaleFactor);
     Camera.setCamera(viewer.camera.position.x, viewer.camera.position.y, viewer.camera.position.z / scaleFactor)
   }
 
