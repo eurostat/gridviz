@@ -28,6 +28,7 @@
     .zoom(500000) //initial camera Z value
     .nuts(true) //loads borders topojson
     .nutsCountry("HR") //filter nuts
+    .nutsSimplification("03M")
     .placenamesCountry("HR") //filter placenames
     .placenameThresholds({
       //"scale": population
@@ -40,8 +41,8 @@
     .center([4755000, 2369000]) //EPSG=3035
     .height(window.innerHeight - 4)
     .width(window.innerWidth - 4)
-    .backgroundColor("#000")
-    .lineColor("#ffffff")
+    .backgroundColor("#fffcfc")
+    .lineColor("#000")
     .colorSchemeName("interpolateYlOrRd")
     .colorScaleName("scaleSequentialLog")
 

@@ -87,7 +87,7 @@ function defineCameraConfig(viewer) {
     config.fov_ = CONSTANTS.fov;
     config.aspect_ = viewer.width_ / viewer.height_;
 
-    //initial camera position Z
+    //initial camera position Z (zoom)
     if (viewer._mobile) {
         config.initialZ_ = config.far_ / 2 - 1
     } else {
@@ -108,6 +108,7 @@ function defineFar(viewer) {
         return 5; //due to a bug with pan & zoom, we have to scale everything on mobile
     } else {
         return viewer.resolution_ * 50000;
+        //return Math.pow(8, viewer.resolution_);
     }
 }
 
