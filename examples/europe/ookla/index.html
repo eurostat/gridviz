@@ -31,6 +31,7 @@
             }
         ])
         .mobileCellSize(0.00011)
+        .debugPlacenames(true)
         .title("Average broadband download speed")
         .subtitle("According to the FCC the minimum acceptable download speed for ISPs is 25MB/s. This grid contains 1.3 million cells.")
         .backgroundColor('#000')
@@ -43,6 +44,8 @@
         .EPSG("3035")
         .showPlacenames(true)
         .cellCount(false)
+        .homeButton(true)
+        .zoomButtons(true)
         .thresholds([1, 10, 25, 50, 100, 1039])
         .colorField("mbps")  // csv column which you wish to visualize
         .legend({

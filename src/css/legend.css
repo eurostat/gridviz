@@ -21,7 +21,7 @@
     font-weight:bold;
     margin-bottom:10px;
   }
-  .legend-tick text{
+  .legend-tick text {
   /* font-size:1rem */
   }
   .gridviz-legend-axis .domain{
@@ -42,4 +42,7 @@
   rect.swatch {
     stroke: white;
     stroke-width: 0.5px;
+  }
+  .legendTitle {
+    font-weight:bold;
   }

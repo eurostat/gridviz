@@ -1,5 +1,5 @@
 // d3.js
-import { zoom, zoomIdentity } from "d3-zoom";
+import { zoomIdentity } from "d3-zoom";
 import * as d3scaleChromatic from "d3-scale-chromatic";
 import * as d3scale from "d3-scale";
 import { json, csv } from "d3-fetch";
@@ -30,6 +30,7 @@ import * as Tooltip from "./tooltip/tooltip.js";
 import * as Placenames from "./placenames/placenames.js";
 import * as Legend from "./legend/legend.js";
 import * as Camera from "./camera/camera.js";
+import * as Zoom from "./zoom/zoom.js";
 import * as Dropdowns from "./gui/dropdowns.js";
 import * as Gui from "./gui/gui.js";
 import * as Buttons from "./gui/buttons.js";
@@ -145,33 +146,11 @@ export function viewer(options) {
   viewer.nutsLevel_ = 0;
   viewer.nutsSimplification_ = "10M"; //current nuts2json simplification
 
-  // grid data
-  /**
- * @typedef {Object} Grid
- * @property {number} url - URL of the csv file to retrieve
- * @property {number} cellSize - Size of the cell in the same unit system as the coordinates. e.g 1 km² grid in EPSG:3035 with zerosRemoved set to 3 has a cellSize of 1 (without the zerosRemoved it would be 1000)
- */
-  viewer.gridInfo_ = null; // type:Grid
+
+
   viewer.resolution_ = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
-
-  //threejs camera
-  viewer.cameraConfig = {}
-  viewer.cameraConfig.near_ = null;
-  viewer.cameraConfig.far_ = null; //set min zoom
-  viewer.cameraConfig.fov_ = null;
-  viewer.cameraConfig.aspect_ = null;
   viewer.zoom_ = null; //initial camera position Z
-
-  //three.js scene
-  viewer.scene = null;
-  viewer.animating = false;
-
-  // other variables
-  let previousIntersect;
-  let gridCaches = {};
-
-  //mobile stuff 
-  viewer.mobileCellSize_ = null;
+  viewer.mobileCellSize_ = null; //cell size for mobiles
 
   //definition of generic accessors based on the name of each parameter name
   for (var p in viewer)
@@ -198,8 +177,28 @@ export function viewer(options) {
     return viewer;
   };
 
-  //threejs layer that will contain the grid "points"
-  viewer.pointsLayer = null; //three.Points
+  // properties that are not exposed via accessor methods
+  viewer.pointsLayer = null; //threejs layer that will contain the grid "points"
+  viewer.scene = null; //three.js scene
+  viewer.animating = false;
+
+  viewer.cameraConfig = {} //threejs camera settings
+  viewer.cameraConfig.near_ = null;
+  viewer.cameraConfig.far_ = null; //set min zoom
+  viewer.cameraConfig.fov_ = null;
+  viewer.cameraConfig.aspect_ = null;
+
+  // other variables
+  let previousIntersect;
+  let gridCaches = {};
+
+  // grid data
+  /**
+ * @typedef {Object} Grid
+ * @property {number} url - URL of the csv file to retrieve
+ * @property {number} cellSize - Size of the cell in the same unit system as the coordinates. e.g 1 km² grid in EPSG:3035 with zerosRemoved set to 3 has a cellSize of 1 (without the zerosRemoved it would be 1000)
+ */
+  viewer.gridInfo_ = null; // type:Grid
 
   //if gridData has already been added, this function now overwrites the gridData currently in the viewer.
   viewer.gridData = function (v) {
@@ -271,7 +270,7 @@ export function viewer(options) {
     //check if WebGL compatible device
     if (WEBGL.isWebGLAvailable()) {
 
-      // Initiate function or other initializations here
+      // check that settings are valid
       let valid = validateInputs();
 
       if (valid) {
@@ -318,10 +317,6 @@ export function viewer(options) {
           viewer.resolution_ = viewer.gridInfo_[0].cellSize;
         }
 
-        if (viewer.showPlacenames_ && !viewer.placenameThresholds_) {
-          Placenames.defineDefaultPlacenameThresholds(viewer);
-        }
-
         // three.js initializations
         createScene();
         if (!viewer.labelRenderer) createLabelRenderer();
@@ -355,11 +350,6 @@ export function viewer(options) {
             viewer.nutsSimplification_ +
             "/" + viewer.nutsLevel_ + ".json"
           );
-        }
-
-        //request initial placenames
-        if (viewer.showPlacenames_) {
-          Placenames.getPlacenames(viewer);
         }
 
         return viewer;
@@ -653,6 +643,7 @@ export function viewer(options) {
   function addButtonEvents() {
     if (viewer.homeButton_) {
       viewer.homeButtonNode.addEventListener("click", () => {
+        //TODO: this theoretically should show the initial (home) zoom position, not necesarily the full extent.
         viewWholeGrid();
       })
     }
@@ -666,16 +657,13 @@ export function viewer(options) {
     }
   }
 
-
   /**
-  * @description zoom in (reduce camera Z position)
-  * @function zoomIn
-  * @parameter scaleFactor 
-  */
+   * @description zoom in (reduce camera Z position)
+   * @function zoomIn
+   * @parameter scaleFactor 
+   */
   viewer.zoomIn = function (scaleFactor) {
-    // when we zoom, we have to update both the threejs camera and the d3 zoom
-    viewer.view.transition().call(viewer.d3zoom.scaleBy, scaleFactor);
-    Camera.setCamera(viewer.camera.position.x, viewer.camera.position.y, viewer.camera.position.z / scaleFactor)
+    Zoom.zoomIn(viewer, scaleFactor)
   }
 
   /**
@@ -684,14 +672,13 @@ export function viewer(options) {
 * @parameter scaleFactor 
 */
   viewer.zoomOut = function (scaleFactor) {
-    // when we zoom, we have to update both the threejs camera and the d3 zoom
-    viewer.view.transition().call(viewer.d3zoom.scaleBy, scaleFactor);
-    Camera.setCamera(viewer.camera.position.x, viewer.camera.position.y, viewer.camera.position.z / scaleFactor)
+    Zoom.zoomOut(viewer, scaleFactor)
   }
 
 
+
   /**
-  * @description move camera to show the entire extent of the grid, and update the zoom transform. TODO: this theoretically should show the initial (home) zoom position, not necesarily the full extent.
+  * @description move camera to show the entire extent of the grid, and update the zoom transform. 
   * @function viewWholeGrid
   */
   function viewWholeGrid() {
@@ -699,7 +686,7 @@ export function viewer(options) {
 
     if (viewer._mobile) {
 
-      let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
+      let scale = Utils.getScaleFromZ(viewer.height_, viewer.cameraConfig.fov_, viewer.cameraConfig.initialZ_)
       viewer.d3zoom.scaleTo(viewer.view, scale);
       viewer.d3zoom.translateTo(viewer.view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
@@ -707,14 +694,14 @@ export function viewer(options) {
       Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
 
       // mobile devices a transform
-      let initial_scale = getScaleFromZ(viewer.cameraConfig.far_);
+      let initial_scale = Utils.getScaleFromZ(viewer.height_, viewer.cameraConfig.fov_, viewer.cameraConfig.far_);
       let initial_transform = zoomIdentity
         .translate(viewer.width_ / 2, viewer.height_ / 2)
         .scale(initial_scale);
       viewer.d3zoom.transform(viewer.view, initial_transform);
 
     } else {
-      let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
+      let scale = Utils.getScaleFromZ(viewer.height_, viewer.cameraConfig.fov_, viewer.cameraConfig.initialZ_)
       viewer.d3zoom.scaleTo(viewer.view, scale);
       viewer.d3zoom.translateTo(viewer.view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
@@ -744,8 +731,6 @@ export function viewer(options) {
   function definePointSize() {
     return viewer.resolution_; //INVESTIGATE: why does threejs pointSize value not always correspond with the grid resolution?
   }
-
-
 
 
 
@@ -794,7 +779,8 @@ export function viewer(options) {
                 });
 
                 //we then calculate the difference between two distinct X coordinates in mobile (webgl) coords
-                // note: THIS ONLY WORKS IF THE CELLS ARE NEXT TO EACH OTHER. For this to work all the time we would need the minimum distance between two X coordinates out of ALL neighbours
+                // note: THIS ONLY WORKS IF THE CELLS ARE NEXT TO EACH OTHER. 
+                // For this to work all the time we would need the minimum distance between two X coordinates out of ALL neighbours
                 let mobileXCoord1 = viewer.mobileCoordScaleX(x1)
                 let mobileXCoord2 = viewer.mobileCoordScaleX(x2)
                 let difference = Math.abs(mobileXCoord1 - mobileXCoord2);
@@ -883,7 +869,7 @@ export function viewer(options) {
             }
 
             // define pan & zoom
-            addPanAndZoom();
+            Zoom.addPanAndZoom(viewer);
 
             //add cells to viewer
             addPointsToScene();
@@ -895,6 +881,16 @@ export function viewer(options) {
             if (viewer.sizeFieldSelector_) {
               Dropdowns.createSizeFieldDropdown(viewer, gridCaches);
               addChangeEventToSizeFieldDropdown()
+            }
+
+            // default scale:population thresholds for placenames
+            if (viewer.showPlacenames_ && !viewer.placenameThresholds_) {
+              Placenames.defineDefaultPlacenameThresholds(viewer);
+            }
+
+            //request initial placenames
+            if (viewer.showPlacenames_) {
+              Placenames.getPlacenames(viewer);
             }
           }
 
@@ -1169,141 +1165,6 @@ export function viewer(options) {
     viewer.labelRenderer.render(viewer.scene, viewer.camera);
   }
 
-  /**
-   * @description Defines zoom functionality using d3.js
-   * @function addPanAndZoom
-   * 
-   */
-  function addPanAndZoom() {
-    // define zoom
-    //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
-    let farScale = getScaleFromZ(viewer.cameraConfig.far_);
-    let nearScale = getScaleFromZ(viewer.cameraConfig.near_);
-    viewer.d3zoom =
-      zoom()
-        .scaleExtent([farScale, nearScale])
-        .extent([[0, 0], [viewer.width_, viewer.height_]])
-        .on("zoom", (event) => {
-          // let event = currentEvent;
-          if (viewer._mobile) {
-            if (event) zoomHandlerMobile(event);
-          } else {
-            if (event) zoomHandler(event);
-          }
-        })
-        .on("end", (event) => {
-          //let event = currentEvent;
-          if (event) zoomEnd(event);
-        });
-
-    viewer.view.call(viewer.d3zoom);
-
-    if (viewer._mobile) {
-      //due to a bug on mobile, where the camera shifts unexpectedly on the first pan or zoom event, we have to scale everything to a webgl-friendly range and set the camera to 0,0
-      let initial_scale = getScaleFromZ(viewer.cameraConfig.initialZ_);
-      var initial_transform = zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
-      viewer.d3zoom.transform(viewer.view, initial_transform);
-      Camera.setCamera(0, 0, viewer.cameraConfig.initialZ_)
-
-    } else {
-      //initial desktop zoom transform
-      let scale = getScaleFromZ(viewer.cameraConfig.initialZ_)
-      viewer.d3zoom.scaleTo(viewer.view, scale);
-      viewer.d3zoom.translateTo(viewer.view,
-        parseInt(viewer.center_[0]) + viewer.width_ / 2,
-        parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
-    }
-  }
-
-  function zoomHandlerMobile(event) {
-    if (event.sourceEvent) {
-      let scale = event.transform.k;
-      let x = -(event.transform.x - viewer.width_ / 2) / scale;
-      let y = (event.transform.y - viewer.height_ / 2) / scale;
-      let z = getZFromScale(scale);
-      Camera.setCamera(x, y, z);
-    }
-  }
-
-  function zoomHandler(event) {
-    let scale = event.transform.k;
-    if (event.sourceEvent) {
-      let new_z = getZFromScale(scale);
-      //if zoom
-      if (new_z !== viewer.camera.position.z) {
-        // Handle a zoom event
-        const { clientX, clientY } = event.sourceEvent;
-        // Code from WestLangley https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z/13091694#13091694
-        const vector = new Vector3(
-          (clientX / viewer.width_) * 2 - 1,
-          -(clientY / viewer.height_) * 2 + 1,
-          1
-        );
-        vector.unproject(viewer.camera);
-        const dir = vector.sub(viewer.camera.position).normalize();
-        const distance = (new_z - viewer.camera.position.z) / dir.z;
-        const pos = viewer.camera.position.clone().add(dir.multiplyScalar(distance));
-        // Set the camera to new coordinates
-        Camera.setCamera(pos.x, pos.y, new_z);
-      } else {
-        // If panning
-        const { movementX, movementY } = event.sourceEvent;
-
-        // Adjust mouse movement by current scale and set camera
-        const current_scale = getScaleFromZ(viewer.camera.position.z);
-        Camera.setCamera(
-          viewer.camera.position.x - movementX / current_scale,
-          viewer.camera.position.y + movementY / current_scale,
-          viewer.camera.position.z
-        );
-      }
-    }
-  }
-
-  function getScaleFromZ(z) {
-    let half_fov = viewer.cameraConfig.fov_ / 2;
-    let half_fov_radians = toRadians(half_fov);
-    let half_fov_height = Math.tan(half_fov_radians) * z;
-    let fov_height = half_fov_height * 2;
-    let scale = viewer.height_ / fov_height; // Divide visualization height by height derived from field of view
-    return scale;
-  }
-
-  function getZFromScale(scale) {
-    let half_fov = viewer.cameraConfig.fov_ / 2;
-    let half_fov_radians = toRadians(half_fov);
-    let scale_height = viewer.height_ / scale;
-    let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians));
-    return camera_z_position;
-  }
-
-  function zoomEnd(event) {
-    Tooltip.hideTooltip();
-    let scale = getScaleFromZ(event.transform.k);
-    if (viewer.debugPlacenames_) {
-      console.info(scale);
-    }
-    // get placenames at certain zoom levels
-    if (viewer.showPlacenames_) {
-      if (viewer.pointsLayer) {
-        if (scale > 0 && scale < viewer.cameraConfig.far_) {
-          //placenames are added to the viewer.pointsLayer object
-          Placenames.getPlacenames(viewer);
-        } else {
-          Placenames.removePlacenamesFromScene(viewer);
-        }
-      }
-    }
-
-  }
-
-
-
-
-  function toRadians(angle) {
-    return angle * (Math.PI / 180);
-  }
 
   function mouseToThree(mouseX, mouseY) {
     return new Vector3(
@@ -1328,13 +1189,9 @@ export function viewer(options) {
   }
 
   function sortIntersectsByDistanceToRay(intersects) {
-    return intersects.concat().sort(sortBy("distanceToRay"));
+    return intersects.concat().sort(Utils.sortBy("distanceToRay"));
   }
 
-  //native replication of lodash's "sortBy"
-  const sortBy = (key) => {
-    return (a, b) => (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0);
-  };
 
   function highlightPoint(intersect) {
     //removeHighlights();
@@ -1370,10 +1227,8 @@ export function viewer(options) {
   }
 
 
-
-
   /**
-   * Used for 'turning objects on and off'
+   * Used for 'turning objects on and off'. Could be useful for applying filter upon legend class hover
    *
    * @param {*} object
    */

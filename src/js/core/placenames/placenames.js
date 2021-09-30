@@ -13,13 +13,14 @@ import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
    */
 export function defineDefaultPlacenameThresholds(viewer) {
     let r = viewer.resolution_ / window.devicePixelRatio;
+    //let s = viewer.camera.position.z;
     // scale : population
 
     viewer.placenameThresholds_ = {
-        [r * 1024]: 1500000,
-        [r * 512]: 1000000,
+        [r * 1024]: 1000000,
+        [r * 512]: 600000,
         [r * 256]: 500000,
-        [r * 128]: 250000,
+        [r * 128]: 200000,
         [r * 64]: 150000,
         [r * 32]: 100000,
         [r * 16]: 50000,
@@ -41,6 +42,7 @@ export function getPlacenames(viewer) {
     let envelope = Utils.getCurrentViewExtent(viewer);
     //currentExtent = envelope;
     //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
+    if (viewer.debugPlacenames_) console.info(envelope);
 
     if (envelope && where) {
         let URL =
@@ -64,13 +66,11 @@ export function getPlacenames(viewer) {
         let uri = encodeURI(URL);
         json(uri).then(
             res => {
+                removePlacenamesFromScene(viewer);
                 if (res.features) {
                     if (res.features.length > 0) {
-                        removePlacenamesFromScene(viewer);
                         addPlacenamesToScene(viewer, res.features);
                     }
-                } else {
-                    removePlacenamesFromScene(viewer);
                 }
             },
             err => {

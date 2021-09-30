@@ -21,7 +21,7 @@
 <script>
 
     let domain = ["1", "10000"].reverse(); //cell population domain
-  let colorScale = d3.scaleSequentialSqrt(domain, d3.interpolateCividis)
+    let colorScale = d3.scaleSequentialSqrt(domain, d3.interpolateCividis)
 
     let containerDiv = document.getElementById("viz-container");
     let viewer = gridviz
@@ -46,7 +46,7 @@
         //.colorScaleName("scaleThreshold")
         .thresholds([5, 10, 25, 50, 100, 946])
         //.reverseColorScheme(true)
-        .colors(["#c51b7d","#ad388a","#945497","#32c6cb","#19e3d8","#00ffe5"])
+        .colors(["#c51b7d", "#ad388a", "#945497", "#32c6cb", "#19e3d8", "#00ffe5"])
         //.colors(["#174060","#1C627C","#288AA1","#2CAFC4","#FDBEB0","#F3767E","#CE3658","#94003A"].reverse())
         //.thresholds([1000, 10000, 50000, 10000, 100000])
         //.zoom(100)
@@ -56,12 +56,12 @@
             titleWidth: 130,
         })
         .tooltip({
-        eventType: "click", // click vs mousemove
-        showLAU: false,
-        showEPSG: false,
-        showNUTS: false,
-        showCoordinates: true,
-      })
+            eventType: "click", // click vs mousemove
+            showLAU: false,
+            showEPSG: false, 
+            showNUTS: false,
+            showCoordinates: true,
+        })
         .build();
 
     viewer.addGeoJson('https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_BN_10M_2020_4326.geojson');
