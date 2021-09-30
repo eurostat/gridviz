@@ -30,7 +30,7 @@
       .zerosRemoved(3)
       .nuts(true)
       .nutsLevel(3)
-      .nutsSimplification("01M")
+      .nutsSimplification("03M")
       .nutsCountry("FR")
       .EPSG(3035)
       .showPlacenames(true)
@@ -45,13 +45,13 @@
       .colorSchemeSelector(true)
       .colorScaleSelector(true)
       .colorFieldSelector(true)
-      .placenameThresholds({
-        //"scale": population
-        500: 1000000,
-        200: 50000,
-        50: 10000,
-        20: 1000,
-      })
+      // .placenameThresholds({
+      //   //"scale": population
+      //   500: 1000000,
+      //   200: 50000,
+      //   50: 10000,
+      //   20: 1000,
+      // })
       .colorScaleSelectorLabel("Scale: ")
       .colorFieldSelectorLabel("Indicator: ")
       .nuts(true) //loads borders topojson
