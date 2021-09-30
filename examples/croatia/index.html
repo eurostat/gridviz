@@ -39,10 +39,10 @@
       1000: 500,
     })
     .center([4755000, 2369000]) //EPSG=3035
-    .height(window.innerHeight - 4)
-    .width(window.innerWidth - 4)
-    .backgroundColor("#fffcfc")
-    .lineColor("#000")
+    .height(window.innerHeight - 0.1)
+    .width(window.innerWidth - 0.1)
+    .backgroundColor("#000")
+    .lineColor("#ffffff")
     .colorSchemeName("interpolateYlOrRd")
     .colorScaleName("scaleSequentialLog")
 
@@ -52,7 +52,7 @@
     .colorScaleSelectorLabel("Scale: ")
     .colorFieldSelectorLabel("Indicator: ")
     .legend({
-      width: 350,
+      width: "300",
       title: "Total tourist nights per km² (2017)",
       titleWidth: 150,
       cells: 10,

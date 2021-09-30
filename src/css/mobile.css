@@ -1,0 +1,45 @@
+/* mobile styles & overrides */
+@media only screen and (max-width: 600px) {
+    #gridviz-legend {
+      z-index: 999999;
+      position: absolute;
+      bottom: 0px!important;
+      left: 0px!important;
+    }
+    .gridviz-headings-container {
+      z-index:999999;
+      position:absolute;
+      top:0px!important;
+      left:0px!important;
+      width: 98%!important;
+     
+    }
+    .gridviz-headings-container, #gridviz-legend {
+      border-radius: 0px !important;
+      background-color:#ffffff !important;
+      max-width: 100% !important;
+    }
+    .gridviz-cellcount{
+      margin-top:1px!important;
+    }
+    #gridviz-loading-spinner {
+      top: 45% !important;
+      left: 44% !important;
+    }
+    #gridviz-loading-text {
+      top: 55% !important;
+      left: 0px;
+    }
+    /* #gridviz-home-btn{
+      left:3px!important;
+      top: 75px!important;
+    }
+    #gridviz-zoomin-btn{
+      left:3px!important;
+      top: 115px!important;
+    }
+    #gridviz-zoomout-btn{
+      left:3px!important;
+      top: 147px!important;
+    } */
+  }

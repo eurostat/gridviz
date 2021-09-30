@@ -658,10 +658,10 @@ export function viewer(options) {
     }
     if (viewer.zoomButtons_) {
       viewer.zoominButtonNode.addEventListener("click", () => {
-        viewer.zoomIn(viewer, 2);
+        viewer.zoomIn(2);
       })
       viewer.zoomoutButtonNode.addEventListener("click", () => {
-        viewer.zoomOut(viewer, 0.5);
+        viewer.zoomOut(0.5);
       })
     }
   }
