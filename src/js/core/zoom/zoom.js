@@ -105,7 +105,7 @@ import { Vector3 } from "three"
     Tooltip.hideTooltip();
     let scale = Utils.getScaleFromZ(viewer.height_,viewer.cameraConfig.fov_,event.transform.k);
     if (viewer.debugPlacenames_) {
-      console.info(scale);
+      console.info('scale:',scale);
     }
     // get placenames at certain zoom levels
     if (viewer.showPlacenames_) {

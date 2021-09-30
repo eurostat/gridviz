@@ -317,10 +317,6 @@ export function viewer(options) {
           viewer.resolution_ = viewer.gridInfo_[0].cellSize;
         }
 
-        if (viewer.showPlacenames_ && !viewer.placenameThresholds_) {
-          Placenames.defineDefaultPlacenameThresholds(viewer);
-        }
-
         // three.js initializations
         createScene();
         if (!viewer.labelRenderer) createLabelRenderer();
@@ -354,11 +350,6 @@ export function viewer(options) {
             viewer.nutsSimplification_ +
             "/" + viewer.nutsLevel_ + ".json"
           );
-        }
-
-        //request initial placenames
-        if (viewer.showPlacenames_) {
-          Placenames.getPlacenames(viewer);
         }
 
         return viewer;
@@ -695,7 +686,7 @@ export function viewer(options) {
 
     if (viewer._mobile) {
 
-      let scale = Utils.getScaleFromZ(viewer.height_,viewer.cameraConfig.fov_,viewer.cameraConfig.initialZ_)
+      let scale = Utils.getScaleFromZ(viewer.height_, viewer.cameraConfig.fov_, viewer.cameraConfig.initialZ_)
       viewer.d3zoom.scaleTo(viewer.view, scale);
       viewer.d3zoom.translateTo(viewer.view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
@@ -703,14 +694,14 @@ export function viewer(options) {
       Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
 
       // mobile devices a transform
-      let initial_scale = Utils.getScaleFromZ(viewer.height_,viewer.cameraConfig.fov_,viewer.cameraConfig.far_);
+      let initial_scale = Utils.getScaleFromZ(viewer.height_, viewer.cameraConfig.fov_, viewer.cameraConfig.far_);
       let initial_transform = zoomIdentity
         .translate(viewer.width_ / 2, viewer.height_ / 2)
         .scale(initial_scale);
       viewer.d3zoom.transform(viewer.view, initial_transform);
 
     } else {
-      let scale = Utils.getScaleFromZ(viewer.height_,viewer.cameraConfig.fov_,viewer.cameraConfig.initialZ_)
+      let scale = Utils.getScaleFromZ(viewer.height_, viewer.cameraConfig.fov_, viewer.cameraConfig.initialZ_)
       viewer.d3zoom.scaleTo(viewer.view, scale);
       viewer.d3zoom.translateTo(viewer.view,
         parseInt(viewer.center_[0]) + viewer.width_ / 2,
@@ -788,7 +779,8 @@ export function viewer(options) {
                 });
 
                 //we then calculate the difference between two distinct X coordinates in mobile (webgl) coords
-                // note: THIS ONLY WORKS IF THE CELLS ARE NEXT TO EACH OTHER. For this to work all the time we would need the minimum distance between two X coordinates out of ALL neighbours
+                // note: THIS ONLY WORKS IF THE CELLS ARE NEXT TO EACH OTHER. 
+                // For this to work all the time we would need the minimum distance between two X coordinates out of ALL neighbours
                 let mobileXCoord1 = viewer.mobileCoordScaleX(x1)
                 let mobileXCoord2 = viewer.mobileCoordScaleX(x2)
                 let difference = Math.abs(mobileXCoord1 - mobileXCoord2);
@@ -889,6 +881,16 @@ export function viewer(options) {
             if (viewer.sizeFieldSelector_) {
               Dropdowns.createSizeFieldDropdown(viewer, gridCaches);
               addChangeEventToSizeFieldDropdown()
+            }
+
+            // default scale:population thresholds for placenames
+            if (viewer.showPlacenames_ && !viewer.placenameThresholds_) {
+              Placenames.defineDefaultPlacenameThresholds(viewer);
+            }
+
+            //request initial placenames
+            if (viewer.showPlacenames_) {
+              Placenames.getPlacenames(viewer);
             }
           }
 
