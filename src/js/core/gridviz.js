@@ -406,12 +406,14 @@ export function viewer(options) {
     if (viewer.sourcesHTML_) {
       Gui.addSourcesToDOM(viewer);
     }
+    if (!viewer._mobile) {
     if (viewer.homeButton_) {
       Buttons.addHomeButtonToDOM(viewer);
     }
     if (viewer.zoomButtons_) {
       Buttons.addZoomButtonsToDOM(viewer);
     }
+  }
   }
 
 
@@ -481,7 +483,10 @@ export function viewer(options) {
     //screen resize
     addResizeEvent();
     //zoom, home buttons etc
-    addButtonEvents();
+    if (!viewer._mobile) {
+      addButtonEvents();
+    }
+
   }
 
   /**
@@ -638,7 +643,7 @@ export function viewer(options) {
   * @function addButtonEvents
   */
   function addButtonEvents() {
-    if (viewer.homeButton_) {
+    if (viewer.homeButton_ &&  viewer.homeButtonNode) {
       viewer.homeButtonNode.addEventListener("click", () => {
         //TODO: this theoretically should show the initial (home) zoom position, not necesarily the full extent.
         viewWholeGrid();
