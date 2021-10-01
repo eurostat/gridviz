@@ -22,9 +22,9 @@ A JavaScript library for visualizing large amounts of gridded data using three.j
   - [Installation](#installation)
     - [Node.js](#nodejs)
     - [standalone](#standalone)
-  - [Preparing your csv data](#preparing-your-csv-data)
   - [Usage](#usage)
-  - [API reference](#gridviz-documentation)
+  - [Preparing csv data](#preparing-csv-data)
+  - [API reference](#api-reference)
     - [Styling](#styling)
     - [Defining the data](#defining-the-data)
     - [Cell colouring](#cell-colouring)
@@ -74,26 +74,6 @@ gridviz = require("gridviz")
 <script src="https://unpkg.com/gridviz/build/gridviz.min.js"></script>
 ```
 
-### Preparing your csv data
-
-If you have exported your grid data as points to a csv file, then it is likely that you can reduce the file size significantly by removing redundant data. We have prepared a small node.js package exactly for this, which you will find in the [csv-prep folder](https://github.com/eurostat/gridviz/tree/master/csv-prep) of this repository.
-
-Here is an example of removing unnecessary information:
-
-Turning each row from this...
-
-``` 
-OBJECTID;ID;Cnt_ID;Ave_Total_Trav
-1;CRS3035RES1000mN1000000E1967000;3;49,121209420200000 
-```
-
-into this...
-
-``` 
-x,y,time
-1967,1000,49 
-```
-
 ### Usage
 
 Create a viewer using  ```let viewer = gridviz.viewer();``` and customise it with the methods below.
@@ -117,6 +97,25 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
 
 For an explanation of all the available functionality, see the developer docs below.
 
+### Preparing csv data
+
+If you have exported your grid data as points to a csv file, then it is likely that you can reduce the file size significantly by removing redundant data. We have prepared a small node.js package exactly for this, which you will find in the [csv-prep folder](https://github.com/eurostat/gridviz/tree/master/csv-prep) of this repository.
+
+Here is an example of removing unnecessary information:
+
+Turning each row from this...
+
+``` 
+OBJECTID;ID;Cnt_ID;Ave_Total_Trav
+1;CRS3035RES1000mN1000000E1967000;3;49,121209420200000 
+```
+
+into this...
+
+``` 
+x,y,time
+1967,1000,49 
+```
 
 ### API reference
 
