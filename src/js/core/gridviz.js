@@ -314,7 +314,7 @@ export function viewer(options) {
 
         //set viewer resolution from user input
         if (!viewer.resolution_) {
-          viewer.resolution_ = viewer.gridInfo_[0].cellSize;
+          viewer.resolution_ = viewer.gridInfo_.cellSize;
         }
 
         // three.js initializations
@@ -336,7 +336,7 @@ export function viewer(options) {
         }
 
         //load initial data
-        loadGrid(viewer.gridInfo_[0]);
+        loadGrid(viewer.gridInfo_);
 
         // NUTS geometries
         if (viewer.nuts_) {

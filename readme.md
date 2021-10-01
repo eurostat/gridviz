@@ -15,10 +15,10 @@ A JavaScript library for visualizing large amounts of gridded data using three.j
   <a href="https://eurostat.github.io/gridviz/examples/europe/1km/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/paris.png" alt="preview" width="200px" height="200px"/></a>
 </div>
 
-### Table of contents
+## Table of contents
 
+  - [Introduction](#introduction)
   - [Examples](#examples)
-  - [Description](#description)
   - [Installation](#installation)
     - [Node.js](#nodejs)
     - [standalone](#standalone)
@@ -32,7 +32,16 @@ A JavaScript library for visualizing large amounts of gridded data using three.j
     - [Legend](#legend)
     - [Tooltip](#tooltip)
 
-## Examples
+
+### Introduction
+
+Gridviz is a JavaScript library which allows you to visualize large gridded datasets (or any csv file with x/y data) in the browser. Unlike traditional raster-based GIS approaches, this tool utilizes WebGL through three.js in order to render eveything client-side. 
+
+From a CSV file with x and y columns, gridviz will build a viewer capable of visualizing millions of grid cells on the fly. 
+
+For data-driven colouring and sizing, you can use [d3-scale](https://github.com/d3/d3-scale) and [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic), or simply set your own colours and thresholds.
+
+### Examples
 
 | Link to example                                                                                                                     | Data source                                                                                                                              | Link to code                                                                                         |
 | :---------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -46,17 +55,9 @@ A JavaScript library for visualizing large amounts of gridded data using three.j
 | [Portugal census data](https://eurostat.github.io/gridviz/examples/portugal/index.html)                                             | [data source](https://www.efgs.info/data/national/)                                                                                      | [See code](https://github.com/eurostat/gridviz/blob/master/examples/portugal/index.html)             |
 | [Average internet speed 2020 (ookla open data, 400x400m grid)](https://eurostat.github.io/gridviz/examples/europe/ookla/index.html) | [data source](https://github.com/teamookla/ookla-open-data)                                                                              | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/ookla/index.html)         | 
 
-## Description
+### Installation
 
-Gridviz is a JavaScript library which allows you to visualize large gridded datasets (or any csv file with x/y data) in the browser. Unlike traditional raster-based GIS approaches, this tool utilizes WebGL through three.js in order to render eveything client-side. 
-
-From a CSV file with x and y columns, gridviz will build a viewer capable of visualizing millions of grid cells on the fly. 
-
-For data-driven colouring and sizing, you can use [d3-scale](https://github.com/d3/d3-scale) and [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic), or simply set your own colours and thresholds.
-
-## Installation
-
-### Node.js
+#### Node.js
 
 ```Shell
 npm install gridviz
@@ -67,13 +68,13 @@ then
 gridviz = require("gridviz")
 ```
 
-### standalone
+#### standalone
 
 ```javascript
 <script src="https://unpkg.com/gridviz/build/gridviz.min.js"></script>
 ```
 
-## Preparing your csv data
+### Preparing your csv data
 
 If you have exported your grid data as points to a csv file, then it is likely that you can reduce the file size significantly by removing redundant data. We have prepared a small node.js package exactly for this, which you will find in the [csv-prep folder](https://github.com/eurostat/gridviz/tree/master/csv-prep) of this repository.
 
@@ -93,7 +94,7 @@ x,y,time
 1967,1000,49 
 ```
 
-## Usage
+### Usage
 
 Create a viewer using  ```let viewer = gridviz.viewer();``` and customise it with the methods below.
 
@@ -117,7 +118,7 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
 For an explanation of all the available functionality, see the developer docs below.
 
 
-## API reference
+### API reference
 
 Here you will find information on how to use the functions available for configuring a gridviz viewer. Like D3, gridviz uses a method chaining syntax (as shown in the barebones example above).
 
@@ -128,7 +129,7 @@ Then configure it using the methods in the table below. The methods follow the p
 Once you have configured the viewer, you can build it using `` viewer.build() ``.
 
 
-### Styling
+#### Styling
 
 These are the methods available for styling the viewer.
 
@@ -149,7 +150,7 @@ These are the methods available for styling the viewer.
 </br>
 
 
-### Defining the data
+#### Defining the data
 
 These methods allow you to define the data that is added to the viewer and how it is presented.
 
@@ -172,7 +173,7 @@ These methods allow you to define the data that is added to the viewer and how i
 
 <br>
 
-### Cell colouring
+#### Cell colouring
 
 The methods that can be used to determine the colour of the grid cells.
 
@@ -191,7 +192,7 @@ The methods that can be used to determine the colour of the grid cells.
 
 <br>
 
- ### Cell sizing
+ #### Cell sizing
 
  The methods that can be used to determine the size of the grid cells.
 
@@ -205,7 +206,7 @@ The methods that can be used to determine the colour of the grid cells.
 
 <br>
 
-### Legend
+#### Legend
 
 The possible configurations for the legend of the grid data.
 
@@ -240,7 +241,7 @@ Default:
 
 <br>
 
-### Tooltip
+#### Tooltip
 
 The possible configurations for the viewer's tooltip.
 
@@ -271,6 +272,4 @@ Default:
 
 <br>
 
-## Developer docs
 
-For source code documentation see [docs](https://eurostat.github.io/gridviz/docs/)
