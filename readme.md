@@ -132,6 +132,14 @@ Then configure it using the methods in the table below. The methods follow the p
 
 Once you have configured the viewer, you can build it using `` viewer.build() ``.
 
+### Contents
+- [Styling](#styling)
+- [Defining the data](#defining-the-data)
+- [Cell colouring](#cell-colouring)
+- [Cell sizing](#cell-sizing)
+- [Legend](#legend)
+- [Tooltip](#tooltip)
+
 
 ### Styling
 
