@@ -325,9 +325,6 @@ export function viewer(options) {
         Camera.createCamera(viewer);
         createRaycaster();
 
-        // tooltip DOM element
-        Tooltip.createTooltipContainer(viewer);
-
         // dropdowns DOM container
         if (viewer.colorSchemeSelector_ || viewer.colorScaleSelector_ || viewer.sizeFieldSelector_ || viewer.colorFieldSelector_) {
           Gui.addSelectorsContainerToDOM(viewer);
@@ -748,6 +745,7 @@ export function viewer(options) {
             //validate csv
             if (csv[0].x && csv[0].y && csv[0][viewer.colorField_]) {
               viewer.cellCount = csv.length;
+              viewer._cellFields = Object.keys(csv[0]).filter(key => key!=='x' && key!=='y' ); // cell properties
 
               //as a temporary hacky fix for d3's pan and zoom not working correctly on mobile devices, we scale the coordinates to a webgl-friendly range
               if (viewer._mobile && !viewer.mobileCellSize_) {
@@ -874,6 +872,9 @@ export function viewer(options) {
             //add cells to viewer
             addPointsToScene();
 
+            // tooltip DOM element
+            Tooltip.createTooltipContainer(viewer);
+
             if (viewer.colorFieldSelector_) {
               Dropdowns.createColorFieldDropdown(viewer, gridCaches);
               addChangeEventToColorFieldDropdown();
@@ -909,6 +910,8 @@ export function viewer(options) {
 
     }
   }
+
+
 
   /**
    * TODO: TILING: replace with requestTile() and addTileToCache() for CSVTiles endpoint

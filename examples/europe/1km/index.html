@@ -35,7 +35,7 @@
         cellSize: 0.99,
       },
     ])
-    .title("1 km² Grid of Europe")
+    .title("1x1 km Grid of Europe")
     // .subtitle("EPSG:3035")
     .cellCount(true)
     .zerosRemoved(3) //last 3 zeros were removed from dataset to improve efficiency
@@ -67,7 +67,7 @@
       //ticks: 5,
     })
     .tooltip({
-        eventType: "mousemove", // click vs mousemove
+        eventType: "click", // click vs mousemove
         showLAU: true,
         showEPSG: true,
         showNUTS: true,

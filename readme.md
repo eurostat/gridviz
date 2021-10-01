@@ -19,14 +19,15 @@ A JavaScript library for visualizing large amounts of gridded data using three.j
 
 | Link to example                                                                                                                  | Data source                                                                                                                              | Link to code                                                                                        |
 | :------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| [Europe - 5km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/5km/index.html)                               | [data source](https://ec.europa.eu/eurostat/web/gisco)                                                                                   | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/5km/index.html)          |
-| [Europe - 2km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/2km/index.html)                               | [data source](https://ec.europa.eu/eurostat/web/gisco)                                                                                   | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/2km/index.html)          |
-| [Europe - 1km² Population Grid](https://eurostat.github.io/gridviz/examples/europe/1km/index.html)                               | [data source](https://ec.europa.eu/eurostat/web/gisco)                                                                                   | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/1km/index.html)          |
-| [Netherlands - Inhabitants per 100m²](https://eurostat.github.io/gridviz/examples/netherlands/index.html)                        | [data source](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken) | [See code](https://github.com/eurostat/gridviz/blob/master/examples/netherlands/index.html)         |
-| [France - 1km² Population Grid](https://eurostat.github.io/gridviz/examples/france/index.html)                                   | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)                                                                 | [See code](https://github.com/eurostat/gridviz/blob/master/examples/france/1km/index.html)          |
+| [Europe - 5x5km Population Grid](https://eurostat.github.io/gridviz/examples/europe/5km/index.html)                               | [data source](https://ec.europa.eu/eurostat/web/gisco)                                                                                   | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/5km/index.html)          |
+| [Europe - 2x2km Population Grid](https://eurostat.github.io/gridviz/examples/europe/2km/index.html)                               | [data source](https://ec.europa.eu/eurostat/web/gisco)                                                                                   | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/2km/index.html)          |
+| [Europe - 1x1km Population Grid](https://eurostat.github.io/gridviz/examples/europe/1km/index.html)                               | [data source](https://ec.europa.eu/eurostat/web/gisco)                                                                                   | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/1km/index.html)          |
+| [Netherlands - 100mx100m Census data](https://eurostat.github.io/gridviz/examples/netherlands/index.html)                        | [data source](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken) | [See code](https://github.com/eurostat/gridviz/blob/master/examples/netherlands/index.html)         |
+| [France - 1x1km Population Grid](https://eurostat.github.io/gridviz/examples/france/index.html)                                   | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)                                                                 | [See code](https://github.com/eurostat/gridviz/blob/master/examples/france/1km/index.html)          |
+| [SE France - Building area by type per km²](https://eurostat.github.io/gridviz/examples/france/building_area/index.html) | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)                                                                 | [See code](https://github.com/eurostat/gridviz/blob/master/examples/france/building_area/index.html) |
 | [France - Inhabitants over 80 years of age per 1km²](https://eurostat.github.io/gridviz/examples/france/population-over-80.html) | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)                                                                 | [See code](https://github.com/eurostat/gridviz/blob/master/examples/france/population-over-80.html) |
 | [Portugal census data](https://eurostat.github.io/gridviz/examples/portugal/index.html)                                          | [data source](https://www.efgs.info/data/national/)                                                                                      | [See code](https://github.com/eurostat/gridviz/blob/master/examples/portugal/index.html)            |
-| [Average internet speed 2020 (ookla open data)](https://eurostat.github.io/gridviz/examples/europe/ookla/index.html)             | [data source](https://github.com/teamookla/ookla-open-data)                                                                              | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/ookla/index.html)        |
+| [Average internet speed 2020 (ookla open data, 400x400m grid)](https://eurostat.github.io/gridviz/examples/europe/ookla/index.html)             | [data source](https://github.com/teamookla/ookla-open-data)                                                                              | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/ookla/index.html)        |
 
 ## Description  
 
@@ -77,8 +78,27 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
         .build()
 ```
 
+## Preparing your csv data
 
-## Documentation
+If you have exported your grid data as points to a csv file, then it is likely that you can reduce the file size significantly by removing redundant data. We have prepared a small node.js package exactly for this, which you will find in the [csv-prep folder](https://github.com/eurostat/gridviz/tree/master/csv-prep) of this repository.
+
+Here is an example of removing unnecessary information:
+
+Turning each row from this...
+
+``` 
+OBJECTID;ID;Cnt_ID;Ave_Total_Trav
+1;CRS3035RES1000mN1000000E1967000;3;49,121209420200000 
+```
+
+into this...
+
+``` 
+x,y,time
+1967,1000,49 
+```
+
+## Gridviz documentation
 
 Here you will find information on how to use the functions available for configuring a gridviz viewer. Like D3, gridviz uses a method chaining syntax (as shown in the barebones example above).
 
