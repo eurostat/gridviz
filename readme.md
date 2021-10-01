@@ -5,7 +5,7 @@
 ![npm](https://img.shields.io/npm/v/gridviz)
 ![license](https://img.shields.io/badge/license-EUPL-success)
 
-A JavaScript library for visualizing large amounts of gridded data using three.js and d3.js. 
+A JavaScript library for visualizing large amounts of gridded data client-side, through the power of WebGL. 
 
 <div>
   <!-- <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/assets/images/previews/preview.gif" alt="preview" width="98%" height="10%"/> -->
@@ -15,7 +15,7 @@ A JavaScript library for visualizing large amounts of gridded data using three.j
   <a href="https://eurostat.github.io/gridviz/examples/europe/1km/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/paris.png" alt="preview" width="200px" height="200px"/></a>
 </div>
 
-## Table of contents
+# Table of contents
 
   - [Introduction](#introduction)
   - [Examples](#examples)
@@ -33,7 +33,7 @@ A JavaScript library for visualizing large amounts of gridded data using three.j
     - [Tooltip](#tooltip)
 
 
-### Introduction
+## Introduction
 
 Gridviz is a JavaScript library which allows you to visualize large gridded datasets (or any csv file with x/y data) in the browser. Unlike traditional raster-based GIS approaches, this tool utilizes WebGL through three.js in order to render eveything client-side. 
 
@@ -41,7 +41,7 @@ From a CSV file with x and y columns, gridviz will build a viewer capable of vis
 
 For data-driven colouring and sizing, you can use [d3-scale](https://github.com/d3/d3-scale) and [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic), or simply set your own colours and thresholds.
 
-### Examples
+## Examples
 
 | Link to example                                                                                                                     | Data source                                                                                                                              | Link to code                                                                                         |
 | :---------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
@@ -53,11 +53,11 @@ For data-driven colouring and sizing, you can use [d3-scale](https://github.com/
 | [SE France - Building area by type per km²](https://eurostat.github.io/gridviz/examples/france/building_area/index.html)            | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)                                                                 | [See code](https://github.com/eurostat/gridviz/blob/master/examples/france/building_area/index.html) |
 | [France - Inhabitants over 80 years of age per 1km²](https://eurostat.github.io/gridviz/examples/france/population-over-80.html)    | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)                                                                 | [See code](https://github.com/eurostat/gridviz/blob/master/examples/france/population-over-80.html)  |
 | [Portugal census data](https://eurostat.github.io/gridviz/examples/portugal/index.html)                                             | [data source](https://www.efgs.info/data/national/)                                                                                      | [See code](https://github.com/eurostat/gridviz/blob/master/examples/portugal/index.html)             |
-| [Average internet speed 2020 (ookla open data, 400x400m grid)](https://eurostat.github.io/gridviz/examples/europe/ookla/index.html) | [data source](https://github.com/teamookla/ookla-open-data)                                                                              | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/ookla/index.html)         | 
+| [Average internet speed 2020 (ookla open data, 400x400m grid)](https://eurostat.github.io/gridviz/examples/europe/ookla/index.html) | [data source](https://github.com/teamookla/ookla-open-data)                                                                              | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/ookla/index.html)         |
 
-### Installation
+## Installation
 
-#### Node.js
+### Node.js
 
 ```Shell
 npm install gridviz
@@ -68,13 +68,13 @@ then
 gridviz = require("gridviz")
 ```
 
-#### standalone
+### standalone
 
 ```javascript
 <script src="https://unpkg.com/gridviz/build/gridviz.min.js"></script>
 ```
 
-### Usage
+## Usage
 
 Create a viewer using  ```let viewer = gridviz.viewer();``` and customise it with the methods below.
 
@@ -97,7 +97,7 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
 
 For an explanation of all the available functionality, see the developer docs below.
 
-### Preparing csv data
+## Preparing csv data
 
 If you have exported your grid data as points to a csv file, then it is likely that you can reduce the file size significantly by removing redundant data. We have prepared a small node.js package exactly for this, which you will find in the [csv-prep folder](https://github.com/eurostat/gridviz/tree/master/csv-prep) of this repository.
 
@@ -117,7 +117,7 @@ x,y,time
 1967,1000,49 
 ```
 
-### API reference
+## API reference
 
 Here you will find information on how to use the functions available for configuring a gridviz viewer. Like D3, gridviz uses a method chaining syntax (as shown in the barebones example above).
 
@@ -128,7 +128,7 @@ Then configure it using the methods in the table below. The methods follow the p
 Once you have configured the viewer, you can build it using `` viewer.build() ``.
 
 
-#### Styling
+### Styling
 
 These are the methods available for styling the viewer.
 
@@ -149,63 +149,63 @@ These are the methods available for styling the viewer.
 </br>
 
 
-#### Defining the data
+### Defining the data
 
 These methods allow you to define the data that is added to the viewer and how it is presented.
 
-| Method                                     | Type                               | Default                | Description                                                                                                                                                          |
-| ------------------------------------------ | ---------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Method                                     | Type                               | Default                | Description                                                                                                                                                                 |
+| ------------------------------------------ | ---------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | *viewer*.**gridData**([value])             | Object {url:string, cellSize: int} | null                   | Object containing the URL of the grid's CSV file and its cellSize (this will determine the point size in three.js). A 1 km² grid in EPSG:3035 will have a cellSize of 1000. |
-| *viewer*.**center**([value])               | Array                              | null                   | [x,y] coordinates with which the viewer will center the camera.                                                                                                      |
-| *viewer*.**zoom**([value])                 | Number                             | (cellSize * 50000) / 2 | The initial Z position of the camera.                                                                                                                                |
-| *viewer*.**addGeoJson**([value])           | String                             | null                   | Loads a geojson file from the specified URL and adds it's geometries to the viewer. Currently only accepts "polygon" or "multipolygon" geometries                    |
-| *viewer*.**nuts**([value])                 | Boolean                            | false                  | Show NUTS boundaries using [nuts2json](https://github.com/eurostat/nuts2json)                                                                                        |
-| *viewer*.**EPSG**([value])                 | int                                | 3035                   | EPSG code of the projection to use for the geometries, placename labels and NUTS boundaries. (NUTS and Placenames only available in 3035, 3857, 4258 or 4326)        |
-| *viewer*.**nutsLevel**([value])            | int                                | 0                      | Nuts2json NUTS level                                                                                                                                                 |
-| *viewer*.**nutsSimplification**([value])   | String                             | "20M"                  | The level of generalisation applied to the Nuts2json  geometries                                                                                                     |
-| *viewer*.**nutsCountry**([value])          | String                             | null                   | Filters nuts2json geometries by country code. Used in order to only load boundaries for a single country.                                                            |  |
-| *viewer*.**showPlacenames**([value])       | Boolean                            | false                  | Adds placenames to the viewer. Placename-scale thresholds currently defined by the user.                                                                             |
-| *viewer*.**placenamesCountry**([value])    | String                             | null                   | Filters placenames by country code                                                                                                                                   |
-| *viewer*.**placenamesThresholds**([value]) | Object                             | null                   | Defines population query parameter at certain scale thresholds e.g. {"100000":500} will show placenames with populations of over 5000 at scales up to 100 000        |
+| *viewer*.**center**([value])               | Array                              | null                   | [x,y] coordinates with which the viewer will center the camera.                                                                                                             |
+| *viewer*.**zoom**([value])                 | Number                             | (cellSize * 50000) / 2 | The initial Z position of the camera.                                                                                                                                       |
+| *viewer*.**addGeoJson**([value])           | String                             | null                   | Loads a geojson file from the specified URL and adds it's geometries to the viewer. Currently only accepts "polygon" or "multipolygon" geometries                           |
+| *viewer*.**nuts**([value])                 | Boolean                            | false                  | Show NUTS boundaries using [nuts2json](https://github.com/eurostat/nuts2json)                                                                                               |
+| *viewer*.**EPSG**([value])                 | int                                | 3035                   | EPSG code of the projection to use for the geometries, placename labels and NUTS boundaries. (NUTS and Placenames only available in 3035, 3857, 4258 or 4326)               |
+| *viewer*.**nutsLevel**([value])            | int                                | 0                      | Nuts2json NUTS level                                                                                                                                                        |
+| *viewer*.**nutsSimplification**([value])   | String                             | "20M"                  | The level of generalisation applied to the Nuts2json  geometries                                                                                                            |
+| *viewer*.**nutsCountry**([value])          | String                             | null                   | Filters nuts2json geometries by country code. Used in order to only load boundaries for a single country.                                                                   |  |
+| *viewer*.**showPlacenames**([value])       | Boolean                            | false                  | Adds placenames to the viewer. Placename-scale thresholds currently defined by the user.                                                                                    |
+| *viewer*.**placenamesCountry**([value])    | String                             | null                   | Filters placenames by country code                                                                                                                                          |
+| *viewer*.**placenamesThresholds**([value]) | Object                             | null                   | Defines population query parameter at certain scale thresholds e.g. {"100000":500} will show placenames with populations of over 5000 at scales up to 100 000               |
 
 
 
 <br>
 
-#### Cell colouring
+### Cell colouring
 
 The methods that can be used to determine the colour of the grid cells.
 
-| Method                                    | Type     | Default                    | Description                                                                                                                                                                                                                                                           |
-| ----------------------------------------- | -------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| *viewer*.**colorField**([value])          | String   | null                       | CSV field used to determine cell colour                                                                                                                                                                                                                               |
-| *viewer*.**colorScaleName**([value])      | String   | "scaleSequential"          | The name of d3.scale function name to use for scaling cell colours. If you would like to define your own scale you can use colorScaleFunction()                                                                                                                       |
-| *viewer*.**colorScaleMidpoint**([value])  | Number   | 0                          | The midpoint value when using a diverging scale (when viewer.colorScaleName is set to 'scaleDiverging')                                                                                                                                                               |
-| *viewer*.**colorScaleFunction**([value])  | Function | d3.[viewer.colorScaleName] | Define a scale function to be used for color scaling. If unspecified it will build a d3 scale using viewer.colorScaleName and the d3.extent() of the values loaded from viewer.colorField.                                                                            |
-| *viewer*.**reverseColorScheme**([value])  | Boolean  | false                      | Flips the current color scheme. Applies .reverse() method to the 'domain' array of the scale.                                                                                                                                                                         |
-| *viewer*.**colorSchemeName**([value])     | String   | "interpolateTurbo"         | Name of d3.scaleChromatic function to use for scaling cell colours                                                                                                                                                                                                    |
-| *viewer*.**colors**([value])              | Array    | null                       | Array of hex strings to be used in combination with viewer.thresholds for colouring.                                                                                                                                                                                  |
-| *viewer*.**thresholds**([value])          | Array    | null                       | Array of threshold values that are applied to the colour scaling function.                                                                                                                                                                                            |
-| *viewer*.**colorFieldSelector**([value])  | boolean  | false                      | Generates a simple HTML select input showing the available fields in the csv file that can be used to drive cell colour.                                                                                                                                              |
-| *viewer*.**colorSchemeSelector**([value]) | boolean  | false                      | Generates an HTML Select element for the different D3 Scale-Chromatic functions                                                                                                                                                                                       |
+| Method                                    | Type     | Default                    | Description                                                                                                                                                                                |
+| ----------------------------------------- | -------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| *viewer*.**colorField**([value])          | String   | null                       | CSV field used to determine cell colour                                                                                                                                                    |
+| *viewer*.**colorScaleName**([value])      | String   | "scaleSequential"          | The name of d3.scale function name to use for scaling cell colours. If you would like to define your own scale you can use colorScaleFunction()                                            |
+| *viewer*.**colorScaleMidpoint**([value])  | Number   | 0                          | The midpoint value when using a diverging scale (when viewer.colorScaleName is set to 'scaleDiverging')                                                                                    |
+| *viewer*.**colorScaleFunction**([value])  | Function | d3.[viewer.colorScaleName] | Define a scale function to be used for color scaling. If unspecified it will build a d3 scale using viewer.colorScaleName and the d3.extent() of the values loaded from viewer.colorField. |
+| *viewer*.**reverseColorScheme**([value])  | Boolean  | false                      | Flips the current color scheme. Applies .reverse() method to the 'domain' array of the scale.                                                                                              |
+| *viewer*.**colorSchemeName**([value])     | String   | "interpolateTurbo"         | Name of d3.scaleChromatic function to use for scaling cell colours                                                                                                                         |
+| *viewer*.**colors**([value])              | Array    | null                       | Array of hex strings to be used in combination with viewer.thresholds for colouring.                                                                                                       |
+| *viewer*.**thresholds**([value])          | Array    | null                       | Array of threshold values that are applied to the colour scaling function.                                                                                                                 |
+| *viewer*.**colorFieldSelector**([value])  | boolean  | false                      | Generates a simple HTML select input showing the available fields in the csv file that can be used to drive cell colour.                                                                   |
+| *viewer*.**colorSchemeSelector**([value]) | boolean  | false                      | Generates an HTML Select element for the different D3 Scale-Chromatic functions                                                                                                            |
 
 <br>
 
- #### Cell sizing
+ ### Cell sizing
 
  The methods that can be used to determine the size of the grid cells.
 
-| Method                                    | Type     | Default                    | Description                                                                                                                                                                                                                                                           |
-| ----------------------------------------- | -------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| *viewer*.**sizeField**([value])           | String   | null                       | CSV field used to determine cell size  |
-| *viewer*.**sizeScaleName**([value])       | String   | "scaleSqrt                 | Name of d3.scale function name to use for scaling cell sizes  |
-| *viewer*.**sizeScaleFunction**([value])   | Function | d3.[viewer.sizeScaleName]  | Define a scale function to be used for scaling cell sizes. If unspecified it will build a d3 scale using viewer.colorScaleName, the d3.extent() of the values loaded from viewer.sizeField and a range of [viewer *viewer*.**resolution / 3, viewer.resolution / 1.5] |
-| *viewer*.**sizeFieldSelector**([value])   | boolean  | false                      | Generates a simple HTML select input showing the available fields in the csv file that can be used to drive cell size.                                                                                                                                                |
+| Method                                  | Type     | Default                   | Description                                                                                                                                                                                                                                                           |
+| --------------------------------------- | -------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| *viewer*.**sizeField**([value])         | String   | null                      | CSV field used to determine cell size                                                                                                                                                                                                                                 |
+| *viewer*.**sizeScaleName**([value])     | String   | "scaleSqrt                | Name of d3.scale function name to use for scaling cell sizes                                                                                                                                                                                                          |
+| *viewer*.**sizeScaleFunction**([value]) | Function | d3.[viewer.sizeScaleName] | Define a scale function to be used for scaling cell sizes. If unspecified it will build a d3 scale using viewer.colorScaleName, the d3.extent() of the values loaded from viewer.sizeField and a range of [viewer *viewer*.**resolution / 3, viewer.resolution / 1.5] |
+| *viewer*.**sizeFieldSelector**([value]) | boolean  | false                     | Generates a simple HTML select input showing the available fields in the csv file that can be used to drive cell size.                                                                                                                                                |
 
 
 <br>
 
-#### Legend
+### Legend
 
 The possible configurations for the legend of the grid data.
 
@@ -240,7 +240,7 @@ Default:
 
 <br>
 
-#### Tooltip
+### Tooltip
 
 The possible configurations for the viewer's tooltip.
 
