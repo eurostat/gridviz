@@ -31,11 +31,16 @@ A JavaScript library for visualizing large amounts of gridded data client-side, 
     - [Cell sizing](#cell-sizing)
     - [Legend](#legend)
     - [Tooltip](#tooltip)
+  -  [About](#about)
+  -  [Contribute](#support-and-contribution)
+  -  [Copyright](#copyright)
+  -  [Disclaimer](#disclaimer)
+
 
 
 ## Introduction
 
-Gridviz is a JavaScript library which allows you to visualize large gridded datasets (or any csv file with x/y data) in the browser. Unlike traditional raster-based GIS approaches, this tool utilizes WebGL through three.js in order to render eveything client-side. 
+Gridviz is a JavaScript library which allows you to visualize large gridded datasets (or any csv file with x/y data) in the browser. Unlike traditional raster-based GIS approaches, this tool utilizes WebGL through [three.js](https://github.com/mrdoob/three.js/) in order to render eveything client-side. 
 
 From a CSV file with x and y columns, gridviz will build a viewer capable of visualizing millions of grid cells on the fly. 
 
@@ -271,4 +276,27 @@ Default:
 
 <br>
 
+
+## About
+
+|   |    |
+| ------ | -------- |
+| *contributors* | [<img src="https://github.com/JoeWDavies.png" height="40" />](https://github.com/JoeWDavies) [<img src="https://github.com/jgaffuri.png" height="40" />](https://github.com/jgaffuri)  |
+| *version* | See [npm](https://www.npmjs.com/package/gridviz?activeTab=versions) |
+| *status* | Since 2020  |
+| *license* | [EUPL 1.2](https://github.com/eurostat/Nuts2json/blob/master/LICENSE)    |
+
+
+## Support and contribution
+
+Feel free to [ask support](https://github.com/eurostat/eurostat.js/issues/new), fork the project or simply star it (it's always a pleasure).
+
+
+## Copyright
+
+The [Eurostat NUTS dataset](http://ec.europa.eu/eurostat/web/nuts/overview) is copyrighted. There are [specific provisions](https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units) for the usage of this dataset which must be respected. The usage of these data is subject to their acceptance. See the [Eurostat-GISCO website](http://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts) for more information.
+
+
+## Disclaimer
+The designations employed and the presentation of material on these maps do not imply the expression of any opinion whatsoever on the part of the European Union concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. Kosovo*: This designation is without prejudice to positions on status, and is in line with UNSCR 1244/1999 and the ICJ Opinion on the Kosovo declaration of independence. Palestine*: This designation shall not be construed as recognition of a State of Palestine and is without prejudice to the individual positions of the Member States on this issue.
 
