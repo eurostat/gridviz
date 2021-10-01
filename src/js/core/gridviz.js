@@ -204,7 +204,7 @@ export function viewer(options) {
   viewer.gridData = function (v) {
     if (v && viewer.pointsLayer) {
       viewer.gridInfo_ = v;
-      viewer.resolution_ = v[0].cellSize
+      viewer.resolution_ = v.cellSize
       viewer.raycasterThreshold = defineRaycasterThreshold();
       viewer.pointSize = definePointSize();
 
@@ -214,11 +214,11 @@ export function viewer(options) {
 
       Camera.redefineCamera(viewer);
       //clear previous grid
-      loadGrid(v[0])
+      loadGrid(v)
     } else {
       if (v) {
         viewer.gridInfo_ = v;
-        viewer.pointSize = v[0].cellSize;
+        viewer.pointSize = v.cellSize;
       }
     }
     return viewer;

@@ -25,12 +25,12 @@
     let viewer = gridviz.viewer()
         .container(containerDiv)
         .title("Portugal 1km² census grid 2011")
-        .gridData([
+        .gridData(
             {
                 url: "../../assets/csv/Portugal/PT_1km_pop_2011.csv",
                 cellSize: 1
             }
-        ])
+        )
         .colorField("TOT_P")  // initial csv column to visualize
         .zoom(2000) //initial camera Z value
         .nuts(true) //loads nuts topojson boundaries

@@ -18,12 +18,12 @@
     .viewer()
     .container(containerDiv)
     .title("Tourism Grid of Croatia")
-    .gridData([
+    .gridData(
       {
         url: "../../assets/csv/Croatia/croatia_tourism_grid.csv",
         cellSize: 1000,
       },
-    ])
+    )
     .colorField("NIGHTS_TOT") // csv column which you wish to visualize
     .zoom(500000) //initial camera Z value
     .nuts(true) //loads borders topojson

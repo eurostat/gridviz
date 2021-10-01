@@ -18,12 +18,12 @@
   let viewer = gridviz
     .viewer()
     .container(containerDiv)
-    .gridData([
+    .gridData(
       {
         url: "../assets/csv/World/individual_events_organized_violence.csv",
         cellSize: 0.01,
       },
-    ])
+    )
     .zoom(200)
     .title("Individual events of organized violence 1989-2020 (UCDP)")
     .colorField("deaths") // csv column that will determine cell colour

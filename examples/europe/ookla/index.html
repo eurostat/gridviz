@@ -24,12 +24,12 @@
     }
     let viz = gridviz.viewer()
         .container(containerDiv)
-        .gridData([
+        .gridData(
             {
                 url: "../../../assets/csv/Europe/ookla/ookla_dl_europe.csv",
                 cellSize: 400
             }
-        ])
+        )
         .mobileCellSize(0.00011)
         .debugPlacenames(true)
         .title("Average broadband download speed")
@@ -47,7 +47,7 @@
         .homeButton(true)
         .zoomButtons(true)
         .thresholds([1, 10, 25, 50, 100, 1039])
-        .colorField("mbps")  // csv column which you wish to visualize
+        .colorField("Mb/s")  // csv column which you wish to visualize
         .legend({
             title: "Average download speed in MB/s (Q1 2020)",
             ticks: 6,
