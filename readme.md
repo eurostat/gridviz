@@ -78,8 +78,27 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
         .build()
 ```
 
+## Preparing your csv data
 
-## Documentation
+If you have exported your grid data as points to a csv file, then it is likely that you can reduce the file size significantly by removing redundant data. We have prepared a small node.js package exactly for this, which you will find in the [csv-prep folder](https://github.com/eurostat/gridviz/tree/master/csv-prep) of this repository.
+
+Here is an example of removing unnecessary information:
+
+Turning each row from this...
+
+``` 
+OBJECTID;ID;Cnt_ID;Ave_Total_Trav
+1;CRS3035RES1000mN1000000E1967000;3;49,121209420200000 
+```
+
+into this...
+
+``` 
+x,y,time
+1967,1000,49 
+```
+
+## Gridviz documentation
 
 Here you will find information on how to use the functions available for configuring a gridviz viewer. Like D3, gridviz uses a method chaining syntax (as shown in the barebones example above).
 

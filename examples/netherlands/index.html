@@ -29,11 +29,10 @@
       )
       .colorField("Inhabitants") // csv column which you wish to visualize
       .zerosRemoved(2)
-      .nuts(false) // does not support 28992 - use method to load custom geojson
-      //.nutsCountry("NL")
+      .nuts(false) // NUTS2JSON does not support EPSG:28992 - use addGeoJson() method to load custom geojson instead
       .center([1720, 4500]) //EPSG=28992 with 2 zeros removed
       .showPlacenames(true)
-      .EPSG(28992)
+      .EPSG(28992) // for placenames service
       .placenamesCountry("NL")
       .placenameThresholds({
         //"scale": population
@@ -52,13 +51,12 @@
       .thresholds([10, 20, 40, 80, 200, 300, 900])
       .colorSchemeSelector(false)
       .colorFieldSelector(true)
-      .colorFieldSelectorLabel("Colour field: ")
+      .colorFieldSelectorLabel("Colour by: ")
       .legend({
         type: "cells",
         orientation: "vertical",
         width: 130,
         height: 170,
-        //title: "Total Inhabitants per 100m² (2018)",
         titleWidth: 110,
         format: ",.0f",
       })
@@ -67,7 +65,7 @@
         showLAU: false,
         showEPSG: false,
         showNUTS: false,
-        showCoordinates: true,
+        showCoordinates: false,
       })
       .build();
   </script>

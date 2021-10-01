@@ -7,8 +7,9 @@ import { json } from "d3-fetch";
 
 let tooltipContainer,
     tooltipTemplate,
+    tooltipTableBody,
+    tooltipRows,
     pointTip,
-    colorFieldTip,
     crsTip,
     xTip,
     yTip,
@@ -50,14 +51,8 @@ export function createTooltipContainer(viewer) {
 
     <table>
      <thead></thead>
-     <tbody>
-     <tr id="colorfieldtip"></tr>
-     <tr id="xtip"></tr>
-     <tr id="ytip"></tr>
-     <tr id="crstip"></tr>
-     <tr id="launametip"></tr>
-     <tr id="laucodetip"></tr>
-     <tr id="nutscodetip"></tr>
+     <tbody id="tooltipBody">
+
      </tbody>
     </table>
    
@@ -65,19 +60,34 @@ export function createTooltipContainer(viewer) {
 <div id="gridviz-pointtip"></div>
 </div>`);
     viewer.container_.append(tooltipTemplate);
+    
+    //append row for each field
+    tooltipTableBody = document.querySelector("#tooltipBody");
+    tooltipRows = {}; // store row nodes for efficient updating
+    viewer._cellFields.forEach((field) => {
+        appendRowToTooltip(field);
+    });
+
+    // optional tooltip rows
+    appendRowToTooltip('x');
+    appendRowToTooltip('y');
+    appendRowToTooltip('launame');
+    appendRowToTooltip('laucode');
+    appendRowToTooltip('nutscode');
+    appendRowToTooltip('crs');
 
     tooltip = document.querySelector("#gridviz-tooltip");
     pointTip = document.querySelector("#gridviz-pointtip");
-    colorFieldTip = document.querySelector("#colorfieldtip");
-    xTip = document.querySelector("#xtip");
-    yTip = document.querySelector("#ytip");
-    crsTip = document.querySelector("#crstip");
-    LAUNameTip = document.querySelector("#launametip");
-    LAUCodeTip = document.querySelector("#laucodetip");
-    NUTSCodeTip = document.querySelector("#nutscodetip");
 
     tooltipContainer = new Object3D();
     viewer.scene.add(tooltipContainer);
+}
+
+function appendRowToTooltip(field) {
+    let row = document.createElement('tr');
+    row.id = field+'tip';
+    tooltipTableBody.appendChild(row)
+    tooltipRows[field] = row;
 }
 
 
@@ -90,11 +100,11 @@ export function updateTooltip(viewer) {
     let x, y;
     if (viewer._mobile) {
         //mobile coords are scaled to [-1,1], so we "unscale" them
-        x = Math.round(viewer.mobileCoordScaleX.invert(tooltip_state.coords[0]))
-        y = Math.round(viewer.mobileCoordScaleY.invert(tooltip_state.coords[1]))
+        x = Math.round(viewer.mobileCoordScaleX.invert(tooltip_state.x))
+        y = Math.round(viewer.mobileCoordScaleY.invert(tooltip_state.y))
     } else {
-        x = tooltip_state.coords[0];
-        y = tooltip_state.coords[1];
+        x = tooltip_state.x;
+        y = tooltip_state.y;
     }
     if (viewer.zerosRemoved_) {
         //add the zeros removed back on
@@ -110,19 +120,22 @@ export function updateTooltip(viewer) {
     pointTip.style.background = tooltip_state.color;
 
     // set tooltip attributes HTML
-    colorFieldTip.innerHTML = `<th><strong>${viewer.colorField_}:</strong> </th>
-    <th>${tooltip_state.colorValue}</th>`
+    viewer._cellFields.forEach((field)=>{
+        tooltipRows[field].innerHTML = `<th><strong>${field}:</strong> </th>
+        <th>${tooltip_state[field]}</th>`
+    })
+
 
     if (viewer.tooltip_.showCoordinates) {
-        xTip.innerHTML = `<th><strong>x:</strong></th>
+        tooltipRows.x.innerHTML = `<th><strong>x:</strong></th>
         <th>${x}</th>`
 
-        yTip.innerHTML = `<th><strong>y:</strong></th>
+        tooltipRows.y.innerHTML = `<th><strong>y:</strong></th>
         <th>${y}</th>`
     }
 
     if (viewer.tooltip_.showEPSG) {
-        crsTip.innerHTML = `<th><strong>CRS:</strong></th>
+        tooltipRows.crstip.innerHTML = `<th><strong>CRS:</strong></th>
         <th>EPSG:${viewer.EPSG_}</th>`
     }
 
@@ -244,18 +257,24 @@ function ensureTooltipOnScreen(viewer) {
 * @description Shows the tooltip where the cell was clicked
 * @param {Object} viewer
 * @param {*} mouse_position // {x,y}
-* @param {*} cell // cell object taken from the grid cache
+* @param {*} cell // cell object intersected from the grid cache
 */
 export function showTooltip(viewer, mouse_position, cell) {
     let left = mouse_position[0] + viewer.tooltip_.xOffset;
     let top = mouse_position[1] + viewer.tooltip_.yOffset;
 
-    tooltip_state.display = "block";
-    tooltip_state.left = left
-    tooltip_state.top = top;
-    tooltip_state.colorValue = Utils.formatNumber(parseFloat(cell[viewer.colorField_]));
-    tooltip_state.coords = [cell.x, cell.y];
-    tooltip_state.color = cell.color;
+    // prepare tooltip settings from cell attributes
+    for (const key in cell) {
+        tooltip_state[key] = cell[key]
+    }
+    // show and position tooltip
+     tooltip_state.display = "block";
+     tooltip_state.left = left
+     tooltip_state.top = top;
+
+    // tooltip_state.colorValue = Utils.formatNumber(parseFloat(cell[viewer.colorField_]));
+    // tooltip_state.coords = [cell.x, cell.y];
+    // tooltip_state.color = cell.color;
     updateTooltip(viewer);
 }
 
