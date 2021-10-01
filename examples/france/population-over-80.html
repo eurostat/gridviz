@@ -16,11 +16,11 @@
     let containerDiv = document.getElementById("viz-container");
     gridviz.viewer()
         .container(containerDiv)
-        .gridData([{
+        .gridData({
             url: "../../assets/csv/France/1km/2015_Ind_80p.csv",
             cellSize: 1000,
             tiled: false
-        }])
+        })
         .colorField("Ind_80p")  // csv column which you wish to visualize
         .center([3709000, 2624000])//EPSG=3035
         .zoom(1000000)

@@ -27,12 +27,12 @@
     let viewer = gridviz
         .viewer()
         .container(containerDiv)
-        .gridData([
+        .gridData(
             {
                 url: "../assets/csv/World/ookla_download_Q1_2020_fixed.csv", //https://github.com/teamookla/ookla-open-data
                 cellSize: 0.005,
             },
-        ])
+        )
         .zoom(200)
         //.EPSG("4326") //for nuts files and placenames
         .title("Average broadband download speed (MB/s)")

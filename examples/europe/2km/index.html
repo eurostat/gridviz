@@ -18,12 +18,12 @@
     .viewer()
     .container(containerDiv)
     .title("2x2 km Grid of Europe")
-    .gridData([
+    .gridData(
       {
         url: "../../../assets/csv/Europe/2km/pop_2km.csv",
         cellSize: 2,
       },
-    ])
+    )
     .zerosRemoved(3) //last 3 zeros were removed from dataset for efficiency
     .colorField("population") // csv column which you wish to visualize
     .sizeField(false) // csv column which you wish to visualize

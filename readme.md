@@ -67,13 +67,12 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
 ```javascript
     let viz = gridviz.viewer()
         .container(containerDiv)
-        .gridData([
+        .gridData(
             {
                 url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
                 cellSize: 5
             }
-        ])
-        .title("5km² Population Grid of Europe")
+        )
         .colorField("population")  // The csv column that will determine cell colour
         .build()
 ```
@@ -135,7 +134,7 @@ These methods allow you to define the data that is added to the viewer and how i
 
 | Method                                     | Type                               | Default                | Description                                                                                                                                                          |
 | ------------------------------------------ | ---------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| *viewer*.**gridData**([value])             | Object {url:string, cellSize: int} | null                   | Object containing the URL of the CSV file and its cellSize (this will determine the point size in three.js). A 1 km² grid in EPSG:3035 will have a cellSize of 1000. |
+| *viewer*.**gridData**([value])             | Object {url:string, cellSize: int} | null                   | Object containing the URL of the grid's CSV file and its cellSize (this will determine the point size in three.js). A 1 km² grid in EPSG:3035 will have a cellSize of 1000. |
 | *viewer*.**center**([value])               | Array                              | null                   | [x,y] coordinates with which the viewer will center the camera.                                                                                                      |
 | *viewer*.**zoom**([value])                 | Number                             | (cellSize * 50000) / 2 | The initial Z position of the camera.                                                                                                                                |
 | *viewer*.**addGeoJson**([value])           | String                             | null                   | Loads a geojson file from the specified URL and adds it's geometries to the viewer. Currently only accepts "polygon" or "multipolygon" geometries                    |

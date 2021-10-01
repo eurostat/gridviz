@@ -18,12 +18,12 @@
   gridviz
     .viewer()
     .container(containerDiv)
-    .gridData([
+    .gridData(
       {
         url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
         cellSize: 6.5,
       },
-    ])
+    )
     .zoom(2000)
     .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
     .title("5km² Population Grid of Europe")
