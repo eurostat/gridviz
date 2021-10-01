@@ -15,6 +15,23 @@ A JavaScript library for visualizing large amounts of gridded data using three.j
   <a href="https://eurostat.github.io/gridviz/examples/europe/1km/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/paris.png" alt="preview" width="200px" height="200px"/></a>
 </div>
 
+### Table of contents
+
+  - [Examples](#examples)
+  - [Description](#description)
+  - [Installation](#installation)
+    - [Node.js](#nodejs)
+    - [standalone](#standalone)
+  - [Preparing your csv data](#preparing-your-csv-data)
+  - [Usage](#usage)
+  - [API reference](#gridviz-documentation)
+    - [Styling](#styling)
+    - [Defining the data](#defining-the-data)
+    - [Cell colouring](#cell-colouring)
+    - [Cell sizing](#cell-sizing)
+    - [Legend](#legend)
+    - [Tooltip](#tooltip)
+
 ## Examples
 
 | Link to example                                                                                                                     | Data source                                                                                                                              | Link to code                                                                                         |
@@ -56,6 +73,26 @@ gridviz = require("gridviz")
 <script src="https://unpkg.com/gridviz/build/gridviz.min.js"></script>
 ```
 
+## Preparing your csv data
+
+If you have exported your grid data as points to a csv file, then it is likely that you can reduce the file size significantly by removing redundant data. We have prepared a small node.js package exactly for this, which you will find in the [csv-prep folder](https://github.com/eurostat/gridviz/tree/master/csv-prep) of this repository.
+
+Here is an example of removing unnecessary information:
+
+Turning each row from this...
+
+``` 
+OBJECTID;ID;Cnt_ID;Ave_Total_Trav
+1;CRS3035RES1000mN1000000E1967000;3;49,121209420200000 
+```
+
+into this...
+
+``` 
+x,y,time
+1967,1000,49 
+```
+
 ## Usage
 
 Create a viewer using  ```let viewer = gridviz.viewer();``` and customise it with the methods below.
@@ -77,27 +114,10 @@ Here's a barebones example that loads a CSV containing population data for a 5 k
         .build()
 ```
 
-## Preparing your csv data
+For an explanation of all the available functionality, see the developer docs below.
 
-If you have exported your grid data as points to a csv file, then it is likely that you can reduce the file size significantly by removing redundant data. We have prepared a small node.js package exactly for this, which you will find in the [csv-prep folder](https://github.com/eurostat/gridviz/tree/master/csv-prep) of this repository.
 
-Here is an example of removing unnecessary information:
-
-Turning each row from this...
-
-``` 
-OBJECTID;ID;Cnt_ID;Ave_Total_Trav
-1;CRS3035RES1000mN1000000E1967000;3;49,121209420200000 
-```
-
-into this...
-
-``` 
-x,y,time
-1967,1000,49 
-```
-
-## Gridviz documentation
+## API reference
 
 Here you will find information on how to use the functions available for configuring a gridviz viewer. Like D3, gridviz uses a method chaining syntax (as shown in the barebones example above).
 
@@ -106,6 +126,7 @@ First create a viewer with ``let viewer = gridviz.viewer() ``.
 Then configure it using the methods in the table below. The methods follow the pattern: ``viewer.method([value])``.
 
 Once you have configured the viewer, you can build it using `` viewer.build() ``.
+
 
 ### Styling
 
@@ -128,7 +149,7 @@ These are the methods available for styling the viewer.
 </br>
 
 
-### Defining the viewer's data
+### Defining the data
 
 These methods allow you to define the data that is added to the viewer and how it is presented.
 
@@ -151,25 +172,34 @@ These methods allow you to define the data that is added to the viewer and how i
 
 <br>
 
-### Colouring & sizing
+### Cell colouring
 
-The methods that can be used to determine the colour and size of the grid cells.
+The methods that can be used to determine the colour of the grid cells.
 
 | Method                                    | Type     | Default                    | Description                                                                                                                                                                                                                                                           |
 | ----------------------------------------- | -------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | *viewer*.**colorField**([value])          | String   | null                       | CSV field used to determine cell colour                                                                                                                                                                                                                               |
-| *viewer*.**sizeField**([value])           | String   | null                       | CSV field used to determine cell size                                                                                                                                                                                                                                 |
 | *viewer*.**colorScaleName**([value])      | String   | "scaleSequential"          | The name of d3.scale function name to use for scaling cell colours. If you would like to define your own scale you can use colorScaleFunction()                                                                                                                       |
-| *viewer*.**sizeScaleName**([value])       | String   | "scaleSqrt                 | Name of d3.scale function name to use for scaling cell sizes                                                                                                                                                                                                          |
+| *viewer*.**colorScaleMidpoint**([value])  | Number   | 0                          | The midpoint value when using a diverging scale (when viewer.colorScaleName is set to 'scaleDiverging')                                                                                                                                                               |
+| *viewer*.**colorScaleFunction**([value])  | Function | d3.[viewer.colorScaleName] | Define a scale function to be used for color scaling. If unspecified it will build a d3 scale using viewer.colorScaleName and the d3.extent() of the values loaded from viewer.colorField.                                                                            |
+| *viewer*.**reverseColorScheme**([value])  | Boolean  | false                      | Flips the current color scheme. Applies .reverse() method to the 'domain' array of the scale.                                                                                                                                                                         |
+| *viewer*.**colorSchemeName**([value])     | String   | "interpolateTurbo"         | Name of d3.scaleChromatic function to use for scaling cell colours                                                                                                                                                                                                    |
 | *viewer*.**colors**([value])              | Array    | null                       | Array of hex strings to be used in combination with viewer.thresholds for colouring.                                                                                                                                                                                  |
 | *viewer*.**thresholds**([value])          | Array    | null                       | Array of threshold values that are applied to the colour scaling function.                                                                                                                                                                                            |
-| *viewer*.**colorSchemeName**([value])     | String   | "interpolateTurbo"         | Name of d3.scaleChromatic function to use for scaling cell colours                                                                                                                                                                                                    |
-| *viewer*.**colorScaleMidpoint**([value])  | Number   | 0                          | The midpoint value when using a diverging scale (when viewer.colorScaleName is set to 'scaleDiverging')                                                                                                                                                               |
-| *viewer*.**reverseColorScheme**([value])  | Boolean  | false                      | Flips the current color scheme. Applies .reverse() method to the 'domain' array of the scale.                                                                                                                                                                         |
-| *viewer*.**colorScaleFunction**([value])  | Function | d3.[viewer.colorScaleName] | Define a scale function to be used for color scaling. If unspecified it will build a d3 scale using viewer.colorScaleName and the d3.extent() of the values loaded from viewer.colorField.                                                                            |
-| *viewer*.**sizeScaleFunction**([value])   | Function | d3.[viewer.sizeScaleName]  | Define a scale function to be used for scaling cell sizes. If unspecified it will build a d3 scale using viewer.colorScaleName, the d3.extent() of the values loaded from viewer.sizeField and a range of [viewer *viewer*.**resolution / 3, viewer.resolution / 1.5] |
 | *viewer*.**colorFieldSelector**([value])  | boolean  | false                      | Generates a simple HTML select input showing the available fields in the csv file that can be used to drive cell colour.                                                                                                                                              |
 | *viewer*.**colorSchemeSelector**([value]) | boolean  | false                      | Generates an HTML Select element for the different D3 Scale-Chromatic functions                                                                                                                                                                                       |
+
+<br>
+
+ ### Cell sizing
+
+ The methods that can be used to determine the size of the grid cells.
+
+| Method                                    | Type     | Default                    | Description                                                                                                                                                                                                                                                           |
+| ----------------------------------------- | -------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| *viewer*.**sizeField**([value])           | String   | null                       | CSV field used to determine cell size  |
+| *viewer*.**sizeScaleName**([value])       | String   | "scaleSqrt                 | Name of d3.scale function name to use for scaling cell sizes  |
+| *viewer*.**sizeScaleFunction**([value])   | Function | d3.[viewer.sizeScaleName]  | Define a scale function to be used for scaling cell sizes. If unspecified it will build a d3 scale using viewer.colorScaleName, the d3.extent() of the values loaded from viewer.sizeField and a range of [viewer *viewer*.**resolution / 3, viewer.resolution / 1.5] |
 | *viewer*.**sizeFieldSelector**([value])   | boolean  | false                      | Generates a simple HTML select input showing the available fields in the csv file that can be used to drive cell size.                                                                                                                                                |
 
 
