@@ -15,8 +15,9 @@ A JavaScript library for visualizing large amounts of gridded data client-side, 
   <a href="https://eurostat.github.io/gridviz/examples/europe/1km/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/paris.png" alt="preview" width="200px" height="200px"/></a>
 </div>
 
-# Table of contents
+<hr>
 
+## Table of contents
   - [Introduction](#introduction)
   - [Examples](#examples)
   - [Installation](#installation)
@@ -37,6 +38,7 @@ A JavaScript library for visualizing large amounts of gridded data client-side, 
   -  [Disclaimer](#disclaimer)
 
 
+<hr>
 
 ## Introduction
 
@@ -244,14 +246,14 @@ Default:
 | showLegend([value])                   | boolean | true                                    | Build d3 colour legend.                                                                                                                                                                                                                            |
 | *viewer*.**legend**([*legendConfig*]) | Object  | See legendConfig default values below.  |
 | **legendConfig**.type                 | String  | "continuous"                            | Type of legend to build. Accepted values are "cells" or "continuous". Cells uses [d3-svg-legend](https://d3-legend.susielu.com/) and continuous uses an implementation of Mike Bostock's [color legend](https://observablehq.com/@d3/color-legend) |
-| **legendConfig**.width                | int     | 140                                     | width of the legend in pixels                                                                                                                                                                                                                      |
-| **legendConfig**.height               | int     | 320 for "cells" and 50 for "continuous" | height of the legend in pixels                                                                                                                                                                                                                     |
-| **legendConfig**.orientation          | int     | For cells legends only                  | "vertical" or "horizontal"                                                                                                                                                                                                                         |
-| **legendConfig**.title                | String  | "Legend"                                | Title text of the legend.                                                                                                                                                                                                                          |
-| **legendConfig**.titleWidth           | int     | 50                                      | Width of the title text of the legend.                                                                                                                                                                                                             |
-| **legendConfig**.format               | string  | ".0s"                                   | d3.format string used to format the legend values                                                                                                                                                                                                  |
-| **legendConfig**.cells                | int     | 5                                       | Number of cells (for cell legends only)                                                                                                                                                                                                            |
-| **legendConfig**.shapeWidth           | int     | 30                                      | width in pixels of legend cell (for cell legends only)                                                                                                                                                                                             |
+| *legendConfig*.**width**                | int     | 140                                     | width of the legend in pixels                                                                                                                                                                                                                      |
+| *legendConfig*.**height**               | int     | 320 for "cells" and 50 for "continuous" | height of the legend in pixels                                                                                                                                                                                                                     |
+| *legendConfig*.**orientation**          | int     | For cells legends only                  | "vertical" or "horizontal"                                                                                                                                                                                                                         |
+| *legendConfig*.**title**                | String  | "Legend"                                | Title text of the legend.                                                                                                                                                                                                                          |
+| *legendConfig*.**titleWidth**           | int     | 50                                      | Width of the title text of the legend.                                                                                                                                                                                                             |
+| *legendConfig*.**format**               | string  | ".0s"                                   | d3.format string used to format the legend values                                                                                                                                                                                                  |
+| *legendConfig*.**cells**                | int     | 5                                       | Number of cells (for cell legends only)                                                                                                                                                                                                            |
+| *legendConfig*.**shapeWidth**           | int     | 30                                      | width in pixels of legend cell (for cell legends only)                                                                                                                                                                                             |
 
 <br>
 
@@ -276,13 +278,13 @@ Default:
 | Method / Object                         | Type    | Default                                 | Description                                                                                                                                                                                       |
 | --------------------------------------- | ------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | *viewer*.**tooltip**([*tooltipConfig*]) | Object  | See tooltipConfig default values below. |
-| **tooltipConfig**.eventType             | String  | "click"                                 | The mouse event that will trigger the tooltip ("click" or "mousemove" being the most common, depending on the dataset). You might want to set showLAU and showNUTS to false when using mousemove. |
-| **tooltipConfig**.showLAU               | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
-| **tooltipConfig**.showNUTS              | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
-| **tooltipConfig**.showCoordinates       | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
-| **tooltipConfig**.showEPSG              | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
-| **tooltipConfig**.xOffset               | int     | 15                                      | X offset in pixels from the mouse position                                                                                                                                                        |
-| **legendConfig**.yOffset                | int     | 15                                      | Y offset in pixels from the mouse position                                                                                                                                                        |
+| *tooltipConfig*.**eventType**             | String  | "click"                                 | The mouse event that will trigger the tooltip ("click" or "mousemove" being the most common, depending on the dataset). You might want to set showLAU and showNUTS to false when using mousemove. |
+| *tooltipConfig*.**showLAU**               | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
+| *tooltipConfig*.**showNUTS**              | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
+| *tooltipConfig*.**showCoordinates**       | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
+| *tooltipConfig*.**showEPSG**              | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
+| *tooltipConfig*.**xOffset**               | int     | 15                                      | X offset in pixels from the mouse position                                                                                                                                                        |
+| *legendConfig*.**yOffset**                | int     | 15                                      | Y offset in pixels from the mouse position                                                                                                                                                        |
 
 <br>
 
