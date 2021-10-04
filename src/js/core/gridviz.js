@@ -649,7 +649,7 @@ export function viewer(options) {
         viewWholeGrid();
       })
     }
-    if (viewer.zoomButtons_) {
+    if (viewer.zoomButtons_ && viewer.zoominButtonNode && viewer.zoomoutButtonNode) {
       viewer.zoominButtonNode.addEventListener("click", () => {
         viewer.zoomIn(2);
       })

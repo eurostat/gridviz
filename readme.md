@@ -154,6 +154,8 @@ These are the methods available for styling the viewer.
 | *viewer*.**lineColor**([value])       | String      | "#ffffff"          | Colour used for line geometries                                                                  |
 | *viewer*.**highlightColor**([value])  | String      | "#37f2d6"          | Colour used when highlighting a cell                                                             |
 | *viewer*.**loadingIcon**([value])     | String      | "ring"             | CSS animation used for the loading icon, other options are: ripple \| ring \| ellipsis \|roller. |
+| *viewer*.**homeButton**([value])     | Boolean      | false             | Whether or not to show a 'home' button which, when clicked will show the entire grid. |
+| *viewer*.**zoomButtons**([value])     | Boolean      | false             | Whether or not to show 'zoom' buttons which, when clicked will zoom in or out. |
 | *viewer*.**title**([value])           | String      | null               | The viewer's title                                                                               |
 | *viewer*.**subtitle**([value])        | String      | null               | The viewer's subtitle                                                                            |
 | *viewer*.**cellCount**([value])       | Boolean     | false              | Shows a count below the title of the total number of cells displayed in the viewer.              |
