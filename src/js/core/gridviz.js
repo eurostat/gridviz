@@ -54,6 +54,10 @@ export function viewer(options) {
   //output object
   let viewer = {};
 
+  //threejs scene (2D = orthographic, 3D = Orbital)
+  viewer.mode_ = '2D';
+  viewer.cellShape_ = 'square';
+
   //debugging
   viewer.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
 
@@ -323,6 +327,7 @@ export function viewer(options) {
         if (!viewer.renderer) createWebGLRenderer();
 
         Camera.createCamera(viewer);
+
         createRaycaster();
 
         // dropdowns DOM container
@@ -407,13 +412,13 @@ export function viewer(options) {
       Gui.addSourcesToDOM(viewer);
     }
     if (!viewer._mobile) {
-    if (viewer.homeButton_) {
-      Buttons.addHomeButtonToDOM(viewer);
+      if (viewer.homeButton_) {
+        Buttons.addHomeButtonToDOM(viewer);
+      }
+      if (viewer.zoomButtons_) {
+        Buttons.addZoomButtonsToDOM(viewer);
+      }
     }
-    if (viewer.zoomButtons_) {
-      Buttons.addZoomButtonsToDOM(viewer);
-    }
-  }
   }
 
 
@@ -643,7 +648,7 @@ export function viewer(options) {
   * @function addButtonEvents
   */
   function addButtonEvents() {
-    if (viewer.homeButton_ &&  viewer.homeButtonNode) {
+    if (viewer.homeButton_ && viewer.homeButtonNode) {
       viewer.homeButtonNode.addEventListener("click", () => {
         //TODO: this theoretically should show the initial (home) zoom position, not necesarily the full extent.
         viewWholeGrid();
@@ -750,7 +755,7 @@ export function viewer(options) {
             //validate csv
             if (csv[0].x && csv[0].y && csv[0][viewer.colorField_]) {
               viewer.cellCount = csv.length;
-              viewer._cellFields = Object.keys(csv[0]).filter(key => key!=='x' && key!=='y' ); // cell properties
+              viewer._cellFields = Object.keys(csv[0]).filter(key => key !== 'x' && key !== 'y'); // cell properties
 
               //as a temporary hacky fix for d3's pan and zoom not working correctly on mobile devices, we scale the coordinates to a webgl-friendly range
               if (viewer._mobile && !viewer.mobileCellSize_) {
@@ -871,8 +876,14 @@ export function viewer(options) {
               }
             }
 
-            // define pan & zoom
-            Zoom.addPanAndZoom(viewer);
+
+            // define pan & zoom for 2D viewers
+            if (viewer.mode_ == '2D') {
+              Zoom.addPanAndZoom(viewer);
+            } else if (viewer.mode_ == '3D') {
+              Camera.createOrbitControls(viewer)
+            }
+
 
             //add cells to viewer
             addPointsToScene();
@@ -1042,14 +1053,18 @@ export function viewer(options) {
   *
   */
   function updateSizeScaleFunction() {
-    //create if didnt exist upon initialization
-    if (!viewer.sizeValuesExtent) {
-      viewer.sizeValuesExtent = extent(gridCaches[viewer.resolution_], d => parseFloat(d[viewer.sizeField_]));
-      viewer.sizeScaleFunction_ = defineSizeScale();
+    if (!viewer.sizeScaleFunction_) {
+      //create if didnt exist upon initialization
+      if (!viewer.sizeValuesExtent) {
+        viewer.sizeValuesExtent = extent(gridCaches[viewer.resolution_], d => parseFloat(d[viewer.sizeField_]));
+        viewer.sizeScaleFunction_ = defineSizeScale();
+      } else {
+        //update
+        let domain = viewer.sizeValuesExtent;
+        viewer.sizeScaleFunction_ = d3scale[viewer.sizeScaleName_]().domain(domain).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]);
+      }
     } else {
-      //update
-      let domain = viewer.sizeValuesExtent;
-      viewer.sizeScaleFunction_ = d3scale[viewer.sizeScaleName_]().domain(domain).range([viewer.resolution_ / 3, viewer.resolution_ / 1.5]);
+      return viewer.sizeScaleFunction_;
     }
   }
 

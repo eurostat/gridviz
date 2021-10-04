@@ -2,25 +2,27 @@
 
 import * as CONSTANTS from "../constants.js";
 import {  PerspectiveCamera, Vector3 } from 'three'
+import { OrbitControls } from '../../lib/threejs/orbitControls';
+import { viewer } from "../gridviz.js";
 
 let camera; // threejs camera object
-
+let cameraConfig; // config object containing: near, far, fov, aspect, zoom
+let controls; //orbit controls
 /**
   * @description Initializes THREE camera object
   * @function createCamera
   * @param viewer 
   */
  export function createCamera(viewer) {
-    viewer.cameraConfig = defineCameraConfig(viewer);
-    viewer.camera = new PerspectiveCamera(
-        viewer.cameraConfig.fov_,
-        viewer.cameraConfig.aspect_,
-        viewer.cameraConfig.near_,
-        viewer.cameraConfig.far_
+    cameraConfig = defineCameraConfig(viewer);
+    camera = new PerspectiveCamera(
+        cameraConfig.fov_,
+        cameraConfig.aspect_,
+        cameraConfig.near_,
+        cameraConfig.far_
     );
 
-    //maintain reference for use in other functions
-    camera = viewer.camera;
+    viewer.camera = camera;
 
     //orthographic
     //https://discourse.threejs.org/t/why-does-pointsmaterial-size-does-not-correspond-with-geographic-grid-cell-size/13408
@@ -46,6 +48,27 @@ let camera; // threejs camera object
     // let z = 1000;
 }
 
+export function createOrbitControls(viewer) {
+
+    // controls
+    controls = new OrbitControls( viewer.camera, viewer.renderer.domElement );
+    controls.target = new Vector3( viewer.center_[0], viewer.center_[1], 0 );
+    //controls.minPolarAngle = 0;
+    //controls.maxPolarAngle = 0;
+    controls.minAzimuthAngle = -0.5;
+    controls.maxAzimuthAngle = 0.5; 
+
+    // controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+    // controls.dampingFactor = 0.05;
+    // controls.screenSpacePanning = false;
+    // controls.minDistance = 100;
+    // controls.maxDistance = 500;
+    // controls.maxPolarAngle = Math.PI / 2;
+
+    camera.position.set( viewer.center_[0], viewer.center_[1], cameraConfig.zoom_);
+    controls.update();
+}
+
 /**
  * @function setCamera
  * @description Sets position and direction of camera
@@ -57,6 +80,10 @@ let camera; // threejs camera object
  export function setCamera(x, y, z) {
     camera.position.set(x, y, z); // Set camera position
     camera.lookAt(new Vector3(x, y, z)); // Set camera angle to point straight down
+
+    if (controls) {
+        controls.update();
+    }
 }
 
 /**
@@ -65,7 +92,7 @@ let camera; // threejs camera object
   * @param viewer 
 */
 export function redefineCamera(viewer) {
-    let cameraConfig = defineCameraConfig(viewer)
+    cameraConfig = defineCameraConfig(viewer)
 
     camera.fov = cameraConfig.fov_;
     camera.aspect = cameraConfig.aspect_;
@@ -105,9 +132,9 @@ function defineCameraConfig(viewer) {
 */
 function defineFar(viewer) {
     if (viewer._mobile) {
-        return 5; //due to a bug with pan & zoom, we have to scale everything on mobile
+        return 5; //due to a bug with pan & zoom, we have to scale everything on mobile to webgl coords
     } else {
-        return viewer.resolution_ * 50000;
+        return viewer.resolution_ * 40000;
         //return Math.pow(8, viewer.resolution_);
     }
 }

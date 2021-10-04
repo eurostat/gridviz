@@ -5,7 +5,13 @@ import {
     Float32BufferAttribute,
     BufferGeometry,
     ShaderMaterial,
-    PointsMaterial
+    PointsMaterial,
+    BoxBufferGeometry,
+    MeshBasicMaterial,
+    Object3D,
+    Geometry,
+    Mesh,
+    Vector3
 } from "three";
 import * as CONSTANTS from "../constants.js";
 
@@ -63,98 +69,169 @@ function vertexShader() {
 * @parameter points [{}]
 */
 export function addPointsToScene(viewer, pointsArray) {
-    //threejs recommends using BufferGeometry instead of Geometry for performance
-    /*   indices = [0, 1, 2, 0, 2, 3];
-  bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));  */
-    if (!viewer.pointsGeometry) {
-        viewer.pointsGeometry = new BufferGeometry();
-    }
 
-    let colors = [];
-    let positions = [];
-    let sizes = [];
 
-    for (var i = 0; i < pointsArray.length; i++) {
-        // Set vector coordinates from data
-        let coords = [
-            pointsArray[i].x,
-            pointsArray[i].y
-        ];
-        let x = parseFloat(coords[0]);
-        let y = parseFloat(coords[1]);
-        let z = CONSTANTS.point_z;
-        let indicator = pointsArray[i][viewer.colorField_];
-        let hex = viewer.colorScaleFunction_(parseFloat(indicator)); //d3 scale-chromatic
-        if (hex == "rgb(NaN, NaN, NaN)") {
-            hex = "#000"; //fallback to black
+    if (viewer.cellShape_ == 'square') {
+        //threejs recommends using BufferGeometry instead of Geometry for performance
+        /*   indices = [0, 1, 2, 0, 2, 3];
+      bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));  */
+        if (!viewer.pointsGeometry) {
+            viewer.pointsGeometry = new BufferGeometry();
         }
-        pointsArray[i].color = hex; //for tooltip
-        let color = new Color(hex);
 
-        if (!isNaN(x) && !isNaN(y)) {
-            positions.push(x, y, z);
-            if (!isNaN(color.r) && !isNaN(color.g) && !isNaN(color.b)) {
-                colors.push(color.r, color.g, color.b);
-            } else {
-                let blk = new Color("#000");
-                colors.push(blk.r, blk.g, blk.b)
-            }
-            if (viewer.sizeField_) {
-                sizes.push(viewer.sizeScaleFunction_(pointsArray[i][viewer.sizeField_]));
-            } else {
-                sizes.push(viewer.pointSize);
-            }
-        }
-    } //fin loop
+        let colors = [];
+        let positions = [];
+        let sizes = [];
 
-    //set buffer geometry attributes
-    viewer.pointsGeometry.setAttribute(
-        "position",
-        new Float32BufferAttribute(positions, 3)
-    );
-    viewer.pointsGeometry.setAttribute(
-        "color",
-        new Float32BufferAttribute(colors, 3)
-    );
-    //Variable point size will affect raycasting: https://github.com/mrdoob/three.js/issues/5105
-    viewer.pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
-    viewer.pointsGeometry.computeBoundingSphere();
-    //create or reuse viewer.pointsLayer Material
-    if (!viewer.pointsMaterial) {
-        // Apply custom point sizes, instead of using three.js pointsMaterial
-        viewer.pointsMaterial = new ShaderMaterial({
-            uniforms: {
-                multiplier: {
-                    value: 1050 + (50 * window.devicePixelRatio) //km TODO: define dynamically. This value needsto be adjusted according to screen in order prevent white lines across the screen flickering when zooming
+        for (var i = 0; i < pointsArray.length; i++) {
+            // Set vector coordinates from data
+            let coords = [
+                pointsArray[i].x,
+                pointsArray[i].y
+            ];
+            let x = parseFloat(coords[0]);
+            let y = parseFloat(coords[1]);
+            let z = CONSTANTS.point_z;
+            let indicator = pointsArray[i][viewer.colorField_];
+            let hex = getCellColor(viewer, indicator);
+            pointsArray[i].color = hex; //save for tooltip
+            let color = new Color(hex);
+
+            if (!isNaN(x) && !isNaN(y)) {
+                positions.push(x, y, z);
+                if (!isNaN(color.r) && !isNaN(color.g) && !isNaN(color.b)) {
+                    colors.push(color.r, color.g, color.b);
+                } else {
+                    let blk = new Color("#000");
+                    colors.push(blk.r, blk.g, blk.b)
                 }
-            },
-            fragmentShader: fragmentShader(),
-            vertexShader: vertexShader(),
-            vertexColors: true
-        });
+                if (viewer.sizeField_) {
+                    sizes.push(viewer.sizeScaleFunction_(pointsArray[i][viewer.sizeField_]));
+                } else {
+                    sizes.push(viewer.pointSize);
+                }
+            }
+        } //fin loop
 
-        //use threejs PointsMaterial instead:
-        // pointsMaterial = new PointsMaterial({
-        //   size: gridConfig.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
-        //   sizeAttenuation: true,
-        //   //https://github.com/mrdoob/three.js/blob/master/src/constants.js
-        //   vertexColors: THREE.VertexColors
-        // });
+        //set buffer geometry attributes
+        viewer.pointsGeometry.setAttribute(
+            "position",
+            new Float32BufferAttribute(positions, 3)
+        );
+        viewer.pointsGeometry.setAttribute(
+            "color",
+            new Float32BufferAttribute(colors, 3)
+        );
+        //Variable point size will affect raycasting: https://github.com/mrdoob/three.js/issues/5105
+        viewer.pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
+        viewer.pointsGeometry.computeBoundingSphere();
+        //create or reuse viewer.pointsLayer Material
+        if (!viewer.pointsMaterial) {
+            // Apply custom point sizes, instead of using three.js pointsMaterial
+            viewer.pointsMaterial = new ShaderMaterial({
+                uniforms: {
+                    multiplier: {
+                        value: 1050 + (50 * window.devicePixelRatio) //km TODO: define dynamically. This value needsto be adjusted according to screen in order prevent white lines across the screen flickering when zooming
+                    }
+                },
+                fragmentShader: fragmentShader(),
+                vertexShader: vertexShader(),
+                vertexColors: true
+            });
 
-    } else {
-        viewer.pointsMaterial.size = viewer.pointSize;
+            //use threejs PointsMaterial instead:
+            // pointsMaterial = new PointsMaterial({
+            //   size: gridConfig.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
+            //   sizeAttenuation: true,
+            //   //https://github.com/mrdoob/three.js/blob/master/src/constants.js
+            //   vertexColors: THREE.VertexColors
+            // });
+
+        } else {
+            viewer.pointsMaterial.size = viewer.pointSize;
+        }
+
+        //create or overwrite viewer.pointsLayer object
+        if (!viewer.pointsLayer) {
+            viewer.pointsLayer = new Points(viewer.pointsGeometry, viewer.pointsMaterial);
+            viewer.pointsLayer.renderOrder = 1; //bottom
+            viewer.scene.add(viewer.pointsLayer);
+        } else {
+            //overwrite current la
+            viewer.pointsLayer.geometry = viewer.pointsGeometry;
+            viewer.pointsLayer.material = viewer.pointsMaterial;
+        }
+
+    } else if (viewer.cellShape_ == "bar") {
+
+        // define bars object, geometry and material
+        const bars = new Object3D();
+
+
+        // create bar for each cell
+        for (var i = 0; i < pointsArray.length; i++) {
+            let height;
+
+            if (viewer.sizeField_) {
+                height = viewer.sizeScaleFunction_(pointsArray[i][viewer.sizeField_]);
+            } else {
+                height = viewer.pointSize;
+            }
+
+            let hex = getCellColor(viewer, pointsArray[i][viewer.colorField_]);
+            pointsArray[i].color = hex; //save for tooltip
+            let color = new Color(hex);
+ 
+            let x = parseFloat(pointsArray[i].x);
+            let y = parseFloat(pointsArray[i].y);
+            
+            const bar = getBar(x, y, viewer.pointSize, viewer.pointSize,height,color);
+            bar.lookAt(new Vector3(x,y,0.0001));
+            bars.add(bar);
+        }
+
+        // let x = 4369, y = 3230, z = 0.0001;
+        // const bar = getBar(x, y, radius);
+        // bar.lookAt(new Vector3(x,y,z));
+        // bars.add(bar);
+
+        // add bars to the viewer
+        viewer.pointsLayer = bars;
+        viewer.scene.add(bars);
+
     }
-    //create or overwrite viewer.pointsLayer object
-    if (!viewer.pointsLayer) {
-        viewer.pointsLayer = new Points(viewer.pointsGeometry, viewer.pointsMaterial);
-        viewer.pointsLayer.renderOrder = 1; //bottom
-        viewer.scene.add(viewer.pointsLayer);
-    } else {
-        viewer.pointsLayer.geometry = viewer.pointsGeometry;
-        viewer.pointsLayer.material = viewer.pointsMaterial;
-    }
+
 }
 
+function getCellColor(viewer, value) {
+    let hex = viewer.colorScaleFunction_(parseFloat(value)); //d3 scale-chromatic
+    if (hex == "rgb(NaN, NaN, NaN)") {
+        hex = "#000"; //fallback to black
+    }
+return hex;
+
+}
+
+function getBar(x, y,width,length, height, color) {
+
+
+    const geometry = new BoxBufferGeometry(width,length, height);
+    const material = new MeshBasicMaterial({ color: color });
+    const bar = new Mesh(geometry, material);
+
+    // const phi = (90 - lat) * Math.PI / 180;
+    // const theta = (180 - lng) * Math.PI / 180;
+
+    // bar.position.x = radius * Math.sin(phi) * Math.cos(theta);
+    // bar.position.y = radius * Math.cos(phi);
+    // bar.position.z = radius * Math.sin(phi) * Math.sin(theta);
+
+    bar.position.x = x;
+    bar.position.y = y;
+    bar.position.z = 0.001 + (height/2);
+
+    return bar;
+}
 
 /**
  * @description rebuilds array which stores point sizes
@@ -199,3 +276,5 @@ export function updatePointsColors(viewer, pointsArray) {
     viewer.pointsGeometry.computeBoundingSphere();
     viewer.pointsLayer.geometry = viewer.pointsGeometry;
 }
+
+
