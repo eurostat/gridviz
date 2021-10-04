@@ -83,7 +83,7 @@ gridviz = require("gridviz")
 
 ## Usage
 
-Create a viewer using  ```let viewer = gridviz.viewer();``` and customise it with the methods below.
+Create a viewer using  ```let viewer = gridviz.viewer();``` and customise it with the methods described in the [API reference](#api-reference) below.
 
 Most of these methods follow the pattern viewer.myMethod([value]): If a value is specified, the method sets the parameter value and returns the viewer object itself. If no value is specified, then the method returns the current value of the parameter.
 
