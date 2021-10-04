@@ -27,7 +27,8 @@
 
   gridviz
     .viewer()    
-    .title("5x5km Population Grid of Europe")
+    .title("3D test example")
+    .subtitle("Left click and drag to orbit in 3D, right click to pan")
     .container(containerDiv)
     .gridData(
       {
@@ -46,7 +47,7 @@
     .colorScaleName('scaleSequentialLog')
     .backgroundColor('#000')
     .legend({
-      title: "Total population per 5 km² (2011)",
+      title: "Total tourist nights per km² (2017)",
       ticks: 4,
     })
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
