@@ -161,9 +161,10 @@ These are the methods available for styling the viewer.
 | *viewer*.**title**([value])           | String      | null               | The viewer's title                                                                               |
 | *viewer*.**subtitle**([value])        | String      | null               | The viewer's subtitle                                                                            |
 | *viewer*.**cellCount**([value])       | Boolean     | false              | Shows a count below the title of the total number of cells displayed in the viewer.              |
-| *viewer*.**sourceHTML**([value])      | HTML        | null               | Defines the innerHTML of the link to the data source shown in the bottom-right corner            |
+| *viewer*.**sourceHTML**([value])      | HTML        | null               | Defines the innerHTML of the link to the data source shown in the bottom-right corner            | 
 
-</br>
+
+<br>
 
 
 ### Defining the data
