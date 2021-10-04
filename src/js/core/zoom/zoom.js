@@ -12,10 +12,6 @@ import { Vector3 } from "three"
  */
 export function addPanAndZoom(viewer) {
 
-  if (viewer.mode == "3D") {
-
-  } else {
-
     // define d3 zoom
     //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
     let farScale = Utils.getScaleFromZ(viewer.height_, viewer.cameraConfig.fov_, viewer.cameraConfig.far_);
@@ -56,7 +52,6 @@ export function addPanAndZoom(viewer) {
       Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
     }
 
-  }
 
 }
 

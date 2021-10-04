@@ -15,6 +15,7 @@ let controls; //orbit controls
   */
  export function createCamera(viewer) {
     cameraConfig = defineCameraConfig(viewer);
+    viewer.cameraConfig = cameraConfig;
     camera = new PerspectiveCamera(
         cameraConfig.fov_,
         cameraConfig.aspect_,
@@ -100,6 +101,7 @@ export function redefineCamera(viewer) {
     camera.far = cameraConfig.far_;
 
     // TODO: redefine panAndZoom
+    viewer.cameraConfig = cameraConfig;
 }
 
 /**
@@ -134,7 +136,7 @@ function defineFar(viewer) {
     if (viewer._mobile) {
         return 5; //due to a bug with pan & zoom, we have to scale everything on mobile to webgl coords
     } else {
-        return viewer.resolution_ * 40000;
+        return viewer.resolution_ * 50000;
         //return Math.pow(8, viewer.resolution_);
     }
 }
