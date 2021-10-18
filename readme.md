@@ -15,8 +15,9 @@ A JavaScript library for visualizing large amounts of gridded data client-side, 
   <a href="https://eurostat.github.io/gridviz/examples/europe/1km/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/paris.png" alt="preview" width="200px" height="200px"/></a>
 </div>
 
-# Table of contents
+<hr>
 
+## Table of contents
   - [Introduction](#introduction)
   - [Examples](#examples)
   - [Installation](#installation)
@@ -37,12 +38,13 @@ A JavaScript library for visualizing large amounts of gridded data client-side, 
   -  [Disclaimer](#disclaimer)
 
 
+<hr>
 
 ## Introduction
 
 Gridviz is a JavaScript library which allows you to visualize large gridded datasets (or any csv file with x/y data) in the browser. Unlike traditional raster-based GIS approaches, this tool utilizes WebGL through [three.js](https://github.com/mrdoob/three.js/) in order to render eveything client-side. 
 
-From a CSV file with x and y columns, gridviz will build a viewer capable of visualizing millions of grid cells on the fly. 
+From a CSV file with x and y columns, gridviz will build a viewer capable of visualizing millions of grid cells on the fly. You can also add GeoJSON files to the viewer using the addGeoJson() method.
 
 For data-driven colouring and sizing, you can use [d3-scale](https://github.com/d3/d3-scale) and [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic), or simply set your own colours and thresholds.
 
@@ -81,11 +83,11 @@ gridviz = require("gridviz")
 
 ## Usage
 
-Create a viewer using  ```let viewer = gridviz.viewer();``` and customise it with the methods below.
+Create a viewer using  ```let viewer = gridviz.viewer();``` and customise it with the methods described in the [API reference](#api-reference) below.
 
 Most of these methods follow the pattern viewer.myMethod([value]): If a value is specified, the method sets the parameter value and returns the viewer object itself. If no value is specified, then the method returns the current value of the parameter.
 
-Here's a barebones example that loads a CSV containing population data for a 5 km² grid of europe:
+Here's a barebones example that loads a CSV containing population data for a 5x5 km grid of europe:
 
 ```javascript
     let viz = gridviz.viewer()
@@ -159,9 +161,10 @@ These are the methods available for styling the viewer.
 | *viewer*.**title**([value])           | String      | null               | The viewer's title                                                                               |
 | *viewer*.**subtitle**([value])        | String      | null               | The viewer's subtitle                                                                            |
 | *viewer*.**cellCount**([value])       | Boolean     | false              | Shows a count below the title of the total number of cells displayed in the viewer.              |
-| *viewer*.**sourceHTML**([value])      | HTML        | null               | Defines the innerHTML of the link to the data source shown in the bottom-right corner            |
+| *viewer*.**sourceHTML**([value])      | HTML        | null               | Defines the innerHTML of the link to the data source shown in the bottom-right corner            | 
 
-</br>
+
+<br>
 
 
 ### Defining the data
@@ -171,11 +174,11 @@ These methods allow you to define the data that is added to the viewer and how i
 | Method                                     | Type                               | Default                | Description                                                                                                                                                                 |
 | ------------------------------------------ | ---------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | *viewer*.**gridData**([value])             | Object {url:string, cellSize: int} | null                   | Object containing the URL of the grid's CSV file and its cellSize (this will determine the point size in three.js). A 1 km² grid in EPSG:3035 will have a cellSize of 1000. |
+| *viewer*.**EPSG**([value])                 | int                                | 3035                   | EPSG code of the projection to use for the geometries, placename labels and NUTS boundaries. (NUTS and Placenames only available in 3035, 3857, 4258 or 4326)               |
 | *viewer*.**center**([value])               | Array                              | null                   | [x,y] coordinates with which the viewer will center the camera.                                                                                                             |
-| *viewer*.**zoom**([value])                 | Number                             | (cellSize * 50000) / 2 | The initial Z position of the camera.                                                                                                                                       |
+| *viewer*.**zoom**([value])                 | Number                             | (gridData.cellSize * 50000) / 2 | The initial Z position of the camera.                                                                                                                                       |
 | *viewer*.**addGeoJson**([value])           | String                             | null                   | Loads a geojson file from the specified URL and adds it's geometries to the viewer. Currently only accepts "polygon" or "multipolygon" geometries                           |
 | *viewer*.**nuts**([value])                 | Boolean                            | false                  | Show NUTS boundaries using [nuts2json](https://github.com/eurostat/nuts2json)                                                                                               |
-| *viewer*.**EPSG**([value])                 | int                                | 3035                   | EPSG code of the projection to use for the geometries, placename labels and NUTS boundaries. (NUTS and Placenames only available in 3035, 3857, 4258 or 4326)               |
 | *viewer*.**nutsLevel**([value])            | int                                | 0                      | Nuts2json NUTS level                                                                                                                                                        |
 | *viewer*.**nutsSimplification**([value])   | String                             | "20M"                  | The level of generalisation applied to the Nuts2json  geometries                                                                                                            |
 | *viewer*.**nutsCountry**([value])          | String                             | null                   | Filters nuts2json geometries by country code. Used in order to only load boundaries for a single country.                                                                   |  |
@@ -244,14 +247,14 @@ Default:
 | showLegend([value])                   | boolean | true                                    | Build d3 colour legend.                                                                                                                                                                                                                            |
 | *viewer*.**legend**([*legendConfig*]) | Object  | See legendConfig default values below.  |
 | **legendConfig**.type                 | String  | "continuous"                            | Type of legend to build. Accepted values are "cells" or "continuous". Cells uses [d3-svg-legend](https://d3-legend.susielu.com/) and continuous uses an implementation of Mike Bostock's [color legend](https://observablehq.com/@d3/color-legend) |
-| **legendConfig**.width                | int     | 140                                     | width of the legend in pixels                                                                                                                                                                                                                      |
-| **legendConfig**.height               | int     | 320 for "cells" and 50 for "continuous" | height of the legend in pixels                                                                                                                                                                                                                     |
-| **legendConfig**.orientation          | int     | For cells legends only                  | "vertical" or "horizontal"                                                                                                                                                                                                                         |
-| **legendConfig**.title                | String  | "Legend"                                | Title text of the legend.                                                                                                                                                                                                                          |
-| **legendConfig**.titleWidth           | int     | 50                                      | Width of the title text of the legend.                                                                                                                                                                                                             |
-| **legendConfig**.format               | string  | ".0s"                                   | d3.format string used to format the legend values                                                                                                                                                                                                  |
-| **legendConfig**.cells                | int     | 5                                       | Number of cells (for cell legends only)                                                                                                                                                                                                            |
-| **legendConfig**.shapeWidth           | int     | 30                                      | width in pixels of legend cell (for cell legends only)                                                                                                                                                                                             |
+| *legendConfig*.**width**                | int     | 140                                     | width of the legend in pixels                                                                                                                                                                                                                      |
+| *legendConfig*.**height**               | int     | 320 for "cells" and 50 for "continuous" | height of the legend in pixels                                                                                                                                                                                                                     |
+| *legendConfig*.**orientation**          | int     | For cells legends only                  | "vertical" or "horizontal"                                                                                                                                                                                                                         |
+| *legendConfig*.**title**                | String  | "Legend"                                | Title text of the legend.                                                                                                                                                                                                                          |
+| *legendConfig*.**titleWidth**           | int     | 50                                      | Width of the title text of the legend.                                                                                                                                                                                                             |
+| *legendConfig*.**format**               | string  | ".0s"                                   | d3.format string used to format the legend values                                                                                                                                                                                                  |
+| *legendConfig*.**cells**                | int     | 5                                       | Number of cells (for cell legends only)                                                                                                                                                                                                            |
+| *legendConfig*.**shapeWidth**           | int     | 30                                      | width in pixels of legend cell (for cell legends only)                                                                                                                                                                                             |
 
 <br>
 
@@ -276,13 +279,13 @@ Default:
 | Method / Object                         | Type    | Default                                 | Description                                                                                                                                                                                       |
 | --------------------------------------- | ------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | *viewer*.**tooltip**([*tooltipConfig*]) | Object  | See tooltipConfig default values below. |
-| **tooltipConfig**.eventType             | String  | "click"                                 | The mouse event that will trigger the tooltip ("click" or "mousemove" being the most common, depending on the dataset). You might want to set showLAU and showNUTS to false when using mousemove. |
-| **tooltipConfig**.showLAU               | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
-| **tooltipConfig**.showNUTS              | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
-| **tooltipConfig**.showCoordinates       | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
-| **tooltipConfig**.showEPSG              | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
-| **tooltipConfig**.xOffset               | int     | 15                                      | X offset in pixels from the mouse position                                                                                                                                                        |
-| **legendConfig**.yOffset                | int     | 15                                      | Y offset in pixels from the mouse position                                                                                                                                                        |
+| *tooltipConfig*.**eventType**             | String  | "click"                                 | The mouse event that will trigger the tooltip ("click" or "mousemove" being the most common, depending on the dataset). You might want to set showLAU and showNUTS to false when using mousemove. |
+| *tooltipConfig*.**showLAU**               | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
+| *tooltipConfig*.**showNUTS**              | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
+| *tooltipConfig*.**showCoordinates**       | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
+| *tooltipConfig*.**showEPSG**              | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
+| *tooltipConfig*.**xOffset**               | int     | 15                                      | X offset in pixels from the mouse position                                                                                                                                                        |
+| *legendConfig*.**yOffset**                | int     | 15                                      | Y offset in pixels from the mouse position                                                                                                                                                        |
 
 <br>
 
