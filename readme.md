@@ -44,7 +44,7 @@ A JavaScript library for visualizing large amounts of gridded data client-side, 
 
 Gridviz is a JavaScript library which allows you to visualize large gridded datasets (or any csv file with x/y data) in the browser. Unlike traditional raster-based GIS approaches, this tool utilizes WebGL through [three.js](https://github.com/mrdoob/three.js/) in order to render eveything client-side. 
 
-From a CSV file with x and y columns, gridviz will build a viewer capable of visualizing millions of grid cells on the fly. 
+From a CSV file with x and y columns, gridviz will build a viewer capable of visualizing millions of grid cells on the fly. You can also add GeoJSON files to the viewer using the addGeoJson() method.
 
 For data-driven colouring and sizing, you can use [d3-scale](https://github.com/d3/d3-scale) and [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic), or simply set your own colours and thresholds.
 
