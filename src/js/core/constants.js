@@ -7,7 +7,7 @@ export const nuts_base_URL = "https://raw.githubusercontent.com/eurostat/Nuts2js
 //     populationField: "REGIOMAP.CITIES_TOWNS_RG_LAEA.POPL_2011"
 // }
 export const placenames = {
-    baseURL: "https://ec.europa.eu/eurostat/statistical-atlas/gis/arcgis/rest/services/Basemaps/StatAtlas_Cities_Labels_2014/MapServer/0/query?",
+    baseURL: "https://ec.europa.eu/statistical-atlas/arcgis/rest/services/Basemaps/StatAtlas_Cities_Labels_2014/MapServer/0/query?",
     countryField: "CNTR_CODE",
     townField: "STTL_NAME",
     populationField: "POPL_SIZE",
