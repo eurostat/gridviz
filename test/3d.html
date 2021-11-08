@@ -36,7 +36,7 @@
         cellSize: 1000,
       },
     )
-    .colorField("NIGHTS_TOT")
+    .colorField("NIGHTS_FOR")
     .sizeField("NIGHTS_TOT") // csv column which you wish to visualize
     .sizeScaleFunction(sizeScale)
     .center([4900000,2475000])
@@ -44,10 +44,11 @@
     .cellCount(true)
     .cellShape('bar')
     .mode('3D')
+    .colorSchemeName('interpolateOrRd')
     .colorScaleName('scaleSequentialLog')
     .backgroundColor('#000')
     .legend({
-      title: "Total tourist nights per km² (2017)",
+      title: "Total foreign tourist nights per km² (2017)",
       ticks: 4,
     })
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")

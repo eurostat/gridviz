@@ -1,4 +1,4 @@
-// all methods related to gridviz viewer's threejs camera
+// all methods related to gridviz viewer's threejs camera and controls
 
 import * as CONSTANTS from "../constants.js";
 import {  PerspectiveCamera, Vector3 } from 'three'
@@ -53,7 +53,7 @@ export function createOrbitControls(viewer) {
 
     // controls
     controls = new OrbitControls( viewer.camera, viewer.renderer.domElement );
-    controls.target = new Vector3( viewer.center_[0], viewer.center_[1], 0 );
+    controls.target = new Vector3( viewer.center_[0], viewer.center_[1], CONSTANTS.point_z );
     //controls.minPolarAngle = 0;
     //controls.maxPolarAngle = 0;
     controls.minAzimuthAngle = -0.5;

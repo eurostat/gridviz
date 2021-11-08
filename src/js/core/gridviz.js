@@ -628,9 +628,16 @@ export function viewer(options) {
       let intersect = checkIntersects(mouse_position);
       if (intersect) {
         //console.log("Intersect", intersect); //for debugging intersects
-        let index = intersect.index;
-        let cell = gridCaches[viewer.resolution_][index];
+        let index;
+        if (viewer.cellShape_ == 'square') {
+         index = intersect.index;
+        
         highlightPoint(intersect);
+        } else {
+          index = intersect.object.id;
+          highlightBar(intersect);
+        }
+        let cell = gridCaches[viewer.resolution_][index];
         Tooltip.showTooltip(viewer, mouse_position, cell);
       } else {
         Tooltip.hideTooltip();
@@ -1200,7 +1207,7 @@ export function viewer(options) {
   function checkIntersects(mouse_position) {
     let mouse_vector = mouseToThree(...mouse_position);
     viewer.raycaster.setFromCamera(mouse_vector, viewer.camera);
-    let intersects = viewer.raycaster.intersectObject(viewer.pointsLayer);
+    let intersects = viewer.raycaster.intersectObject(viewer.pointsLayer, true);
     if (intersects[0]) {
       let sorted_intersects = sortIntersectsByDistanceToRay(intersects);
       let intersect = sorted_intersects[0];
@@ -1215,6 +1222,38 @@ export function viewer(options) {
     return intersects.concat().sort(Utils.sortBy("distanceToRay"));
   }
 
+  function highlightBar(intersect) {
+    //removeHighlights();
+
+    let colors = intersect.object.material.color;
+
+    //reset previous intersect colours back to their original values
+    if (previousIntersect) {
+      colors[previousIntersect.colourIndex].r = previousIntersect.color.r;
+      colors[previousIntersect.colourIndex].g = previousIntersect.color.g;
+      colors[previousIntersect.colourIndex].b = previousIntersect.color.b;
+    }
+
+    //position in geometry colour attribute float32Array
+    let colourIndex = intersect.index * 3
+    let r = colors[colourIndex];
+    let g = colors[colourIndex + 1];
+    let b = colors[colourIndex + 2];
+
+    previousIntersect = {
+      colourIndex: colourIndex,
+      color: { r: r, g: g, b: b }
+    }
+
+    //highlight
+    let newColor = new Color(viewer.highlightColor_);
+    colors[colourIndex].r = newColor.r;
+    colors[colourIndex].g = newColor.g;
+    colors[colourIndex].b = newColor.b;
+
+    intersect.object.geometry.attributes.color.needsUpdate = true;
+
+  }
 
   function highlightPoint(intersect) {
     //removeHighlights();
