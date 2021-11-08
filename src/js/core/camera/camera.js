@@ -8,6 +8,7 @@ import { viewer } from "../gridviz.js";
 let camera; // threejs camera object
 let cameraConfig; // config object containing: near, far, fov, aspect, zoom
 let controls; //orbit controls
+
 /**
   * @description Initializes THREE camera object
   * @function createCamera
@@ -49,6 +50,12 @@ let controls; //orbit controls
     // let z = 1000;
 }
 
+
+/**
+  * @description Creates orbit controls to be used with three.js. Used when viewer is set to '3D' mode.
+  * @function createOrbitControls
+  * @param viewer 
+  */
 export function createOrbitControls(viewer) {
 
     // controls

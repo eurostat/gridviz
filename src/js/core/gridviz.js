@@ -37,7 +37,7 @@ import * as Buttons from "./gui/buttons.js";
 import * as Points from "./layers/points.js";
 
 //TODO list:
-// - mobile pan & zoom bug when using method center([x,y])
+// - mobile pan & zoom bug when using method viewer.center([x,y])
 
 /**
  * Creates a 2D Three.js scene for visualizing point data derived from gridded statistics.
@@ -71,7 +71,7 @@ export function viewer(options) {
   viewer.highlightColor_ = "yellow"
   viewer.loadingIcon_ = "ring"; //ripple | ring | ellipsis | roller
 
-  // https://d3-legend.susielu.com vs https://blog.scottlogic.com/2019/03/13/how-to-create-a-continuous-colour-range-legend-using-d3-and-d3fc.html
+  // legend
   viewer.showLegend_ = true;
 
   // default legend config
