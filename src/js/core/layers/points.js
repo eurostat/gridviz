@@ -131,7 +131,7 @@ export function addPointsToScene(viewer, pointsArray) {
             viewer.pointsMaterial = new ShaderMaterial({
                 uniforms: {
                     multiplier: {
-                        value: 1000 + (50 / window.devicePixelRatio) //km TODO: define dynamically. This value needs to be adjusted according to screen in order prevent screen flickering when zooming
+                        value: 1000 //km TODO: define dynamically. This value needs to be adjusted according to screen in order prevent screen flickering when zooming
                     }
                 },
                 fragmentShader: fragmentShader(),
