@@ -1,3 +1,4 @@
+// used to check device WEBGL compatibility
 class WEBGL {
 
 	static isWebGLAvailable() {
