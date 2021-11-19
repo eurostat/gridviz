@@ -25,8 +25,8 @@ class GridVizCanvas {
         this.cplus.c2d.fillStyle = "black";
         this.cplus.c2d.fillRect(0, 0, this.w, this.h);
 
-        this.cplus.center = {x: 5000000, y: 3014000}
-        this.cplus.ps = 200
+        this.cplus.center = {x: 4000000, y: 2300000}
+        this.cplus.ps = 500
 
  
         

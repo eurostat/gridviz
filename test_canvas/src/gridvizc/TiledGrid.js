@@ -49,15 +49,15 @@ export class TiledGrid {
         const r = this.getInfo().resolutionGeo
         /** @type {number} */
         const s = this.getInfo().tileSizeCell;
+        const tb = this.getInfo().tilingBounds;
 
         const xTMin = Math.floor( (e.xMin-po.x)/(r*s) )
         const xTMax = Math.floor( (e.xMax-po.x)/(r*s) )
         const yTMin = Math.floor( (e.yMin-po.y)/(r*s) )
         const yTMax = Math.floor( (e.yMax-po.y)/(r*s) )
 
-        //TODO use also min/max from gridinfo
-        for(let xT=xTMin; xT<xTMax; xT++) {
-            for(let yT=yTMin; yT<yTMax; yT++) {
+        for(let xT=Math.max(xTMin,tb.minX); xT<=Math.min(xTMax,tb.maxX); xT++) {
+            for(let yT=Math.max(yTMin,tb.minY); yT<=Math.min(yTMax,tb.maxY); yT++) {
 
                 //get cells
                 csv( this.url+xT+"/"+yT+".csv" ).then((data) => {
