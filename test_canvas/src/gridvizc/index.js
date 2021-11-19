@@ -1,7 +1,6 @@
 //@ts-check
 import { CanvasPlus } from './CanvasPlus';
-import { TiledGrid, GridTile } from './TiledGrid';
-import { csv, json } from "d3-fetch";
+import { TiledGrid } from './TiledGrid';
 import { interpolateReds } from "d3-scale-chromatic"
 
 class GridVizCanvas {
@@ -26,46 +25,19 @@ class GridVizCanvas {
         this.cplus.c2d.fillStyle = "black";
         this.cplus.c2d.fillRect(0, 0, this.w, this.h);
 
-        this.cplus.center = {x: 5184500, y: 3517000}
+        this.cplus.center = {x: 5180000, y: 3514000}
         this.cplus.ps = 200
 
  
         
 
-        //TODO group all of that into tiles grid class
+        //TODO
+        //this.layers = []
 
+        const tg = new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/").then(()=>{
+            this.cplus.redraw();
+        })
 
-        const tg = new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/")
-
-        /** @type {Object} */
-        let gridInfo = null;
-
-        /** @type {Array.<GridTile>} */
-        let tiles = null;
-
-
-
-        //convert cell position from tile position into geo position
-        //TODO move to gridtile
-        const geoTile = (cells, gridInfo, xT, yT) => {
-
-            /** @type {number} */
-            const r = gridInfo.resolutionGeo;
-            /** @type {number} */
-            const s = gridInfo.tileSizeCell;
-            /** @type {number} */
-            const xMin = gridInfo.originPoint.x + r*s*xT
-            /** @type {number} */
-            const yMin = gridInfo.originPoint.y + r*s*yT
-
-            for(let i=0; i<cells.length; i++) {
-                const cell = cells[i];
-                /** @type {number} */
-                cell.x = xMin + cell.x * r;
-                /** @type {number} */
-                cell.y = yMin + cell.y * r;
-            }
-        }
 
 
         const th = this;
@@ -74,48 +46,10 @@ class GridVizCanvas {
             //geo extent
             this.updateExtentGeo(); //TODO choose margin parameter
             const e = this.extGeo
-            const po = gridInfo.originPoint
-            /** @type {number} */
-            const r = gridInfo.resolutionGeo
-            /** @type {number} */
-            const s = gridInfo.tileSizeCell;
-
-            const xTMin = Math.floor( (e.xMin-po.x)/(r*s) )
-            const xTMax = Math.floor( (e.xMax-po.x)/(r*s) )
-            const yTMin = Math.floor( (e.yMin-po.y)/(r*s) )
-            const yTMax = Math.floor( (e.yMax-po.y)/(r*s) )
-
-            //TODO use cache
-
-
-            tiles = [];
-
-            //TODO use also min/max from gridinfo
-            for(let xT=xTMin; xT<xTMax; xT++) {
-                for(let yT=yTMin; yT<yTMax; yT++) {
-
-                    //get cells
-                    csv( tg.url+xT+"/"+yT+".csv" ).then((data) => {
-                        geoTile(data, gridInfo, xT, yT) //TODO move to gridtile
-                        const tile = new GridTile(data);
-                        tiles.push(tile)
-                        redrawCells(this)
-                    });
-
-                }
-            }
+            tg.requestTiles(e, ()=>{ redrawCells(this) });
 
             return this
         };
-
-        //get grid info
-        json(tg.url+"/info.json").then((data) => {
-            gridInfo = data;
-            th.cplus.redraw()
-        });
-
-
-
 
 
 
@@ -127,10 +61,10 @@ class GridVizCanvas {
             c2.fillRect(0, 0, th.w, th.h);
 
             /** @type {number} */
-            const r = gridInfo.resolutionGeo
+            const r = tg.getInfo().resolutionGeo
 
-            for(let i=0; i<tiles.length; i++) {
-                const tile = tiles[i];
+            for(let i=0; i<tg.tiles.length; i++) {
+                const tile = tg.tiles[i];
                 for(let j=0; j<tile.cells.length; j++) {
 
                 /** @type {{x:number,y:number}} */
