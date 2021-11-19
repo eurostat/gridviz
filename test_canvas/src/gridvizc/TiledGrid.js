@@ -1,6 +1,7 @@
 //@ts-check
 
 import { json, csv } from "d3-fetch";
+import { GridTile } from './GridTile';
 
 export class TiledGrid {
 
@@ -85,51 +86,22 @@ export class TiledGrid {
 
     }
 
+    //get all cells from cache which are within an envelope
+    getCells(e){
+        let cells = []
 
-}
-
-
-
-
-export class GridTile {
-
-
-    constructor(data, xT, yT, gridInfo) {
-
-        /** @type {Array} */
-        this.cells = data;
-        /** @type {number} */
-        this.x = xT
-        /** @type {number} */
-        this.y = yT
-
-        this.geoTile(gridInfo)
-    }
-
-
-
-
-    //convert cell position from tile position into geo position
-    geoTile(gridInfo) {
-
-        /** @type {number} */
-        const r = gridInfo.resolutionGeo;
-        /** @type {number} */
-        const s = gridInfo.tileSizeCell;
-        /** @type {number} */
-        const xMin = gridInfo.originPoint.x + r*s*this.x
-        /** @type {number} */
-        const yMin = gridInfo.originPoint.y + r*s*this.y
-
-        for(let i=0; i<this.cells.length; i++) {
-            const cell = this.cells[i];
-            /** @type {number} */
-            cell.x = xMin + cell.x * r;
-            /** @type {number} */
-            cell.y = yMin + cell.y * r;
-            //console.log(cell)
+        //TODO use envelope
+        for(let xT in this.cache){
+            //if xT not in envelope
+            for(let yT in this.cache[xT]){
+            //if yT not in envelope
+                /** @type {GridTile} */
+                const tile = this.cache[xT][yT];
+                if(typeof tile === "string") continue;
+                cells = cells.concat(tile.cells)
+            }
         }
+        return cells;
     }
-
 
 }
