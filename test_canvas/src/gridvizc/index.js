@@ -1,5 +1,6 @@
 //@ts-check
 import { CanvasPlus } from './CanvasPlus';
+import { TiledGrid, GridTile } from './TiledGrid';
 import { csv, json } from "d3-fetch";
 import { interpolateReds } from "d3-scale-chromatic"
 
@@ -28,18 +29,24 @@ class GridVizCanvas {
         this.cplus.center = {x: 5184500, y: 3517000}
         this.cplus.ps = 200
 
+ 
         
-        /** @type {string} */
-        const tiledGridURL = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/"
+
+        //TODO group all of that into tiles grid class
+
+
+        const tg = new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/")
 
         /** @type {Object} */
         let gridInfo = null;
 
-        /** @type {Array} */
-        let cells = null;
+        /** @type {Array.<GridTile>} */
+        let tiles = null;
+
 
 
         //convert cell position from tile position into geo position
+        //TODO move to gridtile
         const geoTile = (cells, gridInfo, xT, yT) => {
 
             /** @type {number} */
@@ -81,16 +88,17 @@ class GridVizCanvas {
             //TODO use cache
 
 
-            cells = [];
+            tiles = [];
 
             //TODO use also min/max from gridinfo
             for(let xT=xTMin; xT<xTMax; xT++) {
                 for(let yT=yTMin; yT<yTMax; yT++) {
 
                     //get cells
-                    csv( tiledGridURL+xT+"/"+yT+".csv" ).then((data) => {
-                        geoTile(data, gridInfo, xT, yT)
-                        cells = cells.concat(data)
+                    csv( tg.url+xT+"/"+yT+".csv" ).then((data) => {
+                        geoTile(data, gridInfo, xT, yT) //TODO move to gridtile
+                        const tile = new GridTile(data);
+                        tiles.push(tile)
                         redrawCells(this)
                     });
 
@@ -101,7 +109,7 @@ class GridVizCanvas {
         };
 
         //get grid info
-        json(tiledGridURL+"/info.json").then((data) => {
+        json(tg.url+"/info.json").then((data) => {
             gridInfo = data;
             th.cplus.redraw()
         });
@@ -121,14 +129,17 @@ class GridVizCanvas {
             /** @type {number} */
             const r = gridInfo.resolutionGeo
 
-            for(let i=0; i<cells.length; i++) {
+            for(let i=0; i<tiles.length; i++) {
+                const tile = tiles[i];
+                for(let j=0; j<tile.cells.length; j++) {
 
                 /** @type {{x:number,y:number}} */
-                const cell = cells[i];
+                const cell = tile.cells[j];
                 c2.fillStyle = getColor(cell[2011]);
                 c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), r/cp.ps, r/cp.ps);
             }
         }
+    }
 
         const getColor = (v) => {
             //TODO better
