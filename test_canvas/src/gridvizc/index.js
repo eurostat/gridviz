@@ -1,6 +1,6 @@
 //@ts-check
 import { CanvasPlus } from './CanvasPlus';
-import { TiledGrid } from './TiledGrid';
+import { GridTile, TiledGrid } from './TiledGrid';
 import { interpolateReds } from "d3-scale-chromatic"
 
 class GridVizCanvas {
@@ -60,19 +60,25 @@ class GridVizCanvas {
             c2.fillStyle = "black";
             c2.fillRect(0, 0, th.w, th.h);
 
+
+            //TODO get cells list and draw only those ones
+
             /** @type {number} */
             const r = tg.getInfo().resolutionGeo
 
-            for(let i=0; i<tg.tiles.length; i++) {
-                const tile = tg.tiles[i];
-                for(let j=0; j<tile.cells.length; j++) {
-
-                /** @type {{x:number,y:number}} */
-                const cell = tile.cells[j];
-                c2.fillStyle = getColor(cell[2011]);
-                c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), r/cp.ps, r/cp.ps);
+            for(let xT in tg.cache){
+                for(let yT in tg.cache[xT]){
+                    /** @type {GridTile} */
+                    const tile = tg.cache[xT][yT];
+                    if(typeof tile === "string") continue;
+                    for(let j=0; j<tile.cells.length; j++) {
+                        const cell = tile.cells[j];
+                        const value = cell[2011]; //TODO extract column name
+                        c2.fillStyle = getColor(value);
+                        c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), r/cp.ps, r/cp.ps);
+                    }
+                }
             }
-        }
     }
 
         const getColor = (v) => {

@@ -9,8 +9,10 @@ export class TiledGrid {
         /** @type {string} */
         this.url = url;
 
-        /** @type {Array.<GridTile>} */
-        this.tiles = [];
+        //this.tiles = [];
+        //TODO
+        //dictionary code->tile
+        this.cache = {}
 
         /** @type {Object} */
         this.info = undefined;
@@ -19,9 +21,6 @@ export class TiledGrid {
         /** @type {function} */
         this.tfun = ()=>{};
 
-        //TODO
-        //dictionary code->tile
-        this.cache = {}
     }
 
     //get grid info
@@ -42,6 +41,7 @@ export class TiledGrid {
     }
 
 
+    //request tiles within a geographic envelope.
     requestTiles(e, fun){
 
         const po = this.getInfo().originPoint
@@ -59,11 +59,24 @@ export class TiledGrid {
         for(let xT=Math.max(xTMin,tb.minX); xT<=Math.min(xTMax,tb.maxX); xT++) {
             for(let yT=Math.max(yTMin,tb.minY); yT<=Math.min(yTMax,tb.maxY); yT++) {
 
-                //get cells
+                //prepare cache
+                if(!this.cache[xT]) this.cache[xT]={};
+
+                //check if tile exists in the cache
+                let tile = this.cache[xT][yT];
+                if(tile) continue;
+
+                //mark as loading
+                this.cache[xT][yT] = "loading"
+
+                //get tile request
                 csv( this.url+xT+"/"+yT+".csv" ).then((data) => {
-                    const tile = new GridTile(data, xT, yT, this.getInfo());
-                    this.tiles.push(tile)
+                    //store tile in cache
+                    this.cache[xT][yT] = new GridTile(data, xT, yT, this.getInfo());
                     fun();
+                }).catch(()=>{
+                    //mark as failed
+                    this.cache[xT][yT] = "failed"
                 });
 
             }
