@@ -47,24 +47,17 @@ class GridVizCanvas {
             //geo extent
             this.updateExtentGeo(); //TODO choose margin parameter
             const e = this.extGeo
-            tg.requestTiles(e, ()=>{ redrawCells(this) });
+            tg.requestTiles(e, draw(th.cplus));
 
             return this
         };
 
 
-
-        const redrawCells = function(cp) {
-
-            //get cells within the view
-            const cells = tg.getCells(th.cplus.extGeo)
-
-            //draw cells
-            draw(cells, cp)
-        }
-
         //draw cells
-        const draw = function(cells, cp) {
+        const draw = function(cp) {
+            console.log("draw")
+
+            return function(cells) {
             const c2 = cp.c2d
 
             //clear
@@ -80,6 +73,7 @@ class GridVizCanvas {
                 c2.fillStyle = getColor(value);
                 c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), r/cp.ps, r/cp.ps);
             }
+        }
         }
 
         //
