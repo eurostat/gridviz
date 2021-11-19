@@ -30,13 +30,13 @@ export class GridTile {
         /** @type {number} */
         const yMin = gridInfo.originPoint.y + r*s*this.y
 
+        //compute geographical coordinates of cells
         for(let i=0; i<this.cells.length; i++) {
             const cell = this.cells[i];
             /** @type {number} */
             cell.x = xMin + cell.x * r;
             /** @type {number} */
             cell.y = yMin + cell.y * r;
-            //console.log(cell)
         }
     }
 

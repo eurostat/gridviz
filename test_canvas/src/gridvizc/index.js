@@ -6,7 +6,7 @@ import { interpolateReds } from "d3-scale-chromatic"
 
 class GridVizCanvas {
 
-    //TODO use typing
+    //TODO jsdoc https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html
     //TODO implement mouse over
     //TODO use spatial index
 
@@ -45,7 +45,7 @@ class GridVizCanvas {
         this.cplus.redraw = function() {
 
             //geo extent
-            this.updateExtentGeo(); //TODO choose margin parameter
+            this.updateExtentGeo();
             const e = this.extGeo
             tg.requestTiles(e, draw(th.cplus));
 
