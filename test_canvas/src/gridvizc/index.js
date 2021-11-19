@@ -1,7 +1,8 @@
 //@ts-check
+/** @typedef { {minX: number, maxX: number, minY: number, maxY: number} } Envelope */
+
 import { CanvasPlus } from './CanvasPlus';
 import { TiledGrid } from './TiledGrid';
-import { GridTile } from './GridTile';
 import { interpolateReds } from "d3-scale-chromatic"
 
 class GridVizCanvas {
@@ -27,7 +28,7 @@ class GridVizCanvas {
         this.cplus.c2d.fillRect(0, 0, this.w, this.h);
 
         this.cplus.center = {x: 4000000, y: 2300000}
-        this.cplus.ps = 200
+        this.cplus.ps = 10
 
  
         
@@ -46,7 +47,10 @@ class GridVizCanvas {
 
             //geo extent
             this.updateExtentGeo();
-            const e = this.extGeo
+
+            /** @type {Envelope} */
+            const e = this.extGeo;
+
             tg.requestTiles(e, draw(th.cplus));
 
             return this

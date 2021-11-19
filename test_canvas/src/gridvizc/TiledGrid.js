@@ -1,4 +1,7 @@
 //@ts-check
+/** @typedef { {minX: number, maxX: number, minY: number, maxY: number} } Envelope */
+/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:Envelope }} GridInfo */
+/** @typedef {{x: number, y: number}} Cell */
 
 import { json, csv } from "d3-fetch";
 import { GridTile } from './GridTile';
@@ -22,9 +25,6 @@ export class TiledGrid {
 
     }
 
-
-    /** @typedef { {minX: number, maxX: number, minY: number, maxY: number} } Envelope */
-    /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:Envelope }} GridInfo */
 
     /** @returns {GridInfo} */
     getInfo() {
@@ -62,7 +62,12 @@ export class TiledGrid {
         }
     }
 
-    //request tiles within a geographic envelope.
+    /**
+     * Request tiles within a geographic envelope.
+     * 
+     * @param {Envelope} e 
+     * @param {function} draw 
+     */
     requestTiles(e, draw){
 
         //tiles within the scope
@@ -101,20 +106,25 @@ export class TiledGrid {
                     //mark as failed
                     this.cache[xT][yT] = "failed"
                 });
-
             }
         }
-
-
     }
 
-    //get all cells from cache which are within an envelope
+    /**
+     * Get all cells from cache which are within a geographical envelope
+     * 
+     * @param {Envelope} e 
+     * @returns {Array.<Cell>}
+     */
     getCells(e){
+        /** @type {Array.<Cell>} */
         let cells = []
 
         //tiles within the scope
+        /** @type {Envelope} */
         const tb = this.getTilingEnvelope(e);
         //grid bounds
+        /** @type {Envelope} */
         const gb = this.getInfo().tilingBounds;
 
         for(let xT=Math.max(tb.minX,gb.minX); xT<=Math.min(tb.maxX,gb.maxX); xT++) {
