@@ -327,9 +327,9 @@
    },
    "resolutionGeo": 1000,
    "tilingBounds": {
-      "minY": 7,
-      "minX": 7,
-      "maxY": 42,
-      "maxX": 50
+      "yMin": 7,
+      "xMin": 7,
+      "yMax": 42,
+      "xMax": 50
    }
 }
