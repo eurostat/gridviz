@@ -80,7 +80,7 @@ class GridVizCanvas {
         }
         }
 
-        //
+        //TODO generic style
         const getColor = (v) => {
             //TODO better
             return interpolateReds(v/200)
