@@ -1,5 +1,5 @@
 //@ts-check
-/** @typedef { {minX: number, maxX: number, minY: number, maxY: number} } Envelope */
+/** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
 import { CanvasPlus } from './CanvasPlus';
 import { TiledGrid } from './TiledGrid';
@@ -47,11 +47,7 @@ class GridVizCanvas {
 
             //geo extent
             this.updateExtentGeo();
-
-            /** @type {Envelope} */
-            const e = this.extGeo;
-
-            tg.requestTiles(e, draw(th.cplus));
+            tg.requestTiles(this.extGeo, draw(th.cplus));
 
             return this
         };
@@ -59,25 +55,26 @@ class GridVizCanvas {
 
         //draw cells
         const draw = function(cp) {
-            console.log("draw")
-
             return function(cells) {
-            const c2 = cp.c2d
+                
+                console.log("draw")
+                /*const c2 = cp.c2d
 
-            //clear
-            c2.fillStyle = "black";
-            c2.fillRect(0, 0, th.w, th.h);
-
-            /** @type {number} */
-            const r = tg.getInfo().resolutionGeo
-
-            for(let j=0; j<cells.length; j++) {
-                const cell = cells[j];
-                const value = cell[2011]; //TODO extract column name
-                c2.fillStyle = getColor(value);
-                c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), r/cp.ps, r/cp.ps);
+                //clear
+                c2.fillStyle = "black";
+                c2.fillRect(0, 0, th.w, th.h);
+    
+                /** @type {number} */
+                /*const r = tg.getInfo().resolutionGeo
+    
+                for(let j=0; j<cells.length; j++) {
+                    const cell = cells[j];
+                    const value = cell[2011]; //TODO extract column name
+                    c2.fillStyle = getColor(value);
+                    c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), r/cp.ps, r/cp.ps);
+                }*/
+                console.log("draw end")
             }
-        }
         }
 
         //TODO generic style

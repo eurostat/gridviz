@@ -1,4 +1,5 @@
 //@ts-check
+
 export class CanvasPlus {
 
     /**
@@ -32,7 +33,7 @@ export class CanvasPlus {
         this.ps = ps;
 
         //extent
-        /** @type {{xMin:number,xMax:number,yMin:number,yMax:number}} */
+        /** @type {{xMin: number, xMax: number, yMin: number, yMax: number}} */
         this.extGeo = undefined;
         this.updateExtentGeo()
 

@@ -1,5 +1,5 @@
 //@ts-check
-/** @typedef { {minX: number, maxX: number, minY: number, maxY: number} } Envelope */
+/** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:Envelope }} GridInfo */
 /** @typedef {{x: number, y: number}} Cell */
 
@@ -55,10 +55,10 @@ export class TiledGrid {
         const s = this.getInfo().tileSizeCell;
 
         return {
-            minX: Math.floor( (e.xMin-po.x)/(r*s) ),
-            maxX: Math.floor( (e.xMax-po.x)/(r*s) ),
-            minY: Math.floor( (e.yMin-po.y)/(r*s) ),
-            maxY: Math.floor( (e.yMax-po.y)/(r*s) )
+            xMin: Math.floor( (e.xMin-po.x)/(r*s) ),
+            xMax: Math.floor( (e.xMax-po.x)/(r*s) ),
+            yMin: Math.floor( (e.yMin-po.y)/(r*s) ),
+            yMax: Math.floor( (e.yMax-po.y)/(r*s) )
         }
     }
 
@@ -77,8 +77,8 @@ export class TiledGrid {
         /** @type {Envelope} */
         const gb = this.getInfo().tilingBounds;
 
-        for(let xT=Math.max(tb.minX,gb.minX); xT<=Math.min(tb.maxX,gb.maxX); xT++) {
-            for(let yT=Math.max(tb.minY,gb.minY); yT<=Math.min(tb.maxY,gb.maxY); yT++) {
+        for(let xT=Math.max(tb.xMin,gb.xMin); xT<=Math.min(tb.xMax,gb.xMax); xT++) {
+            for(let yT=Math.max(tb.yMin,gb.yMin); yT<=Math.min(tb.yMax,gb.yMax); yT++) {
 
                 //prepare cache
                 if(!this.cache[xT]) this.cache[xT]={};
@@ -127,9 +127,9 @@ export class TiledGrid {
         /** @type {Envelope} */
         const gb = this.getInfo().tilingBounds;
 
-        for(let xT=Math.max(tb.minX,gb.minX); xT<=Math.min(tb.maxX,gb.maxX); xT++) {
+        for(let xT=Math.max(tb.xMin,gb.xMin); xT<=Math.min(tb.xMax,gb.xMax); xT++) {
             if(!this.cache[xT]) continue;
-            for(let yT=Math.max(tb.minY,gb.minY); yT<=Math.min(tb.maxY,gb.maxY); yT++) {
+            for(let yT=Math.max(tb.yMin,gb.yMin); yT<=Math.min(tb.yMax,gb.yMax); yT++) {
 
                 //get tile
                 /** @type {GridTile} */

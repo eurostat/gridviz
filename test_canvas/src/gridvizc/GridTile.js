@@ -1,5 +1,5 @@
 //@ts-check
-/** @typedef { {minX: number, maxX: number, minY: number, maxY: number} } Envelope */
+/** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:Envelope }} GridInfo */
 /** @typedef {{x: number, y: number}} Cell */
 
