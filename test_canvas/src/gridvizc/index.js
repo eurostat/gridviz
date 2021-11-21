@@ -7,6 +7,7 @@ import { interpolateReds } from "d3-scale-chromatic"
 
 class GridVizCanvas {
 
+    //TODO use layer - one per zoom level
     //TODO jsdoc https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html
     //TODO implement mouse over
     //TODO use spatial index
