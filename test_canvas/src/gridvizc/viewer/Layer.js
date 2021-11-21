@@ -1,6 +1,6 @@
 //@ts-check
 
-export class GridLayer {
+export class Layer {
 
     /**
      * @param {number} minZoom 

@@ -3,7 +3,7 @@
 
 import { CanvasPlus } from '../viewer/CanvasPlus';
 import { TiledGrid } from '../tiledgrid/TiledGrid';
-import { interpolateReds } from "d3-scale-chromatic"
+import { ColorStyle } from '../style/ColorStyle';
 
 export class GridVizCanvas {
 
@@ -28,23 +28,24 @@ export class GridVizCanvas {
         this.cplus.c2d.fillStyle = "black";
         this.cplus.c2d.fillRect(0, 0, this.w, this.h);
 
-        this.cplus.center = {x: 4000000, y: 2300000}
+        this.cplus.center = { x: 4000000, y: 2300000 }
         this.cplus.ps = 10
 
- 
-        
+
+
 
         //TODO
         //this.layers = []
 
-        const tg = new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/").then(()=>{
+        const tg = new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/").loadInfo(() => {
             this.cplus.redraw();
         })
 
+        const style = new ColorStyle()
 
 
         const th = this;
-        this.cplus.redraw = function() {
+        this.cplus.redraw = function () {
 
             //geo extent
             this.updateExtentGeo();
@@ -56,38 +57,11 @@ export class GridVizCanvas {
             return this
         };
 
-        const draw_ = function() {
+        const draw_ = function () {
             //get cells within the view
             const cells = tg.getCells(th.cplus.extGeo)
             //draw cells
-            draw(cells)
-        }
-
-
-        //draw cells
-        const draw = function(cells) {
-            const cp = th.cplus;
-            const c2 = cp.c2d
-
-            //clear
-            c2.fillStyle = "black";
-            c2.fillRect(0, 0, th.w, th.h);
-
-            /** @type {number} */
-            const r = tg.getInfo().resolutionGeo
-
-            for(let j=0; j<cells.length; j++) {
-                const cell = cells[j];
-                const value = cell[2011]; //TODO extract column name
-                c2.fillStyle = getColor(value);
-                c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), r/cp.ps, r/cp.ps);
-            }
-    }
-
-        //TODO generic style
-        const getColor = (v) => {
-            //TODO better
-            return interpolateReds(v/200)
+            style.draw(cells, th, tg)
         }
 
     }

@@ -5,7 +5,6 @@
 
 export class GridTile {
 
-
     /**
      * 
      * @param {Array.<Cell>} data 
@@ -14,6 +13,7 @@ export class GridTile {
      * @param {GridInfo} gridInfo 
      */
     constructor(data, xT, yT, gridInfo) {
+
         /** @type {Array.<Cell>} */
         this.cells = data;
         /** @type {number} */
@@ -33,20 +33,14 @@ export class GridTile {
      */
     geoTile(gridInfo) {
 
-        /** @type {number} */
         const r = gridInfo.resolutionGeo;
-        /** @type {number} */
         const s = gridInfo.tileSizeCell;
-        /** @type {number} */
-        const xMin = gridInfo.originPoint.x + r*s*this.x
-        /** @type {number} */
-        const yMin = gridInfo.originPoint.y + r*s*this.y
+        const xMin = gridInfo.originPoint.x + r * s * this.x
+        const yMin = gridInfo.originPoint.y + r * s * this.y
 
         //compute geographical coordinates of cells
         for (let cell of this.cells) {
-            /** @type {number} */
             cell.x = xMin + cell.x * r;
-            /** @type {number} */
             cell.y = yMin + cell.y * r;
         }
     }
