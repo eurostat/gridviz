@@ -8,6 +8,10 @@ import { GridTile } from './GridTile';
 
 export class TiledGrid {
 
+    /**
+     * 
+     * @param {string} url 
+     */
     constructor(url) {
 
         /** @type {string} */
@@ -21,7 +25,7 @@ export class TiledGrid {
         this.getInfo()
 
         /** @type {function} */
-        this.tfun = ()=>{};
+        this.tfun = ()=>{ /** A callback function to execute after the gridinfo has been retrieved. */};
 
     }
 
@@ -29,11 +33,13 @@ export class TiledGrid {
     /** @returns {GridInfo} */
     getInfo() {
         if(!this.info)
-            json(this.url+"/info.json").then((data) => {
-                // @ts-ignore
-                this.info = data;
-                this.tfun();
-         });
+            json(this.url+"/info.json").then(
+                /** @param {*} data */
+                 (data) => {
+                    this.info = data;
+                    this.tfun();
+                }
+         );
         return this.info;
     }
 
@@ -92,15 +98,14 @@ export class TiledGrid {
                 this.cache[xT][yT] = "loading"
 
                 //get tile request
-                csv( this.url+xT+"/"+yT+".csv" ).then((data) => {
+                csv( this.url+xT+"/"+yT+".csv" ).then(
+                    /** @param {*} data */
+                    (data) => {
                     //store tile in cache
                     this.cache[xT][yT] = new GridTile(data, xT, yT, this.getInfo());
 
-                    //TODO if movement, interupt redraw
-
                     //draw 
                     fun()
-
                 }).catch(()=>{
                     //mark as failed
                     this.cache[xT][yT] = "failed"
