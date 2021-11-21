@@ -1,8 +1,8 @@
 //@ts-check
 /** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
-import { CanvasPlus } from './CanvasPlus';
-import { TiledGrid } from './TiledGrid';
+import { CanvasPlus } from './viewer/CanvasPlus';
+import { TiledGrid } from './tiledgrid/TiledGrid';
 import { interpolateReds } from "d3-scale-chromatic"
 
 class GridVizCanvas {
