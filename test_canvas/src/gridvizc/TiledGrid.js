@@ -66,9 +66,9 @@ export class TiledGrid {
      * Request tiles within a geographic envelope.
      * 
      * @param {Envelope} e 
-     * @param {function} draw 
+     * @param {function} fun 
      */
-    requestTiles(e, draw){
+    requestTiles(e, fun){
 
         //tiles within the scope
         /** @type {Envelope} */
@@ -98,10 +98,9 @@ export class TiledGrid {
 
                     //TODO if movement, interupt redraw
 
-                    //get cells within the view
-                    const cells = this.getCells(e)
-                    //draw cells
-                    draw(cells)
+                    //draw 
+                    fun()
+
                 }).catch(()=>{
                     //mark as failed
                     this.cache[xT][yT] = "failed"

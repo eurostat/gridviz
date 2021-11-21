@@ -47,35 +47,41 @@ class GridVizCanvas {
 
             //geo extent
             this.updateExtentGeo();
-            tg.requestTiles(this.extGeo, draw(th.cplus));
+            tg.requestTiles(this.extGeo, draw_);
+
+            //redaw
+            draw_()
 
             return this
         };
 
+        const draw_ = function() {
+            //get cells within the view
+            const cells = tg.getCells(th.cplus.extGeo)
+            //draw cells
+            draw(cells)
+        }
+
 
         //draw cells
-        const draw = function(cp) {
-            return function(cells) {
-                
-                console.log("draw")
-                const c2 = cp.c2d
+        const draw = function(cells) {
+            const cp = th.cplus;
+            const c2 = cp.c2d
 
-                //clear
-                c2.fillStyle = "black";
-                c2.fillRect(0, 0, th.w, th.h);
-    
-                /** @type {number} */
-                const r = tg.getInfo().resolutionGeo
-    
-                for(let j=0; j<cells.length; j++) {
-                    const cell = cells[j];
-                    const value = cell[2011]; //TODO extract column name
-                    c2.fillStyle = getColor(value);
-                    c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), r/cp.ps, r/cp.ps);
-                }
-                console.log("draw end")
+            //clear
+            c2.fillStyle = "black";
+            c2.fillRect(0, 0, th.w, th.h);
+
+            /** @type {number} */
+            const r = tg.getInfo().resolutionGeo
+
+            for(let j=0; j<cells.length; j++) {
+                const cell = cells[j];
+                const value = cell[2011]; //TODO extract column name
+                c2.fillStyle = getColor(value);
+                c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), r/cp.ps, r/cp.ps);
             }
-        }
+    }
 
         //TODO generic style
         const getColor = (v) => {
