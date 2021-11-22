@@ -8,11 +8,26 @@ import { GridVizCanvas } from "./GridVizCanvas";
  export class Style {
 
     /**
+     * @param {string|function} value 
      * @abstract
      */
-    constructor(){
-        //
+    constructor(value){
+        this.value = value
     }
+
+    /**
+     * @param {Cell} cell 
+     * @returns {number}
+     */
+    getValue(cell) {
+        if(this.value instanceof Function || typeof this.value === "function")
+        return this.value(cell);
+        else return cell[this.value];
+    }
+
+
+
+
 
     /**
      * Draw cells.

@@ -11,6 +11,12 @@
     <script>
         //start simulation
         app = gridvizc.gridvizApp()
+
+        const s = app.styling.getColorStyle("2011");
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", s, 0, 500);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", s, 500, 1000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", s, 1000, 9999999999);
+
     </script>
 </body>
 

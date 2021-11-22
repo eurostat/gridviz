@@ -61,11 +61,15 @@ export class GridVizCanvas {
         /** @type {Array.<Layer>} */
         this.layers = [];
 
-
-        const s = new ColorStyle();
-        this.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", s, 0, 500);
-        this.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", s, 500, 1000);
-        this.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", s, 1000, 9999999999);
+        /**
+         * Styles library.
+         * This object exposes style constructors.
+         */
+        this.styling = {
+            getColorStyle : function(value) {
+                return new ColorStyle(value);
+            }
+        }
 
     }
 

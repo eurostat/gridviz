@@ -7,8 +7,11 @@ import { interpolateReds } from "d3-scale-chromatic"
 
 export class ColorStyle extends Style {
 
-    constructor() {
-        super()
+    /**
+      * @param {string|function} value 
+      */
+    constructor(value) {
+        super(value)
     }
 
 
@@ -30,7 +33,7 @@ export class ColorStyle extends Style {
         c2.fillRect(0, 0, app.w, app.h);
 
         for (let cell of cells) {
-            const value = cell[2011]; //TODO extract column name
+            const value = this.getValue(cell);
             c2.fillStyle = this.getColor(value);
             c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), resolution / cp.ps, resolution / cp.ps);
         }
