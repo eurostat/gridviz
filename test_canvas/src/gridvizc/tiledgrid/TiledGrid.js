@@ -1,21 +1,17 @@
 //@ts-check
-/** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:Envelope }} GridInfo */
-/** @typedef {{x: number, y: number}} Cell */
 
 import { json, csv } from "d3-fetch";
 import { GridTile } from './GridTile';
+import { Dataset, Cell, Envelope } from "../viewer/Dataset"
 
-export class TiledGrid {
+export class TiledGrid extends Dataset {
 
     /**
      * @param {string} url This url of the info.json.
      */
     constructor(url) {
-
-        /** 
-         * @type {string} */
-        this.url = url;
+        super(url, undefined)
 
         /** 
          * The cache of the loaded tiles. It is double indexed: by xT and then yT.
@@ -31,7 +27,7 @@ export class TiledGrid {
     /**
      * Load the info.json from the URL.
      * 
-     * @param {*} callback
+     * @param {function} callback
      * @returns this
      */
     loadInfo(callback) {
@@ -40,6 +36,7 @@ export class TiledGrid {
                 /** @param {*} data */
                 (data) => {
                     this.info = data;
+                    this.resolutionGeo = this.info.resolutionGeo;
                     if (callback) callback();
                 }
             );
@@ -69,12 +66,12 @@ export class TiledGrid {
     }
 
     /**
-     * Request the tiles within a geographic envelope.
+     * Request data within a geographic envelope.
      * 
      * @param {Envelope} e 
      * @param {function} callback 
      */
-    requestTiles(e, callback) {
+    getData(e, callback) {
 
         //TODO empty cache when it becomes too big.
 
@@ -119,13 +116,14 @@ export class TiledGrid {
         }
     }
 
+
     /**
      * Get all cells from cache which are within a geographical envelope.
      * 
      * @param {Envelope} e 
      * @returns {Array.<Cell>}
      */
-    getCells(e) {
+     getCells(e) {
 
         /** @type {Array.<Cell>} */
         let cells = []

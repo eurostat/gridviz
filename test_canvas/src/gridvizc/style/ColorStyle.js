@@ -1,30 +1,38 @@
 //@ts-check
 
+import { Style } from "../viewer/Style"
+import { Cell } from "../viewer/Dataset"
+import { GridVizCanvas } from "../viewer/GridVizCanvas";
 import { interpolateReds } from "d3-scale-chromatic"
 
-export class ColorStyle {
+export class ColorStyle extends Style {
 
     constructor() {
-        //nothing yet
+        super()
     }
 
-    //draw cells
-    draw(cells, th, tg) {
 
-        const cp = th.cplus;
+    /**
+     * Draw cells.
+     * 
+     * @param {Array.<Cell>} cells 
+     * @param {number} resolution 
+     * @param {GridVizCanvas} app 
+     */
+    draw(cells, resolution, app) {
+
+        const cp = app.cplus;
         const c2 = cp.c2d
 
+        //TODO move that to a "clear" method.
         //clear
         c2.fillStyle = "black";
-        c2.fillRect(0, 0, th.w, th.h);
-
-        /** @type {number} */
-        const r = tg.info.resolutionGeo
+        c2.fillRect(0, 0, app.w, app.h);
 
         for (let cell of cells) {
             const value = cell[2011]; //TODO extract column name
             c2.fillStyle = this.getColor(value);
-            c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), r / cp.ps, r / cp.ps);
+            c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), resolution / cp.ps, resolution / cp.ps);
         }
     }
 

@@ -3,13 +3,12 @@
 import { CanvasPlus } from '../viewer/CanvasPlus';
 import { TiledGrid } from '../tiledgrid/TiledGrid';
 import { ColorStyle } from '../style/ColorStyle';
+import { Layer } from './Layer';
 
 export class GridVizCanvas {
 
     //TODO use layer - one per zoom level
-    //TODO jsdoc https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html
     //TODO implement mouse over
-    //TODO use spatial index
 
     constructor(opts) {
         opts = opts || {};
@@ -35,8 +34,8 @@ export class GridVizCanvas {
         const th = this;
         this.cplus.redraw = function () {
 
-            //retrieve tiles
-            th.tg.requestTiles(this.updateExtentGeo(), ()=>{th.draw();});
+            //get data to show
+            th.layer.dataset.getData(this.updateExtentGeo(), ()=>{th.draw();});
 
             //draw cells
             th.draw();
@@ -45,17 +44,17 @@ export class GridVizCanvas {
         };
 
 
-
         //TODO
-        //this.layers = []
+        //TODO add several
+        this.layer = new Layer(
+            new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/").loadInfo(() => {
+                this.cplus.redraw();
+            }),
+            new ColorStyle(),
+            0,
+            10000000
+        )
 
-        /** @type {TiledGrid} */
-        this.tg = new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/").loadInfo(() => {
-            this.cplus.redraw();
-        })
-
-        /** @type {ColorStyle} */
-        this.style = new ColorStyle()
 
     }
 
@@ -65,10 +64,10 @@ export class GridVizCanvas {
      */
     draw() {
         //get cells within the view
-        const cells = this.tg.getCells(this.cplus.extGeo)
+        const cells = this.layer.dataset.getCells(this.cplus.extGeo)
 
         //draw cells
-        this.style.draw(cells, this, this.tg)
+        this.layer.style.draw(cells, this.layer.dataset.resolutionGeo, this)
     }
 
 }
