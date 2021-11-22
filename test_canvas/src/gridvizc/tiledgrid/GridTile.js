@@ -1,20 +1,17 @@
 //@ts-check
-/** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
-/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:Envelope }} GridInfo */
-/** @typedef {{x: number, y: number}} Cell */
 
 export class GridTile {
 
     /**
      * 
-     * @param {Array.<Cell>} data 
+     * @param {Array.<import("./TiledGrid").Cell>} data 
      * @param {number} xT 
      * @param {number} yT 
-     * @param {GridInfo} gridInfo 
+     * @param {import("./TiledGrid").GridInfo} gridInfo 
      */
     constructor(data, xT, yT, gridInfo) {
 
-        /** @type {Array.<Cell>} */
+        /** @type {Array.<import("./TiledGrid").Cell>} */
         this.cells = data;
         /** @type {number} */
         this.x = xT
@@ -29,7 +26,7 @@ export class GridTile {
     /**
      * Convert cell position from tile position into geo position
      * 
-     * @param {GridInfo} gridInfo 
+     * @param {import("./TiledGrid").GridInfo} gridInfo 
      */
     geoTile(gridInfo) {
 

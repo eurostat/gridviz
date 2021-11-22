@@ -1,4 +1,5 @@
 //@ts-check
+/** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
 export class CanvasPlus {
 
@@ -108,6 +109,7 @@ export class CanvasPlus {
 
     /**
      * @param {number} marginPx 
+     * @returns {Envelope}
      */
     updateExtentGeo(marginPx = 20) {
         this.extGeo = {
@@ -116,6 +118,7 @@ export class CanvasPlus {
             yMin: this.pixToGeoY(this.h + marginPx),
             yMax: this.pixToGeoY(-marginPx)
         }
+        return this.extGeo;
     }
 
     /**

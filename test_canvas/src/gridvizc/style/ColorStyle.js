@@ -21,8 +21,7 @@ export class ColorStyle {
         /** @type {number} */
         const r = tg.info.resolutionGeo
 
-        for (let j = 0; j < cells.length; j++) {
-            const cell = cells[j];
+        for (let cell of cells) {
             const value = cell[2011]; //TODO extract column name
             c2.fillStyle = this.getColor(value);
             c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), r / cp.ps, r / cp.ps);

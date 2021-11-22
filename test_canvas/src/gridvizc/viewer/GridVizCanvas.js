@@ -1,5 +1,4 @@
 //@ts-check
-/** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
 import { CanvasPlus } from '../viewer/CanvasPlus';
 import { TiledGrid } from '../tiledgrid/TiledGrid';
@@ -23,47 +22,53 @@ export class GridVizCanvas {
         /** @type {number} */
         this.h = opts.h || canvas.offsetHeight;
 
+
+
         /** @type {CanvasPlus} */
         this.cplus = new CanvasPlus();
         this.cplus.c2d.fillStyle = "black";
         this.cplus.c2d.fillRect(0, 0, this.w, this.h);
 
         this.cplus.center = { x: 4000000, y: 2300000 }
-        this.cplus.ps = 10
+        this.cplus.ps = 100
 
+        const th = this;
+        this.cplus.redraw = function () {
+
+            //retrieve tiles
+            th.tg.requestTiles(this.updateExtentGeo(), ()=>{th.draw();});
+
+            //draw cells
+            th.draw();
+
+            return this
+        };
 
 
 
         //TODO
         //this.layers = []
 
-        const tg = new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/").loadInfo(() => {
+        /** @type {TiledGrid} */
+        this.tg = new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/").loadInfo(() => {
             this.cplus.redraw();
         })
 
-        const style = new ColorStyle()
+        /** @type {ColorStyle} */
+        this.style = new ColorStyle()
+
+    }
 
 
-        const th = this;
-        this.cplus.redraw = function () {
+    /**
+     * 
+     */
+    draw() {
+        //get cells within the view
+        const cells = this.tg.getCells(this.cplus.extGeo)
 
-            //geo extent
-            this.updateExtentGeo();
-            tg.requestTiles(this.extGeo, draw_);
-
-            //redaw
-            draw_()
-
-            return this
-        };
-
-        const draw_ = function () {
-            //get cells within the view
-            const cells = tg.getCells(th.cplus.extGeo)
-            //draw cells
-            style.draw(cells, th, tg)
-        }
-
+        //draw cells
+        this.style.draw(cells, this, this.tg)
     }
 
 }
