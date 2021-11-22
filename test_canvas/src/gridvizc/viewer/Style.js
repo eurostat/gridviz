@@ -1,17 +1,17 @@
 //@ts-check
 import { Cell } from "./Dataset";
-import { GridVizCanvas } from "./GridVizCanvas";
+import { CanvasPlus } from "../viewer/CanvasPlus";
 
 /**
  * @abstract
  */
- export class Style {
+export class Style {
 
     /**
      * @param {string|function} value 
      * @abstract
      */
-    constructor(value){
+    constructor(value) {
         this.value = value
     }
 
@@ -20,13 +20,11 @@ import { GridVizCanvas } from "./GridVizCanvas";
      * @returns {number}
      */
     getValue(cell) {
-        if(this.value instanceof Function || typeof this.value === "function")
-        return this.value(cell);
-        else return cell[this.value];
+        if (this.value instanceof Function || typeof this.value === "function")
+            return this.value(cell);
+        else
+            return cell[this.value];
     }
-
-
-
 
 
     /**
@@ -34,9 +32,9 @@ import { GridVizCanvas } from "./GridVizCanvas";
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} resolution 
-     * @param {GridVizCanvas} app 
+     * @param {CanvasPlus} cp 
      */
-     draw(cells, resolution, app) {
+     draw(cells, resolution, cp) {
         console.log("Style draw method not implemented.")
     }
 

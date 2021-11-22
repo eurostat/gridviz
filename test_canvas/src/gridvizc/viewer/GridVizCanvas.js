@@ -26,15 +26,14 @@ export class GridVizCanvas {
         /** @type {number} */
         this.h = opts.h || canvas.offsetHeight;
 
+        this.backgroundColor = opts.backgroundColor || "white"
+
 
 
         /** @type {CanvasPlus} */
         this.cplus = new CanvasPlus();
-        this.cplus.c2d.fillStyle = "black";
-        this.cplus.c2d.fillRect(0, 0, this.w, this.h);
-
-        this.cplus.center = { x: 4000000, y: 2300000 }
-        this.cplus.ps = 100
+        this.cplus.center = opts.center || { x: 4000000, y: 2300000 }
+        this.cplus.ps = opts.ps || 100
 
         const th = this;
         this.cplus.redraw = function () {
@@ -60,6 +59,8 @@ export class GridVizCanvas {
 
         /** @type {Array.<Layer>} */
         this.layers = [];
+        //note: the layers are not supposed to overlap
+
 
         /**
          * Styles library.
@@ -106,6 +107,15 @@ export class GridVizCanvas {
         //TODO with non-tiled CSV file
     }
 
+    /**
+     * Clear the app screen.
+     * To be used before a redraw for example.
+     */
+    clear() {
+        const c2 = this.cplus.c2d
+        c2.fillStyle = this.backgroundColor;
+        c2.fillRect(0, 0, this.w, this.h);
+    }
 
     /**
      * @param {Layer} layer 
@@ -114,8 +124,11 @@ export class GridVizCanvas {
         //get cells to draw
         const cells = layer.dataset.getCells(this.cplus.extGeo)
 
+        //clear
+        this.clear();
+
         //draw cells
-        layer.style.draw(cells, layer.dataset.resolutionGeo, this)
+        layer.style.draw(cells, layer.dataset.resolutionGeo, this.cplus)
     }
 
 }

@@ -2,7 +2,7 @@
 
 import { Style } from "../viewer/Style"
 import { Cell } from "../viewer/Dataset"
-import { GridVizCanvas } from "../viewer/GridVizCanvas";
+import { CanvasPlus } from "../viewer/CanvasPlus";
 import { interpolateReds } from "d3-scale-chromatic"
 
 export class ColorStyle extends Style {
@@ -20,18 +20,11 @@ export class ColorStyle extends Style {
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} resolution 
-     * @param {GridVizCanvas} app 
+     * @param {CanvasPlus} cp 
      */
-    draw(cells, resolution, app) {
+    draw(cells, resolution, cp) {
 
-        const cp = app.cplus;
         const c2 = cp.c2d
-
-        //TODO move that to a "clear" method.
-        //clear
-        c2.fillStyle = "black";
-        c2.fillRect(0, 0, app.w, app.h);
-
         for (let cell of cells) {
             const value = this.getValue(cell);
             c2.fillStyle = this.getColor(value);
