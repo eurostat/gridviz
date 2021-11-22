@@ -64,6 +64,17 @@ export class CanvasGeo {
         return this;
     }
 
+    /**
+     * Clear the app screen.
+     * To be used before a redraw for example.
+     * @param {*} color 
+     */
+    clear(color="white") {
+        const c2 = this.c2d
+        c2.fillStyle = color;
+        c2.fillRect(0, 0, this.w, this.h);
+    }
+
     //conversion functions
     /**
      * @param {number} xGeo

@@ -115,17 +115,8 @@ export class GridVizCanvas {
 
 
     /**
-     * Clear the app screen.
-     * To be used before a redraw for example.
-     * //TODO move that to canvas
-     */
-    clear() {
-        const c2 = this.cg.c2d
-        c2.fillStyle = this.backgroundColor;
-        c2.fillRect(0, 0, this.w, this.h);
-    }
-
-    /**
+     * Draw a layer.
+     * 
      * @param {Layer} layer 
      */
     draw(layer) {
@@ -133,13 +124,15 @@ export class GridVizCanvas {
         const cells = layer.dataset.getCells(this.cg.extGeo)
 
         //clear
-        this.clear();
+        this.cg.clear(this.backgroundColor);
 
         //draw cells
         layer.style.draw(cells, layer.dataset.resolutionGeo, this.cg)
     }
 
     /**
+     * Set viewer position.
+     * 
      * @param {{x:number,y:number}} pos 
      */
      geoCenter(pos) {
@@ -151,6 +144,8 @@ export class GridVizCanvas {
     }
 
     /**
+     * Set viewer zoom level (ground pixel size).
+     * 
      * @param {number} ps 
      */
      pixSize(ps) {
