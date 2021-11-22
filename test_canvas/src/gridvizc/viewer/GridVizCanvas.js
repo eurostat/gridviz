@@ -142,12 +142,23 @@ export class GridVizCanvas {
     /**
      * @param {{x:number,y:number}} pos 
      */
-    geoCenter(pos) {
+     geoCenter(pos) {
         if(pos) {
             this.cg.center = pos;
             return this;
         }
         return pos;
+    }
+
+    /**
+     * @param {number} ps 
+     */
+     pixSize(ps) {
+        if(ps) {
+            this.cg.ps = ps;
+            return this;
+        }
+        return ps;
     }
 
 }
