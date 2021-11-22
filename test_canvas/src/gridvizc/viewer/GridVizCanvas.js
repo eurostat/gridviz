@@ -8,6 +8,8 @@ import { Layer } from './Layer';
 export class GridVizCanvas {
 
     //TODO use layer - one per zoom level
+    //TODO several styles
+    //TODO dataset static CSV
     //TODO implement mouse over
 
     constructor(opts) {
