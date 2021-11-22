@@ -8,6 +8,7 @@ import { Dataset } from './Dataset';
 import { CSVGrid } from '../dataset/CSVGrid';
 import { TiledGrid } from '../dataset/TiledGrid';
 import { ColorStyle } from '../style/ColorStyle';
+import { FlagStyle } from '../style/FlagStyle';
 
 
 export class GridVizCanvas {
@@ -70,6 +71,9 @@ export class GridVizCanvas {
         this.styling = {
             getColorStyle: function (value) {
                 return new ColorStyle(value);
+            },
+            getFlagStyle : function (dict) {
+                return new FlagStyle(dict);
             }
         }
 
