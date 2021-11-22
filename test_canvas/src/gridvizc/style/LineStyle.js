@@ -25,9 +25,17 @@ export class LineStyle extends Style {
 
         const r = resolution / cg.ps;
 
-        //TODO sort cells by y and x
-        //TODO for each y
-        //TODO sort cells by x
+        //index cells by y
+        const ind = {};
+        for (const cell of cells) {
+            let col = ind[cell.y];
+            if(!col) { col=[]; ind[cell.y]=col }
+            col.push(cell)
+        }
+
+        console.log(ind)
+
+
         //for each row, draw line
 
         cg.ctx.strokeStyle = "blue";
