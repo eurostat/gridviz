@@ -35,7 +35,7 @@ export class Style {
      * @param {CanvasPlus} cp 
      */
      draw(cells, resolution, cp) {
-        console.log("Style draw method not implemented.")
+        throw new Error('Method draw not implemented.');
     }
 
 }
