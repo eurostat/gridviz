@@ -46,7 +46,10 @@ export class CSVGrid extends Dataset {
         let cells = []
 
         for (const cell of this.cells) {
-            //TODO
+            if(cell.x < e.xMin) continue;
+            if(cell.x > e.xMax) continue;
+            if(cell.y < e.yMin) continue;
+            if(cell.y > e.yMax) continue;
         }
 
         return cells;

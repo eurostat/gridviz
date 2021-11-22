@@ -125,17 +125,17 @@ import { Dataset, Cell, Envelope } from "../viewer/Dataset"
     /**
      * Get all cells from cache which are within a geographical envelope.
      * 
-     * @param {Envelope} e 
+     * @param {Envelope} extGeo 
      * @returns {Array.<Cell>}
      */
-     getCells(e) {
+     getCells(extGeo) {
 
         /** @type {Array.<Cell>} */
         let cells = []
 
         //tiles within the scope
         /** @type {Envelope} */
-        const tb = this.getTilingEnvelope(e);
+        const tb = this.getTilingEnvelope(extGeo);
 
         //grid bounds
         /** @type {Envelope} */
