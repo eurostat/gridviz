@@ -5,6 +5,7 @@
 
 /**
  * @abstract
+ * 
  * @author Julien Gaffuri
  */
 export class Dataset {

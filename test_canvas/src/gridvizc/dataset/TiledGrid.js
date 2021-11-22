@@ -7,6 +7,7 @@ import { Dataset, Cell, Envelope } from "../viewer/Dataset"
 
 /**
  * A dataset composed of tiled CSV files.
+ * 
  * @author Julien Gaffuri
  */
  export class TiledGrid extends Dataset {
