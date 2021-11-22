@@ -26,23 +26,29 @@ export class FlagStyle extends Style {
      */
     draw(cells, resolution, cg) {
         const c2 = cg.c2d
+        const r = resolution / cg.ps;
         for (let cell of cells) {
 
             //compute total
             let total = 0;
             for (let column of Object.keys(this.dict))
-                total += cell[column]
+                total += +cell[column]
 
             //draw flag elements
+            let cumul = 0;
             for (let [column, color] of Object.entries(this.dict)) {
+
                 //set color
                 c2.fillStyle = color;
+
                 //compute share
                 const share = cell[column] / total;
-                //draw flag element
-                c2.fillRect(cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), resolution / cg.ps, share * resolution / cg.ps);
-            }
 
+                //draw flag element
+                c2.fillRect(cumul * r + cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), share * r, r);
+
+                cumul += share;
+            }
         }
     }
 
