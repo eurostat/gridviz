@@ -38,6 +38,10 @@ export class GridVizCanvas {
 
             for (const layer of th.layers) {
 
+                //skip layer not within the zoom range
+                if(layer.minZoom >= this.ps) continue;
+                if(layer.maxZoom < this.ps) continue;
+
                 //get data to show
                 layer.dataset.getData(this.updateExtentGeo(), () => { th.draw(layer); });
 
@@ -52,15 +56,25 @@ export class GridVizCanvas {
         /** @type {Array.<Layer>} */
         this.layers = [];
 
+        //add 1km
         this.layers.push(new Layer(
             new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/").loadInfo(() => {
                 this.cplus.redraw();
             }),
             new ColorStyle(),
             0,
-            10000000
+            500
         ));
 
+        //add 5km
+        this.layers.push(new Layer(
+            new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/").loadInfo(() => {
+                this.cplus.redraw();
+            }),
+            new ColorStyle(),
+            500,
+            999999999
+        ));
 
     }
 
