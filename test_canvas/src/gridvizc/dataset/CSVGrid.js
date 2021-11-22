@@ -16,7 +16,7 @@ export class CSVGrid extends Dataset {
         super(url, undefined)
 
         /** @type {Array.<Cell>} */
-        this.cells = [];
+        this.cells = undefined;
     }
 
 
@@ -28,7 +28,19 @@ export class CSVGrid extends Dataset {
      */
     getData(e, callback) {
 
-        //TODO
+        csv(this.url)
+        .then(
+            /** @param {*} data */
+            (data) => {
+                this.cells = data;
+
+                //execute the callback, usually a draw function
+                callback()
+            })
+        .catch(() => {
+            //mark as failed
+            this.cells = []
+        });
 
         return this;
     }
