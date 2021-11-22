@@ -5,7 +5,10 @@ import { json, csv } from "d3-fetch";
 import { GridTile } from './GridTile';
 import { Dataset, Cell, Envelope } from "../viewer/Dataset"
 
-export class TiledGrid extends Dataset {
+/**
+ * A dataset composed of tiled CSV files.
+ */
+ export class TiledGrid extends Dataset {
 
     /**
      * @param {string} url This url of the info.json.
@@ -69,7 +72,8 @@ export class TiledGrid extends Dataset {
      * Request data within a geographic envelope.
      * 
      * @param {Envelope} e 
-     * @param {function} callback 
+     * @param {function} callback
+     * @returns {this}
      */
     getData(e, callback) {
 
@@ -114,6 +118,7 @@ export class TiledGrid extends Dataset {
                     });
             }
         }
+        return this;
     }
 
 

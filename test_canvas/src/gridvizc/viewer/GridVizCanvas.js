@@ -5,6 +5,7 @@ import { Layer } from './Layer';
 import { Style } from './Style';
 import { Dataset } from './Dataset';
 
+import { CSVGrid } from '../dataset/CSVGrid';
 import { TiledGrid } from '../dataset/TiledGrid';
 import { ColorStyle } from '../style/ColorStyle';
 
@@ -67,7 +68,7 @@ export class GridVizCanvas {
          * This object exposes style constructors.
          */
         this.styling = {
-            getColorStyle : function(value) {
+            getColorStyle: function (value) {
                 return new ColorStyle(value);
             }
         }
@@ -97,6 +98,7 @@ export class GridVizCanvas {
         )
     }
 
+
     /**
      * @param {string} url 
      * @param {Style} style 
@@ -104,8 +106,12 @@ export class GridVizCanvas {
      * @param {number} maxZoom 
      */
     addGrid(url, style, minZoom, maxZoom) {
-        //TODO with non-tiled CSV file
+        this.add(
+            new CSVGrid(url).getData(null, () => { this.cg.redraw(); }),
+            style, minZoom, maxZoom
+        )
     }
+
 
     /**
      * Clear the app screen.

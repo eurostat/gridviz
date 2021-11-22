@@ -26,6 +26,7 @@ export class Dataset {
      * 
      * @param {Envelope} extGeo 
      * @param {function} callback 
+     * @returns {this}
      * @abstract
      */
      getData(extGeo, callback) {
