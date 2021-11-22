@@ -36,40 +36,44 @@ export class GridVizCanvas {
         const th = this;
         this.cplus.redraw = function () {
 
-            //get data to show
-            th.layer.dataset.getData(this.updateExtentGeo(), ()=>{th.draw();});
+            for (const layer of th.layers) {
 
-            //draw cells
-            th.draw();
+                //get data to show
+                layer.dataset.getData(this.updateExtentGeo(), () => { th.draw(layer); });
 
+                //draw cells
+                th.draw(layer);
+
+            }
             return this
         };
 
 
-        //TODO
-        //TODO add several
-        this.layer = new Layer(
+        /** @type {Array.<Layer>} */
+        this.layers = [];
+
+        this.layers.push(new Layer(
             new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/").loadInfo(() => {
                 this.cplus.redraw();
             }),
             new ColorStyle(),
             0,
             10000000
-        )
+        ));
 
 
     }
 
 
     /**
-     * 
+     * @param {Layer} layer 
      */
-    draw() {
-        //get cells within the view
-        const cells = this.layer.dataset.getCells(this.cplus.extGeo)
+    draw(layer) {
+        //get cells to draw
+        const cells = layer.dataset.getCells(this.cplus.extGeo)
 
         //draw cells
-        this.layer.style.draw(cells, this.layer.dataset.resolutionGeo, this)
+        layer.style.draw(cells, layer.dataset.resolutionGeo, this)
     }
 
 }
