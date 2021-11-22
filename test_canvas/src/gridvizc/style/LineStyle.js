@@ -4,7 +4,7 @@ import { Style } from "../viewer/Style"
 import { Cell } from "../viewer/Dataset"
 import { CanvasGeo } from "../viewer/CanvasGeo";
 
-export class FlagStyle extends Style {
+export class LineStyle extends Style {
 
     /**
       * @param {string|function} value 

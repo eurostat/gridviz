@@ -9,6 +9,7 @@ import { CSVGrid } from '../dataset/CSVGrid';
 import { TiledGrid } from '../dataset/TiledGrid';
 import { ColorStyle } from '../style/ColorStyle';
 import { FlagStyle } from '../style/FlagStyle';
+import { LineStyle } from '../style/LineStyle';
 
 
 export class GridVizCanvas {
@@ -74,6 +75,9 @@ export class GridVizCanvas {
             },
             getFlagStyle : function (dict) {
                 return new FlagStyle(dict);
+            },
+            getLineStyle : function (value) {
+                return new LineStyle(value);
             }
         }
 
