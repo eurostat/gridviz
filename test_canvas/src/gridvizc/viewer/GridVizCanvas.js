@@ -1,9 +1,13 @@
 //@ts-check
 
 import { CanvasPlus } from '../viewer/CanvasPlus';
-import { TiledGrid } from '../tiledgrid/TiledGrid';
-import { ColorStyle } from '../style/ColorStyle';
 import { Layer } from './Layer';
+import { Style } from './Style';
+import { Dataset } from './Dataset';
+
+import { TiledGrid } from '../dataset/TiledGrid';
+import { ColorStyle } from '../style/ColorStyle';
+
 
 export class GridVizCanvas {
 
@@ -38,8 +42,8 @@ export class GridVizCanvas {
             for (const layer of th.layers) {
 
                 //skip layer not within the zoom range
-                if(layer.minZoom >= this.ps) continue;
-                if(layer.maxZoom < this.ps) continue;
+                if (layer.minZoom >= this.ps) continue;
+                if (layer.maxZoom < this.ps) continue;
 
                 //get data to show
                 layer.dataset.getData(this.updateExtentGeo(), () => { th.draw(layer); });
@@ -58,28 +62,44 @@ export class GridVizCanvas {
         this.layers = [];
 
 
+        const s = new ColorStyle();
+        this.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", s, 0, 500);
+        this.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", s, 500, 1000);
+        this.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", s, 1000, 9999999999);
 
+    }
 
-        //add 1km
-        this.layers.push(new Layer(
-            new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/").loadInfo(() => {
-                this.cplus.redraw();
-            }),
-            new ColorStyle(),
-            0,
-            500
-        ));
+    /**
+     * @param {Dataset} dataset 
+     * @param {Style} style 
+     * @param {number} minZoom 
+     * @param {number} maxZoom 
+     */
+    add(dataset, style, minZoom, maxZoom) {
+        this.layers.push(new Layer(dataset, style, minZoom, maxZoom));
+    }
 
-        //add 5km
-        this.layers.push(new Layer(
-            new TiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/").loadInfo(() => {
-                this.cplus.redraw();
-            }),
-            new ColorStyle(),
-            500,
-            999999999
-        ));
+    /**
+     * @param {string} url 
+     * @param {Style} style 
+     * @param {number} minZoom 
+     * @param {number} maxZoom 
+     */
+    addTiledGrid(url, style, minZoom, maxZoom) {
+        this.add(
+            new TiledGrid(url).loadInfo(() => { this.cplus.redraw(); }),
+            style, minZoom, maxZoom
+        )
+    }
 
+    /**
+     * @param {string} url 
+     * @param {Style} style 
+     * @param {number} minZoom 
+     * @param {number} maxZoom 
+     */
+    addGrid(url, style, minZoom, maxZoom) {
+        //TODO with non-tiled CSV file
     }
 
 

@@ -1,17 +1,20 @@
 //@ts-check
 
+import { Cell } from "../viewer/Dataset"
+import { GridInfo } from "./TiledGrid"
+
 export class GridTile {
 
     /**
      * 
-     * @param {Array.<import("./TiledGrid").Cell>} data 
+     * @param {Array.<Cell>} data 
      * @param {number} xT 
      * @param {number} yT 
-     * @param {import("./TiledGrid").GridInfo} gridInfo 
+     * @param {GridInfo} gridInfo 
      */
     constructor(data, xT, yT, gridInfo) {
 
-        /** @type {Array.<import("./TiledGrid").Cell>} */
+        /** @type {Array.<Cell>} */
         this.cells = data;
         /** @type {number} */
         this.x = xT
@@ -26,7 +29,7 @@ export class GridTile {
     /**
      * Convert cell position from tile position into geo position
      * 
-     * @param {import("./TiledGrid").GridInfo} gridInfo 
+     * @param {GridInfo} gridInfo 
      */
     geoTile(gridInfo) {
 
