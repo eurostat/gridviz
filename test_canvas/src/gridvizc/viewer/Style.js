@@ -20,6 +20,10 @@ export class Style {
 
         /** @type {number} */
         this.psStroke_ = undefined;
+        /** @type {string} */
+        this.strokeColor_ = "gray";
+        /** @type {number} */
+        this.strokeWidth_ = 1.5;
     }
 
     /**
@@ -63,7 +67,8 @@ export class Style {
 
         const c2 = cg.c2d
         const r = resolution / cg.ps;
-        c2.fillStyle = "darkgray";
+        c2.fillStyle = this.strokeColor_;
+        c2.lineWidth = this.strokeWidth_;
         for (let cell of cells) {
             c2.beginPath();
             c2.rect(cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), r, r);
