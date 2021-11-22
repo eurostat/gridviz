@@ -1,6 +1,6 @@
 //@ts-check
 
-import { CanvasPlus } from '../viewer/CanvasPlus';
+import { CanvasZoomPan } from './CanvasZoomPan';
 import { Layer } from './Layer';
 import { Style } from './Style';
 import { Dataset } from './Dataset';
@@ -11,7 +11,6 @@ import { ColorStyle } from '../style/ColorStyle';
 
 export class GridVizCanvas {
 
-    //TODO check generic methods
     //TODO dataset static CSV
     //TODO make several styles
     //TODO implement mouse over
@@ -31,13 +30,13 @@ export class GridVizCanvas {
 
 
 
-        /** @type {CanvasPlus} */
-        this.cplus = new CanvasPlus();
-        this.cplus.center = opts.center || { x: 4000000, y: 2300000 }
-        this.cplus.ps = opts.ps || 100
+        /** @type {CanvasZoomPan} */
+        this.czp = new CanvasZoomPan();
+        this.czp.center = opts.center || { x: 4000000, y: 2300000 }
+        this.czp.ps = opts.ps || 100
 
         const th = this;
-        this.cplus.redraw = function () {
+        this.czp.redraw = function () {
 
             for (const layer of th.layers) {
 
@@ -93,7 +92,7 @@ export class GridVizCanvas {
      */
     addTiledGrid(url, style, minZoom, maxZoom) {
         this.add(
-            new TiledGrid(url).loadInfo(() => { this.cplus.redraw(); }),
+            new TiledGrid(url).loadInfo(() => { this.czp.redraw(); }),
             style, minZoom, maxZoom
         )
     }
@@ -114,7 +113,7 @@ export class GridVizCanvas {
      * //TODO move that to canvas
      */
     clear() {
-        const c2 = this.cplus.c2d
+        const c2 = this.czp.c2d
         c2.fillStyle = this.backgroundColor;
         c2.fillRect(0, 0, this.w, this.h);
     }
@@ -124,13 +123,13 @@ export class GridVizCanvas {
      */
     draw(layer) {
         //get cells to draw
-        const cells = layer.dataset.getCells(this.cplus.extGeo)
+        const cells = layer.dataset.getCells(this.czp.extGeo)
 
         //clear
         this.clear();
 
         //draw cells
-        layer.style.draw(cells, layer.dataset.resolutionGeo, this.cplus)
+        layer.style.draw(cells, layer.dataset.resolutionGeo, this.czp)
     }
 
 }

@@ -1,7 +1,7 @@
 //@ts-check
 /** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
-export class CanvasPlus {
+export class CanvasZoomPan {
 
     /**
      * @constructor

@@ -1,6 +1,6 @@
 //@ts-check
 import { Cell } from "./Dataset";
-import { CanvasPlus } from "../viewer/CanvasPlus";
+import { CanvasZoomPan } from "./CanvasZoomPan";
 
 /**
  * @abstract
@@ -12,10 +12,16 @@ export class Style {
      * @abstract
      */
     constructor(value) {
+
+        /** Used to retrieve the cell value to be used for styling.
+         * @type {string|function} */
         this.value = value
+
     }
 
     /**
+     * Returns the value of a grid cell to be used for styling.
+     * 
      * @param {Cell} cell 
      * @returns {number}
      */
@@ -32,9 +38,9 @@ export class Style {
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} resolution 
-     * @param {CanvasPlus} cp 
+     * @param {CanvasZoomPan} cv 
      */
-     draw(cells, resolution, cp) {
+     draw(cells, resolution, cv) {
         throw new Error('Method draw not implemented.');
     }
 

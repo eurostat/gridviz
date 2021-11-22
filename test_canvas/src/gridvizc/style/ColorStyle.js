@@ -2,7 +2,7 @@
 
 import { Style } from "../viewer/Style"
 import { Cell } from "../viewer/Dataset"
-import { CanvasPlus } from "../viewer/CanvasPlus";
+import { CanvasZoomPan } from "../viewer/CanvasZoomPan";
 import { interpolateReds } from "d3-scale-chromatic"
 
 export class ColorStyle extends Style {
@@ -20,7 +20,7 @@ export class ColorStyle extends Style {
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} resolution 
-     * @param {CanvasPlus} cp 
+     * @param {CanvasZoomPan} cp 
      */
     draw(cells, resolution, cp) {
 
