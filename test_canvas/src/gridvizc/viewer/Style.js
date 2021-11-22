@@ -17,6 +17,8 @@ export class Style {
          * @type {string|function} */
         this.value = value
 
+
+        this.psStroke = undefined;
     }
 
     /**
@@ -40,8 +42,45 @@ export class Style {
      * @param {number} resolution 
      * @param {CanvasGeo} cg 
      */
-     draw(cells, resolution, cg) {
+    draw(cells, resolution, cg) {
         throw new Error('Method draw not implemented.');
+    }
+
+
+
+
+
+    /**
+     * 
+     * @param {*} cells 
+     * @param {*} resolution 
+     * @param {*} cg 
+     * @returns 
+     */
+    drawStroke(cells, resolution, cg) {
+        if (!this.psStroke || cg.ps > this.psStroke) return;
+
+        const c2 = cg.c2d
+        const r = resolution / cg.ps;
+        c2.fillStyle = "darkgray";
+        for (let cell of cells) {
+            c2.beginPath();
+            c2.rect(cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), r, r);
+            c2.stroke();
+        }
+    }
+
+    /**
+     * 
+     * @param {*} psStroke 
+     * @returns 
+     */
+    psStroke(psStroke) {
+        if(psStroke) {
+            this.psStroke = psStroke;
+            return this;
+        }
+        return psStroke;
     }
 
 }

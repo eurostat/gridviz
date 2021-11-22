@@ -72,8 +72,8 @@ export class GridVizCanvas {
             getColorStyle: function (value) {
                 return new ColorStyle(value);
             },
-            getFlagStyle : function (dict, psStroke) {
-                return new FlagStyle(dict, psStroke);
+            getFlagStyle : function (dict) {
+                return new FlagStyle(dict);
             }
         }
 

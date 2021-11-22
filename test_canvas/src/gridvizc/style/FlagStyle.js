@@ -8,15 +8,12 @@ export class FlagStyle extends Style {
 
     /**
       * @param {Object} dict 
-      * @param {number} psStroke 
       */
-    constructor(dict, psStroke) {
+    constructor(dict) {
         super(null)
 
         //dictionnary column -> color
         this.dict = dict;
-
-        this.psStroke = psStroke;
     }
 
 
@@ -56,14 +53,7 @@ export class FlagStyle extends Style {
         }
 
         //draw stroke
-        if (this.psStroke && cg.ps < this.psStroke) {
-            c2.fillStyle = "darkgray";
-            for (let cell of cells) {
-                c2.beginPath();
-                c2.rect(cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), r, r);
-                c2.stroke();
-            }
-        }
+        this.drawStroke(cells, resolution, cg)
 
     }
 
