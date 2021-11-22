@@ -11,22 +11,22 @@
     <script>
         //start simulation
         app = gridvizc.gridvizApp()
-
+/*
         const s = app.styling.getColorStyle("2011").psStroke(70);
         app.geoCenter({ x: 4000000, y: 2300000 }).pixSize(200)
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", s, 0, 500);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", s, 500, 1000);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", s, 1000, 9999999999);
+*/
 
-
-        /*
+        
                 //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
                 //const s = app.styling.getColorStyle("Inhabitants");
-                const s = app.styling.getFlagStyle({ "Population under 14": "green", "Population over 65": "blue" }).psStroke(0.1);
+                const s = app.styling.getFlagStyle({ "Population under 14": "green", "Population over 65": "blue" }).psStroke(0.05);
                 app.geoCenter({ x: 1485, y: 4515 }).pixSize(0.1)
                 //resolution param should be 100 !
                 app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 1, s, 0, 9999999999)
-        */
+        
     </script>
 </body>
 
