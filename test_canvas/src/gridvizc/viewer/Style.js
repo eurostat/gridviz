@@ -1,6 +1,6 @@
 //@ts-check
 import { Cell } from "./Dataset";
-import { CanvasZoomPan } from "./CanvasZoomPan";
+import { CanvasGeo } from './CanvasGeo';
 
 /**
  * @abstract
@@ -38,9 +38,9 @@ export class Style {
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} resolution 
-     * @param {CanvasZoomPan} cv 
+     * @param {CanvasGeo} cg 
      */
-     draw(cells, resolution, cv) {
+     draw(cells, resolution, cg) {
         throw new Error('Method draw not implemented.');
     }
 

@@ -1,6 +1,6 @@
 //@ts-check
 
-import { CanvasZoomPan } from './CanvasZoomPan';
+import { CanvasGeo } from './CanvasGeo';
 import { Layer } from './Layer';
 import { Style } from './Style';
 import { Dataset } from './Dataset';
@@ -30,13 +30,13 @@ export class GridVizCanvas {
 
 
 
-        /** @type {CanvasZoomPan} */
-        this.czp = new CanvasZoomPan();
-        this.czp.center = opts.center || { x: 4000000, y: 2300000 }
-        this.czp.ps = opts.ps || 100
+        /** @type {CanvasGeo} */
+        this.cg = new CanvasGeo();
+        this.cg.center = opts.center || { x: 4000000, y: 2300000 }
+        this.cg.ps = opts.ps || 100
 
         const th = this;
-        this.czp.redraw = function () {
+        this.cg.redraw = function () {
 
             for (const layer of th.layers) {
 
@@ -92,7 +92,7 @@ export class GridVizCanvas {
      */
     addTiledGrid(url, style, minZoom, maxZoom) {
         this.add(
-            new TiledGrid(url).loadInfo(() => { this.czp.redraw(); }),
+            new TiledGrid(url).loadInfo(() => { this.cg.redraw(); }),
             style, minZoom, maxZoom
         )
     }
@@ -113,7 +113,7 @@ export class GridVizCanvas {
      * //TODO move that to canvas
      */
     clear() {
-        const c2 = this.czp.c2d
+        const c2 = this.cg.c2d
         c2.fillStyle = this.backgroundColor;
         c2.fillRect(0, 0, this.w, this.h);
     }
@@ -123,13 +123,13 @@ export class GridVizCanvas {
      */
     draw(layer) {
         //get cells to draw
-        const cells = layer.dataset.getCells(this.czp.extGeo)
+        const cells = layer.dataset.getCells(this.cg.extGeo)
 
         //clear
         this.clear();
 
         //draw cells
-        layer.style.draw(cells, layer.dataset.resolutionGeo, this.czp)
+        layer.style.draw(cells, layer.dataset.resolutionGeo, this.cg)
     }
 
 }

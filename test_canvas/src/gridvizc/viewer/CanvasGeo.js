@@ -1,7 +1,10 @@
 //@ts-check
 /** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
-export class CanvasZoomPan {
+/**
+ * A canvas enhanced with zoom and pan capabilities.
+ */
+export class CanvasGeo {
 
     /**
      * @constructor

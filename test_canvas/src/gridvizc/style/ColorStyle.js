@@ -2,7 +2,7 @@
 
 import { Style } from "../viewer/Style"
 import { Cell } from "../viewer/Dataset"
-import { CanvasZoomPan } from "../viewer/CanvasZoomPan";
+import { CanvasGeo } from "../viewer/CanvasGeo";
 import { interpolateReds } from "d3-scale-chromatic"
 
 export class ColorStyle extends Style {
@@ -20,15 +20,15 @@ export class ColorStyle extends Style {
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} resolution 
-     * @param {CanvasZoomPan} cp 
+     * @param {CanvasGeo} cg 
      */
-    draw(cells, resolution, cp) {
+    draw(cells, resolution, cg) {
 
-        const c2 = cp.c2d
+        const c2 = cg.c2d
         for (let cell of cells) {
             const value = this.getValue(cell);
             c2.fillStyle = this.getColor(value);
-            c2.fillRect(cp.geoToPixX(cell.x), cp.geoToPixY(cell.y), resolution / cp.ps, resolution / cp.ps);
+            c2.fillRect(cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), resolution / cg.ps, resolution / cg.ps);
         }
     }
 
