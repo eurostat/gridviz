@@ -26,27 +26,8 @@ export class LineStyle extends Style {
  * @param {CanvasGeo} cg 
  */
     draw(cells, resolution, cg) {
-
-        const e = cg.extGeo;
-        const xMin = Math.floor(e.xMin / resolution) * resolution;
-        const xMax = Math.floor(e.xMax / resolution) * resolution;
-        const yMin = Math.floor(e.yMin / resolution) * resolution;
-        const yMax = Math.floor(e.yMax / resolution) * resolution;
         
-        const r = resolution / cg.ps;
-
-        cg.ctx.strokeStyle = "black";
-        cg.ctx.lineWidth = 1;
-
-        for (let y = yMin; y <= yMax; y+=resolution) {
-            cg.ctx.beginPath();
-            cg.ctx.moveTo(cg.geoToPixX(xMin), cg.geoToPixY(y));
-            cg.ctx.lineTo(cg.geoToPixX(xMax), cg.geoToPixY(y));
-            cg.ctx.stroke();
-        }
-
-
-        /*/index cells by y
+        //index cells by y
         const ind = {};
         for (const cell of cells) {
             let col = ind[cell.y];
@@ -54,7 +35,30 @@ export class LineStyle extends Style {
             col.push(cell)
         }
 
-        console.log(ind)*/
+        //compute extent
+        const e = cg.extGeo;
+        const xMin = Math.floor(e.xMin / resolution) * resolution;
+        const xMax = Math.floor(e.xMax / resolution) * resolution;
+        const yMin = Math.floor(e.yMin / resolution) * resolution;
+        const yMax = Math.floor(e.yMax / resolution) * resolution;
+
+        cg.ctx.strokeStyle = "black";
+        cg.ctx.lineWidth = 1;
+        const r = resolution / cg.ps;
+
+        for (let y = yMin; y <= yMax; y+=resolution) {
+            cg.ctx.beginPath();
+            cg.ctx.moveTo(cg.geoToPixX(xMin)-100, cg.geoToPixY(y));
+
+            const row = ind[y];
+            if(row) {
+
+            }
+
+            cg.ctx.lineTo(cg.geoToPixX(xMax)+100, cg.geoToPixY(y));
+            cg.ctx.stroke();
+        }
+
 
 
 
