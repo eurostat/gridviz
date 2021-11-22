@@ -79,8 +79,8 @@ export class GridVizCanvas {
             getFlagStyle : function (dict) {
                 return new FlagStyle(dict);
             },
-            getLineStyle : function (value) {
-                return new LineStyle(value);
+            getLineStyle : function (value, valueToHeightFun) {
+                return new LineStyle(value, valueToHeightFun);
             }
         }
 

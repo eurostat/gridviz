@@ -87,8 +87,8 @@ export class Style {
      * @param {*} psStroke 
      * @returns 
      */
-     psStroke(psStroke) {
-        if(psStroke) {
+    psStroke(psStroke) {
+        if (psStroke) {
             this.psStroke_ = psStroke;
             return this;
         }
@@ -100,8 +100,8 @@ export class Style {
      * @param {*} strokeColor 
      * @returns 
      */
-     strokeColor(strokeColor) {
-        if(strokeColor) {
+    strokeColor(strokeColor) {
+        if (strokeColor) {
             this.strokeColor_ = strokeColor;
             return this;
         }
@@ -113,8 +113,8 @@ export class Style {
      * @param {number} strokeWidth 
      * @returns 
      */
-     psSstrokeWidthtroke(strokeWidth) {
-        if(strokeWidth) {
+    strokeWidth(strokeWidth) {
+        if (strokeWidth) {
             this.strokeWidth_ = strokeWidth;
             return this;
         }
