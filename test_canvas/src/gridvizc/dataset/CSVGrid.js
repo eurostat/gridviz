@@ -10,10 +10,11 @@ import { Dataset, Cell, Envelope } from "../viewer/Dataset"
 export class CSVGrid extends Dataset {
 
     /**
-     * @param {string} url This url of the info.json.
+     * @param {string} url This url of the CSV file.
+     * @param {number} resolutionGeo This url of the info.json.
      */
-    constructor(url) {
-        super(url, undefined)
+    constructor(url, resolutionGeo) {
+        super(url, resolutionGeo)
 
         /** @type {Array.<Cell>} */
         this.cells = undefined;
@@ -28,11 +29,18 @@ export class CSVGrid extends Dataset {
      */
     getData(e, callback) {
 
+        //check if data already loaded
+        if(this.cells) return this;
+
+        //load data
         csv(this.url)
         .then(
             /** @param {*} data */
             (data) => {
                 this.cells = data;
+
+                //TODO
+                for (const cell of this.cells) { cell.x = +cell.x; cell.y = +cell.y; }
 
                 //execute the callback, usually a draw function
                 callback()
@@ -53,6 +61,9 @@ export class CSVGrid extends Dataset {
      * @returns {Array.<Cell>}
      */
     getCells(e) {
+
+        //data not loaded yet
+        if(!this.cells) return [];
 
         /** @type {Array.<Cell>} */
         let cells = []

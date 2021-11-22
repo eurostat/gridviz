@@ -10,15 +10,21 @@
     <script src="../build/gridvizc.js"></script>
     <script>
         //start simulation
-        app = gridvizc.gridvizApp()
+        app = gridvizc.gridvizApp({
+            ps:100
+        })
 
-        const s = app.styling.getColorStyle("2011");
+        /*const s = app.styling.getColorStyle("2011");
+        app.geoCenter({x:4000000, y: 2300000})
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", s, 0, 500);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", s, 500, 1000);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", s, 1000, 9999999999);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", s, 1000, 9999999999);*/
+
+        const s = app.styling.getColorStyle("ARRIVALS_T");
+        app.geoCenter({x:5009000,y:2478000})
+        app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/croatia_tourism_grid.csv", 1000, s, 0, 9999999999)
 
     </script>
 </body>
 
 </html>
-

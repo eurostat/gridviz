@@ -24,6 +24,8 @@ export class ColorStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
+        console.log(cells.length)
+
         const c2 = cg.c2d
         for (let cell of cells) {
             const value = this.getValue(cell);

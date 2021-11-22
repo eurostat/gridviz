@@ -33,8 +33,8 @@ export class GridVizCanvas {
 
         /** @type {CanvasGeo} */
         this.cg = new CanvasGeo();
-        this.cg.center = opts.center || { x: 4000000, y: 2300000 }
-        this.cg.ps = opts.ps || 100
+        this.cg.center = opts.center || { x: 0, y: 0 }
+        this.cg.ps = opts.ps || 1
 
         const th = this;
         this.cg.redraw = function () {
@@ -101,13 +101,14 @@ export class GridVizCanvas {
 
     /**
      * @param {string} url 
+     * @param {number} resolutionGeo 
      * @param {Style} style 
      * @param {number} minZoom 
      * @param {number} maxZoom 
      */
-    addGrid(url, style, minZoom, maxZoom) {
+    addCSVGrid(url, resolutionGeo, style, minZoom, maxZoom) {
         this.add(
-            new CSVGrid(url).getData(null, () => { this.cg.redraw(); }),
+            new CSVGrid(url, resolutionGeo).getData(null, () => { this.cg.redraw(); }),
             style, minZoom, maxZoom
         )
     }
@@ -136,6 +137,17 @@ export class GridVizCanvas {
 
         //draw cells
         layer.style.draw(cells, layer.dataset.resolutionGeo, this.cg)
+    }
+
+    /**
+     * @param {{x:number,y:number}} pos 
+     */
+    geoCenter(pos) {
+        if(pos) {
+            this.cg.center = pos;
+            return this;
+        }
+        return pos;
     }
 
 }
