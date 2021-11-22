@@ -39,6 +39,7 @@ export class ColorStyle extends Style {
         }
     }
 
+    //TODO better expose that
     getColor(v) {
         //TODO better
         return interpolateReds(v / 200)
