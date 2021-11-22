@@ -76,6 +76,8 @@ export class TiledGrid {
      */
     requestTiles(e, callback) {
 
+        //TODO empty cache when it becomes too big.
+
         //tiles within the scope
         /** @type {Envelope} */
         const tb = this.getTilingEnvelope(e);
