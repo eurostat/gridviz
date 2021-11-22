@@ -6,6 +6,7 @@ import { Dataset, Cell, Envelope } from "../viewer/Dataset"
 
 /**
  * A dataset composed of a single CSV file.
+ * @author Julien Gaffuri
  */
 export class CSVGrid extends Dataset {
 

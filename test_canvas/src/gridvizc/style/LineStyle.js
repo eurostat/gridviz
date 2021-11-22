@@ -4,6 +4,10 @@ import { Style } from "../viewer/Style"
 import { Cell } from "../viewer/Dataset"
 import { CanvasGeo } from "../viewer/CanvasGeo";
 
+/**
+ * 
+ * @author Julien Gaffuri
+ */
 export class LineStyle extends Style {
 
     /**
@@ -23,9 +27,26 @@ export class LineStyle extends Style {
  */
     draw(cells, resolution, cg) {
 
+        const e = cg.extGeo;
+        const xMin = Math.floor(e.xMin / resolution) * resolution;
+        const xMax = Math.floor(e.xMax / resolution) * resolution;
+        const yMin = Math.floor(e.yMin / resolution) * resolution;
+        const yMax = Math.floor(e.yMax / resolution) * resolution;
+        
         const r = resolution / cg.ps;
 
-        //index cells by y
+        cg.ctx.strokeStyle = "black";
+        cg.ctx.lineWidth = 1;
+
+        for (let y = yMin; y <= yMax; y+=resolution) {
+            cg.ctx.beginPath();
+            cg.ctx.moveTo(cg.geoToPixX(xMin), cg.geoToPixY(y));
+            cg.ctx.lineTo(cg.geoToPixX(xMax), cg.geoToPixY(y));
+            cg.ctx.stroke();
+        }
+
+
+        /*/index cells by y
         const ind = {};
         for (const cell of cells) {
             let col = ind[cell.y];
@@ -33,18 +54,8 @@ export class LineStyle extends Style {
             col.push(cell)
         }
 
-        console.log(ind)
+        console.log(ind)*/
 
-
-        //for each row, draw line
-
-        cg.ctx.strokeStyle = "blue";
-        cg.ctx.lineWidth = 3;
-        cg.ctx.beginPath();
-        cg.ctx.moveTo(10, 100);
-        cg.ctx.lineTo(300, 100);
-        cg.ctx.lineTo(30, 200);
-        cg.ctx.stroke();
 
 
     }

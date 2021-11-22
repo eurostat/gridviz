@@ -11,7 +11,10 @@ import { ColorStyle } from '../style/ColorStyle';
 import { FlagStyle } from '../style/FlagStyle';
 import { LineStyle } from '../style/LineStyle';
 
-
+/**
+ * 
+ * @author Julien Gaffuri
+ */
 export class GridVizCanvas {
 
     //TODO make line styles

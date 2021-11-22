@@ -3,7 +3,10 @@ import { Cell } from "./Dataset";
 import { CanvasGeo } from './CanvasGeo';
 
 /**
+ * 
  * @abstract
+ * 
+ * @author Julien Gaffuri
  */
 export class Style {
 

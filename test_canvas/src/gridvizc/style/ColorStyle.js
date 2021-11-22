@@ -5,6 +5,10 @@ import { Cell } from "../viewer/Dataset"
 import { CanvasGeo } from "../viewer/CanvasGeo";
 import { interpolateReds } from "d3-scale-chromatic"
 
+/**
+ * 
+ * @author Julien Gaffuri
+ */
 export class ColorStyle extends Style {
 
     /**

@@ -3,6 +3,8 @@
 
 /**
  * A canvas enhanced with zoom and pan capabilities.
+ * 
+ * @author Julien Gaffuri
  */
 export class CanvasGeo {
 

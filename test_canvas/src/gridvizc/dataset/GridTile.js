@@ -3,6 +3,10 @@
 import { Cell } from "../viewer/Dataset"
 import { GridInfo } from "./TiledGrid"
 
+/**
+ * 
+ * @author Julien Gaffuri
+ */
 export class GridTile {
 
     /**

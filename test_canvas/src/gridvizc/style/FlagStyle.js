@@ -4,6 +4,10 @@ import { Style } from "../viewer/Style"
 import { Cell } from "../viewer/Dataset"
 import { CanvasGeo } from "../viewer/CanvasGeo";
 
+/**
+ * 
+ * @author Julien Gaffuri
+ */
 export class FlagStyle extends Style {
 
     /**
