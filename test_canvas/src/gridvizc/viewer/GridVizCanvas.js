@@ -111,6 +111,7 @@ export class GridVizCanvas {
     /**
      * Clear the app screen.
      * To be used before a redraw for example.
+     * //TODO move that to canvas
      */
     clear() {
         const c2 = this.cplus.c2d
