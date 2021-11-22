@@ -68,15 +68,14 @@ export class Style {
     drawStroke(cells, resolution, cg) {
         if (!this.psStroke_ || cg.ps > this.psStroke_) return;
 
-        const c2 = cg.c2d
         const r = resolution / cg.ps;
 
-        c2.fillStyle = this.strokeColor_;
-        c2.lineWidth = this.strokeWidth_;
+        cg.ctx.fillStyle = this.strokeColor_;
+        cg.ctx.lineWidth = this.strokeWidth_;
         for (let cell of cells) {
-            c2.beginPath();
-            c2.rect(cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), r, r);
-            c2.stroke();
+            cg.ctx.beginPath();
+            cg.ctx.rect(cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), r, r);
+            cg.ctx.stroke();
         }
     }
 

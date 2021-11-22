@@ -25,7 +25,6 @@ export class FlagStyle extends Style {
      * @param {CanvasGeo} cg 
      */
     draw(cells, resolution, cg) {
-        const c2 = cg.c2d
         const r = resolution / cg.ps;
         for (let cell of cells) {
 
@@ -39,13 +38,13 @@ export class FlagStyle extends Style {
             for (let [column, color] of Object.entries(this.dict)) {
 
                 //set color
-                c2.fillStyle = color;
+                cg.ctx.fillStyle = color;
 
                 //compute share
                 const share = cell[column] / total;
 
                 //draw flag element
-                c2.fillRect(cumul * r + cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), share * r, r);
+                cg.ctx.fillRect(cumul * r + cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), share * r, r);
 
                 cumul += share;
             }

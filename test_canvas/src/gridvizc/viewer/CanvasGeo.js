@@ -26,7 +26,7 @@ export class CanvasGeo {
         this.canvas.height = this.h;
 
         /**@type {Object} */
-        this.c2d = this.canvas.getContext("2d");
+        this.ctx = this.canvas.getContext("2d");
 
         // geo coordinates of the center
         /** @type {{x:number,y:number}} */
@@ -70,9 +70,8 @@ export class CanvasGeo {
      * @param {*} color 
      */
     clear(color="white") {
-        const c2 = this.c2d
-        c2.fillStyle = color;
-        c2.fillRect(0, 0, this.w, this.h);
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect(0, 0, this.w, this.h);
     }
 
     //conversion functions

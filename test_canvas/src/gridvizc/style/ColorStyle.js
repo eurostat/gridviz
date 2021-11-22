@@ -23,14 +23,14 @@ export class ColorStyle extends Style {
      * @param {CanvasGeo} cg 
      */
     draw(cells, resolution, cg) {
-        const c2 = cg.c2d
+
         for (let cell of cells) {
             //get value
             const value = this.getValue(cell);
             //get color
-            c2.fillStyle = this.getColor(value);
+            cg.ctx.fillStyle = this.getColor(value);
             //draw square
-            c2.fillRect(cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), resolution / cg.ps, resolution / cg.ps);
+            cg.ctx.fillRect(cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), resolution / cg.ps, resolution / cg.ps);
         }
 
         //draw stroke

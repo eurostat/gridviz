@@ -22,7 +22,7 @@ export class FlagStyle extends Style {
  * @param {CanvasGeo} cg 
  */
     draw(cells, resolution, cg) {
-        const ctx = cg.c2d
+
         const r = resolution / cg.ps;
 
         //TODO sort cells by y and x
@@ -30,13 +30,13 @@ export class FlagStyle extends Style {
         //TODO sort cells by x
         //for each row, draw line
 
-        ctx.strokeStyle = "blue";
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(10, 100);
-        ctx.lineTo(300, 100);
-        ctx.lineTo(30, 200);
-        ctx.stroke();
+        cg.ctx.strokeStyle = "blue";
+        cg.ctx.lineWidth = 3;
+        cg.ctx.beginPath();
+        cg.ctx.moveTo(10, 100);
+        cg.ctx.lineTo(300, 100);
+        cg.ctx.lineTo(30, 200);
+        cg.ctx.stroke();
 
 
     }

@@ -13,7 +13,6 @@ import { FlagStyle } from '../style/FlagStyle';
 
 export class GridVizCanvas {
 
-    //TODO ctx
     //TODO make line styles
     //TODO make size style
     //TODO make circle style
@@ -38,9 +37,6 @@ export class GridVizCanvas {
 
         /** @type {CanvasGeo} */
         this.cg = new CanvasGeo();
-        this.cg.center = opts.center || { x: 0, y: 0 }
-        this.cg.ps = opts.ps || 1
-
         const th = this;
         this.cg.redraw = function () {
 
