@@ -16,6 +16,8 @@ export class ColorStyle extends Style {
       */
     constructor(value) {
         super(value)
+
+        //TODO add scale value function
     }
 
 

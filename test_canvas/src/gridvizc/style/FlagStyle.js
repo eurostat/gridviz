@@ -17,7 +17,11 @@ export class FlagStyle extends Style {
         super(null)
 
         //dictionnary column -> color
+        /** @type {object} */
         this.dict = dict;
+
+        /** @type {function} */
+        this.sizeFun_ = v => v;
     }
 
 
@@ -48,6 +52,7 @@ export class FlagStyle extends Style {
                 const share = cell[column] / total;
 
                 //draw flag element
+                //TODO use size function
                 cg.ctx.fillRect(cumul * r + cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), share * r, r);
 
                 cumul += share;
@@ -58,6 +63,21 @@ export class FlagStyle extends Style {
         //draw stroke
         this.drawStroke(cells, resolution, cg)
 
+    }
+
+
+
+    /**
+     * 
+     * @param {function} sizeFun 
+     * @returns 
+     */
+     sizeFun(sizeFun) {
+        if (sizeFun) {
+            this.sizeFun_ = sizeFun;
+            return this;
+        }
+        return this.sizeFun_;
     }
 
 }

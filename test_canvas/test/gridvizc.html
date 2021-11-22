@@ -35,7 +35,7 @@
         */
 
         //x,y,Total_m2,Residential_perc,Agricultural_perc,Commercial_Services_perc,Industrial_perc
-        const s = app.styling.getColorStyle("Total (m²)").psStroke(0.05);
+        //const s = app.styling.getColorStyle("Total (m²)").psStroke(0.05);
         const s = app.styling.getFlagStyle({ "Residential_perc": "red", "Agricultural_perc": "green", "Commercial_Services_perc": "blue", "Industrial_perc": "yellow" }).psStroke(0.05);
         app.geoCenter({ x: 4004, y: 2355 }).pixSize(0.15)
         //resolution param should be 100 !
