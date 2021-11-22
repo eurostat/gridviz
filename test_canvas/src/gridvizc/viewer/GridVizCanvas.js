@@ -11,8 +11,9 @@ import { ColorStyle } from '../style/ColorStyle';
 
 export class GridVizCanvas {
 
-    //TODO several styles
+    //TODO check generic methods
     //TODO dataset static CSV
+    //TODO make several styles
     //TODO implement mouse over
 
     constructor(opts) {
