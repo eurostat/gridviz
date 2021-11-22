@@ -1,4 +1,4 @@
-x,y,Total (m²),Residential (%),Agricultural (%), Commercial Services (%), Industrial (%)
+x,y,Total_m2,Residential_perc,Agricultural_perc,Commercial_Services_perc,Industrial_perc
 4071,2344,0,0,0,0,0
 3916,2268,815,93,0,7,0
 4063,2318,0,0,0,0,0
