@@ -18,6 +18,8 @@ export class Style {
         this.value = value
 
 
+        //the stroke
+
         /** @type {number} */
         this.psStroke_ = undefined;
         /** @type {string} */
@@ -56,10 +58,11 @@ export class Style {
 
 
     /**
+     * Draw the stroke of the cells, as rectangle, only for detailled zoom levels when the cells are quite big.
      * 
-     * @param {*} cells 
-     * @param {*} resolution 
-     * @param {*} cg 
+     * @param {Array.<Cell>} cells 
+     * @param {number} resolution 
+     * @param {CanvasGeo} cg 
      * @returns 
      */
     drawStroke(cells, resolution, cg) {
@@ -67,6 +70,7 @@ export class Style {
 
         const c2 = cg.c2d
         const r = resolution / cg.ps;
+
         c2.fillStyle = this.strokeColor_;
         c2.lineWidth = this.strokeWidth_;
         for (let cell of cells) {
@@ -81,12 +85,38 @@ export class Style {
      * @param {*} psStroke 
      * @returns 
      */
-    psStroke(psStroke) {
+     psStroke(psStroke) {
         if(psStroke) {
             this.psStroke_ = psStroke;
             return this;
         }
         return this.psStroke_;
+    }
+
+    /**
+     * 
+     * @param {*} strokeColor 
+     * @returns 
+     */
+     strokeColor(strokeColor) {
+        if(strokeColor) {
+            this.strokeColor_ = strokeColor;
+            return this;
+        }
+        return this.strokeColor_;
+    }
+
+    /**
+     * 
+     * @param {number} strokeWidth 
+     * @returns 
+     */
+     psSstrokeWidthtroke(strokeWidth) {
+        if(strokeWidth) {
+            this.strokeWidth_ = strokeWidth;
+            return this;
+        }
+        return this.strokeWidth_;
     }
 
 }

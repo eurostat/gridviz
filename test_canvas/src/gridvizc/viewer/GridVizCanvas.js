@@ -13,7 +13,10 @@ import { FlagStyle } from '../style/FlagStyle';
 
 export class GridVizCanvas {
 
-    //TODO make several styles
+    //TODO make line styles
+    //TODO make size style
+    //TODO make circle style
+    //TODO make pie chart / sector / multi
     //TODO implement mouse over
 
     constructor(opts) {
