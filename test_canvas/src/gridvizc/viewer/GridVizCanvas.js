@@ -20,6 +20,7 @@ export class GridVizCanvas {
     //TODO make size style - with circle
     //TODO make pie chart / sector / multi
     //TODO implement mouse over
+    //TODO empty tile cache
 
     constructor(opts) {
         opts = opts || {};
