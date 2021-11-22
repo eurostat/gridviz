@@ -12,7 +12,6 @@ import { ColorStyle } from '../style/ColorStyle';
 
 export class GridVizCanvas {
 
-    //TODO dataset static CSV
     //TODO make several styles
     //TODO implement mouse over
 
@@ -27,6 +26,7 @@ export class GridVizCanvas {
         /** @type {number} */
         this.h = opts.h || canvas.offsetHeight;
 
+        /** @type {string} */
         this.backgroundColor = opts.backgroundColor || "white"
 
 

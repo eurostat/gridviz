@@ -39,9 +39,6 @@ export class CSVGrid extends Dataset {
             (data) => {
                 this.cells = data;
 
-                //TODO
-                for (const cell of this.cells) { cell.x = +cell.x; cell.y = +cell.y; }
-
                 //execute the callback, usually a draw function
                 callback()
             })
