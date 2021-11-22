@@ -32,6 +32,9 @@ export class ColorStyle extends Style {
             //draw square
             c2.fillRect(cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), resolution / cg.ps, resolution / cg.ps);
         }
+
+        //draw stroke
+        this.drawStroke(cells, resolution, cg)
     }
 
     //TODO better expose that

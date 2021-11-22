@@ -18,7 +18,8 @@ export class Style {
         this.value = value
 
 
-        this.psStroke = undefined;
+        /** @type {number} */
+        this.psStroke_ = undefined;
     }
 
     /**
@@ -58,7 +59,7 @@ export class Style {
      * @returns 
      */
     drawStroke(cells, resolution, cg) {
-        if (!this.psStroke || cg.ps > this.psStroke) return;
+        if (!this.psStroke_ || cg.ps > this.psStroke_) return;
 
         const c2 = cg.c2d
         const r = resolution / cg.ps;
@@ -77,10 +78,10 @@ export class Style {
      */
     psStroke(psStroke) {
         if(psStroke) {
-            this.psStroke = psStroke;
+            this.psStroke_ = psStroke;
             return this;
         }
-        return psStroke;
+        return this.psStroke_;
     }
 
 }
