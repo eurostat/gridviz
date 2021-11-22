@@ -17,9 +17,7 @@ import { LineStyle } from '../style/LineStyle';
  */
 export class GridVizCanvas {
 
-    //TODO make line styles
-    //TODO make size style
-    //TODO make circle style
+    //TODO make size style - with circle
     //TODO make pie chart / sector / multi
     //TODO implement mouse over
 

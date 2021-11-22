@@ -29,10 +29,12 @@
         const s5 = app.styling.getLineStyle("2011", v => Math.sqrt(v/500)).psStroke(70);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", s5, 1000, 2000);
         const s10 = app.styling.getLineStyle("2011", v => 0.5*Math.sqrt(v/500)).psStroke(70);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", s10, 2000, 9999999999);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", s10, 2000, 4000);
+        const s20 = app.styling.getLineStyle("2011", v => 0.25*Math.sqrt(v/500)).psStroke(70);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", s20, 4000, 9999999999);
 
-/*
-        
+
+        /*
                 //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
                 //const s = app.styling.getColorStyle("Inhabitants");
                 const s = app.styling.getFlagStyle({ "Population under 14": "green", "Population over 65": "blue" }).psStroke(0.05);
