@@ -65,10 +65,10 @@ export class CSVGrid extends Dataset {
         /** @type {Array.<Cell>} */
         let cells = []
         for (const cell of this.cells) {
-            if(cell.x < extGeo.xMin) continue;
-            if(cell.x > extGeo.xMax) continue;
-            if(cell.y < extGeo.yMin) continue;
-            if(cell.y > extGeo.yMax) continue;
+            if(+cell.x + this.resolutionGeo < extGeo.xMin) continue;
+            if(+cell.x - this.resolutionGeo > extGeo.xMax) continue;
+            if(+cell.y + this.resolutionGeo < extGeo.yMin) continue;
+            if(+cell.y - this.resolutionGeo > extGeo.yMax) continue;
             cells.push(cell)
         }
 
