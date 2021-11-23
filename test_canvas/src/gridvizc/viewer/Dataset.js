@@ -13,7 +13,7 @@
 export class Dataset {
 
     /**
-     * @param {string} url This url of the dataset.
+     * @param {string} url The url of the dataset.
      * @param {number} resolution The dataset resolution (in geographical unit).
      * @abstract
      */

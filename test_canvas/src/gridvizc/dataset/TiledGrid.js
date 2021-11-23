@@ -6,14 +6,14 @@ import { GridTile } from './GridTile';
 import { Dataset, Cell, Envelope } from "../viewer/Dataset"
 
 /**
- * A dataset composed of tiled CSV files.
+ * A tiled dataset, composed of CSV tiles.
  * 
  * @author Julien Gaffuri
  */
  export class TiledGrid extends Dataset {
 
     /**
-     * @param {string} url This url of the info.json.
+     * @param {string} url The url of the dataset info.json file.
      */
     constructor(url) {
         super(url, undefined)
@@ -21,16 +21,22 @@ import { Dataset, Cell, Envelope } from "../viewer/Dataset"
         /** 
          * The cache of the loaded tiles. It is double indexed: by xT and then yT.
          * Example: this.cache[xT][yT] returns the tile at [xT][yT] location.
-         * @type {Object} */
+         * 
+         * @type {Object}
+         * */
         this.cache = {}
 
-        /** @type {GridInfo} */
+        /**
+         * The grid info object, from the info.json file.
+         * 
+         *  @type {GridInfo}
+         *  */
         this.info = undefined;
 
     }
 
     /**
-     * Load the info.json from the URL.
+     * Load the info.json from the url.
      * 
      * @param {function} callback
      * @returns this
@@ -41,7 +47,7 @@ import { Dataset, Cell, Envelope } from "../viewer/Dataset"
                 /** @param {*} data */
                 (data) => {
                     this.info = data;
-                    this.resolutionGeo = this.info.resolutionGeo;
+                    this.resolution = this.info.resolutionGeo;
                     if (callback) callback();
                 }
             );

@@ -5,18 +5,18 @@ import { csv } from "d3-fetch";
 import { Dataset, Cell, Envelope } from "../viewer/Dataset"
 
 /**
- * A dataset composed of a single CSV file.
+ * A dataset composed of a single CSV file (not tiled).
  * 
  * @author Julien Gaffuri
  */
 export class CSVGrid extends Dataset {
 
     /**
-     * @param {string} url This url of the CSV file.
-     * @param {number} resolutionGeo This url of the info.json.
+     * @param {string} url The url of the dataset.
+     * @param {number} resolution The dataset resolution (in geographical unit).
      */
-    constructor(url, resolutionGeo) {
-        super(url, resolutionGeo)
+    constructor(url, resolution) {
+        super(url, resolution)
 
         /** @type {Array.<Cell>} */
         this.cells = undefined;
@@ -67,10 +67,10 @@ export class CSVGrid extends Dataset {
         /** @type {Array.<Cell>} */
         let cells = []
         for (const cell of this.cells) {
-            if(+cell.x + this.resolutionGeo < extGeo.xMin) continue;
-            if(+cell.x - this.resolutionGeo > extGeo.xMax) continue;
-            if(+cell.y + this.resolutionGeo < extGeo.yMin) continue;
-            if(+cell.y - this.resolutionGeo > extGeo.yMax) continue;
+            if(+cell.x + this.resolution < extGeo.xMin) continue;
+            if(+cell.x - this.resolution > extGeo.xMax) continue;
+            if(+cell.y + this.resolution < extGeo.yMin) continue;
+            if(+cell.y - this.resolution > extGeo.yMax) continue;
             cells.push(cell)
         }
 
