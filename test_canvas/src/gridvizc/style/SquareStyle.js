@@ -33,21 +33,60 @@ export class SquareStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
+
+        //TODO if by size, sort them
+
         for (let cell of cells) {
 
-            //get value
-            const value = this.getValue(cell);
-
             //get color
-            cg.ctx.fillStyle = this.getColor(value);
+            const cv = this.getColorValue(cell);
+            cg.ctx.fillStyle = this.getColor(cv);
 
-            //draw square
-            cg.ctx.fillRect(cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), resolution / cg.ps, resolution / cg.ps);
+            //get size - in pixels
+            const sv = this.getSizeValue(cell);
+            const s = this.getSize(sv);
+
+            //get size - in groud meters
+            const sG = s * resolution / cg.ps
+
+            /*/draw square
+            const d = resolution * (1-s) * 0.5
+            cg.ctx.fillRect(cg.geoToPixX(cell.x+d), cg.geoToPixY(cell.y-d), sG, sG);
+*/
+            //draw circle
+            cg.ctx.beginPath();
+            cg.ctx.arc(cg.geoToPixX(cell.x + resolution*0.5), cg.geoToPixY(cell.y + resolution*0.5), sG*0.5, 0, 2 * Math.PI, false);
+            cg.ctx.fill();
         }
 
         //draw stroke
         this.drawStroke(cells, resolution, cg)
     }
+
+
+    /**
+     * Get the statistical value to use for the color.
+     * 
+     * @param {Cell} cell 
+     * @returns {number}
+     */
+    getColorValue(cell) {
+        return this.getValue(cell);
+    }
+
+    /**
+     * Get the statistical value to use for the size.
+     * 
+     * @param {Cell} cell 
+     * @returns {number}
+     */
+     getSizeValue(cell) {
+        if (this.size instanceof Function || typeof this.size === "function")
+            return this.size(cell);
+        else
+            return cell[this.size];
+    }
+
 
 
     //TODO better expose that
@@ -57,7 +96,7 @@ export class SquareStyle extends Style {
 
     //TODO better expose that
     getSize(v) {
-        return v/1000
+        return Math.sqrt(v/30000)
     }
 
 }
