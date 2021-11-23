@@ -37,13 +37,20 @@ export class FlagStyle extends Style {
      * @param {CanvasGeo} cg 
      */
     draw(cells, resolution, cg) {
-        const r = resolution / cg.ps;
+
+console.log(cg.ps)
+
         for (let cell of cells) {
 
             //compute total
             let total = 0;
             for (let column of Object.keys(this.color))
                 total += +cell[column]
+
+            //size - in ground meters
+            let sG = this.size? this.size(cell) : resolution;
+            //size - in pixel
+            const s = sG / cg.ps
 
             //draw flag elements
             let cumul = 0;
@@ -57,7 +64,7 @@ export class FlagStyle extends Style {
 
                 //draw flag element
                 //TODO use size function
-                cg.ctx.fillRect(cumul * r + cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), share * r, r);
+                cg.ctx.fillRect(cumul * s + cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), share * s, s);
 
                 cumul += share;
             }
