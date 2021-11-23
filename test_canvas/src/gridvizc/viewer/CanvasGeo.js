@@ -60,10 +60,22 @@ export class CanvasGeo {
 
     }
 
-    /** @returns {this} */
-    redraw() {
-        console.log("Override redraw method");
-        return this;
+    /** */
+    fireRedraw() {
+
+        //mark redraw time. This allows interrupting redraw procedures in callbacks.
+        /** @type {number} */
+        this.redrawId = Date.now();
+
+        //redraw
+        this.redraw(this.redrawId);
+    }
+
+    /**
+     * @param {number} redrawId 
+     */
+    redraw(redrawId) {
+        throw new Error('Method redraw not implemented.');
     }
 
     /**
@@ -106,7 +118,7 @@ export class CanvasGeo {
         this.center.x += dxGeo;
         this.center.y += dyGeo;
         this.updateExtentGeo()
-        this.redraw();
+        this.fireRedraw();
     }
 
     /**
@@ -119,7 +131,7 @@ export class CanvasGeo {
         this.center.x += (xGeo - this.center.x) * (1 - f)
         this.center.y += (yGeo - this.center.y) * (1 - f)
         this.updateExtentGeo()
-        this.redraw();
+        this.fireRedraw();
     }
 
     /**
