@@ -60,6 +60,7 @@ export class Style {
 
 
 
+
     /**
      * Draw the stroke of the cells, as rectangle, only for detailled zoom levels when the cells are quite big.
      * 
@@ -77,6 +78,8 @@ export class Style {
         cg.ctx.lineWidth = this.strokeWidth_;
         for (let cell of cells) {
             cg.ctx.beginPath();
+            //TODO size changeable
+            //TODO shape changeable (circle)
             cg.ctx.rect(cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), r, r);
             cg.ctx.stroke();
         }
