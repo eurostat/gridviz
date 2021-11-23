@@ -37,20 +37,19 @@ export class ShapeColorSizeStyle extends Style {
 
         for (let cell of cells) {
 
-            //get color
+            //color
             const cv = this.getColorValue(cell);
             cg.ctx.fillStyle = this.getColor(cv);
 
-            //get size - in ground meters
+            //size - in ground meters
             const sv = this.getSizeValue(cell);
             const sG = this.getSizeGeo(sv);
-            //get size - in pixels
+            //size - in pixels
             const s = sG / cg.ps
 
-            /*/draw square
+            //draw square
             const d = resolution * (1-sG/resolution) * 0.5
-            cg.ctx.fillRect(cg.geoToPixX(cell.x+d), cg.geoToPixY(cell.y-d), s, s);
-*/
+            cg.ctx.fillRect(cg.geoToPixX(cell.x+d), cg.geoToPixY(cell.y+resolution-d), s, s);
 
             //draw circle
             cg.ctx.beginPath();

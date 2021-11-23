@@ -74,7 +74,7 @@ export class Style {
         if (!this.psStroke_ || cg.ps > this.psStroke_) return;
 
         cg.ctx.fillStyle = this.strokeColor_;
-        cg.ctx.lineWidth = this.strokeWidth_;
+        cg.ctx.lineWidth = 5//this.strokeWidth_; //TODO
         for (let cell of cells) {
 
             //get size - in ground meters
@@ -83,19 +83,15 @@ export class Style {
             const s = sG / cg.ps
 
             //draw square
-            //TODO incinsistency between circle fill and rectangle stroke
             const d = resolution * (1-sG/resolution) * 0.5
             cg.ctx.beginPath();
-            cg.ctx.rect(cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y - d), s, s);
+            cg.ctx.rect(cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), s, s);
             cg.ctx.stroke();
 
-            /*
             //draw circle
             cg.ctx.beginPath();
             cg.ctx.arc(cg.geoToPixX(cell.x + resolution*0.5), cg.geoToPixY(cell.y + resolution*0.5), s*0.5, 0, 2 * Math.PI, false);
-            cg.ctx.fill();
-*/
-
+            cg.ctx.stroke();
         }
     }
 
