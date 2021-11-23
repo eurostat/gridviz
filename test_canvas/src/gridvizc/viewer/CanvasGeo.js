@@ -2,7 +2,7 @@
 /** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
 /**
- * A canvas enhanced with zoom and pan capabilities.
+ * A HTML canvas, enhanced with zoom and pan capabilities.
  * 
  * @author Julien Gaffuri
  */

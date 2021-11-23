@@ -4,6 +4,8 @@
 /** @typedef {{x: number, y: number}} Cell */
 
 /**
+ * A dataset of grid cells.
+ * 
  * @abstract
  * 
  * @author Julien Gaffuri
@@ -12,12 +14,14 @@ export class Dataset {
 
     /**
      * @param {string} url This url of the dataset.
-     * @param {number} resolutionGeo
+     * @param {number} resolutionGeo The dataset resolution (in geographical unit).
      * @abstract
      */
      constructor(url, resolutionGeo){
+
         /** @type {string} */
         this.url = url;
+
         /** @type {number} */
         this.resolutionGeo = resolutionGeo;
     }

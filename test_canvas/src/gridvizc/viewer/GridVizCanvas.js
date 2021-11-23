@@ -153,7 +153,7 @@ export class GridVizCanvas {
         this.cg.clear(this.backgroundColor);
 
         //draw cells
-        layer.style.draw(cells, layer.dataset.resolutionGeo, this.cg)
+        layer.style.draw(cells, layer.dataset.resolution, this.cg)
     }
 
 
