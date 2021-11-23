@@ -38,6 +38,8 @@ export class FlagStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
+        //TODO if size provided, sort cells by size to draw the larger below
+
         for (let cell of cells) {
 
             //compute total

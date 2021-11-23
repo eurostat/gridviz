@@ -24,7 +24,7 @@ export class Style {
 
         /** The stroke color.
          * @type {string} */
-        this.strokeColor_ = "gray";
+        this.strokeColor_ = "lightgray";
 
         /** The stroke line width, in pixels.
          * @type {number} */

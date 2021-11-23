@@ -18,7 +18,6 @@ import { LineStyle } from '../style/LineStyle';
  */
 export class GridVizCanvas {
 
-    //TODO size flags
     //TODO make pie chart / sector / ring / multi
     //TODO remove unnecessary redraw calls
     //TODO zoom/pan smartphone - use d3 events

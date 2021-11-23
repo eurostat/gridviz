@@ -12,24 +12,26 @@
 
         //make application
         app = gridvizc.gridvizApp()
-            .geoCenter({ x: 4004, y: 2355 }).pixSize(0.15)
 
-        //x,y,Total_m2,Residential_perc,Agricultural_perc,Commercial_Services_perc,Industrial_perc
+        /*/x,y,Total_m2,Residential_perc,Agricultural_perc,Commercial_Services_perc,Industrial_perc
+            app.geoCenter({ x: 4004, y: 2355 }).pixSize(0.15)
         const s = app.styling.getFlagStyle(
             { "Residential_perc": "#fb8072", "Agricultural_perc": "#8dd3c7", "Commercial_Services_perc": "#80b1d3", "Industrial_perc": "#ffed6f" },
-            c=>Math.sqrt(c["Total_m2"]/100000)
-        ).psStroke(0.2);
-        //resolution param should be 100 !
+            c=>Math.sqrt(c["Total_m2"]/600000)
+        ).psStroke(0.05);
         app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/1km/building_area.csv", 1, s, 0, 9999999999)
+        //resolution param should be 1000 !
+*/
 
-        /*
-                //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
-                //const s = app.styling.getColorStyle("Inhabitants");
-                const s = app.styling.getFlagStyle({ "Population under 14": "green", "Population over 65": "blue" }).psStroke(0.05);
-                app.geoCenter({ x: 1485, y: 4515 }).pixSize(0.1)
-                //resolution param should be 100 !
-                app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 1, s, 0, 9999999999)
-        */
+        //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
+        //const s = app.styling.getColorStyle("Inhabitants");
+        app.geoCenter({ x: 1485, y: 4515 }).pixSize(0.1)
+        const s = app.styling.getFlagStyle({ "Population under 14": "#8dd3c7", "Population over 65": "#fb8072" },
+        c=>Math.sqrt((c["Population under 14"]+c["Population over 65"])/5000)
+        ).psStroke(0.05);
+        app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 1, s, 0, 9999999999)
+        //resolution param should be 100 !
+
 
     </script>
 </body>
