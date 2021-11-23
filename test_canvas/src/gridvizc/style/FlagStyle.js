@@ -6,13 +6,16 @@ import { CanvasGeo } from "../viewer/CanvasGeo";
 
 /**
  * 
+ * This style shows for each cell a square with vertical stripes representing a decomposition.
+ * The square can be scaled depending on the cell importance.
+ * 
  * @author Julien Gaffuri
  */
 export class FlagStyle extends Style {
 
     /**
-      * @param {Object} color 
-      * @param {function} size 
+      * @param {Object} color The dictionary which give the color of each category.
+      * @param {function} size A function returning the size of a cell (in geographical unit).
       */
     constructor(color, size = null) {
         super()

@@ -11,13 +11,13 @@ import { CanvasGeo } from "../viewer/CanvasGeo";
 export class LineStyle extends Style {
 
     /**
-      * @param {function} heightGeo 
+      * @param {function} height A function returning the height of a cell (in geographical unit).
       */
-    constructor(heightGeo) {
+    constructor(height) {
         super()
 
         /** @type {function} */
-        this.heightGeo = heightGeo;
+        this.height = height;
 
         /** @type {string} */
         this.lineColor_ = "gray"
@@ -42,7 +42,7 @@ export class LineStyle extends Style {
         for (const cell of cells) {
             let row = ind[cell.y];
             if (!row) { row = {}; ind[cell.y] = row }
-            row[cell.x] = +this.heightGeo(cell);
+            row[cell.x] = +this.height(cell);
         }
 
         //compute extent

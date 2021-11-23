@@ -6,15 +6,17 @@ import { CanvasGeo } from "../viewer/CanvasGeo";
 import { interpolateReds, schemeGnBu } from "d3-scale-chromatic"
 
 /**
+ * A very generic style that shows grid cells with specific color, size and shape.
+ * It can be used to show variables as cell colors, cell size, cell shape, or any combination of the three visual variables.
  * 
  * @author Julien Gaffuri
  */
 export class ShapeColorSizeStyle extends Style {
 
     /**
-      * @param {function} color 
-      * @param {function} size 
-      * @param {function} shape 
+      * @param {function} color A function returning the color of the cell.
+      * @param {function} size A function returning the size of a cell (in geographical unit).
+      * @param {function} shape A function returning the shape of a cell.
       */
     constructor(color = () => "#EA6BAC", size = null, shape = () => "square") {
         super()
