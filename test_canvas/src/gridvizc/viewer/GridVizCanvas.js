@@ -75,8 +75,8 @@ export class GridVizCanvas {
          * This object exposes style constructors.
          */
         this.styling = {
-            getShapeColorSizeStyle: function (color, size) {
-                return new ShapeColorSizeStyle(color, size);
+            getShapeColorSizeStyle: function (color = () => "#EA6BAC", size = null, shape = () => "square") {
+                return new ShapeColorSizeStyle(color, size, shape);
             },
             getFlagStyle: function (dict) {
                 return new FlagStyle(dict);

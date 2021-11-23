@@ -11,17 +11,11 @@ import { CanvasGeo } from './CanvasGeo';
 export class Style {
 
     /**
-     * @param {string|function} value 
      * @abstract
      */
-    constructor(value) {
+    constructor() {
 
-        /** Used to retrieve the cell value to be used for styling.
-         * @type {string|function} */
-        this.value = value
-
-
-        //the stroke
+        //the cell stroke
 
         /** @type {number} */
         this.psStroke_ = undefined;
@@ -31,18 +25,6 @@ export class Style {
         this.strokeWidth_ = 1.5;
     }
 
-    /**
-     * Returns the value of a grid cell to be used for styling.
-     * 
-     * @param {Cell} cell 
-     * @returns {number}
-     */
-    getValue(cell) {
-        if (this.value instanceof Function || typeof this.value === "function")
-            return this.value(cell);
-        else
-            return cell[this.value];
-    }
 
 
     /**
@@ -67,37 +49,46 @@ export class Style {
      * @param {Array.<Cell>} cells 
      * @param {number} resolution 
      * @param {CanvasGeo} cg 
-     * @param {function} sizeGeo The function returning the cell size factor
+     * @param {function} shape 
+     * @param {function} size
      * @returns 
      */
-    drawStroke(cells, resolution, cg, sizeGeo) {
+    drawStroke(cells, resolution, cg, shape, size) {
         if (!this.psStroke_ || cg.ps > this.psStroke_) return;
 
         cg.ctx.fillStyle = this.strokeColor_;
-        cg.ctx.lineWidth = 5//this.strokeWidth_; //TODO
+        cg.ctx.lineWidth = this.strokeWidth_;
         for (let cell of cells) {
 
-            //get size - in ground meters
-            const sG = sizeGeo(cell);
-            //get size - in pixels
+            //size - in ground meters
+            let sG;
+            if (size) {
+                sG = size(cell);
+            } else
+                sG = resolution
+
+            //size - in pixel
             const s = sG / cg.ps
 
-            //draw square
-            const d = resolution * (1-sG/resolution) * 0.5
-            cg.ctx.beginPath();
-            cg.ctx.rect(cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), s, s);
-            cg.ctx.stroke();
-
-            //draw circle
-            cg.ctx.beginPath();
-            cg.ctx.arc(cg.geoToPixX(cell.x + resolution*0.5), cg.geoToPixY(cell.y + resolution*0.5), s*0.5, 0, 2 * Math.PI, false);
-            cg.ctx.stroke();
+            const shape_ = shape(cell);
+            if (shape_ === "square") {
+                //draw square
+                const d = resolution * (1 - sG / resolution) * 0.5
+                cg.ctx.beginPath();
+                cg.ctx.rect(cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), s, s);
+                cg.ctx.stroke();
+            } else if (shape_ === "circle") {
+                //draw circle
+                cg.ctx.beginPath();
+                cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5), s * 0.5, 0, 2 * Math.PI, false);
+                cg.ctx.stroke();
+            }
         }
     }
 
     /**
      * 
-     * @param {*} psStroke 
+     * @param {number} psStroke 
      * @returns 
      */
     psStroke(psStroke) {

@@ -3,7 +3,7 @@
 import { Style } from "../viewer/Style"
 import { Cell } from "../viewer/Dataset"
 import { CanvasGeo } from "../viewer/CanvasGeo";
-import { interpolateReds } from "d3-scale-chromatic"
+import { interpolateReds, schemeGnBu } from "d3-scale-chromatic"
 
 /**
  * 
@@ -12,15 +12,21 @@ import { interpolateReds } from "d3-scale-chromatic"
 export class ShapeColorSizeStyle extends Style {
 
     /**
-      * @param {string|function} color The attribute to use for the color
-      * @param {number|function} size The attribute to use for the size
+      * @param {function} color 
+      * @param {function} size 
+      * @param {function} shape 
       */
-    constructor(color, size) {
-        super(color)
+    constructor(color = () => "#EA6BAC", size = null, shape = () => "square") {
+        super()
 
-        /** @type {number|function} */
+        /** @type {function} */
+        this.color = color;
+
+        /** @type {function} */
         this.size = size;
 
+        /** @type {function} */
+        this.shape = shape;
     }
 
 
@@ -38,63 +44,41 @@ export class ShapeColorSizeStyle extends Style {
         for (let cell of cells) {
 
             //color
-            const cv = this.getColorValue(cell);
-            cg.ctx.fillStyle = this.getColor(cv);
+            cg.ctx.fillStyle = this.color? this.color(cell) : "#EA6BAC";
 
             //size - in ground meters
-            const sv = this.getSizeValue(cell);
-            const sG = this.getSizeGeo(sv);
-            //size - in pixels
+            let sG = this.size? this.size(cell) : resolution;
+
+            //size - in pixel
             const s = sG / cg.ps
 
-            //draw square
-            const d = resolution * (1-sG/resolution) * 0.5
-            cg.ctx.fillRect(cg.geoToPixX(cell.x+d), cg.geoToPixY(cell.y+resolution-d), s, s);
-
-            //draw circle
-            cg.ctx.beginPath();
-            cg.ctx.arc(cg.geoToPixX(cell.x + resolution*0.5), cg.geoToPixY(cell.y + resolution*0.5), s*0.5, 0, 2 * Math.PI, false);
-            cg.ctx.fill();
+            const shape = this.shape(cell);
+            if (shape === "square") {
+                //draw square
+                const d = resolution * (1 - sG / resolution) * 0.5
+                cg.ctx.fillRect(cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), s, s);
+            } else if (shape === "circle") {
+                //draw circle
+                cg.ctx.beginPath();
+                cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5), s * 0.5, 0, 2 * Math.PI, false);
+                cg.ctx.fill();
+            }
         }
 
         //draw stroke
-        this.drawStroke(cells, resolution, cg, (cell) => this.getSizeGeo(this.getSizeValue(cell)) )
-    }
-
-
-    /**
-     * Get the statistical value to use for the color.
-     * 
-     * @param {Cell} cell 
-     * @returns {number}
-     */
-    getColorValue(cell) {
-        return this.getValue(cell);
-    }
-
-    /**
-     * Get the statistical value to use for the size.
-     * 
-     * @param {Cell} cell 
-     * @returns {number}
-     */
-     getSizeValue(cell) {
-        if (this.size instanceof Function || typeof this.size === "function")
-            return this.size(cell);
-        else
-            return cell[this.size];
+        this.drawStroke(cells, resolution, cg, this.shape, this.size)
     }
 
 
 
-    //TODO better expose that
+    /*/TODO better expose that
     getColor(v) {
         return interpolateReds(v / 200)
-    }
+    }*/
 
-    //TODO better expose that
+    /*/TODO better expose that
     getSizeGeo(v) {
-        return 1000*Math.sqrt(v/30000)
-    }
+        return 1000 * Math.sqrt(v / 30000)
+    }*/
 
 }
