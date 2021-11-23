@@ -17,6 +17,7 @@ import { LineStyle } from '../style/LineStyle';
  */
 export class GridVizCanvas {
 
+    //TODO redraw interupt
     //TODO example on https://github.com/eurostat/gridviz/blob/master/assets/csv/France/1km/building_area.csv
     //TODO make size style - with circle
     //TODO make pie chart / sector / multi
