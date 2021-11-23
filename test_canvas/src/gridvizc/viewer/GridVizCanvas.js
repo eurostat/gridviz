@@ -47,6 +47,8 @@ export class GridVizCanvas {
         this.cg.redraw = function () {
 
             //TODO do not redraw it if it is no longer necessary
+            //that is if another redraw with another zoom level has been triggered (?)
+            //hasZoomedSinceLastCall()
             //if(XXX) return;
 
             //go through the list of layers and find the one(s) to draw

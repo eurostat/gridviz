@@ -42,7 +42,7 @@ export class CSVGrid extends Dataset {
                 this.cells = data;
 
                 //execute the callback, usually a draw function
-                callback()
+                if(callback) callback()
             })
         .catch(() => {
             //mark as failed

@@ -112,7 +112,7 @@ import { Dataset, Cell, Envelope } from "../viewer/Dataset"
                             this.cache[xT][yT] = new GridTile(data, xT, yT, this.info);
 
                             //execute the callback, usually a draw function
-                            callback()
+                            if(callback) callback()
                         })
                     .catch(() => {
                         //mark as failed
