@@ -58,44 +58,52 @@ export class LineStyle extends Style {
         cg.ctx.lineWidth = this.lineWidth_;
         cg.ctx.fillStyle = this.fillColor_;
 
-        for (let y = yMin; y <= yMax; y += r) {
-            cg.ctx.beginPath();
-
-            //the row baseline
-            const yP = cg.geoToPixY(y);
-
-            //place first point
-            cg.ctx.moveTo(cg.geoToPixX(xMin - r / 2), yP);
+        //draw lines row by row, stating from the top
+        for (let y = yMax; y >= yMin; y -= r) {
 
             //get row
             const row = ind[y]
+            if (!row) continue;
+
+            //compute row baseline
+            const yP = cg.geoToPixY(y);
+
+            //place first point
+            cg.ctx.beginPath();
+            cg.ctx.moveTo(cg.geoToPixX(xMin - r / 2), yP);
 
             //store the previous value
             let v_ = 0;
-            if (row) {
-                for (let x = xMin; x <= xMax; x += r) {
-                    //get value
-                    let v = row[x];
-                    if (v) {
-                        //TODO test bezierCurveTo
-                        cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - this.valueToHeightFun(v));
-                    } else {
-                        //TODO cg.ctx.moveTo
-                        cg.ctx.moveTo(cg.geoToPixX(x + r / 2), yP);
-                    }
-                    v_ = v;
+
+            for (let x = xMin; x <= xMax; x += r) {
+
+                //get column value
+                let v = row[x];
+                if (!v) v = 0;
+
+                if (v || v_) {
+                    //draw line only when at least one of both values is non-null
+                    //TODO test bezierCurveTo ?
+                    cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - this.valueToHeightFun(v));
+                } else {
+                    //else move the point
+                    cg.ctx.moveTo(cg.geoToPixX(x + r / 2), yP);
                 }
+                //store the previous value
+                v_ = v;
             }
 
             //last point
             if (v_)
                 cg.ctx.lineTo(cg.geoToPixX(xMax + r / 2), yP);
 
-            //draw
+            //draw fill
             if (this.fillColor_)
                 cg.ctx.fill()
+            //draw line
             if (this.lineColor_ && this.lineWidth_ > 0)
                 cg.ctx.stroke();
+
         }
     }
 
