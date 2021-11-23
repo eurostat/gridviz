@@ -12,6 +12,7 @@ import { FlagStyle } from '../style/FlagStyle';
 import { LineStyle } from '../style/LineStyle';
 
 /**
+ * A gridviz on a HTML canvas.
  * 
  * @author Julien Gaffuri
  */
@@ -19,7 +20,6 @@ export class GridVizCanvas {
 
     //TODO remove unnecessary redraw calls
     //TODO zoom/pan smartphone - use d3 events
-    //TODO make size style - with circle
     //TODO size flags
     //TODO make pie chart / sector / multi
     //TODO implement mouse over
