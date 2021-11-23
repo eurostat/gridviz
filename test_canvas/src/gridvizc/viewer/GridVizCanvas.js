@@ -7,7 +7,7 @@ import { Dataset } from './Dataset';
 
 import { CSVGrid } from '../dataset/CSVGrid';
 import { TiledGrid } from '../dataset/TiledGrid';
-import { SquareStyle } from '../style/SquareStyle';
+import { ShapeColorSizeStyle } from '../style/ShapeColorSizeStyle';
 import { FlagStyle } from '../style/FlagStyle';
 import { LineStyle } from '../style/LineStyle';
 
@@ -75,8 +75,8 @@ export class GridVizCanvas {
          * This object exposes style constructors.
          */
         this.styling = {
-            getSquareStyle: function (color, size) {
-                return new SquareStyle(color, size);
+            getShapeColorSizeStyle: function (color, size) {
+                return new ShapeColorSizeStyle(color, size);
             },
             getFlagStyle: function (dict) {
                 return new FlagStyle(dict);

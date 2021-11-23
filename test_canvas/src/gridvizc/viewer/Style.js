@@ -67,21 +67,35 @@ export class Style {
      * @param {Array.<Cell>} cells 
      * @param {number} resolution 
      * @param {CanvasGeo} cg 
+     * @param {function} sizeGeo The function returning the cell size factor
      * @returns 
      */
-    drawStroke(cells, resolution, cg) {
+    drawStroke(cells, resolution, cg, sizeGeo) {
         if (!this.psStroke_ || cg.ps > this.psStroke_) return;
-
-        const r = resolution / cg.ps;
 
         cg.ctx.fillStyle = this.strokeColor_;
         cg.ctx.lineWidth = this.strokeWidth_;
         for (let cell of cells) {
+
+            //get size - in ground meters
+            const sG = sizeGeo(cell);
+            //get size - in pixels
+            const s = sG / cg.ps
+
+            //draw square
+            //TODO incinsistency between circle fill and rectangle stroke
+            const d = resolution * (1-sG/resolution) * 0.5
             cg.ctx.beginPath();
-            //TODO size changeable
-            //TODO shape changeable (circle)
-            cg.ctx.rect(cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), r, r);
+            cg.ctx.rect(cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y - d), s, s);
             cg.ctx.stroke();
+
+            /*
+            //draw circle
+            cg.ctx.beginPath();
+            cg.ctx.arc(cg.geoToPixX(cell.x + resolution*0.5), cg.geoToPixY(cell.y + resolution*0.5), s*0.5, 0, 2 * Math.PI, false);
+            cg.ctx.fill();
+*/
+
         }
     }
 
