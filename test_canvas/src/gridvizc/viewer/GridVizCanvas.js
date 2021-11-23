@@ -18,30 +18,34 @@ import { LineStyle } from '../style/LineStyle';
  */
 export class GridVizCanvas {
 
+    //TODO size flags
+    //TODO make pie chart / sector / ring / multi
     //TODO remove unnecessary redraw calls
     //TODO zoom/pan smartphone - use d3 events
-    //TODO size flags
-    //TODO make pie chart / sector / multi
     //TODO implement mouse over
     //TODO empty tile cache
 
     constructor(opts) {
         opts = opts || {};
 
+        //get canvas element
         opts.canvasId = opts.canvasId || "vacanvas";
         const canvas = document.getElementById(opts.canvasId);
 
+        //set dimensions
         /** @type {number} */
         this.w = opts.w || canvas.offsetWidth;
         /** @type {number} */
         this.h = opts.h || canvas.offsetHeight;
 
-        /** @type {string} */
+        /** Background color.
+         * @type {string} */
         this.backgroundColor = opts.backgroundColor || "white"
 
 
 
-        /** @type {CanvasGeo} */
+        /** Make geo canvas
+         * @type {CanvasGeo} */
         this.cg = new CanvasGeo();
         const th = this;
         this.cg.redraw = function () {
@@ -65,9 +69,10 @@ export class GridVizCanvas {
 
 
 
-        /** @type {Array.<Layer>} */
+        /**
+         * The layers.
+         * @type {Array.<Layer>} */
         this.layers = [];
-        //note: the layers are not supposed to overlap
 
 
         /**
@@ -101,20 +106,24 @@ export class GridVizCanvas {
 
 
     /**
-     * @param {Dataset} dataset 
-     * @param {Style} style 
-     * @param {number} minZoom 
-     * @param {number} maxZoom 
+     * Add a layer.
+     * 
+     * @param {Dataset} dataset The dataset to show
+     * @param {Style} style The style to use
+     * @param {number} minZoom The minimum zoom level when to show the layer
+     * @param {number} maxZoom The maximum zoom level when to show the layer
      */
     add(dataset, style, minZoom, maxZoom) {
         this.layers.push(new Layer(dataset, style, minZoom, maxZoom));
     }
 
     /**
-     * @param {string} url 
-     * @param {Style} style 
-     * @param {number} minZoom 
-     * @param {number} maxZoom 
+     * Add a layer from a tiled grid dataset.
+     * 
+     * @param {string} url The url of the dataset info.json file.
+     * @param {Style} style The style to use
+     * @param {number} minZoom The minimum zoom level when to show the layer
+     * @param {number} maxZoom The maximum zoom level when to show the layer
      */
     addTiledGrid(url, style, minZoom, maxZoom) {
         this.add(
@@ -125,15 +134,17 @@ export class GridVizCanvas {
 
 
     /**
-     * @param {string} url 
-     * @param {number} resolutionGeo 
-     * @param {Style} style 
-     * @param {number} minZoom 
-     * @param {number} maxZoom 
+     * Add a layer from a CSV grid dataset.
+     * 
+     * @param {string} url The url of the dataset.
+     * @param {number} resolution The dataset resolution (in geographical unit).
+     * @param {Style} style The style to use
+     * @param {number} minZoom The minimum zoom level when to show the layer
+     * @param {number} maxZoom The maximum zoom level when to show the layer
      */
-    addCSVGrid(url, resolutionGeo, style, minZoom, maxZoom) {
+    addCSVGrid(url, resolution, style, minZoom, maxZoom) {
         this.add(
-            new CSVGrid(url, resolutionGeo).getData(null, () => { this.redrawWhenNecessary(); }),
+            new CSVGrid(url, resolution).getData(null, () => { this.redrawWhenNecessary(); }),
             style, minZoom, maxZoom
         )
     }
