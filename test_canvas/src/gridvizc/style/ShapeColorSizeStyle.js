@@ -48,11 +48,11 @@ export class ShapeColorSizeStyle extends Style {
 
             //size - in ground meters
             let sG = this.size? this.size(cell) : resolution;
-
             //size - in pixel
             const s = sG / cg.ps
 
-            const shape = this.shape(cell);
+            //get shape
+            const shape = this.shape? this.shape(cell) : "square";
             if (shape === "square") {
                 //draw square
                 const d = resolution * (1 - sG / resolution) * 0.5
