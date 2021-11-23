@@ -11,14 +11,13 @@ import { CanvasGeo } from "../viewer/CanvasGeo";
 export class LineStyle extends Style {
 
     /**
-      * @param {string|function} value 
-      * @param {function} valueToHeightFun 
+      * @param {function} heightGeo 
       */
-    constructor(value, valueToHeightFun) {
-        super(value)
+    constructor(heightGeo) {
+        super()
 
         /** @type {function} */
-        this.valueToHeightFun = valueToHeightFun;
+        this.heightGeo = heightGeo;
 
         /** @type {string} */
         this.lineColor_ = "gray"
@@ -43,7 +42,7 @@ export class LineStyle extends Style {
         for (const cell of cells) {
             let row = ind[cell.y];
             if (!row) { row = {}; ind[cell.y] = row }
-            row[cell.x] = +this.getValue(cell);
+            row[cell.x] = +this.heightGeo(cell);
         }
 
         //compute extent
@@ -72,29 +71,29 @@ export class LineStyle extends Style {
             cg.ctx.beginPath();
             cg.ctx.moveTo(cg.geoToPixX(xMin - r / 2), yP);
 
-            //store the previous value
-            let v_ = 0;
+            //store the previous height
+            let hG_ = 0;
 
             for (let x = xMin; x <= xMax; x += r) {
 
                 //get column value
-                let v = row[x];
-                if (!v) v = 0;
+                let hG = row[x];
+                if (!hG) hG = 0;
 
-                if (v || v_) {
+                if (hG || hG_) {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo ?
-                    cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - this.valueToHeightFun(v));
+                    cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - hG);
                 } else {
                     //else move the point
                     cg.ctx.moveTo(cg.geoToPixX(x + r / 2), yP);
                 }
                 //store the previous value
-                v_ = v;
+                hG_ = hG;
             }
 
             //last point
-            if (v_)
+            if (hG_)
                 cg.ctx.lineTo(cg.geoToPixX(xMax + r / 2), yP);
 
             //draw fill

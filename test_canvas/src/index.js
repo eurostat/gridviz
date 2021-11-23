@@ -7,7 +7,7 @@ export const gridvizApp = function (opts) {
     return new GridVizCanvas(opts)
 }
 
-//export all d3 chromatic things
+//export entire d3 scale chromatic
 export const color = function () {
     return dsc
 }
