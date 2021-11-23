@@ -11,17 +11,18 @@ import { CanvasGeo } from "../viewer/CanvasGeo";
 export class FlagStyle extends Style {
 
     /**
-      * @param {Object} dict 
+      * @param {Object} color 
+      * @param {function} size 
       */
-    constructor(dict) {
+    constructor(color, size = null) {
         super()
 
         //dictionnary column -> color
         /** @type {object} */
-        this.dict = dict;
+        this.color = color;
 
         /** @type {function} */
-        this.sizeFun_ = v => v;
+        this.size = size;
     }
 
 
@@ -38,12 +39,12 @@ export class FlagStyle extends Style {
 
             //compute total
             let total = 0;
-            for (let column of Object.keys(this.dict))
+            for (let column of Object.keys(this.color))
                 total += +cell[column]
 
             //draw flag elements
             let cumul = 0;
-            for (let [column, color] of Object.entries(this.dict)) {
+            for (let [column, color] of Object.entries(this.color)) {
 
                 //set color
                 cg.ctx.fillStyle = color;
@@ -61,23 +62,8 @@ export class FlagStyle extends Style {
         }
 
         //draw stroke
-        this.drawStroke(cells, resolution, cg)
+        this.drawStroke(cells, resolution, cg, () => "square", this.size)
 
-    }
-
-
-
-    /**
-     * 
-     * @param {function} sizeFun 
-     * @returns 
-     */
-     sizeFun(sizeFun) {
-        if (sizeFun) {
-            this.sizeFun_ = sizeFun;
-            return this;
-        }
-        return this.sizeFun_;
     }
 
 }

@@ -78,11 +78,11 @@ export class GridVizCanvas {
             getShapeColorSizeStyle: function (color = () => "#EA6BAC", size = null, shape = () => "square") {
                 return new ShapeColorSizeStyle(color, size, shape);
             },
-            getFlagStyle: function (dict) {
-                return new FlagStyle(dict);
+            getFlagStyle: function (dict, size = null) {
+                return new FlagStyle(dict, size);
             },
-            getLineStyle: function (value, valueToHeightFun) {
-                return new LineStyle(value, valueToHeightFun);
+            getLineStyle: function (heightGeo) {
+                return new LineStyle(heightGeo);
             }
         }
 
