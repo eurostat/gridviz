@@ -14,16 +14,16 @@ export class Dataset {
 
     /**
      * @param {string} url This url of the dataset.
-     * @param {number} resolutionGeo The dataset resolution (in geographical unit).
+     * @param {number} resolution The dataset resolution (in geographical unit).
      * @abstract
      */
-     constructor(url, resolutionGeo){
+     constructor(url, resolution){
 
         /** @type {string} */
         this.url = url;
 
         /** @type {number} */
-        this.resolutionGeo = resolutionGeo;
+        this.resolution = resolution;
     }
 
 

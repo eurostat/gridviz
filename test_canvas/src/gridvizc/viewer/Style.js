@@ -3,6 +3,7 @@ import { Cell } from "./Dataset";
 import { CanvasGeo } from './CanvasGeo';
 
 /**
+ * A style, to show a grid dataset.
  * 
  * @abstract
  * 
@@ -17,22 +18,28 @@ export class Style {
 
         //the cell stroke
 
-        /** @type {number} */
+        /** The zoom limit when to show/hide the stroke.
+         * @type {number} */
         this.psStroke_ = undefined;
-        /** @type {string} */
-        this.strokeColor_ = "gray";
-        /** @type {number} */
-        this.strokeWidth_ = 1.5;
-    }
 
+        /** The stroke color.
+         * @type {string} */
+        this.strokeColor_ = "gray";
+
+        /** The stroke line width, in pixels.
+         * @type {number} */
+        this.strokeWidth_ = 1.5;
+
+    }
 
 
     /**
      * Draw cells.
      * 
-     * @param {Array.<Cell>} cells 
-     * @param {number} resolution 
-     * @param {CanvasGeo} cg 
+     * @param {Array.<Cell>} cells The cells to draw.
+     * @param {number} resolution Their resolution (in geographic unit)
+     * @param {CanvasGeo} cg The canvas where to draw them.
+     * @abstract
      */
     draw(cells, resolution, cg) {
         throw new Error('Method draw not implemented.');
@@ -40,17 +47,14 @@ export class Style {
 
 
 
-
-
-
     /**
      * Draw the stroke of the cells, as rectangle, only for detailled zoom levels when the cells are quite big.
      * 
-     * @param {Array.<Cell>} cells 
-     * @param {number} resolution 
-     * @param {CanvasGeo} cg 
-     * @param {function} shape 
-     * @param {function} size
+     * @param {Array.<Cell>} cells The cells to draw.
+     * @param {number} resolution Their resolution (in geographic unit)
+     * @param {CanvasGeo} cg The canvas where to draw them.
+     * @param {function} shape The shape of the stroke.
+     * @param {function} size A function returning the size of a cell (in geographical unit).
      * @returns 
      */
     drawStroke(cells, resolution, cg, shape, size) {
@@ -87,6 +91,7 @@ export class Style {
     }
 
     /**
+     * The zoom limit when to show/hide the stroke.
      * 
      * @param {number} psStroke 
      * @returns 
@@ -100,6 +105,7 @@ export class Style {
     }
 
     /**
+     * The stroke color.
      * 
      * @param {*} strokeColor 
      * @returns 
@@ -113,6 +119,7 @@ export class Style {
     }
 
     /**
+     * The stroke line width, in pixels.
      * 
      * @param {number} strokeWidth 
      * @returns 
