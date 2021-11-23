@@ -46,11 +46,6 @@ export class GridVizCanvas {
         const th = this;
         this.cg.redraw = function () {
 
-            //TODO do not redraw it if it is no longer necessary
-            //that is if another redraw with another zoom level has been triggered (?)
-            //hasZoomedSinceLastCall()
-            //if(XXX) return;
-
             //go through the list of layers and find the one(s) to draw
             for (const layer of th.layers) {
 
@@ -83,15 +78,27 @@ export class GridVizCanvas {
             getColorStyle: function (value) {
                 return new ColorStyle(value);
             },
-            getFlagStyle : function (dict) {
+            getFlagStyle: function (dict) {
                 return new FlagStyle(dict);
             },
-            getLineStyle : function (value, valueToHeightFun) {
+            getLineStyle: function (value, valueToHeightFun) {
                 return new LineStyle(value, valueToHeightFun);
             }
         }
 
     }
+
+    /** */
+    redrawWhenNecessary() {
+
+        //TODO do not redraw it if it is no longer necessary
+        //that is if another redraw with another zoom level has been triggered (?)
+        //hasZoomedSinceLastCall()
+        //if(XXX) return;
+
+        this.cg.redraw();
+    }
+
 
     /**
      * @param {Dataset} dataset 
@@ -111,7 +118,7 @@ export class GridVizCanvas {
      */
     addTiledGrid(url, style, minZoom, maxZoom) {
         this.add(
-            new TiledGrid(url).loadInfo(() => { this.cg.redraw(); }),
+            new TiledGrid(url).loadInfo(() => { this.redrawWhenNecessary(); }),
             style, minZoom, maxZoom
         )
     }
@@ -126,7 +133,7 @@ export class GridVizCanvas {
      */
     addCSVGrid(url, resolutionGeo, style, minZoom, maxZoom) {
         this.add(
-            new CSVGrid(url, resolutionGeo).getData(null, () => { this.cg.redraw(); }),
+            new CSVGrid(url, resolutionGeo).getData(null, () => { this.redrawWhenNecessary(); }),
             style, minZoom, maxZoom
         )
     }
@@ -155,8 +162,8 @@ export class GridVizCanvas {
      * 
      * @param {{x:number,y:number}} pos 
      */
-     geoCenter(pos) {
-        if(pos) {
+    geoCenter(pos) {
+        if (pos) {
             this.cg.center = pos;
             return this;
         }
@@ -168,8 +175,8 @@ export class GridVizCanvas {
      * 
      * @param {number} ps 
      */
-     pixSize(ps) {
-        if(ps) {
+    pixSize(ps) {
+        if (ps) {
             this.cg.ps = ps;
             return this;
         }
