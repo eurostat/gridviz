@@ -33,10 +33,10 @@ export class LineStyle extends Style {
      * Draw cells as squares depending on their value.
      * 
      * @param {Array.<Cell>} cells 
-     * @param {number} resolution 
+     * @param {number} r 
      * @param {CanvasGeo} cg 
      */
-    draw(cells, resolution, cg) {
+    draw(cells, r, cg) {
 
         //index cells by y and x
         const ind = {};
@@ -48,41 +48,48 @@ export class LineStyle extends Style {
 
         //compute extent
         const e = cg.extGeo;
-        const xMin = Math.floor(e.xMin / resolution) * resolution;
-        const xMax = Math.floor(e.xMax / resolution) * resolution;
-        const yMin = Math.floor(e.yMin / resolution) * resolution;
-        const yMax = Math.floor(e.yMax / resolution) * resolution;
+        const xMin = Math.floor(e.xMin / r) * r;
+        const xMax = Math.floor(e.xMax / r) * r;
+        const yMin = Math.floor(e.yMin / r) * r;
+        const yMax = Math.floor(e.yMax / r) * r;
 
         //set color and width
         cg.ctx.strokeStyle = this.lineColor_;
         cg.ctx.lineWidth = this.lineWidth_;
         cg.ctx.fillStyle = this.fillColor_;
 
-        for (let y = yMin; y <= yMax; y += resolution) {
+        for (let y = yMin; y <= yMax; y += r) {
             cg.ctx.beginPath();
 
-            //first point
-            cg.ctx.moveTo(cg.geoToPixX(xMin - resolution / 2), cg.geoToPixY(y));
+            //the row baseline
+            const yP = cg.geoToPixY(y);
+
+            //place first point
+            cg.ctx.moveTo(cg.geoToPixX(xMin - r / 2), yP);
 
             //get row
             const row = ind[y]
 
+            //store the previous value
+            let v_ = 0;
             if (row) {
-                for (let x = xMin; x <= xMax; x += resolution) {
+                for (let x = xMin; x <= xMax; x += r) {
                     //get value
                     let v = row[x];
                     if (v) {
                         //TODO test bezierCurveTo
-                        cg.ctx.lineTo(cg.geoToPixX(x + resolution / 2), cg.geoToPixY(y) - this.valueToHeightFun(v));
+                        cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - this.valueToHeightFun(v));
                     } else {
                         //TODO cg.ctx.moveTo
-                        cg.ctx.moveTo(cg.geoToPixX(x + resolution / 2), cg.geoToPixY(y));
+                        cg.ctx.moveTo(cg.geoToPixX(x + r / 2), yP);
                     }
+                    v_ = v;
                 }
             }
 
             //last point
-            cg.ctx.lineTo(cg.geoToPixX(xMax + resolution / 2), cg.geoToPixY(y));
+            if (v_)
+                cg.ctx.lineTo(cg.geoToPixX(xMax + r / 2), yP);
 
             //draw
             if (this.fillColor_)
