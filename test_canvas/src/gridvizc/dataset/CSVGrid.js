@@ -39,6 +39,9 @@ export class CSVGrid extends Dataset {
         .then(
             /** @param {*} data */
             (data) => {
+                //convert coordinates in numbers
+                for (const c of data) { c.x=+c.x; c.y=+c.y; }
+
                 this.cells = data;
 
                 //execute the callback, usually a draw function

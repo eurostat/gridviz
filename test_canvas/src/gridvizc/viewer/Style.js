@@ -81,6 +81,7 @@ export class Style {
                 cg.ctx.beginPath();
                 cg.ctx.rect(cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), s, s);
                 cg.ctx.stroke();
+
             } else if (shape_ === "circle") {
                 //draw circle
                 cg.ctx.beginPath();

@@ -38,8 +38,6 @@ export class FlagStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
-console.log(cg.ps)
-
         for (let cell of cells) {
 
             //compute total
@@ -54,6 +52,7 @@ console.log(cg.ps)
 
             //draw flag elements
             let cumul = 0;
+            const d = resolution * (1 - sG / resolution) * 0.5
             for (let [column, color] of Object.entries(this.color)) {
 
                 //set color
@@ -63,8 +62,7 @@ console.log(cg.ps)
                 const share = cell[column] / total;
 
                 //draw flag element
-                //TODO use size function
-                cg.ctx.fillRect(cumul * s + cg.geoToPixX(cell.x), cg.geoToPixY(cell.y), share * s, s);
+                cg.ctx.fillRect(cumul * s + cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), share * s, s);
 
                 cumul += share;
             }
@@ -73,7 +71,6 @@ console.log(cg.ps)
 
         //draw stroke
         this.drawStroke(cells, resolution, cg, () => "square", this.size)
-
     }
 
 }
