@@ -17,7 +17,7 @@ import { LineStyle } from '../style/LineStyle';
  */
 export class GridVizCanvas {
 
-    //TODO redraw interupt
+    //TODO remove unnecessary redraw calls
     //TODO zoom/pan smartphone - use d3 events
     //TODO make size style - with circle
     //TODO size flags
@@ -46,6 +46,10 @@ export class GridVizCanvas {
         const th = this;
         this.cg.redraw = function () {
 
+            //TODO do not redraw it if it is no longer necessary
+            //if(XXX) return;
+
+            //go through the list of layers and find the one(s) to draw
             for (const layer of th.layers) {
 
                 //skip layer not within the zoom range
@@ -57,7 +61,6 @@ export class GridVizCanvas {
 
                 //draw cells
                 th.draw(layer);
-
             }
             return this
         };
@@ -133,6 +136,7 @@ export class GridVizCanvas {
      * @param {Layer} layer 
      */
     draw(layer) {
+
         //get cells to draw
         const cells = layer.dataset.getCells(this.cg.extGeo)
 
@@ -142,6 +146,7 @@ export class GridVizCanvas {
         //draw cells
         layer.style.draw(cells, layer.dataset.resolutionGeo, this.cg)
     }
+
 
     /**
      * Set viewer position.
