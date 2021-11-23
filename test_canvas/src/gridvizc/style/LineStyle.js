@@ -82,8 +82,8 @@ export class LineStyle extends Style {
 
                 if (hG || hG_) {
                     //draw line only when at least one of both values is non-null
-                    //TODO test bezierCurveTo ?
-                    cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - hG);
+                    //TODO test bezierCurveTo
+                    cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - hG/cg.ps);
                 } else {
                     //else move the point
                     cg.ctx.moveTo(cg.geoToPixX(x + r / 2), yP);

@@ -14,16 +14,12 @@
             .geoCenter({ x: 4000000, y: 2300000 }).pixSize(200)
 
         //define datasets, styles and layers
-        const s1 = app.styling.getLineStyle("2011", v => 5 * Math.sqrt(v / 500)).psStroke(70);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", s1, 0, 500);
-        const s2 = app.styling.getLineStyle("2011", v => 2 * Math.sqrt(v / 500)).psStroke(70);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", s2, 500, 1000);
-        const s5 = app.styling.getLineStyle("2011", v => Math.sqrt(v / 500)).psStroke(70);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", s5, 1000, 2000);
-        const s10 = app.styling.getLineStyle("2011", v => 0.5 * Math.sqrt(v / 500)).psStroke(70);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", s10, 2000, 4000);
-        const s20 = app.styling.getLineStyle("2011", v => 0.25 * Math.sqrt(v / 500)).psStroke(70);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", s20, 4000, 9999999999);
+        const s = app.styling.getLineStyle(c => 30 * Math.sqrt(c["2011"])).psStroke(70);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", s, 0, 500);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", s, 500, 1000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", s, 1000, 2000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", s, 2000, 4000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", s, 4000, 9999999999);
 
     </script>
 </body>

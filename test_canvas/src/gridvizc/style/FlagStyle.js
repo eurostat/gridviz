@@ -14,7 +14,7 @@ export class FlagStyle extends Style {
       * @param {Object} dict 
       */
     constructor(dict) {
-        super(null)
+        super()
 
         //dictionnary column -> color
         /** @type {object} */
