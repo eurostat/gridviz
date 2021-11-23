@@ -69,16 +69,4 @@ export class ShapeColorSizeStyle extends Style {
         this.drawStroke(cells, resolution, cg, this.shape, this.size)
     }
 
-
-
-    /*/TODO better expose that
-    getColor(v) {
-        return interpolateReds(v / 200)
-    }*/
-
-    /*/TODO better expose that
-    getSizeGeo(v) {
-        return 1000 * Math.sqrt(v / 30000)
-    }*/
-
 }

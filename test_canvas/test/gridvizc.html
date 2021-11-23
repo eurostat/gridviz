@@ -14,7 +14,8 @@
         app = gridvizc.gridvizApp()
 
 
-        const s = app.styling.getShapeColorSizeStyle(null,null).psStroke(70);
+        //const s = app.styling.getShapeColorSizeStyle(c => interpolateReds(c["2018"]/ 200), null, (c)=>"square").psStroke(70);
+        const s = app.styling.getShapeColorSizeStyle(null, c=>1000*Math.sqrt(c["2018"]/30000), c=>"square").psStroke(70);
         app.geoCenter({ x: 4000000, y: 2300000 }).pixSize(200)
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", s, 0, 500);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", s, 500, 1000);
