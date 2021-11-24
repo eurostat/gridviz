@@ -8,13 +8,13 @@ import { CanvasGeo } from "../viewer/CanvasGeo";
  * 
  * @author Julien Gaffuri
  */
-export class MultiStyle extends Style {
+export class RadarStyle extends Style {
 
     /**
       * @param {Object} color The dictionary which give the color of each category.
-      * @param {function} type
+      * @param {function} size The dictionary which give the color of each category.
       */
-    constructor(color, type = null) {
+    constructor(color, size) {
         super()
 
         //dictionnary column -> color
@@ -22,7 +22,7 @@ export class MultiStyle extends Style {
         this.color = color;
 
         /** @type {function} */
-        this.type = type;
+        this.size = size;
     }
 
 
@@ -39,24 +39,16 @@ export class MultiStyle extends Style {
 
         for (let cell of cells) {
 
-            //get symbol type
-            const type_ = this.type ? this.type(cell) : "radar"
-
             //draw decomposition symbol
             for (let [column, color] of Object.entries(this.color)) {
 
                 //set color
                 cg.ctx.fillStyle = color;
 
-                //draw symbol part
-                if (type_ === "radar") {
-                    //TODO
-                } else if (type_ === "multi") {
-                    //TODO
-                } else {
-                    throw new Error('Unexpected symbol type:' + type_);
-                }
+                //get size
+                //TODO
 
+                //TODO draw fill
                 //TODO draw the stroke ?
             }
 
