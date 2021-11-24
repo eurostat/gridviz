@@ -125,10 +125,11 @@ export class GridVizCanvas {
      * @param {Style} style The style to use
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
+     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      */
-    addTiledGrid(url, style, minZoom, maxZoom) {
+    addTiledGrid(url, style, minZoom, maxZoom, preprocess = null) {
         this.add(
-            new TiledGrid(url).loadInfo(() => { this.redrawWhenNecessary(); }),
+            new TiledGrid(url, preprocess).loadInfo(() => { this.redrawWhenNecessary(); }),
             style, minZoom, maxZoom
         )
     }
@@ -142,10 +143,11 @@ export class GridVizCanvas {
      * @param {Style} style The style to use
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
+     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      */
-    addCSVGrid(url, resolution, style, minZoom, maxZoom) {
+    addCSVGrid(url, resolution, style, minZoom, maxZoom, preprocess = null) {
         this.add(
-            new CSVGrid(url, resolution).getData(null, () => { this.redrawWhenNecessary(); }),
+            new CSVGrid(url, resolution, preprocess).getData(null, () => { this.redrawWhenNecessary(); }),
             style, minZoom, maxZoom
         )
     }
