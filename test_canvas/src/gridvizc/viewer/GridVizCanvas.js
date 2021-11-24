@@ -18,11 +18,13 @@ import { LineStyle } from '../style/LineStyle';
  */
 export class GridVizCanvas {
 
-    //TODO use "preprocessCells" for NL
-    //TODO make pie chart / ring / radar / multi(?)
+    //TODO style make pie chart / ring / multi(?) / radar
+    //TODO styles with orientation
+    //TODO style with variation - population geostat
+    //TODO style kernel smoothing
+
     //TODO remove unnecessary redraw calls
     //TODO zoom/pan smartphone - use d3 events
-    //TODO kernel smoothing
     //TODO implement mouse over
     //TODO empty tile cache
 
