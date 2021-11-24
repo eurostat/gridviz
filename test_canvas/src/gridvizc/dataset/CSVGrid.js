@@ -14,9 +14,10 @@ export class CSVGrid extends Dataset {
     /**
      * @param {string} url The url of the dataset.
      * @param {number} resolution The dataset resolution (in geographical unit).
+     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      */
-    constructor(url, resolution) {
-        super(url, resolution)
+    constructor(url, resolution, preprocess = null) {
+        super(url, resolution, preprocess)
 
         /** @type {Array.<Cell>} */
         this.cells = undefined;

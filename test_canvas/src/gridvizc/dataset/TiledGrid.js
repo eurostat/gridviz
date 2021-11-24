@@ -14,9 +14,10 @@ import { Dataset, Cell, Envelope } from "../viewer/Dataset"
 
     /**
      * @param {string} url The url of the dataset info.json file.
+     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      */
-    constructor(url) {
-        super(url, undefined)
+    constructor(url, preprocess = null) {
+        super(url, undefined, preprocess)
 
         /** 
          * The cache of the loaded tiles. It is double indexed: by xT and then yT.

@@ -15,15 +15,19 @@ export class Dataset {
     /**
      * @param {string} url The url of the dataset.
      * @param {number} resolution The dataset resolution (in geographical unit).
+     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      * @abstract
      */
-     constructor(url, resolution){
+     constructor(url, resolution, preprocess=null){
 
         /** @type {string} */
         this.url = url;
 
         /** @type {number} */
         this.resolution = resolution;
+
+        /** @type {function} */
+        this.preprocess = preprocess;
     }
 
 
