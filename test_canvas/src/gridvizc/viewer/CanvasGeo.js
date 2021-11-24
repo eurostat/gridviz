@@ -12,9 +12,9 @@ export class CanvasGeo {
      * @constructor
      * @param {string} canvasId
      * @param {Object} center
-     * @param {number} ps
+     * @param {number} zf
      */
-    constructor(canvasId = "vacanvas", center = undefined, ps = 1) {
+    constructor(canvasId = "vacanvas", center = undefined, zf = 1) {
 
         /** @type {*} */
         this.canvas = document.getElementById(canvasId);
@@ -36,7 +36,7 @@ export class CanvasGeo {
 
         // zoom factor: pixel size, in m/pix
         /** @type {number} */
-        this.ps = ps;
+        this.zf = zf;
 
         //extent
         /** @type {{xMin: number, xMax: number, yMin: number, yMax: number}} */
@@ -47,7 +47,7 @@ export class CanvasGeo {
         let mpan = false
         this.canvas.addEventListener("mousedown", e => { mpan = true });
         this.canvas.addEventListener("mousemove", e => {
-            if (mpan) this.pan(-e.movementX * this.ps, e.movementY * this.ps)
+            if (mpan) this.pan(-e.movementX * this.zf, e.movementY * this.zf)
         });
         this.canvas.addEventListener("mouseup", e => { mpan = false });
 
@@ -81,22 +81,22 @@ export class CanvasGeo {
      * @param {number} xGeo
      * @returns {number}
     */
-    geoToPixX(xGeo) { return (xGeo - this.center.x) / this.ps + this.w * 0.5; }
+    geoToPixX(xGeo) { return (xGeo - this.center.x) / this.zf + this.w * 0.5; }
     /**
      * @param {number} yGeo
      * @returns {number}
     */
-    geoToPixY(yGeo) { return -(yGeo - this.center.y) / this.ps + this.h * 0.5; }
+    geoToPixY(yGeo) { return -(yGeo - this.center.y) / this.zf + this.h * 0.5; }
     /**
      * @param {number} x
      * @returns {number}
     */
-    pixToGeoX(x) { return (x - this.w * 0.5) * this.ps + this.center.x; }
+    pixToGeoX(x) { return (x - this.w * 0.5) * this.zf + this.center.x; }
     /**
      * @param {number} y
      * @returns {number}
     */
-    pixToGeoY(y) { return -(y - this.h * 0.5) * this.ps + this.center.y; }
+    pixToGeoY(y) { return -(y - this.h * 0.5) * this.zf + this.center.y; }
 
     /**
      * @param {number} dxGeo
@@ -115,7 +115,7 @@ export class CanvasGeo {
      * @param {number} yGeo
      */
     zoom(f = 1, xGeo = this.center.x, yGeo = this.center.y) {
-        this.ps *= f;
+        this.zf *= f;
         this.center.x += (xGeo - this.center.x) * (1 - f)
         this.center.y += (yGeo - this.center.y) * (1 - f)
         this.updateExtentGeo()

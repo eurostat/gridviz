@@ -50,7 +50,7 @@ export class FlagStyle extends Style {
             //size - in ground meters
             let sG = this.size? this.size(cell) : resolution;
             //size - in pixel
-            const s = sG / cg.ps
+            const s = sG / cg.zf
 
             //draw flag elements
             let cumul = 0;

@@ -20,7 +20,7 @@ export class Style {
 
         /** The zoom limit when to show/hide the stroke.
          * @type {number} */
-        this.psStroke_ = undefined;
+        this.zfStroke_ = undefined;
 
         /** The stroke color.
          * @type {string} */
@@ -58,7 +58,7 @@ export class Style {
      * @returns 
      */
     drawStroke(cells, resolution, cg, shape, size) {
-        if (!this.psStroke_ || cg.ps > this.psStroke_) return;
+        if (!this.zfStroke_ || cg.zf > this.zfStroke_) return;
 
         cg.ctx.fillStyle = this.strokeColor_;
         cg.ctx.lineWidth = this.strokeWidth_;
@@ -72,7 +72,7 @@ export class Style {
                 sG = resolution
 
             //size - in pixel
-            const s = sG / cg.ps
+            const s = sG / cg.zf
 
             const shape_ = shape(cell);
             if (shape_ === "square") {
@@ -94,15 +94,15 @@ export class Style {
     /**
      * The zoom limit when to show/hide the stroke.
      * 
-     * @param {number} psStroke 
+     * @param {number} zfStroke 
      * @returns 
      */
-    psStroke(psStroke) {
-        if (psStroke) {
-            this.psStroke_ = psStroke;
+    psStroke(zfStroke) {
+        if (zfStroke) {
+            this.zfStroke_ = zfStroke;
             return this;
         }
-        return this.psStroke_;
+        return this.zfStroke_;
     }
 
     /**

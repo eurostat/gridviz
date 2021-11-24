@@ -19,7 +19,6 @@ import { LineStyle } from '../style/LineStyle';
 export class GridVizCanvas {
 
     //TODO add "preprocessCells" method to be launched after the cells have been downloaded.
-    //TODO ps to zf (zoom factor)
     //TODO make pie chart / ring / radar / multi(?)
     //TODO remove unnecessary redraw calls
     //TODO zoom/pan smartphone - use d3 events
@@ -56,8 +55,8 @@ export class GridVizCanvas {
             for (const layer of th.layers) {
 
                 //skip layer not within the zoom range
-                if (layer.minZoom >= this.ps) continue;
-                if (layer.maxZoom < this.ps) continue;
+                if (layer.minZoom >= this.zf) continue;
+                if (layer.maxZoom < this.zf) continue;
 
                 //get data to show
                 layer.dataset.getData(this.updateExtentGeo(), () => { th.draw(layer); });
@@ -186,14 +185,14 @@ export class GridVizCanvas {
     /**
      * Set viewer zoom level (ground pixel size).
      * 
-     * @param {number} ps 
+     * @param {number} zf 
      */
-    pixSize(ps) {
-        if (ps) {
-            this.cg.ps = ps;
+    zoomFactor(zf) {
+        if (zf) {
+            this.cg.zf = zf;
             return this;
         }
-        return ps;
+        return zf;
     }
 
 }
