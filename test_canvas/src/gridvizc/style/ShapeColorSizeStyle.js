@@ -63,6 +63,8 @@ export class ShapeColorSizeStyle extends Style {
                 cg.ctx.beginPath();
                 cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5), s * 0.5, 0, 2 * Math.PI, false);
                 cg.ctx.fill();
+            } else {
+                throw new Error('Unexpected shape:' + shape);
             }
         }
 

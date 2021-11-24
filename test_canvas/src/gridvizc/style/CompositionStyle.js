@@ -5,11 +5,13 @@ import { Cell } from "../viewer/Dataset"
 import { CanvasGeo } from "../viewer/CanvasGeo";
 
 /**
- * 
- * TODO update description
- * Pie chart - ring - flag
- * This style shows for each cell a square with vertical stripes representing a decomposition.
- * The square can be scaled depending on the cell importance.
+ * A style showing the composition of a total in different categories, with different color hues.
+ * It consists of a symbol with different parts, whose size reflect the proportion of the corresponding category.
+ * 3 types of symbols are possible:
+ * - Flag (square symbol, with decomposition into vertical stripes)
+ * - Pie chart (circular symbol, with decomposition into angular sectors)
+ * - Ring (circular symbol, with decomposition into concentric rings)
+ * The symbol can be scaled depending on the cell importance.
  * 
  * @author Julien Gaffuri
  */
@@ -59,7 +61,7 @@ export class CompositionStyle extends Style {
             const s = sG / cg.zf
 
             //get symbol type
-            const type_ = this.type? this.type(cell) : "flag"
+            const type_ = this.type ? this.type(cell) : "flag"
 
             //draw decomposition symbol
             let cumul = 0;
@@ -72,12 +74,14 @@ export class CompositionStyle extends Style {
                 //compute share
                 const share = cell[column] / total;
 
+                //draw symbol part
                 if (type_ === "flag") {
-                    //draw flag element
                     cg.ctx.fillRect(cumul * s + cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), share * s, s);
                 } else if (type_ === "piechart") {
                     //TODO
                 } else if (type_ === "ring") {
+                    //TODO
+                } else {
                     //TODO
                 }
 
