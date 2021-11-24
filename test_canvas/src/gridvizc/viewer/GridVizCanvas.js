@@ -23,6 +23,7 @@ export class GridVizCanvas {
     //TODO make pie chart / ring / radar / multi(?)
     //TODO remove unnecessary redraw calls
     //TODO zoom/pan smartphone - use d3 events
+    //TODO kernel smoothing
     //TODO implement mouse over
     //TODO empty tile cache
 
