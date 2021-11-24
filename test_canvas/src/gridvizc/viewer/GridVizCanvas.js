@@ -18,7 +18,7 @@ import { LineStyle } from '../style/LineStyle';
  */
 export class GridVizCanvas {
 
-    //TODO add "preprocessCells" method to be launched after the cells have been downloaded.
+    //TODO use "preprocessCells" for NL
     //TODO make pie chart / ring / radar / multi(?)
     //TODO remove unnecessary redraw calls
     //TODO zoom/pan smartphone - use d3 events
