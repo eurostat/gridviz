@@ -14,7 +14,7 @@
         app = gridvizc.gridvizApp()
 
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
-        app.geoCenter({ x: 140000, y: 450000 }).zoomFactor(20)
+        app.geoCenter({ x: 140000, y: 456000 }).zoomFactor(10)
         const s = app.styling.getCompositionStyle({ "r": "#1b9e77", "Both parents born in NL (%) ": "#a6761d" },
             c=>"flag",
             c=>5*Math.sqrt((c["Inhabitants"]))

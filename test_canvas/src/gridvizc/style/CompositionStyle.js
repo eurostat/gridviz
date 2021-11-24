@@ -90,6 +90,12 @@ export class CompositionStyle extends Style {
                 } else if (type_ === "ring") {
                     //draw ring
                     //TODO
+                    //TODO need to compute radius properly ! Variation as rootsquare of share !
+                    cg.ctx.beginPath();
+                    cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5),
+                        Math.sqrt(1-cumul) * s * 0.5,
+                    0, 2 * Math.PI);
+                    cg.ctx.fill();
                 } else {
                     throw new Error('Unexpected symbol type:' + type_);
                 }
