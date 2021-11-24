@@ -45,6 +45,9 @@ export class CSVGrid extends Dataset {
 
                 this.cells = data;
 
+                //execute preprocess, if any
+                if(this.preprocess) for (const c of this.cells) this.preprocess(c);
+
                 //execute the callback, usually a draw function
                 if(callback) callback()
             })

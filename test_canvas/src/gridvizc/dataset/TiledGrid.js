@@ -10,7 +10,7 @@ import { Dataset, Cell, Envelope } from "../viewer/Dataset"
  * 
  * @author Julien Gaffuri
  */
- export class TiledGrid extends Dataset {
+export class TiledGrid extends Dataset {
 
     /**
      * @param {string} url The url of the dataset info.json file.
@@ -116,10 +116,14 @@ import { Dataset, Cell, Envelope } from "../viewer/Dataset"
                         /** @param {*} data */
                         (data) => {
                             //store tile in cache
-                            this.cache[xT][yT] = new GridTile(data, xT, yT, this.info);
+                            const tile_ = new GridTile(data, xT, yT, this.info);
+                            this.cache[xT][yT] = tile_;
+
+                            //execute preprocess, if any
+                            if (this.preprocess) for (const c of tile_.cells) this.preprocess(c);
 
                             //execute the callback, usually a draw function
-                            if(callback) callback()
+                            if (callback) callback()
                         })
                     .catch(() => {
                         //mark as failed
@@ -137,7 +141,7 @@ import { Dataset, Cell, Envelope } from "../viewer/Dataset"
      * @param {Envelope} extGeo 
      * @returns {Array.<Cell>}
      */
-     getCells(extGeo) {
+    getCells(extGeo) {
 
         /** @type {Array.<Cell>} */
         let cells = []
