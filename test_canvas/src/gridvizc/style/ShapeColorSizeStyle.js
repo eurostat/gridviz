@@ -3,7 +3,6 @@
 import { Style } from "../viewer/Style"
 import { Cell } from "../viewer/Dataset"
 import { CanvasGeo } from "../viewer/CanvasGeo";
-import { interpolateReds, schemeGnBu } from "d3-scale-chromatic"
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.

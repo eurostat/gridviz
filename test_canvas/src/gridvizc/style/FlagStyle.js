@@ -66,6 +66,10 @@ export class FlagStyle extends Style {
                 //draw flag element
                 cg.ctx.fillRect(cumul * s + cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), share * s, s);
 
+                //TODO draw pie chart
+
+                //TODO draw multi circles
+
                 cumul += share;
             }
 
