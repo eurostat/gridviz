@@ -76,15 +76,19 @@ export class CompositionStyle extends Style {
 
                 //draw symbol part
                 if (type_ === "flag") {
+                    //draw flag vertical stripe
                     cg.ctx.fillRect(cumul * s + cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), share * s, s);
                 } else if (type_ === "piechart") {
+                    //draw pie chart angular sector
+                    const xc = cg.geoToPixX(cell.x + resolution * 0.5);
+                    const yc = cg.geoToPixY(cell.y + resolution * 0.5);
                     cg.ctx.beginPath();
-                    cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5), s * 0.5,
-                        cumul * 2 * Math.PI,
-                        (cumul + share) * 2 * Math.PI,
-                        false);
+                    cg.ctx.moveTo(xc, yc);
+                    cg.ctx.arc(xc, yc, s * 0.5, cumul * 2 * Math.PI, (cumul + share) * 2 * Math.PI);
+                    cg.ctx.lineTo(xc, yc);
                     cg.ctx.fill();
                 } else if (type_ === "ring") {
+                    //draw ring
                     //TODO
                 } else {
                     throw new Error('Unexpected symbol type:' + type_);
