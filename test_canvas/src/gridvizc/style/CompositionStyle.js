@@ -17,14 +17,18 @@ export class CompositionStyle extends Style {
 
     /**
       * @param {Object} color The dictionary which give the color of each category.
+      * @param {string} type The type of decomposition symbol: piechart, flag or ring
       * @param {function} size A function returning the size of a cell (in geographical unit).
       */
-    constructor(color, size = null) {
+    constructor(color, type = "flag", size = null) {
         super()
 
         //dictionnary column -> color
         /** @type {object} */
         this.color = color;
+
+        /** @type {string} */
+        this.type = type;
 
         /** @type {function} */
         this.size = size;
@@ -50,7 +54,7 @@ export class CompositionStyle extends Style {
                 total += +cell[column]
 
             //size - in ground meters
-            let sG = this.size? this.size(cell) : resolution;
+            let sG = this.size ? this.size(cell) : resolution;
             //size - in pixel
             const s = sG / cg.zf
 
@@ -65,11 +69,14 @@ export class CompositionStyle extends Style {
                 //compute share
                 const share = cell[column] / total;
 
-                //draw flag element
-                cg.ctx.fillRect(cumul * s + cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), share * s, s);
-
-                //TODO draw pie chart
-                //TODO draw donut
+                if (this.type === "flag") {
+                    //draw flag element
+                    cg.ctx.fillRect(cumul * s + cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), share * s, s);
+                } else if (this.type === "piechart") {
+                    //TODO
+                } else if (this.type === "donut") {
+                    //TODO
+                }
 
                 cumul += share;
             }
@@ -77,6 +84,7 @@ export class CompositionStyle extends Style {
         }
 
         //draw stroke
+        //TODO adapt shape to all cases
         this.drawStroke(cells, resolution, cg, () => "square", this.size)
     }
 
