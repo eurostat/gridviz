@@ -17,17 +17,17 @@ export class CompositionStyle extends Style {
 
     /**
       * @param {Object} color The dictionary which give the color of each category.
-      * @param {string} type The type of decomposition symbol: piechart, flag or ring
+      * @param {function} type A function returning the type of decomposition symbol of a cell: Among 'flag', 'piechart' and 'ring'
       * @param {function} size A function returning the size of a cell (in geographical unit).
       */
-    constructor(color, type = "flag", size = null) {
+    constructor(color, type = null, size = null) {
         super()
 
         //dictionnary column -> color
         /** @type {object} */
         this.color = color;
 
-        /** @type {string} */
+        /** @type {function} */
         this.type = type;
 
         /** @type {function} */
@@ -58,7 +58,10 @@ export class CompositionStyle extends Style {
             //size - in pixel
             const s = sG / cg.zf
 
-            //draw flag elements
+            //get symbol type
+            const type_ = this.type? this.type(cell) : "flag"
+
+            //draw decomposition symbol
             let cumul = 0;
             const d = resolution * (1 - sG / resolution) * 0.5
             for (let [column, color] of Object.entries(this.color)) {
@@ -69,12 +72,12 @@ export class CompositionStyle extends Style {
                 //compute share
                 const share = cell[column] / total;
 
-                if (this.type === "flag") {
+                if (type_ === "flag") {
                     //draw flag element
                     cg.ctx.fillRect(cumul * s + cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), share * s, s);
-                } else if (this.type === "piechart") {
+                } else if (type_ === "piechart") {
                     //TODO
-                } else if (this.type === "donut") {
+                } else if (type_ === "ring") {
                     //TODO
                 }
 
