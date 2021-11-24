@@ -82,7 +82,7 @@ export class CompositionStyle extends Style {
                 } else if (type_ === "ring") {
                     //TODO
                 } else {
-                    //TODO
+                    throw new Error('Unexpected symbol type:' + type_);
                 }
 
                 cumul += share;
