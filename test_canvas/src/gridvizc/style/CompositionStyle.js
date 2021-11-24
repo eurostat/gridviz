@@ -78,7 +78,12 @@ export class CompositionStyle extends Style {
                 if (type_ === "flag") {
                     cg.ctx.fillRect(cumul * s + cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), share * s, s);
                 } else if (type_ === "piechart") {
-                    //TODO
+                    cg.ctx.beginPath();
+                    cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5), s * 0.5,
+                        cumul * 2 * Math.PI,
+                        (cumul + share) * 2 * Math.PI,
+                        false);
+                    cg.ctx.fill();
                 } else if (type_ === "ring") {
                     //TODO
                 } else {
@@ -91,8 +96,10 @@ export class CompositionStyle extends Style {
         }
 
         //draw stroke
-        //TODO adapt shape to all cases
-        this.drawStroke(cells, resolution, cg, () => "square", this.size)
+        this.drawStroke(cells, resolution, cg, (c) => {
+            const type_ = this.type ? this.type(c) : "flag";
+            return (type_ === "flag") ? "square" : "circle"
+        }, this.size)
     }
 
 }
