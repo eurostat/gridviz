@@ -6,12 +6,14 @@ import { CanvasGeo } from "../viewer/CanvasGeo";
 
 /**
  * 
+ * TODO update description
+ * Pie chart - ring - flag
  * This style shows for each cell a square with vertical stripes representing a decomposition.
  * The square can be scaled depending on the cell importance.
  * 
  * @author Julien Gaffuri
  */
-export class FlagStyle extends Style {
+export class CompositionStyle extends Style {
 
     /**
       * @param {Object} color The dictionary which give the color of each category.
@@ -67,8 +69,7 @@ export class FlagStyle extends Style {
                 cg.ctx.fillRect(cumul * s + cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), share * s, s);
 
                 //TODO draw pie chart
-
-                //TODO draw multi circles
+                //TODO draw donut
 
                 cumul += share;
             }

@@ -8,7 +8,7 @@ import { Dataset } from './Dataset';
 import { CSVGrid } from '../dataset/CSVGrid';
 import { TiledGrid } from '../dataset/TiledGrid';
 import { ShapeColorSizeStyle } from '../style/ShapeColorSizeStyle';
-import { FlagStyle } from '../style/FlagStyle';
+import { CompositionStyle } from '../style/CompositionStyle';
 import { LineStyle } from '../style/LineStyle';
 
 /**
@@ -87,7 +87,7 @@ export class GridVizCanvas {
                 return new ShapeColorSizeStyle(color, size, shape);
             },
             getFlagStyle: function (dict, size = null) {
-                return new FlagStyle(dict, size);
+                return new CompositionStyle(dict, size);
             },
             getLineStyle: function (heightGeo) {
                 return new LineStyle(heightGeo);
