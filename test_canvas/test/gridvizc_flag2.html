@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <title></title>
+</head>
+
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif;">
+    <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
+    <script src="../build/gridvizc.js"></script>
+    <script>
+
+        //make application
+        app = gridvizc.gridvizApp()
+
+        //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
+        app.geoCenter({ x: 1485, y: 4515 }).zoomFactor(0.1)
+        const s = app.styling.getFlagStyle({ "r": "#1b9e77", "Both parents born in NL (%) ": "#a6761d" },
+        c=>Math.sqrt((c["Inhabitants"])/250)
+        ).zfStroke(0.05);
+        app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 1, s, 0, 9999999999,
+        c => {
+            if(c["Both parents born in NL (%) "]<0) c["Both parents born in NL (%) "]=0;
+            c["r"] = 100 - c["Both parents born in NL (%) "];
+        })
+
+
+    </script>
+</body>
+
+</html>
