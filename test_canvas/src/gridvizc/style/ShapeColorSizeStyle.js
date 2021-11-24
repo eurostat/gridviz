@@ -69,6 +69,7 @@ export class ShapeColorSizeStyle extends Style {
         }
 
         //draw stroke
+        //TODO draw that with each symbol
         this.drawStroke(cells, resolution, cg, this.shape, this.size)
     }
 

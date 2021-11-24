@@ -47,6 +47,7 @@ export class CompositionStyle extends Style {
     draw(cells, resolution, cg) {
 
         //TODO if size provided, sort cells by size to draw the larger below
+        //and draw the stroke with the symbol
 
         for (let cell of cells) {
 
