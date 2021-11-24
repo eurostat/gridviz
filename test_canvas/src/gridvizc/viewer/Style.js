@@ -97,7 +97,7 @@ export class Style {
      * @param {number} zfStroke 
      * @returns 
      */
-    psStroke(zfStroke) {
+    zfStroke(zfStroke) {
         if (zfStroke) {
             this.zfStroke_ = zfStroke;
             return this;
