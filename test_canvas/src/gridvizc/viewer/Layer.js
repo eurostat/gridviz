@@ -12,16 +12,16 @@ export class Layer {
 
     /**
      * @param {Dataset} dataset The dataset to show
-     * @param {Style} style The style to use
+     * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
      */
-    constructor(dataset, style, minZoom, maxZoom) {
+    constructor(dataset, styles, minZoom, maxZoom) {
 
         /** @type {Dataset} */
         this.dataset = dataset;
-        /** @type {Style} */
-        this.style = style;
+        /** @type {Array.<Style>} */
+        this.styles = styles;
         /** @type {number} */
         this.minZoom = minZoom;
         /** @type {number} */

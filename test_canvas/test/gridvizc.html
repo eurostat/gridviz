@@ -15,7 +15,7 @@
             .geoCenter({ x: 4000000, y: 2300000 }).zoomFactor(200)
 
 
-            const s = app.styling.getShapeColorSizeStyle(c => gridvizc.color().interpolateReds(c["2018"]/ 200), null, (c)=>"square").zfStroke(70);
+        const s = app.styling.getShapeColorSizeStyle(c => gridvizc.color().interpolateReds(c["2018"]/ 200), null, (c)=>"square").zfStroke(70);
         //const s = app.styling.getShapeColorSizeStyle(null, c=>1000*Math.sqrt(c["2018"]/30000), c=>"square").zfStroke(70);
         //const s = app.styling.getShapeColorSizeStyle(c => gridvizc.color().interpolateReds(c["2018"] / 200), c => 1000 * Math.sqrt(c["2018"] / 30000), (c) => "circle").zfStroke(70);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", s, 0, 500);

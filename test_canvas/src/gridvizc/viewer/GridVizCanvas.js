@@ -112,27 +112,27 @@ export class GridVizCanvas {
      * Add a layer.
      * 
      * @param {Dataset} dataset The dataset to show
-     * @param {Style} style The style to use
+     * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
      */
-    add(dataset, style, minZoom, maxZoom) {
-        this.layers.push(new Layer(dataset, style, minZoom, maxZoom));
+    add(dataset, styles, minZoom, maxZoom) {
+        this.layers.push(new Layer(dataset, styles, minZoom, maxZoom));
     }
 
     /**
      * Add a layer from a tiled grid dataset.
      * 
      * @param {string} url The url of the dataset info.json file.
-     * @param {Style} style The style to use
+     * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
      * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      */
-    addTiledGrid(url, style, minZoom, maxZoom, preprocess = null) {
+    addTiledGrid(url, styles, minZoom, maxZoom, preprocess = null) {
         this.add(
             new TiledGrid(url, preprocess).loadInfo(() => { this.redrawWhenNecessary(); }),
-            style, minZoom, maxZoom
+            styles, minZoom, maxZoom
         )
     }
 
@@ -142,15 +142,15 @@ export class GridVizCanvas {
      * 
      * @param {string} url The url of the dataset.
      * @param {number} resolution The dataset resolution (in geographical unit).
-     * @param {Style} style The style to use
+     * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
      * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      */
-    addCSVGrid(url, resolution, style, minZoom, maxZoom, preprocess = null) {
+    addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null) {
         this.add(
             new CSVGrid(url, resolution, preprocess).getData(null, () => { this.redrawWhenNecessary(); }),
-            style, minZoom, maxZoom
+            styles, minZoom, maxZoom
         )
     }
 
@@ -168,8 +168,9 @@ export class GridVizCanvas {
         //clear
         this.cg.clear(this.backgroundColor);
 
-        //draw cells
-        layer.style.draw(cells, layer.dataset.resolution, this.cg)
+        //draw cells, style by style
+        for (const style of layer.styles)
+            style.draw(cells, layer.dataset.resolution, this.cg)
     }
 
 
