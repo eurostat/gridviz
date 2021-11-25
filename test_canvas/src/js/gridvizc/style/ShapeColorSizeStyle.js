@@ -40,20 +40,25 @@ export class ShapeColorSizeStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
-        //TODO if by size, sort them
+        /*/TODO if by size, sort them
+        console.log("-", this.size(cells[0]), this.size(cells[1]))
+        if (this.size)
+            cells.sort((c1, c2) => ( this.size(c1) - this.size(c2) ));
+        console.log("+", this.size(cells[0]), this.size(cells[1]))
+*/
 
         for (let cell of cells) {
 
             //color
-            cg.ctx.fillStyle = this.color? this.color(cell) : "#EA6BAC";
+            cg.ctx.fillStyle = this.color ? this.color(cell) : "#EA6BAC";
 
             //size - in ground meters
-            let sG = this.size? this.size(cell) : resolution;
+            let sG = this.size ? this.size(cell) : resolution;
             //size - in pixel
             const s = sG / cg.zf
 
             //get shape
-            const shape = this.shape? this.shape(cell) : "square";
+            const shape = this.shape ? this.shape(cell) : "square";
             if (shape === "square") {
                 //draw square
                 const d = resolution * (1 - sG / resolution) * 0.5
