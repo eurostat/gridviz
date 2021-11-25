@@ -9,17 +9,18 @@
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
     <script src="../build/gridvizc.js"></script>
     <script>
+
         //make application
-        app = gviz.App()
+        const app = gviz.App()
             .geoCenter({ x: 4000000, y: 2300000 }).zoomFactor(200)
 
         //define datasets, styles and layers
-        const s = gviz.getLineStyle( c => 30 * Math.sqrt(c["2011"]) ).zfStroke(70);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", s, 0, 500);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", s, 500, 1000);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", s, 1000, 2000);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", s, 2000, 4000);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", s, 4000, 9999999999);
+        const s = gviz.getLineStyle(c => 30 * Math.sqrt(c["2011"])).zfStroke(70);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 500, 1000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 1000, 2000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 2000, 4000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 4000, 9999999999);
 
     </script>
 </body>

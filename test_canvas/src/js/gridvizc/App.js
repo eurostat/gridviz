@@ -18,7 +18,8 @@ import { LineStyle } from './style/LineStyle';
  */
 export class App {
 
-    //TODO style make pie chart / ring / multi(?) / radar
+    //TODO style make multi(or add offset?) / radar
+    //TODO style population change as segment with orientation / width
     //TODO styles with orientation
     //TODO style with variation - population geostat
     //TODO style kernel smoothing

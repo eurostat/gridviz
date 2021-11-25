@@ -11,31 +11,21 @@
     <script>
 
         //make application
-        app = gviz.App()
-
-        /*/x,y,Total_m2,Residential_perc,Agricultural_perc,Commercial_Services_perc,Industrial_perc
-            app.geoCenter({ x: 4004, y: 2355 }).zoomFactor(0.15)
-        const s = app.styling.getCompositionStyle(
-            { "Residential_perc": "#fb8072", "Agricultural_perc": "#8dd3c7", "Commercial_Services_perc": "#80b1d3", "Industrial_perc": "#ffed6f" },
-            c=>Math.sqrt(c["Total_m2"]/600000)
-        ).zfStroke(0.05);
-        app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/1km/building_area.csv", 1, s, 0, 9999999999)
-        //resolution param should be 1000 !
-*/
+        const app = gviz.App()
 
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
         app.geoCenter({ x: 135000, y: 456000 }).zoomFactor(3)
-        const s = gviz.getCompositionStyle({ "Population under 14": "#e6ab02", "pop_":"#1b9e77", "Population over 65": "#d95f02" },
-            c=>"flag",
-            c=>5*Math.sqrt((c["Inhabitants"]))
+        const s = gviz.getCompositionStyle({ "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
+            c => "flag",
+            c => 5 * Math.sqrt((c["Inhabitants"]))
         ).zfStroke(2);
         app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
-        c => {
-            c.x*=100; c.y*=100;
-            if(c["Population under 14"]<0) c["Population under 14"]=0;
-            if(c["Population over 65"]<0) c["Population over 65"]=0;
-            c["pop_"] = c["Inhabitants"]-c["Population under 14"]-c["Population over 65"];
-        })
+            c => {
+                c.x *= 100; c.y *= 100;
+                if (c["Population under 14"] < 0) c["Population under 14"] = 0;
+                if (c["Population over 65"] < 0) c["Population over 65"] = 0;
+                c["pop_"] = c["Inhabitants"] - c["Population under 14"] - c["Population over 65"];
+            })
 
     </script>
 </body>

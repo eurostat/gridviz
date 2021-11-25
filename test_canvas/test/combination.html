@@ -11,29 +11,19 @@
     <script>
 
         //make application
-        app = gviz.App()
+        const app = gviz.App()
             .geoCenter({ x: 4000000, y: 2300000 }).zoomFactor(200)
-
-/*
-        const s = app.styling.getShapeColorSizeStyle(c => gviz.color().interpolateReds(c["2018"]/ 200), null, (c)=>"square").zfStroke(70);
-        //const s = app.styling.getShapeColorSizeStyle(null, c=>1000*Math.sqrt(c["2018"]/30000), c=>"square").zfStroke(70);
-        //const s = app.styling.getShapeColorSizeStyle(c => gviz.color().interpolateReds(c["2018"] / 200), c => 1000 * Math.sqrt(c["2018"] / 30000), (c) => "circle").zfStroke(70);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 500, 1000);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 1000, 9999999999);
-*/
 
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
         app.geoCenter({ x: 135000, y: 456000 }).zoomFactor(3)
         const s1 = gviz.getLineStyle(c => 13 * Math.sqrt(c["Inhabitants"])).zfStroke(3).fillColor("#77777777");
-        //const s1 = new ShapeColorSizeStyle(c => gviz.color().interpolateReds(2*c["Population over 65"]/c["Inhabitants"]), null, (c)=>"square").zfStroke(1);
-        const s2 = gviz.getShapeColorSizeStyle(c => gviz.color().interpolateReds(2*c["Population over 65"]/c["Inhabitants"])
-        , c=>c["Inhabitants"]/3, (c)=>"circle").zfStroke(1);
-        app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s1,s2], 0, 9999999999,
-        c => {
-            c.x*=100; c.y*=100;
-            if(c["Inhabitants"]<0) c["Inhabitants"]=0;
-        })
+        const s2 = gviz.getShapeColorSizeStyle(c => gviz.color().interpolateReds(2 * c["Population over 65"] / c["Inhabitants"]),
+            c => c["Inhabitants"] / 3, (c) => "circle" ).zfStroke(1);
+        app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s1, s2], 0, 9999999999,
+            c => {
+                c.x *= 100; c.y *= 100;
+                if (c["Inhabitants"] < 0) c["Inhabitants"] = 0;
+            })
 
 
     </script>
