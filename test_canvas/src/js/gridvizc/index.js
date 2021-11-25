@@ -16,8 +16,8 @@ export const color = function () {
 //export styles
 
 import { ShapeColorSizeStyle } from "./style/ShapeColorSizeStyle"
-export const getShapeColorSizeStyle = function (color, size, shape) {
-    return new ShapeColorSizeStyle(color, size, shape)
+export const getShapeColorSizeStyle = function (color_, size, shape) {
+    return new ShapeColorSizeStyle(color_, size, shape)
 }
 
 import { LineStyle } from "./style/LineStyle"
@@ -27,7 +27,7 @@ export const getLineStyle = function (height) {
 
 
 import { CompositionStyle } from "./style/CompositionStyle"
-export const getCompositionStyle = function (color, type, size) {
-    return new CompositionStyle(color, type, size)
+export const getCompositionStyle = function (color_, type, size) {
+    return new CompositionStyle(color_, type, size)
 }
 
