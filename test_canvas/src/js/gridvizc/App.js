@@ -16,8 +16,9 @@ import { TiledGrid } from './dataset/TiledGrid';
 export class App {
 
     //TODO style trendline
+    //TODO style radar
 
-    //TODO style make multi (or add offset?) / radar
+    //TODO style make multi (or add offset?)
     //TODO style population change as segment with orientation / width
     //TODO styles with orientation
     //TODO style kernel smoothing
