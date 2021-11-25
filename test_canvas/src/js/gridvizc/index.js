@@ -7,10 +7,17 @@ export const App = function (opts) {
     return new App_(opts)
 }
 
+
 //export entire d3 scale chromatic
 export const color = function () {
     return dsc
 }
+
+
+
+//export datasets
+//TODO
+
 
 
 //export styles

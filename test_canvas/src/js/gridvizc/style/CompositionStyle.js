@@ -94,8 +94,8 @@ export class CompositionStyle extends Style {
                     //TODO need to compute radius properly ! Variation as rootsquare of share !
                     cg.ctx.beginPath();
                     cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5),
-                        Math.sqrt(1-cumul) * s * 0.5,
-                    0, 2 * Math.PI);
+                        Math.sqrt(1 - cumul) * s * 0.5,
+                        0, 2 * Math.PI);
                     cg.ctx.fill();
                 } else {
                     throw new Error('Unexpected symbol type:' + type_);
@@ -104,13 +104,12 @@ export class CompositionStyle extends Style {
                 cumul += share;
             }
 
+            //draw stroke
+            this.drawStroke(cell, resolution, cg, (c) => {
+                return (type_ === "flag") ? "square" : "circle"
+            }, this.size)
         }
 
-        //draw stroke
-        this.drawStroke(cells, resolution, cg, (c) => {
-            const type_ = this.type ? this.type(c) : "flag";
-            return (type_ === "flag") ? "square" : "circle"
-        }, this.size)
     }
 
 }

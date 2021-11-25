@@ -66,11 +66,11 @@ export class ShapeColorSizeStyle extends Style {
             } else {
                 throw new Error('Unexpected shape:' + shape);
             }
+
+            //draw stroke
+            this.drawStroke(cell, resolution, cg, this.shape, this.size)
         }
 
-        //draw stroke
-        //TODO draw that with each symbol
-        this.drawStroke(cells, resolution, cg, this.shape, this.size)
     }
 
 }

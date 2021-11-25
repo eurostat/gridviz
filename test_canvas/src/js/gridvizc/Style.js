@@ -50,44 +50,42 @@ export class Style {
     /**
      * Draw the stroke of the cells, as rectangle, only for detailled zoom levels when the cells are quite big.
      * 
-     * @param {Array.<Cell>} cells The cells to draw.
+     * @param {Cell} cell The cell to draw the stroke of.
      * @param {number} resolution Their resolution (in geographic unit)
      * @param {CanvasGeo} cg The canvas where to draw them.
      * @param {function} shape The shape of the stroke.
      * @param {function} size A function returning the size of a cell (in geographical unit).
      * @returns 
      */
-    drawStroke(cells, resolution, cg, shape, size) {
+    drawStroke(cell, resolution, cg, shape, size) {
         if (!this.zfStroke_ || cg.zf > this.zfStroke_) return;
 
         cg.ctx.fillStyle = this.strokeColor_;
         cg.ctx.lineWidth = this.strokeWidth_;
-        for (let cell of cells) {
 
-            //size - in ground meters
-            let sG;
-            if (size) {
-                sG = size(cell);
-            } else
-                sG = resolution
+        //size - in ground meters
+        let sG;
+        if (size) {
+            sG = size(cell);
+        } else
+            sG = resolution
 
-            //size - in pixel
-            const s = sG / cg.zf
+        //size - in pixel
+        const s = sG / cg.zf
 
-            const shape_ = shape(cell);
-            if (shape_ === "square") {
-                //draw square
-                const d = resolution * (1 - sG / resolution) * 0.5
-                cg.ctx.beginPath();
-                cg.ctx.rect(cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), s, s);
-                cg.ctx.stroke();
+        const shape_ = shape(cell);
+        if (shape_ === "square") {
+            //draw square
+            const d = resolution * (1 - sG / resolution) * 0.5
+            cg.ctx.beginPath();
+            cg.ctx.rect(cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), s, s);
+            cg.ctx.stroke();
 
-            } else if (shape_ === "circle") {
-                //draw circle
-                cg.ctx.beginPath();
-                cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5), s * 0.5, 0, 2 * Math.PI, false);
-                cg.ctx.stroke();
-            }
+        } else if (shape_ === "circle") {
+            //draw circle
+            cg.ctx.beginPath();
+            cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5), s * 0.5, 0, 2 * Math.PI, false);
+            cg.ctx.stroke();
         }
     }
 

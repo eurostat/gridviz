@@ -7,9 +7,6 @@ import { Dataset } from './Dataset';
 
 import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
-import { ShapeColorSizeStyle } from './style/ShapeColorSizeStyle';
-import { CompositionStyle } from './style/CompositionStyle';
-import { LineStyle } from './style/LineStyle';
 
 /**
  * A gridviz on a HTML canvas.
