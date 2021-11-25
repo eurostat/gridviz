@@ -35,8 +35,6 @@ export class RadarStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
-        //TODO sort cells by size to draw the larger below
-
         for (let cell of cells) {
 
             //draw decomposition symbol

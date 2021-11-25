@@ -20,6 +20,7 @@ export class App {
     //TODO styles with orientation
     //TODO style with variation - population geostat
     //TODO style kernel smoothing
+    //TODO style trendline
 
     //TODO remove unnecessary redraw calls
     //TODO zoom/pan smartphone - use d3 events

@@ -91,7 +91,6 @@ export class CompositionStyle extends Style {
                     cg.ctx.fill();
                 } else if (type_ === "ring") {
                     //draw ring
-                    //TODO
                     //TODO need to compute radius properly ! Variation as rootsquare of share !
                     cg.ctx.beginPath();
                     cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5),
