@@ -17,10 +17,10 @@
         //define datasets, styles and layers
         const s = gviz.getShapeColorSizeStyle(
             c => {
-                if (c["2011"] === 0 && c["2018"] === 0) return "white"
-                if (c["2018"] === 0) return gviz.color().interpolateRdBu(1);
+                if (c["2011"] == 0 && c["2018"] === 0) return "white"
+                if (c["2018"] == 0) return gviz.color().interpolateRdBu(0);
                 const r = (c["2018"] - c["2011"]) / c["2018"];
-                return gviz.color().interpolateRdBu(r/100);
+                return gviz.color().interpolateRdBu(-r*5 + 0.5);
             },
             null,
             c => "square"
