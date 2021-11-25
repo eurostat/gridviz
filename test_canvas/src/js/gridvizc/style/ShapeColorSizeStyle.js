@@ -1,8 +1,8 @@
 //@ts-check
 
-import { Style } from "../viewer/Style"
-import { Cell } from "../viewer/Dataset"
-import { CanvasGeo } from "../viewer/CanvasGeo";
+import { Style } from "../Style"
+import { Cell } from "../Dataset"
+import { CanvasGeo } from "../CanvasGeo";
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.

@@ -3,7 +3,7 @@
 
 import { json, csv } from "d3-fetch";
 import { GridTile } from './GridTile';
-import { Dataset, Cell, Envelope } from "../viewer/Dataset"
+import { Dataset, Cell, Envelope } from "../Dataset"
 
 /**
  * A tiled dataset, composed of CSV tiles.

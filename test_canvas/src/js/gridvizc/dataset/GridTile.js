@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Cell } from "../viewer/Dataset"
+import { Cell } from "../Dataset"
 import { GridInfo } from "./TiledGrid"
 
 /**

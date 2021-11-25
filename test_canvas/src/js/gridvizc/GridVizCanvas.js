@@ -1,9 +1,9 @@
 //@ts-check
 
-import { CanvasGeo } from './viewer/CanvasGeo';
-import { Layer } from './viewer/Layer';
-import { Style } from './viewer/Style';
-import { Dataset } from './viewer/Dataset';
+import { CanvasGeo } from './CanvasGeo';
+import { Layer } from './Layer';
+import { Style } from './Style';
+import { Dataset } from './Dataset';
 
 import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
