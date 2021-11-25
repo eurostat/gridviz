@@ -40,12 +40,9 @@ export class ShapeColorSizeStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
-        /*/TODO if by size, sort them
-        console.log("-", this.size(cells[0]), this.size(cells[1]))
+        //if by size, sort cells by size so that the biggest are drawn first
         if (this.size)
-            cells.sort((c1, c2) => ( this.size(c1) - this.size(c2) ));
-        console.log("+", this.size(cells[0]), this.size(cells[1]))
-*/
+            cells.sort((c1, c2) => ( this.size(c2) - this.size(c1) ));
 
         for (let cell of cells) {
 
