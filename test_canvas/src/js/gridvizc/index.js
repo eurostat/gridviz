@@ -1,6 +1,6 @@
 //@ts-check
 
-import { GridVizCanvas } from "./gridvizc/viewer/GridVizCanvas"
+import { GridVizCanvas } from "./GridVizCanvas"
 import * as dsc from "d3-scale-chromatic"
 
 export const gridvizApp = function (opts) {

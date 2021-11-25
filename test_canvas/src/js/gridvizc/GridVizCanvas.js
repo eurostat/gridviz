@@ -1,15 +1,15 @@
 //@ts-check
 
-import { CanvasGeo } from './CanvasGeo';
-import { Layer } from './Layer';
-import { Style } from './Style';
-import { Dataset } from './Dataset';
+import { CanvasGeo } from './viewer/CanvasGeo';
+import { Layer } from './viewer/Layer';
+import { Style } from './viewer/Style';
+import { Dataset } from './viewer/Dataset';
 
-import { CSVGrid } from '../dataset/CSVGrid';
-import { TiledGrid } from '../dataset/TiledGrid';
-import { ShapeColorSizeStyle } from '../style/ShapeColorSizeStyle';
-import { CompositionStyle } from '../style/CompositionStyle';
-import { LineStyle } from '../style/LineStyle';
+import { CSVGrid } from './dataset/CSVGrid';
+import { TiledGrid } from './dataset/TiledGrid';
+import { ShapeColorSizeStyle } from './style/ShapeColorSizeStyle';
+import { CompositionStyle } from './style/CompositionStyle';
+import { LineStyle } from './style/LineStyle';
 
 /**
  * A gridviz on a HTML canvas.
