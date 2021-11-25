@@ -40,7 +40,7 @@ export class ShapeColorSizeStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
-        //if by size, sort cells by size so that the biggest are drawn first
+        //if size is used, sort cells by size so that the biggest are drawn first
         if (this.size)
             cells.sort((c1, c2) => ( this.size(c2) - this.size(c1) ));
 

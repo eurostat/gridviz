@@ -46,8 +46,9 @@ export class CompositionStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
-        //TODO if size provided, sort cells by size to draw the larger below
-        //and draw the stroke with the symbol
+        //if size is used, sort cells by size so that the biggest are drawn first
+        if (this.size)
+            cells.sort((c1, c2) => ( this.size(c2) - this.size(c1) ));
 
         for (let cell of cells) {
 
