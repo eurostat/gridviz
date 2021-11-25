@@ -43,11 +43,10 @@ export class RadarStyle extends Style {
                 //set color
                 cg.ctx.fillStyle = color;
 
-                //get size
-                //TODO
+                //TODO get size
 
                 //TODO draw fill
-                //TODO draw the stroke ?
+                //TODO draw stroke ?
             }
 
         }

@@ -15,7 +15,7 @@ import { TiledGrid } from './dataset/TiledGrid';
  */
 export class App {
 
-    //TODO style make multi(or add offset?) / radar
+    //TODO style make multi (or add offset?) / radar
     //TODO style population change as segment with orientation / width
     //TODO styles with orientation
     //TODO style with variation - population geostat
