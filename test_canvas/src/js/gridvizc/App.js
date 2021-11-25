@@ -15,12 +15,13 @@ import { TiledGrid } from './dataset/TiledGrid';
  */
 export class App {
 
+    //TODO style with variation - population geostat
+    //TODO style trendline
+
     //TODO style make multi (or add offset?) / radar
     //TODO style population change as segment with orientation / width
     //TODO styles with orientation
-    //TODO style with variation - population geostat
     //TODO style kernel smoothing
-    //TODO style trendline
 
     //TODO remove unnecessary redraw calls
     //TODO zoom/pan smartphone - use d3 events
