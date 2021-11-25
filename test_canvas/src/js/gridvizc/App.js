@@ -16,7 +16,7 @@ import { LineStyle } from './style/LineStyle';
  * 
  * @author Julien Gaffuri
  */
-export class GridVizCanvas {
+export class App {
 
     //TODO style make pie chart / ring / multi(?) / radar
     //TODO styles with orientation

@@ -1,10 +1,10 @@
 //@ts-check
 
-import { GridVizCanvas } from "./GridVizCanvas"
+import { App as App_ } from "./App"
 import * as dsc from "d3-scale-chromatic"
 
 export const App = function (opts) {
-    return new GridVizCanvas(opts)
+    return new App_(opts)
 }
 
 //export entire d3 scale chromatic
