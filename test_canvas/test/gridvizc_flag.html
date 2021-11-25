@@ -29,7 +29,7 @@
             c=>"flag",
             c=>5*Math.sqrt((c["Inhabitants"]))
         ).zfStroke(2);
-        app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, s, 0, 9999999999,
+        app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
         c => {
             c.x*=100; c.y*=100;
             if(c["Population under 14"]<0) c["Population under 14"]=0;
