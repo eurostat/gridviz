@@ -3,7 +3,7 @@
 import { GridVizCanvas } from "./GridVizCanvas"
 import * as dsc from "d3-scale-chromatic"
 
-export const gridvizApp = function (opts) {
+export const App = function (opts) {
     return new GridVizCanvas(opts)
 }
 
