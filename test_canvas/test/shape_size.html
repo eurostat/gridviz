@@ -17,9 +17,9 @@
         //define datasets, styles and layers
         const s = gviz.getShapeColorSizeStyle(
             c => "gray",
-            c => 15*Math.sqrt(c["2018"]),
+            c => 7*Math.sqrt(c["2018"]),
             c => "circle"
-        ).zfStroke(999999);
+        ).zfStroke(60);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 500, 1000);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 1000, 2000);
