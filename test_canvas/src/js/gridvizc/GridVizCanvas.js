@@ -31,6 +31,12 @@ export class GridVizCanvas {
     constructor(opts) {
         opts = opts || {};
 
+        /**
+         * The layers.
+         * @type {Array.<Layer>}
+         * */
+         this.layers = [];
+
         //get canvas element
         opts.canvasId = opts.canvasId || "vacanvas";
         const canvas = document.getElementById(opts.canvasId);
@@ -44,7 +50,6 @@ export class GridVizCanvas {
         /** Background color.
          * @type {string} */
         this.backgroundColor = opts.backgroundColor || "white"
-
 
 
         /** Make geo canvas
@@ -68,31 +73,6 @@ export class GridVizCanvas {
             }
             return this
         };
-
-
-
-
-        /**
-         * The layers.
-         * @type {Array.<Layer>} */
-        this.layers = [];
-
-
-        /**
-         * Styles library.
-         * This object exposes style constructors.
-         */
-        this.styling = {
-            getShapeColorSizeStyle: function (color = () => "#EA6BAC", size = null, shape = () => "square") {
-                return new ShapeColorSizeStyle(color, size, shape);
-            },
-            getCompositionStyle: function (dict, type=null, size = null) {
-                return new CompositionStyle(dict, type, size);
-            },
-            getLineStyle: function (heightGeo) {
-                return new LineStyle(heightGeo);
-            }
-        }
 
     }
 
