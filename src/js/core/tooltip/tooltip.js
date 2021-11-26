@@ -36,9 +36,9 @@ let tooltip_state = {
 /**
 * @description Appends tooltip container to the scene
 * @function createTooltipContainer
-* @param {Object} viewer viewer object
+* @param {Object} app app object
 */
-export function createTooltipContainer(viewer) {
+export function createTooltipContainer(app) {
     // Initial tooltip state
     tooltip_state = {
         display: "none"
@@ -94,9 +94,9 @@ function appendRowToTooltip(field) {
 /**
 * @description Updates the innerHTML of the tooltip container
 * @function updateTooltip
-* @param {Object} viewer
+* @param {Object} app
 */
-export function updateTooltip(viewer) {
+export function updateTooltip(app) {
     let x, y;
     if (app._mobile) {
         //mobile coords are scaled to [-1,1], so we "unscale" them
@@ -176,7 +176,7 @@ export function updateTooltip(viewer) {
           `;
                     }
                 }
-                ensureTooltipOnScreen(viewer);
+                ensureTooltipOnScreen(app);
             })
 
         } else {
@@ -194,11 +194,11 @@ export function updateTooltip(viewer) {
             <th>${f.properties.nuts_id}</th>
             `;
                         }
-                        ensureTooltipOnScreen(viewer);
+                        ensureTooltipOnScreen(app);
                     },
                     err => {
                         console.log("no LAU found");
-                        ensureTooltipOnScreen(viewer);
+                        ensureTooltipOnScreen(app);
                         //console.error(err);
                     })
             } else if (app.tooltip_.showNUTS) {
@@ -218,16 +218,16 @@ export function updateTooltip(viewer) {
               <th>${f.properties.lau_name}</th>
               `;
                         }
-                        ensureTooltipOnScreen(viewer);
+                        ensureTooltipOnScreen(app);
                     },
                     err => {
                         console.log("no NUTS found");
-                        ensureTooltipOnScreen(viewer);
+                        ensureTooltipOnScreen(app);
                         //console.error(err);
                     })
             } else {
                 //dont need to wait for fetch
-                ensureTooltipOnScreen(viewer);
+                ensureTooltipOnScreen(app);
             }
         }
     }
@@ -236,9 +236,9 @@ export function updateTooltip(viewer) {
 /**
 * @function ensureTooltipOnScreen
 * @description Prevents the tooltip from appearing off screen
-* @param {Object} viewer
+* @param {Object} app
 */
-function ensureTooltipOnScreen(viewer) {
+function ensureTooltipOnScreen(app) {
     //too far right
     if (tooltip.offsetLeft > app.width_ - tooltip.clientWidth) {
         tooltip.style.left = tooltip.offsetLeft - (tooltip.clientWidth + app.tooltip_.xOffset * 2) + "px";
@@ -255,11 +255,11 @@ function ensureTooltipOnScreen(viewer) {
 /**
 * @function showTooltip
 * @description Shows the tooltip where the cell was clicked
-* @param {Object} viewer
+* @param {Object} app
 * @param {*} mouse_position // {x,y}
 * @param {*} cell // cell object intersected from the grid cache
 */
-export function showTooltip(viewer, mouse_position, cell) {
+export function showTooltip(app, mouse_position, cell) {
     let left = mouse_position[0] + app.tooltip_.xOffset;
     let top = mouse_position[1] + app.tooltip_.yOffset;
 
@@ -275,7 +275,7 @@ export function showTooltip(viewer, mouse_position, cell) {
     // tooltip_state.colorValue = Utils.formatNumber(parseFloat(cell[grid.colorField]));
     // tooltip_state.coords = [cell.x, cell.y];
     // tooltip_state.color = cell.color;
-    updateTooltip(viewer);
+    updateTooltip(app);
 }
 
 /**

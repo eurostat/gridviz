@@ -55,7 +55,7 @@ export function addPanAndZoom(app) {
 
 
 
-function zoomHandler(viewer, event) {
+function zoomHandler(app, event) {
   let scale = event.transform.k;
   if (event.sourceEvent) {
     let new_z = Utils.getZFromScale(app.height_, app.cameraConfig.fov_, scale);
@@ -91,7 +91,7 @@ function zoomHandler(viewer, event) {
 }
 
 
-function zoomHandlerMobile(viewer, event) {
+function zoomHandlerMobile(app, event) {
   if (event.sourceEvent) {
     let scale = event.transform.k;
     let x = -(event.transform.x - app.width_ / 2) / scale;
@@ -102,7 +102,7 @@ function zoomHandlerMobile(viewer, event) {
 }
 
 
-function zoomEnd(viewer, event) {
+function zoomEnd(app, event) {
   Tooltip.hideTooltip();
   let scale = Utils.getScaleFromZ(app.height_, app.cameraConfig.fov_, event.transform.k);
   if (app.debugPlacenames_) {
@@ -113,9 +113,9 @@ function zoomEnd(viewer, event) {
     if (app.pointsLayer) {
       if (scale > 0 && scale < app.cameraConfig.far_) {
         //placenames are added to the app.pointsLayer object
-        Placenames.getPlacenames(viewer);
+        Placenames.getPlacenames(app);
       } else {
-        Placenames.removePlacenamesFromScene(viewer);
+        Placenames.removePlacenamesFromScene(app);
       }
     }
   }
@@ -129,7 +129,7 @@ function zoomEnd(viewer, event) {
  * @function zoomIn
  * @parameter scaleFactor 
  */
-export function zoomIn(viewer, scaleFactor) {
+export function zoomIn(app, scaleFactor) {
   // when we zoom, we have to update both the threejs camera and the d3 zoom
   app.view.call(app.d3zoom.scaleBy, scaleFactor);
   Camera.setCamera(app.camera.position.x, app.camera.position.y, app.camera.position.z / scaleFactor)
@@ -140,7 +140,7 @@ export function zoomIn(viewer, scaleFactor) {
 * @function zoomOut
 * @parameter scaleFactor 
 */
-export function zoomOut(viewer, scaleFactor) {
+export function zoomOut(app, scaleFactor) {
   // when we zoom, we have to update both the threejs camera and the d3 zoom
   app.view.call(app.d3zoom.scaleBy, scaleFactor);
   Camera.setCamera(app.camera.position.x, app.camera.position.y, app.camera.position.z / scaleFactor)

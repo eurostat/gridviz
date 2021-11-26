@@ -16,14 +16,14 @@ let title;
    * @function createLegend
    * @description Add svg legend to DOM using d3-svg-legend
    */
-export function createLegend(viewer) {
+export function createLegend(app) {
     // title for color legend defaults to colorField
     if (!app.legend_.title) title = grid.colorField; else title = app.legend_.title;
 
     if (app.legend_.type == "cells") {
-        createCellsLegend(viewer)
+        createCellsLegend(app)
     } else if (app.legend_.type == "continuous") {
-        createContinuousLegend(viewer)
+        createContinuousLegend(app)
     }
 
 }
@@ -33,7 +33,7 @@ export function createLegend(viewer) {
    * @function createCellsLegend 
    * @description uses npm package 'd3-svg-legend' to build a "cells" style legend
    */
-function createCellsLegend(viewer) {
+function createCellsLegend(app) {
     let legendContainer;
     if (document.getElementById("gridviz-legend")) {
         legendContainer = select("#gridviz-legend");
@@ -84,7 +84,7 @@ function createCellsLegend(viewer) {
    * @function createContinuousLegend
    * @description creates a continuous color legend using d3. see https://observablehq.com/@gabgrz/color-legend
    */
-function createContinuousLegend(viewer) {
+function createContinuousLegend(app) {
 
     let container;
     if (document.getElementById("gridviz-legend")) {
@@ -263,9 +263,9 @@ function thresholdLabels({
  * @description remove DOM element and rebuild legend
  * @function updateLegend
  */
-export function updateLegend(viewer) {
+export function updateLegend(app) {
     // TODO: make less hacky :)
     var l = selectAll(".gridviz-legend-svg").remove();
-    setTimeout(createLegend(viewer), 1000);
+    setTimeout(createLegend(app), 1000);
 }
 
