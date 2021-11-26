@@ -12,7 +12,7 @@ import { CanvasGeo } from "../CanvasGeo";
 export class SegmentStyle extends Style {
 
     /**
-      * @param {function} orientation A function returning the orientation of the segment representing a cell.
+      * @param {function} orientation A function returning the orientation (in degrees) of the segment representing a cell.
       * @param {function} color A function returning the color of the segment representing a cell.
       * @param {function} length A function returning the length of the segment representing a cell.
       * @param {function} width A function returning the width of the segment representing a cell.
@@ -41,17 +41,32 @@ export class SegmentStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
+        //conversion factor degree -> radian
+        const f = Math.PI / 180;
+
         for (let c of cells) {
 
-            //get segment specs
-            const or = this.orientation_(c);
-            const col = this.color_(c);
-            const len = this.length_(c);
-            const w = this.width_(c);
+            //set width and color
+            cg.ctx.lineWidth = this.width_(c);
+            cg.ctx.strokeStyle = this.color_(c);
 
-            //draw the segment
-            cg.ctx.lineWidth = w;
+            //get segment orientation (in radian) and length
+            const or = this.orientation_(c) * f,
+                len = this.length_(c);
 
+            //get segment center
+            const cx = cg.geoToPixX(c.x + resolution / 2 + this.offset_.dx),
+                cy = cg.geoToPixY(c.y + resolution / 2 + this.offset_.dy);
+
+            //get direction
+            const dx = 0.5 * len * Math.cos(or) / cg.zf,
+            dy = 0.5 * len * Math.sin(or) / cg.zf;
+
+            //draw segment
+            cg.ctx.beginPath();
+            cg.ctx.moveTo(cx-dx, cy-dy);
+            cg.ctx.lineTo(cx+dx, cy+dy);
+            cg.ctx.stroke();
         }
 
     }
