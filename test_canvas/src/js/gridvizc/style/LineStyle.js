@@ -17,7 +17,7 @@ export class LineStyle extends Style {
         super()
 
         /** @type {function} */
-        this.height = height;
+        this.height_ = height;
 
         /** @type {string} */
         this.lineColor_ = "gray"
@@ -42,7 +42,7 @@ export class LineStyle extends Style {
         for (const cell of cells) {
             let row = ind[cell.y];
             if (!row) { row = {}; ind[cell.y] = row }
-            row[cell.x] = +this.height(cell);
+            row[cell.x] = +this.height_(cell);
         }
 
         //compute extent
@@ -110,10 +110,23 @@ export class LineStyle extends Style {
 
     /**
      * 
-     * @param {string} lineColor 
-     * @returns 
+     * @param {function} height 
+     * @returns {this|function}
      */
-    lineColor(lineColor) {
+     height(height) {
+        if (height) {
+            this.height_ = height;
+            return this;
+        }
+        return this.height_;
+    }
+
+    /**
+     * 
+     * @param {string} lineColor 
+     * @returns {this|string}
+     */
+     lineColor(lineColor) {
         if (lineColor) {
             this.lineColor_ = lineColor;
             return this;
@@ -124,7 +137,7 @@ export class LineStyle extends Style {
     /**
      * 
      * @param {number} lineWidth 
-     * @returns 
+     * @returns {this|number}
      */
     lineWidth(lineWidth) {
         if (lineWidth) {
@@ -134,11 +147,10 @@ export class LineStyle extends Style {
         return this.lineWidth_;
     }
 
-
     /**
      * 
      * @param {string} fillColor 
-     * @returns 
+     * @returns {this|string}
      */
     fillColor(fillColor) {
         if (fillColor) {
