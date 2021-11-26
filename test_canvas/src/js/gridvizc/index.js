@@ -21,19 +21,19 @@ export const color = function () {
 
 //export styles
 
-import { ShapeColorSizeStyle } from "./style/ShapeColorSizeStyle"
-export const getShapeColorSizeStyle = function (color_, size, shape) {
-    return new ShapeColorSizeStyle(color_, size, shape)
+import { ShapeColorSizeStyle as ShapeColorSizeStyle_ } from "./style/ShapeColorSizeStyle"
+export const ShapeColorSizeStyle = function (color_, size, shape) {
+    return new ShapeColorSizeStyle_(color_, size, shape)
 }
 
-import { LineStyle } from "./style/LineStyle"
-export const getLineStyle = function (height) {
-    return new LineStyle(height)
+import { LineStyle as LineStyle_ } from "./style/LineStyle"
+export const LineStyle = function (height) {
+    return new LineStyle_(height)
 }
 
 
-import { CompositionStyle } from "./style/CompositionStyle"
-export const getCompositionStyle = function (color_, type, size) {
-    return new CompositionStyle(color_, type, size)
+import { CompositionStyle as CompositionStyle_ } from "./style/CompositionStyle"
+export const CompositionStyle = function (color_, type, size) {
+    return new CompositionStyle_(color_, type, size)
 }
 
