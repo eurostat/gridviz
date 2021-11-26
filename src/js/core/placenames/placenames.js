@@ -12,11 +12,11 @@ import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
    * @param {Object} viewer
    */
 export function defineDefaultPlacenameThresholds(viewer) {
-    let r = viewer.resolution_ / window.devicePixelRatio;
-    //let s = viewer.camera.position.z;
+    let r = app.currentResolution_ / window.devicePixelRatio;
+    //let s = app.camera.position.z;
     // scale : population
 
-    viewer.placenameThresholds_ = {
+    app.placenameThresholds_ = {
         [r * 1024]: 1000000,
         [r * 512]: 600000,
         [r * 256]: 500000,
@@ -42,7 +42,7 @@ export function getPlacenames(viewer) {
     let envelope = Utils.getCurrentViewExtent(viewer);
     //currentExtent = envelope;
     //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
-    if (viewer.debugPlacenames_) console.info(envelope);
+    if (app.debugPlacenames_) console.info(envelope);
 
     if (envelope && where) {
         let URL =
@@ -50,8 +50,8 @@ export function getPlacenames(viewer) {
             "where=" +
             where +
             "&outSR=" +
-            viewer.EPSG_ +
-            "&inSR=" + viewer.EPSG_ +
+            app.EPSG_ +
+            "&inSR=" + app.EPSG_ +
             "&geometry=" +
             envelope.xmin +
             "," +
@@ -87,9 +87,9 @@ export function getPlacenames(viewer) {
  * @description Removes the placenames CSS2DObjects from the THREE pointsLayer layer
  */
  export function removePlacenamesFromScene(viewer) {
-    if (viewer.pointsLayer && viewer.pointsLayer.children.length > 0) {
-        for (var i = viewer.pointsLayer.children.length - 1; i >= 0; i--) {
-            viewer.pointsLayer.remove(viewer.pointsLayer.children[i]);
+    if (app.pointsLayer && app.pointsLayer.children.length > 0) {
+        for (var i = app.pointsLayer.children.length - 1; i >= 0; i--) {
+            app.pointsLayer.remove(app.pointsLayer.children[i]);
         }
     }
 }
@@ -101,39 +101,39 @@ export function getPlacenames(viewer) {
  * @param {*} viewer
  */
 function defineWhereParameter(viewer) {
-    let scale = viewer.camera.position.z;
-    let r = viewer.resolution_;
+    let scale = app.camera.position.z;
+    let r = app.currentResolution_;
     let where = "";
-    if (viewer.placenamesCountry_) {
-        where = where + CONSTANTS.placenames.countryField + " = '" + viewer.placenamesCountry_ + "' AND "
+    if (app.placenamesCountry_) {
+        where = where + CONSTANTS.placenames.countryField + " = '" + app.placenamesCountry_ + "' AND "
     }
     // labelling thresholds by population - either custom values or by scale
     let popFilter = getPopulationParameterFromScale(viewer)
-    if (viewer.debugPlacenames_) {
+    if (app.debugPlacenames_) {
         console.info(popFilter);
     }
     return where + popFilter;
 }
 
 /**
- * @description Defines the population parameter for the request to the placenmes service. If viewer.populationThresholds_ are not set, it uses default thresholds
+ * @description Defines the population parameter for the request to the placenmes service. If app.populationThresholds_ are not set, it uses default thresholds
  * @function getPopulationParameterFromScale
  * @param {*} viewer
  */
 function getPopulationParameterFromScale(viewer) {
-    let scale = viewer.camera.position.z;
-    if (viewer._mobile) {
+    let scale = app.camera.position.z;
+    if (app._mobile) {
         //scale up to desktop values
-        let factor = viewer.originalResolution / viewer.resolution_
+        let factor = app.originalResolution / app.currentResolution_
         scale = scale * factor;
     }
 
     let populationFieldName = CONSTANTS.placenames.populationField;
     //build query string from thresholds
-    if (viewer.placenameThresholds_) {
+    if (app.placenameThresholds_) {
         // always ascending order
-        let scales = Object.keys(viewer.placenameThresholds_).sort((a, b)=>{return parseInt(a)-parseInt(b)});
-        let populations = Object.values(viewer.placenameThresholds_).sort((a, b)=>{return parseInt(a)-parseInt(b)});
+        let scales = Object.keys(app.placenameThresholds_).sort((a, b)=>{return parseInt(a)-parseInt(b)});
+        let populations = Object.values(app.placenameThresholds_).sort((a, b)=>{return parseInt(a)-parseInt(b)});
         for (let i = 0; i < scales.length; i++) {
             let s = scales[i];
             let p = populations[i];
@@ -161,11 +161,11 @@ function getPopulationParameterFromScale(viewer) {
  * @param {*} placenames
  */
 function addPlacenamesToScene(viewer, placenames) {
-    if (viewer.pointsLayer) {
+    if (app.pointsLayer) {
         for (let p = 0; p < placenames.length; p++) {
             let label = createPlacenameLabelObject(viewer, placenames[p]);
             // TODO: group objects manually (THREE.group())
-            viewer.pointsLayer.add(label);
+            app.pointsLayer.add(label);
         }
     }
 }
@@ -185,11 +185,11 @@ function createPlacenameLabelObject(viewer, placename) {
     var placeLabel = new CSS2DObject(placeDiv);
 
     //scale mobile coords
-    if (viewer._mobile) {
-        if (viewer.zerosRemoved_) {
-            let d = Number('1E' + viewer.zerosRemoved_);
-            let x = viewer.mobileCoordScaleX(placename.geometry.x / d);
-            let y = viewer.mobileCoordScaleY(placename.geometry.y / d)
+    if (app._mobile) {
+        if (app.zerosRemoved_) {
+            let d = Number('1E' + app.zerosRemoved_);
+            let x = app.mobileCoordScaleX(placename.geometry.x / d);
+            let y = app.mobileCoordScaleY(placename.geometry.y / d)
             placeLabel.position.set(
                 x,
                 y,
@@ -197,16 +197,16 @@ function createPlacenameLabelObject(viewer, placename) {
             );
         } else {
             placeLabel.position.set(
-                viewer.mobileCoordScaleX(placename.geometry.x),
-                viewer.mobileCoordScaleY(placename.geometry.y),
+                app.mobileCoordScaleX(placename.geometry.x),
+                app.mobileCoordScaleY(placename.geometry.y),
                 CONSTANTS.label_height
             );
         }
         return placeLabel;
     } else {
         //desktop
-        if (viewer.zerosRemoved_) {
-            let d = Number('1E' + viewer.zerosRemoved_);
+        if (app.zerosRemoved_) {
+            let d = Number('1E' + app.zerosRemoved_);
             placeLabel.position.set(
                 placename.geometry.x / d,
                 placename.geometry.y / d,

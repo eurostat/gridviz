@@ -1,9 +1,9 @@
-// all methods related to gridviz viewer's threejs camera
+// all methods related to gridviz app's threejs camera
 
 import * as CONSTANTS from "../constants.js";
 import {  PerspectiveCamera, Vector3 } from 'three'
 import { OrbitControls } from '../../lib/threejs/orbitControls';
-import { viewer } from "../gridviz.js";
+import { app } from "../gridviz.js";
 
 let camera; // threejs camera object
 let cameraConfig; // config object containing: near, far, fov, aspect, zoom
@@ -12,11 +12,11 @@ let controls; //orbit controls
 /**
   * @description Initializes THREE camera object
   * @function createCamera
-  * @param viewer 
+  * @param app 
   */
- export function createCamera(viewer) {
-    cameraConfig = defineCameraConfig(viewer);
-    viewer.cameraConfig = cameraConfig;
+ export function createCamera(app) {
+    cameraConfig = defineCameraConfig(app);
+    app.cameraConfig = cameraConfig;
     camera = new PerspectiveCamera(
         cameraConfig.fov_,
         cameraConfig.aspect_,
@@ -24,7 +24,7 @@ let controls; //orbit controls
         cameraConfig.far_
     );
 
-    viewer.camera = camera;
+    app.camera = camera;
 
     //orthographic
     //https://discourse.threejs.org/t/why-does-pointsmaterial-size-does-not-correspond-with-geographic-grid-cell-size/13408
@@ -52,15 +52,15 @@ let controls; //orbit controls
 
 
 /**
-  * @description Creates orbit controls to be used with three.js. Used when viewer is set to '3D' mode.
+  * @description Creates orbit controls to be used with three.js. Used when app is set to '3D' mode.
   * @function createOrbitControls
-  * @param viewer 
+  * @param app 
   */
-export function createOrbitControls(viewer) {
+export function createOrbitControls(app) {
 
     // controls
-    controls = new OrbitControls( viewer.camera, viewer.renderer.domElement );
-    controls.target = new Vector3( viewer.center_[0], viewer.center_[1], 0 );
+    controls = new OrbitControls( app.camera, app.renderer.domElement );
+    controls.target = new Vector3( app.center_[0], app.center_[1], 0 );
     //controls.minPolarAngle = 0;
     //controls.maxPolarAngle = 0;
     controls.minAzimuthAngle = -0.5;
@@ -73,7 +73,7 @@ export function createOrbitControls(viewer) {
     // controls.maxDistance = 500;
     // controls.maxPolarAngle = Math.PI / 2;
 
-    camera.position.set( viewer.center_[0], viewer.center_[1], cameraConfig.zoom_);
+    camera.position.set( app.center_[0], app.center_[1], cameraConfig.zoom_);
     controls.update();
 }
 
@@ -97,10 +97,10 @@ export function createOrbitControls(viewer) {
 /**
 * @description Updates camera configuration. Called when user adds grid data, changes zoom, or changes center after initialization
 * @function redefineCamera
-  * @param viewer 
+  * @param app 
 */
-export function redefineCamera(viewer) {
-    cameraConfig = defineCameraConfig(viewer)
+export function redefineCamera(app) {
+    cameraConfig = defineCameraConfig(app)
 
     camera.fov = cameraConfig.fov_;
     camera.aspect = cameraConfig.aspect_;
@@ -108,28 +108,28 @@ export function redefineCamera(viewer) {
     camera.far = cameraConfig.far_;
 
     // TODO: redefine panAndZoom
-    viewer.cameraConfig = cameraConfig;
+    app.cameraConfig = cameraConfig;
 }
 
 /**
 * @description defines the configuration object we will use for the threejs camera
 * @function defineCameraConfig
-  * @param viewer 
+  * @param app 
 */
-function defineCameraConfig(viewer) {
+function defineCameraConfig(app) {
     let config = {}
-    config.near_ = defineNear(viewer);
-    config.far_ = defineFar(viewer); //set min zoom
+    config.near_ = defineNear(app);
+    config.far_ = defineFar(app); //set min zoom
     config.fov_ = CONSTANTS.fov;
-    config.aspect_ = viewer.width_ / viewer.height_;
+    config.aspect_ = app.width_ / app.height_;
 
     //initial camera position Z (zoom)
-    if (viewer._mobile) {
+    if (app._mobile) {
         config.initialZ_ = config.far_ / 2 - 1
     } else {
-        config.initialZ_ = viewer.zoom_ || config.far_ / 2 - 1
+        config.initialZ_ = app.zoom_ || config.far_ / 2 - 1
     }
-    config.zoom_ = viewer.zoom_ || config.initialZ_;
+    config.zoom_ = app.zoom_ || config.initialZ_;
 
     return config;
 }
@@ -137,24 +137,24 @@ function defineCameraConfig(viewer) {
 /**
 * @description Define the far parameter for THREE.camera. The far parameter represents the furthest possible distance that the camera can be from the plane (where z=0)
 * @function defineFar
-  * @param viewer 
+  * @param app 
 */
-function defineFar(viewer) {
-    if (viewer._mobile) {
+function defineFar(app) {
+    if (app._mobile) {
         return 5; //due to a bug with pan & zoom, we have to scale everything on mobile to webgl coords
     } else {
-        return viewer.resolution_ * 50000;
-        //return Math.pow(8, viewer.resolution_);
+        return app.zoom_ * 50000;
+        //return Math.pow(8, app.currentResolution_);
     }
 }
 
 /**
  * @description Define the near parameter for THREE.camera. The near parameter represents the smallest possible distance that the camera can be from the plane (where z=0)
  * @function defineNear
- *   * @param viewer 
+ *   * @param app 
  */
-function defineNear(viewer) {
-    if (viewer._mobile) {
+function defineNear(app) {
+    if (app._mobile) {
         return 0.0001; //due to a bug with pan & zoom, we have to scale everything on mobile
     } else {
         return 0.01;

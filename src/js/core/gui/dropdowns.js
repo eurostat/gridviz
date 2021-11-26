@@ -161,9 +161,9 @@
     let dropdown_container = document.createElement("div");
     dropdown_container.id = "gridviz-colorscheme-dropdown-container";
     dropdown_container.classList.add("gridviz-dropdown");
-    viewer.schemesSelect = document.createElement("select");
-    viewer.schemesSelect.id = "schemes";
-    viewer.schemesSelect.classList.add("gridviz-select");
+    app.schemesSelect = document.createElement("select");
+    app.schemesSelect.id = "schemes";
+    app.schemesSelect.classList.add("gridviz-select");
     let label = document.createElement("label");
     label.for = "schemes";
     label.classList.add("gridviz-dropdown-label");
@@ -174,12 +174,12 @@
       let option = document.createElement("option");
       option.value = scheme.value;
       option.innerText = scheme.innerText;
-      viewer.schemesSelect.appendChild(option);
+      app.schemesSelect.appendChild(option);
     }
-    viewer.schemesSelect.value = viewer.colorSchemeName_;
+    app.schemesSelect.value = app.colorSchemeName_;
     dropdown_container.appendChild(label);
-    dropdown_container.appendChild(viewer.schemesSelect);
-    viewer.selectorsContainer.appendChild(dropdown_container);
+    dropdown_container.appendChild(app.schemesSelect);
+    app.selectorsContainer.appendChild(dropdown_container);
   }
 
 
@@ -206,25 +206,25 @@
     let dropdown_container = document.createElement("div");
     dropdown_container.id = "gridviz-colorscale-dropdown-container";
     dropdown_container.classList.add("gridviz-dropdown");
-    viewer.colorScaleSelect = document.createElement("select");
-    viewer.colorScaleSelect.classList.add("gridviz-select");
-    viewer.colorScaleSelect.id = "scales";
+    app.colorScaleSelect = document.createElement("select");
+    app.colorScaleSelect.classList.add("gridviz-select");
+    app.colorScaleSelect.id = "scales";
     let label = document.createElement("label");
     label.for = "scales";
     label.classList.add("gridviz-dropdown-label");
-    label.innerText = viewer.colorScaleSelectorLabel_;
+    label.innerText = app.colorScaleSelectorLabel_;
 
     for (let i = 0; i < scales.length; i++) {
       let scale = scales[i];
       let option = document.createElement("option");
       option.value = scale.value;
       option.innerText = scale.innerText;
-      viewer.colorScaleSelect.appendChild(option);
+      app.colorScaleSelect.appendChild(option);
     }
-    viewer.colorScaleSelect.value = viewer.colorScaleName_;
+    app.colorScaleSelect.value = app.colorScaleName_;
     dropdown_container.appendChild(label);
-    dropdown_container.appendChild(viewer.colorScaleSelect);
-    viewer.selectorsContainer.appendChild(dropdown_container);
+    dropdown_container.appendChild(app.colorScaleSelect);
+    app.selectorsContainer.appendChild(dropdown_container);
   }
 
   /**
@@ -235,28 +235,28 @@
     let dropdown_container = document.createElement("div");
     dropdown_container.id = "gridviz-colorfield-dropdown-container";
     dropdown_container.classList.add("gridviz-dropdown");
-    viewer.colorFieldSelect = document.createElement("select");
-    viewer.colorFieldSelect.classList.add("gridviz-select");
-    viewer.colorFieldSelect.id = "colorFields";
+    app.colorFieldSelect = document.createElement("select");
+    app.colorFieldSelect.classList.add("gridviz-select");
+    app.colorFieldSelect.id = "colorFields";
     let label = document.createElement("label");
     label.for = "colorFields";
     label.classList.add("gridviz-dropdown-label");
-    label.innerText = viewer.colorFieldSelectorLabel_;
+    label.innerText = app.colorFieldSelectorLabel_;
 
-    let fields = Object.keys(gridCaches[viewer.resolution_][0]);
+    let fields = Object.keys(gridCaches[app.currentResolution_][0]);
     for (let i = 0; i < fields.length; i++) {
       let field = fields[i];
       if (field.toLowerCase() !== "x" && field.toLowerCase() !== "y" && field !== "color") {
         let option = document.createElement("option");
         option.value = field;
         option.innerText = field;
-        viewer.colorFieldSelect.appendChild(option);
+        app.colorFieldSelect.appendChild(option);
       }
     }
-    viewer.colorFieldSelect.value = viewer.colorField_;
+    app.colorFieldSelect.value = grid.colorField;
     dropdown_container.appendChild(label);
-    dropdown_container.appendChild(viewer.colorFieldSelect);
-    viewer.selectorsContainer.appendChild(dropdown_container);
+    dropdown_container.appendChild(app.colorFieldSelect);
+    app.selectorsContainer.appendChild(dropdown_container);
   }
 
 
@@ -268,33 +268,33 @@
     let dropdown_container = document.createElement("div");
     dropdown_container.id = "gridviz-sizefield-dropdown-container";
     dropdown_container.classList.add("gridviz-dropdown");
-    viewer.sizeFieldSelect = document.createElement("select");
-    viewer.sizeFieldSelect.classList.add("gridviz-select");
-    viewer.sizeFieldSelect.id = "sizeFields";
+    app.sizeFieldSelect = document.createElement("select");
+    app.sizeFieldSelect.classList.add("gridviz-select");
+    app.sizeFieldSelect.id = "sizeFields";
     let label = document.createElement("label");
     label.for = "sizeFields";
     label.classList.add("gridviz-dropdown-label");
-    label.innerText = viewer.sizeFieldSelectorLabel_;
+    label.innerText = app.sizeFieldSelectorLabel_;
 
-    let fields = Object.keys(gridCaches[viewer.resolution_][0]);
+    let fields = Object.keys(gridCaches[app.currentResolution_][0]);
     for (let i = 0; i < fields.length; i++) {
       let field = fields[i];
       if (field.toLowerCase() !== "x" && field.toLowerCase() !== "y" && field !== "color") {
         let option = document.createElement("option");
         option.value = field;
         option.innerText = field;
-        viewer.sizeFieldSelect.appendChild(option);
+        app.sizeFieldSelect.appendChild(option);
       }
     }
     //option for not using sizing
     let option = document.createElement("option");
     option.value = null;
     option.innerText = "none";
-    viewer.sizeFieldSelect.appendChild(option);
+    app.sizeFieldSelect.appendChild(option);
     //set initial value
-    viewer.sizeFieldSelect.value = viewer.sizeField_;
+    app.sizeFieldSelect.value = grid.sizeField;
     dropdown_container.appendChild(label);
-    dropdown_container.appendChild(viewer.sizeFieldSelect);
-    viewer.selectorsContainer.appendChild(dropdown_container);
+    dropdown_container.appendChild(app.sizeFieldSelect);
+    app.selectorsContainer.appendChild(dropdown_container);
 
   }

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>5km² Grid of Europe</title>
+  <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+  <meta name="viewport" content="width=device-width" />
+</head>
+
+<body style="margin: 0">
+  <div id="viz-container"></div>
+</body>
+<script src="../build/gridviz.js"></script>
+<script>
+  let containerDiv = document.getElementById("viz-container");
+
+  gridviz
+    .viewer()
+    .container(containerDiv)
+    .zoom(2000)
+    .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
+    .title("5km² Population Grid of Europe")
+    .colorField("population") // csv column that will determine cell colour
+    .colorScaleName('scaleSequentialLog')
+    .legend({
+      title: "Total population per 5 km² (2011)",
+      ticks: 4,
+    })
+    .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
+    .build();
+</script>
+
+</html>

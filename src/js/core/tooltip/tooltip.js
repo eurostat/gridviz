@@ -23,7 +23,7 @@ let tooltip_state = {
 };
 
 // example tooltip config
-// viewer.tooltip_ = {
+// app.tooltip_ = {
 //     eventType: "click", // click vs mouseover
 //     showLAU: true,
 //     showEPSG: false,
@@ -59,12 +59,12 @@ export function createTooltipContainer(viewer) {
     </div>
 <div id="gridviz-pointtip"></div>
 </div>`);
-    viewer.container_.append(tooltipTemplate);
+    app.container_.append(tooltipTemplate);
     
     //append row for each field
     tooltipTableBody = document.querySelector("#tooltipBody");
     tooltipRows = {}; // store row nodes for efficient updating
-    viewer._cellFields.forEach((field) => {
+    app._cellFields.forEach((field) => {
         appendRowToTooltip(field);
     });
 
@@ -80,7 +80,7 @@ export function createTooltipContainer(viewer) {
     pointTip = document.querySelector("#gridviz-pointtip");
 
     tooltipContainer = new Object3D();
-    viewer.scene.add(tooltipContainer);
+    app.scene.add(tooltipContainer);
 }
 
 function appendRowToTooltip(field) {
@@ -98,17 +98,17 @@ function appendRowToTooltip(field) {
 */
 export function updateTooltip(viewer) {
     let x, y;
-    if (viewer._mobile) {
+    if (app._mobile) {
         //mobile coords are scaled to [-1,1], so we "unscale" them
-        x = Math.round(viewer.mobileCoordScaleX.invert(tooltip_state.x))
-        y = Math.round(viewer.mobileCoordScaleY.invert(tooltip_state.y))
+        x = Math.round(app.mobileCoordScaleX.invert(tooltip_state.x))
+        y = Math.round(app.mobileCoordScaleY.invert(tooltip_state.y))
     } else {
         x = tooltip_state.x;
         y = tooltip_state.y;
     }
-    if (viewer.zerosRemoved_) {
+    if (app.zerosRemoved_) {
         //add the zeros removed back on
-        let f = Number('1E' + viewer.zerosRemoved_);
+        let f = Number('1E' + app.zerosRemoved_);
         x = Math.round(x * f);
         y = Math.round(y * f);
     }
@@ -120,13 +120,13 @@ export function updateTooltip(viewer) {
     pointTip.style.background = tooltip_state.color;
 
     // set tooltip attributes HTML
-    viewer._cellFields.forEach((field)=>{
+    app._cellFields.forEach((field)=>{
         tooltipRows[field].innerHTML = `<th><strong>${field}:</strong> </th>
         <th>${tooltip_state[field]}</th>`
     })
 
 
-    if (viewer.tooltip_.showCoordinates) {
+    if (app.tooltip_.showCoordinates) {
         tooltipRows.x.innerHTML = `<th><strong>x:</strong></th>
         <th>${x}</th>`
 
@@ -134,19 +134,19 @@ export function updateTooltip(viewer) {
         <th>${y}</th>`
     }
 
-    if (viewer.tooltip_.showEPSG) {
+    if (app.tooltip_.showEPSG) {
         tooltipRows.crstip.innerHTML = `<th><strong>CRS:</strong></th>
-        <th>EPSG:${viewer.EPSG_}</th>`
+        <th>EPSG:${app.EPSG_}</th>`
     }
 
     //fetch NUTS info using GISCO id REST API
-    if ([4326, 4258, 3035].includes(viewer.EPSG_)) {
+    if ([4326, 4258, 3035].includes(app.EPSG_)) {
 
-        let nutsRequest = `${CONSTANTS.nutsAPIBaseURL}nuts?x=${x}&y=${y}&proj=${viewer.EPSG_}&year=2021&level=3`;
-        let lauRequest = `${CONSTANTS.nutsAPIBaseURL}lau?x=${x}&y=${y}&proj=${viewer.EPSG_}&year=2019&level=3`;
+        let nutsRequest = `${CONSTANTS.nutsAPIBaseURL}nuts?x=${x}&y=${y}&proj=${app.EPSG_}&year=2021&level=3`;
+        let lauRequest = `${CONSTANTS.nutsAPIBaseURL}lau?x=${x}&y=${y}&proj=${app.EPSG_}&year=2019&level=3`;
 
         //get both (promise.all required to ensure tooltip on screen after both requests have resolved)
-        if (viewer.tooltip_.showLAU && viewer.tooltip_.showNUTS) {
+        if (app.tooltip_.showLAU && app.tooltip_.showNUTS) {
             let promises = [json(nutsRequest), json(lauRequest)];
             Promise.all(promises).then((res) => {
 
@@ -181,7 +181,7 @@ export function updateTooltip(viewer) {
 
         } else {
             //get NUTS
-            if (viewer.tooltip_.showLAU) {
+            if (app.tooltip_.showLAU) {
 
                 json(nutsRequest).then(
                     json => {
@@ -201,7 +201,7 @@ export function updateTooltip(viewer) {
                         ensureTooltipOnScreen(viewer);
                         //console.error(err);
                     })
-            } else if (viewer.tooltip_.showNUTS) {
+            } else if (app.tooltip_.showNUTS) {
 
                 json(lauRequest).then(
                     json => {
@@ -240,13 +240,13 @@ export function updateTooltip(viewer) {
 */
 function ensureTooltipOnScreen(viewer) {
     //too far right
-    if (tooltip.offsetLeft > viewer.width_ - tooltip.clientWidth) {
-        tooltip.style.left = tooltip.offsetLeft - (tooltip.clientWidth + viewer.tooltip_.xOffset * 2) + "px";
+    if (tooltip.offsetLeft > app.width_ - tooltip.clientWidth) {
+        tooltip.style.left = tooltip.offsetLeft - (tooltip.clientWidth + app.tooltip_.xOffset * 2) + "px";
 
     }
     //too far down
-    if (tooltip.offsetTop + tooltip.clientHeight > viewer.height_) {
-        tooltip.style.top = tooltip.offsetTop - (tooltip.clientHeight + viewer.tooltip_.yOffset * 2) + "px";
+    if (tooltip.offsetTop + tooltip.clientHeight > app.height_) {
+        tooltip.style.top = tooltip.offsetTop - (tooltip.clientHeight + app.tooltip_.yOffset * 2) + "px";
     }
 
 }
@@ -260,8 +260,8 @@ function ensureTooltipOnScreen(viewer) {
 * @param {*} cell // cell object intersected from the grid cache
 */
 export function showTooltip(viewer, mouse_position, cell) {
-    let left = mouse_position[0] + viewer.tooltip_.xOffset;
-    let top = mouse_position[1] + viewer.tooltip_.yOffset;
+    let left = mouse_position[0] + app.tooltip_.xOffset;
+    let top = mouse_position[1] + app.tooltip_.yOffset;
 
     // prepare tooltip settings from cell attributes
     for (const key in cell) {
@@ -272,7 +272,7 @@ export function showTooltip(viewer, mouse_position, cell) {
      tooltip_state.left = left
      tooltip_state.top = top;
 
-    // tooltip_state.colorValue = Utils.formatNumber(parseFloat(cell[viewer.colorField_]));
+    // tooltip_state.colorValue = Utils.formatNumber(parseFloat(cell[grid.colorField]));
     // tooltip_state.coords = [cell.x, cell.y];
     // tooltip_state.color = cell.color;
     updateTooltip(viewer);

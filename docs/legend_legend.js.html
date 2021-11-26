@@ -46,11 +46,11 @@ let title;
    */
 export function createLegend(viewer) {
     // title for color legend defaults to colorField
-    if (!viewer.legend_.title) title = viewer.colorField_; else title = viewer.legend_.title;
+    if (!app.legend_.title) title = grid.colorField; else title = app.legend_.title;
 
-    if (viewer.legend_.type == "cells") {
+    if (app.legend_.type == "cells") {
         createCellsLegend(viewer)
-    } else if (viewer.legend_.type == "continuous") {
+    } else if (app.legend_.type == "continuous") {
         createContinuousLegend(viewer)
     }
 
@@ -67,9 +67,9 @@ function createCellsLegend(viewer) {
         legendContainer = select("#gridviz-legend");
     } else {
         legendContainer = create("svg").attr("id", "gridviz-legend");
-        viewer.container_.appendChild(legendContainer.node());
+        app.container_.appendChild(legendContainer.node());
     }
-    if (viewer.legend_.orientation == "horizontal") {
+    if (app.legend_.orientation == "horizontal") {
         legendContainer.attr("class", "gridviz-legend-horizontal gridviz-plugin");
     } else {
         legendContainer.attr("class", "gridviz-legend-vertical gridviz-plugin");
@@ -77,33 +77,33 @@ function createCellsLegend(viewer) {
     let legendSvg =
         legendContainer.append("g")
             .attr("class", "gridviz-legend-svg")
-            .attr("height", viewer.legend_.height)
-            .attr("width", viewer.legend_.width)
+            .attr("height", app.legend_.height)
+            .attr("width", app.legend_.width)
             .attr("transform", "translate(10,15)"); //padding
 
 
-    viewer._gridLegend = LEGEND.legendColor()
-        .shapeWidth(viewer.legend_.shapeWidth)
-        .cells(viewer.legend_.cells)
-        .labelFormat(format(viewer.legend_.format))
-        .orient(viewer.legend_.orientation)
-        .scale(viewer.colorScaleFunction_)
+    app._gridLegend = LEGEND.legendColor()
+        .shapeWidth(app.legend_.shapeWidth)
+        .cells(app.legend_.cells)
+        .labelFormat(format(app.legend_.format))
+        .orient(app.legend_.orientation)
+        .scale(app.colorScaleFunction_)
         .title(title)
-        .titleWidth(viewer.legend_.titleWidth)
+        .titleWidth(app.legend_.titleWidth)
 
-    if (viewer.thresholdValues_) {
-        viewer._gridLegend.labels(thresholdLabels)
+    if (app.thresholds_) {
+        app._gridLegend.labels(thresholdLabels)
     }
 
-    legendSvg.call(viewer._gridLegend);
+    legendSvg.call(app._gridLegend);
 
     //adjust width/height
-    if (!viewer.legend_.height) {
-        viewer.legend_.height = 320
+    if (!app.legend_.height) {
+        app.legend_.height = 320
     }
-    legendContainer.style("height", viewer.legend_.height + "px");
-    legendContainer.style("width", viewer.legend_.width + "px");
-    //legend.style("height", viewer.legend_.height +"px");
+    legendContainer.style("height", app.legend_.height + "px");
+    legendContainer.style("width", app.legend_.width + "px");
+    //legend.style("height", app.legend_.height +"px");
 }
 
 
@@ -120,31 +120,31 @@ function createContinuousLegend(viewer) {
     } else {
         container = create("div").attr("id", "gridviz-legend");
         container.attr("class", "gridviz-plugin");
-        viewer.container_.appendChild(container.node());
+        app.container_.appendChild(container.node());
     }
 
-    let tickSize = viewer.legend_.tickSize || 6;
-    let width = viewer.legend_.width || 500;
-    let height = viewer.legend_.height || 44 + tickSize;
-    let marginBottom = viewer.legend_.marginBottom || 16 + tickSize;
-    let ticks = viewer.legend_.ticks || width / 64;
+    let tickSize = app.legend_.tickSize || 6;
+    let width = app.legend_.width || 500;
+    let height = app.legend_.height || 44 + tickSize;
+    let marginBottom = app.legend_.marginBottom || 16 + tickSize;
+    let ticks = app.legend_.ticks || width / 64;
 
-    viewer._gridLegend = colorLegend({
-        color: viewer.colorScaleFunction_,
+    app._gridLegend = colorLegend({
+        color: app.colorScaleFunction_,
         title: title,
         tickSize: tickSize,
         width: width,
         height: height,
         marginBottom: marginBottom,
         ticks: ticks,
-        marginTop: viewer.legend_.marginRight || 18,
-        marginRight: viewer.legend_.marginRight || 0,
-        marginLeft: viewer.legend_.marginLeft || 0,
-        tickFormat: viewer.legend_.tickFormat || ".0f",
-        tickValues: viewer.thresholdValues_ || undefined
+        marginTop: app.legend_.marginRight || 18,
+        marginRight: app.legend_.marginRight || 0,
+        marginLeft: app.legend_.marginLeft || 0,
+        tickFormat: app.legend_.tickFormat || ".0f",
+        tickValues: app.thresholds_ || undefined
     });
 
-    container.node().appendChild(viewer._gridLegend);
+    container.node().appendChild(app._gridLegend);
 
 }
 function ramp(color, n = 256) {
@@ -307,13 +307,13 @@ export function updateLegend(viewer) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addChangeEventToColorFieldDropdown">addChangeEventToColorFieldDropdown</a></li><li><a href="global.html#addChangeEventToColorScaleDropdown">addChangeEventToColorScaleDropdown</a></li><li><a href="global.html#addChangeEventToColorSchemeDropdown">addChangeEventToColorSchemeDropdown</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addNuts2jsonToScene">addNuts2jsonToScene</a></li><li><a href="global.html#addPanAndZoom">addPanAndZoom</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#colorLegend">colorLegend</a></li><li><a href="global.html#createCellsLegend">createCellsLegend</a></li><li><a href="global.html#createContinuousLegend">createContinuousLegend</a></li><li><a href="global.html#createLabelRenderer">createLabelRenderer</a></li><li><a href="global.html#createLegend">createLegend</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createRaycaster">createRaycaster</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#createWebGLRenderer">createWebGLRenderer</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineDefaultPlacenameThresholds">defineDefaultPlacenameThresholds</a></li><li><a href="global.html#definePointSize">definePointSize</a></li><li><a href="global.html#defineRaycasterThreshold">defineRaycasterThreshold</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#ensureTooltipOnScreen">ensureTooltipOnScreen</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#onChangeColorField">onChangeColorField</a></li><li><a href="global.html#onChangeColorScale">onChangeColorScale</a></li><li><a href="global.html#onChangeColorScheme">onChangeColorScheme</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#thresholdLabels">thresholdLabels</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updateLegend">updateLegend</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#validateInputs">validateInputs</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewer">viewer</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addChangeEventToColorFieldDropdown">addChangeEventToColorFieldDropdown</a></li><li><a href="global.html#addChangeEventToColorScaleDropdown">addChangeEventToColorScaleDropdown</a></li><li><a href="global.html#addChangeEventToColorSchemeDropdown">addChangeEventToColorSchemeDropdown</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#colorLegend">colorLegend</a></li><li><a href="global.html#createCellsLegend">createCellsLegend</a></li><li><a href="global.html#createContinuousLegend">createContinuousLegend</a></li><li><a href="global.html#createLegend">createLegend</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineDefaultPlacenameThresholds">defineDefaultPlacenameThresholds</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#ensureTooltipOnScreen">ensureTooltipOnScreen</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#onChangeColorField">onChangeColorField</a></li><li><a href="global.html#onChangeColorScale">onChangeColorScale</a></li><li><a href="global.html#onChangeColorScheme">onChangeColorScheme</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#thresholdLabels">thresholdLabels</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updateLegend">updateLegend</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li><li><a href="global.html#zoomIn">zoomIn</a></li><li><a href="global.html#zoomOut">zoomOut</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Sep 23 2021 16:50:00 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Nov 26 2021 14:37:17 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

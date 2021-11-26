@@ -63,20 +63,22 @@ function vertexShader() {
 }
 
 /**
-* @description create or update THREE.js viewer.pointsLayer layer. 
-* At the moment, only ONE viewer.pointsLayer layer at a time is handled by the viewer, so a second call of gridviz.gridData() will overwrite the initial layer
+* @description create or update THREE.js app.pointsLayer layer. 
+* At the moment, only ONE app.pointsLayer layer at a time is handled by the app, so a second call of gridviz.gridData() will overwrite the initial layer
 * @function addPointsToScene
-* @parameter points [{}]
+* @parameter app
+* @parameter grid: config passed to addGrid()
+* @parameter pointsArray [{}]
 */
-export function addPointsToScene(viewer, pointsArray) {
+export function addPointsToScene(app, grid, pointsArray) {
 
 
-    if (viewer.cellShape_ == 'square') {
+    if (app.cellShape_ == 'square') {
         //threejs recommends using BufferGeometry instead of Geometry for performance
         /*   indices = [0, 1, 2, 0, 2, 3];
       bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));  */
-        if (!viewer.pointsGeometry) {
-            viewer.pointsGeometry = new BufferGeometry();
+        if (!app.pointsGeometry) {
+            app.pointsGeometry = new BufferGeometry();
         }
 
         let colors = [];
@@ -92,8 +94,8 @@ export function addPointsToScene(viewer, pointsArray) {
             let x = parseFloat(coords[0]);
             let y = parseFloat(coords[1]);
             let z = CONSTANTS.point_z;
-            let indicator = pointsArray[i][viewer.colorField_];
-            let hex = getCellColor(viewer, indicator);
+            let indicator = pointsArray[i][grid.colorField];
+            let hex = getCellColor(app, indicator);
             pointsArray[i].color = hex; //save for tooltip
             let color = new Color(hex);
 
@@ -105,30 +107,30 @@ export function addPointsToScene(viewer, pointsArray) {
                     let blk = new Color("#000");
                     colors.push(blk.r, blk.g, blk.b)
                 }
-                if (viewer.sizeField_) {
-                    sizes.push(viewer.sizeScaleFunction_(pointsArray[i][viewer.sizeField_]));
+                if (grid.sizeField) {
+                    sizes.push(app.sizeScaleFunction_(pointsArray[i][grid.sizeField_]));
                 } else {
-                    sizes.push(viewer.pointSize);
+                    sizes.push(grid.cellSize);
                 }
             }
         } //fin loop
 
         //set buffer geometry attributes
-        viewer.pointsGeometry.setAttribute(
+        app.pointsGeometry.setAttribute(
             "position",
             new Float32BufferAttribute(positions, 3)
         );
-        viewer.pointsGeometry.setAttribute(
+        app.pointsGeometry.setAttribute(
             "color",
             new Float32BufferAttribute(colors, 3)
         );
         //Variable point size will affect raycasting: https://github.com/mrdoob/three.js/issues/5105
-        viewer.pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
-        viewer.pointsGeometry.computeBoundingSphere();
-        //create or reuse viewer.pointsLayer Material
-        if (!viewer.pointsMaterial) {
+        app.pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
+        app.pointsGeometry.computeBoundingSphere();
+        //create or reuse app.pointsLayer Material
+        if (!app.pointsMaterial) {
             // Apply custom point sizes, instead of using three.js pointsMaterial
-            viewer.pointsMaterial = new ShaderMaterial({
+            app.pointsMaterial = new ShaderMaterial({
                 uniforms: {
                     multiplier: {
                         value: 1000 //km TODO: define dynamically. This value needs to be adjusted according to screen in order prevent screen flickering when zooming
@@ -141,28 +143,28 @@ export function addPointsToScene(viewer, pointsArray) {
 
             //use threejs PointsMaterial instead:
             // pointsMaterial = new PointsMaterial({
-            //   size: gridConfig.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
+            //   size: grid.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
             //   sizeAttenuation: true,
             //   //https://github.com/mrdoob/three.js/blob/master/src/constants.js
             //   vertexColors: THREE.VertexColors
             // });
 
         } else {
-            viewer.pointsMaterial.size = viewer.pointSize;
+            app.pointsMaterial.size = grid.cellSize;
         }
 
-        //create or overwrite viewer.pointsLayer object
-        if (!viewer.pointsLayer) {
-            viewer.pointsLayer = new Points(viewer.pointsGeometry, viewer.pointsMaterial);
-            viewer.pointsLayer.renderOrder = 1; //bottom
-            viewer.scene.add(viewer.pointsLayer);
+        //create or overwrite app.pointsLayer object
+        if (!app.pointsLayer) {
+            app.pointsLayer = new Points(app.pointsGeometry, app.pointsMaterial);
+            app.pointsLayer.renderOrder = 1; //bottom
+            app.scene.add(app.pointsLayer);
         } else {
             //overwrite current la
-            viewer.pointsLayer.geometry = viewer.pointsGeometry;
-            viewer.pointsLayer.material = viewer.pointsMaterial;
+            app.pointsLayer.geometry = app.pointsGeometry;
+            app.pointsLayer.material = app.pointsMaterial;
         }
 
-    } else if (viewer.cellShape_ == "bar") {
+    } else if (app.cellShape_ == "bar") {
 
         // define bars object, geometry and material
         const bars = new Object3D();
@@ -172,20 +174,20 @@ export function addPointsToScene(viewer, pointsArray) {
         for (var i = 0; i < pointsArray.length; i++) {
             let height;
 
-            if (viewer.sizeField_) {
-                height = viewer.sizeScaleFunction_(pointsArray[i][viewer.sizeField_]);
+            if (grid.sizeField) {
+                height = app.sizeScaleFunction_(pointsArray[i][grid.sizeField]);
             } else {
-                height = viewer.pointSize;
+                height = grid.cellSize;
             }
 
-            let hex = getCellColor(viewer, pointsArray[i][viewer.colorField_]);
+            let hex = getCellColor(app, pointsArray[i][grid.colorField]);
             pointsArray[i].color = hex; //save for tooltip
             let color = new Color(hex);
  
             let x = parseFloat(pointsArray[i].x);
             let y = parseFloat(pointsArray[i].y);
             
-            const bar = getBar(x, y, viewer.pointSize, viewer.pointSize,height,color);
+            const bar = getBar(x, y, grid.cellSize, grid.cellSize,height,color);
             bar.lookAt(new Vector3(x,y,0.0001));
             bars.add(bar);
         }
@@ -195,16 +197,16 @@ export function addPointsToScene(viewer, pointsArray) {
         // bar.lookAt(new Vector3(x,y,z));
         // bars.add(bar);
 
-        // add bars to the viewer
-        viewer.pointsLayer = bars;
-        viewer.scene.add(bars);
+        // add bars to the app
+        app.pointsLayer = bars;
+        app.scene.add(bars);
 
     }
 
 }
 
-function getCellColor(viewer, value) {
-    let hex = viewer.colorScaleFunction_(parseFloat(value)); //d3 scale-chromatic
+function getCellColor(app, value) {
+    let hex = app.colorScaleFunction_(parseFloat(value)); //d3 scale-chromatic
     if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
     }
@@ -237,19 +239,19 @@ function getBar(x, y,width,length, height, color) {
  * @description rebuilds array which stores point sizes
  * @function updatePointsSizes
  */
-export function updatePointsSizes(viewer, pointsArray) {
+export function updatePointsSizes(app, pointsArray) {
     let sizes = [];
     for (var i = 0; i < pointsArray.length; i++) {
-        if (viewer.sizeField_ && viewer.sizeField_ !== "null") {
-            sizes.push(viewer.sizeScaleFunction_(pointsArray[i][viewer.sizeField_]));
+        if (grid.sizeField && grid.sizeField !== "null") {
+            sizes.push(app.sizeScaleFunction_(pointsArray[i][grid.sizeField]));
         } else {
-            sizes.push(viewer.pointSize);
+            sizes.push(app.currentResolution_);
         }
     }
     //update sizes
-    viewer.pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
-    viewer.pointsGeometry.computeBoundingSphere();
-    viewer.pointsLayer.geometry = viewer.pointsGeometry;
+    app.pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
+    app.pointsGeometry.computeBoundingSphere();
+    app.pointsLayer.geometry = app.pointsGeometry;
 }
 
 
@@ -257,10 +259,10 @@ export function updatePointsSizes(viewer, pointsArray) {
 * @description rebuilds array of point colours
 * @function updatePointsColors
 */
-export function updatePointsColors(viewer, pointsArray) {
+export function updatePointsColors(app, pointsArray) {
     let colors = [];
     for (var i = 0; i < pointsArray.length; i++) {
-        let hex = viewer.colorScaleFunction_(pointsArray[i][viewer.colorField_]); //d3 scale-chromatic
+        let hex = app.colorScaleFunction_(pointsArray[i][grid.colorField]); //d3 scale-chromatic
         if (hex == "rgb(NaN, NaN, NaN)") {
             hex = "#000"; //fallback to black
         }
@@ -269,12 +271,12 @@ export function updatePointsColors(viewer, pointsArray) {
         if (color) colors.push(color.r, color.g, color.b);
     }
     //update colors
-    viewer.pointsGeometry.setAttribute(
+    app.pointsGeometry.setAttribute(
         "color",
         new Float32BufferAttribute(colors, 3)
     );
-    viewer.pointsGeometry.computeBoundingSphere();
-    viewer.pointsLayer.geometry = viewer.pointsGeometry;
+    app.pointsGeometry.computeBoundingSphere();
+    app.pointsLayer.geometry = app.pointsGeometry;
 }
 
 

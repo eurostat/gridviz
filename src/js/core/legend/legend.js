@@ -18,11 +18,11 @@ let title;
    */
 export function createLegend(viewer) {
     // title for color legend defaults to colorField
-    if (!viewer.legend_.title) title = viewer.colorField_; else title = viewer.legend_.title;
+    if (!app.legend_.title) title = grid.colorField; else title = app.legend_.title;
 
-    if (viewer.legend_.type == "cells") {
+    if (app.legend_.type == "cells") {
         createCellsLegend(viewer)
-    } else if (viewer.legend_.type == "continuous") {
+    } else if (app.legend_.type == "continuous") {
         createContinuousLegend(viewer)
     }
 
@@ -39,9 +39,9 @@ function createCellsLegend(viewer) {
         legendContainer = select("#gridviz-legend");
     } else {
         legendContainer = create("svg").attr("id", "gridviz-legend");
-        viewer.container_.appendChild(legendContainer.node());
+        app.container_.appendChild(legendContainer.node());
     }
-    if (viewer.legend_.orientation == "horizontal") {
+    if (app.legend_.orientation == "horizontal") {
         legendContainer.attr("class", "gridviz-legend-horizontal gridviz-plugin");
     } else {
         legendContainer.attr("class", "gridviz-legend-vertical gridviz-plugin");
@@ -49,33 +49,33 @@ function createCellsLegend(viewer) {
     let legendSvg =
         legendContainer.append("g")
             .attr("class", "gridviz-legend-svg")
-            .attr("height", viewer.legend_.height)
-            .attr("width", viewer.legend_.width)
+            .attr("height", app.legend_.height)
+            .attr("width", app.legend_.width)
             .attr("transform", "translate(10,15)"); //padding
 
 
-    viewer._gridLegend = LEGEND.legendColor()
-        .shapeWidth(viewer.legend_.shapeWidth)
-        .cells(viewer.legend_.cells)
-        .labelFormat(format(viewer.legend_.format))
-        .orient(viewer.legend_.orientation)
-        .scale(viewer.colorScaleFunction_)
+    app._gridLegend = LEGEND.legendColor()
+        .shapeWidth(app.legend_.shapeWidth)
+        .cells(app.legend_.cells)
+        .labelFormat(format(app.legend_.format))
+        .orient(app.legend_.orientation)
+        .scale(app.colorScaleFunction_)
         .title(title)
-        .titleWidth(viewer.legend_.titleWidth)
+        .titleWidth(app.legend_.titleWidth)
 
-    if (viewer.thresholds_) {
-        viewer._gridLegend.labels(thresholdLabels)
+    if (app.thresholds_) {
+        app._gridLegend.labels(thresholdLabels)
     }
 
-    legendSvg.call(viewer._gridLegend);
+    legendSvg.call(app._gridLegend);
 
     //adjust width/height
-    if (!viewer.legend_.height) {
-        viewer.legend_.height = 320
+    if (!app.legend_.height) {
+        app.legend_.height = 320
     }
-    legendContainer.style("height", viewer.legend_.height + "px");
-    legendContainer.style("width", viewer.legend_.width + "px");
-    //legend.style("height", viewer.legend_.height +"px");
+    legendContainer.style("height", app.legend_.height + "px");
+    legendContainer.style("width", app.legend_.width + "px");
+    //legend.style("height", app.legend_.height +"px");
 }
 
 
@@ -92,31 +92,31 @@ function createContinuousLegend(viewer) {
     } else {
         container = create("div").attr("id", "gridviz-legend");
         container.attr("class", "gridviz-plugin");
-        viewer.container_.appendChild(container.node());
+        app.container_.appendChild(container.node());
     }
 
-    let tickSize = viewer.legend_.tickSize || 6;
-    let width = viewer.legend_.width || 500;
-    let height = viewer.legend_.height || 44 + tickSize;
-    let marginBottom = viewer.legend_.marginBottom || 16 + tickSize;
-    let ticks = viewer.legend_.ticks || width / 64;
+    let tickSize = app.legend_.tickSize || 6;
+    let width = app.legend_.width || 500;
+    let height = app.legend_.height || 44 + tickSize;
+    let marginBottom = app.legend_.marginBottom || 16 + tickSize;
+    let ticks = app.legend_.ticks || width / 64;
 
-    viewer._gridLegend = colorLegend({
-        color: viewer.colorScaleFunction_,
+    app._gridLegend = colorLegend({
+        color: app.colorScaleFunction_,
         title: title,
         tickSize: tickSize,
         width: width,
         height: height,
         marginBottom: marginBottom,
         ticks: ticks,
-        marginTop: viewer.legend_.marginRight || 18,
-        marginRight: viewer.legend_.marginRight || 0,
-        marginLeft: viewer.legend_.marginLeft || 0,
-        tickFormat: viewer.legend_.tickFormat || ".0f",
-        tickValues: viewer.thresholds_ || undefined
+        marginTop: app.legend_.marginRight || 18,
+        marginRight: app.legend_.marginRight || 0,
+        marginLeft: app.legend_.marginLeft || 0,
+        tickFormat: app.legend_.tickFormat || ".0f",
+        tickValues: app.thresholds_ || undefined
     });
 
-    container.node().appendChild(viewer._gridLegend);
+    container.node().appendChild(app._gridLegend);
 
 }
 function ramp(color, n = 256) {

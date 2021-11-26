@@ -31,8 +31,8 @@ export function addGeoJsonToScene(features, viewer) {
                 let coords = [];
                 for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
                     let xyz;
-                    if (viewer.zerosRemoved_) {
-                        let d = Number('1E' + viewer.zerosRemoved_);
+                    if (app.zerosRemoved_) {
+                        let d = Number('1E' + app.zerosRemoved_);
                         xyz = {
                             x: feature.geometry.coordinates[c][s][0] / d,
                             y: feature.geometry.coordinates[c][s][1] / d,
@@ -49,7 +49,7 @@ export function addGeoJsonToScene(features, viewer) {
                     coords.push(xyz);
                 }
                 if (coords.length > 0) {
-                    geojsonGroup.add(createLineFromCoords(coords, viewer.lineColor_, viewer.lineWidth_));
+                    geojsonGroup.add(createLineFromCoords(coords, app.lineColor_, app.lineWidth_));
                 }
 
             } else if (feature.geometry.type == "MultiPolygon") {
@@ -62,8 +62,8 @@ export function addGeoJsonToScene(features, viewer) {
                         m++
                     ) {
                         let xyz;
-                        if (viewer.zerosRemoved_) {
-                            let d = Number('1E' + viewer.zerosRemoved_);
+                        if (app.zerosRemoved_) {
+                            let d = Number('1E' + app.zerosRemoved_);
                             xyz = {
                                 x: feature.geometry.coordinates[c][s][m][0] / d,
                                 y: feature.geometry.coordinates[c][s][m][1] / d,
@@ -79,13 +79,13 @@ export function addGeoJsonToScene(features, viewer) {
                         coords.push(xyz);
                     }
                     if (coords.length > 0) {
-                        geojsonGroup.add(createLineFromCoords(coords, viewer.lineColor_, viewer.lineWidth_));
+                        geojsonGroup.add(createLineFromCoords(coords, app.lineColor_, app.lineWidth_));
                     }
                 }
             } else if (feature.geometry.type == "LineString") {
                 let xyz;
-                if (viewer.zerosRemoved_) {
-                    let d = Number('1E' + viewer.zerosRemoved_);
+                if (app.zerosRemoved_) {
+                    let d = Number('1E' + app.zerosRemoved_);
                     xyz = {
                         x: feature.geometry.coordinates[c][0] / d,
                         y: feature.geometry.coordinates[c][1] / d,
@@ -103,11 +103,11 @@ export function addGeoJsonToScene(features, viewer) {
         }
         if (feature.geometry.type = "LineString") {
             if (coords.length > 0) {
-                geojsonGroup.add(createLineFromCoords(coords, viewer.lineColor_, viewer.lineWidth_));
+                geojsonGroup.add(createLineFromCoords(coords, app.lineColor_, app.lineWidth_));
             }
         }
     }
-    viewer.scene.add(geojsonGroup);
+    app.scene.add(geojsonGroup);
 }
 
 /**

@@ -7,7 +7,7 @@ let loading_text;
 
 
 export function getCurrentViewExtent(viewer) {
-  var elem = viewer.renderer.domElement;
+  var elem = app.renderer.domElement;
   let clientBottomLeft = [elem.clientLeft, elem.clientHeight];
   let clientTopRight = [elem.clientWidth, elem.clientTop];
   let bottomLeftWorld = getWorldCoordsFromScreen(viewer, clientBottomLeft); //client x,y
@@ -27,8 +27,8 @@ export function getCurrentViewExtent(viewer) {
   // };
 
   // if the user has reduced the filesize by removing trailing 0s from the csv, we simply add them back on before sending the placename queries
-  if (viewer.zerosRemoved_) {
-    let d = Number('1E' + viewer.zerosRemoved_);
+  if (app.zerosRemoved_) {
+    let d = Number('1E' + app.zerosRemoved_);
     return {
       xmin: bottomLeftWorld.x * d,
       ymin: bottomLeftWorld.y * d,
@@ -58,14 +58,14 @@ function getWorldCoordsFromScreen(viewer, [clientX, clientY]) {
     -(clientY / window.innerHeight) * 2 + 1,
     0.5
   );
-  vec.unproject(viewer.camera);
-  vec.sub(viewer.camera.position).normalize();
-  var distance = -viewer.camera.position.z / vec.z;
-  pos.copy(viewer.camera.position).add(vec.multiplyScalar(distance));
-  if (viewer._mobile) {
-    if (viewer.mobileCoordScaleX && viewer.mobileCoordScaleY) {
-      pos.x = Math.round(viewer.mobileCoordScaleX.invert(pos.x))
-      pos.y = Math.round(viewer.mobileCoordScaleY.invert(pos.y))
+  vec.unproject(app.camera);
+  vec.sub(app.camera.position).normalize();
+  var distance = -app.camera.position.z / vec.z;
+  pos.copy(app.camera.position).add(vec.multiplyScalar(distance));
+  if (app._mobile) {
+    if (app.mobileCoordScaleX && app.mobileCoordScaleY) {
+      pos.x = Math.round(app.mobileCoordScaleX.invert(pos.x))
+      pos.y = Math.round(app.mobileCoordScaleY.invert(pos.y))
     } else {
       return false
     }
@@ -122,7 +122,8 @@ export function createLoadingText(container) {
  */
 export function showLoading() {
   loading_spinner.style.display = "block";
-  loading_text.style.display = "block";
+  if (loading_text) loading_text.style.display = "block";
+  
 }
 
 /**
@@ -131,7 +132,7 @@ export function showLoading() {
  */
 export function hideLoading() {
   loading_spinner.style.display = "none";
-  loading_text.style.display = "none";
+  if (loading_text) loading_text.style.display = "none";
 }
 
 /**

@@ -85,7 +85,7 @@ gridviz = require("gridviz")
 
 Create a viewer using  ```let viewer = gridviz.viewer();``` and customise it with the methods described in the [API reference](#api-reference) below.
 
-Most of these methods follow the pattern viewer.myMethod([value]): If a value is specified, the method sets the parameter value and returns the viewer object itself. If no value is specified, then the method returns the current value of the parameter.
+Most of these methods follow the pattern app.myMethod([value]): If a value is specified, the method sets the parameter value and returns the viewer object itself. If no value is specified, then the method returns the current value of the parameter.
 
 Here's a barebones example that loads a CSV containing population data for a 5x5 km grid of europe:
 
@@ -126,13 +126,13 @@ x,y,time
 
 ## API reference
 
-Here you will find information on how to use the functions available for configuring a gridviz viewer. Like D3, gridviz uses a method chaining syntax (as shown in the barebones example above).
+Here you will find information on how to use the functions available for configuring a gridviz app. Like D3, gridviz uses a method chaining syntax (as shown in the barebones example above).
 
 First create a viewer with ``let viewer = gridviz.viewer() ``.
 
-Then configure it using the methods in the table below. The methods follow the pattern: ``viewer.method([value])``.
+Then configure it using the methods in the table below. The methods follow the pattern: ``app.method([value])``.
 
-Once you have configured the viewer, you can build it using `` viewer.build() ``.
+Once you have configured the viewer, you can build it using `` app.build() ``.
 
 ### Contents
 - [Styling](#styling)
@@ -145,7 +145,7 @@ Once you have configured the viewer, you can build it using `` viewer.build() ``
 
 ### Styling
 
-These are the methods available for styling the viewer.
+These are the methods available for styling the app.
 
 | Method                                | Type        | Default            | Description                                                                                      |
 | ------------------------------------- | ----------- | ------------------ | ------------------------------------------------------------------------------------------------ |
@@ -160,7 +160,7 @@ These are the methods available for styling the viewer.
 | *viewer*.**zoomButtons**([value])     | Boolean      | false             | Whether or not to show 'zoom' buttons which, when clicked will zoom in or out. |
 | *viewer*.**title**([value])           | String      | null               | The viewer's title                                                                               |
 | *viewer*.**subtitle**([value])        | String      | null               | The viewer's subtitle                                                                            |
-| *viewer*.**cellCount**([value])       | Boolean     | false              | Shows a count below the title of the total number of cells displayed in the viewer.              |
+| *viewer*.**cellCount**([value])       | Boolean     | false              | Shows a count below the title of the total number of cells displayed in the app.              |
 | *viewer*.**sourceHTML**([value])      | HTML        | null               | Defines the innerHTML of the link to the data source shown in the bottom-right corner            | 
 
 
@@ -177,12 +177,12 @@ These methods allow you to define the data that is added to the viewer and how i
 | *viewer*.**EPSG**([value])                 | int                                | 3035                   | EPSG code of the projection to use for the geometries, placename labels and NUTS boundaries. (NUTS and Placenames only available in 3035, 3857, 4258 or 4326)               |
 | *viewer*.**center**([value])               | Array                              | null                   | [x,y] coordinates with which the viewer will center the camera.                                                                                                             |
 | *viewer*.**zoom**([value])                 | Number                             | (gridData.cellSize * 50000) / 2 | The initial Z position of the camera.                                                                                                                                       |
-| *viewer*.**addGeoJson**([value])           | String                             | null                   | Loads a geojson file from the specified URL and adds it's geometries to the viewer. Currently only accepts "polygon" or "multipolygon" geometries                           |
+| *viewer*.**addGeoJson**([value])           | String                             | null                   | Loads a geojson file from the specified URL and adds it's geometries to the app. Currently only accepts "polygon" or "multipolygon" geometries                           |
 | *viewer*.**nuts**([value])                 | Boolean                            | false                  | Show NUTS boundaries using [nuts2json](https://github.com/eurostat/nuts2json)                                                                                               |
 | *viewer*.**nutsLevel**([value])            | int                                | 0                      | Nuts2json NUTS level                                                                                                                                                        |
 | *viewer*.**nutsSimplification**([value])   | String                             | "20M"                  | The level of generalisation applied to the Nuts2json  geometries                                                                                                            |
 | *viewer*.**nutsCountry**([value])          | String                             | null                   | Filters nuts2json geometries by country code. Used in order to only load boundaries for a single country.                                                                   |  |
-| *viewer*.**showPlacenames**([value])       | Boolean                            | false                  | Adds placenames to the viewer. Placename-scale thresholds currently defined by the user.                                                                                    |
+| *viewer*.**showPlacenames**([value])       | Boolean                            | false                  | Adds placenames to the app. Placename-scale thresholds currently defined by the user.                                                                                    |
 | *viewer*.**placenamesCountry**([value])    | String                             | null                   | Filters placenames by country code                                                                                                                                          |
 | *viewer*.**placenamesThresholds**([value]) | Object                             | null                   | Defines population query parameter at certain scale thresholds e.g. {"100000":500} will show placenames with populations of over 5000 at scales up to 100 000               |
 
@@ -198,11 +198,11 @@ The methods that can be used to determine the colour of the grid cells.
 | ----------------------------------------- | -------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | *viewer*.**colorField**([value])          | String   | null                       | CSV field used to determine cell colour                                                                                                                                                    |
 | *viewer*.**colorScaleName**([value])      | String   | "scaleSequential"          | The name of d3.scale function name to use for scaling cell colours. If you would like to define your own scale you can use colorScaleFunction()                                            |
-| *viewer*.**colorScaleMidpoint**([value])  | Number   | 0                          | The midpoint value when using a diverging scale (when viewer.colorScaleName is set to 'scaleDiverging')                                                                                    |
-| *viewer*.**colorScaleFunction**([value])  | Function | d3.[viewer.colorScaleName] | Define a scale function to be used for color scaling. If unspecified it will build a d3 scale using viewer.colorScaleName and the d3.extent() of the values loaded from viewer.colorField. |
+| *viewer*.**colorScaleMidpoint**([value])  | Number   | 0                          | The midpoint value when using a diverging scale (when app.colorScaleName is set to 'scaleDiverging')                                                                                    |
+| *viewer*.**colorScaleFunction**([value])  | Function | d3.[app.colorScaleName] | Define a scale function to be used for color scaling. If unspecified it will build a d3 scale using app.colorScaleName and the d3.extent() of the values loaded from app.colorField. |
 | *viewer*.**reverseColorScheme**([value])  | Boolean  | false                      | Flips the current color scheme. Applies .reverse() method to the 'domain' array of the scale.                                                                                              |
 | *viewer*.**colorSchemeName**([value])     | String   | "interpolateTurbo"         | Name of d3.scaleChromatic function to use for scaling cell colours                                                                                                                         |
-| *viewer*.**colors**([value])              | Array    | null                       | Array of hex strings to be used in combination with viewer.thresholds for colouring.                                                                                                       |
+| *viewer*.**colors**([value])              | Array    | null                       | Array of hex strings to be used in combination with app.thresholds for colouring.                                                                                                       |
 | *viewer*.**thresholds**([value])          | Array    | null                       | Array of threshold values that are applied to the colour scaling function.                                                                                                                 |
 | *viewer*.**colorFieldSelector**([value])  | boolean  | false                      | Generates a simple HTML select input showing the available fields in the csv file that can be used to drive cell colour.                                                                   |
 | *viewer*.**colorSchemeSelector**([value]) | boolean  | false                      | Generates an HTML Select element for the different D3 Scale-Chromatic functions                                                                                                            |
@@ -217,7 +217,7 @@ The methods that can be used to determine the colour of the grid cells.
 | --------------------------------------- | -------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | *viewer*.**sizeField**([value])         | String   | null                      | CSV field used to determine cell size                                                                                                                                                                                                                                 |
 | *viewer*.**sizeScaleName**([value])     | String   | "scaleSqrt                | Name of d3.scale function name to use for scaling cell sizes                                                                                                                                                                                                          |
-| *viewer*.**sizeScaleFunction**([value]) | Function | d3.[viewer.sizeScaleName] | Define a scale function to be used for scaling cell sizes. If unspecified it will build a d3 scale using viewer.colorScaleName, the d3.extent() of the values loaded from viewer.sizeField and a range of [viewer *viewer*.**resolution / 3, viewer.resolution / 1.5] |
+| *viewer*.**sizeScaleFunction**([value]) | Function | d3.[app.sizeScaleName] | Define a scale function to be used for scaling cell sizes. If unspecified it will build a d3 scale using app.colorScaleName, the d3.extent() of the values loaded from app.sizeField and a range of [viewer *viewer*.**resolution / 3, app.resolution / 1.5] |
 | *viewer*.**sizeFieldSelector**([value]) | boolean  | false                     | Generates a simple HTML select input showing the available fields in the csv file that can be used to drive cell size.                                                                                                                                                |
 
 
