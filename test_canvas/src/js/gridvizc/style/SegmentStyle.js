@@ -41,7 +41,13 @@ export class SegmentStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
-        for (let cell of cells) {
+        for (let c of cells) {
+
+            const or = this.orientation_(c);
+            const col = this.color_(c);
+            const len = this.length_(c);
+            const w = this.width_(c);
+            
 
         }
 
