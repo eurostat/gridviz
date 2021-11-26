@@ -27,13 +27,13 @@ export class CompositionStyle extends Style {
 
         //dictionnary column -> color
         /** @type {object} */
-        this.color = color;
+        this.color_ = color;
 
         /** @type {function} */
         this.type_ = type;
 
         /** @type {function} */
-        this.size = size;
+        this.size_ = size;
     }
 
 
@@ -47,18 +47,18 @@ export class CompositionStyle extends Style {
     draw(cells, resolution, cg) {
 
         //if size is used, sort cells by size so that the biggest are drawn first
-        if (this.size)
-            cells.sort((c1, c2) => (this.size(c2) - this.size(c1)));
+        if (this.size_)
+            cells.sort((c1, c2) => (this.size_(c2) - this.size_(c1)));
 
         for (let cell of cells) {
 
             //compute total
             let total = 0;
-            for (let column of Object.keys(this.color))
+            for (let column of Object.keys(this.color_))
                 total += +cell[column]
 
             //size - in ground meters
-            let sG = this.size ? this.size(cell) : resolution;
+            let sG = this.size_ ? this.size_(cell) : resolution;
             //size - in pixel
             const s = sG / cg.zf
 
@@ -68,7 +68,7 @@ export class CompositionStyle extends Style {
             //draw decomposition symbol
             let cumul = 0;
             const d = resolution * (1 - sG / resolution) * 0.5
-            for (let [column, color] of Object.entries(this.color)) {
+            for (let [column, color] of Object.entries(this.color_)) {
 
                 //set color
                 cg.ctx.fillStyle = color;
@@ -79,11 +79,14 @@ export class CompositionStyle extends Style {
                 //draw symbol part
                 if (type_ === "flag") {
                     //draw flag vertical stripe
-                    cg.ctx.fillRect(cumul * s + cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), share * s, s);
+                    cg.ctx.fillRect(
+                        cumul * s + cg.geoToPixX(cell.x + d + this.offset_.dx),
+                        cg.geoToPixY(cell.y + resolution - d + this.offset_.dy),
+                        share * s, s);
                 } else if (type_ === "piechart") {
                     //draw pie chart angular sector
-                    const xc = cg.geoToPixX(cell.x + resolution * 0.5);
-                    const yc = cg.geoToPixY(cell.y + resolution * 0.5);
+                    const xc = cg.geoToPixX(cell.x + resolution * 0.5 + this.offset_.dx);
+                    const yc = cg.geoToPixY(cell.y + resolution * 0.5 + this.offset_.dy);
                     cg.ctx.beginPath();
                     cg.ctx.moveTo(xc, yc);
                     cg.ctx.arc(xc, yc, s * 0.5, cumul * 2 * Math.PI, (cumul + share) * 2 * Math.PI);
@@ -93,7 +96,9 @@ export class CompositionStyle extends Style {
                     //draw ring
                     //TODO need to compute radius properly ! Variation as rootsquare of share !
                     cg.ctx.beginPath();
-                    cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5),
+                    cg.ctx.arc(
+                        cg.geoToPixX(cell.x + resolution * 0.5 + this.offset_.dx),
+                        cg.geoToPixY(cell.y + resolution * 0.5 + this.offset_.dy),
                         Math.sqrt(1 - cumul) * s * 0.5,
                         0, 2 * Math.PI);
                     cg.ctx.fill();
@@ -107,19 +112,46 @@ export class CompositionStyle extends Style {
             //draw stroke
             this.drawStroke(cell, resolution, cg, (c) => {
                 return (type_ === "flag") ? "square" : "circle"
-            }, this.size)
+            }, this.size_)
         }
 
     }
 
 
-    //TODO document and generalise
-    type(type_) {
-        if (type_) {
-            this.type_ = type_;
+    /**
+     * @param {function} color 
+     * @returns {this|function}
+     */
+     color(color) {
+        if (color) {
+            this.color_ = color;
             return this
         }
-        return this.type
+        return this.color_
+    }
+
+    /**
+     * @param {function} type 
+     * @returns {this|function}
+     */
+     type(type) {
+        if (type) {
+            this.type_ = type;
+            return this
+        }
+        return this.type_
+    }
+
+    /**
+     * @param {function} size 
+     * @returns {this|function}
+     */
+     size(size) {
+        if (size) {
+            this.size_ = size;
+            return this
+        }
+        return this.size_
     }
 
 }
