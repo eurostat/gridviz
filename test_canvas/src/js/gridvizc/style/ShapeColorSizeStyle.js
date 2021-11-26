@@ -59,11 +59,18 @@ export class ShapeColorSizeStyle extends Style {
             if (shape === "square") {
                 //draw square
                 const d = resolution * (1 - sG / resolution) * 0.5
-                cg.ctx.fillRect(cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), s, s);
+                cg.ctx.fillRect(
+                    cg.geoToPixX(cell.x + d +this.offset_.dx),
+                    cg.geoToPixY(cell.y + resolution - d + this.offset_.dy),
+                    s, s);
             } else if (shape === "circle") {
                 //draw circle
                 cg.ctx.beginPath();
-                cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5), s * 0.5, 0, 2 * Math.PI, false);
+                cg.ctx.arc(
+                    cg.geoToPixX(cell.x + resolution * 0.5 + this.offset_.dx),
+                    cg.geoToPixY(cell.y + resolution * 0.5 + this.offset_.dy),
+                    s * 0.5,
+                    0, 2 * Math.PI, false);
                 cg.ctx.fill();
             } else {
                 throw new Error('Unexpected shape:' + shape);
