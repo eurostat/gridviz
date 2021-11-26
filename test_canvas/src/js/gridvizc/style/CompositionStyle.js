@@ -30,7 +30,7 @@ export class CompositionStyle extends Style {
         this.color = color;
 
         /** @type {function} */
-        this.type = type;
+        this.type_ = type;
 
         /** @type {function} */
         this.size = size;
@@ -48,7 +48,7 @@ export class CompositionStyle extends Style {
 
         //if size is used, sort cells by size so that the biggest are drawn first
         if (this.size)
-            cells.sort((c1, c2) => ( this.size(c2) - this.size(c1) ));
+            cells.sort((c1, c2) => (this.size(c2) - this.size(c1)));
 
         for (let cell of cells) {
 
@@ -63,7 +63,7 @@ export class CompositionStyle extends Style {
             const s = sG / cg.zf
 
             //get symbol type
-            const type_ = this.type ? this.type(cell) : "flag"
+            const type_ = this.type_ ? this.type_(cell) : "flag"
 
             //draw decomposition symbol
             let cumul = 0;
@@ -110,6 +110,15 @@ export class CompositionStyle extends Style {
             }, this.size)
         }
 
+    }
+
+
+    type(type_) {
+        if (type_) {
+            this.type_ = type_;
+            return this
+        }
+        return this.type
     }
 
 }
