@@ -1,4 +1,4 @@
-// logic for adding geojson features to the gridviz viewer
+// logic for adding geojson features to the gridviz app
 
 import { Color, Group } from "three";
 
@@ -14,11 +14,11 @@ let lineMaterial; // line material used for all threejs webgl lines
  * 
  * @description Add geojson features to three.js scene. Currently only accepts polygon, multipolygon or linestring
  * @param {Array} features Geojson feature array
- * @param {Object} viewer gridviz viewer
+ * @param {Object} app gridviz app
  * @function addGeoJsonToScene
  */
 let layerZ = CONSTANTS.line_z;
-export function addGeoJsonToScene(features, viewer) {
+export function addGeoJsonToScene(features, app) {
     layerZ = layerZ + 0.002; // increment draw order so that latest geojson is added on top of the rest.
     let geojsonGroup = new Group();
     geojsonGroup.renderOrder = 999; //always on top of grid
