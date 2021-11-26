@@ -16,7 +16,7 @@ let title;
    * @function createLegend
    * @description Add svg legend to DOM using d3-svg-legend
    */
-export function createLegend(app) {
+export function createLegend(app, grid) {
     // title for color legend defaults to colorField
     if (!app.legend_.title) title = grid.colorField; else title = app.legend_.title;
 
@@ -263,9 +263,9 @@ function thresholdLabels({
  * @description remove DOM element and rebuild legend
  * @function updateLegend
  */
-export function updateLegend(app) {
+export function updateLegend(app, grid) {
     // TODO: make less hacky :)
     var l = selectAll(".gridviz-legend-svg").remove();
-    setTimeout(createLegend(app), 1000);
+    setTimeout(createLegend(app, grid), 1000);
 }
 

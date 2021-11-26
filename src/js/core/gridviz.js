@@ -30,6 +30,8 @@ import * as Zoom from "./zoom/zoom.js";
 import * as Buttons from "./gui/buttons.js";
 import * as Gui from "./gui/gui.js";
 import * as Points from "./layers/points.js";
+import * as Dropdowns from "./gui/dropdowns.js";
+
 import * as Viewer from "./viewer/viewer.js";
 
 //TODO list:
@@ -162,7 +164,7 @@ export function app(options) {
     }
     //update legend if necessary
     if (app._gridLegend) {
-      Legend.updateLegend(app)
+      Legend.updateLegend(app, gridConfigs[app.currentResolution_])
     }
     return app;
   };
@@ -393,11 +395,11 @@ export function app(options) {
             Tooltip.createTooltipContainer(app);
 
             if (app.colorFieldSelector_) {
-              Dropdowns.createColorFieldDropdown(app, gridCaches);
+              Dropdowns.createColorFieldDropdown(app, gridConfigs[app.currentResolution_]);
               addChangeEventToColorFieldDropdown();
             }
             if (app.sizeFieldSelector_) {
-              Dropdowns.createSizeFieldDropdown(app, gridCaches);
+              Dropdowns.createSizeFieldDropdown(app, gridConfigs[app.currentResolution_]);
               addChangeEventToSizeFieldDropdown()
             }
 
@@ -436,189 +438,189 @@ export function app(options) {
   /** 
    * @deprecated
    * @function loadGrid
-   * @description request grid, save it to the cache, define the scales used for colouring and sizing, then add the cells (points) to the scene
+   * @description request grid, save it to the cache, define the scales used for colouring and sizing, then add the cells (points) to the scene DEPRECATED
    * @param {Grid}
    */
   function loadGrid(grid) {
-    Utils.showLoading();
-    if (grid.cellSize) {
-      requestGrid(grid).then(
-        csv => {
-          if (csv) {
-            //validate csv
-            if (csv[0].x && csv[0].y && csv[0][grid.colorField]) {
+    // Utils.showLoading();
+    // if (grid.cellSize) {
+    //   requestGrid(grid).then(
+    //     csv => {
+    //       if (csv) {
+    //         //validate csv
+    //         if (csv[0].x && csv[0].y && csv[0][grid.colorField]) {
 
-              app.cellCount = csv.length;
-              app._cellFields = Object.keys(csv[0]).filter(key => key !== 'x' && key !== 'y'); // cell properties
+    //           app.cellCount = csv.length;
+    //           app._cellFields = Object.keys(csv[0]).filter(key => key !== 'x' && key !== 'y'); // cell properties
 
-              //as a temporary hacky fix for d3's pan and zoom not working correctly on mobile devices, we scale the coordinates to a webgl-friendly range
-              if (app._mobile && !app.mobileCellSize_) {
-                let xDomain = extent(csv.map(c => parseFloat(c.x)));
-                let yDomain = extent(csv.map(c => parseFloat(c.y)));
+    //           //as a temporary hacky fix for d3's pan and zoom not working correctly on mobile devices, we scale the coordinates to a webgl-friendly range
+    //           if (app._mobile && !app.mobileCellSize_) {
+    //             let xDomain = extent(csv.map(c => parseFloat(c.x)));
+    //             let yDomain = extent(csv.map(c => parseFloat(c.y)));
 
-                let domain = [
-                  min([xDomain, yDomain], array => min(array)),
-                  max([xDomain, yDomain], array => max(array))
-                ]; // overall min and max values of both axis
+    //             let domain = [
+    //               min([xDomain, yDomain], array => min(array)),
+    //               max([xDomain, yDomain], array => max(array))
+    //             ]; // overall min and max values of both axis
 
-                app.mobileCoordScaleX = d3scale.scaleLinear().domain(domain).range([-1, 1]);
-                app.mobileCoordScaleY = d3scale.scaleLinear().domain(domain).range([-1, 1]);
-                //update cell sizes and raycaster to fit new webgl-friendly coords
+    //             app.mobileCoordScaleX = d3scale.scaleLinear().domain(domain).range([-1, 1]);
+    //             app.mobileCoordScaleY = d3scale.scaleLinear().domain(domain).range([-1, 1]);
+    //             //update cell sizes and raycaster to fit new webgl-friendly coords
 
-                //distance in x coordinates between two neighbouring cells is the new resolution
+    //             //distance in x coordinates between two neighbouring cells is the new resolution
 
-                // to try to ensure the cells are neighbours, first we have to sort the points by X
-                csv.sort(function (a, b) { return a.x - b.x });
+    //             // to try to ensure the cells are neighbours, first we have to sort the points by X
+    //             csv.sort(function (a, b) { return a.x - b.x });
 
-                // then we use the first cell, and find the next cell with a distinct X value
-                let x1 = csv[0].x;
-                let x2;
-                csv.some(function (cell) {
-                  if (cell.x !== x1) {
-                    x2 = cell.x;
-                    return true;
-                  }
-                });
+    //             // then we use the first cell, and find the next cell with a distinct X value
+    //             let x1 = csv[0].x;
+    //             let x2;
+    //             csv.some(function (cell) {
+    //               if (cell.x !== x1) {
+    //                 x2 = cell.x;
+    //                 return true;
+    //               }
+    //             });
 
-                //we then calculate the difference between two distinct X coordinates in mobile (webgl) coords
-                // note: THIS ONLY WORKS IF THE CELLS ARE NEXT TO EACH OTHER. 
-                // For this to work all the time we would need the minimum distance between two X coordinates out of ALL neighbours
-                let mobileXCoord1 = app.mobileCoordScaleX(x1)
-                let mobileXCoord2 = app.mobileCoordScaleX(x2)
-                let difference = Math.abs(mobileXCoord1 - mobileXCoord2);
-                difference = difference * 2;
+    //             //we then calculate the difference between two distinct X coordinates in mobile (webgl) coords
+    //             // note: THIS ONLY WORKS IF THE CELLS ARE NEXT TO EACH OTHER. 
+    //             // For this to work all the time we would need the minimum distance between two X coordinates out of ALL neighbours
+    //             let mobileXCoord1 = app.mobileCoordScaleX(x1)
+    //             let mobileXCoord2 = app.mobileCoordScaleX(x2)
+    //             let difference = Math.abs(mobileXCoord1 - mobileXCoord2);
+    //             difference = difference * 2;
 
-                //giving us our new cell size
-                let newResolution = difference;
+    //             //giving us our new cell size
+    //             let newResolution = difference;
 
-                app.currentResolution_ = newResolution;
-                grid.cellSize = newResolution;
-                app.pointSize = newResolution;
-                app.raycaster.params.Points.threshold = newResolution;
-                //scale center coords
-                if (app.center_) {
-                  app.center_[0] = app.mobileCoordScaleX(app.center_[0]);
-                  app.center_[1] = app.mobileCoordScaleY(app.center_[1]);
-                }
+    //             app.currentResolution_ = newResolution;
+    //             grid.cellSize = newResolution;
+    //             app.pointSize = newResolution;
+    //             app.raycaster.params.Points.threshold = newResolution;
+    //             //scale center coords
+    //             if (app.center_) {
+    //               app.center_[0] = app.mobileCoordScaleX(app.center_[0]);
+    //               app.center_[1] = app.mobileCoordScaleY(app.center_[1]);
+    //             }
 
-              } else if (app._mobile && app.mobileCellSize_) {
-                // new mobile scale
-                let xDomain = extent(csv.map(c => parseFloat(c.x)));
-                let yDomain = extent(csv.map(c => parseFloat(c.y)));
-                let domain = [
-                  min([xDomain, yDomain], array => min(array)),
-                  max([xDomain, yDomain], array => max(array))
-                ]; // overall min and max values of both axis
-                app.mobileCoordScaleX = d3scale.scaleLinear().domain(domain).range([-1, 1]);
-                app.mobileCoordScaleY = d3scale.scaleLinear().domain(domain).range([-1, 1]);
+    //           } else if (app._mobile && app.mobileCellSize_) {
+    //             // new mobile scale
+    //             let xDomain = extent(csv.map(c => parseFloat(c.x)));
+    //             let yDomain = extent(csv.map(c => parseFloat(c.y)));
+    //             let domain = [
+    //               min([xDomain, yDomain], array => min(array)),
+    //               max([xDomain, yDomain], array => max(array))
+    //             ]; // overall min and max values of both axis
+    //             app.mobileCoordScaleX = d3scale.scaleLinear().domain(domain).range([-1, 1]);
+    //             app.mobileCoordScaleY = d3scale.scaleLinear().domain(domain).range([-1, 1]);
 
-                //mobile cell size
-                app.originalResolution = app.currentResolution_;
-                let newResolution = app.mobileCellSize_;
-                app.currentResolution_ = newResolution;
-                grid.cellSize = newResolution;
-                app.pointSize = newResolution;
-                app.raycaster.params.Points.threshold = newResolution;
-                //scale center coords
-                if (app.center_) {
-                  app.center_[0] = app.mobileCoordScaleX(app.center_[0]);
-                  app.center_[1] = app.mobileCoordScaleY(app.center_[1]);
-                }
-              }
+    //             //mobile cell size
+    //             app.originalResolution = app.currentResolution_;
+    //             let newResolution = app.mobileCellSize_;
+    //             app.currentResolution_ = newResolution;
+    //             grid.cellSize = newResolution;
+    //             app.pointSize = newResolution;
+    //             app.raycaster.params.Points.threshold = newResolution;
+    //             //scale center coords
+    //             if (app.center_) {
+    //               app.center_[0] = app.mobileCoordScaleX(app.center_[0]);
+    //               app.center_[1] = app.mobileCoordScaleY(app.center_[1]);
+    //             }
+    //           }
 
-              // add points to cache
-              addGridToCache(csv, grid.cellSize);
-            } else {
-              Utils.hideLoading();
-              let msg = "Incorrect csv format. Please use coordinate columns with names 'x' and 'y' and check that colorField is defined correctly.";
-              console.error(msg);
-              alert(msg)
-              return;
-            }
+    //           // add points to cache
+    //           addGridToCache(csv, grid.cellSize);
+    //         } else {
+    //           Utils.hideLoading();
+    //           let msg = "Incorrect csv format. Please use coordinate columns with names 'x' and 'y' and check that colorField is defined correctly.";
+    //           console.error(msg);
+    //           alert(msg)
+    //           return;
+    //         }
 
-            // add HTMLElements to DOM
-            addInitialElementsToDOM();
-            // define app click, dropdown change and screen resize events
-            addEventListeners();
+    //         // add HTMLElements to DOM
+    //         addInitialElementsToDOM();
+    //         // define app click, dropdown change and screen resize events
+    //         addEventListeners();
 
-            //define scales
-            app.colorValuesExtent = extent(gridCaches[app.currentResolution_], d => parseFloat(d[grid.colorField]));
-            app.colorScaleFunction_ = defineColorScale();
-            if (grid.sizeField) {
-              app.sizeValuesExtent = extent(gridCaches[app.currentResolution_], d => parseFloat(d[grid.sizeField]));
-              app.sizeScaleFunction_ = defineSizeScale();
-            }
+    //         //define scales
+    //         app.colorValuesExtent = extent(gridCaches[app.currentResolution_], d => parseFloat(d[grid.colorField]));
+    //         app.colorScaleFunction_ = defineColorScale();
+    //         if (grid.sizeField) {
+    //           app.sizeValuesExtent = extent(gridCaches[app.currentResolution_], d => parseFloat(d[grid.sizeField]));
+    //           app.sizeScaleFunction_ = defineSizeScale();
+    //         }
 
-            //coordinates extent
-            //app.extentX = extent(gridCaches[app.currentResolution_], d => parseFloat(d.x));
-            //app.extentY = extent(gridCaches[app.currentResolution_], d => parseFloat(d.y));
+    //         //coordinates extent
+    //         //app.extentX = extent(gridCaches[app.currentResolution_], d => parseFloat(d.x));
+    //         //app.extentY = extent(gridCaches[app.currentResolution_], d => parseFloat(d.y));
 
-            // if center is not specified by user, move camera to a cell half way along the array
-            if (!app.center_) {
-              let index = parseInt(gridCaches[app.currentResolution_].length / 2);
-              let c = gridCaches[app.currentResolution_][index];
-              if (app._mobile) {
-                app.center_ = [
-                  app.mobileCoordScaleX(parseFloat(c.x)),
-                  app.mobileCoordScaleY(parseFloat(c.y))
-                ];
-              } else {
-                app.center_ = [
-                  parseFloat(c.x),
-                  parseFloat(c.y)
-                ];
-              }
-            }
-
-
-            // define pan & zoom for 2D apps
-            if (app.mode_ == '2D') {
-              Zoom.addPanAndZoom(app);
-            } else if (app.mode_ == '3D') {
-              Camera.createOrbitControls(app)
-            }
+    //         // if center is not specified by user, move camera to a cell half way along the array
+    //         if (!app.center_) {
+    //           let index = parseInt(gridCaches[app.currentResolution_].length / 2);
+    //           let c = gridCaches[app.currentResolution_][index];
+    //           if (app._mobile) {
+    //             app.center_ = [
+    //               app.mobileCoordScaleX(parseFloat(c.x)),
+    //               app.mobileCoordScaleY(parseFloat(c.y))
+    //             ];
+    //           } else {
+    //             app.center_ = [
+    //               parseFloat(c.x),
+    //               parseFloat(c.y)
+    //             ];
+    //           }
+    //         }
 
 
-            //add cells to app
-            addPointsToScene(grid, gridCaches[grid.cellSize]);
+    //         // define pan & zoom for 2D apps
+    //         if (app.mode_ == '2D') {
+    //           Zoom.addPanAndZoom(app);
+    //         } else if (app.mode_ == '3D') {
+    //           Camera.createOrbitControls(app)
+    //         }
 
-            // tooltip DOM element
-            Tooltip.createTooltipContainer(app);
 
-            if (app.colorFieldSelector_) {
-              Dropdowns.createColorFieldDropdown(app, gridCaches);
-              addChangeEventToColorFieldDropdown();
-            }
-            if (app.sizeFieldSelector_) {
-              Dropdowns.createSizeFieldDropdown(app, gridCaches);
-              addChangeEventToSizeFieldDropdown()
-            }
+    //         //add cells to app
+    //         addPointsToScene(grid, gridCaches[grid.cellSize]);
 
-            // default scale:population thresholds for placenames
-            if (app.showPlacenames_ && !app.placenameThresholds_) {
-              Placenames.defineDefaultPlacenameThresholds(app);
-            }
+    //         // tooltip DOM element
+    //         Tooltip.createTooltipContainer(app);
 
-            //request initial placenames
-            if (app.showPlacenames_) {
-              Placenames.getPlacenames(app);
-            }
-          }
+    //         if (app.colorFieldSelector_) {
+    //           Dropdowns.createColorFieldDropdown(app, gridCaches);
+    //           addChangeEventToColorFieldDropdown();
+    //         }
+    //         if (app.sizeFieldSelector_) {
+    //           Dropdowns.createSizeFieldDropdown(app, gridCaches);
+    //           addChangeEventToSizeFieldDropdown()
+    //         }
 
-          Utils.hideLoading();
-        },
-        err => {
-          Utils.hideLoading();
-          alert(err)
-        }
-      );
-    } else {
-      Utils.hideLoading();
-      let msg = "Please specify grid cell size in the units of its coordinate system";
-      console.error(msg);
-      alert(msg)
+    //         // default scale:population thresholds for placenames
+    //         if (app.showPlacenames_ && !app.placenameThresholds_) {
+    //           Placenames.defineDefaultPlacenameThresholds(app);
+    //         }
 
-    }
+    //         //request initial placenames
+    //         if (app.showPlacenames_) {
+    //           Placenames.getPlacenames(app);
+    //         }
+    //       }
+
+    //       Utils.hideLoading();
+    //     },
+    //     err => {
+    //       Utils.hideLoading();
+    //       alert(err)
+    //     }
+    //   );
+    // } else {
+    //   Utils.hideLoading();
+    //   let msg = "Please specify grid cell size in the units of its coordinate system";
+    //   console.error(msg);
+    //   alert(msg)
+
+    // }
   }
 
   //if gridData has already been added, this function now overwrites the gridData currently in the app.
@@ -783,7 +785,7 @@ export function app(options) {
     updateColorScale();
     Points.updatePointsColors(app, gridConfigs[app.currentResolution_], gridCaches[app.currentResolution_]);
     if (app.legend_) {
-      Legend.updateLegend(app);
+      Legend.updateLegend(app,gridConfigs[app.currentResolution_]);
     }
   }
 
@@ -803,10 +805,10 @@ export function app(options) {
   * @param {*} field
   */
   function onChangeColorField(field) {
-    grid.colorField = field;
+    gridConfigs[app.currentResolution_].colorField = field;
 
     //update the extent/domain of the values of the new field 
-    app.colorValuesExtent = extent(gridCaches[app.currentResolution_], d => parseFloat(d[grid.colorField]));
+    app.colorValuesExtent = extent(gridCaches[app.currentResolution_], d => parseFloat(d[gridConfigs[app.currentResolution_].colorField]));
 
     //update the scale function used for colouring
     if (!app.colors_) {
@@ -814,10 +816,10 @@ export function app(options) {
     }
 
     //update the thee.js point colours
-    Points.updatePointsColors(app, gridCaches[app.currentResolution_]);
+    Points.updatePointsColors(app, gridConfigs[app.currentResolution_],gridCaches[app.currentResolution_]);
 
     if (app.legend_) {
-      Legend.updateLegend(app);
+      Legend.updateLegend(app,gridConfigs[app.currentResolution_]);
     }
   }
 
@@ -839,9 +841,9 @@ export function app(options) {
   function onChangeColorScale(scale) {
     app.colorScaleName_ = scale;
     updateColorScale();
-    Points.updatePointsColors(app, gridCaches[app.currentResolution_]);
+    Points.updatePointsColors(app, gridConfigs[app.currentResolution_],gridCaches[app.currentResolution_]);
     if (app.legend_) {
-      Legend.updateLegend(app);
+      Legend.updateLegend(app,gridConfigs[app.currentResolution_]);
     }
   }
 
@@ -865,7 +867,7 @@ export function app(options) {
     updateSizeScale();
     Points.updatePointsSizes(app, gridCaches[app.currentResolution_]);
     if (app._gridLegend) {
-      Legend.updateLegend(app);
+      Legend.updateLegend(app, gridConfigs[app.currentResolution_]);
     }
   }
 
@@ -1172,9 +1174,9 @@ export function app(options) {
     if (app.showLegend_) {
       if (app.legend_) {
         if (app._gridLegend) {
-          Legend.updateLegend(app);
+          Legend.updateLegend(app, gridConfigs[app.currentResolution_]);
         } else {
-          Legend.createLegend(app);
+          Legend.createLegend(app, gridConfigs[app.currentResolution_]);
         }
       }
     }

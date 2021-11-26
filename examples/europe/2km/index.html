@@ -14,19 +14,11 @@
 <script src="../../../build/gridviz.js"></script>
 <script>
   let containerDiv = document.getElementById("viz-container");
-  gridviz
+  let app = gridviz
     .app()
     .container(containerDiv)
     .title("2x2 km Grid of Europe")
-    .gridData(
-      {
-        url: "../../../assets/csv/Europe/2km/pop_2km.csv",
-        cellSize: 2,
-      },
-    )
     .zerosRemoved(3) //last 3 zeros were removed from dataset for efficiency
-    .colorField("population") // csv column which you wish to visualize
-    .sizeField(false) // csv column which you wish to visualize
     .nuts(true) //loads borders topojson
     .nutsLevel(2)
     .cellCount(true)
@@ -47,6 +39,14 @@
     })
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
     .build();
+
+    app.addGrid(
+      {
+        url: "../../../assets/csv/Europe/2km/pop_2km.csv",
+        cellSize: 2,
+        colorField: "population"
+      },
+    )
 </script>
 
 </html>
