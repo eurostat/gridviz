@@ -8,10 +8,13 @@ export const App = function (opts) {
 }
 
 
-//export entire d3 scale chromatic
+
+
+//export color (the entire d3 scale chromatic)
 export const color = function () {
     return dsc
 }
+
 
 
 
@@ -20,6 +23,11 @@ export const color = function () {
 import { CSVGrid as CSVGrid_ } from "./dataset/CSVGrid"
 export const CSVGrid = function (url, resolution, preprocess = null) {
     return new CSVGrid_(url, resolution, preprocess)
+}
+
+import { TiledGrid as TiledGrid_ } from "./dataset/TiledGrid"
+export const TiledGrid = function (url, preprocess = null) {
+    return new TiledGrid_(url, preprocess)
 }
 
 
