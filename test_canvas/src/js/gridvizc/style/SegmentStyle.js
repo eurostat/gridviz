@@ -47,7 +47,7 @@ export class SegmentStyle extends Style {
         for (let c of cells) {
 
             //set width and color
-            cg.ctx.lineWidth = this.width_(c);
+            cg.ctx.lineWidth = this.width_(c) / cg.zf;
             cg.ctx.strokeStyle = this.color_(c);
 
             //get segment orientation (in radian) and length
@@ -70,5 +70,8 @@ export class SegmentStyle extends Style {
         }
 
     }
+
+
+    //TODO getters and setters
 
 }
