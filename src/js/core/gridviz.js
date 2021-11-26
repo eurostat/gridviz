@@ -242,9 +242,9 @@ export function app(options) {
             if (csv[0].x && csv[0].y && csv[0][grid.colorField]) {
 
               //set app resolution (new grid cell size)
-              if (!app.currentResolution_) {
-                app.currentResolution_ = grid.cellSize || 5;
-              }
+              app.currentResolution_ = grid.cellSize;
+              // set raycaster threshold
+              app.raycaster.params.Points.threshold = grid.cellSize;
 
               app.cellCount = csv.length;
               app._cellFields = Object.keys(csv[0]).filter(key => key !== 'x' && key !== 'y'); // cell properties

@@ -152,25 +152,8 @@ function createLabelRenderer(app) {
 function createRaycaster(app) {
     // for Click and tooltip interaction
     app.raycaster = new Raycaster();
-    app.raycaster.params.Points.threshold = defineRaycasterThreshold(app);
+    //app.raycaster.params.Points.threshold = defineRaycasterThreshold(app);
 }
 
-/**
-* 
-* @description Defines the threshold for raycasting grid cells at the specified resolution. Value represents the distance from the center of the cell's point object.
-*@function defineRaycasterThreshold
-*
-*/
-function defineRaycasterThreshold(app) {
-    return app.currentResolution_ || 1;
-}
 
-/**
- * @description Defines the pointSize parameter for THREE.app.pointsLayer objects at the specified resolution
- * @function definePointSize
- *
- */
-function definePointSize(app) {
-    return app.currentResolution_; //INVESTIGATE: why does threejs pointSize value not always correspond with the grid resolution?
-}
 

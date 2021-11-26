@@ -6,12 +6,12 @@ let loading_bar;
 let loading_text;
 
 
-export function getCurrentViewExtent(viewer) {
+export function getCurrentViewExtent(app) {
   var elem = app.renderer.domElement;
   let clientBottomLeft = [elem.clientLeft, elem.clientHeight];
   let clientTopRight = [elem.clientWidth, elem.clientTop];
-  let bottomLeftWorld = getWorldCoordsFromScreen(viewer, clientBottomLeft); //client x,y
-  let topRightWorld = getWorldCoordsFromScreen(viewer, clientTopRight); //client x,y
+  let bottomLeftWorld = getWorldCoordsFromScreen(app, clientBottomLeft); //client x,y
+  let topRightWorld = getWorldCoordsFromScreen(app, clientTopRight); //client x,y
 
   // if getting coords was unsuccessful, exit
   if (!bottomLeftWorld || !topRightWorld) {
@@ -50,7 +50,7 @@ export function getCurrentViewExtent(viewer) {
 * @description get the position of a canvas event in world coords
 *@function getWorldCoordsFromScreen
 */
-function getWorldCoordsFromScreen(viewer, [clientX, clientY]) {
+function getWorldCoordsFromScreen(app, [clientX, clientY]) {
   var vec = new Vector3(); // create once and reuse
   var pos = new Vector3(); // create once and reuse
   vec.set(
