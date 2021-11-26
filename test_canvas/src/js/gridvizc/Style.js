@@ -16,9 +16,14 @@ export class Style {
      */
     constructor() {
 
+        /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
+         * @type {{dx:number,dy:number}} */
+        this.offset_ = { dx: 0, dy: 0 };
+
+
         //the cell stroke
 
-        /** The zoom limit when to show/hide the stroke.
+        /** The zoom factor limit when to show/hide the stroke.
          * @type {number} */
         this.zfStroke_ = undefined;
 
@@ -44,6 +49,64 @@ export class Style {
     draw(cells, resolution, cg) {
         throw new Error('Method draw not implemented.');
     }
+
+
+    /**
+    * The offset
+    * This is to alter the position of all symbols in a given direction. In geographical unit.
+    * 
+    * @param {{dx:number,dy:number}} offset 
+    * @returns {this|{dx:number,dy:number}}
+    */
+    offset(offset) {
+        if (offset) {
+            this.offset_ = offset;
+            return this;
+        }
+        return this.offset_;
+    }
+    /**
+     * The zoom limit when to show/hide the stroke.
+     * 
+     * @param {number} zfStroke 
+     * @returns {this|number}
+     */
+    zfStroke(zfStroke) {
+        if (zfStroke) {
+            this.zfStroke_ = zfStroke;
+            return this;
+        }
+        return this.zfStroke_;
+    }
+
+    /**
+     * The stroke color.
+     * 
+     * @param {string} strokeColor 
+     * @returns {this|string}
+     */
+    strokeColor(strokeColor) {
+        if (strokeColor) {
+            this.strokeColor_ = strokeColor;
+            return this;
+        }
+        return this.strokeColor_;
+    }
+
+    /**
+     * The stroke line width, in pixels.
+     * 
+     * @param {number} strokeWidth 
+     * @returns {this|number}
+     */
+    strokeWidth(strokeWidth) {
+        if (strokeWidth) {
+            this.strokeWidth_ = strokeWidth;
+            return this;
+        }
+        return this.strokeWidth_;
+    }
+
 
 
 
@@ -87,48 +150,6 @@ export class Style {
             cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5), s * 0.5, 0, 2 * Math.PI, false);
             cg.ctx.stroke();
         }
-    }
-
-    /**
-     * The zoom limit when to show/hide the stroke.
-     * 
-     * @param {number} zfStroke 
-     * @returns 
-     */
-    zfStroke(zfStroke) {
-        if (zfStroke) {
-            this.zfStroke_ = zfStroke;
-            return this;
-        }
-        return this.zfStroke_;
-    }
-
-    /**
-     * The stroke color.
-     * 
-     * @param {*} strokeColor 
-     * @returns 
-     */
-    strokeColor(strokeColor) {
-        if (strokeColor) {
-            this.strokeColor_ = strokeColor;
-            return this;
-        }
-        return this.strokeColor_;
-    }
-
-    /**
-     * The stroke line width, in pixels.
-     * 
-     * @param {number} strokeWidth 
-     * @returns 
-     */
-    strokeWidth(strokeWidth) {
-        if (strokeWidth) {
-            this.strokeWidth_ = strokeWidth;
-            return this;
-        }
-        return this.strokeWidth_;
     }
 
 }
