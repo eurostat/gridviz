@@ -15,7 +15,13 @@ export const color = function () {
 
 
 
-//TODO export datasets
+//export dataset types
+
+import { CSVGrid as CSVGrid_ } from "./dataset/CSVGrid"
+export const CSVGrid = function (url, resolution, preprocess = null) {
+    return new CSVGrid_(url, resolution, preprocess)
+}
+
 
 
 
