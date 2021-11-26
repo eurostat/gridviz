@@ -15,19 +15,9 @@ import { TiledGrid } from './dataset/TiledGrid';
  */
 export class App {
 
-    //TODO style trendline
-    //TODO style radar
-
-    //TODO style make multi (or add offset?)
-    //TODO style population change as segment with orientation / width
-    //TODO styles with orientation
-    //TODO style kernel smoothing
-
-    //TODO remove unnecessary redraw calls
-    //TODO zoom/pan smartphone - use d3 events
-    //TODO implement mouse over
-    //TODO empty tile cache
-
+    /**
+     * @param {object} opts 
+     */
     constructor(opts) {
         opts = opts || {};
 
