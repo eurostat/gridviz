@@ -43,11 +43,14 @@ export class SegmentStyle extends Style {
 
         for (let c of cells) {
 
+            //get segment specs
             const or = this.orientation_(c);
             const col = this.color_(c);
             const len = this.length_(c);
             const w = this.width_(c);
-            
+
+            //draw the segment
+            cg.ctx.lineWidth = w;
 
         }
 

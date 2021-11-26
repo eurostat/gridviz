@@ -123,7 +123,7 @@ export class Style {
     drawStroke(cell, resolution, cg, shape, size) {
         if (!this.zfStroke_ || cg.zf > this.zfStroke_) return;
 
-        cg.ctx.fillStyle = this.strokeColor_;
+        cg.ctx.strokeStyle = this.strokeColor_;
         cg.ctx.lineWidth = this.strokeWidth_;
 
         //size - in ground meters
