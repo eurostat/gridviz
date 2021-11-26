@@ -4,7 +4,7 @@
 * @function addHomeButtonToDOM
 * @description adds a button element with a home icon to the DOM
 */
-export function addHomeButtonToDOM(viewer) {
+export function addHomeButtonToDOM(app) {
     // define position
     let left;
     let top;
@@ -44,7 +44,7 @@ export function addHomeButtonToDOM(viewer) {
 * @function addZoomButtonsToDOM
 * @description adds two zoom button elements to the DOM
 */
-export function addZoomButtonsToDOM(viewer) {
+export function addZoomButtonsToDOM(app) {
     //define positions
     let left;
     let zoomInTop;

@@ -15,23 +15,24 @@
 <script>
   let containerDiv = document.getElementById("viz-container");
 
-  gridviz
-    .viewer()
+  let app = gridviz
+    .app()
     .container(containerDiv)
-    .gridData(
-      {
-        url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
-        cellSize: 5,
-      },
-    )
     .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
     //.title("5km² Population Grid of Europe")
     //.zoom(1000)
     .homeButton(true)
     .zoomButtons(true)
-    .colorField("population") // csv column that will determine cell colour
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
+
+  app.addGrid(
+    {
+      url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
+      cellSize: 5,
+      colorFIeld:"population"
+    },
+  )
 </script>
 
 </html>

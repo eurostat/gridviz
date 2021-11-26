@@ -7,7 +7,7 @@ import * as Utils from "../utils/utils";
 * @function addHeadingsContainerToDOM
 * @description adds a div container for app.title and app.subtitle texts
 */
-export function addHeadingsContainerToDOM(viewer) {
+export function addHeadingsContainerToDOM(app) {
     app.headingsNode = document.createElement("div");
     app.headingsNode.classList.add("gridviz-headings-container");
     app.headingsNode.classList.add("gridviz-plugin");
@@ -20,7 +20,7 @@ export function addHeadingsContainerToDOM(viewer) {
 * @function addSelectorsContainerToDOM
 * @description adds a div container for the available dropdown selectors to the DOM
 */
-export function addSelectorsContainerToDOM(viewer) {
+export function addSelectorsContainerToDOM(app) {
     app.selectorsContainer = document.createElement("div");
     app.selectorsContainer.classList.add("gridviz-selectors");
     app.selectorsContainer.classList.add("gridviz-plugin");
@@ -33,7 +33,7 @@ export function addSelectorsContainerToDOM(viewer) {
 * @function addTitleToDOM
 * @description adds a div element for app.title to headings container 
 */
-export function addTitleToDOM(viewer) {
+export function addTitleToDOM(app) {
     let node = document.createElement("div");
     node.classList.add("gridviz-title");
     node.innerHTML = app.title_;
@@ -46,7 +46,7 @@ export function addTitleToDOM(viewer) {
 * @function addSubtitleToDOM
 * @description adds a div element for app.subtitle to headings container 
 */
-export function addSubtitleToDOM(viewer) {
+export function addSubtitleToDOM(app) {
     let node = document.createElement("div");
     node.classList.add("gridviz-subtitle");
     node.innerHTML = app.subtitle_;
@@ -60,7 +60,7 @@ export function addSubtitleToDOM(viewer) {
 * @function addCellCountToDOM
 * @description adds a div element for app.cellCount to headings container 
 */
-export function addCellCountToDOM(viewer) {
+export function addCellCountToDOM(app) {
     let node = document.createElement("div");
     node.classList.add("gridviz-cellcount");
     node.innerHTML = "Number of cells: " + Utils.formatNumber(app.cellCount);
@@ -74,7 +74,7 @@ export function addCellCountToDOM(viewer) {
 * @function addSourcesToDOM
 * @description adds a div element showing app.sourcesHTML in the bottom right corner
 */
-export function addSourcesToDOM(viewer) {
+export function addSourcesToDOM(app) {
     let node = document.createElement("div");
     node.classList.add("gridviz-sources");
     node.innerHTML = app.sourcesHTML_;

@@ -1,9 +1,9 @@
 /**
    * @description Creates an HTML Select element for the different D3 Scale-Chromatic functions
    * @function createColorSchemeDropdown
-   * @param {Object} viewer viewer object
+   * @param {Object} app app object
    */
- export function createColorSchemeDropdown(viewer) {
+ export function createColorSchemeDropdown(app) {
     let schemes = [
       {
         value: "interpolateBrBG",
@@ -186,9 +186,9 @@
   /**
    * Creates an HTML Select element for the different D3 Scale functions used to generate the colours
    * Accepted: scaleSequential or scaleDiverging & their respective variants
-   * @param {Object} viewer viewer object to append the dropdown to
+   * @param {Object} app app object to append the dropdown to
    */
-  export function createColorScaleDropdown(viewer) {
+  export function createColorScaleDropdown(app) {
     let scales = [
       {
         value: "scaleSequentialLog",
@@ -229,9 +229,9 @@
 
   /**
   * Creates an HTML Select element which allows the user to select the csv field used for colouring(colorField)
-* @param {Object} viewer viewer object
+* @param {Object} app app object
   */
-  export function createColorFieldDropdown(viewer, gridCaches) {
+  export function createColorFieldDropdown(app, gridCaches) {
     let dropdown_container = document.createElement("div");
     dropdown_container.id = "gridviz-colorfield-dropdown-container";
     dropdown_container.classList.add("gridviz-dropdown");
@@ -262,9 +262,9 @@
 
   /**
   * Creates an HTML Select element which allows the user to select the csv field used for sizing the cells (sizeField)
-* @param {Object} viewer viewer object
+* @param {Object} app app object
   */
-  export function createSizeFieldDropdown(viewer, gridCaches) {
+  export function createSizeFieldDropdown(app, gridCaches) {
     let dropdown_container = document.createElement("div");
     dropdown_container.id = "gridviz-sizefield-dropdown-container";
     dropdown_container.classList.add("gridviz-dropdown");

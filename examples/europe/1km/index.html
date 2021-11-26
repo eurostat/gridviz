@@ -26,45 +26,26 @@
   let colorScale = d3.scaleSequentialSqrt(domain, d3.interpolatePurples)
 
   let containerDiv = document.getElementById("viz-container");
-  gridviz
-    .viewer()
+  let app = gridviz
+    .app()
     .container(containerDiv)
-    .gridData(
-      {
-        url: "../../../assets/csv/Europe/1km/pop_1km.csv",
-        cellSize: 0.99,
-      },
-    )
     .title("1x1 km Grid of Europe")
-    // .subtitle("EPSG:3035")
     .cellCount(true)
     .zerosRemoved(3) //last 3 zeros were removed from dataset to improve efficiency
-    .colorField("Population") // csv column which you wish to visualize
-    .sizeField(null) // csv column which you wish to visualize
-    // .zoom(200)
     .nuts(false) //loads borders topojson
-    .geoCenter([4369, 3230]) //EPSG=3035 with last 3 zeros removed
+    .geoCenter([4369, 3230]) //EPSG:3035 with last 3 zeros removed
     .zoom(1500)
     .height(window.innerHeight - 4)
     .width(window.innerWidth - 4)
     .backgroundColor("#000")
     .lineColor("#ffffff")
     .highlightColor("cyan")
-    //.colors(["#F1CE90","#EDBA5F","#E6A530","#D76327","#C64D24","#BA191F"])
-    //.thresholds([1,55,20,200,500,5000])
-    //.colorScaleFunction(colorScale)
-    // following methods define the scales using gridviz
      .colorSchemeName("interpolateMagma")
      .colorScaleName("scaleSequentialLog")
-    // .colorSchemeSelector(true)
-    // .colorScaleSelector(true)
-    // .colorFieldSelector(true)
-    // .sizeFieldSelector(true)
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
     .legend({
       title: "Total population per km² (2011)",
       titleWidth: 130,
-      //ticks: 5,
     })
     .tooltip({
         eventType: "click", // click vs mousemove
@@ -74,6 +55,14 @@
         showCoordinates: true,
       })
     .build();
+
+    app.addGrid(
+      {
+        url: "../../../assets/csv/Europe/1km/pop_1km.csv",
+        cellSize: 0.99,
+        colorField: "Population"
+      },
+    )
 </script>
 
 </html>

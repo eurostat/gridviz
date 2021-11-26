@@ -259,7 +259,7 @@ export function updatePointsSizes(app, pointsArray) {
 * @description rebuilds array of point colours
 * @function updatePointsColors
 */
-export function updatePointsColors(app, pointsArray) {
+export function updatePointsColors(app, grid, pointsArray) {
     let colors = [];
     for (var i = 0; i < pointsArray.length; i++) {
         let hex = app.colorScaleFunction_(pointsArray[i][grid.colorField]); //d3 scale-chromatic

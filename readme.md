@@ -83,14 +83,14 @@ gridviz = require("gridviz")
 
 ## Usage
 
-Create a viewer using  ```let viewer = gridviz.viewer();``` and customise it with the methods described in the [API reference](#api-reference) below.
+Create a viewer using  ```let viewer = gridviz.app();``` and customise it with the methods described in the [API reference](#api-reference) below.
 
 Most of these methods follow the pattern app.myMethod([value]): If a value is specified, the method sets the parameter value and returns the viewer object itself. If no value is specified, then the method returns the current value of the parameter.
 
 Here's a barebones example that loads a CSV containing population data for a 5x5 km grid of europe:
 
 ```javascript
-    let viz = gridviz.viewer()
+    let viz = gridviz.app()
         .container(containerDiv)
         .gridData(
             {
@@ -128,7 +128,7 @@ x,y,time
 
 Here you will find information on how to use the functions available for configuring a gridviz app. Like D3, gridviz uses a method chaining syntax (as shown in the barebones example above).
 
-First create a viewer with ``let viewer = gridviz.viewer() ``.
+First create a viewer with ``let viewer = gridviz.app() ``.
 
 Then configure it using the methods in the table below. The methods follow the pattern: ``app.method([value])``.
 

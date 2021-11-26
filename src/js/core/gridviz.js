@@ -27,9 +27,8 @@ import * as Placenames from "./placenames/placenames.js";
 import * as Legend from "./legend/legend.js";
 import * as Camera from "./camera/camera.js";
 import * as Zoom from "./zoom/zoom.js";
-import * as Dropdowns from "./gui/dropdowns.js";
-import * as Gui from "./gui/gui.js";
 import * as Buttons from "./gui/buttons.js";
+import * as Gui from "./gui/gui.js";
 import * as Points from "./layers/points.js";
 import * as Viewer from "./viewer/viewer.js";
 
@@ -187,14 +186,19 @@ export function app(options) {
 
   // other variables
   let previousIntersect;
-  let gridCaches = {};
 
-  // grid data
+  //grid data / configs
+  let gridCaches = {}; //resolution: pointsArray
+  let gridConfigs = {}; //resolution: config
+
+
+  // Grid object for addGrid(Grid)
   /**
  * @typedef {Object} Grid
  * @property {number} url - URL of the csv file to retrieve
  * @property {number} cellSize - Size of the cell in the same unit system as the coordinates. e.g 1 km² grid in EPSG:3035 with zerosRemoved set to 3 has a cellSize of 1 (without the zerosRemoved it would be 1000)
- */
+ * @property {string} colorField - csv column holding the data to be used for data-driven colour
+  */
 
 
 
@@ -240,8 +244,9 @@ export function app(options) {
           if (csv) {
             //validate csv
             if (csv[0].x && csv[0].y && csv[0][grid.colorField]) {
-
-              //set app resolution (new grid cell size)
+              // save grid config
+              gridConfigs[grid.cellSize] = grid;
+              // set app resolution (new grid cell size)
               app.currentResolution_ = grid.cellSize;
               // set raycaster threshold
               app.raycaster.params.Points.threshold = grid.cellSize;
@@ -776,7 +781,7 @@ export function app(options) {
     Tooltip.hideTooltip()
     app.colorSchemeName_ = scheme;
     updateColorScale();
-    Points.updatePointsColors(app, gridCaches[app.pointsLayer.cellSize]);
+    Points.updatePointsColors(app, gridConfigs[app.currentResolution_], gridCaches[app.currentResolution_]);
     if (app.legend_) {
       Legend.updateLegend(app);
     }

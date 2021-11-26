@@ -22,22 +22,16 @@
 
     let containerDiv = document.getElementById("viz-container");
 
-    gridviz
-      .viewer()
+    let viz = gridviz
+      .app()
       .container(containerDiv)
-      .gridData(
-        {
-          // url: "https://raw.githubusercontent.com/eurostat/gridviz/development/assets/csv/Europe/1km/accs.csv",
-          url: "../../assets/csv/Europe/1km/healthcare_acc.csv",
-          cellSize: 1,
-        },
-      )
+
       .cellCount(true)
       .zoom(4000)
       .geoCenter([4369, 3230])
       .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
       .title("Healthcare accessiblity")
-      .colorField("avg_time") // csv column that will determine cell colour
+
       .showPlacenames(true)
       .colorSchemeName("interpolateCividis")
       //.reverseColorScheme(false)
@@ -56,5 +50,14 @@
       })
       //.sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
       .build();
+
+      viz.addGrid(
+        {
+          // url: "https://raw.githubusercontent.com/eurostat/gridviz/development/assets/csv/Europe/1km/accs.csv",
+          url: "../../assets/csv/Europe/1km/healthcare_acc.csv",
+          cellSize: 1,
+          colorField: "avg_time"
+        },
+      )
   </script>
 </html>

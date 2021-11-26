@@ -13,7 +13,10 @@ import { select } from "d3-selection";
 import { CSS2DRenderer } from "../../lib/threejs/CSS2D/CSS2DRenderer";
 
 import * as Utils from "../utils/utils";
+import * as GUI from "../gui/gui";
 import * as Camera from "../camera/camera.js";
+import * as Dropdowns from "../gui/dropdowns.js";
+
 
 export const build = function (app) {
     // check that settings are valid
@@ -68,12 +71,12 @@ export const build = function (app) {
 
         // dropdowns DOM container
         if (app.colorSchemeSelector_ || app.colorScaleSelector_ || app.sizeFieldSelector_ || app.colorFieldSelector_) {
-            Gui.addSelectorsContainerToDOM(app);
+            GUI.addSelectorsContainerToDOM(app);
         }
         // colour selector added here. Data-dependent dropdowns added once grid data is loaded
         if (app.colorSchemeSelector_) {
             Dropdowns.createColorSchemeDropdown(app);
-            addChangeEventToColorSchemeDropdown();
+            //addChangeEventToColorSchemeDropdown();
         }
 
         //load initial data
