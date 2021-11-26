@@ -113,6 +113,7 @@ export class CompositionStyle extends Style {
     }
 
 
+    //TODO document and generalise
     type(type_) {
         if (type_) {
             this.type_ = type_;
