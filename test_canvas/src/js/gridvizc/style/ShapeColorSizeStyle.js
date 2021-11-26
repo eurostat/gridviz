@@ -77,7 +77,7 @@ export class ShapeColorSizeStyle extends Style {
             }
 
             //draw stroke
-            this.drawStroke(cell, resolution, cg, this.shape, this.size)
+            this.drawStroke(cell, resolution, cg, this.shape_, this.size_)
         }
 
     }
