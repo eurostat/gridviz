@@ -60,18 +60,64 @@ export class SegmentStyle extends Style {
 
             //get direction
             const dx = 0.5 * len * Math.cos(or) / cg.zf,
-            dy = 0.5 * len * Math.sin(or) / cg.zf;
+                dy = 0.5 * len * Math.sin(or) / cg.zf;
 
             //draw segment
             cg.ctx.beginPath();
-            cg.ctx.moveTo(cx-dx, cy-dy);
-            cg.ctx.lineTo(cx+dx, cy+dy);
+            cg.ctx.moveTo(cx - dx, cy - dy);
+            cg.ctx.lineTo(cx + dx, cy + dy);
             cg.ctx.stroke();
         }
 
     }
 
 
-    //TODO getters and setters
+    /**
+     * @param {function} orientation 
+     * @returns {this|function}
+     */
+    orientation(orientation) {
+        if (orientation) {
+            this.orientation_ = orientation;
+            return this
+        }
+        return this.orientation_
+    }
+
+    /**
+     * @param {function} color 
+     * @returns {this|function}
+     */
+    color(color) {
+        if (color) {
+            this.color_ = color;
+            return this
+        }
+        return this.color_
+    }
+
+    /**
+     * @param {function} length 
+     * @returns {this|function}
+     */
+    length(length) {
+        if (length) {
+            this.length_ = length;
+            return this
+        }
+        return this.length_
+    }
+
+    /**
+     * @param {function} width 
+     * @returns {this|function}
+     */
+    width(width) {
+        if (width) {
+            this.width_ = width;
+            return this
+        }
+        return this.width_
+    }
 
 }
