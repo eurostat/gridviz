@@ -21,13 +21,13 @@ export class ShapeColorSizeStyle extends Style {
         super()
 
         /** @type {function} */
-        this.color = color;
+        this.color_ = color;
 
         /** @type {function} */
-        this.size = size;
+        this.size_ = size;
 
         /** @type {function} */
-        this.shape = shape;
+        this.shape_ = shape;
     }
 
 
@@ -41,21 +41,21 @@ export class ShapeColorSizeStyle extends Style {
     draw(cells, resolution, cg) {
 
         //if size is used, sort cells by size so that the biggest are drawn first
-        if (this.size)
-            cells.sort((c1, c2) => ( this.size(c2) - this.size(c1) ));
+        if (this.size_)
+            cells.sort((c1, c2) => ( this.size_(c2) - this.size_(c1) ));
 
         for (let cell of cells) {
 
             //color
-            cg.ctx.fillStyle = this.color ? this.color(cell) : "#EA6BAC";
+            cg.ctx.fillStyle = this.color ? this.color_(cell) : "#EA6BAC";
 
             //size - in ground meters
-            let sG = this.size ? this.size(cell) : resolution;
+            let sG = this.size_ ? this.size_(cell) : resolution;
             //size - in pixel
             const s = sG / cg.zf
 
             //get shape
-            const shape = this.shape ? this.shape(cell) : "square";
+            const shape = this.shape_ ? this.shape_(cell) : "square";
             if (shape === "square") {
                 //draw square
                 const d = resolution * (1 - sG / resolution) * 0.5
@@ -80,6 +80,44 @@ export class ShapeColorSizeStyle extends Style {
             this.drawStroke(cell, resolution, cg, this.shape, this.size)
         }
 
+    }
+
+
+
+    /**
+     * @param {function} color 
+     * @returns {this|function}
+     */
+     color(color) {
+        if (color) {
+            this.color_ = color;
+            return this
+        }
+        return this.color_
+    }
+
+    /**
+     * @param {function} size 
+     * @returns {this|function}
+     */
+     size(size) {
+        if (size) {
+            this.size_ = size;
+            return this
+        }
+        return this.size_
+    }
+
+    /**
+     * @param {function} shape 
+     * @returns {this|function}
+     */
+     shape(shape) {
+        if (shape) {
+            this.shape_ = shape;
+            return this
+        }
+        return this.shape_
     }
 
 }
