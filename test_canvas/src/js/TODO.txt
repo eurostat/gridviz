@@ -1,10 +1,11 @@
 
-
+TODO generic get x/y
 
 TODO style radar
 TODO style trendline
 TODO style kernel smoothing
 TODO fix segment
+TODO FR
 
 TODO remove unnecessary redraw calls
 TODO zoom/pan smartphone - use d3 events
