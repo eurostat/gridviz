@@ -39,7 +39,7 @@
                 "Ind_inc": "gray"
             },
             c => "flag",
-            c => Math.log(1+c["Ind"]*10)
+            c => 10*Math.sqrt(c["Ind"])
         ).zfStroke(5);
 
 

@@ -75,7 +75,7 @@ export class App {
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
      */
-    add(dataset, styles, minZoom, maxZoom) {
+    addLayer(dataset, styles, minZoom, maxZoom) {
         this.layers.push(new Layer(dataset, styles, minZoom, maxZoom));
     }
 
@@ -89,7 +89,7 @@ export class App {
      * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      */
     addTiledGrid(url, styles, minZoom, maxZoom, preprocess = null) {
-        this.add(
+        this.addLayer(
             new TiledGrid(url, preprocess).loadInfo(() => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
@@ -107,7 +107,7 @@ export class App {
      * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      */
     addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null) {
-        this.add(
+        this.addLayer(
             new CSVGrid(url, resolution, preprocess).getData(null, () => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
