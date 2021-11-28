@@ -1,6 +1,10 @@
-- By Color: https://eurostat.github.io/gridviz/test_canvas/test/color.html and https://eurostat.github.io/gridviz/test_canvas/test/color_diverging.html
+- By Color:
+  - https://eurostat.github.io/gridviz/test_canvas/test/color.html
+  - https://eurostat.github.io/gridviz/test_canvas/test/color_diverging.html
 - By size: https://eurostat.github.io/gridviz/test_canvas/test/size.html
-- Composition: https://eurostat.github.io/gridviz/test_canvas/test/composition.html and https://eurostat.github.io/gridviz/test_canvas/test/multi.html
+- Composition:
+  - https://eurostat.github.io/gridviz/test_canvas/test/composition.html
+  - https://eurostat.github.io/gridviz/test_canvas/test/multi.html
 - Segment orientation: https://eurostat.github.io/gridviz/test_canvas/test/segment.html
 - Profile: https://eurostat.github.io/gridviz/test_canvas/test/linestyle.html
 - Combination: https://eurostat.github.io/gridviz/test_canvas/test/combination.html
