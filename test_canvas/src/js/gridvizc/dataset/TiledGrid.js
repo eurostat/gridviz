@@ -152,6 +152,9 @@ export class TiledGrid extends Dataset {
         /** @type {Array.<Cell>} */
         let cells = []
 
+        //check if info has been loaded
+        if(!this.info) return cells;
+
         //tiles within the scope
         /** @type {Envelope} */
         const tb = this.getTilingEnvelope(extGeo);
