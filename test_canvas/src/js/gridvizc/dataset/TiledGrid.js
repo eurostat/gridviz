@@ -120,9 +120,12 @@ export class TiledGrid extends Dataset {
                             this.cache[xT][yT] = tile_;
 
                             //execute preprocess, if any
-                            if (this.preprocess) for (const c of tile_.cells) this.preprocess(c);
+                            if (this.preprocess)
+                                for (const c of tile_.cells)
+                                    this.preprocess(c);
 
                             //execute the callback, usually a draw function
+                            //TODO launch redraw only if the tile is still in the view
                             if (callback) callback()
                         })
                     .catch(() => {
