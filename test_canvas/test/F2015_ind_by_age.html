@@ -21,28 +21,42 @@
 
         //make application
         const app = gviz.App()
+            .geoCenter({ x: 4000000, y: 2260000 }).zoomFactor(100).backgroundColor("black")
 
-        //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
-        app.geoCenter({ x: 135000, y: 456000 }).zoomFactor(3)
+        const col = gviz.color().interpolateRdBu;
         const s = gviz.CompositionStyle(
-            { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
+            {
+                "Ind_0_3": col(0),
+                "Ind_4_5": col(4 / 80),
+                "Ind_6_10": col(6 / 80),
+                "Ind_11_17": col(11 / 80),
+                "Ind_18_24": col(18 / 80),
+                "Ind_25_39": col(25 / 80),
+                "Ind_40_54": col(40 / 80),
+                "Ind_55_64": col(55 / 80),
+                "Ind_65_79": col(65 / 80),
+                "Ind_80p": col(1),
+                "Ind_inc": "gray"
+            },
             c => "flag",
-            c => 5 * Math.sqrt((c["Inhabitants"]))
-        ).zfStroke(5);
-        app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
-            c => {
-                c.x *= 100; c.y *= 100;
-                if (c["Population under 14"] < 0) c["Population under 14"] = 0;
-                if (c["Population over 65"] < 0) c["Population over 65"] = 0;
-                c["pop_"] = c["Inhabitants"] - c["Population under 14"] - c["Population over 65"];
-            })
+            null//c => 5 * Math.sqrt((c["Ind"]))
+        ).zfStroke(15);
 
+
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 200);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m//", [s], 200, 400);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/1000m//", [s], 400, 1000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/2000m//", [s], 1000, 2000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/5000m//", [s], 2000, 5000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/10000m//", [s], 5000, 10000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/20000m//", [s], 10000, 20000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/50000m//", [s], 20000, 9999999999);
 
         //combo list
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
             //change style type
-            s.type(c=>select.value)
+            s.type(c => select.value)
             //redraw
             app.cg.redraw();
         });
