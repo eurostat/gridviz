@@ -21,7 +21,7 @@
 
         //make application
         const app = gviz.App()
-            .geoCenter({ x: 4000000, y: 2260000 }).zoomFactor(100).backgroundColor("black")
+            .geoCenter({ x: 4000000, y: 2260000 }).zoomFactor(100)//.backgroundColor("black")
 
         const col = gviz.color().interpolateRdYlBu;
         const s = gviz.CompositionStyle(
@@ -39,7 +39,7 @@
                 "Ind_inc": "gray"
             },
             c => "flag",
-            c => 10*Math.sqrt(c["Ind"])
+            c => 8 * Math.pow(c["Ind"], 0.5)
         ).zfStroke(5);
 
 
