@@ -86,7 +86,7 @@ export class TiledGrid extends Dataset {
      */
     getData(e, callback) {
 
-        //TODO empty cache when it becomes too big.
+        //TODO empty cache when it gets too big ?
 
         //tiles within the scope
         /** @type {Envelope} */
@@ -125,8 +125,8 @@ export class TiledGrid extends Dataset {
                                     this.preprocess(c);
 
                             //execute the callback, usually a draw function
-                            //TODO launch redraw only if the tile is still in the view
-                            if (callback) callback()
+                            if (tile_.needToLaunchRedraw() && callback)
+                                callback()
                         })
                     .catch(() => {
                         //mark as failed

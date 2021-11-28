@@ -49,4 +49,18 @@ export class GridTile {
         }
     }
 
+
+    /**
+     * Check if the tile need to be drawn after receiving its data from http request.
+     * That is if:
+     * 1- the til is still within the viewer geo extent.
+     * AND 2- the tile belongs to a layer whose zoom extent is within the current viewer zoom level.
+     * @returns {boolean}
+     */
+    needToLaunchRedraw() {
+
+        //TODO check redraw condition
+
+        return true;
+    }
 }
