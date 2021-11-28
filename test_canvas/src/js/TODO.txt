@@ -1,8 +1,10 @@
+TODO remove unnecessary redraw calls
+TODO zoom/pan smartphone - use d3 events
+TODO implement mouse over
+
 TODO test GriddedStatsTiler2
 TODO fix tiler rounding issue
-TODO remove unnecessary redraw calls
-TODO FR
-x,y,Ind,Ind_0_3,Ind_11_17,Ind_18_24,Ind_25_39,Ind_40_54,Ind_4_5,Ind_55_64,Ind_65_79,Ind_6_10,Ind_80p,Ind_inc,Ind_snv,Men,Men_pauv
+
 TODO make generic get x/y ?
 
 TODO style radar
@@ -10,7 +12,5 @@ TODO style trendline
 TODO style kernel smoothing
 TODO fix segment
 
-TODO zoom/pan smartphone - use d3 events
-TODO implement mouse over
 TODO empty tile cache
 
