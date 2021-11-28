@@ -66,17 +66,6 @@ export class App {
 
     }
 
-    /** */
-    redrawWhenNecessary() {
-
-        //TODO do not redraw it if it is no longer necessary
-        //that is if another redraw with another zoom level has been triggered (?)
-        //hasZoomedSinceLastCall()
-        //if(XXX) return;
-
-        this.cg.redraw();
-    }
-
 
     /**
      * Add a layer.
@@ -101,7 +90,7 @@ export class App {
      */
     addTiledGrid(url, styles, minZoom, maxZoom, preprocess = null) {
         this.add(
-            new TiledGrid(url, preprocess).loadInfo(() => { this.redrawWhenNecessary(); }),
+            new TiledGrid(url, preprocess).loadInfo(() => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
     }
@@ -119,7 +108,7 @@ export class App {
      */
     addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null) {
         this.add(
-            new CSVGrid(url, resolution, preprocess).getData(null, () => { this.redrawWhenNecessary(); }),
+            new CSVGrid(url, resolution, preprocess).getData(null, () => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
     }

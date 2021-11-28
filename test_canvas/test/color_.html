@@ -16,12 +16,12 @@
 
         //define datasets, styles and layers
         const s = gviz.ShapeColorSizeStyle(
-            c => gviz.color().interpolateOrRd(Math.pow(c["Ind"],0.5)/100),
+            c => gviz.color().interpolateOrRd(Math.pow(c["Ind"],0.5)/20),
             null,
             c => "square"
-        ).zfStroke(50);
+        ).zfStroke(15);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 100);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m//", [s], 0, 200);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m//", [s], 100, 200);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/1000m//", [s], 200, 500);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/2000m//", [s], 500, 1000);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/5000m//", [s], 1000, 2000);
