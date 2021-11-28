@@ -1,3 +1,5 @@
+# Tests
+
 - By Color:
   - https://eurostat.github.io/gridviz/test_canvas/test/color.html
   - https://eurostat.github.io/gridviz/test_canvas/test/color_diverging.html
@@ -9,7 +11,8 @@
 - Profile: https://eurostat.github.io/gridviz/test_canvas/test/linestyle.html
 - Combination: https://eurostat.github.io/gridviz/test_canvas/test/combination.html
 
-France - 200m (Filosofi 2015)
+# France - 200m (Filosofi 2015)
+
 - Population: https://eurostat.github.io/gridviz/test_canvas/test/F2015_ind.html
 - Population by age: https://eurostat.github.io/gridviz/test_canvas/test/F2015_ind_by_age.html
 - Poverty: https://eurostat.github.io/gridviz/test_canvas/test/F2015_men_pauv.html
