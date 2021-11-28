@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <title></title>
+</head>
+
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif;">
+    <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
+    <script src="../build/gridvizc.js"></script>
+    <script>
+
+        //make application
+        const app = gviz.App()
+            .geoCenter({ x: 4000000, y: 2260000 }).zoomFactor(100)
+
+        //define datasets, styles and layers
+        const s = gviz.ShapeColorSizeStyle(
+            c => gviz.color().interpolateOrRd(Math.pow(c["Ind"],0.5)/100),
+            null,
+            c => "square"
+        ).zfStroke(50);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/5000m//", [s], 0, 9999999999);
+
+    </script>
+</body>
+
+</html>
