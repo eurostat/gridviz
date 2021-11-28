@@ -1,12 +1,12 @@
-- By Color: color.html and color_diverging.html
-- By size: size.html
-- Composition: composition.html and multi.html
-- Segment orientation: segment.html
-- Profile: linestyle.html
-- Combination: combination.html
+- By Color: https://eurostat.github.io/gridviz/test_canvas/test/color.html and https://eurostat.github.io/gridviz/test_canvas/test/color_diverging.html
+- By size: https://eurostat.github.io/gridviz/test_canvas/test/size.html
+- Composition: https://eurostat.github.io/gridviz/test_canvas/test/composition.html and https://eurostat.github.io/gridviz/test_canvas/test/multi.html
+- Segment orientation: https://eurostat.github.io/gridviz/test_canvas/test/segment.html
+- Profile: https://eurostat.github.io/gridviz/test_canvas/test/linestyle.html
+- Combination: https://eurostat.github.io/gridviz/test_canvas/test/combination.html
 
 France - 200m (Filosofi 2015)
-- Population: F2015_ind.html
-- Population by age: F2015_ind_by_age.html
-- Poverty: F2015_men_pauv.html
-- Income: F2015_niv_vie.html
+- Population: https://eurostat.github.io/gridviz/test_canvas/test/F2015_ind.html
+- Population by age: https://eurostat.github.io/gridviz/test_canvas/test/F2015_ind_by_age.html
+- Poverty: https://eurostat.github.io/gridviz/test_canvas/test/F2015_men_pauv.html
+- Income: https://eurostat.github.io/gridviz/test_canvas/test/F2015_niv_vie.html
