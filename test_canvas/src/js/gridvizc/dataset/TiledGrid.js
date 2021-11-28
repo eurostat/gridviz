@@ -80,17 +80,20 @@ export class TiledGrid extends Dataset {
     /**
      * Request data within a geographic envelope.
      * 
-     * @param {Envelope} e 
+     * @param {Envelope} extGeo 
      * @param {function} callback
      * @returns {this}
      */
-    getData(e, callback) {
+    getData(extGeo, callback) {
 
         //TODO empty cache when it gets too big ?
 
+        //check if info has been loaded
+        if(!this.info) return;
+
         //tiles within the scope
         /** @type {Envelope} */
-        const tb = this.getTilingEnvelope(e);
+        const tb = this.getTilingEnvelope(extGeo);
 
         //grid bounds
         /** @type {Envelope} */

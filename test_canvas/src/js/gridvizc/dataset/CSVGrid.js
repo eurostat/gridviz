@@ -32,6 +32,8 @@ export class CSVGrid extends Dataset {
      */
     getData(e, callback) {
 
+        //TODO ensure it is not loading twice ?
+
         //check if data already loaded
         if(this.cells) return this;
 
