@@ -7,7 +7,7 @@ let loading_text;
 
 
 export function getCurrentViewExtent(app) {
-  var elem = app.renderer.domElement;
+  var elem = app.viewer.renderer.domElement;
   let clientBottomLeft = [elem.clientLeft, elem.clientHeight];
   let clientTopRight = [elem.clientWidth, elem.clientTop];
   let bottomLeftWorld = getWorldCoordsFromScreen(app, clientBottomLeft); //client x,y
@@ -58,10 +58,10 @@ function getWorldCoordsFromScreen(app, [clientX, clientY]) {
     -(clientY / window.innerHeight) * 2 + 1,
     0.5
   );
-  vec.unproject(app.camera);
-  vec.sub(app.camera.position).normalize();
-  var distance = -app.camera.position.z / vec.z;
-  pos.copy(app.camera.position).add(vec.multiplyScalar(distance));
+  vec.unproject(app.viewer.camera.camera);
+  vec.sub(app.viewer.camera.camera.position).normalize();
+  var distance = -app.viewer.camera.camera.position.z / vec.z;
+  pos.copy(app.viewer.camera.camera.position).add(vec.multiplyScalar(distance));
   if (app._mobile) {
     if (app.mobileCoordScaleX && app.mobileCoordScaleY) {
       pos.x = Math.round(app.mobileCoordScaleX.invert(pos.x))
@@ -123,7 +123,7 @@ export function createLoadingText(container) {
 export function showLoading() {
   loading_spinner.style.display = "block";
   if (loading_text) loading_text.style.display = "block";
-  
+
 }
 
 /**
@@ -170,11 +170,20 @@ export function getZFromScale(height, fov, scale) {
   return camera_z_position;
 }
 
-  //native replication of lodash's "sortBy"
-  export function sortBy (key) {
-    return (a, b) => (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0);
-  };
+//native replication of lodash's "sortBy"
+export function sortBy(key) {
+  return (a, b) => (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0);
+};
 
 function toRadians(angle) {
   return angle * (Math.PI / 180);
+}
+
+export function checkIfMobile() {
+  // TODO: replace userAgent with screen threshold (this apprently userAgent is no longer standard)
+  if (/Mobi|Android/i.test(navigator.userAgent)) {
+    return true
+  } else {
+    return false
+  }
 }

@@ -94,8 +94,8 @@ export function addPointsToScene(app, grid, pointsArray) {
             let x = parseFloat(coords[0]);
             let y = parseFloat(coords[1]);
             let z = CONSTANTS.point_z;
-            let indicator = pointsArray[i][grid.colorField];
-            let hex = getCellColor(app, indicator);
+            let stat = pointsArray[i][grid.colorField];
+            let hex = getCellColor(app, stat);
             pointsArray[i].color = hex; //save for tooltip
             let color = new Color(hex);
 
@@ -157,7 +157,7 @@ export function addPointsToScene(app, grid, pointsArray) {
         if (!app.pointsLayer) {
             app.pointsLayer = new Points(app.pointsGeometry, app.pointsMaterial);
             app.pointsLayer.renderOrder = 1; //bottom
-            app.scene.add(app.pointsLayer);
+            app.viewer.scene.add(app.pointsLayer);
         } else {
             //overwrite current la
             app.pointsLayer.geometry = app.pointsGeometry;
@@ -183,12 +183,12 @@ export function addPointsToScene(app, grid, pointsArray) {
             let hex = getCellColor(app, pointsArray[i][grid.colorField]);
             pointsArray[i].color = hex; //save for tooltip
             let color = new Color(hex);
- 
+
             let x = parseFloat(pointsArray[i].x);
             let y = parseFloat(pointsArray[i].y);
-            
-            const bar = getBar(x, y, grid.cellSize, grid.cellSize,height,color);
-            bar.lookAt(new Vector3(x,y,0.0001));
+
+            const bar = getBar(x, y, grid.cellSize, grid.cellSize, height, color);
+            bar.lookAt(new Vector3(x, y, 0.0001));
             bars.add(bar);
         }
 
@@ -199,7 +199,7 @@ export function addPointsToScene(app, grid, pointsArray) {
 
         // add bars to the app
         app.pointsLayer = bars;
-        app.scene.add(bars);
+        app.viewer.scene.add(bars);
 
     }
 
@@ -210,14 +210,14 @@ function getCellColor(app, value) {
     if (hex == "rgb(NaN, NaN, NaN)") {
         hex = "#000"; //fallback to black
     }
-return hex;
+    return hex;
 
 }
 
-function getBar(x, y,width,length, height, color) {
+function getBar(x, y, width, length, height, color) {
 
 
-    const geometry = new BoxBufferGeometry(width,length, height);
+    const geometry = new BoxBufferGeometry(width, length, height);
     const material = new MeshBasicMaterial({ color: color });
     const bar = new Mesh(geometry, material);
 
@@ -230,7 +230,7 @@ function getBar(x, y,width,length, height, color) {
 
     bar.position.x = x;
     bar.position.y = y;
-    bar.position.z = 0.001 + (height/2);
+    bar.position.z = 0.001 + (height / 2);
 
     return bar;
 }

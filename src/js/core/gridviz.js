@@ -13,32 +13,26 @@ import {
 } from "three";
 import { WEBGL } from '../lib/threejs/WebGL'
 
-
-// for loading NUTS2json 
-import { feature } from "topojson";
-// gridviz constants
-import * as CONSTANTS from "./constants.js";
-// utility functions
-import * as Utils from "./utils/utils";
 // gridviz modules
 import * as Geojson from "./layers/geojson.js";
 import * as Tooltip from "./tooltip/tooltip.js";
 import * as Placenames from "./placenames/placenames.js";
 import * as Legend from "./legend/legend.js";
-import * as Camera from "./camera/camera.js";
+import { Camera } from "./camera/camera.js";
 import * as Zoom from "./zoom/zoom.js";
 import * as Buttons from "./gui/buttons.js";
-import * as Gui from "./gui/gui.js";
 import * as Points from "./layers/points.js";
 import * as Dropdowns from "./gui/dropdowns.js";
+import * as GUI from "./gui/gui";
+import { Viewer } from "./viewer/viewer.js";
 
-import * as Viewer from "./viewer/viewer.js";
-
-//TODO list:
-// - mobile pan & zoom bug when using method app.geoCenter([x,y])
+//other 
+import { feature } from "topojson";
+import * as CONSTANTS from "./constants.js";
+import * as Utils from "./utils/utils";
 
 /**
- * Creates a Three.js scene for visualizing point data derived from gridded statistics.
+ * Creates a Three.js scene for visualizing x/y data derived from gridded statistics.
  *
  * @author Joseph Davies, Julien Gaffuri
  * @description Generates a Three.js scene for visualizing large point datasets using WebGL. The library follows a similar structure to that of d3, where parameters are set using a series of accessor functions, each of which returns the main app.
@@ -47,10 +41,15 @@ import * as Viewer from "./viewer/viewer.js";
  * 
  */
 export function app(options) {
-  //TODO: move default configs to their respective modules
+  //TODO: allow config as object (options)
+  //TODO: move configurations to their respective modules
 
-  //output object
+  //output
   let app = {};
+
+  app.container_ = document.body;
+  app.height_ = null; //takes container width/height
+  app.width_ = null;
 
   //threejs scene (2D = orthographic, 3D = Orbital)
   app.mode_ = '2D';
@@ -59,10 +58,7 @@ export function app(options) {
   //debugging
   app.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
 
-  //default styles
-  app.container_ = document.body;
-  app.height_ = null; //takes container width/height
-  app.width_ = null;
+  // TODO: move to abstract layer class:
   app.backgroundColor_ = "#ffffff";
   app.lineColor_ = "rgb(0, 0, 0)";
   app.lineWidth_ = 0.0012;
@@ -75,15 +71,7 @@ export function app(options) {
   app.__Legend; // legend stored here
 
   // default tooltip config
-  app.tooltip_ = {
-    eventType: "mousemove", // click vs mousemove
-    showLAU: false,
-    showEPSG: false,
-    showNUTS: false,
-    showCoordinates: false,
-    xOffset: 15,
-    yOffset: 15
-  };
+  app.tooltip_ = Tooltip.defaultTooltipConfig;
 
   //d3 Scaling & colouring stuff
   app.colorSchemeName_ = "interpolateBlues";
@@ -138,7 +126,7 @@ export function app(options) {
   app.zoom_ = null; //initial camera position Z
   app.mobileCellSize_ = null; //cell size for mobiles
 
-  //definition of generic accessors based on the name of each parameter name
+  //definition of generic accessors based on the name of each parameter
   for (var p in app)
     (function () {
       var p_ = p;
@@ -163,18 +151,9 @@ export function app(options) {
     return app;
   };
 
-  // properties that are not exposed via accessor methods
+  // internal properties
   app.pointsLayer = null; //threejs layer that will contain the grid "points"
-  app.scene = null; //three.js scene
   app.animating = false;
-
-  app.cameraConfig = {
-    near_ : null,
-    far_ : null, //set min zoom
-    fov_ : null,
-    aspect_ : null
-  } //threejs camera settings
-  app.cameraConfig
 
   // other variables
   let previousIntersect;
@@ -192,10 +171,8 @@ export function app(options) {
  * @property {string} colorField - csv column holding the data to be used for data-driven colour
   */
 
-
-
   /**
-   *  TODO: return a promise once build is complete
+   *  TODO: resolve a promise once build is complete
    *
    * @function build
    * @description Clears the canvas, builds the three.js app and appends grid data
@@ -204,29 +181,104 @@ export function app(options) {
     //check if WebGL compatible device
     if (WEBGL.isWebGLAvailable()) {
 
-      // build threeJS app
-      Viewer.build(app)
+      // check that settings are valid
+      let valid = validateInputs(app);
 
-      // load NUTS if required
-      if (app.nuts_) {
-        loadNuts2json(
-          CONSTANTS.nuts_base_URL +
-          app.EPSG_ +
-          "/" +
-          app.nutsSimplification_ +
-          "/" + app.nutsLevel_ + ".json"
-        );
+      if (valid) {
+
+        app._isMobile = Utils.checkIfMobile();
+
+        //set width/height if unspecified by user
+        if (!app.width_) app.width_ = getDefaultAppWidth(app);
+        if (!app.height_) app.height_ = getDefaultAppHeight(app);
+
+        // default zoom if unspecified
+        if (!app.zoom_) app.zoom_ = 1000;
+
+        // build threeJS viewer
+        app.viewer = new Viewer({
+          width: app.width_,
+          height: app.height_,
+          container: app.container_,
+          isMobile: app._isMobile,
+          zoom: app.zoom_
+        });
+        //Viewer.build(app)
+
+        // load NUTS if required
+        if (app.nuts_) {
+          loadNuts2json(
+            CONSTANTS.nuts_base_URL +
+            app.EPSG_ +
+            "/" +
+            app.nutsSimplification_ +
+            "/" + app.nutsLevel_ + ".json"
+          );
+        }
+
+        //add dropdowns
+        // dropdowns DOM container
+        if (this.colorSchemeSelector_ || this.colorScaleSelector_ || this.sizeFieldSelector_ || this.colorFieldSelector_) {
+          GUI.addSelectorsContainerToDOM(this);
+        }
+        // colour selector added here. Data-dependent dropdowns added once grid data is loaded
+        if (this.colorSchemeSelector_) {
+          Dropdowns.createColorSchemeDropdown(this);
+        }
+
+        return app;
+
+      } else {
+        Utils.hideLoading();
+        let msg = "invalid inputs";
+        console.error(msg);
+        alert(msg)
+        return;
       }
 
-      return app;
     } else {
-
       // warn user that their device is not compatible with WebGL
       const warning = WEBGL.getWebGLErrorMessage();
       document.getElementById('container').appendChild(warning);
 
     }
   };
+
+  function getDefaultAppWidth(app) {
+    if (app.container_.clientWidth == window.innerWidth) {
+      return app.container_.clientWidth - 1;
+    } else {
+      return app.container_.clientWidth
+    }
+  }
+
+  function getDefaultAppHeight(app) {
+    if (app.container_.clientHeight == "0") {
+      //if container element has no defined height, use screen height
+     return window.innerHeight - 1;
+    } else {
+     return app.container_.clientHeight
+    }
+  }
+
+  /**
+*
+*
+* @function validateInputs
+* @description validates user inputs when initializing the app
+*/
+  function validateInputs(app) {
+    if (app.colors_ && app.thresholds_) {
+      if (app.colors_.length !== app.thresholds_.length) {
+        alert("The number of colors and thesholdvalues must be equal")
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
 
   app.addGrid = function (grid) {
     Utils.showLoading();
@@ -241,7 +293,7 @@ export function app(options) {
               // set app resolution (new grid cell size)
               app.currentResolution_ = grid.cellSize;
               // set raycaster threshold
-              app.raycaster.params.Points.threshold = grid.cellSize;
+              app.viewer.raycaster.params.Points.threshold = grid.cellSize;
 
               app.cellCount = csv.length;
               app._cellFields = Object.keys(csv[0]).filter(key => key !== 'x' && key !== 'y'); // cell properties
@@ -288,7 +340,7 @@ export function app(options) {
                 app.currentResolution_ = newResolution;
                 grid.cellSize = newResolution;
                 app.pointSize = newResolution;
-                app.raycaster.params.Points.threshold = newResolution;
+                app.viewer.raycaster.params.Points.threshold = newResolution;
                 //scale center coords
                 if (app.center_) {
                   app.center_[0] = app.mobileCoordScaleX(app.center_[0]);
@@ -311,7 +363,7 @@ export function app(options) {
                 // app.currentResolution_ = newResolution;
                 grid.cellSize = newResolution;
                 app.pointSize = newResolution;
-                app.raycaster.params.Points.threshold = newResolution;
+                app.viewer.raycaster.params.Points.threshold = newResolution;
                 //scale center coords
                 if (app.center_) {
                   app.center_[0] = app.mobileCoordScaleX(app.center_[0]);
@@ -369,13 +421,11 @@ export function app(options) {
               }
             }
 
-
-
             // define pan & zoom for 2D apps
             if (app.mode_ == '2D') {
               Zoom.addPanAndZoom(app);
             } else if (app.mode_ == '3D') {
-              Camera.createOrbitControls(app)
+              app.viewer.camera.camera.createOrbitControls(app)
             }
 
             //add cells to app
@@ -486,7 +536,7 @@ export function app(options) {
     //             app.currentResolution_ = newResolution;
     //             grid.cellSize = newResolution;
     //             app.pointSize = newResolution;
-    //             app.raycaster.params.Points.threshold = newResolution;
+    //             app.viewer.raycaster.params.Points.threshold = newResolution;
     //             //scale center coords
     //             if (app.center_) {
     //               app.center_[0] = app.mobileCoordScaleX(app.center_[0]);
@@ -510,7 +560,7 @@ export function app(options) {
     //             app.currentResolution_ = newResolution;
     //             grid.cellSize = newResolution;
     //             app.pointSize = newResolution;
-    //             app.raycaster.params.Points.threshold = newResolution;
+    //             app.viewer.raycaster.params.Points.threshold = newResolution;
     //             //scale center coords
     //             if (app.center_) {
     //               app.center_[0] = app.mobileCoordScaleX(app.center_[0]);
@@ -617,16 +667,12 @@ export function app(options) {
   app.gridData = function (v) {
     if (v && app.pointsLayer) {
       app.currentResolution_ = v.cellSize
-      app.raycasterThreshold = defineRaycasterThreshold(app);
+      app.viewer.raycasterThreshold = defineRaycasterThreshold(app);
       app.pointSize = definePointSize(app);
 
-      // if (app.showPlacenames_) {
-      //   Placenames.removePlacenamesFromScene(app); //clear labels
-      // }
-
-      Camera.redefineCamera(app);
+      app.viewer.camera.redefineCamera(app._isMobile, app.zoom_, app.width_, app.height_);
       //clear previous grid
-      loadGrid(v)
+      //loadGrid(v)
     } else {
       if (v) {
         app.pointSize = v.cellSize;
@@ -638,10 +684,10 @@ export function app(options) {
   //if app has already been initialized, calls to geoCenter() method will move existing camera
   app.geoCenter = function (v) {
     //if already previously set
-    if (v && app.scene) {
+    if (v && app.viewer) {
       app.center_ = v;
-      Camera.redefineCamera(app);
-      Camera.setCamera(v[0], v[1], app.camera.position.z)
+      app.viewer.camera.redefineCamera(app._isMobile, app.zoom_, app.width_, app.height_);
+      app.viewer.camera.camerasetCamera(v[0], v[1], app.viewer.camera.camera.position.z)
     } else {
       //set initial
       if (v) {
@@ -657,10 +703,10 @@ export function app(options) {
    * @description Sets the three.js camera z value. If the app has already been initialized, calls to zoom() method will move existing camera
    */
   app.zoom = function (v) {
-    if (v && app.scene) {
+    if (v && app.viewer) {
       app.zoom_ = v;
-      Camera.redefineCamera(app);
-      Camera.setCamera(app.camera.position.x, app.camera.position.y, v); // Set camera zoom (z position)
+      app.viewer.camera.redefineCamera(app._isMobile, app.zoom_, app.width_, app.height_);
+      app.viewer.camera.setCamera(app.viewer.camera.camera.position.x, app.viewer.camera.camera.position.y, v); // Set camera zoom (z position)
     } else {
       if (v) {
         app.zoom_ = v;
@@ -704,19 +750,19 @@ export function app(options) {
   function addInitialElementsToDOM() {
     // add headings / sources texts
     if (app.title_ || app.subtitle_ || app.cellCount_) {
-      Gui.addHeadingsContainerToDOM(app);
+      GUI.addHeadingsContainerToDOM(app);
     }
     if (app.title_) {
-      Gui.addTitleToDOM(app);
+      GUI.addTitleToDOM(app);
     }
     if (app.subtitle_) {
-      Gui.addSubtitleToDOM(app);
+      GUI.addSubtitleToDOM(app);
     }
     if (app.cellCount_) {
-      Gui.addCellCountToDOM(app);
+      GUI.addCellCountToDOM(app);
     }
     if (app.sourcesHTML_) {
-      Gui.addSourcesToDOM(app);
+      GUI.addSourcesToDOM(app);
     }
     if (!app._mobile) {
       if (app.homeButton_) {
@@ -775,7 +821,7 @@ export function app(options) {
     updateColorScale();
     Points.updatePointsColors(app, gridConfigs[app.currentResolution_], gridCaches[app.currentResolution_]);
     if (app.legend_) {
-      Legend.updateLegend(app,gridConfigs[app.currentResolution_]);
+      Legend.updateLegend(app, gridConfigs[app.currentResolution_]);
     }
   }
 
@@ -806,10 +852,10 @@ export function app(options) {
     }
 
     //update the thee.js point colours
-    Points.updatePointsColors(app, gridConfigs[app.currentResolution_],gridCaches[app.currentResolution_]);
+    Points.updatePointsColors(app, gridConfigs[app.currentResolution_], gridCaches[app.currentResolution_]);
 
     if (app.legend_) {
-      Legend.updateLegend(app,gridConfigs[app.currentResolution_]);
+      Legend.updateLegend(app, gridConfigs[app.currentResolution_]);
     }
   }
 
@@ -831,9 +877,9 @@ export function app(options) {
   function onChangeColorScale(scale) {
     app.colorScaleName_ = scale;
     updateColorScale();
-    Points.updatePointsColors(app, gridConfigs[app.currentResolution_],gridCaches[app.currentResolution_]);
+    Points.updatePointsColors(app, gridConfigs[app.currentResolution_], gridCaches[app.currentResolution_]);
     if (app.legend_) {
-      Legend.updateLegend(app,gridConfigs[app.currentResolution_]);
+      Legend.updateLegend(app, gridConfigs[app.currentResolution_]);
     }
   }
 
@@ -869,10 +915,10 @@ export function app(options) {
     window.addEventListener("resize", () => {
       app.width_ = app.container_.clientWidth;
       app.height_ = app.container_.clientHeight;
-      app.labelRenderer.setSize(app.width_, app.height_);
-      app.renderer.setSize(app.width_, app.height_);
-      app.camera.aspect = app.width_ / app.height_;
-      app.camera.updateProjectionMatrix();
+      app.viewer.labelRenderer.setSize(app.width_, app.height_);
+      app.viewer.renderer.setSize(app.width_, app.height_);
+      app.viewer.camera.camera.aspect = app.width_ / app.height_;
+      app.viewer.camera.camera.updateProjectionMatrix();
     });
   }
 
@@ -882,7 +928,7 @@ export function app(options) {
   */
   function addMouseEventsToView() {
     // show cell value on click
-    app.view.on(app.tooltip_.eventType, (event) => {
+    app.viewer.view.on(app.tooltip_.eventType, (event) => {
       let [mouseX, mouseY] = pointer(event);
       let mouse_position = [mouseX, mouseY];
       let intersect = checkIntersects(mouse_position);
@@ -947,8 +993,8 @@ export function app(options) {
     if (app._mobile) {
 
       let scale = Utils.getScaleFromZ(app.height_, app.cameraConfig.fov_, app.cameraConfig.initialZ_)
-      app.d3zoom.scaleTo(app.view, scale);
-      app.d3zoom.translateTo(app.view,
+      app.d3zoom.scaleTo(app.viewer.view, scale);
+      app.d3zoom.translateTo(app.viewer.view,
         parseInt(app.center_[0]) + app.width_ / 2,
         parseInt(app.center_[1]) + app.height_ / 2);
       Camera.setCamera(app.center_[0], app.center_[1], app.cameraConfig.initialZ_)
@@ -958,12 +1004,12 @@ export function app(options) {
       let initial_transform = zoomIdentity
         .translate(app.width_ / 2, app.height_ / 2)
         .scale(initial_scale);
-      app.d3zoom.transform(app.view, initial_transform);
+      app.d3zoom.transform(app.viewer.view, initial_transform);
 
     } else {
       let scale = Utils.getScaleFromZ(app.height_, app.cameraConfig.fov_, app.cameraConfig.initialZ_)
-      app.d3zoom.scaleTo(app.view, scale);
-      app.d3zoom.translateTo(app.view,
+      app.d3zoom.scaleTo(app.viewer.view, scale);
+      app.d3zoom.translateTo(app.viewer.view,
         parseInt(app.center_[0]) + app.width_ / 2,
         parseInt(app.center_[1]) + app.height_ / 2);
       Camera.setCamera(app.center_[0], app.center_[1], app.cameraConfig.initialZ_)
@@ -1189,8 +1235,8 @@ export function app(options) {
     //app.pointsLayer.position.x = 0.02 * time;
     app.animating = true;
     requestAnimationFrame(animate);
-    app.renderer.render(app.scene, app.camera);
-    app.labelRenderer.render(app.scene, app.camera);
+    app.viewer.renderer.render(app.viewer.scene, app.viewer.camera.camera);
+    app.viewer.labelRenderer.render(app.viewer.scene, app.viewer.camera.camera);
   }
 
 
@@ -1204,8 +1250,8 @@ export function app(options) {
 
   function checkIntersects(mouse_position) {
     let mouse_vector = mouseToThree(...mouse_position);
-    app.raycaster.setFromCamera(mouse_vector, app.camera);
-    let intersects = app.raycaster.intersectObject(app.pointsLayer);
+    app.viewer.raycaster.setFromCamera(mouse_vector, app.viewer.camera.camera);
+    let intersects = app.viewer.raycaster.intersectObject(app.pointsLayer);
     if (intersects[0]) {
       let sorted_intersects = sortIntersectsByDistanceToRay(intersects);
       let intersect = sorted_intersects[0];

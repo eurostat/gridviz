@@ -107,7 +107,7 @@ export function addGeoJsonToScene(features, app) {
             }
         }
     }
-    app.scene.add(geojsonGroup);
+    app.viewer.scene.add(geojsonGroup);
 }
 
 /**

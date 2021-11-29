@@ -13,7 +13,7 @@ import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
    */
 export function defineDefaultPlacenameThresholds(app) {
     let r = app.currentResolution_ / window.devicePixelRatio;
-    //let s = app.camera.position.z;
+    //let s = app.viewer.camera.camera.position.z;
     // scale : population
 
     app.placenameThresholds_ = {
@@ -101,7 +101,7 @@ export function getPlacenames(app) {
  * @param {*} app
  */
 function defineWhereParameter(app) {
-    let scale = app.camera.position.z;
+    let scale = app.viewer.camera.camera.position.z;
     let r = app.currentResolution_;
     let where = "";
     if (app.placenamesCountry_) {
@@ -121,7 +121,7 @@ function defineWhereParameter(app) {
  * @param {*} app
  */
 function getPopulationParameterFromScale(app) {
-    let scale = app.camera.position.z;
+    let scale = app.viewer.camera.camera.position.z;
     if (app._mobile) {
         //scale up to desktop values
         let factor = app.originalResolution / app.currentResolution_

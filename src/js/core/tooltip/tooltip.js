@@ -22,16 +22,16 @@ let tooltip_state = {
     display: "none"
 };
 
-// example tooltip config
-// app.tooltip_ = {
-//     eventType: "click", // click vs mouseover
-//     showLAU: true,
-//     showEPSG: false,
-//     showNUTS: true,
-//     showCoordinates: true,
-//     xOffset: 15,
-//     yOffset: 15,
-//   };
+export const defaultTooltipConfig ={
+    eventType: "mousemove", // click vs mousemove
+    showLAU: false,
+    showEPSG: false,
+    showNUTS: false,
+    showCoordinates: false,
+    xOffset: 15,
+    yOffset: 15
+};
+
 
 /**
 * @description Appends tooltip container to the scene
@@ -60,7 +60,7 @@ export function createTooltipContainer(app) {
 <div id="gridviz-pointtip"></div>
 </div>`);
     app.container_.append(tooltipTemplate);
-    
+
     //append row for each field
     tooltipTableBody = document.querySelector("#tooltipBody");
     tooltipRows = {}; // store row nodes for efficient updating
@@ -80,12 +80,12 @@ export function createTooltipContainer(app) {
     pointTip = document.querySelector("#gridviz-pointtip");
 
     tooltipContainer = new Object3D();
-    app.scene.add(tooltipContainer);
+    app.viewer.scene.add(tooltipContainer);
 }
 
 function appendRowToTooltip(field) {
     let row = document.createElement('tr');
-    row.id = field+'tip';
+    row.id = field + 'tip';
     tooltipTableBody.appendChild(row)
     tooltipRows[field] = row;
 }
@@ -120,7 +120,7 @@ export function updateTooltip(app) {
     pointTip.style.background = tooltip_state.color;
 
     // set tooltip attributes HTML
-    app._cellFields.forEach((field)=>{
+    app._cellFields.forEach((field) => {
         tooltipRows[field].innerHTML = `<th><strong>${field}:</strong> </th>
         <th>${tooltip_state[field]}</th>`
     })
@@ -268,9 +268,9 @@ export function showTooltip(app, mouse_position, cell) {
         tooltip_state[key] = cell[key]
     }
     // show and position tooltip
-     tooltip_state.display = "block";
-     tooltip_state.left = left
-     tooltip_state.top = top;
+    tooltip_state.display = "block";
+    tooltip_state.left = left
+    tooltip_state.top = top;
 
     // tooltip_state.colorValue = Utils.formatNumber(parseFloat(cell[grid.colorField]));
     // tooltip_state.coords = [cell.x, cell.y];
