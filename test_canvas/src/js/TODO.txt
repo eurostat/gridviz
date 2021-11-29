@@ -1,14 +1,10 @@
 
-TODO specify sizes in ("pix", "geo")
-
 TODO zoom/pan smartphone/touchscreen - use d3 events - base CanvasGeo on D3.js ?
 TODO implement mouse over
 TODO on zoom/pan, interupt all existing redraws
 
 TODO test GriddedStatsTiler2
 TODO fix tiler rounding issue
-
-TODO make generic get x/y ?
 
 TODO adaptative style: with automated classification taking into account only the data within the viewshed
 TODO style radar

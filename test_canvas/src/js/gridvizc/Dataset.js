@@ -18,7 +18,7 @@ export class Dataset {
      * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      * @abstract
      */
-     constructor(url, resolution, preprocess=null){
+    constructor(url, resolution, preprocess = null) {
 
         /** @type {string} */
         this.url = url;
@@ -39,7 +39,7 @@ export class Dataset {
      * @returns {this}
      * @abstract
      */
-     getData(extGeo, callback) {
+    getData(extGeo, callback) {
         throw new Error('Method getData not implemented.');
     }
 
@@ -51,6 +51,5 @@ export class Dataset {
     getCells(extGeo) {
         throw new Error('Method getCells not implemented.');
     }
-
 
 }
