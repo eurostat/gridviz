@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style } from "../Style"
+import { Style, Size } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
@@ -11,12 +11,12 @@ import { CanvasGeo } from "../CanvasGeo";
 export class LineStyle extends Style {
 
     /**
-      * @param {function(Cell):number} height A function returning the height of a cell (in geographical unit).
+      * @param {function(Cell):Size} height A function returning the height of a cell (in geographical unit).
       */
     constructor(height) {
         super()
 
-        /** @type {function(Cell):number} */
+        /** @type {function(Cell):Size} */
         this.height_ = height;
 
         /** @type {string} */
@@ -38,6 +38,7 @@ export class LineStyle extends Style {
     draw(cells, r, cg) {
 
         //index cells by y and x
+        /**  @type {object} */
         const ind = {};
         for (const cell of cells) {
             let row = ind[cell.y];
@@ -72,18 +73,20 @@ export class LineStyle extends Style {
             cg.ctx.moveTo(cg.geoToPixX(xMin - r / 2), yP);
 
             //store the previous height
-            let hG_ = 0;
+            /** @type {Size} */
+            let hG_;
 
             for (let x = xMin; x <= xMax; x += r) {
 
                 //get column value
+                /** @type {Size} */
                 let hG = row[x];
-                if (!hG) hG = 0;
+                if (!hG) hG = {val:0,type:"g"};
 
-                if (hG || hG_) {
+                if (hG.val || hG_.val) {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo
-                    cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - hG/cg.zf);
+                    cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - hG.val / cg.zf);
                 } else {
                     //else move the point
                     cg.ctx.moveTo(cg.geoToPixX(x + r / 2), yP);
@@ -110,10 +113,10 @@ export class LineStyle extends Style {
 
     /**
      * 
-     * @param {function(Cell):number} height 
-     * @returns {this|function(Cell):number}
+     * @param {function(Cell):Size} height 
+     * @returns {this|function(Cell):Size}
      */
-     height(height) {
+    height(height) {
         if (height) {
             this.height_ = height;
             return this;
@@ -126,7 +129,7 @@ export class LineStyle extends Style {
      * @param {string} lineColor 
      * @returns {this|string}
      */
-     lineColor(lineColor) {
+    lineColor(lineColor) {
         if (lineColor) {
             this.lineColor_ = lineColor;
             return this;
