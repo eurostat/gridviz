@@ -1,8 +1,10 @@
 //@ts-check
 
-import { Style } from "../Style"
+import { Style, Size } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
+
+/** @typedef {"square"|"circle"} Shape */
 
 /**
  * 
@@ -12,7 +14,7 @@ export class RadarStyle extends Style {
 
     /**
       * @param {Object} color The dictionary which give the color of each category.
-      * @param {function(Cell):number} size The dictionary which give the color of each category.
+      * @param {function(Cell):Size} size The dictionary which give the color of each category.
       */
     constructor(color, size) {
         super()
@@ -21,7 +23,7 @@ export class RadarStyle extends Style {
         /** @type {object} */
         this.color = color;
 
-        /** @type {function(Cell):number} */
+        /** @type {function(Cell):Size} */
         this.size = size;
     }
 

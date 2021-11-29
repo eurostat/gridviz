@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style } from "../Style"
+import { Style, Size } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
@@ -16,7 +16,7 @@ export class ShapeColorSizeStyle extends Style {
 
     /**
       * @param {function(Cell):string} color A function returning the color of the cell.
-      * @param {function(Cell):number} size A function returning the size of a cell (in geographical unit).
+      * @param {function(Cell):Size} size A function returning the size of a cell (in geographical unit).
       * @param {function(Cell):Shape} shape A function returning the shape of a cell.
       */
     constructor(color = () => "#EA6BAC", size = null, shape = () => "square") {
@@ -25,7 +25,7 @@ export class ShapeColorSizeStyle extends Style {
         /** @type {function(Cell):string} */
         this.color_ = color;
 
-        /** @type {function(Cell):number} */
+        /** @type {function(Cell):Size} */
         this.size_ = size;
 
         /** @type {function(Cell):Shape} */
@@ -44,17 +44,18 @@ export class ShapeColorSizeStyle extends Style {
 
         //if size is used, sort cells by size so that the biggest are drawn first
         if (this.size_)
-            cells.sort((c1, c2) => (this.size_(c2) - this.size_(c1)));
+            cells.sort((c1, c2) => (this.size_(c2).val - this.size_(c1).val));
 
         for (let cell of cells) {
 
             //color
             cg.ctx.fillStyle = this.color ? this.color_(cell) : "#EA6BAC";
 
-            //size - in ground meters
-            let sG = this.size_ ? this.size_(cell) : resolution;
-            //size - in pixel
-            const s = sG / cg.zf
+            //size
+            let s_ = this.size_ ? this.size_(cell) : { val:resolution, unit:"g" };
+            //size - in pixel and geo
+            const sP = s_.unit==="p"? s_.val : s_.val / cg.zf
+            const sG = cg.zf * sP;
 
             //get shape
             const shape = this.shape_ ? this.shape_(cell) : "square";
@@ -64,14 +65,14 @@ export class ShapeColorSizeStyle extends Style {
                 cg.ctx.fillRect(
                     cg.geoToPixX(cell.x + d + this.offset_.dx),
                     cg.geoToPixY(cell.y + resolution - d + this.offset_.dy),
-                    s, s);
+                    sP, sP);
             } else if (shape === "circle") {
                 //draw circle
                 cg.ctx.beginPath();
                 cg.ctx.arc(
                     cg.geoToPixX(cell.x + resolution * 0.5 + this.offset_.dx),
                     cg.geoToPixY(cell.y + resolution * 0.5 + this.offset_.dy),
-                    s * 0.5,
+                    sP * 0.5,
                     0, 2 * Math.PI, false);
                 cg.ctx.fill();
             } else {
@@ -99,8 +100,8 @@ export class ShapeColorSizeStyle extends Style {
     }
 
     /**
-     * @param {function(Cell):number} size 
-     * @returns {this|function(Cell):number}
+     * @param {function(Cell):Size} size 
+     * @returns {this|function(Cell):Size}
      */
     size(size) {
         if (size) {

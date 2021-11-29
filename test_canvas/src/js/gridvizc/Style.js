@@ -119,7 +119,7 @@ export class Style {
      * @param {number} resolution Their resolution (in geographic unit)
      * @param {CanvasGeo} cg The canvas where to draw them.
      * @param {function(Cell):string} shape The shape of the stroke.
-     * @param {function(Cell):number} size A function returning the size of a cell (in geographical unit).
+     * @param {function(Cell):Size} size A function returning the size of a cell (in geographical unit).
      * @returns 
      */
     drawStroke(cell, resolution, cg, shape, size) {
@@ -128,15 +128,11 @@ export class Style {
         cg.ctx.strokeStyle = this.strokeColor_;
         cg.ctx.lineWidth = this.strokeWidth_;
 
-        //size - in ground meters
-        let sG;
-        if (size) {
-            sG = size(cell);
-        } else
-            sG = resolution
-
-        //size - in pixel
-        const s = sG / cg.zf
+        //size
+        let s_ = size ? size(cell) : { val: resolution, unit: "g" };
+        //size - in pixel and geo
+        const sP = s_.unit === "p" ? s_.val : s_.val / cg.zf
+        const sG = cg.zf * sP;
 
         const shape_ = shape(cell);
         if (shape_ === "square") {
@@ -146,7 +142,7 @@ export class Style {
             cg.ctx.rect(
                 cg.geoToPixX(cell.x + d + this.offset_.dx),
                 cg.geoToPixY(cell.y + resolution - d + this.offset_.dy),
-                s, s);
+                sP, sP);
             cg.ctx.stroke();
 
         } else if (shape_ === "circle") {
@@ -155,7 +151,7 @@ export class Style {
             cg.ctx.arc(
                 cg.geoToPixX(cell.x + resolution * 0.5 + this.offset_.dx),
                 cg.geoToPixY(cell.y + resolution * 0.5 + this.offset_.dy),
-                s * 0.5,
+                sP * 0.5,
                 0, 2 * Math.PI, false);
             cg.ctx.stroke();
         }
