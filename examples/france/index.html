@@ -14,12 +14,9 @@
 <script src="../../build/gridviz.js"></script>
 <script>
     let containerDiv = document.getElementById("viz-container");
-    gridviz.app()
+    let viz = gridviz.app()
         .container(containerDiv)
-        .gridData({
-            url: "../../assets/csv/France/1km/2015_Ind.csv",
-            cellSize: 1000,
-        })
+
         .title("1x1km Grid of France")
         .sourcesHTML("Source: <a target='__blank' href='https://insee.fr/fr/accueil'>INSEE</a>")
         .geoCenter([3709000, 2624000])//EPSG=3035
@@ -37,7 +34,6 @@
         .lineColor("#ffffff")
         .colorSchemeName("interpolateInferno")
         .colorScaleName("scaleSequentialLog")
-        .colorField("Inhabitants")  // csv column used to calculate the colour of each cell
         .colorSchemeSelector(true)
         .colorScaleSelector(true)
         //  .placenameThresholds({ //"scale": population
@@ -54,9 +50,15 @@
             title: "Total population per km² (2015)",
             titleWidth: 110,
             format: ',.0f',
-            ticks:4
+            ticks: 4
         })
         .build()
+
+    viz.addGrid({
+        url: "../../assets/csv/France/1km/2015_Ind.csv",
+        cellSize: 1000,
+        colorField: "Inhabitants"
+    })
 </script>
 
 </html>

@@ -11,6 +11,18 @@ import { range, quantile } from "d3-array";
 
 let title;
 
+export const defaultLegendConfig = {
+    type: "continuous", //cells vs continuous
+    width: 300,
+    height: null,
+    orientation: "horizontal",
+    title: null, //if null, will default to the current colorField
+    titleWidth: 50,
+    format: ".0s",
+    cells: 5,
+    shapeWidth: 30
+  };
+
 /**
    * 
    * @function createLegend
@@ -25,7 +37,6 @@ export function createLegend(app, grid) {
     } else if (app.legend_.type == "continuous") {
         createContinuousLegend(app)
     }
-
 }
 
 /**
@@ -54,7 +65,7 @@ function createCellsLegend(app) {
             .attr("transform", "translate(10,15)"); //padding
 
 
-    app._gridLegend = LEGEND.legendColor()
+    app.__Legend = LEGEND.legendColor()
         .shapeWidth(app.legend_.shapeWidth)
         .cells(app.legend_.cells)
         .labelFormat(format(app.legend_.format))
@@ -64,10 +75,10 @@ function createCellsLegend(app) {
         .titleWidth(app.legend_.titleWidth)
 
     if (app.thresholds_) {
-        app._gridLegend.labels(thresholdLabels)
+        app.__Legend.labels(thresholdLabels)
     }
 
-    legendSvg.call(app._gridLegend);
+    legendSvg.call(app.__Legend);
 
     //adjust width/height
     if (!app.legend_.height) {
@@ -101,7 +112,7 @@ function createContinuousLegend(app) {
     let marginBottom = app.legend_.marginBottom || 16 + tickSize;
     let ticks = app.legend_.ticks || width / 64;
 
-    app._gridLegend = colorLegend({
+    app.__Legend = colorLegend({
         color: app.colorScaleFunction_,
         title: title,
         tickSize: tickSize,
@@ -116,7 +127,7 @@ function createContinuousLegend(app) {
         tickValues: app.thresholds_ || undefined
     });
 
-    container.node().appendChild(app._gridLegend);
+    container.node().appendChild(app.__Legend);
 
 }
 function ramp(color, n = 256) {

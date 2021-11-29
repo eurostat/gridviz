@@ -137,7 +137,7 @@ function defineCameraConfig(app) {
 /**
 * @description Define the far parameter for THREE.camera. The far parameter represents the furthest possible distance that the camera can be from the plane (where z=0)
 * @function defineFar
-  * @param app 
+* @param app 
 */
 function defineFar(app) {
     if (app._mobile) {
@@ -151,7 +151,7 @@ function defineFar(app) {
 /**
  * @description Define the near parameter for THREE.camera. The near parameter represents the smallest possible distance that the camera can be from the plane (where z=0)
  * @function defineNear
- *   * @param app 
+ *  @param app 
  */
 function defineNear(app) {
     if (app._mobile) {

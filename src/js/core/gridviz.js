@@ -38,10 +38,10 @@ import * as Viewer from "./viewer/viewer.js";
 // - mobile pan & zoom bug when using method app.geoCenter([x,y])
 
 /**
- * Creates a 2D Three.js scene for visualizing point data derived from gridded statistics.
+ * Creates a Three.js scene for visualizing point data derived from gridded statistics.
  *
  * @author Joseph Davies, Julien Gaffuri
- * @description Generates a 2D Three.js scene for visualizing large point datasets using WebGL. The library follows a similar structure to that of d3, whereby parameters are set using a series of accessor functions, each of which returns the main app.
+ * @description Generates a Three.js scene for visualizing large point datasets using WebGL. The library follows a similar structure to that of d3, where parameters are set using a series of accessor functions, each of which returns the main app.
  * @requires "THREE"
  * @requires "D3"
  * 
@@ -59,7 +59,7 @@ export function app(options) {
   //debugging
   app.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
 
-  //styles
+  //default styles
   app.container_ = document.body;
   app.height_ = null; //takes container width/height
   app.width_ = null;
@@ -71,20 +71,8 @@ export function app(options) {
 
   // legend
   app.showLegend_ = true;
-
-  // default legend config
-  app.legend_ = {
-    type: "continuous", //cells vs continuous
-    width: 300,
-    height: null,
-    orientation: "horizontal",
-    title: null, //if null, will default to the current colorField
-    titleWidth: 50,
-    format: ".0s",
-    cells: 5,
-    shapeWidth: 30
-  };
-  app._gridLegend; //legend stored here
+  app.legend_ = Legend.defaultLegendConfig; // default legend config
+  app.__Legend; // legend stored here
 
   // default tooltip config
   app.tooltip_ = {
@@ -163,7 +151,7 @@ export function app(options) {
       app.legend_[key] = v[key];
     }
     //update legend if necessary
-    if (app._gridLegend) {
+    if (app.__Legend) {
       Legend.updateLegend(app, gridConfigs[app.currentResolution_])
     }
     return app;
@@ -180,11 +168,13 @@ export function app(options) {
   app.scene = null; //three.js scene
   app.animating = false;
 
-  app.cameraConfig = {} //threejs camera settings
-  app.cameraConfig.near_ = null;
-  app.cameraConfig.far_ = null; //set min zoom
-  app.cameraConfig.fov_ = null;
-  app.cameraConfig.aspect_ = null;
+  app.cameraConfig = {
+    near_ : null,
+    far_ : null, //set min zoom
+    fov_ : null,
+    aspect_ : null
+  } //threejs camera settings
+  app.cameraConfig
 
   // other variables
   let previousIntersect;
@@ -866,7 +856,7 @@ export function app(options) {
     grid.sizeField = field;
     updateSizeScale();
     Points.updatePointsSizes(app, gridCaches[app.currentResolution_]);
-    if (app._gridLegend) {
+    if (app.__Legend) {
       Legend.updateLegend(app, gridConfigs[app.currentResolution_]);
     }
   }
@@ -1173,7 +1163,7 @@ export function app(options) {
     //create or update legend
     if (app.showLegend_) {
       if (app.legend_) {
-        if (app._gridLegend) {
+        if (app.__Legend) {
           Legend.updateLegend(app, gridConfigs[app.currentResolution_]);
         } else {
           Legend.createLegend(app, gridConfigs[app.currentResolution_]);

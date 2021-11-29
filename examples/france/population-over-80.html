@@ -14,14 +14,8 @@
 <script src="../../build/gridviz.js"></script>
 <script>
     let containerDiv = document.getElementById("viz-container");
-    gridviz.app()
+    let viz = gridviz.app()
         .container(containerDiv)
-        .gridData({
-            url: "../../assets/csv/France/1km/2015_Ind_80p.csv",
-            cellSize: 1000,
-            tiled: false
-        })
-        .colorField("Ind_80p")  // csv column which you wish to visualize
         .geoCenter([3709000, 2624000])//EPSG=3035
         .zoom(1000000)
         .height(window.innerHeight)
@@ -37,13 +31,6 @@
         .EPSG(3035)
         .showPlacenames(true)
         .placenamesCountry("FR")
-        // .placenameThresholds({ //"scale": population
-        //     "500000": 100000,
-        //     "175000": 50000,
-        //     "150000": 20000,
-        //     "100000": 10000,
-        //     "50000": 1000
-        // })
         .legend({
             title: "Population over 80 years of age per km² (2015)",
             titleWidth: 150,
@@ -51,6 +38,12 @@
             ticks:6
         })
         .build()
+
+        viz.addGrid({
+            url: "../../assets/csv/France/1km/2015_Ind_80p.csv",
+            cellSize: 1000,
+            colorField: "Ind_80p"
+        })
 </script>
 
 </html>
