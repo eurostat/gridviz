@@ -3,6 +3,7 @@
 
 import { json, csv } from "d3-fetch";
 import { GridTile } from './GridTile';
+import { App } from '../App';
 import { Dataset, Cell, Envelope } from "../Dataset"
 
 /**
@@ -14,9 +15,10 @@ export class TiledGrid extends Dataset {
 
     /**
      * @param {string} url The url of the dataset info.json file.
+     * @param {App} app The app.
      * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      */
-    constructor(url, preprocess = null) {
+    constructor(url, app, preprocess = null) {
         super(url, undefined, preprocess)
 
         /** 
