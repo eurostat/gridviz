@@ -77,7 +77,7 @@ export class LineStyle extends Style {
 
             //store the previous height
             /** @type {Size} */
-            let hG_ = { val: 0, type: "g" };
+            let hG_ = { val: 0, unit: "geo" };
 
             //go through the line cells
             for (let x = xMin; x <= xMax; x += r) {
@@ -85,12 +85,12 @@ export class LineStyle extends Style {
                 //get column value
                 /** @type {Size} */
                 let hG = row[x];
-                if (!hG) hG = { val: 0, type: "g" };
+                if (!hG) hG = { val: 0, unit: "geo" };
 
                 if (hG.val || hG_.val) {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo
-                    const dyP = hG.type==="p" ? hG.val : hG.val / cg.zf
+                    const dyP = hG.unit==="pix" ? hG.val : hG.val / cg.zf
                     cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - dyP);
                 } else {
                     //else move the point

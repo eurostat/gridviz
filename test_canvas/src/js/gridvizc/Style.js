@@ -2,7 +2,7 @@
 import { Cell } from "./Dataset";
 import { CanvasGeo } from './CanvasGeo';
 
-/** @typedef {{val: number, type: "p"|"g"}} Size */
+/** @typedef {{val: number, unit: "pix"|"geo"}} Size */
 
 /**
  * A style, to show a grid dataset.
