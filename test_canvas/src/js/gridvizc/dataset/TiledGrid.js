@@ -81,10 +81,10 @@ export class TiledGrid extends Dataset {
      * Request data within a geographic envelope.
      * 
      * @param {Envelope} extGeo 
-     * @param {function} callback
+     * @param {function} redrawFun
      * @returns {this}
      */
-    getData(extGeo, callback) {
+    getData(extGeo, redrawFun) {
 
         //TODO empty cache when it gets too big ?
 
@@ -127,9 +127,14 @@ export class TiledGrid extends Dataset {
                                 for (const c of tile_.cells)
                                     this.preprocess(c);
 
+                            //check if redraw is needed, that is:
+                            // 1. if the dataset belongs to a layer which is visible at the current zoom level
+                            // and 2. the tile is within the view
+
+
                             //execute the callback, usually a draw function
-                            if (tile_.needToLaunchRedraw() && callback)
-                                callback()
+                            if (tile_.needToLaunchRedraw() && redrawFun)
+                                redrawFun()
                         })
                     .catch(() => {
                         //mark as failed

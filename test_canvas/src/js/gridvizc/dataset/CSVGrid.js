@@ -28,9 +28,9 @@ export class CSVGrid extends Dataset {
      * Request data within a geographic envelope.
      * 
      * @param {Envelope} e 
-     * @param {function} callback 
+     * @param {function} redraw 
      */
-    getData(e, callback) {
+    getData(e, redraw) {
 
         //TODO ensure it is not loading twice ?
 
@@ -50,8 +50,11 @@ export class CSVGrid extends Dataset {
                 //execute preprocess, if any
                 if(this.preprocess) for (const c of this.cells) this.preprocess(c);
 
+                //TODO check if redraw is necessary
+                //that is if the dataset belongs to a layer which is visible at the current zoom level
+
                 //execute the callback, usually a draw function
-                if(callback) callback()
+                if(redraw) redraw()
             })
         .catch(() => {
             //mark as failed

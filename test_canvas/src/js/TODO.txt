@@ -1,5 +1,7 @@
-TODO zoom/pan smartphone - use d3 events
+
+
 TODO remove unnecessary redraw calls
+TODO zoom/pan smartphone - use d3 events
 TODO implement mouse over
 
 TODO test GriddedStatsTiler2
