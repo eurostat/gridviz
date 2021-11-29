@@ -46,6 +46,7 @@ export class LineStyle extends Style {
             row[cell.x] = this.height_(cell);
         }
 
+
         //compute extent
         const e = cg.extGeo;
         const xMin = Math.floor(e.xMin / r) * r;
@@ -58,11 +59,13 @@ export class LineStyle extends Style {
         cg.ctx.lineWidth = this.lineWidth_;
         cg.ctx.fillStyle = this.fillColor_;
 
-        //draw lines row by row, stating from the top
+        //draw lines, row by row, stating from the top
         for (let y = yMax; y >= yMin; y -= r) {
 
             //get row
             const row = ind[y]
+
+            //no row
             if (!row) continue;
 
             //compute row baseline
@@ -74,19 +77,21 @@ export class LineStyle extends Style {
 
             //store the previous height
             /** @type {Size} */
-            let hG_;
+            let hG_ = { val: 0, type: "g" };
 
+            //go through the line cells
             for (let x = xMin; x <= xMax; x += r) {
 
                 //get column value
                 /** @type {Size} */
                 let hG = row[x];
-                if (!hG) hG = {val:0,type:"g"};
+                if (!hG) hG = { val: 0, type: "g" };
 
                 if (hG.val || hG_.val) {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo
-                    cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - hG.val / cg.zf);
+                    const dyP = hG.type==="p" ? hG.val : hG.val / cg.zf
+                    cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - dyP);
                 } else {
                     //else move the point
                     cg.ctx.moveTo(cg.geoToPixX(x + r / 2), yP);
