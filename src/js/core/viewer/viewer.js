@@ -92,7 +92,7 @@ export class Viewer {
     }
 
     /**
-     * @description Returns the current extent of the viewer in world coordinates
+     * @description Returns the current extent of the viewer in geographic coordinates
      * @function getCurrentViewExtent
      * @param app gridviz app
      */
@@ -136,7 +136,7 @@ export class Viewer {
     }
 
     /**
-    * @description get the position of a canvas event in world coords
+    * @description get the position of a canvas location in geographic coords
     *@function getWorldCoordsFromScreen
     */
     getWorldCoordsFromScreen(app, [clientX, clientY]) {

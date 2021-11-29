@@ -179,7 +179,7 @@ export function app(options) {
    * @description Clears the canvas, builds the three.js app and appends grid data
   */
   app.build = function () {
-    
+
     Loading.createLoadingSpinner(app.container_, app.loadingIcon_);
     Loading.showLoading();
 
@@ -210,19 +210,10 @@ export function app(options) {
         });
         //Viewer.build(app)
 
-        // load NUTS if required
-        if (app.nuts_) {
-          loadNuts2json(
-            CONSTANTS.nuts_base_URL +
-            app.EPSG_ +
-            "/" +
-            app.nutsSimplification_ +
-            "/" + app.nutsLevel_ + ".json"
-          );
-        }
+        // add NUTS geometries to viewer as geojson
+        if (app.nuts_) loadNuts2json(CONSTANTS.nuts_base_URL + app.EPSG_ + "/" + app.nutsSimplification_ + "/" + app.nutsLevel_ + ".json");
 
-        //add dropdowns
-        // dropdowns DOM container
+        //add container for dropdowns
         if (this.colorSchemeSelector_ || this.colorScaleSelector_ || this.sizeFieldSelector_ || this.colorFieldSelector_) {
           GUI.addSelectorsContainerToDOM(this);
         }
@@ -260,9 +251,9 @@ export function app(options) {
   function getDefaultAppHeight(app) {
     if (app.container_.clientHeight == "0") {
       //if container element has no defined height, use screen height
-     return window.innerHeight - 1;
+      return window.innerHeight - 1;
     } else {
-     return app.container_.clientHeight
+      return app.container_.clientHeight
     }
   }
 
