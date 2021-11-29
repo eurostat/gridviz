@@ -30,6 +30,7 @@ import { Viewer } from "./viewer/viewer.js";
 import { feature } from "topojson";
 import * as CONSTANTS from "./constants.js";
 import * as Utils from "./utils/utils";
+import * as Loading from "./gui/loading";
 
 /**
  * Creates a Three.js scene for visualizing x/y data derived from gridded statistics.
@@ -178,6 +179,10 @@ export function app(options) {
    * @description Clears the canvas, builds the three.js app and appends grid data
   */
   app.build = function () {
+    
+    Loading.createLoadingSpinner(app.container_, app.loadingIcon_);
+    Loading.showLoading();
+
     //check if WebGL compatible device
     if (WEBGL.isWebGLAvailable()) {
 
@@ -229,7 +234,7 @@ export function app(options) {
         return app;
 
       } else {
-        Utils.hideLoading();
+        Loading.hideLoading();
         let msg = "invalid inputs";
         console.error(msg);
         alert(msg)
@@ -281,7 +286,7 @@ export function app(options) {
   }
 
   app.addGrid = function (grid) {
-    Utils.showLoading();
+    Loading.showLoading();
     if (grid.cellSize) {
       requestGrid(grid).then(
         csv => {
@@ -374,7 +379,7 @@ export function app(options) {
               // add points to cache
               addGridToCache(csv, grid.cellSize);
             } else {
-              Utils.hideLoading();
+              Loading.hideLoading();
               let msg = "Incorrect csv format. Please use coordinate columns with names 'x' and 'y' and check that colorField is defined correctly.";
               console.error(msg);
               alert(msg)
@@ -454,16 +459,16 @@ export function app(options) {
             }
           }
 
-          Utils.hideLoading();
+          Loading.hideLoading();
 
         },
         err => {
-          Utils.hideLoading();
+          Loading.hideLoading();
           alert(err)
         }
       );
     } else {
-      Utils.hideLoading();
+      Loading.hideLoading();
       let msg = "Please specify grid cell size in the units of its coordinate system";
       console.error(msg);
       alert(msg)
@@ -571,7 +576,7 @@ export function app(options) {
     //           // add points to cache
     //           addGridToCache(csv, grid.cellSize);
     //         } else {
-    //           Utils.hideLoading();
+    //           Loading.hideLoading();
     //           let msg = "Incorrect csv format. Please use coordinate columns with names 'x' and 'y' and check that colorField is defined correctly.";
     //           console.error(msg);
     //           alert(msg)
@@ -647,15 +652,15 @@ export function app(options) {
     //         }
     //       }
 
-    //       Utils.hideLoading();
+    //       Loading.hideLoading();
     //     },
     //     err => {
-    //       Utils.hideLoading();
+    //       Loading.hideLoading();
     //       alert(err)
     //     }
     //   );
     // } else {
-    //   Utils.hideLoading();
+    //   Loading.hideLoading();
     //   let msg = "Please specify grid cell size in the units of its coordinate system";
     //   console.error(msg);
     //   alert(msg)
@@ -1217,7 +1222,7 @@ export function app(options) {
       }
     }
 
-    Utils.hideLoading();
+    Loading.hideLoading();
     if (!app.animating) {
       animate();
     }

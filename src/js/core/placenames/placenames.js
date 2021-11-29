@@ -39,7 +39,7 @@ export function defineDefaultPlacenameThresholds(app) {
    */
 export function getPlacenames(app) {
     let where = defineWhereParameter(app)
-    let envelope = Utils.getCurrentViewExtent(app);
+    let envelope = app.viewer.getCurrentViewExtent(app);
     //currentExtent = envelope;
     //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
     if (app.debugPlacenames_) console.info(envelope);

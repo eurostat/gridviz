@@ -3,14 +3,13 @@ import {
     WebGLRenderer,
     Color,
     Raycaster,
-} from "three";
+    Vector3
+} from "three"
+
 import { select } from "d3-selection";
 import { CSS2DRenderer } from "../../lib/threejs/CSS2D/CSS2DRenderer";
 import * as Utils from "../utils/utils";
-import * as GUI from "../gui/gui";
 import { Camera } from "../camera/camera.js";
-import * as Dropdowns from "../gui/dropdowns.js";
-
 
 /**
  * @desc A threeJS webGL viewer, containing a Camera, WebGL renderer, label renderer and raycaster - enhanced with zoom and pan capabilities.
@@ -26,8 +25,6 @@ export class Viewer {
         this.container = opts.container;
         this.isMobile = opts.isMobile || false;
         this.zoom = opts.zoom;
-
-        Utils.createLoadingSpinner(this.container, this.loadingIcon_);
 
         //set container height and width
         this.container.classList.add("gridviz-container");
@@ -92,6 +89,77 @@ export class Viewer {
     createRaycaster() {
         // for Click and tooltip interaction
         this.raycaster = new Raycaster();
+    }
+
+    /**
+     * @description Returns the current extent of the viewer in world coordinates
+     * @function getCurrentViewExtent
+     * @param app gridviz app
+     */
+    getCurrentViewExtent(app) {
+        var elem = app.viewer.renderer.domElement;
+        let clientBottomLeft = [elem.clientLeft, elem.clientHeight];
+        let clientTopRight = [elem.clientWidth, elem.clientTop];
+        let bottomLeftWorld = this.getWorldCoordsFromScreen(app, clientBottomLeft); //client x,y
+        let topRightWorld = this.getWorldCoordsFromScreen(app, clientTopRight); //client x,y
+
+        // if getting coords was unsuccessful, exit
+        if (!bottomLeftWorld || !topRightWorld) {
+            return
+        }
+
+        // full european extent in EPSG 3035:
+        // return {
+        //   xmin: 1053668.5589,
+        //   ymin: 1645342.8583,
+        //   xmax: 5724066.4412,
+        //   ymax: 5901309.0137
+        // };
+
+        // if the user has reduced the filesize by removing trailing 0s from the csv, we simply add them back on before sending the placename queries
+        if (app.zerosRemoved_) {
+            let d = Number('1E' + app.zerosRemoved_);
+            return {
+                xmin: bottomLeftWorld.x * d,
+                ymin: bottomLeftWorld.y * d,
+                xmax: topRightWorld.x * d,
+                ymax: topRightWorld.y * d
+            };
+        } else {
+            return {
+                xmin: bottomLeftWorld.x,
+                ymin: bottomLeftWorld.y,
+                xmax: topRightWorld.x,
+                ymax: topRightWorld.y
+            };
+        }
+    }
+
+    /**
+    * @description get the position of a canvas event in world coords
+    *@function getWorldCoordsFromScreen
+    */
+    getWorldCoordsFromScreen(app, [clientX, clientY]) {
+        var vec = new Vector3(); // create once and reuse
+        var pos = new Vector3(); // create once and reuse
+        vec.set(
+            (clientX / window.innerWidth) * 2 - 1,
+            -(clientY / window.innerHeight) * 2 + 1,
+            0.5
+        );
+        vec.unproject(app.viewer.camera.camera);
+        vec.sub(app.viewer.camera.camera.position).normalize();
+        var distance = -app.viewer.camera.camera.position.z / vec.z;
+        pos.copy(app.viewer.camera.camera.position).add(vec.multiplyScalar(distance));
+        if (app._mobile) {
+            if (app.mobileCoordScaleX && app.mobileCoordScaleY) {
+                pos.x = Math.round(app.mobileCoordScaleX.invert(pos.x))
+                pos.y = Math.round(app.mobileCoordScaleY.invert(pos.y))
+            } else {
+                return false
+            }
+        }
+        return pos;
     }
 
 }
