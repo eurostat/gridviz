@@ -12,7 +12,7 @@ export class RadarStyle extends Style {
 
     /**
       * @param {Object} color The dictionary which give the color of each category.
-      * @param {function} size The dictionary which give the color of each category.
+      * @param {function(Cell):number} size The dictionary which give the color of each category.
       */
     constructor(color, size) {
         super()
@@ -21,7 +21,7 @@ export class RadarStyle extends Style {
         /** @type {object} */
         this.color = color;
 
-        /** @type {function} */
+        /** @type {function(Cell):number} */
         this.size = size;
     }
 

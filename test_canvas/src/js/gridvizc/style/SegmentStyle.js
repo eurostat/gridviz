@@ -12,21 +12,21 @@ import { CanvasGeo } from "../CanvasGeo";
 export class SegmentStyle extends Style {
 
     /**
-      * @param {function} orientation A function returning the orientation (in degrees) of the segment representing a cell.
-      * @param {function} color A function returning the color of the segment representing a cell.
-      * @param {function} length A function returning the length of the segment representing a cell.
-      * @param {function} width A function returning the width of the segment representing a cell.
+      * @param {function(Cell):number} orientation A function returning the orientation (in degrees) of the segment representing a cell.
+      * @param {function(Cell):string} color A function returning the color of the segment representing a cell.
+      * @param {function(Cell):number} length A function returning the length of the segment representing a cell.
+      * @param {function(Cell):number} width A function returning the width of the segment representing a cell.
       */
     constructor(orientation, color, length, width) {
         super()
 
-        /** @type {function} */
+        /** @type {function(Cell):number} */
         this.orientation_ = orientation;
-        /** @type {function} */
+        /** @type {function(Cell):string} */
         this.color_ = color;
-        /** @type {function} */
+        /** @type {function(Cell):number} */
         this.length_ = length;
-        /** @type {function} */
+        /** @type {function(Cell):number} */
         this.width_ = width;
 
     }
@@ -73,8 +73,8 @@ export class SegmentStyle extends Style {
 
 
     /**
-     * @param {function} orientation 
-     * @returns {this|function}
+     * @param {function(Cell):number} orientation 
+     * @returns {this|function(Cell):number}
      */
     orientation(orientation) {
         if (orientation) {
@@ -85,8 +85,8 @@ export class SegmentStyle extends Style {
     }
 
     /**
-     * @param {function} color 
-     * @returns {this|function}
+     * @param {function(Cell):string} color 
+     * @returns {this|function(Cell):string}
      */
     color(color) {
         if (color) {
@@ -97,8 +97,8 @@ export class SegmentStyle extends Style {
     }
 
     /**
-     * @param {function} length 
-     * @returns {this|function}
+     * @param {function(Cell):number} length 
+     * @returns {this|function(Cell):number}
      */
     length(length) {
         if (length) {
@@ -109,8 +109,8 @@ export class SegmentStyle extends Style {
     }
 
     /**
-     * @param {function} width 
-     * @returns {this|function}
+     * @param {function(Cell):number} width 
+     * @returns {this|function(Cell):number}
      */
     width(width) {
         if (width) {

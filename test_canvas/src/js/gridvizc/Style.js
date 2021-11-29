@@ -116,8 +116,8 @@ export class Style {
      * @param {Cell} cell The cell to draw the stroke of.
      * @param {number} resolution Their resolution (in geographic unit)
      * @param {CanvasGeo} cg The canvas where to draw them.
-     * @param {function} shape The shape of the stroke.
-     * @param {function} size A function returning the size of a cell (in geographical unit).
+     * @param {function(Cell):string} shape The shape of the stroke.
+     * @param {function(Cell):number} size A function returning the size of a cell (in geographical unit).
      * @returns 
      */
     drawStroke(cell, resolution, cg, shape, size) {

@@ -15,7 +15,7 @@ export class Dataset {
     /**
      * @param {string} url The url of the dataset.
      * @param {number} resolution The dataset resolution (in geographical unit).
-     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      * @abstract
      */
      constructor(url, resolution, preprocess=null){
@@ -26,7 +26,7 @@ export class Dataset {
         /** @type {number} */
         this.resolution = resolution;
 
-        /** @type {function} */
+        /** @type {function(Cell):void} */
         this.preprocess = preprocess;
     }
 
@@ -35,7 +35,7 @@ export class Dataset {
      * Request data within a geographic envelope.
      * 
      * @param {Envelope} extGeo 
-     * @param {function} callback 
+     * @param {function():void} callback 
      * @returns {this}
      * @abstract
      */

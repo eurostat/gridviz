@@ -3,7 +3,7 @@
 import { CanvasGeo } from './CanvasGeo';
 import { Layer } from './Layer';
 import { Style } from './Style';
-import { Dataset } from './Dataset';
+import { Dataset, Cell } from './Dataset';
 
 import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
@@ -86,7 +86,7 @@ export class App {
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
-     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      */
     addTiledGrid(url, styles, minZoom, maxZoom, preprocess = null) {
         this.addLayer(
@@ -104,7 +104,7 @@ export class App {
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
-     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      */
     addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null) {
         this.addLayer(

@@ -14,7 +14,7 @@ export class TiledGrid extends Dataset {
 
     /**
      * @param {string} url The url of the dataset info.json file.
-     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      */
     constructor(url, preprocess = null) {
         super(url, undefined, preprocess)
@@ -39,7 +39,7 @@ export class TiledGrid extends Dataset {
     /**
      * Load the info.json from the url.
      * 
-     * @param {function} callback
+     * @param {function():void} callback
      * @returns this
      */
     loadInfo(callback) {
@@ -81,7 +81,7 @@ export class TiledGrid extends Dataset {
      * Request data within a geographic envelope.
      * 
      * @param {Envelope} extGeo 
-     * @param {function} redrawFun
+     * @param {function():void} redrawFun
      * @returns {this}
      */
     getData(extGeo, redrawFun) {

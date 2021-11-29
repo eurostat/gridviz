@@ -13,20 +13,20 @@ import { CanvasGeo } from "../CanvasGeo";
 export class ShapeColorSizeStyle extends Style {
 
     /**
-      * @param {function} color A function returning the color of the cell.
-      * @param {function} size A function returning the size of a cell (in geographical unit).
-      * @param {function} shape A function returning the shape of a cell.
+      * @param {function(Cell):string} color A function returning the color of the cell.
+      * @param {function(Cell):number} size A function returning the size of a cell (in geographical unit).
+      * @param {function(Cell):string} shape A function returning the shape of a cell.
       */
     constructor(color = () => "#EA6BAC", size = null, shape = () => "square") {
         super()
 
-        /** @type {function} */
+        /** @type {function(Cell):string} */
         this.color_ = color;
 
-        /** @type {function} */
+        /** @type {function(Cell):number} */
         this.size_ = size;
 
-        /** @type {function} */
+        /** @type {function(Cell):string} */
         this.shape_ = shape;
     }
 
@@ -42,7 +42,7 @@ export class ShapeColorSizeStyle extends Style {
 
         //if size is used, sort cells by size so that the biggest are drawn first
         if (this.size_)
-            cells.sort((c1, c2) => ( this.size_(c2) - this.size_(c1) ));
+            cells.sort((c1, c2) => (this.size_(c2) - this.size_(c1)));
 
         for (let cell of cells) {
 
@@ -60,7 +60,7 @@ export class ShapeColorSizeStyle extends Style {
                 //draw square
                 const d = resolution * (1 - sG / resolution) * 0.5
                 cg.ctx.fillRect(
-                    cg.geoToPixX(cell.x + d +this.offset_.dx),
+                    cg.geoToPixX(cell.x + d + this.offset_.dx),
                     cg.geoToPixY(cell.y + resolution - d + this.offset_.dy),
                     s, s);
             } else if (shape === "circle") {
@@ -85,10 +85,10 @@ export class ShapeColorSizeStyle extends Style {
 
 
     /**
-     * @param {function} color 
-     * @returns {this|function}
+     * @param {function(Cell):string} color 
+     * @returns {this|function(Cell):string}
      */
-     color(color) {
+    color(color) {
         if (color) {
             this.color_ = color;
             return this
@@ -97,10 +97,10 @@ export class ShapeColorSizeStyle extends Style {
     }
 
     /**
-     * @param {function} size 
-     * @returns {this|function}
+     * @param {function(Cell):number} size 
+     * @returns {this|function(Cell):number}
      */
-     size(size) {
+    size(size) {
         if (size) {
             this.size_ = size;
             return this
@@ -109,10 +109,10 @@ export class ShapeColorSizeStyle extends Style {
     }
 
     /**
-     * @param {function} shape 
-     * @returns {this|function}
+     * @param {function(Cell):string} shape 
+     * @returns {this|function(Cell):string}
      */
-     shape(shape) {
+    shape(shape) {
         if (shape) {
             this.shape_ = shape;
             return this
