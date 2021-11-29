@@ -9,6 +9,7 @@ TODO fix tiler rounding issue
 
 TODO make generic get x/y ?
 
+TODO adaptative style: with automated classification taking into account only the data within the viewshed
 TODO style radar
 TODO style trendline
 TODO style kernel smoothing
