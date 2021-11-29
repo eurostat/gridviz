@@ -1,6 +1,7 @@
 
+TODO specify sizes in ("P", "G")
 
-TODO zoom/pan smartphone - use d3 events
+TODO zoom/pan smartphone/touchscreen - use d3 events - base CanvasGeo on D3.js ?
 TODO implement mouse over
 TODO on zoom/pan, interupt all existing redraws
 
@@ -11,7 +12,7 @@ TODO make generic get x/y ?
 
 TODO adaptative style: with automated classification taking into account only the data within the viewshed
 TODO style radar
-TODO style trendline
+TODO style trendline - ENACT dataset ?
 TODO style kernel smoothing
 TODO fix segment
 
