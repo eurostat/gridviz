@@ -36,6 +36,12 @@ export class TiledGrid extends Dataset {
          *  */
         this.info = undefined;
 
+        /**
+         * The app being used.
+         * 
+         * @type {App}
+         */
+        this.app = app;
     }
 
     /**
@@ -91,7 +97,7 @@ export class TiledGrid extends Dataset {
         //TODO empty cache when it gets too big ?
 
         //check if info has been loaded
-        if(!this.info) return;
+        if (!this.info) return;
 
         //tiles within the scope
         /** @type {Envelope} */
@@ -131,6 +137,12 @@ export class TiledGrid extends Dataset {
 
                             //check if redraw is needed, that is:
                             // 1. if the dataset belongs to a layer which is visible at the current zoom level
+                            for (const layer of this.ap) {
+
+                            }
+
+
+
                             // and 2. the tile is within the view
 
 
@@ -160,7 +172,7 @@ export class TiledGrid extends Dataset {
         let cells = []
 
         //check if info has been loaded
-        if(!this.info) return cells;
+        if (!this.info) return cells;
 
         //tiles within the scope
         /** @type {Envelope} */

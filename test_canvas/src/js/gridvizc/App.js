@@ -74,9 +74,11 @@ export class App {
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
+     * @returns {this}
      */
     addLayer(dataset, styles, minZoom, maxZoom) {
         this.layers.push(new Layer(dataset, styles, minZoom, maxZoom));
+        return this;
     }
 
     /**
@@ -87,10 +89,11 @@ export class App {
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
      * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @returns {this}
      */
     addTiledGrid(url, styles, minZoom, maxZoom, preprocess = null) {
-        this.addLayer(
-            new TiledGrid(url, preprocess).loadInfo(() => { this.cg.redraw(); }),
+        return this.addLayer(
+            new TiledGrid(url, this, preprocess).loadInfo(() => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
     }
@@ -105,9 +108,10 @@ export class App {
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
      * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @returns {this}
      */
     addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null) {
-        this.addLayer(
+        return this.addLayer(
             new CSVGrid(url, resolution, preprocess).getData(null, () => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
@@ -118,6 +122,7 @@ export class App {
      * Draw a layer.
      * 
      * @param {Layer} layer 
+     * @returns {this}
      */
     draw(layer) {
 
@@ -130,6 +135,8 @@ export class App {
         //draw cells, style by style
         for (const style of layer.styles)
             style.draw(cells, layer.dataset.resolution, this.cg)
+        
+        return this;
     }
 
 
@@ -137,6 +144,7 @@ export class App {
      * Set viewer position.
      * 
      * @param {{x:number,y:number}} pos 
+     * @returns {this|{{x:number,y:number}}}
      */
     geoCenter(pos) {
         if (pos) {
@@ -149,7 +157,8 @@ export class App {
     /**
      * Set viewer zoom level (ground pixel size).
      * 
-     * @param {number} zf 
+     * @param {number} zf
+     * @returns {this|number}
      */
      zoomFactor(zf) {
         if (zf) {
@@ -163,6 +172,7 @@ export class App {
      * Set viewer zoom level (ground pixel size).
      * 
      * @param {string} backgroundColor 
+     * @returns {this|string}
      */
      backgroundColor(backgroundColor) {
         if (backgroundColor) {

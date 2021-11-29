@@ -15,5 +15,5 @@ TODO style trendline
 TODO style kernel smoothing
 TODO fix segment
 
-TODO empty tile cache
+TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache and remove inpriority the old-unused tiles.
 
