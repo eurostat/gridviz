@@ -43,7 +43,7 @@ export class LineStyle extends Style {
         for (const cell of cells) {
             let row = ind[cell.y];
             if (!row) { row = {}; ind[cell.y] = row }
-            row[cell.x] = +this.height_(cell);
+            row[cell.x] = this.height_(cell);
         }
 
         //compute extent
