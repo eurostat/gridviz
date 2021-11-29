@@ -52,9 +52,10 @@ export class ShapeColorSizeStyle extends Style {
             cg.ctx.fillStyle = this.color ? this.color_(cell) : "#EA6BAC";
 
             //size
-            let s_ = this.size_ ? this.size_(cell) : { val:resolution, unit:"g" };
+            /** @type {Size} */
+            let s_ = this.size_ ? this.size_(cell) : { val: resolution, unit: "geo" };
             //size - in pixel and geo
-            const sP = s_.unit==="p"? s_.val : s_.val / cg.zf
+            const sP = s_.unit === "pix" ? s_.val : s_.val / cg.zf
             const sG = cg.zf * sP;
 
             //get shape

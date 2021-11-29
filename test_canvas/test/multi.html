@@ -19,19 +19,19 @@
         const r = 100
         const s14 = gviz.ShapeColorSizeStyle(
             c => "#e6ab0299",
-            c => 6 * Math.sqrt(c["Population under 14"]),
+            c => { return { val: 6 * Math.sqrt(c["Population under 14"]), unit: "geo" } },
             c => "circle"
-        ).offset({ dx: -0.366*r, dy: -0.366*r }).zfStroke(1);
+        ).offset({ dx: -0.366 * r, dy: -0.366 * r }).zfStroke(1);
         const s30 = gviz.ShapeColorSizeStyle(
             c => "#1b9e7799",
-            c => 6 * Math.sqrt(c["pop_"]),
+            c => { return { val: 6 * Math.sqrt(c["pop_"]), unit: "geo" } },
             c => "circle"
-        ).offset({ dx: 0.5*r, dy: 0.366*r }).zfStroke(1);
+        ).offset({ dx: 0.5 * r, dy: 0.366 * r }).zfStroke(1);
         const s65 = gviz.ShapeColorSizeStyle(
             c => "#d95f0299",
-            c => 6 * Math.sqrt(c["Population over 65"]),
+            c => { return { val: 6 * Math.sqrt(c["Population over 65"]), unit: "geo" } },
             c => "circle"
-        ).offset({ dx: 0.366*r, dy: -0.366*r }).zfStroke(1);
+        ).offset({ dx: 0.366 * r, dy: -0.366 * r }).zfStroke(1);
 
         app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s30, s14, s65], 0, 9999999999,
             c => {

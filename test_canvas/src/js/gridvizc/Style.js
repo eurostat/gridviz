@@ -129,9 +129,10 @@ export class Style {
         cg.ctx.lineWidth = this.strokeWidth_;
 
         //size
-        let s_ = size ? size(cell) : { val: resolution, unit: "g" };
+        /** @type {Size} */
+        let s_ = size ? size(cell) : { val: resolution, unit: "geo" };
         //size - in pixel and geo
-        const sP = s_.unit === "p" ? s_.val : s_.val / cg.zf
+        const sP = s_.unit === "pix" ? s_.val : s_.val / cg.zf
         const sG = cg.zf * sP;
 
         const shape_ = shape(cell);

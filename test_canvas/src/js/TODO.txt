@@ -1,5 +1,5 @@
 
-TODO specify sizes in ("P", "G")
+TODO specify sizes in ("pix", "geo")
 
 TODO zoom/pan smartphone/touchscreen - use d3 events - base CanvasGeo on D3.js ?
 TODO implement mouse over

@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style } from "../Style"
+import { Style, Size } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
@@ -14,8 +14,8 @@ export class SegmentStyle extends Style {
     /**
       * @param {function(Cell):number} orientation A function returning the orientation (in degrees) of the segment representing a cell.
       * @param {function(Cell):string} color A function returning the color of the segment representing a cell.
-      * @param {function(Cell):number} length A function returning the length of the segment representing a cell.
-      * @param {function(Cell):number} width A function returning the width of the segment representing a cell.
+      * @param {function(Cell):Size} length A function returning the length of the segment representing a cell.
+      * @param {function(Cell):Size} width A function returning the width of the segment representing a cell.
       */
     constructor(orientation, color, length, width) {
         super()
@@ -24,9 +24,9 @@ export class SegmentStyle extends Style {
         this.orientation_ = orientation;
         /** @type {function(Cell):string} */
         this.color_ = color;
-        /** @type {function(Cell):number} */
+        /** @type {function(Cell):Size} */
         this.length_ = length;
-        /** @type {function(Cell):number} */
+        /** @type {function(Cell):Size} */
         this.width_ = width;
 
     }
@@ -47,20 +47,24 @@ export class SegmentStyle extends Style {
         for (let c of cells) {
 
             //set width and color
-            cg.ctx.lineWidth = this.width_(c) / cg.zf;
+            /** @type {Size} */
+            const lw = this.width_(c);
+            cg.ctx.lineWidth = lw.unit === "pix" ? lw.val : lw.val / cg.zf;
             cg.ctx.strokeStyle = this.color_(c);
 
             //get segment orientation (in radian) and length
-            const or = this.orientation_(c) * f,
-                len = this.length_(c);
+            const or = this.orientation_(c) * f
+            const len = this.length_(c);
+            //convert length in pixel
+            if (len.unit === "geo") { len.val /= cg.zf; len.unit = "pix" }
 
             //get segment center
             const cx = cg.geoToPixX(c.x + resolution / 2 + this.offset_.dx),
                 cy = cg.geoToPixY(c.y + resolution / 2 + this.offset_.dy);
 
             //get direction
-            const dx = 0.5 * len * Math.cos(or) / cg.zf,
-                dy = 0.5 * len * Math.sin(or) / cg.zf;
+            const dx = 0.5 * Math.cos(or) * len.val,
+                dy = 0.5 * Math.sin(or) * len.val;
 
             //draw segment
             cg.ctx.beginPath();
@@ -97,8 +101,8 @@ export class SegmentStyle extends Style {
     }
 
     /**
-     * @param {function(Cell):number} length 
-     * @returns {this|function(Cell):number}
+     * @param {function(Cell):Size} length 
+     * @returns {this|function(Cell):Size}
      */
     length(length) {
         if (length) {
@@ -109,8 +113,8 @@ export class SegmentStyle extends Style {
     }
 
     /**
-     * @param {function(Cell):number} width 
-     * @returns {this|function(Cell):number}
+     * @param {function(Cell):Size} width 
+     * @returns {this|function(Cell):Size}
      */
     width(width) {
         if (width) {

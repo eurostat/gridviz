@@ -39,7 +39,7 @@
                 "Ind_inc": "gray"
             },
             c => "flag",
-            c => 8 * Math.pow(c["Ind"], 0.5)
+            c => { return { val: 8 * Math.pow(c["Ind"], 0.5), unit: "geo" } }
         ).zfStroke(5);
 
 

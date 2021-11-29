@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style } from "../Style"
+import { Style, Size } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
@@ -20,7 +20,7 @@ export class CompositionStyle extends Style {
     /**
       * @param {Object} color The dictionary which give the color of each category.
       * @param {function(Cell):string} type A function returning the type of decomposition symbol of a cell: Among 'flag', 'piechart' and 'ring'
-      * @param {function(Cell):number} size A function returning the size of a cell (in geographical unit).
+      * @param {function(Cell):Size} size A function returning the size of a cell (in geographical unit).
       */
     constructor(color, type = null, size = null) {
         super()
@@ -32,7 +32,7 @@ export class CompositionStyle extends Style {
         /** @type {function(Cell):string} */
         this.type_ = type;
 
-        /** @type {function(Cell):number} */
+        /** @type {function(Cell):Size} */
         this.size_ = size;
     }
 
@@ -48,7 +48,7 @@ export class CompositionStyle extends Style {
 
         //if size is used, sort cells by size so that the biggest are drawn first
         if (this.size_)
-            cells.sort((c1, c2) => (this.size_(c2) - this.size_(c1)));
+            cells.sort((c1, c2) => (this.size_(c2).val - this.size_(c1).val));
 
         for (let cell of cells) {
 
@@ -57,10 +57,12 @@ export class CompositionStyle extends Style {
             for (let column of Object.keys(this.color_))
                 total += +cell[column]
 
-            //size - in ground meters
-            let sG = this.size_ ? this.size_(cell) : resolution;
-            //size - in pixel
-            const s = sG / cg.zf
+            //size
+            /** @type {Size} */
+            let s_ = this.size_ ? this.size_(cell) : { val: resolution, unit: "geo" };
+            //size - in pixel and geo
+            const sP = s_.unit === "pix" ? s_.val : s_.val / cg.zf
+            const sG = cg.zf * sP;
 
             //get symbol type
             const type_ = this.type_ ? this.type_(cell) : "flag"
@@ -80,16 +82,16 @@ export class CompositionStyle extends Style {
                 if (type_ === "flag") {
                     //draw flag vertical stripe
                     cg.ctx.fillRect(
-                        cumul * s + cg.geoToPixX(cell.x + d + this.offset_.dx),
+                        cumul * sP + cg.geoToPixX(cell.x + d + this.offset_.dx),
                         cg.geoToPixY(cell.y + resolution - d + this.offset_.dy),
-                        share * s, s);
+                        share * sP, sP);
                 } else if (type_ === "piechart") {
                     //draw pie chart angular sector
                     const xc = cg.geoToPixX(cell.x + resolution * 0.5 + this.offset_.dx);
                     const yc = cg.geoToPixY(cell.y + resolution * 0.5 + this.offset_.dy);
                     cg.ctx.beginPath();
                     cg.ctx.moveTo(xc, yc);
-                    cg.ctx.arc(xc, yc, s * 0.5, cumul * 2 * Math.PI, (cumul + share) * 2 * Math.PI);
+                    cg.ctx.arc(xc, yc, sP * 0.5, cumul * 2 * Math.PI, (cumul + share) * 2 * Math.PI);
                     cg.ctx.lineTo(xc, yc);
                     cg.ctx.fill();
                 } else if (type_ === "ring") {
@@ -99,7 +101,7 @@ export class CompositionStyle extends Style {
                     cg.ctx.arc(
                         cg.geoToPixX(cell.x + resolution * 0.5 + this.offset_.dx),
                         cg.geoToPixY(cell.y + resolution * 0.5 + this.offset_.dy),
-                        Math.sqrt(1 - cumul) * s * 0.5,
+                        Math.sqrt(1 - cumul) * sP * 0.5,
                         0, 2 * Math.PI);
                     cg.ctx.fill();
                 } else {
@@ -122,7 +124,7 @@ export class CompositionStyle extends Style {
      * @param {object} color 
      * @returns {this|object}
      */
-     color(color) {
+    color(color) {
         if (color) {
             this.color_ = color;
             return this
@@ -134,7 +136,7 @@ export class CompositionStyle extends Style {
      * @param {function(Cell):string} type 
      * @returns {this|function(Cell):string}
      */
-     type(type) {
+    type(type) {
         if (type) {
             this.type_ = type;
             return this
@@ -143,10 +145,10 @@ export class CompositionStyle extends Style {
     }
 
     /**
-     * @param {function(Cell):number} size 
-     * @returns {this|function(Cell):number}
+     * @param {function(Cell):Size} size 
+     * @returns {this|function(Cell):Size}
      */
-     size(size) {
+    size(size) {
         if (size) {
             this.size_ = size;
             return this
