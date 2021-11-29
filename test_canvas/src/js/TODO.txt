@@ -1,8 +1,8 @@
 
 
-TODO remove unnecessary redraw calls
 TODO zoom/pan smartphone - use d3 events
 TODO implement mouse over
+TODO on zoom/pan, interupt all existing redraws
 
 TODO test GriddedStatsTiler2
 TODO fix tiler rounding issue

@@ -143,8 +143,8 @@ export class App {
     /**
      * Set viewer position.
      * 
-     * @param {{x:number,y:number}} pos 
-     * @returns {this|{{x:number,y:number}}}
+     * @param {{x:number,y:number}=} pos 
+     * @returns {this|{x:number,y:number}}
      */
     geoCenter(pos) {
         if (pos) {
@@ -157,7 +157,7 @@ export class App {
     /**
      * Set viewer zoom level (ground pixel size).
      * 
-     * @param {number} zf
+     * @param {number=} zf
      * @returns {this|number}
      */
      zoomFactor(zf) {
@@ -171,7 +171,7 @@ export class App {
     /**
      * Set viewer zoom level (ground pixel size).
      * 
-     * @param {string} backgroundColor 
+     * @param {string=} backgroundColor 
      * @returns {this|string}
      */
      backgroundColor(backgroundColor) {

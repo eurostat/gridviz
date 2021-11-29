@@ -25,42 +25,22 @@ export class GridTile {
         /** @type {number} */
         this.y = yT
 
-        //convert cell coordinates into geographical coordinates
-        this.geoTile(gridInfo)
-    }
-
-
-    /**
-     * Convert cell position from tile position into geo position
-     * 
-     * @param {GridInfo} gridInfo 
-     */
-    geoTile(gridInfo) {
-
         const r = gridInfo.resolutionGeo;
         const s = gridInfo.tileSizeCell;
-        const xMin = gridInfo.originPoint.x + r * s * this.x
-        const yMin = gridInfo.originPoint.y + r * s * this.y
 
-        //compute geographical coordinates of cells
+        /** @type {import("../Dataset").Envelope} */
+        this.extGeo = {
+            xMin: gridInfo.originPoint.x + r * s * this.x,
+            xMax: gridInfo.originPoint.x + r * s * (this.x + 1),
+            yMin: gridInfo.originPoint.y + r * s * this.y,
+            yMax: gridInfo.originPoint.y + r * s * (this.y + 1)
+        }
+
+        //convert cell coordinates into geographical coordinates
         for (let cell of this.cells) {
-            cell.x = xMin + cell.x * r;
-            cell.y = yMin + cell.y * r;
+            cell.x = this.extGeo.xMin + cell.x * r;
+            cell.y = this.extGeo.yMin + cell.y * r;
         }
     }
 
-
-    /**
-     * Check if the tile need to be drawn after receiving its data from http request.
-     * That is if:
-     * 1- the til is still within the viewer geo extent.
-     * AND 2- the tile belongs to a layer whose zoom extent is within the current viewer zoom level.
-     * @returns {boolean}
-     */
-    needToLaunchRedraw() {
-
-        //TODO check redraw condition
-
-        return true;
-    }
 }

@@ -73,9 +73,9 @@ export class TiledGrid extends Dataset {
      * @returns {Envelope}
      */
     getTilingEnvelope(e) {
-        const po = this.info.originPoint
-        const r = this.info.resolutionGeo
-        const s = this.info.tileSizeCell
+        const po = this.info.originPoint,
+            r = this.info.resolutionGeo,
+            s = this.info.tileSizeCell;
 
         return {
             xMin: Math.floor((e.xMin - po.x) / (r * s)),
@@ -135,20 +135,34 @@ export class TiledGrid extends Dataset {
                                 for (const c of tile_.cells)
                                     this.preprocess(c);
 
-                            //check if redraw is needed, that is:
-                            // 1. if the dataset belongs to a layer which is visible at the current zoom level
-                            for (const layer of this.ap) {
 
+                            //if no redraw is specified, then leave
+                            if (!redrawFun) return;
+
+                            //check if redraw is really needed, that is if:
+
+                            // 1. the dataset belongs to a layer which is visible at the current zoom level
+                            let redraw = false;
+                            for (const layer of this.app.layers) {
+                                if (layer.dataset != this) continue;
+                                if (layer.maxZoom < this.app.zoomFactor()) continue;
+                                if (layer.minZoom > this.app.zoomFactor()) continue;
+                                //found one layer. No need to seek more.
+                                redraw = true;
+                                break;
                             }
+                            if (!redraw) return;
 
+                            // 2. the tile is within the view, that is its geo envelope intersects the viewer geo envelope.
+                            const env = this.app.cg.updateExtentGeo();
+                            const envT = tile_.extGeo;
+                            if(env.xMax <= envT.xMin) return;
+                            if(env.xMin >= envT.xMax) return;
+                            if(env.yMax <= envT.yMin) return;
+                            if(env.yMin >= envT.yMax) return;
 
-
-                            // and 2. the tile is within the view
-
-
-                            //execute the callback, usually a draw function
-                            if (tile_.needToLaunchRedraw() && redrawFun)
-                                redrawFun()
+                            //redraw
+                            redrawFun()
                         })
                     .catch(() => {
                         //mark as failed
