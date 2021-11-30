@@ -16,7 +16,7 @@
   let containerDiv = document.getElementById("viz-container");
 
   let viewer = gridviz
-    .viewer()
+    .app()
     .container(containerDiv)
     .gridData(
       {
@@ -36,7 +36,7 @@
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
 
-    viewer.addGeoJson('https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_BN_20M_2020_4326.geojson');
+    app.addGeoJson('https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_BN_20M_2020_4326.geojson');
 </script>
 
 </html>

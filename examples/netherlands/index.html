@@ -13,24 +13,17 @@
   <script src="../../build/gridviz.js"></script>
   <script>
     let containerDiv = document.getElementById("viz-container");
-    gridviz
-      .viewer()
+    let viz = gridviz
+      .app()
       .container(containerDiv)
       .title("100 x 100m statistics of the Netherlands")
-      .gridData(
-        {
-          url: "../../assets/csv/Netherlands/100m/NL_census.csv",
-          cellSize: 1,
-        },
-      )
       .cellCount(true)
       .sourcesHTML(
         "Source: <a target='__blank' href='https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken'>Statistics Netherlands</a>"
       )
-      .colorField("Inhabitants") // csv column which you wish to visualize
       .zerosRemoved(2)
       .nuts(false) // NUTS2JSON does not support EPSG:28992 - use addGeoJson() method to load custom geojson instead
-      .center([1720, 4500]) //EPSG=28992 with 2 zeros removed
+      .geoCenter([1720, 4500]) //EPSG=28992 with 2 zeros removed
       .showPlacenames(true)
       .EPSG(28992) // for placenames service
       .placenamesCountry("NL")
@@ -69,5 +62,13 @@
         showCoordinates: false,
       })
       .build();
+
+      viz.addGrid(
+        {
+          url: "../../assets/csv/Netherlands/100m/NL_census.csv",
+          cellSize: 1,
+          colorField: "Inhabitants"
+        },
+      )
   </script>
 </html>

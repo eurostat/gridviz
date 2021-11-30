@@ -24,54 +24,21 @@
 
   let containerDiv = document.getElementById("viz-container");
   let viz = gridviz
-    .viewer()
+    .app()
     .container(containerDiv)
-    .gridData(
-      {
-        url: "../../../assets/csv/Europe/5km/3035/pop_grid_5km_incl_uninhab.csv",
-        cellSize: 6.1,
-      },
-    )
     .zerosRemoved(3)
     .title("5x5km Population Grid of Europe")
     .cellCount(true)
-    .colorField("Population") // csv column which you wish to visualize
-    //sizeColumn() "value" // csv column which you wish to visualize
-    //.nuts(true) //loads borders topojson
-    //.nutsLevel(0)
-    .center([4369, 3230]) //EPSG=3035
+    .geoCenter([4369, 3230]) //EPSG=3035
     .zoom(5000)
-    // .height(window.innerHeight - 5)
-    // .width(window.innerWidth)
     .homeButton(true)
     .zoomButtons(true)
     .showPlacenames(true)
     .backgroundColor("#000")
     .lineColor('rgb(0, 0, 0)')
-    //.colorSchemeName("interpolateCividis") //d3-scale-chromatic
     .colorScaleName("scaleThreshold")
-    // .colors([
-    //   "#ffffcc",
-    //   "#c7e9b4",
-    //   "#7fcdbb",
-    //   "#41b6c4",
-    //   "#1d91c0",
-    //   "#225ea8",
-    //   "#0c2c84"
-    // ])
     .colors(['#ffffe5','#fff7bc','#fee391','#fec44f','#fe9929','#ec7014','#cc4c02','#993404','#662506'])
     .thresholds([1, 250, 750, 1500, 3000, 7500, 100000, 500000, 737000])
-    // .placenameThresholds({
-    //   5000: 8000000,
-    //   2000: 6000000,
-    //   1000: 5000000,
-    //   500: 1000000,
-    //   250: 1000000,
-    // })
-    //.colorSchemeSelector(true)
-    //.colorScaleSelector(true)
-    // .colorFieldSelector(true)
-    // .sizeFieldSelector(true)
     .legend({
       type: "continuous",
       width: legendWidth,
@@ -89,6 +56,14 @@
     })
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
     .build();
+
+    viz.addGrid(
+      {
+        url: "../../../assets/csv/Europe/5km/3035/pop_grid_5km_incl_uninhab.csv",
+        cellSize: 6.1,
+        colorField: "Population"
+      },
+    )
 
   //viz.addGeoJson("../../../assets/geojson/NUTS_BN_03M_2021_3035_LEVL_0.geojson");
 </script>

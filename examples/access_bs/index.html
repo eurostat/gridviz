@@ -22,32 +22,16 @@
       legendHeight = 50;
     }
 
-    gridviz
-      .viewer()
+    let viz = gridviz
+      .app()
       .container(containerDiv)
-      .gridData(
-        {
-          // url: "https://raw.githubusercontent.com/eurostat/gridviz/development/assets/csv/Europe/1km/accs.csv",
-          url: "../../assets/csv/Europe/1km/primary_school_acc.csv",
-          cellSize: 1,
-        },
-      )
       .cellCount(true)
       .zoom(4000)
-      .center([4369, 3230])
+      .geoCenter([4369, 3230])
       .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
       .title("Primary schools accessiblity")
-      .colorField("avg_time") // csv column that will determine cell colour
-
-      //.colorSchemeName("interpolateYlOrRd")
-      //.reverseColorScheme(false)
-      //.colorSchemeSelector(true)
       .colors(['#f7fcfd','#e0ecf4','#bfd3e6','#9ebcda','#8c96c6','#8c6bb1','#88419d','#810f7c','#4d004b']) //from colorbrewer
-
-      //.colorScaleSelector(true)
-      //.colorScaleName("scaleSequentialSqrt")
       .thresholds([2, 4, 6, 8, 10, 15, 20, 25, 30])
-
       .legend({
         title: "Travel time to nearest school (min)",
         ticks: 12,
@@ -56,5 +40,14 @@
       })
       //.sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
       .build();
+
+      viz.addGrid( 
+        {
+          // url: "https://raw.githubusercontent.com/eurostat/gridviz/development/assets/csv/Europe/1km/accs.csv",
+          url: "../../assets/csv/Europe/1km/primary_school_acc.csv",
+          cellSize: 1,
+          colorField: "avg_time"
+        }
+      )
   </script>
 </html>

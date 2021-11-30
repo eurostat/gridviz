@@ -11,21 +11,32 @@ import { range, quantile } from "d3-array";
 
 let title;
 
+export const defaultLegendConfig = {
+    type: "continuous", //cells vs continuous
+    width: 300,
+    height: null,
+    orientation: "horizontal",
+    title: null, //if null, will default to the current colorField
+    titleWidth: 50,
+    format: ".0s",
+    cells: 5,
+    shapeWidth: 30
+  };
+
 /**
    * 
    * @function createLegend
    * @description Add svg legend to DOM using d3-svg-legend
    */
-export function createLegend(viewer) {
+export function createLegend(app, grid) {
     // title for color legend defaults to colorField
-    if (!viewer.legend_.title) title = viewer.colorField_; else title = viewer.legend_.title;
+    if (!app.legend_.title) title = grid.colorField; else title = app.legend_.title;
 
-    if (viewer.legend_.type == "cells") {
-        createCellsLegend(viewer)
-    } else if (viewer.legend_.type == "continuous") {
-        createContinuousLegend(viewer)
+    if (app.legend_.type == "cells") {
+        createCellsLegend(app)
+    } else if (app.legend_.type == "continuous") {
+        createContinuousLegend(app)
     }
-
 }
 
 /**
@@ -33,15 +44,15 @@ export function createLegend(viewer) {
    * @function createCellsLegend 
    * @description uses npm package 'd3-svg-legend' to build a "cells" style legend
    */
-function createCellsLegend(viewer) {
+function createCellsLegend(app) {
     let legendContainer;
     if (document.getElementById("gridviz-legend")) {
         legendContainer = select("#gridviz-legend");
     } else {
         legendContainer = create("svg").attr("id", "gridviz-legend");
-        viewer.container_.appendChild(legendContainer.node());
+        app.container_.appendChild(legendContainer.node());
     }
-    if (viewer.legend_.orientation == "horizontal") {
+    if (app.legend_.orientation == "horizontal") {
         legendContainer.attr("class", "gridviz-legend-horizontal gridviz-plugin");
     } else {
         legendContainer.attr("class", "gridviz-legend-vertical gridviz-plugin");
@@ -49,33 +60,33 @@ function createCellsLegend(viewer) {
     let legendSvg =
         legendContainer.append("g")
             .attr("class", "gridviz-legend-svg")
-            .attr("height", viewer.legend_.height)
-            .attr("width", viewer.legend_.width)
+            .attr("height", app.legend_.height)
+            .attr("width", app.legend_.width)
             .attr("transform", "translate(10,15)"); //padding
 
 
-    viewer._gridLegend = LEGEND.legendColor()
-        .shapeWidth(viewer.legend_.shapeWidth)
-        .cells(viewer.legend_.cells)
-        .labelFormat(format(viewer.legend_.format))
-        .orient(viewer.legend_.orientation)
-        .scale(viewer.colorScaleFunction_)
+    app.__Legend = LEGEND.legendColor()
+        .shapeWidth(app.legend_.shapeWidth)
+        .cells(app.legend_.cells)
+        .labelFormat(format(app.legend_.format))
+        .orient(app.legend_.orientation)
+        .scale(app.colorScaleFunction_)
         .title(title)
-        .titleWidth(viewer.legend_.titleWidth)
+        .titleWidth(app.legend_.titleWidth)
 
-    if (viewer.thresholds_) {
-        viewer._gridLegend.labels(thresholdLabels)
+    if (app.thresholds_) {
+        app.__Legend.labels(thresholdLabels)
     }
 
-    legendSvg.call(viewer._gridLegend);
+    legendSvg.call(app.__Legend);
 
     //adjust width/height
-    if (!viewer.legend_.height) {
-        viewer.legend_.height = 320
+    if (!app.legend_.height) {
+        app.legend_.height = 320
     }
-    legendContainer.style("height", viewer.legend_.height + "px");
-    legendContainer.style("width", viewer.legend_.width + "px");
-    //legend.style("height", viewer.legend_.height +"px");
+    legendContainer.style("height", app.legend_.height + "px");
+    legendContainer.style("width", app.legend_.width + "px");
+    //legend.style("height", app.legend_.height +"px");
 }
 
 
@@ -84,7 +95,7 @@ function createCellsLegend(viewer) {
    * @function createContinuousLegend
    * @description creates a continuous color legend using d3. see https://observablehq.com/@gabgrz/color-legend
    */
-function createContinuousLegend(viewer) {
+function createContinuousLegend(app) {
 
     let container;
     if (document.getElementById("gridviz-legend")) {
@@ -92,31 +103,31 @@ function createContinuousLegend(viewer) {
     } else {
         container = create("div").attr("id", "gridviz-legend");
         container.attr("class", "gridviz-plugin");
-        viewer.container_.appendChild(container.node());
+        app.container_.appendChild(container.node());
     }
 
-    let tickSize = viewer.legend_.tickSize || 6;
-    let width = viewer.legend_.width || 500;
-    let height = viewer.legend_.height || 44 + tickSize;
-    let marginBottom = viewer.legend_.marginBottom || 16 + tickSize;
-    let ticks = viewer.legend_.ticks || width / 64;
+    let tickSize = app.legend_.tickSize || 6;
+    let width = app.legend_.width || 500;
+    let height = app.legend_.height || 44 + tickSize;
+    let marginBottom = app.legend_.marginBottom || 16 + tickSize;
+    let ticks = app.legend_.ticks || width / 64;
 
-    viewer._gridLegend = colorLegend({
-        color: viewer.colorScaleFunction_,
+    app.__Legend = colorLegend({
+        color: app.colorScaleFunction_,
         title: title,
         tickSize: tickSize,
         width: width,
         height: height,
         marginBottom: marginBottom,
         ticks: ticks,
-        marginTop: viewer.legend_.marginRight || 18,
-        marginRight: viewer.legend_.marginRight || 0,
-        marginLeft: viewer.legend_.marginLeft || 0,
-        tickFormat: viewer.legend_.tickFormat || ".0f",
-        tickValues: viewer.thresholds_ || undefined
+        marginTop: app.legend_.marginRight || 18,
+        marginRight: app.legend_.marginRight || 0,
+        marginLeft: app.legend_.marginLeft || 0,
+        tickFormat: app.legend_.tickFormat || ".0f",
+        tickValues: app.thresholds_ || undefined
     });
 
-    container.node().appendChild(viewer._gridLegend);
+    container.node().appendChild(app.__Legend);
 
 }
 function ramp(color, n = 256) {
@@ -263,9 +274,9 @@ function thresholdLabels({
  * @description remove DOM element and rebuild legend
  * @function updateLegend
  */
-export function updateLegend(viewer) {
+export function updateLegend(app, grid) {
     // TODO: make less hacky :)
     var l = selectAll(".gridviz-legend-svg").remove();
-    setTimeout(createLegend(viewer), 1000);
+    setTimeout(createLegend(app, grid), 1000);
 }
 

@@ -1,4 +1,4 @@
-// logic for adding geojson features to the gridviz viewer
+// logic for adding geojson features to the gridviz app
 
 import { Color, Group } from "three";
 
@@ -14,11 +14,11 @@ let lineMaterial; // line material used for all threejs webgl lines
  * 
  * @description Add geojson features to three.js scene. Currently only accepts polygon, multipolygon or linestring
  * @param {Array} features Geojson feature array
- * @param {Object} viewer gridviz viewer
+ * @param {Object} app gridviz app
  * @function addGeoJsonToScene
  */
 let layerZ = CONSTANTS.line_z;
-export function addGeoJsonToScene(features, viewer) {
+export function addGeoJsonToScene(features, app) {
     layerZ = layerZ + 0.002; // increment draw order so that latest geojson is added on top of the rest.
     let geojsonGroup = new Group();
     geojsonGroup.renderOrder = 999; //always on top of grid
@@ -31,8 +31,8 @@ export function addGeoJsonToScene(features, viewer) {
                 let coords = [];
                 for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
                     let xyz;
-                    if (viewer.zerosRemoved_) {
-                        let d = Number('1E' + viewer.zerosRemoved_);
+                    if (app.zerosRemoved_) {
+                        let d = Number('1E' + app.zerosRemoved_);
                         xyz = {
                             x: feature.geometry.coordinates[c][s][0] / d,
                             y: feature.geometry.coordinates[c][s][1] / d,
@@ -49,7 +49,7 @@ export function addGeoJsonToScene(features, viewer) {
                     coords.push(xyz);
                 }
                 if (coords.length > 0) {
-                    geojsonGroup.add(createLineFromCoords(coords, viewer.lineColor_, viewer.lineWidth_));
+                    geojsonGroup.add(createLineFromCoords(coords, app.lineColor_, app.lineWidth_));
                 }
 
             } else if (feature.geometry.type == "MultiPolygon") {
@@ -62,8 +62,8 @@ export function addGeoJsonToScene(features, viewer) {
                         m++
                     ) {
                         let xyz;
-                        if (viewer.zerosRemoved_) {
-                            let d = Number('1E' + viewer.zerosRemoved_);
+                        if (app.zerosRemoved_) {
+                            let d = Number('1E' + app.zerosRemoved_);
                             xyz = {
                                 x: feature.geometry.coordinates[c][s][m][0] / d,
                                 y: feature.geometry.coordinates[c][s][m][1] / d,
@@ -79,13 +79,13 @@ export function addGeoJsonToScene(features, viewer) {
                         coords.push(xyz);
                     }
                     if (coords.length > 0) {
-                        geojsonGroup.add(createLineFromCoords(coords, viewer.lineColor_, viewer.lineWidth_));
+                        geojsonGroup.add(createLineFromCoords(coords, app.lineColor_, app.lineWidth_));
                     }
                 }
             } else if (feature.geometry.type == "LineString") {
                 let xyz;
-                if (viewer.zerosRemoved_) {
-                    let d = Number('1E' + viewer.zerosRemoved_);
+                if (app.zerosRemoved_) {
+                    let d = Number('1E' + app.zerosRemoved_);
                     xyz = {
                         x: feature.geometry.coordinates[c][0] / d,
                         y: feature.geometry.coordinates[c][1] / d,
@@ -103,11 +103,11 @@ export function addGeoJsonToScene(features, viewer) {
         }
         if (feature.geometry.type = "LineString") {
             if (coords.length > 0) {
-                geojsonGroup.add(createLineFromCoords(coords, viewer.lineColor_, viewer.lineWidth_));
+                geojsonGroup.add(createLineFromCoords(coords, app.lineColor_, app.lineWidth_));
             }
         }
     }
-    viewer.scene.add(geojsonGroup);
+    app.viewer.scene.add(geojsonGroup);
 }
 
 /**

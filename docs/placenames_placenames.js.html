@@ -40,14 +40,15 @@ import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
    * @param {Object} viewer
    */
 export function defineDefaultPlacenameThresholds(viewer) {
-    let r = viewer.resolution_;
+    let r = app.currentResolution_ / window.devicePixelRatio;
+    //let s = app.camera.position.z;
     // scale : population
 
-    viewer.placenameThresholds_ = {
-        [r * 1024]: 1500000,
-        [r * 512]: 1000000,
+    app.placenameThresholds_ = {
+        [r * 1024]: 1000000,
+        [r * 512]: 600000,
         [r * 256]: 500000,
-        [r * 128]: 250000,
+        [r * 128]: 200000,
         [r * 64]: 150000,
         [r * 32]: 100000,
         [r * 16]: 50000,
@@ -69,6 +70,7 @@ export function getPlacenames(viewer) {
     let envelope = Utils.getCurrentViewExtent(viewer);
     //currentExtent = envelope;
     //ESRI Rest API envelope: &lt;xmin>,&lt;ymin>,&lt;xmax>,&lt;ymax> (bottom left x,y , top right x,y)
+    if (app.debugPlacenames_) console.info(envelope);
 
     if (envelope &amp;&amp; where) {
         let URL =
@@ -76,8 +78,8 @@ export function getPlacenames(viewer) {
             "where=" +
             where +
             "&amp;outSR=" +
-            viewer.EPSG_ +
-            "&amp;inSR=" + viewer.EPSG_ +
+            app.EPSG_ +
+            "&amp;inSR=" + app.EPSG_ +
             "&amp;geometry=" +
             envelope.xmin +
             "," +
@@ -92,13 +94,11 @@ export function getPlacenames(viewer) {
         let uri = encodeURI(URL);
         json(uri).then(
             res => {
+                removePlacenamesFromScene(viewer);
                 if (res.features) {
                     if (res.features.length > 0) {
-                        removePlacenamesFromScene(viewer);
                         addPlacenamesToScene(viewer, res.features);
                     }
-                } else {
-                    removePlacenamesFromScene(viewer);
                 }
             },
             err => {
@@ -115,9 +115,9 @@ export function getPlacenames(viewer) {
  * @description Removes the placenames CSS2DObjects from the THREE pointsLayer layer
  */
  export function removePlacenamesFromScene(viewer) {
-    if (viewer.pointsLayer &amp;&amp; viewer.pointsLayer.children.length > 0) {
-        for (var i = viewer.pointsLayer.children.length - 1; i >= 0; i--) {
-            viewer.pointsLayer.remove(viewer.pointsLayer.children[i]);
+    if (app.pointsLayer &amp;&amp; app.pointsLayer.children.length > 0) {
+        for (var i = app.pointsLayer.children.length - 1; i >= 0; i--) {
+            app.pointsLayer.remove(app.pointsLayer.children[i]);
         }
     }
 }
@@ -129,39 +129,39 @@ export function getPlacenames(viewer) {
  * @param {*} viewer
  */
 function defineWhereParameter(viewer) {
-    let scale = viewer.camera.position.z;
-    let r = viewer.resolution_;
+    let scale = app.camera.position.z;
+    let r = app.currentResolution_;
     let where = "";
-    if (viewer.placenamesCountry_) {
-        where = where + CONSTANTS.placenames.countryField + " = '" + viewer.placenamesCountry_ + "' AND "
+    if (app.placenamesCountry_) {
+        where = where + CONSTANTS.placenames.countryField + " = '" + app.placenamesCountry_ + "' AND "
     }
     // labelling thresholds by population - either custom values or by scale
     let popFilter = getPopulationParameterFromScale(viewer)
-    if (viewer.debugPlacenames_) {
+    if (app.debugPlacenames_) {
         console.info(popFilter);
     }
     return where + popFilter;
 }
 
 /**
- * @description Defines the population parameter for the request to the placenmes service. If viewer.populationThresholds_ are not set, it uses default thresholds
+ * @description Defines the population parameter for the request to the placenmes service. If app.populationThresholds_ are not set, it uses default thresholds
  * @function getPopulationParameterFromScale
  * @param {*} viewer
  */
 function getPopulationParameterFromScale(viewer) {
-    let scale = viewer.camera.position.z;
-    if (viewer._mobile) {
+    let scale = app.camera.position.z;
+    if (app._mobile) {
         //scale up to desktop values
-        let factor = viewer.originalResolution / viewer.resolution_
+        let factor = app.originalResolution / app.currentResolution_
         scale = scale * factor;
     }
 
     let populationFieldName = CONSTANTS.placenames.populationField;
     //build query string from thresholds
-    if (viewer.placenameThresholds_) {
+    if (app.placenameThresholds_) {
         // always ascending order
-        let scales = Object.keys(viewer.placenameThresholds_).sort((a, b)=>{return parseInt(a)-parseInt(b)});
-        let populations = Object.values(viewer.placenameThresholds_).sort((a, b)=>{return parseInt(a)-parseInt(b)});
+        let scales = Object.keys(app.placenameThresholds_).sort((a, b)=>{return parseInt(a)-parseInt(b)});
+        let populations = Object.values(app.placenameThresholds_).sort((a, b)=>{return parseInt(a)-parseInt(b)});
         for (let i = 0; i &lt; scales.length; i++) {
             let s = scales[i];
             let p = populations[i];
@@ -189,11 +189,11 @@ function getPopulationParameterFromScale(viewer) {
  * @param {*} placenames
  */
 function addPlacenamesToScene(viewer, placenames) {
-    if (viewer.pointsLayer) {
+    if (app.pointsLayer) {
         for (let p = 0; p &lt; placenames.length; p++) {
             let label = createPlacenameLabelObject(viewer, placenames[p]);
             // TODO: group objects manually (THREE.group())
-            viewer.pointsLayer.add(label);
+            app.pointsLayer.add(label);
         }
     }
 }
@@ -213,11 +213,11 @@ function createPlacenameLabelObject(viewer, placename) {
     var placeLabel = new CSS2DObject(placeDiv);
 
     //scale mobile coords
-    if (viewer._mobile) {
-        if (viewer.zerosRemoved_) {
-            let d = Number('1E' + viewer.zerosRemoved_);
-            let x = viewer.mobileCoordScaleX(placename.geometry.x / d);
-            let y = viewer.mobileCoordScaleY(placename.geometry.y / d)
+    if (app._mobile) {
+        if (app.zerosRemoved_) {
+            let d = Number('1E' + app.zerosRemoved_);
+            let x = app.mobileCoordScaleX(placename.geometry.x / d);
+            let y = app.mobileCoordScaleY(placename.geometry.y / d)
             placeLabel.position.set(
                 x,
                 y,
@@ -225,16 +225,16 @@ function createPlacenameLabelObject(viewer, placename) {
             );
         } else {
             placeLabel.position.set(
-                viewer.mobileCoordScaleX(placename.geometry.x),
-                viewer.mobileCoordScaleY(placename.geometry.y),
+                app.mobileCoordScaleX(placename.geometry.x),
+                app.mobileCoordScaleY(placename.geometry.y),
                 CONSTANTS.label_height
             );
         }
         return placeLabel;
     } else {
         //desktop
-        if (viewer.zerosRemoved_) {
-            let d = Number('1E' + viewer.zerosRemoved_);
+        if (app.zerosRemoved_) {
+            let d = Number('1E' + app.zerosRemoved_);
             placeLabel.position.set(
                 placename.geometry.x / d,
                 placename.geometry.y / d,
@@ -259,13 +259,13 @@ function createPlacenameLabelObject(viewer, placename) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addChangeEventToColorFieldDropdown">addChangeEventToColorFieldDropdown</a></li><li><a href="global.html#addChangeEventToColorScaleDropdown">addChangeEventToColorScaleDropdown</a></li><li><a href="global.html#addChangeEventToColorSchemeDropdown">addChangeEventToColorSchemeDropdown</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addNuts2jsonToScene">addNuts2jsonToScene</a></li><li><a href="global.html#addPanAndZoom">addPanAndZoom</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#colorLegend">colorLegend</a></li><li><a href="global.html#createCellsLegend">createCellsLegend</a></li><li><a href="global.html#createContinuousLegend">createContinuousLegend</a></li><li><a href="global.html#createLabelRenderer">createLabelRenderer</a></li><li><a href="global.html#createLegend">createLegend</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createRaycaster">createRaycaster</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#createWebGLRenderer">createWebGLRenderer</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineDefaultPlacenameThresholds">defineDefaultPlacenameThresholds</a></li><li><a href="global.html#definePointSize">definePointSize</a></li><li><a href="global.html#defineRaycasterThreshold">defineRaycasterThreshold</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#ensureTooltipOnScreen">ensureTooltipOnScreen</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#onChangeColorField">onChangeColorField</a></li><li><a href="global.html#onChangeColorScale">onChangeColorScale</a></li><li><a href="global.html#onChangeColorScheme">onChangeColorScheme</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#thresholdLabels">thresholdLabels</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updateLegend">updateLegend</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#validateInputs">validateInputs</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewer">viewer</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addChangeEventToColorFieldDropdown">addChangeEventToColorFieldDropdown</a></li><li><a href="global.html#addChangeEventToColorScaleDropdown">addChangeEventToColorScaleDropdown</a></li><li><a href="global.html#addChangeEventToColorSchemeDropdown">addChangeEventToColorSchemeDropdown</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#colorLegend">colorLegend</a></li><li><a href="global.html#createCellsLegend">createCellsLegend</a></li><li><a href="global.html#createContinuousLegend">createContinuousLegend</a></li><li><a href="global.html#createLegend">createLegend</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineDefaultPlacenameThresholds">defineDefaultPlacenameThresholds</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#ensureTooltipOnScreen">ensureTooltipOnScreen</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#onChangeColorField">onChangeColorField</a></li><li><a href="global.html#onChangeColorScale">onChangeColorScale</a></li><li><a href="global.html#onChangeColorScheme">onChangeColorScheme</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#thresholdLabels">thresholdLabels</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updateLegend">updateLegend</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li><li><a href="global.html#zoomIn">zoomIn</a></li><li><a href="global.html#zoomOut">zoomOut</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Sep 23 2021 16:50:00 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Nov 26 2021 14:37:17 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -23,21 +23,13 @@
   let sizeScale = d3.scaleSequentialSqrt(domain, [1000, 10000]) //min/max height in geographic units
   let containerDiv = document.getElementById("viz-container");
 
-  gridviz
-    .viewer()    
+  let app = gridviz
+    .app()    
     .title("3D test example")
     .subtitle("Left click and drag to orbit in 3D, right click to pan")
     .container(containerDiv)
-    .gridData(
-      {
-        url: "../../assets/csv/Croatia/croatia_tourism_grid.csv",
-        cellSize: 1000,
-      },
-    )
-    .colorField("NIGHTS_TOT")
-    .sizeField("NIGHTS_TOT") // csv column which you wish to visualize
     .sizeScaleFunction(sizeScale)
-    .center([4900000,2475000])
+    .geoCenter([4900000,2475000])
     .zoom(500000) //initial camera Z value
     .cellCount(true)
     .cellShape('bar')
@@ -55,6 +47,15 @@
     .lineColor('#ffffff')
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
+
+    app.addGrid(
+      {
+        url: "../../assets/csv/Croatia/croatia_tourism_grid.csv",
+        cellSize: 1000,
+        colorField: "NIGHTS_TOT",
+        sizeField: "NIGHTS_TOT"
+      }
+    )
 </script>
 
 </html>

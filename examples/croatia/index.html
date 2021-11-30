@@ -14,17 +14,10 @@
 <script src="../../build/gridviz.js"></script>
 <script>
   let containerDiv = document.getElementById("viz-container");
-  gridviz
-    .viewer()
+  let app = gridviz
+    .app()
     .container(containerDiv)
     .title("Tourism Grid of Croatia")
-    .gridData(
-      {
-        url: "../../assets/csv/Croatia/croatia_tourism_grid.csv",
-        cellSize: 1000,
-      },
-    )
-    .colorField("NIGHTS_TOT") // csv column which you wish to visualize
     .zoom(500000) //initial camera Z value
     .nuts(true) //loads borders topojson
     .nutsCountry("HR") //filter nuts
@@ -48,17 +41,13 @@
         250: 10000,
       })
       .backgroundColor("#2b2b2b")
-    .center([4755000, 2369000]) //EPSG=3035
+    .geoCenter([4755000, 2369000]) //EPSG=3035
     .height(window.innerHeight - 0.1)
     .width(window.innerWidth - 0.1)
     .lineColor("#ffffff")
     .lineWidth(0.00025)
     .colorSchemeName("interpolateYlOrRd")
     .colorScaleName("scaleSequentialLog")
-
-    // .colorSchemeSelector(true)
-    // .colorScaleSelector(true)
-    // .colorFieldSelector(true)
     .colorScaleSelectorLabel("Scale: ")
     .colorFieldSelectorLabel("Indicator: ")
     .legend({
@@ -69,6 +58,14 @@
       format: ",.2r",
     })
     .build();
+
+    app.addGrid(
+      {
+        url: "../../assets/csv/Croatia/croatia_tourism_grid.csv",
+        cellSize: 1000,
+        colorField: "NIGHTS_TOT"
+      },
+    )
 </script>
 
 </html>

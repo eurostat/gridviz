@@ -10,114 +10,112 @@ import { Vector3 } from "three"
  * @function addPanAndZoom
  * 
  */
-export function addPanAndZoom(viewer) {
+export function addPanAndZoom(app) {
 
     // define d3 zoom
     //where [x0, y0] is the top-left corner of the world and [x1, y1] is the bottom-right corner of the world
-    let farScale = Utils.getScaleFromZ(viewer.height_, viewer.cameraConfig.fov_, viewer.cameraConfig.far_);
-    let nearScale = Utils.getScaleFromZ(viewer.height_, viewer.cameraConfig.fov_, viewer.cameraConfig.near_);
-    viewer.d3zoom =
+    let farScale = Utils.getScaleFromZ(app.height_, app.viewer.camera.cameraConfig.fov_, app.viewer.camera.cameraConfig.far_);
+    let nearScale = Utils.getScaleFromZ(app.height_, app.viewer.camera.cameraConfig.fov_, app.viewer.camera.cameraConfig.near_);
+    app.d3zoom =
       zoom()
         .scaleExtent([farScale, nearScale])
-        .extent([[0, 0], [viewer.width_, viewer.height_]])
+        .extent([[0, 0], [app.width_, app.height_]])
         .on("zoom", (event) => {
           // let event = currentEvent;
-          if (viewer._mobile) {
-            if (event) zoomHandlerMobile(viewer, event);
+          if (app._mobile) {
+            if (event) zoomHandlerMobile(app, event);
           } else {
-            if (event) zoomHandler(viewer, event);
+            if (event) zoomHandler(app, event);
           }
         })
         .on("end", (event) => {
           //let event = currentEvent;
-          if (event) zoomEnd(viewer, event);
+          if (event) zoomEnd(app, event);
         });
 
-    viewer.view.call(viewer.d3zoom);
+    app.viewer.view.call(app.d3zoom);
 
-    if (viewer._mobile) {
+    if (app._mobile) {
       //due to a bug on mobile, where the camera shifts unexpectedly on the first pan or zoom event, we have to scale everything to a webgl-friendly range and set the camera to 0,0
-      let initial_scale = Utils.getScaleFromZ(viewer.height_, viewer.cameraConfig.fov_, viewer.cameraConfig.initialZ_);
-      var initial_transform = zoomIdentity.translate(viewer.width_ / 2, viewer.height_ / 2).scale(initial_scale);
-      viewer.d3zoom.transform(viewer.view, initial_transform);
-      Camera.setCamera(0, 0, viewer.cameraConfig.initialZ_)
+      let initial_scale = Utils.getScaleFromZ(app.height_, app.viewer.camera.cameraConfig.fov_, app.viewer.camera.cameraConfig.initialZ_);
+      var initial_transform = zoomIdentity.translate(app.width_ / 2, app.height_ / 2).scale(initial_scale);
+      app.d3zoom.transform(app.viewer.view, initial_transform);
+      app.viewer.camera.setCamera(0, 0, app.viewer.camera.cameraConfig.initialZ_)
 
     } else {
       //initial desktop zoom transform
-      let scale = Utils.getScaleFromZ(viewer.height_, viewer.cameraConfig.fov_, viewer.cameraConfig.initialZ_)
-      viewer.d3zoom.scaleTo(viewer.view, scale);
-      viewer.d3zoom.translateTo(viewer.view,
-        parseInt(viewer.center_[0]) + viewer.width_ / 2,
-        parseInt(viewer.center_[1]) + viewer.height_ / 2);
-      Camera.setCamera(viewer.center_[0], viewer.center_[1], viewer.cameraConfig.initialZ_)
+      let scale = Utils.getScaleFromZ(app.height_, app.viewer.camera.cameraConfig.fov_, app.viewer.camera.cameraConfig.initialZ_)
+      app.d3zoom.scaleTo(app.viewer.view, scale);
+      app.d3zoom.translateTo(app.viewer.view,
+        parseInt(app.center_[0]) + app.width_ / 2,
+        parseInt(app.center_[1]) + app.height_ / 2);
+        app.viewer.camera.setCamera(app.center_[0], app.center_[1], app.viewer.camera.cameraConfig.initialZ_)
     }
-
-
 }
 
 
 
-function zoomHandler(viewer, event) {
+function zoomHandler(app, event) {
   let scale = event.transform.k;
   if (event.sourceEvent) {
-    let new_z = Utils.getZFromScale(viewer.height_, viewer.cameraConfig.fov_, scale);
+    let new_z = Utils.getZFromScale(app.height_, app.viewer.camera.cameraConfig.fov_, scale);
     //if zoom
-    if (new_z !== viewer.camera.position.z) {
+    if (new_z !== app.viewer.camera.camera.position.z) {
       // Handle a zoom event
       const { clientX, clientY } = event.sourceEvent;
       // Code from WestLangley https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z/13091694#13091694
       const vector = new Vector3(
-        (clientX / viewer.width_) * 2 - 1,
-        -(clientY / viewer.height_) * 2 + 1,
+        (clientX / app.width_) * 2 - 1,
+        -(clientY / app.height_) * 2 + 1,
         1
       );
-      vector.unproject(viewer.camera);
-      const dir = vector.sub(viewer.camera.position).normalize();
-      const distance = (new_z - viewer.camera.position.z) / dir.z;
-      const pos = viewer.camera.position.clone().add(dir.multiplyScalar(distance));
+      vector.unproject(app.viewer.camera.camera);
+      const dir = vector.sub(app.viewer.camera.camera.position).normalize();
+      const distance = (new_z - app.viewer.camera.camera.position.z) / dir.z;
+      const pos = app.viewer.camera.camera.position.clone().add(dir.multiplyScalar(distance));
       // Set the camera to new coordinates
-      Camera.setCamera(pos.x, pos.y, new_z);
+      app.viewer.camera.setCamera(pos.x, pos.y, new_z);
     } else {
       // If panning
       const { movementX, movementY } = event.sourceEvent;
 
       // Adjust mouse movement by current scale and set camera
-      const current_scale = Utils.getScaleFromZ(viewer.height_, viewer.cameraConfig.fov_, viewer.camera.position.z);
-      Camera.setCamera(
-        viewer.camera.position.x - movementX / current_scale,
-        viewer.camera.position.y + movementY / current_scale,
-        viewer.camera.position.z
+      const current_scale = Utils.getScaleFromZ(app.height_, app.viewer.camera.cameraConfig.fov_, app.viewer.camera.camera.position.z);
+      app.viewer.camera.setCamera(
+        app.viewer.camera.camera.position.x - movementX / current_scale,
+        app.viewer.camera.camera.position.y + movementY / current_scale,
+        app.viewer.camera.camera.position.z
       );
     }
   }
 }
 
 
-function zoomHandlerMobile(viewer, event) {
+function zoomHandlerMobile(app, event) {
   if (event.sourceEvent) {
     let scale = event.transform.k;
-    let x = -(event.transform.x - viewer.width_ / 2) / scale;
-    let y = (event.transform.y - viewer.height_ / 2) / scale;
-    let z = Utils.getZFromScale(viewer.height_, viewer.cameraConfig.fov_, scale);
-    Camera.setCamera(x, y, z);
+    let x = -(event.transform.x - app.width_ / 2) / scale;
+    let y = (event.transform.y - app.height_ / 2) / scale;
+    let z = Utils.getZFromScale(app.height_, app.viewer.camera.cameraConfig.fov_, scale);
+    app.viewer.camera.setCamera(x, y, z);
   }
 }
 
 
-function zoomEnd(viewer, event) {
+function zoomEnd(app, event) {
   Tooltip.hideTooltip();
-  let scale = Utils.getScaleFromZ(viewer.height_, viewer.cameraConfig.fov_, event.transform.k);
-  if (viewer.debugPlacenames_) {
+  let scale = Utils.getScaleFromZ(app.height_, app.viewer.camera.cameraConfig.fov_, event.transform.k);
+  if (app.debugPlacenames_) {
     console.info('scale:', scale);
   }
   // get placenames at certain zoom levels
-  if (viewer.showPlacenames_) {
-    if (viewer.pointsLayer) {
-      if (scale > 0 && scale < viewer.cameraConfig.far_) {
-        //placenames are added to the viewer.pointsLayer object
-        Placenames.getPlacenames(viewer);
+  if (app.showPlacenames_) {
+    if (app.pointsLayer) {
+      if (scale > 0 && scale < app.viewer.camera.cameraConfig.far_) {
+        //placenames are added to the app.pointsLayer object
+        Placenames.getPlacenames(app);
       } else {
-        Placenames.removePlacenamesFromScene(viewer);
+        Placenames.removePlacenamesFromScene(app);
       }
     }
   }
@@ -131,10 +129,10 @@ function zoomEnd(viewer, event) {
  * @function zoomIn
  * @parameter scaleFactor 
  */
-export function zoomIn(viewer, scaleFactor) {
+export function zoomIn(app, scaleFactor) {
   // when we zoom, we have to update both the threejs camera and the d3 zoom
-  viewer.view.call(viewer.d3zoom.scaleBy, scaleFactor);
-  Camera.setCamera(viewer.camera.position.x, viewer.camera.position.y, viewer.camera.position.z / scaleFactor)
+  app.viewer.view.call(app.d3zoom.scaleBy, scaleFactor);
+  app.viewer.camera.camera.setCamera(app.viewer.camera.camera.position.x, app.viewer.camera.camera.position.y, app.viewer.camera.camera.position.z / scaleFactor)
 }
 
 /**
@@ -142,8 +140,8 @@ export function zoomIn(viewer, scaleFactor) {
 * @function zoomOut
 * @parameter scaleFactor 
 */
-export function zoomOut(viewer, scaleFactor) {
+export function zoomOut(app, scaleFactor) {
   // when we zoom, we have to update both the threejs camera and the d3 zoom
-  viewer.view.call(viewer.d3zoom.scaleBy, scaleFactor);
-  Camera.setCamera(viewer.camera.position.x, viewer.camera.position.y, viewer.camera.position.z / scaleFactor)
+  app.viewer.view.call(app.d3zoom.scaleBy, scaleFactor);
+  app.viewer.camera.camera.setCamera(app.viewer.camera.camera.position.x, app.viewer.camera.camera.position.y, app.viewer.camera.camera.position.z / scaleFactor)
 }
