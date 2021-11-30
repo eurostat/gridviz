@@ -89,41 +89,21 @@ export class ShapeColorSizeStyle extends Style {
     }
 
 
+    //getters and setters
 
-    /**
-     * @param {function(Cell):string} color 
-     * @returns {this|function(Cell):string}
-     */
-    color(color) {
-        if (color) {
-            this.color_ = color;
-            return this
-        }
-        return this.color_
-    }
+    /** @returns {function(Cell):string} */
+    getColor() { return this.color_; }
+    /** @param {function(Cell):string} val @returns {this} */
+    setColor(val) { this.color_ = val; return this; }
 
-    /**
-     * @param {Size} size 
-     * @returns {this|Size}
-     */
-    size(size) {
-        if (size) {
-            this.size_ = size;
-            return this
-        }
-        return this.size_
-    }
+    /** @returns {Size} */
+    getSize() { return this.size_; }
+    /** @param {Size} val @returns {this} */
+    setSize(val) { this.size_ = val; return this; }
 
-    /**
-     * @param {function(Cell):Shape} shape 
-     * @returns {this|function(Cell):Shape}
-     */
-    shape(shape) {
-        if (shape) {
-            this.shape_ = shape;
-            return this
-        }
-        return this.shape_
-    }
+    /** @returns {function(Cell):Shape} */
+    getShape() { return this.shape_; }
+    /** @param {function(Cell):Shape} val @returns {this} */
+    setShape(val) { this.shape_ = val; return this; }
 
 }
