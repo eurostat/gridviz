@@ -4,6 +4,8 @@ import { Style, Size } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
+/** @typedef {"flag"|"piechart"|"ring"} CompositionType */
+
 /**
  * A style showing the composition of a total in different categories, with different color hues.
  * It consists of a symbol with different parts, whose size reflect the proportion of the corresponding category.
@@ -19,7 +21,7 @@ export class CompositionStyle extends Style {
 
     /**
       * @param {Object} color The dictionary which give the color of each category.
-      * @param {function(Cell):string} type A function returning the type of decomposition symbol of a cell: Among 'flag', 'piechart' and 'ring'
+      * @param {function(Cell):CompositionType} type A function returning the type of decomposition symbol of a cell, @see CompositionType
       * @param {Size} size A function returning the size of a cell (in geographical unit).
       */
     constructor(color, type = null, size = null) {
@@ -29,7 +31,7 @@ export class CompositionStyle extends Style {
         /** @private @type {object} */
         this.color_ = color;
 
-        /** @private @type {function(Cell):string} */
+        /** @private @type {function(Cell):CompositionType} */
         this.type_ = type;
 
         /** @private @type {Size} */
@@ -135,8 +137,8 @@ export class CompositionStyle extends Style {
     }
 
     /**
-     * @param {function(Cell):string} type 
-     * @returns {this|function(Cell):string}
+     * @param {function(Cell):CompositionType} type 
+     * @returns {this|function(Cell):CompositionType}
      */
     type(type) {
         if (type) {
