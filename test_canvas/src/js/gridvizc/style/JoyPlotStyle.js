@@ -17,7 +17,7 @@ export class JoyPlotStyle extends Style {
         super()
 
         /** @private @type {Size} */
-        this.height_ = height;
+        this.height = height;
 
         /** @private @type {string} */
         this.lineColor_ = "gray"
@@ -43,7 +43,7 @@ export class JoyPlotStyle extends Style {
         for (const cell of cells) {
             let row = ind[cell.y];
             if (!row) { row = {}; ind[cell.y] = row }
-            row[cell.x] = this.height_.val(cell);
+            row[cell.x] = this.height.val(cell);
         }
 
 
@@ -90,7 +90,7 @@ export class JoyPlotStyle extends Style {
                 if (hG || hG_) {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo
-                    const dyP = this.height_.unit==="pix" ? hG : hG / cg.zf
+                    const dyP = this.height.unit==="pix" ? hG : hG / cg.zf
                     cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - dyP);
                 } else {
                     //else move the point
@@ -115,19 +115,12 @@ export class JoyPlotStyle extends Style {
     }
 
 
+    //getters and setters
 
-    /**
-     * 
-     * @param {Size} height 
-     * @returns {this|Size}
-     */
-    height(height) {
-        if (height) {
-            this.height_ = height;
-            return this;
-        }
-        return this.height_;
-    }
+    /** @returns {Size} */
+    getHeight() { return this.height; }
+    /** @param {Size} val @returns {this} */
+    setHeight(val) { this.height = val; return this; }
 
     /**
      * 

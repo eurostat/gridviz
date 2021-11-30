@@ -91,8 +91,8 @@ export class SegmentStyle extends Style {
     getLength() { return this.length; }
     /** @param {Size} val @returns {this} */
     setLength(val) { this.length = val; return this; }
-    /** @returns {Size} */
 
+    /** @returns {Size} */
     getWidth() { return this.width; }
     /** @param {Size} val @returns {this} */
     setWidth(val) { this.width = val; return this; }
