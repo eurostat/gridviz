@@ -14,7 +14,7 @@ export class RadarStyle extends Style {
 
     /**
       * @param {Object} color The dictionary which give the color of each category.
-      * @param {Size} size The dictionary which give the color of each category.
+      * @param {Size} size 
       */
     constructor(color, size) {
         super()
