@@ -151,7 +151,7 @@ export class App {
             this.cg.center = pos;
             return this;
         }
-        return pos;
+        return this.cg.center;
     }
 
     /**
@@ -165,7 +165,7 @@ export class App {
             this.cg.zf = zf;
             return this;
         }
-        return zf;
+        return this.cg.zf;
     }
 
     /**
