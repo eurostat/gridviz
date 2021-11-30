@@ -23,13 +23,13 @@ export class ShapeColorSizeStyle extends Style {
         super()
 
         /** @private @type {function(Cell):string} */
-        this.color_ = color;
+        this.color = color;
 
         /** @private @type {Size} */
-        this.size_ = size;
+        this.size = size;
 
         /** @private @type {function(Cell):Shape} */
-        this.shape_ = shape;
+        this.shape = shape;
     }
 
 
@@ -43,17 +43,17 @@ export class ShapeColorSizeStyle extends Style {
     draw(cells, resolution, cg) {
 
         //if size is used, sort cells by size so that the biggest are drawn first
-        if (this.size_)
-            cells.sort((c1, c2) => (this.size_.val(c2) - this.size_.val(c1)));
+        if (this.size)
+            cells.sort((c1, c2) => (this.size.val(c2) - this.size.val(c1)));
 
         for (let cell of cells) {
 
             //color
-            cg.ctx.fillStyle = this.color ? this.color_(cell) : "#EA6BAC";
+            cg.ctx.fillStyle = this.color ? this.color(cell) : "#EA6BAC";
 
             //size
             /** @type {Size} */
-            let s_ = this.size_ || { val: c=>resolution, unit: "geo" };
+            let s_ = this.size || { val: c=>resolution, unit: "geo" };
             //size - in pixel and geo
             /** @type {number} */
             const sP = s_.unit === "pix" ? s_.val(cell) : s_.val(cell) / cg.zf
@@ -61,7 +61,7 @@ export class ShapeColorSizeStyle extends Style {
             const sG = cg.zf * sP;
 
             //get shape
-            const shape = this.shape_ ? this.shape_(cell) : "square";
+            const shape = this.shape ? this.shape(cell) : "square";
             if (shape === "square") {
                 //draw square
                 const d = resolution * (1 - sG / resolution) * 0.5
@@ -83,7 +83,7 @@ export class ShapeColorSizeStyle extends Style {
             }
 
             //draw stroke
-            this.drawStroke(cell, resolution, cg, this.shape_, this.size_)
+            this.drawStroke(cell, resolution, cg, this.shape, this.size)
         }
 
     }
@@ -92,18 +92,18 @@ export class ShapeColorSizeStyle extends Style {
     //getters and setters
 
     /** @returns {function(Cell):string} */
-    getColor() { return this.color_; }
+    getColor() { return this.color; }
     /** @param {function(Cell):string} val @returns {this} */
-    setColor(val) { this.color_ = val; return this; }
+    setColor(val) { this.color = val; return this; }
 
     /** @returns {Size} */
-    getSize() { return this.size_; }
+    getSize() { return this.size; }
     /** @param {Size} val @returns {this} */
-    setSize(val) { this.size_ = val; return this; }
+    setSize(val) { this.size = val; return this; }
 
     /** @returns {function(Cell):Shape} */
-    getShape() { return this.shape_; }
+    getShape() { return this.shape; }
     /** @param {function(Cell):Shape} val @returns {this} */
-    setShape(val) { this.shape_ = val; return this; }
+    setShape(val) { this.shape = val; return this; }
 
 }
