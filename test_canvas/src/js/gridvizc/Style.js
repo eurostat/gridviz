@@ -22,22 +22,22 @@ export class Style {
     constructor() {
 
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
-         * @type {{dx:number,dy:number}} */
+         * @private @type {{dx:number,dy:number}} */
         this.offset = { dx: 0, dy: 0 };
 
 
         //the cell stroke
 
         /** The zoom factor limit when to show/hide the stroke.
-         * @type {number} */
+         * @private @type {number} */
         this.zfStroke = undefined;
 
         /** The stroke color.
-         * @type {string} */
+         * @private @type {string} */
         this.strokeColor = "lightgray";
 
         /** The stroke line width, in pixels.
-         * @type {number} */
+         * @private @type {number} */
         this.strokeWidth = 1.5;
 
     }
