@@ -1,30 +1,30 @@
-// all methods related to gridviz app's threejs camera
+// all methods related to gridviz viewer's threejs camera and controls
 
 import * as CONSTANTS from "../constants.js";
 import { PerspectiveCamera, Vector3 } from 'three'
 import { OrbitControls } from '../../lib/threejs/orbitControls';
-import { app } from "../gridviz.js";
-
 
 
 /**
-  * @description parent class for THREE camera usage in gridviz
-  * @param app 
+  * @Description parent class for THREE camera usage in gridviz
+  * @class Camera
+  * 
   */
 export class Camera {
+
 
     constructor(opts) {
         this.controls = null; //orbit controls
         this.viewerWidth = opts.viewerWidth;
         this.viewerHeight = opts.viewerHeight;
         this.isMobile = opts.isMobile;
-        this.zoom = opts.zoom;
-        this.cameraConfig = this.defineCameraConfig(this.isMobile,this.zoom,this.viewerWidth,this.viewerHeight);
+        this.zoom = opts.zoom; // initial camera z position
+        this.config = this.defineCameraConfig(this.isMobile,this.zoom,this.viewerWidth,this.viewerHeight);
         this.camera = new PerspectiveCamera(
-            this.cameraConfig.fov_,
-            this.cameraConfig.aspect_,
-            this.cameraConfig.near_,
-            this.cameraConfig.far_
+            this.config.fov_,
+            this.config.aspect_,
+            this.config.near_,
+            this.config.far_
         );
 
     }

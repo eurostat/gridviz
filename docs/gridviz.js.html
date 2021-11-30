@@ -154,7 +154,7 @@ export function app(options) {
   app.placenameThresholds_ = null;
 
   // dataset properties
-  app.center_ = null; //default - If not specified then should default as first or randomly selected point
+  app.geoCenter_ = null; //default - If not specified then should default as first or randomly selected point
   app.zerosRemoved_ = 0; //to make EPSG 3035 files lighter, the final 3 zeros of each x/y coordinate are often removed. 
 
   //texts
@@ -321,9 +321,9 @@ export function app(options) {
                 app.pointSize = newResolution;
                 app.raycaster.params.Points.threshold = newResolution;
                 //scale center coords
-                if (app.center_) {
-                  app.center_[0] = app.mobileCoordScaleX(app.center_[0]);
-                  app.center_[1] = app.mobileCoordScaleY(app.center_[1]);
+                if (app.geoCenter_) {
+                  app.geoCenter_[0] = app.mobileCoordScaleX(app.geoCenter_[0]);
+                  app.geoCenter_[1] = app.mobileCoordScaleY(app.geoCenter_[1]);
                 }
 
               } else if (app._mobile &amp;&amp; app.mobileCellSize_) {
@@ -344,9 +344,9 @@ export function app(options) {
                 app.pointSize = newResolution;
                 app.raycaster.params.Points.threshold = newResolution;
                 //scale center coords
-                if (app.center_) {
-                  app.center_[0] = app.mobileCoordScaleX(app.center_[0]);
-                  app.center_[1] = app.mobileCoordScaleY(app.center_[1]);
+                if (app.geoCenter_) {
+                  app.geoCenter_[0] = app.mobileCoordScaleX(app.geoCenter_[0]);
+                  app.geoCenter_[1] = app.mobileCoordScaleY(app.geoCenter_[1]);
                 }
               }
 
@@ -384,16 +384,16 @@ export function app(options) {
             //app.extentY = extent(gridCaches[grid.cellSize], d => parseFloat(d.y));
 
             // if center is not specified by user, move camera to a cell half way along the array
-            if (!app.center_) {
+            if (!app.geoCenter_) {
               let index = parseInt(gridCaches[grid.cellSize].length / 2);
               let c = gridCaches[grid.cellSize][index];
               if (app._mobile) {
-                app.center_ = [
+                app.geoCenter_ = [
                   app.mobileCoordScaleX(parseFloat(c.x)),
                   app.mobileCoordScaleY(parseFloat(c.y))
                 ];
               } else {
-                app.center_ = [
+                app.geoCenter_ = [
                   parseFloat(c.x),
                   parseFloat(c.y)
                 ];
@@ -519,9 +519,9 @@ export function app(options) {
                 app.pointSize = newResolution;
                 app.raycaster.params.Points.threshold = newResolution;
                 //scale center coords
-                if (app.center_) {
-                  app.center_[0] = app.mobileCoordScaleX(app.center_[0]);
-                  app.center_[1] = app.mobileCoordScaleY(app.center_[1]);
+                if (app.geoCenter_) {
+                  app.geoCenter_[0] = app.mobileCoordScaleX(app.geoCenter_[0]);
+                  app.geoCenter_[1] = app.mobileCoordScaleY(app.geoCenter_[1]);
                 }
 
               } else if (app._mobile &amp;&amp; app.mobileCellSize_) {
@@ -543,9 +543,9 @@ export function app(options) {
                 app.pointSize = newResolution;
                 app.raycaster.params.Points.threshold = newResolution;
                 //scale center coords
-                if (app.center_) {
-                  app.center_[0] = app.mobileCoordScaleX(app.center_[0]);
-                  app.center_[1] = app.mobileCoordScaleY(app.center_[1]);
+                if (app.geoCenter_) {
+                  app.geoCenter_[0] = app.mobileCoordScaleX(app.geoCenter_[0]);
+                  app.geoCenter_[1] = app.mobileCoordScaleY(app.geoCenter_[1]);
                 }
               }
 
@@ -577,16 +577,16 @@ export function app(options) {
             //app.extentY = extent(gridCaches[app.currentResolution_], d => parseFloat(d.y));
 
             // if center is not specified by user, move camera to a cell half way along the array
-            if (!app.center_) {
+            if (!app.geoCenter_) {
               let index = parseInt(gridCaches[app.currentResolution_].length / 2);
               let c = gridCaches[app.currentResolution_][index];
               if (app._mobile) {
-                app.center_ = [
+                app.geoCenter_ = [
                   app.mobileCoordScaleX(parseFloat(c.x)),
                   app.mobileCoordScaleY(parseFloat(c.y))
                 ];
               } else {
-                app.center_ = [
+                app.geoCenter_ = [
                   parseFloat(c.x),
                   parseFloat(c.y)
                 ];
@@ -670,13 +670,13 @@ export function app(options) {
   app.geoCenter = function (v) {
     //if already previously set
     if (v &amp;&amp; app.scene) {
-      app.center_ = v;
+      app.geoCenter_ = v;
       Camera.redefineCamera(app);
       Camera.setCamera(v[0], v[1], app.camera.position.z)
     } else {
       //set initial
       if (v) {
-        app.center_ = v;
+        app.geoCenter_ = v;
       }
     }
     return app;
@@ -980,9 +980,9 @@ export function app(options) {
       let scale = Utils.getScaleFromZ(app.height_, app.cameraConfig.fov_, app.cameraConfig.initialZ_)
       app.d3zoom.scaleTo(app.view, scale);
       app.d3zoom.translateTo(app.view,
-        parseInt(app.center_[0]) + app.width_ / 2,
-        parseInt(app.center_[1]) + app.height_ / 2);
-      Camera.setCamera(app.center_[0], app.center_[1], app.cameraConfig.initialZ_)
+        parseInt(app.geoCenter_[0]) + app.width_ / 2,
+        parseInt(app.geoCenter_[1]) + app.height_ / 2);
+      Camera.setCamera(app.geoCenter_[0], app.geoCenter_[1], app.cameraConfig.initialZ_)
 
       // mobile devices a transform
       let initial_scale = Utils.getScaleFromZ(app.height_, app.cameraConfig.fov_, app.cameraConfig.far_);
@@ -995,9 +995,9 @@ export function app(options) {
       let scale = Utils.getScaleFromZ(app.height_, app.cameraConfig.fov_, app.cameraConfig.initialZ_)
       app.d3zoom.scaleTo(app.view, scale);
       app.d3zoom.translateTo(app.view,
-        parseInt(app.center_[0]) + app.width_ / 2,
-        parseInt(app.center_[1]) + app.height_ / 2);
-      Camera.setCamera(app.center_[0], app.center_[1], app.cameraConfig.initialZ_)
+        parseInt(app.geoCenter_[0]) + app.width_ / 2,
+        parseInt(app.geoCenter_[1]) + app.height_ / 2);
+      Camera.setCamera(app.geoCenter_[0], app.geoCenter_[1], app.cameraConfig.initialZ_)
     }
 
   }

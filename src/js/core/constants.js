@@ -14,7 +14,7 @@ export const placenames = {
     minScaleField: "MIN_SCAL"
 }
 export const nutsAPIBaseURL = "https://gisco-services.ec.europa.eu/id/"; //to get nuts codes of cells
-export const line_z = 0.0001001; //line vertices z coordinate
+export const line_z = 0.0002001; //line vertices z coordinate
 export const point_z = 0.0001; //threejs points object height
 export const fov = 50; // threejs camera FOV
 export const label_height = 0.001; // placenames z coordinate

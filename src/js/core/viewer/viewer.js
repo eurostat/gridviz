@@ -1,3 +1,7 @@
+//@ts-check
+/** @typedef { {container: HTMLElement, width: number, height: number, isMobile: boolean, zoom:number, backgroundColor?:string} } ViewerConfig */
+/** @typedef { {xmin: number, xmax: number, ymin: number, ymax: number} } Envelope */
+
 import {
     Scene,
     WebGLRenderer,
@@ -18,23 +22,29 @@ import { Camera } from "../camera/camera.js";
  */
 export class Viewer {
 
+
+    /**
+     * @constructor
+     * @param {ViewerConfig} opts
+     */
     constructor(opts) {
 
         this.width = opts.width;
         this.height = opts.height;
         this.container = opts.container;
         this.isMobile = opts.isMobile || false;
-        this.zoom = opts.zoom;
+        this.zoom = opts.zoom; //camera z position
+        this.backgroundColor = opts.backgroundColor || "#000";
 
         //set container height and width
         this.container.classList.add("gridviz-container");
-        this.container.style.width = this.width;
-        this.container.style.height = this.height;
+        this.container.style.width = this.width + "px";
+        this.container.style.height = this.height + "px";
 
         // three.js initializations
-        this.createScene(this);
-        if (!this.labelRenderer) this.createLabelRenderer(this);
-        if (!this.renderer) this.createWebGLRenderer(this);
+        this.createScene();
+        if (!this.labelRenderer) this.createLabelRenderer();
+        if (!this.renderer) this.createWebGLRenderer();
 
         this.camera = new Camera({
             isMobile: this.isMobile,
@@ -43,7 +53,7 @@ export class Viewer {
             zoom: this.zoom
         });
 
-        this.createRaycaster(this);
+        this.createRaycaster();
     }
 
     /**
@@ -52,7 +62,7 @@ export class Viewer {
     */
     createScene() {
         this.scene = new Scene();
-        this.scene.background = new Color(this.backgroundColor_);
+        this.scene.background = new Color(this.backgroundColor);
     }
 
     /**
@@ -95,6 +105,7 @@ export class Viewer {
      * @description Returns the current extent of the viewer in geographic coordinates
      * @function getCurrentViewExtent
      * @param app gridviz app
+     * @returns {Envelope}
      */
     getCurrentViewExtent(app) {
         var elem = app.viewer.renderer.domElement;
@@ -137,7 +148,7 @@ export class Viewer {
 
     /**
     * @description get the position of a canvas location in geographic coords
-    *@function getWorldCoordsFromScreen
+    * @function getWorldCoordsFromScreen
     */
     getWorldCoordsFromScreen(app, [clientX, clientY]) {
         var vec = new Vector3(); // create once and reuse
