@@ -21,13 +21,13 @@ export class SegmentStyle extends Style {
         super()
 
         /** @private @type {function(Cell):number} */
-        this.orientation_ = orientation;
+        this.orientation = orientation;
         /** @private @type {function(Cell):string} */
-        this.color_ = color;
+        this.color = color;
         /** @private @type {Size} */
-        this.length_ = length;
+        this.length = length;
         /** @private @type {Size} */
-        this.width_ = width;
+        this.width = width;
 
     }
 
@@ -47,14 +47,14 @@ export class SegmentStyle extends Style {
         for (let c of cells) {
 
             //set width and color
-            cg.ctx.lineWidth = this.width_.unit === "pix" ? this.width_.val(c) : this.width_.val(c) / cg.zf;
-            cg.ctx.strokeStyle = this.color_(c);
+            cg.ctx.lineWidth = this.width.unit === "pix" ? this.width.val(c) : this.width.val(c) / cg.zf;
+            cg.ctx.strokeStyle = this.color(c);
 
             //get segment orientation (in radian) and length (in pixel)
             /** @type {number} */
-            const or = this.orientation_(c) * f
+            const or = this.orientation(c) * f
             /** @type {number} */
-            const len = this.length_.unit === "pix"? this.length_.val(c) : this.length_.val(c) / cg.zf
+            const len = this.length.unit === "pix"? this.length.val(c) : this.length.val(c) / cg.zf
 
             //get segment center
             const cx = cg.geoToPixX(c.x + resolution / 2 + this.offset_.dx),
@@ -74,52 +74,27 @@ export class SegmentStyle extends Style {
     }
 
 
-    /**
-     * @param {function(Cell):number} orientation 
-     * @returns {this|function(Cell):number}
-     */
-    orientation(orientation) {
-        if (orientation) {
-            this.orientation_ = orientation;
-            return this
-        }
-        return this.orientation_
-    }
 
-    /**
-     * @param {function(Cell):string} color 
-     * @returns {this|function(Cell):string}
-     */
-    color(color) {
-        if (color) {
-            this.color_ = color;
-            return this
-        }
-        return this.color_
-    }
+    //getters and setters
 
-    /**
-     * @param {Size} length 
-     * @returns {this|Size}
-     */
-    length(length) {
-        if (length) {
-            this.length_ = length;
-            return this
-        }
-        return this.length_
-    }
+    /** @returns {function(Cell):number} */
+    getOrientation() { return this.orientation; }
+    /** @param {function(Cell):number} val @returns {this} */
+    setOrientation(val) { this.orientation = val; return this; }
 
-    /**
-     * @param {Size} width 
-     * @returns {this|Size}
-     */
-    width(width) {
-        if (width) {
-            this.width_ = width;
-            return this
-        }
-        return this.width_
-    }
+    /** @returns {function(Cell):string} */
+    getColor() { return this.color; }
+    /** @param {function(Cell):string} val @returns {this} */
+    setColor(val) { this.color = val; return this; }
+
+    /** @returns {Size} */
+    getLength() { return this.length; }
+    /** @param {Size} val @returns {this} */
+    setLength(val) { this.length = val; return this; }
+    /** @returns {Size} */
+
+    getWidth() { return this.width; }
+    /** @param {Size} val @returns {this} */
+    setWidth(val) { this.width = val; return this; }
 
 }
