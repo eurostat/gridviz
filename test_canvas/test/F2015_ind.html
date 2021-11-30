@@ -19,7 +19,7 @@
             c => gviz.color().interpolateSpectral(1 - c["Ind"]/400),
             null,
             c => "square"
-        ).zfStroke(15);
+        ).setZFStroke(15);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 200);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m//", [s], 200, 400);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/1000m//", [s], 400, 1000);

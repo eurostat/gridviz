@@ -19,7 +19,7 @@
             c => "gray",
             { val: c => 7 * Math.sqrt(c["2018"]), unit: "geo" },
             c => "circle"
-        ).zfStroke(60);
+        ).setZFStroke(60);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 500, 1000);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 1000, 2000);

@@ -23,22 +23,22 @@ export class Style {
 
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
          * @type {{dx:number,dy:number}} */
-        this.offset_ = { dx: 0, dy: 0 };
+        this.offset = { dx: 0, dy: 0 };
 
 
         //the cell stroke
 
         /** The zoom factor limit when to show/hide the stroke.
          * @type {number} */
-        this.zfStroke_ = undefined;
+        this.zfStroke = undefined;
 
         /** The stroke color.
          * @type {string} */
-        this.strokeColor_ = "lightgray";
+        this.strokeColor = "lightgray";
 
         /** The stroke line width, in pixels.
          * @type {number} */
-        this.strokeWidth_ = 1.5;
+        this.strokeWidth = 1.5;
 
     }
 
@@ -57,65 +57,6 @@ export class Style {
 
 
     /**
-    * The offset
-    * This is to alter the position of all symbols in a given direction. In geographical unit.
-    * 
-    * @param {{dx:number,dy:number}} offset 
-    * @returns {this|{dx:number,dy:number}}
-    */
-    offset(offset) {
-        if (offset) {
-            this.offset_ = offset;
-            return this;
-        }
-        return this.offset_;
-    }
-    /**
-     * The zoom limit when to show/hide the stroke.
-     * 
-     * @param {number} zfStroke 
-     * @returns {this|number}
-     */
-    zfStroke(zfStroke) {
-        if (zfStroke) {
-            this.zfStroke_ = zfStroke;
-            return this;
-        }
-        return this.zfStroke_;
-    }
-
-    /**
-     * The stroke color.
-     * 
-     * @param {string} strokeColor 
-     * @returns {this|string}
-     */
-    strokeColor(strokeColor) {
-        if (strokeColor) {
-            this.strokeColor_ = strokeColor;
-            return this;
-        }
-        return this.strokeColor_;
-    }
-
-    /**
-     * The stroke line width, in pixels.
-     * 
-     * @param {number} strokeWidth 
-     * @returns {this|number}
-     */
-    strokeWidth(strokeWidth) {
-        if (strokeWidth) {
-            this.strokeWidth_ = strokeWidth;
-            return this;
-        }
-        return this.strokeWidth_;
-    }
-
-
-
-
-    /**
      * Draw the stroke of the cells, as rectangle, only for detailled zoom levels when the cells are quite big.
      * 
      * @param {Cell} cell The cell to draw the stroke of.
@@ -125,11 +66,11 @@ export class Style {
      * @param {Size} size A function returning the size of a cell (in geographical unit).
      * @returns 
      */
-    drawStroke(cell, resolution, cg, shape, size) {
-        if (!this.zfStroke_ || cg.zf > this.zfStroke_) return;
+     drawStroke(cell, resolution, cg, shape, size) {
+        if (!this.zfStroke || cg.zf > this.zfStroke) return;
 
-        cg.ctx.strokeStyle = this.strokeColor_;
-        cg.ctx.lineWidth = this.strokeWidth_;
+        cg.ctx.strokeStyle = this.strokeColor;
+        cg.ctx.lineWidth = this.strokeWidth;
 
         //size
         /** @type {number} */
@@ -144,8 +85,8 @@ export class Style {
             const d = resolution * (1 - sG / resolution) * 0.5
             cg.ctx.beginPath();
             cg.ctx.rect(
-                cg.geoToPixX(cell.x + d + this.offset_.dx),
-                cg.geoToPixY(cell.y + resolution - d + this.offset_.dy),
+                cg.geoToPixX(cell.x + d + this.offset.dx),
+                cg.geoToPixY(cell.y + resolution - d + this.offset.dy),
                 sP, sP);
             cg.ctx.stroke();
 
@@ -153,12 +94,36 @@ export class Style {
             //draw circle
             cg.ctx.beginPath();
             cg.ctx.arc(
-                cg.geoToPixX(cell.x + resolution * 0.5 + this.offset_.dx),
-                cg.geoToPixY(cell.y + resolution * 0.5 + this.offset_.dy),
+                cg.geoToPixX(cell.x + resolution * 0.5 + this.offset.dx),
+                cg.geoToPixY(cell.y + resolution * 0.5 + this.offset.dy),
                 sP * 0.5,
                 0, 2 * Math.PI, false);
             cg.ctx.stroke();
         }
     }
+
+
+
+    //getters and setters
+
+    /** @returns {{dx:number,dy:number}} */
+    getOffset() { return this.offset; }
+    /** @param {{dx:number,dy:number}} val @returns {this} */
+    setOffset(val) { this.offset = val; return this; }
+
+    /** @returns {number} */
+    getZFStroke() { return this.zfStroke; }
+    /** @param {number} val @returns {this} */
+    setZFStroke(val) { this.zfStroke = val; return this; }
+
+    /** @returns {string} */
+    getStrokeColor() { return this.strokeColor; }
+    /** @param {string} val @returns {this} */
+    setStrokeColor(val) { this.strokeColor = val; return this; }
+
+    /** @returns {number} */
+    getStrokeWidth() { return this.strokeWidth; }
+    /** @param {number} val @returns {this} */
+    setStrokeWidth(val) { this.strokeWidth = val; return this; }
 
 }

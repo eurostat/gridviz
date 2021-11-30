@@ -57,8 +57,8 @@ export class SegmentStyle extends Style {
             const len = this.length.unit === "pix"? this.length.val(c) : this.length.val(c) / cg.zf
 
             //get segment center
-            const cx = cg.geoToPixX(c.x + resolution / 2 + this.offset_.dx),
-                cy = cg.geoToPixY(c.y + resolution / 2 + this.offset_.dy);
+            const cx = cg.geoToPixX(c.x + resolution / 2 + this.offset.dx),
+                cy = cg.geoToPixY(c.y + resolution / 2 + this.offset.dy);
 
             //get direction
             const dx = 0.5 * Math.cos(or) * len,

@@ -18,12 +18,12 @@
         app.geoCenter({ x: 135000, y: 456000 }).zoomFactor(3)
         const s1 = gviz.JoyPlotStyle(
             { val: c => 13 * Math.sqrt(c["Inhabitants"]), unit: "geo" }
-        ).zfStroke(3).fillColor("#77777777");
+        ).setZFStroke(3).fillColor("#77777777");
         const s2 = gviz.ShapeColorSizeStyle(
             c => gviz.color().interpolateReds(2 * c["Population over 65"] / c["Inhabitants"]),
             { val: c => c["Inhabitants"] / 3, unit: "geo" },
             c => "circle"
-        ).zfStroke(1);
+        ).setZFStroke(1);
         app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s1, s2], 0, 9999999999,
             c => {
                 c.x *= 100; c.y *= 100;

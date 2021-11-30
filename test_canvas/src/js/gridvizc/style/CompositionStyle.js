@@ -86,13 +86,13 @@ export class CompositionStyle extends Style {
                 if (type_ === "flag") {
                     //draw flag vertical stripe
                     cg.ctx.fillRect(
-                        cumul * sP + cg.geoToPixX(cell.x + d + this.offset_.dx),
-                        cg.geoToPixY(cell.y + resolution - d + this.offset_.dy),
+                        cumul * sP + cg.geoToPixX(cell.x + d + this.offset.dx),
+                        cg.geoToPixY(cell.y + resolution - d + this.offset.dy),
                         share * sP, sP);
                 } else if (type_ === "piechart") {
                     //draw pie chart angular sector
-                    const xc = cg.geoToPixX(cell.x + resolution * 0.5 + this.offset_.dx);
-                    const yc = cg.geoToPixY(cell.y + resolution * 0.5 + this.offset_.dy);
+                    const xc = cg.geoToPixX(cell.x + resolution * 0.5 + this.offset.dx);
+                    const yc = cg.geoToPixY(cell.y + resolution * 0.5 + this.offset.dy);
                     cg.ctx.beginPath();
                     cg.ctx.moveTo(xc, yc);
                     cg.ctx.arc(xc, yc, sP * 0.5, cumul * 2 * Math.PI, (cumul + share) * 2 * Math.PI);
@@ -103,8 +103,8 @@ export class CompositionStyle extends Style {
                     //TODO need to compute radius properly ! Variation as rootsquare of share !
                     cg.ctx.beginPath();
                     cg.ctx.arc(
-                        cg.geoToPixX(cell.x + resolution * 0.5 + this.offset_.dx),
-                        cg.geoToPixY(cell.y + resolution * 0.5 + this.offset_.dy),
+                        cg.geoToPixX(cell.x + resolution * 0.5 + this.offset.dx),
+                        cg.geoToPixY(cell.y + resolution * 0.5 + this.offset.dy),
                         Math.sqrt(1 - cumul) * sP * 0.5,
                         0, 2 * Math.PI);
                     cg.ctx.fill();
