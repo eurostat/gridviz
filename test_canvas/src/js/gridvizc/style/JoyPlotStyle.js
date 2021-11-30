@@ -20,11 +20,11 @@ export class JoyPlotStyle extends Style {
         this.height = height;
 
         /** @private @type {string} */
-        this.lineColor_ = "gray"
+        this.lineColor = "gray"
         /** @private @type {number} */
-        this.lineWidth_ = 1;
+        this.lineWidth = 1;
         /** @private @type {string} */
-        this.fillColor_ = "rgba(192, 140, 89, 0.4)"
+        this.fillColor = "rgba(192, 140, 89, 0.4)"
     }
 
 
@@ -55,9 +55,9 @@ export class JoyPlotStyle extends Style {
         const yMax = Math.floor(e.yMax / r) * r;
 
         //set color and width
-        cg.ctx.strokeStyle = this.lineColor_;
-        cg.ctx.lineWidth = this.lineWidth_;
-        cg.ctx.fillStyle = this.fillColor_;
+        cg.ctx.strokeStyle = this.lineColor;
+        cg.ctx.lineWidth = this.lineWidth;
+        cg.ctx.fillStyle = this.fillColor;
 
         //draw lines, row by row, stating from the top
         for (let y = yMax; y >= yMin; y -= r) {
@@ -105,10 +105,10 @@ export class JoyPlotStyle extends Style {
                 cg.ctx.lineTo(cg.geoToPixX(xMax + r / 2), yP);
 
             //draw fill
-            if (this.fillColor_)
+            if (this.fillColor)
                 cg.ctx.fill()
             //draw line
-            if (this.lineColor_ && this.lineWidth_ > 0)
+            if (this.lineColor && this.lineWidth > 0)
                 cg.ctx.stroke();
 
         }
@@ -122,43 +122,19 @@ export class JoyPlotStyle extends Style {
     /** @param {Size} val @returns {this} */
     setHeight(val) { this.height = val; return this; }
 
-    /**
-     * 
-     * @param {string} lineColor 
-     * @returns {this|string}
-     */
-    lineColor(lineColor) {
-        if (lineColor) {
-            this.lineColor_ = lineColor;
-            return this;
-        }
-        return this.lineColor_;
-    }
+    /** @returns {string} */
+    getLineColor() { return this.lineColor; }
+    /** @param {string} val @returns {this} */
+    setLineColor(val) { this.lineColor = val; return this; }
 
-    /**
-     * 
-     * @param {number} lineWidth 
-     * @returns {this|number}
-     */
-    lineWidth(lineWidth) {
-        if (lineWidth) {
-            this.lineWidth_ = lineWidth;
-            return this;
-        }
-        return this.lineWidth_;
-    }
+    /** @returns {number} */
+    getLineWidth() { return this.lineWidth; }
+    /** @param {number} val @returns {this} */
+    setLineWidth(val) { this.lineWidth = val; return this; }
 
-    /**
-     * 
-     * @param {string} fillColor 
-     * @returns {this|string}
-     */
-    fillColor(fillColor) {
-        if (fillColor) {
-            this.fillColor_ = fillColor;
-            return this;
-        }
-        return this.fillColor_;
-    }
+    /** @returns {string} */
+    getFillColor() { return this.fillColor; }
+    /** @param {string} val @returns {this} */
+    setFillColor(val) { this.fillColor = val; return this; }
 
 }
