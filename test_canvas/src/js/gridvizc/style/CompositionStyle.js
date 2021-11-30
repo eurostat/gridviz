@@ -20,7 +20,7 @@ export class CompositionStyle extends Style {
     /**
       * @param {Object} color The dictionary which give the color of each category.
       * @param {function(Cell):string} type A function returning the type of decomposition symbol of a cell: Among 'flag', 'piechart' and 'ring'
-      * @param {function(Cell):Size} size A function returning the size of a cell (in geographical unit).
+      * @param {Size} size A function returning the size of a cell (in geographical unit).
       */
     constructor(color, type = null, size = null) {
         super()
@@ -32,7 +32,7 @@ export class CompositionStyle extends Style {
         /** @type {function(Cell):string} */
         this.type_ = type;
 
-        /** @type {function(Cell):Size} */
+        /** @type {Size} */
         this.size_ = size;
     }
 
@@ -145,7 +145,7 @@ export class CompositionStyle extends Style {
     }
 
     /**
-     * @param {function(Cell):Size} size 
+     * @param {Size} size 
      * @returns {this|function(Cell):Size}
      */
     size(size) {

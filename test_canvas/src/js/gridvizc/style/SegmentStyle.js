@@ -14,8 +14,8 @@ export class SegmentStyle extends Style {
     /**
       * @param {function(Cell):number} orientation A function returning the orientation (in degrees) of the segment representing a cell.
       * @param {function(Cell):string} color A function returning the color of the segment representing a cell.
-      * @param {function(Cell):Size} length A function returning the length of the segment representing a cell.
-      * @param {function(Cell):Size} width A function returning the width of the segment representing a cell.
+      * @param {Size} length A function returning the length of the segment representing a cell.
+      * @param {Size} width A function returning the width of the segment representing a cell.
       */
     constructor(orientation, color, length, width) {
         super()
@@ -24,9 +24,9 @@ export class SegmentStyle extends Style {
         this.orientation_ = orientation;
         /** @type {function(Cell):string} */
         this.color_ = color;
-        /** @type {function(Cell):Size} */
+        /** @type {Size} */
         this.length_ = length;
-        /** @type {function(Cell):Size} */
+        /** @type {Size} */
         this.width_ = width;
 
     }
@@ -101,7 +101,7 @@ export class SegmentStyle extends Style {
     }
 
     /**
-     * @param {function(Cell):Size} length 
+     * @param {Size} length 
      * @returns {this|function(Cell):Size}
      */
     length(length) {
@@ -113,7 +113,7 @@ export class SegmentStyle extends Style {
     }
 
     /**
-     * @param {function(Cell):Size} width 
+     * @param {Size} width 
      * @returns {this|function(Cell):Size}
      */
     width(width) {

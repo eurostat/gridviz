@@ -11,12 +11,12 @@ import { CanvasGeo } from "../CanvasGeo";
 export class LineStyle extends Style {
 
     /**
-      * @param {function(Cell):Size} height A function returning the height of a cell (in geographical unit).
+      * @param {Size} height A function returning the height of a cell (in geographical unit).
       */
     constructor(height) {
         super()
 
-        /** @type {function(Cell):Size} */
+        /** @type {Size} */
         this.height_ = height;
 
         /** @type {string} */
@@ -118,7 +118,7 @@ export class LineStyle extends Style {
 
     /**
      * 
-     * @param {function(Cell):Size} height 
+     * @param {Size} height 
      * @returns {this|function(Cell):Size}
      */
     height(height) {

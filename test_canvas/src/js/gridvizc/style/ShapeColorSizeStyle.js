@@ -16,7 +16,7 @@ export class ShapeColorSizeStyle extends Style {
 
     /**
       * @param {function(Cell):string} color A function returning the color of the cell.
-      * @param {function(Cell):Size} size A function returning the size of a cell (in geographical unit).
+      * @param {Size} size A function returning the size of a cell (in geographical unit).
       * @param {function(Cell):Shape} shape A function returning the shape of a cell.
       */
     constructor(color = () => "#EA6BAC", size = null, shape = () => "square") {
@@ -25,7 +25,7 @@ export class ShapeColorSizeStyle extends Style {
         /** @type {function(Cell):string} */
         this.color_ = color;
 
-        /** @type {function(Cell):Size} */
+        /** @type {Size} */
         this.size_ = size;
 
         /** @type {function(Cell):Shape} */
@@ -101,7 +101,7 @@ export class ShapeColorSizeStyle extends Style {
     }
 
     /**
-     * @param {function(Cell):Size} size 
+     * @param {Size} size 
      * @returns {this|function(Cell):Size}
      */
     size(size) {

@@ -2,7 +2,7 @@
 import { Cell } from "./Dataset";
 import { CanvasGeo } from './CanvasGeo';
 
-/** @typedef {{val: number, unit: "pix"|"geo"}} Size */
+/** @typedef {{val: function(Cell):number, unit: "pix"|"geo"}} Size */
 
 /**
  * A style, to show a grid dataset.
@@ -119,7 +119,7 @@ export class Style {
      * @param {number} resolution Their resolution (in geographic unit)
      * @param {CanvasGeo} cg The canvas where to draw them.
      * @param {function(Cell):string} shape The shape of the stroke.
-     * @param {function(Cell):Size} size A function returning the size of a cell (in geographical unit).
+     * @param {Size} size A function returning the size of a cell (in geographical unit).
      * @returns 
      */
     drawStroke(cell, resolution, cg, shape, size) {
@@ -129,10 +129,10 @@ export class Style {
         cg.ctx.lineWidth = this.strokeWidth_;
 
         //size
-        /** @type {Size} */
-        let s_ = size ? size(cell) : { val: resolution, unit: "geo" };
+        /** @type {number} */
+        size = size || { val: c=>resolution, unit:"geo"};
         //size - in pixel and geo
-        const sP = s_.unit === "pix" ? s_.val : s_.val / cg.zf
+        const sP = size.unit === "pix" ? size.val(cell) : size.val(cell) / cg.zf
         const sG = cg.zf * sP;
 
         const shape_ = shape(cell);
