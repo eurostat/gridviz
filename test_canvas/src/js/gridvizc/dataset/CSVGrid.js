@@ -19,7 +19,7 @@ export class CSVGrid extends Dataset {
     constructor(url, resolution, preprocess = null) {
         super(url, resolution, preprocess)
 
-        /** @type {Array.<Cell>} */
+        /** @private @type {Array.<Cell>} */
         this.cells = undefined;
     }
 

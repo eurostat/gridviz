@@ -20,13 +20,13 @@ export class Dataset {
      */
     constructor(url, resolution, preprocess = null) {
 
-        /** @type {string} */
+        /** @protected @type {string} */
         this.url = url;
 
-        /** @type {number} */
+        /** @protected @type {number} */
         this.resolution = resolution;
 
-        /** @type {function(Cell):void} */
+        /** @protected @type {function(Cell):void} */
         this.preprocess = preprocess;
     }
 
