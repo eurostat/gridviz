@@ -1,6 +1,7 @@
+TODO implement mouse over
+
 TODO test private/public
 TODO modularise further canvasgeo (make ctx private)
-TODO implement mouse over
 
 TODO test GriddedStatsTiler2
 TODO fix tiler rounding issue
