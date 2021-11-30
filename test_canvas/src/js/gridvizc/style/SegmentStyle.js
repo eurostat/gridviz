@@ -47,24 +47,22 @@ export class SegmentStyle extends Style {
         for (let c of cells) {
 
             //set width and color
-            /** @type {Size} */
-            const lw = this.width_(c);
-            cg.ctx.lineWidth = lw.unit === "pix" ? lw.val : lw.val / cg.zf;
+            cg.ctx.lineWidth = this.width_.unit === "pix" ? this.width_.val(c) : this.width_.val(c) / cg.zf;
             cg.ctx.strokeStyle = this.color_(c);
 
-            //get segment orientation (in radian) and length
+            //get segment orientation (in radian) and length (in pixel)
+            /** @type {number} */
             const or = this.orientation_(c) * f
-            const len = this.length_(c);
-            //convert length in pixel
-            if (len.unit === "geo") { len.val /= cg.zf; len.unit = "pix" }
+            /** @type {number} */
+            const len = this.length_.unit === "pix"? this.length_.val(c) : this.length_.val(c) / cg.zf
 
             //get segment center
             const cx = cg.geoToPixX(c.x + resolution / 2 + this.offset_.dx),
                 cy = cg.geoToPixY(c.y + resolution / 2 + this.offset_.dy);
 
             //get direction
-            const dx = 0.5 * Math.cos(or) * len.val,
-                dy = 0.5 * Math.sin(or) * len.val;
+            const dx = 0.5 * Math.cos(or) * len,
+                dy = 0.5 * Math.sin(or) * len;
 
             //draw segment
             cg.ctx.beginPath();
