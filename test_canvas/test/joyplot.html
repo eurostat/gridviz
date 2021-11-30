@@ -15,13 +15,13 @@
             .geoCenter({ x: 4000000, y: 2300000 }).zoomFactor(200)
 
         //define datasets, styles and layers
-        const s = gviz.JoyPlotStyle({ val: c => 40 * Math.sqrt(c["2011"]), unit: "geo" }).zfStroke(70);
+        const s = gviz.JoyPlotStyle({ val: c => 30 * Math.sqrt(c["2011"]), unit: "geo" }).zfStroke(70);
         //const s = gviz.JoyPlotStyle({ val: c => 400 * Math.sqrt(c["2011"]) / 10, unit: "geo" }).zfStroke(70);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 500, 1000);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 1000, 2500);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 2500, 5000);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 5000, 9999999999);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 400);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 400, 800);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 800, 2000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 2000, 4000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 4000, 9999999999);
 
     </script>
 </body>
