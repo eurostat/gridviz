@@ -26,13 +26,13 @@ export class CompositionStyle extends Style {
         super()
 
         //dictionnary column -> color
-        /** @type {object} */
+        /** @private @type {object} */
         this.color_ = color;
 
-        /** @type {function(Cell):string} */
+        /** @private @type {function(Cell):string} */
         this.type_ = type;
 
-        /** @type {Size} */
+        /** @private @type {Size} */
         this.size_ = size;
     }
 

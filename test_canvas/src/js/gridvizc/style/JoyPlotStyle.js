@@ -16,14 +16,14 @@ export class JoyPlotStyle extends Style {
     constructor(height) {
         super()
 
-        /** @type {Size} */
+        /** @private @type {Size} */
         this.height_ = height;
 
-        /** @type {string} */
+        /** @private @type {string} */
         this.lineColor_ = "gray"
-        /** @type {number} */
+        /** @private @type {number} */
         this.lineWidth_ = 1;
-        /** @type {string} */
+        /** @private @type {string} */
         this.fillColor_ = "rgba(192, 140, 89, 0.4)"
     }
 

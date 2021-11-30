@@ -20,10 +20,10 @@ export class RadarStyle extends Style {
         super()
 
         //dictionnary column -> color
-        /** @type {object} */
+        /** @private @type {object} */
         this.color = color;
 
-        /** @type {Size} */
+        /** @private @type {Size} */
         this.size = size;
     }
 

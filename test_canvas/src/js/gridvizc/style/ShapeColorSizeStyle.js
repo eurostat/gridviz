@@ -22,13 +22,13 @@ export class ShapeColorSizeStyle extends Style {
     constructor(color = () => "#EA6BAC", size = null, shape = () => "square") {
         super()
 
-        /** @type {function(Cell):string} */
+        /** @private @type {function(Cell):string} */
         this.color_ = color;
 
-        /** @type {Size} */
+        /** @private @type {Size} */
         this.size_ = size;
 
-        /** @type {function(Cell):Shape} */
+        /** @private @type {function(Cell):Shape} */
         this.shape_ = shape;
     }
 

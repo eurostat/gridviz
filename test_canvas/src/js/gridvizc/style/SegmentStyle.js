@@ -20,13 +20,13 @@ export class SegmentStyle extends Style {
     constructor(orientation, color, length, width) {
         super()
 
-        /** @type {function(Cell):number} */
+        /** @private @type {function(Cell):number} */
         this.orientation_ = orientation;
-        /** @type {function(Cell):string} */
+        /** @private @type {function(Cell):string} */
         this.color_ = color;
-        /** @type {Size} */
+        /** @private @type {Size} */
         this.length_ = length;
-        /** @type {Size} */
+        /** @private @type {Size} */
         this.width_ = width;
 
     }
