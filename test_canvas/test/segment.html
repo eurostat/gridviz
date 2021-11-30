@@ -26,8 +26,8 @@
             },
             c => gviz.color().interpolateOrRd(Math.pow(c["2018"], 0.5) / 100),
             //c => "white",
-            c => { return { val: 1000, unit: "geo" } },
-            c => { return { val: 200, unit: "geo" } }
+            { val: c => 1000, unit: "geo" },
+            { val: c => 200, unit: "geo" }
         ).zfStroke(50);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 500, 1000);

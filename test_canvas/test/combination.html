@@ -17,11 +17,11 @@
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
         app.geoCenter({ x: 135000, y: 456000 }).zoomFactor(3)
         const s1 = gviz.LineStyle(
-            c => { return { val: 13 * Math.sqrt(c["Inhabitants"]), unit: "geo" } }
+            { val: c => 13 * Math.sqrt(c["Inhabitants"]), unit: "geo" }
         ).zfStroke(3).fillColor("#77777777");
         const s2 = gviz.ShapeColorSizeStyle(
             c => gviz.color().interpolateReds(2 * c["Population over 65"] / c["Inhabitants"]),
-            c => { return { val: c["Inhabitants"] / 3, unit: "geo" } },
+            { val: c => c["Inhabitants"] / 3, unit: "geo" },
             c => "circle"
         ).zfStroke(1);
         app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s1, s2], 0, 9999999999,
@@ -29,7 +29,6 @@
                 c.x *= 100; c.y *= 100;
                 if (c["Inhabitants"] < 0) c["Inhabitants"] = 0;
             })
-
 
     </script>
 </body>
