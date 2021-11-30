@@ -40,9 +40,9 @@ export const ShapeColorSizeStyle = function (color_, size, shape) {
     return new ShapeColorSizeStyle_(color_, size, shape)
 }
 
-import { LineStyle as LineStyle_ } from "./style/LineStyle"
-export const LineStyle = function (height) {
-    return new LineStyle_(height)
+import { JoyPlotStyle as JoyPlotStyle_ } from "./style/JoyPlotStyle"
+export const JoyPlotStyle = function (height) {
+    return new JoyPlotStyle_(height)
 }
 
 import { CompositionStyle as CompositionStyle_ } from "./style/CompositionStyle"

@@ -8,7 +8,7 @@
   - https://eurostat.github.io/gridviz/test_canvas/test/composition.html
   - https://eurostat.github.io/gridviz/test_canvas/test/multi.html
 - Segment orientation: https://eurostat.github.io/gridviz/test_canvas/test/segment.html
-- Profile: https://eurostat.github.io/gridviz/test_canvas/test/linestyle.html
+- Joy plot: https://eurostat.github.io/gridviz/test_canvas/test/joyplot.html
 - Combination: https://eurostat.github.io/gridviz/test_canvas/test/combination.html
 
 # France - 200m (Filosofi 2015)

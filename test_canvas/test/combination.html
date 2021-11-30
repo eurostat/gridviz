@@ -16,7 +16,7 @@
 
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
         app.geoCenter({ x: 135000, y: 456000 }).zoomFactor(3)
-        const s1 = gviz.LineStyle(
+        const s1 = gviz.JoyPlotStyle(
             { val: c => 13 * Math.sqrt(c["Inhabitants"]), unit: "geo" }
         ).zfStroke(3).fillColor("#77777777");
         const s2 = gviz.ShapeColorSizeStyle(

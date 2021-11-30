@@ -8,7 +8,7 @@ import { CanvasGeo } from "../CanvasGeo";
  * 
  * @author Julien Gaffuri
  */
-export class LineStyle extends Style {
+export class JoyPlotStyle extends Style {
 
     /**
       * @param {Size} height A function returning the height of a cell.
