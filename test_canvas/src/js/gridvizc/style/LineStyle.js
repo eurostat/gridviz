@@ -11,7 +11,7 @@ import { CanvasGeo } from "../CanvasGeo";
 export class LineStyle extends Style {
 
     /**
-      * @param {Size} height A function returning the height of a cell (in geographical unit).
+      * @param {Size} height A function returning the height of a cell.
       */
     constructor(height) {
         super()
@@ -43,7 +43,7 @@ export class LineStyle extends Style {
         for (const cell of cells) {
             let row = ind[cell.y];
             if (!row) { row = {}; ind[cell.y] = row }
-            row[cell.x] = this.height_(cell);
+            row[cell.x] = this.height_.val(cell);
         }
 
 
@@ -76,21 +76,21 @@ export class LineStyle extends Style {
             cg.ctx.moveTo(cg.geoToPixX(xMin - r / 2), yP);
 
             //store the previous height
-            /** @type {Size} */
-            let hG_ = { val: 0, unit: "geo" };
+            /** @type {number} */
+            let hG_;
 
             //go through the line cells
             for (let x = xMin; x <= xMax; x += r) {
 
                 //get column value
-                /** @type {Size} */
+                /** @type {number} */
                 let hG = row[x];
-                if (!hG) hG = { val: 0, unit: "geo" };
+                if (!hG) hG = 0;
 
-                if (hG.val || hG_.val) {
+                if (hG || hG_) {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo
-                    const dyP = hG.unit==="pix" ? hG.val : hG.val / cg.zf
+                    const dyP = this.height_.unit==="pix" ? hG : hG / cg.zf
                     cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - dyP);
                 } else {
                     //else move the point
@@ -119,7 +119,7 @@ export class LineStyle extends Style {
     /**
      * 
      * @param {Size} height 
-     * @returns {this|function(Cell):Size}
+     * @returns {this|Size}
      */
     height(height) {
         if (height) {

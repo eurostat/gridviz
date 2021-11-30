@@ -102,7 +102,7 @@ export class SegmentStyle extends Style {
 
     /**
      * @param {Size} length 
-     * @returns {this|function(Cell):Size}
+     * @returns {this|Size}
      */
     length(length) {
         if (length) {
@@ -114,7 +114,7 @@ export class SegmentStyle extends Style {
 
     /**
      * @param {Size} width 
-     * @returns {this|function(Cell):Size}
+     * @returns {this|Size}
      */
     width(width) {
         if (width) {

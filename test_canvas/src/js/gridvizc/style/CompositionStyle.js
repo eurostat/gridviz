@@ -48,7 +48,7 @@ export class CompositionStyle extends Style {
 
         //if size is used, sort cells by size so that the biggest are drawn first
         if (this.size_)
-            cells.sort((c1, c2) => (this.size_(c2).val - this.size_(c1).val));
+            cells.sort((c1, c2) => (this.size_.val(c2) - this.size_.val(c1)));
 
         for (let cell of cells) {
 
@@ -59,9 +59,11 @@ export class CompositionStyle extends Style {
 
             //size
             /** @type {Size} */
-            let s_ = this.size_ ? this.size_(cell) : { val: resolution, unit: "geo" };
+            let s_ = this.size_ || { val: c=>resolution, unit: "geo" };
             //size - in pixel and geo
-            const sP = s_.unit === "pix" ? s_.val : s_.val / cg.zf
+            /** @type {number} */
+            const sP = s_.unit === "pix" ? s_.val(cell) : s_.val(cell) / cg.zf
+            /** @type {number} */
             const sG = cg.zf * sP;
 
             //get symbol type
@@ -146,7 +148,7 @@ export class CompositionStyle extends Style {
 
     /**
      * @param {Size} size 
-     * @returns {this|function(Cell):Size}
+     * @returns {this|Size}
      */
     size(size) {
         if (size) {
