@@ -2,7 +2,10 @@
 import { Cell } from "./Dataset";
 import { CanvasGeo } from './CanvasGeo';
 
-/** @typedef {{val: function(Cell):number, unit: "pix"|"geo"}} Size */
+/** Definition of a cell size parameter.
+ * val: The function returning the size of a cell.
+ * unit: The unit of the size value, either in pixel ("pix") or in geographical unit ("geo").
+ * @typedef {{val: function(Cell):number, unit: "pix"|"geo"}} Size */
 
 /**
  * A style, to show a grid dataset.
@@ -130,7 +133,7 @@ export class Style {
 
         //size
         /** @type {number} */
-        size = size || { val: c=>resolution, unit:"geo"};
+        size = size || { val: c => resolution, unit: "geo" };
         //size - in pixel and geo
         const sP = size.unit === "pix" ? size.val(cell) : size.val(cell) / cg.zf
         const sG = cg.zf * sP;
