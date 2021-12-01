@@ -45,21 +45,20 @@ export class App {
         /** Make geo canvas
          * @type {CanvasGeo} */
         this.cg = new CanvasGeo();
-        const th = this;
-        this.cg.redraw = function () {
+        this.cg.redraw = () => {
 
             //go through the list of layers and find the one(s) to draw
-            for (const layer of th.layers) {
+            for (const layer of this.layers) {
 
                 //skip layer not within the zoom range
-                if (layer.minZoom >= this.zf) continue;
-                if (layer.maxZoom < this.zf) continue;
+                if (layer.minZoom >= this.cg.zf) continue;
+                if (layer.maxZoom < this.cg.zf) continue;
 
                 //get data to show
-                layer.dataset.getData(this.updateExtentGeo(), () => { th.draw(layer); });
+                layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.draw(layer); });
 
                 //draw cells
-                th.draw(layer);
+                this.draw(layer);
             }
             return this
         };
