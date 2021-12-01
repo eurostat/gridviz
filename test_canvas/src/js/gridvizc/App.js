@@ -25,7 +25,7 @@ export class App {
          * The layers.
          * @type {Array.<Layer>}
          * */
-         this.layers = [];
+        this.layers = [];
 
         //get canvas element
         opts.canvasId = opts.canvasId || "vacanvas";
@@ -64,6 +64,31 @@ export class App {
             return this
         };
 
+    }
+
+
+
+    /**
+     * @private
+     * 
+     * Draw a layer.
+     * 
+     * @param {Layer} layer 
+     * @returns {this}
+     */
+    draw(layer) {
+
+        //get cells to draw
+        const cells = layer.dataset.getCells(this.cg.extGeo)
+
+        //clear
+        this.cg.clear(this.backgroundColor_);
+
+        //draw cells, style by style
+        for (const style of layer.styles)
+            style.draw(cells, layer.dataset.resolution, this.cg)
+
+        return this;
     }
 
 
@@ -118,27 +143,6 @@ export class App {
     }
 
 
-    /**
-     * Draw a layer.
-     * 
-     * @param {Layer} layer 
-     * @returns {this}
-     */
-    draw(layer) {
-
-        //get cells to draw
-        const cells = layer.dataset.getCells(this.cg.extGeo)
-
-        //clear
-        this.cg.clear(this.backgroundColor_);
-
-        //draw cells, style by style
-        for (const style of layer.styles)
-            style.draw(cells, layer.dataset.resolution, this.cg)
-
-        return this;
-    }
-
 
     /**
      * Set viewer position.
@@ -160,7 +164,7 @@ export class App {
      * @param {number=} zf
      * @returns {this|number}
      */
-     zoomFactor(zf) {
+    zoomFactor(zf) {
         if (zf) {
             this.cg.zf = zf;
             return this;
@@ -174,7 +178,7 @@ export class App {
      * @param {string=} backgroundColor 
      * @returns {this|string}
      */
-     backgroundColor(backgroundColor) {
+    backgroundColor(backgroundColor) {
         if (backgroundColor) {
             this.backgroundColor_ = backgroundColor;
             return this;
