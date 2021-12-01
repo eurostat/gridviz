@@ -43,21 +43,21 @@ export class Tooltip2 {
 
 
 		/** @private @type {Selection} */
-		this.tooltip = select("#" + config.div);
+		this.tooltip = select("#" + this.div);
 		if (this.tooltip.empty())
-			this.tooltip = select("body").append("div").attr("id", config.div);
+			this.tooltip = select("body").append("div").attr("id", this.div);
 
 		//initialise
-		this.tooltip.style("max-width", config.maxWidth);
+		this.tooltip.style("max-width", this.maxWidth);
 		this.tooltip.style("overflow", "hidden");
-		this.tooltip.style("font-size", config.fontSize);
-		this.tooltip.style("background", config.background);
-		this.tooltip.style("padding", config.padding);
-		this.tooltip.style("border", config.border);
-		this.tooltip.style("border-radius", config["border-radius"]);
-		this.tooltip.style("box-shadow", config["box-shadow"]);
+		this.tooltip.style("font-size", this.fontSize);
+		this.tooltip.style("background", this.background);
+		this.tooltip.style("padding", this.padding);
+		this.tooltip.style("border", this.border);
+		this.tooltip.style("border-radius", this["border-radius"]);
+		this.tooltip.style("box-shadow", this["box-shadow"]);
 		this.tooltip.style("position", "absolute");
-		this.tooltip.style("font-family", config["font-family"]);
+		this.tooltip.style("font-family", this["font-family"]);
 		this.tooltip.style("position", "absolute");
 		this.tooltip.style("pointer-events", "none");
 		this.tooltip.style("opacity", "0");
