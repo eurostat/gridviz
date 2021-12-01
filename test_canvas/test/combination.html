@@ -12,10 +12,10 @@
 
         //make application
         const app = gviz.App()
-            .geoCenter({ x: 4000000, y: 2300000 }).zoomFactor(200)
+            .setGeoCenter({ x: 4000000, y: 2300000 }).zoomFactor(200)
 
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
-        app.geoCenter({ x: 135000, y: 456000 }).zoomFactor(3)
+        app.setGeoCenter({ x: 135000, y: 456000 }).zoomFactor(3)
         const s1 = gviz.JoyPlotStyle(
             { val: c => 13 * Math.sqrt(c["Inhabitants"]), unit: "geo" }
         ).setZFStroke(3).fillColor("#77777777");
