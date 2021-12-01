@@ -63,73 +63,26 @@ export class App {
 
         //add tooltip
         this.tooltip = tooltip();
-
-        this.cg.canvas.addEventListener("mousemove",
-            e => {
-                //compute mouse geo position
-                const mousePositionGeo = { x: this.cg.pixToGeoX(e.clientX), y: this.cg.pixToGeoY(e.clientY) }
-                //TODO show position somewhere ?
-
-                //get cell at mouse position
-
-                //get layers
-                /** @type {Layer} */
-                const layer = this.getTopActiveLayers()[0];
-                if (!layer) return;
-
-                //compute candidate cell position
-                /** @type {number} */
-                const r = layer.dataset.getResolution();
-                /** @type {number} */
-                const cellX = r * Math.floor(mousePositionGeo.x / r)
-                /** @type {number} */
-                const cellY = r * Math.floor(mousePositionGeo.y / r)
-
-                //get cell data
-                for (const cell of layer.dataset.getCells(this.cg.extGeo)) {
-                    if (cell.x != cellX) continue;
-                    if (cell.y != cellY) continue;
-                    //console.log(cell);
-                    //one is enough
-                    break;
-                }
-
-                this.tooltip.mouseover("Ahahah!")
-                this.tooltip.mousemove()
-
-            });
-
-    }
-
-
-    /**
-     * Returns the layers which are within the current viewer zoom extent, that is the ones that are visible.
-     * @returns {Array.<Layer>}
-     */
-    getActiveLayers() {
-
-        /** @type {Array.<Layer>} */
-        const out = []
-
-        //go through the layers
-        const zf = this.getZoomFactor();
-        for (const layer of this.layers) {
-            //check if layer zoom extent contains current zoom factor
-            if (layer.maxZoom < zf) continue;
-            if (layer.minZoom >= zf) continue;
-            out.push(layer);
+        const showCellInfoTooltip = (e) => {
+            //compute mouse geo position
+            const mousePositionGeo = { x: this.cg.pixToGeoX(e.clientX), y: this.cg.pixToGeoY(e.clientY) }
+            //TODO show position somewhere ?
+            /** @type {string} */
+            const html = this.getCellInfoHTML(mousePositionGeo)
+            this.tooltip.html(html);
         }
-        return out;
+        this.cg.canvas.addEventListener("mouseover", e => {
+            showCellInfoTooltip(e)
+            this.tooltip.mouseover(e)
+        });
+        this.cg.canvas.addEventListener("mousemove", e => {
+            showCellInfoTooltip(e)
+            this.tooltip.mouseover(e)
+        });
+        this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.mouseover() });
+
     }
 
-    /**
-     * Returns the layer which is on top of the visible layers. This is the layer the user can interact with.
-     * @returns {Layer}
-     */
-    getTopActiveLayers() {
-        const lays = this.getActiveLayers();
-        return lays[lays.length - 1]
-    }
 
     /**
      * @private
@@ -204,6 +157,62 @@ export class App {
             styles, minZoom, maxZoom
         )
     }
+
+
+
+
+
+
+
+    /**
+     * Returns the layers which are within the current viewer zoom extent, that is the ones that are visible.
+     * @returns {Array.<Layer>}
+     */
+    getActiveLayers() {
+
+        /** @type {Array.<Layer>} */
+        const out = []
+
+        //go through the layers
+        const zf = this.getZoomFactor();
+        for (const layer of this.layers) {
+            //check if layer zoom extent contains current zoom factor
+            if (layer.maxZoom < zf) continue;
+            if (layer.minZoom >= zf) continue;
+            out.push(layer);
+        }
+        return out;
+    }
+
+
+    /**
+     * Returns the layer which is on top of the visible layers. This is the layer the user can interact with.
+     * @returns {Layer}
+     */
+    getTopActiveLayers() {
+        const lays = this.getActiveLayers();
+        return lays[lays.length - 1]
+    }
+
+    /**
+     * Return the cell HTML info at a given geo position.
+     * This is usefull for user interactions, to show this info where the user clicks for example.
+     * 
+     * @param {{x:number,y:number}} posGeo 
+     * @returns {string}
+     */
+    getCellInfoHTML(posGeo) {
+        //get top layer
+        /** @type {Layer} */
+        const layer = this.getTopActiveLayers();
+        if (!layer) return undefined;
+        //get cell at mouse position
+        /** @type {Cell} */
+        const cell = layer.dataset.getCellFromPosition(posGeo, layer.dataset.getCells(this.cg.updateExtentGeo()));
+        if (!cell) return undefined;
+        return layer.dataset.cellInfoHTML(cell);
+    }
+
 
 
 

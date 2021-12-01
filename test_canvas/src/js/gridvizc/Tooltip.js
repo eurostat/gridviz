@@ -1,4 +1,7 @@
-import { select, event } from "d3-selection";
+//@ts-check
+
+import { select } from "d3-selection";
+import { transition } from "d3-transition";
 
 /**
  * @param {*} config
@@ -43,17 +46,22 @@ export const tooltip = function (config) {
 		tooltip.style("opacity", "0");
 	}
 
-	my.mouseover = function (html) {
-		if(html) tooltip.html(html);
+	/**
+	 * @param {string} html 
+	 */
+	my.html = function(html) {
+		tooltip.html(html);
+	}
+
+	my.mouseover = function (event, html) {
+		if (html) tooltip.html(html);
 		tooltip.style("left", (event.pageX + config.xOffset) + "px").style("top", (event.pageY - config.yOffset) + "px")
 			.transition().duration(config.transitionDuration).style("opacity", 1);
-
-			//this.ensureTooltipOnScreen();
+		//this.ensureTooltipOnScreen();
 	};
 
-	my.mousemove = function () {
+	my.mousemove = function (event) {
 		tooltip.style("left", (event.pageX + config.xOffset) + "px").style("top", (event.pageY - config.yOffset) + "px");
-
 		//this.ensureTooltipOnScreen();
 	};
 
@@ -73,28 +81,29 @@ export const tooltip = function (config) {
 		return my;
 	};
 
-/**
-* @function ensureTooltipOnScreen
-* @description Prevents the tooltip from overflowing off screen
-*/
-my.ensureTooltipOnScreen = function() {
-	// TODO: parent needs to be the all-encompassing container, not the map SVG id otherwise it just uses the last SVG which will be an inset SVG.
-	let parent = document.getElementById(config.parentContainerId);
-	let bbox = parent.getBBox();
-	let parentWidth = bbox.width;
-	let parentHeight = bbox.height;
-	let node = tooltip.node();
-    //too far right
-    if (node.offsetLeft > parentWidth - node.clientWidth) {
-        node.style.left = node.offsetLeft - (node.clientWidth + config.xOffset * 2) + "px";
 
-    }
-    //too far down
-    if (node.offsetTop + node.clientHeight > parentHeight) {
-        node.style.top = node.offsetTop - (node.clientHeight + config.yOffset * 2) + "px";
-    }
+	/**
+	* @function ensureTooltipOnScreen
+	* @description Prevents the tooltip from overflowing off screen
+	*/
+	/*my.ensureTooltipOnScreen = function () {
+		// TODO: parent needs to be the all-encompassing container, not the map SVG id otherwise it just uses the last SVG which will be an inset SVG.
+		let parent = document.getElementById(config.parentContainerId);
+		let bbox = parent.getBBox();
+		let parentWidth = bbox.width;
+		let parentHeight = bbox.height;
+		let node = tooltip.node();
+		//too far right
+		if (node.offsetLeft > parentWidth - node.clientWidth) {
+			node.style.left = node.offsetLeft - (node.clientWidth + config.xOffset * 2) + "px";
 
-}
+		}
+		//too far down
+		if (node.offsetTop + node.clientHeight > parentHeight) {
+			node.style.top = node.offsetTop - (node.clientHeight + config.yOffset * 2) + "px";
+		}
+
+	}*/
 
 	my();
 	return my;

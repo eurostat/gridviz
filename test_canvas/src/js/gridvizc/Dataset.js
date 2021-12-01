@@ -57,6 +57,37 @@ export class Dataset {
 
 
 
+
+    /**
+     * Get a cell under a given position, if any.
+     * 
+     * @param {{x:number,y:number}} posGeo 
+     * @param {Array.<Cell>} cells Some cells from the dataset, a subset if necessary.
+     * @returns {Cell}
+     */
+    getCellFromPosition(posGeo, cells) {
+
+        //compute candidate cell position
+        /** @type {number} */
+        const r = this.getResolution();
+        /** @type {number} */
+        const cellX = r * Math.floor(posGeo.x / r)
+        /** @type {number} */
+        const cellY = r * Math.floor(posGeo.y / r)
+
+        //get cell data
+        for (const cell of cells) {
+            if (cell.x != cellX) continue;
+            if (cell.y != cellY) continue;
+            return cell;
+        }
+        return undefined;
+    }
+
+
+
+
+
     //getters and setters
 
     /** @returns {number} */
