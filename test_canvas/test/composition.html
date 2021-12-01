@@ -42,7 +42,7 @@
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
             //change style type
-            s.type(c => select.value)
+            s.setType(c => select.value)
             //redraw
             app.cg.redraw();
         });
