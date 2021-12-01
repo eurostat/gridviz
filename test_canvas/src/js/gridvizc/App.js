@@ -39,7 +39,7 @@ export class App {
 
         /** Background color.
          * @type {string} */
-        this.backgroundColor_ = opts.backgroundColor || "white"
+        this.backgroundColor = opts.backgroundColor || "white"
 
 
         /** Make geo canvas
@@ -82,7 +82,7 @@ export class App {
         const cells = layer.dataset.getCells(this.cg.extGeo)
 
         //clear
-        this.cg.clear(this.backgroundColor_);
+        this.cg.clear(this.backgroundColor);
 
         //draw cells, style by style
         for (const style of layer.styles)
@@ -157,8 +157,8 @@ export class App {
     setZoomFactor(val) { this.cg.zf = val; return this; }
 
     /** @returns {string} */
-    getBackgroundColor() { return this.backgroundColor_; }
+    getBackgroundColor() { return this.backgroundColor; }
     /** @param {string} val @returns {this} */
-    setBackgroundColor(val) { this.backgroundColor_ = val; return this; }
+    setBackgroundColor(val) { this.backgroundColor = val; return this; }
 
 }
