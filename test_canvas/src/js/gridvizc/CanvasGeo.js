@@ -149,15 +149,4 @@ export class CanvasGeo {
         return true
     }
 
-
-    /**
-     * Add a mousemove event.
-     * To show a tooltip for example.
-     * 
-     * @param {function(*):void} fun 
-     */
-    addMouseMoveEvent(fun) {
-        this.canvas.addEventListener("mousemove", fun);
-    }
-
 }

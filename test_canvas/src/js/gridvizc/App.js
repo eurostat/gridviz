@@ -64,40 +64,40 @@ export class App {
         //add tooltip
         this.tooltip = tooltip();
 
-        this.cg.addMouseMoveEvent( e => {
+        this.cg.canvas.addEventListener("mousemove",
+            e => {
+                //compute mouse geo position
+                const mousePositionGeo = { x: this.cg.pixToGeoX(e.clientX), y: this.cg.pixToGeoY(e.clientY) }
+                //TODO show position somewhere ?
 
-            //compute mouse geo position
-            const mousePositionGeo = { x: this.cg.pixToGeoX(e.clientX), y: this.cg.pixToGeoY(e.clientY) }
-            //TODO show position somewhere ?
+                //get cell at mouse position
 
-            //get cell at mouse position
+                //get layers
+                /** @type {Layer} */
+                const layer = this.getTopActiveLayers()[0];
+                if (!layer) return;
 
-            //get layers
-            /** @type {Layer} */
-            const layer = this.getActiveLayers()[0];
-            if(!layer) return;
+                //compute candidate cell position
+                /** @type {number} */
+                const r = layer.dataset.getResolution();
+                /** @type {number} */
+                const cellX = r * Math.floor(mousePositionGeo.x / r)
+                /** @type {number} */
+                const cellY = r * Math.floor(mousePositionGeo.y / r)
 
-            //compute candidate cell position
-            /** @type {number} */
-            const r = layer.dataset.getResolution();
-            /** @type {number} */
-            const cellX = r*Math.floor(mousePositionGeo.x/r)
-            /** @type {number} */
-            const cellY = r*Math.floor(mousePositionGeo.y/r)
+                //get cell data
+                for (const cell of layer.dataset.getCells(this.cg.extGeo)) {
+                    if (cell.x != cellX) continue;
+                    if (cell.y != cellY) continue;
+                    //console.log(cell);
+                    //one is enough
+                    break;
+                }
 
-            //get cell data
-            for(const cell of layer.dataset.getCells(this.cg.extGeo)) {
-                if(cell.x != cellX) continue;
-                if(cell.y != cellY) continue;
-                //console.log(cell);
-                //one is enough
-                break;
-            }
+                this.tooltip.mouseover("Ahahah!")
+                this.tooltip.mousemove()
 
-            this.tooltip.mouseover("Ahahah!")
-            this.tooltip.mousemove()
-
-        });
+            });
 
     }
 
@@ -122,6 +122,14 @@ export class App {
         return out;
     }
 
+    /**
+     * Returns the layer which is on top of the visible layers. This is the layer the user can interact with.
+     * @returns {Layer}
+     */
+    getTopActiveLayers() {
+        const lays = this.getActiveLayers();
+        return lays[lays.length - 1]
+    }
 
     /**
      * @private
