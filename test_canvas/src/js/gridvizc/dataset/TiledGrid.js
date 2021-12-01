@@ -18,8 +18,8 @@ export class TiledGrid extends Dataset {
      * @param {App} app The app.
      * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      */
-    constructor(url, app, preprocess = null) {
-        super(url, undefined, preprocess)
+    constructor(url, app, preprocess = null, cellInfoHTML = null) {
+        super(url, undefined, preprocess, cellInfoHTML)
 
         /** 
          * The cache of the loaded tiles. It is double indexed: by xT and then yT.
@@ -154,10 +154,10 @@ export class TiledGrid extends Dataset {
                             // 2. the tile is within the view, that is its geo envelope intersects the viewer geo envelope.
                             const env = this.app.cg.updateExtentGeo();
                             const envT = tile_.extGeo;
-                            if(env.xMax <= envT.xMin) return;
-                            if(env.xMin >= envT.xMax) return;
-                            if(env.yMax <= envT.yMin) return;
-                            if(env.yMin >= envT.yMax) return;
+                            if (env.xMax <= envT.xMin) return;
+                            if (env.xMin >= envT.xMax) return;
+                            if (env.yMax <= envT.yMin) return;
+                            if (env.yMin >= envT.yMax) return;
 
                             //redraw
                             redrawFun()
