@@ -1,7 +1,7 @@
-TODO style kernel smoothing
-
 TODO test GriddedStatsTiler2
 TODO fix tiler rounding issue
+
+TODO style kernel smoothing
 
 TODO zoom/pan smartphone/touchscreen - use d3 events - TODO make new canvasgeo based on d3 zoom/pan/over
 TODO modularise further canvasgeo (make ctx private ?)
@@ -21,3 +21,4 @@ TODO background - images
 TODO foreground - geo names
 
 TODO finalise demos
+
