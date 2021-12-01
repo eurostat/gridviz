@@ -61,19 +61,17 @@ export class App {
         };
 
 
-        //add tooltip
+
+        //tooltip
+        /** @private @type {Tooltip} */
         this.tooltip = new Tooltip()
-        /**
-         * @param {MouseEvent} e 
-         * @returns {boolean}
-         */
+        /** @param {MouseEvent} e @returns {boolean} */
         const showCellInfoTooltip = (e) => {
             //compute mouse geo position
             const mousePositionGeo = { x: this.cg.pixToGeoX(e.clientX), y: this.cg.pixToGeoY(e.clientY) }
-            //TODO show position somewhere ?
             /** @type {string} */
             const html = this.getCellInfoHTML(mousePositionGeo)
-            if(!html) return false;
+            if (!html) return false;
             this.tooltip.html(html);
             return true;
         }
