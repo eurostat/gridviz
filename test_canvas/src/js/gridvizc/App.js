@@ -144,19 +144,15 @@ export class App {
 
 
 
-    /**
-     * Set viewer position.
-     * 
-     * @param {{x:number,y:number}=} pos 
-     * @returns {this|{x:number,y:number}}
-     */
-    geoCenter(pos) {
-        if (pos) {
-            this.cg.center = pos;
-            return this;
-        }
-        return this.cg.center;
-    }
+
+    //getters and setters
+
+    /** @returns {{x:number,y:number}} */
+    getGeoCenter() { return this.cg.center; }
+    /** @param {{x:number,y:number}} val @returns {this} */
+    setGeoCenter(val) { this.cg.center = val; return this; }
+
+
 
     /**
      * Set viewer zoom level (ground pixel size).

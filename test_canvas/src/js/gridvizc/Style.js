@@ -22,7 +22,7 @@ export class Style {
     constructor() {
 
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
-         * @private @type {{dx:number,dy:number}} */
+         * @protected @type {{dx:number,dy:number}} */
         this.offset = { dx: 0, dy: 0 };
 
 
