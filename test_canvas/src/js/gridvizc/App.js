@@ -4,11 +4,10 @@ import { CanvasGeo } from './CanvasGeo';
 import { Layer } from './Layer';
 import { Style } from './Style';
 import { Dataset, Cell } from './Dataset';
-import { tooltip } from './Tooltip';
+import { Tooltip } from './Tooltip';
 
 import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
-import { Tooltip2 } from './Tooltip2';
 
 /**
  * A gridviz on a HTML canvas.
@@ -63,10 +62,9 @@ export class App {
 
 
         //add tooltip
-        this.tooltip = new Tooltip2()//tooltip();
+        this.tooltip = new Tooltip()
         /**
-         * 
-         * @param {*} e 
+         * @param {MouseEvent} e 
          * @returns {boolean}
          */
         const showCellInfoTooltip = (e) => {
