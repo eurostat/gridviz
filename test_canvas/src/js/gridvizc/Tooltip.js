@@ -53,21 +53,34 @@ export const tooltip = function (config) {
 		tooltip.html(html);
 	}
 
-	my.mouseover = function (event, html) {
-		if (html) tooltip.html(html);
+	my.show = function() {
+		tooltip.transition().duration(config.transitionDuration).style("opacity", 1);
+	}
+
+	my.hide = function() {
+		tooltip.transition().duration(config.transitionDuration).style("opacity", 0);
+	}
+
+	my.setPosition = function(event) {
 		tooltip.style("left", (event.pageX + config.xOffset) + "px").style("top", (event.pageY - config.yOffset) + "px")
-			.transition().duration(config.transitionDuration).style("opacity", 1);
+	}
+
+	/*
+	my.mouseover = function (event, html) {
+		if (html) my.html(html);
+		my.setPosition(event);
+		my.show()
 		//this.ensureTooltipOnScreen();
 	};
 
 	my.mousemove = function (event) {
-		tooltip.style("left", (event.pageX + config.xOffset) + "px").style("top", (event.pageY - config.yOffset) + "px");
+		my.setPosition(event);
 		//this.ensureTooltipOnScreen();
 	};
 
 	my.mouseout = function () {
-		tooltip.transition().duration(config.transitionDuration).style("opacity", 0);
-	};
+		my.hide();
+	};*/
 
 	my.style = function (k, v) {
 		if (arguments.length == 1) return tooltip.style(k);

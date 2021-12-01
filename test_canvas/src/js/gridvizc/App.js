@@ -63,23 +63,32 @@ export class App {
 
         //add tooltip
         this.tooltip = tooltip();
+        /**
+         * 
+         * @param {*} e 
+         * @returns {boolean}
+         */
         const showCellInfoTooltip = (e) => {
             //compute mouse geo position
             const mousePositionGeo = { x: this.cg.pixToGeoX(e.clientX), y: this.cg.pixToGeoY(e.clientY) }
             //TODO show position somewhere ?
             /** @type {string} */
             const html = this.getCellInfoHTML(mousePositionGeo)
+            if(!html) return false;
             this.tooltip.html(html);
+            return true;
         }
         this.cg.canvas.addEventListener("mouseover", e => {
-            showCellInfoTooltip(e)
-            this.tooltip.mouseover(e)
+            const b = showCellInfoTooltip(e)
+            if (b) this.tooltip.show(); else this.tooltip.hide();
+            this.tooltip.setPosition(e);
         });
         this.cg.canvas.addEventListener("mousemove", e => {
-            showCellInfoTooltip(e)
-            this.tooltip.mouseover(e)
+            const b = showCellInfoTooltip(e)
+            if (b) this.tooltip.show(); else this.tooltip.hide();
+            this.tooltip.setPosition(e);
         });
-        this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.mouseover() });
+        this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
 
     }
 
