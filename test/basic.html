@@ -18,7 +18,9 @@
   let app = gridviz
     .app()
     .container(containerDiv)
-    .zoom(2000)
+    .zoom(3000)
+    .geoCenter([3900,3170])
+    .showPlacenames(true)
     .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
     .title("5km² Population Grid of Europe")
     .colorScaleName('scaleSequentialLog')

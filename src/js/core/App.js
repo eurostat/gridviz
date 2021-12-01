@@ -9,31 +9,28 @@ import { extent, min, max } from "d3-array";
 import { pointer } from "d3-selection";
 
 //three.js
-import {
-  Vector3,
-  Color,
-} from "three";
+import { Vector3, Color, Group } from "three";
 import { WEBGL } from '../lib/threejs/WebGL'
 
 // gridviz modules
-import * as Geojson from "./layers/geojson.js";
 import * as Tooltip from "./tooltip/tooltip.js";
 import * as Placenames from "./placenames/placenames.js";
 import * as Legend from "./legend/legend.js";
-import { Camera } from "./viewer/camera/camera.js";
-import * as Zoom from "./viewer/zoom/zoom.js";
 import * as Buttons from "./gui/buttons.js";
-import * as Points from "./layers/points.js";
 import * as Dropdowns from "./gui/dropdowns.js";
 import * as GUI from "./gui/gui";
 import { Viewer } from "./viewer/viewer.js";
-import { SquaresLayer } from "./layers/squares.js";
+
+import { SquaresLayer } from "./layers/SquaresLayer.js";
+import { LabelsLayer } from "./layers/LabelsLayer.js";
+import { GeoJsonLayer } from "./layers/GeoJsonLayer";
 
 //other 
 import { feature } from "topojson";
 import * as CONSTANTS from "./constants.js";
 import * as Utils from "./utils/utils";
 import * as Loading from "./gui/loading";
+import { app } from "..";
 
 /**
  * Creates a Three.js scene for visualizing x/y data derived from gridded statistics.
@@ -202,21 +199,37 @@ export class App {
         // default zoom if unspecified
         if (!this.zoom_) this.zoom_ = 1000;
 
-        // build threeJS viewer
+        // build threeJS viewer with pan and zoom functionality
         this.viewer = new Viewer({
           width: this.width_,
           height: this.height_,
           container: this.container_,
+          geoCenter: this.geoCenter_,
           isMobile: this._isMobile,
-          zoom: this.zoom_
+          zoom: this.zoom_,
+          zerosRemoved: this.zerosRemoved_
         });
         //Viewer.build(app)
 
         // add NUTS geometries to viewer as geojson
         if (this.nuts_) this.loadNuts2json(CONSTANTS.nuts_base_URL + this.EPSG_ + "/" + this.nutsSimplification_ + "/" + this.nutsLevel_ + ".json");
 
-        //add stuff to DOM 
+        //add titles, sources texts to DOM 
         this.addInitialElementsToDOM()
+
+        // default scale:population thresholds for placenames
+        if (this.showPlacenames_ && !this.placenameThresholds_) {
+          this.placenameThresholds_ = Placenames.defineDefaultPlacenameThresholds(this.currentResolution_);
+        }
+
+        //request initial placenames
+        if (this.showPlacenames_) {
+          //add layer to scene
+          this.labelsLayer = new LabelsLayer();
+          this.viewer.scene.add(this.labelsLayer);
+          this.viewer.on("zoomEnd", (e) => {this.onZoomEnd(e)});
+          Placenames.getPlacenames(this);
+        }
 
         //add container for dropdowns
         if (this.colorSchemeSelector_ || this.colorScaleSelector_ || this.sizeFieldSelector_ || this.colorFieldSelector_) {
@@ -244,6 +257,49 @@ export class App {
 
     }
   };
+
+  /**
+   * @description Event handler for viewer zoom end
+   * @param {*} event
+   * @memberof App
+   */
+  onZoomEnd(event) {
+    Tooltip.hideTooltip();
+    let scale = Utils.getScaleFromZ(this.height_, this.viewer.camera.config.fov_, event.transform.k);
+    // decide which layers to show based on their max/min zoom levels
+
+    //update current app resolution (resolution of current grid in view)
+
+
+    // get placenames at certain zoom levels
+    if (this.showPlacenames_) {
+      //update thresholds according to current grid resolution
+      this.placenameThresholds_ = Placenames.defineDefaultPlacenameThresholds(this.currentResolution_);
+      if (scale > 0 && scale < this.viewer.camera.config.far_) {
+        //placenames are added to the this.pointsLayer object
+        let that = this;
+        Placenames.getPlacenames(that).then(
+          res => {
+            Placenames.removeAllLabelsFromLayer(this.labelsLayer);
+            if (res.features) {
+              if (res.features.length > 0) {
+                for (let p = 0; p < res.features.length; p++) {
+                  let label = Placenames.createPlacenameLabelObject(app, res.features[p]);
+                  // TODO: group objects manually (THREE.group())
+                  this.labelsLayer.add(label);
+                }
+              }
+            }
+          },
+          err => {
+            console.error(err);
+          }
+        );
+      } else {
+        Placenames.removeAllLabelsFromLayer(this.labelsLayer);
+      }
+    }
+  }
 
   getDefaultAppWidth(app) {
     return this.container_.clientWidth == window.innerWidth ? this.container_.clientWidth - 1 : this.container_.clientWidth;
@@ -289,15 +345,16 @@ export class App {
   * 
   * @param {string} url The url of the dataset.
   * @param {number} resolution The dataset resolution (in geographical unit).
-  * @param {Array.<Style>} styles The styles, ordered in drawing order.
   * @param {number} minZoom The minimum zoom level when to show the layer
   * @param {number} maxZoom The maximum zoom level when to show the layer
   * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
   */
-  addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null) {
+  addCSVGrid(url, resolution, minZoom, maxZoom, preprocess = null) {
     this.add(
-      new CSVGrid(url, resolution, preprocess).getData(null, () => { this.redrawWhenNecessary(); }),
-      styles, minZoom, maxZoom
+      new CSVGrid(url, resolution, preprocess),
+      minZoom,
+      maxZoom,
+      preprocess
     )
   }
 
@@ -318,14 +375,14 @@ export class App {
               this.gridConfigs[layerConfig.cellSize] = layerConfig;
               // set current app resolution (new grid cell size)
               this.currentResolution_ = layerConfig.cellSize;
-              // set raycaster threshold
+              // set raycaster threshold (for tooltip hover)
               this.viewer.raycaster.params.Points.threshold = layerConfig.cellSize;
-
-              this.cellCount = cells.length;
+              // count cells
+              this.cellCount = this.cellCount ? this.cellCount + cells.length : cells.length;
+              // save all fields to app
               this._cellFields = Object.keys(cells[0]).filter(key => key !== 'x' && key !== 'y');
-
               //as a temporary hacky fix for d3's pan and zoom not working correctly on mobile devices, we scale the coordinates to a webgl-friendly range
-              if (this._isMobile) convertCoordinatesToMobile(app, cells, layerConfig)
+              if (this._isMobile) this.convertCoordinatesToMobile(app, cells, layerConfig)
 
               // add points to cache
               this.addGridToCache(cells, layerConfig);
@@ -355,7 +412,7 @@ export class App {
 
               // define pan & zoom for 2D apps
               if (this.mode_ == '2D') {
-                Zoom.addPanAndZoom(app);
+                //Zoom.addPanAndZoom(app);
               } else if (this.mode_ == '3D') {
                 this.viewer.camera.camera.createOrbitControls(app)
               }
@@ -377,9 +434,9 @@ export class App {
               if (this.showLegend_) {
                 if (this.legend_) {
                   if (this.__Legend) {
-                    Legend.updateLegend(app, layerConfig);
+                    Legend.updateLegend(this, layerConfig);
                   } else {
-                    Legend.createLegend(app, layerConfig);
+                    Legend.createLegend(this, layerConfig);
                   }
                 }
               }
@@ -387,12 +444,11 @@ export class App {
               Loading.hideLoading();
               if (!this.animating) {
                 this.animating = true;
-                let that = this;
-                this.animate(that);
+                this.animate();
               }
 
               // tooltip DOM element
-              Tooltip.createTooltipContainer(app);
+              Tooltip.createTooltipContainer(this);
 
               if (this.colorFieldSelector_) {
                 Dropdowns.createColorFieldDropdown(app, this.gridConfigs[this.currentResolution_]);
@@ -401,16 +457,6 @@ export class App {
               if (this.sizeFieldSelector_) {
                 Dropdowns.createSizeFieldDropdown(app, this.gridConfigs[this.currentResolution_]);
                 this.addChangeEventToSizeFieldDropdown()
-              }
-
-              // default scale:population thresholds for placenames
-              if (this.showPlacenames_ && !this.placenameThresholds_) {
-                Placenames.defineDefaultPlacenameThresholds(app);
-              }
-
-              //request initial placenames
-              if (this.showPlacenames_) {
-                Placenames.getPlacenames(app);
               }
             }
 
@@ -439,12 +485,12 @@ export class App {
   }
 
   /** 
-* @description Three.js render loop
-* @function animate
-* 
-*/
+  * @description Three.js render loop
+  * @function animate
+  * 
+  */
   animate() {
-    var $this = this; // Hold the current object's scope, for accessing properties from within the callback method.
+    var $this = this; // Hold the app's scope, for accessing properties from within the callback method.
 
     function renderloop() {
       requestAnimationFrame(renderloop);
@@ -454,7 +500,6 @@ export class App {
 
     renderloop();
   }
-
 
 
   /**
@@ -626,8 +671,11 @@ export class App {
         json.objects.nutsbn.geometries = newArray;
         //topojson to geojson
         let features = feature(json, json.objects.nutsbn).features;
-        //add line geometries to app
-        Geojson.addGeoJsonToScene(features, app);
+
+        //add line geometries to viewer
+        let geojsonLayer = new GeoJsonLayer(features);
+        this.viewer.scene.add(geojsonLayer);
+
       },
       err => {
         console.error(err);
@@ -669,7 +717,7 @@ export class App {
 
 
   /**
-   * @description Adds event listeners to app, dropdowns and screen resize
+   * @description Adds event listeners to the app viewer, dropdowns and screen resize
    * @function addEventListeners
    */
   addEventListeners() {
@@ -830,7 +878,7 @@ export class App {
         let index = intersect.index;
         let cell = this.gridCaches[this.currentResolution_][index];
         this.highlightPoint(intersect);
-        Tooltip.showTooltip(app, mouse_position, cell);
+        Tooltip.showTooltip(this, mouse_position, cell);
       } else {
         Tooltip.hideTooltip();
       }
@@ -864,7 +912,7 @@ export class App {
    * @parameter scaleFactor 
    */
   zoomIn(scaleFactor) {
-    Zoom.zoomIn(app, scaleFactor)
+    this.viewer.zoomIn(scaleFactor)
   }
 
   /**
@@ -873,7 +921,7 @@ export class App {
   * @parameter scaleFactor 
   */
   zoomOut(scaleFactor) {
-    Zoom.zoomOut(app, scaleFactor)
+    this.viewer.zoomOut(scaleFactor)
   }
 
   /**

@@ -9,14 +9,13 @@ import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
 /**
    * @description Defines the default 'scale : population' thresholds which are used to generate the placename queries. E.g 10 : 10000 will define the population value of the placename query as 10 000 when the current app scale (or camera.position.z) is above 10 and below the next threshold.
    * @function defineDefaultPlacenameThresholds
-   * @param {Object} app
+   * @param {number} resolution
    */
-export function defineDefaultPlacenameThresholds(app) {
-    let r = app.currentResolution_ / window.devicePixelRatio;
+export function defineDefaultPlacenameThresholds(resolution) {
+    let r = resolution / window.devicePixelRatio;
     //let s = app.viewer.camera.camera.position.z;
     // scale : population
-
-    app.placenameThresholds_ = {
+    return {
         [r * 1024]: 1000000,
         [r * 512]: 600000,
         [r * 256]: 500000,
@@ -29,13 +28,13 @@ export function defineDefaultPlacenameThresholds(app) {
         [r * 2]: 1000,
         [r]: 10,
     }
-    
 }
 
 /**
    * @description Retrieves placenames by population according to the current scale, from an ArcGIS server endpoint (see constants for baseURL).
    * @function getPlacenames
    * @param {*} scale
+   * @returns {Promise}
    */
 export function getPlacenames(app) {
     let where = defineWhereParameter(app)
@@ -64,32 +63,20 @@ export function getPlacenames(app) {
 
         //TODO: manage multiple calls by replicating angular's .unsubscribe() somehow
         let uri = encodeURI(URL);
-        json(uri).then(
-            res => {
-                removePlacenamesFromScene(app);
-                if (res.features) {
-                    if (res.features.length > 0) {
-                        addPlacenamesToScene(app, res.features);
-                    }
-                }
-            },
-            err => {
-                console.error(err);
-            }
-        );
+        return json(uri);
     }
 }
 
 /**
  * 
- * It seems that the browsers JS garbage collector removes the DOM nodes
+ * 
  * @function removePlacenamesFromScene
  * @description Removes the placenames CSS2DObjects from the THREE pointsLayer layer
  */
- export function removePlacenamesFromScene(app) {
-    if (app.pointsLayer && app.pointsLayer.children.length > 0) {
-        for (var i = app.pointsLayer.children.length - 1; i >= 0; i--) {
-            app.pointsLayer.remove(app.pointsLayer.children[i]);
+ export function removeAllLabelsFromLayer(labelsLayer) {
+    if (labelsLayer && labelsLayer.children.length > 0) {
+        for (var i = labelsLayer.children.length - 1; i >= 0; i--) {
+            labelsLayer.remove(labelsLayer.children[i]);
         }
     }
 }
@@ -156,28 +143,12 @@ function getPopulationParameterFromScale(app) {
 }
 
 /**
- * @description Appends placename labels from JSON features to the app
- * @function addPlacenamesToScene
- * @param {*} placenames
- */
-function addPlacenamesToScene(app, placenames) {
-    if (app.pointsLayer) {
-        for (let p = 0; p < placenames.length; p++) {
-            let label = createPlacenameLabelObject(app, placenames[p]);
-            // TODO: group objects manually (THREE.group())
-            app.pointsLayer.add(label);
-        }
-    }
-}
-
-
-/**
  * Creates a CSS2DObject for a placename ESRI JSON object
  *
  * @param {*} placename
  * @returns CSS2DObject
  */
-function createPlacenameLabelObject(app, placename) {
+export function createPlacenameLabelObject(app, placename) {
     var placeDiv = document.createElement("div");
     placeDiv.className = "gridviz-placename";
     placeDiv.textContent = placename.attributes[CONSTANTS.placenames.townField];

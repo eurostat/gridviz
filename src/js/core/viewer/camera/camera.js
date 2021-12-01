@@ -12,7 +12,11 @@ import { OrbitControls } from '../../../lib/threejs/orbitControls';
   */
 export class Camera {
 
-
+    /**
+     * Creates an instance of Camera.
+     * @param {*} opts
+     * @memberof Camera
+     */
     constructor(opts) {
         this.controls = null; //orbit controls
         this.viewerWidth = opts.viewerWidth;
