@@ -42,15 +42,27 @@
             //{ val: c => 8 * Math.pow(c["Ind"], 0.5), unit: "geo" }
             { val: c => 3.0 * Math.pow(c["Ind"], 0.2), unit: "pix" }
         ).setZFStroke(5);
+        const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
+            " < 3 : " + Math.floor(["Ind_0_3"]) + "<br>" +
+            " 4-5 : " + Math.floor(c["Ind_4_5"]) + "<br>" +
+            " 6-10: " + Math.floor(c["Ind_6_10"]) + "<br>" +
+            "11-17: " + Math.floor(c["Ind_11_17"]) + "<br>" +
+            "18-24: " + Math.floor(c["Ind_18_24"]) + "<br>" +
+            "25-39: " + Math.floor(c["Ind_25_39"]) + "<br>" +
+            "40-54: " + Math.floor(c["Ind_40_54"]) + "<br>" +
+            "55-64: " + Math.floor(c["Ind_55_64"]) + "<br>" +
+            "65-79: " + Math.floor(c["Ind_65_79"]) + "<br>" +
+            " > 80: " + Math.floor(c["Ind_80p"]) + "<br>" +
+            " unk.: " + Math.floor(c["Ind_inc"]) + "<br>";
 
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 10);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m//", [s], 10, 20);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/1000m//", [s], 20, 50);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/2000m//", [s], 50, 100);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/5000m//", [s], 100, 250);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/10000m//", [s], 250, 500);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/20000m//", [s], 500, 1000);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/50000m//", [s], 1000, 9999999999);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 10, null, ttfun);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m//", [s], 10, 20, null, ttfun);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/1000m//", [s], 20, 50, null, ttfun);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/2000m//", [s], 50, 100, null, ttfun);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/5000m//", [s], 100, 250, null, ttfun);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/10000m//", [s], 250, 500, null, ttfun);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/20000m//", [s], 500, 1000, null, ttfun);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/50000m//", [s], 1000, 9999999999, null, ttfun);
 
         //combo list
         const select = document.querySelector('#type');
