@@ -39,7 +39,7 @@ export class CanvasGeo {
         this.zf = zf;
 
         //extent
-        /** @type {{xMin: number, xMax: number, yMin: number, yMax: number}} */
+        /** @type {Envelope} */
         this.extGeo = undefined;
         this.updateExtentGeo()
 
