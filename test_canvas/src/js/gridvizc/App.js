@@ -4,6 +4,7 @@ import { CanvasGeo } from './CanvasGeo';
 import { Layer } from './Layer';
 import { Style } from './Style';
 import { Dataset, Cell } from './Dataset';
+import { tooltip } from './Tooltip';
 
 import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
@@ -61,6 +62,8 @@ export class App {
 
 
         //add tooltip
+        this.tooltip = tooltip();
+
         this.cg.addMouseMoveEvent( e => {
 
             //compute mouse geo position
@@ -86,12 +89,16 @@ export class App {
             for(const cell of layer.dataset.getCells(this.cg.extGeo)) {
                 if(cell.x != cellX) continue;
                 if(cell.y != cellY) continue;
-                console.log(cell);
+                //console.log(cell);
                 //one is enough
                 break;
             }
 
+            this.tooltip.mouseover("Ahahah!")
+            this.tooltip.mousemove()
+
         });
+
     }
 
 
