@@ -145,8 +145,8 @@ export class TiledGrid extends Dataset {
                             let redraw = false;
                             for (const layer of this.app.layers) {
                                 if (layer.dataset != this) continue;
-                                if (layer.maxZoom < this.app.zoomFactor()) continue;
-                                if (layer.minZoom > this.app.zoomFactor()) continue;
+                                if (layer.maxZoom < this.app.setZoomFactor()) continue;
+                                if (layer.minZoom > this.app.setZoomFactor()) continue;
                                 //found one layer. No need to seek more.
                                 redraw = true;
                                 break;

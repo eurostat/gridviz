@@ -152,34 +152,14 @@ export class App {
     /** @param {{x:number,y:number}} val @returns {this} */
     setGeoCenter(val) { this.cg.center = val; return this; }
 
+    /** @returns {number} */
+    getZoomFactor() { return this.cg.zf; }
+    /** @param {number} val @returns {this} */
+    setZoomFactor(val) { this.cg.zf = val; return this; }
 
-
-    /**
-     * Set viewer zoom level (ground pixel size).
-     * 
-     * @param {number=} zf
-     * @returns {this|number}
-     */
-    zoomFactor(zf) {
-        if (zf) {
-            this.cg.zf = zf;
-            return this;
-        }
-        return this.cg.zf;
-    }
-
-    /**
-     * Set viewer zoom level (ground pixel size).
-     * 
-     * @param {string=} backgroundColor 
-     * @returns {this|string}
-     */
-    backgroundColor(backgroundColor) {
-        if (backgroundColor) {
-            this.backgroundColor_ = backgroundColor;
-            return this;
-        }
-        return this.backgroundColor_;
-    }
+    /** @returns {string} */
+    getBackgroundColor() { return this.backgroundColor_; }
+    /** @param {string} val @returns {this} */
+    setBackgroundColor(val) { this.backgroundColor_ = val; return this; }
 
 }

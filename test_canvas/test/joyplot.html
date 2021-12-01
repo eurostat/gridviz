@@ -12,7 +12,7 @@
 
         //make application
         const app = gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2300000 }).zoomFactor(200)
+            .setGeoCenter({ x: 4000000, y: 2300000 }).setZoomFactor(200)
 
         //define datasets, styles and layers
         const s = gviz.JoyPlotStyle({ val: c => 30 * Math.sqrt(c["2011"]), unit: "geo" }).setZFStroke(70);
