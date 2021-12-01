@@ -105,7 +105,13 @@ export class Dataset {
  */
 const defaultCellInfoHTML = function (cell) {
     const buf = []
-    buf.push(cell.x)
-    buf.push(cell.y)
-    return buf.join("<br>");
+    for (const key of Object.keys(cell)) {
+        buf.push("<b>")
+        buf.push(key)
+        buf.push("</b>")
+        buf.push(" : ")
+        buf.push(cell[key])
+        buf.push("<br>")
+    }
+    return buf.join("");
 }
