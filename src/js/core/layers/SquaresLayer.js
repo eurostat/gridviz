@@ -1,12 +1,6 @@
 // this file contains the logic for creating and updating threejs point layers (three.Points())
 import { Cell } from "../datasets/Dataset"
-import {
-    Points,
-    Color,
-    Float32BufferAttribute,
-    BufferGeometry,
-    ShaderMaterial,
-} from "three";
+import {Points,Color,Float32BufferAttribute,BufferGeometry,ShaderMaterial,} from "three";
 import * as CONSTANTS from "../constants.js";
 
 /**
@@ -63,7 +57,7 @@ export class SquaresLayer {
                     this.colors.push(blk.r, blk.g, blk.b)
                 }
                 if (sizeField) {
-                    this.sizes.push(sizeFunction(cells[i][sizeField_]));
+                    this.sizes.push(sizeFunction(cells[i][sizeField]));
                 } else {
                     this.sizes.push(cellSize);
                 }

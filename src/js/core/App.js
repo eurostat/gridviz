@@ -21,7 +21,9 @@ import * as Dropdowns from "./gui/dropdowns.js";
 import * as GUI from "./gui/gui";
 import { Viewer } from "./viewer/viewer.js";
 
+import { CirclesLayer } from "./layers/CirclesLayer.js";
 import { SquaresLayer } from "./layers/SquaresLayer.js";
+import { CuboidsLayer } from "./layers/CuboidsLayer";
 import { LabelsLayer } from "./layers/LabelsLayer.js";
 import { GeoJsonLayer } from "./layers/GeoJsonLayer";
 
@@ -55,7 +57,6 @@ export class App {
 
     //threejs scene (2D = orthographic, 3D = Orbital)
     this.mode_ = '2D';
-    this.cellShape_ = 'square';
 
     //debugging
     this.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
@@ -209,7 +210,6 @@ export class App {
           zoom: this.zoom_,
           zerosRemoved: this.zerosRemoved_
         });
-        //Viewer.build(app)
 
         // add NUTS geometries to viewer as geojson
         if (this.nuts_) this.loadNuts2json(CONSTANTS.nuts_base_URL + this.EPSG_ + "/" + this.nutsSimplification_ + "/" + this.nutsLevel_ + ".json");
@@ -227,7 +227,7 @@ export class App {
           //add layer to scene
           this.labelsLayer = new LabelsLayer();
           this.viewer.scene.add(this.labelsLayer);
-          this.viewer.on("zoomEnd", (e) => {this.onZoomEnd(e)});
+          this.viewer.on("zoomEnd", (e) => { this.onZoomEnd(e) });
           Placenames.getPlacenames(this);
         }
 
@@ -283,11 +283,7 @@ export class App {
             Placenames.removeAllLabelsFromLayer(this.labelsLayer);
             if (res.features) {
               if (res.features.length > 0) {
-                for (let p = 0; p < res.features.length; p++) {
-                  let label = Placenames.createPlacenameLabelObject(app, res.features[p]);
-                  // TODO: group objects manually (THREE.group())
-                  this.labelsLayer.add(label);
-                }
+                this.addPlacenameFeaturesToViewer(res.features)
               }
             }
           },
@@ -301,6 +297,42 @@ export class App {
     }
   }
 
+  /**
+   * @description Adds placename labels to the viewer (via labelsLayer)
+   * @param {Array} features Features returned by ArcGIS placename service
+   * @memberof App
+   */
+  addPlacenameFeaturesToViewer(features) {
+    for (let p = 0; p < features.length; p++) {
+      let pn = features[p];
+      let name = pn.attributes[CONSTANTS.placenames.townField];
+      let x, y, d;
+      // x/y coordinates of each placename label
+      if (this._isMobile) {
+        if (this.zerosRemoved_) {
+          d = Number('1E' + this.zerosRemoved_);
+          x = this.mobileCoordScaleX(pn.geometry.x / d);
+          y = this.mobileCoordScaleY(pn.geometry.y / d)
+        } else {
+          x = this.mobileCoordScaleX(pn.geometry.x);
+          y = this.mobileCoordScaleY(pn.geometry.y);
+        }
+      } else {
+        if (this.zerosRemoved_) {
+          let d = Number('1E' + this.zerosRemoved_);
+          x = pn.geometry.x / d;
+          y = pn.geometry.y / d
+        } else {
+          x = pn.geometry.x;
+          y = pn.geometry.y;
+        }
+      }
+      let label = Placenames.createPlacenameLabelObject(x, y, name);
+      // TODO: group objects manually (THREE.group())
+      this.labelsLayer.add(label);
+    }
+  }
+
   getDefaultAppWidth(app) {
     return this.container_.clientWidth == window.innerWidth ? this.container_.clientWidth - 1 : this.container_.clientWidth;
   }
@@ -310,12 +342,12 @@ export class App {
   }
 
   /**
-  *
+  * TODO: validate all app configurations
   *
   * @function validateAppConfiguration
-  * @description validates app configuration
+  * @description validates the app configurations chosen by the user
   */
-  validateAppConfiguration(app) {
+  validateAppConfiguration() {
     if (this.colors_ && this.thresholds_) {
       if (this.colors_.length !== this.thresholds_.length) {
         alert("The number of colors and thesholdvalues must be equal")
@@ -364,8 +396,16 @@ export class App {
   * @param {LayerConfig} layerConfig The layer configuration
   */
   addGrid(layerConfig) {
+    //TODO: validate layerConfig
     Loading.showLoading();
-    if (layerConfig.cellSize) {
+    if (!layerConfig.cellSize && !layerConfig.sizeField) {
+      Loading.hideLoading();
+      let msg = "Please specify grid cell size in the units of its coordinate system";
+      console.error(msg);
+      alert(msg)
+
+    } else {
+
       csv(layerConfig.url).then(
         cells => {
           if (cells) {
@@ -419,10 +459,20 @@ export class App {
 
               //add cells to app
               let newLayer;
-              if (this.cellShape_ == "square") {
+              if (layerConfig.cellShape == "square") {
                 newLayer = new SquaresLayer(cells, layerConfig.colorField, this.colorScaleFunction_, layerConfig.cellSize, layerConfig.sizeField, this.sizeScaleFunction_);
-              } else if (this.cellShape_ == "cuboid") {
-                newLayer = new CuboidsLayer(cells, layerConfig.colorField, this.colorScaleFunction_, layerConfig.cellSize, layerConfig.sizeField, this.sizeScaleFunction_);
+              } else if (layerConfig.cellShape == "cuboid") {
+                if (cells.length > 2000) {
+                  alert("Too many cuboids! Please use a different shape if you dont want the browser to explode!")
+                } else {
+                  newLayer = new CuboidsLayer(cells, layerConfig.colorField, this.colorScaleFunction_, layerConfig.cellSize, layerConfig.sizeField, this.sizeScaleFunction_);
+                }
+                
+              } else if (layerConfig.cellShape == "circle") {
+                newLayer = new CirclesLayer(cells, layerConfig.colorField, this.colorScaleFunction_, layerConfig.cellSize, layerConfig.sizeField, this.sizeScaleFunction_);
+              } else {
+                //default to squares
+                newLayer = new SquaresLayer(cells, layerConfig.colorField, this.colorScaleFunction_, layerConfig.cellSize, layerConfig.sizeField, this.sizeScaleFunction_);
               }
 
               // add to app layers array
@@ -475,12 +525,6 @@ export class App {
           alert(err)
         }
       );
-    } else {
-      Loading.hideLoading();
-      let msg = "Please specify grid cell size in the units of its coordinate system";
-      console.error(msg);
-      alert(msg)
-
     }
   }
 
@@ -1088,11 +1132,12 @@ export class App {
   *
   */
   defineSizeScale() {
-    // user-defined vs default scale
     if (this.sizeScaleFunction_) {
+      // user-defined
       return this.sizeScaleFunction_;
     } else {
-      return d3scale[this.sizeScaleName_]().domain(this.colorValuesExtent).range([this.currentResolution_ / 3, this.currentResolution_ / 1.5]); //minSize, maxSize
+      // default sizing scale
+      return d3scale[this.sizeScaleName_]().domain(this.sizeValuesExtent).range([this.currentResolution_ / 1.5, this.currentResolution_]); //minSize, maxSize
     }
   }
 

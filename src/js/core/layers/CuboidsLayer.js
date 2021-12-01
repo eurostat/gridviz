@@ -8,35 +8,56 @@ import {
     Vector3
 } from "three";
 
-function addCuboidsToScene(cellSize, colorField, sizeField) {
-    // define bars object, geometry and material
-    const bars = new Object3D();
+/**
+ * @description Returns a ThreeJS object of cuboid geometries
+ * @export Three.Object3D
+ * @class CuboidsLayer
+ */
+export class CuboidsLayer {
 
-    // create bar for each cell
-    for (var i = 0; i < pointsArray.length; i++) {
-        let height;
+    /**
+      * @param {Array<Cell>} cells
+      * @param {String} colorField
+      * @param {Function} colorFunction
+      * @param {number} cellSize optional
+      * @param {string} sizeField optional
+      * @param {Function} sizeFunction optional
+      */
+    constructor(cells, colorField, colorFunction, cellSize, sizeField, sizeFunction) {
+        // define bars object, geometry and material
+        let bars = new Object3D();
 
-        if (grid.sizeField) {
-            height = app.sizeScaleFunction_(pointsArray[i][grid.sizeField]);
-        } else {
-            height = grid.cellSize;
+        // create bar for each cell
+        for (var i = 0; i < cells.length; i++) {
+            let height;
+
+            if (sizeField) {
+                height = sizeFunction(cells[i][sizeField]);
+            } else {
+                height = cellSize;
+            }
+
+            let hex = getCellColor(colorFunction, cells[i][colorField]);
+            cells[i].color = hex; //save for tooltip
+            let color = new Color(hex);
+
+            let x = parseFloat(cells[i].x);
+            let y = parseFloat(cells[i].y);
+
+            const bar = getBar(x, y, cellSize, cellSize, height, color);
+            bar.lookAt(new Vector3(x, y, 0.0001));
+            bars.add(bar);
         }
-
-        let hex = getCellColor(app, pointsArray[i][grid.colorField]);
-        pointsArray[i].color = hex; //save for tooltip
-        let color = new Color(hex);
-
-        let x = parseFloat(pointsArray[i].x);
-        let y = parseFloat(pointsArray[i].y);
-
-        const bar = getBar(x, y, grid.cellSize, grid.cellSize, height, color);
-        bar.lookAt(new Vector3(x, y, 0.0001));
-        bars.add(bar);
+        return bars;
     }
+}
 
-    // add bars to the viewer
-    app.pointsLayer = bars;
-    app.viewer.scene.add(bars);
+function getCellColor(colorScaleFunction, value) {
+    let hex = colorScaleFunction(parseFloat(value)); //d3 scale-chromatic
+    if (hex == "rgb(NaN, NaN, NaN)") {
+        hex = "#000"; //fallback to black
+    }
+    return hex;
 }
 
 function getBar(x, y, width, length, height, color) {

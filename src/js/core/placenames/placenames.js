@@ -145,51 +145,15 @@ function getPopulationParameterFromScale(app) {
 /**
  * Creates a CSS2DObject for a placename ESRI JSON object
  *
- * @param {*} placename
+ * @param {string} placename
  * @returns CSS2DObject
  */
-export function createPlacenameLabelObject(app, placename) {
+export function createPlacenameLabelObject(x, y, placename) {   
     var placeDiv = document.createElement("div");
     placeDiv.className = "gridviz-placename";
-    placeDiv.textContent = placename.attributes[CONSTANTS.placenames.townField];
+    placeDiv.textContent = placename;
     placeDiv.style.marginTop = "-1em";
     var placeLabel = new CSS2DObject(placeDiv);
-
-    //scale mobile coords
-    if (app._mobile) {
-        if (app.zerosRemoved_) {
-            let d = Number('1E' + app.zerosRemoved_);
-            let x = app.mobileCoordScaleX(placename.geometry.x / d);
-            let y = app.mobileCoordScaleY(placename.geometry.y / d)
-            placeLabel.position.set(
-                x,
-                y,
-                CONSTANTS.label_height
-            );
-        } else {
-            placeLabel.position.set(
-                app.mobileCoordScaleX(placename.geometry.x),
-                app.mobileCoordScaleY(placename.geometry.y),
-                CONSTANTS.label_height
-            );
-        }
-        return placeLabel;
-    } else {
-        //desktop
-        if (app.zerosRemoved_) {
-            let d = Number('1E' + app.zerosRemoved_);
-            placeLabel.position.set(
-                placename.geometry.x / d,
-                placename.geometry.y / d,
-                CONSTANTS.label_height
-            );
-        } else {
-            placeLabel.position.set(
-                placename.geometry.x,
-                placename.geometry.y,
-                CONSTANTS.label_height
-            );
-        }
-        return placeLabel;
-    }
+    placeLabel.position.set(x,y,CONSTANTS.label_height);
+    return placeLabel;
 }
