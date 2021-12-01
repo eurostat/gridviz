@@ -16,9 +16,10 @@ export class Dataset {
      * @param {string} url The url of the dataset.
      * @param {number} resolution The dataset resolution (in geographical unit).
      * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {function(Cell):string} cellInfoHTML The HTML content providing information on the grid cell.
      * @abstract
      */
-    constructor(url, resolution, preprocess = null) {
+    constructor(url, resolution, preprocess = null, cellInfoHTML = null) {
 
         /** @protected @type {string} */
         this.url = url;
@@ -30,7 +31,7 @@ export class Dataset {
         this.preprocess = preprocess;
 
         /** @type {function(Cell):string} */
-        this.cellInfoHTML = defaultCellInfoHTML;
+        this.cellInfoHTML = cellInfoHTML || defaultCellInfoHTML;
     }
 
 
