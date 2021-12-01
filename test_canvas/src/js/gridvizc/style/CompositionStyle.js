@@ -20,7 +20,7 @@ import { CanvasGeo } from "../CanvasGeo";
 export class CompositionStyle extends Style {
 
     /**
-      * @param {Object} color The dictionary which give the color of each category.
+      * @param {object} color The dictionary which give the color of each category.
       * @param {function(Cell):CompositionType} type A function returning the type of decomposition symbol of a cell, @see CompositionType
       * @param {Size} size A function returning the size of a cell (in geographical unit).
       */

@@ -25,7 +25,7 @@ export class TiledGrid extends Dataset {
          * The cache of the loaded tiles. It is double indexed: by xT and then yT.
          * Example: this.cache[xT][yT] returns the tile at [xT][yT] location.
          * 
-         * @type {Object}
+         * @type {object}
          * */
         this.cache = {}
 

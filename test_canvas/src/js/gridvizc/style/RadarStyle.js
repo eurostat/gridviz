@@ -13,7 +13,7 @@ import { CanvasGeo } from "../CanvasGeo";
 export class RadarStyle extends Style {
 
     /**
-      * @param {Object} color The dictionary which give the color of each category.
+      * @param {object} color The dictionary which give the color of each category.
       * @param {Size} size 
       */
     constructor(color, size) {
