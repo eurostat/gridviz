@@ -136,11 +136,12 @@ export class App {
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
      * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {function(Cell):string} cellInfoHTML The HTML content providing information on the grid cell.
      * @returns {this}
      */
-    addTiledGrid(url, styles, minZoom, maxZoom, preprocess = null) {
+    addTiledGrid(url, styles, minZoom, maxZoom, preprocess = null, cellInfoHTML = null) {
         return this.addLayer(
-            new TiledGrid(url, this, preprocess).loadInfo(() => { this.cg.redraw(); }),
+            new TiledGrid(url, this, preprocess, cellInfoHTML).loadInfo(() => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
     }
@@ -155,11 +156,12 @@ export class App {
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
      * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {function(Cell):string} cellInfoHTML The HTML content providing information on the grid cell.
      * @returns {this}
      */
-    addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null) {
+    addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null, cellInfoHTML = null) {
         return this.addLayer(
-            new CSVGrid(url, resolution, preprocess).getData(null, () => { this.cg.redraw(); }),
+            new CSVGrid(url, resolution, preprocess, cellInfoHTML).getData(null, () => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
     }
