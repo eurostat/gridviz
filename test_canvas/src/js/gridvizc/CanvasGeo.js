@@ -58,10 +58,6 @@ export class CanvasGeo {
             this.zoom(f_, this.pixToGeoX(e.offsetX), this.pixToGeoY(e.offsetY))
         });
 
-        this.canvas.addEventListener("mousemove", e => {
-            //console.log(e);
-            //TODO
-        });
     }
 
     /**
@@ -152,4 +148,16 @@ export class CanvasGeo {
         if (obj.y > this.extGeo.yMax) return false;
         return true
     }
+
+
+    /**
+     * Add a mousemove event.
+     * To show a tooltip for example.
+     * 
+     * @param {function(*):void} fun 
+     */
+    addMouseMoveEvent(fun) {
+        this.canvas.addEventListener("mousemove", fun);
+    }
+
 }

@@ -59,6 +59,39 @@ export class App {
             return this
         };
 
+
+        //add tooltip
+        this.cg.addMouseMoveEvent( e => {
+
+            //compute mouse geo position
+            const mousePositionGeo = { x: this.cg.pixToGeoX(e.clientX), y: this.cg.pixToGeoY(e.clientY) }
+            //TODO show position somewhere ?
+
+            //get cell at mouse position
+
+            //get layers
+            /** @type {Layer} */
+            const layer = this.getActiveLayers()[0];
+            if(!layer) return;
+
+            //compute candidate cell position
+            /** @type {number} */
+            const r = layer.dataset.getResolution();
+            /** @type {number} */
+            const cellX = r*Math.floor(mousePositionGeo.x/r)
+            /** @type {number} */
+            const cellY = r*Math.floor(mousePositionGeo.y/r)
+
+            //get cell data
+            for(const cell of layer.dataset.getCells(this.cg.extGeo)) {
+                if(cell.x != cellX) continue;
+                if(cell.y != cellY) continue;
+                console.log(cell);
+                //one is enough
+                break;
+            }
+
+        });
     }
 
 
