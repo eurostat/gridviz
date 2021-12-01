@@ -1,10 +1,10 @@
-TODO implement mouse over
+TODO mouse over: better structure tooltip class. Improve. Show rectangle.
 
 TODO test GriddedStatsTiler2
 TODO fix tiler rounding issue
 
 TODO zoom/pan smartphone/touchscreen - use d3 events - TODO make new canvasgeo based on d3 zoom/pan/over
-TODO modularise further canvasgeo (make ctx private)
+TODO modularise further canvasgeo (make ctx private ?)
 
 TODO adaptative style: with automated classification taking into account only the data within the viewshed
 TODO style radar
