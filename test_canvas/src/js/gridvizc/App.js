@@ -86,7 +86,7 @@ export class App {
 
         //draw cells, style by style
         for (const style of layer.styles)
-            style.draw(cells, layer.dataset.resolution, this.cg)
+            style.draw(cells, layer.dataset.getResolution(), this.cg)
 
         return this;
     }
