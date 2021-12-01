@@ -28,6 +28,9 @@ export class Dataset {
 
         /** @protected @type {function(Cell):void} */
         this.preprocess = preprocess;
+
+        /** @type {function(Cell):string} */
+        this.cellInfoHTML = defaultCellInfoHTML;
     }
 
 
@@ -59,4 +62,19 @@ export class Dataset {
     /** @returns {number} */
     getResolution() { return this.resolution; }
 
+}
+
+
+/**
+ * The default function returning cell information as HTML.
+ * This is typically used for tooltip information.
+ * 
+ * @param {Cell} cell 
+ * @returns {string}
+ */
+const defaultCellInfoHTML = function (cell) {
+    const buf = []
+    buf.push(cell.x)
+    buf.push(cell.y)
+    return buf.join("<br>");
 }
