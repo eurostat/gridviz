@@ -1,2 +1,6 @@
 import "../css/styles.css";
-export { app } from "./core/gridviz.js";
+import { App as App_ } from "./core/App"
+
+export const app = function (opts) {
+    return new App_(opts)
+}

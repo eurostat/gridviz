@@ -99,7 +99,7 @@ function appendRowToTooltip(field) {
 export function updateTooltip(app) {
     let x, y;
     if (app._mobile) {
-        //mobile coords are scaled to [-1,1], so we "unscale" them
+        //mobile coords are scaled to [-1,1], so we invert them
         x = Math.round(app.mobileCoordScaleX.invert(tooltip_state.x))
         y = Math.round(app.mobileCoordScaleY.invert(tooltip_state.y))
     } else {

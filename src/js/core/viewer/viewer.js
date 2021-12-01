@@ -13,7 +13,7 @@ import {
 import { select } from "d3-selection";
 import { CSS2DRenderer } from "../../lib/threejs/CSS2D/CSS2DRenderer";
 import * as Utils from "../utils/utils";
-import { Camera } from "../camera/camera.js";
+import { Camera } from "./camera/camera.js";
 
 /**
  * @desc A threeJS webGL viewer, containing a Camera, WebGL renderer, label renderer and raycaster - enhanced with zoom and pan capabilities.
