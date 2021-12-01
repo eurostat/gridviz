@@ -1,32 +1,53 @@
 //@ts-check
 
-import { select } from "d3-selection";
+import { select, Selection } from "d3-selection";
 import { transition } from "d3-transition";
 
+/**
+ * A generic class to make a tooltip.
+ * It is a div element, which can be moved under the mouse pointer and filled with some information in html.
+ */
 export class Tooltip2 {
 
+	/** 
+	 * @param {object} config
+	 */
 	constructor(config) {
 		config = config || {};
+
+		/** @type {string} */
 		this.div = config.div || "tooltip_eurostat";
+		/** @type {string} */
 		this.maxWidth = config.maxWidth || "200px";
+		/** @type {string} */
 		this.fontSize = config.fontSize || "14px";
+		/** @type {string} */
 		this.background = config.background || "white";
+		/** @type {string} */
 		this.padding = config.padding || "5px";
+		/** @type {string} */
 		this.border = config.border || "0px";
+		/** @type {string} */
 		this["border-radius"] = config["border-radius"] || "5px";
+		/** @type {string} */
 		this["box-shadow"] = config["box-shadow"] || "5px 5px 5px grey";
+		/** @type {string} */
 		this["font-family"] = config["font-family"] || "Helvetica, Arial, sans-serif";
 
-		this.transitionDuration = config.transitionDuration || 200;
+		/** @type {number} */
+		this.transitionDuration = config.transitionDuration || 100;
+		/** @type {number} */
 		this.xOffset = config.xOffset || 30;
+		/** @type {number} */
 		this.yOffset = config.yOffset || 20;
 
 
+		/** @private @type {Selection} */
 		this.tooltip = select("#" + config.div);
 		if (this.tooltip.empty())
 			this.tooltip = select("body").append("div").attr("id", config.div);
 
-		//this.tooltip.style("width",config.width);
+		//initialise
 		this.tooltip.style("max-width", config.maxWidth);
 		this.tooltip.style("overflow", "hidden");
 		this.tooltip.style("font-size", config.fontSize);
@@ -43,21 +64,28 @@ export class Tooltip2 {
 	}
 
 
-	/**
-	* @param {string} html 
-	*/
-	html(html) {
-		this.tooltip.html(html);
-	}
-
+	/** Show the tooltip */
 	show() {
 		this.tooltip.transition().duration(this.transitionDuration).style("opacity", 1);
 	}
 
+	/** Hide the tooltip */
 	hide() {
 		this.tooltip.transition().duration(this.transitionDuration).style("opacity", 0);
 	}
 
+	/**
+	 * Set the content of the tooltip.
+	 * @param {string} html 
+	 */
+	html(html) {
+		this.tooltip.html(html);
+	}
+
+	/**
+	 * Set the position of the tooltip at the mouse event position.
+	 * @param {MouseEvent} event 
+	 */
 	setPosition(event) {
 		this.tooltip.style("left", (event.pageX + this.xOffset) + "px").style("top", (event.pageY - this.yOffset) + "px")
 	}
