@@ -3,66 +3,63 @@
 import { select } from "d3-selection";
 import { transition } from "d3-transition";
 
-/**
- * @param {*} config
- * @returns
- */
-export const tooltip = function (config) {
-	config = config || {};
-	config.div = config.div || "tooltip_eurostat";
-	config.maxWidth = config.maxWidth || "200px";
-	config.fontSize = config.fontSize || "14px";
-	config.background = config.background || "white";
-	config.padding = config.padding || "5px";
-	config.border = config.border || "0px";
-	config["border-radius"] = config["border-radius"] || "5px";
-	config["box-shadow"] = config["box-shadow"] || "5px 5px 5px grey";
-	config["font-family"] = config["font-family"] || "Helvetica, Arial, sans-serif";
+export class Tooltip2 {
 
-	config.transitionDuration = config.transitionDuration || 200;
-	config.xOffset = config.xOffset || 30;
-	config.yOffset = config.yOffset || 20;
+	constructor(config) {
+		config = config || {};
+		this.div = config.div || "tooltip_eurostat";
+		this.maxWidth = config.maxWidth || "200px";
+		this.fontSize = config.fontSize || "14px";
+		this.background = config.background || "white";
+		this.padding = config.padding || "5px";
+		this.border = config.border || "0px";
+		this["border-radius"] = config["border-radius"] || "5px";
+		this["box-shadow"] = config["box-shadow"] || "5px 5px 5px grey";
+		this["font-family"] = config["font-family"] || "Helvetica, Arial, sans-serif";
 
-	var tooltip;
+		this.transitionDuration = config.transitionDuration || 200;
+		this.xOffset = config.xOffset || 30;
+		this.yOffset = config.yOffset || 20;
 
-	function my() {
-		tooltip = select("#" + config.div);
-		if (tooltip.empty())
-			tooltip = select("body").append("div").attr("id", config.div);
 
-		//tooltip.style("width",config.width);
-		tooltip.style("max-width", config.maxWidth);
-		tooltip.style("overflow", "hidden");
-		tooltip.style("font-size", config.fontSize);
-		tooltip.style("background", config.background);
-		tooltip.style("padding", config.padding);
-		tooltip.style("border", config.border);
-		tooltip.style("border-radius", config["border-radius"]);
-		tooltip.style("box-shadow", config["box-shadow"]);
-		tooltip.style("position", "absolute");
-		tooltip.style("font-family", config["font-family"]);
-		tooltip.style("position", "absolute");
-		tooltip.style("pointer-events", "none");
-		tooltip.style("opacity", "0");
+		this.tooltip = select("#" + config.div);
+		if (this.tooltip.empty())
+			this.tooltip = select("body").append("div").attr("id", config.div);
+
+		//this.tooltip.style("width",config.width);
+		this.tooltip.style("max-width", config.maxWidth);
+		this.tooltip.style("overflow", "hidden");
+		this.tooltip.style("font-size", config.fontSize);
+		this.tooltip.style("background", config.background);
+		this.tooltip.style("padding", config.padding);
+		this.tooltip.style("border", config.border);
+		this.tooltip.style("border-radius", config["border-radius"]);
+		this.tooltip.style("box-shadow", config["box-shadow"]);
+		this.tooltip.style("position", "absolute");
+		this.tooltip.style("font-family", config["font-family"]);
+		this.tooltip.style("position", "absolute");
+		this.tooltip.style("pointer-events", "none");
+		this.tooltip.style("opacity", "0");
 	}
+
 
 	/**
-	 * @param {string} html 
-	 */
-	my.html = function(html) {
-		tooltip.html(html);
+	* @param {string} html 
+	*/
+	html(html) {
+		this.tooltip.html(html);
 	}
 
-	my.show = function() {
-		tooltip.transition().duration(config.transitionDuration).style("opacity", 1);
+	show() {
+		this.tooltip.transition().duration(this.transitionDuration).style("opacity", 1);
 	}
 
-	my.hide = function() {
-		tooltip.transition().duration(config.transitionDuration).style("opacity", 0);
+	hide() {
+		this.tooltip.transition().duration(this.transitionDuration).style("opacity", 0);
 	}
 
-	my.setPosition = function(event) {
-		tooltip.style("left", (event.pageX + config.xOffset) + "px").style("top", (event.pageY - config.yOffset) + "px")
+	setPosition(event) {
+		this.tooltip.style("left", (event.pageX + this.xOffset) + "px").style("top", (event.pageY - this.yOffset) + "px")
 	}
 
 	/*
@@ -72,26 +69,26 @@ export const tooltip = function (config) {
 		my.show()
 		//this.ensureTooltipOnScreen();
 	};
-
+	
 	my.mousemove = function (event) {
 		my.setPosition(event);
 		//this.ensureTooltipOnScreen();
 	};
-
+	
 	my.mouseout = function () {
 		my.hide();
 	};*/
 
-	my.style = function (k, v) {
-		if (arguments.length == 1) return tooltip.style(k);
-		tooltip.style(k, v);
-		return my;
+	style(k, v) {
+		if (arguments.length == 1) return this.tooltip.style(k);
+		this.tooltip.style(k, v);
+		return this;
 	};
 
-	my.attr = function (k, v) {
-		if (arguments.length == 1) return tooltip.attr(k);
-		tooltip.attr(k, v);
-		return my;
+	attr(k, v) {
+		if (arguments.length == 1) return this.tooltip.attr(k);
+		this.tooltip.attr(k, v);
+		return this;
 	};
 
 
@@ -109,15 +106,13 @@ export const tooltip = function (config) {
 		//too far right
 		if (node.offsetLeft > parentWidth - node.clientWidth) {
 			node.style.left = node.offsetLeft - (node.clientWidth + config.xOffset * 2) + "px";
-
+	
 		}
 		//too far down
 		if (node.offsetTop + node.clientHeight > parentHeight) {
 			node.style.top = node.offsetTop - (node.clientHeight + config.yOffset * 2) + "px";
 		}
-
+	
 	}*/
 
-	my();
-	return my;
-};
+}

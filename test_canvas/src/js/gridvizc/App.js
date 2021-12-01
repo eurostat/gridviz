@@ -8,6 +8,7 @@ import { tooltip } from './Tooltip';
 
 import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
+import { Tooltip2 } from './Tooltip2';
 
 /**
  * A gridviz on a HTML canvas.
@@ -62,7 +63,7 @@ export class App {
 
 
         //add tooltip
-        this.tooltip = tooltip();
+        this.tooltip = new Tooltip2()//tooltip();
         /**
          * 
          * @param {*} e 
