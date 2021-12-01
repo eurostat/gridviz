@@ -1,4 +1,4 @@
-TODO mouse over: better structure tooltip class. Improve. Show rectangle.
+TODO mouse over: restructure tooltip class. Show rectangle.
 
 TODO test GriddedStatsTiler2
 TODO fix tiler rounding issue
@@ -16,4 +16,7 @@ TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache an
 
 TODO webGL investigation
 TODO on zoom/pan, interupt all existing redraws
+TODO background - images
+TODO foreground - geo names
 
+TODO finalise demos
