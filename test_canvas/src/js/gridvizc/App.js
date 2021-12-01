@@ -48,11 +48,7 @@ export class App {
         this.cg.redraw = () => {
 
             //go through the list of layers and find the one(s) to draw
-            for (const layer of this.layers) {
-
-                //skip layer not within the zoom range
-                if (layer.minZoom >= this.cg.zf) continue;
-                if (layer.maxZoom < this.cg.zf) continue;
+            for (const layer of this.getActiveLayers()) {
 
                 //get data to show
                 layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.draw(layer); });
@@ -65,6 +61,26 @@ export class App {
 
     }
 
+
+    /**
+     * Returns the layers which are within the current viewer zoom extent, that is the ones that are visible.
+     * @returns {Array.<Layer>}
+     */
+    getActiveLayers() {
+
+        /** @type {Array.<Layer>} */
+        const out = []
+
+        //go through the layers
+        const zf = this.getZoomFactor();
+        for (const layer of this.layers) {
+            //check if layer zoom extent contains current zoom factor
+            if (layer.maxZoom < zf) continue;
+            if (layer.minZoom >= zf) continue;
+            out.push(layer);
+        }
+        return out;
+    }
 
 
     /**

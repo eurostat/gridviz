@@ -58,6 +58,10 @@ export class CanvasGeo {
             this.zoom(f_, this.pixToGeoX(e.offsetX), this.pixToGeoY(e.offsetY))
         });
 
+        this.canvas.addEventListener("mousemove", e => {
+            //console.log(e);
+            //TODO
+        });
     }
 
     /**
