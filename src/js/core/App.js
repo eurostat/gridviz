@@ -277,18 +277,20 @@ export class App {
   onZoomEnd(event) {
     Tooltip.hideTooltip();
 
+    // show/hide layers within new Envelope
     this.redraw();
 
     // get zoom-dependent placenames
     if (this.showPlacenames_) {
       let scale = Utils.getScaleFromZ(this.height_, this.viewer.camera.config.fov_, event.transform.k);
-      this.updatePlacenameLabels(scale);
+      Placenames.updatePlacenameLabels(this, scale);
     }
   }
 
   /**
    * @description Determines which layers to draw and shows or hides them
    * @memberof App
+   * @function redraw
    */
   redraw() {
     // decide which layers to render
@@ -304,8 +306,10 @@ export class App {
         continue;
       };
 
-      // set current visible resolution for placename requests
+      // set current resolution for placename requests
       this._currentResolution = layer.dataset.resolution;
+      // set raycaster threshold (for tooltip hover)
+      this.viewer.raycaster.params.Points.threshold = layer.dataset.resolution;
 
       //get data to show
       layer.dataset.getData(this.viewer.extGeo, () => { this.draw(layer); });
@@ -317,71 +321,6 @@ export class App {
       if (layer.hidden == true) {
         this.showLayer(layer);
       }
-    }
-  }
-
-  /**
-   * @description Adds placename labels to the viewer (via labelsLayer)
-   * @param {Array} features Features returned by ArcGIS placename service
-   * @memberof App
-   */
-  addPlacenameFeaturesToViewer(features) {
-    for (let p = 0; p < features.length; p++) {
-      let pn = features[p];
-      let name = pn.attributes[CONSTANTS.placenames.townField];
-      let x, y, d;
-      // x/y coordinates of each placename label
-      if (this._isMobile) {
-        if (this.zerosRemoved_) {
-          d = Number('1E' + this.zerosRemoved_);
-          x = this.mobileCoordScaleX(pn.geometry.x / d);
-          y = this.mobileCoordScaleY(pn.geometry.y / d)
-        } else {
-          x = this.mobileCoordScaleX(pn.geometry.x);
-          y = this.mobileCoordScaleY(pn.geometry.y);
-        }
-      } else {
-        if (this.zerosRemoved_) {
-          let d = Number('1E' + this.zerosRemoved_);
-          x = pn.geometry.x / d;
-          y = pn.geometry.y / d
-        } else {
-          x = pn.geometry.x;
-          y = pn.geometry.y;
-        }
-      }
-      let label = Placenames.createPlacenameLabelObject(x, y, name);
-      // TODO: group objects manually (THREE.group())
-      this.labelsLayer.add(label);
-    }
-  }
-
-  /**
-   * @description Updates the placename labels accroding to the current zoom level
-   * @param {*} scale
-   * @memberof App
-   */
-  updatePlacenameLabels(scale) {
-    //update thresholds according to current grid resolution
-    this.placenameThresholds_ = Placenames.defineDefaultPlacenameThresholds(this._currentResolution);
-    if (scale > 0 && scale < this.viewer.camera.config.far_) {
-      //placenames are added to the this.pointsLayer object
-      let that = this;
-      Placenames.getPlacenames(that).then(
-        res => {
-          Placenames.removeAllLabelsFromLayer(this.labelsLayer);
-          if (res.features) {
-            if (res.features.length > 0) {
-              this.addPlacenameFeaturesToViewer(res.features)
-            }
-          }
-        },
-        err => {
-          console.error(err);
-        }
-      );
-    } else {
-      Placenames.removeAllLabelsFromLayer(this.labelsLayer);
     }
   }
 
@@ -424,7 +363,6 @@ export class App {
     this.layers.push(new Layer(dataset, styles, minZoom, maxZoom));
   }
 
-
   /**
    * Add a layer from a CSV grid dataset.
    * 
@@ -437,25 +375,52 @@ export class App {
    */
   addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null) {
     Loading.showLoading();
+
     this.add(
-      new CSVGrid(url, resolution, preprocess).getData(null, () => {
+      new CSVGrid(url, resolution, preprocess).getData(null, (grid) => {
         Loading.hideLoading();
+
+        // for mobile devices
+        if (this._isMobile) {
+          // fix for d3's pan and zoom not working correctly on mobile devices with webgl, we scale the coordinates to a webgl-friendly range
+          this.viewer.mobileCoordScale = this.defineMobileCoordScale(grid.cells);
+
+          this.mobileCellSize_ = 0.001;
+          grid.resolution = this.defineMobileResolution(grid.cells[0]);
+
+          // transform mobile coords
+          if (this._isMobile) {
+            grid.cells.forEach((cell) => {
+              let x = this.viewer.mobileCoordScale(cell.x);
+              let y = this.viewer.mobileCoordScale(cell.y);
+              cell.x = x;
+              cell.y = y;
+            })
+          }
+
+          // convert to mobile-friendly coordinates
+          if (this.geoCenter_) this.geoCenter([this.viewer.mobileCoordScale(this.geoCenter_[0]), this.viewer.mobileCoordScale(this.geoCenter_[1])]);
+          if (this.zoom_) this.zoom(0.1)
+          //if (grid.minZoom) grid.minZoom = 
+        }
+
+        // draw cells
         this.redraw();
       }),
       styles, minZoom, maxZoom
     )
   }
 
-
   /**
- * Draw a layer.
- * 
- * @param {Layer} layer 
- */
+   * Draw a layer.
+   * 
+   * @param {Layer} layer 
+   */
   draw(layer) {
 
     //get cells to draw
-    const cells = layer.dataset.getCells(this.viewer.extGeo)
+    let geoExt = this._isMobile ? this.viewer.envelopeToMobile(this.viewer.getCurrentViewExtent()) : this.viewer.getCurrentViewExtent();
+    let cells = layer.dataset.getCells(geoExt);
 
     //draw cells, style by style
     for (const style of layer.styles)
@@ -499,12 +464,6 @@ export class App {
               //as a temporary hacky fix for d3's pan and zoom not working correctly on mobile devices, we scale the coordinates to a webgl-friendly range
               if (this._isMobile) this.convertCoordinatesToMobile(app, cells, layerConfig)
 
-              // add points to cache
-              this.addGridToCache(cells, layerConfig);
-
-              //define scales
-              this.defineGridScalingFunctions(app, layerConfig)
-
               // define app click, dropdown change and screen resize events
               this.addEventListeners();
 
@@ -514,8 +473,8 @@ export class App {
                 let c = this.gridCaches[layerConfig.cellSize][index];
                 if (this._isMobile) {
                   this.geoCenter_ = [
-                    this.mobileCoordScaleX(parseFloat(c.x)),
-                    this.mobileCoordScaleY(parseFloat(c.y))
+                    this.mobileCoordScale(parseFloat(c.x)),
+                    this.mobileCoordScale(parseFloat(c.y))
                   ];
                 } else {
                   this.geoCenter_ = [
@@ -532,23 +491,6 @@ export class App {
                 this.viewer.camera.camera.createOrbitControls(app)
               }
 
-              //add cells to app
-              let newLayer;
-              if (layerConfig.cellShape == "square") {
-                newLayer = new SquaresLayer(cells, layerConfig.colorField, this.colorScaleFunction_, layerConfig.cellSize, layerConfig.sizeField, this.sizeScaleFunction_);
-              } else if (layerConfig.cellShape == "cuboid") {
-                if (cells.length > 2000) {
-                  alert("Too many cuboids! Please use a different shape if you dont want the browser to explode!")
-                } else {
-                  newLayer = new CuboidsLayer(cells, layerConfig.colorField, this.colorScaleFunction_, layerConfig.cellSize, layerConfig.sizeField, this.sizeScaleFunction_);
-                }
-
-              } else if (layerConfig.cellShape == "circle") {
-                newLayer = new CirclesLayer(cells, layerConfig.colorField, this.colorScaleFunction_, layerConfig.cellSize, layerConfig.sizeField, this.sizeScaleFunction_);
-              } else {
-                //default to squares
-                newLayer = new SquaresLayer(cells, layerConfig.colorField, this.colorScaleFunction_, layerConfig.cellSize, layerConfig.sizeField, this.sizeScaleFunction_);
-              }
 
               // add to app layers array
               this.layers.push(newLayer);
@@ -615,7 +557,6 @@ export class App {
       requestAnimationFrame(renderloop);
       $this.viewer.renderer.render($this.viewer.scene, $this.viewer.camera.camera);
       $this.viewer.labelRenderer.render($this.viewer.scene, $this.viewer.camera.camera);
-
     }
 
     renderloop();
@@ -638,95 +579,79 @@ export class App {
     }
   }
 
+
+  defineMobileCoordScale(cells) {
+    let mobileCoordScale;
+
+    let xDomain = extent(cells.map(c => parseFloat(c.x)));
+    let yDomain = extent(cells.map(c => parseFloat(c.y)));
+
+    let domain = [
+      min([xDomain, yDomain], array => min(array)),
+      max([xDomain, yDomain], array => max(array))
+    ]; // overall min and max values of both axis
+
+    //save mobile-scaling function
+    mobileCoordScale = d3scale.scaleLinear().domain(domain).range([-1, 1]);
+
+    return mobileCoordScale;
+  }
+
+
   /**
-   *
-   *
-   * @param {*} app
-   * @param {*} cells
-   * @param {*} layerConfig
+   * @description define mobile resolution to webgl coords
+   * @return {*} 
    * @memberof App
    */
-  convertCoordinatesToMobile(app, cells, layerConfig) {
-    if (this._isMobile && !this.mobileCellSize_) {
-      let xDomain = extent(cells.map(c => parseFloat(c.x)));
-      let yDomain = extent(cells.map(c => parseFloat(c.y)));
+  defineMobileResolution(resolution, cell) {
+    let newResolution;
 
-      let domain = [
-        min([xDomain, yDomain], array => min(array)),
-        max([xDomain, yDomain], array => max(array))
-      ]; // overall min and max values of both axis
+    if (!this.mobileCellSize_) { // cell size not set by user
 
-      //save mobile-scaling function
-      this.mobileCoordScaleX = d3scale.scaleLinear().domain(domain).range([-1, 1]);
-      this.mobileCoordScaleY = d3scale.scaleLinear().domain(domain).range([-1, 1]);
-      //update cell sizes and raycaster to fit new webgl-friendly coords
-      //distance in x coordinates between two neighbouring cells is the new resolution
-      // to try to ensure the cells are neighbours, first we have to sort the points by X
-      cells.sort(function (a, b) { return a.x - b.x });
+      // distance in x coordinates between two neighbouring cells is the new resolution
+      // ensure the cells are neighbours
+      // cells.sort(function (a, b) { return a.x - b.x });
 
-      // then we use the first cell, and find the next cell with a distinct X value
-      let x1 = cells[0].x;
-      let x2;
-      cells.some(function (cell) {
-        if (cell.x !== x1) {
-          x2 = cell.x;
-          return true;
-        }
-      });
+      // // use the first cell, and find the next cell with a distinct X value
+      // let x1 = cells[0].x;
+      // let x2;
+      // cells.some(function (cell) {
+      //   if (cell.x !== x1) {
+      //     x2 = cell.x;
+      //     return true;
+      //   }
+      // });
 
-      //we then calculate the difference between two distinct X coordinates in mobile (webgl) coords
-      // note: this only works if cells are next to each other. 
-      // For this to work all the time we would need the minimum distance between two X coordinates out of two adjacent neighbours
-      let mobileXCoord1 = this.mobileCoordScaleX(x1)
-      let mobileXCoord2 = this.mobileCoordScaleX(x2)
-      let difference = Math.abs(mobileXCoord1 - mobileXCoord2);
-      difference = difference * 2;
+      // //we then calculate the difference between two distinct X coordinates in mobile (webgl) coords
+      // // note: this only works if cells are next to each other. 
+      // // For this to work we would need the minimum distance between two X coordinates out of two adjacent neighbours
+      // let mobileXCoord1 = this.mobileCoordScale(x1)
+      // let mobileXCoord2 = this.mobileCoordScale(x2)
+      // let difference = Math.abs(mobileXCoord1 - mobileXCoord2);
+      // difference = difference * 2;
+
+      // //compare old coordainte vs new and use difference to scale resolution
+      // let original = cells[0].x;
+      // let mobile = this.mobileCoordScale(x1);
+
+      let original = cell.x;
+      let mobile = this.mobileCoordScale(original);
+      let difference = original / mobile;
 
       //giving us our new cell size
-      let newResolution = difference;
-      this._currentResolution = newResolution;
-      layerConfig.cellSize = newResolution;
-      this.pointSize = newResolution;
-      this.viewer.raycaster.params.Points.threshold = newResolution;
-      //scale center coords
-      if (this.geoCenter_) {
-        this.geoCenter_[0] = this.mobileCoordScaleX(this.geoCenter_[0]);
-        this.geoCenter_[1] = this.mobileCoordScaleY(this.geoCenter_[1]);
-      }
+      newResolution = resolution / difference;
 
-    } else if (this._isMobile && this.mobileCellSize_) {
-      // apply cell size manually (with accessor method)
-      // new mobile scale
-      let xDomain = extent(cells.map(c => parseFloat(c.x)));
-      let yDomain = extent(cells.map(c => parseFloat(c.y)));
-      let domain = [
-        min([xDomain, yDomain], array => min(array)),
-        max([xDomain, yDomain], array => max(array))
-      ]; // overall min and max values of both axis
-      this.mobileCoordScaleX = d3scale.scaleLinear().domain(domain).range([-1, 1]);
-      this.mobileCoordScaleY = d3scale.scaleLinear().domain(domain).range([-1, 1]);
-
-      //mobile cell size
-      let newResolution = this.mobileCellSize_;
-      // this._currentResolution = newResolution;
-      layerConfig.cellSize = newResolution;
-      this.pointSize = newResolution;
-      this.viewer.raycaster.params.Points.threshold = newResolution;
-      //scale center coords
-      if (this.geoCenter_) {
-        this.geoCenter_[0] = this.mobileCoordScaleX(this.geoCenter_[0]);
-        this.geoCenter_[1] = this.mobileCoordScaleY(this.geoCenter_[1]);
-      }
+    } else if (this.mobileCellSize_) {
+      // set manually
+      newResolution = this.mobileCellSize_;
     }
 
+    return newResolution;
   }
 
   addTiledGrid() {
 
   }
-
-
-
 
   /**
    * @description if app has already been initialized, calls to geoCenter() method will move existing camera
@@ -1093,8 +1018,8 @@ export class App {
         for (let i = 0; i < cells.length; i++) {
           //scale mobile coordinates to avoid d3 pan/zoom bug 
           let point = cells[i];
-          point.x = this.mobileCoordScaleX(parseFloat(cells[i].x));
-          point.y = this.mobileCoordScaleY(parseFloat(cells[i].y));
+          point.x = this.mobileCoordScale(parseFloat(cells[i].x));
+          point.y = this.mobileCoordScale(parseFloat(cells[i].y));
           if (!this.gridCaches[res]) this.gridCaches[res] = [];
           this.gridCaches[res].push(point);
         }

@@ -100,8 +100,8 @@ export function updateTooltip(app) {
     let x, y;
     if (app._mobile) {
         //mobile coords are scaled to [-1,1], so we invert them
-        x = Math.round(app.mobileCoordScaleX.invert(tooltip_state.x))
-        y = Math.round(app.mobileCoordScaleY.invert(tooltip_state.y))
+        x = Math.round(app.viewer.mobileCoordScale.invert(tooltip_state.x))
+        y = Math.round(app.viewer.mobileCoordScale.invert(tooltip_state.y))
     } else {
         x = tooltip_state.x;
         y = tooltip_state.y;

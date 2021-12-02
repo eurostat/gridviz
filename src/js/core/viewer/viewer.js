@@ -1,5 +1,5 @@
 //@ts-check
-/** @typedef { {container: HTMLElement, width: number, height: number, zoom:number, geoCenter:[number,number], isMobile: boolean,  backgroundColor?:string, showPlacenames:boolean?, zerosRemoved:number?} } ViewerConfig */
+/** @typedef { {container: HTMLElement, width: number, height: number, zoom:number, geoCenter:[number,number], isMobile: boolean, backgroundColor?:string, showPlacenames:boolean?, zerosRemoved:number?} } ViewerConfig */
 /** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
 import { Scene, WebGLRenderer, Color, Raycaster, Vector3, LatheBufferGeometry } from "three"
@@ -35,6 +35,7 @@ export class Viewer extends EventEmitter {
         this.zerosRemoved = opts.zerosRemoved || 0;
         this.geoCenter = opts.geoCenter || [0, 0];
         this.extGeo = null;
+        this.mobileCoordScale = null; //d3 scale for transforming coordinates into webgl coordinates (-1 to 1)
 
         this.zoomBehaviour = undefined; //d3 zoom
         this.view; // d3 selection of WebGLRenderer.domElement: HTMLCanvasElement
@@ -186,7 +187,7 @@ export class Viewer extends EventEmitter {
         }
     }
 
-    zoomHandlerMobile(app, event) {
+    zoomHandlerMobile(event) {
         if (event.sourceEvent) {
             let scale = event.transform.k;
             let x = -(event.transform.x - this.width / 2) / scale;
@@ -226,15 +227,15 @@ export class Viewer extends EventEmitter {
     /**
      * @description Returns the current extent of the viewer in geographic coordinates
      * @function getCurrentViewExtent
-     * @param app gridviz app
+     * 
      * @returns {Envelope}
      */
-    getCurrentViewExtent(app) {
+    getCurrentViewExtent() {
         var elem = this.renderer.domElement;
         let clientBottomLeft = [elem.clientLeft, elem.clientHeight];
         let clientTopRight = [elem.clientWidth, elem.clientTop];
-        let bottomLeftGeo = this.getGeoCoordsFromScreen(app, clientBottomLeft); //client x,y
-        let topRightGeo = this.getGeoCoordsFromScreen(app, clientTopRight); //client x,y
+        let bottomLeftGeo = this.getGeoCoordsFromScreen(clientBottomLeft); //client x,y
+        let topRightGeo = this.getGeoCoordsFromScreen(clientTopRight); //client x,y
 
         // if getting coords was unsuccessful, exit
         if (!bottomLeftGeo || !topRightGeo) {
@@ -245,16 +246,29 @@ export class Viewer extends EventEmitter {
             xMin: bottomLeftGeo.x,
             yMin: bottomLeftGeo.y,
             xMax: topRightGeo.x,
-            yMax: topRightGeo.y
+            yMax: topRightGeo.y,
         };
+    }
 
+
+    /**
+     * @description transform Envelope to mobile coordinates (-1 - 1)
+     * @memberof Viewer
+     * @param {Envelope}
+     */
+    envelopeToMobile(e) {
+        e.xMin = this.mobileCoordScale(e.xMin);
+        e.yMin = this.mobileCoordScale(e.yMin);
+        e.xMax = this.mobileCoordScale(e.xMax);
+        e.yMax = this.mobileCoordScale(e.yMax);
+        return e;
     }
 
     /**
     * @description get the position of a canvas location in geographic coords
     * @function getGeoCoordsFromScreen
     */
-    getGeoCoordsFromScreen(app, [clientX, clientY]) {
+    getGeoCoordsFromScreen([clientX, clientY]) {
         var vec = new Vector3(); // create once and reuse
         var pos = new Vector3(); // create once and reuse
         vec.set(
@@ -267,11 +281,9 @@ export class Viewer extends EventEmitter {
         var distance = -this.camera.camera.position.z / vec.z;
         pos.copy(this.camera.camera.position).add(vec.multiplyScalar(distance));
         if (this.isMobile) {
-            if (this.mobileCoordScaleX && this.mobileCoordScaleY) {
-                pos.x = Math.round(this.mobileCoordScaleX.invert(pos.x))
-                pos.y = Math.round(this.mobileCoordScaleY.invert(pos.y))
-            } else {
-                return false
+            if (this.mobileCoordScale) {
+                pos.x = Math.round(this.mobileCoordScale.invert(pos.x))
+                pos.y = Math.round(this.mobileCoordScale.invert(pos.y))
             }
         }
         return pos;

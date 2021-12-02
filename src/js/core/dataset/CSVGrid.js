@@ -49,7 +49,7 @@ export class CSVGrid extends Dataset {
                 if(this.preprocess) for (const c of this.cells) this.preprocess(c);
 
                 //execute the callback, usually a draw function
-                if(callback) callback()
+                if(callback) callback(this)
             })
         .catch(() => {
             //mark as failed
@@ -72,7 +72,7 @@ export class CSVGrid extends Dataset {
         if(!this.cells) return [];
 
         /** @type {Array.<Cell>} */
-        let cells = []
+        let cells = [];
         for (const cell of this.cells) {
             if(+cell.x + this.resolution < extGeo.xMin) continue;
             if(+cell.x - this.resolution > extGeo.xMax) continue;

@@ -5,6 +5,70 @@ import { json } from "d3-fetch";
 import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
 
 /**
+ * @description Adds placename labels to the viewer (via labelsLayer)
+ * @param {Array} features Features returned by ArcGIS placename service
+ * 
+ */
+ export function addPlacenameFeaturesToViewer(app, features) {
+    for (let p = 0; p < features.length; p++) {
+        let pn = features[p];
+        let name = pn.attributes[CONSTANTS.placenames.townField];
+        let x, y, d;
+        // x/y coordinates of each placename label
+        if (app._isMobile) {
+            if (app.zerosRemoved_) {
+                d = Number('1E' + app.zerosRemoved_);
+                x = app.viewer.mobileCoordScale(pn.geometry.x / d);
+                y = app.viewer.mobileCoordScale(pn.geometry.y / d)
+            } else {
+                x = app.viewer.mobileCoordScale(pn.geometry.x);
+                y = app.viewer.mobileCoordScale(pn.geometry.y);
+            }
+        } else {
+            if (app.zerosRemoved_) {
+                let d = Number('1E' + app.zerosRemoved_);
+                x = pn.geometry.x / d;
+                y = pn.geometry.y / d
+            } else {
+                x = pn.geometry.x;
+                y = pn.geometry.y;
+            }
+        }
+        let label = createPlacenameLabelObject(x, y, name);
+        // TODO: group objects manually (THREE.group())
+        app.labelsLayer.add(label);
+    }
+}
+
+/**
+ * @description Updates the placename labels accroding to the current zoom level
+ * @param {*} scale
+ * 
+ */
+ export function updatePlacenameLabels(app, scale) {
+    //update thresholds according to current grid resolution
+    app.placenameThresholds_ = defineDefaultPlacenameThresholds(app._currentResolution);
+    if (scale > 0 && scale < app.viewer.camera.config.far_) {
+        //placenames are added to the app.labelsLayer object
+        getPlacenames(app).then(
+            res => {
+                removeAllLabelsFromLayer(app.labelsLayer);
+                if (res.features) {
+                    if (res.features.length > 0) {
+                        addPlacenameFeaturesToViewer(app, res.features)
+                    }
+                }
+            },
+            err => {
+                console.error(err);
+            }
+        );
+    } else {
+        removeAllLabelsFromLayer(app.labelsLayer);
+    }
+}
+
+/**
    * @description Defines the default 'scale : population' thresholds which are used to generate the placename queries. E.g 10 : 10000 will define the population value of the placename query as 10 000 when the current app scale (or camera.position.z) is above 10 and below the next threshold.
    * @function defineDefaultPlacenameThresholds
    * @param {number} resolution
@@ -39,12 +103,12 @@ export function getPlacenames(app) {
     let envelope = app.viewer.getCurrentViewExtent(app);
 
     // if user has removed trailing zeros from x/y we add them back on for the placenames requests
-     if (app.zerosRemoved_) {
+    if (app.zerosRemoved_) {
         let d = Number('1E' + app.zerosRemoved_);
         envelope.xMin *= d,
-        envelope.yMin *= d,
-        envelope.xMax *= d,
-        envelope.yMax *= d;
+            envelope.yMin *= d,
+            envelope.xMax *= d,
+            envelope.yMax *= d;
     }
     //currentExtent = envelope;
     //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
@@ -80,7 +144,7 @@ export function getPlacenames(app) {
  * @function removePlacenamesFromScene
  * @description Removes the placenames CSS2DObjects from the THREE pointsLayer layer
  */
- export function removeAllLabelsFromLayer(labelsLayer) {
+export function removeAllLabelsFromLayer(labelsLayer) {
     if (labelsLayer && labelsLayer.children.length > 0) {
         for (var i = labelsLayer.children.length - 1; i >= 0; i--) {
             labelsLayer.remove(labelsLayer.children[i]);
@@ -126,13 +190,13 @@ function getPopulationParameterFromScale(app) {
     //build query string from thresholds
     if (app.placenameThresholds_) {
         // always ascending order
-        let scales = Object.keys(app.placenameThresholds_).sort((a, b)=>{return parseInt(a)-parseInt(b)});
-        let populations = Object.values(app.placenameThresholds_).sort((a, b)=>{return parseInt(a)-parseInt(b)});
+        let scales = Object.keys(app.placenameThresholds_).sort((a, b) => { return parseInt(a) - parseInt(b) });
+        let populations = Object.values(app.placenameThresholds_).sort((a, b) => { return parseInt(a) - parseInt(b) });
         for (let i = 0; i < scales.length; i++) {
             let s = scales[i];
             let p = populations[i];
 
-            
+
 
             if (scales[i + 1]) { //if not last threshold
                 if (scale < parseInt(scales[0])) { //below first threshold
@@ -155,12 +219,12 @@ function getPopulationParameterFromScale(app) {
  * @param {string} placename
  * @returns CSS2DObject
  */
-export function createPlacenameLabelObject(x, y, placename) {   
+export function createPlacenameLabelObject(x, y, placename) {
     var placeDiv = document.createElement("div");
     placeDiv.className = "gridviz-placename";
     placeDiv.textContent = placename;
     placeDiv.style.marginTop = "-1em";
     var placeLabel = new CSS2DObject(placeDiv);
-    placeLabel.position.set(x,y,CONSTANTS.label_height);
+    placeLabel.position.set(x, y, CONSTANTS.label_height);
     return placeLabel;
 }

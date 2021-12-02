@@ -96,9 +96,7 @@ export class ColorSizeShapeStyle extends Style {
         //set sizes
         this.bufferGeometry.setAttribute("size", new Float32BufferAttribute(this.sizes, 1));
         //set shapes
-        if (this.shape) {
-            this.bufferGeometry.setAttribute("shape", new Float32BufferAttribute(this.shapes, 1));
-        }
+        if (this.shape) this.bufferGeometry.setAttribute("shape", new Float32BufferAttribute(this.shapes, 1));
         
         // add all cells to scene
         // create layer if new
