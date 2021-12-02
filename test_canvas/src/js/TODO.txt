@@ -2,11 +2,10 @@ TODO test GriddedStatsTiler2
 TODO fix tiler rounding issue
 
 TODO style kernel smoothing
+TODO mouse over: Show rectangle.
 
 TODO zoom/pan smartphone/touchscreen - use d3 events - TODO make new canvasgeo based on d3 zoom/pan/over
 TODO modularise further canvasgeo (make ctx private ?)
-
-TODO mouse over: Show rectangle.
 
 TODO adaptative style: with automated classification taking into account only the data within the viewshed
 TODO style radar
