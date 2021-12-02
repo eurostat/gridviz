@@ -1,5 +1,4 @@
 // this file contains the logic for creating and updating threejs point layers (three.Points())
-import { Cell } from "../datasets/Dataset"
 import {Points,Color,Float32BufferAttribute,BufferGeometry,ShaderMaterial,} from "three";
 import * as CONSTANTS from "../constants.js";
 
@@ -64,17 +63,13 @@ export class SquaresLayer {
             }
         }
 
-        //set buffer geometry attributes
-        this.bufferGeometry.setAttribute(
-            "position",
-            new Float32BufferAttribute(this.positions, 3)
-        );
-        this.bufferGeometry.setAttribute(
-            "color",
-            new Float32BufferAttribute(this.colors, 3)
-        );
-        //Variable point size will affect raycasting: https://github.com/mrdoob/three.js/issues/5105
+        //set positions
+        this.bufferGeometry.setAttribute("position",new Float32BufferAttribute(this.positions, 3));
+        //set colors
+        this.bufferGeometry.setAttribute("color",new Float32BufferAttribute(this.colors, 3));
+        //set sizes
         this.bufferGeometry.setAttribute("size", new Float32BufferAttribute(this.sizes, 1));
+
         this.bufferGeometry.computeBoundingSphere();
         //create or reuse app.pointsLayer Material
         if (!this.pointsMaterial) {

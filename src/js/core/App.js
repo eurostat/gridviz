@@ -9,7 +9,7 @@ import { extent, min, max } from "d3-array";
 import { pointer } from "d3-selection";
 
 //three.js
-import { Vector3, Color, Group } from "three";
+import { Vector3, Color, Points } from "three";
 import { WEBGL } from '../lib/threejs/WebGL'
 
 // gridviz modules
@@ -19,13 +19,19 @@ import * as Legend from "./legend/legend.js";
 import * as Buttons from "./gui/buttons.js";
 import * as Dropdowns from "./gui/dropdowns.js";
 import * as GUI from "./gui/gui";
+
 import { Viewer } from "./viewer/viewer.js";
+import { Layer } from './Layer';
+import { Style } from './Style';
+import { Dataset } from './Dataset';
 
 import { CirclesLayer } from "./layers/CirclesLayer.js";
 import { SquaresLayer } from "./layers/SquaresLayer.js";
 import { CuboidsLayer } from "./layers/CuboidsLayer";
-import { LabelsLayer } from "./layers/LabelsLayer.js";
-import { GeoJsonLayer } from "./layers/GeoJsonLayer";
+import { LabelsLayer } from "./placenames/LabelsLayer.js";
+import { GeoJsonLayer } from "./GeoJsonLayer";
+
+import { CSVGrid } from './dataset/CSVGrid';
 
 //other 
 import { feature } from "topojson";
@@ -49,19 +55,22 @@ export class App {
     //output
     let app = this;
 
+    /**
+   * The layers.
+   * @type {Array.<Layer>}
+   * */
     this.layers = [];
 
     this.container_ = document.body;
     this.height_ = null; //takes container width/height
     this.width_ = null;
+    this.backgroundColor_ = "#ffffff";
 
     //threejs scene (2D = orthographic, 3D = Orbital)
     this.mode_ = '2D';
 
     //debugging
     this.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
-
-    this.backgroundColor_ = "#ffffff";
 
     // TODO: move to layer class:
     this.lineColor_ = "rgb(0, 0, 0)";
@@ -240,6 +249,9 @@ export class App {
           Dropdowns.createColorSchemeDropdown(this);
         }
 
+        this.animating = true;
+        this.animate();
+
         return this;
 
       } else {
@@ -259,41 +271,45 @@ export class App {
   };
 
   /**
-   * @description Event handler for viewer zoom end
+   * @description Event handler for when viewer pan or zoom event has finished
    * @param {*} event
    * @memberof App
    */
   onZoomEnd(event) {
     Tooltip.hideTooltip();
-    let scale = Utils.getScaleFromZ(this.height_, this.viewer.camera.config.fov_, event.transform.k);
-    // decide which layers to show based on their max/min zoom levels
 
-    //update current app resolution (resolution of current grid in view)
+    this.redraw();
 
-
-    // get placenames at certain zoom levels
+    // get zoom-dependent placenames
     if (this.showPlacenames_) {
-      //update thresholds according to current grid resolution
-      this.placenameThresholds_ = Placenames.defineDefaultPlacenameThresholds(this.currentResolution_);
-      if (scale > 0 && scale < this.viewer.camera.config.far_) {
-        //placenames are added to the this.pointsLayer object
-        let that = this;
-        Placenames.getPlacenames(that).then(
-          res => {
-            Placenames.removeAllLabelsFromLayer(this.labelsLayer);
-            if (res.features) {
-              if (res.features.length > 0) {
-                this.addPlacenameFeaturesToViewer(res.features)
-              }
-            }
-          },
-          err => {
-            console.error(err);
-          }
-        );
-      } else {
-        Placenames.removeAllLabelsFromLayer(this.labelsLayer);
-      }
+      let scale = Utils.getScaleFromZ(this.height_, this.viewer.camera.config.fov_, event.transform.k);
+      this.updatePlacenameLabels(scale);
+    }
+  }
+
+  /**
+   * @description Determines which layers to draw and shows or hides them
+   * @memberof App
+   */
+  redraw() {
+    // decide which layers to render
+    for (const layer of this.layers) {
+
+      //hide layer not within the zoom range
+      if (layer.minZoom >= this.viewer.camera.camera.position.z) {
+          this.hideLayer(layer);
+        continue;
+      };
+      if (layer.maxZoom < this.viewer.camera.camera.position.z) {
+        this.hideLayer(layer);
+        continue;
+      };
+
+      //get data to show
+      layer.dataset.getData(this.viewer.extGeo, () => { this.draw(layer); });
+
+      //draw cells
+      this.draw(layer);
     }
   }
 
@@ -333,6 +349,35 @@ export class App {
     }
   }
 
+  /**
+   * @description Updates the placename labels accroding to the current zoom level
+   * @param {*} scale
+   * @memberof App
+   */
+  updatePlacenameLabels(scale) {
+    //update thresholds according to current grid resolution
+    this.placenameThresholds_ = Placenames.defineDefaultPlacenameThresholds(this.currentResolution_);
+    if (scale > 0 && scale < this.viewer.camera.config.far_) {
+      //placenames are added to the this.pointsLayer object
+      let that = this;
+      Placenames.getPlacenames(that).then(
+        res => {
+          Placenames.removeAllLabelsFromLayer(this.labelsLayer);
+          if (res.features) {
+            if (res.features.length > 0) {
+              this.addPlacenameFeaturesToViewer(res.features)
+            }
+          }
+        },
+        err => {
+          console.error(err);
+        }
+      );
+    } else {
+      Placenames.removeAllLabelsFromLayer(this.labelsLayer);
+    }
+  }
+
   getDefaultAppWidth(app) {
     return this.container_.clientWidth == window.innerWidth ? this.container_.clientWidth - 1 : this.container_.clientWidth;
   }
@@ -361,33 +406,52 @@ export class App {
   }
 
   /**
-  * Add a layer.
-  * 
-  * @param {Dataset} dataset The dataset to show
-  * @param {number} minZoom The minimum zoom level when to show the layer
-  * @param {number} maxZoom The maximum zoom level when to show the layer
-  */
-  add(dataset, minZoom, maxZoom) {
-    this.layers.push(new Layer(dataset, minZoom, maxZoom));
+   * Add a layer.
+   * 
+   * @param {Dataset} dataset The dataset to show
+   * @param {Array.<Style>} styles The styles, ordered in drawing order.
+   * @param {number} minZoom The minimum zoom level when to show the layer
+   * @param {number} maxZoom The maximum zoom level when to show the layer
+   */
+  add(dataset, styles, minZoom, maxZoom) {
+    this.layers.push(new Layer(dataset, styles, minZoom, maxZoom));
   }
 
 
   /**
-  * Add a layer from a CSV grid dataset.
-  * 
-  * @param {string} url The url of the dataset.
-  * @param {number} resolution The dataset resolution (in geographical unit).
-  * @param {number} minZoom The minimum zoom level when to show the layer
-  * @param {number} maxZoom The maximum zoom level when to show the layer
-  * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
-  */
-  addCSVGrid(url, resolution, minZoom, maxZoom, preprocess = null) {
+   * Add a layer from a CSV grid dataset.
+   * 
+   * @param {string} url The url of the dataset.
+   * @param {number} resolution The dataset resolution (in geographical unit).
+   * @param {Array.<Style>} styles The styles, ordered in drawing order.
+   * @param {number} minZoom The minimum zoom level when to show the layer
+   * @param {number} maxZoom The maximum zoom level when to show the layer
+   * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+   */
+  addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null) {
     this.add(
-      new CSVGrid(url, resolution, preprocess),
-      minZoom,
-      maxZoom,
-      preprocess
+      new CSVGrid(url, resolution, preprocess).getData(null, () => { this.redraw() }),
+      styles, minZoom, maxZoom
     )
+  }
+
+
+  /**
+ * Draw a layer.
+ * 
+ * @param {Layer} layer 
+ */
+  draw(layer) {
+
+    //get cells to draw
+    const cells = layer.dataset.getCells(this.viewer.extGeo)
+
+    //draw cells, style by style
+    for (const style of layer.styles)
+      style.draw(cells, layer.dataset.resolution, this.viewer)
+
+    //show if hidden
+    this.showLayer(layer);
   }
 
   /**
@@ -467,7 +531,7 @@ export class App {
                 } else {
                   newLayer = new CuboidsLayer(cells, layerConfig.colorField, this.colorScaleFunction_, layerConfig.cellSize, layerConfig.sizeField, this.sizeScaleFunction_);
                 }
-                
+
               } else if (layerConfig.cellShape == "circle") {
                 newLayer = new CirclesLayer(cells, layerConfig.colorField, this.colorScaleFunction_, layerConfig.cellSize, layerConfig.sizeField, this.sizeScaleFunction_);
               } else {
@@ -540,6 +604,7 @@ export class App {
       requestAnimationFrame(renderloop);
       $this.viewer.renderer.render($this.viewer.scene, $this.viewer.camera.camera);
       $this.viewer.labelRenderer.render($this.viewer.scene, $this.viewer.camera.camera);
+
     }
 
     renderloop();
@@ -1265,14 +1330,30 @@ export class App {
   /**
    * Used for 'turning objects on and off'. Could be useful for applying filter upon legend class hover
    *
-   * @param {*} object
+   * @param {Layer} layer
    */
-  hideObject(object) {
-    object.traverse(function (child) {
-      if (child instanceof Points) {
-        child.visible = false;
-      }
-    });
+  hideLayer(layer) {
+    layer.styles.forEach((style)=> {
+      style.pointsLayer.traverse(function (child) {
+        if (child instanceof Points) {
+          child.visible = false;
+        }
+      });
+    })
   }
 
+  /**
+   * @description
+   * @param {Layer} layer
+   * @memberof App
+   */
+  showLayer(layer) {
+    layer.styles.forEach((style)=> {
+      style.pointsLayer.traverse(function (child) {
+        if (child instanceof Points) {
+          child.visible = true;
+        }
+      });
+    })
+  }
 }

@@ -18,10 +18,10 @@
   let app = gridviz
     .app()
     .container(containerDiv)
-    .zoom(3000)
-    .geoCenter([3900,3170])
+    .zoom(300000)
+    .geoCenter([3900000, 3170000])
     .showPlacenames(true)
-    .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
+    //.zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
     .title("5km² Population Grid of Europe")
     .colorScaleName('scaleSequentialLog')
     .legend({
@@ -31,15 +31,23 @@
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
 
-    app.addGrid(
-      {
-        url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
-        cellSize: 5,
-        colorField :"population",
-        // sizeField: "population",
-        cellShape: "circle"
-      },
-    )
+  // app.addGrid(
+  //   {
+  //     url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
+  //     cellSize: 5,
+  //     colorField: "population",
+  //     // sizeField: "population",
+  //     cellShape: "circle"
+  //   },
+  // )
+
+  //define datasets, styles and layers
+  const s = gridviz.getShapeColorSizeStyle(
+    c => gridviz.color().interpolateOrRd(Math.pow(c["Population"], 0.5) / 100),
+    null,
+    c => "square"
+  )
+  app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_2011_3035_5km.csv", 5000, [s], 0, 999999999);
 </script>
 
 </html>

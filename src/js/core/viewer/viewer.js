@@ -1,6 +1,6 @@
 //@ts-check
 /** @typedef { {container: HTMLElement, width: number, height: number, zoom:number, geoCenter:[number,number], isMobile: boolean,  backgroundColor?:string, showPlacenames:boolean?, zerosRemoved:number?} } ViewerConfig */
-/** @typedef { {xmin: number, xmax: number, ymin: number, ymax: number} } Envelope */
+/** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
 import { Scene, WebGLRenderer, Color, Raycaster, Vector3, LatheBufferGeometry } from "three"
 import { zoom, zoomIdentity } from "d3-zoom";
@@ -34,6 +34,7 @@ export class Viewer extends EventEmitter {
         this.showPlacenames = opts.showPlacenames || false;
         this.zerosRemoved = opts.zerosRemoved || 0;
         this.geoCenter = opts.geoCenter || [0,0];
+        this.extGeo = null;
 
         this.zoomBehaviour = undefined; //d3 zoom
         this.view; // d3 selection of WebGLRenderer.domElement: HTMLCanvasElement
@@ -193,6 +194,7 @@ export class Viewer extends EventEmitter {
     }
 
     zoomEnd(event) {
+        this.extGeo = this.getCurrentViewExtent();
         this.emit("zoomEnd",event)
     }
 
@@ -228,11 +230,11 @@ export class Viewer extends EventEmitter {
         var elem = this.renderer.domElement;
         let clientBottomLeft = [elem.clientLeft, elem.clientHeight];
         let clientTopRight = [elem.clientWidth, elem.clientTop];
-        let bottomLeftWorld = this.getWorldCoordsFromScreen(app, clientBottomLeft); //client x,y
-        let topRightWorld = this.getWorldCoordsFromScreen(app, clientTopRight); //client x,y
+        let bottomLeftGeo = this.getGeoCoordsFromScreen(app, clientBottomLeft); //client x,y
+        let topRightGeo = this.getGeoCoordsFromScreen(app, clientTopRight); //client x,y
 
         // if getting coords was unsuccessful, exit
-        if (!bottomLeftWorld || !topRightWorld) {
+        if (!bottomLeftGeo || !topRightGeo) {
             return
         }
 
@@ -248,26 +250,26 @@ export class Viewer extends EventEmitter {
         if (this.zerosRemoved) {
             let d = Number('1E' + this.zerosRemoved);
             return {
-                xmin: bottomLeftWorld.x * d,
-                ymin: bottomLeftWorld.y * d,
-                xmax: topRightWorld.x * d,
-                ymax: topRightWorld.y * d
+                xMin: bottomLeftGeo.x * d,
+                yMin: bottomLeftGeo.y * d,
+                xMax: topRightGeo.x * d,
+                yMax: topRightGeo.y * d
             };
         } else {
             return {
-                xmin: bottomLeftWorld.x,
-                ymin: bottomLeftWorld.y,
-                xmax: topRightWorld.x,
-                ymax: topRightWorld.y
+                xMin: bottomLeftGeo.x,
+                yMin: bottomLeftGeo.y,
+                xMax: topRightGeo.x,
+                yMax: topRightGeo.y
             };
         }
     }
 
     /**
     * @description get the position of a canvas location in geographic coords
-    * @function getWorldCoordsFromScreen
+    * @function getGeoCoordsFromScreen
     */
-    getWorldCoordsFromScreen(app, [clientX, clientY]) {
+    getGeoCoordsFromScreen(app, [clientX, clientY]) {
         var vec = new Vector3(); // create once and reuse
         var pos = new Vector3(); // create once and reuse
         vec.set(
