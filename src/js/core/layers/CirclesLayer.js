@@ -180,7 +180,7 @@ export function updatePointsSizes(app, cells) {
         if (sizeField && sizeField !== "null") {
             sizes.push(app.sizeScaleFunction_(cells[i][sizeField]));
         } else {
-            sizes.push(app.currentResolution_);
+            sizes.push(app._currentResolution);
         }
     }
     //update sizes

@@ -52,13 +52,13 @@ export function getPlacenames(app) {
             app.EPSG_ +
             "&inSR=" + app.EPSG_ +
             "&geometry=" +
-            envelope.xmin +
+            envelope.xMin +
             "," +
-            envelope.ymin +
+            envelope.yMin +
             "," +
-            envelope.xmax +
+            envelope.xMax +
             "," +
-            envelope.ymax +
+            envelope.yMax +
             "&geometryType=esriGeometryEnvelope&f=json&outFields=" + CONSTANTS.placenames.townField + "," + CONSTANTS.placenames.populationField;
 
         //TODO: manage multiple calls by replicating angular's .unsubscribe() somehow
@@ -89,7 +89,7 @@ export function getPlacenames(app) {
  */
 function defineWhereParameter(app) {
     let scale = app.viewer.camera.camera.position.z;
-    let r = app.currentResolution_;
+    let r = app._currentResolution;
     let where = "";
     if (app.placenamesCountry_) {
         where = where + CONSTANTS.placenames.countryField + " = '" + app.placenamesCountry_ + "' AND "
@@ -111,7 +111,7 @@ function getPopulationParameterFromScale(app) {
     let scale = app.viewer.camera.camera.position.z;
     if (app._mobile) {
         //scale up to desktop values
-        let factor = app.originalResolution / app.currentResolution_
+        let factor = app.originalResolution / app._currentResolution
         scale = scale * factor;
     }
 

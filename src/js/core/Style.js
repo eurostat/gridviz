@@ -58,7 +58,7 @@ export class Style {
      * @returns 
      */
     drawStroke(cell, resolution, viewer, shape, size) {
-
+        throw new Error('Method drawStroke not implemented.');
     }
 
 }

@@ -60,6 +60,9 @@ export class Viewer extends EventEmitter {
 
         // add d3 zoom functionality
         this.addPanAndZoom();
+
+        //initial extent
+        this.extGeo = this.getCurrentViewExtent();
     }
 
     /**

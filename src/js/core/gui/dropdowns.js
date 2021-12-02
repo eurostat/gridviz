@@ -276,7 +276,7 @@ export function createSizeFieldDropdown(app, gridCaches) {
   label.classList.add("gridviz-dropdown-label");
   label.innerText = app.sizeFieldSelectorLabel_;
 
-  let fields = Object.keys(gridCaches[app.currentResolution_][0]);
+  let fields = Object.keys(gridCaches[app._currentResolution][0]);
   for (let i = 0; i < fields.length; i++) {
     let field = fields[i];
     if (field.toLowerCase() !== "x" && field.toLowerCase() !== "y" && field !== "color") {

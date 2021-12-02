@@ -135,7 +135,7 @@ export class App {
     this.nutsLevel_ = 0;
     this.nutsSimplification_ = "10M"; //current nuts2json simplification
 
-    this.currentResolution_ = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
+    this._currentResolution = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
     this.zoom_ = null; //initial camera position Z
     this.mobileCellSize_ = null; //cell size for mobiles
 
@@ -167,7 +167,7 @@ export class App {
     }
     //update legend if necessary
     if (this.__Legend) {
-      Legend.updateLegend(this, this.gridConfigs[this.currentResolution_])
+      Legend.updateLegend(this, this.gridConfigs[this._currentResolution])
     }
     return this;
   };
@@ -226,17 +226,14 @@ export class App {
         //add titles, sources texts to DOM 
         this.addInitialElementsToDOM()
 
-        // default scale:population thresholds for placenames
-        if (this.showPlacenames_ && !this.placenameThresholds_) {
-          this.placenameThresholds_ = Placenames.defineDefaultPlacenameThresholds(this.currentResolution_);
-        }
+        // handle viewer's pan & zoom end
+        this.viewer.on("zoomEnd", (e) => { this.onZoomEnd(e) });
 
         //request initial placenames
         if (this.showPlacenames_) {
           //add layer to scene
           this.labelsLayer = new LabelsLayer();
           this.viewer.scene.add(this.labelsLayer);
-          this.viewer.on("zoomEnd", (e) => { this.onZoomEnd(e) });
           Placenames.getPlacenames(this);
         }
 
@@ -251,6 +248,8 @@ export class App {
 
         this.animating = true;
         this.animate();
+
+        Loading.hideLoading();
 
         return this;
 
@@ -305,6 +304,9 @@ export class App {
         continue;
       };
 
+      // set current visible resolution for placename requests
+      this._currentResolution = layer.dataset.resolution;
+
       //get data to show
       layer.dataset.getData(this.viewer.extGeo, () => { this.draw(layer); });
 
@@ -356,7 +358,7 @@ export class App {
    */
   updatePlacenameLabels(scale) {
     //update thresholds according to current grid resolution
-    this.placenameThresholds_ = Placenames.defineDefaultPlacenameThresholds(this.currentResolution_);
+    this.placenameThresholds_ = Placenames.defineDefaultPlacenameThresholds(this._currentResolution);
     if (scale > 0 && scale < this.viewer.camera.config.far_) {
       //placenames are added to the this.pointsLayer object
       let that = this;
@@ -429,8 +431,12 @@ export class App {
    * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
    */
   addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null) {
+    Loading.showLoading();
     this.add(
-      new CSVGrid(url, resolution, preprocess).getData(null, () => { this.redraw() }),
+      new CSVGrid(url, resolution, preprocess).getData(null, () => { 
+        Loading.hideLoading();
+        this.redraw(); 
+      }),
       styles, minZoom, maxZoom
     )
   }
@@ -478,7 +484,7 @@ export class App {
               // save grid config
               this.gridConfigs[layerConfig.cellSize] = layerConfig;
               // set current app resolution (new grid cell size)
-              this.currentResolution_ = layerConfig.cellSize;
+              this._currentResolution = layerConfig.cellSize;
               // set raycaster threshold (for tooltip hover)
               this.viewer.raycaster.params.Points.threshold = layerConfig.cellSize;
               // count cells
@@ -565,11 +571,11 @@ export class App {
               Tooltip.createTooltipContainer(this);
 
               if (this.colorFieldSelector_) {
-                Dropdowns.createColorFieldDropdown(app, this.gridConfigs[this.currentResolution_]);
+                Dropdowns.createColorFieldDropdown(app, this.gridConfigs[this._currentResolution]);
                 this.addChangeEventToColorFieldDropdown();
               }
               if (this.sizeFieldSelector_) {
-                Dropdowns.createSizeFieldDropdown(app, this.gridConfigs[this.currentResolution_]);
+                Dropdowns.createSizeFieldDropdown(app, this.gridConfigs[this._currentResolution]);
                 this.addChangeEventToSizeFieldDropdown()
               }
             }
@@ -673,7 +679,7 @@ export class App {
 
       //giving us our new cell size
       let newResolution = difference;
-      this.currentResolution_ = newResolution;
+      this._currentResolution = newResolution;
       layerConfig.cellSize = newResolution;
       this.pointSize = newResolution;
       this.viewer.raycaster.params.Points.threshold = newResolution;
@@ -697,7 +703,7 @@ export class App {
 
       //mobile cell size
       let newResolution = this.mobileCellSize_;
-      // this.currentResolution_ = newResolution;
+      // this._currentResolution = newResolution;
       layerConfig.cellSize = newResolution;
       this.pointSize = newResolution;
       this.viewer.raycaster.params.Points.threshold = newResolution;
@@ -869,9 +875,9 @@ export class App {
     Tooltip.hideTooltip()
     this.colorSchemeName_ = scheme;
     this.updateColorScale();
-    Points.updatePointsColors(app, this.gridConfigs[this.currentResolution_], this.gridCaches[this.currentResolution_]);
+    Points.updatePointsColors(app, this.gridConfigs[this._currentResolution], this.gridCaches[this._currentResolution]);
     if (this.legend_) {
-      Legend.updateLegend(app, this.gridConfigs[this.currentResolution_]);
+      Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
     }
   }
 
@@ -891,10 +897,10 @@ export class App {
   * @param {*} field
   */
   onChangeColorField(field) {
-    this.gridConfigs[this.currentResolution_].colorField = field;
+    this.gridConfigs[this._currentResolution].colorField = field;
 
     //update the extent/domain of the values of the new field 
-    this.colorValuesExtent = extent(this.gridCaches[this.currentResolution_], d => parseFloat(d[this.gridConfigs[this.currentResolution_].colorField]));
+    this.colorValuesExtent = extent(this.gridCaches[this._currentResolution], d => parseFloat(d[this.gridConfigs[this._currentResolution].colorField]));
 
     //update the scale function used for colouring
     if (!this.colors_) {
@@ -902,10 +908,10 @@ export class App {
     }
 
     //update the thee.js point colours
-    Points.updatePointsColors(app, this.gridConfigs[this.currentResolution_], this.gridCaches[this.currentResolution_]);
+    Points.updatePointsColors(app, this.gridConfigs[this._currentResolution], this.gridCaches[this._currentResolution]);
 
     if (this.legend_) {
-      Legend.updateLegend(app, this.gridConfigs[this.currentResolution_]);
+      Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
     }
   }
 
@@ -927,9 +933,9 @@ export class App {
   onChangeColorScale(scale) {
     this.colorScaleName_ = scale;
     this.updateColorScale();
-    Points.updatePointsColors(app, this.gridConfigs[this.currentResolution_], this.gridCaches[this.currentResolution_]);
+    Points.updatePointsColors(app, this.gridConfigs[this._currentResolution], this.gridCaches[this._currentResolution]);
     if (this.legend_) {
-      Legend.updateLegend(app, this.gridConfigs[this.currentResolution_]);
+      Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
     }
   }
 
@@ -949,11 +955,11 @@ export class App {
   * @param {*} field
   */
   onChangeSizeField(field) {
-    this.gridConfigs[this.currentResolution_].sizeField = field;
+    this.gridConfigs[this._currentResolution].sizeField = field;
     this.updateSizeScale();
-    Points.updatePointsSizes(app, this.gridCaches[this.currentResolution_]);
+    Points.updatePointsSizes(app, this.gridCaches[this._currentResolution]);
     if (this.__Legend) {
-      Legend.updateLegend(app, this.gridConfigs[this.currentResolution_]);
+      Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
     }
   }
 
@@ -985,7 +991,7 @@ export class App {
       if (intersect) {
         //console.log("Intersect", intersect); //for debugging intersects
         let index = intersect.index;
-        let cell = this.gridCaches[this.currentResolution_][index];
+        let cell = this.gridCaches[this._currentResolution][index];
         this.highlightPoint(intersect);
         Tooltip.showTooltip(this, mouse_position, cell);
       } else {
@@ -1178,12 +1184,12 @@ export class App {
     if (!this.sizeScaleFunction_) {
       //create if didnt exist upon initialization
       if (!this.sizeValuesExtent) {
-        this.sizeValuesExtent = extent(this.gridCaches[this.currentResolution_], d => parseFloat(this.gridCaches[this.currentResolution_]));
+        this.sizeValuesExtent = extent(this.gridCaches[this._currentResolution], d => parseFloat(this.gridCaches[this._currentResolution]));
         this.sizeScaleFunction_ = defineSizeScale();
       } else {
         //update
         let domain = this.sizeValuesExtent;
-        this.sizeScaleFunction_ = d3scale[this.sizeScaleName_]().domain(domain).range([this.currentResolution_ / 3, this.currentResolution_ / 1.5]);
+        this.sizeScaleFunction_ = d3scale[this.sizeScaleName_]().domain(domain).range([this._currentResolution / 3, this._currentResolution / 1.5]);
       }
     } else {
       return this.sizeScaleFunction_;
@@ -1202,7 +1208,7 @@ export class App {
       return this.sizeScaleFunction_;
     } else {
       // default sizing scale
-      return d3scale[this.sizeScaleName_]().domain(this.sizeValuesExtent).range([this.currentResolution_ / 1.5, this.currentResolution_]); //minSize, maxSize
+      return d3scale[this.sizeScaleName_]().domain(this.sizeValuesExtent).range([this._currentResolution / 1.5, this._currentResolution]); //minSize, maxSize
     }
   }
 
