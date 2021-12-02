@@ -12,9 +12,9 @@ export const color = function () {
 }
 
 //export styles
-import { ShapeColorSizeStyle } from "./core/style/ShapeColorSizeStyle"
-export const getShapeColorSizeStyle = function (color_, size, shape) {
-    return new ShapeColorSizeStyle(color_, size, shape)
+import { ColorSizeShapeStyle } from "./core/style/ColorSizeShapeStyle"
+export const getColorSizeShapeStyle = function (color_, size, shape) {
+    return new ColorSizeShapeStyle(color_, size, shape)
 }
 
 // import { LineStyle } from "./core/style/LineStyle"

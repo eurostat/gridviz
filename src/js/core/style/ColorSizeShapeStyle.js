@@ -12,7 +12,7 @@ import { Points, Color, Float32BufferAttribute, BufferGeometry, ShaderMaterial, 
  * 
  * @author Julien Gaffuri
  */
-export class ShapeColorSizeStyle extends Style {
+export class ColorSizeShapeStyle extends Style {
 
     /**
       * @param {function} color A function returning the color of the cell.

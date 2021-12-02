@@ -33,7 +33,7 @@ export class Viewer extends EventEmitter {
         this.backgroundColor = opts.backgroundColor || "#000";
         this.showPlacenames = opts.showPlacenames || false;
         this.zerosRemoved = opts.zerosRemoved || 0;
-        this.geoCenter = opts.geoCenter || [0,0];
+        this.geoCenter = opts.geoCenter || [0, 0];
         this.extGeo = null;
 
         this.zoomBehaviour = undefined; //d3 zoom
@@ -198,7 +198,7 @@ export class Viewer extends EventEmitter {
 
     zoomEnd(event) {
         this.extGeo = this.getCurrentViewExtent();
-        this.emit("zoomEnd",event)
+        this.emit("zoomEnd", event)
     }
 
     /**
@@ -241,31 +241,13 @@ export class Viewer extends EventEmitter {
             return
         }
 
-        // full european extent in EPSG 3035:
-        // return {
-        //   xmin: 1053668.5589,
-        //   ymin: 1645342.8583,
-        //   xmax: 5724066.4412,
-        //   ymax: 5901309.0137
-        // };
+        return {
+            xMin: bottomLeftGeo.x,
+            yMin: bottomLeftGeo.y,
+            xMax: topRightGeo.x,
+            yMax: topRightGeo.y
+        };
 
-        // if the user has reduced the filesize by removing trailing 0s from the csv, we simply add them back on before sending the placename queries
-        if (this.zerosRemoved) {
-            let d = Number('1E' + this.zerosRemoved);
-            return {
-                xMin: bottomLeftGeo.x * d,
-                yMin: bottomLeftGeo.y * d,
-                xMax: topRightGeo.x * d,
-                yMax: topRightGeo.y * d
-            };
-        } else {
-            return {
-                xMin: bottomLeftGeo.x,
-                yMin: bottomLeftGeo.y,
-                xMax: topRightGeo.x,
-                yMax: topRightGeo.y
-            };
-        }
     }
 
     /**

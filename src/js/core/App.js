@@ -237,14 +237,14 @@ export class App {
           Placenames.getPlacenames(this);
         }
 
-        //add container for dropdowns
-        if (this.colorSchemeSelector_ || this.colorScaleSelector_ || this.sizeFieldSelector_ || this.colorFieldSelector_) {
-          GUI.addSelectorsContainerToDOM(this);
-        }
+        //add container for dropdowns - Deprecate dropdowns?
+        // if (this.colorSchemeSelector_ || this.colorScaleSelector_ || this.sizeFieldSelector_ || this.colorFieldSelector_) {
+        //   GUI.addSelectorsContainerToDOM(this);
+        // }
         // colour selector added here. Data-dependent dropdowns added once grid data is loaded
-        if (this.colorSchemeSelector_) {
-          Dropdowns.createColorSchemeDropdown(this);
-        }
+        // if (this.colorSchemeSelector_) {
+        //   Dropdowns.createColorSchemeDropdown(this);
+        // }
 
         this.animating = true;
         this.animate();
@@ -296,7 +296,7 @@ export class App {
 
       //hide layer not within the zoom range
       if (layer.minZoom >= this.viewer.camera.camera.position.z) {
-          this.hideLayer(layer);
+        this.hideLayer(layer);
         continue;
       };
       if (layer.maxZoom < this.viewer.camera.camera.position.z) {
@@ -312,6 +312,11 @@ export class App {
 
       //draw cells
       this.draw(layer);
+
+      //show if hidden
+      if (layer.hidden == true) {
+        this.showLayer(layer);
+      }
     }
   }
 
@@ -433,9 +438,9 @@ export class App {
   addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null) {
     Loading.showLoading();
     this.add(
-      new CSVGrid(url, resolution, preprocess).getData(null, () => { 
+      new CSVGrid(url, resolution, preprocess).getData(null, () => {
         Loading.hideLoading();
-        this.redraw(); 
+        this.redraw();
       }),
       styles, minZoom, maxZoom
     )
@@ -457,7 +462,7 @@ export class App {
       style.draw(cells, layer.dataset.resolution, this.viewer)
 
     //show if hidden
-    this.showLayer(layer);
+    //this.showLayer(layer);
   }
 
   /**
@@ -1339,13 +1344,17 @@ export class App {
    * @param {Layer} layer
    */
   hideLayer(layer) {
-    layer.styles.forEach((style)=> {
-      style.pointsLayer.traverse(function (child) {
-        if (child instanceof Points) {
-          child.visible = false;
-        }
-      });
+    layer.styles.forEach((style) => {
+      if (style.pointsLayer) {
+        style.pointsLayer.traverse(function (child) {
+          if (child instanceof Points) {
+            child.visible = false;
+          }
+        });
+        layer.hidden = true;
+      }
     })
+
   }
 
   /**
@@ -1354,12 +1363,15 @@ export class App {
    * @memberof App
    */
   showLayer(layer) {
-    layer.styles.forEach((style)=> {
-      style.pointsLayer.traverse(function (child) {
-        if (child instanceof Points) {
-          child.visible = true;
-        }
-      });
+    layer.styles.forEach((style) => {
+      if (style.pointsLayer) {
+        style.pointsLayer.traverse(function (child) {
+          if (child instanceof Points) {
+            child.visible = true;
+          }
+        });
+        layer.hidden = false;
+      }
     })
   }
 }

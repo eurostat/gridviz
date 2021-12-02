@@ -1,7 +1,5 @@
-// this file contains the logic required for loading placename labels into the app/
 // placenames are requested from an ArcGIS service provided by REGIO and are queried by using population thresholds according to the app's current scale
 
-import * as Utils from "../utils/utils";
 import * as CONSTANTS from "../constants.js";
 import { json } from "d3-fetch";
 import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
@@ -39,6 +37,15 @@ export function defineDefaultPlacenameThresholds(resolution) {
 export function getPlacenames(app) {
     let where = defineWhereParameter(app)
     let envelope = app.viewer.getCurrentViewExtent(app);
+
+    // if user has removed trailing zeros from x/y we add them back on for the placenames requests
+     if (app.zerosRemoved_) {
+        let d = Number('1E' + app.zerosRemoved_);
+        envelope.xMin *= d,
+        envelope.yMin *= d,
+        envelope.xMax *= d,
+        envelope.yMax *= d;
+    }
     //currentExtent = envelope;
     //ESRI Rest API envelope: <xmin>,<ymin>,<xmax>,<ymax> (bottom left x,y , top right x,y)
     if (app.debugPlacenames_) console.info(envelope);
