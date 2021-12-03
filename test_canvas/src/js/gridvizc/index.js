@@ -55,3 +55,8 @@ export const SegmentStyle = function (orientation, color, length, width) {
     return new SegmentStyle_(orientation, color, length, width)
 }
 
+import { TextStyle as TextStyle_ } from "./style/TextStyle"
+export const TextStyle = function (text, color, fontSize, fontFamily) {
+    return new TextStyle_(text, color, fontSize, fontFamily)
+}
+
