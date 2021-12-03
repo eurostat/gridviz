@@ -1,4 +1,4 @@
-
+TODO style trendline - with ENACT dataset ?
 TODO style kernel smoothing
 TODO adaptative style: with automated classification taking into account only the data within the viewshed
 TODO mouse over: Show rectangle.
@@ -7,7 +7,6 @@ TODO zoom/pan smartphone/touchscreen - use d3 events - TODO make new canvasgeo b
 TODO modularise further canvasgeo (make ctx private ?)
 
 TODO style radar
-TODO style trendline - with ENACT dataset ?
 
 TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache and remove inpriority the old-unused tiles.
 
@@ -16,8 +15,6 @@ TODO on zoom/pan, interupt all existing redraws
 TODO background - images ?
 
 TODO foreground - geo names
-https://ec.europa.eu/regional_policy/en/information/maps/urban-centres-towns and https://stackoverflow.com/questions/42259132/converting-epsg-projection-bounds-to-a-d3-js-map
-Or: https://ec.europa.eu/statistical-atlas/arcgis/rest/services/Basemaps/StatAtlas_Cities_Labels_2014/MapServer/0/query?where=POPL_SIZE%3E100000&outSR=3035&inSR=3035&geometry=4209280.331417825,3162220.359042136,4441182.77218426,3305502.075619854&geometryType=esriGeometryEnvelope&f=json&outFields=STTL_NAME,POPL_SIZE
 
 TODO finalise demos
 TODO fix segment

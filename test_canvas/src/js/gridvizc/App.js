@@ -1,5 +1,6 @@
 //@ts-check
 
+import { csv } from "d3-fetch";
 import { CanvasGeo } from './CanvasGeo';
 import { Layer } from './Layer';
 import { Style } from './Style';
@@ -57,6 +58,12 @@ export class App {
                 //draw cells
                 this.draw(layer);
             }
+
+            //draw toponames
+            for (const tn of this.toponames) {
+                //TODO draw toponame
+            }
+
             return this
         };
 
@@ -87,6 +94,34 @@ export class App {
         });
         this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
 
+
+        //topo names
+        //{name: 'Wolkersdorf im Weinviertel', cat: '1', pop_2011: '8892', lon: '16.52305', lat: '48.38337'}
+        /** @typedef {{nama: string, cat: number, pop_2011:number, lon:number, lat:number }} TopoName */
+        /** @type {Array.<TopoName>} */
+        this.toponames = [];
+        const toponamesURL = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv"
+        csv(toponamesURL)
+            .then(
+                /** @param {*} data */
+                (data) => {
+                    this.toponames = data;
+
+                    //TODO define projection
+                    //const projection = d3.geoAzimuthalEqualArea().rotate([-10, -52]).scale(700)
+                    //https://spatialreference.org/ref/epsg/etrs89-etrs-laea/html/
+
+                    for (const tn of this.toponames) {
+                        //project TODO
+                        tn.lon = 0; tn.lat = 0;
+                    }
+
+                    //redraw
+                    this.cg.redraw();
+                })
+            .catch(() => {
+                //
+            });
     }
 
 
