@@ -1,6 +1,7 @@
 //@ts-check
 
 import { csv } from "d3-fetch";
+import { geoAzimuthalEqualArea } from 'd3-geo'
 import { CanvasGeo } from './CanvasGeo';
 import { Layer } from './Layer';
 import { Style } from './Style';
@@ -43,6 +44,12 @@ export class App {
          * @type {string} */
         this.backgroundColor = opts.backgroundColor || "white"
 
+        /** The projection from (lat,lon) to the CRS of the grid.
+          * ITt is used for example to project and show the toponyms in the foreground.
+          * By default, it is set to European projection, ETRS89-LAEA (EPSG:3035)
+          * @type {function} */
+        this.projection = geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000])//.scale(1)
+
 
         /** Make geo canvas
          * @type {CanvasGeo} */
@@ -53,15 +60,22 @@ export class App {
             for (const layer of this.getActiveLayers()) {
 
                 //get data to show
-                layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.draw(layer); });
+                layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw();/*this.draw(layer);*/ });
 
                 //draw cells
                 this.draw(layer);
             }
 
             //draw toponyms
+            this.cg.ctx.fillStyle = "blue";
+            this.cg.ctx.font = "15px Arial";
+            this.cg.ctx.textAlign = "center";
             for (const tn of this.toponyms) {
-                //TODO draw toponym
+                //draw toponym
+                const tx = this.cg.geoToPixX(tn.lon);
+                const ty = this.cg.geoToPixY(tn.lat);
+                //draw the text
+                this.cg.ctx.fillText(tn.name, tx, ty);
             }
 
             return this
@@ -94,10 +108,8 @@ export class App {
         });
         this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
 
-
         //toponymes
-        //{name: 'Wolkersdorf im Weinviertel', cat: '1', pop_2011: '8892', lon: '16.52305', lat: '48.38337'}
-        /** @typedef {{nama: string, cat: number, pop_2011:number, lon:number, lat:number }} TopoName */
+        /** @typedef {{name: string, cat: number, pop_2011:number, lon:number, lat:number }} TopoName */
         /** @type {Array.<TopoName>} */
         this.toponyms = [];
         const toponymsURL = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv"
@@ -107,13 +119,10 @@ export class App {
                 (data) => {
                     this.toponyms = data;
 
-                    //TODO define projection
-                    //const projection = d3.geoAzimuthalEqualArea().rotate([-10, -52]).scale(700)
-                    //https://spatialreference.org/ref/epsg/etrs89-etrs-laea/html/
-
+                    //project toponyms
                     for (const tn of this.toponyms) {
-                        //project TODO
-                        tn.lon = 0; tn.lat = 0;
+                        const p = this.projection([tn.lon, tn.lat])
+                        tn.lon = p[0]; tn.lat = p[1];
                     }
 
                     //redraw
@@ -276,4 +285,8 @@ export class App {
     /** @param {string} val @returns {this} */
     setBackgroundColor(val) { this.backgroundColor = val; return this; }
 
+    /** @returns {function} */
+    getProjection() { return this.projection; }
+    /** @param {function} val @returns {this} */
+    setProjection(val) { this.projection = val; return this; }
 }
