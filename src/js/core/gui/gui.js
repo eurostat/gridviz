@@ -62,9 +62,21 @@ export function addSubtitleToDOM(app) {
 */
 export function addCellCountToDOM(app) {
     let node = document.createElement("div");
-    node.classList.add("gridviz-cellcount");
-    node.innerHTML = "Number of cells: " + Utils.formatNumber(app.cellCount);
+    node.id = "gridviz-cellcount";
     app.headingsNode.appendChild(node);
+}
+
+
+/**
+*
+*
+* @function updateCellCount
+* @description updates the cell count text
+*/
+export function updateCellCount(count) {
+    let node = document.getElementById("gridviz-cellcount");
+    let num = Utils.formatNumber(count);
+    node.innerHTML = "Number of cells in view: " + num;
 }
 
 

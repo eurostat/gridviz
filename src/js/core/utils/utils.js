@@ -3,11 +3,10 @@
 /**
  * @description returns number with space as separator
  * @function formatNumber
+ * @param {Number} n
  */
 export function formatNumber(n) {
-  return n
-    .toLocaleString("en")
-    .replace(/,/gi, " ")
+  return n.toLocaleString("en").replace(/,/gi, " ")
 }
 
 /**

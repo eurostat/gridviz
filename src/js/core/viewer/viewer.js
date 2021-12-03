@@ -1,5 +1,5 @@
 //@ts-check
-/** @typedef { {container: HTMLElement, width: number, height: number, zoom:number, geoCenter:[number,number], isMobile: boolean, backgroundColor?:string, showPlacenames:boolean?, zerosRemoved:number?} } ViewerConfig */
+/** @typedef { {container: HTMLElement, width: number, height: number, zoom:number, geoCenter:[number,number], isMobile: boolean?, is3D: Boolean?, backgroundColor:string?, showPlacenames:boolean?, zerosRemoved:number?} } ViewerConfig */
 /** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
 import { Scene, WebGLRenderer, Color, Raycaster, Vector3, LatheBufferGeometry } from "three"
@@ -8,6 +8,7 @@ import { select } from "d3-selection";
 import { CSS2DRenderer } from "../../lib/threejs/CSS2D/CSS2DRenderer";
 import * as Utils from "../utils/utils";
 import { Camera } from "./camera/camera.js";
+import { OrbitControls } from '../../lib/threejs/orbitControls';
 
 const EventEmitter = require('events');
 
@@ -25,20 +26,57 @@ export class Viewer extends EventEmitter {
     constructor(opts) {
         super()
 
+        /** Width of the viewport in pixels
+        * @type {Number} */
         this.width = opts.width;
-        this.height = opts.height;
-        this.container = opts.container;
-        this.isMobile = opts.isMobile || false;
-        this.zoom = opts.zoom; //camera z position
-        this.backgroundColor = opts.backgroundColor || "#000";
-        this.showPlacenames = opts.showPlacenames || false;
-        this.zerosRemoved = opts.zerosRemoved || 0;
-        this.geoCenter = opts.geoCenter || [0, 0];
-        this.extGeo = null;
-        this.mobileCoordScale = null; //d3 scale for transforming coordinates into webgl coordinates (-1 to 1)
 
+        /** Height of the viewport in pixels
+        * @type {Number} */
+        this.height = opts.height;
+
+        /** Container upon which the viewer will be appended
+        * @type {HTMLElement} */
+        this.container = opts.container;
+
+        /** Whether the current device is a mobile or not
+        * @type {Boolean} */
+        this.isMobile = opts.isMobile || false;
+
+        /** Whether the viewport can pan and zoom in 3D
+        * @type {Boolean} */
+        this.is3D = opts.is3D || false;
+
+        /** The camera Z position
+        * @type {Number} */
+        this.zoom = opts.zoom;
+
+        /** Background color of the threejs scene
+        * @type {String} */
+        this.backgroundColor = opts.backgroundColor || "#000";
+
+        /** Whether to show placename labels from an ArcGIS service
+        * @type {Boolean} */
+        this.showPlacenames = opts.showPlacenames || false;
+
+        /** The current geographic center of the viewer
+        * @type {[number,number]} */
+        this.geoCenter = opts.geoCenter || [0, 0];
+
+        /** The current geographic extent of the viewer
+        * @type {Envelope} */
+        this.extGeo = null;
+
+        /** A function for scaling geographic coordinates to wegbl cartesian coordinates (-1 to 1). Needed for mobile devices.
+         * @type {import("d3-scale").ScaleLinear} */
+        this.mobileCoordScale = null;
+
+        /** A D3 Zoom Behavior for panning and zooming transformations
+        * @type {import("d3-zoom").ZoomBehavior} */
         this.zoomBehaviour = undefined; //d3 zoom
-        this.view; // d3 selection of WebGLRenderer.domElement: HTMLCanvasElement
+
+        /** A d3 selection of the viewer WebGLRenderer.domElement.
+        * @type {import("d3-selection").Selection} */
+        this.view;
 
         //set container height and width
         this.container.classList.add("gridviz-container");
@@ -50,6 +88,7 @@ export class Viewer extends EventEmitter {
         if (!this.labelRenderer) this.createLabelRenderer();
         if (!this.renderer) this.createWebGLRenderer();
 
+        // set camera / controls
         this.camera = new Camera({
             isMobile: this.isMobile,
             viewerWidth: this.width,
@@ -57,10 +96,9 @@ export class Viewer extends EventEmitter {
             zoom: this.zoom
         });
 
-        this.createRaycaster();
+        this.is3D == true ? this.createOrbitControls() : this.addPanAndZoom();
 
-        // add d3 zoom functionality
-        this.addPanAndZoom();
+        this.createRaycaster();
 
         //initial extent
         this.extGeo = this.getCurrentViewExtent();
@@ -145,8 +183,8 @@ export class Viewer extends EventEmitter {
             let scale = Utils.getScaleFromZ(this.height, this.camera.config.fov_, this.camera.config.initialZ_)
             this.zoomBehaviour.scaleTo(this.view, scale);
             this.zoomBehaviour.translateTo(this.view,
-                parseInt(this.geoCenter[0]) + this.width / 2,
-                parseInt(this.geoCenter[1]) + this.height / 2);
+                this.geoCenter[0] + this.width / 2,
+                this.geoCenter[1] + this.height / 2);
             this.camera.setCamera(this.geoCenter[0], this.geoCenter[1], this.camera.config.initialZ_)
         }
         this.view.call(this.zoomBehaviour);
@@ -289,5 +327,30 @@ export class Viewer extends EventEmitter {
         return pos;
     }
 
+
+    /**
+  * @description Creates orbit controls to be used with three.js. Used when app is set to '3D' mode.
+  * @function createOrbitControls
+  * 
+  */
+    createOrbitControls() {
+        // controls
+        this.controls = new OrbitControls(this.camera.camera, this.renderer.domElement);
+        this.controls.target = new Vector3(this.geoCenter[0], this.geoCenter[1], 0);
+        //controls.minPolarAngle = 0;
+        //controls.maxPolarAngle = 0;
+        this.controls.minAzimuthAngle = -0.5;
+        this.controls.maxAzimuthAngle = 0.5;
+
+        // controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+        // controls.dampingFactor = 0.05;
+        // controls.screenSpacePanning = false;
+        // controls.minDistance = 100;
+        // controls.maxDistance = 500;
+        // controls.maxPolarAngle = Math.PI / 2;
+
+        this.camera.camera.position.set(this.geoCenter[0], this.geoCenter[1], this.camera.config.zoom);
+        this.controls.update();
+    }
 }
 

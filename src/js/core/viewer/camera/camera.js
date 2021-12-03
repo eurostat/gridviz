@@ -1,9 +1,7 @@
-// all methods related to gridviz viewer's threejs camera and controls
+//@ts-check
 
 import * as CONSTANTS from "../../constants.js";
 import { PerspectiveCamera, Vector3 } from 'three'
-import { OrbitControls } from '../../../lib/threejs/orbitControls';
-
 
 /**
   * @Description parent class for THREE camera usage in gridviz
@@ -18,18 +16,39 @@ export class Camera {
      * @memberof Camera
      */
     constructor(opts) {
-        this.controls = null; //orbit controls
+
+        /** Width of the viewport in pixels
+        * @type {Number} */
         this.viewerWidth = opts.viewerWidth;
+
+        /** Height of the viewport in pixels
+         * @type {Number} */
         this.viewerHeight = opts.viewerHeight;
-        this.isMobile = opts.isMobile;
-        this.zoom = opts.zoom; // initial camera z position
-        this.config = this.defineCameraConfig(this.isMobile,this.zoom,this.viewerWidth,this.viewerHeight);
+
+        /** Whether the current device is a mobile or not
+        * @type {Boolean} */
+         this.isMobile = opts.isMobile || false;
+
+        /** initial camera z position
+        * @type {Number} */
+        this.zoom = opts.zoom;
+
+        /** Configurations for the threeJS camera
+        * @type {Object} */
+        this.config = this.defineCameraConfig(this.isMobile, this.zoom, this.viewerWidth, this.viewerHeight);
+
+        /** ThreeJS perspective camera
+        * @type {PerspectiveCamera} */
         this.camera = new PerspectiveCamera(
             this.config.fov_,
             this.config.aspect_,
             this.config.near_,
             this.config.far_
         );
+
+        /** Orbit controls for 3D panning and zooming
+        * @type {OrbitControls} */
+        this.controls = null;
 
     }
 
@@ -58,31 +77,6 @@ export class Camera {
 
 
     /**
-      * @description Creates orbit controls to be used with three.js. Used when app is set to '3D' mode.
-      * @function createOrbitControls
-      * @param app 
-      */
-    createOrbitControls(app) {
-        // controls
-        this.controls = new OrbitControls(app.viewer.camera.camera, app.viewer.renderer.domElement);
-        this.controls.target = new Vector3(app.geoCenter_[0], app.geoCenter_[1], 0);
-        //controls.minPolarAngle = 0;
-        //controls.maxPolarAngle = 0;
-        this.controls.minAzimuthAngle = -0.5;
-        this.controls.maxAzimuthAngle = 0.5;
-
-        // controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-        // controls.dampingFactor = 0.05;
-        // controls.screenSpacePanning = false;
-        // controls.minDistance = 100;
-        // controls.maxDistance = 500;
-        // controls.maxPolarAngle = Math.PI / 2;
-
-        this.camera.position.set(app.geoCenter_[0], app.geoCenter_[1], cameraConfig.zoom_);
-        this.controls.update();
-    }
-
-    /**
      * @function setCamera
      * @description Sets position and direction of camera
      * @param {number} x three.js coord
@@ -100,14 +94,14 @@ export class Camera {
     }
 
     /**
-    * @description defines the configuration object we will use for the threejs camera
+    * @description defines the configuration object that is used for the threejs camera
     * @function defineCameraConfig
-    * @param isMobile
-    * @param zoom
-    * @param viewerWidth
-    * @param viewerHeight
+    * @param {Boolean} isMobile
+    * @param {Number} zoom
+    * @param {Number} viewerWidth
+    * @param {Number} viewerHeight
     */
-    defineCameraConfig(isMobile,zoom,viewerWidth,viewerHeight) {
+    defineCameraConfig(isMobile, zoom, viewerWidth, viewerHeight) {
         let config = {}
         config.near_ = this.defineNear(isMobile);
         config.far_ = this.defineFar(isMobile, zoom); //set min zoom
@@ -126,19 +120,22 @@ export class Camera {
     }
 
     /**
-    * @description Updates camera configuration. Called when user adds grid data, changes zoom, or changes center after initialization
+    * @description Updates camera configuration. Usually called when user adds grid data, changes zoom, or changes center after initialization
     * @function redefineCamera
-    * @param opts
+    * @param {Boolean} isMobile
+    * @param {Number} zoom
+    * @param {Number} viewerWidth
+    * @param {Number} viewerHeight
     */
-    redefineCamera(isMobile,zoom,viewerWidth,viewerHeight) {
-        let cameraConfig = this.defineCameraConfig(isMobile,zoom,viewerWidth,viewerHeight)
-        camera.fov = cameraConfig.fov_;
-        camera.aspect = cameraConfig.aspect_;
-        camera.near = cameraConfig.near_;
-        camera.far = cameraConfig.far_;
+    redefineCamera(isMobile, zoom, viewerWidth, viewerHeight) {
+        let cameraConfig = this.defineCameraConfig(isMobile, zoom, viewerWidth, viewerHeight)
+        this.camera.fov = cameraConfig.fov_;
+        this.camera.aspect = cameraConfig.aspect_;
+        this.camera.near = cameraConfig.near_;
+        this.camera.far = cameraConfig.far_;
 
         // TODO: redefine panAndZoom
-        this.cameraConfig = cameraConfig;
+        this.config = cameraConfig;
     }
 
     /**

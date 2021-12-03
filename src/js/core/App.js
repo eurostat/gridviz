@@ -67,7 +67,7 @@ export class App {
     this.backgroundColor_ = "#ffffff";
 
     //threejs scene (2D = orthographic, 3D = Orbital)
-    this.mode_ = '2D';
+    this.is3D_ = false; // not yet implemented
 
     //debugging
     this.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
@@ -216,6 +216,7 @@ export class App {
           container: this.container_,
           geoCenter: this.geoCenter_,
           isMobile: this._isMobile,
+          is3D: this.is3D_,
           zoom: this.zoom_,
           zerosRemoved: this.zerosRemoved_
         });
@@ -311,8 +312,8 @@ export class App {
       // set raycaster threshold (for tooltip hover)
       this.viewer.raycaster.params.Points.threshold = layer.dataset.resolution;
 
-      //get data to show
-      layer.dataset.getData(this.viewer.extGeo, () => { this.draw(layer); });
+      //get data to show if necessary
+      //layer.dataset.getData(this.viewer.extGeo, () => { this.draw(layer); });
 
       //draw cells
       this.draw(layer);
@@ -324,13 +325,29 @@ export class App {
     }
   }
 
-  getDefaultAppWidth(app) {
-    return this.container_.clientWidth == window.innerWidth ? this.container_.clientWidth - 1 : this.container_.clientWidth;
+  
+  /**
+ * Draw a layer.
+ * 
+ * @param {Layer} layer 
+ */
+  draw(layer) {
+
+    //get cells to draw
+    let geoExt = this._isMobile ? this.viewer.envelopeToMobile(this.viewer.getCurrentViewExtent()) : this.viewer.getCurrentViewExtent();
+    let cells = layer.dataset.getCells(geoExt);
+
+    if (cells.length > 0) {
+      // count cells
+      if (this.cellCount_) GUI.updateCellCount(cells.length);
+
+      //draw cells, style by style
+      for (const style of layer.styles)
+        style.draw(cells, layer.dataset.resolution, this.viewer)
+    }
   }
 
-  getDefaultAppHeight(app) {
-    return this.container_.clientHeight == "0" ? window.innerHeight - 1 : this.container_.clientHeight;
-  }
+
 
   /**
   * TODO: validate all app configurations
@@ -381,28 +398,7 @@ export class App {
         Loading.hideLoading();
 
         // for mobile devices
-        if (this._isMobile) {
-          // fix for d3's pan and zoom not working correctly on mobile devices with webgl, we scale the coordinates to a webgl-friendly range
-          this.viewer.mobileCoordScale = this.defineMobileCoordScale(grid.cells);
-
-          this.mobileCellSize_ = 0.001;
-          grid.resolution = this.defineMobileResolution(grid.cells[0]);
-
-          // transform mobile coords
-          if (this._isMobile) {
-            grid.cells.forEach((cell) => {
-              let x = this.viewer.mobileCoordScale(cell.x);
-              let y = this.viewer.mobileCoordScale(cell.y);
-              cell.x = x;
-              cell.y = y;
-            })
-          }
-
-          // convert to mobile-friendly coordinates
-          if (this.geoCenter_) this.geoCenter([this.viewer.mobileCoordScale(this.geoCenter_[0]), this.viewer.mobileCoordScale(this.geoCenter_[1])]);
-          if (this.zoom_) this.zoom(0.1)
-          //if (grid.minZoom) grid.minZoom = 
-        }
+        if (this._isMobile) this.applyMobileSettings(grid);
 
         // draw cells
         this.redraw();
@@ -411,23 +407,36 @@ export class App {
     )
   }
 
+
+
+
   /**
-   * Draw a layer.
-   * 
-   * @param {Layer} layer 
+   * @description Transforms cell coordinates to cartesian coordinates from -1 to 1, cell resolution and the camera Z position
+   * @param {CSVGrid} grid
+   * @memberof App
    */
-  draw(layer) {
+  applyMobileSettings(grid) {
+    // fix for d3's pan and zoom not working correctly on mobile devices with webgl, we scale the coordinates to a webgl-friendly range
+    this.viewer.mobileCoordScale = this.defineMobileCoordScale(grid.cells);
 
-    //get cells to draw
-    let geoExt = this._isMobile ? this.viewer.envelopeToMobile(this.viewer.getCurrentViewExtent()) : this.viewer.getCurrentViewExtent();
-    let cells = layer.dataset.getCells(geoExt);
+    // transform mobile coords
+    if (this._isMobile) {
+      grid.cells.forEach((cell, index) => {
+        grid.cells[index].x = this.viewer.mobileCoordScale(cell.x);
+        grid.cells[index].y = this.viewer.mobileCoordScale(cell.y);
+      });
+    }
 
-    //draw cells, style by style
-    for (const style of layer.styles)
-      style.draw(cells, layer.dataset.resolution, this.viewer)
+    //set grid resolution to mobile
+    let originalResolution = grid.resolution;
+    let mobileResolution = this.defineMobileResolution(grid.cells, grid.resolution);
+    this.viewer.mobileResolutionScale = originalResolution / mobileResolution;
+    grid.resolution = mobileResolution;
 
-    //show if hidden
-    //this.showLayer(layer);
+    // convert other settings to mobile-friendly coordinates
+    if (this.geoCenter_) this.geoCenter([this.viewer.mobileCoordScale(this.geoCenter_[0]), this.viewer.mobileCoordScale(this.geoCenter_[1])]);
+    if (this.zoom_) this.zoom(0.1);
+    //if (grid.minZoom) grid.minZoom = 
   }
 
   /**
@@ -482,13 +491,6 @@ export class App {
                     parseFloat(c.y)
                   ];
                 }
-              }
-
-              // define pan & zoom for 2D apps
-              if (this.mode_ == '2D') {
-                //Zoom.addPanAndZoom(app);
-              } else if (this.mode_ == '3D') {
-                this.viewer.camera.camera.createOrbitControls(app)
               }
 
 
@@ -580,6 +582,12 @@ export class App {
   }
 
 
+  /**
+   * @description defines a scaling function for transforming geographic coordinates into webgl cartesian coordinates (-1 to 1)
+   * @param {Array<Cell>} cells
+   * @return {d3scale.scaleLinear} 
+   * @memberof App
+   */
   defineMobileCoordScale(cells) {
     let mobileCoordScale;
 
@@ -599,47 +607,23 @@ export class App {
 
 
   /**
-   * @description define mobile resolution to webgl coords
-   * @return {*} 
+   * @description define mobile resolution in webgl
+   * @return {Number} 
    * @memberof App
    */
-  defineMobileResolution(resolution, cell) {
+  defineMobileResolution(cells, resolution) {
     let newResolution;
 
     if (!this.mobileCellSize_) { // cell size not set by user
 
-      // distance in x coordinates between two neighbouring cells is the new resolution
-      // ensure the cells are neighbours
-      // cells.sort(function (a, b) { return a.x - b.x });
-
-      // // use the first cell, and find the next cell with a distinct X value
-      // let x1 = cells[0].x;
-      // let x2;
-      // cells.some(function (cell) {
-      //   if (cell.x !== x1) {
-      //     x2 = cell.x;
-      //     return true;
-      //   }
-      // });
-
-      // //we then calculate the difference between two distinct X coordinates in mobile (webgl) coords
-      // // note: this only works if cells are next to each other. 
-      // // For this to work we would need the minimum distance between two X coordinates out of two adjacent neighbours
-      // let mobileXCoord1 = this.mobileCoordScale(x1)
-      // let mobileXCoord2 = this.mobileCoordScale(x2)
-      // let difference = Math.abs(mobileXCoord1 - mobileXCoord2);
-      // difference = difference * 2;
-
-      // //compare old coordainte vs new and use difference to scale resolution
-      // let original = cells[0].x;
-      // let mobile = this.mobileCoordScale(x1);
-
-      let original = cell.x;
-      let mobile = this.mobileCoordScale(original);
-      let difference = original / mobile;
+      // distance between two X coordinates out of two adjacent neighbours
+      let mobileXCoord1 = this.viewer.mobileCoordScale(0)
+      let mobileXCoord2 = this.viewer.mobileCoordScale(resolution)
+      let difference = Math.abs(mobileXCoord1 - mobileXCoord2);
+      difference = difference * 2;
 
       //giving us our new cell size
-      newResolution = resolution / difference;
+      newResolution = difference / window.devicePixelRatio;
 
     } else if (this.mobileCellSize_) {
       // set manually
@@ -1299,4 +1283,14 @@ export class App {
       }
     })
   }
+
+  getDefaultAppWidth() {
+    return this.container_.clientWidth == window.innerWidth ? this.container_.clientWidth - 1 : this.container_.clientWidth;
+  }
+
+  getDefaultAppHeight() {
+    return this.container_.clientHeight == "0" ? window.innerHeight - 1 : this.container_.clientHeight;
+  }
 }
+
+
