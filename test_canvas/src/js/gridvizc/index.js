@@ -51,12 +51,11 @@ export const CompositionStyle = function (color_, type, size) {
 }
 
 import { SegmentStyle as SegmentStyle_ } from "./style/SegmentStyle"
-export const SegmentStyle = function (orientation, color, length, width) {
-    return new SegmentStyle_(orientation, color, length, width)
+export const SegmentStyle = function (orientation, color_, length, width) {
+    return new SegmentStyle_(orientation, color_, length, width)
 }
 
 import { TextStyle as TextStyle_ } from "./style/TextStyle"
-export const TextStyle = function (text, color, fontSize, fontFamily) {
-    return new TextStyle_(text, color, fontSize, fontFamily)
+export const TextStyle = function (text, color_, fontSize, fontFamily, fontWeight) {
+    return new TextStyle_(text, color_, fontSize, fontFamily, fontWeight)
 }
-

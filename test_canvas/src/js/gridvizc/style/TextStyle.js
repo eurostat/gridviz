@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Size } from "../Style"
+import { Style } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
