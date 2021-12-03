@@ -1,16 +1,13 @@
-TODO test GriddedStatsTiler2
-TODO fix tiler rounding issue
 
 TODO style kernel smoothing
+TODO adaptative style: with automated classification taking into account only the data within the viewshed
 TODO mouse over: Show rectangle.
 
 TODO zoom/pan smartphone/touchscreen - use d3 events - TODO make new canvasgeo based on d3 zoom/pan/over
 TODO modularise further canvasgeo (make ctx private ?)
 
-TODO adaptative style: with automated classification taking into account only the data within the viewshed
 TODO style radar
 TODO style trendline - ENACT dataset ?
-TODO fix segment
 
 TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache and remove inpriority the old-unused tiles.
 
@@ -20,4 +17,5 @@ TODO background - images
 TODO foreground - geo names
 
 TODO finalise demos
+TODO fix segment
 
