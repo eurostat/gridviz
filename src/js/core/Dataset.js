@@ -1,7 +1,7 @@
 //@ts-check
 
 /** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
-/** @typedef {{x: number, y: number}} Cell */
+/** @typedef {{x: number, y: number, color:string?}} Cell */
 
 /**
  * A dataset of grid cells.

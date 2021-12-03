@@ -62,6 +62,7 @@ export class ColorSizeShapeStyle extends Style {
             //color
             let c = this.color ? new Color(this.color(cell)) : new Color("#EA6BAC");
             this.colors.push(c.r, c.g, c.b);
+            cell.color = this.color(cell) || '#EA6BAC'; //save for tooltip
 
             //size - in ground meters
             this.sizes.push(this.size ? this.size(cell) : resolution);

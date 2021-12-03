@@ -56,19 +56,26 @@ export class Tooltip {
 
     updateTooltip(cell, left, top, color) {
         //add row to table if necessary
-        for (const field in cell) { 
-            if (!this.tooltipTableRows[field]) {
-                // add new row
-                this.appendRowToTooltip(field);
-                this.tooltipTableRows[field].innerHTML = field + ": " + cell[field];
-            } else if (this.tooltipTableRows[field]) {
-                //update existing row
-                this.tooltipTableRows[field].innerHTML = field + ": " + cell[field];
+        for (const field in cell) {
+            if (field !== "color") {
+                if (this.showCoordinates == false && field =="x" || field =="y") {
+                    continue;
+                } else {
+                    if (!this.tooltipTableRows[field]) {
+                        // add new row
+                        this.appendRowToTooltip(field);
+                        this.tooltipTableRows[field].innerHTML = `<th>${field}</th><th><strong>${cell[field]}</strong></th>`
+                    } else if (this.tooltipTableRows[field]) {
+                        //update existing row
+                        this.tooltipTableRows[field].innerHTML = `<th>${field}</th><th><strong>${cell[field]}</strong></th>`
+                    }
+                }
             }
         }
         this.tooltipNode.style.left = (left + this.xOffset) + "px";
         this.tooltipNode.style.top = (top + this.yOffset) + "px";
         this.pointTipNode.style.background = color || 'none';
+        this.ensureTooltipOnScreen();
     }
 
     appendRowToTooltip(field) {
@@ -99,18 +106,17 @@ export class Tooltip {
 * @description Prevents the tooltip from appearing off screen
 * 
 */
-ensureTooltipOnScreen() {
-    //too far right
-    if (this.tooltipNode.offsetLeft > this.parentNode.clientWidth - this.tooltipNode.clientWidth) {
-        this.tooltipNode.style.left = this.tooltipNode.offsetLeft - (this.tooltipNode.clientWidth + this.xOffset * 2) + "px";
+    ensureTooltipOnScreen() {
+        //too far right
+        if (this.tooltipNode.offsetLeft > this.parentNode.clientWidth - this.tooltipNode.clientWidth) {
+            this.tooltipNode.style.left = this.tooltipNode.offsetLeft - (this.tooltipNode.clientWidth + this.xOffset * 2) + "px";
 
+        }
+        //too far down
+        if (this.tooltipNode.offsetTop + this.tooltipNode.clientHeight > this.parentNode.clientHeight) {
+            this.tooltipNode.style.top = this.tooltipNode.offsetTop - (this.tooltipNode.clientHeight + this.yOffset * 2) + "px";
+        }
     }
-    //too far down
-    if (this.tooltipNode.offsetTop + this.tooltipNode.clientHeight > this.parentNode.clientHeight) {
-        this.tooltipNode.style.top = this.tooltipNode.offsetTop - (this.tooltipNode.clientHeight + this.yOffset * 2) + "px";
-    }
-}
-
 }
 
 

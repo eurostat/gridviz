@@ -842,10 +842,7 @@ export class App {
         //show tooltip & update its content
         this._tooltip.show();
 
-        let left = mouse_position[0];
-        let top = mouse_position[1];
-        let color = 'blue'
-        this._tooltip.updateTooltip(cell,left,top,color)
+        this._tooltip.updateTooltip(cell,mouse_position[0],mouse_position[1],cell.color|| 'none')
 
       } else {
         this._tooltip.hide();
@@ -864,8 +861,8 @@ export class App {
   checkIntersects(mouse_position) {
     let mouse_vector = this.mouseToThree(...mouse_position);
     this.viewer.raycaster.setFromCamera(mouse_vector, this.viewer.camera.camera);
-    let objectToIntersect;
-    let intersects = this.viewer.raycaster.intersectObjects(this.viewer.scene.children); // intersect first layer TODO: intersect all layers
+    // intersect visible layers
+    let intersects = this.viewer.raycaster.intersectObjects(this.viewer.scene.children.filter((obj)=>{return obj.visible == true;})); 
     if (intersects[0]) {
       let sorted_intersects = this.sortIntersectsByDistanceToRay(intersects);
       let intersect = sorted_intersects[0];
