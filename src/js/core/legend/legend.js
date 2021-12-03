@@ -1,4 +1,5 @@
-// logic for creating either continous legends or "cell" legends
+//@ts-check
+/** @typedef {{type: String, width: Number, height:Number, orientation: String, title:String, titleWidth: Number, format: String, cells:Number, shapeWidth:Number }} LegendConfig */
 
 import * as LEGEND from "d3-svg-legend";
 import { select, create, selectAll } from "d3-selection";
@@ -9,127 +10,139 @@ import { format } from "d3-format";
 import * as d3scale from "d3-scale";
 import { range, quantile } from "d3-array";
 
-let title;
 
-export const defaultLegendConfig = {
-    type: "continuous", //cells vs continuous
-    width: 300,
-    height: null,
-    orientation: "horizontal",
-    title: null, //if null, will default to the current colorField
-    titleWidth: 50,
-    format: ".0s",
-    cells: 5,
-    shapeWidth: 30
-  };
+export class Legend {
 
-/**
-   * 
-   * @function createLegend
-   * @description Add svg legend to DOM using d3-svg-legend
-   */
-export function createLegend(app, grid) {
-    // title for color legend defaults to colorField
-    if (!app.legend_.title) title = grid.colorField; else title = app.legend_.title;
+    /**
+     * Creates an instance of Legend.
+     * @param {LegendConfig} config
+     * @memberof Legend
+     */
+    constructor(config) {
+        this.type = config.type || "continuous", //cells vs continuous
+            this.width = config.width || 300,
+            this.height = config.height || null,
+            this.orientation = config.orientation || "horizontal",
+            this.title = config.title || null, //if null, will default to the current colorField
+            this.titleWidth = config.titleWidth || 50,
+            this.format = config.format || ".0s",
+            this.cells = config.cells || 5,
+            this.shapeWidth = config.shapeWidth || 30;
 
-    if (app.legend_.type == "cells") {
-        createCellsLegend(app)
-    } else if (app.legend_.type == "continuous") {
-        createContinuousLegend(app)
+        this.createLegend();
     }
+
+    /**
+     * @description Creates a legend
+     * @memberof Legend
+     */
+    createLegend() {
+        if (this.type == "cells") this.createCellsLegend();
+        if (this.type == "continuous") this.createContinuousLegend();
+    }
+
+    /**
+     * @description
+     * @param {*} layer
+     * @memberof Legend
+     */
+    createCellsLegend(layer) {
+        let legendContainer = select("#gridviz-legend");
+        if (layer.legend_.orientation == "horizontal") {
+            legendContainer.attr("class", "gridviz-legend-horizontal gridviz-plugin");
+        } else {
+            legendContainer.attr("class", "gridviz-legend-vertical gridviz-plugin");
+        }
+        let legendSvg =
+            legendContainer.append("g")
+                .attr("class", "gridviz-legend-svg")
+                .attr("height", layer.legend_.height)
+                .attr("width", layer.legend_.width)
+                .attr("transform", "translate(10,15)"); //padding
+
+
+        layer.__Legend = LEGEND.legendColor()
+            .shapeWidth(layer.legend_.shapeWidth)
+            .cells(layer.legend_.cells)
+            .labelFormat(format(layer.legend_.format))
+            .orient(layer.legend_.orientation)
+            .scale(layer.colorScaleFunction_)
+            .title(layer.title)
+            .titleWidth(layer.legend_.titleWidth)
+
+        if (layer.thresholds_) {
+            layer.__Legend.labels(thresholdLabels)
+        }
+
+        legendSvg.call(layer.__Legend);
+
+        //adjust width/height
+        if (!layer.legend_.height) {
+            layer.legend_.height = 320
+        }
+        legendContainer.style("height", layer.legend_.height + "px");
+        legendContainer.style("width", layer.legend_.width + "px");
+        //legend.style("height", app.legend_.height +"px");
+    }
+
+
+    /**
+     * @description
+     * @param {*} app
+     * @memberof Legend
+     */
+    createContinuousLegend(app) {
+        let container;
+        if (document.getElementById("gridviz-legend")) {
+            container = select("#gridviz-legend");
+        } else {
+            container = create("div").attr("id", "gridviz-legend");
+            container.attr("class", "gridviz-plugin");
+            app.container_.appendChild(container.node());
+        }
+
+        let tickSize = app.legend_.tickSize || 6;
+        let width = app.legend_.width || 500;
+        let height = app.legend_.height || 44 + tickSize;
+        let marginBottom = app.legend_.marginBottom || 16 + tickSize;
+        let ticks = app.legend_.ticks || width / 64;
+
+        app.__Legend = colorLegend({
+            color: app.colorScaleFunction_,
+            title: title,
+            tickSize: tickSize,
+            width: width,
+            height: height,
+            marginBottom: marginBottom,
+            ticks: ticks,
+            marginTop: app.legend_.marginRight || 18,
+            marginRight: app.legend_.marginRight || 0,
+            marginLeft: app.legend_.marginLeft || 0,
+            tickFormat: app.legend_.tickFormat || ".0f",
+            tickValues: app.thresholds_ || undefined
+        });
+
+        container.node().appendChild(app.__Legend);
+    }
+
+    /**
+     * @description remove DOM element and rebuild legend
+     * @function updateLegend
+     */
+    updateLegend() {
+        // clear and create new
+        var l = selectAll(".gridviz-legend-svg").remove();
+        setTimeout(()=> this.createLegend(), 1000);
+    }
+
 }
 
 /**
-   * 
-   * @function createCellsLegend 
-   * @description uses npm package 'd3-svg-legend' to build a "cells" style legend
-   */
-function createCellsLegend(app) {
-    let legendContainer;
-    if (document.getElementById("gridviz-legend")) {
-        legendContainer = select("#gridviz-legend");
-    } else {
-        legendContainer = create("svg").attr("id", "gridviz-legend");
-        app.container_.appendChild(legendContainer.node());
-    }
-    if (app.legend_.orientation == "horizontal") {
-        legendContainer.attr("class", "gridviz-legend-horizontal gridviz-plugin");
-    } else {
-        legendContainer.attr("class", "gridviz-legend-vertical gridviz-plugin");
-    }
-    let legendSvg =
-        legendContainer.append("g")
-            .attr("class", "gridviz-legend-svg")
-            .attr("height", app.legend_.height)
-            .attr("width", app.legend_.width)
-            .attr("transform", "translate(10,15)"); //padding
-
-
-    app.__Legend = LEGEND.legendColor()
-        .shapeWidth(app.legend_.shapeWidth)
-        .cells(app.legend_.cells)
-        .labelFormat(format(app.legend_.format))
-        .orient(app.legend_.orientation)
-        .scale(app.colorScaleFunction_)
-        .title(title)
-        .titleWidth(app.legend_.titleWidth)
-
-    if (app.thresholds_) {
-        app.__Legend.labels(thresholdLabels)
-    }
-
-    legendSvg.call(app.__Legend);
-
-    //adjust width/height
-    if (!app.legend_.height) {
-        app.legend_.height = 320
-    }
-    legendContainer.style("height", app.legend_.height + "px");
-    legendContainer.style("width", app.legend_.width + "px");
-    //legend.style("height", app.legend_.height +"px");
-}
-
-
-/**
-   * 
-   * @function createContinuousLegend
-   * @description creates a continuous color legend using d3. see https://observablehq.com/@gabgrz/color-legend
-   */
-function createContinuousLegend(app) {
-
-    let container;
-    if (document.getElementById("gridviz-legend")) {
-        container = select("#gridviz-legend");
-    } else {
-        container = create("div").attr("id", "gridviz-legend");
-        container.attr("class", "gridviz-plugin");
-        app.container_.appendChild(container.node());
-    }
-
-    let tickSize = app.legend_.tickSize || 6;
-    let width = app.legend_.width || 500;
-    let height = app.legend_.height || 44 + tickSize;
-    let marginBottom = app.legend_.marginBottom || 16 + tickSize;
-    let ticks = app.legend_.ticks || width / 64;
-
-    app.__Legend = colorLegend({
-        color: app.colorScaleFunction_,
-        title: title,
-        tickSize: tickSize,
-        width: width,
-        height: height,
-        marginBottom: marginBottom,
-        ticks: ticks,
-        marginTop: app.legend_.marginRight || 18,
-        marginRight: app.legend_.marginRight || 0,
-        marginLeft: app.legend_.marginLeft || 0,
-        tickFormat: app.legend_.tickFormat || ".0f",
-        tickValues: app.thresholds_ || undefined
-    });
-
-    container.node().appendChild(app.__Legend);
-
-}
+ * @description
+ * @param {*} color
+ * @param {number} [n=256]
+ * @return {HTMLElement} 
+ */
 function ramp(color, n = 256) {
     const canvas = document.createElement("CANVAS")
     canvas.width = n;
@@ -141,6 +154,7 @@ function ramp(color, n = 256) {
     }
     return canvas;
 }
+
 
 /**
    * 
@@ -270,13 +284,4 @@ function thresholdLabels({
     return generatedLabels[i]
 }
 
-/**
- * @description remove DOM element and rebuild legend
- * @function updateLegend
- */
-export function updateLegend(app, grid) {
-    // TODO: make less hacky :)
-    var l = selectAll(".gridviz-legend-svg").remove();
-    setTimeout(createLegend(app, grid), 1000);
-}
 

@@ -14,6 +14,12 @@ export function addHeadingsContainerToDOM(app) {
     app.container_.appendChild(app.headingsNode);
 }
 
+export function addLegendContainerToDOM(app) {
+    legendContainer = document.createElement("svg")
+    legendContainer.id = "gridviz-legend";
+    app.container_.appendChild(legendContainer);
+}
+
 /**
 *
 *

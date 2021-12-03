@@ -1,4 +1,4 @@
-//constants to be used in all gridviz components
+//constants to be used across gridviz
 export const nuts_base_URL = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2016/";
 // export const placenames = {
 //     baseURL: "https://ec.europa.eu/regio/regiogis/gis/arcgis/rest/services/Urban/urban_centres_towns_v3/MapServer/0/query?",

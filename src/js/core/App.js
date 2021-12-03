@@ -15,7 +15,6 @@ import { WEBGL } from '../lib/threejs/WebGL'
 // gridviz modules
 import * as Tooltip from "./tooltip/tooltip.js";
 import * as Placenames from "./placenames/placenames.js";
-import * as Legend from "./legend/legend.js";
 import * as Buttons from "./gui/buttons.js";
 import * as Dropdowns from "./gui/dropdowns.js";
 import * as GUI from "./gui/gui";
@@ -24,10 +23,8 @@ import { Viewer } from "./viewer/viewer.js";
 import { Layer } from './Layer';
 import { Style } from './Style';
 import { Dataset } from './Dataset';
+import { Legend } from './legend/legend';
 
-import { CirclesLayer } from "./layers/CirclesLayer.js";
-import { SquaresLayer } from "./layers/SquaresLayer.js";
-import { CuboidsLayer } from "./layers/CuboidsLayer";
 import { LabelsLayer } from "./placenames/LabelsLayer.js";
 import { GeoJsonLayer } from "./GeoJsonLayer";
 
@@ -61,26 +58,54 @@ export class App {
    * */
     this.layers = [];
 
+    /**
+    * Container where viewer will be appended
+    * @type {HTMLElement}
+    * */
     this.container_ = document.body;
-    this.height_ = null; //takes container width/height
+
+    /**
+    * Height of the viewport
+    * @type {Number}
+    * */
+    this.height_ = null;
+
+    /**
+    * Width of the viewport
+    * @type {Number}
+    * */
     this.width_ = null;
+
+    /**
+    * Background color of the app
+    * @type {String}
+    * */
     this.backgroundColor_ = "#ffffff";
 
-    //threejs scene (2D = orthographic, 3D = Orbital)
-    this.is3D_ = false; // not yet implemented
-
-    //debugging
-    this.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
-
-    // TODO: move to layer class:
-    this.lineColor_ = "rgb(0, 0, 0)";
-    this.lineWidth_ = 0.0012;
+    /**
+    * Color of cell when highlighted by mouse event
+    * @type {String}
+    * */
     this.highlightColor_ = "yellow"
-    this.loadingIcon_ = "ring"; //ripple | ring | ellipsis | roller
 
-    // legend
+    /**
+    * style of loading spinner
+    * @type {String} ripple | ring | ellipsis | roller
+    * */
+    this.loadingIcon_ = "ring";
+
+    /**
+    * Whether or not to show a legend
+    * @type {Boolean}
+    * */
     this.showLegend_ = true;
+
+    /**
+    * Whether or not to show a legend
+    * @type {LegendConfig}
+    * */
     this.legend_ = Legend.defaultLegendConfig; // default legend config
+
     this.__Legend; // legend stored here
 
     // default tooltip config
@@ -139,6 +164,12 @@ export class App {
     this.zoom_ = null; //initial camera position Z
     this.mobileCellSize_ = null; //cell size for mobiles
 
+    //threejs scene (2D = orthographic, 3D = Orbital)
+    this.is3D_ = false; // not yet implemented
+
+    //debugging
+    this.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
+
     //definition of generic accessors based on the name of each parameter
     for (var p in app)
       (function () {
@@ -160,26 +191,12 @@ export class App {
   }
 
 
-  //override some accesors
-  legend(v) {
-    for (let key in v) {
-      this.legend_[key] = v[key];
-    }
-    //update legend if necessary
-    if (this.__Legend) {
-      Legend.updateLegend(this, this.gridConfigs[this._currentResolution])
-    }
-    return this;
-  };
-
   tooltip(v) {
     for (let key in v) {
       this.tooltip_[key] = v[key];
     }
     return this;
   };
-
-
 
   /**
    *  TODO: resolve a promise once build is complete
@@ -266,7 +283,6 @@ export class App {
       // warn user that their device is not compatible with WebGL
       const warning = WEBGL.getWebGLErrorMessage();
       document.getElementById('container').appendChild(warning);
-
     }
   };
 
@@ -308,9 +324,21 @@ export class App {
       };
 
       // set current resolution for placename requests
-      this._currentResolution = layer.dataset.resolution;
+      this.updateCurrentResolution( layer.dataset.resolution );
+
       // set raycaster threshold (for tooltip hover)
-      this.viewer.raycaster.params.Points.threshold = layer.dataset.resolution;
+      this.updateRaycasterThreshold( layer.dataset.resolution);
+      
+      //create or update legend
+      if (this.showLegend_) {
+        if (layer.legend) {
+          if (layer.__Legend) {
+            layer.__Legend.updateLegend();
+          } else {
+            layer.__Legend = new Legend(layer.legend);
+          }
+        }
+      }
 
       //get data to show if necessary
       //layer.dataset.getData(this.viewer.extGeo, () => { this.draw(layer); });
@@ -325,7 +353,7 @@ export class App {
     }
   }
 
-  
+
   /**
  * Draw a layer.
  * 
@@ -499,16 +527,7 @@ export class App {
               // add to threeJS viewer
               this.viewer.scene.add(newLayer)
 
-              //create or update legend
-              if (this.showLegend_) {
-                if (this.legend_) {
-                  if (this.__Legend) {
-                    Legend.updateLegend(this, layerConfig);
-                  } else {
-                    Legend.createLegend(this, layerConfig);
-                  }
-                }
-              }
+
 
               Loading.hideLoading();
               if (!this.animating) {
@@ -728,6 +747,7 @@ export class App {
     if (this.subtitle_) {
       GUI.addSubtitleToDOM(this);
     }
+      GUI.addLegendContainerToDOM(this);
     if (this.cellCount_) {
       GUI.addCellCountToDOM(this);
     }
@@ -790,9 +810,9 @@ export class App {
     this.colorSchemeName_ = scheme;
     this.updateColorScale();
     Points.updatePointsColors(app, this.gridConfigs[this._currentResolution], this.gridCaches[this._currentResolution]);
-    if (this.legend_) {
-      Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
-    }
+    // if (this.layer._legend) {
+    //   this.layer._legend.updateLegend();
+    // }
   }
 
   /**
@@ -824,9 +844,9 @@ export class App {
     //update the thee.js point colours
     Points.updatePointsColors(app, this.gridConfigs[this._currentResolution], this.gridCaches[this._currentResolution]);
 
-    if (this.legend_) {
-      Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
-    }
+    // if (this.legend_) {
+    //   Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
+    // }
   }
 
   /**
@@ -848,9 +868,9 @@ export class App {
     this.colorScaleName_ = scale;
     this.updateColorScale();
     Points.updatePointsColors(app, this.gridConfigs[this._currentResolution], this.gridCaches[this._currentResolution]);
-    if (this.legend_) {
-      Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
-    }
+    // if (this.legend_) {
+    //   Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
+    // }
   }
 
   /**
@@ -872,9 +892,9 @@ export class App {
     this.gridConfigs[this._currentResolution].sizeField = field;
     this.updateSizeScale();
     Points.updatePointsSizes(app, this.gridCaches[this._currentResolution]);
-    if (this.__Legend) {
-      Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
-    }
+    // if (this.__Legend) {
+    //   Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
+    // }
   }
 
   /**
@@ -1152,6 +1172,12 @@ export class App {
   }
   updateSizeScale() {
     updateSizeScaleFunction();
+  }
+  updateCurrentResolution(res) {
+    this._currentResolution = res;
+  }
+  updateRaycasterThreshold(threshold) {
+    this.viewer.raycaster.params.Points.threshold = threshold;
   }
 
   mouseToThree(mouseX, mouseY) {
