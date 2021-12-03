@@ -10,9 +10,6 @@ let tooltipContainer,
     tooltipTableBody,
     tooltipRows,
     pointTip,
-    crsTip,
-    xTip,
-    yTip,
     LAUNameTip,
     LAUCodeTip,
     NUTSCodeTip,
@@ -22,68 +19,98 @@ let tooltip_state = {
     display: "none"
 };
 
-export const defaultTooltipConfig ={
-    eventType: "mousemove", // click vs mousemove
-    showLAU: false,
-    showEPSG: false,
-    showNUTS: false,
-    showCoordinates: false,
-    xOffset: 15,
-    yOffset: 15
-};
+export class Tooltip {
 
+    constructor(parentNode, config) {
 
-/**
-* @description Appends tooltip container to the scene
-* @function createTooltipContainer
-* @param {Object} app app object
-*/
-export function createTooltipContainer(app) {
-    // Initial tooltip state
-    tooltip_state = {
-        display: "none"
-    };
+        this.parentNode = parentNode;
+        this.eventType = config.eventType || "mousemove";
+        this.showLAU = config.LAU || false;
+        this.showEPSG = config.EPSG || false;
+        this.showNUTS = config.NUTS || false;
+        this.showCoordinates = config.showCoordiantes || false;
+        this.xOffset = config.xOffset || 15;
+        this.yOffset = config.yOffset || 15;
+        this.tooltipTableRows = {}; // store table rows <tr>
+        this.tooltipNode = null; //HTMLElement
 
-    //inject tooltip HTML to DOM
-    tooltipTemplate = document.createRange()
-        .createContextualFragment(`<div id="gridviz-tooltip">
-    <div id="gridviz-labeltip">
+        this.appendTooltipContainer(this.parentNode);
+    }
 
-    <table>
-     <thead></thead>
-     <tbody id="tooltipBody">
+    /**
+    * @description Appends tooltip container to the scene
+    * @function appendTooltipContainer
+    * @param {HTMLElement} parentNode node upon which the tooltip is appended
+    */
+    appendTooltipContainer(parentNode) {
 
-     </tbody>
-    </table>
-   
-    </div>
-<div id="gridviz-pointtip"></div>
-</div>`);
-    app.container_.append(tooltipTemplate);
+        //inject tooltip HTML to DOM
+        let tooltipTemplate = document.createRange()
+            .createContextualFragment(`<div id="gridviz-tooltip">
+                <div id="gridviz-labeltip">
 
-    //append row for each field
-    tooltipTableBody = document.querySelector("#tooltipBody");
-    tooltipRows = {}; // store row nodes for efficient updating
-    app._cellFields.forEach((field) => {
-        appendRowToTooltip(field);
-    });
+                <table>
+                <thead></thead>
+                <tbody id="tooltipTableBody">
 
-    // optional tooltip rows
-    appendRowToTooltip('x');
-    appendRowToTooltip('y');
-    appendRowToTooltip('launame');
-    appendRowToTooltip('laucode');
-    appendRowToTooltip('nutscode');
-    appendRowToTooltip('crs');
+                </tbody>
+                </table>
+            
+                </div>
+            <div id="gridviz-pointtip"></div>
+            </div>`);
+        parentNode.append(tooltipTemplate);
 
-    tooltip = document.querySelector("#gridviz-tooltip");
-    pointTip = document.querySelector("#gridviz-pointtip");
+        this.tooltipTableBody = document.querySelector("#tooltipTableBody");
+        this.tooltipNode = document.querySelector("#gridviz-tooltip");
+        this.pointTipNode = document.querySelector("#gridviz-pointtip");
 
-    tooltipContainer = new Object3D();
-    app.viewer.scene.add(tooltipContainer);
+    }
+
+    updateTooltip(cell, left, top, color) {
+        //add row to table if necessary
+        for (const field in cell) { 
+            if (!this.tooltipTableRows[field]) {
+                // add new row
+                this.appendRowToTooltip(field);
+                this.tooltipTableRows[field].innerHTML = field + ": " + cell[field];
+            } else if (this.tooltipTableRows[field]) {
+                //update existing row
+                this.tooltipTableRows[field].innerHTML = field + ": " + cell[field];
+            }
+        }
+        this.tooltipNode.style.left = (left + this.xOffset) + "px";
+        this.tooltipNode.style.top = (top + this.yOffset) + "px";
+        this.pointTipNode.style.background = color || 'none';
+    }
+
+    appendRowToTooltip(field) {
+        let row = document.createElement('tr');
+        row.id = field + 'tip';
+        this.tooltipTableBody.appendChild(row)
+        this.tooltipTableRows[field] = row;
+    }
+
+    /**
+    * @function hide
+    * @description sets tooltip display to none
+    */
+    hide() {
+        this.tooltipNode.style.display = "none";
+    }
+
+    /**
+    * @function show
+    * @description sets tooltip display to block
+    */
+    show() {
+        this.tooltipNode.style.display = "block";
+    }
+
 }
 
-function appendRowToTooltip(field) {
+
+function appendRowToTooltip(tooltipTableBody, field) {
     let row = document.createElement('tr');
     row.id = field + 'tip';
     tooltipTableBody.appendChild(row)
@@ -126,7 +153,7 @@ export function updateTooltip(app) {
     })
 
 
-    if (app.tooltip_.showCoordinates) {
+    if (this.showCoordinates) {
         tooltipRows.x.innerHTML = `<th><strong>x:</strong></th>
         <th>${x}</th>`
 
@@ -134,7 +161,7 @@ export function updateTooltip(app) {
         <th>${y}</th>`
     }
 
-    if (app.tooltip_.showEPSG) {
+    if (this.showEPSG) {
         tooltipRows.crstip.innerHTML = `<th><strong>CRS:</strong></th>
         <th>EPSG:${app.EPSG_}</th>`
     }
@@ -146,7 +173,7 @@ export function updateTooltip(app) {
         let lauRequest = `${CONSTANTS.nutsAPIBaseURL}lau?x=${x}&y=${y}&proj=${app.EPSG_}&year=2019&level=3`;
 
         //get both (promise.all required to ensure tooltip on screen after both requests have resolved)
-        if (app.tooltip_.showLAU && app.tooltip_.showNUTS) {
+        if (this.showLAU && this.showNUTS) {
             let promises = [json(nutsRequest), json(lauRequest)];
             Promise.all(promises).then((res) => {
 
@@ -181,7 +208,7 @@ export function updateTooltip(app) {
 
         } else {
             //get NUTS
-            if (app.tooltip_.showLAU) {
+            if (this.showLAU) {
 
                 json(nutsRequest).then(
                     json => {
@@ -201,7 +228,7 @@ export function updateTooltip(app) {
                         ensureTooltipOnScreen(app);
                         //console.error(err);
                     })
-            } else if (app.tooltip_.showNUTS) {
+            } else if (this.showNUTS) {
 
                 json(lauRequest).then(
                     json => {
@@ -241,14 +268,13 @@ export function updateTooltip(app) {
 function ensureTooltipOnScreen(app) {
     //too far right
     if (tooltip.offsetLeft > app.width_ - tooltip.clientWidth) {
-        tooltip.style.left = tooltip.offsetLeft - (tooltip.clientWidth + app.tooltip_.xOffset * 2) + "px";
+        tooltip.style.left = tooltip.offsetLeft - (tooltip.clientWidth + this.xOffset * 2) + "px";
 
     }
     //too far down
     if (tooltip.offsetTop + tooltip.clientHeight > app.height_) {
-        tooltip.style.top = tooltip.offsetTop - (tooltip.clientHeight + app.tooltip_.yOffset * 2) + "px";
+        tooltip.style.top = tooltip.offsetTop - (tooltip.clientHeight + this.yOffset * 2) + "px";
     }
-
 }
 
 
@@ -260,8 +286,8 @@ function ensureTooltipOnScreen(app) {
 * @param {*} cell // cell object intersected from the grid cache
 */
 export function showTooltip(app, mouse_position, cell) {
-    let left = mouse_position[0] + app.tooltip_.xOffset;
-    let top = mouse_position[1] + app.tooltip_.yOffset;
+    let left = mouse_position[0] + this.xOffset;
+    let top = mouse_position[1] + this.yOffset;
 
     // prepare tooltip settings from cell attributes
     for (const key in cell) {
@@ -278,13 +304,3 @@ export function showTooltip(app, mouse_position, cell) {
     updateTooltip(app);
 }
 
-/**
-* @function hideTooltip
-* @description sets tooltip display to none
-*/
-export function hideTooltip() {
-    if (tooltip && tooltip_state) {
-        tooltip.style.display = "none";
-        //updateTooltip();
-    }
-}

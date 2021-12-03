@@ -13,7 +13,7 @@ import { Vector3, Color, Points } from "three";
 import { WEBGL } from '../lib/threejs/WebGL'
 
 // gridviz modules
-import * as Tooltip from "./tooltip/tooltip.js";
+
 import * as Placenames from "./placenames/placenames.js";
 import * as Buttons from "./gui/buttons.js";
 import * as Dropdowns from "./gui/dropdowns.js";
@@ -24,6 +24,7 @@ import { Layer } from './Layer';
 import { Style } from './Style';
 import { Dataset } from './Dataset';
 import { Legend } from './legend/legend';
+import { Tooltip } from "./tooltip/tooltip.js";
 
 import { LabelsLayer } from "./placenames/LabelsLayer.js";
 import { GeoJsonLayer } from "./GeoJsonLayer";
@@ -100,16 +101,8 @@ export class App {
     * */
     this.showLegend_ = true;
 
-    /**
-    * Whether or not to show a legend
-    * @type {LegendConfig}
-    * */
-    this.legend_ = Legend.defaultLegendConfig; // default legend config
-
-    this.__Legend; // legend stored here
-
-    // default tooltip config
-    this.tooltip_ = Tooltip.defaultTooltipConfig;
+    // tooltip config
+    this.tooltip_ = {};
 
     //d3 Scaling & colouring stuff
     this.colorSchemeName_ = "interpolateBlues";
@@ -160,7 +153,7 @@ export class App {
     this.nutsLevel_ = 0;
     this.nutsSimplification_ = "10M"; //current nuts2json simplification
 
-    this._currentResolution = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
+
     this.zoom_ = null; //initial camera position Z
     this.mobileCellSize_ = null; //cell size for mobiles
 
@@ -178,19 +171,21 @@ export class App {
       })();
 
     // internal properties
-    this.pointsLayer = null; //threejs layer that will contain the grid "points"
+    this.threejsObject = null; //threejs layer that will contain the grid "points"
     this.animating = false;
 
     // previously highlighted/intersected cell
-    this.previousIntersect;
+    this._previousIntersect;
 
-    //grid data / configs
-    this.gridCaches = {}; //resolution: pointsArray
-    this.gridConfigs = {}; //resolution: config
+    this._currentResolution = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
 
   }
 
-
+  //overwrite some accessors
+  legend(v) {
+    console.log("App.Legend() method deprecated. Legend now specified at layer level.");
+    return this;
+  };
   tooltip(v) {
     for (let key in v) {
       this.tooltip_[key] = v[key];
@@ -238,11 +233,20 @@ export class App {
           zerosRemoved: this.zerosRemoved_
         });
 
+        //add tooltip
+        this._tooltip = new Tooltip(this.container_, this.tooltip_);
+
+        // window.resize
+        this.addResizeEvent();
+
+        // view.onHover
+        this.addMouseEventsToView();
+
         // add NUTS geometries to viewer as geojson
         if (this.nuts_) this.loadNuts2json(CONSTANTS.nuts_base_URL + this.EPSG_ + "/" + this.nutsSimplification_ + "/" + this.nutsLevel_ + ".json");
 
         //add titles, sources texts to DOM 
-        this.addInitialElementsToDOM()
+        this.addInitialElementsToDOM();
 
         // handle viewer's pan & zoom end
         this.viewer.on("zoomEnd", (e) => { this.onZoomEnd(e) });
@@ -292,7 +296,7 @@ export class App {
    * @memberof App
    */
   onZoomEnd(event) {
-    Tooltip.hideTooltip();
+    //this._tooltip.hide();
 
     // show/hide layers within new Envelope
     this.redraw();
@@ -324,11 +328,11 @@ export class App {
       };
 
       // set current resolution for placename requests
-      this.updateCurrentResolution( layer.dataset.resolution );
+      this.updateCurrentResolution(layer.dataset.resolution);
 
       // set raycaster threshold (for tooltip hover)
-      this.updateRaycasterThreshold( layer.dataset.resolution);
-      
+      this.updateRaycasterThreshold(layer.dataset.resolution);
+
       //create or update legend
       if (this.showLegend_) {
         if (layer.legend) {
@@ -353,14 +357,12 @@ export class App {
     }
   }
 
-
   /**
  * Draw a layer.
  * 
  * @param {Layer} layer 
  */
   draw(layer) {
-
     //get cells to draw
     let geoExt = this._isMobile ? this.viewer.envelopeToMobile(this.viewer.getCurrentViewExtent()) : this.viewer.getCurrentViewExtent();
     let cells = layer.dataset.getCells(geoExt);
@@ -374,8 +376,6 @@ export class App {
         style.draw(cells, layer.dataset.resolution, this.viewer)
     }
   }
-
-
 
   /**
   * TODO: validate all app configurations
@@ -435,9 +435,6 @@ export class App {
     )
   }
 
-
-
-
   /**
    * @description Transforms cell coordinates to cartesian coordinates from -1 to 1, cell resolution and the camera Z position
    * @param {CSVGrid} grid
@@ -467,104 +464,6 @@ export class App {
     //if (grid.minZoom) grid.minZoom = 
   }
 
-  /**
-  * Add a layer.
-  * 
-  * @param {LayerConfig} layerConfig The layer configuration
-  */
-  addGrid(layerConfig) {
-    //TODO: validate layerConfig
-    Loading.showLoading();
-    if (!layerConfig.cellSize && !layerConfig.sizeField) {
-      Loading.hideLoading();
-      let msg = "Please specify grid cell size in the units of its coordinate system";
-      console.error(msg);
-      alert(msg)
-
-    } else {
-
-      csv(layerConfig.url).then(
-        cells => {
-          if (cells) {
-            //validate cells
-            if (cells[0].x && cells[0].y && cells[0][layerConfig.colorField]) {
-              // save grid config
-              this.gridConfigs[layerConfig.cellSize] = layerConfig;
-              // set current app resolution (new grid cell size)
-              this._currentResolution = layerConfig.cellSize;
-              // set raycaster threshold (for tooltip hover)
-              this.viewer.raycaster.params.Points.threshold = layerConfig.cellSize;
-              // count cells
-              this.cellCount = this.cellCount ? this.cellCount + cells.length : cells.length;
-              // save all fields to app
-              this._cellFields = Object.keys(cells[0]).filter(key => key !== 'x' && key !== 'y');
-              //as a temporary hacky fix for d3's pan and zoom not working correctly on mobile devices, we scale the coordinates to a webgl-friendly range
-              if (this._isMobile) this.convertCoordinatesToMobile(app, cells, layerConfig)
-
-              // define app click, dropdown change and screen resize events
-              this.addEventListeners();
-
-              // if center is not specified by user, set center to a cell half way along the array
-              if (!this.geoCenter_) {
-                let index = parseInt(this.gridCaches[layerConfig.cellSize].length / 2);
-                let c = this.gridCaches[layerConfig.cellSize][index];
-                if (this._isMobile) {
-                  this.geoCenter_ = [
-                    this.mobileCoordScale(parseFloat(c.x)),
-                    this.mobileCoordScale(parseFloat(c.y))
-                  ];
-                } else {
-                  this.geoCenter_ = [
-                    parseFloat(c.x),
-                    parseFloat(c.y)
-                  ];
-                }
-              }
-
-
-              // add to app layers array
-              this.layers.push(newLayer);
-              // add to threeJS viewer
-              this.viewer.scene.add(newLayer)
-
-
-
-              Loading.hideLoading();
-              if (!this.animating) {
-                this.animating = true;
-                this.animate();
-              }
-
-              // tooltip DOM element
-              Tooltip.createTooltipContainer(this);
-
-              if (this.colorFieldSelector_) {
-                Dropdowns.createColorFieldDropdown(app, this.gridConfigs[this._currentResolution]);
-                this.addChangeEventToColorFieldDropdown();
-              }
-              if (this.sizeFieldSelector_) {
-                Dropdowns.createSizeFieldDropdown(app, this.gridConfigs[this._currentResolution]);
-                this.addChangeEventToSizeFieldDropdown()
-              }
-            }
-
-            Loading.hideLoading();
-
-          } else {
-            Loading.hideLoading();
-            let msg = "Incorrect csv format. Please use coordinate columns with names 'x' and 'y' and check that colorField is defined correctly.";
-            console.error(msg);
-            alert(msg)
-            return;
-          }
-        },
-        err => {
-          Loading.hideLoading();
-          alert(err)
-        }
-      );
-    }
-  }
 
   /** 
   * @description Three.js render loop
@@ -573,13 +472,11 @@ export class App {
   */
   animate() {
     var $this = this; // Hold the app's scope, for accessing properties from within the callback method.
-
     function renderloop() {
       requestAnimationFrame(renderloop);
       $this.viewer.renderer.render($this.viewer.scene, $this.viewer.camera.camera);
       $this.viewer.labelRenderer.render($this.viewer.scene, $this.viewer.camera.camera);
     }
-
     renderloop();
   }
 
@@ -747,7 +644,7 @@ export class App {
     if (this.subtitle_) {
       GUI.addSubtitleToDOM(this);
     }
-      GUI.addLegendContainerToDOM(this);
+    GUI.addLegendContainerToDOM(this);
     if (this.cellCount_) {
       GUI.addCellCountToDOM(this);
     }
@@ -918,20 +815,69 @@ export class App {
   */
   addMouseEventsToView() {
     // show cell value on click
-    this.viewer.view.on(this.tooltip_.eventType, (event) => {
+    this.viewer.view.on(this._tooltip.eventType, (event) => {
       let [mouseX, mouseY] = pointer(event);
       let mouse_position = [mouseX, mouseY];
       let intersect = this.checkIntersects(mouse_position);
       if (intersect) {
-        //console.log("Intersect", intersect); //for debugging intersects
+
+        // find the Layer that has been intersected
+        let intersectedLayer;
+        this.layers.find((layer) => {
+          return layer.styles.forEach((s) => {
+            if (s.threejsObject) {
+              if (layer.styles[0].threejsObject.uuid == intersect.object.uuid) {
+                intersectedLayer = layer;
+              }
+            }
+          })
+        });
+        //find cell in original array
         let index = intersect.index;
-        let cell = this.gridCaches[this._currentResolution][index];
+        let cell = intersectedLayer.dataset.cells[index];
+
+        //change cell colour
         this.highlightPoint(intersect);
-        Tooltip.showTooltip(this, mouse_position, cell);
+
+        //show tooltip & update its content
+        this._tooltip.show();
+
+        let left = mouse_position[0];
+        let top = mouse_position[1];
+        let color = 'blue'
+        this._tooltip.updateTooltip(cell,left,top,color)
+
       } else {
-        Tooltip.hideTooltip();
+        this._tooltip.hide();
       }
     });
+  }
+
+  mouseToThree(mouseX, mouseY) {
+    return new Vector3(
+      (mouseX / this.width_) * 2 - 1,
+      -(mouseY / this.height_) * 2 + 1,
+      0.5
+    );
+  }
+
+  checkIntersects(mouse_position) {
+    let mouse_vector = this.mouseToThree(...mouse_position);
+    this.viewer.raycaster.setFromCamera(mouse_vector, this.viewer.camera.camera);
+    let objectToIntersect;
+    let intersects = this.viewer.raycaster.intersectObjects(this.viewer.scene.children); // intersect first layer TODO: intersect all layers
+    if (intersects[0]) {
+      let sorted_intersects = this.sortIntersectsByDistanceToRay(intersects);
+      let intersect = sorted_intersects[0];
+      return intersect;
+    } else {
+      return false;
+
+    }
+  }
+
+  sortIntersectsByDistanceToRay(intersects) {
+    return intersects.concat().sort(Utils.sortBy("distanceToRay"));
   }
 
   /**
@@ -1008,30 +954,6 @@ export class App {
   }
   // end of event listeners
 
-
-  /**
-   * TODO: replace with addTileToCache()
-   * @description adds the csv points to a cache object
-   * @param {*} cells 
-   * @param {LayerConfig} layerConfig
-   */
-  addGridToCache(cells, layerConfig) {
-    let res = layerConfig.cellSize;
-    if (cells) {
-      if (this._isMobile) {
-        for (let i = 0; i < cells.length; i++) {
-          //scale mobile coordinates to avoid d3 pan/zoom bug 
-          let point = cells[i];
-          point.x = this.mobileCoordScale(parseFloat(cells[i].x));
-          point.y = this.mobileCoordScale(parseFloat(cells[i].y));
-          if (!this.gridCaches[res]) this.gridCaches[res] = [];
-          this.gridCaches[res].push(point);
-        }
-      } else {
-        if (!this.gridCaches[res]) this.gridCaches[res] = cells
-      }
-    }
-  }
 
   /**
    * 
@@ -1180,31 +1102,7 @@ export class App {
     this.viewer.raycaster.params.Points.threshold = threshold;
   }
 
-  mouseToThree(mouseX, mouseY) {
-    return new Vector3(
-      (mouseX / this.width_) * 2 - 1,
-      -(mouseY / this.height_) * 2 + 1,
-      0.5
-    );
-  }
 
-  checkIntersects(mouse_position) {
-    let mouse_vector = this.mouseToThree(...mouse_position);
-    this.viewer.raycaster.setFromCamera(mouse_vector, this.viewer.camera.camera);
-    let intersects = this.viewer.raycaster.intersectObject(this.layers[0]); // intersect first layer TODO: intersect all layers
-    if (intersects[0]) {
-      let sorted_intersects = this.sortIntersectsByDistanceToRay(intersects);
-      let intersect = sorted_intersects[0];
-      return intersect;
-    } else {
-      return false;
-
-    }
-  }
-
-  sortIntersectsByDistanceToRay(intersects) {
-    return intersects.concat().sort(Utils.sortBy("distanceToRay"));
-  }
 
   highlightBar(intersect) {
     //removeHighlights();
@@ -1280,8 +1178,8 @@ export class App {
    */
   hideLayer(layer) {
     layer.styles.forEach((style) => {
-      if (style.pointsLayer) {
-        style.pointsLayer.traverse(function (child) {
+      if (style.threejsObject) {
+        style.threejsObject.traverse(function (child) {
           if (child instanceof Points) {
             child.visible = false;
           }
@@ -1299,8 +1197,8 @@ export class App {
    */
   showLayer(layer) {
     layer.styles.forEach((style) => {
-      if (style.pointsLayer) {
-        style.pointsLayer.traverse(function (child) {
+      if (style.threejsObject) {
+        style.threejsObject.traverse(function (child) {
           if (child instanceof Points) {
             child.visible = true;
           }

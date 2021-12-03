@@ -24,11 +24,6 @@
     .cellCount(true)
     .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
     .title("5km² Population Grid of Europe")
-    .colorScaleName('scaleSequentialLog')
-    .legend({
-      title: "Total population per 5 km² (2011)",
-      ticks: 4,
-    })
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
 

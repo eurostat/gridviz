@@ -5,6 +5,7 @@ import { Cell } from "../Dataset"
 import { Viewer } from "../viewer/viewer";
 import * as CONSTANTS from "../constants.js";
 import { Points, Color, Float32BufferAttribute, BufferGeometry, ShaderMaterial, } from "three";
+import * as Utils from "../utils/utils";
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -56,7 +57,7 @@ export class ColorSizeShapeStyle extends Style {
         for (let cell of cells) {
 
             //position
-            this.positions.push(cell.x, cell.y, CONSTANTS.point_z)
+            this.positions.push(cell.x, cell.y, CONSTANTS.point_z);
 
             //color
             let c = this.color ? new Color(this.color(cell)) : new Color("#EA6BAC");
@@ -98,18 +99,16 @@ export class ColorSizeShapeStyle extends Style {
         //set shapes
         if (this.shape) this.bufferGeometry.setAttribute("shape", new Float32BufferAttribute(this.shapes, 1));
         
-        // add all cells to scene
         // create layer if new
-        if (!this.pointsLayer) {
-            this.pointsLayer = new Points(this.bufferGeometry, this.pointsMaterial);
-            this.pointsLayer.renderOrder = 1; //bottom
-            viewer.scene.add(this.pointsLayer);
+        if (!this.threejsObject) {
+            this.threejsObject = new Points(this.bufferGeometry, this.pointsMaterial);
+            this.threejsObject.renderOrder = 1; //bottom
+            viewer.scene.add(this.threejsObject);
         } else {
             // else update its attributes
-            this.pointsLayer.geometry = this.bufferGeometry;
-            this.pointsLayer.material = this.pointsMaterial;
+            this.threejsObject.geometry = this.bufferGeometry;
+            this.threejsObject.material = this.pointsMaterial;
         }
-
     }
 
     /**

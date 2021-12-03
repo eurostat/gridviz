@@ -29,7 +29,10 @@ export class Legend {
             this.cells = config.cells || 5,
             this.shapeWidth = config.shapeWidth || 30;
 
-        this.createLegend();
+        //TODO: apply shape/color/size style function to data in order to build legend.
+        //this.createLegend();
+
+
     }
 
     /**
