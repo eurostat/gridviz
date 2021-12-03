@@ -14,9 +14,10 @@ export class TextStyle extends Style {
       * @param {function(Cell):string} text A function returning the text of a cell.
       * @param {function(Cell):string} color A function returning the color of the cell.
       * @param {function(Cell):number} fontSize A function returning the font size of the cell label.
-      * @param {function(Cell):string} font A function returning the font info of the cell label, other than the size. Ex: "italic small-caps bold arial"
+      * @param {function(Cell):string} fontFamily A function returning the font family of the cell label.
+      * @param {function(Cell):string} fontWeight A function returning the font weight of the cell label.
       */
-    constructor(text, color = () => "black", fontSize = () => 10, font = () => "bold Arial") {
+    constructor(text, color = () => "black", fontSize = () => 10, fontFamily = () => "Arial", fontWeight = () => "bold") {
         super()
 
         /** @private @type {function(Cell):string} */
@@ -30,9 +31,11 @@ export class TextStyle extends Style {
         this.fontSize = fontSize;
         //TODO fontsize in geo also ? Here it is in pix only.
 
-        /** Example: "italic small-caps bold arial"
-         * @private @type {function(Cell):string} */
-        this.font = font;
+        /** @private @type {function(Cell):string} */
+        this.fontFamily = fontFamily;
+
+        /** @private @type {function(Cell):string} */
+        this.fontWeight = fontWeight;
     }
 
 
@@ -60,8 +63,9 @@ export class TextStyle extends Style {
 
             //text size and font
             const fontSize = this.fontSize ? this.fontSize(cell) : 10;
-            const fontFamily = this.font ? this.font(cell) : "bold Arial";
-            cg.ctx.font = fontSize + "px " + fontFamily;
+            const fontFamily = this.fontFamily ? this.fontFamily(cell) : "Arial";
+            const fontWeight = this.fontWeight ? this.fontWeight(cell) : "bold";
+            cg.ctx.font = fontWeight + " " + fontSize + "px " + fontFamily;
 
             //text position
             cg.ctx.textAlign = "center";

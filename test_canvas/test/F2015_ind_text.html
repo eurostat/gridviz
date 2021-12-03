@@ -19,6 +19,7 @@
             c => c["Ind"],
             c => gviz.color().interpolateSpectral(1 - c["Ind"] / 400),
             c => 15
+            
         ).setZFStroke(10);
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 50, null, ttfun);
