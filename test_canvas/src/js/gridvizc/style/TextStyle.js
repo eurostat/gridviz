@@ -60,7 +60,7 @@ export class TextStyle extends Style {
 
             //text size and font
             const fontSize = this.fontSize ? this.fontSize(cell) : 10;
-            const fontFamily = this.fontFamily ? this.fontFamily(cell) : "Arial";
+            const fontFamily = this.font ? this.font(cell) : "bold Arial";
             cg.ctx.font = fontSize + "px " + fontFamily;
 
             //text position
