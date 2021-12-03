@@ -113,6 +113,10 @@ export class App {
                 if(tn.pop_2011<50000) return
                 return "bold 15px Arial";
             }
+
+            if(tn.cat==2) return
+            if(tn.pop_2011<500000) return
+            return "bold 15px Arial";
         }
 
 
