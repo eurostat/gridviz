@@ -67,25 +67,42 @@ export class App {
             }
 
             //draw toponyms
-            this.cg.ctx.fillStyle = "#00000044";
-            this.cg.ctx.font = "bold 18px Arial";
-            this.cg.ctx.textAlign = "center";
-            for (const tn of this.toponyms) {
-                //draw toponym
-                const tx = this.cg.geoToPixX(tn.x);
-                const ty = this.cg.geoToPixY(tn.y);
-                //draw the text
-                this.cg.ctx.fillText(tn.name, tx, ty);
-            }
+            this.drawToponyms()
 
             return this
         };
 
 
 
+
+
+        //toponyms
+
+        this.toponymsURL = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv"
+
+        /** @typedef {{name: string, cat: number, pop_2011:number, lon:number, lat:number, x:number, y:number }} Toponym */
+        /** @type {Array.<Toponym>} */
+        this.toponyms = undefined;
+
+        //toponyms selection function
+
+        /** Return toponym style depending on its importance and the zoom level
+         * @type {function(Toponym,number):string} */
+        this.toponymStyle = (tn, zf) => {
+            if (zf < 100) {
+                return "bold 20px Arial";
+            }
+            return null;
+        }
+
+
+
+
         //tooltip
+
         /** @private @type {Tooltip} */
         this.tooltip = new Tooltip()
+
         /** @param {MouseEvent} e @returns {boolean} */
         const showCellInfoTooltip = (e) => {
             //compute mouse geo position
@@ -109,39 +126,6 @@ export class App {
         this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
 
 
-        //toponymes
-        /** @typedef {{name: string, cat: number, pop_2011:number, lon:number, lat:number, x:number, y:number }} Toponym */
-        /** @type {Array.<Toponym>} */
-        this.toponyms = [];
-
-        //toponyms selection function
-
-        /** @type {function(Toponym):boolean} */
-        this.show = (t) => {
-            return true;
-        }
-
-        //get toponymes
-        const toponymsURL = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv"
-        csv(toponymsURL)
-            .then(
-                /** @param {*} data */
-                (data) => {
-                    this.toponyms = data;
-
-                    //project toponyms
-                    for (const tn of this.toponyms) {
-                        const p = this.projection([tn.lon, tn.lat])
-                        tn.x = p[0]; tn.y = p[1];
-                        delete tn.lon; delete tn.lat;
-                    }
-
-                    //redraw
-                    this.cg.redraw();
-                })
-            .catch(() => {
-                //
-            });
     }
 
 
@@ -275,6 +259,77 @@ export class App {
         if (!cell) return undefined;
         return layer.dataset.cellInfoHTML(cell);
     }
+
+
+
+
+
+
+
+    /**
+     * @private
+     * 
+     * Draw the toponym names.
+     * 
+     * @returns {void}
+     */
+    drawToponyms() {
+
+        //load toponyms if necessary
+        if (!this.toponyms) {
+            this.loadToponyms();
+            return;
+        }
+
+        this.cg.ctx.fillStyle = "#00000044";
+        this.cg.ctx.textAlign = "center";
+        for (const tn of this.toponyms) {
+
+            //get toponym style
+            const st = this.toponymStyle(tn, this.getZoomFactor());
+            if (!st) continue;
+            this.cg.ctx.font = st;
+
+            //get toponym position
+            const tx = this.cg.geoToPixX(tn.x);
+            const ty = this.cg.geoToPixY(tn.y);
+
+            //draw toponym
+            this.cg.ctx.fillText(tn.name, tx, ty);
+        }
+    }
+
+    /**
+     * Load data for toponyms, from URL this.toponymsURL
+     * 
+     * @private
+     */
+    loadToponyms() {
+        csv(this.toponymsURL)
+            .then(
+                /** @param {*} data */
+                (data) => {
+                    this.toponyms = data;
+
+                    //project toponyms
+                    for (const tn of this.toponyms) {
+                        const p = this.projection([tn.lon, tn.lat])
+                        tn.x = p[0]; tn.y = p[1];
+                        delete tn.lon; delete tn.lat;
+                    }
+
+                    //redraw
+                    this.cg.redraw();
+                })
+            .catch(() => {
+                console.log("Failed loading toponyms from: " + this.toponymsURL)
+                this.toponyms = []
+            });
+    }
+
+
+
+
 
 
 
