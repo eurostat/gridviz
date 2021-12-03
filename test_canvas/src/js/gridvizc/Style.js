@@ -66,7 +66,7 @@ export class Style {
      * @param {Size} size A function returning the size of a cell (in geographical unit).
      * @returns 
      */
-     drawStroke(cell, resolution, cg, shape, size) {
+     drawStroke(cell, resolution, cg, shape, size = null) {
         if (!this.zfStroke || cg.zf > this.zfStroke) return;
 
         cg.ctx.strokeStyle = this.strokeColor;

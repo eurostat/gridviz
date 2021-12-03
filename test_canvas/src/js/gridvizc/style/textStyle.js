@@ -24,12 +24,15 @@ export class TextStyle extends Style {
 
         /** @private @type {function(Cell):string} */
         this.color = color;
+        //TODO add stroke color aswell? This is only for fill
 
         /** @private @type {function(Cell):number} */
         this.fontSize = fontSize;
+        //TODO fontsize in geo also ? Here it is in pix only.
 
         /** @private @type {function(Cell):string} */
         this.fontFamily = fontFamily;
+        //TODO add bold/regular/italic ? maybe covered by font family
     }
 
 
@@ -48,21 +51,28 @@ export class TextStyle extends Style {
         for (let cell of cells) {
             //see https://www.w3schools.com/graphics/canvas_text.asp
 
-            //color
+            //get cell text
+            const text = this.text(cell);
+            if(!text) continue;
+
+            //text color
             cg.ctx.fillStyle = this.color ? this.color(cell) : "#EA6BAC";
+
+            //text size and font
+            const fontSize = this.fontSize? this.fontSize(cell) : "10";
+            const fontFamily = this.fontFamily? this.fontFamily(cell) : "Arial";
+            cg.ctx.font = fontSize + "px " + fontFamily;
 
             //text position
             cg.ctx.textAlign = "center";
             const tx = cg.geoToPixX(cell.x + r * 0.5 + this.offset.dx);
             const ty = cg.geoToPixY(cell.y + r * 0.5 + this.offset.dy);
 
-            /*
-            ctx.font = "30px Comic Sans MS";
-            ctx.fillText("Hello World", canvas.width/2, canvas.height/2);
-            */
+            //draw the text
+            cg.ctx.fillText(text, tx, ty);
 
-            //draw stroke
-            //this.drawStroke(cell, resolution, cg, "square", this.size)
+            //draw stroke of the cell as a square ?
+            //this.drawStroke(cell, r, cg, c => "square")
         }
 
     }
