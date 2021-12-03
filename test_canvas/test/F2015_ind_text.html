@@ -12,10 +12,14 @@
 
         //make application
         const app = gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100)//.setBackgroundColor("black")
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setBackgroundColor("black")
 
         //define datasets, styles and layers
-        const s = gviz.TextStyle( c => c["Ind"]);
+        const s = gviz.TextStyle(
+            c => c["Ind"],
+            c => gviz.color().interpolateSpectral(1 - c["Ind"] / 400),
+            c => 15
+        ).setZFStroke(10);
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 50, null, ttfun);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m//", [s], 50, 100, null, ttfun);
