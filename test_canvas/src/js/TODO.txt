@@ -13,8 +13,8 @@ TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache an
 
 TODO webGL investigation
 TODO on zoom/pan, interupt all existing redraws
-TODO background - images
-TODO foreground - geo names
+TODO background - images ?
+TODO foreground - geo names - https://ec.europa.eu/regional_policy/en/information/maps/urban-centres-towns
 
 TODO finalise demos
 TODO fix segment
