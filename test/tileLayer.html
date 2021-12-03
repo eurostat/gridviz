@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>5km² Grid of Europe</title>
+  <title>Tiled CSV grid</title>
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
   <meta name="viewport" content="width=device-width" />
 </head>
@@ -15,20 +15,24 @@
 <script>
   let containerDiv = document.getElementById("viz-container");
 
-  gridviz
+  let app = gridviz
     .app()
     .container(containerDiv)
-    .zoom(2000)
-    .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
-    .title("5km² Population Grid of Europe")
-    .colorField("population") // csv column that will determine cell colour
-    .colorScaleName('scaleSequentialLog')
-    .legend({
-      title: "Total population per 5 km² (2011)",
-      ticks: 4,
-    })
-    .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
+    .geoCenter([4000000,2260000])
+    .zoom(100000)
     .build();
+
+  //define datasets, styles and layers
+  const s = gridviz.getColorSizeShapeStyle(
+    c => "gray",
+    c => 7 * Math.sqrt(c["2018"]),
+    c => "circle"
+  );
+  app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500);
+  app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 500, 1000);
+  app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 1000, 2000);
+  app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 2000, 4000);
+  app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 4000, 9999999999);
 </script>
 
 </html>

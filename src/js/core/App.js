@@ -30,6 +30,7 @@ import { LabelsLayer } from "./placenames/LabelsLayer.js";
 import { GeoJsonLayer } from "./GeoJsonLayer";
 
 import { CSVGrid } from './dataset/CSVGrid';
+import { TiledGrid } from './dataset/TiledGrid';
 
 //other 
 import { feature } from "topojson";
@@ -436,6 +437,30 @@ export class App {
   }
 
   /**
+   * Add a layer from a tiled grid dataset.
+   * 
+   * @param {string} url The url of the dataset info.json file.
+   * @param {Array.<Style>} styles The styles, ordered in drawing order.
+   * @param {number} minZoom The minimum zoom level when to show the layer
+   * @param {number} maxZoom The maximum zoom level when to show the layer
+   * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+   */
+  addTiledGrid(url, styles, minZoom, maxZoom, preprocess = null) {
+    this.add(
+      new TiledGrid(url, preprocess).loadInfo(() => { 
+        Loading.hideLoading();
+
+        // for mobile devices
+        //if (this._isMobile) this.applyMobileSettings(grid);
+
+        // draw cells
+        this.redraw();
+       }),
+      styles, minZoom, maxZoom
+    )
+  }
+
+  /**
    * @description Transforms cell coordinates to cartesian coordinates from -1 to 1, cell resolution and the camera Z position
    * @param {CSVGrid} grid
    * @memberof App
@@ -549,9 +574,6 @@ export class App {
     return newResolution;
   }
 
-  addTiledGrid() {
-
-  }
 
   /**
    * @description if app has already been initialized, calls to geoCenter() method will move existing camera
@@ -842,7 +864,7 @@ export class App {
         //show tooltip & update its content
         this._tooltip.show();
 
-        this._tooltip.updateTooltip(cell,mouse_position[0],mouse_position[1],cell.color|| 'none')
+        this._tooltip.updateTooltip(cell, mouse_position[0], mouse_position[1], cell.color || 'none')
 
       } else {
         this._tooltip.hide();
@@ -862,14 +884,13 @@ export class App {
     let mouse_vector = this.mouseToThree(...mouse_position);
     this.viewer.raycaster.setFromCamera(mouse_vector, this.viewer.camera.camera);
     // intersect visible layers
-    let intersects = this.viewer.raycaster.intersectObjects(this.viewer.scene.children.filter((obj)=>{return obj.visible == true;})); 
+    let intersects = this.viewer.raycaster.intersectObjects(this.viewer.scene.children.filter((obj) => { return obj.visible == true; }));
     if (intersects[0]) {
       let sorted_intersects = this.sortIntersectsByDistanceToRay(intersects);
       let intersect = sorted_intersects[0];
       return intersect;
     } else {
       return false;
-
     }
   }
 
