@@ -55,6 +55,7 @@ export class App {
          * @type {CanvasGeo} */
         this.cg = new CanvasGeo();
         this.cg.redraw = () => {
+            console.log(this.getZoomFactor())
 
             //go through the list of layers and find the one(s) to draw
             for (const layer of this.getActiveLayers()) {
@@ -89,10 +90,29 @@ export class App {
         /** Return toponym style depending on its importance and the zoom level
          * @type {function(Toponym,number):string} */
         this.toponymStyle = (tn, zf) => {
+            if (zf < 50) {
+                return "bold 30px Arial";
+            }
             if (zf < 100) {
                 return "bold 20px Arial";
             }
-            return null;
+            if (zf < 200) {
+                return "bold 15px Arial";
+            }
+            if (zf < 300) {
+                if(tn.cat==2) return
+                return "bold 15px Arial";
+            }
+            if (zf < 400) {
+                if(tn.cat==2) return
+                if(tn.pop_2011<10000) return
+                return "bold 15px Arial";
+            }
+            if (zf < 500) {
+                if(tn.cat==2) return
+                if(tn.pop_2011<50000) return
+                return "bold 15px Arial";
+            }
         }
 
 
