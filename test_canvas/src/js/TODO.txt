@@ -7,7 +7,7 @@ TODO zoom/pan smartphone/touchscreen - use d3 events - TODO make new canvasgeo b
 TODO modularise further canvasgeo (make ctx private ?)
 
 TODO style radar
-TODO style trendline - ENACT dataset ?
+TODO style trendline - with ENACT dataset ?
 
 TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache and remove inpriority the old-unused tiles.
 
