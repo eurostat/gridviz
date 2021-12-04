@@ -16,6 +16,7 @@ export { JoyPlotStyle } from "./style/JoyPlotStyle"
 export { CompositionStyle } from "./style/CompositionStyle"
 export { SegmentStyle } from "./style/SegmentStyle"
 export { TextStyle } from "./style/TextStyle"
+export { KernelSmoothingStyle } from "./style/KernelSmoothingStyle"
 
 //export label layer
 export { LabelLayer } from "./LabelLayer"
