@@ -44,6 +44,9 @@ export class KernelSmoothingStyle extends Style {
      */
     draw(cells, r, cg) {
 
+        if (!cells || cells.length == 0)
+            return;
+
         //TODO
         //See:
         //NO https://github.com/Planeshifter/kernel-smooth/blob/master/examples/index.js
@@ -55,27 +58,35 @@ export class KernelSmoothingStyle extends Style {
         //https://observablehq.com/@d3/kernel-density-estimation
 
         //compute extent
-        const e = cg.extGeo;
+        const e = cg.updateExtentGeo();
         const xMin = Math.floor(e.xMin / r) * r;
         const xMax = Math.floor(e.xMax / r) * r;
         const yMin = Math.floor(e.yMin / r) * r;
         const yMax = Math.floor(e.yMax / r) * r;
 
+        const nbX = (xMax - xMin) / r
+        const nbY = (yMax - yMin) / r
+        console.log(nbX, nbY)
+
         //create input matrix (with 0 as values)
         const inMat = [];
-        for (let x = xMin; x <= xMax; x += r) {
+        for (let i = 0; i <= nbX; i++) {
             const col = [];
-            for (let y = yMin; y <= yMax; y += r) {
-                col.push([0,0]);
+            for (let j = 0; j <= nbY; j++) {
+                col.push([0, 0]);
             }
             inMat.push(col);
         }
 
         //fill input matrix with input figures, non smoothed
-        for (const c of cells)
-            inMat[c.x-xMin][c.y-yMin] = [this.value(c),0];
+        for (const c of cells) {
+            const i = (c.x - xMin)/r
+            const j = (c.y - yMin)/r
+console.log(i,j)
+            //inMat[i][j] = [this.value(c), 0];
+        }
 
-        console.log(inMat)
+        //console.log(inMat)
 
         //compute smoothed matrix
 
