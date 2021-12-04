@@ -11,14 +11,120 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class KernelSmoothingStyle extends Style {
 
-    constructor(value, sigmaGeo) {
+    /**
+     * @param {function(Cell):number} value 
+     * @param {function} color 
+     * @param {number} sigmaGeo 
+     */
+    constructor(value, color, sigmaGeo) {
         super()
 
         /** @private @type {function(Cell):number} */
         this.value = value;
 
+        /** @type {function} */
+        this.color = color;
+
         /** @type {number} */
         this.sigmaGeo = sigmaGeo
+
+        /** 
+         * The kernel window
+         * @private
+         * @type {Array.<Array<number>>} */
+        this.kw = undefined
+    }
+
+
+    /**
+    * compute window matrix, that is the matrix of the weights.
+    * one quadrant is necessary only, since it is symetrical (along both x and y axes).
+    * @param {number} sigma 
+    * @returns 
+    */
+    getKernelWindow(sigma) {
+        if (!this.kw) {
+            //the size of the window: lets limit that to ~4 times the standard deviation, as an approximation.
+            const windowSize = Math.floor(3 * sigma) + 1;
+
+            //prepare coefficients for gaussian computation, to avoid computing them every time.
+            const c2 = 2 * sigma * sigma;
+
+            /**
+             * The gaussian function.
+             * @param {number} x 
+             * @param {number} y 
+             * @returns {number}
+             */
+            const gaussian = (x, y) => Math.exp(-(x * x + y * y) / c2)
+
+            this.kw = []
+            for (let wi = 0; wi <= windowSize; wi++) {
+                const col = []
+                for (let wj = 0; wj <= windowSize; wj++) {
+                    //compute weight at wi,wj
+                    const val = gaussian(wi, wj)
+                    col.push(val)
+                }
+                this.kw.push(col)
+            }
+        }
+        return this.kw
+    }
+
+
+    /**
+    * Compute kernel smoothing.
+    * 
+    * @private
+    * @param {Array.<Array.<number>>} m The input matrix to be smoothed
+    * @param {number} nbX Size of the input matrix - X
+    * @param {number} nbY Size of the input matrix - Y
+    * @param {number} sigma 
+    * @returns {Array.<Array.<number>>}
+    */
+    kernelSmoothing(m, nbX, nbY, sigma) {
+
+        //create output matrix
+        const out = getEmptyMatrix(nbX, nbY);
+
+        //compute window matrix, that is the matrix of the weights
+        //one quadrant is necessary only, since it is symetrical (along both x and y axes)
+        const window = this.getKernelWindow(sigma)
+        const windowSize = window.length - 1
+
+        //make smoothing, cell by cell
+        for (let i = 0; i < nbX; i++) {
+            for (let j = 0; j < nbY; j++) {
+
+                //compute smoothed value, at i,j
+                /** @type {number} */
+                let sval = 0;
+                /** @type {number} */
+                let sumWeights = 0;
+
+                //moving window (wi,wj)
+                for (let wi = -windowSize; wi <= windowSize; wi++)
+                    for (let wj = -windowSize; wj <= windowSize; wj++) {
+
+                        //TODO use symetric
+                        if (i + wi < 0 || i + wi >= nbX || j + wj < 0 || j + wj >= nbY)
+                            continue;
+
+                        //get weight of pixel (i+wi,j+wj)
+                        const weight = window[Math.abs(wi)][Math.abs(wj)]
+
+                        //add contribution of pixel (i+wi,j+wj): its weight times its value
+                        sval += weight * m[i + wi][j + wj]
+
+                        //keep sum of weights
+                        sumWeights += weight;
+                    }
+                //smoothed value
+                out[i][j] = sval / sumWeights
+            }
+        }
+        return out;
     }
 
 
@@ -56,10 +162,24 @@ export class KernelSmoothingStyle extends Style {
         }
 
         //compute smoothed matrix
-        matrix = kernelSmoothing(matrix, nbX, nbY, this.sigmaGeo / r)
+        matrix = this.kernelSmoothing(matrix, nbX, nbY, this.sigmaGeo / r)
 
         //draw smoothed matrix
-        //TODO
+        for (let i = 0; i < nbX; i++)
+            for (let j = 0; j < nbY; j++) {
+                //get value
+                const val = matrix[i][j]
+
+                //set color
+                cg.ctx.fillStyle = this.color(val/1000);
+
+                //cell geo position
+                const xG = xMin + i * r;
+                const yG = yMin + j * r;
+
+                //fill rectangle
+                cg.ctx.fillRect(cg.geoToPixX(xG), cg.geoToPixY(yG), r, r);
+            }
 
     }
 
@@ -89,90 +209,6 @@ function getEmptyMatrix(nbX, nbY) {
     return matrix;
 }
 
-/**
- * compute window matrix, that is the matrix of the weights
- * one quadrant is necessary only, since it is symetrical (along both x and y axes)
- * 
- * @param {number} sigma 
- * @returns 
- */
-function kernelWindow(sigma) {
-
-    //the size of the window: lets limit that to ~4 times the standard deviation, as an approximation.
-    const windowSize = Math.floor(3 * sigma) + 1;
-
-    //prepare coefficients for gaussian computation, to avoid computing them every time.
-    const c2 = 2 * sigma * sigma;
-
-    //the gaussian function.
-    const gaussian = (x, y) => Math.exp(-(x * x + y * y) / c2)
-
-    const window = []
-    for (let wi = 0; wi <= windowSize; wi++) {
-        const col = []
-        for (let wj = 0; wj <= windowSize; wj++) {
-            //compute weight at wi,wj
-            const val = gaussian(wi, wj)
-            col.push(val)
-        }
-        window.push(col)
-    }
-    return window
-}
-
-
-
-/**
- * Compute kernel smoothing.
- * 
- * @param {Array.<Array.<number>>} m The input matrix to be smoothed
- * @param {number} nbX Size of the input matrix - X
- * @param {number} nbY Size of the input matrix - Y
- * @param {number} sigma Smoothing std deviation, in number of cells
- * @returns {Array.<Array.<number>>}
- */
-function kernelSmoothing(m, nbX, nbY, sigma) {
-
-    //create output matrix
-    const out = getEmptyMatrix(nbX, nbY);
-
-    //compute window matrix, that is the matrix of the weights
-    //one quadrant is necessary only, since it is symetrical (along both x and y axes)
-    const window = kernelWindow(sigma)
-    const windowSize = window.length
-
-    //make smoothing, cell by cell
-    for (let i = 0; i < nbX; i++) {
-        for (let j = 0; j < nbY; j++) {
-
-            //compute smoothed value, at i,j
-            let sval = 0;
-            let sumWeights = 0;
-
-            //moving window (wi,wj)
-            for (let wi = -windowSize; wi <= windowSize; wi++)
-                for (let wj = -windowSize; wj <= windowSize; wj++) {
-
-                    //TODO use symetric
-                    if (i + wi < 0 || i + wi >= nbX || j + wj < 0 || j + wj >= nbY)
-                        continue;
-
-                    //get weight of pixel (i+wi,j+wj)
-                    const weight = window[Math.abs(wi)][Math.abs(wj)]
-
-                    //add contribution of pixel (i+wi,j+wj): its weight times its value
-                    sval += weight * m[i + wi][j + wj]
-
-                    //keep sum of weights
-                    sumWeights += weight;
-                }
-
-            //smoothed value
-            out[i][j] = sval / sumWeights
-        }
-    }
-    return out;
-}
 
 
         //See:
