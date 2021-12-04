@@ -13,7 +13,24 @@ export class KernelSmoothingStyle extends Style {
 
     constructor() {
         super()
+
+        /** @type {number} */
+        this.sigma = 10000
+
+        //prepare coefficients for gaussian computation
+        const c1 = this.sigma * Math.sqrt(2 * Math.PI);
+        const c2 = 2 * this.sigma * this.sigma;
+
+        /**
+         * The gaussian function.
+         * 
+         * @param {number} x 
+         * @returns {number}
+         * @private
+         */
+        this.gaussian = (x) => Math.exp(-x * x / c2) / c1
     }
+
 
     /**
      * Draw cells as squares depending on their value.
@@ -33,10 +50,15 @@ export class KernelSmoothingStyle extends Style {
         //https://bl.ocks.org/rpgove/210f679b1087b517ce654b717e8247ac
         //https://observablehq.com/@d3/kernel-density-estimation
 
+        
 
     }
+
+
+
 
     //getters and setters
     //TODO
 
 }
+
