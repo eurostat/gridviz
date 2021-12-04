@@ -254,4 +254,10 @@ export class App {
     getProjection() { return this.projection; }
     /** @param {function} val @returns {this} */
     setProjection(val) { this.projection = val; return this; }
+
+    /** @returns {LabelLayer} */
+    getLabelLayer() { return this.labelLayer; }
+    /** @param {LabelLayer} val @returns {this} */
+    setLabelLayer(val) { this.labelLayer = val; return this; }
+
 }
