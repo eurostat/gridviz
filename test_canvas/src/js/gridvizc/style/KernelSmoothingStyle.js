@@ -106,21 +106,37 @@ function kernelSmoothing(m, nbX, nbY, sigma) {
 
     //prepare coefficients for gaussian computation
     //to avoid computing them every time.
-    const c1 = sigma * Math.sqrt(2 * Math.PI);
     const c2 = 2 * sigma * sigma;
 
     //the gaussian function.
-    const gaussian = (x) => Math.exp(-x * x / c2) / c1
+    const gaussian = (x, y) => Math.exp(-(x * x + y * y) / c2)
 
-    //the size of the window: lets limit that to 5 times the standard deviation, as an approximation.
-    const windowSize = Math.floor(5 * sigma) + 1;
+    //the size of the window: lets limit that to 3 times the standard deviation, as an approximation.
+    const windowSize = Math.floor(3 * sigma) + 1;
+
+    //compute window matrix, that is the matrix of the weights
+    //one quadrant is necessary only, since it is symetrical (with 2 axes)
+    const window = []
+    for (let wi = 0; wi <= windowSize; wi++) {
+        const col = []
+        for (let wj = 0; wj <= windowSize; wj++) {
+            //compute weight at wi,wj
+            const val = gaussian(wi, wj)
+            col.push(val)
+        }
+        window.push(col)
+    }
+    console.log(window)
 
     //make smoothing, cell by cell
     for (let i = 0; i < nbX; i++) {
         for (let j = 0; j < nbY; j++) {
+
             //compute smoothed value, at i,j
             let sval = 0;
             let sumWeights = 0;
+
+            //moving window (wi,wj)
             for (let wi = -windowSize; wi <= windowSize; wi++)
                 for (let wj = -windowSize; wj <= windowSize; wj++) {
 
@@ -128,8 +144,8 @@ function kernelSmoothing(m, nbX, nbY, sigma) {
                     if (i + wi < 0 || i + wi >= nbX || j + wj < 0 || j + wj >= nbY)
                         continue;
 
-                    //compute weight of pixel (i+wi,j+wj)
-                    const weight = gaussian(Math.sqrt(wi * wi + wj * wj)); //TODO with gaussian
+                    //get weight of pixel (i+wi,j+wj)
+                    const weight = window[Math.abs(wi)][Math.abs(wj)]
 
                     //add contribution of pixel (i+wi,j+wj): its weight times its value
                     sval += weight * m[i + wi][j + wj]
@@ -137,8 +153,8 @@ function kernelSmoothing(m, nbX, nbY, sigma) {
                     //keep sum of weights
                     sumWeights += weight;
                 }
-            //TODO check sumWeights is (almost) equal to 1
-            console.log(sumWeights)
+
+            //smoothed value
             out[i][j] = sval / sumWeights
         }
     }
