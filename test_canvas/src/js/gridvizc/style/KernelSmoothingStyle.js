@@ -178,7 +178,7 @@ export class KernelSmoothingStyle extends Style {
                 const val = +matrix[i][j]
 
                 //set color
-                cg.ctx.fillStyle = this.color(val / maxValue);
+                cg.ctx.fillStyle = this.color( Math.sqrt(val / maxValue) );
 
                 //cell geo position
                 const xG = xMin + i * r;
