@@ -347,10 +347,16 @@ export class App {
         }
 
         //get data to show if necessary
-        if (layer.dataset.info) layer.dataset.getData(this.viewer.extGeo, () => { this.draw(layer); });
+        if (layer.dataset.info) {
+          layer.dataset.getData(this.viewer.extGeo, () => {
+            this.draw(layer); //this only fires if tile is new (not already in cache)
+          });
+        } else {
+          //draw cells
+          this.draw(layer);
+        }
 
-        //draw cells
-        this.draw(layer);
+
 
         //show if hidden
         if (layer.hidden == true) {
@@ -373,6 +379,9 @@ export class App {
     if (cells.length > 0) {
       // count cells
       if (this.cellCount_) GUI.updateCellCount(cells.length);
+
+      //debugging
+      console.log(cells[0], this.viewer.camera.camera.position)
 
       //draw cells, style by style
       for (const style of layer.styles)
