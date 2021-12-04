@@ -43,15 +43,30 @@ export class KernelSmoothingStyle extends Style {
 
         //TODO
         //See:
-        //https://github.com/Planeshifter/kernel-smooth/blob/master/examples/index.js
-        //https://gist.github.com/curran/b595fde4d771c5784421
-        //https://github.com/jasondavies/science.js/tree/master/examples/kde
+        //NO https://github.com/Planeshifter/kernel-smooth/blob/master/examples/index.js
+        //NO https://github.com/jasondavies/science.js/tree/master/examples/kde
+        //NO https://gist.github.com/curran/b595fde4d771c5784421
 
-        //https://bl.ocks.org/rpgove/210f679b1087b517ce654b717e8247ac
+        //NO https://bl.ocks.org/rpgove/210f679b1087b517ce654b717e8247ac
+        //http://bl.ocks.org/rpgove/51621b3d35705b1a942a
         //https://observablehq.com/@d3/kernel-density-estimation
 
-        
+        //compute extent
+        const e = cg.extGeo;
+        const xMin = Math.floor(e.xMin / r) * r;
+        const xMax = Math.floor(e.xMax / r) * r;
+        const yMin = Math.floor(e.yMin / r) * r;
+        const yMax = Math.floor(e.yMax / r) * r;
 
+        //draw pixels
+        for (let y = yMin; y <= yMax; y += r) {
+            for (let x = xMin; x <= xMax; x += r) {
+                //compute smoothed value
+                
+
+
+            }
+        }
     }
 
 
