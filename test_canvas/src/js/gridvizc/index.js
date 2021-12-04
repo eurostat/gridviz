@@ -3,7 +3,7 @@
 //the application
 export { App } from "./App"
 
-//export color (the entire d3 scale chromatic) //TODO simpler ?
+//export color (the entire d3 scale chromatic)
 export * from "d3-scale-chromatic"
 
 //export dataset types
@@ -20,4 +20,3 @@ export { TextStyle } from "./style/TextStyle"
 //export label layer
 export { LabelLayer } from "./LabelLayer"
 export { getEurostatLabelLayer } from "./LabelLayer"
-
