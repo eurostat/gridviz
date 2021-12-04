@@ -163,23 +163,26 @@ export class KernelSmoothingStyle extends Style {
 
         //compute smoothed matrix
         matrix = this.kernelSmoothing(matrix, nbX, nbY, this.sigmaGeo / r)
+        //console.log(matrix)
 
         //draw smoothed matrix
-        for (let i = 0; i < nbX; i++)
+        for (let i = 0; i < nbX; i++) {
             for (let j = 0; j < nbY; j++) {
                 //get value
-                const val = matrix[i][j]
+                const val = +matrix[i][j]
 
                 //set color
-                cg.ctx.fillStyle = this.color(val/1000);
+                //TODO better, using max value maybe
+                cg.ctx.fillStyle = this.color(val/100);
 
                 //cell geo position
                 const xG = xMin + i * r;
                 const yG = yMin + j * r;
 
                 //fill rectangle
-                cg.ctx.fillRect(cg.geoToPixX(xG), cg.geoToPixY(yG), r, r);
+                cg.ctx.fillRect(cg.geoToPixX(xG), cg.geoToPixY(yG), r/cg.zf, r/cg.zf);
             }
+        }
 
     }
 
