@@ -320,11 +320,11 @@ export class App {
 
       //hide layer not within the zoom range
       if (layer.minZoom >= this.viewer.camera.camera.position.z) {
-        this.hideLayer(layer);
+        //this.hideLayer(layer);
         continue;
       };
       if (layer.maxZoom < this.viewer.camera.camera.position.z) {
-        this.hideLayer(layer);
+        //this.hideLayer(layer);
         continue;
       };
 
@@ -349,8 +349,9 @@ export class App {
         //get data to show if necessary
         if (layer.dataset.info) {
           layer.dataset.getData(this.viewer.extGeo, () => {
-            this.draw(layer); //this only fires if tile is new (not already in cache)
+            this.draw(layer);
           });
+          this.draw(layer);
         } else {
           //draw cells
           this.draw(layer);
@@ -381,7 +382,7 @@ export class App {
       if (this.cellCount_) GUI.updateCellCount(cells.length);
 
       //debugging
-      console.log(cells[0], this.viewer.camera.camera.position)
+      //console.log(cells[0], this.viewer.camera.camera.position)
 
       //draw cells, style by style
       for (const style of layer.styles)
