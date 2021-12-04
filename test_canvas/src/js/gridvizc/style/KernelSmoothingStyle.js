@@ -104,18 +104,17 @@ function kernelSmoothing(m, nbX, nbY, sigma) {
     //create output matrix
     const out = getEmptyMatrix(nbX, nbY);
 
-    //prepare coefficients for gaussian computation
-    //to avoid computing them every time.
+    //prepare coefficients for gaussian computation, to avoid computing them every time.
     const c2 = 2 * sigma * sigma;
 
     //the gaussian function.
     const gaussian = (x, y) => Math.exp(-(x * x + y * y) / c2)
 
-    //the size of the window: lets limit that to 3 times the standard deviation, as an approximation.
+    //the size of the window: lets limit that to ~4 times the standard deviation, as an approximation.
     const windowSize = Math.floor(3 * sigma) + 1;
 
     //compute window matrix, that is the matrix of the weights
-    //one quadrant is necessary only, since it is symetrical (with 2 axes)
+    //one quadrant is necessary only, since it is symetrical (along both x and y axes)
     const window = []
     for (let wi = 0; wi <= windowSize; wi++) {
         const col = []
