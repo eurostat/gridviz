@@ -165,6 +165,12 @@ export class KernelSmoothingStyle extends Style {
         matrix = this.kernelSmoothing(matrix, nbX, nbY, this.sigmaGeo / r)
         //console.log(matrix)
 
+        //get max value
+        let maxValue = -Infinity
+        for (let i = 0; i < nbX; i++)
+            for (let j = 0; j < nbY; j++)
+                if (matrix[i][j] > maxValue) maxValue = matrix[i][j];
+
         //draw smoothed matrix
         for (let i = 0; i < nbX; i++) {
             for (let j = 0; j < nbY; j++) {
@@ -173,14 +179,14 @@ export class KernelSmoothingStyle extends Style {
 
                 //set color
                 //TODO better, using max value maybe
-                cg.ctx.fillStyle = this.color(val/100);
+                cg.ctx.fillStyle = this.color(val / maxValue);
 
                 //cell geo position
                 const xG = xMin + i * r;
                 const yG = yMin + j * r;
 
                 //fill rectangle
-                cg.ctx.fillRect(cg.geoToPixX(xG), cg.geoToPixY(yG), r/cg.zf, r/cg.zf);
+                cg.ctx.fillRect(cg.geoToPixX(xG), cg.geoToPixY(yG), r / cg.zf, r / cg.zf);
             }
         }
 
