@@ -59,3 +59,8 @@ import { TextStyle as TextStyle_ } from "./style/TextStyle"
 export const TextStyle = function (text, color_, fontSize, fontFamily, fontWeight) {
     return new TextStyle_(text, color_, fontSize, fontFamily, fontWeight)
 }
+
+
+//export Eurostat label layer
+import { getEurostatLabelLayer as a } from "./LabelLayer"
+export const getEurostatLabelLayer = a
