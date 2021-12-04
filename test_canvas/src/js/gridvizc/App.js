@@ -1,7 +1,5 @@
 //@ts-check
 
-import { csv } from "d3-fetch";
-import { geoAzimuthalEqualArea } from 'd3-geo'
 import { CanvasGeo } from './CanvasGeo';
 import { Layer } from './Layer';
 import { Style } from './Style';
@@ -10,6 +8,7 @@ import { Tooltip } from './Tooltip';
 
 import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
+import { LabelLayer } from './LabelLayer';
 
 /**
  * A gridviz on a HTML canvas.
@@ -44,13 +43,6 @@ export class App {
          * @type {string} */
         this.backgroundColor = opts.backgroundColor || "white"
 
-        /** The projection from (lat,lon) to the CRS of the grid.
-          * ITt is used for example to project and show the toponyms in the foreground.
-          * By default, it is set to European projection, ETRS89-LAEA (EPSG:3035)
-          * @type {function} */
-        this.projection = geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000])//.scale(1)
-
-
         /** Make geo canvas
          * @type {CanvasGeo} */
         this.cg = new CanvasGeo();
@@ -67,59 +59,15 @@ export class App {
                 this.draw(layer);
             }
 
-            //draw toponyms
-            this.drawToponyms()
+            //draw label layer
+            if ((this.labelLayer))
+                this.labelLayer.draw(this.cg)
 
             return this
         };
 
-
-
-
-
-        //toponyms
-
-        this.toponymsURL = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv"
-
-        /** @typedef {{name: string, cat: number, pop_2011:number, lon:number, lat:number, x:number, y:number }} Toponym */
-        /** @type {Array.<Toponym>} */
-        this.toponyms = undefined;
-
-        //toponyms selection function
-
-        /** Return toponym style depending on its importance and the zoom level
-         * @type {function(Toponym,number):string} */
-        this.toponymStyle = (tn, zf) => {
-            if (zf < 50) {
-                return "bold 30px Arial";
-            }
-            if (zf < 100) {
-                return "bold 20px Arial";
-            }
-            if (zf < 200) {
-                return "bold 15px Arial";
-            }
-            if (zf < 300) {
-                if(tn.cat==2) return
-                return "bold 15px Arial";
-            }
-            if (zf < 400) {
-                if(tn.cat==2) return
-                if(tn.pop_2011<10000) return
-                return "bold 15px Arial";
-            }
-            if (zf < 500) {
-                if(tn.cat==2) return
-                if(tn.pop_2011<50000) return
-                return "bold 15px Arial";
-            }
-
-            if(tn.cat==2) return
-            if(tn.pop_2011<500000) return
-            return "bold 15px Arial";
-        }
-
-
+        /** @type {LabelLayer} */
+        this.labelLayer = new LabelLayer() //undefined;
 
 
         //tooltip
@@ -283,79 +231,6 @@ export class App {
         if (!cell) return undefined;
         return layer.dataset.cellInfoHTML(cell);
     }
-
-
-
-
-
-
-
-    /**
-     * @private
-     * 
-     * Draw the toponym names.
-     * 
-     * @returns {void}
-     */
-    drawToponyms() {
-
-        //load toponyms if necessary
-        if (!this.toponyms) {
-            this.loadToponyms();
-            return;
-        }
-
-        this.cg.ctx.fillStyle = "#00000044";
-        this.cg.ctx.textAlign = "center";
-        for (const tn of this.toponyms) {
-
-            //get toponym style
-            const st = this.toponymStyle(tn, this.getZoomFactor());
-            if (!st) continue;
-            this.cg.ctx.font = st;
-
-            //get toponym position
-            const tx = this.cg.geoToPixX(tn.x);
-            const ty = this.cg.geoToPixY(tn.y);
-
-            //draw toponym
-            this.cg.ctx.fillText(tn.name, tx, ty);
-        }
-    }
-
-    /**
-     * Load data for toponyms, from URL this.toponymsURL
-     * 
-     * @private
-     */
-    loadToponyms() {
-        csv(this.toponymsURL)
-            .then(
-                /** @param {*} data */
-                (data) => {
-                    this.toponyms = data;
-
-                    //project toponyms
-                    for (const tn of this.toponyms) {
-                        const p = this.projection([tn.lon, tn.lat])
-                        tn.x = p[0]; tn.y = p[1];
-                        delete tn.lon; delete tn.lat;
-                    }
-
-                    //redraw
-                    this.cg.redraw();
-                })
-            .catch(() => {
-                console.log("Failed loading toponyms from: " + this.toponymsURL)
-                this.toponyms = []
-            });
-    }
-
-
-
-
-
-
 
 
     //getters and setters
