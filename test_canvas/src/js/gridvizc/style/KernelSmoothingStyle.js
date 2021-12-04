@@ -18,20 +18,7 @@ export class KernelSmoothingStyle extends Style {
         this.value = value;
 
         /** @type {number} */
-        this.sigma = 10000
-
-        //prepare coefficients for gaussian computation
-        const c1 = this.sigma * Math.sqrt(2 * Math.PI);
-        const c2 = 2 * this.sigma * this.sigma;
-
-        /**
-         * The gaussian function.
-         * 
-         * @param {number} x 
-         * @returns {number}
-         * @private
-         */
-        this.gaussian = (x) => Math.exp(-x * x / c2) / c1
+        this.sigmaGeo = 10000
     }
 
 
@@ -64,39 +51,35 @@ export class KernelSmoothingStyle extends Style {
         const yMin = Math.floor(e.yMin / r) * r;
         const yMax = Math.floor(e.yMax / r) * r;
 
-        const nbX = (xMax - xMin) / r
-        const nbY = (yMax - yMin) / r
+        const nbX = (xMax - xMin) / r + 1
+        const nbY = (yMax - yMin) / r + 1
         console.log(nbX, nbY)
 
         //create input matrix (with 0 as values)
-        const inMat = [];
-        for (let i = 0; i <= nbX; i++) {
+        let matrix = [];
+        for (let i = 0; i < nbX; i++) {
             const col = [];
-            for (let j = 0; j <= nbY; j++) {
-                col.push([0, 0]);
+            for (let j = 0; j < nbY; j++) {
+                col.push(0);
             }
-            inMat.push(col);
+            matrix.push(col);
         }
 
-        //fill input matrix with input figures, non smoothed
+        //fill input matrix with input figures, not smoothed
         for (const c of cells) {
-            const i = (c.x - xMin)/r
-            const j = (c.y - yMin)/r
-console.log(i,j)
-            //inMat[i][j] = [this.value(c), 0];
+            if (c.x < xMin || c.x > xMax || c.y < yMin || c.y >= yMax)
+                continue;
+            const i = (c.x - xMin) / r
+            const j = (c.y - yMin) / r
+            matrix[i][j] = +this.value(c);
         }
-
-        //console.log(inMat)
 
         //compute smoothed matrix
+        matrix = kernelSmoothing(matrix, nbX, nbY, this.sigmaGeo / r)
 
         //draw smoothed matrix
-        for (let y = yMin; y <= yMax; y += r) {
-            for (let x = xMin; x <= xMax; x += r) {
-                //compute smoothed value
+        //TODO
 
-            }
-        }
     }
 
 
@@ -107,3 +90,14 @@ console.log(i,j)
 
 }
 
+function kernelSmoothing(m, nbX, nbY, sigma) {
+
+    //prepare coefficients for gaussian computation
+    const c1 = sigma * Math.sqrt(2 * Math.PI);
+    const c2 = 2 * sigma * sigma;
+
+    //the gaussian function.
+    const gaussian = (x) => Math.exp(-x * x / c2) / c1
+
+    return m;
+}
