@@ -11,14 +11,14 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class KernelSmoothingStyle extends Style {
 
-    constructor(value) {
+    constructor(value, sigmaGeo) {
         super()
 
         /** @private @type {function(Cell):number} */
         this.value = value;
 
         /** @type {number} */
-        this.sigmaGeo = 10000
+        this.sigmaGeo = sigmaGeo
     }
 
 
@@ -33,16 +33,6 @@ export class KernelSmoothingStyle extends Style {
 
         if (!cells || cells.length == 0)
             return;
-
-        //TODO
-        //See:
-        //NO https://github.com/Planeshifter/kernel-smooth/blob/master/examples/index.js
-        //NO https://github.com/jasondavies/science.js/tree/master/examples/kde
-        //NO https://gist.github.com/curran/b595fde4d771c5784421
-
-        //NO https://bl.ocks.org/rpgove/210f679b1087b517ce654b717e8247ac
-        //NO http://bl.ocks.org/rpgove/51621b3d35705b1a942a
-        //https://observablehq.com/@d3/kernel-density-estimation
 
         //compute extent
         const e = cg.updateExtentGeo();
@@ -74,8 +64,6 @@ export class KernelSmoothingStyle extends Style {
         //TODO
 
     }
-
-
 
 
     //getters and setters
@@ -137,10 +125,17 @@ function kernelSmoothing(m, nbX, nbY, sigma) {
             let sumWeights = 0;
             for (let wi = -windowSize; wi <= windowSize; wi++)
                 for (let wj = -windowSize; wj <= windowSize; wj++) {
+
+                    //TODO use symetric
+                    if (i + wi < 0 || i + wi >= nbX || j + wj < 0 || j + wj >= nbY)
+                        continue;
+
                     //compute weight of pixel (i+wi,j+wj)
-                    const weight = gaussian( Math.sqrt(wi*wi+wj*wj) ); //TODO with gaussian
+                    const weight = gaussian(Math.sqrt(wi * wi + wj * wj)); //TODO with gaussian
+
                     //add contribution of pixel (i+wi,j+wj): its weight times its value
-                    sval += weight * m[i+wi][j+wj]
+                    sval += weight * m[i + wi][j + wj]
+
                     //keep sum of weights
                     sumWeights += weight;
                 }
@@ -150,3 +145,13 @@ function kernelSmoothing(m, nbX, nbY, sigma) {
     }
     return out;
 }
+
+
+        //See:
+        //NO https://github.com/Planeshifter/kernel-smooth/blob/master/examples/index.js
+        //NO https://github.com/jasondavies/science.js/tree/master/examples/kde
+        //NO https://gist.github.com/curran/b595fde4d771c5784421
+
+        //NO https://bl.ocks.org/rpgove/210f679b1087b517ce654b717e8247ac
+        //NO http://bl.ocks.org/rpgove/51621b3d35705b1a942a
+        //https://observablehq.com/@d3/kernel-density-estimation
