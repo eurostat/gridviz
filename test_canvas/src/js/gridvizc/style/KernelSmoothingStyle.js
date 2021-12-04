@@ -11,8 +11,11 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class KernelSmoothingStyle extends Style {
 
-    constructor() {
+    constructor(value) {
         super()
+
+        /** @private @type {function(Cell):number} */
+        this.value = value;
 
         /** @type {number} */
         this.sigma = 10000
@@ -48,7 +51,7 @@ export class KernelSmoothingStyle extends Style {
         //NO https://gist.github.com/curran/b595fde4d771c5784421
 
         //NO https://bl.ocks.org/rpgove/210f679b1087b517ce654b717e8247ac
-        //http://bl.ocks.org/rpgove/51621b3d35705b1a942a
+        //NO http://bl.ocks.org/rpgove/51621b3d35705b1a942a
         //https://observablehq.com/@d3/kernel-density-estimation
 
         //compute extent
@@ -58,12 +61,28 @@ export class KernelSmoothingStyle extends Style {
         const yMin = Math.floor(e.yMin / r) * r;
         const yMax = Math.floor(e.yMax / r) * r;
 
-        //draw pixels
+        //create input matrix (with 0 as values)
+        const inMat = [];
+        for (let x = xMin; x <= xMax; x += r) {
+            const col = [];
+            for (let y = yMin; y <= yMax; y += r) {
+                col.push([0,0]);
+            }
+            inMat.push(col);
+        }
+
+        //fill input matrix with input figures, non smoothed
+        for (const c of cells)
+            inMat[c.x-xMin][c.y-yMin] = [this.value(c),0];
+
+        console.log(inMat)
+
+        //compute smoothed matrix
+
+        //draw smoothed matrix
         for (let y = yMin; y <= yMax; y += r) {
             for (let x = xMin; x <= xMax; x += r) {
                 //compute smoothed value
-                
-
 
             }
         }
