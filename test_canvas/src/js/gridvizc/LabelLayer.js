@@ -12,25 +12,26 @@ export class LabelLayer {
 
     /**
      */
-    constructor() {
-        //
-        this.toponymsURL = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv"
+    constructor(url, labelStyle, projection) {
 
-        /** @typedef {{name: string, cat: number, pop_2011:number, lon:number, lat:number, x:number, y:number }} Toponym */
-        /** @type {Array.<Toponym>} */
-        this.toponyms = undefined;
+        /** @type {string} */
+        this.url = url || "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv"
+
+        /** @typedef {{name: string, cat: number, pop_2011:number, lon:number, lat:number, x:number, y:number }} Label */
+        /** @type {Array.<Label>} */
+        this.labels = undefined;
 
         /** The projection from (lat,lon) to the CRS of the grid.
-          * ITt is used for example to project and show the toponyms in the foreground.
+          * ITt is used for example to project and show the labels in the foreground.
           * By default, it is set to European projection, ETRS89-LAEA (EPSG:3035)
           * @type {function} */
-        this.projection = geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000])//.scale(1)
+        this.projection = projection || geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000])//.scale(1)
 
-        //toponyms selection function
+        //labels selection function
 
-        /** Return toponym style depending on its importance and the zoom level
-         * @type {function(Toponym,number):string} */
-        this.toponymStyle = (tn, zf) => {
+        /** Return label style depending on its importance and the zoom level
+         * @type {function(Label,number):string} */
+        this.labelStyle = labelStyle || function(tn, zf) {
             if (zf < 50) {
                 return "bold 30px Arial";
             }
@@ -70,44 +71,44 @@ export class LabelLayer {
      */
     draw(cg) {
 
-        //load toponyms if necessary
-        if (!this.toponyms) {
+        //load labels if necessary
+        if (!this.labels) {
             this.load(cg.redraw);
             return;
         }
 
         cg.ctx.fillStyle = "#00000044";
         cg.ctx.textAlign = "center";
-        for (const tn of this.toponyms) {
+        for (const tn of this.labels) {
 
-            //get toponym style
-            const st = this.toponymStyle(tn, cg.zf);
+            //get label style
+            const st = this.labelStyle(tn, cg.zf);
             if (!st) continue;
             cg.ctx.font = st;
 
-            //get toponym position
+            //get label position
             const tx = cg.geoToPixX(tn.x);
             const ty = cg.geoToPixY(tn.y);
 
-            //draw toponym
+            //draw label
             cg.ctx.fillText(tn.name, tx, ty);
         }
     }
 
     /**
-     * Load data for toponyms, from URL this.toponymsURL
+     * Load data for labels, from URL this.url
      * @param {function():void} callback
      * @private
      */
     load(callback) {
-        csv(this.toponymsURL)
+        csv(this.url)
             .then(
                 /** @param {*} data */
                 (data) => {
-                    this.toponyms = data;
+                    this.labels = data;
 
-                    //project toponyms
-                    for (const tn of this.toponyms) {
+                    //project labels
+                    for (const tn of this.labels) {
                         const p = this.projection([tn.lon, tn.lat])
                         tn.x = p[0]; tn.y = p[1];
                         delete tn.lon; delete tn.lat;
@@ -117,8 +118,8 @@ export class LabelLayer {
                     if(callback) callback()
                 })
             .catch(() => {
-                console.log("Failed loading toponyms from: " + this.toponymsURL)
-                this.toponyms = []
+                console.log("Failed loading labels from: " + this.url)
+                this.labels = []
             });
     }
 

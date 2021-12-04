@@ -6,7 +6,7 @@ TODO mouse over: Show rectangle.
 
 TODO style radar
 
-TODO toponyms - improve selection
+TODO labels - improve selection
 
 TODO zoom/pan smartphone/touchscreen - use d3 events - TODO make new canvasgeo based on d3 zoom/pan/over
 TODO modularise further canvasgeo (make ctx private ?)
