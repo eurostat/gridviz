@@ -328,32 +328,34 @@ export class App {
         continue;
       };
 
-      // set current resolution for placename requests
-      this.updateCurrentResolution(layer.dataset.resolution);
+      if (layer.dataset.cells || layer.dataset.info) {
+        // set current resolution for placename requests
+        this.updateCurrentResolution(layer.dataset.resolution);
 
-      // set raycaster threshold (for tooltip hover)
-      this.updateRaycasterThreshold(layer.dataset.resolution);
+        // set raycaster threshold (for tooltip hover)
+        this.updateRaycasterThreshold(layer.dataset.resolution);
 
-      //create or update legend
-      if (this.showLegend_) {
-        if (layer.legend) {
-          if (layer.__Legend) {
-            layer.__Legend.updateLegend();
-          } else {
-            layer.__Legend = new Legend(layer.legend);
+        //create or update legend
+        if (this.showLegend_) {
+          if (layer.legend) {
+            if (layer.__Legend) {
+              layer.__Legend.updateLegend();
+            } else {
+              layer.__Legend = new Legend(layer.legend);
+            }
           }
         }
-      }
 
-      //get data to show if necessary
-      //layer.dataset.getData(this.viewer.extGeo, () => { this.draw(layer); });
+        //get data to show if necessary
+        if (layer.dataset.info) layer.dataset.getData(this.viewer.extGeo, () => { this.draw(layer); });
 
-      //draw cells
-      this.draw(layer);
+        //draw cells
+        this.draw(layer);
 
-      //show if hidden
-      if (layer.hidden == true) {
-        this.showLayer(layer);
+        //show if hidden
+        if (layer.hidden == true) {
+          this.showLayer(layer);
+        }
       }
     }
   }
@@ -447,7 +449,7 @@ export class App {
    */
   addTiledGrid(url, styles, minZoom, maxZoom, preprocess = null) {
     this.add(
-      new TiledGrid(url, preprocess).loadInfo(() => { 
+      new TiledGrid(url, preprocess).loadInfo(() => {
         Loading.hideLoading();
 
         // for mobile devices
@@ -455,7 +457,7 @@ export class App {
 
         // draw cells
         this.redraw();
-       }),
+      }),
       styles, minZoom, maxZoom
     )
   }
@@ -856,15 +858,23 @@ export class App {
         });
         //find cell in original array
         let index = intersect.index;
-        let cell = intersectedLayer.dataset.cells[index];
 
-        //change cell colour
-        this.highlightPoint(intersect);
 
-        //show tooltip & update its content
-        this._tooltip.show();
+        let cell;
+        if (intersectedLayer.dataset.cells) { // CSVGrid
+          cell = intersectedLayer.dataset.cells[index];
+        } // TODO: find cell in TiledGrid
 
-        this._tooltip.updateTooltip(cell, mouse_position[0], mouse_position[1], cell.color || 'none')
+        if (cell) {
+          //change cell colour
+          this.highlightPoint(intersect);
+
+          //show tooltip & update its content
+          this._tooltip.show();
+
+          this._tooltip.updateTooltip(cell, mouse_position[0], mouse_position[1], cell.color || 'none')
+        }
+
 
       } else {
         this._tooltip.hide();
