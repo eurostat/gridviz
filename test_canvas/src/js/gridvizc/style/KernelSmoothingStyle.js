@@ -178,7 +178,6 @@ export class KernelSmoothingStyle extends Style {
                 const val = +matrix[i][j]
 
                 //set color
-                //TODO better, using max value maybe
                 cg.ctx.fillStyle = this.color(val / maxValue);
 
                 //cell geo position
