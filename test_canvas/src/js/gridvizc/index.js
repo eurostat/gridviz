@@ -20,6 +20,7 @@ export { CompositionStyle } from "./style/CompositionStyle"
 export { SegmentStyle } from "./style/SegmentStyle"
 export { TextStyle } from "./style/TextStyle"
 
-//export Eurostat label layer
+//export label layer
+export { LabelLayer } from "./LabelLayer"
 export { getEurostatLabelLayer } from "./LabelLayer"
 
