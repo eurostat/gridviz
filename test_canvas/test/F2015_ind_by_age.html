@@ -24,7 +24,7 @@
             .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100)//.setBackgroundColor("black")
 
         const col = gviz.color().interpolateRdYlBu;
-        const s = gviz.CompositionStyle(
+        const s = new gviz.CompositionStyle(
             {
                 "Ind_0_3": col(0),
                 "Ind_4_5": col(4 / 80),

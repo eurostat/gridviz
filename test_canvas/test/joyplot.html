@@ -15,8 +15,8 @@
             .setGeoCenter({ x: 4000000, y: 2300000 }).setZoomFactor(200)
 
         //define datasets, styles and layers
-        const s = gviz.JoyPlotStyle({ val: c => 30 * Math.sqrt(c["2018"]), unit: "geo" }).setZFStroke(70);
-        //const s = gviz.JoyPlotStyle({ val: c => 400 * Math.sqrt(c["2011"]) / 10, unit: "geo" }).setZFStroke(70);
+        const s = new gviz.JoyPlotStyle({ val: c => 30 * Math.sqrt(c["2018"]), unit: "geo" }).setZFStroke(70);
+        //const s = new gviz.JoyPlotStyle({ val: c => 400 * Math.sqrt(c["2011"]) / 10, unit: "geo" }).setZFStroke(70);
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 300, null, ttfun);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 300, 600, null, ttfun);

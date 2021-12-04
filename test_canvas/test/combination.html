@@ -15,10 +15,10 @@
             .setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(3)
 
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
-        const s1 = gviz.JoyPlotStyle(
+        const s1 = new gviz.JoyPlotStyle(
             { val: c => 13 * Math.sqrt(c["Inhabitants"]), unit: "geo" }
         ).setZFStroke(3).setFillColor("#77777777");
-        const s2 = gviz.ShapeColorSizeStyle(
+        const s2 = new gviz.ShapeColorSizeStyle(
             c => gviz.color().interpolateReds(2 * c["Population over 65"] / c["Inhabitants"]),
             { val: c => c["Inhabitants"] / 3, unit: "geo" },
             c => "circle"

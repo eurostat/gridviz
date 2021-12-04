@@ -15,7 +15,7 @@
             .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100)
 
         //define datasets, styles and layers
-        const s = gviz.ShapeColorSizeStyle(
+        const s = new gviz.ShapeColorSizeStyle(
             c => {
                 if (c["2011"] == 0 && c["2018"] === 0) return "white"
                 if (c["2018"] == 0) return gviz.color().interpolateRdBu(0);

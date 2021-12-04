@@ -24,7 +24,7 @@
 
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
         app.setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(3)
-        const s = gviz.CompositionStyle(
+        const s = new gviz.CompositionStyle(
             { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
             c => "flag",
             { val: c => 5 * Math.sqrt((c["Inhabitants"])), unit: "geo" }
