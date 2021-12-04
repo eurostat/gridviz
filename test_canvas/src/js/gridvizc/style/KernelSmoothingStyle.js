@@ -33,9 +33,8 @@ export class KernelSmoothingStyle extends Style {
         //https://bl.ocks.org/rpgove/210f679b1087b517ce654b717e8247ac
         //https://observablehq.com/@d3/kernel-density-estimation
 
-        
-    }
 
+    }
 
     //getters and setters
     //TODO
