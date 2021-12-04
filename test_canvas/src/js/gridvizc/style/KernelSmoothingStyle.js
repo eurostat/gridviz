@@ -41,9 +41,9 @@ export class KernelSmoothingStyle extends Style {
         const yMin = Math.floor(e.yMin / r) * r;
         const yMax = Math.floor(e.yMax / r) * r;
 
+        //compute matrix dimensions
         const nbX = (xMax - xMin) / r + 1
         const nbY = (yMax - yMin) / r + 1
-        console.log(nbX, nbY)
 
         //create and fill input matrix with input figures, not smoothed
         let matrix = getEmptyMatrix(nbX, nbY);
@@ -57,8 +57,6 @@ export class KernelSmoothingStyle extends Style {
 
         //compute smoothed matrix
         matrix = kernelSmoothing(matrix, nbX, nbY, this.sigmaGeo / r)
-
-        console.log(matrix)
 
         //draw smoothed matrix
         //TODO
@@ -140,6 +138,7 @@ function kernelSmoothing(m, nbX, nbY, sigma) {
                     sumWeights += weight;
                 }
             //TODO check sumWeights is (almost) equal to 1
+            console.log(sumWeights)
             out[i][j] = sval / sumWeights
         }
     }
