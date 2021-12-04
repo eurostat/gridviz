@@ -89,6 +89,38 @@ function getEmptyMatrix(nbX, nbY) {
     return matrix;
 }
 
+/**
+ * compute window matrix, that is the matrix of the weights
+ * one quadrant is necessary only, since it is symetrical (along both x and y axes)
+ * 
+ * @param {number} sigma 
+ * @returns 
+ */
+function kernelWindow(sigma) {
+
+    //the size of the window: lets limit that to ~4 times the standard deviation, as an approximation.
+    const windowSize = Math.floor(3 * sigma) + 1;
+
+    //prepare coefficients for gaussian computation, to avoid computing them every time.
+    const c2 = 2 * sigma * sigma;
+
+    //the gaussian function.
+    const gaussian = (x, y) => Math.exp(-(x * x + y * y) / c2)
+
+    const window = []
+    for (let wi = 0; wi <= windowSize; wi++) {
+        const col = []
+        for (let wj = 0; wj <= windowSize; wj++) {
+            //compute weight at wi,wj
+            const val = gaussian(wi, wj)
+            col.push(val)
+        }
+        window.push(col)
+    }
+    return window
+}
+
+
 
 /**
  * Compute kernel smoothing.
@@ -104,28 +136,10 @@ function kernelSmoothing(m, nbX, nbY, sigma) {
     //create output matrix
     const out = getEmptyMatrix(nbX, nbY);
 
-    //prepare coefficients for gaussian computation, to avoid computing them every time.
-    const c2 = 2 * sigma * sigma;
-
-    //the gaussian function.
-    const gaussian = (x, y) => Math.exp(-(x * x + y * y) / c2)
-
-    //the size of the window: lets limit that to ~4 times the standard deviation, as an approximation.
-    const windowSize = Math.floor(3 * sigma) + 1;
-
     //compute window matrix, that is the matrix of the weights
     //one quadrant is necessary only, since it is symetrical (along both x and y axes)
-    const window = []
-    for (let wi = 0; wi <= windowSize; wi++) {
-        const col = []
-        for (let wj = 0; wj <= windowSize; wj++) {
-            //compute weight at wi,wj
-            const val = gaussian(wi, wj)
-            col.push(val)
-        }
-        window.push(col)
-    }
-    console.log(window)
+    const window = kernelWindow(sigma)
+    const windowSize = window.length
 
     //make smoothing, cell by cell
     for (let i = 0; i < nbX; i++) {
