@@ -1,5 +1,6 @@
 TODO style kernel smoothing
 TODO style trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php
+
 TODO adaptative style: with automated classification taking into account only the data within the viewshed
 TODO mouse over: Show rectangle.
 
