@@ -18,9 +18,9 @@
         const s = new gviz.ShapeColorSizeStyle(
             c => {
                 if (c["2011"] == 0 && c["2018"] === 0) return "white"
-                if (c["2018"] == 0) return gviz.color().interpolateRdBu(0);
+                if (c["2018"] == 0) return gviz.interpolateRdBu(0);
                 const r = (c["2018"] - c["2011"]) / c["2011"];
-                return gviz.color().interpolateRdBu(-r * 5 + 0.5);
+                return gviz.interpolateRdBu(-r * 5 + 0.5);
             },
             null,
             c => "square"

@@ -23,7 +23,7 @@
         const app = new gviz.App()
             .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setLabelLayer(gviz.getEurostatLabelLayer())//.setBackgroundColor("black")
 
-        const col = gviz.color().interpolateRdYlBu;
+        const col = gviz.interpolateRdYlBu;
         const s = new gviz.CompositionStyle(
             {
                 "Ind_0_3": col(0),

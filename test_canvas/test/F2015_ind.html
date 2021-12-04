@@ -16,7 +16,7 @@
 
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle(
-            c => gviz.color().interpolateSpectral(1 - c["Ind"]/400),
+            c => gviz.interpolateSpectral(1 - c["Ind"]/400),
             null,
             c => "square"
         ).setZFStroke(15);

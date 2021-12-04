@@ -17,7 +17,7 @@
         //define datasets, styles and layers
         const s = new gviz.TextStyle(
             c => c["Ind"],
-            c => gviz.color().interpolateSpectral(1 - c["Ind"] / 3000),
+            c => gviz.interpolateSpectral(1 - c["Ind"] / 3000),
             c => 12 //4 * Math.pow(c["Ind"], 0.1)
         ).setZFStroke(999999).setStrokeColor("#dddddd").setStrokeWidth(0.5);
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
