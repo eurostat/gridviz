@@ -12,7 +12,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2300000 }).setZoomFactor(200)
+            .setGeoCenter({ x: 4000000, y: 2300000 }).setZoomFactor(200).setLabelLayer(gviz.getEurostatLabelLayer())
 
         //define datasets, styles and layers
         const s = new gviz.JoyPlotStyle({ val: c => 30 * Math.sqrt(c["2018"]), unit: "geo" }).setZFStroke(70);
