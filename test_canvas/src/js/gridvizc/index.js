@@ -3,9 +3,8 @@
 //the application
 
 import { App as App_ } from "./App"
-export const App = function (opts) {
-    return new App_(opts)
-}
+export const App = App_
+
 
 
 //export color (the entire d3 scale chromatic)
