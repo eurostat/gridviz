@@ -1,16 +1,16 @@
 //@ts-check
 
-import { App as App_ } from "./App"
-import * as dsc from "d3-scale-chromatic"
+//the application
 
+import { App as App_ } from "./App"
 export const App = function (opts) {
     return new App_(opts)
 }
 
 
-
-
 //export color (the entire d3 scale chromatic)
+
+import * as dsc from "d3-scale-chromatic"
 export const color = function () {
     return dsc
 }
@@ -33,7 +33,14 @@ export const TiledGrid = function (url, preprocess = null) {
 
 
 
+
 //export styles
+
+
+//test
+import { ShapeColorSizeStyle as gfddf } from "./style/ShapeColorSizeStyle"
+export const ShapeColorSizeStyle2 = gfddf
+//test
 
 import { ShapeColorSizeStyle as ShapeColorSizeStyle_ } from "./style/ShapeColorSizeStyle"
 export const ShapeColorSizeStyle = function (color_, size, shape) {
@@ -61,6 +68,9 @@ export const TextStyle = function (text, color_, fontSize, fontFamily, fontWeigh
 }
 
 
+
+
 //export Eurostat label layer
+
 import { getEurostatLabelLayer as a } from "./LabelLayer"
 export const getEurostatLabelLayer = a
