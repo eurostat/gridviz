@@ -4,10 +4,12 @@
 export { App } from "./App"
 
 //export color (the entire d3 scale chromatic) //TODO simpler ?
+//export * as color2 from "d3-scale-chromatic"
 import * as dsc from "d3-scale-chromatic"
 export const color = function () {
     return dsc
 }
+
 
 //export dataset types
 export { CSVGrid } from "./dataset/CSVGrid"
