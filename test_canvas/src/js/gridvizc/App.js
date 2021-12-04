@@ -55,7 +55,7 @@ export class App {
          * @type {CanvasGeo} */
         this.cg = new CanvasGeo();
         this.cg.redraw = () => {
-            console.log(this.getZoomFactor())
+            //console.log(this.getZoomFactor())
 
             //go through the list of layers and find the one(s) to draw
             for (const layer of this.getActiveLayers()) {
