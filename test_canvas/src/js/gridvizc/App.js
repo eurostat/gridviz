@@ -67,7 +67,7 @@ export class App {
         };
 
         /** @type {LabelLayer} */
-        this.labelLayer = new LabelLayer() //undefined;
+        this.labelLayer = undefined;
 
 
         //tooltip
