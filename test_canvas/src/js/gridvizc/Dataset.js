@@ -13,25 +13,31 @@
 export class Dataset {
 
     /**
-     * @param {string} url The url of the dataset.
-     * @param {number} resolution The dataset resolution (in geographical unit).
-     * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
-     * @param {function(Cell):string} cellInfoHTML The HTML content providing information on the grid cell.
+     * @param {*} opts 
      * @abstract
      */
-    constructor(url, resolution, preprocess = null, cellInfoHTML = null) {
+    constructor(opts) {
+        opts = opts || {};
 
-        /** @protected @type {string} */
-        this.url = url;
+        /**
+         * The url of the dataset.
+         * @protected @type {string} */
+        this.url = opts.url;
 
-        /** @protected @type {number} */
-        this.resolution = resolution;
+        /**
+         * The dataset resolution (in geographical unit).
+         * @protected @type {number} */
+        this.resolution = opts.resolution;
 
-        /** @protected @type {function(Cell):void} */
-        this.preprocess = preprocess;
+        /**
+         * A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+         * @protected @type {function(Cell):void} */
+        this.preprocess = opts.preprocess;
 
-        /** @type {function(Cell):string} */
-        this.cellInfoHTML = cellInfoHTML || defaultCellInfoHTML;
+        /**
+         * The HTML content providing information on the grid cell.
+         * @type {function(Cell):string} */
+        this.cellInfoHTML = opts.cellInfoHTML || defaultCellInfoHTML;
     }
 
 
