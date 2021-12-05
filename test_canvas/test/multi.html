@@ -34,11 +34,13 @@
         ).setOffset({ dx: 0.366 * r, dy: -0.366 * r }).setZFStroke(1);
 
         app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s30, s14, s65], 0, 9999999999,
-            c => {
-                c.x *= 100; c.y *= 100;
-                if (c["Population under 14"] < 0) c["Population under 14"] = 0;
-                if (c["Population over 65"] < 0) c["Population over 65"] = 0;
-                c["pop_"] = c["Inhabitants"] - c["Population under 14"] - c["Population over 65"];
+            {
+                preprocess: c => {
+                    c.x *= 100; c.y *= 100;
+                    if (c["Population under 14"] < 0) c["Population under 14"] = 0;
+                    if (c["Population over 65"] < 0) c["Population over 65"] = 0;
+                    c["pop_"] = c["Inhabitants"] - c["Population under 14"] - c["Population over 65"];
+                }
             })
 
     </script>
