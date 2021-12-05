@@ -12,9 +12,10 @@ import { Dataset, Cell, Envelope } from "../Dataset"
 export class CSVGrid extends Dataset {
 
     /**
+     * @param {string} url The URL of the dataset
      * @param {object} opts 
      */
-    constructor(opts) {
+    constructor(url, opts) {
         super(opts)
 
         /** @private @type {Array.<Cell>} */

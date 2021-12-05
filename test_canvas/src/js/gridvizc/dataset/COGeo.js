@@ -9,8 +9,8 @@ import { Dataset, Cell, Envelope } from "../Dataset"
  */
 export class GeoTiff extends Dataset {
 
-    constructor(opts) {
-        super(opts)
+    constructor(url, opts) {
+        super(url, opts)
     }
 
     //TODO Use https://geotiffjs.github.io/

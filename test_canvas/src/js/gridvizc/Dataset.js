@@ -13,16 +13,17 @@
 export class Dataset {
 
     /**
+     * @param {string} url The URL of the dataset
      * @param {object} opts 
      * @abstract
      */
-    constructor(opts) {
+    constructor(url, opts) {
         opts = opts || {};
 
         /**
          * The url of the dataset.
          * @protected @type {string} */
-        this.url = opts.url;
+        this.url = url;
 
         /**
          * The dataset resolution (in geographical unit).

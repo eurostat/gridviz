@@ -14,10 +14,11 @@ import { Dataset, Cell, Envelope } from "../Dataset"
 export class TiledGrid extends Dataset {
 
     /**
+     * @param {string} url The URL of the dataset
      * @param {object} opts 
      */
-    constructor(opts) {
-        super(opts)
+    constructor(url, opts) {
+        super(url, opts)
         opts = opts || {};
 
         /**
