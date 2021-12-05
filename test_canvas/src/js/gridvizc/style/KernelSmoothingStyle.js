@@ -13,7 +13,7 @@ export class KernelSmoothingStyle extends Style {
 
     /**
      * @param {function(Cell):number} value 
-     * @param {function} color 
+     * @param {function(number,number,number):string} color 
      * @param {number} sigmaGeo 
      */
     constructor(value, color, sigmaGeo) {
@@ -160,20 +160,24 @@ export class KernelSmoothingStyle extends Style {
         matrix = this.kernelSmoothing(matrix, nbX, nbY, this.sigmaGeo / r)
         //console.log(matrix)
 
-        //get max value
-        let maxValue = -Infinity
+        //get min and max value
+        let minValue = Infinity, maxValue = -Infinity
         for (let i = 0; i < nbX; i++)
-            for (let j = 0; j < nbY; j++)
-                if (matrix[i][j] > maxValue) maxValue = matrix[i][j];
+            for (let j = 0; j < nbY; j++) {
+                const sval = matrix[i][j]
+                if (sval > maxValue) maxValue = sval;
+                if (sval < minValue) minValue = sval;
+            }
 
         //draw smoothed matrix
         for (let i = 0; i < nbX; i++) {
             for (let j = 0; j < nbY; j++) {
+
                 //get value
-                const val = +matrix[i][j]
+                const sval = +matrix[i][j]
 
                 //set color
-                cg.ctx.fillStyle = this.color(Math.pow(val / maxValue, 0.35));
+                cg.ctx.fillStyle = this.color(sval, minValue, maxValue)
 
                 //cell geo position
                 const xG = xMin + i * r;
