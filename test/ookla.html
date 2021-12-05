@@ -2,71 +2,52 @@
 <html>
 
 <head>
-    <meta charset="utf-8" />
-    <title>Internet speed</title>
-    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
+  <meta charset="utf-8" />
+  <title>5km² Grid of Europe</title>
+  <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+  <meta name="viewport" content="width=device-width" />
 </head>
 
 <body style="margin: 0">
-    <div id="viz-container"></div>
+  <div id="viz-container"></div>
 </body>
-
 <script src="../build/gridviz.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.3.0/d3.min.js"
-    integrity="sha512-wKo55+1oH5DGJ19ScVUHTtcZiqJuSnknSs8CgzzEm1lNftJRDXN/kWpF9Kx+vPam8HBeg53OxS0MYd0+Iz9cjQ=="
-    crossorigin="anonymous"></script>
-
 <script>
+  let containerDiv = document.getElementById("viz-container");
 
-    let domain = ["1", "10000"].reverse(); //cell population domain
-    let colorScale = d3.scaleSequentialSqrt(domain, d3.interpolateCividis)
+  let app = gridviz
+    .app()
+    .container(containerDiv)
+    .zoom(10000)
+    .geoCenter([3900000, 3170000])
+    .showPlacenames(true)
+    .cellCount(true)
+    .nuts(true)
+    .title("Population grids of Europe")
+    .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
+    .build();
 
-    let containerDiv = document.getElementById("viz-container");
-    let viewer = gridviz
-        .App()
-        .container(containerDiv)
-        .gridData(
-            {
-                url: "../assets/csv/World/ookla_download_Q1_2020_fixed.csv", //https://github.com/teamookla/ookla-open-data
-                cellSize: 0.005,
-            },
-        )
-        .zoom(200)
-        //.EPSG("4326") //for nuts files and placenames
-        .title("Average broadband download speed (MB/s)")
-        .cellCount(true)
-        .colorField("mbps")
-        .backgroundColor('black')
-        .lineWidth(0.001)
-        .lineColor("rgb(255, 255, 255)")
-        //.colorSchemeName("interpolateCividis")
-        //.colorScaleName('scaleSequentialLog')
-        //.colorScaleName("scaleThreshold")
-        .thresholds([5, 10, 25, 50, 100, 946])
-        //.reverseColorScheme(true)
-        .colors(["#c51b7d", "#ad388a", "#945497", "#32c6cb", "#19e3d8", "#00ffe5"])
-        //.colors(["#174060","#1C627C","#288AA1","#2CAFC4","#FDBEB0","#F3767E","#CE3658","#94003A"].reverse())
-        //.thresholds([1000, 10000, 50000, 10000, 100000])
-        //.zoom(100)
-        .sourcesHTML("<p>Source: <a target='__blank' href='https://github.com/teamookla/ookla-open-data'>OOKLA open data</a></p>")
-        .legend({
-            title: "Average download speed (MB/s)",
-            titleWidth: 130,
-        })
-        .tooltip({
-            eventType: "click", // click vs mousemove
-            showLAU: false,
-            showEPSG: false, 
-            showNUTS: false,
-            showCoordinates: true,
-        })
-        .build();
+  //define datasets, styles and layers
+  const s = gridviz.getColorSizeShapeStyle(
+    c => {
+        if (c["Mb/s"] > 900) return "#00ffe5";
+        if (c["Mb/s"] > 100) return "#19e3d8";
+        if (c["Mb/s"] > 50) return "#32c6cb";
+        if (c["Mb/s"] > 25) return "#945497";
+        if (c["Mb/s"] > 10) return "#ad388a";
+        if (c["Mb/s"] > 5) return "#c51b7d";
+        return "red";
+    },
+    null,
+    c => "square"
+  )
 
-    app.addGeoJson('https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_BN_10M_2020_4326.geojson');
+  app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/ookla/ookla_dl_europe.csv", 400, [s], 0, 99999999999999);
+  //app.addGeoJson('https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_BN_10M_2020_4326.geojson');
 
-
+// .thresholds([5, 10, 25, 50, 100, 946])
+// //.reverseColorScheme(true)
+// .colors(["#c51b7d", "#ad388a", "#945497", "#32c6cb", "#19e3d8", "#00ffe5"])
 </script>
 
 </html>

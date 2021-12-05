@@ -147,7 +147,7 @@ export class Camera {
         if (isMobile) {
             return 5; //due to a bug with pan & zoom, we have to scale everything on mobile to webgl coords
         } else {
-            return zoom * 50000;
+            return zoom * 500000;
             //return Math.pow(8, app._currentResolution);
         }
     }

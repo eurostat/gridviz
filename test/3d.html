@@ -25,34 +25,26 @@
 
   let containerDiv = document.getElementById("viz-container");
 
-  gridviz
-    .App()    
+  let app = gridviz
+    .app()    
     .title("3D test example")
     .subtitle("Left click and drag to orbit in 3D, right click to pan")
     .container(containerDiv)
-    .gridData(
-      {
-        url: "../../assets/csv/Croatia/croatia_tourism_grid.csv",
-        cellSize: 1000,
-      },
-    )
-    .colorField("NIGHTS_FOR")
-    .sizeField("NIGHTS_TOT") // csv column which you wish to visualize
-    .sizeScaleFunction(sizeScale)
     .geoCenter([4900000,2475000])
     .zoom(500000) //initial camera Z value
     .cellCount(true)
-    .cellShape('bar')
-    .mode('3D')
-    .colorSchemeName('interpolateOrRd')
-    .colorScaleName('scaleSequentialLog')
-    .backgroundColor('#000')
-    .legend({
-      title: "Total foreign tourist nights per km² (2017)",
-      ticks: 4,
-    })
+    .nuts(true)
+    .nutsCountry("HR")
+    //.mode("3D")
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
+
+    const s = gridviz.getColorSizeShapeStyle(
+    c => gridviz.color().interpolateOrRd(Math.pow(c["NIGHTS_FOR"], 0.5) / 100),
+    null,
+    c => "square"
+  )
+    app.addCSVGrid("../../assets/csv/Croatia/croatia_tourism_grid.csv", 1000, [s], 0, 9999999999);
 </script>
 
 </html>

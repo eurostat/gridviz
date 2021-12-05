@@ -1,4 +1,4 @@
-// to be re-integrated into gridviz via styles
+// DEPRECATED: to be re-integrated into gridviz via styles
 import {
     Color,
     BoxBufferGeometry,

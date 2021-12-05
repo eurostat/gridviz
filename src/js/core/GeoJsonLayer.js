@@ -18,10 +18,15 @@ export class GeoJsonLayer {
      * Creates an instance of GeoJsonLayer.
      * @memberof GeoJsonLayer
      * @param {Array} features geojson features array
+     * @param {Number} lineWidth line width in webgl
+     * @param {String} lineColor line color hex string
+     * @param {Number} zerosRemoved number of trailing zeros to be removed from coordinates
      * @returns {Three.Group} ThreeJS group of line geometries
      */
-    constructor(features) {
+    constructor(features, lineColor, lineWidth, zerosRemoved) {
         this.features = features;
+        this.lineColor = lineColor || "grey";
+        this.lineWidth = lineWidth || 0.001;
         this.layerZ = CONSTANTS.line_z;
         this.group = new Group();
         this.group.renderOrder = 999; //always on top of grid cells
@@ -36,25 +41,25 @@ export class GeoJsonLayer {
                     let coords = [];
                     for (let s = 0; s < feature.geometry.coordinates[c].length; s++) {
                         let xyz;
-                        if (app.zerosRemoved_) {
-                            let d = Number('1E' + app.zerosRemoved_);
+                        if (zerosRemoved) {
+                            let d = Number('1E' + zerosRemoved);
                             xyz = {
                                 x: feature.geometry.coordinates[c][s][0] / d,
                                 y: feature.geometry.coordinates[c][s][1] / d,
-                                z: layerZ
+                                z: this.layerZ
                             };
                         } else {
                             xyz = {
                                 x: feature.geometry.coordinates[c][s][0],
                                 y: feature.geometry.coordinates[c][s][1],
-                                z: layerZ
+                                z: this.layerZ
                             };
                         }
 
                         coords.push(xyz);
                     }
                     if (coords.length > 0) {
-                        this.group.add(createLineFromCoords(coords, app.lineColor_, app.lineWidth_));
+                        this.group.add(this.createLineFromCoords(coords, this.lineColor, this.lineWidth));
                     }
 
                 } else if (feature.geometry.type == "MultiPolygon") {
@@ -67,40 +72,40 @@ export class GeoJsonLayer {
                             m++
                         ) {
                             let xyz;
-                            if (app.zerosRemoved_) {
-                                let d = Number('1E' + app.zerosRemoved_);
+                            if (zerosRemoved) {
+                                let d = Number('1E' + zerosRemoved);
                                 xyz = {
                                     x: feature.geometry.coordinates[c][s][m][0] / d,
                                     y: feature.geometry.coordinates[c][s][m][1] / d,
-                                    z: layerZ
+                                    z: this.layerZ
                                 };
                             } else {
                                 xyz = {
                                     x: feature.geometry.coordinates[c][s][m][0],
                                     y: feature.geometry.coordinates[c][s][m][1],
-                                    z: layerZ
+                                    z: this.layerZ
                                 };
                             }
                             coords.push(xyz);
                         }
                         if (coords.length > 0) {
-                            this.group.add(createLineFromCoords(coords, app.lineColor_, app.lineWidth_));
+                            this.group.add(this.createLineFromCoords(coords, this.lineColor, this.lineWidth));
                         }
                     }
                 } else if (feature.geometry.type == "LineString") {
                     let xyz;
-                    if (app.zerosRemoved_) {
-                        let d = Number('1E' + app.zerosRemoved_);
+                    if (zerosRemoved) {
+                        let d = Number('1E' + zerosRemoved);
                         xyz = {
                             x: feature.geometry.coordinates[c][0] / d,
                             y: feature.geometry.coordinates[c][1] / d,
-                            z: layerZ
+                            z: this.layerZ
                         };
                     } else {
                         xyz = {
                             x: feature.geometry.coordinates[c][0],
                             y: feature.geometry.coordinates[c][1],
-                            z: layerZ
+                            z: this.layerZ
                         };
                     }
                     coords.push(xyz);
@@ -108,12 +113,12 @@ export class GeoJsonLayer {
             }
             if (feature.geometry.type = "LineString") {
                 if (coords.length > 0) {
-                    this.group.add(createLineFromCoords(coords, app.lineColor_, app.lineWidth_));
+                    this.group.add(this.createLineFromCoords(coords, this.lineColor, this.lineWidth));
                 }
             }
         }
 
-        layerZ = layerZ + 0.002; //increment layerZ so next GeoJson is drawn on top
+        this.layerZ = this.layerZ + 0.002; //increment this.layerZ so next GeoJson is drawn on top
 
         return this.group;
     }
@@ -132,7 +137,7 @@ export class GeoJsonLayer {
         let colors = [];
         let color = new Color(lineColor);
         for (var i = 0; i < coords.length; i++) {
-            positions.push(coords[i].x, coords[i].y, layerZ);
+            positions.push(coords[i].x, coords[i].y, this.layerZ);
             colors.push(color.r, color.g, color.b);
         }
         line_geom.setPositions(positions);

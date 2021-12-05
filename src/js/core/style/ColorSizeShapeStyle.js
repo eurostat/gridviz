@@ -64,7 +64,7 @@ export class ColorSizeShapeStyle extends Style {
             this.colors.push(c.r, c.g, c.b);
             cell.color = this.color(cell) || '#EA6BAC'; //save for tooltip
 
-            //size - in ground meters
+            //size - in ground meters. TODO: use uniform if all cells have same size to optimize memory usage
             this.sizes.push(this.size ? this.size(cell) : resolution);
 
             //shape
@@ -108,7 +108,7 @@ export class ColorSizeShapeStyle extends Style {
         } else {
             // else update its attributes
             this.threejsObject.geometry = this.bufferGeometry;
-            this.threejsObject.material = this.pointsMaterial;
+            //this.threejsObject.material = this.pointsMaterial;
         }
     }
 

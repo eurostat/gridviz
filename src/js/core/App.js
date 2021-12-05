@@ -159,7 +159,7 @@ export class App {
     this.mobileCellSize_ = null; //cell size for mobiles
 
     //threejs scene (2D = orthographic, 3D = Orbital)
-    this.is3D_ = false; // not yet implemented
+    this.mode_ = false; // not yet implemented
 
     //debugging
     this.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
@@ -229,7 +229,7 @@ export class App {
           container: this.container_,
           geoCenter: this.geoCenter_,
           isMobile: this._isMobile,
-          is3D: this.is3D_,
+          is3D: this.mode_,
           zoom: this.zoom_,
           zerosRemoved: this.zerosRemoved_
         });
@@ -320,11 +320,11 @@ export class App {
 
       //hide layer not within the zoom range
       if (layer.minZoom >= this.viewer.camera.camera.position.z) {
-        //this.hideLayer(layer);
+        if ((layer.dataset instanceof TiledGrid) === false) {this.hideLayer(layer);}
         continue;
       };
       if (layer.maxZoom < this.viewer.camera.camera.position.z) {
-        //this.hideLayer(layer);
+        if ((layer.dataset instanceof TiledGrid) === false) {this.hideLayer(layer);}
         continue;
       };
 
@@ -346,18 +346,19 @@ export class App {
           }
         }
 
-        //get data to show if necessary
+        //draw cells
         if (layer.dataset.info) {
+          //TiledGrid
           layer.dataset.getData(this.viewer.extGeo, () => {
+            //new tile
             this.draw(layer);
           });
           this.draw(layer);
         } else {
-          //draw cells
+          //CSVGrid 
+          //NOTE: Sometimes it doesnt make sense in wegl to redraw a large CSVGrid - its more efficient to load the whole thing once and leave it in the GPU.
           this.draw(layer);
         }
-
-
 
         //show if hidden
         if (layer.hidden == true) {
@@ -375,7 +376,8 @@ export class App {
   draw(layer) {
     //get cells to draw
     let geoExt = this._isMobile ? this.viewer.envelopeToMobile(this.viewer.getCurrentViewExtent()) : this.viewer.getCurrentViewExtent();
-    let cells = layer.dataset.getCells(geoExt);
+
+    let cells = layer.dataset.getCells(geoExt); //use all cells for CSVGrid?
 
     if (cells.length > 0) {
       // count cells
@@ -1117,7 +1119,8 @@ export class App {
       res => {
         if (res.features) {
           if (res.features.length > 0) {
-            Geojson.addGeoJsonToScene(res.features, app);
+            let layer = new GeoJsonLayer(res.features);
+            this.viewer.scene.add(layer);
           }
         }
       },
