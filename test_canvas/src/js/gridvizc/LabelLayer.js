@@ -118,6 +118,20 @@ export class LabelLayer {
             });
     }
 
+
+
+    //getters and setters
+
+    /** @returns {string} */
+    getUrl() { return this.url; }
+    /** @returns {function(Label,number):string} */
+    getLabelStyle() { return this.labelStyle; }
+    /** @returns {function(Label,number):string} */
+    getLabelColor() { return this.labelColor; }
+    /** @returns {function} */
+    getProjection() { return this.projection; }
+
+
 }
 
 
