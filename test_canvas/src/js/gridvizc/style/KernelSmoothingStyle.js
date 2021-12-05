@@ -28,11 +28,6 @@ export class KernelSmoothingStyle extends Style {
         /** @type {number} */
         this.sigmaGeo = sigmaGeo
 
-        /** 
-         * The kernel window
-         * @private
-         * @type {Array.<Array<number>>} */
-        this.kw = undefined
     }
 
 
@@ -40,36 +35,36 @@ export class KernelSmoothingStyle extends Style {
     * compute window matrix, that is the matrix of the weights.
     * one quadrant is necessary only, since it is symetrical (along both x and y axes).
     * @param {number} sigma 
-    * @returns 
+    * @returns {Array.<Array<number>>}
+    * @private
     */
     getKernelWindow(sigma) {
-        if (!this.kw) {
-            //the size of the window: lets limit that to ~4 times the standard deviation, as an approximation.
-            const windowSize = Math.floor(3 * sigma) + 1;
 
-            //prepare coefficients for gaussian computation, to avoid computing them every time.
-            const c2 = 2 * sigma * sigma;
+        //the size of the window: lets limit that to ~4 times the standard deviation, as an approximation.
+        const windowSize = Math.floor(3 * sigma) + 1;
 
-            /**
-             * The gaussian function.
-             * @param {number} x 
-             * @param {number} y 
-             * @returns {number}
-             */
-            const gaussian = (x, y) => Math.exp(-(x * x + y * y) / c2)
+        //prepare coefficients for gaussian computation, to avoid computing them every time.
+        const c2 = 2 * sigma * sigma;
 
-            this.kw = []
-            for (let wi = 0; wi <= windowSize; wi++) {
-                const col = []
-                for (let wj = 0; wj <= windowSize; wj++) {
-                    //compute weight at wi,wj
-                    const val = gaussian(wi, wj)
-                    col.push(val)
-                }
-                this.kw.push(col)
+        /**
+         * The gaussian function.
+         * @param {number} x 
+         * @param {number} y 
+         * @returns {number}
+         */
+        const gaussian = (x, y) => Math.exp(-(x * x + y * y) / c2)
+
+        const kw = []
+        for (let wi = 0; wi <= windowSize; wi++) {
+            const col = []
+            for (let wj = 0; wj <= windowSize; wj++) {
+                //compute weight at wi,wj
+                const val = gaussian(wi, wj)
+                col.push(val)
             }
+            kw.push(col)
         }
-        return this.kw
+        return kw;
     }
 
 
@@ -178,7 +173,7 @@ export class KernelSmoothingStyle extends Style {
                 const val = +matrix[i][j]
 
                 //set color
-                cg.ctx.fillStyle = this.color( Math.sqrt(val / maxValue) );
+                cg.ctx.fillStyle = this.color(Math.pow(val / maxValue, 0.35));
 
                 //cell geo position
                 const xG = xMin + i * r;
