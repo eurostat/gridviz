@@ -165,6 +165,7 @@ export class KernelSmoothingStyle extends Style {
         for (let i = 0; i < nbX; i++)
             for (let j = 0; j < nbY; j++) {
                 const sval = matrix[i][j]
+                if(!sval) continue
                 if (sval > maxValue) maxValue = sval;
                 if (sval < minValue) minValue = sval;
             }
@@ -175,6 +176,7 @@ export class KernelSmoothingStyle extends Style {
 
                 //get value
                 const sval = +matrix[i][j]
+                if(!sval) continue
 
                 //set color
                 cg.ctx.fillStyle = this.color(sval, minValue, maxValue)
@@ -216,13 +218,10 @@ function getEmptyMatrix(nbX, nbY) {
     return matrix;
 }
 
-
-
-        //See:
-        //NO https://github.com/Planeshifter/kernel-smooth/blob/master/examples/index.js
-        //NO https://github.com/jasondavies/science.js/tree/master/examples/kde
-        //NO https://gist.github.com/curran/b595fde4d771c5784421
-
-        //NO https://bl.ocks.org/rpgove/210f679b1087b517ce654b717e8247ac
-        //NO http://bl.ocks.org/rpgove/51621b3d35705b1a942a
-        //https://observablehq.com/@d3/kernel-density-estimation
+//See:
+//NO https://github.com/Planeshifter/kernel-smooth/blob/master/examples/index.js
+//NO https://github.com/jasondavies/science.js/tree/master/examples/kde
+//NO https://gist.github.com/curran/b595fde4d771c5784421
+//NO https://bl.ocks.org/rpgove/210f679b1087b517ce654b717e8247ac
+//NO http://bl.ocks.org/rpgove/51621b3d35705b1a942a
+//NO https://observablehq.com/@d3/kernel-density-estimation
