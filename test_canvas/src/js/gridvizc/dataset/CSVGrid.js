@@ -12,13 +12,11 @@ import { Dataset, Cell, Envelope } from "../Dataset"
 export class CSVGrid extends Dataset {
 
     /**
-     * @param {string} url The url of the dataset.
-     * @param {number} resolution The dataset resolution (in geographical unit).
-     * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {object} opts 
      */
-    constructor(url, resolution, preprocess = null, cellInfoHTML = null) {
-        super(url, resolution, preprocess, cellInfoHTML)
-    
+    constructor(opts) {
+        super(opts)
+
         /** @private @type {Array.<Cell>} */
         this.cells = undefined;
     }
@@ -35,31 +33,31 @@ export class CSVGrid extends Dataset {
         //TODO ensure it is not loading twice ?
 
         //check if data already loaded
-        if(this.cells) return this;
+        if (this.cells) return this;
 
         //load data
         csv(this.url)
-        .then(
-            /** @param {*} data */
-            (data) => {
-                //convert coordinates in numbers
-                for (const c of data) { c.x=+c.x; c.y=+c.y; }
+            .then(
+                /** @param {*} data */
+                (data) => {
+                    //convert coordinates in numbers
+                    for (const c of data) { c.x = +c.x; c.y = +c.y; }
 
-                this.cells = data;
+                    this.cells = data;
 
-                //execute preprocess, if any
-                if(this.preprocess) for (const c of this.cells) this.preprocess(c);
+                    //execute preprocess, if any
+                    if (this.preprocess) for (const c of this.cells) this.preprocess(c);
 
-                //TODO check if redraw is necessary
-                //that is if the dataset belongs to a layer which is visible at the current zoom level
+                    //TODO check if redraw is necessary
+                    //that is if the dataset belongs to a layer which is visible at the current zoom level
 
-                //execute the callback, usually a draw function
-                if(redraw) redraw()
-            })
-        .catch(() => {
-            //mark as failed
-            this.cells = []
-        });
+                    //execute the callback, usually a draw function
+                    if (redraw) redraw()
+                })
+            .catch(() => {
+                //mark as failed
+                this.cells = []
+            });
 
         return this;
     }
@@ -74,15 +72,15 @@ export class CSVGrid extends Dataset {
     getCells(extGeo) {
 
         //data not loaded yet
-        if(!this.cells) return [];
+        if (!this.cells) return [];
 
         /** @type {Array.<Cell>} */
         let cells = []
         for (const cell of this.cells) {
-            if(+cell.x + this.resolution < extGeo.xMin) continue;
-            if(+cell.x - this.resolution > extGeo.xMax) continue;
-            if(+cell.y + this.resolution < extGeo.yMin) continue;
-            if(+cell.y - this.resolution > extGeo.yMax) continue;
+            if (+cell.x + this.resolution < extGeo.xMin) continue;
+            if (+cell.x - this.resolution > extGeo.xMax) continue;
+            if (+cell.y + this.resolution < extGeo.yMin) continue;
+            if (+cell.y - this.resolution > extGeo.yMax) continue;
             cells.push(cell)
         }
 

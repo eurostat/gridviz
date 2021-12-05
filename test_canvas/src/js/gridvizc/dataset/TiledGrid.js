@@ -14,20 +14,17 @@ import { Dataset, Cell, Envelope } from "../Dataset"
 export class TiledGrid extends Dataset {
 
     /**
-     * @param {string} url The url of the dataset info.json file.
-     * @param {App} app The app.
-     * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {object} opts 
      */
-    constructor(url, app, preprocess = null, cellInfoHTML = null) {
-        super(url, undefined, preprocess, cellInfoHTML)
+    constructor(opts) {
+        super(opts)
+        opts = opts || {};
 
-        /** 
-         * The cache of the loaded tiles. It is double indexed: by xT and then yT.
-         * Example: this.cache[xT][yT] returns the tile at [xT][yT] location.
-         * 
-         * @type {object}
-         * */
-        this.cache = {}
+        /**
+         * The app being used.
+         * @type {App}
+         */
+        this.app = opts.app;
 
         /**
          * The grid info object, from the info.json file.
@@ -36,12 +33,13 @@ export class TiledGrid extends Dataset {
          *  */
         this.info = undefined;
 
-        /**
-         * The app being used.
-         * 
-         * @type {App}
-         */
-        this.app = app;
+        /** 
+        * The cache of the loaded tiles. It is double indexed: by xT and then yT.
+        * Example: this.cache[xT][yT] returns the tile at [xT][yT] location.
+        * 
+        * @type {object}
+        * */
+        this.cache = {}
     }
 
     /**

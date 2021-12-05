@@ -13,7 +13,7 @@
 export class Dataset {
 
     /**
-     * @param {*} opts 
+     * @param {object} opts 
      * @abstract
      */
     constructor(opts) {
@@ -111,8 +111,8 @@ export class Dataset {
 const defaultCellInfoHTML = function (cell) {
     const buf = []
     for (const key of Object.keys(cell)) {
-        if(key === "x") continue;
-        if(key === "y") continue;
+        if (key === "x") continue;
+        if (key === "y") continue;
         buf.push("<b>")
         buf.push(key)
         buf.push("</b>")
