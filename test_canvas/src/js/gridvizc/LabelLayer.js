@@ -124,13 +124,23 @@ export class LabelLayer {
 
     /** @returns {string} */
     getUrl() { return this.url; }
+    /** @param {string} val @returns {this} */
+    setUrl(val) { this.url = val; return this; }
+
     /** @returns {function(Label,number):string} */
     getLabelStyle() { return this.labelStyle; }
+    /** @param {function(Label,number):string} val @returns {this} */
+    setLabelStyle(val) { this.labelStyle = val; return this; }
+
     /** @returns {function(Label,number):string} */
     getLabelColor() { return this.labelColor; }
+    /** @param {function(Label,number):string} val @returns {this} */
+    setLabelColor(val) { this.labelColor = val; return this; }
+
     /** @returns {function} */
     getProjection() { return this.projection; }
-
+    /** @param {function} val @returns {this} */
+    setProjection(val) { this.projection = val; return this; }
 
 }
 
