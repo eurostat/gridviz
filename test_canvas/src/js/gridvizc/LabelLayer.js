@@ -126,7 +126,7 @@ export class LabelLayer {
  * @returns {LabelLayer}
  */
 export const getEurostatLabelLayer = function(){
-    const lay = new LabelLayer(
+    return new LabelLayer(
         //url
         "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv",
         //style
@@ -164,5 +164,4 @@ export const getEurostatLabelLayer = function(){
         //projection
         geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]),
     )
-    return lay;
 }
