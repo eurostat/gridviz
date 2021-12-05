@@ -17,7 +17,7 @@
         //define datasets, styles and layers
         const s = new gviz.KernelSmoothingStyle(
             c => +c["2018"],
-            (v, min, max) => gviz.interpolateOranges(Math.pow(val / maxValue, 0.35)),
+            (val, min, max) => gviz.interpolateOranges(Math.pow(val / max, 0.35)),
             1000).setZFStroke(50);
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 300, null, ttfun);
