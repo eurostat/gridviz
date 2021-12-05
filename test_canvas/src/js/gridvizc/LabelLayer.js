@@ -130,7 +130,7 @@ export const getEurostatLabelLayer = function(){
         //url
         "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv",
         //style
-        function(lb, zf) {
+        (lb, zf) => {
             if (zf < 50) {
                 return "bold 30px Arial";
             }
