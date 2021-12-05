@@ -149,7 +149,7 @@ export class App {
      * @param {number} maxZoom The maximum zoom level when to show the layer
      * @returns {this}
      */
-    addTiledGrid(url, opts, styles, minZoom, maxZoom) {
+    addTiledGridLayer(url, opts, styles, minZoom, maxZoom) {
         return this.addLayer(
             new TiledGrid(url, this, opts).loadInfo(() => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
@@ -168,7 +168,7 @@ export class App {
      * @param {number} maxZoom The maximum zoom level when to show the layer
      * @returns {this}
      */
-    addCSVGrid(url, resolution, opts, styles, minZoom, maxZoom) {
+    addCSVGridLayer(url, resolution, opts, styles, minZoom, maxZoom) {
         return this.addLayer(
             new CSVGrid(url, resolution, opts).getData(null, () => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
