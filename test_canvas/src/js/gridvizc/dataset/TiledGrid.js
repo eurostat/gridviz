@@ -14,18 +14,19 @@ import { Dataset, Cell, Envelope } from "../Dataset"
 export class TiledGrid extends Dataset {
 
     /**
-     * @param {string} url The URL of the dataset
+     * @param {string} url The URL of the dataset.
+     * @param {App} app The application.
      * @param {object} opts 
      */
-    constructor(url, opts) {
-        super(url, opts)
+    constructor(url, app, opts) {
+        super(url, null, opts)
         opts = opts || {};
 
         /**
          * The app being used.
          * @type {App}
          */
-        this.app = opts.app;
+        this.app = app;
 
         /**
          * The grid info object, from the info.json file.

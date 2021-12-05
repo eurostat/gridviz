@@ -12,11 +12,12 @@ import { Dataset, Cell, Envelope } from "../Dataset"
 export class CSVGrid extends Dataset {
 
     /**
-     * @param {string} url The URL of the dataset
+     * @param {string} url The URL of the dataset.
+     * @param {number} resolution The dataset resolution in geogrpahical unit.
      * @param {object} opts 
      */
-    constructor(url, opts) {
-        super(opts)
+    constructor(url, resolution, opts) {
+        super(url, resolution, opts)
 
         /** @private @type {Array.<Cell>} */
         this.cells = undefined;

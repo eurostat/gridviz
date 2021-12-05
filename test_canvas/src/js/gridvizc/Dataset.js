@@ -13,11 +13,12 @@
 export class Dataset {
 
     /**
-     * @param {string} url The URL of the dataset
+     * @param {string} url The URL of the dataset.
+     * @param {number} resolution The dataset resolution in geogrpahical unit.
      * @param {object} opts 
      * @abstract
      */
-    constructor(url, opts) {
+    constructor(url, resolution, opts) {
         opts = opts || {};
 
         /**
@@ -28,7 +29,7 @@ export class Dataset {
         /**
          * The dataset resolution (in geographical unit).
          * @protected @type {number} */
-        this.resolution = opts.resolution;
+        this.resolution = resolution;
 
         /**
          * A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
