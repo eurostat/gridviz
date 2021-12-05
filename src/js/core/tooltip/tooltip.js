@@ -55,11 +55,20 @@ export class Tooltip {
     }
 
     updateTooltip(cell, left, top, color) {
-        //add row to table if necessary
+        //hide rows of fields that do not belong to this cell
+        for (const row in this.tooltipTableRows) {
+            if (!cell[row]) {
+                this.tooltipTableRows[row].style.display = "none";
+            } else {
+                this.tooltipTableRows[row].style.display = "block";
+            }
+         }
+
+        // add/update table rows for each cell field
         for (const field in cell) {
             if (field !== "color") {
-                if (this.showCoordinates == false && field =="x" || field =="y") {
-                    continue;
+                if (this.showCoordinates == false && field == "x" || field == "y") {
+                    continue; //dont update x/y
                 } else {
                     if (!this.tooltipTableRows[field]) {
                         // add new row
