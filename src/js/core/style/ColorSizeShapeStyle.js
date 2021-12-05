@@ -60,9 +60,10 @@ export class ColorSizeShapeStyle extends Style {
             this.positions.push(cell.x, cell.y, CONSTANTS.point_z);
 
             //color
-            let c = this.color ? new Color(this.color(cell)) : new Color("#EA6BAC");
+            let colorString = this.color ? this.color(cell) : "#EA6BAC";
+            let c = new Color(colorString);
             this.colors.push(c.r, c.g, c.b);
-            cell.color = this.color(cell) || '#EA6BAC'; //save for tooltip
+            cell.color = colorString; //save for tooltip
 
             //size - in ground meters. TODO: use uniform if all cells have same size to optimize memory usage
             this.sizes.push(this.size ? this.size(cell) : resolution);

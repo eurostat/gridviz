@@ -64,7 +64,7 @@ export class App {
     * Container where viewer will be appended
     * @type {HTMLElement}
     * */
-    this.container_ = document.body;
+    this.container_ = document.getElementById("gridviz") || document.body;
 
     /**
     * Height of the viewport
@@ -97,6 +97,18 @@ export class App {
     this.loadingIcon_ = "ring";
 
     /**
+    * initial camera Z position
+    * @type {Number} 
+    * */
+    this.zoom_ = null; 
+
+    /**
+    * initial camera position in geographic coordinates [x,y]
+    * @type {[Number,Number]} [x,y]
+    * */
+    this.geoCenter_ = null; //
+
+    /**
     * Whether or not to show a legend
     * @type {Boolean}
     * */
@@ -105,6 +117,32 @@ export class App {
     // tooltip config
     this.tooltip_ = {};
 
+    // placenames
+    this.showPlacenames_ = false;
+    this.placenamesCountry_ = false;
+    this.placenameThresholds_ = null;
+
+    //projection
+    this.EPSG_ = 3035; //used to determine the projection for grid, placenames, NUTS, etc
+    this.zerosRemoved_ = 0; //to make EPSG 3035 files lighter, the final 3 zeros of each x/y coordinate are often removed. 
+
+    //texts
+    this.title_ = null;
+    this.subtitle_ = null;
+    this.cellCount_ = null;
+    this.sourcesHTML_ = null;
+
+    //show borders using nuts2json
+    this.nuts_ = false; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
+    this.nutsCountry_ = false; // only show borders of given country code
+    this.nutsLevel_ = 0;
+    this.nutsSimplification_ = "10M"; //current nuts2json simplification
+
+    this.mobileCellSize_ = null; // manually set cell size for mobiles - TODO: move to layer
+        
+    this.mode_ = false; //threejs scene (2D = orthographic, 3D = Orbital) - not yet implemented in new structure
+
+    // for deprectation
     //d3 Scaling & colouring stuff
     this.colorSchemeName_ = "interpolateBlues";
     this.reverseColorScheme_ = false;
@@ -126,43 +164,9 @@ export class App {
     this.sizeFieldSelector_ = false;
     this.sizeFieldSelectorLabel_ = "Size field: ";
 
-    //projection
-    this.EPSG_ = 3035; //used to determine the projection for grid, placenames, NUTS, etc
-
-    // placenames
-    this.showPlacenames_ = false;
-    this.placenamesCountry_ = false;
-    this.placenameThresholds_ = null;
-
-    // dataset properties
-    this.geoCenter_ = null; //default - If not specified then should default as first or randomly selected point
-    this.zerosRemoved_ = 0; //to make EPSG 3035 files lighter, the final 3 zeros of each x/y coordinate are often removed. 
-
-    //texts
-    this.title_ = null;
-    this.subtitle_ = null;
-    this.cellCount_ = null;
-    this.sourcesHTML_ = null;
-
     //buttons
     this.homeButton_ = false;
     this.zoomButtons_ = false;
-
-    //borders using nuts2json
-    this.nuts_ = false; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
-    this.nutsCountry_ = false; // only show borders of given country code
-    this.nutsLevel_ = 0;
-    this.nutsSimplification_ = "10M"; //current nuts2json simplification
-
-
-    this.zoom_ = null; //initial camera position Z
-    this.mobileCellSize_ = null; //cell size for mobiles
-
-    //threejs scene (2D = orthographic, 3D = Orbital)
-    this.mode_ = false; // not yet implemented
-
-    //debugging
-    this.debugPlacenames_ = false; //logs scale & population filter values in the console upon zoom
 
     //definition of generic accessors based on the name of each parameter
     for (var p in app)
@@ -171,14 +175,10 @@ export class App {
         app[p_.substring(0, p_.length - 1)] = function (v) { if (!arguments.length) return app[p_]; app[p_] = v; return app; };
       })();
 
-    // internal properties
-    this.threejsObject = null; //threejs layer that will contain the grid "points"
+    // internal
     this.animating = false;
-
-    // previously highlighted/intersected cell
-    this._previousIntersect;
-
-    this._currentResolution = null; //current grid resolution. e.g. 5000 for EPSG:3035 5km grid
+    this._previousIntersect; // previously highlighted/intersected cell
+    this._currentResolution = null; //current grid resolution in view. e.g. 5000 for EPSG:3035 5km grid
 
   }
 
@@ -320,11 +320,11 @@ export class App {
 
       //hide layer not within the zoom range
       if (layer.minZoom >= this.viewer.camera.camera.position.z) {
-        if ((layer.dataset instanceof TiledGrid) === false) {this.hideLayer(layer);}
+        if ((layer.dataset instanceof TiledGrid) === false) { this.hideLayer(layer); }
         continue;
       };
       if (layer.maxZoom < this.viewer.camera.camera.position.z) {
-        if ((layer.dataset instanceof TiledGrid) === false) {this.hideLayer(layer);}
+        if ((layer.dataset instanceof TiledGrid) === false) { this.hideLayer(layer); }
         continue;
       };
 
@@ -654,7 +654,7 @@ export class App {
         let features = feature(json, json.objects.nutsbn).features;
 
         //add line geometries to viewer
-        let geojsonLayer = new GeoJsonLayer(features);
+        let geojsonLayer = new GeoJsonLayer(features, null, null, this.zerosRemoved_);
         this.viewer.scene.add(geojsonLayer);
 
       },
@@ -871,10 +871,10 @@ export class App {
         //find cell in original array
         let index = intersect.index;
 
-
         let cell;
-        if (intersectedLayer.dataset.cells) { // CSVGrid
-          cell = intersectedLayer.dataset.cells[index];
+        if (intersectedLayer.dataset.cells) {
+          // Find cell in CSVGrid
+          cell = intersectedLayer.dataset.cells[index]; //wrong
         } // TODO: find cell in TiledGrid
 
         if (cell) {

@@ -292,7 +292,7 @@ export class Viewer extends EventEmitter {
     /**
      * @description transform Envelope to mobile coordinates (-1 - 1)
      * @memberof Viewer
-     * @param {Envelope}
+     * @param {Envelope} e
      */
     envelopeToMobile(e) {
         e.xMin = this.mobileCoordScale(e.xMin);
@@ -305,6 +305,7 @@ export class Viewer extends EventEmitter {
     /**
     * @description get the position of a canvas location in geographic coords
     * @function getGeoCoordsFromScreen
+    * @returns {Vector3} pos
     */
     getGeoCoordsFromScreen([clientX, clientY]) {
         var vec = new Vector3(); // create once and reuse

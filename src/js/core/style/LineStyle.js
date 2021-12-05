@@ -2,7 +2,9 @@
 
 import { Style } from "../Style"
 import { Cell } from "../Dataset"
-import { CanvasGeo } from "../CanvasGeo";
+import { Viewer } from "../viewer/viewer";
+import { createLineFromCoords } from "../GeoJsonLayer";
+import { Group } from "three";
 
 /**
  * 
@@ -20,11 +22,13 @@ export class LineStyle extends Style {
         this.height = height;
 
         /** @type {string} */
-        this.lineColor_ = "gray"
+        this.lineColor_ = "white"
         /** @type {number} */
-        this.lineWidth_ = 1;
+        this.lineWidth_ = 0.002;
         /** @type {string} */
         this.fillColor_ = "rgba(192, 140, 89, 0.4)"
+
+        this.threejsObject = new Group();
     }
 
 
@@ -33,9 +37,11 @@ export class LineStyle extends Style {
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} r 
-     * @param {CanvasGeo} cg 
+     * @param {Viewer} viewer 
      */
-    draw(cells, r, cg) {
+    draw(cells, r, viewer) {
+
+        if (this.threejsObject) this.threejsObject.clear();
 
         //index cells by y and x
         const ind = {};
@@ -46,16 +52,14 @@ export class LineStyle extends Style {
         }
 
         //compute extent
-        const e = cg.extGeo;
+        const e = viewer.extGeo;
         const xMin = Math.floor(e.xMin / r) * r;
         const xMax = Math.floor(e.xMax / r) * r;
         const yMin = Math.floor(e.yMin / r) * r;
         const yMax = Math.floor(e.yMax / r) * r;
 
         //set color and width
-        cg.ctx.strokeStyle = this.lineColor_;
-        cg.ctx.lineWidth = this.lineWidth_;
-        cg.ctx.fillStyle = this.fillColor_;
+
 
         //draw lines row by row, stating from the top
         for (let y = yMax; y >= yMin; y -= r) {
@@ -65,11 +69,14 @@ export class LineStyle extends Style {
             if (!row) continue;
 
             //compute row baseline
-            const yP = cg.geoToPixY(y);
+            //const yP = viewer.geoToPixY(y);
+            let coords = [];
+            let startingPoint = [(xMin - r / 2), y];
 
             //place first point
-            cg.ctx.beginPath();
-            cg.ctx.moveTo(cg.geoToPixX(xMin - r / 2), yP);
+            //cg.ctx.moveTo(cg.geoToPixX(xMin - r / 2), yP);
+            coords.push(startingPoint);
+
 
             //store the previous height
             let hG_ = 0;
@@ -83,25 +90,32 @@ export class LineStyle extends Style {
                 if (hG || hG_) {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo
-                    cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - hG/cg.zf);
+                    //cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - hG/cg.zf);
+                    coords.push([(x + r / 2), y - hG])
                 } else {
                     //else move the point
-                    cg.ctx.moveTo(cg.geoToPixX(x + r / 2), yP);
+                    //cg.ctx.moveTo(cg.geoToPixX(x + r / 2), yP);
+                    coords.push([(x + r / 2), y])
                 }
                 //store the previous value
                 hG_ = hG;
             }
 
             //last point
-            if (hG_)
-                cg.ctx.lineTo(cg.geoToPixX(xMax + r / 2), yP);
+            if (hG_) {
+                coords.push([(xMax + r / 2), y])
+            }
+            //cg.ctx.lineTo(cg.geoToPixX(xMax + r / 2), yP);
 
             //draw fill
-            if (this.fillColor_)
-                cg.ctx.fill()
+            // if (this.fillColor_)
+            //     cg.ctx.fill()
+
             //draw line
-            if (this.lineColor_ && this.lineWidth_ > 0)
-                cg.ctx.stroke();
+            if (this.lineColor_ && this.lineWidth_ > 0) {
+                let line = createLineFromCoords(coords, this.lineColor_, this.lineWidth_);
+                this.threejsObject.add(line);
+            }
 
         }
     }

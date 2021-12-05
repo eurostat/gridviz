@@ -17,10 +17,10 @@ export const getColorSizeShapeStyle = function (color_, size, shape) {
     return new ColorSizeShapeStyle(color_, size, shape)
 }
 
-// import { LineStyle } from "./core/style/LineStyle"
-// export const getLineStyle = function (height) {
-//     return new LineStyle(height)
-// }
+import { LineStyle } from "./core/style/LineStyle"
+export const getLineStyle = function (height) {
+    return new LineStyle(height)
+}
 
 // import { CompositionStyle } from "./core/style/CompositionStyle"
 // export const getCompositionStyle = function (color_, type, size) {
