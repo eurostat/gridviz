@@ -143,13 +143,13 @@ export class App {
      * Add a layer from a tiled grid dataset.
      * 
      * @param {string} url The URL of the dataset.
-     * @param {object} opts The parameters of the dataset.
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
+     * @param {object=} opts The parameters of the dataset.
      * @returns {this}
      */
-    addTiledGridLayer(url, opts, styles, minZoom, maxZoom) {
+    addTiledGridLayer(url, styles, minZoom, maxZoom, opts) {
         return this.addLayer(
             new TiledGrid(url, this, opts).loadInfo(() => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
@@ -162,13 +162,13 @@ export class App {
      * 
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geogrpahical unit.
-     * @param {object} opts The parameters of the dataset.
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
+     * @param {object=} opts The parameters of the dataset.
      * @returns {this}
      */
-    addCSVGridLayer(url, resolution, opts, styles, minZoom, maxZoom) {
+    addCSVGridLayer(url, resolution, styles, minZoom, maxZoom, opts) {
         return this.addLayer(
             new CSVGrid(url, resolution, opts).getData(null, () => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
