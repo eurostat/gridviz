@@ -142,17 +142,15 @@ export class App {
     /**
      * Add a layer from a tiled grid dataset.
      * 
-     * @param {string} url The url of the dataset info.json file.
+     * @param {object} opts The parameters of the dataset.
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
-     * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
-     * @param {function(Cell):string} cellInfoHTML The HTML content providing information on the grid cell.
      * @returns {this}
      */
-    addTiledGrid(url, styles, minZoom, maxZoom, preprocess = null, cellInfoHTML = null) {
+    addTiledGrid(opts, styles, minZoom, maxZoom) {
         return this.addLayer(
-            new TiledGrid(url, this, preprocess, cellInfoHTML).loadInfo(() => { this.cg.redraw(); }),
+            new TiledGrid(opts).loadInfo(() => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
     }
@@ -161,18 +159,15 @@ export class App {
     /**
      * Add a layer from a CSV grid dataset.
      * 
-     * @param {string} url The url of the dataset.
-     * @param {number} resolution The dataset resolution (in geographical unit).
+     * @param {object} opts The parameters of the dataset.
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
-     * @param {function(Cell):void} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
-     * @param {function(Cell):string} cellInfoHTML The HTML content providing information on the grid cell.
      * @returns {this}
      */
-    addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null, cellInfoHTML = null) {
+    addCSVGrid(opts, styles, minZoom, maxZoom) {
         return this.addLayer(
-            new CSVGrid(url, resolution, preprocess, cellInfoHTML).getData(null, () => { this.cg.redraw(); }),
+            new CSVGrid(opts).getData(null, () => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
     }
