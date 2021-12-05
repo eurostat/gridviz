@@ -6,39 +6,39 @@ import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
 /**
+ * A style representing the cell as a smoothed layer, to smoothing local variations and show main trends across space.
  * 
  * @author Julien Gaffuri
  */
 export class KernelSmoothingStyle extends Style {
 
     /**
-     * @param {function(Cell):number} value A function specifying the value to consider for each cell.
+     * @param {function(Cell):number} value A function specifying the value to consider for each cell. This is the value to smooth.
      * @param {number} sigmaGeo The smoothing parameter, in geo unit. The larger, the more smoothed.
-     * @param {function(number,number,number):string} color Return the color of a cell, based on its smoothed value, the min and max values of the viewport.
+     * @param {function(number,number,number):string} color Return the color of a cell, based on its smoothed value. The min and max values of the viewport are given.
      */
     constructor(value, sigmaGeo, color) {
         super()
 
-        /** @private @type {function(Cell):number} */
+        /** @private @type {function(Cell):number} @private */
         this.value = value;
 
-        /** @type {function} */
+        /** @type {function} @private */
         this.color = color;
 
-        /** @type {number} */
+        /** @type {number} @private */
         this.sigmaGeo = sigmaGeo
-
     }
 
 
     /**
-    * compute window matrix, that is the matrix of the weights.
-    * one quadrant is necessary only, since it is symetrical (along both x and y axes).
+    * Compute kernel matrix, that is the matrix of the weights.
+    * One quadrant is necessary only, since it is symetrical (along both x and y axes).
     * @param {number} sigma 
     * @returns {Array.<Array<number>>}
     * @private
     */
-    getKernelWindow(sigma) {
+    getKernelMatrix(sigma) {
 
         //the size of the window: lets limit that to ~4 times the standard deviation, as an approximation.
         const windowSize = Math.floor(3 * sigma) + 1;
@@ -47,7 +47,7 @@ export class KernelSmoothingStyle extends Style {
         const c2 = 2 * sigma * sigma;
 
         /**
-         * The gaussian function.
+         * The gaussian function. TODO expose that function as a parameter, to use other kernels ?
          * @param {number} x 
          * @param {number} y 
          * @returns {number}
@@ -85,8 +85,8 @@ export class KernelSmoothingStyle extends Style {
 
         //compute window matrix, that is the matrix of the weights
         //one quadrant is necessary only, since it is symetrical (along both x and y axes)
-        const window = this.getKernelWindow(sigma)
-        const windowSize = window.length - 1
+        const km = this.getKernelMatrix(sigma)
+        const windowSize = km.length - 1
 
         //make smoothing, cell by cell
         for (let i = 0; i < nbX; i++) {
@@ -107,7 +107,7 @@ export class KernelSmoothingStyle extends Style {
                             continue;
 
                         //get weight of pixel (i+wi,j+wj)
-                        const weight = window[Math.abs(wi)][Math.abs(wj)]
+                        const weight = km[Math.abs(wi)][Math.abs(wj)]
 
                         //add contribution of pixel (i+wi,j+wj): its weight times its value
                         sval += weight * m[i + wi][j + wj]
