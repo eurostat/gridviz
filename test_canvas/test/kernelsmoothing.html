@@ -12,13 +12,13 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(1000).setLabelLayer(gviz.getEurostatLabelLayer())
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(300).setLabelLayer(gviz.getEurostatLabelLayer())
 
         //define datasets, styles and layers
         const s = new gviz.KernelSmoothingStyle(
             c => +c["2018"],
             1000,
-            (val, min, max) => gviz.interpolateOranges(Math.pow(val / max, 0.35)),
+            (val, min, max) => gviz.interpolateCubehelixDefault(Math.pow(val / max, 0.35)),
         ).setZFStroke(50);
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 300, null, ttfun);
