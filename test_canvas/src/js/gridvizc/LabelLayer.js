@@ -4,7 +4,8 @@ import { csv } from "d3-fetch";
 import { geoAzimuthalEqualArea } from 'd3-geo'
 import { CanvasGeo } from "./CanvasGeo";
 
-/** @typedef {{name: string, x:number, y:number }} Label */
+/** A label. The name is the text to show. (x,y) are the coordinates in the same CRS as the grid.
+ * @typedef {{name: string, x:number, y:number }} Label */
 
 /**
  * A (generic) layer for placename labels, to be shown on top of the grid layers.
@@ -18,21 +19,19 @@ export class LabelLayer {
 
     /**
      * @param {string} url The URL of the label data, as CSV file
-     * @param {function(Label,number):string} labelStyle Specify if and how a lable should be drawn, depending on its importance and the zoom level.
+     * @param {function(Label,number):string} labelStyle Specify if and how a label should be drawn, depending on its importance and the zoom level.
      * @param {function(Label,number):string} labelColor Specify the label color, depending on its importance and the zoom level.
      * @param {function(object):void} preprocess A preprocess to run on each label after loading. It can be used to apply some specific treatment before, format the label data, project coordinates, etc.
      */
-    constructor(url, labelStyle = lb => "bold 15px Arial", labelColor = lb => "#00000044", preprocess = null) {
+    constructor(url, labelStyle = lb => "bold 15px Arial", labelColor = lb => "#00000044", preprocess = undefined) {
 
         /** @private @type {string} */
         this.url = url
 
-        /** Return label style depending on its importance and the zoom level
-         * @private @type {function(Label,number):string} */
+        /** @private @type {function(Label,number):string} */
         this.labelStyle = labelStyle
 
-        /** Return label color depending on its importance and the zoom level
-         * @private @type {function(Label,number):string} */
+        /** @private @type {function(Label,number):string} */
         this.labelColor = labelColor
 
         /** @private @type {function(object):void} */
@@ -51,13 +50,16 @@ export class LabelLayer {
      */
     draw(cg) {
 
-        //load labels if necessary
+        //load labels, if not done yet.
         if (!this.labels) {
             this.load(cg.redraw);
             return;
         }
 
+        //maybe another position (top right?)
         cg.ctx.textAlign = "center";
+
+        //draw labels, one by one
         for (const lb of this.labels) {
 
             //set color
@@ -68,12 +70,8 @@ export class LabelLayer {
             if (!st) continue;
             cg.ctx.font = st;
 
-            //get label position
-            const tx = cg.geoToPixX(lb.x);
-            const ty = cg.geoToPixY(lb.y);
-
             //draw label
-            cg.ctx.fillText(lb.name, tx, ty);
+            cg.ctx.fillText(lb.name, cg.geoToPixX(lb.x), cg.geoToPixY(lb.y));
         }
     }
 
@@ -85,16 +83,17 @@ export class LabelLayer {
     load(callback) {
 
         if (!this.url) {
-            console.log("Failed loading labels. No URL specified." + this.url)
+            console.log("Failed loading labels: No URL specified. " + this.url)
             this.labels = []
             return;
         }
 
         csv(this.url)
             .then(
-                /** @param {*} data */
+                /** @param {Array.<object>} data */
                 (data) => {
-                    //apply preprocess
+
+                    //apply preprocess, if any
                     if (this.preprocess)
                         for (const lb of data)
                             this.preprocess(lb)
@@ -106,7 +105,7 @@ export class LabelLayer {
                     if (callback) callback()
                 })
             .catch(() => {
-                console.log("Failed loading labels from: " + this.url)
+                console.log("Failed loading labels from " + this.url)
                 this.labels = []
             });
     }
@@ -139,7 +138,8 @@ export class LabelLayer {
 
 
 /**
- * Returns label layer from Eurostat, in LAEA projection
+ * Returns label layer from Eurostat, for ETRS89-LAEA grids.
+ * 
  * @returns {LabelLayer}
  */
 export const getEurostatLabelLayer = function () {
@@ -182,8 +182,10 @@ export const getEurostatLabelLayer = function () {
         },
         //color
         lb => "#00000044",
+        //preprocess
         lb => {
-            const p = this.projection([lb.lon, lb.lat])
+            //project from geo coordinates to ETRS89-LAEA
+            const p = proj([lb.lon, lb.lat])
             lb.x = p[0]; lb.y = p[1];
             delete lb.lon; delete lb.lat;
         }
