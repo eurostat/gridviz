@@ -20,11 +20,12 @@
     <script>
 
         //make application
-        const app = new gviz.App()
+        const app = new gviz.App().setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(3)
 
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
-        app.setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(3)
+        //const cf = gviz.interpolateSpectral
         const s = new gviz.CompositionStyle({
+            //color: { "Population under 14": cf(0), "pop_": cf(0.5), "Population over 65": cf(1) },
             color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
             type: c => "flag",
             size: { val: c => 5 * Math.sqrt((c["Inhabitants"])), unit: "geo" },
