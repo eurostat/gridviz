@@ -18,27 +18,29 @@ export class Style {
 
     /**
      * @abstract
+     * @param {object} opts 
      */
-    constructor() {
+    constructor(opts) {
+        opts = opts || {};
 
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
          * @protected @type {{dx:number,dy:number}} */
-        this.offset = { dx: 0, dy: 0 };
+        this.offset = opts.offset || { dx: 0, dy: 0 };
 
 
         //the cell stroke
 
         /** The zoom factor limit when to show/hide the stroke.
          * @private @type {number} */
-        this.zfStroke = undefined;
+        this.zfStroke = opts.zfStroke || undefined;
 
         /** The stroke color.
          * @private @type {string} */
-        this.strokeColor = "lightgray";
+        this.strokeColor = opts.strokeColor || "lightgray";
 
         /** The stroke line width, in pixels.
          * @private @type {number} */
-        this.strokeWidth = 1.5;
+        this.strokeWidth = opts.strokeWidth || 1.5;
 
     }
 

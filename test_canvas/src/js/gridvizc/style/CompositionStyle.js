@@ -19,23 +19,22 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class CompositionStyle extends Style {
 
-    /**
-      * @param {object} color The dictionary which give the color of each category.
-      * @param {function(Cell):CompositionType} type A function returning the type of decomposition symbol of a cell, @see CompositionType
-      * @param {Size} size A function returning the size of a cell (in geographical unit).
-      */
-    constructor(color, type = null, size = null) {
-        super()
+    /** @param {object} opts */
+    constructor(opts) {
+        super(opts)
+        opts = opts || {};
 
-        //dictionnary column -> color
-        /** @private @type {object} */
-        this.color = color;
+        /** The dictionary which give the color of each category.
+         * @private @type {object} */
+        this.color = opts.color;
 
-        /** @private @type {function(Cell):CompositionType} */
-        this.type = type;
+        /** A function returning the type of decomposition symbol of a cell, @see CompositionType
+         * @private @type {function(Cell):CompositionType} */
+        this.type = opts.type;
 
-        /** @private @type {Size} */
-        this.size = size;
+        /** A function returning the size of a cell (in geographical unit).
+         * @private @type {Size} */
+        this.size = opts.size;
     }
 
 
