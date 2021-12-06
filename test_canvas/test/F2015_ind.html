@@ -15,10 +15,9 @@
             .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setLabelLayer(gviz.getEurostatLabelLayer())//.setBackgroundColor("black")
 
         //define datasets, styles and layers
-        const s = new gviz.ShapeColorSizeStyle(
-            c => gviz.interpolateSpectral(1 - c["Ind"]/400),
-            null,
-            c => "square"
+        const s = new gviz.ShapeColorSizeStyle({
+            color: c => gviz.interpolateSpectral(1 - c["Ind"] / 400),
+        }
         ).setZFStroke(15);
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 100, { cellInfoHTML: ttfun });
