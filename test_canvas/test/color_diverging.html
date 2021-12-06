@@ -15,17 +15,16 @@
             .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setLabelLayer(gviz.getEurostatLabelLayer())
 
         //define datasets, styles and layers
-        const s = new gviz.ShapeColorSizeStyle(
-            c => {
+        const s = new gviz.ShapeColorSizeStyle({
+            color: c => {
                 if (c["2011"] == 0 && c["2018"] === 0) return "white"
                 if (c["2018"] == 0) return gviz.interpolateRdBu(0);
                 const r = (c["2018"] - c["2011"]) / c["2011"];
                 return gviz.interpolateRdBu(-r * 5 + 0.5);
-            },
-            null,
-            c => "square"
+            }
+        }
         ).setZFStroke(50);
-        const ttfun = c => "<b>" + (c["2018"]>c["2011"]?"+":"") + Math.floor(((c["2018"] - c["2011"]) / c["2011"])*1000)/10 + "%</b> inhabitant(s)"
+        const ttfun = c => "<b>" + (c["2018"] > c["2011"] ? "+" : "") + Math.floor(((c["2018"] - c["2011"]) / c["2011"]) * 1000) / 10 + "%</b> inhabitant(s)"
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 500, 1000, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 1000, 2000, { cellInfoHTML: ttfun });
