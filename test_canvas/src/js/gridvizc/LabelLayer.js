@@ -97,13 +97,10 @@ export class LabelLayer {
                 (data) => {
                     this.labels = data;
 
-                    //project labels
-                    if (this.projection)
-                        for (const lb of this.labels) {
-                            const p = this.projection([lb.lon, lb.lat])
-                            lb.x = p[0]; lb.y = p[1];
-                            delete lb.lon; delete lb.lat;
-                        }
+                    //apply preprocess
+                    if (this.preprocess)
+                        for (const lb of this.labels)
+                            this.preprocess(lb)
 
                     //redraw
                     if (callback) callback()
@@ -147,7 +144,7 @@ export class LabelLayer {
  */
 export const getEurostatLabelLayer = function () {
 
-console.log(geoAzimuthalEqualArea())
+    console.log(geoAzimuthalEqualArea())
 
     return new LabelLayer(
         //url
