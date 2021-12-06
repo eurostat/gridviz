@@ -1,7 +1,6 @@
 //@ts-check
 
 import { csv } from "d3-fetch";
-import { geoAzimuthalEqualArea } from 'd3-geo'
 import { CanvasGeo } from "./CanvasGeo";
 
 /** A label. The name is the text to show. (x,y) are the coordinates in the same CRS as the grid.
@@ -18,7 +17,7 @@ import { CanvasGeo } from "./CanvasGeo";
 export class LabelLayer {
 
     /**
-     * @param {string} url The URL of the label data, as CSV file
+     * @param {string} url The URL of the label data, as CSV file. The file should contain the information for each label such as the text, the position and other information for the display of the label according to the zoom level. If necessary, this data can be reformated with the 'preprocess' parameter.
      * @param {function(Label,number):string} labelStyle Specify if and how a label should be drawn, depending on its importance and the zoom level.
      * @param {function(Label,number):string} labelColor Specify the label color, depending on its importance and the zoom level.
      * @param {function(object):void} preprocess A preprocess to run on each label after loading. It can be used to apply some specific treatment before, format the label data, project coordinates, etc.
@@ -134,60 +133,4 @@ export class LabelLayer {
     /** @param {function(object):void} val @returns {this} */
     setPreprocess(val) { this.preprocess = val; return this; }
 
-}
-
-
-/**
- * Returns label layer from Eurostat, for ETRS89-LAEA grids.
- * 
- * @returns {LabelLayer}
- */
-export const getEurostatLabelLayer = function () {
-
-    //ETRS89-LAEA projection
-    const proj = geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]);
-
-    return new LabelLayer(
-        //url
-        "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv",
-        //style
-        (lb, zf) => {
-            if (zf < 50) {
-                return "bold 30px Arial";
-            }
-            if (zf < 100) {
-                return "bold 20px Arial";
-            }
-            if (zf < 200) {
-                return "bold 15px Arial";
-            }
-            if (zf < 300) {
-                if (lb["cat"] == 2) return
-                return "bold 15px Arial";
-            }
-            if (zf < 400) {
-                if (lb["cat"] == 2) return
-                if (lb["pop_2011"] < 10000) return
-                return "bold 15px Arial";
-            }
-            if (zf < 500) {
-                if (lb["cat"] == 2) return
-                if (lb["pop_2011"] < 50000) return
-                return "bold 15px Arial";
-            }
-
-            if (lb["cat"] == 2) return
-            if (lb["pop_2011"] < 500000) return
-            return "bold 15px Arial";
-        },
-        //color
-        lb => "#00000044",
-        //preprocess
-        lb => {
-            //project from geo coordinates to ETRS89-LAEA
-            const p = proj([lb.lon, lb.lat])
-            lb.x = p[0]; lb.y = p[1];
-            delete lb.lon; delete lb.lat;
-        }
-    )
 }
