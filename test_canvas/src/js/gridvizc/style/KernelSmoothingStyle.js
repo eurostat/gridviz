@@ -12,7 +12,6 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class KernelSmoothingStyle extends Style {
 
-
     /** @param {object} opts */
     constructor(opts) {
         super(opts)
@@ -24,11 +23,11 @@ export class KernelSmoothingStyle extends Style {
 
         /** The smoothing parameter, in geo unit. The larger, the more smoothed.
          * @type {number} @private */
-         this.sigmaGeo = opts.sigmaGeo
+        this.sigmaGeo = opts.sigmaGeo
 
         /** Return the color of a cell, based on its smoothed value. The min and max values of the viewport are given.
          * @type {function} @private */
-         this.color = opts.color
+        this.color = opts.color
     }
 
 
@@ -166,7 +165,7 @@ export class KernelSmoothingStyle extends Style {
         for (let i = 0; i < nbX; i++)
             for (let j = 0; j < nbY; j++) {
                 const sval = matrix[i][j]
-                if(!sval) continue
+                if (!sval) continue
                 if (sval > maxValue) maxValue = sval;
                 if (sval < minValue) minValue = sval;
             }
@@ -177,7 +176,7 @@ export class KernelSmoothingStyle extends Style {
 
                 //get value
                 const sval = +matrix[i][j]
-                if(!sval) continue
+                if (!sval) continue
 
                 //set color
                 cg.ctx.fillStyle = this.color(sval, minValue, maxValue)
