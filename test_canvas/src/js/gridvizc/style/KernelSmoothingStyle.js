@@ -12,22 +12,23 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class KernelSmoothingStyle extends Style {
 
-    /**
-     * @param {function(Cell):number} value A function specifying the value to consider for each cell. This is the value to smooth.
-     * @param {number} sigmaGeo The smoothing parameter, in geo unit. The larger, the more smoothed.
-     * @param {function(number,number,number):string} color Return the color of a cell, based on its smoothed value. The min and max values of the viewport are given.
-     */
-    constructor(value, sigmaGeo, color) {
-        super()
 
-        /** @private @type {function(Cell):number} @private */
-        this.value = value;
+    /** @param {object} opts */
+    constructor(opts) {
+        super(opts)
+        opts = opts || {}
 
-        /** @type {function} @private */
-        this.color = color;
+        /** A function specifying the value to consider for each cell. This is the value to smooth.
+         * @private @type {function(Cell):number} @private */
+        this.value = opts.value
 
-        /** @type {number} @private */
-        this.sigmaGeo = sigmaGeo
+        /** The smoothing parameter, in geo unit. The larger, the more smoothed.
+         * @type {number} @private */
+         this.sigmaGeo = opts.sigmaGeo
+
+        /** Return the color of a cell, based on its smoothed value. The min and max values of the viewport are given.
+         * @type {function} @private */
+         this.color = opts.color
     }
 
 
