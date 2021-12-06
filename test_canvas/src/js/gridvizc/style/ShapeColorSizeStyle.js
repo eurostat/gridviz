@@ -14,22 +14,22 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class ShapeColorSizeStyle extends Style {
 
-    /**
-      * @param {function(Cell):string} color A function returning the color of the cell.
-      * @param {Size} size A function returning the size of a cell (in geographical unit).
-      * @param {function(Cell):Shape} shape A function returning the shape of a cell.
-      */
-    constructor(color = () => "#EA6BAC", size = null, shape = () => "square") {
-        super()
+    /** @param {object} opts */
+    constructor(opts) {
+        super(opts)
+        opts = opts || {};
 
-        /** @private @type {function(Cell):string} */
-        this.color = color;
+        /** A function returning the color of the cell.
+         * @private @type {function(Cell):string} */
+        this.color = opts.color || (() => "#EA6BAC");
 
-        /** @private @type {Size} */
-        this.size = size;
+        /** A function returning the size of a cell (in geographical unit).
+         * @private @type {Size} */
+        this.size = opts.size;
 
-        /** @private @type {function(Cell):Shape} */
-        this.shape = shape;
+        /** A function returning the shape of a cell.
+         * @private @type {function(Cell):Shape} */
+        this.shape = opts.shape || (() => "square");
     }
 
 
@@ -53,7 +53,7 @@ export class ShapeColorSizeStyle extends Style {
 
             //size
             /** @type {Size} */
-            let s_ = this.size || { val: c=>resolution, unit: "geo" };
+            let s_ = this.size || { val: c => resolution, unit: "geo" };
             //size - in pixel and geo
             /** @type {number} */
             const sP = s_.unit === "pix" ? s_.val(cell) : s_.val(cell) / cg.zf

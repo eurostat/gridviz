@@ -10,32 +10,32 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class TextStyle extends Style {
 
-    /**
-      * @param {function(Cell):string} text A function returning the text of a cell.
-      * @param {function(Cell):string} color A function returning the color of the cell.
-      * @param {function(Cell):number} fontSize A function returning the font size of the cell label.
-      * @param {function(Cell):string} fontFamily A function returning the font family of the cell label.
-      * @param {function(Cell):string} fontWeight A function returning the font weight of the cell label.
-      */
-    constructor(text, color = () => "black", fontSize = () => 10, fontFamily = () => "Arial", fontWeight = () => "bold") {
-        super()
+    /** @param {object} opts */
+    constructor(opts) {
+        super(opts)
+        opts = opts || {};
 
-        /** @private @type {function(Cell):string} */
-        this.text = text;
+        /** A function returning the text of a cell.
+         * @private @type {function(Cell):string} */
+        this.text = opts.text || (c => c+"")
 
-        /** @private @type {function(Cell):string} */
-        this.color = color;
+        /** A function returning the color of the cell.
+         * @private @type {function(Cell):string} */
+        this.color = opts.color || (() => "black")
         //TODO add stroke color aswell? This is only for fill
 
-        /** @private @type {function(Cell):number} */
-        this.fontSize = fontSize;
+        /** A function returning the font size of the cell label.
+         * @private @type {function(Cell):number} */
+        this.fontSize = opts.fontSize || (() => 10)
         //TODO fontsize in geo also ? Here it is in pix only.
 
-        /** @private @type {function(Cell):string} */
-        this.fontFamily = fontFamily;
+        /** A function returning the font family of the cell label.
+         * @private @type {function(Cell):string} */
+        this.fontFamily = opts.fontFamily || (() => "Arial")
 
-        /** @private @type {function(Cell):string} */
-        this.fontWeight = fontWeight;
+        /** A function returning the font weight of the cell label.
+         * @private @type {function(Cell):string} */
+        this.fontWeight = opts.fontWeight || (() => "bold")
     }
 
 
