@@ -15,13 +15,17 @@
             .container(containerDiv)
             .geoCenter([4900000, 2475000])
             .title("gridviz Joyplot")
+            .backgroundColor("white")
             .cellCount(true)
             .zoom(500000) //initial camera Z value
             .nuts(true)
             .build()
 
         //define datasets, styles and layers
-        const s = gridviz.getLineStyle(c => 30 * Math.sqrt(c["2011"]));
+        const s = gridviz.getLineStyle(c => 30 * Math.sqrt(c["2011"]))
+        .lineColor("grey")
+        //.lineWidth(0.0015)
+
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 400000);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 400000, 950000);
         app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 950000, 1950000);

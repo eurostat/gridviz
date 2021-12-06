@@ -3,12 +3,11 @@
 import { Style } from "../Style"
 import { Cell } from "../Dataset"
 import { Viewer } from "../viewer/viewer";
-import { Color, Group, LineBasicMaterial, LineSegments,Line, BufferGeometry, Vector3, Float32BufferAttribute } from "three";
+import { Color, Group, LineBasicMaterial, Line, BufferGeometry, Vector3, Float32BufferAttribute, Object3D, Material } from "three";
 import { LineMaterial } from "../../lib/threejs/lines/LineMaterial";
 import { Line2 } from "../../lib/threejs/lines/Line2";
 import { LineGeometry } from "../../lib/threejs/lines/LineGeometry";
-import * as CONSTANTS from "../constants.js";
-import { LineSegments2 } from "../../lib/threejs/lines/LineSegments2";
+
 
 /**
  * 
@@ -25,21 +24,30 @@ export class LineStyle extends Style {
         /** @type {function} */
         this.height = height;
 
+        /** 
+         * @type {number} 
+         * used in drawLine() to determine if the user has used the default or not
+        */
+        this.defaultLineWidth = 0.001;
+
         /** @type {string} */
         this.lineColor_ = "grey"
         /** @type {number} */
-        this.lineWidth_ = 0.001;
+        this.lineWidth_ = this.defaultLineWidth;
         /** @type {string} */
         this.fillColor_ = "rgba(192, 140, 89, 0.4)"
-
+        /** @type {number} */
         this.lineZ = 0.001;
-
+        /** @type {Object3D} */
         this.threejsObject = null;
-
-        this.lineMaterial = new LineMaterial({
+        
+        /** @type {Material} */
+        this.lineMaterial = new LineBasicMaterial({
             linewidth: this.lineWidth_,
-            vertexColors: true
-        });
+            vertexColors: true,
+            //opacity: 1
+            //color: this.lineColor_ - use color attribute in Geometry object instead
+        }); 
     }
 
 
@@ -52,6 +60,9 @@ export class LineStyle extends Style {
      */
     draw(cells, r, viewer) {
 
+        // hex to be used in threejs
+        let lineC = new Color(this.lineColor_);
+        let backgroundC = new Color(viewer.backgroundColor);
 
         if (this.threejsObject) {
             // clear existing layer
@@ -85,15 +96,15 @@ export class LineStyle extends Style {
             const row = ind[y]
             if (!row) continue;
 
-            //compute row baseline
-            //const yP = viewer.geoToPixY(y);
-            let coords = [];
-            let startingPoint = { "x": (xMin - r / 2), "y": y, "z": this.lineZ };
+            let coords = []; //vertices positions
+            let colors = []; //vertices colors
 
             //place first point
-            //cg.ctx.moveTo(cg.geoToPixX(xMin - r / 2), yP);
-            //coords.push(startingPoint);
+            coords.push((xMin - r / 2), y, this.lineZ);
 
+            // we hide the segments of the line with no data by setting their color to the same colour as the viewer background. 
+            // This is a LOT more efficient (in webgl) than creating a new geometry object.
+            colors.push(backgroundC.r, backgroundC.g, backgroundC.b);
 
             //store the previous height
             let hG_ = 0;
@@ -105,21 +116,20 @@ export class LineStyle extends Style {
                 if (!hG) hG = 0;
 
                 if (hG || hG_) {
-                    //draw line only when at least one of both values is non-null
-                    //TODO test bezierCurveTo
-                    //cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - hG/cg.zf);
-                    coords.push((x + r / 2),  y + hG,  this.lineZ )
+                    // segments where both values are non-null
+
+                    //push xyz to buffer
+                    coords.push((x + r / 2), y + hG, this.lineZ)
+                    //push rgb to buffer
+                    colors.push(lineC.r, lineC.g, lineC.b);
+
                 } else {
-                    //else move the point (end current line and start new line at next point)
-                    //cg.ctx.moveTo(cg.geoToPixX(x + r / 2), yP);
+                    // areas with no data
 
-                    //end current line
-                    //this.drawLine(coords)
-
-                    //start new line at next point
-                    //coords = [];
-                    coords.push((x + r / 2),y, this.lineZ )
-
+                    //push xyz to buffer
+                    coords.push((x + r / 2), y, this.lineZ)
+                    // hide this segment
+                    colors.push(backgroundC.r, backgroundC.g, backgroundC.b);
                 }
                 //store the previous value
                 hG_ = hG;
@@ -128,7 +138,8 @@ export class LineStyle extends Style {
             //last point
             if (hG_) {
                 //cg.ctx.lineTo(cg.geoToPixX(xMax + r / 2), yP);
-                coords.push((xMax + r / 2),  y,  this.lineZ )
+                coords.push((xMax + r / 2), y, this.lineZ)
+                colors.push(lineC.r, lineC.g, lineC.b);
             }
 
 
@@ -137,30 +148,45 @@ export class LineStyle extends Style {
             //     cg.ctx.fill()
 
             //draw line
-            this.drawLine(coords)
+            this.drawLine(coords, colors)
         }
     }
 
-    drawLine(coords) {
+    drawLine(coords, colors) {
         if (this.lineColor_ && this.lineWidth_ > 0 && coords.length > 0) {
-            //     let line = this.createLineFromCoords(coords, this.lineColor_, this.lineWidth_);
-            //     this.threejsObject.add(line);
 
-            const material = new LineBasicMaterial({ color: this.lineColor_, opacity: 1 });
-
-            const line = new Line(this.createGeometry(coords), material);
+            // line width is complicated in webGL (see https://threejs.org/docs/?q=line#api/en/materials/LineBasicMaterial.linewidth)
+            // therefore a workaround (Line2) is needed if the user wants a different line thickness
+            let line; 
+            if (this.lineWidth_ !== this.defaultLineWidth) {
+                this.lineMaterial = new LineMaterial({
+                    //color: this.lineColor_, 
+                    linewidth: this.lineWidth_, 
+                    vertexColors: true, // use our colors array
+                    //opacity: 1
+                });
+                line = new Line2(this.createLineGeometry(coords, colors), this.lineMaterial);
+            } else {
+                line = new Line(this.createBufferGeometry(coords, colors), this.lineMaterial);
+            }
             this.threejsObject.add(line);
         }
     }
 
-    createGeometry(vertices) {
-
+    createBufferGeometry(vertices, colors) {
         const geometry = new BufferGeometry();
-
         geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-
+        geometry.setAttribute('color', new Float32BufferAttribute(colors, 3));
         return geometry;
+    }
 
+    createLineGeometry(vertices, colors) {
+        //workaround for custom line thickness
+        // see https://threejs.org/examples/?q=lines#webgl_lines_fat
+        let geometry = new LineGeometry()
+        geometry.setPositions(vertices);
+        geometry.setColors(colors);
+        return geometry;
     }
 
 
