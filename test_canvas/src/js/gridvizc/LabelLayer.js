@@ -17,7 +17,6 @@ import { CanvasGeo } from "./CanvasGeo";
 export class LabelLayer {
 
     /**
-     * 
      * @param {string} url The URL of the label data, as CSV file
      * @param {function(Label,number):string} labelStyle Specify if and how a lable should be drawn, depending on its importance and the zoom level.
      * @param {function(Label,number):string} labelColor Specify the label color, depending on its importance and the zoom level.
@@ -130,10 +129,10 @@ export class LabelLayer {
     /** @param {function(Label,number):string} val @returns {this} */
     setLabelColor(val) { this.labelColor = val; return this; }
 
-    /** @returns {function} */
-    getProjection() { return this.projection; }
-    /** @param {function(Array.<number>):Array.<number>} val @returns {this} */
-    setProjection(val) { this.projection = val; return this; }
+    /** @returns {function(Label):void} */
+    getPreprocess() { return this.preprocess; }
+    /** @param {function(Label):void} val @returns {this} */
+    setPreprocess(val) { this.preprocess = val; return this; }
 
 }
 
@@ -186,3 +185,11 @@ export const getEurostatLabelLayer = function () {
         geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]),
     )
 }
+
+
+
+                    /*{
+                        const p = this.projection([lb.lon, lb.lat])
+                        lb.x = p[0]; lb.y = p[1];
+                        delete lb.lon; delete lb.lat;
+                    }*/
