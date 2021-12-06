@@ -101,7 +101,7 @@ export class Viewer extends EventEmitter {
         this.createRaycaster();
 
         //initial extent
-        this.extGeo = this.getCurrentViewExtent();
+        this.extGeo = this.getCurrentGeoExtent();
     }
 
     /**
@@ -236,7 +236,7 @@ export class Viewer extends EventEmitter {
     }
 
     zoomEnd(event) {
-        this.extGeo = this.getCurrentViewExtent();
+        this.extGeo = this.getCurrentGeoExtent();
         this.emit("zoomEnd", event)
     }
 
@@ -264,11 +264,11 @@ export class Viewer extends EventEmitter {
 
     /**
      * @description Returns the current extent of the viewer in geographic coordinates
-     * @function getCurrentViewExtent
+     * @function getCurrentGeoExtent
      * 
      * @returns {Envelope}
      */
-    getCurrentViewExtent() {
+    getCurrentGeoExtent() {
         var elem = this.renderer.domElement;
         let clientBottomLeft = [elem.clientLeft, elem.clientHeight];
         let clientTopRight = [elem.clientWidth, elem.clientTop];

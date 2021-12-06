@@ -1,7 +1,7 @@
 //@ts-check
 
 /** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
-/** @typedef {{x: number, y: number, color:string?}} Cell */
+/** @typedef {{x: number, y: number}} Cell */
 
 /**
  * A dataset of grid cells.
@@ -18,7 +18,7 @@ export class Dataset {
      * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
      * @abstract
      */
-     constructor(url, resolution, preprocess=null){
+    constructor(url, resolution, preprocess = null) {
 
         /** @type {string} */
         this.url = url;
@@ -39,7 +39,7 @@ export class Dataset {
      * @returns {this}
      * @abstract
      */
-     getData(extGeo, callback) {
+    getData(extGeo, callback) {
         throw new Error('Method getData not implemented.');
     }
 
@@ -51,6 +51,37 @@ export class Dataset {
     getCells(extGeo) {
         throw new Error('Method getCells not implemented.');
     }
+
+    /**
+     * Get a cell under a given position, if any.
+     * 
+     * @param {{x:number,y:number}} posGeo 
+     * @param {Array.<Cell>} cells Some cells from the dataset, a subset if necessary.
+     * @returns {Cell}
+     */
+    getCellFromPosition(posGeo, cells) {
+
+        //compute candidate cell position
+        /** @type {number} */
+        const r = this.getResolution();
+        /** @type {number} */
+        const cellX = r * Math.floor(posGeo.x / r)
+        /** @type {number} */
+        const cellY = r * Math.floor(posGeo.y / r)
+
+        //get cell data
+        for (const cell of cells) {
+            if (cell.x != posGeo.x) continue;
+            if (cell.y != posGeo.y) continue;
+            return cell;
+        }
+        return undefined;
+    }
+
+    //getters and setters
+
+    /** @returns {number} */
+    getResolution() { return this.resolution; }
 
 
 }

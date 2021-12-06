@@ -42,6 +42,8 @@ export class ColorSizeShapeStyle extends Style {
      * @param {Viewer} viewer 
      */
     draw(cells, resolution, viewer) {
+        
+        this.cells = cells; //save new subset for tooltip
 
         this.colors = [];
         this.positions = [];

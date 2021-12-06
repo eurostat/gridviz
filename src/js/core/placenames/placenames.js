@@ -100,7 +100,7 @@ export function defineDefaultPlacenameThresholds(resolution) {
    */
 export function getPlacenames(app) {
     let where = defineWhereParameter(app)
-    let envelope = app.viewer.getCurrentViewExtent(app);
+    let envelope = app.viewer.getCurrentGeoExtent(app);
 
     // if user has removed trailing zeros from x/y we add them back on for the placenames requests
     if (app.zerosRemoved_) {

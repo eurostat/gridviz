@@ -100,7 +100,7 @@ export class App {
     * initial camera Z position
     * @type {Number} 
     * */
-    this.zoom_ = null; 
+    this.zoom_ = null;
 
     /**
     * initial camera position in geographic coordinates [x,y]
@@ -139,7 +139,7 @@ export class App {
     this.nutsSimplification_ = "10M"; //current nuts2json simplification
 
     this.mobileCellSize_ = null; // manually set cell size for mobiles - TODO: move to layer
-        
+
     this.mode_ = false; //threejs scene (2D = orthographic, 3D = Orbital) - not yet implemented in new structure
 
     // for deprectation
@@ -376,7 +376,7 @@ export class App {
  */
   draw(layer) {
     //get cells to draw
-    let geoExt = this._isMobile ? this.viewer.envelopeToMobile(this.viewer.getCurrentViewExtent()) : this.viewer.getCurrentViewExtent();
+    let geoExt = this._isMobile ? this.viewer.envelopeToMobile(this.viewer.getCurrentGeoExtent()) : this.viewer.getCurrentGeoExtent();
 
     let cells = layer.dataset.getCells(geoExt); //use all cells for CSVGrid?
 
@@ -704,131 +704,14 @@ export class App {
    * @function addEventListeners
    */
   addEventListeners() {
-    //show population value on click
+    //show cell values on click/hover
     this.addMouseEventsToView();
-    //change color scheme
-    if (this.colorSchemeSelector_) {
-      this.addChangeEventToColorSchemeDropdown();
-    }
-    //change scale
-    if (this.colorScaleSelector_) {
-      Dropdowns.createColorScaleDropdown(app);
-      this.addChangeEventToColorScaleDropdown();
-    }
     //screen resize
     this.addResizeEvent();
     //zoom, home buttons etc
     if (!this._isMobile) {
       this.addButtonEvents();
     }
-
-  }
-
-  /**
-  * @description Add change event to color-scheme selector
-  * @function addChangeEventToColorSchemeDropdown
-  */
-  addChangeEventToColorSchemeDropdown() {
-    this.schemesSelect.addEventListener("change", function (e) {
-      this.onChangeColorScheme(e.currentTarget.value);
-    });
-  }
-
-  /**
-  * @description Color scheme dropdown event handler. Updates point colours and legend
-  * @function onChangeColorScheme
-  * @param {String} scheme Name of the d3-scale-chromatic colour scheme
-  */
-  onChangeColorScheme(scheme) {
-    Tooltip.hideTooltip()
-    this.colorSchemeName_ = scheme;
-    this.updateColorScale();
-    Points.updatePointsColors(app, this.gridConfigs[this._currentResolution], this.gridCaches[this._currentResolution]);
-    // if (this.layer._legend) {
-    //   this.layer._legend.updateLegend();
-    // }
-  }
-
-  /**
-  * @description Adds change event to color-field select element
-  * @function addChangeEventToColorFieldDropdown
-  */
-  addChangeEventToColorFieldDropdown() {
-    this.colorFieldSelect.addEventListener("change", function (e) {
-      this.onChangeColorField(e.currentTarget.value);
-    });
-  }
-
-  /**
-  * @description Color csv field dropdown event handler
-  * @function onChangeColorField
-  * @param {*} field
-  */
-  onChangeColorField(field) {
-    this.gridConfigs[this._currentResolution].colorField = field;
-
-    //update the extent/domain of the values of the new field 
-    this.colorValuesExtent = extent(this.gridCaches[this._currentResolution], d => parseFloat(d[this.gridConfigs[this._currentResolution].colorField]));
-
-    //update the scale function used for colouring
-    if (!this.colors_) {
-      this.updateColorScale();
-    }
-
-    //update the thee.js point colours
-    Points.updatePointsColors(app, this.gridConfigs[this._currentResolution], this.gridCaches[this._currentResolution]);
-
-    // if (this.legend_) {
-    //   Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
-    // }
-  }
-
-  /**
-  * @description Add change event to color-scale selector
-  * @function addChangeEventToColorScaleDropdown
-  */
-  addChangeEventToColorScaleDropdown() {
-    this.colorScaleSelect.addEventListener("change", function (e) {
-      this.onChangeColorScale(e.currentTarget.value);
-    });
-  }
-
-  /**
-  * @description Color scale dropdown event handler
-  * @function onChangeColorScale
-  * @param {String} scale name of d3-scale to be used
-  */
-  onChangeColorScale(scale) {
-    this.colorScaleName_ = scale;
-    this.updateColorScale();
-    Points.updatePointsColors(app, this.gridConfigs[this._currentResolution], this.gridCaches[this._currentResolution]);
-    // if (this.legend_) {
-    //   Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
-    // }
-  }
-
-  /**
-  * @description Add change event to size-field selector
-  * @function addChangeEventToSizeFieldDropdown
-  */
-  addChangeEventToSizeFieldDropdown() {
-    this.sizeFieldSelect.addEventListener("change", function (e) {
-      this.onChangeSizeField(e.currentTarget.value);
-    });
-  }
-
-  /**
-  * Color csv field dropdown event handler
-  *
-  * @param {*} field
-  */
-  onChangeSizeField(field) {
-    this.gridConfigs[this._currentResolution].sizeField = field;
-    this.updateSizeScale();
-    Points.updatePointsSizes(app, this.gridCaches[this._currentResolution]);
-    // if (this.__Legend) {
-    //   Legend.updateLegend(app, this.gridConfigs[this._currentResolution]);
-    // }
   }
 
   /**
@@ -847,7 +730,7 @@ export class App {
   }
 
   /**
-  * @description attach event listeners to the app
+  * @description attach mouse event listeners to the viewer
   * @function addMouseEventsToView
   */
   addMouseEventsToView() {
@@ -858,25 +741,28 @@ export class App {
       let intersect = this.checkIntersects(mouse_position);
       if (intersect) {
 
-        // find the Layer that has been intersected
-        let intersectedLayer;
+        // find the style that has been intersected
+        let intersectedStyle;
         this.layers.find((layer) => {
           return layer.styles.forEach((s) => {
             if (s.threejsObject) {
-              if (layer.styles[0].threejsObject.uuid == intersect.object.uuid) {
-                intersectedLayer = layer;
+              if (layer.styles) {
+                layer.styles.forEach((style) => {
+                  if (style.threejsObject.uuid == intersect.object.uuid) {
+                    intersectedStyle = style;
+                  };
+                });
               }
             }
           })
         });
-        //find cell in original array
-        let index = intersect.index;
 
+        //find cell
         let cell;
-        if (intersectedLayer.dataset.cells) {
-          // Find cell in CSVGrid
-          cell = intersectedLayer.dataset.cells[index]; //wrong
-        } // TODO: find cell in TiledGrid
+        if (intersectedStyle.cells) {
+          let index = intersect.index;
+          cell = intersectedStyle.cells[index];
+        }
 
         if (cell) {
           //change cell colour
@@ -887,8 +773,6 @@ export class App {
 
           this._tooltip.updateTooltip(cell, mouse_position[0], mouse_position[1], cell.color || 'none')
         }
-
-
       } else {
         this._tooltip.hide();
       }

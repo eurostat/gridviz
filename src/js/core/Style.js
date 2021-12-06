@@ -16,20 +16,9 @@ export class Style {
      */
     constructor() {
 
-        //the cell stroke
-
-        /** The zoom limit when to show/hide the stroke.
-         * @type {number} */
-        this.zfStroke_ = undefined;
-
-        /** The stroke color.
-         * @type {string} */
-        this.strokeColor_ = "lightgray";
-
-        /** The stroke line width, in pixels.
-         * @type {number} */
-        this.strokeWidth_ = 1.5;
-
+        /** The cells or cells subset currently loaded by the style. Useful for efficiently finding raycasted cell properties for tooltip hover.
+         * @type {Array<Cell>} */
+         this.cells = null;
     }
 
 

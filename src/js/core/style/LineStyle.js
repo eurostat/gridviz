@@ -48,6 +48,7 @@ export class LineStyle extends Style {
             //opacity: 1
             //color: this.lineColor_ - use color attribute in Geometry object instead
         }); 
+
     }
 
 
