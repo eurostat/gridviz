@@ -12,19 +12,17 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class RadarStyle extends Style {
 
-    /**
-      * @param {object} color The dictionary which give the color of each category.
-      * @param {Size} size 
-      */
-    constructor(color, size) {
-        super()
+    /** @param {object} opts */
+    constructor(opts) {
+        super(opts)
+        opts = opts || {};
 
         //dictionnary column -> color
         /** @private @type {object} */
-        this.color = color;
+        this.color = opts.color;
 
         /** @private @type {Size} */
-        this.size = size;
+        this.size = opts.size;
     }
 
 

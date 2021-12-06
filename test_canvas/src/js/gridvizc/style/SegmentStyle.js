@@ -11,23 +11,26 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class SegmentStyle extends Style {
 
-    /**
-      * @param {function(Cell):number} orientation A function returning the orientation (in degrees) of the segment representing a cell.
-      * @param {function(Cell):string} color A function returning the color of the segment representing a cell.
-      * @param {Size} length A function returning the length of the segment representing a cell.
-      * @param {Size} width A function returning the width of the segment representing a cell.
-      */
-    constructor(orientation, color, length, width) {
-        super()
+    /** @param {object} opts */
+    constructor(opts) {
+        super(opts)
+        opts = opts || {};
 
-        /** @private @type {function(Cell):number} */
-        this.orientation = orientation;
-        /** @private @type {function(Cell):string} */
-        this.color = color;
-        /** @private @type {Size} */
-        this.length = length;
-        /** @private @type {Size} */
-        this.width = width;
+        /** A function returning the orientation (in degrees) of the segment representing a cell.
+         * @private @type {function(Cell):number} */
+        this.orientation = opts.orientation;
+
+        /** A function returning the color of the segment representing a cell.
+         * @private @type {function(Cell):string} */
+        this.color = opts.color;
+
+        /** A function returning the length of the segment representing a cell.
+         * @private @type {Size} */
+        this.length = opts.length;
+
+        /** A function returning the width of the segment representing a cell.
+         * @private @type {Size} */
+        this.width = opts.width;
 
     }
 
