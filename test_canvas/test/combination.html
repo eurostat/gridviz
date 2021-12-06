@@ -16,15 +16,16 @@
 
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
         const s1 = new gviz.JoyPlotStyle({
-            height: { val: c => 13 * Math.sqrt(c["Inhabitants"]), unit: "geo" }
-        }
-        ).setZFStroke(3).setFillColor("#77777777");
+            height: { val: c => 13 * Math.sqrt(c["Inhabitants"]), unit: "geo" },
+            fillColor: "#77777777",
+            zfStroke: 3
+        });
         const s2 = new gviz.ShapeColorSizeStyle({
             color: c => gviz.interpolateReds(2 * c["Population over 65"] / c["Inhabitants"]),
             size: { val: c => c["Inhabitants"] / 3, unit: "geo" },
-            shape: c => "circle"
-        }
-        ).setZFStroke(1);
+            shape: c => "circle",
+            zfStroke: 1
+        });
         app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s1, s2], 0, 9999999999,
             {
                 preprocess: c => {
