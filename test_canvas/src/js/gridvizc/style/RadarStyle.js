@@ -38,7 +38,16 @@ export class RadarStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
+        //nb categories
+        const nbCat = Object.entries(this.color).length
+        const angle = 2 * Math.PI / nbCat
+        let angleCumul = 0
+
         for (let cell of cells) {
+
+            //compute cell center position
+            const xc = cg.geoToPixX(cell.x + resolution * 0.5 + this.offset.dx);
+            const yc = cg.geoToPixY(cell.y + resolution * 0.5 + this.offset.dy);
 
             //draw decomposition symbol
             for (let [column, color] of Object.entries(this.color)) {
@@ -49,15 +58,19 @@ export class RadarStyle extends Style {
                 //get categroy value
                 const val = cell[column]
 
-                //radius - in pixel and geo
+                //radius - in pixel
                 /** @type {number} */
                 const rP = this.radius.unit === "pix" ? this.radius.val(val) : this.radius.val(val) / cg.zf
-                /** @type {number} */
-                const rG = cg.zf * rP;
 
-                console.log(val, rG)
+                cg.ctx.beginPath();
+                cg.ctx.moveTo(xc, yc);
+                cg.ctx.arc(xc, yc, rP, angleCumul, angleCumul + angle);
+                cg.ctx.lineTo(xc, yc);
+                cg.ctx.fill();
 
-                //TODO draw fill
+                //
+                angleCumul += angle
+
                 //TODO draw stroke ?
             }
 
