@@ -17,12 +17,15 @@ export class RadarStyle extends Style {
         super(opts)
         opts = opts || {};
 
-        //dictionnary column -> color
-        /** @private @type {object} */
+        /**
+         * The dictionary which give the color of each category.
+         * @private @type {object} */
         this.color = opts.color;
 
-        /** @private @type {Size} */
-        this.size = opts.size;
+        /**
+         * @private @type {{val: function(number):number, unit: "pix"|"geo"}} */
+        this.radius = opts.radius;
+
     }
 
 
@@ -43,7 +46,14 @@ export class RadarStyle extends Style {
                 //set color
                 cg.ctx.fillStyle = color;
 
-                //TODO get size
+                //get categroy value
+                const val = cell[column]
+
+                //radius - in pixel and geo
+                /** @type {number} */
+                const rP = this.radius.unit === "pix" ? this.radius.val(val) : this.radius.val(val) / cg.zf
+                /** @type {number} */
+                const rG = cg.zf * rP;
 
                 //TODO draw fill
                 //TODO draw stroke ?

@@ -24,15 +24,18 @@ export class CompositionStyle extends Style {
         super(opts)
         opts = opts || {};
 
-        /** The dictionary which give the color of each category.
+        /**
+         * The dictionary which give the color of each category.
          * @private @type {object} */
         this.color = opts.color;
 
-        /** A function returning the type of decomposition symbol of a cell, @see CompositionType
+        /**
+         * A function returning the type of decomposition symbol of a cell, @see CompositionType
          * @private @type {function(Cell):CompositionType} */
         this.type = opts.type;
 
-        /** A function returning the size of a cell (in geographical unit).
+        /**
+         * A function returning the size of a cell (in geographical unit).
          * @private @type {Size} */
         this.size = opts.size;
     }
