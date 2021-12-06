@@ -24,8 +24,8 @@
             .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setLabelLayer(gviz.getEurostatLabelLayer())//.setBackgroundColor("black")
 
         const col = gviz.interpolateRdYlBu;
-        const s = new gviz.CompositionStyle(
-            {
+        const s = new gviz.CompositionStyle({
+            color: {
                 "Ind_0_3": col(0),
                 "Ind_4_5": col(4 / 80),
                 "Ind_6_10": col(6 / 80),
@@ -38,9 +38,10 @@
                 "Ind_80p": col(1),
                 "Ind_inc": "gray"
             },
-            c => "ring",
-            //{ val: c => 8 * Math.pow(c["Ind"], 0.5), unit: "geo" }
-            { val: c => 3.0 * Math.pow(c["Ind"], 0.2), unit: "pix" }
+            type: c => "ring",
+            //size : { val: c => 8 * Math.pow(c["Ind"], 0.5), unit: "geo" }
+            size: { val: c => 3.0 * Math.pow(c["Ind"], 0.2), unit: "pix" }
+        }
         ).setZFStroke(5);
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
             " < 3 : " + Math.floor(["Ind_0_3"]) + "<br>" +

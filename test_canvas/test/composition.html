@@ -24,10 +24,11 @@
 
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
         app.setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(3)
-        const s = new gviz.CompositionStyle(
-            { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
-            c => "flag",
-            { val: c => 5 * Math.sqrt((c["Inhabitants"])), unit: "geo" }
+        const s = new gviz.CompositionStyle({
+            color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
+            type: c => "flag",
+            size: { val: c => 5 * Math.sqrt((c["Inhabitants"])), unit: "geo" }
+        }
         ).setZFStroke(5);
         app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
             {
