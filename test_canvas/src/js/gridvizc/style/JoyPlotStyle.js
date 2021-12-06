@@ -10,21 +10,21 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class JoyPlotStyle extends Style {
 
-    /**
-      * @param {Size} height A function returning the height of a cell.
-      */
-    constructor(height) {
-        super()
+    /** @param {object} opts */
+    constructor(opts) {
+        super(opts)
+        opts = opts || {};
 
-        /** @private @type {Size} */
-        this.height = height;
+        /** A function returning the height of a cell.
+         * @private @type {Size} */
+        this.height = opts.height;
 
         /** @private @type {string} */
-        this.lineColor = "gray"
+        this.lineColor = opts.lineColor || "gray"
         /** @private @type {number} */
-        this.lineWidth = 1;
+        this.lineWidth = opts.lineWidth || 1;
         /** @private @type {string} */
-        this.fillColor = "rgba(192, 140, 89, 0.4)"
+        this.fillColor = opts.fillColor || "rgba(192, 140, 89, 0.4)"
     }
 
 
