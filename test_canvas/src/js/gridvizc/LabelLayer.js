@@ -17,24 +17,32 @@ import { CanvasGeo } from "./CanvasGeo";
 export class LabelLayer {
 
     /**
-     * @param {string} url The URL of the label data, as CSV file. The file should contain the information for each label such as the text, the position and other information for the display of the label according to the zoom level. If necessary, this data can be reformated with the 'preprocess' parameter.
-     * @param {function(Label,number):string} labelStyle Specify if and how a label should be drawn, depending on its importance and the zoom level.
-     * @param {function(Label,number):string} labelColor Specify the label color, depending on its importance and the zoom level.
-     * @param {function(object):void} preprocess A preprocess to run on each label after loading. It can be used to apply some specific treatment before, format the label data, project coordinates, etc.
+     * @param {string} url 
+     * @param {object} opts 
      */
-    constructor(url, labelStyle = lb => "bold 15px Arial", labelColor = lb => "#00000044", preprocess = undefined) {
+     constructor(url, opts) {
+        opts = opts || {};
 
-        /** @private @type {string} */
+        /** 
+         * The URL of the label data, as CSV file.
+         * The file should contain the information for each label such as the text, the position and other information for the display of the label according to the zoom level.
+         * If necessary, this data can be reformated with the 'preprocess' parameter.
+         * @private @type {string} */
         this.url = url
 
-        /** @private @type {function(Label,number):string} */
-        this.labelStyle = labelStyle
+        /** Specify if and how a label should be drawn, depending on its importance and the zoom level.
+         * @private @type {function(Label,number):string} */
+        this.labelStyle = opts.labelStyle || (() => "bold 15px Arial")
 
-        /** @private @type {function(Label,number):string} */
-        this.labelColor = labelColor
+        /** Specify the label color, depending on its importance and the zoom level.
+         * @private @type {function(Label,number):string} */
+        this.labelColor = opts.labelColor || (() => "#00000044")
 
-        /** @private @type {function(object):void} */
-        this.preprocess = preprocess;
+        /** 
+         * A preprocess to run on each label after loading.
+         * It can be used to apply some specific treatment before, format the label data, project coordinates, etc.
+         * @private @type {function(object):void} */
+        this.preprocess = opts.preprocess
 
         /** @private @type {Array.<Label>} */
         this.labels = undefined
