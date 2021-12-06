@@ -32,11 +32,11 @@ export class LabelLayer {
 
         /** Specify if and how a label should be drawn, depending on its importance and the zoom level.
          * @private @type {function(Label,number):string} */
-        this.labelStyle = opts.labelStyle || (() => "bold 15px Arial")
+        this.style = opts.style || (() => "bold 15px Arial")
 
         /** Specify the label color, depending on its importance and the zoom level.
          * @private @type {function(Label,number):string} */
-        this.labelColor = opts.labelColor || (() => "#00000044")
+        this.color = opts.color || (() => "#00000044")
 
         /** 
          * A preprocess to run on each label after loading.
@@ -70,10 +70,10 @@ export class LabelLayer {
         for (const lb of this.labels) {
 
             //set color
-            cg.ctx.fillStyle = this.labelColor(lb, cg.zf);
+            cg.ctx.fillStyle = this.color(lb, cg.zf);
 
             //get label style
-            const st = this.labelStyle(lb, cg.zf);
+            const st = this.style(lb, cg.zf);
             if (!st) continue;
             cg.ctx.font = st;
 
@@ -127,14 +127,14 @@ export class LabelLayer {
     setUrl(val) { this.url = val; return this; }
 
     /** @returns {function(Label,number):string} */
-    getLabelStyle() { return this.labelStyle; }
+    getLabelStyle() { return this.style; }
     /** @param {function(Label,number):string} val @returns {this} */
-    setLabelStyle(val) { this.labelStyle = val; return this; }
+    setLabelStyle(val) { this.style = val; return this; }
 
     /** @returns {function(Label,number):string} */
-    getLabelColor() { return this.labelColor; }
+    getLabelColor() { return this.color; }
     /** @param {function(Label,number):string} val @returns {this} */
-    setLabelColor(val) { this.labelColor = val; return this; }
+    setLabelColor(val) { this.color = val; return this; }
 
     /** @returns {function(object):void} */
     getPreprocess() { return this.preprocess; }

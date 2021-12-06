@@ -46,7 +46,7 @@ export const getEurostatLabelLayer = function () {
     return new LabelLayer(
         "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv",
         {
-            labelStyle: (lb, zf) => {
+            style: (lb, zf) => {
                 if (zf < 50) {
                     return "bold 30px Arial";
                 }
@@ -76,7 +76,7 @@ export const getEurostatLabelLayer = function () {
                 return "bold 15px Arial";
             },
             //color
-            labelColor: () => "#00000044",
+            color: () => "#00000044",
             //preprocess
             preprocess: lb => {
                 //project from geo coordinates to ETRS89-LAEA
