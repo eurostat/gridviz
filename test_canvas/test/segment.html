@@ -16,8 +16,8 @@
             .setLabelLayer(gviz.getEurostatLabelLayer().setLabelColor(c => "#fff8"))
 
         //define datasets, styles and layers
-        const s = new gviz.SegmentStyle(
-            c => {
+        const s = new gviz.SegmentStyle({
+            orientation: c => {
                 if (c["2011"] == 0 && c["2018"] === 0) return "white"
                 if (c["2018"] == 0) return gviz.interpolateRdBu(0);
                 let r = (c["2018"] - c["2011"]) / c["2018"];
@@ -25,10 +25,10 @@
                 r = Math.min(Math.max(r, -1), 1)
                 return 85 * r;
             },
-            c => gviz.interpolateOrRd(Math.pow(c["2018"], 0.5) / 100),
-            //c => "white",
-            { val: c => 1000, unit: "geo" },
-            { val: c => 200, unit: "geo" }
+            color: c => gviz.interpolateOrRd(Math.pow(c["2018"], 0.5) / 100),
+            length: { val: c => 1000, unit: "geo" },
+            width: { val: c => 200, unit: "geo" }
+        }
         ).setZFStroke(50);
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500);
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 500, 1000);
