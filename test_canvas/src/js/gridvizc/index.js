@@ -34,6 +34,7 @@ import { LabelLayer } from "./LabelLayer"
 
 /**
  * Returns label layer from Eurostat, for ETRS89-LAEA grids.
+ * From dataset: https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv
  * 
  * @returns {LabelLayer}
  */
