@@ -4,6 +4,8 @@ import { csv } from "d3-fetch";
 import { geoAzimuthalEqualArea } from 'd3-geo'
 import { CanvasGeo } from "./CanvasGeo";
 
+/** @typedef {{name: string, x:number, y:number }} Label */
+
 /**
  * A (generic) layer for placename labels, to be shown on top of the grid layers.
  * The input is a CSV file with the position of the labels and name + some other info on the label importance.
@@ -17,32 +19,28 @@ export class LabelLayer {
     /**
      * 
      * @param {string} url The URL of the label data, as CSV file
-     * @param {function(Ob,number):string} labelStyle Specify if and how a lable should be drawn, depending on its importance and the zoom level.
+     * @param {function(Label,number):string} labelStyle Specify if and how a lable should be drawn, depending on its importance and the zoom level.
      * @param {function(Label,number):string} labelColor Specify the label color, depending on its importance and the zoom level.
-     * @param {function(Array.<number>):Array.<number>} projection 
+     * @param {function(Label):void} preprocess A preprocess to run on each label after loading. It can be used to apply some specific treatment before, format the label data, project coordinates, etc.
      */
-    constructor(url, labelStyle = lb => "bold 15px Arial", labelColor = lb => "#00000044", projection = null) {
+    constructor(url, labelStyle = lb => "bold 15px Arial", labelColor = lb => "#00000044", preprocess = null) {
 
-        /** @type {string} */
+        /** @private @type {string} */
         this.url = url
 
         /** Return label style depending on its importance and the zoom level
-         * @type {function(Label,number):string} */
+         * @private @type {function(Label,number):string} */
         this.labelStyle = labelStyle
 
         /** Return label color depending on its importance and the zoom level
-         * @type {function(Label,number):string} */
+         * @private @type {function(Label,number):string} */
         this.labelColor = labelColor
 
-        /** The projection from (lat,lon) to the CRS of the grid.
-          * ITt is used for example to project and show the labels in the foreground.
-          * By default, it is set to European projection, ETRS89-LAEA (EPSG:3035)
-          * @type {function(Array.<number>):Array.<number>} */
-        this.projection = projection
+        /** @private @type {function(Label):void} */
+        this.preprocess = preprocess;
 
         /** @private @type {Array.<Label>} */
         this.labels = undefined
-
     }
 
 
