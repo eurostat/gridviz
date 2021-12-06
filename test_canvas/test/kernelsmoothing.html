@@ -15,10 +15,11 @@
             .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(300).setLabelLayer(gviz.getEurostatLabelLayer().setLabelColor(c => "#0005"))
 
         //define datasets, styles and layers
-        const s = new gviz.KernelSmoothingStyle(
-            c => +c["2018"],
-            1000,
-            (val, min, max) => gviz.interpolateOrRd(Math.pow((val - min) / (max - min), 0.35)),
+        const s = new gviz.KernelSmoothingStyle({
+            value: c => +c["2018"],
+            sigmaGeo: 1000,
+            color: (val, min, max) => gviz.interpolateOrRd(Math.pow((val - min) / (max - min), 0.35))
+        }
         );
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 300, { cellInfoHTML: ttfun });
