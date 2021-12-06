@@ -10,6 +10,7 @@ export * from "d3-scale-chromatic"
 export { CSVGrid } from "./dataset/CSVGrid"
 export { TiledGrid } from "./dataset/TiledGrid"
 
+
 //export styles
 export { ShapeColorSizeStyle } from "./style/ShapeColorSizeStyle"
 export { JoyPlotStyle } from "./style/JoyPlotStyle"
