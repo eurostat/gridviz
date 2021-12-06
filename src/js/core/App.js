@@ -226,6 +226,7 @@ export class App {
         this.viewer = new Viewer({
           width: this.width_,
           height: this.height_,
+          backgroundColor: this.backgroundColor_,
           container: this.container_,
           geoCenter: this.geoCenter_,
           isMobile: this._isMobile,

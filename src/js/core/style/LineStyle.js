@@ -3,8 +3,12 @@
 import { Style } from "../Style"
 import { Cell } from "../Dataset"
 import { Viewer } from "../viewer/viewer";
-import { createLineFromCoords } from "../GeoJsonLayer";
-import { Group } from "three";
+import { Color, Group, LineBasicMaterial, LineSegments,Line, BufferGeometry, Vector3, Float32BufferAttribute } from "three";
+import { LineMaterial } from "../../lib/threejs/lines/LineMaterial";
+import { Line2 } from "../../lib/threejs/lines/Line2";
+import { LineGeometry } from "../../lib/threejs/lines/LineGeometry";
+import * as CONSTANTS from "../constants.js";
+import { LineSegments2 } from "../../lib/threejs/lines/LineSegments2";
 
 /**
  * 
@@ -22,13 +26,20 @@ export class LineStyle extends Style {
         this.height = height;
 
         /** @type {string} */
-        this.lineColor_ = "white"
+        this.lineColor_ = "grey"
         /** @type {number} */
-        this.lineWidth_ = 0.002;
+        this.lineWidth_ = 0.001;
         /** @type {string} */
         this.fillColor_ = "rgba(192, 140, 89, 0.4)"
 
-        this.threejsObject = new Group();
+        this.lineZ = 0.001;
+
+        this.threejsObject = null;
+
+        this.lineMaterial = new LineMaterial({
+            linewidth: this.lineWidth_,
+            vertexColors: true
+        });
     }
 
 
@@ -41,7 +52,16 @@ export class LineStyle extends Style {
      */
     draw(cells, r, viewer) {
 
-        if (this.threejsObject) this.threejsObject.clear();
+
+        if (this.threejsObject) {
+            // clear existing layer
+            this.threejsObject.clear();
+        } else {
+            // add layer to threejs scene
+            this.threejsObject = new Group();
+            this.threejsObject.renderOrder = 1; //bottom
+            viewer.scene.add(this.threejsObject);
+        }
 
         //index cells by y and x
         const ind = {};
@@ -58,9 +78,6 @@ export class LineStyle extends Style {
         const yMin = Math.floor(e.yMin / r) * r;
         const yMax = Math.floor(e.yMax / r) * r;
 
-        //set color and width
-
-
         //draw lines row by row, stating from the top
         for (let y = yMax; y >= yMin; y -= r) {
 
@@ -71,11 +88,11 @@ export class LineStyle extends Style {
             //compute row baseline
             //const yP = viewer.geoToPixY(y);
             let coords = [];
-            let startingPoint = [(xMin - r / 2), y];
+            let startingPoint = { "x": (xMin - r / 2), "y": y, "z": this.lineZ };
 
             //place first point
             //cg.ctx.moveTo(cg.geoToPixX(xMin - r / 2), yP);
-            coords.push(startingPoint);
+            //coords.push(startingPoint);
 
 
             //store the previous height
@@ -91,11 +108,18 @@ export class LineStyle extends Style {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo
                     //cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - hG/cg.zf);
-                    coords.push([(x + r / 2), y - hG])
+                    coords.push((x + r / 2),  y + hG,  this.lineZ )
                 } else {
-                    //else move the point
+                    //else move the point (end current line and start new line at next point)
                     //cg.ctx.moveTo(cg.geoToPixX(x + r / 2), yP);
-                    coords.push([(x + r / 2), y])
+
+                    //end current line
+                    //this.drawLine(coords)
+
+                    //start new line at next point
+                    //coords = [];
+                    coords.push((x + r / 2),y, this.lineZ )
+
                 }
                 //store the previous value
                 hG_ = hG;
@@ -103,21 +127,40 @@ export class LineStyle extends Style {
 
             //last point
             if (hG_) {
-                coords.push([(xMax + r / 2), y])
+                //cg.ctx.lineTo(cg.geoToPixX(xMax + r / 2), yP);
+                coords.push((xMax + r / 2),  y,  this.lineZ )
             }
-            //cg.ctx.lineTo(cg.geoToPixX(xMax + r / 2), yP);
+
 
             //draw fill
             // if (this.fillColor_)
             //     cg.ctx.fill()
 
             //draw line
-            if (this.lineColor_ && this.lineWidth_ > 0) {
-                let line = createLineFromCoords(coords, this.lineColor_, this.lineWidth_);
-                this.threejsObject.add(line);
-            }
-
+            this.drawLine(coords)
         }
+    }
+
+    drawLine(coords) {
+        if (this.lineColor_ && this.lineWidth_ > 0 && coords.length > 0) {
+            //     let line = this.createLineFromCoords(coords, this.lineColor_, this.lineWidth_);
+            //     this.threejsObject.add(line);
+
+            const material = new LineBasicMaterial({ color: this.lineColor_, opacity: 1 });
+
+            const line = new Line(this.createGeometry(coords), material);
+            this.threejsObject.add(line);
+        }
+    }
+
+    createGeometry(vertices) {
+
+        const geometry = new BufferGeometry();
+
+        geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+
+        return geometry;
+
     }
 
 
@@ -148,7 +191,6 @@ export class LineStyle extends Style {
         return this.lineWidth_;
     }
 
-
     /**
      * 
      * @param {string} fillColor 
@@ -160,6 +202,30 @@ export class LineStyle extends Style {
             return this;
         }
         return this.fillColor_;
+    }
+
+    /**
+    * @description Build threejs line geometry from world coordinates
+    * @function createLineFromCoords
+    * @param {Array<Vector3>} coords  array of coord objects with values x,y,z
+    * @param {String} lineColor  color value for geojson lines
+    * @param {Number} lineWidth  Geojson line width. Default: 0.0012
+    * @returns {Line2}
+    */
+    createLineFromCoords(coords, lineColor, lineWidth) {
+        let line_geom = new LineGeometry();
+        let color = new Color(lineColor);
+        line_geom.setPositions(coords);
+        //line_geom.setColors(colors);
+        if (!this.lineMaterial) {
+            this.lineMaterial = new LineMaterial({
+                linewidth: lineWidth,
+                color: color,
+                vertexColors: true
+            });
+        }
+        //line2 allows custom linewidth (but not currently included in main threejs build)
+        return new Line2(line_geom, this.lineMaterial);
     }
 
 }

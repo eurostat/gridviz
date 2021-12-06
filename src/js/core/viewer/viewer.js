@@ -52,7 +52,7 @@ export class Viewer extends EventEmitter {
 
         /** Background color of the threejs scene
         * @type {String} */
-        this.backgroundColor = opts.backgroundColor || "#000";
+        this.backgroundColor = opts.backgroundColor || "#ffffff";
 
         /** Whether to show placename labels from an ArcGIS service
         * @type {Boolean} */

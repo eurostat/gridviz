@@ -9,20 +9,24 @@
     <div id="gridviz"></div>
     <script src="../build/gridviz.js"></script>
     <script>
-
+        let containerDiv = document.getElementById("gridviz");
         //make application
         const app = gridviz.app()
-            .geoCenter([4000000, 2300000])
-            .zoom(100000)
+            .container(containerDiv)
+            .geoCenter([4900000, 2475000])
+            .title("gridviz Joyplot")
+            .cellCount(true)
+            .zoom(500000) //initial camera Z value
+            .nuts(true)
             .build()
 
         //define datasets, styles and layers
         const s = gridviz.getLineStyle(c => 30 * Math.sqrt(c["2011"]));
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 200000);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 200000, 500000);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 500000, 2000000);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 2000000, 5000000);
-        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 5000000, 9999999999);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 400000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 400000, 950000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 950000, 1950000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 1950000, 5000000);
+        app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 5000000, 999999999);
 
     </script>
 </body>

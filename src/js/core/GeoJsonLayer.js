@@ -59,7 +59,7 @@ export class GeoJsonLayer {
                         coords.push(xyz);
                     }
                     if (coords.length > 0) {
-                        this.group.add(createLineFromCoords(coords, this.lineColor, this.lineWidth));
+                        this.group.add(this.createLineFromCoords(coords, this.lineColor, this.lineWidth));
                     }
 
                 } else if (feature.geometry.type == "MultiPolygon") {
@@ -89,7 +89,7 @@ export class GeoJsonLayer {
                             coords.push(xyz);
                         }
                         if (coords.length > 0) {
-                            this.group.add(createLineFromCoords(coords, this.lineColor, this.lineWidth));
+                            this.group.add(this.createLineFromCoords(coords, this.lineColor, this.lineWidth));
                         }
                     }
                 } else if (feature.geometry.type == "LineString") {
@@ -113,7 +113,7 @@ export class GeoJsonLayer {
             }
             if (feature.geometry.type = "LineString") {
                 if (coords.length > 0) {
-                    this.group.add(createLineFromCoords(coords, this.lineColor, this.lineWidth));
+                    this.group.add(this.createLineFromCoords(coords, this.lineColor, this.lineWidth));
                 }
             }
         }
@@ -123,35 +123,37 @@ export class GeoJsonLayer {
         return this.group;
     }
 
+    /**
+     * @description Build threejs line geometry from world coordinates
+     * @function createLineFromCoords
+     * @param {Array} coords  array of coord objects with values x,y,z
+     * @param {String || Number} lineColor  accepted color value for geojson lines
+     * @param {Number} lineWidth  Geojson line width. Default: 0.0012
+     * @returns {Line2}
+     */
+    createLineFromCoords(coords, lineColor, lineWidth) {
+        let line_geom = new LineGeometry();
+        let positions = [];
+        let colors = [];
+        let color = new Color(lineColor);
+        for (var i = 0; i < coords.length; i++) {
+            positions.push(coords[i].x, coords[i].y, CONSTANTS.line_z);
+            colors.push(color.r, color.g, color.b);
+        }
+        line_geom.setPositions(positions);
+        line_geom.setColors(colors);
+        if (!this.lineMaterial) {
+            this.lineMaterial = new LineMaterial({
+                linewidth: lineWidth,
+                vertexColors: true
+            });
+        }
+        //line2 allows custom linewidth (but not currently included in main threejs build)
+        return new Line2(line_geom, this.lineMaterial);
+    }
+
 }
 
-/**
- * @description Build threejs line geometry from world coordinates
- * @function createLineFromCoords
- * @param {Array} coords  array of coord objects with values x,y,z
- * @param {String || Number} lineColor  accepted color value for geojson lines
- * @param {Number} lineWidth  Geojson line width. Default: 0.0012
- * @returns {Line2}
- */
-export function createLineFromCoords(coords, lineColor, lineWidth) {
-    let line_geom = new LineGeometry();
-    let positions = [];
-    let colors = [];
-    let color = new Color(lineColor);
-    for (var i = 0; i < coords.length; i++) {
-        positions.push(coords[i].x, coords[i].y, this.layerZ);
-        colors.push(color.r, color.g, color.b);
-    }
-    line_geom.setPositions(positions);
-    line_geom.setColors(colors);
-    if (!this.lineMaterial) {
-        this.lineMaterial = new LineMaterial({
-            linewidth: lineWidth,
-            vertexColors: true
-        });
-    }
-    //line2 allows custom linewidth (but not currently included in main threejs build)
-    return new Line2(line_geom, this.lineMaterial);
-}
+
 
 
