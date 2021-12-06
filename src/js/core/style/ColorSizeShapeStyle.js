@@ -221,5 +221,29 @@ export class ColorSizeShapeStyle extends Style {
       }
     `;
     }
-
 }
+
+// TODO: allow user to use cuboid as a shape using following function (for 3d visualizations)
+// for each cell:
+// let bars = new Object3D();
+// const bar = getBar(x, y, cellSize, cellSize, height, color);
+// bar.lookAt(new Vector3(x, y, 0.0001));
+// bars.add(bar);
+// function getBar(x, y, width, length, height, color) {
+//     const geometry = new BoxBufferGeometry(width, length, height);
+//     const material = new MeshBasicMaterial({ color: color });
+//     const bar = new Mesh(geometry, material);
+
+//     // const phi = (90 - lat) * Math.PI / 180;
+//     // const theta = (180 - lng) * Math.PI / 180;
+
+//     // bar.position.x = radius * Math.sin(phi) * Math.cos(theta);
+//     // bar.position.y = radius * Math.cos(phi);
+//     // bar.position.z = radius * Math.sin(phi) * Math.sin(theta);
+
+//     bar.position.x = x;
+//     bar.position.y = y;
+//     bar.position.z = 0.001 + (height / 2);
+
+//     return bar;
+// }

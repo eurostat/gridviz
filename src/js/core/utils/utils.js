@@ -1,6 +1,9 @@
 //utility functions for gridviz 
 
-
+/**
+ * @description creates a unique identifier
+ * @function createUUID
+ */
 export function createUUID(){
   var dt = new Date().getTime();
   var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -23,6 +26,9 @@ export function formatNumber(n) {
 /**
  * @description returns a scale from a z value
  * @function getScaleFromZ
+ * @param {Number} height - viz container height in pixels
+ * @param {Number} fov - Field of view (of threeJS camera)
+ * @param {Number} z - z position value
  */
 export function getScaleFromZ(height, fov, z) {
   let half_fov = fov / 2;
@@ -36,6 +42,9 @@ export function getScaleFromZ(height, fov, z) {
 /**
  * @description returns a z value from a scale
  * @function getZFromScale
+ * @param {Number} height - viz container height in pixels
+ * @param {Number} fov - Field of view (of threeJS camera)
+ * @param {Number} scale - scale
  */
 export function getZFromScale(height, fov, scale) {
   let half_fov = fov / 2;

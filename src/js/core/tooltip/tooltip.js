@@ -62,7 +62,7 @@ export class Tooltip {
             } else {
                 this.tooltipTableRows[row].style.display = "block";
             }
-         }
+        }
 
         // add/update table rows for each cell field
         for (const field in cell) {
@@ -73,10 +73,10 @@ export class Tooltip {
                     if (!this.tooltipTableRows[field]) {
                         // add new row
                         this.appendRowToTooltip(field);
-                        this.tooltipTableRows[field].innerHTML = `<th>${field}</th><th><strong>${cell[field]}</strong></th>`
+                        this.tooltipTableRows[field].innerHTML = `<th><strong>${field}</strong></th><th>${cell[field]}</th>`
                     } else if (this.tooltipTableRows[field]) {
                         //update existing row
-                        this.tooltipTableRows[field].innerHTML = `<th>${field}</th><th><strong>${cell[field]}</strong></th>`
+                        this.tooltipTableRows[field].innerHTML = `<th><strong>${field}</strong></th><th>${cell[field]}</th>`
                     }
                 }
             }
@@ -111,10 +111,10 @@ export class Tooltip {
     }
 
     /**
-* @function ensureTooltipOnScreen
-* @description Prevents the tooltip from appearing off screen
-* 
-*/
+    * @function ensureTooltipOnScreen
+    * @description Prevents the tooltip from appearing off screen
+    * 
+    */
     ensureTooltipOnScreen() {
         //too far right
         if (this.tooltipNode.offsetLeft > this.parentNode.clientWidth - this.tooltipNode.clientWidth) {

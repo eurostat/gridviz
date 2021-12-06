@@ -8,6 +8,7 @@ import { LineMaterial } from "../../lib/threejs/lines/LineMaterial";
 import { Line2 } from "../../lib/threejs/lines/Line2";
 import { LineGeometry } from "../../lib/threejs/lines/LineGeometry";
 
+//TODO: add fill option (area charts) using this as reference: https://stackoverflow.com/questions/46868061/fill-area-between-lines-with-color-three-js 
 
 /**
  * 
