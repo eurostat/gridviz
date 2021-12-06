@@ -17,7 +17,7 @@
         app.setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(3)
         const s = new gviz.RadarStyle({
             color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
-            size: { val: c => 5 * Math.sqrt((c["Inhabitants"])), unit: "geo" },
+            radius: { val: val => 5 * Math.sqrt(val), unit: "geo" },
             zfStroke: 5
         })
         app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,

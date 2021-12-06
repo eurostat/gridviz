@@ -18,6 +18,7 @@ export { CompositionStyle } from "./style/CompositionStyle"
 export { SegmentStyle } from "./style/SegmentStyle"
 export { TextStyle } from "./style/TextStyle"
 export { KernelSmoothingStyle } from "./style/KernelSmoothingStyle"
+export { RadarStyle } from "./style/RadarStyle"
 
 //export label layer
 export { LabelLayer } from "./LabelLayer"

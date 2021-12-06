@@ -55,6 +55,8 @@ export class RadarStyle extends Style {
                 /** @type {number} */
                 const rG = cg.zf * rP;
 
+                console.log(val, rG)
+
                 //TODO draw fill
                 //TODO draw stroke ?
             }
