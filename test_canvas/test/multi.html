@@ -17,21 +17,27 @@
         app.setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(3)
 
         const r = 100
-        const s14 = new gviz.ShapeColorSizeStyle(
-            c => "#e6ab0299",
-            { val: c => 6 * Math.sqrt(c["Population under 14"]), unit: "geo" },
-            c => "circle"
-        ).setOffset({ dx: -0.366 * r, dy: -0.366 * r }).setZFStroke(1);
-        const s30 = new gviz.ShapeColorSizeStyle(
-            c => "#1b9e7799",
-            { val: c => 6 * Math.sqrt(c["pop_"]), unit: "geo" },
-            c => "circle"
-        ).setOffset({ dx: 0.5 * r, dy: 0.366 * r }).setZFStroke(1);
-        const s65 = new gviz.ShapeColorSizeStyle(
-            c => "#d95f0299",
-            { val: c => 6 * Math.sqrt(c["Population over 65"]), unit: "geo" },
-            c => "circle"
-        ).setOffset({ dx: 0.366 * r, dy: -0.366 * r }).setZFStroke(1);
+        const s14 = new gviz.ShapeColorSizeStyle({
+            color: c => "#e6ab0299",
+            size: { val: c => 6 * Math.sqrt(c["Population under 14"]), unit: "geo" },
+            shape: c => "circle",
+            offset: { dx: -0.366 * r, dy: -0.366 * r }
+        }
+        ).setZFStroke(1);
+        const s30 = new gviz.ShapeColorSizeStyle({
+            color: c => "#1b9e7799",
+            size: { val: c => 6 * Math.sqrt(c["pop_"]), unit: "geo" },
+            shape: c => "circle",
+            offset: { dx: 0.5 * r, dy: 0.366 * r }
+        }
+        ).setZFStroke(1);
+        const s65 = new gviz.ShapeColorSizeStyle({
+            color: c => "#d95f0299",
+            size: { val: c => 6 * Math.sqrt(c["Population over 65"]), unit: "geo" },
+            shape: c => "circle",
+            offset: { dx: 0.366 * r, dy: -0.366 * r }
+        }
+        ).setZFStroke(1);
 
         app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s30, s14, s65], 0, 9999999999,
             {
