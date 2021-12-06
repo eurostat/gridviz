@@ -15,17 +15,11 @@
             .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setLabelLayer(gviz.getEurostatLabelLayer())
 
         //define datasets, styles and layers
-        const s = new gviz.ShapeColorSizeStyle(
-            c => gviz.interpolateSpectral( 1 - Math.pow( c["Ind_snv"]/c["Ind"] /(12*3500), 1.7 )),
-            null,
-            c => "square"
+        const s = new gviz.ShapeColorSizeStyle({
+            color: c => gviz.interpolateSpectral(1 - Math.pow(c["Ind_snv"] / c["Ind"] / (12 * 3500), 1.7))
+        }
         ).setZFStroke(15);
-        /*const s = new gviz.KernelSmoothingStyle(
-            c => +c["Ind_snv"]/c["Ind"] /(12*3500),
-            10,
-            (val, min, max) => gviz.interpolateSpectral(Math.pow(val / max, 1)),
-        );*/
-        const ttfun = c => "<b>" + Math.floor(c["Ind_snv"]/c["Ind"] /12) + "€</b>/month/person"
+        const ttfun = c => "<b>" + Math.floor(c["Ind_snv"] / c["Ind"] / 12) + "€</b>/month/person"
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 100, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m//", [s], 100, 200, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/1000m//", [s], 200, 500, { cellInfoHTML: ttfun });
