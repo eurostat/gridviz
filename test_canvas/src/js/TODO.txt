@@ -1,4 +1,3 @@
-TODO style radar
 TODO style trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php
 TODO adaptative style: with automated classification taking into account only the data within the viewshed
 TODO style contours. See https://observablehq.com/@d3/density-contours
