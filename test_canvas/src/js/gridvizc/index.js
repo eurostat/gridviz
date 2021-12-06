@@ -38,52 +38,52 @@ import { LabelLayer } from "./LabelLayer"
  * 
  * @returns {LabelLayer}
  */
- export const getEurostatLabelLayer = function () {
+export const getEurostatLabelLayer = function () {
 
     //ETRS89-LAEA projection
     const proj = geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]);
 
     return new LabelLayer(
-        //url
         "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv",
-        //style
-        (lb, zf) => {
-            if (zf < 50) {
-                return "bold 30px Arial";
-            }
-            if (zf < 100) {
-                return "bold 20px Arial";
-            }
-            if (zf < 200) {
-                return "bold 15px Arial";
-            }
-            if (zf < 300) {
-                if (lb["cat"] == 2) return
-                return "bold 15px Arial";
-            }
-            if (zf < 400) {
-                if (lb["cat"] == 2) return
-                if (lb["pop_2011"] < 10000) return
-                return "bold 15px Arial";
-            }
-            if (zf < 500) {
-                if (lb["cat"] == 2) return
-                if (lb["pop_2011"] < 50000) return
-                return "bold 15px Arial";
-            }
+        {
+            labelStyle: (lb, zf) => {
+                if (zf < 50) {
+                    return "bold 30px Arial";
+                }
+                if (zf < 100) {
+                    return "bold 20px Arial";
+                }
+                if (zf < 200) {
+                    return "bold 15px Arial";
+                }
+                if (zf < 300) {
+                    if (lb["cat"] == 2) return
+                    return "bold 15px Arial";
+                }
+                if (zf < 400) {
+                    if (lb["cat"] == 2) return
+                    if (lb["pop_2011"] < 10000) return
+                    return "bold 15px Arial";
+                }
+                if (zf < 500) {
+                    if (lb["cat"] == 2) return
+                    if (lb["pop_2011"] < 50000) return
+                    return "bold 15px Arial";
+                }
 
-            if (lb["cat"] == 2) return
-            if (lb["pop_2011"] < 500000) return
-            return "bold 15px Arial";
-        },
-        //color
-        lb => "#00000044",
-        //preprocess
-        lb => {
-            //project from geo coordinates to ETRS89-LAEA
-            const p = proj([lb.lon, lb.lat])
-            lb.x = p[0]; lb.y = p[1];
-            delete lb.lon; delete lb.lat;
+                if (lb["cat"] == 2) return
+                if (lb["pop_2011"] < 500000) return
+                return "bold 15px Arial";
+            },
+            //color
+            labelColor: () => "#00000044",
+            //preprocess
+            preprocess: lb => {
+                //project from geo coordinates to ETRS89-LAEA
+                const p = proj([lb.lon, lb.lat])
+                lb.x = p[0]; lb.y = p[1];
+                delete lb.lon; delete lb.lat;
+            }
         }
     )
 }
