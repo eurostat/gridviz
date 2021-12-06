@@ -18,9 +18,9 @@
         const s = new gviz.ShapeColorSizeStyle({
             color: c => "gray",
             size: { val: c => 7 * Math.sqrt(c["2018"]), unit: "geo" },
-            shape: c => "circle"
-        }
-        ).setZFStroke(60);
+            shape: c => "circle",
+            zfStroke: 60
+        })
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 500, 1000, { cellInfoHTML: ttfun });

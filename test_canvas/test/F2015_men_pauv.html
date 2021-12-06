@@ -16,9 +16,9 @@
 
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
-            color: c => gviz.interpolateSpectral(1 - Math.pow(c["Men_pauv"] / c["Men"], 0.6))
-        }
-        ).setZFStroke(15);
+            color: c => gviz.interpolateSpectral(1 - Math.pow(c["Men_pauv"] / c["Men"], 0.6)),
+            zfStroke: 15
+        })
         const ttfun = c => "<b>" + (Math.floor(1000 * (c["Men_pauv"] / c["Men"])) / 10) + "%</b> of poor households."
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 100, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m//", [s], 100, 200, { cellInfoHTML: ttfun });

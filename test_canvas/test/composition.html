@@ -27,9 +27,9 @@
         const s = new gviz.CompositionStyle({
             color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
             type: c => "flag",
-            size: { val: c => 5 * Math.sqrt((c["Inhabitants"])), unit: "geo" }
-        }
-        ).setZFStroke(5);
+            size: { val: c => 5 * Math.sqrt((c["Inhabitants"])), unit: "geo" },
+            zfStroke: 5
+        })
         app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
             {
                 preprocess: c => {

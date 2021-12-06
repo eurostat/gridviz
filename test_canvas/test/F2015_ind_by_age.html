@@ -39,10 +39,9 @@
                 "Ind_inc": "gray"
             },
             type: c => "ring",
-            //size : { val: c => 8 * Math.pow(c["Ind"], 0.5), unit: "geo" }
-            size: { val: c => 3.0 * Math.pow(c["Ind"], 0.2), unit: "pix" }
-        }
-        ).setZFStroke(5);
+            size: { val: c => 3.0 * Math.pow(c["Ind"], 0.2), unit: "pix" },
+            zfStroke: 5
+        })
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
             " < 3 : " + Math.floor(["Ind_0_3"]) + "<br>" +
             " 4-5 : " + Math.floor(c["Ind_4_5"]) + "<br>" +

@@ -18,9 +18,11 @@
         const s = new gviz.TextStyle({
             text: c => c["Ind"],
             color: c => gviz.interpolateSpectral(1 - c["Ind"] / 3000),
-            fontSize: c => 12 //4 * Math.pow(c["Ind"], 0.1)
-        }
-        ).setZFStroke(999999).setStrokeColor("#dddddd").setStrokeWidth(0.5);
+            fontSize: c => 12,
+            strokeColor = "#dddddd",
+            strokeWidth: 0.5,
+            zfStroke: 999999
+        })
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 10, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m//", [s], 10, 20, { cellInfoHTML: ttfun });
