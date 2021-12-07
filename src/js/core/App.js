@@ -150,28 +150,6 @@ export class App {
 
     this.mode_ = false; //threejs scene (2D = orthographic, 3D = Orbital) - not yet implemented in new structure
 
-    // for deprectation
-    //d3 Scaling & colouring stuff
-    this.colorSchemeName_ = "interpolateBlues";
-    this.reverseColorScheme_ = false;
-    this.sizeScaleName_ = "scaleSqrt";
-    this.colorScaleName_ = "scaleSequentialSqrt";
-    this.colorScaleMidpoint_ = 0; // midpoint for diverging scales
-    this.colors_ = null;
-    this.thresholds_ = null; // for threshold / quantile scales
-    this.colorScaleFunction_ = null;
-    this.sizeScaleFunction_ = null;
-
-    //dropdowns
-    this.colorSchemeSelector_ = false;
-    this.colorScaleSelectorLabel_ = "Colour scale: "
-    this.colorScaleSelector_ = false;
-    this.colorScaleSelectorDefault_ = this.colorScaleName_
-    this.colorFieldSelectorLabel_ = "Colour field: "
-    this.colorFieldSelector_ = false;
-    this.sizeFieldSelector_ = false;
-    this.sizeFieldSelectorLabel_ = "Size field: ";
-
     //buttons
     this.homeButton_ = false;
     this.zoomButtons_ = false;
@@ -184,7 +162,7 @@ export class App {
       })();
 
     // internal
-    this.animating = false;
+    this._animating = false;
     this._previousIntersect; // previously highlighted/intersected cell
     this._currentResolution = null; //current grid resolution in view. e.g. 5000 for EPSG:3035 5km grid
 
@@ -269,7 +247,7 @@ export class App {
           Placenames.getPlacenames(this);
         }
 
-        this.animating = true;
+        this._animating = true;
         this.animate();
 
         Loading.hideLoading();

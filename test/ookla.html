@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>5km² Grid of Europe</title>
+  <title>Internet speed</title>
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
   <meta name="viewport" content="width=device-width" />
 </head>
@@ -18,16 +18,18 @@
   let app = gridviz
     .app()
     .container(containerDiv)
-    .zoom(10000)
-    .geoCenter([3900000, 3170000])
+    .zoom(600000)
+    .geoCenter([3852581, 3065000])
     .showPlacenames(true)
     .cellCount(true)
     .nuts(true)
-    .title("Population grids of Europe")
-    .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
+    .nutsSimplification("03M")
+    .title("Internet speed in Europe (broadband download in MB/s)")
+    .sourcesHTML("Source: <a target='__blank' href='https://github.com/teamookla/ookla-open-data'>OOKLA open data</a>")
     .build();
 
   //define datasets, styles and layers
+  // thresholds
   const s = gridviz.getColorSizeShapeStyle(
     c => {
         if (c["Mb/s"] > 900) return "#00ffe5";
@@ -42,12 +44,15 @@
     c => "square"
   )
 
-  app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/ookla/ookla_dl_europe.csv", 400, [s], 0, 99999999999999);
-  //app.addGeoJson('https://gisco-services.ec.europa.eu/distribution/v2/countries/geojson/CNTR_BN_10M_2020_4326.geojson');
+  // scale-chromatic
+  // const s = gridviz.getColorSizeShapeStyle(
+  //   c => gridviz.color().interpolateBrBG(Math.pow(c["Mb/s"], 1) / 100),
+  //   null,
+  //   c => "square"
+  // )
 
-// .thresholds([5, 10, 25, 50, 100, 946])
-// //.reverseColorScheme(true)
-// .colors(["#c51b7d", "#ad388a", "#945497", "#32c6cb", "#19e3d8", "#00ffe5"])
+  app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/ookla/ookla_dl_europe.csv", 400, [s], 0, 99999999999999);
+
 </script>
 
 </html>
