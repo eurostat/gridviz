@@ -1,3 +1,4 @@
+TODO finalise kernel smoothing: unit in geo/pix
 TODO style trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php
 TODO adaptative style: with automated classification taking into account only the data within the viewshed
 TODO style contours. See https://observablehq.com/@d3/density-contours
@@ -15,5 +16,4 @@ TODO background - images ?
 
 TODO finalise demos
 TODO fix segment
-TODO finalise kernel smoothing
 

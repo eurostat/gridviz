@@ -9,7 +9,7 @@ import { CanvasGeo } from "./CanvasGeo";
 /**
  * A (generic) layer for placename labels, to be shown on top of the grid layers.
  * The input is a CSV file with the position of the labels and name + some other info on the label importance.
- * If the label position is not in the same CRS as the grid, it can be reporjected with the "projection" function.
+ * If the label data is not in the expected format or in the same CRS as the grid, it can be corrected with the "preprocess" function.
  * The selection of the label, their style (font, weight, etc.) and color can be specified depending on their importance and the zoom level.
  * 
  * @author Julien Gaffuri
