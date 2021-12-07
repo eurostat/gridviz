@@ -4,7 +4,6 @@
 import { Style } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
-import { ShapeColorSizeStyle } from "../style/ShapeColorSizeStyle";
 
 /**
  * A style representing the cell as a smoothed layer, to smoothing local variations and show main trends across space.
@@ -36,17 +35,17 @@ export class KernelSmoothingStyle extends Style {
     /**
     * Compute kernel matrix, that is the matrix of the weights.
     * One quadrant is necessary only, since it is symetrical (along both x and y axes).
-    * @param {number} sigma 
+    * @param {number} s 
     * @returns {Array.<Array<number>>}
     * @private
     */
-    getKernelMatrix(sigma) {
+    getKernelMatrix(s) {
 
         //the size of the window: lets limit that to ~4 times the standard deviation, as an approximation.
-        const windowSize = Math.floor(3 * sigma) + 1;
+        const windowSize = Math.floor(3 * s) + 1;
 
         //prepare coefficients for gaussian computation, to avoid computing them every time.
-        const c2 = 2 * sigma * sigma;
+        const c2 = 2 * s * s;
 
         /**
          * The gaussian function. TODO expose that function as a parameter, to use other kernels ?
@@ -77,10 +76,10 @@ export class KernelSmoothingStyle extends Style {
     * @param {Array.<Array.<number>>} m The input matrix to be smoothed
     * @param {number} nbX Size of the input matrix - X
     * @param {number} nbY Size of the input matrix - Y
-    * @param {number} sigma 
+    * @param {number} s 
     * @returns {Array.<Array.<number>>}
     */
-    kernelSmoothing(m, nbX, nbY, sigma) {
+    kernelSmoothing(m, nbX, nbY, s) {
 
         //create output matrix
         /** @type {Array.<Array.<number>>} */
@@ -89,7 +88,7 @@ export class KernelSmoothingStyle extends Style {
         //compute window matrix, that is the matrix of the weights
         //one quadrant is necessary only, since it is symetrical (along both x and y axes)
         /** @type {Array.<Array.<number>>} */
-        const km = this.getKernelMatrix(sigma)
+        const km = this.getKernelMatrix(s)
         const windowSize = km.length - 1
 
         //make smoothing, cell by cell
@@ -161,11 +160,13 @@ export class KernelSmoothingStyle extends Style {
             matrix[i][j] = +this.value(c);
         }
 
-        //compute smoothed matrix
+        //get smoothing param in geo unit
         /** @type {number} */
-        const s = this.sigma.unit === "geo" ? this.sigma.val : this.sigma.val / cg.zf
+        const sG = this.sigma.unit === "geo" ? this.sigma.val : this.sigma.val * cg.zf
+
+        //compute smoothed matrix
         /** @type {Array.<Array.<number>>} */
-        matrix = this.kernelSmoothing(matrix, nbX, nbY, s / r)
+        matrix = this.kernelSmoothing(matrix, nbX, nbY, sG / r)
 
         //convert smoothed matrix into list of cells
         /** @type {Array.<Cell>} */
