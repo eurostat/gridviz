@@ -12,12 +12,12 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(300).setLabelLayer(gviz.getEurostatLabelLayer().setLabelColor(c => "#0005"))
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(500).setLabelLayer(gviz.getEurostatLabelLayer().setLabelColor(c => "#0005"))
 
         //define datasets, styles and layers
         const s = new gviz.KernelSmoothingStyle({
             value: c => +c["2018"],
-            sigma: { val: 1000, unit: "geo" },
+            sigma: { val: 5, unit: "pix" },
             style: new gviz.ShapeColorSizeStyle(
                 //{ color: (val, min, max) => gviz.interpolateOrRd(Math.pow((val - min) / (max - min), 0.35)) }
                 { color: c => gviz.interpolateOrRd(Math.pow((c.val) / 10000, 0.35)) }
