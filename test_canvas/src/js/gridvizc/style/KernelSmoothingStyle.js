@@ -22,10 +22,12 @@ export class KernelSmoothingStyle extends Style {
         this.value = opts.value
 
         /** The smoothing parameter, in geo unit. The larger, the more smoothed.
+         * //TODO make it in pix/geo
          * @type {number} @private */
         this.sigmaGeo = opts.sigmaGeo
 
         /** Return the color of a cell, based on its smoothed value. The min and max values of the viewport are given.
+         * //TODO make it a generic style
          * @type {function(number,number,number):string} @private */
         this.color = opts.color
     }
