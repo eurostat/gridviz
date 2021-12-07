@@ -26,7 +26,7 @@ export class KernelSmoothingStyle extends Style {
         this.sigmaGeo = opts.sigmaGeo
 
         /** Return the color of a cell, based on its smoothed value. The min and max values of the viewport are given.
-         * @type {function} @private */
+         * @type {function(number,number,number):string} @private */
         this.color = opts.color
     }
 
@@ -194,7 +194,21 @@ export class KernelSmoothingStyle extends Style {
 
 
     //getters and setters
-    //TODO
+
+    /** @returns {function(Cell):number} */
+    getValue() { return this.value; }
+    /** @param {function(Cell):number} val @returns {this} */
+    setValue(val) { this.value = val; return this; }
+
+    /** @returns {number} */
+    getSigmaGeo() { return this.sigmaGeo; }
+    /** @param {number} val @returns {this} */
+    setSigmaGeo(val) { this.sigmaGeo = val; return this; }
+
+    /** @returns {function(number,number,number):string} */
+    getColor() { return this.color; }
+    /** @param {function(number,number,number):string} val @returns {this} */
+    setColor(val) { this.color = val; return this; }
 
 }
 
