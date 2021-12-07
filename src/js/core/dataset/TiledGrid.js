@@ -49,7 +49,7 @@ export class TiledGrid extends Dataset {
                 (data) => {
                     this.info = data;
                     this.resolution = this.info.resolutionGeo;
-                    if (callback) callback();
+                    if (callback) callback(this);
                 }
             );
         else if (callback) callback();

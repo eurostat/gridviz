@@ -46,10 +46,6 @@ export class Camera {
             this.config.far_
         );
 
-        /** Orbit controls for 3D panning and zooming
-        * @type {OrbitControls} */
-        this.controls = null;
-
     }
 
     //orthographic
@@ -87,10 +83,6 @@ export class Camera {
     setCamera(x, y, z) {
         this.camera.position.set(x, y, z); // Set camera position
         this.camera.lookAt(new Vector3(x, y, z)); // Set camera angle to point straight down
-
-        if (this.controls) {
-            this.controls.update();
-        }
     }
 
     /**

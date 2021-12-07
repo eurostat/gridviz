@@ -39,6 +39,14 @@ import * as Utils from "./utils/utils";
 import * as Loading from "./gui/loading";
 import { app } from "..";
 
+//TODO
+// continue to implement styles from canvas_test
+// add stroke to cells
+// add fill to line charts (joyplot)
+// add legend for each Layer and visualize according to the styles in current extentGeo
+// rewrite reference API for new structure
+// clean up code
+
 /**
  * Creates a Three.js scene for visualizing x/y data derived from gridded statistics.
  *
@@ -261,15 +269,6 @@ export class App {
           Placenames.getPlacenames(this);
         }
 
-        //add container for dropdowns - Deprecate dropdowns?
-        // if (this.colorSchemeSelector_ || this.colorScaleSelector_ || this.sizeFieldSelector_ || this.colorFieldSelector_) {
-        //   GUI.addSelectorsContainerToDOM(this);
-        // }
-        // colour selector added here. Data-dependent dropdowns added once grid data is loaded
-        // if (this.colorSchemeSelector_) {
-        //   Dropdowns.createColorSchemeDropdown(this);
-        // }
-
         this.animating = true;
         this.animate();
 
@@ -320,11 +319,13 @@ export class App {
     for (const layer of this.layers) {
 
       //hide layer not within the zoom range
-      if (layer.minZoom >= this.viewer.camera.camera.position.z) {
+      let minZoom = this._isMobile ? this.viewer.mobileZoomScale(layer.minZoom) : layer.minZoom;
+      let maxZoom = this._isMobile ? this.viewer.mobileZoomScale(layer.maxZoom) : layer.maxZoom;
+      if (minZoom >= this.viewer.camera.camera.position.z) {
         if ((layer.dataset instanceof TiledGrid) === false) { this.hideLayer(layer); }
         continue;
       };
-      if (layer.maxZoom < this.viewer.camera.camera.position.z) {
+      if (maxZoom < this.viewer.camera.camera.position.z) {
         if ((layer.dataset instanceof TiledGrid) === false) { this.hideLayer(layer); }
         continue;
       };
@@ -376,7 +377,7 @@ export class App {
  */
   draw(layer) {
     //get cells to draw
-    let geoExt = this._isMobile ? this.viewer.envelopeToMobile(this.viewer.getCurrentGeoExtent()) : this.viewer.getCurrentGeoExtent();
+    let geoExt = this.viewer.getCurrentGeoExtent();
 
     let cells = layer.dataset.getCells(geoExt); //use all cells for CSVGrid?
 
@@ -384,12 +385,20 @@ export class App {
       // count cells
       if (this.cellCount_) GUI.updateCellCount(cells.length);
 
-      //debugging
-      //console.log(cells[0], this.viewer.camera.camera.position)
+      // mobile rescale
+      let mobileCells = [];
+      if (this._isMobile && this.viewer.mobileCoordScale) {
+        cells.forEach((cell) => {
+          let newCell = { ...cell };
+          newCell.x = this.viewer.mobileCoordScale(cell.x);
+          newCell.y = this.viewer.mobileCoordScale(cell.y);
+          mobileCells.push(newCell);
+        });
+      }
 
       //draw cells, style by style
       for (const style of layer.styles)
-        style.draw(cells, layer.dataset.resolution, this.viewer)
+        style.draw(this._isMobile ? mobileCells : cells, layer.dataset.resolution, this.viewer)
     }
   }
 
@@ -462,11 +471,11 @@ export class App {
    */
   addTiledGrid(url, styles, minZoom, maxZoom, preprocess = null) {
     this.add(
-      new TiledGrid(url, preprocess).loadInfo(() => {
+      new TiledGrid(url, preprocess).loadInfo((tiledGrid) => {
         Loading.hideLoading();
 
         // for mobile devices
-        //if (this._isMobile) this.applyMobileSettings(grid);
+        if (this._isMobile) this.applyMobileSettings(tiledGrid);
 
         // draw cells
         this.redraw();
@@ -481,27 +490,30 @@ export class App {
    * @memberof App
    */
   applyMobileSettings(grid) {
+
     // fix for d3's pan and zoom not working correctly on mobile devices with webgl, we scale the coordinates to a webgl-friendly range
     this.viewer.mobileCoordScale = this.defineMobileCoordScale(grid.cells);
 
-    // transform mobile coords
-    if (this._isMobile) {
-      grid.cells.forEach((cell, index) => {
-        grid.cells[index].x = this.viewer.mobileCoordScale(cell.x);
-        grid.cells[index].y = this.viewer.mobileCoordScale(cell.y);
-      });
-    }
+    // apply mobile transform to loaded cells' coords
+    // if (grid.cells) {
+    //   grid.cells.forEach((cell, index) => {
+    //     grid.cells[index].x = this.viewer.mobileCoordScale(cell.x);
+    //     grid.cells[index].y = this.viewer.mobileCoordScale(cell.y);
+    //   });
+    // }
+
+    //set zoom scale
+    this.viewer.mobileZoomScale = d3scale.scaleLinear().domain([grid.resolution, this.viewer.camera.zoom]).range([0, 1]);
 
     //set grid resolution to mobile
-    let originalResolution = grid.resolution;
-    let mobileResolution = this.defineMobileResolution(grid.cells, grid.resolution);
-    this.viewer.mobileResolutionScale = originalResolution / mobileResolution;
+    let mobileResolution = this.defineMobileResolution(grid.resolution);
     grid.resolution = mobileResolution;
+
+
 
     // convert other settings to mobile-friendly coordinates
     if (this.geoCenter_) this.geoCenter([this.viewer.mobileCoordScale(this.geoCenter_[0]), this.viewer.mobileCoordScale(this.geoCenter_[1])]);
-    if (this.zoom_) this.zoom(0.1);
-    //if (grid.minZoom) grid.minZoom = 
+    if (this.zoom_) this.zoom(mobileResolution * 20);
   }
 
 
@@ -546,9 +558,24 @@ export class App {
    */
   defineMobileCoordScale(cells) {
     let mobileCoordScale;
+    let xDomain;
+    let yDomain;
 
-    let xDomain = extent(cells.map(c => parseFloat(c.x)));
-    let yDomain = extent(cells.map(c => parseFloat(c.y)));
+    if (cells) {
+      xDomain = extent(cells.map(c => parseFloat(c.x)));
+      yDomain = extent(cells.map(c => parseFloat(c.y)));
+    } else {
+      // TODO: get x and y domains of tiled grid
+      // for now use full european extent in EPSG 3035:
+      // return {
+      //   xmin: 1053668,
+      //   ymin: 1645342,
+      //   xmax: 5724066,
+      //   ymax: 5901309
+      // };
+      xDomain = [1053668, 5724066];
+      yDomain = [1645342, 5901309];
+    }
 
     let domain = [
       min([xDomain, yDomain], array => min(array)),
@@ -566,8 +593,10 @@ export class App {
    * @description define mobile resolution in webgl
    * @return {Number} 
    * @memberof App
+   * @param {Number} resolution the current resolution
+   * @returns {Number} newResolution
    */
-  defineMobileResolution(cells, resolution) {
+  defineMobileResolution(resolution) {
     let newResolution;
 
     if (!this.mobileCellSize_) { // cell size not set by user
@@ -877,121 +906,7 @@ export class App {
     }
 
   }
-  // end of event listeners
 
-
-  /**
-   * 
-   * @function defineColorScale
-   * @description defines the initial color scale to be used when colouring grid cells
-   *
-   */
-  defineColorScale() {
-    if (this.colors_ && this.thresholds_) {
-      return d3scale
-        .scaleThreshold()
-        .domain(this.thresholds_)
-        .range(this.colors_);
-    } else {
-      // assign default if user doesnt specify their own function
-      if (!this.colorScaleFunction_) {
-
-        if (this.colorScaleName_ == "scaleSequentialLog") {
-          // fix 0 issue for log scales
-          if (this.colorValuesExtent[0] == 0) {
-            this.colorValuesExtent[0] = 0.1
-          }
-        }
-
-        let domain = this.colorValuesExtent;
-
-        if (this.reverseColorScheme_) {
-          domain = domain.reverse();
-        }
-        //apply thresholds if specified by user
-        if (this.colorScaleName_ == "scaleSequentialQuantile") {
-          // use threshold values as domain
-          return d3scale[this.colorScaleName_](this.thresholds_, d3scaleChromatic[this.colorSchemeName_])
-
-        } else {
-          return d3scale[this.colorScaleName_](domain, d3scaleChromatic[this.colorSchemeName_]);
-        }
-
-      } else {
-        return this.colorScaleFunction_;
-      }
-    }
-  }
-
-
-  /**
-   * 
-   * @function updateColorScaleFunction
-   * @description called when user selects a different colour scheme or scale function
-   *
-   */
-  updateColorScaleFunction() {
-    let domain;
-
-    if (this.colorScaleName_ == "scaleSequentialLog") {
-      // fix 0 issue for log scales
-      if (this.colorValuesExtent[0] == 0) {
-        this.colorValuesExtent[0] = 0.1
-      }
-    }
-
-    if (this.colorScaleName_ == "scaleDiverging") {
-      domain = [this.colorValuesExtent[0], this.colorScaleMidpoint, this.colorValuesExtent[1]];
-    } else {
-      domain = this.colorValuesExtent;
-    }
-
-    //apply thresholds if specified by user
-    if (this.colorScaleName_ == "scaleSequentialQuantile") {
-      // use threshold values as domain
-      this.colorScaleFunction_ = d3scale[this.colorScaleName_](this.thresholds_, d3scaleChromatic[this.colorSchemeName_])
-    } else {
-      this.colorScaleFunction_ = d3scale[this.colorScaleName_](domain, d3scaleChromatic[this.colorSchemeName_]);
-    }
-  }
-
-  /**
-  * 
-  * @function updateColorScaleFunction
-  * @description called when user selects a different colour scheme or scale function
-  *
-  */
-  updateSizeScaleFunction() {
-    if (!this.sizeScaleFunction_) {
-      //create if didnt exist upon initialization
-      if (!this.sizeValuesExtent) {
-        this.sizeValuesExtent = extent(this.gridCaches[this._currentResolution], d => parseFloat(this.gridCaches[this._currentResolution]));
-        this.sizeScaleFunction_ = defineSizeScale();
-      } else {
-        //update
-        let domain = this.sizeValuesExtent;
-        this.sizeScaleFunction_ = d3scale[this.sizeScaleName_]().domain(domain).range([this._currentResolution / 3, this._currentResolution / 1.5]);
-      }
-    } else {
-      return this.sizeScaleFunction_;
-    }
-  }
-
-  /**
-  * 
-  * @function defineSizeScale
-  * @description define initial scale function to be used when determining cell size
-  *
-  */
-  defineSizeScale() {
-    if (this.sizeScaleFunction_) {
-      // user-defined
-      return this.sizeScaleFunction_;
-    } else {
-      // default sizing scale
-      return d3scale[this.sizeScaleName_]().domain(this.sizeValuesExtent).range([this._currentResolution / 1.5, this._currentResolution]); //minSize, maxSize
-    }
-  }
 
   /**
    * 
@@ -1022,13 +937,11 @@ export class App {
     updateSizeScaleFunction();
   }
   updateCurrentResolution(res) {
-    this._currentResolution = res;
+    this._currentResolution = this._isMobile ? this.defineMobileResolution(res) : res;
   }
   updateRaycasterThreshold(threshold) {
     this.viewer.raycaster.params.Points.threshold = threshold;
   }
-
-
 
   highlightBar(intersect) {
     //removeHighlights();
