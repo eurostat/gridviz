@@ -24,8 +24,8 @@ export class KernelSmoothingStyle extends Style {
 
         /** The smoothing parameter, in geo unit. The larger, the more smoothed.
          * //TODO make it in pix/geo
-         * @type {number} @private */
-        this.sigmaGeo = opts.sigmaGeo
+         * @type {{val: number, unit: "pix"|"geo"}} @private */
+        this.sigma = opts.sigma
 
         /** Return the style to represent the smoothed cells.
          * @type {Style} @private */
@@ -83,10 +83,12 @@ export class KernelSmoothingStyle extends Style {
     kernelSmoothing(m, nbX, nbY, sigma) {
 
         //create output matrix
+        /** @type {Array.<Array.<number>>} */
         const out = getEmptyMatrix(nbX, nbY);
 
         //compute window matrix, that is the matrix of the weights
         //one quadrant is necessary only, since it is symetrical (along both x and y axes)
+        /** @type {Array.<Array.<number>>} */
         const km = this.getKernelMatrix(sigma)
         const windowSize = km.length - 1
 
@@ -149,6 +151,7 @@ export class KernelSmoothingStyle extends Style {
         const nbY = (yMax - yMin) / r + 1
 
         //create and fill input matrix with input figures, not smoothed
+        /** @type {Array.<Array.<number>>} */
         let matrix = getEmptyMatrix(nbX, nbY);
         for (const c of cells) {
             if (c.x < xMin || c.x > xMax || c.y < yMin || c.y >= yMax)
@@ -159,18 +162,10 @@ export class KernelSmoothingStyle extends Style {
         }
 
         //compute smoothed matrix
-        matrix = this.kernelSmoothing(matrix, nbX, nbY, this.sigmaGeo / r)
-        //console.log(matrix)
-
-        //get min and max value
-        let minValue = Infinity, maxValue = -Infinity
-        for (let i = 0; i < nbX; i++)
-            for (let j = 0; j < nbY; j++) {
-                const sval = matrix[i][j]
-                if (!sval) continue
-                if (sval > maxValue) maxValue = sval;
-                if (sval < minValue) minValue = sval;
-            }
+        /** @type {number} */
+        const s = this.sigma.unit === "geo" ? this.sigma.val : this.sigma.val / cg.zf
+        /** @type {Array.<Array.<number>>} */
+        matrix = this.kernelSmoothing(matrix, nbX, nbY, s / r)
 
         //convert smoothed matrix into list of cells
         /** @type {Array.<Cell>} */
@@ -197,10 +192,10 @@ export class KernelSmoothingStyle extends Style {
     /** @param {function(Cell):number} val @returns {this} */
     setValue(val) { this.value = val; return this; }
 
-    /** @returns {number} */
-    getSigmaGeo() { return this.sigmaGeo; }
-    /** @param {number} val @returns {this} */
-    setSigmaGeo(val) { this.sigmaGeo = val; return this; }
+    /** @returns {{val: number, unit: "pix"|"geo"}} */
+    getSigmaGeo() { return this.sigma; }
+    /** @param {{val: number, unit: "pix"|"geo"}} val @returns {this} */
+    setSigmaGeo(val) { this.sigma = val; return this; }
 
     /** @returns {Style} */
     getStyle() { return this.style; }
@@ -215,7 +210,7 @@ export class KernelSmoothingStyle extends Style {
  * 
  * @param {number} nbX 
  * @param {number} nbY 
- * @returns 
+ * @returns {Array.<Array.<number>>}
  */
 function getEmptyMatrix(nbX, nbY) {
     const matrix = []
