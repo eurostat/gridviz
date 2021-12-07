@@ -4,6 +4,7 @@
 import { Style } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
+import { ShapeColorSizeStyle } from "../style/ShapeColorSizeStyle";
 
 /**
  * A style representing the cell as a smoothed layer, to smoothing local variations and show main trends across space.
@@ -26,10 +27,9 @@ export class KernelSmoothingStyle extends Style {
          * @type {number} @private */
         this.sigmaGeo = opts.sigmaGeo
 
-        /** Return the color of a cell, based on its smoothed value. The min and max values of the viewport are given.
-         * //TODO make it a generic style
-         * @type {function(number,number,number):string} @private */
-        this.color = opts.color
+        /** Return the style to represent the smoothed cells.
+         * @type {Style} @private */
+        this.style = opts.style
     }
 
 
@@ -172,25 +172,20 @@ export class KernelSmoothingStyle extends Style {
                 if (sval < minValue) minValue = sval;
             }
 
-        //draw smoothed matrix
+        //convert smoothed matrix into list of cells
+        /** @type {Array.<Cell>} */
+        const scells = []
         for (let i = 0; i < nbX; i++) {
             for (let j = 0; j < nbY; j++) {
-
-                //get value
-                const sval = +matrix[i][j]
-                if (!sval) continue
-
-                //set color
-                cg.ctx.fillStyle = this.color(sval, minValue, maxValue)
-
-                //cell geo position
-                const xG = xMin + i * r;
-                const yG = yMin + j * r;
-
-                //fill rectangle
-                cg.ctx.fillRect(cg.geoToPixX(xG), cg.geoToPixY(yG), r / cg.zf, r / cg.zf);
+                /** @type {Cell} */
+                const c = { x: xMin + i * r, y: yMin + j * r }
+                c["val"] = +matrix[i][j]
+                scells.push(c)
             }
         }
+
+        //draw smoothed cells from style
+        this.style.draw(scells, r, cg);
 
     }
 
@@ -207,10 +202,10 @@ export class KernelSmoothingStyle extends Style {
     /** @param {number} val @returns {this} */
     setSigmaGeo(val) { this.sigmaGeo = val; return this; }
 
-    /** @returns {function(number,number,number):string} */
-    getColor() { return this.color; }
-    /** @param {function(number,number,number):string} val @returns {this} */
-    setColor(val) { this.color = val; return this; }
+    /** @returns {Style} */
+    getStyle() { return this.style; }
+    /** @param {Style} val @returns {this} */
+    setStyle(val) { this.style = val; return this; }
 
 }
 

@@ -18,7 +18,10 @@
         const s = new gviz.KernelSmoothingStyle({
             value: c => +c["2018"],
             sigmaGeo: 1000,
-            color: (val, min, max) => gviz.interpolateOrRd(Math.pow((val - min) / (max - min), 0.35))
+            style: new gviz.ShapeColorSizeStyle(
+                //{ color: (val, min, max) => gviz.interpolateOrRd(Math.pow((val - min) / (max - min), 0.35)) }
+                { color: c => gviz.interpolateOrRd(Math.pow((c.val) / 10000, 0.35)) }
+            )
         });
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 300, { cellInfoHTML: ttfun });
