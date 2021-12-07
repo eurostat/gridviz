@@ -4,7 +4,7 @@ import { Style, Size } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
-/** @typedef {"square"|"circle"} Shape */
+/** @typedef {"square"|"circle"|"none"} Shape */
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -49,7 +49,13 @@ export class ShapeColorSizeStyle extends Style {
         for (let cell of cells) {
 
             //color
-            cg.ctx.fillStyle = this.color ? this.color(cell) : "#EA6BAC";
+            const col = this.color ? this.color(cell) : undefined;
+            if(!col) continue
+            cg.ctx.fillStyle = col;
+
+            //shape
+            const shape = this.shape ? this.shape(cell) : "square";
+            if(shape === "none") continue
 
             //size
             /** @type {Size} */
@@ -60,8 +66,6 @@ export class ShapeColorSizeStyle extends Style {
             /** @type {number} */
             const sG = cg.zf * sP;
 
-            //get shape
-            const shape = this.shape ? this.shape(cell) : "square";
             if (shape === "square") {
                 //draw square
                 const d = resolution * (1 - sG / resolution) * 0.5

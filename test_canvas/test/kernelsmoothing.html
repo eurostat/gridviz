@@ -12,7 +12,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(500).setLabelLayer(gviz.getEurostatLabelLayer().setLabelColor(c => "#0005"))
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(250).setLabelLayer(gviz.getEurostatLabelLayer().setLabelColor(c => "#0005"))
 
         //define datasets, styles and layers
         const s = new gviz.KernelSmoothingStyle({
@@ -20,15 +20,21 @@
             sigma: { val: 5, unit: "pix" },
             style: new gviz.ShapeColorSizeStyle(
                 //{ color: (val, min, max) => gviz.interpolateOrRd(Math.pow((val - min) / (max - min), 0.35)) }
-                { color: c => gviz.interpolateOrRd(Math.pow((c.val) / 10000, 0.35)) }
+                { color: c => {
+                    const v = Math.pow((c.val) / 20000, 0.35)
+                    const nbClass = 6
+                    const cl = Math.floor(nbClass*v)/nbClass
+                    if(cl<1/nbClass) return "white"
+                    return gviz.interpolateSpectral(cl)  //interpolateOrRd
+                }}
             )
         });
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 300, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 300, 750, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 750, 1500, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 1500, 3000, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 3000, 9999999999), null, ttfun;
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 500, 1000, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 1000, 1000, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 1000, 2000, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 2000, 9999999999), null, ttfun;
 
     </script>
 </body>
