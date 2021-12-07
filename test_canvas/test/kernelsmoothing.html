@@ -17,16 +17,21 @@
         //define datasets, styles and layers
         const s = new gviz.KernelSmoothingStyle({
             value: c => +c["2018"],
-            sigma: { val: 5, unit: "pix" },
+            sigma: { val: 1000, unit: "geo" },
+            /*style: new gviz.JoyPlotStyle({
+                height: { val: c => 100*Math.pow(c.val,0.5), unit: "geo" }
+            })*/
             style: new gviz.ShapeColorSizeStyle(
                 //{ color: (val, min, max) => gviz.interpolateOrRd(Math.pow((val - min) / (max - min), 0.35)) }
-                { color: c => {
-                    const v = Math.pow((c.val) / 20000, 0.35)
-                    const nbClass = 6
-                    const cl = Math.floor(nbClass*v)/nbClass
-                    if(cl<1/nbClass) return "white"
-                    return gviz.interpolateSpectral(cl)  //interpolateOrRd
-                }}
+                {
+                    color: c => {
+                        const v = Math.pow((c.val) / 20000, 0.35)
+                        const nbClass = 10
+                        const cl = Math.floor(nbClass * v) / nbClass
+                        if (cl < 1 / nbClass) return "white"
+                        return gviz.interpolateSpectral(cl)  //interpolateOrRd
+                    }
+                }
             )
         });
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
