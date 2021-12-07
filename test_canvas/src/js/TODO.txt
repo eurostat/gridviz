@@ -1,6 +1,6 @@
 TODO test kernel smoothing with discrete categories
 TODO finalise kernel smoothing: unit in geo/pix + generic
-TODO contour style. See https://observablehq.com/@d3/density-contours
+TODO contour style. and hypsometric. See https://observablehq.com/@d3/density-contours
 
 TODO style trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php
 TODO adaptative style: with automated classification taking into account only the data within the viewshed
