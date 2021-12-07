@@ -51,7 +51,13 @@
   //   c => "square"
   // )
 
-  app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/ookla/ookla_dl_europe.csv", 400, [s], 0, 99999999999999);
+  app.addCSVGrid({
+    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/ookla/ookla_dl_europe.csv", 
+    resolution: 400,
+    styles: [s],
+    minZoom: 0, 
+    maxZoom: 999999999 
+  });
 
 </script>
 

@@ -1,4 +1,5 @@
 /** @typedef {{ url: object, colorField: string, cellSize: string, sizeField: string }} LayerConfig */
+/** @typedef {{ url: String, resolution: Number, styles: Array<Style>, minZoom: Number, maxZoom: Number }} CSVGridConfig */
 
 // d3.js
 import { zoomIdentity } from "d3-zoom";
@@ -414,18 +415,14 @@ export class App {
   /**
    * Add a layer from a CSV grid dataset.
    * 
-   * @param {string} url The url of the dataset.
-   * @param {number} resolution The dataset resolution (in geographical unit).
-   * @param {Array.<Style>} styles The styles, ordered in drawing order.
-   * @param {number} minZoom The minimum zoom level when to show the layer
-   * @param {number} maxZoom The maximum zoom level when to show the layer
-   * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+   * @param {CSVGridConfig} opts The CSVGrid configuration object.
    */
-  addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null) {
+  addCSVGrid(opts) {
+    //url, resolution, styles, minZoom, maxZoom, preprocess = null
     Loading.showLoading();
 
     this.add(
-      new CSVGrid(url, resolution, preprocess).getData(null, (grid) => {
+      new CSVGrid(opts.url, opts.resolution, opts.preprocess).getData(null, (grid) => {
         Loading.hideLoading();
 
         // for mobile devices
@@ -434,7 +431,7 @@ export class App {
         // draw cells
         this.redraw();
       }),
-      styles, minZoom, maxZoom
+      opts.styles, opts.minZoom, opts.maxZoom
     )
   }
 

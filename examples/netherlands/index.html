@@ -22,7 +22,6 @@
         "Source: <a target='__blank' href='https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken'>Statistics Netherlands</a>"
       )
       .zerosRemoved(2)
-      .nuts(false) // NUTS2JSON does not support EPSG:28992 - use addGeoJson() method to load custom geojson instead
       .geoCenter([1720, 4500]) //EPSG=28992 with 2 zeros removed
       .showPlacenames(true)
       .EPSG(28992) // for placenames service
@@ -41,34 +40,17 @@
       .backgroundColor("#2b2b2b")
       .highlightColor('cyan')
       .lineColor("#ffffff")
-      .colors(['#ffffd4','#fee391','#fec44f','#fe9929','#ec7014','#cc4c02','#8c2d04'])
-      .thresholds([10, 20, 40, 80, 200, 300, 900])
-      .colorSchemeSelector(false)
-      .colorFieldSelector(true)
-      .colorFieldSelectorLabel("Colour by: ")
-      .legend({
-        type: "cells",
-        orientation: "vertical",
-        width: 130,
-        height: 170,
-        titleWidth: 110,
-        format: ",.0f",
-      })
-      .tooltip({
-        eventType: "mousemove", // click vs mousemove
-        showLAU: false,
-        showEPSG: false,
-        showNUTS: false,
-        showCoordinates: false,
-      })
       .build();
 
-      viz.addGrid(
+      viz.addCSVGrid(
         {
           url: "../../assets/csv/Netherlands/100m/NL_census.csv",
-          cellSize: 1,
+          resolution: 1,
           colorField: "Inhabitants"
         },
       )
+
+      .colors(['#ffffd4','#fee391','#fec44f','#fe9929','#ec7014','#cc4c02','#8c2d04'])
+      .thresholds([10, 20, 40, 80, 200, 300, 900])
   </script>
 </html>

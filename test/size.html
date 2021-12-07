@@ -38,7 +38,7 @@
     null,
     c => 0.1*Math.sqrt(c["population"]),
     c => {
-      if( c["population"] > 10000){
+      if( c["population"] > 5000){
         return "circle";
       } else {
         return "square";
@@ -46,8 +46,20 @@
     }
   )
 
-  app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/1km/pop_1km.csv", 1, [s1km], 0, 500);
-  app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv", 5, [s5km], 500, 999999999);
+  app.addCSVGrid({
+    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/1km/pop_1km.csv",
+    resolution: 1,
+    styles: [s1km],
+    minZoom: 0,
+    maxZoom: 500
+  })
+  app.addCSVGrid({
+    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv", 
+    resolution: 5,
+    styles: [s5km],
+    minZoom: 500, 
+    maxZoom: 999999999 
+  });
 
 </script>
 
