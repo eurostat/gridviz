@@ -50,6 +50,7 @@ export class RadarStyle extends Style {
 
         //get the stat
         const stat = this.getStat(cells, true);
+        console.log(stat)
 
         for (let cell of cells) {
 
