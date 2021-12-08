@@ -28,7 +28,8 @@
             //color: { "Population under 14": cf(0), "pop_": cf(0.5), "Population over 65": cf(1) },
             color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
             type: c => "flag",
-            size: { val: c => 5 * Math.sqrt((c["Inhabitants"])), unit: "geo" },
+            colSize: "Inhabitants",
+            size: { val: (v,r,s) => r * Math.sqrt(v/s.max), unit: "geo" },
             zfStroke: 5
         })
         app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
