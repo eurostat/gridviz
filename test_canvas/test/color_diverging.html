@@ -16,11 +16,14 @@
 
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
-            color: c => {
-                if (isNaN(c.r)) return "white"
-                if (c.r === Infinity) return gviz.schemeSet1[0]
-                if (c.r === -1) return gviz.schemeSet1[3]
-                return gviz.interpolateSpectral(-c.r * 5 + 0.5);
+            colorCol: "r",
+            color: (v, r, s) => {
+                if (isNaN(v)) return "white"
+                if (v === Infinity) return gviz.schemeSet1[0]
+                if (v === -1) return gviz.schemeSet1[3]
+                const sig = Math.sign(v)
+                v = Math.pow(Math.abs(v), 0.3)
+                return gviz.interpolateSpectral(- sig * v * 0.5 + 0.5);
             },
             zfStroke: 50
         });
