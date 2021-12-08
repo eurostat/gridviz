@@ -10,7 +10,7 @@ import { CanvasGeo } from './CanvasGeo';
 
 /**
  * Statistics of a set of values
- * @typedef {{min:number,max:number,mean:number}} Stat */
+ * @typedef {{min:number,max:number}} Stat */
 
 /**
  * A style, to show a grid dataset.
@@ -139,7 +139,7 @@ export class Style {
 
 /**
  * Compute some statistics on a value of some cells.
- * TODO: compute median
+ * TODO: compute median ?
  * 
  * @param {Array.<Cell>} cells 
  * @param {function(Cell):number} valFun 
@@ -150,15 +150,15 @@ export const getStatistics = function (cells, valFun, ignoreZeros) {
     if (!cells || cells.length == 0) return undefined
     let min = Infinity
     let max = -Infinity
-    let sum = 0
-    let nb = 0
+    //let sum = 0
+    //let nb = 0
     for (const cell of cells) {
         const v = +valFun(cell);
         if(ignoreZeros && !v) continue
         if (v < min) min = v
         if (v > max) max = v
-        sum += v
-        nb++
+        //sum += v
+        //nb++
     }
-    return { min: min, max: max, mean: (sum / nb) }
+    return { min: min, max: max, }
 }
