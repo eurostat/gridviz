@@ -15,7 +15,13 @@
             .setGeoCenter({ x: 4000000, y: 2300000 }).setZoomFactor(200).setLabelLayer(gviz.getEurostatLabelLayer())
 
         //define datasets, styles and layers
-        const s = new gviz.JoyPlotStyle({ height: { val: c => 30 * Math.sqrt(c["2018"]), unit: "geo" }, zfStroke: 70 })
+        const s = new gviz.JoyPlotStyle({
+            height: {
+                val: c => 30 * Math.sqrt(c["2018"]),
+                unit: "geo"
+            },
+            zfStroke: 70
+        })
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 300, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 300, 600, { cellInfoHTML: ttfun });
