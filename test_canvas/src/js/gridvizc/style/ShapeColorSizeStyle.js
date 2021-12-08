@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Size, Stat } from "../Style"
+import { Style, Size, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
@@ -51,9 +51,20 @@ export class ShapeColorSizeStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
-        //if size is used, sort cells by size so that the biggest are drawn first
-        if (this.size)
-            cells.sort((c1, c2) => (this.size.val(c2) - this.size.val(c1)));
+
+        let statSize
+        if (this.sizeCol) {
+            //if size is used, sort cells by size so that the biggest are drawn first
+            cells.sort((c1, c2) => c2[this.sizeCol] - c1[this.sizeCol]);
+            //and compute size variable statistics
+            statSize = getStatistics(cells, c => c[this.sizeCol], true)
+        }
+
+        let statColor
+        if (this.colorCol) {
+            //compute color variable statistics
+            statColor = getStatistics(cells, c => c[this.colorCol], true)
+        }
 
         for (let cell of cells) {
 
