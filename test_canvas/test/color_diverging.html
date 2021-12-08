@@ -17,22 +17,22 @@
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
             color: c => {
-                if(isNaN(c.r)) return "white"
-                if(c.r === Infinity) return gviz.schemeSet1[0]
-                if(c.r === -1) return gviz.schemeSet1[3]
+                if (isNaN(c.r)) return "white"
+                if (c.r === Infinity) return gviz.schemeSet1[0]
+                if (c.r === -1) return gviz.schemeSet1[3]
                 return gviz.interpolateSpectral(-c.r * 5 + 0.5);
             },
             zfStroke: 50
         });
         const preprocess = c => {
-            if(!c[2011] && c["2018"]) cr = Infinity
+            if (!c["2011"] && c["2018"]) c.r = Infinity
             else if (!c["2011"] && !c["2018"]) c.r = NaN
             else c.r = ((+c["2018"]) - (+c["2011"])) / (+c["2011"]);
         }
         const cellInfoHTML = c => {
-            if(isNaN(c.r)) return ""
-            if(!c.r) return "No change"
-            if(c.r === Infinity) return "No population in 2011, <b>" + c["2018"] + "</b> in 2018"
+            if (isNaN(c.r)) return ""
+            if (!c.r) return "No change"
+            if (c.r === Infinity) return "No population in 2011, <b>" + c["2018"] + "</b> in 2018"
             return "<b>" + (+c["2018"] > +c["2011"] ? "+" : "") + Math.floor(c.r * 1000) / 10 + "%</b> inhabitant(s)"
         }
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });

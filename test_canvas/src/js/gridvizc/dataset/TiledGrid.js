@@ -16,9 +16,10 @@ export class TiledGrid extends Dataset {
     /**
      * @param {string} url The URL of the dataset.
      * @param {App} app The application.
+     * @param {object} opts 
      */
-    constructor(url, app) {
-        super(url, null, null)
+     constructor(url, app, opts) {
+        super(url, null, opts)
 
         /**
          * The app being used.
