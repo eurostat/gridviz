@@ -41,7 +41,7 @@ export class Dataset {
          * @type {function(Cell):string} */
         this.cellInfoHTML = opts.cellInfoHTML || defaultCellInfoHTML;
 
-        /** The list of cells within the view
+        /** The cells within the view
          * @protected @type {Array.<Cell>} */
         this.cellsViewCache = []
     }
@@ -83,7 +83,7 @@ export class Dataset {
      * Get a cell under a given position, if any.
      * 
      * @param {{x:number,y:number}} posGeo 
-     * @param {Array.<Cell>} cells Some cells from the dataset, a subset if necessary.
+     * @param {Array.<Cell>} cells Some cells from the dataset (a subset if necessary, usually the view cache).
      * @returns {Cell}
      */
     getCellFromPosition(posGeo, cells) {
@@ -103,6 +103,32 @@ export class Dataset {
             return cell;
         }
         return undefined;
+    }
+
+
+
+    /**
+     * Compute some statistics on a value of some cells.
+     * TODO: compute median
+     * 
+     * @param {Array.<Cell>} cells 
+     * @param {function(Cell):number} valFun 
+     * @returns {{min:number,max:number,mean:number}}
+     */
+    getStatistics(cells, valFun) {
+        if (!cells || cells.length == 0) return undefined
+        let min = Infinity
+        let max = -Infinity
+        let sum = 0
+        let nb = 0
+        for (const cell of cells) {
+            const v = valFun(cell);
+            if (v < min) min = v
+            if (v > max) max = v
+            sum += v
+            nb++
+        }
+        return { min: min, max: max, mean: sum / nb }
     }
 
 
@@ -136,3 +162,4 @@ const defaultCellInfoHTML = function (cell) {
     }
     return buf.join("");
 }
+
