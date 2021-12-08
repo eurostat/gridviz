@@ -12,7 +12,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(250).setLabelLayer(gviz.getEurostatLabelLayer().setLabelColor(c => "#0005"))
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(250).setLabelLayer(gviz.getEurostatLabelLayer().setColor(c => "#0005"))
 
         //define datasets, styles and layers
         const s = new gviz.KernelSmoothingStyle({

@@ -127,14 +127,14 @@ export class LabelLayer {
     setUrl(val) { this.url = val; return this; }
 
     /** @returns {function(Label,number):string} */
-    getLabelStyle() { return this.style; }
+    getStyle() { return this.style; }
     /** @param {function(Label,number):string} val @returns {this} */
-    setLabelStyle(val) { this.style = val; return this; }
+    setStyle(val) { this.style = val; return this; }
 
     /** @returns {function(Label,number):string} */
-    getLabelColor() { return this.color; }
+    getColor() { return this.color; }
     /** @param {function(Label,number):string} val @returns {this} */
-    setLabelColor(val) { this.color = val; return this; }
+    setColor(val) { this.color = val; return this; }
 
     /** @returns {function(object):void} */
     getPreprocess() { return this.preprocess; }
