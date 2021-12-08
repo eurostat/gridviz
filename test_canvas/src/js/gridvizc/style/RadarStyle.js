@@ -50,7 +50,6 @@ export class RadarStyle extends Style {
 
         //get the stat
         const stat = this.getStat(cells, true);
-        console.log(stat)
 
         for (let cell of cells) {
 
@@ -99,9 +98,10 @@ export class RadarStyle extends Style {
         let max = -Infinity
         let sum = 0
         let nb = 0
+        const keys = Object.keys(this.color)
         for (const cell of cells) {
-            for (let key of Object.keys(this.color)) {
-                const v = cell[key];
+            for (let key of keys) {
+                const v = +cell[key];
                 if (ignoreZeros && !v) continue
                 if (v < min) min = v
                 if (v > max) max = v
