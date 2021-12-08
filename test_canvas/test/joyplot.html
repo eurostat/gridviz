@@ -16,9 +16,10 @@
 
         //define datasets, styles and layers
         const s = new gviz.JoyPlotStyle({
+            col: "2018",
             height: {
-                val: c => 30 * Math.sqrt(c["2018"]),
-                unit: "geo"
+                val: (v,s) => 10 * Math.sqrt(v/s.max),
+                unit: "pix"
             },
             zfStroke: 70
         })

@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Size } from "../Style"
+import { Style, Size, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
@@ -15,8 +15,12 @@ export class JoyPlotStyle extends Style {
         super(opts)
         opts = opts || {};
 
+        /** The column where to get the values.
+         * @private @type {string} */
+        this.col = opts.col
+
         /** A function returning the height of a cell.
-         * @private @type {Size} */
+         * @private @type {{val: function(number,Stat):number, unit: "pix"|"geo"}} */
         this.height = opts.height;
 
         /** @private @type {string} */
@@ -37,13 +41,16 @@ export class JoyPlotStyle extends Style {
      */
     draw(cells, r, cg) {
 
+        //compute statistics
+        const stat = getStatistics(cells, c => c[this.col], true)
+
         //index cells by y and x
         /**  @type {object} */
         const ind = {};
         for (const cell of cells) {
             let row = ind[cell.y];
             if (!row) { row = {}; ind[cell.y] = row }
-            row[cell.x] = this.height.val(cell);
+            row[cell.x] = this.height.val(cell[this.col], stat);
         }
 
 
@@ -90,7 +97,7 @@ export class JoyPlotStyle extends Style {
                 if (hG || hG_) {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo
-                    const dyP = this.height.unit==="pix" ? hG : hG / cg.zf
+                    const dyP = this.height.unit === "pix" ? hG : hG / cg.zf
                     cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - dyP);
                 } else {
                     //else move the point
@@ -117,9 +124,9 @@ export class JoyPlotStyle extends Style {
 
     //getters and setters
 
-    /** @returns {Size} */
+    /** @returns {{val: function(number,Stat):number, unit: "pix"|"geo"}} */
     getHeight() { return this.height; }
-    /** @param {Size} val @returns {this} */
+    /** @param {{val: function(number,Stat):number, unit: "pix"|"geo"}} val @returns {this} */
     setHeight(val) { this.height = val; return this; }
 
     /** @returns {string} */
