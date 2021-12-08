@@ -16,7 +16,11 @@
 
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
         const s1 = new gviz.JoyPlotStyle({
-            height: { val: c => 13 * Math.sqrt(c["Inhabitants"]), unit: "geo" },
+            col:"Inhabitants",
+            height: {
+                val: (v,s) => 250 * Math.sqrt(v/s.max),
+                unit: "geo"
+            },
             fillColor: "#77777777",
             zfStroke: 3
         });
