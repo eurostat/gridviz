@@ -49,7 +49,7 @@ export class RadarStyle extends Style {
         let angleCumul = Math.PI
 
         //get the stat
-        const stat = getStat(cells);
+        const stat = this.getStat(cells, true);
 
         for (let cell of cells) {
 
@@ -73,7 +73,7 @@ export class RadarStyle extends Style {
                 //draw angular sector
                 cg.ctx.beginPath();
                 cg.ctx.moveTo(xc, yc);
-                cg.ctx.arc(xc, yc, rP, angleCumul -angle , angleCumul);
+                cg.ctx.arc(xc, yc, rP, angleCumul - angle, angleCumul);
                 cg.ctx.lineTo(xc, yc);
                 cg.ctx.fill();
 
@@ -84,6 +84,34 @@ export class RadarStyle extends Style {
         }
 
     }
+
+
+    /** 
+    * Get the stat, all categories together.
+    * @param {Array.<Cell>} cells 
+    * @param {boolean} ignoreZeros 
+    * @returns {Stat}
+    */
+    getStat(cells, ignoreZeros) {
+        if (!cells || cells.length == 0) return undefined
+        let min = Infinity
+        let max = -Infinity
+        let sum = 0
+        let nb = 0
+        for (const cell of cells) {
+            for (let key of Object.keys(this.color)) {
+                const v = cell[key];
+                if (ignoreZeros && !v) continue
+                if (v < min) min = v
+                if (v > max) max = v
+                sum += v
+                nb++
+            }
+        }
+        return { min: min, max: max, mean: (sum / nb) }
+    }
+
+
 
 
     //getters and setters
