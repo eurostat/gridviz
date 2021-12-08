@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Size } from "../Style"
+import { Style, Size, Stat } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
@@ -26,7 +26,7 @@ export class RadarStyle extends Style {
         /**
          * The function specifying how the radius evolves depending on the statistical value.
          * 
-         * @private @type {{val: function(number):number, unit: "pix"|"geo"}} */
+         * @private @type {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
         this.radius = opts.radius;
 
     }
@@ -36,10 +36,10 @@ export class RadarStyle extends Style {
      * Draw cells.
      * 
      * @param {Array.<Cell>} cells 
-     * @param {number} resolution 
+     * @param {number} r 
      * @param {CanvasGeo} cg 
      */
-    draw(cells, resolution, cg) {
+    draw(cells, r, cg) {
 
         //nb categories
         const nbCat = Object.entries(this.color).length
@@ -48,11 +48,14 @@ export class RadarStyle extends Style {
         const angle = 2 * Math.PI / nbCat
         let angleCumul = Math.PI
 
+        //get the stat
+        const stat = getStat(cells);
+
         for (let cell of cells) {
 
             //compute cell center position
-            const xc = cg.geoToPixX(cell.x + resolution * 0.5 + this.offset.dx);
-            const yc = cg.geoToPixY(cell.y + resolution * 0.5 + this.offset.dy);
+            const xc = cg.geoToPixX(cell.x + r * 0.5 + this.offset.dx);
+            const yc = cg.geoToPixY(cell.y + r * 0.5 + this.offset.dy);
 
             //draw decomposition symbols
             for (let [column, color] of Object.entries(this.color)) {
@@ -65,7 +68,7 @@ export class RadarStyle extends Style {
 
                 //compute category radius - in pixel
                 /** @type {number} */
-                const rP = this.radius.unit === "pix" ? this.radius.val(val) : this.radius.val(val) / cg.zf
+                const rP = this.radius.unit === "pix" ? this.radius.val(val, r, stat) : this.radius.val(val, r, stat) / cg.zf
 
                 //draw angular sector
                 cg.ctx.beginPath();
@@ -90,9 +93,9 @@ export class RadarStyle extends Style {
     /** @param {function(Cell):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
-    /** @returns {{val: function(number):number, unit: "pix"|"geo"}} */
+    /** @returns {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
     getRadius() { return this.radius; }
-    /** @param {{val: function(number):number, unit: "pix"|"geo"}} val @returns {this} */
+    /** @param {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} val @returns {this} */
     setRadius(val) { this.radius = val; return this; }
 
 }

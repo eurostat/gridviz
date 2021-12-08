@@ -29,7 +29,7 @@
                 "Ind_80p": col(1),
                 "Ind_inc": "gray"
             },
-            radius: { val: val => 5.0 * Math.pow(val, 0.2), unit: "pix" },
+            radius: { val: (v, r, s) => r * Math.pow(v / s.max, 0.2), unit: "geo" },
         })
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
             " < 3 : " + Math.floor(["Ind_0_3"]) + "<br>" +
