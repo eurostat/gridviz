@@ -39,7 +39,8 @@
                 "Ind_inc": "gray"
             },
             type: c => "ring",
-            size: { val: c => 5.0 * Math.pow(c["Ind"], 0.2), unit: "pix" },
+            colSize: "Ind",
+            size: { val: (v,r,s) => r * Math.sqrt(v/s.max), unit: "geo" },
             zfStroke: 5
         })
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
