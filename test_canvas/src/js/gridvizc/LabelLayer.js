@@ -36,15 +36,15 @@ export class LabelLayer {
 
         /** Specify the label color, depending on its importance and the zoom level.
          * @private @type {function(Label,number):string} */
-        this.color = opts.color || (() => "black")
+        this.color = opts.color || (() => "#000000AA")
 
         /** Specify the label halo color, depending on its importance and the zoom level.
          * @private @type {function(Label,number):string} */
-        this.haloColor = opts.haloColor || (() => "")
+        this.haloColor = opts.haloColor || (() => "#FFFFFFAA")
 
         /** Specify the label halo width, depending on its importance and the zoom level.
         * @private @type {function(Label,number):number} */
-        this.haloWidth = opts.haloWidth || (() => -3)
+        this.haloWidth = opts.haloWidth || (() => 3)
 
         /** 
          * A preprocess to run on each label after loading.
