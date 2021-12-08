@@ -82,7 +82,7 @@ export class ShapeColorSizeStyle extends Style {
             let s_ = this.size || { val: c => resolution, unit: "geo" };
             //size - in pixel and geo
             /** @type {number} */
-            const sP = s_.unit === "pix" ? s_.val(cell) : s_.val(cell) / cg.zf
+            const sP = s_.unit === "pix" ? s_.val(cell[this.sizeCol],resolution, statSize) : s_.val(cell[this.sizeCol], resolution, statSize) / cg.zf
             /** @type {number} */
             const sG = cg.zf * sP;
 
