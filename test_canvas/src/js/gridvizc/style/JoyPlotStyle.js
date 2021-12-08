@@ -15,13 +15,13 @@ export class JoyPlotStyle extends Style {
         super(opts)
         opts = opts || {};
 
-        /** The column where to get the values.
+        /** The cell column where to get the value to represent.
          * @private @type {string} */
         this.col = opts.col
 
         /** A function returning the height of a cell.
          * @private @type {{val: function(number,Stat):number, unit: "pix"|"geo"}} */
-        this.height = opts.height;
+        this.height = opts.height || { val: (v) => Math.sqrt(v), unit: "pix" };
 
         /** @private @type {string} */
         this.lineColor = opts.lineColor || "gray"
@@ -123,6 +123,11 @@ export class JoyPlotStyle extends Style {
 
 
     //getters and setters
+
+    /** @returns {string} */
+    getCol() { return this.col; }
+    /** @param {string} val @returns {this} */
+    setCol(val) { this.col = val; return this; }
 
     /** @returns {{val: function(number,Stat):number, unit: "pix"|"geo"}} */
     getHeight() { return this.height; }

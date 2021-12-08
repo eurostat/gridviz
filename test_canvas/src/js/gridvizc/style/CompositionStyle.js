@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Size } from "../Style"
+import { Style, Size, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
@@ -34,10 +34,14 @@ export class CompositionStyle extends Style {
          * @private @type {function(Cell):CompositionType} */
         this.type = opts.type;
 
-        /**
-         * A function returning the size of a cell (in geographical unit).
-         * @private @type {Size} */
-        this.size = opts.size;
+
+        /** The column where to get the size values.
+         * @private @type {string} */
+        this.colSize = opts.colSize
+
+        /** A function returning the size of a cell.
+         * @private @type {{val: function(number,Stat):number, unit: "pix"|"geo"}} */
+        this.size = opts.size || { val: (v) => Math.sqrt(v), unit: "pix" };
     }
 
 
@@ -50,9 +54,13 @@ export class CompositionStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
-        //if size is used, sort cells by size so that the biggest are drawn first
-        if (this.size)
-            cells.sort((c1, c2) => (this.size.val(c2) - this.size.val(c1)));
+        let stat
+        if (this.colSize) {
+            //if size is used, sort cells by size so that the biggest are drawn first
+            cells.sort((c1, c2) => c2[this.colSize] - c1[this.colSize]);
+            //and compute statistics
+            stat = getStatistics(cells, c => c[this.colSize], true)
+        }
 
         for (let cell of cells) {
 
@@ -62,11 +70,11 @@ export class CompositionStyle extends Style {
                 total += +cell[column]
 
             //size
-            /** @type {Size} */
-            let s_ = this.size || { val: c=>resolution, unit: "geo" };
+            /** @type {{val: function(number,Stat):number, unit: "pix"|"geo"}} */
+            let s_ = this.size || { val: v => resolution, unit: "geo" };
             //size - in pixel and geo
             /** @type {number} */
-            const sP = s_.unit === "pix" ? s_.val(cell) : s_.val(cell) / cg.zf
+            const sP = s_.unit === "pix" ? s_.val(cell[this.colSize], stat) : s_.val(cell[this.colSize], stat) / cg.zf
             /** @type {number} */
             const sG = cg.zf * sP;
 
@@ -117,10 +125,11 @@ export class CompositionStyle extends Style {
                 cumul += share;
             }
 
-            //draw stroke
+            /*/draw stroke
             this.drawStroke(cell, resolution, cg, (c) => {
                 return (type_ === "flag") ? "square" : "circle"
-            }, this.size)
+            }, this.size)*/
+            //TODO
         }
 
     }
@@ -139,9 +148,14 @@ export class CompositionStyle extends Style {
     /** @param {function(Cell):CompositionType} val @returns {this} */
     setType(val) { this.type = val; return this; }
 
-    /** @returns {Size} */
+    /** @returns {string} */
+    getColSize() { return this.colSize; }
+    /** @param {string} val @returns {this} */
+    setColSize(val) { this.colSize = val; return this; }
+
+    /** @returns {{val: function(number,Stat):number, unit: "pix"|"geo"}} */
     getSize() { return this.size; }
-    /** @param {Size} val @returns {this} */
+    /** @param {{val: function(number,Stat):number, unit: "pix"|"geo"}} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
 }
