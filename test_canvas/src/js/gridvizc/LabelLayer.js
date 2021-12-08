@@ -20,7 +20,7 @@ export class LabelLayer {
      * @param {string} url 
      * @param {object} opts 
      */
-     constructor(url, opts) {
+    constructor(url, opts) {
         opts = opts || {};
 
         /** 
@@ -36,7 +36,15 @@ export class LabelLayer {
 
         /** Specify the label color, depending on its importance and the zoom level.
          * @private @type {function(Label,number):string} */
-        this.color = opts.color || (() => "#00000044")
+        this.color = opts.color || (() => "black")
+
+        /** Specify the label halo color, depending on its importance and the zoom level.
+         * @private @type {function(Label,number):string} */
+        this.haloColor = opts.haloColor || (() => "")
+
+        /** Specify the label halo width, depending on its importance and the zoom level.
+        * @private @type {function(Label,number):number} */
+        this.haloWidth = opts.haloWidth || (() => -3)
 
         /** 
          * A preprocess to run on each label after loading.
@@ -69,16 +77,36 @@ export class LabelLayer {
         //draw labels, one by one
         for (const lb of this.labels) {
 
-            //set color
-            cg.ctx.fillStyle = this.color(lb, cg.zf);
 
             //get label style
             const st = this.style(lb, cg.zf);
             if (!st) continue;
             cg.ctx.font = st;
 
-            //draw label
-            cg.ctx.fillText(lb.name, cg.geoToPixX(lb.x), cg.geoToPixY(lb.y));
+            //position
+            const xP = cg.geoToPixX(lb.x)
+            const yP = cg.geoToPixY(lb.y)
+
+            //label stroke, for the halo
+            if (this.haloColor && this.haloWidth) {
+                const hc = this.haloColor(lb, cg.zf);
+                const hw = this.haloWidth(lb, cg.zf);
+                if (hc && hw && hw > 0) {
+                    cg.ctx.strokeStyle = hc;
+                    cg.ctx.lineWidth = hw;
+                    cg.ctx.strokeText(lb.name, xP, yP);
+                }
+            }
+
+            //label fill
+            if (this.color) {
+                const col = this.color(lb, cg.zf);
+                if (col) {
+                    cg.ctx.fillStyle = col;
+                    cg.ctx.fillText(lb.name, xP, yP);
+                }
+
+            }
         }
     }
 
