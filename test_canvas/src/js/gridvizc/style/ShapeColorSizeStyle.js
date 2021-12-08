@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Size } from "../Style"
+import { Style, Size, Stat } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
@@ -19,13 +19,22 @@ export class ShapeColorSizeStyle extends Style {
         super(opts)
         opts = opts || {};
 
+
+        /** @private @type {string} */
+        this.colorCol = opts.colorCol;
+
         /** A function returning the color of the cell.
-         * @private @type {function(Cell):string} */
+        * @private @type {function(number,number,Stat):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
+
+        /** @private @type {string} */
+        this.sizeCol = opts.sizeCol;
+
         /** A function returning the size of a cell (in geographical unit).
-         * @private @type {Size} */
+        * @private @type {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
         this.size = opts.size;
+
 
         /** A function returning the shape of a cell.
          * @private @type {function(Cell):Shape} */
@@ -50,12 +59,12 @@ export class ShapeColorSizeStyle extends Style {
 
             //color
             const col = this.color ? this.color(cell) : undefined;
-            if(!col) continue
+            if (!col) continue
             cg.ctx.fillStyle = col;
 
             //shape
             const shape = this.shape ? this.shape(cell) : "square";
-            if(shape === "none") continue
+            if (shape === "none") continue
 
             //size
             /** @type {Size} */
@@ -87,7 +96,8 @@ export class ShapeColorSizeStyle extends Style {
             }
 
             //draw stroke
-            this.drawStroke(cell, resolution, cg, this.shape, this.size)
+            //TODO
+            //this.drawStroke(cell, resolution, cg, this.shape, this.size)
         }
 
     }
@@ -95,14 +105,14 @@ export class ShapeColorSizeStyle extends Style {
 
     //getters and setters
 
-    /** @returns {function(Cell):string} */
+    /** @returns {function(number,number,Stat):string} */
     getColor() { return this.color; }
-    /** @param {function(Cell):string} val @returns {this} */
+    /** @param {function(number,number,Stat):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
-    /** @returns {Size} */
+    /** @returns {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
     getSize() { return this.size; }
-    /** @param {Size} val @returns {this} */
+    /** @param {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
     /** @returns {function(Cell):Shape} */
