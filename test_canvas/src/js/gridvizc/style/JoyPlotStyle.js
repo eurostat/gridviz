@@ -20,7 +20,7 @@ export class JoyPlotStyle extends Style {
         this.col = opts.col
 
         /** A function returning the height of a cell.
-         * @private @type {{val: function(number,Stat):number, unit: "pix"|"geo"}} */
+         * @private @type {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
         this.height = opts.height || { val: (v) => Math.sqrt(v), unit: "pix" };
 
         /** @private @type {string} */
@@ -50,7 +50,7 @@ export class JoyPlotStyle extends Style {
         for (const cell of cells) {
             let row = ind[cell.y];
             if (!row) { row = {}; ind[cell.y] = row }
-            row[cell.x] = this.height.val(cell[this.col], stat);
+            row[cell.x] = this.height.val(cell[this.col], r, stat);
         }
 
 
@@ -129,9 +129,9 @@ export class JoyPlotStyle extends Style {
     /** @param {string} val @returns {this} */
     setCol(val) { this.col = val; return this; }
 
-    /** @returns {{val: function(number,Stat):number, unit: "pix"|"geo"}} */
+    /** @returns {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
     getHeight() { return this.height; }
-    /** @param {{val: function(number,Stat):number, unit: "pix"|"geo"}} val @returns {this} */
+    /** @param {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} val @returns {this} */
     setHeight(val) { this.height = val; return this; }
 
     /** @returns {string} */

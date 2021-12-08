@@ -18,8 +18,8 @@
         const s = new gviz.JoyPlotStyle({
             col: "2018",
             height: {
-                val: (v,s) => 40 * Math.sqrt(v/s.max),
-                unit: "pix"
+                val: (v,r,s) => r * Math.sqrt(v/s.max),
+                unit: "geo"
             },
             zfStroke: 70
         })
