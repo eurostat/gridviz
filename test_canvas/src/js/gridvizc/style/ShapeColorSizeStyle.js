@@ -78,7 +78,7 @@ export class ShapeColorSizeStyle extends Style {
             if (shape === "none") continue
 
             //size
-            /** @type {Size} */
+            /** @type {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
             let s_ = this.size || { val: c => resolution, unit: "geo" };
             //size - in pixel and geo
             /** @type {number} */
