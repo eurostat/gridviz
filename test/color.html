@@ -30,30 +30,40 @@
 
   //define datasets, styles and layers
   const s1km = gridviz.getColorSizeShapeStyle(
-    c => gridviz.color().interpolateOrRd(Math.pow(c["Population"], 0.6) / 100),
-    null,
-    c => "square"
+    {
+      "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["Population"], 0.6) / 100),
+      "sizeFunction":  c => 1,
+      "shapeFunction": c => "circle",
+      "opacity": 1,
+      "strokeWidth": 0.2,
+      "strokeColor": 'grey'
+    }
   )
 
   const s5km = gridviz.getColorSizeShapeStyle(
-    c => gridviz.color().interpolateOrRd(Math.pow(c["population"], 0.5) / 100),
-    null,
-    c => "square"
+    {
+      "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["population"], 0.5) / 100),
+      "sizeFunction":  c => 5,
+      "shapeFunction": c => "circle",
+      "opacity": 1,
+      "strokeWidth": 0.2,
+      "strokeColor": 'grey'
+    }
   )
 
   app.addCSVGrid({
-    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/1km/pop_1km.csv", 
+    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/1km/pop_1km.csv",
     resolution: 1,
     styles: [s1km],
-    minZoom: 0, 
+    minZoom: 0,
     maxZoom: 500
   });
   app.addCSVGrid({
-    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv", 
+    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
     resolution: 5,
     styles: [s5km],
-    minZoom: 500, 
-    maxZoom: 999999999 
+    minZoom: 500,
+    maxZoom: 999999999
   });
 
 </script>

@@ -35,7 +35,7 @@ export class ColorSizeShapeStyle extends Style {
         /** @type {Number} */
         this.opacity = opts.opacity || 1;
         /** @type {Number} */
-        this.strokeWidth = opts.strokeWidth || 0.1;
+        this.strokeWidth = opts.strokeWidth || 0;
         /** @type {String} */
         this.strokeColor = opts.strokeColor || 'black';
     }
@@ -52,6 +52,7 @@ export class ColorSizeShapeStyle extends Style {
 
         this.cells = cells; //save new subset for tooltip
 
+        // bufferGeometry attribute arrays
         this.colors = [];
         this.positions = [];
         this.sizes = [];
@@ -74,7 +75,7 @@ export class ColorSizeShapeStyle extends Style {
             this.colors.push(c.r, c.g, c.b);
             cell.color = colorString; //save for tooltip
 
-            //size - in ground meters. TODO: use uniform if all cells have same size to optimize memory usage
+            //size - in ground meters. TODO: use a uniform in pointsMaterial if all cells have same size to optimize memory usage
             this.sizes.push(this.sizeFunction ? this.sizeFunction(cell) : resolution);
 
             //shape
@@ -86,7 +87,6 @@ export class ColorSizeShapeStyle extends Style {
             } else {
                 throw new Error('Unexpected shape:' + shape);
             }
-
         }
 
         if (!this.pointsMaterial) {
@@ -101,7 +101,7 @@ export class ColorSizeShapeStyle extends Style {
                         value: this.strokeWidth
                     },
                     strokeColor: {
-                        value: new Color(this.strokeWidth)
+                        value: new Color(this.strokeColor)
                     },
                     opacity: {
                         value: this.opacity
@@ -130,7 +130,6 @@ export class ColorSizeShapeStyle extends Style {
         } else {
             // else update its attributes
             this.threejsObject.geometry = this.bufferGeometry;
-
             //this.threejsObject.material = this.pointsMaterial;
         }
     }
@@ -151,42 +150,49 @@ export class ColorSizeShapeStyle extends Style {
 
         varying vec3 vColor;
         varying float vShape;
-        varying vec2 vUV;
+        varying vec2 vUV; // texture coordinates
 
             void main() {
                 
-
-                float r = 0.0, delta = 0.0, alpha = 1.0;
-                vec2 cxy = 2.0 * gl_PointCoord - 1.0;
-
-                //radius
-                r = dot(cxy, cxy);
-
-                // discard pixels according to radius and vShape values
-                // if (r > vShape) { 
-                //     gl_FragColor =  vec4(strokeColor.rgb, 0.0);
-                // }
-
-                //define border
-                float border = (r - strokeWidth/2.)/(strokeWidth/2.+r);
-
-                // distance from border to pixel
-                float d = distance(vUV, vec2(.5, .5));
-
-                // outside radius
-                if (d<r) gl_FragColor = vec4(vColor.rgb, 0.0);
-
-                // inside stroke area
-                else if (d < r + strokeWidth) gl_FragColor = vec4(strokeColor.rgb, opacity);
-
-                //hide pixel
-                else gl_FragColor = vec4(vColor.rgb, opacity);
-            
-                // if(d<=border) gl_FragColor = vec4(vColor.rgb, opacity);
-                // else if(d>border && d<1.) gl_FragColor =  vec4(strokeColor.rgb, opacity);
-                // else discard;
-                //gl_FragColor = vec4( vColor.rgb, 1.0 );
+                float r = 0.0, alpha = opacity, delta = 0.0;
                 
+                if (vShape > 1.0) {
+                    // square
+
+                    // distance from texCoords to center
+                    float d = distance(vUV, vec2(.5, .5));
+
+                    // inside stroke area
+                    //if (d > .5 - strokeWidth) gl_FragColor = vec4(strokeColor.rgb, opacity);
+
+                    // inside square, not in stroke area
+                    //else gl_FragColor = vec4(vColor.rgb, opacity);
+
+                    float mixAmount = step(strokeWidth, 0.8);
+                    gl_FragColor = mix(vec4(vColor.rgb, opacity), 
+                                        vec4(strokeColor.rgb, opacity), 
+                                       mixAmount);
+
+                } else if (vShape < 2.0) { 
+                    // circle
+
+                    //radius
+                    vec2 cxy = 2.0 * gl_PointCoord - 1.0;
+                    r = dot(cxy, cxy);
+
+                    // distance from texCoords to center
+                    float d = distance(vUV, vec2(.5, .5));
+
+                    // outside radius
+                    if (d<r) gl_FragColor = vec4(0.0,0.0,0.0,0.0);
+
+                    // inside stroke area
+                    else if (d < r + strokeWidth) gl_FragColor = vec4(strokeColor.rgb, opacity);
+
+                    //inside radius
+                    else gl_FragColor = vec4(vColor.rgb, opacity);
+
+                }                
             }
         `;
     }
@@ -223,7 +229,10 @@ export class ColorSizeShapeStyle extends Style {
         // manual 'point attenuation' because threejs attenuation doesnt coincide with real world cellSize 
         // (e.g. 1000 for 1km grid leaves space between cells)...
         // this method works well on mobile & desktop, but not when appending the renderer to a container
-        gl_PointSize = size * (multiplier / -mvPosition.z ); 
+
+        if (shape < 2.0) gl_PointSize = (size * (multiplier / -mvPosition.z ))*1.5; //adjust for circles
+        else gl_PointSize = size * (multiplier / -mvPosition.z ); 
+        
     
         // threejs attenuation (when {attenuation: true} in pointer material)...
         // does this: gl_PointSize *= ( scale / - mvPosition.z );
