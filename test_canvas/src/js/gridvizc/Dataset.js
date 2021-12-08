@@ -40,28 +40,40 @@ export class Dataset {
          * The HTML content providing information on the grid cell.
          * @type {function(Cell):string} */
         this.cellInfoHTML = opts.cellInfoHTML || defaultCellInfoHTML;
+
+        /** The list of cells within the view
+         * @protected @type {Array.<Cell>} */
+        this.cellsViewCache = []
     }
 
 
     /**
      * Request data within a geographic envelope.
      * 
+     * @abstract
      * @param {Envelope} extGeo 
      * @param {function():void} callback 
      * @returns {this}
-     * @abstract
      */
     getData(extGeo, callback) {
         throw new Error('Method getData not implemented.');
     }
 
+
+
+
+
+    /** @returns {Array.<Cell>} */
+    getViewCache = () => this.cellsViewCache
+
     /**
-     * @param {Envelope} extGeo 
-     * @returns {Array.<Cell>}
+     * Fill the view cache with all cells which are within a geographical envelope.
      * @abstract
+     * @param {Envelope} extGeo 
+     * @returns {void}
      */
-    getCells(extGeo) {
-        throw new Error('Method getCells not implemented.');
+    updateViewCache(extGeo) {
+        throw new Error('Method updateViewCache not implemented.');
     }
 
 
@@ -84,7 +96,7 @@ export class Dataset {
         /** @type {number} */
         const cellY = r * Math.floor(posGeo.y / r)
 
-        //get cell data
+        //get cell
         for (const cell of cells) {
             if (cell.x != cellX) continue;
             if (cell.y != cellY) continue;

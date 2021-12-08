@@ -66,27 +66,25 @@ export class CSVGrid extends Dataset {
 
 
     /**
-     * Get all cells from cache which are within a geographical envelope.
-     * 
+     * Fill the view cache with all cells which are within a geographical envelope.
+     * @abstract
      * @param {Envelope} extGeo 
-     * @returns {Array.<Cell>}
+     * @returns {void}
      */
-    getCells(extGeo) {
+    updateViewCache(extGeo) {
 
         //data not loaded yet
-        if (!this.cells) return [];
+        if (!this.cells) return;
 
         /** @type {Array.<Cell>} */
-        let cells = []
+        this.cellsViewCache = []
         for (const cell of this.cells) {
             if (+cell.x + this.resolution < extGeo.xMin) continue;
             if (+cell.x - this.resolution > extGeo.xMax) continue;
             if (+cell.y + this.resolution < extGeo.yMin) continue;
             if (+cell.y - this.resolution > extGeo.yMax) continue;
-            cells.push(cell)
+            this.cellsViewCache.push(cell)
         }
-
-        return cells;
     }
 
 }

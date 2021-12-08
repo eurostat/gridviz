@@ -16,11 +16,9 @@ export class TiledGrid extends Dataset {
     /**
      * @param {string} url The URL of the dataset.
      * @param {App} app The application.
-     * @param {object} opts 
      */
-    constructor(url, app, opts) {
-        super(url, null, opts)
-        opts = opts || {};
+    constructor(url, app) {
+        super(url, null, null)
 
         /**
          * The app being used.
@@ -173,18 +171,18 @@ export class TiledGrid extends Dataset {
 
 
     /**
-     * Get all cells from cache which are within a geographical envelope.
-     * 
+     * Fill the view cache with all cells which are within a geographical envelope.
+     * @abstract
      * @param {Envelope} extGeo 
-     * @returns {Array.<Cell>}
+     * @returns {void}
      */
-    getCells(extGeo) {
+    updateViewCache(extGeo) {
 
-        /** @type {Array.<Cell>} */
-        let cells = []
+        //
+        this.cellsViewCache = []
 
         //check if info has been loaded
-        if (!this.info) return cells;
+        if (!this.info) return;
 
         //tiles within the scope
         /** @type {Envelope} */
@@ -204,11 +202,9 @@ export class TiledGrid extends Dataset {
                 if (!tile || typeof tile === "string") continue;
 
                 //get cells
-                cells = cells.concat(tile.cells)
+                this.cellsViewCache = this.cellsViewCache.concat(tile.cells)
             }
         }
-
-        return cells;
     }
 
 }
