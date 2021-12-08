@@ -111,15 +111,15 @@ export class App {
      */
     draw(layer) {
 
-        //get cells to draw
-        const cells = layer.dataset.getCells(this.cg.extGeo)
+        //update dataset view cache
+        layer.dataset.updateViewCache(this.cg.extGeo)
 
         //clear
         this.cg.clear(this.backgroundColor);
 
         //draw cells, style by style
         for (const style of layer.styles)
-            style.draw(cells, layer.dataset.getResolution(), this.cg)
+            style.draw(layer.dataset.getViewCache(), layer.dataset.getResolution(), this.cg)
 
         return this;
     }
@@ -146,12 +146,11 @@ export class App {
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
-     * @param {object=} opts The parameters of the dataset.
      * @returns {this}
      */
-    addTiledGridLayer(url, styles, minZoom, maxZoom, opts) {
+    addTiledGridLayer(url, styles, minZoom, maxZoom) {
         return this.addLayer(
-            new TiledGrid(url, this, opts).loadInfo(() => { this.cg.redraw(); }),
+            new TiledGrid(url, this).loadInfo(() => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
     }
@@ -225,7 +224,7 @@ export class App {
         if (!layer) return undefined;
         //get cell at mouse position
         /** @type {Cell} */
-        const cell = layer.dataset.getCellFromPosition(posGeo, layer.dataset.getCells(this.cg.updateExtentGeo()));
+        const cell = layer.dataset.getCellFromPosition(posGeo, layer.dataset.getViewCache());
         if (!cell) return undefined;
         return layer.dataset.cellInfoHTML(cell);
     }

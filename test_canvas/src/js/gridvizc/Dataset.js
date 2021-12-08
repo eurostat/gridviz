@@ -64,7 +64,7 @@ export class Dataset {
 
 
     /** @returns {Array.<Cell>} */
-    getViewCache = () => this.cellsViewCache
+    getViewCache() { return this.cellsViewCache }
 
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
