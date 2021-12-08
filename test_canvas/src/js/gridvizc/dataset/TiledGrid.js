@@ -202,7 +202,15 @@ export class TiledGrid extends Dataset {
                 if (!tile || typeof tile === "string") continue;
 
                 //get cells
-                this.cellsViewCache = this.cellsViewCache.concat(tile.cells)
+                //this.cellsViewCache = this.cellsViewCache.concat(tile.cells)
+
+                for (const cell of tile.cells) {
+                    if (+cell.x + this.resolution < extGeo.xMin) continue;
+                    if (+cell.x - this.resolution > extGeo.xMax) continue;
+                    if (+cell.y + this.resolution < extGeo.yMin) continue;
+                    if (+cell.y - this.resolution > extGeo.yMax) continue;
+                    this.cellsViewCache.push(cell)
+                }
             }
         }
     }
