@@ -28,7 +28,7 @@
             //color: { "Population under 14": cf(0), "pop_": cf(0.5), "Population over 65": cf(1) },
             color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
             type: c => "flag",
-            colSize: "Inhabitants",
+            sizeCol: "Inhabitants",
             size: { val: (v,r,s) => r * Math.sqrt(v/s.max), unit: "geo" },
             zfStroke: 5
         })

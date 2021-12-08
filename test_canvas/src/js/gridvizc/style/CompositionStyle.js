@@ -37,7 +37,7 @@ export class CompositionStyle extends Style {
 
         /** The column where to get the size values.
          * @private @type {string} */
-        this.colSize = opts.colSize
+        this.sizeCol = opts.sizeCol
 
         /** A function returning the size of a cell.
          * @private @type {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
@@ -55,11 +55,11 @@ export class CompositionStyle extends Style {
     draw(cells, resolution, cg) {
 
         let stat
-        if (this.colSize) {
+        if (this.sizeCol) {
             //if size is used, sort cells by size so that the biggest are drawn first
-            cells.sort((c1, c2) => c2[this.colSize] - c1[this.colSize]);
+            cells.sort((c1, c2) => c2[this.sizeCol] - c1[this.sizeCol]);
             //and compute statistics
-            stat = getStatistics(cells, c => c[this.colSize], true)
+            stat = getStatistics(cells, c => c[this.sizeCol], true)
         }
 
         for (let cell of cells) {
@@ -74,7 +74,7 @@ export class CompositionStyle extends Style {
             let s_ = this.size || { val: v => resolution, unit: "geo" };
             //size - in pixel and geo
             /** @type {number} */
-            const sP = s_.unit === "pix" ? s_.val(cell[this.colSize],resolution, stat) : s_.val(cell[this.colSize], resolution, stat) / cg.zf
+            const sP = s_.unit === "pix" ? s_.val(cell[this.sizeCol],resolution, stat) : s_.val(cell[this.sizeCol], resolution, stat) / cg.zf
             /** @type {number} */
             const sG = cg.zf * sP;
 
@@ -149,9 +149,9 @@ export class CompositionStyle extends Style {
     setType(val) { this.type = val; return this; }
 
     /** @returns {string} */
-    getColSize() { return this.colSize; }
+    getColSize() { return this.sizeCol; }
     /** @param {string} val @returns {this} */
-    setColSize(val) { this.colSize = val; return this; }
+    setColSize(val) { this.sizeCol = val; return this; }
 
     /** @returns {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
     getSize() { return this.size; }
