@@ -17,7 +17,7 @@
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
             colorCol: "r",
-            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 0.5)),
+            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
             zfStroke: 15
         })
         const ttfun = c => "<b>" + Math.floor(c.r) + "€</b>/month/person"
