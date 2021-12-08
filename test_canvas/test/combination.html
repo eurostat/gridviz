@@ -18,7 +18,7 @@
         const s1 = new gviz.JoyPlotStyle({
             heightCol:"Inhabitants",
             height: {
-                val: (v,s) => 250 * Math.sqrt(v/s.max),
+                val: (v,r,s) => 200 * Math.sqrt(v/s.max),
                 unit: "geo"
             },
             fillColor: "#77777777",
