@@ -69,7 +69,7 @@ export class ShapeColorSizeStyle extends Style {
         for (let cell of cells) {
 
             //color
-            const col = this.color ? this.color(cell) : undefined;
+            const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined;
             if (!col) continue
             cg.ctx.fillStyle = col;
 
