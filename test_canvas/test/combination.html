@@ -26,7 +26,7 @@
         });
         const s2 = new gviz.ShapeColorSizeStyle({
             colorCol: "r",
-            color: (v, r, s) => gviz.interpolateReds(Math.pow(v / s.max, 0.3)),
+            color: (v, r, s) => gviz.interpolateReds(Math.pow(v / s.max, 0.5)),
             sizeCol: "Inhabitants",
             size: { val: (v, r, s) => r * Math.sqrt(v / s.max), unit: "geo" },
             shape: c => "circle",
