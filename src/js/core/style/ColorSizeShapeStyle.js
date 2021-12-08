@@ -1,4 +1,5 @@
 //@ts-check
+/** @typedef {{ colorFunction: Function, sizeFunction: Function, shapeFunction: Function, opacity:Number, strokeWidth: Number, strokeColor:String }} ColorSizeShapeStyleConfig */
 
 import { Style } from "../Style"
 import { Cell } from "../Dataset"
@@ -16,21 +17,27 @@ import * as Utils from "../utils/utils";
 export class ColorSizeShapeStyle extends Style {
 
     /**
-      * @param {function} color A function returning the color of the cell.
-      * @param {function} size A function returning the size of a cell (in geographical unit).
-      * @param {function} shape A function returning the shape of a cell.
+      * @constructor
+      * @param {ColorSizeShapeStyleConfig} opts A configuration object for a color-size-shape style.
       */
-    constructor(color = () => "#EA6BAC", size = null, shape = () => "square") {
+    constructor(opts) {
         super()
 
         /** @type {function} */
-        this.color = color;
+        this.colorFunction = opts.colorFunction || (() => "#EA6BAC");
 
         /** @type {function} */
-        this.size = size;
+        this.sizeFunction = opts.sizeFunction || null;
 
         /** @type {function} */
-        this.shape = shape;
+        this.shapeFunction = opts.shapeFunction || null;
+
+        /** @type {Number} */
+        this.opacity = opts.opacity || 1;
+        /** @type {Number} */
+        this.strokeWidth = opts.strokeWidth || 0.1;
+        /** @type {String} */
+        this.strokeColor = opts.strokeColor || 'black';
     }
 
 
@@ -53,8 +60,8 @@ export class ColorSizeShapeStyle extends Style {
         this.bufferGeometry = new BufferGeometry();
 
         //if size is used, sort cells by size so that the biggest are drawn first
-        if (this.size)
-            cells.sort((c1, c2) => (this.size(c2) - this.size(c1)));
+        if (this.sizeFunction)
+            cells.sort((c1, c2) => (this.sizeFunction(c2) - this.sizeFunction(c1)));
 
         for (let cell of cells) {
 
@@ -62,16 +69,16 @@ export class ColorSizeShapeStyle extends Style {
             this.positions.push(cell.x, cell.y, CONSTANTS.point_z);
 
             //color
-            let colorString = this.color ? this.color(cell) : "#EA6BAC";
+            let colorString = this.colorFunction ? this.colorFunction(cell) : "#EA6BAC";
             let c = new Color(colorString);
             this.colors.push(c.r, c.g, c.b);
             cell.color = colorString; //save for tooltip
 
             //size - in ground meters. TODO: use uniform if all cells have same size to optimize memory usage
-            this.sizes.push(this.size ? this.size(cell) : resolution);
+            this.sizes.push(this.sizeFunction ? this.sizeFunction(cell) : resolution);
 
             //shape
-            const shape = this.shape ?  this.shape(cell) : 'square';
+            const shape = this.shapeFunction ? this.shapeFunction(cell) : 'square';
             if (shape == "square") {
                 this.shapes.push(2);
             } else if (shape == "circle") {
@@ -84,22 +91,27 @@ export class ColorSizeShapeStyle extends Style {
 
         if (!this.pointsMaterial) {
             this.pointsMaterial = new ShaderMaterial({
-            uniforms: {
-                multiplier: {
-                    value: 1000 //km TODO: define dynamically. This value needs to be adjusted according to screen in order prevent screen flickering when zooming
+                transparent: true,
+                uniforms: {
+                    //uniforms are constants sent to shaders
+                    multiplier: {
+                        value: 1000 //km TODO: define dynamically.
+                    },
+                    strokeWidth: {
+                        value: this.strokeWidth
+                    },
+                    strokeColor: {
+                        value: new Color(this.strokeWidth)
+                    },
+                    opacity: {
+                        value: this.opacity
+                    }
                 },
-                stroke:{
-                    value: 0.1
-                },
-                strokeColor: {
-                    value: new Color( 'black' )
-                }
-            },
-            fragmentShader: this.fragmentShader(), // TODO: make dynamic 
-            vertexShader: this.vertexShader(),
-            vertexColors: true
-        });
-    }
+                fragmentShader: this.fragmentShader(),
+                vertexShader: this.vertexShader(),
+                vertexColors: true
+            });
+        }
 
         //set positions
         this.bufferGeometry.setAttribute("position", new Float32BufferAttribute(this.positions, 3));
@@ -118,22 +130,24 @@ export class ColorSizeShapeStyle extends Style {
         } else {
             // else update its attributes
             this.threejsObject.geometry = this.bufferGeometry;
-            
-           //this.threejsObject.material = this.pointsMaterial;
+
+            //this.threejsObject.material = this.pointsMaterial;
         }
     }
 
     /**
     * @description WebGL - Shader stage that will process a Fragment generated by the Rasterization into a set of colors and a single depth value
     * @function fragmentShader
-    *  
-    *  webgl does NOT like using if statements in frag shaders so we use vShape float to determine pixel discarding (1.0 creates a circle and 2.0 maintains a square)
+    *  This is where the magic happens
+    *  Read https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices
+    *  frag shaders dont like ifelse statements so we use vShape float to determine pixel discarding for circles (1.0 creates a circle and 2.0 maintains a square)
     *  Discard should be avoided. It's better to set the alpha to 0 for pixels outside of the desired area. (https://stackoverflow.com/questions/18425201/three-js-webgl-draw-a-circle-custom-fill-and-border-color-from-shader)
     */
     fragmentShader() {
         return `
         uniform vec3 strokeColor;
-        uniform float stroke;
+        uniform float strokeWidth;
+        uniform float opacity;
 
         varying vec3 vColor;
         varying float vShape;
@@ -149,20 +163,28 @@ export class ColorSizeShapeStyle extends Style {
                 r = dot(cxy, cxy);
 
                 // discard pixels according to radius and vShape values
-                if (r > vShape) { 
-                    discard;
-                }
+                // if (r > vShape) { 
+                //     gl_FragColor =  vec4(strokeColor.rgb, 0.0);
+                // }
 
                 //define border
-                float border = (r - stroke/2.)/(stroke/2.+r);
+                float border = (r - strokeWidth/2.)/(strokeWidth/2.+r);
 
-                //distance to border
+                // distance from border to pixel
                 float d = distance(vUV, vec2(.5, .5));
+
+                // outside radius
+                if (d<r) gl_FragColor = vec4(vColor.rgb, 0.0);
+
+                // inside stroke area
+                else if (d < r + strokeWidth) gl_FragColor = vec4(strokeColor.rgb, opacity);
+
+                //hide pixel
+                else gl_FragColor = vec4(vColor.rgb, opacity);
             
-                if(d<=border) gl_FragColor = vec4(strokeColor.rgb, 1.);
-                else if(d>border && d<1.) gl_FragColor =  vec4(vColor.rgb, 1.);
-                else discard;
-                
+                // if(d<=border) gl_FragColor = vec4(vColor.rgb, opacity);
+                // else if(d>border && d<1.) gl_FragColor =  vec4(strokeColor.rgb, opacity);
+                // else discard;
                 //gl_FragColor = vec4( vColor.rgb, 1.0 );
                 
             }
@@ -177,7 +199,8 @@ export class ColorSizeShapeStyle extends Style {
     vertexShader() {
         return `
       uniform float multiplier;
-      uniform float stroke; //for fragment shader
+      uniform float opacity; //for fragment shader
+      uniform float strokeWidth; //for fragment shader
       uniform vec3 strokeColor; //for fragment shader
 
       attribute float size;
@@ -189,7 +212,7 @@ export class ColorSizeShapeStyle extends Style {
       varying vec2 vUV;
       
       void main() {
-        // pass to fragment shader
+        // pass variables with v prefix to fragment shader
         vColor = color;
         vShape = shape;
         vUV = uv;

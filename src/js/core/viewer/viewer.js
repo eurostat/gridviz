@@ -118,7 +118,11 @@ export class Viewer extends EventEmitter {
      * @function createWebGLRenderer
      */
     createWebGLRenderer() {
-        this.renderer = new WebGLRenderer();
+        this.renderer = new WebGLRenderer({
+            alpha:true,
+            antialias:true,
+            failIfMajorPerformanceCaveat: false,
+        });
         // TODO: adjust for when the user loads gridviz into a small container
         let pixelRatio = window.devicePixelRatio;
         this.renderer.setPixelRatio(pixelRatio);
