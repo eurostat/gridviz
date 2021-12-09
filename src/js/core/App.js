@@ -304,11 +304,11 @@ export class App {
       let minZoom = this._isMobile ? this.viewer.mobileZoomScale(layer.minZoom) : layer.minZoom;
       let maxZoom = this._isMobile ? this.viewer.mobileZoomScale(layer.maxZoom) : layer.maxZoom;
       if (minZoom >= this.viewer.camera.camera.position.z) {
-        this.hideLayer(layer);
+        if ((layer.dataset instanceof TiledGrid) == false) this.hideLayer(layer);
         continue;
       };
       if (maxZoom < this.viewer.camera.camera.position.z) {
-        this.hideLayer(layer);
+        if ((layer.dataset instanceof TiledGrid) == false) this.hideLayer(layer);
         continue;
       };
       //show if hidden
