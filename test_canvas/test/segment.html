@@ -25,9 +25,10 @@
                 r = Math.min(Math.max(r, -1), 1)
                 return 85 * r;
             },
-            color: c => gviz.interpolateOrRd(Math.pow(c["2018"], 0.5) / 100),
-            length: c => 1000,
-            width: c => 200,
+            colorCol: "2018",
+            color: v => gviz.interpolateOrRd(Math.pow(v, 0.5) / 100),
+            length: () => 1000,
+            width: () => 200,
             zfStroke: 50
         })
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500);
