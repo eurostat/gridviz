@@ -36,7 +36,7 @@
                 "Ind_55_64": col(55 / 80),
                 "Ind_65_79": col(65 / 80),
                 "Ind_80p": col(1),
-                "Ind_inc": "gray"
+                //"Ind_inc": "gray"
             },
             type: c => "ring",
             sizeCol: "Ind",
@@ -54,7 +54,7 @@
             "55-64: " + Math.floor(c["Ind_55_64"]) + "<br>" +
             "65-79: " + Math.floor(c["Ind_65_79"]) + "<br>" +
             " > 80: " + Math.floor(c["Ind_80p"]) + "<br>" +
-            " unk.: " + Math.floor(c["Ind_inc"]) + "<br>";
+            //" unk.: " + Math.floor(c["Ind_inc"]) + "<br>";
 
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 10, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m//", [s], 10, 20, { cellInfoHTML: ttfun });
