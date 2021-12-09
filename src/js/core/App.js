@@ -10,7 +10,8 @@ import { extent, min, max } from "d3-array";
 import { pointer } from "d3-selection";
 
 //three.js
-import { Vector3, Color, Points } from "three";
+import { Vector3, Color, Points, Line } from "three";
+import { Line2 } from "../lib/threejs/lines/Line2";
 import { WEBGL } from '../lib/threejs/WebGL'
 
 // gridviz modules
@@ -23,6 +24,7 @@ import * as GUI from "./gui/gui";
 import { Viewer } from "./viewer/viewer.js";
 import { Layer } from './Layer';
 import { Style } from './Style';
+import { LineStyle } from './style/LineStyle';
 import { Dataset } from './Dataset';
 import { Legend } from './legend/legend';
 import { Tooltip } from "./tooltip/tooltip.js";
@@ -294,6 +296,7 @@ export class App {
    * @function redraw
    */
   redraw() {
+
     // decide which layers to render
     for (const layer of this.layers) {
 
@@ -328,23 +331,29 @@ export class App {
         }
 
         //draw cells
+
         if (layer.dataset.info) {
           //TiledGrid
+          
           layer.dataset.getData(this.viewer.extGeo, () => {
             //new tile
             this.draw(layer);
+            
           });
           this.draw(layer);
         } else {
           //CSVGrid 
           //NOTE: Sometimes it doesnt make sense in wegl to redraw a large CSVGrid - its more efficient to load the whole thing once and leave it in the GPU.
           this.draw(layer);
+          
         }
 
         //show if hidden
         if (layer.hidden == true) {
           this.showLayer(layer);
         }
+
+       
       }
     }
   }
@@ -734,7 +743,7 @@ export class App {
   }
 
   /**
-  * @description attach mouse event listeners to the viewer
+  * @description attach mouse event listeners to the viewer, such as tooltip on hover or click
   * @function addMouseEventsToView
   */
   addMouseEventsToView() {
@@ -747,35 +756,52 @@ export class App {
 
         // find the style that has been intersected
         let intersectedStyle;
+        let intersectedLayer; //style parent
         this.layers.find((layer) => {
-          return layer.styles.forEach((s) => {
-            if (s.threejsObject) {
-              if (layer.styles) {
-                layer.styles.forEach((style) => {
-                  if (style.threejsObject.uuid == intersect.object.uuid) {
-                    intersectedStyle = style;
-                  };
-                });
+          if (layer.styles) {
+            layer.styles.forEach((style) => {
+              if (style.threejsObject) {
+                if (style.threejsObject.uuid == intersect.object.uuid) {
+                  intersectedStyle = style;
+                  intersectedLayer = layer;
+                } else if (style.threejsObject.children.length > 0) {
+                  // if style has children (e.g LineStyle)
+                  style.threejsObject.children.some((child) => {
+                    if (child.uuid == intersect.object.uuid) {
+                      intersectedStyle = style;
+                      intersectedLayer = layer;
+                    }
+                  })
+                }
               }
-            }
-          })
+            });
+          }
         });
 
-        //find cell
+        //find cell in style
         let cell;
-        if (intersectedStyle.cells) {
-          let index = intersect.index;
-          cell = intersectedStyle.cells[index];
+        if (intersectedStyle) {
+          if (intersectedStyle.cells) {
+            if (intersect.object instanceof Line || intersect.object instanceof Line2) {
+              // LineStyle has children
+              let position = intersect.point;
+              cell = intersectedLayer.dataset.getCellFromPosition(position, intersectedStyle.cells, this._currentResolution);
+            } else {
+              cell = intersectedStyle.cells[intersect.index];
+            }
+          }
         }
 
         if (cell) {
           //change cell colour
-          this.highlightPoint(intersect);
+          this.highlightObject(intersect);
 
           //show tooltip & update its content
           this._tooltip.show();
 
           this._tooltip.updateTooltip(cell, mouse_position[0], mouse_position[1], cell.color || 'none')
+        } else {
+          this._tooltip.hide();
         }
       } else {
         this._tooltip.hide();
@@ -783,19 +809,31 @@ export class App {
     });
   }
 
-  mouseToThree(mouseX, mouseY) {
-    return new Vector3(
-      (mouseX / this.width_) * 2 - 1,
-      -(mouseY / this.height_) * 2 + 1,
-      0.5
-    );
-  }
 
+  /**
+   * @description Checks all intersections between the ray and the objects with or without the descendants.
+   * @param {Array} mouse_position [x,y]
+   * @return {Object} Intersect
+   * @memberof App
+   */
   checkIntersects(mouse_position) {
     let mouse_vector = this.mouseToThree(...mouse_position);
+
     this.viewer.raycaster.setFromCamera(mouse_vector, this.viewer.camera.camera);
+
+    // whether to raycast recursivley - looks through children of threejs object. (only applicable for LineStyles)
+    let recursive = false;
+    this.layers.forEach((layer) => {
+      layer.styles.forEach((style) => {
+        if (style instanceof LineStyle && !layer.hidden) {
+          recursive = true; // set recursive to true if there are any LineStyles visible
+        }
+      })
+    })
+
     // intersect visible layers
-    let intersects = this.viewer.raycaster.intersectObjects(this.viewer.scene.children.filter((obj) => { return obj.visible == true; }));
+    let intersects = this.viewer.raycaster.intersectObjects(this.viewer.scene.children.filter((obj) => { return obj.visible == true; }), recursive);
+
     if (intersects[0]) {
       let sorted_intersects = this.sortIntersectsByDistanceToRay(intersects);
       let intersect = sorted_intersects[0];
@@ -803,6 +841,21 @@ export class App {
     } else {
       return false;
     }
+  }
+
+  /**
+   * @description Turns mouse x/y coordinates into a threejs Vector3
+   * @param {Number} mouseX
+   * @param {Number} mouseY
+   * @return {Vector3} 
+   * @memberof App
+   */
+  mouseToThree(mouseX, mouseY) {
+    return new Vector3(
+      (mouseX / this.width_) * 2 - 1,
+      -(mouseY / this.height_) * 2 + 1,
+      0.5
+    );
   }
 
   sortIntersectsByDistanceToRay(intersects) {
@@ -916,70 +969,41 @@ export class App {
   }
   updateRaycasterThreshold(threshold) {
     this.viewer.raycaster.params.Points.threshold = threshold;
+    this.viewer.raycaster.params.Line.threshold = threshold / 3;
   }
 
-  highlightBar(intersect) {
+  highlightObject(intersect) {
     //removeHighlights();
-
-    let colors = intersect.object.material.color;
-
-    //reset previous intersect colours back to their original values
-    if (this.previousIntersect) {
-      colors[this.previousIntersect.colourIndex].r = this.previousIntersect.color.r;
-      colors[this.previousIntersect.colourIndex].g = this.previousIntersect.color.g;
-      colors[this.previousIntersect.colourIndex].b = this.previousIntersect.color.b;
-    }
-
-    //position in geometry colour attribute float32Array
-    let colourIndex = intersect.index * 3
-    let r = colors[colourIndex];
-    let g = colors[colourIndex + 1];
-    let b = colors[colourIndex + 2];
-
-    this.previousIntersect = {
-      colourIndex: colourIndex,
-      color: { r: r, g: g, b: b }
-    }
-
-    //highlight
-    let newColor = new Color(viewer.highlightColor_);
-    colors[colourIndex].r = newColor.r;
-    colors[colourIndex].g = newColor.g;
-    colors[colourIndex].b = newColor.b;
-
-    intersect.object.geometry.attributes.color.needsUpdate = true;
-
-  }
-
-  highlightPoint(intersect) {
-    //removeHighlights();
-
     let colors = intersect.object.geometry.attributes.color.array;
+    let newColor = new Color(this.highlightColor_);
+
 
     //reset previous intersect colours back to their original values
     if (this.previousIntersect) {
-      colors[this.previousIntersect.colourIndex] = this.previousIntersect.color.r;
-      colors[this.previousIntersect.colourIndex + 1] = this.previousIntersect.color.g;
-      colors[this.previousIntersect.colourIndex + 2] = this.previousIntersect.color.b;
-    }
+      this.previousIntersect.object.geometry.attributes.color.array[this.previousIntersect.colourIndex] = this.previousIntersect.color.r;
+      this.previousIntersect.object.geometry.attributes.color.array[this.previousIntersect.colourIndex + 1] = this.previousIntersect.color.g;
+      this.previousIntersect.object.geometry.attributes.color.array[this.previousIntersect.colourIndex + 2] = this.previousIntersect.color.b;
+      this.previousIntersect.object.geometry.attributes.color.needsUpdate = true;
+    } 
 
-    //position in geometry colour attribute float32Array
+    // get intersected vertex colour
     let colourIndex = intersect.index * 3
     let r = colors[colourIndex];
     let g = colors[colourIndex + 1];
     let b = colors[colourIndex + 2];
 
     this.previousIntersect = {
-      colourIndex: colourIndex,
-      color: { r: r, g: g, b: b }
+      object: intersect.object, //threeJS object
+      colourIndex: colourIndex, // index of highlighted vertex's colour
+      color: { r: r, g: g, b: b } // vertex's original colour
     }
 
     //highlight
-    let newColor = new Color(this.highlightColor_);
     colors[colourIndex] = newColor.r;
     colors[colourIndex + 1] = newColor.g;
     colors[colourIndex + 2] = newColor.b;
 
+    // flag to be updated
     intersect.object.geometry.attributes.color.needsUpdate = true;
 
   }

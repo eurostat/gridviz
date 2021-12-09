@@ -25,15 +25,14 @@
     .build();
 
   //define datasets, styles and layers
-  const s = gridviz.getColorSizeShapeStyle(
-    c => gridviz.color().interpolateOrRd(Math.pow(c["2018"], 0.6) / 100),
-    null,
-    c => "square"
-  );
+  const s = gridviz.getColorSizeShapeStyle({"colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["2018"], 0.6) / 100)});
+
+  let s2 = gridviz.getColorSizeShapeStyle({"colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["2018"], 0.5) / 100)});
+
   app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 200000);
   app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s],  200000, 500000);
   app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 500000, 2000000);
-  app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 2000000, 5000000);
+  app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s2], 2000000, 5000000);
   app.addTiledGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 5000000, 9999999999);
 </script>
 

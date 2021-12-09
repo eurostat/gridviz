@@ -24,7 +24,7 @@ export class ColorSizeShapeStyle extends Style {
         super()
 
         /** @type {function} */
-        this.colorFunction = opts.colorFunction || (() => "#EA6BAC");
+        this.colorFunction = opts.colorFunction || null;
 
         /** @type {function} */
         this.sizeFunction = opts.sizeFunction || null;
@@ -38,6 +38,8 @@ export class ColorSizeShapeStyle extends Style {
         this.strokeWidth = opts.strokeWidth || 0;
         /** @type {String} */
         this.strokeColor = opts.strokeColor || 'black';
+
+        
     }
 
 
@@ -49,16 +51,15 @@ export class ColorSizeShapeStyle extends Style {
      * @param {Viewer} viewer 
      */
     draw(cells, resolution, viewer) {
-
-        this.cells = cells; //save new subset for tooltip
+        //save cells to style for tooltip
+        this.cells = cells; 
+        this.bufferGeometry = new BufferGeometry(); // new buffer for each draw
 
         // bufferGeometry attribute arrays
         this.colors = [];
         this.positions = [];
         this.sizes = [];
         this.shapes = [];
-
-        this.bufferGeometry = new BufferGeometry();
 
         //if size is used, sort cells by size so that the biggest are drawn first
         if (this.sizeFunction)
@@ -129,7 +130,11 @@ export class ColorSizeShapeStyle extends Style {
             viewer.scene.add(this.threejsObject);
         } else {
             // else update its attributes
+            
             this.threejsObject.geometry = this.bufferGeometry;
+            //this.threejsObject.geometry.attributes.position.needsUpdate = true;
+            //this.threejsObject.geometry.attributes.color.needsUpdate = true;
+            //this.threejsObject.geometry.attributes.size.needsUpdate = true;
             //this.threejsObject.material = this.pointsMaterial;
         }
     }
@@ -158,20 +163,8 @@ export class ColorSizeShapeStyle extends Style {
                 
                 if (vShape > 1.0) {
                     // square
+                    gl_FragColor = vec4(vColor.rgb, opacity);
 
-                    // distance from texCoords to center
-                    float d = distance(vUV, vec2(.5, .5));
-
-                    // inside stroke area
-                    //if (d > .5 - strokeWidth) gl_FragColor = vec4(strokeColor.rgb, opacity);
-
-                    // inside square, not in stroke area
-                    //else gl_FragColor = vec4(vColor.rgb, opacity);
-
-                    float mixAmount = step(strokeWidth, 0.8);
-                    gl_FragColor = mix(vec4(vColor.rgb, opacity), 
-                                        vec4(strokeColor.rgb, opacity), 
-                                       mixAmount);
 
                 } else if (vShape < 2.0) { 
                     // circle

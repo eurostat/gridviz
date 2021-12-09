@@ -29,6 +29,16 @@
     .build();
 
   //define datasets, styles and layers
+  const s5km = gridviz.getColorSizeShapeStyle(
+    {
+      "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["population"], 0.5) / 100),
+      "sizeFunction":  c => 5,
+      "shapeFunction": c => "circle",
+      "opacity": 1,
+      "strokeWidth": 0.2,
+      "strokeColor": 'grey'
+    }
+  )
   const s1km = gridviz.getColorSizeShapeStyle(
     {
       "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["Population"], 0.6) / 100),
@@ -40,16 +50,7 @@
     }
   )
 
-  const s5km = gridviz.getColorSizeShapeStyle(
-    {
-      "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["population"], 0.5) / 100),
-      "sizeFunction":  c => 5,
-      "shapeFunction": c => "circle",
-      "opacity": 1,
-      "strokeWidth": 0.2,
-      "strokeColor": 'grey'
-    }
-  )
+
 
   app.addCSVGrid({
     url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/1km/pop_1km.csv",

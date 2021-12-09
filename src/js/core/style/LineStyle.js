@@ -1,4 +1,5 @@
 //@ts-check
+/** @typedef {{ heightFunction: Function, lineColor: String, lineWidth: Number, fillColor:String }} LineStyleConfig */
 
 import { Style } from "../Style"
 import { Cell } from "../Dataset"
@@ -17,26 +18,26 @@ import { LineGeometry } from "../../lib/threejs/lines/LineGeometry";
 export class LineStyle extends Style {
 
     /**
-      * @param {function} height A function returning the height of a cell (in geographical unit).
+      * @param {LineStyleConfig} opts A function returning the height of a cell (in geographical unit).
       */
-    constructor(height) {
+    constructor(opts) {
         super()
 
         /** @type {function} */
-        this.height = height;
+        this.heightFunction = opts.heightFunction || null;
 
         /** 
          * @type {number} 
-         * used in drawLine() to determine if the user has used the default or not
+         * used to determine if the user has used the default or not
         */
         this.defaultLineWidth = 0.001;
 
         /** @type {string} */
-        this.lineColor_ = "grey"
+        this.lineColor = opts.lineColor || "grey"
         /** @type {number} */
-        this.lineWidth_ = this.defaultLineWidth;
+        this.lineWidth = opts.lineWidth || this.defaultLineWidth;
         /** @type {string} */
-        this.fillColor_ = "rgba(192, 140, 89, 0.4)"
+        this.fillColor = opts.fillColor || "rgba(192, 140, 89, 0.4)"
         /** @type {number} */
         this.lineZ = 0.001;
         /** @type {Object3D} */
@@ -44,7 +45,7 @@ export class LineStyle extends Style {
         
         /** @type {Material} */
         this.lineMaterial = new LineBasicMaterial({
-            linewidth: this.lineWidth_,
+            linewidth: this.lineWidth,
             vertexColors: true,
             //opacity: 1
             //color: this.lineColor_ - use color attribute in Geometry object instead
@@ -61,9 +62,11 @@ export class LineStyle extends Style {
      * @param {Viewer} viewer 
      */
     draw(cells, r, viewer) {
+        //save cells to style for tooltip
+        this.cells = cells; 
 
         // hex to be used in threejs
-        let lineC = new Color(this.lineColor_);
+        let lineC = new Color(this.lineColor);
         let backgroundC = new Color(viewer.backgroundColor);
 
         if (this.threejsObject) {
@@ -81,7 +84,7 @@ export class LineStyle extends Style {
         for (const cell of cells) {
             let row = ind[cell.y];
             if (!row) { row = {}; ind[cell.y] = row }
-            row[cell.x] = +this.height(cell);
+            row[cell.x] = +this.heightFunction(cell);
         }
 
         //compute extent
@@ -155,15 +158,15 @@ export class LineStyle extends Style {
     }
 
     drawLine(coords, colors) {
-        if (this.lineColor_ && this.lineWidth_ > 0 && coords.length > 0) {
+        if (this.lineColor && this.lineWidth > 0 && coords.length > 0) {
 
             // line width is complicated in webGL (see https://threejs.org/docs/?q=line#api/en/materials/LineBasicMaterial.linewidth)
             // therefore a workaround (Line2) is needed if the user wants a different line thickness
             let line; 
-            if (this.lineWidth_ !== this.defaultLineWidth) {
+            if (this.lineWidth !== this.defaultLineWidth) {
                 this.lineMaterial = new LineMaterial({
                     //color: this.lineColor_, 
-                    linewidth: this.lineWidth_, 
+                    linewidth: this.lineWidth, 
                     vertexColors: true, // use our colors array
                     //opacity: 1
                 });
@@ -189,47 +192,6 @@ export class LineStyle extends Style {
         geometry.setPositions(vertices);
         geometry.setColors(colors);
         return geometry;
-    }
-
-
-
-    /**
-     * 
-     * @param {string} lineColor 
-     * @returns 
-     */
-    lineColor(lineColor) {
-        if (lineColor) {
-            this.lineColor_ = lineColor;
-            return this;
-        }
-        return this.lineColor_;
-    }
-
-    /**
-     * 
-     * @param {number} lineWidth 
-     * @returns 
-     */
-    lineWidth(lineWidth) {
-        if (lineWidth) {
-            this.lineWidth_ = lineWidth;
-            return this;
-        }
-        return this.lineWidth_;
-    }
-
-    /**
-     * 
-     * @param {string} fillColor 
-     * @returns 
-     */
-    fillColor(fillColor) {
-        if (fillColor) {
-            this.fillColor_ = fillColor;
-            return this;
-        }
-        return this.fillColor_;
     }
 
     /**
