@@ -51,7 +51,6 @@
         //combo list
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
-            console.log(select.value)
             if (select.value === "radar") {
                 app.layers[0].styles = [sRadar]
             } else {
