@@ -17,7 +17,7 @@
         //define datasets, styles and layers
         const s = new gviz.JoyPlotStyle({
             heightCol: "2018",
-            height: (v,r,s,zf) => 5*r * Math.sqrt(v/s.max),
+            height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
             zfStroke: 70
         })
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"

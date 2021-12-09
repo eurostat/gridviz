@@ -21,8 +21,8 @@
             style: new gviz.ShapeColorSizeStyle(
                 //{ color: (val, min, max) => gviz.interpolateOrRd(Math.pow((val - min) / (max - min), 0.35)) }
                 {
-                    colorCol : "val",
-                    color: (v,r,s) => {
+                    colorCol: "val",
+                    color: (v, r, s) => {
                         const v_ = Math.pow((v) / s.max, 0.25)
                         const nbClass = 10
                         const cl = Math.floor(nbClass * v_) / nbClass

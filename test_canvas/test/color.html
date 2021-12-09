@@ -16,8 +16,8 @@
 
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
-            colorCol : "2018",
-            color: (v,r,s) => gviz.interpolateOrRd( Math.pow(v/s.max, 0.3) ),
+            colorCol: "2018",
+            color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
             zfStroke: 50
         });
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"

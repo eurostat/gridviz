@@ -16,8 +16,8 @@
 
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
-            colorCol : "Ind",
-            color: (v,r,s) => gviz.interpolateSpectral( 1 - Math.pow(v/s.max, 0.35) ),
+            colorCol: "Ind",
+            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.35)),
             zfStroke: 15
         })
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
