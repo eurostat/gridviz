@@ -1,4 +1,3 @@
-TODO adaptative style: with automated classification taking into account only the data within the viewshed
 
 TODO test kernel smoothing with discrete categories
 TODO finalise kernel smoothing: unit in geo/pix + generic
