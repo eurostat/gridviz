@@ -34,7 +34,7 @@
 
         const sRadar = new gviz.RadarStyle({
             color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
-            radius: { val: (v, r, s) => 0.7 * r * Math.pow(v / s.max, 0.2), unit: "geo" },
+            radius: { val: (v, r, s) => 0.6 * r * Math.pow(v / s.max, 0.2), unit: "geo" },
         })
 
         app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
