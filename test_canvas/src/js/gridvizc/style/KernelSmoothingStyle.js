@@ -22,8 +22,7 @@ export class KernelSmoothingStyle extends Style {
         this.value = opts.value
 
         /** The smoothing parameter, in geo unit. The larger, the more smoothed.
-         * //TODO make it in pix/geo
-         * @type {{val: number, unit: "pix"|"geo"}} @private */
+         * @type {function(number):number} @private */
         this.sigma = opts.sigma
 
         /** Return the style to represent the smoothed cells.
@@ -162,7 +161,7 @@ export class KernelSmoothingStyle extends Style {
 
         //get smoothing param in geo unit
         /** @type {number} */
-        const sG = this.sigma.unit === "geo" ? this.sigma.val : this.sigma.val * cg.zf
+        const sG = this.sigma(cg.zf)
 
         //compute smoothed matrix
         /** @type {Array.<Array.<number>>} */
@@ -193,9 +192,9 @@ export class KernelSmoothingStyle extends Style {
     /** @param {function(Cell):number} val @returns {this} */
     setValue(val) { this.value = val; return this; }
 
-    /** @returns {{val: number, unit: "pix"|"geo"}} */
+    /** @returns {function(number):number} */
     getSigmaGeo() { return this.sigma; }
-    /** @param {{val: number, unit: "pix"|"geo"}} val @returns {this} */
+    /** @param {function(number):number} val @returns {this} */
     setSigmaGeo(val) { this.sigma = val; return this; }
 
     /** @returns {Style} */
