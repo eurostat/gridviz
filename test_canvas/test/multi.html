@@ -14,29 +14,29 @@
         const app = new gviz.App()
 
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
-        app.setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(3)
+        app.setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(3)//.setBackgroundColor("black")
 
         const r = 100
         const s14 = new gviz.ShapeColorSizeStyle({
-            color: () => "#e6ab0299",
+            color: () => "#377eb8",
             sizeCol:"Population under 14",
-            size: { val: (v,r,s) => 6 * Math.sqrt(v), unit: "geo" },
+            size: { val: (v,r,s) => 5 * Math.sqrt(v), unit: "geo" },
             shape: c => "circle",
             offset: { dx: -0.366 * r, dy: -0.366 * r },
             zfStroke: 1
         })
         const s30 = new gviz.ShapeColorSizeStyle({
-            color: () => "#1b9e7799",
+            color: () => "#4daf4a",
             sizeCol:"pop_",
-            size: { val: (v,r,s) => 6 * Math.sqrt(v), unit: "geo" },
+            size: { val: (v,r,s) => 5 * Math.sqrt(v), unit: "geo" },
             shape: c => "circle",
             offset: { dx: 0.5 * r, dy: 0.366 * r },
             zfStroke: 1
         })
         const s65 = new gviz.ShapeColorSizeStyle({
-            color: () => "#d95f0299",
+            color: () => "#e41a1c",
             sizeCol:"Population over 65",
-            size: { val: (v,r,s) => 6 * Math.sqrt(v), unit: "geo" },
+            size: { val: (v,r,s) => 5 * Math.sqrt(v), unit: "geo" },
             shape: c => "circle",
             offset: { dx: 0.366 * r, dy: -0.366 * r },
             zfStroke: 1
