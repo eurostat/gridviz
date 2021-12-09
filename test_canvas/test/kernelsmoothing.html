@@ -26,7 +26,7 @@
                 {
                     colorCol : "val",
                     color: (v,r,s) => {
-                        const v_ = Math.pow((v) / s.max, 0.35)
+                        const v_ = Math.pow((v) / s.max, 0.25)
                         const nbClass = 10
                         const cl = Math.floor(nbClass * v_) / nbClass
                         if (cl < 1 / nbClass) return "white"
