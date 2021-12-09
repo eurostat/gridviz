@@ -13,6 +13,7 @@
             <option value="flag">Flag</option>
             <option value="piechart">Pie chart</option>
             <option value="ring" selected>Ring</option>
+            <option value="radar">Radar</option>
         </select>
     </div>
 
@@ -43,6 +44,24 @@
             size: { val: (v, r, s) => 1.4 * r * Math.pow(v / s.max, 0.2), unit: "geo" },
             zfStroke: 5
         })
+
+        const sRadar = new gviz.RadarStyle({
+            color: {
+                "Ind_0_3": col(0),
+                "Ind_4_5": col(4 / 80),
+                "Ind_6_10": col(6 / 80),
+                "Ind_11_17": col(11 / 80),
+                "Ind_18_24": col(18 / 80),
+                "Ind_25_39": col(25 / 80),
+                "Ind_40_54": col(40 / 80),
+                "Ind_55_64": col(55 / 80),
+                "Ind_65_79": col(65 / 80),
+                "Ind_80p": col(1),
+                "Ind_inc": "gray"
+            },
+            radius: { val: (v, r, s) => 0.7 * r * Math.pow(v / s.max, 0.2), unit: "geo" },
+        })
+
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
             " < 3 : " + Math.floor(["Ind_0_3"]) + "<br>" +
             " 4-5 : " + Math.floor(c["Ind_4_5"]) + "<br>" +
@@ -68,8 +87,14 @@
         //combo list
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
-            //change style type
-            s.setType(c => select.value)
+            if (select.value === "radar") {
+                app.layers[0].styles = [sRadar]
+            } else {
+                app.layers[0].styles = [s]
+                //change style type
+                s.setType(c => select.value)
+            }
+
             //redraw
             app.cg.redraw();
         });

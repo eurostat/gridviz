@@ -7,7 +7,6 @@
 - Composition:
   - https://eurostat.github.io/gridviz/test_canvas/test/composition.html
   - https://eurostat.github.io/gridviz/test_canvas/test/multi.html
-  - https://eurostat.github.io/gridviz/test_canvas/test/radar.html
 - Segment orientation: https://eurostat.github.io/gridviz/test_canvas/test/segment.html
 - Gaussian kernel smoothing: https://eurostat.github.io/gridviz/test_canvas/test/kernelsmoothing.html
 - Joy plot: https://eurostat.github.io/gridviz/test_canvas/test/joyplot.html
