@@ -51,8 +51,9 @@
         //combo list
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
-            if (select.value == "radar") {
-
+            console.log(select.value)
+            if (select.value === "radar") {
+                
             } else {
                 //change style type
                 s.setType(c => select.value)
