@@ -2,12 +2,6 @@
 import { Cell } from "./Dataset";
 import { CanvasGeo } from './CanvasGeo';
 
-/** 
- * Definition of a cell size parameter.
- * val: The function returning the size of a cell.
- * unit: The unit of the size value, either in pixel ("pix") or in geographical unit ("geo").
- * @typedef {{val: function(Cell):number, unit: "pix"|"geo"}} Size */
-
 /**
  * Statistics of a set of values
  * @typedef {{min:number,max:number}} Stat */
@@ -70,7 +64,7 @@ export class Style {
      * @param {number} resolution Their resolution (in geographic unit)
      * @param {CanvasGeo} cg The canvas where to draw them.
      * @param {function(Cell):string} shape The shape of the stroke.
-     * @param {Size} size A function returning the size of a cell (in geographical unit).
+     * @param {function(Cell,number,Stat,number):number} size A function returning the size of a cell (in geographical unit).
      * @returns 
      */
     drawStroke(cell, resolution, cg, shape, size = null) {
@@ -81,10 +75,10 @@ export class Style {
 
         //size
         /** @type {number} */
-        size = size || { val: c => resolution, unit: "geo" };
+        size = size || (() => resolution);
         //size - in pixel and geo
-        const sP = size.unit === "pix" ? size.val(cell) : size.val(cell) / cg.zf
-        const sG = cg.zf * sP;
+        const sG = size(cell, resolution, null, cg.zf)
+        const sP = sG / cg.zf;
 
         const shape_ = shape(cell);
         if (shape_ === "square") {
@@ -154,7 +148,7 @@ export const getStatistics = function (cells, valFun, ignoreZeros) {
     //let nb = 0
     for (const cell of cells) {
         const v = +valFun(cell);
-        if(ignoreZeros && !v) continue
+        if (ignoreZeros && !v) continue
         if (v < min) min = v
         if (v > max) max = v
         //sum += v

@@ -26,7 +26,7 @@ export class RadarStyle extends Style {
         /**
          * The function specifying how the radius evolves depending on the statistical value.
          * 
-         * @private @type {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
+         * @private @type {function(number,number,Stat,number):number} */
         this.radius = opts.radius;
 
     }
@@ -68,7 +68,7 @@ export class RadarStyle extends Style {
 
                 //compute category radius - in pixel
                 /** @type {number} */
-                const rP = this.radius.unit === "pix" ? this.radius.val(val, r, stat) : this.radius.val(val, r, stat) / cg.zf
+                const rP = this.radius(val, r, stat, cg.zf) / cg.zf
 
                 //draw angular sector
                 cg.ctx.beginPath();
@@ -122,9 +122,9 @@ export class RadarStyle extends Style {
     /** @param {function(Cell):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
-    /** @returns {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
+    /** @returns {function(number,number,Stat,number):number} */
     getRadius() { return this.radius; }
-    /** @param {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} val @returns {this} */
+    /** @param {function(number,number,Stat,number):number} val @returns {this} */
     setRadius(val) { this.radius = val; return this; }
 
 }

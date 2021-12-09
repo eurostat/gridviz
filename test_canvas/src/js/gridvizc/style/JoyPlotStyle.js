@@ -20,8 +20,8 @@ export class JoyPlotStyle extends Style {
         this.heightCol = opts.heightCol
 
         /** A function returning the height of a cell.
-         * @private @type {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
-        this.height = opts.height || { val: (v) => Math.sqrt(v), unit: "pix" };
+         * @private @type {function(number,number,Stat,number):number} */
+        this.height = opts.height || ((v) => Math.sqrt(v));
 
         /** @private @type {string} */
         this.lineColor = opts.lineColor || "gray"
@@ -50,7 +50,7 @@ export class JoyPlotStyle extends Style {
         for (const cell of cells) {
             let row = ind[cell.y];
             if (!row) { row = {}; ind[cell.y] = row }
-            row[cell.x] = this.height.val(cell[this.heightCol], r, stat);
+            row[cell.x] = this.height(cell[this.heightCol], r, stat, cg.zf);
         }
 
 
@@ -97,7 +97,7 @@ export class JoyPlotStyle extends Style {
                 if (hG || hG_) {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo
-                    const dyP = this.height.unit === "pix" ? hG : hG / cg.zf
+                    const dyP = hG / cg.zf
                     cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - dyP);
                 } else {
                     //else move the point
@@ -129,9 +129,9 @@ export class JoyPlotStyle extends Style {
     /** @param {string} val @returns {this} */
     setHeightCol(val) { this.heightCol = val; return this; }
 
-    /** @returns {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
+    /** @returns {function(number,number,Stat,number):number} */
     getHeight() { return this.height; }
-    /** @param {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} val @returns {this} */
+    /** @param {function(number,number,Stat,number):number} val @returns {this} */
     setHeight(val) { this.height = val; return this; }
 
     /** @returns {string} */

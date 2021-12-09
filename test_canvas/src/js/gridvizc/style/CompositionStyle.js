@@ -40,8 +40,8 @@ export class CompositionStyle extends Style {
         this.sizeCol = opts.sizeCol
 
         /** A function returning the size of a cell.
-         * @private @type {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
-        this.size = opts.size || { val: (v) => Math.sqrt(v), unit: "pix" };
+         * @private @type {function(number,number,Stat,number):number} */
+        this.size = opts.size || ((v) => Math.sqrt(v));
     }
 
 
@@ -70,13 +70,13 @@ export class CompositionStyle extends Style {
                 total += +cell[column]
 
             //size
-            /** @type {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
-            let s_ = this.size || { val: v => resolution, unit: "geo" };
+            /** @type {function(number,number,Stat,number):number} */
+            let s_ = this.size || (() => resolution);
             //size - in pixel and geo
             /** @type {number} */
-            const sP = s_.unit === "pix" ? s_.val(cell[this.sizeCol],resolution, stat) : s_.val(cell[this.sizeCol], resolution, stat) / cg.zf
+            const sG = s_(cell[this.sizeCol], resolution, stat, cg.zf)
             /** @type {number} */
-            const sG = cg.zf * sP;
+            const sP = sG/cg.zf;
 
             //get symbol type
             const type_ = this.type ? this.type(cell) : "flag"
@@ -153,9 +153,9 @@ export class CompositionStyle extends Style {
     /** @param {string} val @returns {this} */
     setColSize(val) { this.sizeCol = val; return this; }
 
-    /** @returns {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
+    /** @returns {function(number,number,Stat,number):number} */
     getSize() { return this.size; }
-    /** @param {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} val @returns {this} */
+    /** @param {function(number,number,Stat,number):number} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
 }

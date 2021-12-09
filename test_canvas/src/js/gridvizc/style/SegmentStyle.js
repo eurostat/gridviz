@@ -79,9 +79,29 @@ export class SegmentStyle extends Style {
 
         for (let c of cells) {
 
-            //set width and color
+            //color
+            const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
+            if (!col) continue
+            cg.ctx.fillStyle = col;
+
+
+            //width
+            const w = this.width? this.width(c[this.widthCol], resolution, statWidth) : undefined;
+            if (!w) continue
+
+            /** @type {function(number,number,Stat,number):number} */
+            let s_ = this.size || (() => resolution)
+            //size - in pixel and geo
+            /** @type {number} */
+            const sG = s_(cell[this.sizeCol], resolution, statSize, cg.zf)
+            /** @type {number} */
+            const sP = sG/cg.zf;
+
+
+            //set width
             cg.ctx.lineWidth = this.width.unit === "pix" ? this.width.val(c) : this.width.val(c) / cg.zf;
-            cg.ctx.strokeStyle = this.color(c);
+
+
 
             //get segment orientation (in radian) and length (in pixel)
             /** @type {number} */

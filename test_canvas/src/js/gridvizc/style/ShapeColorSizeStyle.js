@@ -32,7 +32,7 @@ export class ShapeColorSizeStyle extends Style {
         this.sizeCol = opts.sizeCol;
 
         /** A function returning the size of a cell (in geographical unit).
-        * @private @type {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
+        * @private @type {function(number,number,Stat,number):number} */
         this.size = opts.size;
 
 
@@ -78,13 +78,12 @@ export class ShapeColorSizeStyle extends Style {
             if (shape === "none") continue
 
             //size
-            /** @type {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
-            let s_ = this.size || { val: c => resolution, unit: "geo" };
-            //size - in pixel and geo
+            /** @type {function(number,number,Stat,number):number} */
+            let s_ = this.size || (() => resolution);
+            //size - in geo and pixel
+            const sG = s_(cell[this.sizeCol], resolution, statSize, cg.zf)
             /** @type {number} */
-            const sP = s_.unit === "pix" ? s_.val(cell[this.sizeCol],resolution, statSize) : s_.val(cell[this.sizeCol], resolution, statSize) / cg.zf
-            /** @type {number} */
-            const sG = cg.zf * sP;
+            const sP = sG/cg.zf
 
             if (shape === "square") {
                 //draw square
@@ -121,9 +120,9 @@ export class ShapeColorSizeStyle extends Style {
     /** @param {function(number,number,Stat):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
-    /** @returns {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} */
+    /** @returns {function(number,number,Stat,number):number} */
     getSize() { return this.size; }
-    /** @param {{val: function(number,number,Stat):number, unit: "pix"|"geo"}} val @returns {this} */
+    /** @param {function(number,number,Stat,number):number} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
     /** @returns {function(Cell):Shape} */
