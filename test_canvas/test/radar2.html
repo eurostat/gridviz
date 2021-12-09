@@ -11,47 +11,24 @@
     <script>
 
         //make application
-        const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setLabelLayer(gviz.getEurostatLabelLayer())//.setBackgroundColor("black")
+        const app = new gviz.App().setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(3)
 
-        const col = gviz.interpolateSpectral;
+        //define style
         const s = new gviz.RadarStyle({
-            color: {
-                "Ind_0_3": col(0),
-                "Ind_4_5": col(4 / 80),
-                "Ind_6_10": col(6 / 80),
-                "Ind_11_17": col(11 / 80),
-                "Ind_18_24": col(18 / 80),
-                "Ind_25_39": col(25 / 80),
-                "Ind_40_54": col(40 / 80),
-                "Ind_55_64": col(55 / 80),
-                "Ind_65_79": col(65 / 80),
-                "Ind_80p": col(1),
-                "Ind_inc": "gray"
-            },
+            color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
             radius: { val: (v, r, s) => 0.7 * r * Math.pow(v / s.max, 0.2), unit: "geo" },
         })
-        const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
-            " < 3 : " + Math.floor(["Ind_0_3"]) + "<br>" +
-            " 4-5 : " + Math.floor(c["Ind_4_5"]) + "<br>" +
-            " 6-10: " + Math.floor(c["Ind_6_10"]) + "<br>" +
-            "11-17: " + Math.floor(c["Ind_11_17"]) + "<br>" +
-            "18-24: " + Math.floor(c["Ind_18_24"]) + "<br>" +
-            "25-39: " + Math.floor(c["Ind_25_39"]) + "<br>" +
-            "40-54: " + Math.floor(c["Ind_40_54"]) + "<br>" +
-            "55-64: " + Math.floor(c["Ind_55_64"]) + "<br>" +
-            "65-79: " + Math.floor(c["Ind_65_79"]) + "<br>" +
-            " > 80: " + Math.floor(c["Ind_80p"]) + "<br>" +
-            " unk.: " + Math.floor(c["Ind_inc"]) + "<br>";
 
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 8, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m//", [s], 8, 16, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/1000m//", [s], 16, 40, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/2000m//", [s], 40, 80, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/5000m//", [s], 80, 200, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/10000m//", [s], 200, 400, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/20000m//", [s], 400, 800, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/50000m//", [s], 800, 9999999999, { cellInfoHTML: ttfun });
+        //define layers
+        app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
+            {
+                preprocess: c => {
+                    c.x *= 100; c.y *= 100;
+                    if (c["Population under 14"] < 0) c["Population under 14"] = 0;
+                    if (c["Population over 65"] < 0) c["Population over 65"] = 0;
+                    c["pop_"] = c["Inhabitants"] - c["Population under 14"] - c["Population over 65"];
+                }
+            })
 
     </script>
 
