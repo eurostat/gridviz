@@ -41,7 +41,7 @@
             },
             type: c => "ring",
             sizeCol: "Ind",
-            size: { val: (v, r, s) => 1.4 * r * Math.pow(v / s.max, 0.2), unit: "geo" },
+            size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
             zfStroke: 5
         })
 
@@ -59,7 +59,7 @@
                 "Ind_80p": col(1),
                 "Ind_inc": "gray"
             },
-            radius: { val: (v, r, s) => 0.7 * r * Math.pow(v / s.max, 0.2), unit: "geo" },
+            radius: (v, r, s, zf) => 0.7 * r * Math.pow(v / s.max, 0.2),
         })
 
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +

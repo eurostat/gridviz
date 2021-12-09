@@ -26,8 +26,8 @@
                 return 85 * r;
             },
             color: c => gviz.interpolateOrRd(Math.pow(c["2018"], 0.5) / 100),
-            length: { val: c => 1000, unit: "geo" },
-            width: { val: c => 200, unit: "geo" },
+            length: c => 1000,
+            width: c => 200,
             zfStroke: 50
         })
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500);

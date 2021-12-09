@@ -31,7 +31,7 @@ export class ShapeColorSizeStyle extends Style {
         /** @private @type {string} */
         this.sizeCol = opts.sizeCol;
 
-        /** A function returning the size of a cell (in geographical unit).
+        /** A function returning the size of a cell in geographical unit.
         * @private @type {function(number,number,Stat,number):number} */
         this.size = opts.size;
 

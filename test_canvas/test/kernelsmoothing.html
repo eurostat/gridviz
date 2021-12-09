@@ -17,10 +17,7 @@
         //define datasets, styles and layers
         const s = new gviz.KernelSmoothingStyle({
             value: c => +c["2018"],
-            sigma: { val: 1000, unit: "geo" },
-            /*style: new gviz.JoyPlotStyle({
-                height: { val: c => 100*Math.pow(c.val,0.5), unit: "geo" }
-            })*/
+            sigma: zf => 1000,
             style: new gviz.ShapeColorSizeStyle(
                 //{ color: (val, min, max) => gviz.interpolateOrRd(Math.pow((val - min) / (max - min), 0.35)) }
                 {

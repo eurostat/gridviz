@@ -28,13 +28,13 @@
             color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
             type: c => "flag",
             sizeCol: "Inhabitants",
-            size: { val: (v, r, s) => r * Math.sqrt(v / s.max), unit: "geo" },
+            size: (v, r, s, zf) => r * Math.sqrt(v / s.max),
             zfStroke: 5
         })
 
         const sRadar = new gviz.RadarStyle({
             color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
-            radius: { val: (v, r, s) => 0.6 * r * Math.pow(v / s.max, 0.2), unit: "geo" },
+            radius: (v, r, s, zf) => 0.6 * r * Math.pow(v / s.max, 0.2),
         })
 
         app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
@@ -52,10 +52,10 @@
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
             if (select.value === "radar") {
-                for(let lay of app.layers) lay.styles = [sRadar]
+                for (let lay of app.layers) lay.styles = [sRadar]
             } else {
                 s.setType(c => select.value)
-                for(let lay of app.layers) lay.styles = [s]
+                for (let lay of app.layers) lay.styles = [s]
             }
             //redraw
             app.cg.redraw();

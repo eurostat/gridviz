@@ -13,7 +13,7 @@ export class CSVGrid extends Dataset {
 
     /**
      * @param {string} url The URL of the dataset.
-     * @param {number} resolution The dataset resolution in geogrpahical unit.
+     * @param {number} resolution The dataset resolution in geographical unit.
      * @param {object} opts 
      */
     constructor(url, resolution, opts) {

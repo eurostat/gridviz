@@ -161,7 +161,7 @@ export class App {
      * Add a layer from a CSV grid dataset.
      * 
      * @param {string} url The URL of the dataset.
-     * @param {number} resolution The dataset resolution in geogrpahical unit.
+     * @param {number} resolution The dataset resolution in geographical unit.
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer

@@ -14,7 +14,7 @@ export class Dataset {
 
     /**
      * @param {string} url The URL of the dataset.
-     * @param {number} resolution The dataset resolution in geogrpahical unit.
+     * @param {number} resolution The dataset resolution in geographical unit.
      * @param {object} opts 
      * @abstract
      */
@@ -27,7 +27,7 @@ export class Dataset {
         this.url = url;
 
         /**
-         * The dataset resolution (in geographical unit).
+         * The dataset resolution in geographical unit.
          * @protected @type {number} */
         this.resolution = resolution;
 
