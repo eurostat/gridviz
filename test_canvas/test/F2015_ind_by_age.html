@@ -88,13 +88,11 @@
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
             if (select.value === "radar") {
-                app.layers[0].styles = [sRadar]
+                for(let lay of app.layers) lay.styles = [sRadar]
             } else {
-                app.layers[0].styles = [s]
-                //change style type
                 s.setType(c => select.value)
+                for(let lay of app.layers) lay.styles = [s]
             }
-
             //redraw
             app.cg.redraw();
         });
