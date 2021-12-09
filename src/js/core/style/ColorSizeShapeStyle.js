@@ -56,10 +56,10 @@ export class ColorSizeShapeStyle extends Style {
         this.bufferGeometry = new BufferGeometry(); // new buffer for each draw
 
         // bufferGeometry attribute arrays
-        this.colors = [];
-        this.positions = [];
-        this.sizes = [];
-        this.shapes = [];
+        let colors = [];
+        let positions = [];
+        let sizes = [];
+        let shapes = [];
 
         //if size is used, sort cells by size so that the biggest are drawn first
         if (this.sizeFunction)
@@ -68,23 +68,23 @@ export class ColorSizeShapeStyle extends Style {
         for (let cell of cells) {
 
             //position
-            this.positions.push(cell.x, cell.y, CONSTANTS.point_z);
+            positions.push(cell.x, cell.y, CONSTANTS.point_z);
 
             //color
             let colorString = this.colorFunction ? this.colorFunction(cell) : "#EA6BAC";
             let c = new Color(colorString);
-            this.colors.push(c.r, c.g, c.b);
+            colors.push(c.r, c.g, c.b);
             cell.color = colorString; //save for tooltip
 
             //size - in ground meters. TODO: use a uniform in pointsMaterial if all cells have same size to optimize memory usage
-            this.sizes.push(this.sizeFunction ? this.sizeFunction(cell) : resolution);
+            sizes.push(this.sizeFunction ? this.sizeFunction(cell) : resolution);
 
             //shape
             const shape = this.shapeFunction ? this.shapeFunction(cell) : 'square';
             if (shape == "square") {
-                this.shapes.push(2);
+                shapes.push(2);
             } else if (shape == "circle") {
-                this.shapes.push(1);
+                shapes.push(1);
             } else {
                 throw new Error('Unexpected shape:' + shape);
             }
@@ -115,13 +115,13 @@ export class ColorSizeShapeStyle extends Style {
         }
 
         //set positions
-        this.bufferGeometry.setAttribute("position", new Float32BufferAttribute(this.positions, 3));
+        this.bufferGeometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
         //set colors
-        this.bufferGeometry.setAttribute("color", new Float32BufferAttribute(this.colors, 3));
+        this.bufferGeometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
         //set sizes
-        this.bufferGeometry.setAttribute("size", new Float32BufferAttribute(this.sizes, 1));
+        this.bufferGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
         //set shapes
-        this.bufferGeometry.setAttribute("shape", new Float32BufferAttribute(this.shapes, 1));
+        this.bufferGeometry.setAttribute("shape", new Float32BufferAttribute(shapes, 1));
 
         // create layer if new
         if (!this.threejsObject) {
@@ -130,8 +130,9 @@ export class ColorSizeShapeStyle extends Style {
             viewer.scene.add(this.threejsObject);
         } else {
             // else update its attributes
-            
+            //this.threejsObject.visible = true;
             this.threejsObject.geometry = this.bufferGeometry;
+            
             //this.threejsObject.geometry.attributes.position.needsUpdate = true;
             //this.threejsObject.geometry.attributes.color.needsUpdate = true;
             //this.threejsObject.geometry.attributes.size.needsUpdate = true;

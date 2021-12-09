@@ -3,9 +3,8 @@
 
 // d3.js
 import { zoomIdentity } from "d3-zoom";
-import * as d3scaleChromatic from "d3-scale-chromatic";
 import * as d3scale from "d3-scale";
-import { json, csv } from "d3-fetch";
+import { json } from "d3-fetch";
 import { extent, min, max } from "d3-array";
 import { pointer } from "d3-selection";
 
@@ -18,7 +17,6 @@ import { WEBGL } from '../lib/threejs/WebGL'
 
 import * as Placenames from "./placenames/placenames.js";
 import * as Buttons from "./gui/buttons.js";
-import * as Dropdowns from "./gui/dropdowns.js";
 import * as GUI from "./gui/gui";
 
 import { Viewer } from "./viewer/viewer.js";
@@ -43,11 +41,13 @@ import * as Loading from "./gui/loading";
 import { app } from "..";
 
 //TODO
+// allow user to use same style for different tiledGrid layers - at the moment causes issues due to cells being stored on style maybe. Move cell subsets to dataset.
 // continue to implement styles from canvas_test
 // add stroke to cells
 // add fill to line charts (joyplot)
 // add legend for each Layer and visualize according to the styles in current extentGeo
 // rewrite reference API for new structure
+
 // clean up code
 
 /**
@@ -304,13 +304,17 @@ export class App {
       let minZoom = this._isMobile ? this.viewer.mobileZoomScale(layer.minZoom) : layer.minZoom;
       let maxZoom = this._isMobile ? this.viewer.mobileZoomScale(layer.maxZoom) : layer.maxZoom;
       if (minZoom >= this.viewer.camera.camera.position.z) {
-        if ((layer.dataset instanceof TiledGrid) === false) { this.hideLayer(layer); }
+        this.hideLayer(layer);
         continue;
       };
       if (maxZoom < this.viewer.camera.camera.position.z) {
-        if ((layer.dataset instanceof TiledGrid) === false) { this.hideLayer(layer); }
+        this.hideLayer(layer);
         continue;
       };
+      //show if hidden
+      if (layer.hidden == true) {
+        this.showLayer(layer);
+      }
 
       if (layer.dataset.cells || layer.dataset.info) {
         // set current resolution for placename requests
@@ -334,26 +338,23 @@ export class App {
 
         if (layer.dataset.info) {
           //TiledGrid
-          
+
           layer.dataset.getData(this.viewer.extGeo, () => {
             //new tile
             this.draw(layer);
-            
+
           });
           this.draw(layer);
         } else {
           //CSVGrid 
           //NOTE: Sometimes it doesnt make sense in wegl to redraw a large CSVGrid - its more efficient to load the whole thing once and leave it in the GPU.
           this.draw(layer);
-          
+
         }
 
-        //show if hidden
-        if (layer.hidden == true) {
-          this.showLayer(layer);
-        }
 
-       
+
+
       }
     }
   }
@@ -431,7 +432,7 @@ export class App {
     Loading.showLoading();
 
     this.add(
-      new CSVGrid(opts.url, opts.resolution, opts.preprocess).getData(null, (grid) => {
+      new CSVGrid(opts).getData(null, (grid) => {
         Loading.hideLoading();
 
         // for mobile devices
@@ -453,9 +454,9 @@ export class App {
    * @param {number} maxZoom The maximum zoom level when to show the layer
    * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
    */
-  addTiledGrid(url, styles, minZoom, maxZoom, preprocess = null) {
+  addTiledGrid(opts) {
     this.add(
-      new TiledGrid(url, preprocess).loadInfo((tiledGrid) => {
+      new TiledGrid(opts).loadInfo((tiledGrid) => {
         Loading.hideLoading();
 
         // for mobile devices
@@ -464,7 +465,7 @@ export class App {
         // draw cells
         this.redraw();
       }),
-      styles, minZoom, maxZoom
+      opts.styles, opts.minZoom, opts.maxZoom
     )
   }
 
@@ -984,7 +985,7 @@ export class App {
       this.previousIntersect.object.geometry.attributes.color.array[this.previousIntersect.colourIndex + 1] = this.previousIntersect.color.g;
       this.previousIntersect.object.geometry.attributes.color.array[this.previousIntersect.colourIndex + 2] = this.previousIntersect.color.b;
       this.previousIntersect.object.geometry.attributes.color.needsUpdate = true;
-    } 
+    }
 
     // get intersected vertex colour
     let colourIndex = intersect.index * 3
@@ -1017,14 +1018,15 @@ export class App {
   hideLayer(layer) {
     layer.styles.forEach((style) => {
       if (style.threejsObject) {
-        style.threejsObject.traverse(function (child) {
-          if (child instanceof Points) {
-            child.visible = false;
-          }
-        });
-        layer.hidden = true;
+        style.threejsObject.visible = false;
+        // style.threejsObject.traverse(function (child) {
+        //   if (child instanceof Points) {
+        //     child.visible = false;
+        //   }
+        // });
       }
     })
+    layer.hidden = true;
 
   }
 
@@ -1036,14 +1038,15 @@ export class App {
   showLayer(layer) {
     layer.styles.forEach((style) => {
       if (style.threejsObject) {
-        style.threejsObject.traverse(function (child) {
-          if (child instanceof Points) {
-            child.visible = true;
-          }
-        });
-        layer.hidden = false;
+        style.threejsObject.visible = true;
+        // style.threejsObject.traverse(function (child) {
+        //   if (child instanceof Points) {
+        //     child.visible = true;
+        //   }
+        // });
       }
     })
+    layer.hidden = false;
   }
 
   getDefaultAppWidth() {

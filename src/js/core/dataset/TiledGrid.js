@@ -1,9 +1,11 @@
 //@ts-check
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:Envelope }} GridInfo */
+/** @typedef {{ url: String, resolution: Number, preprocess: Function, styles: Array<Style>, minZoom: Number, maxZoom: Number }} TiledGridConfig */
 
 import { json, csv } from "d3-fetch";
 import { GridTile } from './GridTile';
 import { Dataset, Cell, Envelope } from "../Dataset"
+import { Style } from '../Style';
 
 /**
  * A tiled dataset, composed of CSV tiles.
@@ -13,11 +15,10 @@ import { Dataset, Cell, Envelope } from "../Dataset"
 export class TiledGrid extends Dataset {
 
     /**
-     * @param {string} url The url of the dataset info.json file.
-     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {TiledGridConfig} opts 
      */
-    constructor(url, preprocess = null) {
-        super(url, undefined, preprocess)
+    constructor(opts) {
+        super(opts.url, undefined, opts.preprocess)
 
         /** 
          * The cache of the loaded tiles. It is double indexed: by xT and then yT.

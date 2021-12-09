@@ -26,6 +26,8 @@ export class Layer {
         this.minZoom = minZoom;
         /** @type {number} */
         this.maxZoom = maxZoom;
+        /** @type {Boolean} */
+        this.hidden = false;
 
     }
 

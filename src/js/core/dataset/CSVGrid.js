@@ -1,8 +1,9 @@
 //@ts-check
-/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:Envelope }} GridInfo */
+/** @typedef {{ url: String, resolution: Number, preprocess: Function, styles: Array<Style>, minZoom: Number, maxZoom: Number }} CSVGridConfig */
 
 import { csv } from "d3-fetch";
 import { Dataset, Cell, Envelope } from "../Dataset"
+import { Style } from '../Style';
 
 /**
  * A dataset composed of a single CSV file (not tiled).
@@ -12,12 +13,10 @@ import { Dataset, Cell, Envelope } from "../Dataset"
 export class CSVGrid extends Dataset {
 
     /**
-     * @param {string} url The url of the dataset.
-     * @param {number} resolution The dataset resolution (in geographical unit).
-     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {CSVGridConfig} opts The url of the dataset.
      */
-    constructor(url, resolution, preprocess = null) {
-        super(url, resolution, preprocess)
+    constructor(opts) {
+        super(opts.url, opts.resolution, opts.preprocess);
 
         /** @type {Array.<Cell>} */
         this.cells = undefined;
