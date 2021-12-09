@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Size, Stat } from "../Style"
+import { Style, Stat } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
@@ -96,8 +96,8 @@ export class RadarStyle extends Style {
         if (!cells || cells.length == 0) return undefined
         let min = Infinity
         let max = -Infinity
-        let sum = 0
-        let nb = 0
+        //let sum = 0
+        //let nb = 0
         const keys = Object.keys(this.color)
         for (const cell of cells) {
             for (let key of keys) {
@@ -105,11 +105,11 @@ export class RadarStyle extends Style {
                 if (ignoreZeros && !v) continue
                 if (v < min) min = v
                 if (v > max) max = v
-                sum += v
-                nb++
+                //sum += v
+                //nb++
             }
         }
-        return { min: min, max: max, mean: (sum / nb) }
+    return { min: min, max: max/*, mean: (sum / nb)*/ }
     }
 
 

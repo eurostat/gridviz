@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Size } from "../Style"
+import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
@@ -20,16 +20,25 @@ export class SegmentStyle extends Style {
          * @private @type {function(Cell):number} */
         this.orientation = opts.orientation;
 
-        /** A function returning the color of the segment representing a cell.
-         * @private @type {function(Cell):string} */
-        this.color = opts.color;
+        /** @private @type {string} */
+        this.colorCol = opts.colorCol;
+
+        /** A function returning the color of the cell segment.
+        * @private @type {function(number,number,Stat):string} */
+        this.color = opts.color || (() => "#EA6BAC");
+
+        /** @private @type {string} */
+        this.lengthCol = opts.lengthCol;
 
         /** A function returning the length of the segment representing a cell.
-         * @private @type {Size} */
+         * @private @type {function(number,number,Stat):number} */
         this.length = opts.length;
 
+        /** @private @type {string} */
+        this.widthCol = opts.widthCol;
+
         /** A function returning the width of the segment representing a cell.
-         * @private @type {Size} */
+         * @private @type {function(number,number,Stat):number} */
         this.width = opts.width;
 
     }
@@ -43,6 +52,27 @@ export class SegmentStyle extends Style {
      * @param {CanvasGeo} cg 
      */
     draw(cells, resolution, cg) {
+
+        let statColor
+        if (this.colorCol) {
+            //compute color variable statistics
+            statColor = getStatistics(cells, c => c[this.colorCol], true)
+        }
+
+        let statLength
+        if (this.lengthCol) {
+            //if length is used, sort cells by length so that the longests are drawn first
+            cells.sort((c1, c2) => c2[this.lengthCol] - c1[this.lengthCol]);
+            //and compute size variable statistics
+            statLength = getStatistics(cells, c => c[this.lengthCol], true)
+        }
+
+        let statWidth
+        if (this.widthCol) {
+            //and compute size variable statistics
+            statWidth = getStatistics(cells, c => c[this.widthCol], true)
+        }
+
 
         //conversion factor degree -> radian
         const f = Math.PI / 180;
@@ -85,19 +115,25 @@ export class SegmentStyle extends Style {
     /** @param {function(Cell):number} val @returns {this} */
     setOrientation(val) { this.orientation = val; return this; }
 
-    /** @returns {function(Cell):string} */
+    //TODO colorCol
+
+    /** @returns {function(number,number,Stat):string} */
     getColor() { return this.color; }
-    /** @param {function(Cell):string} val @returns {this} */
+    /** @param {function(number,number,Stat):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
-    /** @returns {Size} */
+    //TODO lengthCol
+
+    /** @returns {function(number,number,Stat):number} */
     getLength() { return this.length; }
-    /** @param {Size} val @returns {this} */
+    /** @param {function(number,number,Stat):number} val @returns {this} */
     setLength(val) { this.length = val; return this; }
 
-    /** @returns {Size} */
+    //TODO widthCol
+
+    /** @returns {function(number,number,Stat):number} */
     getWidth() { return this.width; }
-    /** @param {Size} val @returns {this} */
+    /** @param {function(number,number,Stat):number} val @returns {this} */
     setWidth(val) { this.width = val; return this; }
 
 }
