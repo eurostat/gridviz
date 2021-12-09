@@ -94,9 +94,10 @@ export class SegmentStyle extends Style {
             //orientation (in radian)
             /** @type {number} */
             const or = this.orientation(c) * f
+            if (or === undefined || isNaN(or)) continue;
 
             //set color and width
-            cg.ctx.fillStyle = col
+            cg.ctx.strokeStyle = col
             cg.ctx.lineWidth = wG / cg.zf
 
             //compute segment centre postition
