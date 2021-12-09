@@ -13,6 +13,7 @@
             <option value="flag" selected>Flag</option>
             <option value="piechart">Pie chart</option>
             <option value="ring">Ring</option>
+            <option value="radar">Radar</option>
         </select>
     </div>
 
@@ -27,9 +28,15 @@
             color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
             type: c => "flag",
             sizeCol: "Inhabitants",
-            size: { val: (v,r,s) => r * Math.sqrt(v/s.max), unit: "geo" },
+            size: { val: (v, r, s) => r * Math.sqrt(v / s.max), unit: "geo" },
             zfStroke: 5
         })
+
+        const sRadar = new gviz.RadarStyle({
+            color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
+            radius: { val: (v, r, s) => 0.7 * r * Math.pow(v / s.max, 0.2), unit: "geo" },
+        })
+
         app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
             {
                 preprocess: c => {
@@ -44,8 +51,13 @@
         //combo list
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
-            //change style type
-            s.setType(c => select.value)
+            if (select.value == "radar") {
+
+            } else {
+                //change style type
+                s.setType(c => select.value)
+            }
+
             //redraw
             app.cg.redraw();
         });
