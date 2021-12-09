@@ -68,11 +68,15 @@ export const getEurostatLabelLayer = function () {
                 }
 
                 if (lb["cat"] == 2) return
-                if (lb["pop_2011"] < 500000) return
+                if (lb["pop_2011"] < 400000) return
                 return "bold 15px Arial";
             },
             //color
-            //color: () => "#00000044",
+            color: () => "#00000044",
+            //halo color
+            haloColor: () => null,
+            //halo width
+            haloWidth: () => 0,
             //preprocess
             preprocess: lb => {
                 //project from geo coordinates to ETRS89-LAEA

@@ -24,10 +24,11 @@
             style: new gviz.ShapeColorSizeStyle(
                 //{ color: (val, min, max) => gviz.interpolateOrRd(Math.pow((val - min) / (max - min), 0.35)) }
                 {
-                    color: c => {
-                        const v = Math.pow((c.val) / 20000, 0.35)
+                    colorCol : "val",
+                    color: (v,r,s) => {
+                        const v_ = Math.pow((v) / s.max, 0.35)
                         const nbClass = 10
-                        const cl = Math.floor(nbClass * v) / nbClass
+                        const cl = Math.floor(nbClass * v_) / nbClass
                         if (cl < 1 / nbClass) return "white"
                         return gviz.interpolateSpectral(cl)  //interpolateOrRd
                     }
