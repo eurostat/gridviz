@@ -2,6 +2,7 @@
 
 import { Dataset } from "./Dataset";
 import { Style } from "./Style";
+import { ColorSizeShapeStyle } from "../core/style/ColorSizeShapeStyle"
 
 /**
  * A data layer, which specifies a dataset to be shown within a specified zoom range, with a specified style.
@@ -21,7 +22,7 @@ export class Layer {
         /** @type {Dataset} */
         this.dataset = dataset;
         /** @type {Array.<Style>} */
-        this.styles = styles;
+        this.styles = styles || [new ColorSizeShapeStyle({})];
         /** @type {number} */
         this.minZoom = minZoom;
         /** @type {number} */

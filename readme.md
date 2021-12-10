@@ -92,14 +92,17 @@ Here's a barebones example that loads a CSV containing population data for a 5x5
 ```javascript
     let viz = gridviz.app()
         .container(containerDiv)
-        .gridData(
-            {
-                url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
-                cellSize: 5
-            }
-        )
-        .colorField("population")  // The csv column that will determine cell colour
         .build()
+
+    viz.addCSVGrid({
+      url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
+      resolution: 5,
+      minZoom: 500,
+      maxZoom: 999999999
+    });
+
+
+
 ```
 
 For an explanation of all the available functionality, see the developer docs below.
