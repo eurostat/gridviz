@@ -1,7 +1,7 @@
-
+TODO test kernel smoothing with pixel unit
 TODO test kernel smoothing with discrete categories
-TODO finalise kernel smoothing: unit in geo/pix + generic
 TODO contour style. and hypsometric. See https://observablehq.com/@d3/density-contours
+TODO merge multi with other composition
 
 TODO style trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php
 
