@@ -2,7 +2,7 @@
 //@ts-check
 
 import { Style } from "../Style"
-import { Cell } from "../Dataset"
+import { Cell, Envelope } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
 
 /**
@@ -35,7 +35,7 @@ export class KernelSmoothingStyle extends Style {
     * Compute kernel matrix, that is the matrix of the weights.
     * One quadrant is necessary only, since it is symetrical (along both x and y axes).
     * @param {number} s 
-    * @returns {Array.<Array<number>>}
+    * @returns {Array.<Array<{w:number,val:number}>>}
     * @private
     */
     getKernelMatrix(s) {
@@ -59,8 +59,8 @@ export class KernelSmoothingStyle extends Style {
             const col = []
             for (let wj = 0; wj <= kernelSize; wj++) {
                 //compute weight at wi,wj
-                const val = gaussian(wi, wj)
-                col.push(val)
+                const w = gaussian(wi, wj)
+                col.push({ w: w, val: 0 })
             }
             kw.push(col)
         }
@@ -73,50 +73,80 @@ export class KernelSmoothingStyle extends Style {
     * 
     * @private
     * @param {Array.<Cell>} cells The cells to be smoothed
+    * @param {Envelope} e 
+    * @param {number} r 
     * @param {number} s 
-    * @returns {Array.<Array.<number>>}
+    * @returns {Array.<Cell>}
     */
-    kernelSmoothing(cells, s) {
+    kernelSmoothing(cells, e, r, s) {
+
+        //compute extent
+        const xMin = Math.floor(e.xMin / r) * r;
+        const xMax = Math.floor(e.xMax / r) * r;
+        const yMin = Math.floor(e.yMin / r) * r;
+        const yMax = Math.floor(e.yMax / r) * r;
+
+        //compute matrix dimensions
+        const nbX = (xMax - xMin) / r + 1
+        const nbY = (yMax - yMin) / r + 1
 
         //index input matrix by x/y
+        const ind = {}
+        for (const c of cells) {
+            // i,j of the cell
+            const i = Math.floor((c.x - xMin) / r)
+            const j = Math.floor((c.y - yMin) / r)
+            if (!ind[i]) ind[i] = {}
+            ind[i][j] = c
+        }
 
         //get kernel matrix
-        /** @type {Array.<Array.<number>>} */
+        /** @type {Array.<Array.<{w:number,val:number}>>} */
         const km = this.getKernelMatrix(s)
         const kernelSize = km.length - 1
 
-        //make smoothing, cell by cell
-        for (let i = 0; i < nbX; i++) {
-            for (let j = 0; j < nbY; j++) {
+        //compute smoothing, cell by cell
 
-                //compute smoothed value, at i,j
-                /** @type {number} */
-                let sval = 0;
+        for (const i of Object.keys(ind)) {
+            for (const j of Object.keys(ind[i])) {
+
+                //get cell i,j
+                const c = ind[i][j]
+
+                //check if c is an input cell or a cell resulting from the smoothing already stored in 'cells'
+                if (c.notInputCell) continue;
+
+                //compute contribution of cell c
+
                 /** @type {number} */
                 let sumWeights = 0;
 
-                //moving kernel window (ki,kj)
-                for (let ki = -kernelSize; ki <= kernelSize; ki++)
-                    for (let kj = -kernelSize; kj <= kernelSize; kj++) {
+                //compute contributions of c with kernel window (ki,kj)
+                for (let ki = 0; ki <= kernelSize; ki++)
+                    for (let kj = 0; kj <= kernelSize; kj++) {
 
-                        //TODO use symetric
-                        if (i + ki < 0 || i + ki >= nbX || j + kj < 0 || j + kj >= nbY)
-                            continue;
+                        //check if target cell is within the view frame
+                        //if (+i + ki < 0 || +i + ki >= nbX || +j + kj < 0 || +j + kj >= nbY)
+                        //    continue;
 
-                        //get weight of pixel (i+wi,j+wj)
-                        const weight = km[Math.abs(ki)][Math.abs(kj)]
+                        //get kernel element (i+wi,j+wj)
+                        const ke = km[ki][kj]
 
                         //add contribution of pixel (i+wi,j+wj): its weight times its value
-                        sval += weight * m[i + ki][j + kj]
+                        ke.val = ke.w * this.value(c)
 
                         //keep sum of weights
-                        sumWeights += weight;
+                        sumWeights += ke.w;
                     }
                 //smoothed value
-                out[i][j] = sval / sumWeights
+                //out[i][j] = sval / sumWeights
+
+
             }
+
         }
-        return out;
+
+        return cells;
     }
 
 
@@ -132,50 +162,41 @@ export class KernelSmoothingStyle extends Style {
         if (!cells || cells.length == 0)
             return;
 
-        //compute extent
-        const e = cg.updateExtentGeo();
-        const xMin = Math.floor(e.xMin / r) * r;
-        const xMax = Math.floor(e.xMax / r) * r;
-        const yMin = Math.floor(e.yMin / r) * r;
-        const yMax = Math.floor(e.yMax / r) * r;
-
-        //compute matrix dimensions
-        const nbX = (xMax - xMin) / r + 1
-        const nbY = (yMax - yMin) / r + 1
 
         //create and fill input matrix with input figures, not smoothed
         /** @type {Array.<Array.<number>>} */
-        let matrix = getEmptyMatrix(nbX, nbY);
+        /*let matrix = getEmptyMatrix(nbX, nbY);
         for (const c of cells) {
             if (c.x < xMin || c.x > xMax || c.y < yMin || c.y >= yMax)
                 continue;
             const i = (c.x - xMin) / r
             const j = (c.y - yMin) / r
             matrix[i][j] = +this.value(c);
-        }
+        }*/
 
         //get smoothing param in geo unit
         /** @type {number} */
         const sG = this.sigma(cg.zf)
 
         //compute smoothed matrix
-        /** @type {Array.<Array.<number>>} */
-        matrix = this.kernelSmoothing(matrix, nbX, nbY, sG / r)
+        //matrix = this.kernelSmoothing(matrix, nbX, nbY, sG / r)
+
+        //apply kernel smoothing
+        cells = this.kernelSmoothing(cells, cg.extGeo, r, sG / r)
 
         //convert smoothed matrix into list of cells
         /** @type {Array.<Cell>} */
-        const scells = []
+        /*const scells = []
         for (let i = 0; i < nbX; i++) {
             for (let j = 0; j < nbY; j++) {
-                /** @type {Cell} */
                 const c = { x: xMin + i * r, y: yMin + j * r }
                 c["val"] = +matrix[i][j]
                 scells.push(c)
             }
-        }
+        }*/
 
         //draw smoothed cells from style
-        this.style.draw(scells, r, cg);
+        this.style.draw(cells, r, cg);
 
     }
 
@@ -202,9 +223,9 @@ export class KernelSmoothingStyle extends Style {
 
 /**
  * Create a matrix full of zeros.
- * 
- * @param {number} nbX 
- * @param {number} nbY 
+ *
+ * @param {number} nbX
+ * @param {number} nbY
  * @returns {Array.<Array.<number>>}
  */
 /*function getEmptyMatrix(nbX, nbY) {
