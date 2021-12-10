@@ -12,6 +12,9 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class KernelSmoothingStyle extends Style {
 
+    //TODO use https://github.com/uwdata/fast-kde
+    //TODO https://observablehq.com/@sahilchinoy/areal-interpolation-iii
+
     /** @param {object} opts */
     constructor(opts) {
         super(opts)

@@ -1,11 +1,10 @@
-TODO contour style. and hypsometric. See https://observablehq.com/@d3/density-contours
-TODO merge multi with other composition
 TODO draw cell stroke
+TODO labels - improve selection
 
 TODO style trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php
+TODO contour style. and hypsometric. See https://observablehq.com/@d3/density-contours
 
 TODO mouse over: Show rectangle.
-TODO labels - improve selection
 TODO zoom/pan smartphone/touchscreen - use d3 events - TODO make new canvasgeo based on d3 zoom/pan/over
 TODO modularise further canvasgeo (make ctx private ?)
 
@@ -16,4 +15,3 @@ TODO on zoom/pan, interupt all existing redraws
 TODO background - images ?
 
 TODO finalise demos
-
