@@ -1,5 +1,6 @@
 TODO contour style. and hypsometric. See https://observablehq.com/@d3/density-contours
 TODO merge multi with other composition
+TODO draw cell stroke
 
 TODO style trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php
 

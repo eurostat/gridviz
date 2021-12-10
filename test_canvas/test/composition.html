@@ -14,6 +14,7 @@
             <option value="piechart">Pie chart</option>
             <option value="ring">Ring</option>
             <option value="radar">Radar</option>
+            <option value="multi">Multi</option>
         </select>
     </div>
 
@@ -32,9 +33,38 @@
             zfStroke: 5
         })
 
+
+
         const sRadar = new gviz.RadarStyle({
             color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
             radius: (v, r, s, zf) => 0.6 * r * Math.pow(v / s.max, 0.2),
+        })
+
+
+        const r = 100
+        const s14 = new gviz.ShapeColorSizeStyle({
+            color: () => "#377eb8",
+            sizeCol: "Population under 14",
+            size: (v, r, s, zf) => 5 * Math.sqrt(v),
+            shape: c => "circle",
+            offset: { dx: -0.366 * r, dy: -0.366 * r },
+            zfStroke: 1
+        })
+        const s30 = new gviz.ShapeColorSizeStyle({
+            color: () => "#4daf4a",
+            sizeCol: "pop_",
+            size: (v, r, s, zf) => 5 * Math.sqrt(v),
+            shape: c => "circle",
+            offset: { dx: 0.5 * r, dy: 0.366 * r },
+            zfStroke: 1
+        })
+        const s65 = new gviz.ShapeColorSizeStyle({
+            color: () => "#e41a1c",
+            sizeCol: "Population over 65",
+            size: (v, r, s, zf) => 5 * Math.sqrt(v),
+            shape: c => "circle",
+            offset: { dx: 0.366 * r, dy: -0.366 * r },
+            zfStroke: 1
         })
 
         app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
@@ -53,6 +83,8 @@
         select.addEventListener('change', function () {
             if (select.value === "radar") {
                 for (let lay of app.layers) lay.styles = [sRadar]
+            } else if (select.value === "multi") {
+                for (let lay of app.layers) lay.styles = [s30, s14, s65]
             } else {
                 s.setType(c => select.value)
                 for (let lay of app.layers) lay.styles = [s]
