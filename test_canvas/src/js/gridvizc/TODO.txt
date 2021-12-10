@@ -1,4 +1,3 @@
-TODO test kernel smoothing with discrete categories
 TODO contour style. and hypsometric. See https://observablehq.com/@d3/density-contours
 TODO merge multi with other composition
 
