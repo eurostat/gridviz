@@ -149,12 +149,12 @@ export class KernelSmoothingStyle extends Style {
                     }
                 }
 
-                /**  */
+                /** Check that the cell i,j is within the frame */
                 const isWithinFrame = (i, j) => i >= 0 && i < nbX && j >= 0 && j < nbY
-                /**  */
-                const addContributionTo = (iki, jkj, v) => {
+                /** Add v as a contribution to the cell i,j */
+                const addContributionTo = (i, j, v) => {
                     //get cell at (i+ki,j+kj)
-                    const c_ = index[iki] ? index[iki][jkj] : undefined
+                    const c_ = index[i] ? index[i][j] : undefined
 
                     if (c_) {
                         //cell exists: add contribution
@@ -162,8 +162,8 @@ export class KernelSmoothingStyle extends Style {
                         else c_["ksmval"] = v
                     } else {
                         //cell does not exist: create a new one with the smoothed value
-                        if (!index[iki]) index[iki] = {}
-                        index[iki][jkj] = { x: xMin + iki * r, y: yMin + jkj * r, ksmval: v, notInputCell: true }
+                        if (!index[i]) index[i] = {}
+                        index[i][j] = { x: xMin + i * r, y: yMin + j * r, ksmval: v, notInputCell: true }
                     }
                 }
 
