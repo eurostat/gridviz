@@ -34,12 +34,16 @@ export class ColorSizeShapeStyle extends Style {
 
         /** @type {Number} */
         this.opacity = opts.opacity || 1;
+
         /** @type {Number} */
         this.strokeWidth = opts.strokeWidth || 0;
+
         /** @type {String} */
         this.strokeColor = opts.strokeColor || 'black';
+
         /** @type {Array<Cell>} */
-        this.cells = []; // cells displayed
+        this.cells = []; // cells displayed by the style
+
         /** @type {Points} */
         this.threejsObject = undefined; // threejs Object3D
     }
@@ -54,7 +58,7 @@ export class ColorSizeShapeStyle extends Style {
      */
     draw(cells, resolution, viewer) {
         //save cells to style for tooltip
-        this.cells = cells; 
+        this.cells = cells;
         let bufferGeometry = new BufferGeometry(); // new buffer for each draw
 
         // bufferGeometry attribute arrays
@@ -83,13 +87,10 @@ export class ColorSizeShapeStyle extends Style {
 
             //shape
             const shape = this.shapeFunction ? this.shapeFunction(cell) : 'square';
-            if (shape == "square") {
-                shapes.push(2);
-            } else if (shape == "circle") {
-                shapes.push(1);
-            } else {
-                throw new Error('Unexpected shape:' + shape);
-            }
+            if (shape == "square") shapes.push(2);
+            else if (shape == "circle") shapes.push(1);
+            else throw new Error('Unexpected shape:' + shape);
+
         }
 
         if (!this.pointsMaterial) {
@@ -131,14 +132,8 @@ export class ColorSizeShapeStyle extends Style {
             this.threejsObject.renderOrder = 1; //bottom
             viewer.scene.add(this.threejsObject);
         } else {
-            // else update its attributes
-            //this.threejsObject.visible = true;
+            // else update its existing attributes
             this.threejsObject.geometry = bufferGeometry;
-            
-            //this.threejsObject.geometry.attributes.position.needsUpdate = true;
-            //this.threejsObject.geometry.attributes.color.needsUpdate = true;
-            //this.threejsObject.geometry.attributes.size.needsUpdate = true;
-            //this.threejsObject.material = this.pointsMaterial;
         }
     }
 

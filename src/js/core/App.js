@@ -303,11 +303,11 @@ export class App {
       let minZoom = this._isMobile ? this.viewer.mobileZoomScale(layer.minZoom) : layer.minZoom;
       let maxZoom = this._isMobile ? this.viewer.mobileZoomScale(layer.maxZoom) : layer.maxZoom;
       if (minZoom >= this.viewer.camera.camera.position.z) {
-        if ((layer.dataset instanceof TiledGrid) == false) this.hideLayer(layer);
+        this.hideLayer(layer);
         continue;
       };
       if (maxZoom < this.viewer.camera.camera.position.z) {
-        if ((layer.dataset instanceof TiledGrid) == false) this.hideLayer(layer);
+        this.hideLayer(layer);
         continue;
       };
       //show if hidden
@@ -1041,8 +1041,16 @@ export class App {
    * @param {Layer} layer
    */
   hideLayer(layer) {
+    
     layer.styles.forEach((style) => {
-      if (style.threejsObject) {
+      // different layers can use the same style - so only hide the style if it isnt being used by another visible layer
+      let usedByVisibleLayer = false;
+      this.layers.forEach((l) => {
+        if (l !== layer && l.styles.includes(style) && l.hidden == false) {
+          usedByVisibleLayer = true;
+        }
+      })
+      if (style.threejsObject && usedByVisibleLayer == false) {
         style.threejsObject.visible = false;
         // style.threejsObject.traverse(function (child) {
         //   if (child instanceof Points) {
