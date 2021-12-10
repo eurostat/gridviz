@@ -90,7 +90,7 @@ export class KernelSmoothingStyle extends Style {
         const nbX = (xMax - xMin) / r + 1
         const nbY = (yMax - yMin) / r + 1
 
-        //index input matrix by x/y
+        //index input cells by i/j
         const ind = {}
         for (const c of cells) {
             // i,j of the cell
@@ -105,6 +105,10 @@ export class KernelSmoothingStyle extends Style {
         const km = this.getKernelMatrix(s)
         const kernelSize = km.length - 1
 
+        console.log(km)
+        console.log(kernelSize)
+        console.log(ind)
+
         //compute smoothing, cell by cell
 
         for (const i of Object.keys(ind)) {
@@ -116,32 +120,51 @@ export class KernelSmoothingStyle extends Style {
                 //check if c is an input cell or a cell resulting from the smoothing already stored in 'cells'
                 if (c.notInputCell) continue;
 
-                //compute contribution of cell c
+                /** 
+                 * Value of cell c
+                 * @type {number} */
+                const val = this.value(c);
+
+                //compute contribution of cell c with kernel window (ki,kj). store result in km.val field
 
                 /** @type {number} */
                 let sumWeights = 0;
-
-                //compute contributions of c with kernel window (ki,kj)
                 for (let ki = 0; ki <= kernelSize; ki++)
                     for (let kj = 0; kj <= kernelSize; kj++) {
 
-                        //check if target cell is within the view frame
-                        //if (+i + ki < 0 || +i + ki >= nbX || +j + kj < 0 || +j + kj >= nbY)
-                        //    continue;
-
-                        //get kernel element (i+wi,j+wj)
+                        //get kernel element
                         const ke = km[ki][kj]
 
-                        //add contribution of pixel (i+wi,j+wj): its weight times its value
-                        ke.val = ke.w * this.value(c)
+                        //add contribution: its weight times its value
+                        ke.val = ke.w * val
 
                         //keep sum of weights
                         sumWeights += ke.w;
                     }
-                //smoothed value
-                //out[i][j] = sval / sumWeights
 
+                //add contributions to smoothed values
+                for (let ki = -kernelSize; ki <= kernelSize; ki++)
+                    for (let kj = -kernelSize; kj <= kernelSize; kj++) {
 
+                        //check if target cell is within the view frame
+                        if (+i + ki < 0 || +i + ki >= nbX || +j + kj < 0 || +j + kj >= nbY)
+                            continue;
+
+                        //get contribution (ki,kj)
+                        const v = km[Math.abs(ki)][Math.abs(kj)].val
+                        if (!v) continue;
+
+                        //get cell at (i+ki,j+kj)
+                        const c = ind[+i + ki][+j + kj]
+
+                        //cell exist: add contribution
+                        if (c) {
+                            if (c.ksmval) c.ksmval += v
+                            else c.ksmval = v
+                        } else {
+                            ind[i + ki][j + kj] = { x: xMin + (+i + ki) * r, y: yMin + (+j + kj) * r, ksmval: v, notInputCell: true }
+                        }
+                    }
             }
 
         }
