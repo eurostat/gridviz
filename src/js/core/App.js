@@ -13,12 +13,7 @@ import { Vector3, Color, Points, Line, CircleGeometry, MeshBasicMaterial, Mesh }
 import { Line2 } from "../lib/threejs/lines/Line2";
 import { WEBGL } from '../lib/threejs/WebGL'
 
-// gridviz modules
-
-import * as Placenames from "./placenames/placenames.js";
-import * as Buttons from "./gui/buttons.js";
-import * as GUI from "./gui/gui";
-
+// gridviz
 import { Viewer } from "./viewer/viewer.js";
 import { Layer } from './Layer';
 import { Style } from './Style';
@@ -26,25 +21,27 @@ import { LineStyle } from './style/LineStyle';
 import { Dataset } from './Dataset';
 import { Legend } from './legend/legend';
 import { Tooltip } from "./tooltip/tooltip.js";
-
 import { LabelsLayer } from "./placenames/LabelsLayer.js";
 import { GeoJsonLayer } from "./GeoJsonLayer";
-
 import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
 
-//other 
-import { feature } from "topojson";
+import * as Placenames from "./placenames/placenames.js";
+import * as Buttons from "./gui/buttons.js";
+import * as GUI from "./gui/gui";
+import * as Loading from "./gui/loading";
 import * as CONSTANTS from "./constants.js";
 import * as Utils from "./utils/utils";
-import * as Loading from "./gui/loading";
-import { app } from "..";
+
+//other 
+import { feature } from "topojson";
 
 //TODO
-// allow user to use same style for different tiledGrid layers - at the moment causes issues due to cells being stored on style maybe. Move cell subsets to dataset.
+// redraw after home/zoom button events
 // continue to implement styles from canvas_test
-// add stroke to cells
+// add stroke to square cells - fragment shader only applies stroke to circles atm.
 // add fill to line charts (joyplot)
+// add types for everything
 // add legend for each Layer and visualize according to the styles in current extentGeo
 // rewrite reference API for new structure
 
@@ -209,6 +206,12 @@ export class App {
         if (!this.width_) this.width_ = this.getDefaultAppWidth(this);
         if (!this.height_) this.height_ = this.getDefaultAppHeight(this);
 
+        //add titles, sources texts to DOM 
+        this.addInitialElementsToDOM();
+
+        //add home/zoom buttons
+        if (this.zoomButtons_) Buttons.addZoomButtonsToDOM(this); if (this.homeButton_) Buttons.addHomeButtonToDOM(this);
+
         // default zoom if unspecified
         if (!this.zoom_) this.zoom_ = 1000;
 
@@ -234,11 +237,11 @@ export class App {
         // view.onHover
         this.addMouseEventsToView();
 
+        //zoom, home buttons etc
+        if (!this._isMobile) this.addButtonEvents();
+
         // add NUTS geometries to viewer as geojson
         if (this.nuts_) this.loadNuts2json(CONSTANTS.nuts_base_URL + this.EPSG_ + "/" + this.nutsSimplification_ + "/" + this.nutsLevel_ + ".json");
-
-        //add titles, sources texts to DOM 
-        this.addInitialElementsToDOM();
 
         // handle viewer's pan & zoom end
         this.viewer.on("zoomEnd", (e) => { this.onZoomEnd(e) });
@@ -257,7 +260,7 @@ export class App {
         return this;
 
       } else {
-        
+
         let msg = "invalid inputs";
         console.error(msg);
         alert(msg)
@@ -345,7 +348,7 @@ export class App {
             //new tile
             this.draw(layer);
 
-          }, (err)=>{
+          }, (err) => {
             //failed
             if (this._pendingRequests > 0) this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading();
           });
@@ -441,13 +444,13 @@ export class App {
     this.add(
       new CSVGrid(opts).getData(null, (grid) => {
         this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading();
-    
+
         // for mobile devices
         if (this._isMobile) this.applyMobileSettings(grid);
 
         // draw cells
         this.redraw();
-      }, (err)=> {this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading()}),
+      }, (err) => { this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading() }),
       opts.styles, opts.minZoom, opts.maxZoom
     )
   }
@@ -474,7 +477,7 @@ export class App {
 
         // draw cells
         this.redraw();
-      }, (err)=>{ if (this._pendingRequests > 0) this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading();}),
+      }, (err) => { if (this._pendingRequests > 0) this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading(); }),
       opts.styles, opts.minZoom, opts.maxZoom
     )
   }
@@ -723,20 +726,6 @@ export class App {
   }
 
 
-  /**
-   * @description Adds event listeners to the app viewer, dropdowns and screen resize
-   * @function addEventListeners
-   */
-  addEventListeners() {
-    //show cell values on click/hover
-    this.addMouseEventsToView();
-    //screen resize
-    this.addResizeEvent();
-    //zoom, home buttons etc
-    if (!this._isMobile) {
-      this.addButtonEvents();
-    }
-  }
 
   /**
    * @description redefine width and height of app when window is resized
@@ -804,18 +793,18 @@ export class App {
         }
 
         if (cell) {
-          
+
           if (intersect.object instanceof Line2 || intersect.object instanceof Line) {
             //circle pointer
             if (!this._highlightPointer) {
-              const material = new MeshBasicMaterial( { color: new Color(this.highlightColor_) } );
-              this._highlightPointer = new Mesh( new CircleGeometry( this._currentResolution/2, 30 ), material );
-              this.viewer.scene.add( this._highlightPointer );
+              const material = new MeshBasicMaterial({ color: new Color(this.highlightColor_) });
+              this._highlightPointer = new Mesh(new CircleGeometry(this._currentResolution / 2, 30), material);
+              this.viewer.scene.add(this._highlightPointer);
             }
-            this._highlightPointer.geometry = new CircleGeometry( this._currentResolution/2, 30 );
+            this._highlightPointer.geometry = new CircleGeometry(this._currentResolution / 2, 30);
             intersect.point.z = 1;
-            this._highlightPointer.position.copy( intersect.point );
-            
+            this._highlightPointer.position.copy(intersect.point);
+
 
           } else {
             //change object colour
@@ -936,8 +925,8 @@ export class App {
     if (this._isMobile) {
 
       let scale = Utils.getScaleFromZ(this.height_, this.viewer.camera.config.fov_, this.viewer.camera.config.initialZ_)
-      this.d3zoom.scaleTo(this.viewer.view, scale);
-      this.d3zoom.translateTo(this.viewer.view,
+      this.viewer.zoomBehaviour.scaleTo(this.viewer.view, scale);
+      this.viewer.zoomBehaviour.translateTo(this.viewer.view,
         parseInt(this.geoCenter_[0]) + this.width_ / 2,
         parseInt(this.geoCenter_[1]) + this.height_ / 2);
       this.viewer.camera.setCamera(this.geoCenter_[0], this.geoCenter_[1], this.viewer.camera.config.initialZ_)
@@ -947,12 +936,12 @@ export class App {
       let initial_transform = zoomIdentity
         .translate(this.width_ / 2, this.height_ / 2)
         .scale(initial_scale);
-      this.d3zoom.transform(this.viewer.view, initial_transform);
+      this.viewer.zoomBehaviour.transform(this.viewer.view, initial_transform);
 
     } else {
       let scale = Utils.getScaleFromZ(this.height_, this.viewer.camera.config.fov_, this.viewer.camera.config.initialZ_)
-      this.d3zoom.scaleTo(this.viewer.view, scale);
-      this.d3zoom.translateTo(this.viewer.view,
+      this.viewer.zoomBehaviour.scaleTo(this.viewer.view, scale);
+      this.viewer.zoomBehaviour.translateTo(this.viewer.view,
         parseInt(this.geoCenter_[0]) + this.width_ / 2,
         parseInt(this.geoCenter_[1]) + this.height_ / 2);
       this.viewer.camera.setCamera(this.geoCenter_[0], this.geoCenter_[1], this.viewer.camera.config.initialZ_)
@@ -1041,7 +1030,7 @@ export class App {
    * @param {Layer} layer
    */
   hideLayer(layer) {
-    
+
     layer.styles.forEach((style) => {
       // different layers can use the same style - so only hide the style if it isnt being used by another visible layer
       let usedByVisibleLayer = false;

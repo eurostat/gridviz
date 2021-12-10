@@ -1,3 +1,5 @@
+//DEPRECATED
+
 /**
    * @description Creates an HTML Select element for the different D3 Scale-Chromatic functions
    * @function createColorSchemeDropdown
