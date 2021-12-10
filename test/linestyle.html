@@ -14,9 +14,10 @@
         const app = gridviz.app()
             .container(containerDiv)
             .geoCenter([4900000, 2475000])
-            .title("gridviz Joyplot")
+            .title("gridviz population Joyplot")
             .showPlacenames(true)
             .backgroundColor("white")
+            .highlightColor("red")
             .cellCount(true)
             .zoom(500000) //initial camera Z value
             .nuts(true)
@@ -25,7 +26,8 @@
         //define datasets, styles and layers
         const s = gridviz.getLineStyle({
             "heightFunction": c => 30 * Math.sqrt(c["2011"]),
-            "lineColor": "grey"
+            "lineColor": "black",
+            "lineWidth": 0.0015
         })
 
         //.lineWidth(0.0015)

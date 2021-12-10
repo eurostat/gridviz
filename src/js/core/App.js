@@ -9,7 +9,7 @@ import { extent, min, max } from "d3-array";
 import { pointer } from "d3-selection";
 
 //three.js
-import { Vector3, Color, Points, Line } from "three";
+import { Vector3, Color, Points, Line, CircleGeometry, MeshBasicMaterial, Mesh } from "three";
 import { Line2 } from "../lib/threejs/lines/Line2";
 import { WEBGL } from '../lib/threejs/WebGL'
 
@@ -168,6 +168,7 @@ export class App {
     this._animating = false;
     this._previousIntersect; // previously highlighted/intersected cell
     this._currentResolution = null; //current grid resolution in view. e.g. 5000 for EPSG:3035 5km grid
+    this._pendingRequests = 0; // pending resource requests
 
   }
 
@@ -253,12 +254,10 @@ export class App {
         this._animating = true;
         this.animate();
 
-        Loading.hideLoading();
-
         return this;
 
       } else {
-        Loading.hideLoading();
+        
         let msg = "invalid inputs";
         console.error(msg);
         alert(msg)
@@ -338,12 +337,19 @@ export class App {
 
         if (layer.dataset.info) {
           //TiledGrid
-
+          this._pendingRequests++;
+          Loading.showLoading();
           layer.dataset.getData(this.viewer.extGeo, () => {
+            if (this._pendingRequests > 0) this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading();
+
             //new tile
             this.draw(layer);
 
+          }, (err)=>{
+            //failed
+            if (this._pendingRequests > 0) this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading();
           });
+
           this.draw(layer);
         } else {
           //CSVGrid 
@@ -430,17 +436,18 @@ export class App {
   addCSVGrid(opts) {
     //url, resolution, styles, minZoom, maxZoom, preprocess = null
     Loading.showLoading();
+    this._pendingRequests++;
 
     this.add(
       new CSVGrid(opts).getData(null, (grid) => {
-        Loading.hideLoading();
-
+        this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading();
+    
         // for mobile devices
         if (this._isMobile) this.applyMobileSettings(grid);
 
         // draw cells
         this.redraw();
-      }),
+      }, (err)=> {this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading()}),
       opts.styles, opts.minZoom, opts.maxZoom
     )
   }
@@ -455,16 +462,19 @@ export class App {
    * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
    */
   addTiledGrid(opts) {
+    Loading.showLoading();
+    this._pendingRequests++;
+
     this.add(
       new TiledGrid(opts).loadInfo((tiledGrid) => {
-        Loading.hideLoading();
+        if (this._pendingRequests > 0) this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading();
 
         // for mobile devices
         if (this._isMobile) this.applyMobileSettings(tiledGrid);
 
         // draw cells
         this.redraw();
-      }),
+      }, (err)=>{ if (this._pendingRequests > 0) this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading();}),
       opts.styles, opts.minZoom, opts.maxZoom
     )
   }
@@ -794,9 +804,23 @@ export class App {
         }
 
         if (cell) {
-          //change cell colour
-          this.highlightObject(intersect);
+          
+          if (intersect.object instanceof Line2) {
+            //circle pointer
+            if (!this._highlightPointer) {
+              const material = new MeshBasicMaterial( { color: new Color(this.highlightColor_) } );
+              this._highlightPointer = new Mesh( new CircleGeometry( this._currentResolution/2, 30 ), material );
+              this.viewer.scene.add( this._highlightPointer );
+            }
+            this._highlightPointer.geometry = new CircleGeometry( this._currentResolution/2, 30 );
+            intersect.point.z = 1;
+            this._highlightPointer.position.copy( intersect.point );
+            
 
+          } else {
+            //change object colour
+            this.highlightObject(intersect);
+          }
           //show tooltip & update its content
           this._tooltip.show();
 
@@ -970,7 +994,8 @@ export class App {
   }
   updateRaycasterThreshold(threshold) {
     this.viewer.raycaster.params.Points.threshold = threshold;
-    this.viewer.raycaster.params.Line.threshold = threshold / 3;
+    this.viewer.raycaster.params.Line.threshold = threshold * 2;
+    //this.viewer.raycaster.params.Line2 = { "threshold": threshold };
   }
 
   highlightObject(intersect) {

@@ -38,8 +38,10 @@ export class ColorSizeShapeStyle extends Style {
         this.strokeWidth = opts.strokeWidth || 0;
         /** @type {String} */
         this.strokeColor = opts.strokeColor || 'black';
-
-        
+        /** @type {Array<Cell>} */
+        this.cells = []; // cells displayed
+        /** @type {Points} */
+        this.threejsObject = undefined; // threejs Object3D
     }
 
 
@@ -53,7 +55,7 @@ export class ColorSizeShapeStyle extends Style {
     draw(cells, resolution, viewer) {
         //save cells to style for tooltip
         this.cells = cells; 
-        this.bufferGeometry = new BufferGeometry(); // new buffer for each draw
+        let bufferGeometry = new BufferGeometry(); // new buffer for each draw
 
         // bufferGeometry attribute arrays
         let colors = [];
@@ -115,23 +117,23 @@ export class ColorSizeShapeStyle extends Style {
         }
 
         //set positions
-        this.bufferGeometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+        bufferGeometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
         //set colors
-        this.bufferGeometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
+        bufferGeometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
         //set sizes
-        this.bufferGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
+        bufferGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
         //set shapes
-        this.bufferGeometry.setAttribute("shape", new Float32BufferAttribute(shapes, 1));
+        bufferGeometry.setAttribute("shape", new Float32BufferAttribute(shapes, 1));
 
         // create layer if new
         if (!this.threejsObject) {
-            this.threejsObject = new Points(this.bufferGeometry, this.pointsMaterial);
+            this.threejsObject = new Points(bufferGeometry, this.pointsMaterial);
             this.threejsObject.renderOrder = 1; //bottom
             viewer.scene.add(this.threejsObject);
         } else {
             // else update its attributes
             //this.threejsObject.visible = true;
-            this.threejsObject.geometry = this.bufferGeometry;
+            this.threejsObject.geometry = bufferGeometry;
             
             //this.threejsObject.geometry.attributes.position.needsUpdate = true;
             //this.threejsObject.geometry.attributes.color.needsUpdate = true;

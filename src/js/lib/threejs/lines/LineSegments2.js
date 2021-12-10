@@ -148,7 +148,7 @@ LineSegments2.prototype = Object.assign(Object.create(Mesh.prototype), {
         var zPos = MathUtils.lerp(start.z, end.z, param);
         var isInClipSpace = zPos >= -1 && zPos <= 1;
 
-        var isInside = ssOrigin3.distanceTo(closestPoint) < lineWidth * 0.5;
+        var isInside = ssOrigin3.distanceTo(closestPoint) < lineWidth * 10;
 
         if (isInClipSpace && isInside) {
           line.start.fromBufferAttribute(instanceStart, i);

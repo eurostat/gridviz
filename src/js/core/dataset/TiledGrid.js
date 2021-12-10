@@ -41,9 +41,10 @@ export class TiledGrid extends Dataset {
      * Load the info.json from the url.
      * 
      * @param {function} callback
+     * @param {function} errorCallback
      * @returns this
      */
-    loadInfo(callback) {
+    loadInfo(callback, errorCallback) {
         if (!this.info)
             json(this.url + "/info.json").then(
                 /** @param {*} data */
@@ -52,7 +53,10 @@ export class TiledGrid extends Dataset {
                     this.resolution = this.info.resolutionGeo;
                     if (callback) callback(this);
                 }
-            );
+            ).catch(() => {
+                //execute the error callback
+                if (errorCallback) errorCallback("request failed");
+            });
         else if (callback) callback();
         return this;
     }
@@ -85,9 +89,10 @@ export class TiledGrid extends Dataset {
      * 
      * @param {Envelope} e 
      * @param {function} callback
+     * @param {Function} errorCallback 
      * @returns {this}
      */
-    getData(e, callback) {
+    getData(e, callback, errorCallback) {
 
         //TODO empty cache when it becomes too big.
 
@@ -98,6 +103,8 @@ export class TiledGrid extends Dataset {
         //grid bounds
         /** @type {Envelope} */
         const gb = this.info.tilingBounds;
+
+        let requests = 0; // count requests
 
         for (let xT = Math.max(tb.xMin, gb.xMin); xT <= Math.min(tb.xMax, gb.xMax); xT++) {
             for (let yT = Math.max(tb.yMin, gb.yMin); yT <= Math.min(tb.yMax, gb.yMax); yT++) {
@@ -114,6 +121,7 @@ export class TiledGrid extends Dataset {
                 this.cache[xT][yT] = "loading"
 
                 //request tile
+                requests++;
                 csv(this.url + xT + "/" + yT + ".csv")
                     .then(
                         /** @param {*} data */
@@ -125,15 +133,19 @@ export class TiledGrid extends Dataset {
                             //execute preprocess, if any
                             if (this.preprocess) for (const c of tile_.cells) this.preprocess(c);
 
-                            //execute the callback, usually a draw function
-                            if (callback) callback()
+                            //execute the callback, usually a draw function. Send how many requests were made
+                            if (callback) callback(requests)
                         })
                     .catch(() => {
                         //mark as failed
                         this.cache[xT][yT] = "failed"
+                        //execute the error callback
+                        if (errorCallback) errorCallback("request failed")
                     });
             }
         }
+
+        if (requests == 0 && errorCallback) errorCallback("no tiles requested") // not necessarily an error? but need to execute callback to stop loading spinner
         return this;
     }
 
@@ -147,32 +159,32 @@ export class TiledGrid extends Dataset {
     getCells(extGeo) {
         if (this.info) {
 
-        /** @type {Array.<Cell>} */
-        let cells = []
+            /** @type {Array.<Cell>} */
+            let cells = []
 
-        //tiles within the scope
-        /** @type {Envelope} */
-        const tb = this.getTilingEnvelope(extGeo);
+            //tiles within the scope
+            /** @type {Envelope} */
+            const tb = this.getTilingEnvelope(extGeo);
 
-        //grid bounds
-        /** @type {Envelope} */
-        const gb = this.info.tilingBounds;
+            //grid bounds
+            /** @type {Envelope} */
+            const gb = this.info.tilingBounds;
 
-        for (let xT = Math.max(tb.xMin, gb.xMin); xT <= Math.min(tb.xMax, gb.xMax); xT++) {
-            if (!this.cache[xT]) continue;
-            for (let yT = Math.max(tb.yMin, gb.yMin); yT <= Math.min(tb.yMax, gb.yMax); yT++) {
+            for (let xT = Math.max(tb.xMin, gb.xMin); xT <= Math.min(tb.xMax, gb.xMax); xT++) {
+                if (!this.cache[xT]) continue;
+                for (let yT = Math.max(tb.yMin, gb.yMin); yT <= Math.min(tb.yMax, gb.yMax); yT++) {
 
-                //get tile
-                /** @type {GridTile} */
-                const tile = this.cache[xT][yT];
-                if (!tile || typeof tile === "string") continue;
+                    //get tile
+                    /** @type {GridTile} */
+                    const tile = this.cache[xT][yT];
+                    if (!tile || typeof tile === "string") continue;
 
-                //get cells
-                cells = cells.concat(tile.cells)
+                    //get cells
+                    cells = cells.concat(tile.cells)
+                }
             }
-        }
 
-        return cells;
-    } else { return [];}
+            return cells;
+        } else { return []; }
     }
 }

@@ -36,10 +36,11 @@ export class Dataset {
      * 
      * @param {Envelope} extGeo 
      * @param {function} callback 
+     * @param {Function} errorCallback 
      * @returns {this}
      * @abstract
      */
-    getData(extGeo, callback) {
+    getData(extGeo, callback, errorCallback) {
         throw new Error('Method getData not implemented.');
     }
 
