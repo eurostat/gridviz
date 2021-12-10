@@ -33,7 +33,7 @@
             colorCol: "ksmval",
             color: (v, r, s) => {
                 const v_ = Math.pow((v) / s.max, 0.2)
-                const nbClass = 10
+                const nbClass = 15
                 const cl = Math.floor(nbClass * v_) / nbClass
                 if (cl < 1 / nbClass) return "white"
                 return gviz.interpolateRdYlGn(1 - cl)

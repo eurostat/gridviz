@@ -25,16 +25,16 @@ export class KernelSmoothingStyle extends Style {
          * @type {function(number):number} @private */
         this.sigma = opts.sigma
 
-        /** Return the style to represent the smoothed cells.
+        /** The style to represent the smoothed cells.
          * @type {Style} @private */
         this.style = opts.style
     }
 
 
     /**
-    * Compute kernel matrix, that is the matrix of the weights.
+    * Compute the kernel matrix, that is the matrix of the weights.
     * One quadrant is necessary only, since it is symetrical (along both x and y axes).
-    * @param {number} s 
+    * @param {number} s Sigma (in grid pixel !)
     * @returns {Array.<Array<{w:number,val:number}>>}
     * @private
     */
@@ -54,11 +54,14 @@ export class KernelSmoothingStyle extends Style {
          */
         const gaussian = (x, y) => Math.exp(-(x * x + y * y) / c2)
 
+        /** @type {Array.<Array<{w:number,val:number}>>} */
         const kw = []
         for (let wi = 0; wi <= kernelSize; wi++) {
+            /** @type {Array<{w:number,val:number}>} */
             const col = []
             for (let wj = 0; wj <= kernelSize; wj++) {
                 //compute weight at wi,wj
+                /** @type {number} */
                 const w = gaussian(wi, wj)
                 col.push({ w: w, val: 0 })
             }
@@ -69,18 +72,18 @@ export class KernelSmoothingStyle extends Style {
 
 
     /**
-    * Compute kernel smoothing.
+    * Compute kernel smoothing of some cells.
     * 
     * @private
-    * @param {Array.<Cell>} cells The cells to be smoothed
-    * @param {Envelope} e Geo envelope
-    * @param {number} r Resolution, in geo unit
-    * @param {number} s Sigma
-    * @returns {Array.<Cell>} The list of cells, including the initial ones and the ones with smoothed values, in ksmval property.
+    * @param {Array.<Cell>} cells The cells to be smoothed.
+    * @param {Envelope} e Geo envelope to consider.
+    * @param {number} r Resolution, in geo unit.
+    * @param {number} s Sigma (in grid pixel !)
+    * @returns {Array.<Cell>} The list of cells, including the initial ones and the ones with smoothed values, in "ksmval" property.
     */
     kernelSmoothing(cells, e, r, s) {
 
-        //compute extent
+        //compute extent, in grid position
         const xMin = Math.floor(e.xMin / r) * r;
         const xMax = Math.floor(e.xMax / r) * r;
         const yMin = Math.floor(e.yMin / r) * r;
@@ -90,44 +93,45 @@ export class KernelSmoothingStyle extends Style {
         const nbX = (xMax - xMin) / r + 1
         const nbY = (yMax - yMin) / r + 1
 
-        //initialise smoothed value
+        //initialise smoothed value to 0
         for (const c of cells) c["ksmval"] = 0
 
-        //index input cells by i/j
-        const ind = {}
+        //index input cells by i/j (grid position)
+        const index = {}
         for (const c of cells) {
             // i,j of the cell
             const i = Math.floor((c.x - xMin) / r)
             const j = Math.floor((c.y - yMin) / r)
-            if (!ind[i]) ind[i] = {}
-            ind[i][j] = c
+            if (!index[i]) index[i] = {}
+            index[i][j] = c
         }
 
         //get kernel matrix
         /** @type {Array.<Array.<{w:number,val:number}>>} */
-        const km = this.getKernelMatrix(s)
-        const kernelSize = km.length
+        const kernelMatrix = this.getKernelMatrix(s)
+        const kernelSize = kernelMatrix.length
 
         //compute smoothing, cell by cell
 
-        for (const i_ of Object.keys(ind)) {
+        for (const i_ of Object.keys(index)) {
             const i = +i_
-            for (const j_ of Object.keys(ind[i_])) {
+            for (const j_ of Object.keys(index[i_])) {
                 const j = +j_
 
                 //get cell i,j
-                const c = ind[i][j]
+                const c = index[i][j]
 
                 //check if c is an input cell or a cell resulting from the smoothing already stored in 'cells'
                 if (c.notInputCell) continue;
 
                 /** 
-                 * Value of cell c
+                 * get value of cell c
                  * @type {number} */
                 const val = this.value(c);
                 if (!val) continue
 
-                //compute contribution of cell c across kernel window (ki,kj). store result in km.val field
+                //compute contribution of cell c across kernel window (ki,kj).
+                //store contributions in kernelMatrix.val field.
 
                 /** @type {number} */
                 let sumWeights = 0;
@@ -135,7 +139,7 @@ export class KernelSmoothingStyle extends Style {
                     for (let kj = 0; kj < kernelSize; kj++) {
 
                         //get kernel element
-                        const ke = km[ki][kj]
+                        const ke = kernelMatrix[ki][kj]
 
                         //add contribution: the weight X the value
                         ke.val = ke.w * val
@@ -145,25 +149,12 @@ export class KernelSmoothingStyle extends Style {
                     }
                 }
 
-
-                //add contributions to smoothed values
-                for (let ki = -kernelSize + 1; ki < kernelSize; ki++) {
-                    for (let kj = -kernelSize + 1; kj < kernelSize; kj++) {
-
-                        //check if target cell is within the view frame
-                        if (i + ki < 0 || i + ki >= nbX || j + kj < 0 || j + kj >= nbY)
-                            continue;
-
-                        //get contribution (ki,kj)
-                        let ke = km[Math.abs(ki)][Math.abs(kj)]
-                        if (!ke) continue
-                        let v = ke.val
-                        if (!v) continue;
-                        v /= sumWeights
-                        if (!v) continue;
-
+                /**  */
+                const isNotWithinFrame = (i, j, ki, kj) => i + ki < 0 || i + ki >= nbX || j + kj < 0 || j + kj >= nbY
+                /**  */
+                const addContributionTo = (iki, jkj, v) => {
                         //get cell at (i+ki,j+kj)
-                        const c_ = ind[i + ki] ? ind[i + ki][j + kj] : undefined
+                        const c_ = index[iki] ? index[iki][jkj] : undefined
 
                         if (c_) {
                             //cell exists: add contribution
@@ -171,9 +162,34 @@ export class KernelSmoothingStyle extends Style {
                             else c_["ksmval"] = v
                         } else {
                             //cell does not exist: create a new one with the smoothed value
-                            if (!ind[i + ki]) ind[i + ki] = {}
-                            ind[i + ki][j + kj] = { x: xMin + (i + ki) * r, y: yMin + (j + kj) * r, ksmval: v, notInputCell: true }
+                            if (!index[iki]) index[iki] = {}
+                            index[iki][jkj] = { x: xMin + iki * r, y: yMin + jkj * r, ksmval: v, notInputCell: true }
                         }
+                }
+
+                //add contributions to smoothed values
+                for (let ki = 0; ki < kernelSize; ki++) {
+                    for (let kj = 0; kj < kernelSize; kj++) {
+
+                        //check if target cell is within the view frame
+                        if (isNotWithinFrame(i, j, ki, kj))
+                            continue;
+
+                        //get contribution (ki,kj)
+                        let ke = kernelMatrix[Math.abs(ki)][Math.abs(kj)]
+                        if (!ke) continue
+                        let v = ke.val
+                        if (!v) continue;
+                        v /= sumWeights
+                        if (!v) continue;
+
+                        //add contribution
+                        addContributionTo(i+ki, j+kj, v)
+                        if(ki==0 && kj==0) continue;
+                        addContributionTo(i-ki, j+kj, v)
+                        if(ki==0) continue;
+                        addContributionTo(i+ki, j-kj, v)
+                        addContributionTo(i-ki, j-kj, v)
                     }
                 }
             }
@@ -181,9 +197,9 @@ export class KernelSmoothingStyle extends Style {
 
         //make out list
         const out = []
-        for (let i of Object.keys(ind))
-            for (const j of Object.keys(ind[i]))
-                out.push(ind[i][j])
+        for (let i of Object.keys(index))
+            for (const j of Object.keys(index[i]))
+                out.push(index[i][j])
 
         return out;
     }
