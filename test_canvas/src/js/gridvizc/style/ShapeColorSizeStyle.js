@@ -83,21 +83,24 @@ export class ShapeColorSizeStyle extends Style {
             //size - in geo and pixel
             const sG = s_(cell[this.sizeCol], resolution, statSize, cg.zf)
             /** @type {number} */
-            const sP = sG/cg.zf
+            const sP = sG / cg.zf
+
+            //get offset
+            const offset = this.offset(cell, resolution, cg.zf)
 
             if (shape === "square") {
                 //draw square
                 const d = resolution * (1 - sG / resolution) * 0.5
                 cg.ctx.fillRect(
-                    cg.geoToPixX(cell.x + d + this.offset.dx),
-                    cg.geoToPixY(cell.y + resolution - d + this.offset.dy),
+                    cg.geoToPixX(cell.x + d + offset.dx),
+                    cg.geoToPixY(cell.y + resolution - d + offset.dy),
                     sP, sP);
             } else if (shape === "circle") {
                 //draw circle
                 cg.ctx.beginPath();
                 cg.ctx.arc(
-                    cg.geoToPixX(cell.x + resolution * 0.5 + this.offset.dx),
-                    cg.geoToPixY(cell.y + resolution * 0.5 + this.offset.dy),
+                    cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx),
+                    cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy),
                     sP * 0.5,
                     0, 2 * Math.PI, false);
                 cg.ctx.fill();

@@ -17,7 +17,7 @@ export class TextStyle extends Style {
 
         /** A function returning the text of a cell.
          * @private @type {function(Cell):string} */
-        this.text = opts.text || (c => c+"")
+        this.text = opts.text || (c => c + "")
 
         /** A function returning the color of the cell.
          * @private @type {function(Cell):string} */
@@ -67,10 +67,13 @@ export class TextStyle extends Style {
             const fontWeight = this.fontWeight ? this.fontWeight(cell) : "bold";
             cg.ctx.font = fontWeight + " " + fontSize + "px " + fontFamily;
 
+            //get offset
+            const offset = this.offset(cell, r, cg.zf)
+
             //text position
             cg.ctx.textAlign = "center";
-            const tx = cg.geoToPixX(cell.x + r * 0.5 + this.offset.dx);
-            const ty = cg.geoToPixY(cell.y + r * 0.5 + this.offset.dy) + fontSize * 0.5;
+            const tx = cg.geoToPixX(cell.x + r * 0.5 + offset.dx);
+            const ty = cg.geoToPixY(cell.y + r * 0.5 + offset.dy) + fontSize * 0.5;
 
             //draw the text
             cg.ctx.fillText(text, tx, ty);

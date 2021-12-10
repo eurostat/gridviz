@@ -4,9 +4,7 @@
   - https://eurostat.github.io/gridviz/test_canvas/test/color.html
   - https://eurostat.github.io/gridviz/test_canvas/test/color_diverging.html
 - By size: https://eurostat.github.io/gridviz/test_canvas/test/size.html
-- Composition:
-  - https://eurostat.github.io/gridviz/test_canvas/test/composition.html
-  - https://eurostat.github.io/gridviz/test_canvas/test/multi.html
+- Composition: https://eurostat.github.io/gridviz/test_canvas/test/composition.html
 - Segment orientation: https://eurostat.github.io/gridviz/test_canvas/test/segment.html
 - Gaussian kernel smoothing: https://eurostat.github.io/gridviz/test_canvas/test/kernelsmoothing.html
 - Joy plot: https://eurostat.github.io/gridviz/test_canvas/test/joyplot.html

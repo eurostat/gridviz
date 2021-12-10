@@ -23,8 +23,8 @@ export class Style {
         opts = opts || {};
 
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
-         * @protected @type {{dx:number,dy:number}} */
-        this.offset = opts.offset || { dx: 0, dy: 0 };
+         * @protected @type {function(Cell,number,number):{dx:number,dy:number}} */
+        this.offset = opts.offset || ((c, r, zf) => ({ dx: 0, dy: 0 }));
 
 
         //the cell stroke
@@ -81,13 +81,14 @@ export class Style {
         const sP = sG / cg.zf;
 
         const shape_ = shape(cell);
+        const offset = this.offset(cell, resolution, cg.zf)
         if (shape_ === "square") {
             //draw square
             const d = resolution * (1 - sG / resolution) * 0.5
             cg.ctx.beginPath();
             cg.ctx.rect(
-                cg.geoToPixX(cell.x + d + this.offset.dx),
-                cg.geoToPixY(cell.y + resolution - d + this.offset.dy),
+                cg.geoToPixX(cell.x + d + offset.dx),
+                cg.geoToPixY(cell.y + resolution - d + offset.dy),
                 sP, sP);
             cg.ctx.stroke();
 
@@ -95,8 +96,8 @@ export class Style {
             //draw circle
             cg.ctx.beginPath();
             cg.ctx.arc(
-                cg.geoToPixX(cell.x + resolution * 0.5 + this.offset.dx),
-                cg.geoToPixY(cell.y + resolution * 0.5 + this.offset.dy),
+                cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx),
+                cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy),
                 sP * 0.5,
                 0, 2 * Math.PI, false);
             cg.ctx.stroke();
@@ -107,9 +108,9 @@ export class Style {
 
     //getters and setters
 
-    /** @returns {{dx:number,dy:number}} */
+    /** @returns {function(Cell,number,number):{dx:number,dy:number}} */
     getOffset() { return this.offset; }
-    /** @param {{dx:number,dy:number}} val @returns {this} */
+    /** @param {function(Cell,number,number):{dx:number,dy:number}} val @returns {this} */
     setOffset(val) { this.offset = val; return this; }
 
     /** @returns {number} */

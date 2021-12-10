@@ -96,13 +96,16 @@ export class SegmentStyle extends Style {
             const or = this.orientation(c) * f
             if (or === undefined || isNaN(or)) continue;
 
+            //get offset
+            const offset = this.offset(c, resolution, cg.zf)
+
             //set color and width
             cg.ctx.strokeStyle = col
             cg.ctx.lineWidth = wG / cg.zf
 
             //compute segment centre postition
-            const cx = cg.geoToPixX(c.x + resolution / 2 + this.offset.dx);
-            const cy = cg.geoToPixY(c.y + resolution / 2 + this.offset.dy);
+            const cx = cg.geoToPixX(c.x + resolution / 2 + offset.dx);
+            const cy = cg.geoToPixY(c.y + resolution / 2 + offset.dy);
 
             //compute segment direction
             const dx = 0.5 * Math.cos(or) * lG / cg.zf

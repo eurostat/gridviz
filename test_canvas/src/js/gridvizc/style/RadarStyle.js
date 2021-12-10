@@ -53,9 +53,12 @@ export class RadarStyle extends Style {
 
         for (let cell of cells) {
 
+            //get offset
+            const offset = this.offset(cell, r, cg.zf)
+
             //compute cell center position
-            const xc = cg.geoToPixX(cell.x + r * 0.5 + this.offset.dx);
-            const yc = cg.geoToPixY(cell.y + r * 0.5 + this.offset.dy);
+            const xc = cg.geoToPixX(cell.x + r * 0.5 + offset.dx);
+            const yc = cg.geoToPixY(cell.y + r * 0.5 + offset.dy);
 
             //draw decomposition symbols
             for (let [column, color] of Object.entries(this.color)) {
