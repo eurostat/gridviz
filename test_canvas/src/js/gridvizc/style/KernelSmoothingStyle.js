@@ -105,10 +105,6 @@ export class KernelSmoothingStyle extends Style {
         const km = this.getKernelMatrix(s)
         const kernelSize = km.length
 
-        console.log(km)
-        console.log(kernelSize)
-        console.log(ind)
-
         //compute smoothing, cell by cell
 
         for (const i of Object.keys(ind)) {
@@ -124,23 +120,25 @@ export class KernelSmoothingStyle extends Style {
                  * Value of cell c
                  * @type {number} */
                 const val = this.value(c);
+                if(!val) continue
 
-                //compute contribution of cell c with kernel window (ki,kj). store result in km.val field
+                //compute contribution of cell c across kernel window (ki,kj). store result in km.val field
 
                 /** @type {number} */
                 let sumWeights = 0;
-                for (let ki = 0; ki <= kernelSize; ki++)
-                    for (let kj = 0; kj <= kernelSize; kj++) {
+                for (let ki = 0; ki < kernelSize; ki++)
+                    for (let kj = 0; kj < kernelSize; kj++) {
 
                         //get kernel element
                         const ke = km[ki][kj]
 
-                        //add contribution: its weight times its value
+                        //add contribution: the weight X the value
                         ke.val = ke.w * val
 
                         //keep sum of weights
                         sumWeights += ke.w;
                     }
+
 
                 //add contributions to smoothed values
                 for (let ki = -kernelSize; ki <= kernelSize; ki++)
@@ -151,7 +149,7 @@ export class KernelSmoothingStyle extends Style {
                             continue;
 
                         //get contribution (ki,kj)
-                        const v = km[Math.abs(ki)][Math.abs(kj)].val
+                        const v = km[Math.abs(ki)][Math.abs(kj)].val / sumWeights
                         if (!v) continue;
 
                         //get cell at (i+ki,j+kj)
