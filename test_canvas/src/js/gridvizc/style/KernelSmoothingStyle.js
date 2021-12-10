@@ -150,30 +150,26 @@ export class KernelSmoothingStyle extends Style {
                 }
 
                 /**  */
-                const isNotWithinFrame = (i, j, ki, kj) => i + ki < 0 || i + ki >= nbX || j + kj < 0 || j + kj >= nbY
+                const isWithinFrame = (i, j) => i >= 0 && i < nbX && j >= 0 && j < nbY
                 /**  */
                 const addContributionTo = (iki, jkj, v) => {
-                        //get cell at (i+ki,j+kj)
-                        const c_ = index[iki] ? index[iki][jkj] : undefined
+                    //get cell at (i+ki,j+kj)
+                    const c_ = index[iki] ? index[iki][jkj] : undefined
 
-                        if (c_) {
-                            //cell exists: add contribution
-                            if (c_["ksmval"]) c_["ksmval"] += v
-                            else c_["ksmval"] = v
-                        } else {
-                            //cell does not exist: create a new one with the smoothed value
-                            if (!index[iki]) index[iki] = {}
-                            index[iki][jkj] = { x: xMin + iki * r, y: yMin + jkj * r, ksmval: v, notInputCell: true }
-                        }
+                    if (c_) {
+                        //cell exists: add contribution
+                        if (c_["ksmval"]) c_["ksmval"] += v
+                        else c_["ksmval"] = v
+                    } else {
+                        //cell does not exist: create a new one with the smoothed value
+                        if (!index[iki]) index[iki] = {}
+                        index[iki][jkj] = { x: xMin + iki * r, y: yMin + jkj * r, ksmval: v, notInputCell: true }
+                    }
                 }
 
                 //add contributions to smoothed values
                 for (let ki = 0; ki < kernelSize; ki++) {
                     for (let kj = 0; kj < kernelSize; kj++) {
-
-                        //check if target cell is within the view frame
-                        if (isNotWithinFrame(i, j, ki, kj))
-                            continue;
 
                         //get contribution (ki,kj)
                         let ke = kernelMatrix[Math.abs(ki)][Math.abs(kj)]
@@ -183,13 +179,20 @@ export class KernelSmoothingStyle extends Style {
                         v /= sumWeights
                         if (!v) continue;
 
-                        //add contributions to 4 similar points
-                        addContributionTo(i+ki, j+kj, v)
-                        if(ki==0 && kj==0) continue;
-                        addContributionTo(i-ki, j+kj, v)
-                        if(ki==0) continue;
-                        addContributionTo(i+ki, j-kj, v)
-                        addContributionTo(i-ki, j-kj, v)
+                        //add contributions to 4 similar cells, if they are within the frame of course
+                        if (isWithinFrame(i + ki, j + kj))
+                            addContributionTo(i + ki, j + kj, v)
+
+                        if (ki == 0 && kj == 0) continue;
+
+                        if (isWithinFrame(i - ki, j + kj))
+                            addContributionTo(i - ki, j + kj, v)
+
+                        if (ki == 0) continue;
+                        if (isWithinFrame(i + ki, j - kj))
+                            addContributionTo(i + ki, j - kj, v)
+                        if (isWithinFrame(i - ki, j - kj))
+                            addContributionTo(i - ki, j - kj, v)
                     }
                 }
             }
