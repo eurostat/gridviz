@@ -14,6 +14,8 @@
             <option value="size">size</option>
             <option value="joyplot">Joy plot</option>
         </select>
+        <br>
+        <input type="range" min="1" max="16" value="8" class="slider" id="sigma">
     </div>
 
     <script src="../build/gridvizc.js"></script>
@@ -69,16 +71,23 @@
 
 
 
-        //combo list
-        const select = document.querySelector('#style');
+        //style selection
+        const select = document.getElementById('style');
         select.addEventListener('change', function () {
             //set selected style
-            s.style = styles[select.value]
+            s.style = styles[this.value]
             //redraw
-            app.cg.redraw();
+            app.cg.redraw()
         });
 
-
+        //sigma selection
+        const slider = document.getElementById('sigma');
+        slider.oninput = function () {
+            //set sigma
+            s.sigma = zf => zf * (+this.value)
+            //redraw
+            app.cg.redraw()
+        }
     </script>
 </body>
 
