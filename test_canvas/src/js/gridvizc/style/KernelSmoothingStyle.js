@@ -40,8 +40,8 @@ export class KernelSmoothingStyle extends Style {
     */
     getKernelMatrix(s) {
 
-        //the size of the window: lets limit that to ~4 times the standard deviation, as an approximation.
-        const windowSize = Math.floor(3 * s) + 1;
+        //the size of the kernel: lets limit that to ~4 times the standard deviation, as an approximation.
+        const kernelSize = Math.floor(3 * s) + 1;
 
         //prepare coefficients for gaussian computation, to avoid computing them every time.
         const c2 = 2 * s * s;
@@ -55,9 +55,9 @@ export class KernelSmoothingStyle extends Style {
         const gaussian = (x, y) => Math.exp(-(x * x + y * y) / c2)
 
         const kw = []
-        for (let wi = 0; wi <= windowSize; wi++) {
+        for (let wi = 0; wi <= kernelSize; wi++) {
             const col = []
-            for (let wj = 0; wj <= windowSize; wj++) {
+            for (let wj = 0; wj <= kernelSize; wj++) {
                 //compute weight at wi,wj
                 const val = gaussian(wi, wj)
                 col.push(val)
@@ -72,23 +72,18 @@ export class KernelSmoothingStyle extends Style {
     * Compute kernel smoothing.
     * 
     * @private
-    * @param {Array.<Array.<number>>} m The input matrix to be smoothed
-    * @param {number} nbX Size of the input matrix - X
-    * @param {number} nbY Size of the input matrix - Y
+    * @param {Array.<Cell>} cells The cells to be smoothed
     * @param {number} s 
     * @returns {Array.<Array.<number>>}
     */
-    kernelSmoothing(m, nbX, nbY, s) {
+    kernelSmoothing(cells, s) {
 
-        //create output matrix
-        /** @type {Array.<Array.<number>>} */
-        const out = getEmptyMatrix(nbX, nbY);
+        //index input matrix by x/y
 
-        //compute window matrix, that is the matrix of the weights
-        //one quadrant is necessary only, since it is symetrical (along both x and y axes)
+        //get kernel matrix
         /** @type {Array.<Array.<number>>} */
         const km = this.getKernelMatrix(s)
-        const windowSize = km.length - 1
+        const kernelSize = km.length - 1
 
         //make smoothing, cell by cell
         for (let i = 0; i < nbX; i++) {
@@ -100,19 +95,19 @@ export class KernelSmoothingStyle extends Style {
                 /** @type {number} */
                 let sumWeights = 0;
 
-                //moving window (wi,wj)
-                for (let wi = -windowSize; wi <= windowSize; wi++)
-                    for (let wj = -windowSize; wj <= windowSize; wj++) {
+                //moving kernel window (ki,kj)
+                for (let ki = -kernelSize; ki <= kernelSize; ki++)
+                    for (let kj = -kernelSize; kj <= kernelSize; kj++) {
 
                         //TODO use symetric
-                        if (i + wi < 0 || i + wi >= nbX || j + wj < 0 || j + wj >= nbY)
+                        if (i + ki < 0 || i + ki >= nbX || j + kj < 0 || j + kj >= nbY)
                             continue;
 
                         //get weight of pixel (i+wi,j+wj)
-                        const weight = km[Math.abs(wi)][Math.abs(wj)]
+                        const weight = km[Math.abs(ki)][Math.abs(kj)]
 
                         //add contribution of pixel (i+wi,j+wj): its weight times its value
-                        sval += weight * m[i + wi][j + wj]
+                        sval += weight * m[i + ki][j + kj]
 
                         //keep sum of weights
                         sumWeights += weight;
@@ -212,7 +207,7 @@ export class KernelSmoothingStyle extends Style {
  * @param {number} nbY 
  * @returns {Array.<Array.<number>>}
  */
-function getEmptyMatrix(nbX, nbY) {
+/*function getEmptyMatrix(nbX, nbY) {
     const matrix = []
     for (let i = 0; i < nbX; i++) {
         const col = [];
@@ -222,7 +217,7 @@ function getEmptyMatrix(nbX, nbY) {
         matrix.push(col);
     }
     return matrix;
-}
+}*/
 
 //See:
 //NO https://github.com/Planeshifter/kernel-smooth/blob/master/examples/index.js
