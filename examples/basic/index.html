@@ -21,19 +21,20 @@
     .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
     .title("5km² Population Grid of Europe")
     .zoom(3000)
+    .geoCenter([4000,3000])
     .homeButton(true)
     .zoomButtons(true)
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
 
-  app.addGrid(
-    {
-      url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
-      cellSize: 5,
-      colorField:"population",
-      //sizeField:"population"
-    },
-  )
+  const s = gridviz.colorSizeShapeStyle({ "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["population"], 0.5) / 100) })
+  app.addCSVGrid({
+    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
+    resolution: 5,
+    styles: [s],
+    minZoom: 0,
+    maxZoom: 999999999
+  })
 </script>
 
 </html>

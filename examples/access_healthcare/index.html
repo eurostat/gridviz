@@ -1,63 +1,62 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Healthcare accessiblity</title>
-    <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
-    <meta name="viewport" content="width=device-width" />
-  </head>
 
-  <body style="margin: 0">
-    <div id="viz-container" style="height: 100%; width: 100%"></div>
-  </body>
-  <script src="../../build/gridviz.js"></script>
-  <script>
-    let legendWidth;
-    let legendHeight;
-    // set mobile legend
-    if (window.screen.width < 600) {
-      legendWidth = window.screen.width - 30; //margin
-      legendHeight = 50;
+<head>
+  <meta charset="utf-8" />
+  <title>Healthcare accessiblity</title>
+  <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+  <meta name="viewport" content="width=device-width" />
+</head>
+
+<body style="margin: 0">
+  <div id="viz-container" style="height: 100%; width: 100%"></div>
+</body>
+<script src="../../build/gridviz.js"></script>
+<script>
+  let legendWidth;
+  let legendHeight;
+  // set mobile legend
+  if (window.screen.width < 600) {
+    legendWidth = window.screen.width - 30; //margin
+    legendHeight = 50;
+  }
+
+  let containerDiv = document.getElementById("viz-container");
+
+  let viz = gridviz
+    .app()
+    .container(containerDiv)
+
+    .cellCount(true)
+    .zoom(4000)
+    .geoCenter([4369, 3230])
+    .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
+    .title("Healthcare accessiblity")
+    .showPlacenames(true)
+    .build();
+
+  const s = gridviz.colorSizeShapeStyle({
+    colorFunction: c => {
+      if (c["avg_time"] > 40) return "#4d004b";
+      if (c["avg_time"] > 30) return "#810f7c";
+      if (c["avg_time"] > 25) return "#88419d";
+      if (c["avg_time"] > 20) return "#8c6bb1";
+      if (c["avg_time"] > 15) return "#8c96c6";
+      if (c["avg_time"] > 10) return "#9ebcda";
+      if (c["avg_time"] > 8) return "#bfd3e6";
+      if (c["avg_time"] > 6) return "#e0ecf4";
+      if (c["avg_time"] > 4) return "#f7fcfd";
+      return "red";
     }
+  })
+  viz.addCSVGrid({
+    url: "../../assets/csv/Europe/1km/healthcare_acc.csv",
+    resolution: 1,
+    styles: [s],
+    minZoom: 0,
+    maxZoom: 999999999
+  });
 
-    let containerDiv = document.getElementById("viz-container");
+</script>
 
-    let viz = gridviz
-      .app()
-      .container(containerDiv)
-
-      .cellCount(true)
-      .zoom(4000)
-      .geoCenter([4369, 3230])
-      .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
-      .title("Healthcare accessiblity")
-
-      .showPlacenames(true)
-      .colorSchemeName("interpolateCividis")
-      //.reverseColorScheme(false)
-      .colorSchemeSelector(true)
-      .colors(['#f7fcfd','#e0ecf4','#bfd3e6','#9ebcda','#8c96c6','#8c6bb1','#88419d','#810f7c','#4d004b']) //from colorbrewer
-
-      //.colorScaleSelector(true)
-      .colorScaleName("scaleSequentialQuantile")
-      .thresholds([4, 6, 8, 10, 15, 20, 25, 30, 40])
-
-      .legend({
-        title: "Travel time to nearest hospital (min)",
-        ticks: 10,
-        width: legendWidth,
-        height: legendHeight
-      })
-      //.sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
-      .build();
-
-      viz.addGrid(
-        {
-          // url: "https://raw.githubusercontent.com/eurostat/gridviz/development/assets/csv/Europe/1km/accs.csv",
-          url: "../../assets/csv/Europe/1km/healthcare_acc.csv",
-          cellSize: 1,
-          colorField: "avg_time"
-        },
-      )
-  </script>
 </html>

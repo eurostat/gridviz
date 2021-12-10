@@ -31,34 +31,18 @@
         .height(window.innerHeight)
         .width(window.innerWidth)
         .backgroundColor("#000")
-        .lineColor("#ffffff")
-        .colorSchemeName("interpolateInferno")
-        .colorScaleName("scaleSequentialLog")
-        .colorSchemeSelector(true)
-        .colorScaleSelector(true)
-        //  .placenameThresholds({ //"scale": population
-        //     "500000": 100000,
-        //     "175000": 50000,
-        //     "150000": 20000,
-        //     "100000": 10000,
-        //     "50000": 1000
-        // })
-        .colorScaleSelectorLabel("Scale: ")
-        .colorFieldSelectorLabel("Indicator: ")
         .nuts(true) //loads borders topojson
-        .legend({
-            title: "Total population per km² (2015)",
-            titleWidth: 110,
-            format: ',.0f',
-            ticks: 4
-        })
         .build()
 
-    viz.addGrid({
+        const s = gridviz.colorSizeShapeStyle({ "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["Inhabitants"], 0.6) / 100) })
+        viz.addCSVGrid({
         url: "../../assets/csv/France/1km/2015_Ind.csv",
-        cellSize: 1000,
-        colorField: "Inhabitants"
-    })
+        resolution: 1000,
+        styles: [s],
+        minZoom: 0,
+        maxZoom: 999999999
+    });
+
 </script>
 
 </html>

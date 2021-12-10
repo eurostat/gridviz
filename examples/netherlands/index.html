@@ -39,18 +39,28 @@
       .width(window.innerWidth)
       .backgroundColor("#2b2b2b")
       .highlightColor('cyan')
-      .lineColor("#ffffff")
       .build();
 
-      viz.addCSVGrid(
-        {
-          url: "../../assets/csv/Netherlands/100m/NL_census.csv",
-          resolution: 1,
-          colorField: "Inhabitants"
-        },
-      )
 
-      .colors(['#ffffd4','#fee391','#fec44f','#fe9929','#ec7014','#cc4c02','#8c2d04'])
-      .thresholds([10, 20, 40, 80, 200, 300, 900])
+  const s = gridviz.colorSizeShapeStyle({
+      colorFunction: c => {
+        if (c["Inhabitants"] > 900) return "#8c2d04";
+        if (c["Inhabitants"] > 300) return "#cc4c02";
+        if (c["Inhabitants"] > 200) return "#ec7014";
+        if (c["Inhabitants"] > 80) return "#fe9929";
+        if (c["Inhabitants"] > 40) return "#fec44f";
+        if (c["Inhabitants"] > 20) return "#fee391";
+        if (c["Inhabitants"] > 0) return "#ffffd4";
+      }
+    }
+  )
+
+  viz.addCSVGrid({
+    url: "../../assets/csv/Netherlands/100m/NL_census.csv",
+    resolution: 1,
+    styles: [s],
+    minZoom: 0,
+    maxZoom: 999999999
+  });
   </script>
 </html>
