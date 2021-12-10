@@ -41,7 +41,7 @@ export class KernelSmoothingStyle extends Style {
     getKernelMatrix(s) {
 
         //the size of the kernel: lets limit that to ~4 times the standard deviation, as an approximation.
-        const kernelSize = Math.floor(3 * s) + 1;
+        const kernelSize = Math.floor(3 * s);
 
         //prepare coefficients for gaussian computation, to avoid computing them every time.
         const c2 = 2 * s * s;
@@ -103,7 +103,7 @@ export class KernelSmoothingStyle extends Style {
         //get kernel matrix
         /** @type {Array.<Array.<{w:number,val:number}>>} */
         const km = this.getKernelMatrix(s)
-        const kernelSize = km.length - 1
+        const kernelSize = km.length
 
         console.log(km)
         console.log(kernelSize)
