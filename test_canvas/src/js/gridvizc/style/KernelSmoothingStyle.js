@@ -183,7 +183,7 @@ export class KernelSmoothingStyle extends Style {
                         v /= sumWeights
                         if (!v) continue;
 
-                        //add contribution
+                        //add contributions to 4 similar points
                         addContributionTo(i+ki, j+kj, v)
                         if(ki==0 && kj==0) continue;
                         addContributionTo(i-ki, j+kj, v)
@@ -195,7 +195,7 @@ export class KernelSmoothingStyle extends Style {
             }
         }
 
-        //make out list
+        //make output list
         const out = []
         for (let i of Object.keys(index))
             for (const j of Object.keys(index[i]))
