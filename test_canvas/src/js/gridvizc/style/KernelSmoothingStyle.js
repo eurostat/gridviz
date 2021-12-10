@@ -241,9 +241,9 @@ export class KernelSmoothingStyle extends Style {
     setValue(val) { this.value = val; return this; }
 
     /** @returns {function(number):number} */
-    getSigmaGeo() { return this.sigma; }
+    getSigma() { return this.sigma; }
     /** @param {function(number):number} val @returns {this} */
-    setSigmaGeo(val) { this.sigma = val; return this; }
+    setSigma(val) { this.sigma = val; return this; }
 
     /** @returns {Style} */
     getStyle() { return this.style; }

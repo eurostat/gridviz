@@ -7,6 +7,11 @@
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
+
+    <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
+        <input type="range" min="1" max="16" value="5" class="slider" id="sigma">
+    </div>
+
     <script src="../build/gridvizc.js"></script>
     <script>
 
@@ -45,6 +50,14 @@
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/20000m//", [s], 4000, 8000, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/50000m//", [s], 8000, 9999999999, { cellInfoHTML: ttfun });
 
+        //sigma selection
+        const slider = document.getElementById('sigma');
+        slider.oninput = function () {
+            //set sigma
+            s.sigma = zf => zf * (+this.value)
+            //redraw
+            app.cg.redraw()
+        }
     </script>
 </body>
 
