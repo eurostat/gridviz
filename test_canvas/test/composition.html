@@ -24,9 +24,12 @@
         //make application
         const app = new gviz.App().setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(3)
 
+        const colorDict = { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" }
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
+
+        //flag, piechart, ring style
         const s = new gviz.CompositionStyle({
-            color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
+            color: colorDict,
             type: c => "flag",
             sizeCol: "Inhabitants",
             size: (v, r, s, zf) => r * Math.sqrt(v / s.max),
@@ -34,16 +37,17 @@
         })
 
 
-
+        //radar style
         const sRadar = new gviz.RadarStyle({
-            color: { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
+            color: colorDict,
             radius: (v, r, s, zf) => 0.6 * r * Math.pow(v / s.max, 0.2),
         })
 
 
+        //multi style
         const r = 100
         const s14 = new gviz.ShapeColorSizeStyle({
-            color: () => "#377eb8",
+            color: () => colorDict["Population under 14"],
             sizeCol: "Population under 14",
             size: (v, r, s, zf) => 5 * Math.sqrt(v),
             shape: c => "circle",
@@ -51,7 +55,7 @@
             zfStroke: 1
         })
         const s30 = new gviz.ShapeColorSizeStyle({
-            color: () => "#4daf4a",
+            color: () => colorDict["pop_"],
             sizeCol: "pop_",
             size: (v, r, s, zf) => 5 * Math.sqrt(v),
             shape: c => "circle",
@@ -59,7 +63,7 @@
             zfStroke: 1
         })
         const s65 = new gviz.ShapeColorSizeStyle({
-            color: () => "#e41a1c",
+            color: () => colorDict["Population over 65"],
             sizeCol: "Population over 65",
             size: (v, r, s, zf) => 5 * Math.sqrt(v),
             shape: c => "circle",
@@ -81,6 +85,7 @@
         //combo list
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
+            //set style
             if (select.value === "radar") {
                 for (let lay of app.layers) lay.styles = [sRadar]
             } else if (select.value === "multi") {
