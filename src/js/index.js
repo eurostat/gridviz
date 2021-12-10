@@ -13,12 +13,12 @@ export const color = function () {
 
 //export styles
 import { ColorSizeShapeStyle } from "./core/style/ColorSizeShapeStyle"
-export const getColorSizeShapeStyle = function (opts) {
+export const colorSizeShapeStyle = function (opts) {
     return new ColorSizeShapeStyle(opts)
 }
 
 import { LineStyle } from "./core/style/LineStyle"
-export const getLineStyle = function (height) {
+export const lineStyle = function (height) {
     return new LineStyle(height)
 }
 

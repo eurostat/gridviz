@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <title></title>
+</head>
+
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif;">
+    <div id="gridviz"></div>
+    <script src="../build/gridviz.js"></script>
+    <script>
+        let containerDiv = document.getElementById("gridviz");
+        //make application
+        const app = gridviz.app()
+            .container(containerDiv)
+            .geoCenter([4900000, 2475000])
+            .title("gridviz population Joyplot")
+            .showPlacenames(true)
+            .backgroundColor("white")
+            .highlightColor("red")
+            .cellCount(true)
+            .zoom(500000) //initial camera Z value
+            .nuts(true)
+            .build()
+
+        //define datasets, styles and layers
+        const s = gridviz.lineStyle({
+            "heightFunction": c => 30 * Math.sqrt(c["2011"]),
+            "lineColor": "black",
+            //"lineWidth": 0.0015
+        })
+
+        //.lineWidth(0.0015)
+
+        app.addTiledGrid({
+            url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/",
+            styles: [s],
+            minZoom: 0,
+            maxZoom: 200000
+        });
+        app.addTiledGrid({
+            url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/",
+            styles: [s],
+            minZoom: 200000,
+            maxZoom: 500000
+        })
+        app.addTiledGrid({
+            url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/",
+            styles: [s],
+            minZoom: 500000,
+            maxZoom: 2000000
+        })
+        app.addTiledGrid({
+            url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/",
+            styles: [s],
+            minZoom: 2000000,
+            maxZoom: 5000000
+        })
+        app.addTiledGrid({
+            url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/",
+            styles: [s],
+            minZoom: 5000000,
+            maxZoom: 9999999999
+        })
+
+    </script>
+</body>
+
+</html>

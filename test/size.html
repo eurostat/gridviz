@@ -28,7 +28,7 @@
     .build();
 
   //define datasets, styles and layers
-  const s1km = gridviz.getColorSizeShapeStyle({
+  const s1km = gridviz.colorSizeShapeStyle({
     "colorFunction": null,
     "sizeFunction": c => 0.1 * Math.sqrt(c["Population"]),
     "shapeFunction": c => "circle",
@@ -36,7 +36,7 @@
   }
   )
 
-  const s5km = gridviz.getColorSizeShapeStyle({
+  const s5km = gridviz.colorSizeShapeStyle({
     "colorFunction": null,
     "sizeFunction": c => 0.1 * Math.sqrt(c["population"]),
     "shapeFunction": c => c["population"] > 5000 ? "circle" : "square",

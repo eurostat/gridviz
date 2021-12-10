@@ -29,7 +29,7 @@
     .build();
 
   //define datasets, styles and layers
-  const s5km = gridviz.getColorSizeShapeStyle(
+  const s5km = gridviz.colorSizeShapeStyle(
     {
       "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["population"], 0.5) / 100),
       "sizeFunction":  c => 5,
@@ -39,14 +39,14 @@
       "strokeColor": 'grey'
     }
   )
-  const s1km = gridviz.getColorSizeShapeStyle(
+  const s1km = gridviz.colorSizeShapeStyle(
     {
       "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["Population"], 0.6) / 100),
       "sizeFunction":  c => 1,
       "shapeFunction": c => "circle",
       "opacity": 1,
       "strokeWidth": 0.2,
-      "strokeColor": 'grey'
+      "strokeColor": 'black'
     }
   )
 

@@ -805,7 +805,7 @@ export class App {
 
         if (cell) {
           
-          if (intersect.object instanceof Line2) {
+          if (intersect.object instanceof Line2 || intersect.object instanceof Line) {
             //circle pointer
             if (!this._highlightPointer) {
               const material = new MeshBasicMaterial( { color: new Color(this.highlightColor_) } );
@@ -994,8 +994,8 @@ export class App {
   }
   updateRaycasterThreshold(threshold) {
     this.viewer.raycaster.params.Points.threshold = threshold;
-    this.viewer.raycaster.params.Line.threshold = threshold * 2;
-    //this.viewer.raycaster.params.Line2 = { "threshold": threshold };
+    this.viewer.raycaster.params.Line.threshold = threshold;
+    //this.viewer.raycaster.params.Line2 // define this in LineSegments2 raycast function
   }
 
   highlightObject(intersect) {
