@@ -166,11 +166,11 @@ export class KernelSmoothingStyle extends Style {
                         const c_ = ind[i + ki] ? ind[i + ki][j + kj] : undefined
 
                         if (c_) {
-                            //cell exist: add contribution
+                            //cell exists: add contribution
                             if (c_["ksmval"]) c_["ksmval"] += v
                             else c_["ksmval"] = v
                         } else {
-                            //cell does not exist: create a new one
+                            //cell does not exist: create a new one with the smoothed value
                             if (!ind[i + ki]) ind[i + ki] = {}
                             ind[i + ki][j + kj] = { x: xMin + (i + ki) * r, y: yMin + (j + kj) * r, ksmval: v, notInputCell: true }
                         }
