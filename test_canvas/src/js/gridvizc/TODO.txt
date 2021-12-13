@@ -1,11 +1,11 @@
+TODO color: test image drawing https://github.com/uwdata/fast-kde/blob/main/src/heatmap.js
 TODO draw cell stroke
 TODO labels - improve selection
 TODO make nice test with combination
 TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache and remove inpriority the old-unused tiles.
 
-
 TODO style trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php
-TODO contour style. and hypsometric. See https://observablehq.com/@d3/density-contours
+TODO contour style. and hypsometric. See https://observablehq.com/@d3/density-contours https://observablehq.com/@sahilchinoy/contour-map?collection=@sahilchinoy/geo-experiments
 TODO show accessibility data - merge datasets
 
 TODO mouse over: Show rectangle.
