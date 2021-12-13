@@ -102,6 +102,8 @@ export class Viewer extends EventEmitter {
 
         //initial extent
         this.extGeo = this.getCurrentGeoExtent();
+
+        this._previousTouch = null; //mobile zoom
     }
 
     /**
@@ -119,8 +121,8 @@ export class Viewer extends EventEmitter {
      */
     createWebGLRenderer() {
         this.renderer = new WebGLRenderer({
-            alpha:true,
-            antialias:true,
+            alpha: true,
+            antialias: true,
             failIfMajorPerformanceCaveat: false,
         });
         // TODO: adjust for when the user loads gridviz into a small container
@@ -163,7 +165,6 @@ export class Viewer extends EventEmitter {
                 .scaleExtent([this.farScale, this.nearScale])
                 .extent([[0, 0], [this.width, this.height]])
                 .on("zoom", (event) => {
-                    // let event = currentEvent;
                     if (this.isMobile) {
                         if (event) this.zoomHandlerMobile(event);
                     } else {
@@ -171,52 +172,39 @@ export class Viewer extends EventEmitter {
                     }
                 })
                 .on("end", (event) => {
-                    //let event = currentEvent;
+                    //reset previous touch for mobiles
+                    if (this.isMobile) this.previousTouch = null;
                     if (event) this.zoomEnd(event);
                 });
 
-        if (this.isMobile) {
-            //due to a bug on mobile, where the camera shifts unexpectedly on the first pan or zoom event, we have to scale everything to a webgl-friendly range and set the camera to 0,0
-            let initial_scale = Utils.getScaleFromZ(this.height, this.camera.config.fov_, this.camera.config.initialZ_);
-            var initial_transform = zoomIdentity.translate(this.width / 2, this.height / 2).scale(initial_scale);
-            this.zoomBehaviour.transform(this.view, initial_transform);
-            this.camera.setCamera(0, 0, this.camera.config.initialZ_)
+        // if (this.isMobile) {
+        //due to a bug on mobile, where the camera shifts unexpectedly on the first pan or zoom event, we have to scale everything to a webgl-friendly range and set the camera to 0,0
+        // let initial_scale = Utils.getScaleFromZ(this.height, this.camera.config.fov_, this.camera.config.initialZ_);
+        // var initial_transform = zoomIdentity.translate(this.width / 2, this.height / 2).scale(initial_scale);
+        // this.zoomBehaviour.transform(this.view, initial_transform);
+        // this.camera.setCamera(0, 0, this.camera.config.initialZ_)
 
-        } else {
-            //initial desktop zoom transform
-            let scale = Utils.getScaleFromZ(this.height, this.camera.config.fov_, this.camera.config.initialZ_)
-            this.zoomBehaviour.scaleTo(this.view, scale);
-            this.zoomBehaviour.translateTo(this.view,
-                this.geoCenter[0] + this.width / 2,
-                this.geoCenter[1] + this.height / 2);
-            this.camera.setCamera(this.geoCenter[0], this.geoCenter[1], this.camera.config.initialZ_)
-        }
+        // } else {
+        //initial desktop zoom transform
+        let scale = Utils.getScaleFromZ(this.height, this.camera.config.fov_, this.camera.config.initialZ_)
+        this.zoomBehaviour.scaleTo(this.view, scale);
+        this.zoomBehaviour.translateTo(this.view,
+            this.geoCenter[0] + this.width / 2,
+            this.geoCenter[1] + this.height / 2);
+        this.camera.setCamera(this.geoCenter[0], this.geoCenter[1], this.camera.config.initialZ_)
+        // }
         this.view.call(this.zoomBehaviour);
     }
 
     zoomHandler(event) {
-        let scale = event.transform.k;
         if (event.sourceEvent) {
-            let new_z = Utils.getZFromScale(this.height, this.camera.config.fov_, scale);
-            //if zoom
-            if (new_z !== this.camera.camera.position.z) {
-                // Handle a zoom event
-                const { clientX, clientY } = event.sourceEvent;
-                // Code from WestLangley https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z/13091694#13091694
-                const vector = new Vector3(
-                    (clientX / this.width) * 2 - 1,
-                    -(clientY / this.height) * 2 + 1,
-                    1
-                );
-                vector.unproject(this.camera.camera);
-                const dir = vector.sub(this.camera.camera.position).normalize();
-                const distance = (new_z - this.camera.camera.position.z) / dir.z;
-                const pos = this.camera.camera.position.clone().add(dir.multiplyScalar(distance));
-                // Set the camera to new coordinates
-                this.camera.setCamera(pos.x, pos.y, new_z);
+
+            if (event.sourceEvent.type == "wheel") {
+                this.handleWheelEvent(event)
             } else {
                 // If panning
-                const { movementX, movementY } = event.sourceEvent;
+                let movementX = event.sourceEvent.movementX;
+                let movementY = event.sourceEvent.movementY;
 
                 // Adjust mouse movement by current scale and set camera
                 const current_scale = Utils.getScaleFromZ(this.height, this.camera.config.fov_, this.camera.camera.position.z);
@@ -229,13 +217,60 @@ export class Viewer extends EventEmitter {
         }
     }
 
+
     zoomHandlerMobile(event) {
+
         if (event.sourceEvent) {
-            let scale = event.transform.k;
-            let x = -(event.transform.x - this.width / 2) / scale;
-            let y = (event.transform.y - this.height / 2) / scale;
-            let z = Utils.getZFromScale(this.height, this.camera.config.fov_, scale);
-            this.camera.setCamera(x, y, z);
+            if (event.sourceEvent.type == "wheel") {
+                //zoom
+                this.handleWheelEvent(event)
+
+            } else {
+                //pan
+                //https://stackoverflow.com/questions/63469667/what-are-movementx-and-movementy-alternatives-for-touch-events
+
+                const touch = event.sourceEvent.touches[0];
+                if (this.previousTouch) {
+                    // be aware that these only store the movement of the first touch in the touches array
+                    event.movementX = touch.pageX - this.previousTouch.pageX;
+                    event.movementY = touch.pageY - this.previousTouch.pageY;
+
+                    // If panning
+                    let movementX = event.movementX;
+                    let movementY = event.movementY;
+
+                    // Adjust mouse movement by current scale and set camera
+                    const current_scale = Utils.getScaleFromZ(this.height, this.camera.config.fov_, this.camera.camera.position.z);
+                    this.camera.setCamera(
+                        this.camera.camera.position.x - (movementX / current_scale),
+                        this.camera.camera.position.y + (movementY / current_scale),
+                        this.camera.camera.position.z
+                    );
+                };
+
+                this.previousTouch = touch;
+            }
+        }
+    }
+
+    handleWheelEvent(event) {
+        let scale = event.transform.k;
+        let new_z = Utils.getZFromScale(this.height, this.camera.config.fov_, scale);
+        if (new_z !== this.camera.camera.position.z) {
+            // Handle a zoom event
+            const { clientX, clientY } = event.sourceEvent;
+            // Code from WestLangley https://stackoverflow.com/questions/13055214/mouse-canvas-x-y-to-three-js-world-x-y-z/13091694#13091694
+            const vector = new Vector3(
+                (clientX / this.width) * 2 - 1,
+                -(clientY / this.height) * 2 + 1,
+                1
+            );
+            vector.unproject(this.camera.camera);
+            const dir = vector.sub(this.camera.camera.position).normalize();
+            const distance = (new_z - this.camera.camera.position.z) / dir.z;
+            const pos = this.camera.camera.position.clone().add(dir.multiplyScalar(distance));
+            // Set the camera to new coordinates
+            this.camera.setCamera(pos.x, pos.y, new_z);
         }
     }
 
@@ -323,12 +358,12 @@ export class Viewer extends EventEmitter {
         vec.sub(this.camera.camera.position).normalize();
         var distance = -this.camera.camera.position.z / vec.z;
         pos.copy(this.camera.camera.position).add(vec.multiplyScalar(distance));
-        if (this.isMobile) {
-            if (this.mobileCoordScale) {
-                pos.x = Math.round(this.mobileCoordScale.invert(pos.x))
-                pos.y = Math.round(this.mobileCoordScale.invert(pos.y))
-            }
-        }
+        // if (this.isMobile) {
+        //     if (this.mobileCoordScale) {
+        //         pos.x = Math.round(this.mobileCoordScale.invert(pos.x))
+        //         pos.y = Math.round(this.mobileCoordScale.invert(pos.y))
+        //     }
+        // }
         return pos;
     }
 

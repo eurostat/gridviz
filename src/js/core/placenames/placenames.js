@@ -15,16 +15,6 @@ import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
         let name = pn.attributes[CONSTANTS.placenames.townField];
         let x, y, d;
         // x/y coordinates of each placename label
-        if (app._isMobile) {
-            if (app.zerosRemoved_) {
-                d = Number('1E' + app.zerosRemoved_);
-                x = app.viewer.mobileCoordScale(pn.geometry.x / d);
-                y = app.viewer.mobileCoordScale(pn.geometry.y / d)
-            } else {
-                x = app.viewer.mobileCoordScale(pn.geometry.x);
-                y = app.viewer.mobileCoordScale(pn.geometry.y);
-            }
-        } else {
             if (app.zerosRemoved_) {
                 let d = Number('1E' + app.zerosRemoved_);
                 x = pn.geometry.x / d;
@@ -33,9 +23,7 @@ import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
                 x = pn.geometry.x;
                 y = pn.geometry.y;
             }
-        }
         let label = createPlacenameLabelObject(x, y, name);
-        // TODO: group objects manually (THREE.group())
         app.labelsLayer.add(label);
     }
 }

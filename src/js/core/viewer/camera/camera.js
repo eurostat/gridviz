@@ -25,17 +25,13 @@ export class Camera {
          * @type {Number} */
         this.viewerHeight = opts.viewerHeight;
 
-        /** Whether the current device is a mobile or not
-        * @type {Boolean} */
-         this.isMobile = opts.isMobile || false;
-
         /** initial camera z position
         * @type {Number} */
         this.zoom = opts.zoom;
 
         /** Configurations for the threeJS camera
         * @type {Object} */
-        this.config = this.defineCameraConfig(this.isMobile, this.zoom, this.viewerWidth, this.viewerHeight);
+        this.config = this.defineCameraConfig(this.zoom, this.viewerWidth, this.viewerHeight);
 
         /** ThreeJS perspective camera
         * @type {PerspectiveCamera} */
@@ -88,24 +84,19 @@ export class Camera {
     /**
     * @description defines the configuration object that is used for the threejs camera
     * @function defineCameraConfig
-    * @param {Boolean} isMobile
     * @param {Number} zoom
     * @param {Number} viewerWidth
     * @param {Number} viewerHeight
     */
-    defineCameraConfig(isMobile, zoom, viewerWidth, viewerHeight) {
+    defineCameraConfig(zoom, viewerWidth, viewerHeight) {
         let config = {}
-        config.near_ = this.defineNear(isMobile);
-        config.far_ = this.defineFar(isMobile, zoom); //set min zoom
+        config.near_ = this.defineNear();
+        config.far_ = this.defineFar(zoom); //set min zoom
         config.fov_ = CONSTANTS.fov;
         config.aspect_ = viewerWidth / viewerHeight;
 
-        //initial camera position Z (zoom)
-        if (isMobile) {
-            config.initialZ_ = config.far_ / 2 - 1
-        } else {
-            config.initialZ_ = zoom || config.far_ / 2 - 1
-        }
+        config.initialZ_ = zoom || config.far_ / 2 - 1
+
         config.zoom_ = zoom || config.initialZ_;
 
         return config;
@@ -114,13 +105,12 @@ export class Camera {
     /**
     * @description Updates camera configuration. Usually called when user adds grid data, changes zoom, or changes center after initialization
     * @function redefineCamera
-    * @param {Boolean} isMobile
     * @param {Number} zoom
     * @param {Number} viewerWidth
     * @param {Number} viewerHeight
     */
-    redefineCamera(isMobile, zoom, viewerWidth, viewerHeight) {
-        let cameraConfig = this.defineCameraConfig(isMobile, zoom, viewerWidth, viewerHeight)
+    redefineCamera(zoom, viewerWidth, viewerHeight) {
+        let cameraConfig = this.defineCameraConfig(zoom, viewerWidth, viewerHeight)
         this.camera.fov = cameraConfig.fov_;
         this.camera.aspect = cameraConfig.aspect_;
         this.camera.near = cameraConfig.near_;
@@ -133,28 +123,17 @@ export class Camera {
     /**
     * @description Define the far parameter for THREE.camera. The far parameter represents the furthest possible distance that the camera can be from the plane (where z=0)
     * @function defineFar
-    * @param isMobile
     */
-    defineFar(isMobile, zoom) {
-        if (isMobile) {
-            return 5; //due to a bug with pan & zoom, we have to scale everything on mobile to webgl coords
-        } else {
-            return zoom * 500000;
-            //return Math.pow(8, app._currentResolution);
-        }
+    defineFar(zoom) {
+        return zoom * 500000;
     }
 
     /**
      * @description Define the near parameter for THREE.camera. The near parameter represents the smallest possible distance that the camera can be from the plane (where z=0)
      * @function defineNear
-     * @param isMobile
      */
-    defineNear(isMobile) {
-        if (isMobile) {
-            return 0.0001; //due to a bug with pan & zoom, we have to scale everything on mobile
-        } else {
-            return 0.01;
-        }
+    defineNear() {
+        return 0.01;
     }
 
 }

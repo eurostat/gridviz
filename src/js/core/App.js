@@ -202,6 +202,7 @@ export class App {
       if (valid) {
 
         this._isMobile = Utils.checkIfMobile();
+        //this._isMobile = false; 
 
         //set width/height if unspecified by user
         if (!this.width_) this.width_ = this.getDefaultAppWidth(this);
@@ -282,7 +283,6 @@ export class App {
    */
   onZoomEnd(event) {
     //this._tooltip.hide();
-
     // show/hide layers within new Envelope
     this.redraw();
 
@@ -304,8 +304,8 @@ export class App {
     for (const layer of this.layers) {
 
       //hide layer not within the zoom range
-      let minZoom = this._isMobile ? this.viewer.mobileZoomScale(layer.minZoom) : layer.minZoom;
-      let maxZoom = this._isMobile ? this.viewer.mobileZoomScale(layer.maxZoom) : layer.maxZoom;
+      let minZoom = layer.minZoom;
+      let maxZoom = layer.maxZoom;
       if (minZoom >= this.viewer.camera.camera.position.z) {
         this.hideLayer(layer);
         continue;
@@ -385,19 +385,19 @@ export class App {
       if (this.cellCount_) GUI.updateCellCount(cells.length);
 
       // mobile rescale
-      let mobileCells = [];
-      if (this._isMobile && this.viewer.mobileCoordScale) {
-        cells.forEach((cell) => {
-          let newCell = { ...cell };
-          newCell.x = this.viewer.mobileCoordScale(cell.x);
-          newCell.y = this.viewer.mobileCoordScale(cell.y);
-          mobileCells.push(newCell);
-        });
-      }
+      // let mobileCells = [];
+      // if (this._isMobile && this.viewer.mobileCoordScale) {
+      //   cells.forEach((cell) => {
+      //     let newCell = { ...cell };
+      //     newCell.x = this.viewer.mobileCoordScale(cell.x);
+      //     newCell.y = this.viewer.mobileCoordScale(cell.y);
+      //     mobileCells.push(newCell);
+      //   });
+      // }
 
       //draw cells, style by style
       for (const style of layer.styles)
-        style.draw(this._isMobile ? mobileCells : cells, layer.dataset.resolution, this.viewer)
+        style.draw(cells, layer.dataset.resolution, this.viewer)
     }
   }
 
@@ -447,7 +447,7 @@ export class App {
         this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading();
 
         // for mobile devices
-        if (this._isMobile) this.applyMobileSettings(grid);
+        //if (this._isMobile) this.applyMobileSettings(grid);
 
         // draw cells
         this.redraw();
@@ -474,7 +474,7 @@ export class App {
         if (this._pendingRequests > 0) this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading();
 
         // for mobile devices
-        if (this._isMobile) this.applyMobileSettings(tiledGrid);
+        //if (this._isMobile) this.applyMobileSettings(tiledGrid);
 
         // draw cells
         this.redraw();
@@ -980,7 +980,7 @@ export class App {
     updateSizeScaleFunction();
   }
   updateCurrentResolution(res) {
-    this._currentResolution = this._isMobile ? this.defineMobileResolution(res) : res;
+    this._currentResolution = res;
   }
   updateRaycasterThreshold(threshold) {
     this.viewer.raycaster.params.Points.threshold = threshold;

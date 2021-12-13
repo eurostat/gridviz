@@ -40,7 +40,7 @@ export function getScaleFromZ(height, fov, z) {
 }
 
 /**
- * @description returns a z value from a scale
+ * @description returns a z value from a d3 event.transform.k value
  * @function getZFromScale
  * @param {Number} height - viz container height in pixels
  * @param {Number} fov - Field of view (of threeJS camera)
