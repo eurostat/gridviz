@@ -37,6 +37,7 @@ import * as Utils from "./utils/utils";
 import { feature } from "topojson";
 
 //TODO
+// add property like "dontUpdateOnPanZoom" to CSVGrid to avoid getting cells based on extent and just send all cells once to the GPU (like old gridviz did).
 // redraw after home/zoom button events
 // continue to implement styles from canvas_test
 // add stroke to square cells - fragment shader only applies stroke to circles atm.

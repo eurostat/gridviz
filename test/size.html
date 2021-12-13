@@ -31,7 +31,7 @@
   const s1km = gridviz.colorSizeShapeStyle({
     "colorFunction": null,
     "sizeFunction": c => 0.1 * Math.sqrt(c["Population"]),
-    "shapeFunction": c => "circle",
+    "shapeFunction": c => c["Population"] > 2000 ? "circle" : "square",
     "opacity": 0.5
   }
   )
@@ -48,13 +48,13 @@
     resolution: 1,
     styles: [s1km],
     minZoom: 0,
-    maxZoom: 800
+    maxZoom: 200
   })
   app.addCSVGrid({
     url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
     resolution: 5,
     styles: [s5km],
-    minZoom: 800,
+    minZoom: 200,
     maxZoom: 999999999
   });
 
