@@ -161,6 +161,7 @@ export class ColorSizeShapeStyle extends Style {
                 
                 if (vShape > 1.0) {
                     // square
+
                     gl_FragColor = vec4(vColor.rgb, opacity);
 
 
@@ -171,7 +172,7 @@ export class ColorSizeShapeStyle extends Style {
                     vec2 cxy = 2.0 * gl_PointCoord - 1.0;
                     r = dot(cxy, cxy);
 
-                    // distance from texCoords to center
+                    // distance from texCoords to 0.5,0.5
                     float d = distance(vUV, vec2(.5, .5));
 
                     // outside radius

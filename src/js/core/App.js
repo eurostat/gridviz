@@ -202,7 +202,6 @@ export class App {
       if (valid) {
 
         this._isMobile = Utils.checkIfMobile();
-        //this._isMobile = false; 
 
         //set width/height if unspecified by user
         if (!this.width_) this.width_ = this.getDefaultAppWidth(this);
@@ -483,38 +482,6 @@ export class App {
     )
   }
 
-  /**
-   * @description Transforms cell coordinates to cartesian coordinates from -1 to 1, cell resolution and the camera Z position
-   * @param {CSVGrid} grid
-   * @memberof App
-   */
-  applyMobileSettings(grid) {
-
-    // fix for d3's pan and zoom not working correctly on mobile devices with webgl, we scale the coordinates to a webgl-friendly range
-    this.viewer.mobileCoordScale = this.defineMobileCoordScale(grid.cells);
-
-    // apply mobile transform to loaded cells' coords
-    // if (grid.cells) {
-    //   grid.cells.forEach((cell, index) => {
-    //     grid.cells[index].x = this.viewer.mobileCoordScale(cell.x);
-    //     grid.cells[index].y = this.viewer.mobileCoordScale(cell.y);
-    //   });
-    // }
-
-    //set zoom scale
-    this.viewer.mobileZoomScale = d3scale.scaleLinear().domain([grid.resolution, this.viewer.camera.zoom]).range([0, 1]);
-
-    //set grid resolution to mobile
-    let mobileResolution = this.defineMobileResolution(grid.resolution);
-    grid.resolution = mobileResolution;
-
-
-
-    // convert other settings to mobile-friendly coordinates
-    if (this.geoCenter_) this.geoCenter([this.viewer.mobileCoordScale(this.geoCenter_[0]), this.viewer.mobileCoordScale(this.geoCenter_[1])]);
-    if (this.zoom_) this.zoom(mobileResolution * 20);
-  }
-
 
   /** 
   * @description Three.js render loop
@@ -533,92 +500,6 @@ export class App {
 
 
   /**
-   *
-   *
-   * @param {*} app
-   * @param {*} layerConfig
-   * @memberof App
-   */
-  defineGridScalingFunctions(app, layerConfig) {
-    this.colorValuesExtent = extent(this.gridCaches[layerConfig.cellSize], d => parseFloat(d[layerConfig.colorField]));
-    this.colorScaleFunction_ = this.defineColorScale();
-    if (layerConfig.sizeField) {
-      this.sizeValuesExtent = extent(this.gridCaches[layerConfig.cellSize], d => parseFloat(d[layerConfig.sizeField]));
-      this.sizeScaleFunction_ = this.defineSizeScale();
-    }
-  }
-
-
-  /**
-   * @description defines a scaling function for transforming geographic coordinates into webgl cartesian coordinates (-1 to 1)
-   * @param {Array<Cell>} cells
-   * @return {d3scale.scaleLinear} 
-   * @memberof App
-   */
-  defineMobileCoordScale(cells) {
-    let mobileCoordScale;
-    let xDomain;
-    let yDomain;
-
-    if (cells) {
-      xDomain = extent(cells.map(c => parseFloat(c.x)));
-      yDomain = extent(cells.map(c => parseFloat(c.y)));
-    } else {
-      // TODO: get x and y domains of tiled grid
-      // for now use full european extent in EPSG 3035:
-      // return {
-      //   xmin: 1053668,
-      //   ymin: 1645342,
-      //   xmax: 5724066,
-      //   ymax: 5901309
-      // };
-      xDomain = [1053668, 5724066];
-      yDomain = [1645342, 5901309];
-    }
-
-    let domain = [
-      min([xDomain, yDomain], array => min(array)),
-      max([xDomain, yDomain], array => max(array))
-    ]; // overall min and max values of both axis
-
-    //save mobile-scaling function
-    mobileCoordScale = d3scale.scaleLinear().domain(domain).range([-1, 1]);
-
-    return mobileCoordScale;
-  }
-
-
-  /**
-   * @description define mobile resolution in webgl
-   * @return {Number} 
-   * @memberof App
-   * @param {Number} resolution the current resolution
-   * @returns {Number} newResolution
-   */
-  defineMobileResolution(resolution) {
-    let newResolution;
-
-    if (!this.mobileCellSize_) { // cell size not set by user
-
-      // distance between two X coordinates out of two adjacent neighbours
-      let mobileXCoord1 = this.viewer.mobileCoordScale(0)
-      let mobileXCoord2 = this.viewer.mobileCoordScale(resolution)
-      let difference = Math.abs(mobileXCoord1 - mobileXCoord2);
-      difference = difference * 2;
-
-      //giving us our new cell size
-      newResolution = difference / window.devicePixelRatio;
-
-    } else if (this.mobileCellSize_) {
-      // set manually
-      newResolution = this.mobileCellSize_;
-    }
-
-    return newResolution;
-  }
-
-
-  /**
    * @description if app has already been initialized, calls to geoCenter() method will move existing camera
    *
    * @param {*} v
@@ -629,7 +510,7 @@ export class App {
     //if already previously set
     if (v && this.viewer) {
       this.geoCenter_ = v;
-      this.viewer.camera.redefineCamera(this._isMobile, this.zoom_, this.width_, this.height_);
+      this.viewer.camera.redefineCamera(this.zoom_, this.width_, this.height_);
       this.viewer.camera.camera.setCamera(v[0], v[1], this.viewer.camera.camera.position.z)
     } else {
       //set initial
@@ -648,7 +529,7 @@ export class App {
   zoom(v) {
     if (v && this.viewer) {
       this.zoom_ = v;
-      this.viewer.camera.redefineCamera(this._isMobile, this.zoom_, this.width_, this.height_);
+      this.viewer.camera.redefineCamera(this.zoom_, this.width_, this.height_);
       this.viewer.this.viewer.camera.setCamera(this.viewer.camera.camera.position.x, this.viewer.camera.camera.position.y, v); // Set camera zoom (z position)
     } else {
       if (v) {
@@ -922,32 +803,12 @@ export class App {
   */
   viewWholeGrid() {
     // when we zoom, we have to update both the threejs camera and the d3 zoom
-
-    if (this._isMobile) {
-
       let scale = Utils.getScaleFromZ(this.height_, this.viewer.camera.config.fov_, this.viewer.camera.config.initialZ_)
       this.viewer.zoomBehaviour.scaleTo(this.viewer.view, scale);
       this.viewer.zoomBehaviour.translateTo(this.viewer.view,
         parseInt(this.geoCenter_[0]) + this.width_ / 2,
         parseInt(this.geoCenter_[1]) + this.height_ / 2);
       this.viewer.camera.setCamera(this.geoCenter_[0], this.geoCenter_[1], this.viewer.camera.config.initialZ_)
-
-      // mobile devices a transform
-      let initial_scale = Utils.getScaleFromZ(this.height_, this.viewer.camera.config.fov_, this.viewer.camera.config.far_);
-      let initial_transform = zoomIdentity
-        .translate(this.width_ / 2, this.height_ / 2)
-        .scale(initial_scale);
-      this.viewer.zoomBehaviour.transform(this.viewer.view, initial_transform);
-
-    } else {
-      let scale = Utils.getScaleFromZ(this.height_, this.viewer.camera.config.fov_, this.viewer.camera.config.initialZ_)
-      this.viewer.zoomBehaviour.scaleTo(this.viewer.view, scale);
-      this.viewer.zoomBehaviour.translateTo(this.viewer.view,
-        parseInt(this.geoCenter_[0]) + this.width_ / 2,
-        parseInt(this.geoCenter_[1]) + this.height_ / 2);
-      this.viewer.camera.setCamera(this.geoCenter_[0], this.geoCenter_[1], this.viewer.camera.config.initialZ_)
-    }
-
   }
 
 

@@ -218,7 +218,7 @@ These methods allow you to define the data that is added to the viewer and how i
 Gridviz offers various styles that can be applied to the grid cells:
 
   - [colorSizeShapeStyle](#colorSizeShapeStyle)
-  - [LineStyle](#lineStyle)
+  - [lineStyle](#lineStyle)
 
 These styles can be initialised individually using a configuration object and applied to different layers. For example: 
 
@@ -297,7 +297,7 @@ The possible configurations for the viewer's tooltip.
 Default:
 ```javascript
 {
-    eventType: "click", // click vs mouseover
+    eventType: "mouseover", // click vs mouseover
     showCoordinates: true,
     xOffset: 15,
     yOffset: 15
@@ -308,7 +308,7 @@ Default:
 | Method / Object                         | Type    | Default                                 | Description                                                                                                                                                                                       |
 | --------------------------------------- | ------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | *viewer*.**tooltip**([*tooltipConfig*]) | Object  | See tooltipConfig default values below. |
-| *tooltipConfig*.**eventType**           | String  | "click"                                 | The mouse event that will trigger the tooltip ("click" or "mousemove" being the most common, depending on the dataset). You might want to set showLAU and showNUTS to false when using mousemove. |
+| *tooltipConfig*.**eventType**           | String  | "mouseover"                                 | The mouse event that will trigger the tooltip ("click" or "mousemove" being the most common, depending on the dataset). You might want to set showLAU and showNUTS to false when using mousemove. |
 | *tooltipConfig*.**showCoordinates**     | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
 | *tooltipConfig*.**xOffset**             | int     | 15                                      | X offset in pixels from the mouse position                                                                                                                                                        |
 | *legendConfig*.**yOffset**              | int     | 15                                      | Y offset in pixels from the mouse position                                                                                                                                                        |
