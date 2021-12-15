@@ -220,7 +220,10 @@ Gridviz offers various styles that can be applied to the grid cells:
   - [colorSizeShapeStyle](#colorSizeShapeStyle)
   - [lineStyle](#lineStyle)
 
-These styles can be initialised individually using a configuration object and applied to different layers. For example: 
+These styles can be initialised individually using a configuration object and applied to different layers. 
+To help define interpolation functions for these styles, d3's [scale-chromatic](https://github.com/d3/d3-scale-chromatic) can be accessed via ```gridviz.color()```.
+
+For example: 
 
 ```javascript
     //define the style
@@ -238,11 +241,11 @@ These styles can be initialised individually using a configuration object and ap
     });
 ```
 
-To help define interpolation functions for these styles, d3's [scale-chromatic](https://github.com/d3/d3-scale-chromatic) can be accessed via ```gridviz.color()```.
+
 
 #### colorSizeShapeStyle
 
-colorSizeShapeStyle allows you to define the color, size and shape of each grid cell individually. 
+colorSizeShapeStyle allows you to define the **color**, **size** and **shape** of each grid cell individually. 
 
 In the following example, we define an interpolation function that will determine the colour of the grid cell using its "Population" attribute, and set each grid cell size to 1 and its shape to a circle.
 
@@ -305,13 +308,13 @@ Default:
 ```
 
 
-| Method / Object                         | Type    | Default                                 | Description                                                                                                                                                                                       |
-| --------------------------------------- | ------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Method / Object                         | Type    | Default                                 | Description                                                                |
+| --------------------------------------- | ------- | --------------------------------------- | -------------------------------------------------------------------------- |
 | *viewer*.**tooltip**([*tooltipConfig*]) | Object  | See tooltipConfig default values below. |
-| *tooltipConfig*.**eventType**           | String  | "mouseover"                                 | The mouse event that will trigger the tooltip ("click" or "mousemove" being the most common, depending on the dataset). You might want to set showLAU and showNUTS to false when using mousemove. |
-| *tooltipConfig*.**showCoordinates**     | boolean | true                                    | Whether or not to show the LAU code in the tooltip (only available for EPSG 4326, 4258 or 3035)                                                                                                   |
-| *tooltipConfig*.**xOffset**             | int     | 15                                      | X offset in pixels from the mouse position                                                                                                                                                        |
-| *legendConfig*.**yOffset**              | int     | 15                                      | Y offset in pixels from the mouse position                                                                                                                                                        |
+| *tooltipConfig*.**eventType**           | String  | "mouseover"                             | The type of mouse event that will trigger the tooltip. Mouseover or click. |
+| *tooltipConfig*.**showCoordinates**     | boolean | true                                    | Whether to show the cell's x and y values                                  |
+| *tooltipConfig*.**xOffset**             | int     | 15                                      | X offset in pixels from the mouse position                                 |
+| *legendConfig*.**yOffset**              | int     | 15                                      | Y offset in pixels from the mouse position                                 |
 
 <br>
 
