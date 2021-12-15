@@ -14,7 +14,7 @@ import { WEBGL } from '../lib/threejs/WebGL'
 import { Viewer } from "./viewer/viewer.js";
 import { Layer } from './Layer';
 import { Style } from './Style';
-
+import { JoyPlotStyle } from "./style/JoyPlotStyle"
 import { Dataset } from './Dataset';
 import { Legend } from './legend/legend';
 import { Tooltip } from "./tooltip/tooltip.js";
