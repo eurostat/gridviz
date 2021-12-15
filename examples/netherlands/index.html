@@ -14,7 +14,7 @@
   <script>
     let containerDiv = document.getElementById("viz-container");
     let viz = gridviz
-      .app()
+      .App()
       .container(containerDiv)
       .title("100 x 100m statistics of the Netherlands")
       .cellCount(true)
@@ -42,7 +42,7 @@
       .build();
 
 
-  const s = gridviz.colorSizeShapeStyle({
+  const s = new gridviz.ColorSizeShapeStyle({
       colorFunction: c => {
         if (c["Inhabitants"] > 900) return "#8c2d04";
         if (c["Inhabitants"] > 300) return "#cc4c02";

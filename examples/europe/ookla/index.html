@@ -15,8 +15,8 @@
 <script>
   let containerDiv = document.getElementById("viz-container");
 
-  let app = gridviz
-    .app()
+  let app = new gridviz
+    .App()
     .container(containerDiv)
     .zoom(600000)
     .geoCenter([3852581, 3065000])
@@ -31,7 +31,7 @@
 
   //define datasets, styles and layers
   // thresholds
-  const s = gridviz.colorSizeShapeStyle({
+  const s = new gridviz.ColorSizeShapeStyle({
       colorFunction: c => {
         if (c["Mb/s"] > 900) return "#00ffe5";
         if (c["Mb/s"] > 100) return "#19e3d8";
@@ -48,7 +48,7 @@
   )
 
   // scale-chromatic
-  // const s = gridviz.colorSizeShapeStyle(
+  // const s = new gridviz.ColorSizeShapeStyle(
   //   c => gridviz.color().interpolateBrBG(Math.pow(c["Mb/s"], 1) / 100),
   //   null,
   //   c => "square"

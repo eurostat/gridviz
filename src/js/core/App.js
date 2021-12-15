@@ -2,14 +2,11 @@
 /** @typedef {{ url: String, resolution: Number, styles: Array<Style>, minZoom: Number, maxZoom: Number }} CSVGridConfig */
 
 // d3.js
-import { zoomIdentity } from "d3-zoom";
-import * as d3scale from "d3-scale";
 import { json } from "d3-fetch";
-import { extent, min, max } from "d3-array";
 import { pointer } from "d3-selection";
 
 //three.js
-import { Vector3, Color, Points, Line, CircleGeometry, MeshBasicMaterial, Mesh } from "three";
+import { Vector3, Color, Line, CircleGeometry, MeshBasicMaterial, Mesh } from "three";
 import { Line2 } from "../lib/threejs/lines/Line2";
 import { WEBGL } from '../lib/threejs/WebGL'
 
@@ -17,7 +14,7 @@ import { WEBGL } from '../lib/threejs/WebGL'
 import { Viewer } from "./viewer/viewer.js";
 import { Layer } from './Layer';
 import { Style } from './Style';
-import { LineStyle } from './style/LineStyle';
+
 import { Dataset } from './Dataset';
 import { Legend } from './legend/legend';
 import { Tooltip } from "./tooltip/tooltip.js";
@@ -647,7 +644,7 @@ export class App {
                   intersectedStyle = style;
                   intersectedLayer = layer;
                 } else if (style.threejsObject.children.length > 0) {
-                  // if style has children (e.g LineStyle)
+                  // if style has children (e.g JoyPlotStyle)
                   style.threejsObject.children.some((child) => {
                     if (child.uuid == intersect.object.uuid) {
                       intersectedStyle = style;
@@ -665,7 +662,7 @@ export class App {
         if (intersectedStyle) {
           if (intersectedStyle.cells) {
             if (intersect.object instanceof Line || intersect.object instanceof Line2) {
-              // LineStyle has children
+              // JoyPlotStyle has children
               let position = intersect.point;
               cell = intersectedLayer.dataset.getCellFromPosition(position, intersectedStyle.cells, this._currentResolution);
             } else {
@@ -717,12 +714,12 @@ export class App {
 
     this.viewer.raycaster.setFromCamera(mouse_vector, this.viewer.camera.camera);
 
-    // whether to raycast recursivley - looks through children of threejs object. (only applicable for LineStyles)
+    // whether to raycast recursivley - looks through children of threejs object. (only applicable for JoyPlotStyles)
     let recursive = false;
     this.layers.forEach((layer) => {
       layer.styles.forEach((style) => {
-        if (style instanceof LineStyle && !layer.hidden) {
-          recursive = true; // set recursive to true if there are any LineStyles visible
+        if (style instanceof JoyPlotStyle && !layer.hidden) {
+          recursive = true; // set recursive to true if there are any JoyPlotStyles visible
         }
       })
     })

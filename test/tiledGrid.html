@@ -15,8 +15,8 @@
 <script>
   let containerDiv = document.getElementById("viz-container");
 
-  let app = gridviz
-    .app()
+  let app = new gridviz
+    .App()
     .container(containerDiv)
     .geoCenter([4000000,2260000])
     .cellCount(true)
@@ -26,11 +26,11 @@
     .build();
 
   //define datasets, styles and layers
-  let s1 = gridviz.colorSizeShapeStyle({"colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["2018"], 0.6) / 100)});
-  let s2 = gridviz.colorSizeShapeStyle({"colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["2018"], 0.6) / 100)});
-  let s3 = gridviz.colorSizeShapeStyle({"colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["2018"], 0.5) / 100)});
-  let s4 = gridviz.colorSizeShapeStyle({"colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["2018"], 0.4) / 100)});
-  let s5 = gridviz.colorSizeShapeStyle({"colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["2018"], 0.38) / 100)});
+  let s1 = new gridviz.ColorSizeShapeStyle({"colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["2018"], 0.6) / 100)});
+  let s2 = new gridviz.ColorSizeShapeStyle({"colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["2018"], 0.6) / 100)});
+  let s3 = new gridviz.ColorSizeShapeStyle({"colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["2018"], 0.5) / 100)});
+  let s4 = new gridviz.ColorSizeShapeStyle({"colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["2018"], 0.4) / 100)});
+  let s5 = new gridviz.ColorSizeShapeStyle({"colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["2018"], 0.38) / 100)});
 
   app.addTiledGrid({
     url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/",

@@ -75,14 +75,14 @@ gridviz = require("gridviz")
 
 ## Usage
 
-Create a viewer using  ```let viewer = gridviz.app();``` and customise it with the methods described in the [API reference](#api-reference) below.
+Create a gridviz App using  ```let viewer = gridviz.App();``` and customise it with the methods described in the [API reference](#api-reference) below.
 
 Most of these methods follow the pattern app.myMethod([value]): If a value is specified, the method sets the parameter value and returns the viewer object itself. If no value is specified, then the method returns the current value of the parameter.
 
 Here's a barebones example that loads a CSV file containing population data for a 5x5 km grid of europe:
 
 ```javascript
-  let app = gridviz.app()
+  let app = gridviz.App()
         .container(containerDiv)
         .geoCenter([4500,3000])
         .zoom(4000)
@@ -123,11 +123,11 @@ x,y,time
 
 Here you will find information on how to use the functions available for configuring a gridviz app. Like D3, gridviz uses a method chaining syntax (as shown in the barebones example above).
 
-First create a viewer with ``let viewer = gridviz.app() ``.
+First create a viewer with ``let viewer = gridviz.App() ``.
 
-Then configure it using the methods in the table below. The methods follow the pattern: ``app.method([value])``.
+Then configure it using the methods in the table below. The methods follow the pattern: ``App.method([value])``.
 
-Once you have configured the viewer, you can build it using `` app.build() ``.
+Once you have configured the viewer, you can build it using `` App.build() ``.
 
 ### Contents
 - [Position](#position)
@@ -215,7 +215,7 @@ These methods allow you to define the data that is added to the viewer and how i
 Gridviz offers various styles that can be applied to the grid cells:
 
   - [colorSizeShapeStyle](#colorSizeShapeStyle)
-  - [lineStyle](#lineStyle)
+  - [JoyPlotStyle](#JoyPlotStyle)
 
 These styles can be initialised individually using a configuration object and applied to different layers. 
 To help define interpolation functions for these styles, d3's [scale-chromatic](https://github.com/d3/d3-scale-chromatic) can be accessed via ```gridviz.color()```.
@@ -224,7 +224,7 @@ For example:
 
 ```javascript
     //define the style
-    const style = gridviz.colorSizeShapeStyle({
+    const style = new gridviz.ColorSizeShapeStyle({
       "colorFunction": cell => gridviz.color().interpolateOrRd(Math.pow(cell["2018"], 0.6) / 100)
       });
 
@@ -247,7 +247,7 @@ colorSizeShapeStyle allows you to define the **color**, **size** and **shape** o
 In the following example, we define an interpolation function that will determine the colour of the grid cell using its "Population" attribute, and set each grid cell size to 1 and its shape to a circle.
 
 ```javascript
-  const style = gridviz.colorSizeShapeStyle({
+  const style = new gridviz.ColorSizeShapeStyle({
       "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["Population"], 0.6) / 100),
       "sizeFunction":  c => 1,
       "shapeFunction": c => "circle",
@@ -257,7 +257,7 @@ In the following example, we define an interpolation function that will determin
     })
 
 ```
-The following properties can be defined in the configuration object passed to gridviz.colorSizeShapeStyle(). All are optional.
+The following properties can be defined in the configuration object passed to new gridviz.ColorSizeShapeStyle(). All are optional.
 
 | Property                   | Type     | Default | Description                                                                                                                                                                                    |
 | -------------------------- | -------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -269,17 +269,17 @@ The following properties can be defined in the configuration object passed to gr
 | **strokeColor**([value])   | String   | 'grey'  | The color of the cell border stroke.                                                                                                                                                           |
 
 
-#### lineStyle
+#### JoyPlotStyle
 
-linestyle allows you to visualize a grid in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
+JoyPlotStyle allows you to visualize a grid in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
 
 ```javascript
-    const style = gridviz.lineStyle({
+    const style = new gridviz.JoyPlotStyle({
         "heightFunction": c => 30 * Math.sqrt(c["2011"]),
         "lineColor": "black"
     })
 ```
-The following properties can be defined in the configuration object passed to gridviz.lineStyle().
+The following properties can be defined in the configuration object passed to new gridviz.JoyPlotStyle().
 
 | Property                    | Type     | Default | Description                                                                                                                               |
 | --------------------------- | -------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------- |

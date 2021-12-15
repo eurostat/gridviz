@@ -25,8 +25,8 @@
 
   let containerDiv = document.getElementById("viz-container");
 
-  let app = gridviz
-    .app()
+  let app = new gridviz
+    .App()
     .title("3D test example - in development")
     .subtitle("Left click and drag to orbit in 3D, right click to pan")
     .container(containerDiv)

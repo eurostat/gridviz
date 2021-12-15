@@ -16,7 +16,7 @@
 <script>
     let containerDiv = document.getElementById("gridviz");
     //make application
-    const app = gridviz.app()
+    const app = new gridviz.App()
         .container(containerDiv)
         .geoCenter([4900000, 2475000])
         .title("gridviz population Joyplot")
@@ -29,7 +29,7 @@
         .build()
 
     //define datasets, styles and layers
-    const s = gridviz.lineStyle({
+    const s = new gridviz.JoyPlotStyle({
         "heightFunction": c => 50 * Math.sqrt(c["2011"]),
         "lineColor": "white",
         "lineWidth": 0.0016

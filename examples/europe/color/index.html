@@ -16,7 +16,7 @@
     let containerDiv = document.getElementById("viz-container");
 
     let app = gridviz
-        .app()
+        .App()
         .container(containerDiv)
         .zoom(3000)
         .geoCenter([3900, 3170])
@@ -29,7 +29,7 @@
         .build();
 
     //define datasets, styles and layers
-    const s5km = gridviz.colorSizeShapeStyle(
+    const s5km = new gridviz.ColorSizeShapeStyle(
         {
             "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["population"], 0.5) / 100),
             "sizeFunction": c => 5,
@@ -39,7 +39,7 @@
             "strokeColor": 'grey'
         }
     )
-    const s1km = gridviz.colorSizeShapeStyle(
+    const s1km = new gridviz.ColorSizeShapeStyle(
         {
             "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["Population"], 0.6) / 100),
             "sizeFunction": c => 1,

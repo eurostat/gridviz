@@ -14,7 +14,7 @@
 <script src="../../build/gridviz.js"></script>
 <script>
     let containerDiv = document.getElementById("viz-container");
-    let viz = gridviz.app()
+    let viz = gridviz.App()
         .container(containerDiv)
 
         .title("1x1km Grid of France")
@@ -34,7 +34,7 @@
         .nuts(true) //loads borders topojson
         .build()
 
-        const s = gridviz.colorSizeShapeStyle({ "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["Inhabitants"], 0.6) / 100) })
+        const s = new gridviz.ColorSizeShapeStyle({ "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["Inhabitants"], 0.6) / 100) })
         viz.addCSVGrid({
         url: "../../assets/csv/France/1km/2015_Ind.csv",
         resolution: 1000,

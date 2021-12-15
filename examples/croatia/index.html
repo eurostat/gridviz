@@ -14,8 +14,8 @@
 <script src="../../build/gridviz.js"></script>
 <script>
   let containerDiv = document.getElementById("viz-container");
-  let app = gridviz
-    .app()
+  let app = new gridviz
+    .App()
     .container(containerDiv)
     .title("Tourism Grid of Croatia")
     .zoom(500000) //initial camera Z value

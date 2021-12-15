@@ -16,8 +16,8 @@
   let containerDiv = document.getElementById("viz-container");
 
 
-  let viz = gridviz
-    .app()
+  let viz = new gridviz
+    .App()
     .container(containerDiv)
     .cellCount(true)
     .zoom(4000)
@@ -26,7 +26,7 @@
     .title("Primary schools accessiblity")
     .build();
 
-  const s = gridviz.colorSizeShapeStyle({
+  const s = new gridviz.ColorSizeShapeStyle({
     colorFunction: c => {
       if (c["avg_time"] > 30) return "#4d004b";
       if (c["avg_time"] > 25) return "#810f7c";

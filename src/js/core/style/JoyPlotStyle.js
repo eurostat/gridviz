@@ -1,5 +1,5 @@
 //@ts-check
-/** @typedef {{ heightFunction: Function, lineColor: String, lineWidth: Number, fillColor:String }} LineStyleConfig */
+/** @typedef {{ heightFunction: Function, lineColor: String, lineWidth: Number, fillColor:String }} JoyPlotStyleConfig */
 
 import { Style } from "../Style"
 import { Cell } from "../Dataset"
@@ -13,12 +13,12 @@ import { LineGeometry } from "../../lib/threejs/lines/LineGeometry";
 
 /**
  * 
- * @author Julien Gaffuri
+ * @author Julien Gaffuri, Joseph Davies
  */
-export class LineStyle extends Style {
+export class JoyPlotStyle extends Style {
 
     /**
-      * @param {LineStyleConfig} opts A function returning the height of a cell (in geographical unit).
+      * @param {JoyPlotStyleConfig} opts A function returning the height of a cell (in geographical unit).
       */
     constructor(opts) {
         super()

@@ -22,7 +22,7 @@
     }
 
     let containerDiv = document.getElementById("viz-container");
-    let viewer = gridviz.app()
+    let viewer = gridviz.App()
         .container(containerDiv)
         .title("Portugal 1km² census grid 2011")
         .zoom(2000) //initial camera Z value
@@ -45,7 +45,7 @@
         .backgroundColor("#fcf6c2")
         .build()
 
-    const s = gridviz.colorSizeShapeStyle({ "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["TOT_P"], 0.6) / 100) })
+    const s = new gridviz.ColorSizeShapeStyle({ "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["TOT_P"], 0.6) / 100) })
     viewer.addCSVGrid({
         url: "../../assets/csv/Portugal/PT_1km_pop_2011.csv",
         resolution: 1,
