@@ -1,8 +1,10 @@
 //@ts-check
 
-import { Style } from "../Style"
+import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
+
+/** @typedef {"square"|"circle"|"none"} Shape */
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -12,22 +14,31 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class ShapeColorSizeStyle extends Style {
 
-    /**
-      * @param {function} color A function returning the color of the cell.
-      * @param {function} size A function returning the size of a cell (in geographical unit).
-      * @param {function} shape A function returning the shape of a cell.
-      */
-    constructor(color = () => "#EA6BAC", size = null, shape = () => "square") {
-        super()
+    /** @param {object} opts */
+    constructor(opts) {
+        super(opts)
+        opts = opts || {};
 
-        /** @type {function} */
-        this.color = color;
 
-        /** @type {function} */
-        this.size = size;
+        /** @private @type {string} */
+        this.colorCol = opts.colorCol;
 
-        /** @type {function} */
-        this.shape = shape;
+        /** A function returning the color of the cell.
+        * @private @type {function(number,number,Stat):string} */
+        this.color = opts.color || (() => "#EA6BAC");
+
+
+        /** @private @type {string} */
+        this.sizeCol = opts.sizeCol;
+
+        /** A function returning the size of a cell in geographical unit.
+        * @private @type {function(number,number,Stat,number):number} */
+        this.size = opts.size;
+
+
+        /** A function returning the shape of a cell.
+         * @private @type {function(Cell):Shape} */
+        this.shape = opts.shape || (() => "square");
     }
 
 
@@ -40,39 +51,86 @@ export class ShapeColorSizeStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
-        //if size is used, sort cells by size so that the biggest are drawn first
-        if (this.size)
-            cells.sort((c1, c2) => ( this.size(c2) - this.size(c1) ));
+
+        let statSize
+        if (this.sizeCol) {
+            //if size is used, sort cells by size so that the biggest are drawn first
+            cells.sort((c1, c2) => c2[this.sizeCol] - c1[this.sizeCol]);
+            //and compute size variable statistics
+            statSize = getStatistics(cells, c => c[this.sizeCol], true)
+        }
+
+        let statColor
+        if (this.colorCol) {
+            //compute color variable statistics
+            statColor = getStatistics(cells, c => c[this.colorCol], true)
+        }
 
         for (let cell of cells) {
 
             //color
-            cg.ctx.fillStyle = this.color ? this.color(cell) : "#EA6BAC";
+            const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined;
+            if (!col) continue
+            cg.ctx.fillStyle = col;
 
-            //size - in ground meters
-            let sG = this.size ? this.size(cell) : resolution;
-            //size - in pixel
-            const s = sG / cg.zf
-
-            //get shape
+            //shape
             const shape = this.shape ? this.shape(cell) : "square";
+            if (shape === "none") continue
+
+            //size
+            /** @type {function(number,number,Stat,number):number} */
+            let s_ = this.size || (() => resolution);
+            //size - in geo and pixel
+            const sG = s_(cell[this.sizeCol], resolution, statSize, cg.zf)
+            /** @type {number} */
+            const sP = sG / cg.zf
+
+            //get offset
+            const offset = this.offset(cell, resolution, cg.zf)
+
             if (shape === "square") {
                 //draw square
                 const d = resolution * (1 - sG / resolution) * 0.5
-                cg.ctx.fillRect(cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), s, s);
+                cg.ctx.fillRect(
+                    cg.geoToPixX(cell.x + d + offset.dx),
+                    cg.geoToPixY(cell.y + resolution - d + offset.dy),
+                    sP, sP);
             } else if (shape === "circle") {
                 //draw circle
                 cg.ctx.beginPath();
-                cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5), s * 0.5, 0, 2 * Math.PI, false);
+                cg.ctx.arc(
+                    cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx),
+                    cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy),
+                    sP * 0.5,
+                    0, 2 * Math.PI, false);
                 cg.ctx.fill();
             } else {
                 throw new Error('Unexpected shape:' + shape);
             }
 
             //draw stroke
-            this.drawStroke(cell, resolution, cg, this.shape, this.size)
+            //TODO
+            //this.drawStroke(cell, resolution, cg, this.shape, this.size)
         }
 
     }
+
+
+    //getters and setters
+
+    /** @returns {function(number,number,Stat):string} */
+    getColor() { return this.color; }
+    /** @param {function(number,number,Stat):string} val @returns {this} */
+    setColor(val) { this.color = val; return this; }
+
+    /** @returns {function(number,number,Stat,number):number} */
+    getSize() { return this.size; }
+    /** @param {function(number,number,Stat,number):number} val @returns {this} */
+    setSize(val) { this.size = val; return this; }
+
+    /** @returns {function(Cell):Shape} */
+    getShape() { return this.shape; }
+    /** @param {function(Cell):Shape} val @returns {this} */
+    setShape(val) { this.shape = val; return this; }
 
 }

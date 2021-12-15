@@ -25,27 +25,21 @@ export class GridTile {
         /** @type {number} */
         this.y = yT
 
-        //convert cell coordinates into geographical coordinates
-        this.geoTile(gridInfo)
-    }
-
-
-    /**
-     * Convert cell position from tile position into geo position
-     * 
-     * @param {GridInfo} gridInfo 
-     */
-    geoTile(gridInfo) {
-
         const r = gridInfo.resolutionGeo;
         const s = gridInfo.tileSizeCell;
-        const xMin = gridInfo.originPoint.x + r * s * this.x
-        const yMin = gridInfo.originPoint.y + r * s * this.y
 
-        //compute geographical coordinates of cells
+        /** @type {import("../Dataset").Envelope} */
+        this.extGeo = {
+            xMin: gridInfo.originPoint.x + r * s * this.x,
+            xMax: gridInfo.originPoint.x + r * s * (this.x + 1),
+            yMin: gridInfo.originPoint.y + r * s * this.y,
+            yMax: gridInfo.originPoint.y + r * s * (this.y + 1)
+        }
+
+        //convert cell coordinates into geographical coordinates
         for (let cell of this.cells) {
-            cell.x = xMin + cell.x * r;
-            cell.y = yMin + cell.y * r;
+            cell.x = this.extGeo.xMin + cell.x * r;
+            cell.y = this.extGeo.yMin + cell.y * r;
         }
     }
 

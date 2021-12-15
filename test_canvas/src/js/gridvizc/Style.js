@@ -3,6 +3,10 @@ import { Cell } from "./Dataset";
 import { CanvasGeo } from './CanvasGeo';
 
 /**
+ * Statistics of a set of values
+ * @typedef {{min:number,max:number}} Stat */
+
+/**
  * A style, to show a grid dataset.
  * 
  * @abstract
@@ -13,22 +17,29 @@ export class Style {
 
     /**
      * @abstract
+     * @param {object} opts 
      */
-    constructor() {
+    constructor(opts) {
+        opts = opts || {};
+
+        /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
+         * @protected @type {function(Cell,number,number):{dx:number,dy:number}} */
+        this.offset = opts.offset || ((c, r, zf) => ({ dx: 0, dy: 0 }));
+
 
         //the cell stroke
 
-        /** The zoom limit when to show/hide the stroke.
-         * @type {number} */
-        this.zfStroke_ = undefined;
+        /** The zoom factor limit when to show/hide the stroke.
+         * @private @type {number} */
+        this.zfStroke = opts.zfStroke || undefined;
 
         /** The stroke color.
-         * @type {string} */
-        this.strokeColor_ = "lightgray";
+         * @private @type {string} */
+        this.strokeColor = opts.strokeColor || "lightgray";
 
         /** The stroke line width, in pixels.
-         * @type {number} */
-        this.strokeWidth_ = 1.5;
+         * @private @type {number} */
+        this.strokeWidth = opts.strokeWidth || 1.5;
 
     }
 
@@ -46,89 +57,103 @@ export class Style {
     }
 
 
-
     /**
      * Draw the stroke of the cells, as rectangle, only for detailled zoom levels when the cells are quite big.
      * 
      * @param {Cell} cell The cell to draw the stroke of.
      * @param {number} resolution Their resolution (in geographic unit)
      * @param {CanvasGeo} cg The canvas where to draw them.
-     * @param {function} shape The shape of the stroke.
-     * @param {function} size A function returning the size of a cell (in geographical unit).
+     * @param {function(Cell):string} shape The shape of the stroke.
+     * @param {function(Cell,number,Stat,number):number} size A function returning the size of a cell (in geographical unit).
      * @returns 
      */
-    drawStroke(cell, resolution, cg, shape, size) {
-        if (!this.zfStroke_ || cg.zf > this.zfStroke_) return;
+    drawStroke(cell, resolution, cg, shape, size = null) {
+        if (!this.zfStroke || cg.zf > this.zfStroke) return;
 
-        cg.ctx.fillStyle = this.strokeColor_;
-        cg.ctx.lineWidth = this.strokeWidth_;
+        cg.ctx.strokeStyle = this.strokeColor;
+        cg.ctx.lineWidth = this.strokeWidth;
 
-        //size - in ground meters
-        let sG;
-        if (size) {
-            sG = size(cell);
-        } else
-            sG = resolution
-
-        //size - in pixel
-        const s = sG / cg.zf
+        //size
+        /** @type {number} */
+        size = size || (() => resolution);
+        //size - in pixel and geo
+        const sG = size(cell, resolution, null, cg.zf)
+        const sP = sG / cg.zf;
 
         const shape_ = shape(cell);
+        const offset = this.offset(cell, resolution, cg.zf)
         if (shape_ === "square") {
             //draw square
             const d = resolution * (1 - sG / resolution) * 0.5
             cg.ctx.beginPath();
-            cg.ctx.rect(cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), s, s);
+            cg.ctx.rect(
+                cg.geoToPixX(cell.x + d + offset.dx),
+                cg.geoToPixY(cell.y + resolution - d + offset.dy),
+                sP, sP);
             cg.ctx.stroke();
 
         } else if (shape_ === "circle") {
             //draw circle
             cg.ctx.beginPath();
-            cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5), s * 0.5, 0, 2 * Math.PI, false);
+            cg.ctx.arc(
+                cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx),
+                cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy),
+                sP * 0.5,
+                0, 2 * Math.PI, false);
             cg.ctx.stroke();
         }
     }
 
-    /**
-     * The zoom limit when to show/hide the stroke.
-     * 
-     * @param {number} zfStroke 
-     * @returns 
-     */
-    zfStroke(zfStroke) {
-        if (zfStroke) {
-            this.zfStroke_ = zfStroke;
-            return this;
-        }
-        return this.zfStroke_;
-    }
 
-    /**
-     * The stroke color.
-     * 
-     * @param {*} strokeColor 
-     * @returns 
-     */
-    strokeColor(strokeColor) {
-        if (strokeColor) {
-            this.strokeColor_ = strokeColor;
-            return this;
-        }
-        return this.strokeColor_;
-    }
 
-    /**
-     * The stroke line width, in pixels.
-     * 
-     * @param {number} strokeWidth 
-     * @returns 
-     */
-    strokeWidth(strokeWidth) {
-        if (strokeWidth) {
-            this.strokeWidth_ = strokeWidth;
-            return this;
-        }
-        return this.strokeWidth_;
-    }
+    //getters and setters
 
+    /** @returns {function(Cell,number,number):{dx:number,dy:number}} */
+    getOffset() { return this.offset; }
+    /** @param {function(Cell,number,number):{dx:number,dy:number}} val @returns {this} */
+    setOffset(val) { this.offset = val; return this; }
+
+    /** @returns {number} */
+    getZFStroke() { return this.zfStroke; }
+    /** @param {number} val @returns {this} */
+    setZFStroke(val) { this.zfStroke = val; return this; }
+
+    /** @returns {string} */
+    getStrokeColor() { return this.strokeColor; }
+    /** @param {string} val @returns {this} */
+    setStrokeColor(val) { this.strokeColor = val; return this; }
+
+    /** @returns {number} */
+    getStrokeWidth() { return this.strokeWidth; }
+    /** @param {number} val @returns {this} */
+    setStrokeWidth(val) { this.strokeWidth = val; return this; }
+
+}
+
+
+
+/**
+ * Compute some statistics on a value of some cells.
+ * TODO: compute median ?
+ * 
+ * @param {Array.<Cell>} cells 
+ * @param {function(Cell):number} valFun 
+ * @param {boolean} ignoreZeros 
+ * @returns {Stat}
+ */
+export const getStatistics = function (cells, valFun, ignoreZeros) {
+    if (!cells || cells.length == 0) return undefined
+    let min = Infinity
+    let max = -Infinity
+    //let sum = 0
+    //let nb = 0
+    for (const cell of cells) {
+        const v = +valFun(cell);
+        if (ignoreZeros && !v) continue
+        if (v < min) min = v
+        if (v > max) max = v
+        //sum += v
+        //nb++
+    }
+    return { min: min, max: max, }
 }

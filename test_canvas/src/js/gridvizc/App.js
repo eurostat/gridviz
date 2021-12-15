@@ -3,10 +3,12 @@
 import { CanvasGeo } from './CanvasGeo';
 import { Layer } from './Layer';
 import { Style } from './Style';
-import { Dataset } from './Dataset';
+import { Dataset, Cell } from './Dataset';
+import { Tooltip } from './Tooltip';
 
 import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
+import { LabelLayer } from './LabelLayer';
 
 /**
  * A gridviz on a HTML canvas.
@@ -15,19 +17,9 @@ import { TiledGrid } from './dataset/TiledGrid';
  */
 export class App {
 
-    //TODO style trendline
-    //TODO style radar
-
-    //TODO style make multi (or add offset?)
-    //TODO style population change as segment with orientation / width
-    //TODO styles with orientation
-    //TODO style kernel smoothing
-
-    //TODO remove unnecessary redraw calls
-    //TODO zoom/pan smartphone - use d3 events
-    //TODO implement mouse over
-    //TODO empty tile cache
-
+    /**
+     * @param {object} opts 
+     */
     constructor(opts) {
         opts = opts || {};
 
@@ -35,7 +27,7 @@ export class App {
          * The layers.
          * @type {Array.<Layer>}
          * */
-         this.layers = [];
+        this.layers = [];
 
         //get canvas element
         opts.canvasId = opts.canvasId || "vacanvas";
@@ -51,40 +43,85 @@ export class App {
          * @type {string} */
         this.backgroundColor = opts.backgroundColor || "white"
 
-
         /** Make geo canvas
          * @type {CanvasGeo} */
         this.cg = new CanvasGeo();
-        const th = this;
-        this.cg.redraw = function () {
+        this.cg.redraw = () => {
+            //console.log(this.getZoomFactor())
 
             //go through the list of layers and find the one(s) to draw
-            for (const layer of th.layers) {
-
-                //skip layer not within the zoom range
-                if (layer.minZoom >= this.zf) continue;
-                if (layer.maxZoom < this.zf) continue;
+            for (const layer of this.getActiveLayers()) {
 
                 //get data to show
-                layer.dataset.getData(this.updateExtentGeo(), () => { th.draw(layer); });
+                layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw();/*this.draw(layer);*/ });
 
                 //draw cells
-                th.draw(layer);
+                this.draw(layer);
             }
+
+            //draw label layer
+            if ((this.labelLayer))
+                this.labelLayer.draw(this.cg)
+
             return this
         };
 
+        /** @type {LabelLayer} */
+        this.labelLayer = undefined;
+
+
+        //tooltip
+
+        /** @private @type {Tooltip} */
+        this.tooltip = new Tooltip()
+
+        /** @param {MouseEvent} e @returns {boolean} */
+        const showCellInfoTooltip = (e) => {
+            //compute mouse geo position
+            const mousePositionGeo = { x: this.cg.pixToGeoX(e.clientX), y: this.cg.pixToGeoY(e.clientY) }
+            /** @type {string} */
+            const html = this.getCellInfoHTML(mousePositionGeo)
+            if (!html) return false;
+            this.tooltip.html(html);
+            return true;
+        }
+        this.cg.canvas.addEventListener("mouseover", e => {
+            const b = showCellInfoTooltip(e)
+            if (b) this.tooltip.show(); else this.tooltip.hide();
+            this.tooltip.setPosition(e);
+        });
+        this.cg.canvas.addEventListener("mousemove", e => {
+            const b = showCellInfoTooltip(e)
+            if (b) this.tooltip.show(); else this.tooltip.hide();
+            this.tooltip.setPosition(e);
+        });
+        this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
+
+
     }
 
-    /** */
-    redrawWhenNecessary() {
 
-        //TODO do not redraw it if it is no longer necessary
-        //that is if another redraw with another zoom level has been triggered (?)
-        //hasZoomedSinceLastCall()
-        //if(XXX) return;
+    /**
+     * @private
+     * 
+     * Draw a layer.
+     * 
+     * @param {Layer} layer 
+     * @returns {this}
+     */
+    draw(layer) {
 
-        this.cg.redraw();
+        //update dataset view cache
+        layer.dataset.updateViewCache(this.cg.extGeo)
+
+        //clear
+        this.cg.clear(this.backgroundColor);
+
+        //draw cells, style by style
+        for (const style of layer.styles)
+            style.draw(layer.dataset.getViewCache(), layer.dataset.getResolution(), this.cg)
+
+        return this;
     }
 
 
@@ -95,23 +132,26 @@ export class App {
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
+     * @returns {this}
      */
-    add(dataset, styles, minZoom, maxZoom) {
+    addLayer(dataset, styles, minZoom, maxZoom) {
         this.layers.push(new Layer(dataset, styles, minZoom, maxZoom));
+        return this;
     }
 
     /**
      * Add a layer from a tiled grid dataset.
      * 
-     * @param {string} url The url of the dataset info.json file.
+     * @param {string} url The URL of the dataset.
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
-     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {object=} opts The parameters of the dataset.
+     * @returns {this}
      */
-    addTiledGrid(url, styles, minZoom, maxZoom, preprocess = null) {
-        this.add(
-            new TiledGrid(url, preprocess).loadInfo(() => { this.redrawWhenNecessary(); }),
+    addTiledGridLayer(url, styles, minZoom, maxZoom, opts) {
+        return this.addLayer(
+            new TiledGrid(url, this, opts).loadInfo(() => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
     }
@@ -120,64 +160,102 @@ export class App {
     /**
      * Add a layer from a CSV grid dataset.
      * 
-     * @param {string} url The url of the dataset.
-     * @param {number} resolution The dataset resolution (in geographical unit).
+     * @param {string} url The URL of the dataset.
+     * @param {number} resolution The dataset resolution in geographical unit.
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
-     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {object=} opts The parameters of the dataset.
+     * @returns {this}
      */
-    addCSVGrid(url, resolution, styles, minZoom, maxZoom, preprocess = null) {
-        this.add(
-            new CSVGrid(url, resolution, preprocess).getData(null, () => { this.redrawWhenNecessary(); }),
+    addCSVGridLayer(url, resolution, styles, minZoom, maxZoom, opts) {
+        return this.addLayer(
+            new CSVGrid(url, resolution, opts).getData(null, () => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
     }
 
 
-    /**
-     * Draw a layer.
-     * 
-     * @param {Layer} layer 
-     */
-    draw(layer) {
 
-        //get cells to draw
-        const cells = layer.dataset.getCells(this.cg.extGeo)
 
-        //clear
-        this.cg.clear(this.backgroundColor);
 
-        //draw cells, style by style
-        for (const style of layer.styles)
-            style.draw(cells, layer.dataset.resolution, this.cg)
-    }
 
 
     /**
-     * Set viewer position.
-     * 
-     * @param {{x:number,y:number}} pos 
+     * Returns the layers which are within the current viewer zoom extent, that is the ones that are visible.
+     * @returns {Array.<Layer>}
      */
-    geoCenter(pos) {
-        if (pos) {
-            this.cg.center = pos;
-            return this;
+    getActiveLayers() {
+
+        /** @type {Array.<Layer>} */
+        const out = []
+
+        //go through the layers
+        const zf = this.getZoomFactor();
+        for (const layer of this.layers) {
+            //check if layer zoom extent contains current zoom factor
+            if (layer.maxZoom < zf) continue;
+            if (layer.minZoom >= zf) continue;
+            out.push(layer);
         }
-        return pos;
+        return out;
+    }
+
+
+    /**
+     * Returns the layer which is on top of the visible layers. This is the layer the user can interact with.
+     * @returns {Layer}
+     */
+    getTopActiveLayers() {
+        const lays = this.getActiveLayers();
+        return lays[lays.length - 1]
     }
 
     /**
-     * Set viewer zoom level (ground pixel size).
+     * Return the cell HTML info at a given geo position.
+     * This is usefull for user interactions, to show this info where the user clicks for example.
      * 
-     * @param {number} zf 
+     * @param {{x:number,y:number}} posGeo 
+     * @returns {string}
      */
-    zoomFactor(zf) {
-        if (zf) {
-            this.cg.zf = zf;
-            return this;
-        }
-        return zf;
+    getCellInfoHTML(posGeo) {
+        //get top layer
+        /** @type {Layer} */
+        const layer = this.getTopActiveLayers();
+        if (!layer) return undefined;
+        //get cell at mouse position
+        /** @type {Cell} */
+        const cell = layer.dataset.getCellFromPosition(posGeo, layer.dataset.getViewCache());
+        if (!cell) return undefined;
+        return layer.dataset.cellInfoHTML(cell);
     }
+
+
+    //getters and setters
+
+    /** @returns {{x:number,y:number}} */
+    getGeoCenter() { return this.cg.center; }
+    /** @param {{x:number,y:number}} val @returns {this} */
+    setGeoCenter(val) { this.cg.center = val; return this; }
+
+    /** @returns {number} */
+    getZoomFactor() { return this.cg.zf; }
+    /** @param {number} val @returns {this} */
+    setZoomFactor(val) { this.cg.zf = val; return this; }
+
+    /** @returns {string} */
+    getBackgroundColor() { return this.backgroundColor; }
+    /** @param {string} val @returns {this} */
+    setBackgroundColor(val) { this.backgroundColor = val; return this; }
+
+    /** @returns {function} */
+    getProjection() { return this.projection; }
+    /** @param {function} val @returns {this} */
+    setProjection(val) { this.projection = val; return this; }
+
+    /** @returns {LabelLayer} */
+    getLabelLayer() { return this.labelLayer; }
+    /** @param {LabelLayer} val @returns {this} */
+    setLabelLayer(val) { this.labelLayer = val; return this; }
 
 }

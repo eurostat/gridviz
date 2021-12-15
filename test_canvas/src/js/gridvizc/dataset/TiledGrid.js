@@ -3,6 +3,7 @@
 
 import { json, csv } from "d3-fetch";
 import { GridTile } from './GridTile';
+import { App } from '../App';
 import { Dataset, Cell, Envelope } from "../Dataset"
 
 /**
@@ -13,19 +14,18 @@ import { Dataset, Cell, Envelope } from "../Dataset"
 export class TiledGrid extends Dataset {
 
     /**
-     * @param {string} url The url of the dataset info.json file.
-     * @param {function} preprocess A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+     * @param {string} url The URL of the dataset.
+     * @param {App} app The application.
+     * @param {object} opts 
      */
-    constructor(url, preprocess = null) {
-        super(url, undefined, preprocess)
+     constructor(url, app, opts) {
+        super(url, null, opts)
 
-        /** 
-         * The cache of the loaded tiles. It is double indexed: by xT and then yT.
-         * Example: this.cache[xT][yT] returns the tile at [xT][yT] location.
-         * 
-         * @type {Object}
-         * */
-        this.cache = {}
+        /**
+         * The app being used.
+         * @type {App}
+         */
+        this.app = app;
 
         /**
          * The grid info object, from the info.json file.
@@ -34,12 +34,19 @@ export class TiledGrid extends Dataset {
          *  */
         this.info = undefined;
 
+        /** 
+        * The cache of the loaded tiles. It is double indexed: by xT and then yT.
+        * Example: this.cache[xT][yT] returns the tile at [xT][yT] location.
+        * 
+        * @type {object}
+        * */
+        this.cache = {}
     }
 
     /**
      * Load the info.json from the url.
      * 
-     * @param {function} callback
+     * @param {function():void} callback
      * @returns this
      */
     loadInfo(callback) {
@@ -65,9 +72,9 @@ export class TiledGrid extends Dataset {
      * @returns {Envelope}
      */
     getTilingEnvelope(e) {
-        const po = this.info.originPoint
-        const r = this.info.resolutionGeo
-        const s = this.info.tileSizeCell
+        const po = this.info.originPoint,
+            r = this.info.resolutionGeo,
+            s = this.info.tileSizeCell;
 
         return {
             xMin: Math.floor((e.xMin - po.x) / (r * s)),
@@ -80,17 +87,20 @@ export class TiledGrid extends Dataset {
     /**
      * Request data within a geographic envelope.
      * 
-     * @param {Envelope} e 
-     * @param {function} callback
+     * @param {Envelope} extGeo 
+     * @param {function():void} redrawFun
      * @returns {this}
      */
-    getData(e, callback) {
+    getData(extGeo, redrawFun) {
 
-        //TODO empty cache when it becomes too big.
+        //TODO empty cache when it gets too big ?
+
+        //check if info has been loaded
+        if (!this.info) return;
 
         //tiles within the scope
         /** @type {Envelope} */
-        const tb = this.getTilingEnvelope(e);
+        const tb = this.getTilingEnvelope(extGeo);
 
         //grid bounds
         /** @type {Envelope} */
@@ -120,10 +130,36 @@ export class TiledGrid extends Dataset {
                             this.cache[xT][yT] = tile_;
 
                             //execute preprocess, if any
-                            if (this.preprocess) for (const c of tile_.cells) this.preprocess(c);
+                            if (this.preprocess)
+                                for (const c of tile_.cells)
+                                    this.preprocess(c);
 
-                            //execute the callback, usually a draw function
-                            if (callback) callback()
+
+                            //if no redraw is specified, then leave
+                            if (!redrawFun) return;
+
+                            //check if redraw is really needed, that is if:
+
+                            // 1. the dataset belongs to a layer which is visible at the current zoom level
+                            let redraw = false;
+                            for (const layer of this.app.getActiveLayers()) {
+                                if (layer.dataset != this) continue;
+                                //found one layer. No need to seek more.
+                                redraw = true;
+                                break;
+                            }
+                            if (!redraw) return;
+
+                            // 2. the tile is within the view, that is its geo envelope intersects the viewer geo envelope.
+                            const env = this.app.cg.updateExtentGeo();
+                            const envT = tile_.extGeo;
+                            if (env.xMax <= envT.xMin) return;
+                            if (env.xMin >= envT.xMax) return;
+                            if (env.yMax <= envT.yMin) return;
+                            if (env.yMin >= envT.yMax) return;
+
+                            //redraw
+                            redrawFun()
                         })
                     .catch(() => {
                         //mark as failed
@@ -136,15 +172,18 @@ export class TiledGrid extends Dataset {
 
 
     /**
-     * Get all cells from cache which are within a geographical envelope.
-     * 
+     * Fill the view cache with all cells which are within a geographical envelope.
+     * @abstract
      * @param {Envelope} extGeo 
-     * @returns {Array.<Cell>}
+     * @returns {void}
      */
-    getCells(extGeo) {
+    updateViewCache(extGeo) {
 
-        /** @type {Array.<Cell>} */
-        let cells = []
+        //
+        this.cellsViewCache = []
+
+        //check if info has been loaded
+        if (!this.info) return;
 
         //tiles within the scope
         /** @type {Envelope} */
@@ -164,11 +203,17 @@ export class TiledGrid extends Dataset {
                 if (!tile || typeof tile === "string") continue;
 
                 //get cells
-                cells = cells.concat(tile.cells)
+                //this.cellsViewCache = this.cellsViewCache.concat(tile.cells)
+
+                for (const cell of tile.cells) {
+                    if (+cell.x + this.resolution < extGeo.xMin) continue;
+                    if (+cell.x - this.resolution > extGeo.xMax) continue;
+                    if (+cell.y + this.resolution < extGeo.yMin) continue;
+                    if (+cell.y - this.resolution > extGeo.yMax) continue;
+                    this.cellsViewCache.push(cell)
+                }
             }
         }
-
-        return cells;
     }
 
 }

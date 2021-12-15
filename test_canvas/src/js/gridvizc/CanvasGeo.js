@@ -11,12 +11,12 @@ export class CanvasGeo {
     /**
      * @constructor
      * @param {string} canvasId
-     * @param {Object} center
+     * @param {object} center
      * @param {number} zf
      */
     constructor(canvasId = "vacanvas", center = undefined, zf = 1) {
 
-        /** @type {*} */
+        /** @type {object} */
         this.canvas = document.getElementById(canvasId);
 
         /** @type {number} */
@@ -27,7 +27,7 @@ export class CanvasGeo {
         this.canvas.width = this.w;
         this.canvas.height = this.h;
 
-        /**@type {Object} */
+        /**@type {object} */
         this.ctx = this.canvas.getContext("2d");
 
         // geo coordinates of the center
@@ -39,7 +39,7 @@ export class CanvasGeo {
         this.zf = zf;
 
         //extent
-        /** @type {{xMin: number, xMax: number, yMin: number, yMax: number}} */
+        /** @type {Envelope} */
         this.extGeo = undefined;
         this.updateExtentGeo()
 
@@ -148,4 +148,5 @@ export class CanvasGeo {
         if (obj.y > this.extGeo.yMax) return false;
         return true
     }
+
 }

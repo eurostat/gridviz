@@ -5,30 +5,100 @@
     <title></title>
 </head>
 
-<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif;">
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
+
+    <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
+        <select id="type">
+            <option value="flag" selected>Flag</option>
+            <option value="piechart">Pie chart</option>
+            <option value="ring">Ring</option>
+            <option value="radar">Radar</option>
+            <option value="multi">Multi</option>
+        </select>
+    </div>
+
     <script src="../build/gridvizc.js"></script>
     <script>
 
         //make application
-        const app = gviz.App()
+        const app = new gviz.App().setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(3)
 
+        const colorDict = { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" }
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
-        app.geoCenter({ x: 135000, y: 456000 }).zoomFactor(3)
-        const s = gviz.getCompositionStyle(
-            { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" },
-            c => "flag",
-            c => 5 * Math.sqrt((c["Inhabitants"]))
-        ).zfStroke(5);
-        app.addCSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
-            c => {
-                c.x *= 100; c.y *= 100;
-                if (c["Population under 14"] < 0) c["Population under 14"] = 0;
-                if (c["Population over 65"] < 0) c["Population over 65"] = 0;
-                c["pop_"] = c["Inhabitants"] - c["Population under 14"] - c["Population over 65"];
+
+        //flag, piechart, ring style
+        const s = new gviz.CompositionStyle({
+            color: colorDict,
+            type: c => "flag",
+            sizeCol: "Inhabitants",
+            size: (v, r, s, zf) => r * Math.sqrt(v / s.max),
+            zfStroke: 5
+        })
+
+
+        //radar style
+        const sRadar = new gviz.RadarStyle({
+            color: colorDict,
+            radius: (v, r, s, zf) => 0.6 * r * Math.pow(v / s.max, 0.2),
+        })
+
+
+        //multi style
+        const s14 = new gviz.ShapeColorSizeStyle({
+            color: () => colorDict["Population under 14"],
+            sizeCol: "Population under 14",
+            size: (v, r, s, zf) => 5 * Math.sqrt(v),
+            shape: c => "circle",
+            offset: (c, r, zf) => ({ dx: -0.183 * r, dy: -0.183 * r }),
+            zfStroke: 1
+        })
+        const s30 = new gviz.ShapeColorSizeStyle({
+            color: () => colorDict["pop_"],
+            sizeCol: "pop_",
+            size: (v, r, s, zf) => 5 * Math.sqrt(v),
+            shape: c => "circle",
+            offset: (c, r, zf) => ({ dx: 0, dy: 0.183 * r }),
+            zfStroke: 1
+        })
+        const s65 = new gviz.ShapeColorSizeStyle({
+            color: () => colorDict["Population over 65"],
+            sizeCol: "Population over 65",
+            size: (v, r, s, zf) => 5 * Math.sqrt(v),
+            shape: c => "circle",
+            offset: (c, r, zf) => ({ dx: 0.183 * r, dy: -0.183 * r }),
+            zfStroke: 1
+        })
+
+        app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
+            {
+                preprocess: c => {
+                    c.x *= 100; c.y *= 100;
+                    if (c["Population under 14"] < 0) c["Population under 14"] = 0;
+                    if (c["Population over 65"] < 0) c["Population over 65"] = 0;
+                    c["pop_"] = c["Inhabitants"] - c["Population under 14"] - c["Population over 65"];
+                }
             })
 
+
+        //combo list
+        const select = document.querySelector('#type');
+        select.addEventListener('change', function () {
+            //set style
+            if (select.value === "radar") {
+                for (let lay of app.layers) lay.styles = [sRadar]
+            } else if (select.value === "multi") {
+                for (let lay of app.layers) lay.styles = [s30, s14, s65]
+            } else {
+                s.setType(c => select.value)
+                for (let lay of app.layers) lay.styles = [s]
+            }
+            //redraw
+            app.cg.redraw();
+        });
+
     </script>
+
 </body>
 
 </html>

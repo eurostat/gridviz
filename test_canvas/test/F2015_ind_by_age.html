@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <title></title>
+</head>
+
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
+    <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
+
+    <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
+        <select id="type">
+            <option value="flag">Flag</option>
+            <option value="piechart">Pie chart</option>
+            <option value="ring" selected>Ring</option>
+            <option value="radar">Radar</option>
+        </select>
+    </div>
+
+    <script src="../build/gridvizc.js"></script>
+    <script>
+
+        //make application
+        const app = new gviz.App()
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setLabelLayer(gviz.getEurostatLabelLayer())//.setBackgroundColor("black")
+
+        const col = gviz.interpolateSpectral;
+        const s = new gviz.CompositionStyle({
+            color: {
+                "Ind_0_3": col(0),
+                "Ind_4_5": col(4 / 80),
+                "Ind_6_10": col(6 / 80),
+                "Ind_11_17": col(11 / 80),
+                "Ind_18_24": col(18 / 80),
+                "Ind_25_39": col(25 / 80),
+                "Ind_40_54": col(40 / 80),
+                "Ind_55_64": col(55 / 80),
+                "Ind_65_79": col(65 / 80),
+                "Ind_80p": col(1),
+                //"Ind_inc": "gray"
+            },
+            type: c => "ring",
+            sizeCol: "Ind",
+            size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
+            zfStroke: 5
+        })
+
+        const sRadar = new gviz.RadarStyle({
+            color: {
+                "Ind_0_3": col(0),
+                "Ind_4_5": col(4 / 80),
+                "Ind_6_10": col(6 / 80),
+                "Ind_11_17": col(11 / 80),
+                "Ind_18_24": col(18 / 80),
+                "Ind_25_39": col(25 / 80),
+                "Ind_40_54": col(40 / 80),
+                "Ind_55_64": col(55 / 80),
+                "Ind_65_79": col(65 / 80),
+                "Ind_80p": col(1),
+                //"Ind_inc": "gray"
+            },
+            radius: (v, r, s, zf) => 0.7 * r * Math.pow(v / s.max, 0.2),
+        })
+
+        const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
+            " < 3 : " + Math.floor(["Ind_0_3"]) + "<br>" +
+            " 4-5 : " + Math.floor(c["Ind_4_5"]) + "<br>" +
+            " 6-10: " + Math.floor(c["Ind_6_10"]) + "<br>" +
+            "11-17: " + Math.floor(c["Ind_11_17"]) + "<br>" +
+            "18-24: " + Math.floor(c["Ind_18_24"]) + "<br>" +
+            "25-39: " + Math.floor(c["Ind_25_39"]) + "<br>" +
+            "40-54: " + Math.floor(c["Ind_40_54"]) + "<br>" +
+            "55-64: " + Math.floor(c["Ind_55_64"]) + "<br>" +
+            "65-79: " + Math.floor(c["Ind_65_79"]) + "<br>" +
+            " > 80: " + Math.floor(c["Ind_80p"]) + "<br>" +
+            //" unk.: " + Math.floor(c["Ind_inc"]) + "<br>";
+
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m//", [s], 0, 10, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m//", [s], 10, 20, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/1000m//", [s], 20, 50, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/2000m//", [s], 50, 100, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/5000m//", [s], 100, 250, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/10000m//", [s], 250, 500, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/20000m//", [s], 500, 1000, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/50000m//", [s], 1000, 9999999999, { cellInfoHTML: ttfun });
+
+        //combo list
+        const select = document.querySelector('#type');
+        select.addEventListener('change', function () {
+            if (select.value === "radar") {
+                for(let lay of app.layers) lay.styles = [sRadar]
+            } else {
+                s.setType(c => select.value)
+                for(let lay of app.layers) lay.styles = [s]
+            }
+            //redraw
+            app.cg.redraw();
+        });
+
+    </script>
+
+</body>
+
+</html>

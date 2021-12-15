@@ -1,8 +1,10 @@
 //@ts-check
 
-import { Style } from "../Style"
+import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { CanvasGeo } from "../CanvasGeo";
+
+/** @typedef {"flag"|"piechart"|"ring"} CompositionType */
 
 /**
  * A style showing the composition of a total in different categories, with different color hues.
@@ -17,23 +19,29 @@ import { CanvasGeo } from "../CanvasGeo";
  */
 export class CompositionStyle extends Style {
 
-    /**
-      * @param {Object} color The dictionary which give the color of each category.
-      * @param {function} type A function returning the type of decomposition symbol of a cell: Among 'flag', 'piechart' and 'ring'
-      * @param {function} size A function returning the size of a cell (in geographical unit).
-      */
-    constructor(color, type = null, size = null) {
-        super()
+    /** @param {object} opts */
+    constructor(opts) {
+        super(opts)
+        opts = opts || {};
 
-        //dictionnary column -> color
-        /** @type {object} */
-        this.color = color;
+        /**
+         * The dictionary which give the color of each category.
+         * @private @type {object} */
+        this.color = opts.color;
 
-        /** @type {function} */
-        this.type = type;
+        /**
+         * A function returning the type of decomposition symbol of a cell, @see CompositionType
+         * @private @type {function(Cell):CompositionType} */
+        this.type = opts.type;
 
-        /** @type {function} */
-        this.size = size;
+
+        /** The column where to get the size values.
+         * @private @type {string} */
+        this.sizeCol = opts.sizeCol
+
+        /** A function returning the size of a cell.
+         * @private @type {function(number,number,Stat,number):number} */
+        this.size = opts.size || ((v) => Math.sqrt(v));
     }
 
 
@@ -46,9 +54,13 @@ export class CompositionStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
-        //if size is used, sort cells by size so that the biggest are drawn first
-        if (this.size)
-            cells.sort((c1, c2) => ( this.size(c2) - this.size(c1) ));
+        let stat
+        if (this.sizeCol) {
+            //if size is used, sort cells by size so that the biggest are drawn first
+            cells.sort((c1, c2) => c2[this.sizeCol] - c1[this.sizeCol]);
+            //and compute statistics
+            stat = getStatistics(cells, c => c[this.sizeCol], true)
+        }
 
         for (let cell of cells) {
 
@@ -57,13 +69,20 @@ export class CompositionStyle extends Style {
             for (let column of Object.keys(this.color))
                 total += +cell[column]
 
-            //size - in ground meters
-            let sG = this.size ? this.size(cell) : resolution;
-            //size - in pixel
-            const s = sG / cg.zf
+            //size
+            /** @type {function(number,number,Stat,number):number} */
+            let s_ = this.size || (() => resolution);
+            //size - in pixel and geo
+            /** @type {number} */
+            const sG = s_(cell[this.sizeCol], resolution, stat, cg.zf)
+            /** @type {number} */
+            const sP = sG / cg.zf;
 
             //get symbol type
             const type_ = this.type ? this.type(cell) : "flag"
+
+            //get offset
+            const offset = this.offset(cell, resolution, cg.zf)
 
             //draw decomposition symbol
             let cumul = 0;
@@ -79,22 +98,27 @@ export class CompositionStyle extends Style {
                 //draw symbol part
                 if (type_ === "flag") {
                     //draw flag vertical stripe
-                    cg.ctx.fillRect(cumul * s + cg.geoToPixX(cell.x + d), cg.geoToPixY(cell.y + resolution - d), share * s, s);
+                    cg.ctx.fillRect(
+                        cumul * sP + cg.geoToPixX(cell.x + d + offset.dx),
+                        cg.geoToPixY(cell.y + resolution - d + offset.dy),
+                        share * sP, sP);
                 } else if (type_ === "piechart") {
                     //draw pie chart angular sector
-                    const xc = cg.geoToPixX(cell.x + resolution * 0.5);
-                    const yc = cg.geoToPixY(cell.y + resolution * 0.5);
+                    const xc = cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx);
+                    const yc = cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy);
                     cg.ctx.beginPath();
                     cg.ctx.moveTo(xc, yc);
-                    cg.ctx.arc(xc, yc, s * 0.5, cumul * 2 * Math.PI, (cumul + share) * 2 * Math.PI);
+                    cg.ctx.arc(xc, yc, sP * 0.5, cumul * 2 * Math.PI, (cumul + share) * 2 * Math.PI);
                     cg.ctx.lineTo(xc, yc);
                     cg.ctx.fill();
                 } else if (type_ === "ring") {
                     //draw ring
                     //TODO need to compute radius properly ! Variation as rootsquare of share !
                     cg.ctx.beginPath();
-                    cg.ctx.arc(cg.geoToPixX(cell.x + resolution * 0.5), cg.geoToPixY(cell.y + resolution * 0.5),
-                        Math.sqrt(1 - cumul) * s * 0.5,
+                    cg.ctx.arc(
+                        cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx),
+                        cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy),
+                        Math.sqrt(1 - cumul) * sP * 0.5,
                         0, 2 * Math.PI);
                     cg.ctx.fill();
                 } else {
@@ -104,12 +128,37 @@ export class CompositionStyle extends Style {
                 cumul += share;
             }
 
-            //draw stroke
+            /*/draw stroke
             this.drawStroke(cell, resolution, cg, (c) => {
                 return (type_ === "flag") ? "square" : "circle"
-            }, this.size)
+            }, this.size)*/
+            //TODO
         }
 
     }
+
+
+
+    //getters and setters
+
+    /** @returns {function(Cell):string} */
+    getColor() { return this.color; }
+    /** @param {function(Cell):string} val @returns {this} */
+    setColor(val) { this.color = val; return this; }
+
+    /** @returns {function(Cell):CompositionType} */
+    getType() { return this.type; }
+    /** @param {function(Cell):CompositionType} val @returns {this} */
+    setType(val) { this.type = val; return this; }
+
+    /** @returns {string} */
+    getColSize() { return this.sizeCol; }
+    /** @param {string} val @returns {this} */
+    setColSize(val) { this.sizeCol = val; return this; }
+
+    /** @returns {function(number,number,Stat,number):number} */
+    getSize() { return this.size; }
+    /** @param {function(number,number,Stat,number):number} val @returns {this} */
+    setSize(val) { this.size = val; return this; }
 
 }
