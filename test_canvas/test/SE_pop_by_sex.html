@@ -34,7 +34,7 @@
             color: colorDict,
             type: c => "ring",
             sizeCol: "pop",
-            size: (v, r, s, zf) => r * Math.sqrt(v / s.max),
+            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
             zfStroke: 5
         })
 
@@ -42,7 +42,8 @@
         //radar style
         const sRadar = new gviz.RadarStyle({
             color: colorDict,
-            radius: (v, r, s, zf) => 0.6 * r * Math.pow(v / s.max, 0.2),
+            radius: (v, r, s, zf) => 0.5 * r * Math.pow(v / s.max, 0.2),
+            offsetAngle: () => 90
         })
 
         const ttfun = c => "<b>" + c["pop"] + "</b> inhabitant(s)<br>Female: " + c["f"] + "<br>Male: " + c["m"]

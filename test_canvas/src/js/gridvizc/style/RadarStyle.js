@@ -32,8 +32,8 @@ export class RadarStyle extends Style {
         /**
          * The function specifying how the offser angle.
          * 
-         * @private @type {function(number,number,Stat,number):number} */
-         this.offsetAngle = opts.offsetAngle;
+         * @private @type {function(Cell,number,number):number} */
+        this.offsetAngle = opts.offsetAngle;
 
     }
 
@@ -52,7 +52,7 @@ export class RadarStyle extends Style {
 
         //angle for each category: the same for all.
         const angle = 2 * Math.PI / nbCat
-        let angleCumul = Math.PI
+        const f = Math.PI/180
 
         //get the stat
         const stat = this.getStat(cells, true);
@@ -61,6 +61,10 @@ export class RadarStyle extends Style {
 
             //get offset
             const offset = this.offset(cell, r, cg.zf)
+
+            //get offset angle
+            const offsetAngle = this.offsetAngle ? this.offsetAngle(cell, r, cg.zf) : 0
+            let angleCumul = Math.PI + offsetAngle * f
 
             //compute cell center position
             const xc = cg.geoToPixX(cell.x + r * 0.5 + offset.dx);
@@ -118,7 +122,7 @@ export class RadarStyle extends Style {
                 //nb++
             }
         }
-    return { min: min, max: max/*, mean: (sum / nb)*/ }
+        return { min: min, max: max/*, mean: (sum / nb)*/ }
     }
 
 
@@ -136,9 +140,9 @@ export class RadarStyle extends Style {
     /** @param {function(number,number,Stat,number):number} val @returns {this} */
     setRadius(val) { this.radius = val; return this; }
 
-    /** @returns {function(number,number,Stat,number):number} */
+    /** @returns {function(Cell,number,number):number} */
     getOffsetAngle() { return this.offsetAngle; }
-    /** @param {function(number,number,Stat,number):number} val @returns {this} */
+    /** @param {function(Cell,number,number):number} val @returns {this} */
     setOffsetAngle(val) { this.offsetAngle = val; return this; }
-   
+
 }
