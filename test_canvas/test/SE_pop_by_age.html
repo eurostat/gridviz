@@ -24,7 +24,7 @@
         const app = new gviz.App().setGeoCenter({ x: 673515, y: 6580880 }).setZoomFactor(100)
 
         const col = gviz.interpolateSpectral;
-        //x,y,0_15,0_5,100_,15_20,20_25,30_35,35_40,40_45,45_50,50_55,55_60,5_10,60_65,65_70,70_75,75_80,80_85,85_90,90_95,95_100,f,25_30,m,pop
+        //x,y,10_15,0_5,100_,15_20,20_25,30_35,35_40,40_45,45_50,50_55,55_60,5_10,60_65,65_70,70_75,75_80,80_85,85_90,90_95,95_100,f,25_30,m,pop
         const colorDict = {
             "0_5": col(0 / 15),
             "5_10": col(1 / 15),
@@ -49,7 +49,7 @@
             color: colorDict,
             type: c => "flag",
             sizeCol: "pop",
-            size: (v, r, s, zf) => r * Math.sqrt(v / s.max),
+            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
             zfStroke: 5
         })
 
@@ -57,11 +57,28 @@
         //radar style
         const sRadar = new gviz.RadarStyle({
             color: colorDict,
-            radius: (v, r, s, zf) => 0.6 * r * Math.pow(v / s.max, 0.2),
+            radius: (v, r, s, zf) => 0.5 * r * Math.pow(v / s.max, 0.2),
         })
 
 
         const ttfun = c => "<b>" + c["pop"] + "</b> inhabitant(s)"
+        +"<br>0_5: "+c["0_5"]
+        +"<br>5_10: "+c["5_10"]
+        +"<br>10_15: "+c["10_15"]
+        +"<br>15_20: "+c["15_20"]
+        +"<br>20_25: "+c["20_25"]
+        +"<br>30_35: "+c["30_35"]
+        +"<br>35_40: "+c["35_40"]
+        +"<br>40_45: "+c["40_45"]
+        +"<br>45_50: "+c["45_50"]
+        +"<br>50_55: "+c["50_55"]
+        +"<br>60_65: "+c["60_65"]
+        +"<br>70_75: "+c["70_75"]
+        +"<br>80_85: "+c["80_85"]
+        +"<br>90_95: "+c["90_95"]
+        +"<br>95_100: "+c["95_100"]
+        +"<br>100_: "+c["100_"]
+
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/1000m/", [s], 0, 50, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/2000m/", [s], 50, 100, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/5000m/", [s], 100, 250, { cellInfoHTML: ttfun });
