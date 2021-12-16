@@ -66,8 +66,12 @@ export class CompositionStyle extends Style {
 
             //compute total
             let total = 0;
-            for (let column of Object.keys(this.color))
-                total += +cell[column]
+            for (let column of Object.keys(this.color)) {
+                const v = +cell[column];
+                if (!v) continue
+                total += v
+            }
+            if (!total) continue
 
             //size
             /** @type {function(number,number,Stat,number):number} */
@@ -89,11 +93,12 @@ export class CompositionStyle extends Style {
             const d = resolution * (1 - sG / resolution) * 0.5
             for (let [column, color] of Object.entries(this.color)) {
 
+                //get share
+                const share = cell[column] / total;
+                if (!share) continue
+
                 //set color
                 cg.ctx.fillStyle = color;
-
-                //compute share
-                const share = cell[column] / total;
 
                 //draw symbol part
                 if (type_ === "flag") {
