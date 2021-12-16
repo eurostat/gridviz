@@ -39,7 +39,7 @@
             color: colorDict,
             type: c => "flag",
             sizeCol: "pop",
-            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3),
+            size: (v, r, s, zf) => 1.2 * r * Math.pow(v / s.max, 0.2),
             zfStroke: 5
         })
 
@@ -47,24 +47,25 @@
         //radar style
         const sRadar = new gviz.RadarStyle({
             color: colorDict,
-            radius: (v, r, s, zf) => 0.5 * r * Math.pow(v / s.max, 0.3),
+            radius: (v, r, s, zf) => 0.6 * r * Math.pow(v / s.max, 0.2),
         })
 
         const ttfun = c => "<b>" + c["pop"] + "</b> inhabitant(s)"
-            + "<br>0_15: " + c["0_15"]
-            + "<br>15_25: " + c["15_25"]
-            + "<br>25_50: " + c["25_50"]
-            + "<br>50_65: " + c["50_65"]
-            + "<br>65_80: " + c["65_80"]
-            + "<br>80_: " + c["80_"]
+            + "<br>By age group:"
+            + "<br>   < 15: " + c["0_15"]
+            + "<br>15 - 25: " + c["15_25"]
+            + "<br>25 - 50: " + c["25_50"]
+            + "<br>50 - 65: " + c["50_65"]
+            + "<br>65 - 80: " + c["65_80"]
+            + "<br>   > 80: " + c["80_"]
 
         preprocess = c => {
-            c["0_15"] = c["0_5"] + c["5_10"] + c["10_15"]
-            c["15_25"] = c["15_20"] + c["20_25"]
-            c["25_50"] = c["25_30"] + c["30_35"] + c["35_40"] + c["40_45"] + c["45_50"]
-            c["50_65"] = c["50_55"] + c["55_60"] + c["60_65"]
-            c["65_80"] = c["65_70"] + c["70_75"] + c["75_80"]
-            c["80_"] = c["80_85"] + c["85_90"] + c["90_95"] + c["95_100"] + c["100_"]
+            c["0_15"] = +c["0_5"] + +c["5_10"] + +c["10_15"]
+            c["15_25"] = +c["15_20"] + +c["20_25"]
+            c["25_50"] = +c["25_30"] + +c["30_35"] + +c["35_40"] + +c["40_45"] + +c["45_50"]
+            c["50_65"] = +c["50_55"] + +c["55_60"] + +c["60_65"]
+            c["65_80"] = +c["65_70"] + +c["70_75"] + +c["75_80"]
+            c["80_"] = +c["80_85"] + +c["85_90"] + +c["90_95"] + +c["95_100"] + +c["100_"]
         }
 
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/1000m/", [s], 0, 25, { cellInfoHTML: ttfun, preprocess: preprocess });
