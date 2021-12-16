@@ -26,22 +26,27 @@
         const col = gviz.interpolateSpectral;
         //x,y,10_15,0_5,100_,15_20,20_25,30_35,35_40,40_45,45_50,50_55,55_60,5_10,60_65,65_70,70_75,75_80,80_85,85_90,90_95,95_100,f,25_30,m,pop
         const colorDict = {
-            "0_5": col(0 / 15),
-            "5_10": col(1 / 15),
-            "10_15": col(2 / 15),
-            "15_20": col(3 / 15),
-            "20_25": col(4 / 15),
-            "30_35": col(5 / 15),
-            "35_40": col(6 / 15),
-            "40_45": col(7 / 15),
-            "45_50": col(8 / 15),
-            "50_55": col(9 / 15),
-            "60_65": col(10 / 15),
-            "70_75": col(11 / 15),
-            "80_85": col(12 / 15),
-            "90_95": col(13 / 15),
-            "95_100": col(14 / 15),
-            "100_": col(15 / 15),
+            "0_5": col(0 / 20),
+            "5_10": col(1 / 20),
+            "10_15": col(2 / 20),
+            "15_20": col(3 / 20),
+            "20_25": col(4 / 20),
+            "25_30": col(5 / 20),
+            "30_35": col(6 / 20),
+            "35_40": col(7 / 20),
+            "40_45": col(8 / 20),
+            "45_50": col(9 / 20),
+            "50_55": col(10 / 20),
+            "55_60": col(11 / 20),
+            "60_65": col(12 / 20),
+            "65_70": col(13 / 20),
+            "70_75": col(14 / 20),
+            "75_80": col(15 / 20),
+            "80_85": col(16 / 20),
+            "85_90": col(17 / 20),
+            "90_95": col(18 / 20),
+            "95_100": col(19 / 20),
+            "100_": col(20 / 20),
         }
 
         //flag, piechart, ring style
@@ -49,7 +54,7 @@
             color: colorDict,
             type: c => "flag",
             sizeCol: "pop",
-            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
+            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3),
             zfStroke: 5
         })
 
@@ -57,34 +62,39 @@
         //radar style
         const sRadar = new gviz.RadarStyle({
             color: colorDict,
-            radius: (v, r, s, zf) => 0.5 * r * Math.pow(v / s.max, 0.2),
+            radius: (v, r, s, zf) => 0.5 * r * Math.pow(v / s.max, 0.3),
         })
 
 
         const ttfun = c => "<b>" + c["pop"] + "</b> inhabitant(s)"
-        +"<br>0_5: "+c["0_5"]
-        +"<br>5_10: "+c["5_10"]
-        +"<br>10_15: "+c["10_15"]
-        +"<br>15_20: "+c["15_20"]
-        +"<br>20_25: "+c["20_25"]
-        +"<br>30_35: "+c["30_35"]
-        +"<br>35_40: "+c["35_40"]
-        +"<br>40_45: "+c["40_45"]
-        +"<br>45_50: "+c["45_50"]
-        +"<br>50_55: "+c["50_55"]
-        +"<br>60_65: "+c["60_65"]
-        +"<br>70_75: "+c["70_75"]
-        +"<br>80_85: "+c["80_85"]
-        +"<br>90_95: "+c["90_95"]
-        +"<br>95_100: "+c["95_100"]
-        +"<br>100_: "+c["100_"]
+            + "<br>0_5: " + c["0_5"]
+            + "<br>5_10: " + c["5_10"]
+            + "<br>10_15: " + c["10_15"]
+            + "<br>15_20: " + c["15_20"]
+            + "<br>20_25: " + c["20_25"]
+            + "<br>25_30: " + c["25_30"]
+            + "<br>30_35: " + c["30_35"]
+            + "<br>35_40: " + c["35_40"]
+            + "<br>40_45: " + c["40_45"]
+            + "<br>45_50: " + c["45_50"]
+            + "<br>50_55: " + c["50_55"]
+            + "<br>55_60: " + c["55_60"]
+            + "<br>60_65: " + c["60_65"]
+            + "<br>65_70: " + c["65_70"]
+            + "<br>70_75: " + c["70_75"]
+            + "<br>75_80: " + c["75_80"]
+            + "<br>80_85: " + c["80_85"]
+            + "<br>85_90: " + c["85_90"]
+            + "<br>90_95: " + c["90_95"]
+            + "<br>95_100: " + c["95_100"]
+            + "<br>100_: " + c["100_"]
 
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/1000m/", [s], 0, 50, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/2000m/", [s], 50, 100, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/5000m/", [s], 100, 250, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/10000m/", [s], 250, 500, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/20000m/", [s], 500, 1000, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/50000m/", [s], 1000, 9999999999, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/1000m/", [s], 0, 25, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/2000m/", [s], 25, 50, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/5000m/", [s], 50, 125, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/10000m/", [s], 125, 250, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/20000m/", [s], 250, 500, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/50000m/", [s], 500, 9999999999, { cellInfoHTML: ttfun });
 
         //combo list
         const select = document.querySelector('#type');
