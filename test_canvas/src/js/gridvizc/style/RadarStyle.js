@@ -29,6 +29,12 @@ export class RadarStyle extends Style {
          * @private @type {function(number,number,Stat,number):number} */
         this.radius = opts.radius;
 
+        /**
+         * The function specifying how the offser angle.
+         * 
+         * @private @type {function(number,number,Stat,number):number} */
+         this.offsetAngle = opts.offsetAngle;
+
     }
 
 
@@ -130,4 +136,9 @@ export class RadarStyle extends Style {
     /** @param {function(number,number,Stat,number):number} val @returns {this} */
     setRadius(val) { this.radius = val; return this; }
 
+    /** @returns {function(number,number,Stat,number):number} */
+    getOffsetAngle() { return this.offsetAngle; }
+    /** @param {function(number,number,Stat,number):number} val @returns {this} */
+    setOffsetAngle(val) { this.offsetAngle = val; return this; }
+   
 }

@@ -45,8 +45,7 @@
             radius: (v, r, s, zf) => 0.6 * r * Math.pow(v / s.max, 0.2),
         })
 
-
-        const ttfun = c => "<b>" + c["pop"] + "</b> inhabitant(s)"
+        const ttfun = c => "<b>" + c["pop"] + "</b> inhabitant(s)<br>Female: " + c["f"] + "<br>Male: " + c["m"]
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/1000m/", [s], 0, 50, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/2000m/", [s], 50, 100, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/5000m/", [s], 100, 250, { cellInfoHTML: ttfun });
