@@ -1,3 +1,4 @@
+TODO modularise further canvasgeo (make ctx private ?)
 TODO draw cell stroke - shape stroke style ?
 TODO tiled datasets: accessibility, NL, etc.
 TODO labels - improve selection
@@ -10,7 +11,6 @@ TODO show accessibility data - merge datasets
 
 TODO mouse over: Show rectangle.
 TODO zoom/pan smartphone/touchscreen - use d3 events - TODO make new canvasgeo based on d3 zoom/pan/over
-TODO modularise further canvasgeo (make ctx private ?)
 
 TODO webGL investigation
 TODO on zoom/pan, interupt all existing redraws

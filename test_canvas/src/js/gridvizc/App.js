@@ -1,6 +1,6 @@
 //@ts-check
 
-import { CanvasGeo } from './CanvasGeo';
+import { CanvasGeo, Envelope } from './CanvasGeo';
 import { Layer } from './Layer';
 import { Style } from './Style';
 import { Dataset, Cell } from './Dataset';
@@ -44,7 +44,7 @@ export class App {
         this.backgroundColor = opts.backgroundColor || "white"
 
         /** Make geo canvas
-         * @type {CanvasGeo} */
+         * @type {CanvasGeo} @private */
         this.cg = new CanvasGeo();
         this.cg.redraw = () => {
             //console.log(this.getZoomFactor())
@@ -229,6 +229,21 @@ export class App {
         if (!cell) return undefined;
         return layer.dataset.cellInfoHTML(cell);
     }
+
+
+
+    /**
+     * @param {number} marginPx 
+     * @returns {Envelope}
+     */
+     updateExtentGeo(marginPx = 20) {
+        return this.cg.updateExtentGeo(marginPx);
+    }
+
+
+
+
+
 
 
     //getters and setters

@@ -151,7 +151,7 @@ export class TiledGrid extends Dataset {
                             if (!redraw) return;
 
                             // 2. the tile is within the view, that is its geo envelope intersects the viewer geo envelope.
-                            const env = this.app.cg.updateExtentGeo();
+                            const env = this.app.updateExtentGeo();
                             const envT = tile_.extGeo;
                             if (env.xMax <= envT.xMin) return;
                             if (env.xMin >= envT.xMax) return;
