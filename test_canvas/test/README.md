@@ -18,3 +18,7 @@
 - Population by age: https://eurostat.github.io/gridviz/test_canvas/test/F2015_ind_by_age.html
 - Poverty: https://eurostat.github.io/gridviz/test_canvas/test/F2015_men_pauv.html
 - Income: https://eurostat.github.io/gridviz/test_canvas/test/F2015_niv_vie.html
+
+# Sweden
+
+- Composition by age: https://eurostat.github.io/gridviz/test_canvas/test/SE_pop_by_age.html
