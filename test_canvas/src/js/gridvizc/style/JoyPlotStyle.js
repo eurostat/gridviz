@@ -2,7 +2,7 @@
 
 import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
-import { CanvasGeo } from "../CanvasGeo";
+import { GeoViewer } from "../GeoViewer";
 
 /**
  * 
@@ -37,7 +37,7 @@ export class JoyPlotStyle extends Style {
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} r 
-     * @param {CanvasGeo} cg 
+     * @param {GeoViewer} cg 
      */
     draw(cells, r, cg) {
 

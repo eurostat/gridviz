@@ -1,6 +1,6 @@
 //@ts-check
 import { Cell } from "./Dataset";
-import { CanvasGeo } from './CanvasGeo';
+import { GeoViewer } from './GeoViewer';
 
 /**
  * Statistics of a set of values
@@ -49,7 +49,7 @@ export class Style {
      * 
      * @param {Array.<Cell>} cells The cells to draw.
      * @param {number} resolution Their resolution (in geographic unit)
-     * @param {CanvasGeo} cg The canvas where to draw them.
+     * @param {GeoViewer} cg The canvas where to draw them.
      * @abstract
      */
     draw(cells, resolution, cg) {
@@ -62,7 +62,7 @@ export class Style {
      * 
      * @param {Cell} cell The cell to draw the stroke of.
      * @param {number} resolution Their resolution (in geographic unit)
-     * @param {CanvasGeo} cg The canvas where to draw them.
+     * @param {GeoViewer} cg The canvas where to draw them.
      * @param {function(Cell):string} shape The shape of the stroke.
      * @param {function(Cell,number,Stat,number):number} size A function returning the size of a cell (in geographical unit).
      * @returns 
