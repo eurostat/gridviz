@@ -21,4 +21,5 @@
 
 # Sweden
 
-- Composition by age: https://eurostat.github.io/gridviz/test_canvas/test/SE_pop_by_age.html
+- Population by age: https://eurostat.github.io/gridviz/test_canvas/test/SE_pop_by_age.html
+- Population by sex: https://eurostat.github.io/gridviz/test_canvas/test/SE_pop_by_sex.html
