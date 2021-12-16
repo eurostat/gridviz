@@ -25,22 +25,25 @@
         const app = new gviz.App().setGeoCenter({ x: 673515, y: 6580880 }).setZoomFactor(3)
 
         const col = gviz.interpolateSpectral;
-        //x,y,0_15,0_5,100_,15_20,20_25,30_35,35_40,40_45,45_50,50_55,55_60,5_10,60_65,65_70,70_75,75_80,80_85,85_90,90_95,95_100,f,ld25_30,m,pop
+        //x,y,0_15,0_5,100_,15_20,20_25,30_35,35_40,40_45,45_50,50_55,55_60,5_10,60_65,65_70,70_75,75_80,80_85,85_90,90_95,95_100,f,25_30,m,pop
         const colorDict = {
-            "": col(0),
-            "": col(4 / 80),
-            "": col(6 / 80),
-            "": col(11 / 80),
-            "": col(18 / 80),
-            "": col(25 / 80),
-            "": col(40 / 80),
-            "": col(55 / 80),
-            "": col(65 / 80),
-            "": col(1),
-            //"Ind_inc": "gray"
+            "0_5": col(0 / 15),
+            "5_10": col(1 / 15),
+            "10_15": col(2 / 15),
+            "15_20": col(3 / 15),
+            "20_25": col(4 / 15),
+            "30_35": col(5 / 15),
+            "35_40": col(6 / 15),
+            "40_45": col(7 / 15),
+            "45_50": col(8 / 15),
+            "50_55": col(9 / 15),
+            "60_65": col(10 / 15),
+            "70_75": col(11 / 15),
+            "80_85": col(12 / 15),
+            "90_95": col(13 / 15),
+            "95_100": col(14 / 15),
+            "100_": col(15 / 15),
         }
-
-
 
         //flag, piechart, ring style
         const s = new gviz.CompositionStyle({
@@ -87,12 +90,13 @@
 
         https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/1000m/4/50.csv
 
-        app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
-            {
-                preprocess: c => {
-                }
-            })
-
+        const ttfun = c => "<b>" + c["pop"] + "</b> inhabitant(s)"
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/1000m/", [s], 0, 500, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/2000m/", [s], 500, 1000, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/5000m/", [s], 1000, 2000, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/10000m/", [s], 2000, 4000, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/20000m/", [s], 4000, 9999999999, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/50000m/", [s], 4000, 9999999999, { cellInfoHTML: ttfun });
 
         //combo list
         const select = document.querySelector('#type');
