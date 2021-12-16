@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <title></title>
+</head>
+
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
+    <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
+
+    <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
+        <select id="type">
+            <option value="flag" selected>Flag</option>
+            <option value="piechart">Pie chart</option>
+            <option value="ring">Ring</option>
+            <option value="radar">Radar</option>
+        </select>
+    </div>
+
+    <script src="../build/gridvizc.js"></script>
+    <script>
+
+        //make application
+        const app = new gviz.App().setGeoCenter({ x: 673515, y: 6580880 }).setZoomFactor(100)
+
+        const col = gviz.interpolateSpectral;
+        //x,y,10_15,0_5,100_,15_20,20_25,30_35,35_40,40_45,45_50,50_55,55_60,5_10,60_65,65_70,70_75,75_80,80_85,85_90,90_95,95_100,f,25_30,m,pop
+        const colorDict = {
+            "0_15": col(0 / 5),
+            "15_25": col(1 / 5),
+            "25_50": col(2 / 5),
+            "50_65": col(3 / 5),
+            "65_80": col(4 / 5),
+            "80_": col(5 / 5),
+        }
+
+        //flag, piechart, ring style
+        const s = new gviz.CompositionStyle({
+            color: colorDict,
+            type: c => "flag",
+            sizeCol: "pop",
+            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3),
+            zfStroke: 5
+        })
+
+
+        //radar style
+        const sRadar = new gviz.RadarStyle({
+            color: colorDict,
+            radius: (v, r, s, zf) => 0.5 * r * Math.pow(v / s.max, 0.3),
+        })
+
+        const ttfun = c => "<b>" + c["pop"] + "</b> inhabitant(s)"
+            + "<br>0_15: " + c["0_15"]
+            + "<br>15_25: " + c["15_25"]
+            + "<br>25_50: " + c["25_50"]
+            + "<br>50_65: " + c["50_65"]
+            + "<br>65_80: " + c["65_80"]
+            + "<br>80_: " + c["80_"]
+
+        preprocess = c => {
+            c["0_15"] = c["0_5"] + c["5_10"] + c["10_15"]
+            c["15_25"] = c["15_20"] + c["20_25"]
+            c["25_50"] = c["25_30"] + c["30_35"] + c["35_40"] + c["40_45"] + c["45_50"]
+            c["50_65"] = c["50_55"] + c["55_60"] + c["60_65"]
+            c["65_80"] = c["65_70"] + c["70_75"] + c["75_80"]
+            c["80_"] = c["80_85"] + c["85_90"] + c["90_95"] + c["95_100"] + c["100_"]
+        }
+
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/1000m/", [s], 0, 25, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/2000m/", [s], 25, 50, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/5000m/", [s], 50, 125, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/10000m/", [s], 125, 250, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/20000m/", [s], 250, 500, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/50000m/", [s], 500, 9999999999, { cellInfoHTML: ttfun, preprocess: preprocess });
+
+        //combo list
+        const select = document.querySelector('#type');
+        select.addEventListener('change', function () {
+            //set style
+            if (select.value === "radar") {
+                for (let lay of app.layers) lay.styles = [sRadar]
+            } else {
+                s.setType(c => select.value)
+                for (let lay of app.layers) lay.styles = [s]
+            }
+            //redraw
+            app.cg.redraw();
+        });
+
+    </script>
+
+</body>
+
+</html>
