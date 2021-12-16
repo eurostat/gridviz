@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <title></title>
+</head>
+
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
+    <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
+
+    <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
+        <select id="type">
+            <option value="flag">Flag</option>
+            <option value="piechart">Pie chart</option>
+            <option value="ring" selected>Ring</option>
+            <option value="radar">Radar</option>
+        </select>
+    </div>
+
+    <script src="../build/gridvizc.js"></script>
+    <script>
+
+        //make application
+        const app = new gviz.App().setGeoCenter({ x: 673515, y: 6580880 }).setZoomFactor(10)
+
+        //x,y,0_15,0_5,100_,15_20,20_25,30_35,35_40,40_45,45_50,50_55,55_60,5_10,60_65,65_70,70_75,75_80,80_85,85_90,90_95,95_100,f,25_30,m,pop
+        const colorDict = {
+            "f": "#ff4444",
+            "m": "#4444ff",
+        }
+
+        //flag, piechart, ring style
+        const s = new gviz.CompositionStyle({
+            color: colorDict,
+            type: c => "ring",
+            sizeCol: "pop",
+            size: (v, r, s, zf) => r * Math.sqrt(v / s.max),
+            zfStroke: 5
+        })
+
+
+        //radar style
+        const sRadar = new gviz.RadarStyle({
+            color: colorDict,
+            radius: (v, r, s, zf) => 0.6 * r * Math.pow(v / s.max, 0.2),
+        })
+
+
+        const ttfun = c => "<b>" + c["pop"] + "</b> inhabitant(s)"
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/1000m/", [s], 0, 50, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/2000m/", [s], 50, 100, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/5000m/", [s], 100, 250, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/10000m/", [s], 250, 500, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/20000m/", [s], 500, 1000, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/50000m/", [s], 1000, 9999999999, { cellInfoHTML: ttfun });
+
+        //combo list
+        const select = document.querySelector('#type');
+        select.addEventListener('change', function () {
+            //set style
+            if (select.value === "radar") {
+                for (let lay of app.layers) lay.styles = [sRadar]
+            } else {
+                s.setType(c => select.value)
+                for (let lay of app.layers) lay.styles = [s]
+            }
+            //redraw
+            app.cg.redraw();
+        });
+
+    </script>
+
+</body>
+
+</html>
