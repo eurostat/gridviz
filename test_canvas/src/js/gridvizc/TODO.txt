@@ -1,7 +1,8 @@
+TODO tiled datasets: accessibility, NL, ook, etc.
 TODO color: test image drawing https://github.com/uwdata/fast-kde/blob/main/src/heatmap.js
 TODO draw cell stroke - shape stroke style ?
 TODO labels - improve selection
-TODO make nice test with combination
+TODO make nice test with combination - need for client side join?
 TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache and remove inpriority the old-unused tiles.
 
 TODO style trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php
