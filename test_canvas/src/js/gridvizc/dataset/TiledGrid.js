@@ -18,7 +18,7 @@ export class TiledGrid extends Dataset {
      * @param {App} app The application.
      * @param {object} opts 
      */
-     constructor(url, app, opts) {
+    constructor(url, app, opts) {
         super(url, null, opts)
 
         /**
@@ -50,15 +50,26 @@ export class TiledGrid extends Dataset {
      * @returns this
      */
     loadInfo(callback) {
+
         if (!this.info)
-            json(this.url + "/info.json").then(
-                /** @param {*} data */
-                (data) => {
-                    this.info = data;
-                    this.resolution = this.info.resolutionGeo;
-                    if (callback) callback();
-                }
-            );
+
+            //TODO ensure a single call
+            //this.info = "loading"
+
+            json(this.url + "/info.json")
+                .then(
+                    /** @param {*} data */
+                    (data) => {
+                        this.info = data;
+                        this.resolution = this.info.resolutionGeo;
+                        if (callback) callback();
+                    }
+                )
+                .catch(() => {
+                    //mark as failed
+                    //this.info = "failed"
+                });
+
         else if (callback) callback();
         return this;
     }

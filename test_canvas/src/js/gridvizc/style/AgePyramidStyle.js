@@ -22,13 +22,13 @@ export class AgePyramidStyle extends Style {
         this.color = opts.color;
 
         /**
-         * The function specifying how the length of a bar depending on the statistical value.
+         * The function specifying how the length of a bar depending on the statistical value, in geo unit.
          * 
          * @private @type {function(number,number,Stat,number):number} */
         this.length = opts.length;
 
         /**
-        * The function specifying how the height of the age pyramid.
+        * The function specifying the height of the age pyramid, in geo unit.
         * 
         * @private @type {function(number):number} */
         this.height = opts.height || (r => r);
@@ -50,7 +50,7 @@ export class AgePyramidStyle extends Style {
 
         //height, in pixel
         const h = this.height(r) / cg.zf
-        const h_ = h / nbCat
+        const hPerCat = h / nbCat
 
         //get the stat
         const stat = getStat(cells, this.color, true);
@@ -84,10 +84,10 @@ export class AgePyramidStyle extends Style {
                 cg.ctx.fillRect(
                     xc + (r / cg.zf - wP) * 0.5,
                     yc + hCumul,
-                    wP, h_);
+                    wP, hPerCat);
 
                 //next height
-                hCumul -= h_
+                hCumul -= hPerCat
             }
 
         }
