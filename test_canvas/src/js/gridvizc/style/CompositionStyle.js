@@ -71,7 +71,7 @@ export class CompositionStyle extends Style {
                 if (!v) continue
                 total += v
             }
-            if (!total) continue
+            if (!total || isNaN(total)) continue
 
             //size
             /** @type {function(number,number,Stat,number):number} */
@@ -95,7 +95,7 @@ export class CompositionStyle extends Style {
 
                 //get share
                 const share = cell[column] / total;
-                if (!share) continue
+                if (!share || isNaN(share)) continue
 
                 //set color
                 cg.ctx.fillStyle = color;
