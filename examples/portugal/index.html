@@ -22,7 +22,7 @@
     }
 
     let containerDiv = document.getElementById("viz-container");
-    let viewer = gridviz.App()
+    let viewer = new gridviz.App()
         .container(containerDiv)
         .title("Portugal 1km² census grid 2011")
         .zoom(2000) //initial camera Z value

@@ -1,5 +1,5 @@
 //@ts-check
-/** @typedef {{ heightFunction: Function, lineColor: String, lineWidth: Number, fillColor:String }} JoyPlotStyleConfig */
+/** @typedef {{ heightFunction: Function, lineColor: String, lineWidth: Number, fillColor:String, fillOpacity:Number }} JoyPlotStyleConfig */
 
 import { Style } from "../Style"
 import { Cell } from "../Dataset"
@@ -37,7 +37,9 @@ export class JoyPlotStyle extends Style {
         /** @type {number} */
         this.lineWidth = opts.lineWidth || this.defaultLineWidth;
         /** @type {string} */
-        this.fillColor = opts.fillColor || "rgba(192, 140, 89, 0.4)"
+        this.fillColor = opts.fillColor || null;
+        /** @type {Number} */
+        this.fillOpacity = opts.fillOpacity || 0.75;
         /** @type {number} */
         this.lineZ = 0.001;
         /** @type {Object3D} */
@@ -130,7 +132,7 @@ export class JoyPlotStyle extends Style {
                     //push rgb to buffer
                     colors.push(lineC.r, lineC.g, lineC.b);
                     //push [x,y] to fill polygon
-                    fillCoords.push([(x + r / 2), y + hG])
+                    if (this.fillColor) fillCoords.push([(x + r / 2), y + hG])
 
                 } else {
                     // areas with no data
@@ -140,7 +142,7 @@ export class JoyPlotStyle extends Style {
                     // hide this segment
                     colors.push(backgroundC.r, backgroundC.g, backgroundC.b);
                     // fill polygon
-                    fillCoords.push([(x + r / 2), y])
+                    if (this.fillColor) fillCoords.push([(x + r / 2), y])
                 }
                 //store the previous value
                 hG_ = hG;
@@ -151,14 +153,15 @@ export class JoyPlotStyle extends Style {
                 //cg.ctx.lineTo(cg.geoToPixX(xMax + r / 2), yP);
                 coords.push((xMax + r / 2), y, this.lineZ)
                 colors.push(lineC.r, lineC.g, lineC.b);
-                fillCoords.push([(xMax + r / 2), y])
+                if (this.fillColor) fillCoords.push([(xMax + r / 2), y])
             }
 
 
             //draw fill
-            // if (this.fillColor_)
-            //     cg.ctx.fill()
-            this.drawFill(fillCoords, y);
+             if (this.fillColor) {
+                 this.drawFill(fillCoords, y);
+             }
+            
 
             //draw line
             this.drawLine(coords, colors);
@@ -166,25 +169,16 @@ export class JoyPlotStyle extends Style {
     }
 
     drawFill(coords, yMin) {
-        let width = ((coords.length - 1) / 3);
-        let height = 0;
-        let widthSegments = ((coords.length - 1) / 3);
-        let heightSegments = 1;
-        var planeGeom = new PlaneGeometry(width, height, widthSegments, heightSegments);
-        planeGeom.translate(coords[0], coords[1], coords[2]);
-
-        //planeGeom.setAttribute( 'position', new Float32BufferAttribute( coords, 3 ) );
 
         if (!this.meshMaterial) {
             this.meshMaterial = new MeshBasicMaterial({
-                color: "red",
+                color: this.fillColor,
                 wireframe: false,
                 //side: THREE.DoubleSide,
                 transparent: true,
-                opacity: .75
+                opacity: this.fillOpacity
             })
         }
-        let plane = new Mesh(planeGeom, this.meshMaterial);
 
         let mesh = this.createPolygonFill(coords , yMin)
 
@@ -213,14 +207,6 @@ export class JoyPlotStyle extends Style {
 
         var geometry = new ShapeGeometry(shape);
 
-        if (!this.meshMaterial) {
-            this.meshMaterial = new MeshBasicMaterial({
-                color: "red",
-                wireframe: false,
-                transparent: true,
-                opacity: .75
-            })
-        }
         return new Mesh(geometry, this.meshMaterial);
     }
 

@@ -73,10 +73,10 @@ export class Tooltip {
                     if (!this.tooltipTableRows[field]) {
                         // add new row
                         this.appendRowToTooltip(field);
-                        this.tooltipTableRows[field].innerHTML = `<th><strong>${field}</strong></th><th>${cell[field]}</th>`
+                        this.tooltipTableRows[field].innerHTML = `<th><strong>${field} : </strong></th><th>${cell[field]}</th>`
                     } else if (this.tooltipTableRows[field]) {
                         //update existing row
-                        this.tooltipTableRows[field].innerHTML = `<th><strong>${field}</strong></th><th>${cell[field]}</th>`
+                        this.tooltipTableRows[field].innerHTML = `<th><strong>${field} : </strong></th><th>${cell[field]}</th>`
                     }
                 }
             }

@@ -77,14 +77,14 @@ gridviz = require("gridviz");
 
 ## Usage
 
-Create a gridviz App using `let viewer = gridviz.App();` and customise it with the methods described in the [API reference](#api-reference) below.
+Create a gridviz App using `let viewer = new gridviz.App();` and customise it with the methods described in the [API reference](#api-reference) below.
 
 Most of these methods follow the pattern app.myMethod([value]): If a value is specified, the method sets the parameter value and returns the viewer object itself. If no value is specified, then the method returns the current value of the parameter.
 
 Here's a barebones example that loads a CSV file containing population data for a 5x5 km grid of europe:
 
 ```javascript
-let app = gridviz.App().container(containerDiv).geoCenter([4500, 3000]).zoom(4000).build();
+let app = new gridviz.App().container(containerDiv).geoCenter([4500, 3000]).zoom(4000).build();
 
 app.addCSVGrid({
   url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
@@ -120,7 +120,7 @@ x,y,time
 
 Here you will find information on how to use the functions available for configuring a gridviz app. Like D3, gridviz uses a method chaining syntax (as shown in the barebones example above).
 
-First create a viewer with `let viewer = gridviz.App() `.
+First create a viewer with `let viewer = new gridviz.App() `.
 
 Then configure it using the methods in the table below. The methods follow the pattern: `App.method([value])`.
 
@@ -271,6 +271,8 @@ The following properties can be defined in the configuration object passed to ne
 | --------------------------- | -------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **heightFunction**([value]) | Function | null    | Function used to define the height of the line at the location of its corresponding cell. Function is executed on each cell at draw time. |
 | **lineColor**([value])      | String   | 'grey'  | The color of the lines.                                                                                                                   |
+| **fillColor**([value])      | String   | null  | The color of the area below the lines of each row                                                                                                              |
+| **fillOpacity**([value])      | Number   | 0.75  | The opacity of the area below the lines of each row                                                                                                              |
 
 <br>
 

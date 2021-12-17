@@ -32,6 +32,8 @@
     const s = new gridviz.JoyPlotStyle({
         "heightFunction": c => 50 * Math.sqrt(c["2011"]),
         "lineColor": "white",
+        "fillColor": "#6bd5ff",
+        "fillOpacity": 0.5
         //"lineWidth": 0.0016
     })
 
@@ -57,12 +59,12 @@
         url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/",
         styles: [s],
         minZoom: 800000,
-        maxZoom: 4000000
+        maxZoom: 3000000
     })
     app.addTiledGrid({
         url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/",
         styles: [s],
-        minZoom: 4000000,
+        minZoom: 3000000,
         maxZoom: 9999999999
     })
 

@@ -678,10 +678,11 @@ export class App {
             if (!this._highlightPointer) {
               const material = new MeshBasicMaterial({ color: new Color(this.highlightColor_) });
               this._highlightPointer = new Mesh(new CircleGeometry(this._currentResolution / 2, 30), material);
+              this._highlightPointer.renderOrder = 999999;
               this.viewer.scene.add(this._highlightPointer);
             }
             this._highlightPointer.geometry = new CircleGeometry(this._currentResolution / 2, 30);
-            intersect.point.z = 1;
+            intersect.point.z = 9;
             this._highlightPointer.position.copy(intersect.point);
 
 
