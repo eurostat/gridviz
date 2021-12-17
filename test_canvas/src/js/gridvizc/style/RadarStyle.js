@@ -52,10 +52,10 @@ export class RadarStyle extends Style {
 
         //angle for each category: the same for all.
         const angle = 2 * Math.PI / nbCat
-        const f = Math.PI/180
+        const f = Math.PI / 180
 
         //get the stat
-        const stat = this.getStat(cells, true);
+        const stat = getStat(cells, this.color, true);
 
         for (let cell of cells) {
 
@@ -99,34 +99,6 @@ export class RadarStyle extends Style {
     }
 
 
-    /** 
-    * Get the stat, all categories together.
-    * @param {Array.<Cell>} cells 
-    * @param {boolean} ignoreZeros 
-    * @returns {Stat}
-    */
-    getStat(cells, ignoreZeros) {
-        if (!cells || cells.length == 0) return undefined
-        let min = Infinity
-        let max = -Infinity
-        //let sum = 0
-        //let nb = 0
-        const keys = Object.keys(this.color)
-        for (const cell of cells) {
-            for (let key of keys) {
-                const v = +cell[key];
-                if (ignoreZeros && !v) continue
-                if (v < min) min = v
-                if (v > max) max = v
-                //sum += v
-                //nb++
-            }
-        }
-        return { min: min, max: max/*, mean: (sum / nb)*/ }
-    }
-
-
-
 
     //getters and setters
 
@@ -145,4 +117,33 @@ export class RadarStyle extends Style {
     /** @param {function(Cell,number,number):number} val @returns {this} */
     setOffsetAngle(val) { this.offsetAngle = val; return this; }
 
+}
+
+
+
+/** 
+* Get the stat, all categories together.
+* @param {Array.<Cell>} cells 
+* @param {object} color 
+* @param {boolean} ignoreZeros 
+* @returns {Stat}
+*/
+export const getStat = function (cells, color, ignoreZeros) {
+    if (!cells || cells.length == 0) return undefined
+    let min = Infinity
+    let max = -Infinity
+    //let sum = 0
+    //let nb = 0
+    const keys = Object.keys(color)
+    for (const cell of cells) {
+        for (let key of keys) {
+            const v = +cell[key];
+            if (ignoreZeros && !v) continue
+            if (v < min) min = v
+            if (v > max) max = v
+            //sum += v
+            //nb++
+        }
+    }
+    return { min: min, max: max/*, mean: (sum / nb)*/ }
 }

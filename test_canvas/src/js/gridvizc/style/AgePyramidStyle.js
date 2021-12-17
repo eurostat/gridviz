@@ -1,6 +1,7 @@
 //@ts-check
 
-import { Style, Stat, getStatistics } from "../Style"
+import { Style, Stat } from "../Style"
+import { getStat } from "./RadarStyle"
 import { Cell } from "../Dataset"
 import { GeoViewer } from "../GeoViewer";
 
@@ -20,13 +21,18 @@ export class AgePyramidStyle extends Style {
          * @private @type {object} */
         this.color = opts.color;
 
-        /** The column where to get the size values.
-         * @private @type {string} */
-        this.sizeCol = opts.sizeCol
-
-        /** A function returning the size of a cell.
+        /**
+         * The function specifying how the length of a bar depending on the statistical value.
+         * 
          * @private @type {function(number,number,Stat,number):number} */
-        this.size = opts.size || ((v) => Math.sqrt(v));
+         this.length = opts.lenght;
+
+         /**
+         * The function specifying how the height of the age pyramid.
+         * 
+         * @private @type {function(number):number} */
+         this.height = opts.height;
+
     }
 
 
@@ -34,97 +40,56 @@ export class AgePyramidStyle extends Style {
      * Draw cells as squares depending on their value.
      * 
      * @param {Array.<Cell>} cells 
-     * @param {number} resolution 
+     * @param {number} r 
      * @param {GeoViewer} cg 
      */
-    draw(cells, resolution, cg) {
+    draw(cells, r, cg) {
 
-        let stat
-        if (this.sizeCol) {
-            //if size is used, sort cells by size so that the biggest are drawn first
-            cells.sort((c1, c2) => c2[this.sizeCol] - c1[this.sizeCol]);
-            //and compute statistics
-            stat = getStatistics(cells, c => c[this.sizeCol], true)
-        }
+
+        //nb categories
+        const nbCat = Object.entries(this.color).length
+
+        //angle for each category: the same for all.
+        const angle = 2 * Math.PI / nbCat
+        const f = Math.PI/180
+
+        //get the stat
+        const stat = getStat(cells, this.color, true);
 
         for (let cell of cells) {
 
-            //compute total
-            let total = 0;
-            for (let column of Object.keys(this.color)) {
-                const v = +cell[column];
-                if (!v) continue
-                total += v
-            }
-            if (!total) continue
-
-            //size
-            /** @type {function(number,number,Stat,number):number} */
-            let s_ = this.size || (() => resolution);
-            //size - in pixel and geo
-            /** @type {number} */
-            const sG = s_(cell[this.sizeCol], resolution, stat, cg.zf)
-            /** @type {number} */
-            const sP = sG / cg.zf;
-
-            //get symbol type
-            const type_ = this.type ? this.type(cell) : "flag"
-
             //get offset
-            const offset = this.offset(cell, resolution, cg.zf)
+            const offset = this.offset(cell, r, cg.zf)
 
-            //draw decomposition symbol
-            let cumul = 0;
-            const d = resolution * (1 - sG / resolution) * 0.5
+            //compute cell center position
+            const xc = cg.geoToPixX(cell.x + r * 0.5 + offset.dx);
+            const yc = cg.geoToPixY(cell.y + r * 0.5 + offset.dy);
+
+            //draw decomposition symbols
             for (let [column, color] of Object.entries(this.color)) {
 
-                //get share
-                const share = cell[column] / total;
-                if (!share) continue
-
-                //set color
+                //set category color
                 cg.ctx.fillStyle = color;
 
-                //draw symbol part
-                if (type_ === "flag") {
-                    //draw flag vertical stripe
-                    cg.ctx.fillRect(
-                        cumul * sP + cg.geoToPixX(cell.x + d + offset.dx),
-                        cg.geoToPixY(cell.y + resolution - d + offset.dy),
-                        share * sP, sP);
-                } else if (type_ === "piechart") {
-                    //draw pie chart angular sector
-                    const xc = cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx);
-                    const yc = cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy);
-                    cg.ctx.beginPath();
-                    cg.ctx.moveTo(xc, yc);
-                    cg.ctx.arc(xc, yc, sP * 0.5, cumul * 2 * Math.PI, (cumul + share) * 2 * Math.PI);
-                    cg.ctx.lineTo(xc, yc);
-                    cg.ctx.fill();
-                } else if (type_ === "ring") {
-                    //draw ring
-                    //TODO need to compute radius properly ! Variation as rootsquare of share !
-                    cg.ctx.beginPath();
-                    cg.ctx.arc(
-                        cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx),
-                        cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy),
-                        Math.sqrt(1 - cumul) * sP * 0.5,
-                        0, 2 * Math.PI);
-                    cg.ctx.fill();
-                } else {
-                    throw new Error('Unexpected symbol type:' + type_);
-                }
+                //get categroy value
+                const val = cell[column]
 
-                cumul += share;
+                //compute category radius - in pixel
+                /** @type {number} */
+                const rP = this.radius(val, r, stat, cg.zf) / cg.zf
+
+                //draw angular sector
+                cg.ctx.beginPath();
+                cg.ctx.moveTo(xc, yc);
+                cg.ctx.arc(xc, yc, rP, angleCumul - angle, angleCumul);
+                cg.ctx.lineTo(xc, yc);
+                cg.ctx.fill();
+
+                //next angular sector
+                angleCumul -= angle
             }
 
-            /*/draw stroke
-            this.drawStroke(cell, resolution, cg, (c) => {
-                return (type_ === "flag") ? "square" : "circle"
-            }, this.size)*/
-            //TODO
         }
-
     }
 
 
@@ -136,19 +101,9 @@ export class AgePyramidStyle extends Style {
     /** @param {function(Cell):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
-    /** @returns {function(Cell):CompositionType} */
-    getType() { return this.type; }
-    /** @param {function(Cell):CompositionType} val @returns {this} */
-    setType(val) { this.type = val; return this; }
-
-    /** @returns {string} */
-    getColSize() { return this.sizeCol; }
-    /** @param {string} val @returns {this} */
-    setColSize(val) { this.sizeCol = val; return this; }
-
     /** @returns {function(number,number,Stat,number):number} */
-    getSize() { return this.size; }
+    getLength() { return this.length; }
     /** @param {function(number,number,Stat,number):number} val @returns {this} */
-    setSize(val) { this.size = val; return this; }
+    setLength(val) { this.length = val; return this; }
 
 }
