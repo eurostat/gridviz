@@ -16,6 +16,8 @@ export class AgePyramidStyle extends Style {
         super(opts)
         opts = opts || {};
 
+        console.log(opts)
+
         /**
          * The dictionary which give the color of each category.
          * @private @type {object} */
@@ -25,13 +27,13 @@ export class AgePyramidStyle extends Style {
          * The function specifying how the length of a bar depending on the statistical value.
          * 
          * @private @type {function(number,number,Stat,number):number} */
-        this.length = opts.lenght;
+        this.length = opts.length;
 
         /**
         * The function specifying how the height of the age pyramid.
         * 
         * @private @type {function(number):number} */
-        this.height = opts.height;
+        this.height = opts.height || (r => r);
 
     }
 
@@ -61,7 +63,7 @@ export class AgePyramidStyle extends Style {
             const offset = this.offset(cell, r, cg.zf)
 
             //
-            let hCumul = 0 //TODO
+            let hCumul = (r / cg.zf - h) * 0.5
 
             //compute cell position
             const xc = cg.geoToPixX(cell.x + offset.dx);
@@ -82,7 +84,7 @@ export class AgePyramidStyle extends Style {
 
                 //draw bar
                 cg.ctx.fillRect(
-                    xc,
+                    xc + (r / cg.zf - wP) * 0.5,
                     yc + hCumul,
                     wP, h_);
 
