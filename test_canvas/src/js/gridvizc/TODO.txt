@@ -1,3 +1,4 @@
+TODO debug requests intensity - info.json, tiles, etc. ! to ensure sent only once.
 TODO composition as age pyramid: fix Y position ?
 TODO composition as multi - make generic
 TODO modularise further canvasgeo (make ctx private)
