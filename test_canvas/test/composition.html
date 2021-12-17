@@ -10,10 +10,11 @@
 
     <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
         <select id="type">
-            <option value="flag" selected>Flag</option>
-            <option value="piechart">Pie chart</option>
-            <option value="ring">Ring</option>
+            <option value="pyramid" selected>Age pyramid</option>
             <option value="radar">Radar</option>
+            <option value="flag">Flag</option>
+            <option value="ring">Ring</option>
+            <option value="piechart">Pie chart</option>
             <option value="multi">Multi</option>
         </select>
     </div>
@@ -36,13 +37,18 @@
             zfStroke: 5
         })
 
-
         //radar style
         const sRadar = new gviz.RadarStyle({
             color: colorDict,
             radius: (v, r, s, zf) => 0.6 * r * Math.pow(v / s.max, 0.2),
         })
 
+        //age pyramid style
+        const sPyramid = new gviz.AgePyramidStyle({
+            color: colorDict,
+            length: (v, r, s, zf) => r * Math.pow(v / s.max, 0.5),
+            height: r => r * 0.9
+        })
 
         //multi style
         const s14 = new gviz.ShapeColorSizeStyle({
@@ -70,7 +76,7 @@
             zfStroke: 1
         })
 
-        app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s], 0, 9999999999,
+        app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [sPyramid], 0, 9999999999,
             {
                 preprocess: c => {
                     c.x *= 100; c.y *= 100;
@@ -87,6 +93,8 @@
             //set style
             if (select.value === "radar") {
                 for (let lay of app.layers) lay.styles = [sRadar]
+            } else if (select.value === "pyramid") {
+                for (let lay of app.layers) lay.styles = [sPyramid]
             } else if (select.value === "multi") {
                 for (let lay of app.layers) lay.styles = [s30, s14, s65]
             } else {
@@ -95,6 +103,8 @@
             }
             //redraw
             app.cg.redraw();
+
+
         });
 
     </script>
