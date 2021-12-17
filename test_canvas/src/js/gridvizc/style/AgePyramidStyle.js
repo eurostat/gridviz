@@ -16,8 +16,6 @@ export class AgePyramidStyle extends Style {
         super(opts)
         opts = opts || {};
 
-        console.log(opts)
-
         /**
          * The dictionary which give the color of each category.
          * @private @type {object} */
