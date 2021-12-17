@@ -109,4 +109,9 @@ export class AgePyramidStyle extends Style {
     /** @param {function(number,number,Stat,number):number} val @returns {this} */
     setLength(val) { this.length = val; return this; }
 
+    /** @returns {function(number):number} */
+    getHeight() { return this.height; }
+    /** @param {function(number):number} val @returns {this} */
+    sethHight(val) { this.height = val; return this; }
+
 }
