@@ -54,7 +54,7 @@
         const sPyramid = new gviz.AgePyramidStyle({
             color: colorDict,
             length: (v, r, s, zf) => r * Math.pow(v / s.max, 0.5),
-            height: r=>r*0.8
+            height: r => r * 0.9
         })
 
         const ttfun = c => "<b>" + c["pop"] + "</b> inhabitant(s)"
