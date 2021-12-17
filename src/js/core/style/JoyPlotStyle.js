@@ -4,7 +4,7 @@
 import { Style } from "../Style"
 import { Cell } from "../Dataset"
 import { Viewer } from "../viewer/viewer";
-import { Color, Group, LineBasicMaterial, Line, BufferGeometry, Vector3, Float32BufferAttribute, Object3D, Material } from "three";
+import { Color, Group, LineBasicMaterial, Line, BufferGeometry, Vector3, Float32BufferAttribute, BufferAttribute, Shape, ShapeGeometry, Object3D, Material, Mesh, MeshBasicMaterial, PlaneGeometry } from "three";
 import { LineMaterial } from "../../lib/threejs/lines/LineMaterial";
 import { Line2 } from "../../lib/threejs/lines/Line2";
 import { LineGeometry } from "../../lib/threejs/lines/LineGeometry";
@@ -42,14 +42,14 @@ export class JoyPlotStyle extends Style {
         this.lineZ = 0.001;
         /** @type {Object3D} */
         this.threejsObject = null;
-        
+
         /** @type {Material} */
         this.lineMaterial = new LineBasicMaterial({
             linewidth: this.lineWidth,
             vertexColors: true,
             //opacity: 1
             //color: this.lineColor_ - use color attribute in Geometry object instead
-        }); 
+        });
 
     }
 
@@ -58,12 +58,12 @@ export class JoyPlotStyle extends Style {
      * Draw cells as squares depending on their value.
      * 
      * @param {Array.<Cell>} cells 
-     * @param {number} r 
+     * @param {number} r  resolution
      * @param {Viewer} viewer 
      */
     draw(cells, r, viewer) {
         //save cells to style for tooltip
-        this.cells = cells; 
+        this.cells = cells;
 
         // hex to be used in threejs
         let lineC = new Color(this.lineColor);
@@ -104,6 +104,8 @@ export class JoyPlotStyle extends Style {
             let coords = []; //vertices positions
             let colors = []; //vertices colors
 
+            let fillCoords = [];
+
             //place first point
             coords.push((xMin - r / 2), y, this.lineZ);
 
@@ -127,6 +129,8 @@ export class JoyPlotStyle extends Style {
                     coords.push((x + r / 2), y + hG, this.lineZ)
                     //push rgb to buffer
                     colors.push(lineC.r, lineC.g, lineC.b);
+                    //push [x,y] to fill polygon
+                    fillCoords.push([(x + r / 2), y + hG])
 
                 } else {
                     // areas with no data
@@ -135,6 +139,8 @@ export class JoyPlotStyle extends Style {
                     coords.push((x + r / 2), y, this.lineZ)
                     // hide this segment
                     colors.push(backgroundC.r, backgroundC.g, backgroundC.b);
+                    // fill polygon
+                    fillCoords.push([(x + r / 2), y])
                 }
                 //store the previous value
                 hG_ = hG;
@@ -145,16 +151,77 @@ export class JoyPlotStyle extends Style {
                 //cg.ctx.lineTo(cg.geoToPixX(xMax + r / 2), yP);
                 coords.push((xMax + r / 2), y, this.lineZ)
                 colors.push(lineC.r, lineC.g, lineC.b);
+                fillCoords.push([(xMax + r / 2), y])
             }
 
 
             //draw fill
             // if (this.fillColor_)
             //     cg.ctx.fill()
+            this.drawFill(fillCoords, y);
 
             //draw line
-            this.drawLine(coords, colors)
+            this.drawLine(coords, colors);
         }
+    }
+
+    drawFill(coords, yMin) {
+        let width = ((coords.length - 1) / 3);
+        let height = 0;
+        let widthSegments = ((coords.length - 1) / 3);
+        let heightSegments = 1;
+        var planeGeom = new PlaneGeometry(width, height, widthSegments, heightSegments);
+        planeGeom.translate(coords[0], coords[1], coords[2]);
+
+        //planeGeom.setAttribute( 'position', new Float32BufferAttribute( coords, 3 ) );
+
+        if (!this.meshMaterial) {
+            this.meshMaterial = new MeshBasicMaterial({
+                color: "red",
+                wireframe: false,
+                //side: THREE.DoubleSide,
+                transparent: true,
+                opacity: .75
+            })
+        }
+        let plane = new Mesh(planeGeom, this.meshMaterial);
+
+        let mesh = this.createPolygonFill(coords , yMin)
+
+        this.threejsObject.add(mesh);
+    }
+
+    // var poly = [[0,1],[0.25,0],[0.5,0.5],[0.75,0],[1,1]];
+    /**
+     *
+     *
+     * @param {*} coords array of x/y coordinates
+     * @param {*} yMin the minimum Y value of the polygon's coordinates
+     * @returns
+     * @memberof JoyPlotStyle
+     */
+    createPolygonFill(coords, yMin) {
+        var shape = new Shape();
+        let origin = [coords[0][0], yMin];
+        shape.moveTo(origin[0], origin[1]);
+        for (var i = 1; i < coords.length; ++i) {
+            shape.lineTo(coords[i][0], coords[i][1]);
+        }
+
+        // make sure that the first point is a the lowest Y value of the row 
+        shape.lineTo(origin[0], origin[1]);
+
+        var geometry = new ShapeGeometry(shape);
+
+        if (!this.meshMaterial) {
+            this.meshMaterial = new MeshBasicMaterial({
+                color: "red",
+                wireframe: false,
+                transparent: true,
+                opacity: .75
+            })
+        }
+        return new Mesh(geometry, this.meshMaterial);
     }
 
     drawLine(coords, colors) {
@@ -162,11 +229,11 @@ export class JoyPlotStyle extends Style {
 
             // line width is complicated in webGL (see https://threejs.org/docs/?q=line#api/en/materials/LineBasicMaterial.linewidth)
             // therefore a workaround (Line2) is needed if the user wants a different line thickness
-            let line; 
+            let line;
             if (this.lineWidth !== this.defaultLineWidth) {
                 this.lineMaterial = new LineMaterial({
                     //color: this.lineColor_, 
-                    linewidth: this.lineWidth, 
+                    linewidth: this.lineWidth,
                     vertexColors: true, // use our colors array
                     //opacity: 1
                 });

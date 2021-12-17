@@ -18,13 +18,13 @@
     //make application
     const app = new gridviz.App()
         .container(containerDiv)
-        .geoCenter([4900000, 2475000])
+        .geoCenter([4000000, 2500000])
         .title("gridviz population Joyplot")
         .showPlacenames(true)
         .backgroundColor("black")
         .highlightColor("red")
         .cellCount(true)
-        .zoom(500000) //initial camera Z value
+        .zoom(1500000) //initial camera Z value
         .nuts(true)
         .build()
 
@@ -32,37 +32,37 @@
     const s = new gridviz.JoyPlotStyle({
         "heightFunction": c => 50 * Math.sqrt(c["2011"]),
         "lineColor": "white",
-        "lineWidth": 0.0016
+        //"lineWidth": 0.0016
     })
 
     app.addTiledGrid({
         url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/",
         styles: [s],
         minZoom: 0,
-        maxZoom: 200000
+        maxZoom: 100000
     });
     app.addTiledGrid({
         url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/",
         styles: [s],
-        minZoom: 200000,
-        maxZoom: 500000
+        minZoom: 100000,
+        maxZoom: 300000
     })
     app.addTiledGrid({
         url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/",
         styles: [s],
-        minZoom: 500000,
-        maxZoom: 2000000
+        minZoom: 300000,
+        maxZoom: 800000
     })
     app.addTiledGrid({
         url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/",
         styles: [s],
-        minZoom: 2000000,
-        maxZoom: 5000000
+        minZoom: 800000,
+        maxZoom: 4000000
     })
     app.addTiledGrid({
         url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/",
         styles: [s],
-        minZoom: 5000000,
+        minZoom: 4000000,
         maxZoom: 9999999999
     })
 
