@@ -10,7 +10,6 @@ export * from "d3-scale-chromatic"
 export { CSVGrid } from "./dataset/CSVGrid"
 export { TiledGrid } from "./dataset/TiledGrid"
 
-
 //export styles
 export { ShapeColorSizeStyle } from "./style/ShapeColorSizeStyle"
 export { JoyPlotStyle } from "./style/JoyPlotStyle"
@@ -19,6 +18,7 @@ export { SegmentStyle } from "./style/SegmentStyle"
 export { TextStyle } from "./style/TextStyle"
 export { KernelSmoothingStyle } from "./style/KernelSmoothingStyle"
 export { RadarStyle } from "./style/RadarStyle"
+export { AgePyramidStyle } from "./style/AgePyramidStyle"
 
 //export label layer
 export { LabelLayer } from "./LabelLayer"

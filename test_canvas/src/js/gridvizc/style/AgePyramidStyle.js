@@ -51,7 +51,7 @@ export class AgePyramidStyle extends Style {
         //height, in pixel
         const h = this.height(r) / cg.zf
         const h_ = h / nbCat
- 
+
         //get the stat
         const stat = getStat(cells, this.color, true);
 
@@ -64,8 +64,8 @@ export class AgePyramidStyle extends Style {
             let hCumul = 0 //TODO
 
             //compute cell position
-            const xc = cg.geoToPixX(cell.x);
-            const yc = cg.geoToPixY(cell.y);
+            const xc = cg.geoToPixX(cell.x + offset.dx);
+            const yc = cg.geoToPixY(cell.y + offset.dy);
 
             //draw decomposition symbols
             for (let [column, color] of Object.entries(this.color)) {
@@ -76,11 +76,15 @@ export class AgePyramidStyle extends Style {
                 //get categroy value
                 const val = cell[column]
 
-                //compute category radius - in pixel
+                //compute category length - in pixel
                 /** @type {number} */
-                const rP = this.length(val, r, stat, cg.zf) / cg.zf
+                const wP = this.length(val, r, stat, cg.zf) / cg.zf
 
-                //draw angular sector
+                //draw bar
+                cg.ctx.fillRect(
+                    xc,
+                    yc + hCumul,
+                    wP, h_);
 
                 //next height
                 hCumul += h_
