@@ -25,13 +25,13 @@ export class AgePyramidStyle extends Style {
          * The function specifying how the length of a bar depending on the statistical value.
          * 
          * @private @type {function(number,number,Stat,number):number} */
-         this.length = opts.lenght;
+        this.length = opts.lenght;
 
-         /**
-         * The function specifying how the height of the age pyramid.
-         * 
-         * @private @type {function(number):number} */
-         this.height = opts.height;
+        /**
+        * The function specifying how the height of the age pyramid.
+        * 
+        * @private @type {function(number):number} */
+        this.height = opts.height;
 
     }
 
@@ -45,14 +45,13 @@ export class AgePyramidStyle extends Style {
      */
     draw(cells, r, cg) {
 
-
         //nb categories
         const nbCat = Object.entries(this.color).length
 
-        //angle for each category: the same for all.
-        const angle = 2 * Math.PI / nbCat
-        const f = Math.PI/180
-
+        //height, in pixel
+        const h = this.height(r) / cg.zf
+        const h_ = h / nbCat
+ 
         //get the stat
         const stat = getStat(cells, this.color, true);
 
@@ -61,9 +60,12 @@ export class AgePyramidStyle extends Style {
             //get offset
             const offset = this.offset(cell, r, cg.zf)
 
-            //compute cell center position
-            const xc = cg.geoToPixX(cell.x + r * 0.5 + offset.dx);
-            const yc = cg.geoToPixY(cell.y + r * 0.5 + offset.dy);
+            //
+            let hCumul = 0 //TODO
+
+            //compute cell position
+            const xc = cg.geoToPixX(cell.x);
+            const yc = cg.geoToPixY(cell.y);
 
             //draw decomposition symbols
             for (let [column, color] of Object.entries(this.color)) {
@@ -76,17 +78,12 @@ export class AgePyramidStyle extends Style {
 
                 //compute category radius - in pixel
                 /** @type {number} */
-                const rP = this.radius(val, r, stat, cg.zf) / cg.zf
+                const rP = this.length(val, r, stat, cg.zf) / cg.zf
 
                 //draw angular sector
-                cg.ctx.beginPath();
-                cg.ctx.moveTo(xc, yc);
-                cg.ctx.arc(xc, yc, rP, angleCumul - angle, angleCumul);
-                cg.ctx.lineTo(xc, yc);
-                cg.ctx.fill();
 
-                //next angular sector
-                angleCumul -= angle
+                //next height
+                hCumul += h_
             }
 
         }
