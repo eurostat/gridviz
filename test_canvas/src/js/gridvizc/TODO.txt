@@ -1,5 +1,5 @@
-TODO composition as age pyramid age pyramid
-TODO composition as multi
+TODO composition as age pyramid: fix Y position ?
+TODO composition as multi - make generic
 TODO modularise further canvasgeo (make ctx private ?)
 TODO draw cell stroke - shape stroke style ?
 TODO tiled datasets: accessibility, NL, etc.
