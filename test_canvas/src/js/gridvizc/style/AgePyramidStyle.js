@@ -63,7 +63,7 @@ export class AgePyramidStyle extends Style {
             const offset = this.offset(cell, r, cg.zf)
 
             //
-            let hCumul = (r / cg.zf + h) * 0.5
+            let hCumul = (-r / cg.zf + h) * 0.5
 
             //compute cell position
             const xc = cg.geoToPixX(cell.x + offset.dx);
