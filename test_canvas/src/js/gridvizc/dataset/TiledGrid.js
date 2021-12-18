@@ -34,6 +34,9 @@ export class TiledGrid extends Dataset {
          *  */
         this.info = undefined;
 
+        /**  @type {string} @private  */
+        this.infoLoadingStatus = "notLoaded";
+
         /** 
         * The cache of the loaded tiles. It is double indexed: by xT and then yT.
         * Example: this.cache[xT][yT] returns the tile at [xT][yT] location.
@@ -51,7 +54,8 @@ export class TiledGrid extends Dataset {
      */
     loadInfo(callback) {
 
-        if (!this.info) {
+        if (!this.info && this.infoLoadingStatus === "notLoaded") {
+            this.infoLoadingStatus = "loading"
             json(this.url + "/info.json")
                 .then(
                     /** @param {*} data */
@@ -59,12 +63,13 @@ export class TiledGrid extends Dataset {
                         if (this.info) console.log("!")
                         this.info = data;
                         this.resolution = data.resolutionGeo;
+                        this.infoLoadingStatus = "loaded"
                         if (callback) callback();
                     }
                 )
                 .catch(() => {
                     //mark as failed
-                    //this.info = "failed"
+                    this.infoLoadingStatus = "failed"
                 });
         }
         else if (callback) callback();
