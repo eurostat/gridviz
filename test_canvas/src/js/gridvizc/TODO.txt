@@ -1,4 +1,4 @@
-TODO debug requests intensity - info.json, tiles, etc. ! to ensure sent only once. Use promise.
+TODO debug requests intensity - nemes, tiles, etc. ! to ensure sent only once. Use promise.
 TODO composition as age pyramid: fix Y position ?
 TODO composition as multi - make generic
 TODO modularise further canvasgeo (make ctx private)

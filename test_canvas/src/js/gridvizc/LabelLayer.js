@@ -54,6 +54,9 @@ export class LabelLayer {
 
         /** @private @type {Array.<Label>} */
         this.labels = undefined
+
+        /** @private @type {string} */
+        this.loadingStatus = "notLoaded"
     }
 
 
@@ -119,30 +122,37 @@ export class LabelLayer {
 
         if (!this.url) {
             console.log("Failed loading labels: No URL specified. " + this.url)
+            this.loadingStatus = "failed"
             this.labels = []
             return;
         }
 
-        csv(this.url)
-            .then(
-                /** @param {Array.<object>} data */
-                (data) => {
+        if (this.loadingStatus === "notLoaded") {
+            this.loadingStatus = "loading"
+            csv(this.url)
+                .then(
+                    /** @param {Array.<object>} data */
+                    (data) => {
 
-                    //apply preprocess, if any
-                    if (this.preprocess)
-                        for (const lb of data)
-                            this.preprocess(lb)
+                        //apply preprocess, if any
+                        if (this.preprocess)
+                            for (const lb of data)
+                                this.preprocess(lb)
 
-                    //store labels
-                    this.labels = data;
+                        //store labels
+                        this.labels = data;
 
-                    //redraw
-                    if (callback) callback()
-                })
-            .catch(() => {
-                console.log("Failed loading labels from " + this.url)
-                this.labels = []
-            });
+                        this.loadingStatus = "loaded"
+
+                        //redraw
+                        if (callback) callback()
+                    })
+                .catch(() => {
+                    console.log("Failed loading labels from " + this.url)
+                    this.labels = []
+                    this.loadingStatus = "failed"
+                });
+        }
     }
 
 
