@@ -84,7 +84,7 @@ export class AgePyramidStyle extends Style {
                 cg.ctx.fillRect(
                     xc + (r / cg.zf - wP) * 0.5,
                     yc + hCumul,
-                    wP, hPerCat);
+                    wP, -hPerCat);
 
                 //next height
                 hCumul -= hPerCat

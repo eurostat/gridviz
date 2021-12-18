@@ -1,5 +1,4 @@
 TODO debug requests intensity - last check, etc. ! to ensure sent only once. Use promise ?
-TODO composition as age pyramid: fix Y position ?
 TODO composition as multi - make generic
 TODO modularise further canvasgeo (make ctx private)
 TODO draw cell stroke - shape stroke style ?
