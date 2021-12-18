@@ -29,8 +29,8 @@ export class TiledGrid extends Dataset {
 
         /**
          * The grid info object, from the info.json file.
-         * 
          *  @type {GridInfo}
+         * @private
          *  */
         this.info = undefined;
 
@@ -51,17 +51,14 @@ export class TiledGrid extends Dataset {
      */
     loadInfo(callback) {
 
-        if (!this.info)
-
-            //TODO ensure a single call
-            //this.info = "loading"
-
+        if (!this.info) {
             json(this.url + "/info.json")
                 .then(
                     /** @param {*} data */
                     (data) => {
+                        if (this.info) console.log("!")
                         this.info = data;
-                        this.resolution = this.info.resolutionGeo;
+                        this.resolution = data.resolutionGeo;
                         if (callback) callback();
                     }
                 )
@@ -69,7 +66,7 @@ export class TiledGrid extends Dataset {
                     //mark as failed
                     //this.info = "failed"
                 });
-
+        }
         else if (callback) callback();
         return this;
     }
