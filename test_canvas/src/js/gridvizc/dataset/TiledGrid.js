@@ -56,11 +56,10 @@ export class TiledGrid extends Dataset {
 
         if (!this.info && this.infoLoadingStatus === "notLoaded") {
             this.infoLoadingStatus = "loading"
-            json(this.url + "/info.json")
+            json(this.url + "info.json")
                 .then(
                     /** @param {*} data */
                     (data) => {
-                        if (this.info) console.log("!")
                         this.info = data;
                         this.resolution = data.resolutionGeo;
                         this.infoLoadingStatus = "loaded"
@@ -72,7 +71,8 @@ export class TiledGrid extends Dataset {
                     this.infoLoadingStatus = "failed"
                 });
         }
-        else if (callback) callback();
+        else if (callback && (this.infoLoadingStatus === "loaded" || this.infoLoadingStatus === "failed"))
+            callback();
         return this;
     }
 
