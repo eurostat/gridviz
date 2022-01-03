@@ -30,13 +30,20 @@
   //define datasets, styles and layers
   const s1km = new gridviz.ColorSizeShapeStyle({
     "colorFunction": null,
-    "sizeFunction": c => 10 * Math.sqrt(c["2011"]),
+    "sizeFunction": c => 20 * Math.sqrt(c["2011"]),
     "shapeFunction": c => c["2011"] > 2000 ? "circle" : "square",
     "opacity": 0.5
   }
   )
 
   const s5km = new gridviz.ColorSizeShapeStyle({
+    "colorFunction": null,
+    "sizeFunction": c => 50 * Math.sqrt(c["2011"]),
+    "shapeFunction": c => c["2011"] > 5000 ? "circle" : "square",
+    "opacity": 0.5
+  })
+
+  const s10km = new gridviz.ColorSizeShapeStyle({
     "colorFunction": null,
     "sizeFunction": c => 50 * Math.sqrt(c["2011"]),
     "shapeFunction": c => c["2011"] > 5000 ? "circle" : "square",
@@ -53,6 +60,12 @@
     url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/",
     styles: [s5km], 
     minZoom: 200000, 
+    maxZoom: 1000000
+  });
+  app.addTiledGrid({
+    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/",
+    styles: [s10km], 
+    minZoom: 1000000, 
     maxZoom: 999999999999999999
   });
 
