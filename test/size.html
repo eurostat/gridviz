@@ -18,44 +18,42 @@
   let app = new gridviz
     .App()
     .container(containerDiv)
-    .zoom(3000)
-    .geoCenter([3900, 3170])
+    .zoom(100000)
+    .geoCenter([4000000,2260000])
     .cellCount(true)
     .showPlacenames(true)
     .nuts(true)
-    .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
+    //.zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
 
   //define datasets, styles and layers
   const s1km = new gridviz.ColorSizeShapeStyle({
     "colorFunction": null,
-    "sizeFunction": c => 0.1 * Math.sqrt(c["Population"]),
-    "shapeFunction": c => c["Population"] > 2000 ? "circle" : "square",
-    "opacity": 0.2
+    "sizeFunction": c => 10 * Math.sqrt(c["2011"]),
+    "shapeFunction": c => c["2011"] > 2000 ? "circle" : "square",
+    "opacity": 0.5
   }
   )
 
   const s5km = new gridviz.ColorSizeShapeStyle({
     "colorFunction": null,
-    "sizeFunction": c => 0.1 * Math.sqrt(c["population"]),
-    "shapeFunction": c => c["population"] > 5000 ? "circle" : "square",
-    "opacity": 0.2
+    "sizeFunction": c => 50 * Math.sqrt(c["2011"]),
+    "shapeFunction": c => c["2011"] > 5000 ? "circle" : "square",
+    "opacity": 0.5
   })
 
-  app.addCSVGrid({
-    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/1km/pop_1km.csv",
-    resolution: 1,
-    styles: [s1km],
-    minZoom: 0,
-    maxZoom: 200
-  })
-  app.addCSVGrid({
-    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
-    resolution: 5,
-    styles: [s5km],
-    minZoom: 200,
-    maxZoom: 999999999
+  app.addTiledGrid({
+    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/",
+    styles: [s1km], 
+    minZoom: 0, 
+    maxZoom: 200000
+  });
+  app.addTiledGrid({
+    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/",
+    styles: [s5km], 
+    minZoom: 200000, 
+    maxZoom: 999999999999999999
   });
 
 </script>
