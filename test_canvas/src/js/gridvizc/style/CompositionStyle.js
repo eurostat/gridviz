@@ -42,6 +42,10 @@ export class CompositionStyle extends Style {
         /** A function returning the size of a cell.
          * @private @type {function(number,number,Stat,number):number} */
         this.size = opts.size || ((v) => Math.sqrt(v));
+
+        /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
+         * 0 for normal pie charts, 0.5 to empty half of the radius. */
+        this.pieChartInternalRadiusFactor = opts.pieChartInternalRadiusFactor || 0.5
     }
 
 
@@ -108,13 +112,24 @@ export class CompositionStyle extends Style {
                         cg.geoToPixY(cell.y + resolution - d + offset.dy),
                         share * sP, sP);
                 } else if (type_ === "piechart") {
+
                     //draw pie chart angular sector
+                    //TODO move out of the loop ?
                     const xc = cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx);
                     const yc = cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy);
+
+                    //compute angles and radius
+                    const a1 = cumul * 2 * Math.PI
+                    const a2 = (cumul + share) * 2 * Math.PI
+                    const r = sP * 0.5
+
+                    //draw
                     cg.ctx.beginPath();
                     cg.ctx.moveTo(xc, yc);
-                    cg.ctx.arc(xc, yc, sP * 0.5, cumul * 2 * Math.PI, (cumul + share) * 2 * Math.PI);
-                    cg.ctx.lineTo(xc, yc);
+                    cg.ctx.arc(xc, yc, r, a1, a2);
+                    if (this.pieChartInternalRadiusFactor)
+                        cg.ctx.arc(xc, yc, r * this.pieChartInternalRadiusFactor, a2, a1, true);
+                    cg.ctx.closePath();
                     cg.ctx.fill();
                 } else if (type_ === "ring") {
                     //draw ring
@@ -166,4 +181,8 @@ export class CompositionStyle extends Style {
     /** @param {function(number,number,Stat,number):number} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
+    /** @returns {function(number,number,Stat,number):number} */
+    getPieChartInternalRadiusFactor() { return this.pieChartInternalRadiusFactor; }
+    /** @param {function(number,number,Stat,number):number} val @returns {this} */
+    setPieChartInternalRadiusFactor(val) { this.pieChartInternalRadiusFactor = val; return this; }
 }
