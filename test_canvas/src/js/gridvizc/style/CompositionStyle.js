@@ -92,6 +92,10 @@ export class CompositionStyle extends Style {
             //get offset
             const offset = this.offset(cell, resolution, cg.zf)
 
+            //compute center position
+            const xc = cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx);
+            const yc = cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy);
+
             //draw decomposition symbol
             let cumul = 0;
             const d = resolution * (1 - sG / resolution) * 0.5
@@ -106,41 +110,41 @@ export class CompositionStyle extends Style {
 
                 //draw symbol part
                 if (type_ === "flag") {
+
                     //draw flag vertical stripe
                     cg.ctx.fillRect(
                         cumul * sP + cg.geoToPixX(cell.x + d + offset.dx),
                         cg.geoToPixY(cell.y + resolution - d + offset.dy),
                         share * sP, sP);
+
                 } else if (type_ === "piechart") {
-
                     //draw pie chart angular sector
-                    //TODO move out of the loop ?
-                    const xc = cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx);
-                    const yc = cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy);
 
-                    //compute angles and radius
+                    //compute angles
                     const a1 = cumul * 2 * Math.PI
                     const a2 = (cumul + share) * 2 * Math.PI
-                    const r = sP * 0.5
 
                     //draw
                     cg.ctx.beginPath();
                     cg.ctx.moveTo(xc, yc);
-                    cg.ctx.arc(xc, yc, r, a1, a2);
+                    cg.ctx.arc(xc, yc, sP * 0.5, a1, a2);
                     if (this.pieChartInternalRadiusFactor)
-                        cg.ctx.arc(xc, yc, r * this.pieChartInternalRadiusFactor, a2, a1, true);
+                        cg.ctx.arc(xc, yc, sP * 0.5 * this.pieChartInternalRadiusFactor, a2, a1, true);
                     cg.ctx.closePath();
                     cg.ctx.fill();
+
                 } else if (type_ === "ring") {
+
                     //draw ring
                     //TODO need to compute radius properly ! Variation as rootsquare of share !
                     cg.ctx.beginPath();
                     cg.ctx.arc(
-                        cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx),
-                        cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy),
+                        xc,
+                        yc,
                         Math.sqrt(1 - cumul) * sP * 0.5,
                         0, 2 * Math.PI);
                     cg.ctx.fill();
+
                 } else {
                     throw new Error('Unexpected symbol type:' + type_);
                 }
