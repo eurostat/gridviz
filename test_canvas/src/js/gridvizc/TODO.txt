@@ -1,3 +1,4 @@
+TODO pie chart -> donut
 TODO debug requests intensity - last check, etc. ! to ensure sent only once. Use promise ?
 TODO composition as multi - make generic
 TODO modularise further canvasgeo (make ctx private)
@@ -15,7 +16,7 @@ TODO mouse over: Show rectangle.
 TODO zoom/pan smartphone/touchscreen - use d3 events - TODO make new canvasgeo based on d3 zoom/pan/over
 
 TODO webGL investigation
-TODO on zoom/pan, interupt all existing redraws
+TODO on zoom/pan, interrupt all existing redraws
 TODO background - images ?
 
 TODO finalise demos
