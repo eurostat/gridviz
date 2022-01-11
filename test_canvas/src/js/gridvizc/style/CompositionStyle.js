@@ -136,7 +136,6 @@ export class CompositionStyle extends Style {
                 } else if (type_ === "ring") {
 
                     //draw ring
-                    //TODO need to compute radius properly ! Variation as rootsquare of share !
                     cg.ctx.beginPath();
                     cg.ctx.arc(
                         xc,
