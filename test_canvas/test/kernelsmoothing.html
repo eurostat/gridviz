@@ -15,7 +15,7 @@
             <option value="joyplot">Joy plot</option>
         </select>
         <br>
-        <input type="range" min="1" max="16" value="8" class="slider" id="sigma">
+        <input type="range" min="1" max="16" value="0" class="slider" id="sigma">
     </div>
 
     <script src="../build/gridvizc.js"></script>
@@ -30,7 +30,7 @@
 
         //color style
         styles.color = new gviz.ShapeColorSizeStyle({
-            colorCol: "ksmval",
+            colorCol: "2018",
             color: (v, r, s) => {
                 const v_ = Math.pow((v) / s.max, 0.2)
                 const nbClass = 10
@@ -63,11 +63,7 @@
             style: styles.color
         });
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 250, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 250, 500, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 500, 1250, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 1250, 2500, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 2500, 9999999999), null, ttfun;
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [styles.color], 0, 99999999, { cellInfoHTML: ttfun });
 
 
 
