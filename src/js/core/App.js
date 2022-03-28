@@ -141,6 +141,8 @@ export class App {
     //show borders using nuts2json
     this.nuts_ = false; //show topojson borders of europe (available in 3035; 3857, 4258 or 4326)
     this.nutsCountry_ = false; // only show borders of given country code
+    this.nutsLineWidth_ = 0.0005; // GL line width for NUTS layer
+    this.nutsLineColor_ = 'black'
     this.nutsLevel_ = 0;
     this.nutsSimplification_ = "10M"; //current nuts2json simplification
 
@@ -561,7 +563,7 @@ export class App {
         let features = feature(json, json.objects.nutsbn).features;
 
         //add line geometries to viewer
-        let geojsonLayer = new GeoJsonLayer(features, null, null, this.zerosRemoved_);
+        let geojsonLayer = new GeoJsonLayer(features, this.nutsLineColor_, this.nutsLineWidth_, this.zerosRemoved_);
         this.viewer.scene.add(geojsonLayer);
 
       },
