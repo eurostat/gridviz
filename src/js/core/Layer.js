@@ -16,8 +16,9 @@ export class Layer {
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
+     * @param {Boolean} drawAll Draw all cells in the dataset (e.g. to draw all cells of a csv grid only once)
      */
-    constructor(dataset, styles, minZoom, maxZoom) {
+    constructor(dataset, styles, minZoom, maxZoom, drawAll) {
 
         /** @type {Dataset} */
         this.dataset = dataset;
@@ -28,7 +29,10 @@ export class Layer {
         /** @type {number} */
         this.maxZoom = maxZoom;
         /** @type {Boolean} */
+        this.drawAll = drawAll ? drawAll : false;
+        /** @type {Boolean} */
         this.hidden = false;
+
 
     }
 

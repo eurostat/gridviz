@@ -1,9 +1,9 @@
 /** @typedef {{ url: object, colorField: string, cellSize: string, sizeField: string }} LayerConfig */
-/** @typedef {{ url: String, resolution: Number, styles: Array<Style>, minZoom: Number, maxZoom: Number }} CSVGridConfig */
+/** @typedef {{ url: String, resolution: Number, styles: Array<Style>, minZoom: Number, maxZoom: Number, drawAll?:Boolean }} CSVGridConfig */
 
 // d3.js
 import { json } from "d3-fetch";
-import { pointer } from "d3-selection";
+import { pointer, select } from "d3-selection";
 
 //three.js
 import { Vector3, Color, Line, CircleGeometry, MeshBasicMaterial, Mesh } from "three";
@@ -30,19 +30,16 @@ import * as Loading from "./gui/loading";
 import * as CONSTANTS from "./constants.js";
 import * as Utils from "./utils/utils";
 
-//other 
+//others 
 import { feature } from "topojson";
 
-//TODO
+//TODO list:
 // add property like "dontUpdateOnPanZoom" to CSVGrid to avoid getting cells based on extent and just send all cells once to the GPU (like old gridviz did).
 // redraw after home/zoom button events
 // continue to implement styles from canvas_test
 // add stroke to square cells - fragment shader only applies stroke to circles atm.
-// add fill to line charts (joyplot)
 // add types for everything
 // add legend for each Layer and visualize according to the styles in current extentGeo
-// rewrite reference API for new structure
-
 // clean up code
 
 /**
@@ -324,19 +321,34 @@ export class App {
         // set raycaster threshold (for tooltip hover)
         this.updateRaycasterThreshold(layer.dataset.resolution);
 
-        //create or update legend
+        //create or update each style legend
         if (this.showLegend_) {
-          if (layer.legend) {
-            if (layer.__Legend) {
-              layer.__Legend.updateLegend();
-            } else {
-              layer.__Legend = new Legend(layer.legend);
+          layer.styles.forEach((style)=>{
+            if (style.legend) {
+              //legends container 
+              let legendContainer;
+              if (document.getElementById("gridviz-legend")) {
+                  legendContainer = select("#gridviz-legend");
+              } else {
+                  legendContainer = create("div").attr("id", "gridviz-legend");
+                  legendContainer.attr("class", "gridviz-plugin");
+                  app.container_.appendChild(legendContainer.node());
+              }
+              
+              if (style.__Legend) {
+                //update existing
+                style.__Legend.updateLegend();
+              } else {
+                //create new
+                style.__Legend = new Legend(style.legend);
+                //add to DOM
+                app.container_.node().appendChild(style.__Legend);
+              }
             }
-          }
+          })
         }
 
         //draw cells
-
         if (layer.dataset.info) {
           //TiledGrid
           this._pendingRequests++;
@@ -356,11 +368,10 @@ export class App {
         } else {
           //CSVGrid 
           //NOTE: Sometimes it doesnt make sense in wegl to redraw a large CSVGrid - its more efficient to load the whole thing once and leave it in the GPU.
+          //TODO: add a loadAll:true option for CSVGrid layers so that all data is kept in the GPU?
           this.draw(layer);
 
         }
-
-
 
 
       }
@@ -375,8 +386,17 @@ export class App {
   draw(layer) {
     //get cells to draw
     let geoExt = this.viewer.getCurrentGeoExtent();
+    let cells;
 
-    let cells = layer.dataset.getCells(geoExt); //use all cells for CSVGrid?
+    if (layer.drawAll && layer._drawnAll) {
+      return; // all cells already drawn      
+    } else if (layer.drawAll && !layer._drawnAll) {
+      cells = layer.dataset.cells; // draw all cells (if not already drawn)
+      layer._drawnAll = true; // flag that all cells have now been drawn
+    } else {
+      cells = layer.dataset.getCells(geoExt); //use all cells for CSVGrid?
+    } 
+    
 
     if (cells.length > 0) {
       // count cells
@@ -425,9 +445,10 @@ export class App {
    * @param {Array.<Style>} styles The styles, ordered in drawing order.
    * @param {number} minZoom The minimum zoom level when to show the layer
    * @param {number} maxZoom The maximum zoom level when to show the layer
+   * @param {Boolean} drawAll Draw all cells in the dataset once
    */
-  add(dataset, styles, minZoom, maxZoom) {
-    this.layers.push(new Layer(dataset, styles, minZoom, maxZoom));
+  add(dataset, styles, minZoom, maxZoom, drawAll) {
+    this.layers.push(new Layer(dataset, styles, minZoom, maxZoom, drawAll));
   }
 
   /**
@@ -450,7 +471,7 @@ export class App {
         // draw cells
         this.redraw();
       }, (err) => { this._pendingRequests--; if (this._pendingRequests == 0) Loading.hideLoading() }),
-      opts.styles, opts.minZoom, opts.maxZoom
+      opts.styles, opts.minZoom, opts.maxZoom, opts.drawAll
     )
   }
 

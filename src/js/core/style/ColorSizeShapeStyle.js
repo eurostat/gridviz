@@ -1,5 +1,5 @@
 //@ts-check
-/** @typedef {{ colorFunction: Function, sizeFunction: Function, shapeFunction: Function, opacity:Number, strokeWidth: Number, strokeColor:String }} ColorSizeShapeStyleConfig */
+/** @typedef {{ colorFunction: Function, sizeFunction: Function, shapeFunction: Function, opacity:Number, strokeWidth: Number, strokeColor:String, legend:LegendConfig }} ColorSizeShapeStyleConfig */
 
 import { Style } from "../Style"
 import { Cell } from "../Dataset"
@@ -7,7 +7,7 @@ import { Viewer } from "../viewer/viewer";
 import * as CONSTANTS from "../constants.js";
 import { Points, Color, Float32BufferAttribute, BufferGeometry, ShaderMaterial, } from "three";
 import * as Utils from "../utils/utils";
-
+import { LegendConfig } from "../legend/legend";
 // TODO: for each attribute that is the same value for ALL cells: send a Uniform to the GPU instead of an attribute array
 
 /**
@@ -48,6 +48,14 @@ export class ColorSizeShapeStyle extends Style {
 
         /** @type {Points} */
         this.threejsObject = undefined; // threejs Object3D
+
+        /** @type {LegendConfig} */
+        this.legend = opts.legend || undefined; // legend configuration obj
+
+        //set colorFunction of legend
+        if (this.legend && !this.legend.colorFunction) {
+            this.legend.colorFunction = this.colorFunction;
+        }
     }
 
 
@@ -139,7 +147,7 @@ export class ColorSizeShapeStyle extends Style {
         }
     }
 
-    
+
     // This is where the magicical chaos happens...
 
     /**

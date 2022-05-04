@@ -1,5 +1,5 @@
 //@ts-check
-/** @typedef {{ url: String, resolution: Number, preprocess: Function, styles: Array<Style>, minZoom: Number, maxZoom: Number }} CSVGridConfig */
+/** @typedef {{ url: String, resolution: Number, preprocess: Function, styles: Array<Style>, minZoom: Number, maxZoom: Number, drawAll?:Boolean }} CSVGridConfig */
 
 import { csv } from "d3-fetch";
 import { Dataset, Cell, Envelope } from "../Dataset"

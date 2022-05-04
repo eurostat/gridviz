@@ -40,7 +40,7 @@
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
 
-  const s = gridviz.getColorSizeShapeStyle(
+  const s = new gridviz.ColorSizeShapeStyle(
     c => gridviz.color().interpolateOrRd(Math.pow(c["NIGHTS_FOR"], 0.5) / 100),
     null,
     c => "square"

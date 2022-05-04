@@ -1,5 +1,5 @@
 //@ts-check
-/** @typedef {{type: String, width: Number, height:Number, orientation: String, title:String, titleWidth: Number, format: String, cells:Number, shapeWidth:Number }} LegendConfig */
+/** @typedef {{type: String, width: Number, height:Number, orientation: String, title:String, titleWidth: Number, format: String, cells:Number, shapeWidth:Number, colorFunction?:Function, thresholds:Array, marginRight:any, marginLeft:any, tickFormat:Function }} LegendConfig */
 
 import * as LEGEND from "d3-svg-legend";
 import { select, create, selectAll } from "d3-selection";
@@ -28,11 +28,14 @@ export class Legend {
             this.format = config.format || ".0s",
             this.cells = config.cells || 5,
             this.shapeWidth = config.shapeWidth || 30;
+        this.thresholds = config.thresholds || null;
+        this.colorFunction = config.colorFunction || null;
+        this.marginRight = config.marginRight;
+        this.marginLeft = config.marginLeft;
+        this.tickFormat = config.tickFormat;
 
-        //TODO: apply shape/color/size style function to data in order to build legend.
-        //this.createLegend();
-
-
+        // builds a legend for a style
+        this.createLegend();
     }
 
     /**
@@ -94,38 +97,155 @@ export class Legend {
      * @param {*} app
      * @memberof Legend
      */
-    createContinuousLegend(app) {
-        let container;
-        if (document.getElementById("gridviz-legend")) {
-            container = select("#gridviz-legend");
-        } else {
-            container = create("div").attr("id", "gridviz-legend");
-            container.attr("class", "gridviz-plugin");
-            app.container_.appendChild(container.node());
+    createContinuousLegend(opts, app) {
+        let tickSize = this.tickSize || 6;
+        let width = this.width || 500;
+        let height = this.height || 44 + tickSize;
+        let marginBottom = this.marginBottom || 16 + tickSize;
+        let ticks = this.ticks || width / 64;
+
+        /**
+         * @description
+         * @param {*} color
+         * @param {number} [n=256]
+         * @return {HTMLElement} 
+         */
+        function ramp(color, n = 256) {
+            const canvas = document.createElement("CANVAS")
+            canvas.width = n;
+            canvas.height = 1;
+            const context = canvas.getContext("2d");
+            for (let i = 0; i < n; ++i) {
+                context.fillStyle = color(i / (n - 1));
+                context.fillRect(i, 0, 1, 1);
+            }
+            return canvas;
         }
 
-        let tickSize = app.legend_.tickSize || 6;
-        let width = app.legend_.width || 500;
-        let height = app.legend_.height || 44 + tickSize;
-        let marginBottom = app.legend_.marginBottom || 16 + tickSize;
-        let ticks = app.legend_.ticks || width / 64;
+        /**
+         * 
+         * @function colorLegend
+         * @description see https://observablehq.com/@gabgrz/color-legend
+         */
+        function colorLegend({
+            color,
+            title,
+            tickSize,
+            width,
+            height,
+            marginTop,
+            marginRight,
+            marginBottom,
+            marginLeft,
+            ticks,
+            tickFormat,
+            tickValues
+        } = {}) {
 
-        app.__Legend = colorLegend({
-            color: app.colorScaleFunction_,
-            title: title,
+            const svg = create("svg")
+                .attr("class", "gridviz-legend-svg")
+                // .attr("class", "gridviz-continuous-legend")
+                .attr("width", width)
+                .attr("height", height)
+                .attr("viewBox", [0, 0, width, height])
+                .style("overflow", "visible")
+                .style("display", "block");
+
+            let x;
+
+            // Continuous
+            if (color.interpolator) {
+                x = Object.assign(color.copy()
+                    .interpolator(interpolateRound(marginLeft, width - marginRight)),
+                    { range() { return [marginLeft, width - marginRight]; } });
+
+                svg.append("image")
+                    .attr("x", marginLeft)
+                    .attr("y", marginTop)
+                    .attr("width", width - marginLeft - marginRight)
+                    .attr("height", height - marginTop - marginBottom)
+                    .attr("preserveAspectRatio", "none")
+                    .attr("xlink:href", ramp(color.interpolator()).toDataURL());
+
+                // scaleSequentialQuantile doesn’t implement ticks or tickFormat.
+                if (!x.ticks) {
+                    if (tickValues === undefined) {
+                        const n = Math.round(ticks + 1);
+                        tickValues = range(n).map(i => quantile(color.domain(), i / (n - 1)));
+                    }
+                    if (typeof tickFormat !== "function") {
+                        tickFormat = format(tickFormat === undefined ? ",f" : tickFormat);
+                    }
+                }
+            }
+
+            // Discrete
+            else if (color.invertExtent) {
+                const thresholds
+                    = color.thresholds ? color.thresholds() // scaleQuantize
+                        : color.quantiles ? color.quantiles() // scaleQuantile
+                            : color.domain(); // scaleThreshold
+
+                const thresholdFormat
+                    = tickFormat === undefined ? d => d
+                        : typeof tickFormat === "string" ? format(tickFormat)
+                            : tickFormat;
+
+                x = d3scale.scaleLinear()
+                    .domain([-1, color.range().length - 1])
+                    .rangeRound([marginLeft, width - marginRight]);
+
+                svg.append("g")
+                    .selectAll("rect")
+                    .data(color.range())
+                    .join("rect")
+                    .attr("x", (d, i) => x(i - 1))
+                    .attr("y", marginTop)
+                    .attr("width", (d, i) => x(i) - x(i - 1))
+                    .attr("height", height - marginTop - marginBottom)
+                    .attr("fill", d => d);
+
+                tickValues = range(thresholds.length);
+                tickFormat = i => thresholdFormat(thresholds[i], i);
+            }
+
+            svg.append("g")
+                .attr("transform", `translate(0, ${height - marginBottom})`)
+                .call(axisBottom(x)
+                    .ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined)
+                    .tickFormat(typeof tickFormat === "function" ? tickFormat : undefined)
+                    .tickSize(tickSize)
+                    .tickValues(tickValues))
+                .call(g => g.selectAll(".tick line").attr("y1", marginTop + marginBottom - height))
+                .call(g => g.select(".domain").remove())
+                .call(g => g.append("text")
+                    .attr("y", marginTop + marginBottom - height - 10)
+                    .attr("fill", "currentColor")
+                    .attr("text-anchor", "start")
+                    .attr("font-weight", "bold")
+                    .attr("class", "gridviz-continuous-legend-title")
+                    .text(title));
+
+            return svg.node();
+        }
+
+
+
+        return colorLegend({
+            color: this.colorFunction,
+            title: this.title,
             tickSize: tickSize,
             width: width,
             height: height,
             marginBottom: marginBottom,
             ticks: ticks,
-            marginTop: app.legend_.marginRight || 18,
-            marginRight: app.legend_.marginRight || 0,
-            marginLeft: app.legend_.marginLeft || 0,
-            tickFormat: app.legend_.tickFormat || ".0f",
-            tickValues: app.thresholds_ || undefined
+            marginTop: this.marginRight || 18,
+            marginRight: this.marginRight || 0,
+            marginLeft: this.marginLeft || 0,
+            tickFormat: this.tickFormat || ".0f",
+            tickValues: this.thresholds || undefined
         });
 
-        container.node().appendChild(app.__Legend);
     }
 
     /**
@@ -135,136 +255,14 @@ export class Legend {
     updateLegend() {
         // clear and create new
         var l = selectAll(".gridviz-legend-svg").remove();
-        setTimeout(()=> this.createLegend(), 1000);
+        setTimeout(() => this.createLegend(), 1000);
     }
 
 }
 
-/**
- * @description
- * @param {*} color
- * @param {number} [n=256]
- * @return {HTMLElement} 
- */
-function ramp(color, n = 256) {
-    const canvas = document.createElement("CANVAS")
-    canvas.width = n;
-    canvas.height = 1;
-    const context = canvas.getContext("2d");
-    for (let i = 0; i < n; ++i) {
-        context.fillStyle = color(i / (n - 1));
-        context.fillRect(i, 0, 1, 1);
-    }
-    return canvas;
-}
 
 
-/**
-   * 
-   * @function colorLegend
-   * @description see https://observablehq.com/@gabgrz/color-legend
-   */
-function colorLegend({
-    color,
-    title,
-    tickSize,
-    width,
-    height,
-    marginTop,
-    marginRight,
-    marginBottom,
-    marginLeft,
-    ticks,
-    tickFormat,
-    tickValues
-} = {}) {
 
-    const svg = create("svg")
-        .attr("class", "gridviz-legend-svg")
-        // .attr("class", "gridviz-continuous-legend")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("viewBox", [0, 0, width, height])
-        .style("overflow", "visible")
-        .style("display", "block");
-
-    let x;
-
-    // Continuous
-    if (color.interpolator) {
-        x = Object.assign(color.copy()
-            .interpolator(interpolateRound(marginLeft, width - marginRight)),
-            { range() { return [marginLeft, width - marginRight]; } });
-
-        svg.append("image")
-            .attr("x", marginLeft)
-            .attr("y", marginTop)
-            .attr("width", width - marginLeft - marginRight)
-            .attr("height", height - marginTop - marginBottom)
-            .attr("preserveAspectRatio", "none")
-            .attr("xlink:href", ramp(color.interpolator()).toDataURL());
-
-        // scaleSequentialQuantile doesn’t implement ticks or tickFormat.
-        if (!x.ticks) {
-            if (tickValues === undefined) {
-                const n = Math.round(ticks + 1);
-                tickValues = range(n).map(i => quantile(color.domain(), i / (n - 1)));
-            }
-            if (typeof tickFormat !== "function") {
-                tickFormat = format(tickFormat === undefined ? ",f" : tickFormat);
-            }
-        }
-    }
-
-    // Discrete
-    else if (color.invertExtent) {
-        const thresholds
-            = color.thresholds ? color.thresholds() // scaleQuantize
-                : color.quantiles ? color.quantiles() // scaleQuantile
-                    : color.domain(); // scaleThreshold
-
-        const thresholdFormat
-            = tickFormat === undefined ? d => d
-                : typeof tickFormat === "string" ? format(tickFormat)
-                    : tickFormat;
-
-        x = d3scale.scaleLinear()
-            .domain([-1, color.range().length - 1])
-            .rangeRound([marginLeft, width - marginRight]);
-
-        svg.append("g")
-            .selectAll("rect")
-            .data(color.range())
-            .join("rect")
-            .attr("x", (d, i) => x(i - 1))
-            .attr("y", marginTop)
-            .attr("width", (d, i) => x(i) - x(i - 1))
-            .attr("height", height - marginTop - marginBottom)
-            .attr("fill", d => d);
-
-        tickValues = range(thresholds.length);
-        tickFormat = i => thresholdFormat(thresholds[i], i);
-    }
-
-    svg.append("g")
-        .attr("transform", `translate(0, ${height - marginBottom})`)
-        .call(axisBottom(x)
-            .ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined)
-            .tickFormat(typeof tickFormat === "function" ? tickFormat : undefined)
-            .tickSize(tickSize)
-            .tickValues(tickValues))
-        .call(g => g.selectAll(".tick line").attr("y1", marginTop + marginBottom - height))
-        .call(g => g.select(".domain").remove())
-        .call(g => g.append("text")
-            .attr("y", marginTop + marginBottom - height - 10)
-            .attr("fill", "currentColor")
-            .attr("text-anchor", "start")
-            .attr("font-weight", "bold")
-            .attr("class", "gridviz-continuous-legend-title")
-            .text(title));
-
-    return svg.node();
-}
 
 /**
    * 
