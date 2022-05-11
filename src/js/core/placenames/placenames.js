@@ -180,11 +180,10 @@ function getPopulationParameterFromScale(app) {
         // always ascending order
         let scales = Object.keys(app.placenameThresholds_).sort((a, b) => { return parseInt(a) - parseInt(b) });
         let populations = Object.values(app.placenameThresholds_).sort((a, b) => { return parseInt(a) - parseInt(b) });
+        
         for (let i = 0; i < scales.length; i++) {
             let s = scales[i];
             let p = populations[i];
-
-
 
             if (scales[i + 1]) { //if not last threshold
                 if (scale < parseInt(scales[0])) { //below first threshold
