@@ -26,27 +26,32 @@
     .title("Primary schools accessiblity")
     .build();
 
+  // const s = new gridviz.ColorSizeShapeStyle({
+  //   colorFunction: c => {
+  //     if (c["avg_time"] > 30) return "#4d004b";
+  //     if (c["avg_time"] > 25) return "#810f7c";
+  //     if (c["avg_time"] > 20) return "#88419d";
+  //     if (c["avg_time"] > 15) return "#8c6bb1";
+  //     if (c["avg_time"] > 10) return "#8c96c6";
+  //     if (c["avg_time"] > 8) return "#9ebcda";
+  //     if (c["avg_time"] > 6) return "#bfd3e6";
+  //     if (c["avg_time"] > 4) return "#e0ecf4";
+  //     if (c["avg_time"] > 0) return "#f7fcfd";
+  //   }
+  // }
+  // )
+
   const s = new gridviz.ColorSizeShapeStyle({
-    colorFunction: c => {
-      if (c["avg_time"] > 30) return "#4d004b";
-      if (c["avg_time"] > 25) return "#810f7c";
-      if (c["avg_time"] > 20) return "#88419d";
-      if (c["avg_time"] > 15) return "#8c6bb1";
-      if (c["avg_time"] > 10) return "#8c96c6";
-      if (c["avg_time"] > 8) return "#9ebcda";
-      if (c["avg_time"] > 6) return "#bfd3e6";
-      if (c["avg_time"] > 4) return "#e0ecf4";
-      if (c["avg_time"] > 0) return "#f7fcfd";
-    }
-  }
-  )
+    colorFunction: c => gridviz.color().interpolateTurbo(Math.pow(c["avg_time"], 0.5) / 5)
+  })
 
   viz.addCSVGrid({
     url: "../../assets/csv/Europe/1km/primary_school_acc.csv",
     resolution: 1,
     styles: [s],
     minZoom: 0,
-    maxZoom: 999999999
+    maxZoom: 999999999,
+    drawAll:true
   });
 
 </script>

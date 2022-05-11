@@ -43,8 +43,9 @@ export class Legend {
      * @memberof Legend
      */
     createLegend() {
-        if (this.type == "cells") this.createCellsLegend();
-        if (this.type == "continuous") this.createContinuousLegend();
+        // TODO: adapt legends to new gridviz API. Each style can have its own legend.
+        // if (this.type == "cells") this.createCellsLegend();
+        // if (this.type == "continuous") this.createContinuousLegend();
     }
 
     /**
@@ -209,24 +210,26 @@ export class Legend {
                 tickFormat = i => thresholdFormat(thresholds[i], i);
             }
 
-            svg.append("g")
-                .attr("transform", `translate(0, ${height - marginBottom})`)
-                .call(axisBottom(x)
-                    .ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined)
-                    .tickFormat(typeof tickFormat === "function" ? tickFormat : undefined)
-                    .tickSize(tickSize)
-                    .tickValues(tickValues))
-                .call(g => g.selectAll(".tick line").attr("y1", marginTop + marginBottom - height))
-                .call(g => g.select(".domain").remove())
-                .call(g => g.append("text")
-                    .attr("y", marginTop + marginBottom - height - 10)
-                    .attr("fill", "currentColor")
-                    .attr("text-anchor", "start")
-                    .attr("font-weight", "bold")
-                    .attr("class", "gridviz-continuous-legend-title")
-                    .text(title));
+            if (x) {
+                svg.append("g")
+                    .attr("transform", `translate(0, ${height - marginBottom})`)
+                    .call(axisBottom(x)
+                        .ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined)
+                        .tickFormat(typeof tickFormat === "function" ? tickFormat : undefined)
+                        .tickSize(tickSize)
+                        .tickValues(tickValues))
+                    .call(g => g.selectAll(".tick line").attr("y1", marginTop + marginBottom - height))
+                    .call(g => g.select(".domain").remove())
+                    .call(g => g.append("text")
+                        .attr("y", marginTop + marginBottom - height - 10)
+                        .attr("fill", "currentColor")
+                        .attr("text-anchor", "start")
+                        .attr("font-weight", "bold")
+                        .attr("class", "gridviz-continuous-legend-title")
+                        .text(title));
 
-            return svg.node();
+                return svg.node();
+            }
         }
 
 

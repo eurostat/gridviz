@@ -26,7 +26,6 @@
   let viz = new gridviz
     .App()
     .container(containerDiv)
-
     .cellCount(true)
     .zoom(4000)
     .geoCenter([4369, 3230])
@@ -35,26 +34,17 @@
     .showPlacenames(true)
     .build();
 
-  const s = new gridviz.ColorSizeShapeStyle({
-    colorFunction: c => {
-      if (c["avg_time"] > 40) return "#4d004b";
-      if (c["avg_time"] > 30) return "#810f7c";
-      if (c["avg_time"] > 25) return "#88419d";
-      if (c["avg_time"] > 20) return "#8c6bb1";
-      if (c["avg_time"] > 15) return "#8c96c6";
-      if (c["avg_time"] > 10) return "#9ebcda";
-      if (c["avg_time"] > 8) return "#bfd3e6";
-      if (c["avg_time"] > 6) return "#e0ecf4";
-      if (c["avg_time"] > 4) return "#f7fcfd";
-      return "red";
-    }
+  const style = new gridviz.ColorSizeShapeStyle({
+    colorFunction: c => gridviz.color().interpolateTurbo(Math.pow(c["avg_time"], 0.5) / 7)
   })
+
   viz.addCSVGrid({
     url: "../../assets/csv/Europe/1km/healthcare_acc.csv",
     resolution: 1,
-    styles: [s],
+    styles: [style],
     minZoom: 0,
-    maxZoom: 999999999
+    maxZoom: 999999999,
+    drawAll:true
   });
 
 </script>

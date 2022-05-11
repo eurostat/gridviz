@@ -64,7 +64,7 @@ function toRadians(angle) {
 }
 
 export function checkIfMobile() {
-  // TODO: replace userAgent with screen threshold (this apprently userAgent is no longer standard)
+  // TODO: replace userAgent with screen threshold ( apprently userAgent is no longer standard)
   if (/Mobi|Android/i.test(navigator.userAgent)) {
     return true
   } else {

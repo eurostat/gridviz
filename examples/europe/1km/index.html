@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>5x5km Grid of Europe</title>
+  <title>1x1km Population Grid of Europe</title>
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
   <meta name="viewport" content="width=device-width" />
 </head>
@@ -11,7 +11,7 @@
 <body style="margin: 0">
   <div id="viz-container" style="height:100%; width:100%;"></div>
 </body>
-<script src="../../build/gridviz.js"></script>
+<script src="../../../build/gridviz.js"></script>
 <script>
   let containerDiv = document.getElementById("viz-container");
 
@@ -29,17 +29,17 @@
 
 
   const style = new gridviz.ColorSizeShapeStyle({ 
-    "colorFunction": c => gridviz.color().interpolateViridis(Math.pow(c["population"], 0.4) / 50),
+    "colorFunction": c => gridviz.color().interpolateMagma(Math.pow(c["Population"], 0.4) / 50),
   })
 
   app.addCSVGrid({
-    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
-    resolution: 5,
-    styles: [style],
-    minZoom: 0,
-    maxZoom: 999999999,
-    drawAll: true
-  })
+        url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/1km/pop_1km.csv",
+        resolution: 1,
+        styles: [style],
+        minZoom: 0,
+        maxZoom: 50000000,
+        drawAll:true
+    });
 </script>
 
 </html>
