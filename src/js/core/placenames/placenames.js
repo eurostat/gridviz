@@ -35,7 +35,7 @@ import { CSS2DObject } from "../../lib/threejs/CSS2D/CSS2DRenderer";
  */
  export function updatePlacenameLabels(app, scale) {
     //update thresholds according to current grid resolution
-    app.placenameThresholds_ = defineDefaultPlacenameThresholds(app._currentResolution);
+    app.placenameThresholds_ = app.placenameThresholds_ ? app.placenameThresholds_ : defineDefaultPlacenameThresholds(app._currentResolution);
     if (scale > 0 && scale < app.viewer.camera.config.far_) {
         //placenames are added to the app.labelsLayer object
         getPlacenames(app).then(
@@ -180,7 +180,7 @@ function getPopulationParameterFromScale(app) {
         // always ascending order
         let scales = Object.keys(app.placenameThresholds_).sort((a, b) => { return parseInt(a) - parseInt(b) });
         let populations = Object.values(app.placenameThresholds_).sort((a, b) => { return parseInt(a) - parseInt(b) });
-        
+
         for (let i = 0; i < scales.length; i++) {
             let s = scales[i];
             let p = populations[i];
