@@ -36,7 +36,7 @@ A JavaScript library for visualizing large amounts of gridded data client-side, 
       - [Placenames](#placenames)
       - [Projection](#projection)
     - [Styles](#styles)
-      - [colorSizeShapeStyle](#colorsizeshapestyle)
+      - [ColorSizeShapeStyle](#colorsizeshapestyle)
       - [JoyPlotStyle](#joyplotstyle)
     - [Tooltip](#tooltip)
   - [About](#about)
@@ -210,7 +210,7 @@ These methods allow you to define the data that is added to the viewer and how i
 
 Gridviz offers various styles that can be applied to the grid cells:
 
-- [colorSizeShapeStyle](#colorSizeShapeStyle)
+- [ColorSizeShapeStyle](#colorSizeShapeStyle)
 - [JoyPlotStyle](#JoyPlotStyle)
 
 These styles can be initialised individually using a configuration object and applied to different layers.
@@ -234,9 +234,9 @@ For example:
     });
 ```
 
-#### colorSizeShapeStyle
+#### ColorSizeShapeStyle
 
-colorSizeShapeStyle allows you to define the **color**, **size** and **shape** of each grid cell individually.
+ColorSizeShapeStyle allows you to define the **color**, **size** and **shape** of each grid cell individually.
 
 In the following example, we define an interpolation function that will determine the colour of the grid cell using its "Population" attribute, and set each grid cell size to 1 and its shape to a circle.
 
