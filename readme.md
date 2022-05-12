@@ -11,6 +11,7 @@ A JavaScript library for visualizing large amounts of gridded data client-side, 
 <div>
   <a href="https://eurostat.github.io/gridviz/examples/europe/color/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/color.png" alt="preview" width="200px" height="200px"/></a>
   <a href="https://eurostat.github.io/gridviz/examples/europe/joyplot/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/joyplot.png" alt="preview" width="200px" height="200px"/></a>
+    <a href="https://eurostat.github.io/gridviz/examples/europe/size/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/size.png" alt="preview" width="200px" height="200px"/></a>
   <a href="https://eurostat.github.io/gridviz/examples/netherlands/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/nl.png" alt="preview" width="200px" height="200px"/></a>
 </div>
 
