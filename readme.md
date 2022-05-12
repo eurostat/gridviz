@@ -39,6 +39,7 @@ A JavaScript library for visualizing large amounts of gridded data client-side, 
       - [ColorSizeShapeStyle](#colorsizeshapestyle)
       - [JoyPlotStyle](#joyplotstyle)
     - [Tooltip](#tooltip)
+    - [Legend](#legend)
   - [About](#about)
   - [Support and contribution](#support-and-contribution)
   - [Copyright](#copyright)
@@ -308,6 +309,11 @@ Default:
 | _legendConfig_.**yOffset**              | int     | 15                                      | Y offset in pixels from the mouse position                                 |
 
 <br>
+
+### Legend
+
+Coming soon...
+
 
 ## About
 
