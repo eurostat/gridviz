@@ -7,7 +7,7 @@
     position: absolute; 
     pointer-events: none; 
     z-index:999; 
-    border-radius:5px; 
+    border-radius: 2px; 
     box-shadow: 0 1px 5px rgba(0,0,0,0.65); 
     font-size: 0.8rem; 
     text-align: left; 
@@ -31,7 +31,6 @@
     display: block;
   }
 
-
   /* table */
   #gridviz-labeltip > table{
       border-spacing: 0px;
@@ -40,4 +39,5 @@
     border-bottom: 1px solid lightgrey;
     padding-bottom: 2px;
     padding-top: 2px;
+    font-weight: normal;
 }

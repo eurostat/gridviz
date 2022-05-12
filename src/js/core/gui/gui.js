@@ -5,13 +5,19 @@ import * as Utils from "../utils/utils";
 *
 *
 * @function addHeadingsContainerToDOM
-* @description adds a div container for viewer.title and viewer.subtitle texts
+* @description adds a div container for app.title and app.subtitle texts
 */
-export function addHeadingsContainerToDOM(viewer) {
-    viewer.headingsNode = document.createElement("div");
-    viewer.headingsNode.classList.add("gridviz-headings-container");
-    viewer.headingsNode.classList.add("gridviz-plugin");
-    viewer.container_.appendChild(viewer.headingsNode);
+export function addHeadingsContainerToDOM(app) {
+    app.headingsNode = document.createElement("div");
+    app.headingsNode.classList.add("gridviz-headings-container");
+    app.headingsNode.classList.add("gridviz-plugin");
+    app.container_.appendChild(app.headingsNode);
+}
+
+export function addLegendContainerToDOM(app) {
+    let legendContainer = document.createElement("svg")
+    legendContainer.id = "gridviz-legend";
+    app.container_.appendChild(legendContainer);
 }
 
 /**
@@ -20,37 +26,37 @@ export function addHeadingsContainerToDOM(viewer) {
 * @function addSelectorsContainerToDOM
 * @description adds a div container for the available dropdown selectors to the DOM
 */
-export function addSelectorsContainerToDOM(viewer) {
-    viewer.selectorsContainer = document.createElement("div");
-    viewer.selectorsContainer.classList.add("gridviz-selectors");
-    viewer.selectorsContainer.classList.add("gridviz-plugin");
-    viewer.container_.appendChild(viewer.selectorsContainer);
+export function addSelectorsContainerToDOM(app) {
+    app.selectorsContainer = document.createElement("div");
+    app.selectorsContainer.classList.add("gridviz-selectors");
+    app.selectorsContainer.classList.add("gridviz-plugin");
+    app.container_.appendChild(app.selectorsContainer);
 }
 
 /**
 *
 *
 * @function addTitleToDOM
-* @description adds a div element for viewer.title to headings container 
+* @description adds a div element for app.title to headings container 
 */
-export function addTitleToDOM(viewer) {
+export function addTitleToDOM(app) {
     let node = document.createElement("div");
     node.classList.add("gridviz-title");
-    node.innerHTML = viewer.title_;
-    viewer.headingsNode.appendChild(node);
+    node.innerHTML = app.title_;
+    app.headingsNode.appendChild(node);
 }
 
 /**
 *
 *
 * @function addSubtitleToDOM
-* @description adds a div element for viewer.subtitle to headings container 
+* @description adds a div element for app.subtitle to headings container 
 */
-export function addSubtitleToDOM(viewer) {
+export function addSubtitleToDOM(app) {
     let node = document.createElement("div");
     node.classList.add("gridviz-subtitle");
-    node.innerHTML = viewer.subtitle_;
-    viewer.headingsNode.appendChild(node);
+    node.innerHTML = app.subtitle_;
+    app.headingsNode.appendChild(node);
 }
 
 
@@ -58,13 +64,25 @@ export function addSubtitleToDOM(viewer) {
 *
 *
 * @function addCellCountToDOM
-* @description adds a div element for viewer.cellCount to headings container 
+* @description adds a div element for app.cellCount to headings container 
 */
-export function addCellCountToDOM(viewer) {
+export function addCellCountToDOM(app) {
     let node = document.createElement("div");
-    node.classList.add("gridviz-cellcount");
-    node.innerHTML = "Number of cells: " + Utils.formatNumber(viewer.cellCount);
-    viewer.headingsNode.appendChild(node);
+    node.id = "gridviz-cellcount";
+    app.headingsNode.appendChild(node);
+}
+
+
+/**
+*
+*
+* @function updateCellCount
+* @description updates the cell count text
+*/
+export function updateCellCount(count) {
+    let node = document.getElementById("gridviz-cellcount");
+    let num = Utils.formatNumber(count);
+    node.innerHTML = "Number of cells in view: " + num;
 }
 
 
@@ -72,11 +90,11 @@ export function addCellCountToDOM(viewer) {
 *
 *
 * @function addSourcesToDOM
-* @description adds a div element showing viewer.sourcesHTML in the bottom right corner
+* @description adds a div element showing app.sourcesHTML in the bottom right corner
 */
-export function addSourcesToDOM(viewer) {
+export function addSourcesToDOM(app) {
     let node = document.createElement("div");
     node.classList.add("gridviz-sources");
-    node.innerHTML = viewer.sourcesHTML_;
-    viewer.container_.appendChild(node);
+    node.innerHTML = app.sourcesHTML_;
+    app.container_.appendChild(node);
 }

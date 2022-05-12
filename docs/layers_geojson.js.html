@@ -36,7 +36,7 @@ import { LineMaterial } from "../../lib/threejs/lines/LineMaterial";
 import * as THREE from "three/src/constants";
 import * as CONSTANTS from "../constants.js";
 
-let lineMaterial; // linematerial used for threejs webgl lines
+let lineMaterial; // line material used for all threejs webgl lines
 
 /**
  * 
@@ -59,8 +59,8 @@ export function addGeoJsonToScene(features, viewer) {
                 let coords = [];
                 for (let s = 0; s &lt; feature.geometry.coordinates[c].length; s++) {
                     let xyz;
-                    if (viewer.zerosRemoved_) {
-                        let d = Number('1E' + viewer.zerosRemoved_);
+                    if (app.zerosRemoved_) {
+                        let d = Number('1E' + app.zerosRemoved_);
                         xyz = {
                             x: feature.geometry.coordinates[c][s][0] / d,
                             y: feature.geometry.coordinates[c][s][1] / d,
@@ -77,7 +77,7 @@ export function addGeoJsonToScene(features, viewer) {
                     coords.push(xyz);
                 }
                 if (coords.length > 0) {
-                    geojsonGroup.add(createLineFromCoords(coords, viewer.lineColor_, viewer.lineWidth_));
+                    geojsonGroup.add(createLineFromCoords(coords, app.lineColor_, app.lineWidth_));
                 }
 
             } else if (feature.geometry.type == "MultiPolygon") {
@@ -90,8 +90,8 @@ export function addGeoJsonToScene(features, viewer) {
                         m++
                     ) {
                         let xyz;
-                        if (viewer.zerosRemoved_) {
-                            let d = Number('1E' + viewer.zerosRemoved_);
+                        if (app.zerosRemoved_) {
+                            let d = Number('1E' + app.zerosRemoved_);
                             xyz = {
                                 x: feature.geometry.coordinates[c][s][m][0] / d,
                                 y: feature.geometry.coordinates[c][s][m][1] / d,
@@ -107,13 +107,13 @@ export function addGeoJsonToScene(features, viewer) {
                         coords.push(xyz);
                     }
                     if (coords.length > 0) {
-                        geojsonGroup.add(createLineFromCoords(coords, viewer.lineColor_, viewer.lineWidth_));
+                        geojsonGroup.add(createLineFromCoords(coords, app.lineColor_, app.lineWidth_));
                     }
                 }
             } else if (feature.geometry.type == "LineString") {
                 let xyz;
-                if (viewer.zerosRemoved_) {
-                    let d = Number('1E' + viewer.zerosRemoved_);
+                if (app.zerosRemoved_) {
+                    let d = Number('1E' + app.zerosRemoved_);
                     xyz = {
                         x: feature.geometry.coordinates[c][0] / d,
                         y: feature.geometry.coordinates[c][1] / d,
@@ -131,11 +131,11 @@ export function addGeoJsonToScene(features, viewer) {
         }
         if (feature.geometry.type = "LineString") {
             if (coords.length > 0) {
-                geojsonGroup.add(createLineFromCoords(coords, viewer.lineColor_, viewer.lineWidth_));
+                geojsonGroup.add(createLineFromCoords(coords, app.lineColor_, app.lineWidth_));
             }
         }
     }
-    viewer.scene.add(geojsonGroup);
+    app.scene.add(geojsonGroup);
 }
 
 /**
@@ -160,7 +160,7 @@ function createLineFromCoords(coords, lineColor, lineWidth) {
     if (!lineMaterial) {
         lineMaterial = new LineMaterial({
             linewidth: lineWidth,
-            vertexColors: THREE.VertexColors
+            vertexColors: true
         });
     }
     //line2 allows custom linewidth (but not currently included in main threejs build)
@@ -175,13 +175,13 @@ function createLineFromCoords(coords, lineColor, lineWidth) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addChangeEventToColorFieldDropdown">addChangeEventToColorFieldDropdown</a></li><li><a href="global.html#addChangeEventToColorScaleDropdown">addChangeEventToColorScaleDropdown</a></li><li><a href="global.html#addChangeEventToColorSchemeDropdown">addChangeEventToColorSchemeDropdown</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addNuts2jsonToScene">addNuts2jsonToScene</a></li><li><a href="global.html#addPanAndZoom">addPanAndZoom</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#colorLegend">colorLegend</a></li><li><a href="global.html#createCellsLegend">createCellsLegend</a></li><li><a href="global.html#createContinuousLegend">createContinuousLegend</a></li><li><a href="global.html#createLabelRenderer">createLabelRenderer</a></li><li><a href="global.html#createLegend">createLegend</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createRaycaster">createRaycaster</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#createWebGLRenderer">createWebGLRenderer</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineDefaultPlacenameThresholds">defineDefaultPlacenameThresholds</a></li><li><a href="global.html#definePointSize">definePointSize</a></li><li><a href="global.html#defineRaycasterThreshold">defineRaycasterThreshold</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#ensureTooltipOnScreen">ensureTooltipOnScreen</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#onChangeColorField">onChangeColorField</a></li><li><a href="global.html#onChangeColorScale">onChangeColorScale</a></li><li><a href="global.html#onChangeColorScheme">onChangeColorScheme</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#thresholdLabels">thresholdLabels</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updateLegend">updateLegend</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#validateInputs">validateInputs</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewer">viewer</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addChangeEventToColorFieldDropdown">addChangeEventToColorFieldDropdown</a></li><li><a href="global.html#addChangeEventToColorScaleDropdown">addChangeEventToColorScaleDropdown</a></li><li><a href="global.html#addChangeEventToColorSchemeDropdown">addChangeEventToColorSchemeDropdown</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#colorLegend">colorLegend</a></li><li><a href="global.html#createCellsLegend">createCellsLegend</a></li><li><a href="global.html#createContinuousLegend">createContinuousLegend</a></li><li><a href="global.html#createLegend">createLegend</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineDefaultPlacenameThresholds">defineDefaultPlacenameThresholds</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#ensureTooltipOnScreen">ensureTooltipOnScreen</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#onChangeColorField">onChangeColorField</a></li><li><a href="global.html#onChangeColorScale">onChangeColorScale</a></li><li><a href="global.html#onChangeColorScheme">onChangeColorScheme</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#thresholdLabels">thresholdLabels</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updateLegend">updateLegend</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li><li><a href="global.html#zoomIn">zoomIn</a></li><li><a href="global.html#zoomOut">zoomOut</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Sep 23 2021 16:50:00 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Nov 26 2021 14:37:17 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

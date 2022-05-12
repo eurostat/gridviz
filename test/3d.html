@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>5km² Grid of Europe</title>
+  <title>3d</title>
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
   <meta name="viewport" content="width=device-width" />
 </head>
@@ -25,33 +25,33 @@
 
   let containerDiv = document.getElementById("viz-container");
 
-  gridviz
-    .viewer()    
-    .title("3D test example")
+  let app = new gridviz
+    .App()
+    .title("3D test example - in development")
     .subtitle("Left click and drag to orbit in 3D, right click to pan")
     .container(containerDiv)
-    .gridData(
-      {
-        url: "../../assets/csv/Croatia/croatia_tourism_grid.csv",
-        cellSize: 1000,
-      },
-    )
-    .colorField("NIGHTS_TOT")
-    .sizeField("NIGHTS_TOT") // csv column which you wish to visualize
-    .sizeScaleFunction(sizeScale)
-    .center([4900000,2475000])
+    .geoCenter([4900000, 2475000])
     .zoom(500000) //initial camera Z value
+    .backgroundColor("black")
     .cellCount(true)
-    .cellShape('bar')
-    .mode('3D')
-    .colorScaleName('scaleSequentialLog')
-    .backgroundColor('#000')
-    .legend({
-      title: "Total tourist nights per km² (2017)",
-      ticks: 4,
-    })
+    .nuts(true)
+    .nutsCountry("HR")
+    //.mode("3D")
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
+
+  const s = new gridviz.ColorSizeShapeStyle(
+    c => gridviz.color().interpolateOrRd(Math.pow(c["NIGHTS_FOR"], 0.5) / 100),
+    null,
+    c => "square"
+  )
+  app.addCSVGrid({
+    url: "../../assets/csv/Croatia/croatia_tourism_grid.csv",
+    resolution: 1000,
+    styles: [s],
+    minZoom: 0,
+    maxZoom: 9999999999
+  });
 </script>
 
 </html>

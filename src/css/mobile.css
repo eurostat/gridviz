@@ -19,7 +19,7 @@
       background-color:#ffffff !important;
       max-width: 100% !important;
     }
-    .gridviz-cellcount{
+    #gridviz-cellcount{
       margin-top:1px!important;
     }
     #gridviz-loading-spinner {

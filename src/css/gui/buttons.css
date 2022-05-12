@@ -8,6 +8,7 @@
     background: #fff;
     color:"black";
     cursor: pointer;
+    box-shadow: 0.6px 0.6px 0.6px 0.6px slategrey;
   }
   .gridviz-icon-button:hover{
     opacity:0.5;
