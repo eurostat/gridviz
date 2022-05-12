@@ -336,13 +336,14 @@ export class App {
               }
               
               if (style.__Legend) {
-                //update existing
-                style.__Legend.updateLegend();
+                //update existing legend with new data
+                // not yet implemented
+                //style.__Legend.updateLegend();
               } else {
                 //create new
                 style.__Legend = new Legend(style.legend);
                 //add to DOM
-                app.container_.node().appendChild(style.__Legend);
+               // app.container_.node().appendChild(style.__Legend);
               }
             }
           })

@@ -1,5 +1,5 @@
 //@ts-check
-/** @typedef {{type: String, width: Number, height:Number, orientation: String, title:String, titleWidth: Number, format: String, cells:Number, shapeWidth:Number, colorFunction?:Function, thresholds:Array, marginRight:any, marginLeft:any, tickFormat:Function }} LegendConfig */
+/** @typedef {{type: String, width: Number, height:Number, title:String, titleFontSize:Number, format: String, cells:Number, cellWidth:Number, colorFunction?:Function, labels:Array,colors:Array, marginRight:any, marginLeft:any,marginTop:any,marginBottom:any, tickFormat:Function }} LegendConfig */
 
 import * as LEGEND from "d3-svg-legend";
 import { select, create, selectAll } from "d3-selection";
@@ -19,20 +19,24 @@ export class Legend {
      * @memberof Legend
      */
     constructor(config) {
-        this.type = config.type || "continuous", //cells vs continuous
-            this.width = config.width || 300,
-            this.height = config.height || null,
-            this.orientation = config.orientation || "horizontal",
-            this.title = config.title || null, //if null, will default to the current colorField
-            this.titleWidth = config.titleWidth || 50,
-            this.format = config.format || ".0s",
-            this.cells = config.cells || 5,
-            this.shapeWidth = config.shapeWidth || 30;
-        this.thresholds = config.thresholds || null;
+        this.type = config.type || "cells"; //cells vs continuous
+        this.width = config.width || 300;
+        this.height = config.height || 70;
+        this.title = config.title || null; //if null, will default to the current colorField
+        this.cells = config.cells || 5;
+        this.cellWidth = config.cellWidth || 30;
+        this.labels = config.labels || null;
+        this.colors = config.colors || null;
         this.colorFunction = config.colorFunction || null;
-        this.marginRight = config.marginRight;
-        this.marginLeft = config.marginLeft;
+        this.marginRight = config.marginRight || 5;
+        this.marginLeft = config.marginLeft || 5;
+        this.marginTop = config.marginTop || 25;
+        this.marginBottom = config.marginBottom || 5;
         this.tickFormat = config.tickFormat;
+        this.title = config.title || null;
+        this.titleFontSize = config.titleFontSize || 16;
+        //html node
+        this._node = null;
 
         // builds a legend for a style
         this.createLegend();
@@ -44,7 +48,7 @@ export class Legend {
      */
     createLegend() {
         // TODO: adapt legends to new gridviz API. Each style can have its own legend.
-        // if (this.type == "cells") this.createCellsLegend();
+        if (this.type == "cells") this.createCellsLegend();
         // if (this.type == "continuous") this.createContinuousLegend();
     }
 
@@ -54,42 +58,61 @@ export class Legend {
      * @memberof Legend
      */
     createCellsLegend(layer) {
-        let legendContainer = select("#gridviz-legend");
-        if (layer.legend_.orientation == "horizontal") {
-            legendContainer.attr("class", "gridviz-legend-horizontal gridviz-plugin");
-        } else {
-            legendContainer.attr("class", "gridviz-legend-vertical gridviz-plugin");
+        let legendContainerDiv = select("#gridviz-legend").attr("class", "gridviz-legend-horizontal gridviz-plugin");
+        //adjust width/height of parent container
+        legendContainerDiv.style("height", this.height + "px");
+        legendContainerDiv.style("width", this.width + "px");
+
+        let legendSvg = legendContainerDiv.append("svg")
+            .attr("class", "gridviz-legend-svg")
+            .attr("height", this.height)
+            .attr("width", this.width)
+        //.attr("transform", "translate(10,15)"); //padding
+
+        let xRange = [this.marginLeft, this.width - this.marginRight];
+        let xDomain = [-1, this.colors.length - 1];
+        let x = d3scale.scaleLinear()
+            .domain(xDomain)
+            .rangeRound(xRange);
+
+        //title
+        if (this.title) {
+         legendSvg.append("g")
+         .append("text")
+         .attr("y", this.marginTop)
+         .attr("x", this.marginLeft)
+         .text(this.title)
+         .style("font-size",this.titleFontSize);
         }
-        let legendSvg =
-            legendContainer.append("g")
-                .attr("class", "gridviz-legend-svg")
-                .attr("height", layer.legend_.height)
-                .attr("width", layer.legend_.width)
-                .attr("transform", "translate(10,15)"); //padding
 
+        //cells
+        legendSvg
+            .selectAll("rect")
+            .data(this.colors)
+            .join("rect")
+            .attr("x", (d, i) =>
+                x(i - 1)
+            )
+            .attr("y", this.marginTop)
+            .attr("width", (d, i) =>
+                x(i) - x(i - 1)
+            )
+            .attr("height", this.height - this.marginTop - this.marginBottom)
+            .style("fill", d => d);
 
-        layer.__Legend = LEGEND.legendColor()
-            .shapeWidth(layer.legend_.shapeWidth)
-            .cells(layer.legend_.cells)
-            .labelFormat(format(layer.legend_.format))
-            .orient(layer.legend_.orientation)
-            .scale(layer.colorScaleFunction_)
-            .title(layer.title)
-            .titleWidth(layer.legend_.titleWidth)
+        //labels
+        legendSvg.append("g")
+            .selectAll("text")
+            .data(this.labels)
+            .join("text")
+            .attr("x", (d, i) =>
+                x(i - 1)
+            )
+            .attr("y", this.marginTop)
+            .text(d => d);
 
-        if (layer.thresholds_) {
-            layer.__Legend.labels(thresholdLabels)
-        }
+        this._node = legendSvg.node();
 
-        legendSvg.call(layer.__Legend);
-
-        //adjust width/height
-        if (!layer.legend_.height) {
-            layer.legend_.height = 320
-        }
-        legendContainer.style("height", layer.legend_.height + "px");
-        legendContainer.style("width", layer.legend_.width + "px");
-        //legend.style("height", app.legend_.height +"px");
     }
 
 

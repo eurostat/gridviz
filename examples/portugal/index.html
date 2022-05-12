@@ -29,6 +29,8 @@
         .nuts(true) //loads nuts topojson boundaries
         .nutsSimplification("03M") //loads nuts topojson boundaries
         .nutsCountry("PT") //filter nuts
+        .nutsLineColor("white")
+        .nutsLineWidth(0.0010) // GL line width for NUTS layer
         .showPlacenames(true)
         .placenameThresholds({ //"scale": population
             "1000": 150000,
@@ -43,14 +45,14 @@
         .sourcesHTML("Source: <a href='https://www.efgs.info/data/national/' target='_blank'>Statistics Portugal</a>")
         .geoCenter([2677, 1964])
         //.backgroundColor("#fcf6c2")
-        .backgroundColor("white")
+        .backgroundColor("black")
         .build()
 
-    const s = new gridviz.ColorSizeShapeStyle({ "colorFunction": c => gridviz.color().interpolateCividis(Math.pow(c["TOT_P"], 0.6) / 100) })
+    const s1 = new gridviz.ColorSizeShapeStyle({ "colorFunction": c => gridviz.color().interpolateMagma(Math.pow(c["TOT_P"], 0.6) / 100) })
     viewer.addCSVGrid({
         url: "../../assets/csv/Portugal/PT_1km_pop_2011.csv",
         resolution: 1,
-        styles: [s],
+        styles: [s1],
         minZoom: 0,
         maxZoom: 999999999
     });

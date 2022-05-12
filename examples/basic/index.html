@@ -27,9 +27,16 @@
     .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
 
-
+  let colorFunc = c => gridviz.color().interpolateViridis(Math.pow(c["population"], 0.4) / 50);
   const style = new gridviz.ColorSizeShapeStyle({ 
-    "colorFunction": c => gridviz.color().interpolateViridis(Math.pow(c["population"], 0.4) / 50),
+    "colorFunction": colorFunc,
+    "legend": {
+      title: "Inhabitants per 5x5km",
+      type: "cells",
+      cells: 5,
+      colors: [colorFunc({"population":1}),colorFunc({"population":5000}),colorFunc({"population":10000}),colorFunc({"population":100000})],
+      labels: [1,5000,10000,100000] 
+    }
   })
 
   app.addCSVGrid({

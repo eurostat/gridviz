@@ -19,21 +19,30 @@ A JavaScript library for visualizing large amounts of gridded data client-side, 
 
 ## Table of contents
 
-- [Introduction](#introduction)
-- [Examples](#examples)
-- [Installation](#installation)
-  - [Node.js](#nodejs)
-  - [standalone](#standalone)
-- [Usage](#usage)
-- [Preparing csv data](#preparing-csv-data)
-- [API reference](#api-reference)
-  - [Styling](#Styles)
-  - [Defining the data](#adding-data)
-  - [Tooltip](#tooltip)
-- [About](#about)
-- [Contribute](#support-and-contribution)
-- [Copyright](#copyright)
-- [Disclaimer](#disclaimer)
+- [gridviz](#gridviz)
+  - [Table of contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Examples](#examples)
+  - [Installation](#installation)
+    - [Node.js](#nodejs)
+    - [standalone](#standalone)
+  - [Usage](#usage)
+  - [Preparing csv data](#preparing-csv-data)
+  - [API reference](#api-reference)
+    - [Contents](#contents)
+    - [App Configuration](#app-configuration)
+    - [Adding data](#adding-data)
+      - [NUTS](#nuts)
+      - [Placenames](#placenames)
+      - [Projection](#projection)
+    - [Styles](#styles)
+      - [colorSizeShapeStyle](#colorsizeshapestyle)
+      - [JoyPlotStyle](#joyplotstyle)
+    - [Tooltip](#tooltip)
+  - [About](#about)
+  - [Support and contribution](#support-and-contribution)
+  - [Copyright](#copyright)
+  - [Disclaimer](#disclaimer)
 
 <hr>
 
@@ -49,10 +58,9 @@ For data-driven colouring and sizing, you can use [d3-scale](https://github.com/
 
 | Link to example                                                                                                                     | Data source                                                                                                                              | Link to code                                                                                 |
 | :---------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| [Population grids of Europe](https://eurostat.github.io/gridviz/examples/europe/color/index.html)                                   | [data source](https://ec.europa.eu/eurostat/web/gisco)                                                                                   | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/color/index.html) |
-| [Netherlands - 100x100m Census data](https://eurostat.github.io/gridviz/examples/netherlands/index.html)                            | [data source](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken) | [See code](https://github.com/eurostat/gridviz/blob/master/examples/netherlands/index.html)  |
-| [France - 1x1km Population Grid](https://eurostat.github.io/gridviz/examples/france/index.html)                                     | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)                                                                 | [See code](https://github.com/eurostat/gridviz/blob/master/examples/france/1km/index.html)   |
-| [Portugal census data](https://eurostat.github.io/gridviz/examples/portugal/index.html)                                             | [data source](https://www.efgs.info/data/national/)                                                                                      | [See code](https://github.com/eurostat/gridviz/blob/master/examples/portugal/index.html)     |
+| [Multi-resolution population density of Europe](https://eurostat.github.io/gridviz/examples/europe/color/index.html)                                   | [data source](https://ec.europa.eu/eurostat/web/gisco)                                                                                   | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/color/index.html) |
+| [Netherlands - 100x100m census data](https://eurostat.github.io/gridviz/examples/netherlands/index.html)                            | [data source](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken) | [See code](https://github.com/eurostat/gridviz/blob/master/examples/netherlands/index.html)  |
+| [France - 1x1km population grid](https://eurostat.github.io/gridviz/examples/france/index.html)                                     | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)                                                                 | [See code](https://github.com/eurostat/gridviz/blob/master/examples/france/1km/index.html)   |
 | [Average internet speed 2020 (ookla open data, 400x400m grid)](https://eurostat.github.io/gridviz/examples/europe/ookla/index.html) | [data source](https://github.com/teamookla/ookla-open-data)                                                                              | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/ookla/index.html) |
 
 ## Installation

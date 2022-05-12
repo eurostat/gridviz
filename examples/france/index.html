@@ -17,7 +17,7 @@
     let viz = new gridviz.App()
         .container(containerDiv)
 
-        .title("1x1km Grid of France")
+        .title("1x1km population grid of France")
         .sourcesHTML("Source: <a target='__blank' href='https://insee.fr/fr/accueil'>INSEE</a>")
         .geoCenter([3709000, 2624000])//EPSG=3035
         .zoom(1000000)
@@ -28,6 +28,14 @@
         .EPSG(3035)
         .showPlacenames(true)
         .placenamesCountry("FR")
+        .placenameThresholds({
+        //"scale": population
+        1000000: 200000,
+        500000: 150000,
+        250000: 100000,
+        90000: 100000,
+        10000: 30000,
+      })
         .height(window.innerHeight)
         .width(window.innerWidth)
         .backgroundColor("#000")
