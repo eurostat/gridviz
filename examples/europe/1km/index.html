@@ -3,77 +3,43 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>1km² Grid of Europe</title>
+  <title>1x1km Population Grid of Europe</title>
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
   <meta name="viewport" content="width=device-width" />
 </head>
 
 <body style="margin: 0">
-  <div id="viz-container"></div>
+  <div id="viz-container" style="height:100%; width:100%;"></div>
 </body>
-
 <script src="../../../build/gridviz.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.3.0/d3.min.js"
-  integrity="sha512-wKo55+1oH5DGJ19ScVUHTtcZiqJuSnknSs8CgzzEm1lNftJRDXN/kWpF9Kx+vPam8HBeg53OxS0MYd0+Iz9cjQ=="
-  crossorigin="anonymous"></script>
-
 <script>
-  // we can define the colorScale separately and inject it using colorScaleFunctionMethod(), or we could use gridviz methods to do it for us
-  //scale must be continuous or discrete to work with legend
-
-  let domain = ["1", "10000"].reverse(); //cell population domain
-  let colorScale = d3.scaleSequentialSqrt(domain, d3.interpolatePurples)
-
   let containerDiv = document.getElementById("viz-container");
-  gridviz
-    .viewer()
+
+  let app = new gridviz
+    .App()
     .container(containerDiv)
-    .gridData(
-      {
-        url: "../../../assets/csv/Europe/1km/pop_1km.csv",
-        cellSize: 0.99,
-      },
-    )
-    .title("1x1 km Grid of Europe")
-    // .subtitle("EPSG:3035")
-    .cellCount(true)
-    .zerosRemoved(3) //last 3 zeros were removed from dataset to improve efficiency
-    .colorField("Population") // csv column which you wish to visualize
-    .sizeField(null) // csv column which you wish to visualize
-    // .zoom(200)
-    .nuts(false) //loads borders topojson
-    .center([4369, 3230]) //EPSG=3035 with last 3 zeros removed
-    .zoom(1500)
-    .height(window.innerHeight - 4)
-    .width(window.innerWidth - 4)
-    .backgroundColor("#000")
-    .lineColor("#ffffff")
-    .highlightColor("cyan")
-    //.colors(["#F1CE90","#EDBA5F","#E6A530","#D76327","#C64D24","#BA191F"])
-    //.thresholds([1,55,20,200,500,5000])
-    //.colorScaleFunction(colorScale)
-    // following methods define the scales using gridviz
-     .colorSchemeName("interpolateMagma")
-     .colorScaleName("scaleSequentialLog")
-    // .colorSchemeSelector(true)
-    // .colorScaleSelector(true)
-    // .colorFieldSelector(true)
-    // .sizeFieldSelector(true)
-    .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
-    .legend({
-      title: "Total population per km² (2011)",
-      titleWidth: 130,
-      //ticks: 5,
-    })
-    .tooltip({
-        eventType: "click", // click vs mousemove
-        showLAU: true,
-        showEPSG: true,
-        showNUTS: true,
-        showCoordinates: true,
-      })
+    .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
+    .title("5km² Population Grid of Europe")
+    .zoom(3000)
+    .geoCenter([4000,3000])
+    .homeButton(true)
+    .zoomButtons(true)
+    .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
+
+
+  const style = new gridviz.ColorSizeShapeStyle({ 
+    "colorFunction": c => gridviz.color().interpolateMagma(Math.pow(c["Population"], 0.4) / 50),
+  })
+
+  app.addCSVGrid({
+        url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/1km/pop_1km.csv",
+        resolution: 1,
+        styles: [style],
+        minZoom: 0,
+        maxZoom: 50000000,
+        drawAll:true
+    });
 </script>
 
 </html>

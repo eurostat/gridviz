@@ -3,94 +3,43 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>5km² Grid of Europe</title>
+  <title>5x5km Grid of Europe</title>
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
   <meta name="viewport" content="width=device-width" />
 </head>
 
 <body style="margin: 0">
-  <div id="viz-container"></div>
+  <div id="viz-container" style="height:100%; width:100%;"></div>
 </body>
 <script src="../../../build/gridviz.js"></script>
-
 <script>
-  let legendWidth;
-  let legendHeight;
-  //mobile
-  if (window.screen.width < 600) {
-    legendWidth = window.screen.width - 30; //margin
-    legendHeight = 50;
-  }
-
   let containerDiv = document.getElementById("viz-container");
-  let viz = gridviz
-    .viewer()
+
+  let app = new gridviz
+    .App()
     .container(containerDiv)
-    .gridData(
-      {
-        url: "../../../assets/csv/Europe/5km/3035/pop_grid_5km_incl_uninhab.csv",
-        cellSize: 6.1,
-      },
-    )
-    .zerosRemoved(3)
-    .title("5x5km Population Grid of Europe")
-    .cellCount(true)
-    .colorField("Population") // csv column which you wish to visualize
-    //sizeColumn() "value" // csv column which you wish to visualize
-    //.nuts(true) //loads borders topojson
-    //.nutsLevel(0)
-    .center([4369, 3230]) //EPSG=3035
-    .zoom(5000)
-    // .height(window.innerHeight - 5)
-    // .width(window.innerWidth)
+    .zerosRemoved(3) // To reduce file size, zeros can be removed from the cell's x and y coordinates. Just let gridviz know how many have been removed here!
+    .title("5km² Population Grid of Europe")
+    .zoom(3000)
+    .geoCenter([4000,3000])
     .homeButton(true)
     .zoomButtons(true)
-    .showPlacenames(true)
-    .backgroundColor("#000")
-    .lineColor('rgb(0, 0, 0)')
-    //.colorSchemeName("interpolateCividis") //d3-scale-chromatic
-    .colorScaleName("scaleThreshold")
-    // .colors([
-    //   "#ffffcc",
-    //   "#c7e9b4",
-    //   "#7fcdbb",
-    //   "#41b6c4",
-    //   "#1d91c0",
-    //   "#225ea8",
-    //   "#0c2c84"
-    // ])
-    .colors(['#ffffe5','#fff7bc','#fee391','#fec44f','#fe9929','#ec7014','#cc4c02','#993404','#662506'])
-    .thresholds([1, 250, 750, 1500, 3000, 7500, 100000, 500000, 737000])
-    // .placenameThresholds({
-    //   5000: 8000000,
-    //   2000: 6000000,
-    //   1000: 5000000,
-    //   500: 1000000,
-    //   250: 1000000,
-    // })
-    //.colorSchemeSelector(true)
-    //.colorScaleSelector(true)
-    // .colorFieldSelector(true)
-    // .sizeFieldSelector(true)
-    .legend({
-      type: "continuous",
-      width: legendWidth,
-      height: legendHeight,
-      title: "Total population per 5x5 km (2011)",
-      titleWidth: 130,
-      ticks: 5,
-    })
-    .tooltip({
-      eventType: "mousemove", // click vs mousemove
-      showLAU: false,
-      showEPSG: false,
-      showNUTS: false,
-      showCoordinates: false,
-    })
-    .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/population-distribution-demography/geostat'>GEOSTAT</a>")
+    .sourcesHTML("Source: <a target='__blank' href='https://ec.europa.eu/eurostat/web/gisco/geodata/'>GISCO</a>")
     .build();
 
-  //viz.addGeoJson("../../../assets/geojson/NUTS_BN_03M_2021_3035_LEVL_0.geojson");
+
+  const style = new gridviz.ColorSizeShapeStyle({ 
+    "colorFunction": c => gridviz.color().interpolateViridis(Math.pow(c["population"], 0.4) / 50),
+  })
+
+  app.addCSVGrid({
+    url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
+    resolution: 5,
+    styles: [style],
+    minZoom: 0,
+    maxZoom: 999999999,
+    drawAll: true
+  })
 </script>
 
 </html>

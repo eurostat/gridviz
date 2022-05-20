@@ -33,7 +33,13 @@ import {
     Float32BufferAttribute,
     BufferGeometry,
     ShaderMaterial,
-    PointsMaterial
+    PointsMaterial,
+    BoxBufferGeometry,
+    MeshBasicMaterial,
+    Object3D,
+    Geometry,
+    Mesh,
+    Vector3
 } from "three";
 import * as CONSTANTS from "../constants.js";
 
@@ -85,122 +91,195 @@ function vertexShader() {
 }
 
 /**
-* @description create or update THREE.js viewer.pointsLayer layer. 
-* At the moment, only ONE viewer.pointsLayer layer at a time is handled by the viewer, so a second call of gridviz.gridData() will overwrite the initial layer
+* @description create or update THREE.js app.pointsLayer layer. 
+* At the moment, only ONE app.pointsLayer layer at a time is handled by the app, so a second call of gridviz.gridData() will overwrite the initial layer
 * @function addPointsToScene
-* @parameter points [{}]
+* @parameter app
+* @parameter grid: config passed to addGrid()
+* @parameter pointsArray [{}]
 */
-export function addPointsToScene(viewer, pointsArray) {
-    //threejs recommends using BufferGeometry instead of Geometry for performance
-    /*   indices = [0, 1, 2, 0, 2, 3];
-  bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));  */
-    if (!viewer.pointsGeometry) {
-        viewer.pointsGeometry = new BufferGeometry();
-    }
+export function addPointsToScene(app, grid, pointsArray) {
 
-    let colors = [];
-    let positions = [];
-    let sizes = [];
 
-    for (var i = 0; i &lt; pointsArray.length; i++) {
-        // Set vector coordinates from data
-        let coords = [
-            pointsArray[i].x,
-            pointsArray[i].y
-        ];
-        let x = parseFloat(coords[0]);
-        let y = parseFloat(coords[1]);
-        let z = CONSTANTS.point_z;
-        let indicator = pointsArray[i][viewer.colorField_];
-        let hex = viewer.colorScaleFunction_(parseFloat(indicator)); //d3 scale-chromatic
-        if (hex == "rgb(NaN, NaN, NaN)") {
-            hex = "#000"; //fallback to black
+    if (app.cellShape_ == 'square') {
+        //threejs recommends using BufferGeometry instead of Geometry for performance
+        /*   indices = [0, 1, 2, 0, 2, 3];
+      bufferGeometry.setIndex(new THREE.BufferAttribute(new Uint16Array(indices), 1));  */
+        if (!app.pointsGeometry) {
+            app.pointsGeometry = new BufferGeometry();
         }
-        pointsArray[i].color = hex; //for tooltip
-        let color = new Color(hex);
 
-        if (!isNaN(x) &amp;&amp; !isNaN(y)) {
-            positions.push(x, y, z);
-            if (!isNaN(color.r) &amp;&amp; !isNaN(color.g) &amp;&amp; !isNaN(color.b)) {
-                colors.push(color.r, color.g, color.b);
-            } else {
-                let blk = new Color("#000");
-                colors.push(blk.r, blk.g, blk.b)
-            }
-            if (viewer.sizeField_) {
-                sizes.push(viewer.sizeScaleFunction_(pointsArray[i][viewer.sizeField_]));
-            } else {
-                sizes.push(viewer.pointSize);
-            }
-        }
-    } //fin loop
+        let colors = [];
+        let positions = [];
+        let sizes = [];
 
-    //set buffer geometry attributes
-    viewer.pointsGeometry.setAttribute(
-        "position",
-        new Float32BufferAttribute(positions, 3)
-    );
-    viewer.pointsGeometry.setAttribute(
-        "color",
-        new Float32BufferAttribute(colors, 3)
-    );
-    //Variable point size will affect raycasting: https://github.com/mrdoob/three.js/issues/5105
-    viewer.pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
-    viewer.pointsGeometry.computeBoundingSphere();
-    //create or reuse viewer.pointsLayer Material
-    if (!viewer.pointsMaterial) {
-        // Apply custom point sizes, instead of using three.js pointsMaterial
-        viewer.pointsMaterial = new ShaderMaterial({
-            uniforms: {
-                multiplier: {
-                    value: 1000 + (50 * window.devicePixelRatio) //km TODO: define dynamically. This value needsto be adjusted according to screen in order prevent white lines across the screen flickering when zooming
+        for (var i = 0; i &lt; pointsArray.length; i++) {
+            // Set vector coordinates from data
+            let coords = [
+                pointsArray[i].x,
+                pointsArray[i].y
+            ];
+            let x = parseFloat(coords[0]);
+            let y = parseFloat(coords[1]);
+            let z = CONSTANTS.point_z;
+            let indicator = pointsArray[i][grid.colorField];
+            let hex = getCellColor(app, indicator);
+            pointsArray[i].color = hex; //save for tooltip
+            let color = new Color(hex);
+
+            if (!isNaN(x) &amp;&amp; !isNaN(y)) {
+                positions.push(x, y, z);
+                if (!isNaN(color.r) &amp;&amp; !isNaN(color.g) &amp;&amp; !isNaN(color.b)) {
+                    colors.push(color.r, color.g, color.b);
+                } else {
+                    let blk = new Color("#000");
+                    colors.push(blk.r, blk.g, blk.b)
                 }
-            },
-            fragmentShader: fragmentShader(),
-            vertexShader: vertexShader(),
-            vertexColors: true
-        });
+                if (grid.sizeField) {
+                    sizes.push(app.sizeScaleFunction_(pointsArray[i][grid.sizeField_]));
+                } else {
+                    sizes.push(grid.cellSize);
+                }
+            }
+        } //fin loop
 
-        //use threejs PointsMaterial instead:
-        // pointsMaterial = new PointsMaterial({
-        //   size: gridConfig.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
-        //   sizeAttenuation: true,
-        //   //https://github.com/mrdoob/three.js/blob/master/src/constants.js
-        //   vertexColors: THREE.VertexColors
-        // });
+        //set buffer geometry attributes
+        app.pointsGeometry.setAttribute(
+            "position",
+            new Float32BufferAttribute(positions, 3)
+        );
+        app.pointsGeometry.setAttribute(
+            "color",
+            new Float32BufferAttribute(colors, 3)
+        );
+        //Variable point size will affect raycasting: https://github.com/mrdoob/three.js/issues/5105
+        app.pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
+        app.pointsGeometry.computeBoundingSphere();
+        //create or reuse app.pointsLayer Material
+        if (!app.pointsMaterial) {
+            // Apply custom point sizes, instead of using three.js pointsMaterial
+            app.pointsMaterial = new ShaderMaterial({
+                uniforms: {
+                    multiplier: {
+                        value: 1000 //km TODO: define dynamically. This value needs to be adjusted according to screen in order prevent screen flickering when zooming
+                    }
+                },
+                fragmentShader: fragmentShader(),
+                vertexShader: vertexShader(),
+                vertexColors: true
+            });
 
-    } else {
-        viewer.pointsMaterial.size = viewer.pointSize;
+            //use threejs PointsMaterial instead:
+            // pointsMaterial = new PointsMaterial({
+            //   size: grid.pointSize * 2, // when using three.js attenuation we have to multiply the cellSize by 2
+            //   sizeAttenuation: true,
+            //   //https://github.com/mrdoob/three.js/blob/master/src/constants.js
+            //   vertexColors: THREE.VertexColors
+            // });
+
+        } else {
+            app.pointsMaterial.size = grid.cellSize;
+        }
+
+        //create or overwrite app.pointsLayer object
+        if (!app.pointsLayer) {
+            app.pointsLayer = new Points(app.pointsGeometry, app.pointsMaterial);
+            app.pointsLayer.renderOrder = 1; //bottom
+            app.scene.add(app.pointsLayer);
+        } else {
+            //overwrite current la
+            app.pointsLayer.geometry = app.pointsGeometry;
+            app.pointsLayer.material = app.pointsMaterial;
+        }
+
+    } else if (app.cellShape_ == "bar") {
+
+        // define bars object, geometry and material
+        const bars = new Object3D();
+
+
+        // create bar for each cell
+        for (var i = 0; i &lt; pointsArray.length; i++) {
+            let height;
+
+            if (grid.sizeField) {
+                height = app.sizeScaleFunction_(pointsArray[i][grid.sizeField]);
+            } else {
+                height = grid.cellSize;
+            }
+
+            let hex = getCellColor(app, pointsArray[i][grid.colorField]);
+            pointsArray[i].color = hex; //save for tooltip
+            let color = new Color(hex);
+ 
+            let x = parseFloat(pointsArray[i].x);
+            let y = parseFloat(pointsArray[i].y);
+            
+            const bar = getBar(x, y, grid.cellSize, grid.cellSize,height,color);
+            bar.lookAt(new Vector3(x,y,0.0001));
+            bars.add(bar);
+        }
+
+        // let x = 4369, y = 3230, z = 0.0001;
+        // const bar = getBar(x, y, radius);
+        // bar.lookAt(new Vector3(x,y,z));
+        // bars.add(bar);
+
+        // add bars to the app
+        app.pointsLayer = bars;
+        app.scene.add(bars);
+
     }
-    //create or overwrite viewer.pointsLayer object
-    if (!viewer.pointsLayer) {
-        viewer.pointsLayer = new Points(viewer.pointsGeometry, viewer.pointsMaterial);
-        viewer.pointsLayer.renderOrder = 1; //bottom
-        viewer.scene.add(viewer.pointsLayer);
-    } else {
-        viewer.pointsLayer.geometry = viewer.pointsGeometry;
-        viewer.pointsLayer.material = viewer.pointsMaterial;
-    }
+
 }
 
+function getCellColor(app, value) {
+    let hex = app.colorScaleFunction_(parseFloat(value)); //d3 scale-chromatic
+    if (hex == "rgb(NaN, NaN, NaN)") {
+        hex = "#000"; //fallback to black
+    }
+return hex;
+
+}
+
+function getBar(x, y,width,length, height, color) {
+
+
+    const geometry = new BoxBufferGeometry(width,length, height);
+    const material = new MeshBasicMaterial({ color: color });
+    const bar = new Mesh(geometry, material);
+
+    // const phi = (90 - lat) * Math.PI / 180;
+    // const theta = (180 - lng) * Math.PI / 180;
+
+    // bar.position.x = radius * Math.sin(phi) * Math.cos(theta);
+    // bar.position.y = radius * Math.cos(phi);
+    // bar.position.z = radius * Math.sin(phi) * Math.sin(theta);
+
+    bar.position.x = x;
+    bar.position.y = y;
+    bar.position.z = 0.001 + (height/2);
+
+    return bar;
+}
 
 /**
  * @description rebuilds array which stores point sizes
  * @function updatePointsSizes
  */
-export function updatePointsSizes(viewer, pointsArray) {
+export function updatePointsSizes(app, pointsArray) {
     let sizes = [];
     for (var i = 0; i &lt; pointsArray.length; i++) {
-        if (viewer.sizeField_ &amp;&amp; viewer.sizeField_ !== "null") {
-            sizes.push(viewer.sizeScaleFunction_(pointsArray[i][viewer.sizeField_]));
+        if (grid.sizeField &amp;&amp; grid.sizeField !== "null") {
+            sizes.push(app.sizeScaleFunction_(pointsArray[i][grid.sizeField]));
         } else {
-            sizes.push(viewer.pointSize);
+            sizes.push(app.currentResolution_);
         }
     }
     //update sizes
-    pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
-    pointsGeometry.computeBoundingSphere();
-    viewer.pointsLayer.geometry = pointsGeometry;
+    app.pointsGeometry.setAttribute("size", new Float32BufferAttribute(sizes, 1));
+    app.pointsGeometry.computeBoundingSphere();
+    app.pointsLayer.geometry = app.pointsGeometry;
 }
 
 
@@ -208,10 +287,10 @@ export function updatePointsSizes(viewer, pointsArray) {
 * @description rebuilds array of point colours
 * @function updatePointsColors
 */
-export function updatePointsColors(viewer, pointsArray) {
+export function updatePointsColors(app, pointsArray) {
     let colors = [];
     for (var i = 0; i &lt; pointsArray.length; i++) {
-        let hex = viewer.colorScaleFunction_(pointsArray[i][viewer.colorField_]); //d3 scale-chromatic
+        let hex = app.colorScaleFunction_(pointsArray[i][grid.colorField]); //d3 scale-chromatic
         if (hex == "rgb(NaN, NaN, NaN)") {
             hex = "#000"; //fallback to black
         }
@@ -220,13 +299,16 @@ export function updatePointsColors(viewer, pointsArray) {
         if (color) colors.push(color.r, color.g, color.b);
     }
     //update colors
-    pointsGeometry.setAttribute(
+    app.pointsGeometry.setAttribute(
         "color",
         new Float32BufferAttribute(colors, 3)
     );
-    pointsGeometry.computeBoundingSphere();
-    viewer.pointsLayer.geometry = pointsGeometry;
-}</code></pre>
+    app.pointsGeometry.computeBoundingSphere();
+    app.pointsLayer.geometry = app.pointsGeometry;
+}
+
+
+</code></pre>
         </article>
     </section>
 
@@ -236,13 +318,13 @@ export function updatePointsColors(viewer, pointsArray) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addChangeEventToColorFieldDropdown">addChangeEventToColorFieldDropdown</a></li><li><a href="global.html#addChangeEventToColorScaleDropdown">addChangeEventToColorScaleDropdown</a></li><li><a href="global.html#addChangeEventToColorSchemeDropdown">addChangeEventToColorSchemeDropdown</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addNuts2jsonToScene">addNuts2jsonToScene</a></li><li><a href="global.html#addPanAndZoom">addPanAndZoom</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#colorLegend">colorLegend</a></li><li><a href="global.html#createCellsLegend">createCellsLegend</a></li><li><a href="global.html#createContinuousLegend">createContinuousLegend</a></li><li><a href="global.html#createLabelRenderer">createLabelRenderer</a></li><li><a href="global.html#createLegend">createLegend</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createRaycaster">createRaycaster</a></li><li><a href="global.html#createScene">createScene</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#createWebGLRenderer">createWebGLRenderer</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineDefaultPlacenameThresholds">defineDefaultPlacenameThresholds</a></li><li><a href="global.html#definePointSize">definePointSize</a></li><li><a href="global.html#defineRaycasterThreshold">defineRaycasterThreshold</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#ensureTooltipOnScreen">ensureTooltipOnScreen</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#onChangeColorField">onChangeColorField</a></li><li><a href="global.html#onChangeColorScale">onChangeColorScale</a></li><li><a href="global.html#onChangeColorScheme">onChangeColorScheme</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#thresholdLabels">thresholdLabels</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updateLegend">updateLegend</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#validateInputs">validateInputs</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewer">viewer</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addButtonEvents">addButtonEvents</a></li><li><a href="global.html#addChangeEventToColorFieldDropdown">addChangeEventToColorFieldDropdown</a></li><li><a href="global.html#addChangeEventToColorScaleDropdown">addChangeEventToColorScaleDropdown</a></li><li><a href="global.html#addChangeEventToColorSchemeDropdown">addChangeEventToColorSchemeDropdown</a></li><li><a href="global.html#addChangeEventToSizeFieldDropdown">addChangeEventToSizeFieldDropdown</a></li><li><a href="global.html#addEventListeners">addEventListeners</a></li><li><a href="global.html#addGeoJson">addGeoJson</a></li><li><a href="global.html#addGeoJsonToScene">addGeoJsonToScene</a></li><li><a href="global.html#addMouseEventsToView">addMouseEventsToView</a></li><li><a href="global.html#addPlacenamesToScene">addPlacenamesToScene</a></li><li><a href="global.html#addPointsToScene">addPointsToScene</a></li><li><a href="global.html#addResizeEvent">addResizeEvent</a></li><li><a href="global.html#animate">animate</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#build">build</a></li><li><a href="global.html#colorLegend">colorLegend</a></li><li><a href="global.html#createCellsLegend">createCellsLegend</a></li><li><a href="global.html#createContinuousLegend">createContinuousLegend</a></li><li><a href="global.html#createLegend">createLegend</a></li><li><a href="global.html#createLineFromCoords">createLineFromCoords</a></li><li><a href="global.html#createPlacenameLabelObject">createPlacenameLabelObject</a></li><li><a href="global.html#createTooltipContainer">createTooltipContainer</a></li><li><a href="global.html#defineColorScale">defineColorScale</a></li><li><a href="global.html#defineDefaultPlacenameThresholds">defineDefaultPlacenameThresholds</a></li><li><a href="global.html#defineSizeScale">defineSizeScale</a></li><li><a href="global.html#defineWhereParameter">defineWhereParameter</a></li><li><a href="global.html#ensureTooltipOnScreen">ensureTooltipOnScreen</a></li><li><a href="global.html#fragmentShader">fragmentShader</a></li><li><a href="global.html#getPlacenames">getPlacenames</a></li><li><a href="global.html#getPopulationParameterFromScale">getPopulationParameterFromScale</a></li><li><a href="global.html#hideTooltip">hideTooltip</a></li><li><a href="global.html#loadGrid">loadGrid</a></li><li><a href="global.html#loadNuts2json">loadNuts2json</a></li><li><a href="global.html#onChangeColorField">onChangeColorField</a></li><li><a href="global.html#onChangeColorScale">onChangeColorScale</a></li><li><a href="global.html#onChangeColorScheme">onChangeColorScheme</a></li><li><a href="global.html#removePlacenamesFromScene">removePlacenamesFromScene</a></li><li><a href="global.html#requestGrid">requestGrid</a></li><li><a href="global.html#showTooltip">showTooltip</a></li><li><a href="global.html#thresholdLabels">thresholdLabels</a></li><li><a href="global.html#updateColorScaleFunction">updateColorScaleFunction</a></li><li><a href="global.html#updateLegend">updateLegend</a></li><li><a href="global.html#updatePointsColors">updatePointsColors</a></li><li><a href="global.html#updatePointsSizes">updatePointsSizes</a></li><li><a href="global.html#updateTooltip">updateTooltip</a></li><li><a href="global.html#vertexShader">vertexShader</a></li><li><a href="global.html#viewWholeGrid">viewWholeGrid</a></li><li><a href="global.html#zoom">zoom</a></li><li><a href="global.html#zoomIn">zoomIn</a></li><li><a href="global.html#zoomOut">zoomOut</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Sep 23 2021 16:50:00 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Nov 26 2021 14:37:17 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

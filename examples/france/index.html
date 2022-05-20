@@ -14,15 +14,12 @@
 <script src="../../build/gridviz.js"></script>
 <script>
     let containerDiv = document.getElementById("viz-container");
-    gridviz.viewer()
+    let viz = new gridviz.App()
         .container(containerDiv)
-        .gridData({
-            url: "../../assets/csv/France/1km/2015_Ind.csv",
-            cellSize: 1000,
-        })
-        .title("1x1km Grid of France")
+
+        .title("1x1km population grid of France")
         .sourcesHTML("Source: <a target='__blank' href='https://insee.fr/fr/accueil'>INSEE</a>")
-        .center([3709000, 2624000])//EPSG=3035
+        .geoCenter([3709000, 2624000])//EPSG=3035
         .zoom(1000000)
         .nuts(true)
         .nutsLevel(3)
@@ -31,32 +28,30 @@
         .EPSG(3035)
         .showPlacenames(true)
         .placenamesCountry("FR")
+        .placenameThresholds({
+        //"scale": population
+        1000000: 200000,
+        500000: 150000,
+        250000: 100000,
+        90000: 100000,
+        10000: 30000,
+      })
         .height(window.innerHeight)
         .width(window.innerWidth)
         .backgroundColor("#000")
-        .lineColor("#ffffff")
-        .colorSchemeName("interpolateInferno")
-        .colorScaleName("scaleSequentialLog")
-        .colorField("Inhabitants")  // csv column used to calculate the colour of each cell
-        .colorSchemeSelector(true)
-        .colorScaleSelector(true)
-        //  .placenameThresholds({ //"scale": population
-        //     "500000": 100000,
-        //     "175000": 50000,
-        //     "150000": 20000,
-        //     "100000": 10000,
-        //     "50000": 1000
-        // })
-        .colorScaleSelectorLabel("Scale: ")
-        .colorFieldSelectorLabel("Indicator: ")
         .nuts(true) //loads borders topojson
-        .legend({
-            title: "Total population per km² (2015)",
-            titleWidth: 110,
-            format: ',.0f',
-            ticks:4
-        })
         .build()
+
+        const s = new gridviz.ColorSizeShapeStyle({ "colorFunction": c => gridviz.color().interpolateOrRd(Math.pow(c["Inhabitants"], 0.6) / 100) })
+        viz.addCSVGrid({
+        url: "../../assets/csv/France/1km/2015_Ind.csv",
+        resolution: 1000,
+        styles: [s],
+        minZoom: 0,
+        maxZoom: 999999999,
+        drawAll:true
+    });
+
 </script>
 
 </html>

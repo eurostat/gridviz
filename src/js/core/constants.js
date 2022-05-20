@@ -1,4 +1,4 @@
-//constants to be used in all gridviz components
+//constants to be used across gridviz
 export const nuts_base_URL = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2016/";
 // export const placenames = {
 //     baseURL: "https://ec.europa.eu/regio/regiogis/gis/arcgis/rest/services/Urban/urban_centres_towns_v3/MapServer/0/query?",
@@ -14,7 +14,7 @@ export const placenames = {
     minScaleField: "MIN_SCAL"
 }
 export const nutsAPIBaseURL = "https://gisco-services.ec.europa.eu/id/"; //to get nuts codes of cells
-export const line_z = 0.0001001; //line vertices z coordinate
+export const line_z = 0.0002; //line vertices z coordinate
 export const point_z = 0.0001; //threejs points object height
 export const fov = 50; // threejs camera FOV
 export const label_height = 0.001; // placenames z coordinate

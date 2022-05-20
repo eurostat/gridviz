@@ -4,36 +4,36 @@
 * @function addHomeButtonToDOM
 * @description adds a button element with a home icon to the DOM
 */
-export function addHomeButtonToDOM(viewer) {
+export function addHomeButtonToDOM(app) {
     // define position
     let left;
     let top;
-    if (viewer._mobile) {
+    if (app._mobile) {
         // currently not adding buttons to mobile version
         // left = 3;
-        // if (viewer.title_ || viewer.subtitle_) {
+        // if (app.title_ || app.subtitle_) {
         //     top = 75;
         // } else {
         //     top = 20;
         // }
     } else {
         left = 10;
-        if (viewer.title_ || viewer.subtitle_) {
+        if (app.title_ || app.subtitle_) {
             top = 100;
         } else {
             top = 20;
         }
 
         //create node
-        viewer.homeButtonNode = document.createElement("div");
-        viewer.homeButtonNode.style.left = left + 'px';
-        viewer.homeButtonNode.style.top = top + 'px';
-        viewer.homeButtonNode.id = "gridviz-home-btn";
-        viewer.homeButtonNode.classList.add("gridviz-home-button", "gridviz-icon-button");
+        app.homeButtonNode = document.createElement("div");
+        app.homeButtonNode.style.left = left + 'px';
+        app.homeButtonNode.style.top = top + 'px';
+        app.homeButtonNode.id = "gridviz-home-btn";
+        app.homeButtonNode.classList.add("gridviz-home-button", "gridviz-icon-button");
         let icon = document.createElement("span")
         icon.classList.add("icon")
-        viewer.homeButtonNode.appendChild(icon)
-        viewer.container_.appendChild(viewer.homeButtonNode);
+        app.homeButtonNode.appendChild(icon)
+        app.container_.appendChild(app.homeButtonNode);
     }
 
 }
@@ -44,15 +44,15 @@ export function addHomeButtonToDOM(viewer) {
 * @function addZoomButtonsToDOM
 * @description adds two zoom button elements to the DOM
 */
-export function addZoomButtonsToDOM(viewer) {
+export function addZoomButtonsToDOM(app) {
     //define positions
     let left;
     let zoomInTop;
     let zoomOutTop;
-    if (viewer._mobile) {
+    if (app._mobile) {
         // currently not adding buttons to mobile version
         // left = 3;
-        // if (viewer.title_ || viewer.subtitle_) {
+        // if (app.title_ || app.subtitle_) {
         //     zoomInTop = 110;
         //     zoomOutTop = 140;
         // } else {
@@ -61,7 +61,7 @@ export function addZoomButtonsToDOM(viewer) {
         // }
     } else {
         left = 10;
-        if (viewer.title_ || viewer.subtitle_) {
+        if (app.title_ || app.subtitle_) {
             zoomInTop = 140;
             zoomOutTop = 170;
         } else {
@@ -70,26 +70,26 @@ export function addZoomButtonsToDOM(viewer) {
         }
 
         //build zoomin node
-        viewer.zoominButtonNode = document.createElement("div");
-        viewer.zoominButtonNode.id = "gridviz-zoomin-btn";
-        viewer.zoominButtonNode.style.left = left + 'px';
-        viewer.zoominButtonNode.style.top = zoomInTop + 'px';
-        viewer.zoominButtonNode.classList.add("gridviz-zoomin-button", "gridviz-icon-button");
+        app.zoominButtonNode = document.createElement("div");
+        app.zoominButtonNode.id = "gridviz-zoomin-btn";
+        app.zoominButtonNode.style.left = left + 'px';
+        app.zoominButtonNode.style.top = zoomInTop + 'px';
+        app.zoominButtonNode.classList.add("gridviz-zoomin-button", "gridviz-icon-button");
         let icon = document.createElement("span");
         icon.classList.add("icon");
-        viewer.zoominButtonNode.appendChild(icon);
-        viewer.container_.appendChild(viewer.zoominButtonNode);
+        app.zoominButtonNode.appendChild(icon);
+        app.container_.appendChild(app.zoominButtonNode);
 
         //build zoom out
-        viewer.zoomoutButtonNode = document.createElement("div");
-        viewer.zoomoutButtonNode.id = "gridviz-zoomout-btn";
-        viewer.zoomoutButtonNode.style.left = left + 'px';
-        viewer.zoomoutButtonNode.style.top = zoomOutTop + 'px';
-        viewer.zoomoutButtonNode.classList.add("gridviz-zoomout-button", "gridviz-icon-button");
+        app.zoomoutButtonNode = document.createElement("div");
+        app.zoomoutButtonNode.id = "gridviz-zoomout-btn";
+        app.zoomoutButtonNode.style.left = left + 'px';
+        app.zoomoutButtonNode.style.top = zoomOutTop + 'px';
+        app.zoomoutButtonNode.classList.add("gridviz-zoomout-button", "gridviz-icon-button");
         let icon2 = document.createElement("span");
         icon2.classList.add("icon");
-        viewer.zoomoutButtonNode.appendChild(icon2);
-        viewer.container_.appendChild(viewer.zoomoutButtonNode);
+        app.zoomoutButtonNode.appendChild(icon2);
+        app.container_.appendChild(app.zoomoutButtonNode);
     }
 
 }
