@@ -33,6 +33,8 @@ export { LabelLayer } from "./LabelLayer"
 import { geoAzimuthalEqualArea } from 'd3-geo'
 import { LabelLayer } from "./LabelLayer"
 
+
+
 /**
  * Returns label layer from Eurostat, for ETRS89-LAEA grids.
  * From dataset: https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/names.csv
@@ -69,6 +71,45 @@ export const getEurostatLabelLayer = function () {
 
                 if (lb["cat"] == 2) return
                 if (lb["pop_2011"] < 400000) return
+                return "bold 15px Arial";
+            },
+            //color
+            color: () => "#00000044",
+            //halo color
+            haloColor: () => null,
+            //halo width
+            haloWidth: () => 0,
+            //preprocess
+            preprocess: lb => {
+                //project from geo coordinates to ETRS89-LAEA
+                const p = proj([lb.lon, lb.lat])
+                lb.x = p[0]; lb.y = p[1];
+                delete lb.lon; delete lb.lat;
+            }
+        }
+    )
+}
+
+
+
+
+
+/**
+ * Returns label layer from Eurostat, for ETRS89-LAEA grids.
+ * From dataset: https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/euronymes.csv
+ * 
+ * @returns {LabelLayer}
+ */
+ export const getEuronymeLabelLayer = function () {
+
+    //ETRS89-LAEA projection
+    const proj = geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]);
+
+    return new LabelLayer(
+        "https://raw.githubusercontent.com/eurostat/gridviz/testcanvas/assets/csv/euronymes.csv",
+        {
+            style: (lb, zf) => {
+                if(lb.rmax < zf) return;
                 return "bold 15px Arial";
             },
             //color
