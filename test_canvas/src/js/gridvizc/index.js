@@ -110,14 +110,14 @@ export const getEurostatLabelLayer = function () {
         {
             style: (lb, zf) => {
                 if(lb.rmax < zf) return;
-                return "bold 15px Arial";
+                return "bold 14px Arial";
             },
             //color
-            color: () => "#00000044",
+            color: () => "#000000AA", //"#00000044",
             //halo color
-            haloColor: () => null,
+            haloColor: () => "#FFFFFFAA",
             //halo width
-            haloWidth: () => 0,
+            haloWidth: () => 2,
             //preprocess
             preprocess: lb => {
                 //project from geo coordinates to ETRS89-LAEA
