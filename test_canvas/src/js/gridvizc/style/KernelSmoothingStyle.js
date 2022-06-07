@@ -2,7 +2,7 @@
 
 import { Style } from "../Style"
 import { Cell, Envelope } from "../Dataset"
-import { GeoViewer } from "../GeoViewer";
+import { GeoCanvas } from "../GeoCanvas";
 
 /**
  * A style representing the cell as a smoothed layer, to smoothing local variations and show main trends across space.
@@ -218,7 +218,7 @@ export class KernelSmoothingStyle extends Style {
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} r 
-     * @param {GeoViewer} cg 
+     * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
 

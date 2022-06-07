@@ -6,7 +6,7 @@
  * 
  * @author Julien Gaffuri
  */
-export class GeoViewer {
+export class GeoCanvas {
 
     /**
      * @constructor

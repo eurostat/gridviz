@@ -2,7 +2,7 @@
 
 import { Style } from "../Style"
 import { Cell } from "../Dataset"
-import { GeoViewer } from "../GeoViewer";
+import { GeoCanvas } from "../GeoCanvas";
 
 /**
  * 
@@ -44,7 +44,7 @@ export class TextStyle extends Style {
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} r 
-     * @param {GeoViewer} cg 
+     * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
 

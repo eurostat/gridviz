@@ -2,7 +2,7 @@
 
 import { Style, Stat } from "../Style"
 import { Cell } from "../Dataset"
-import { GeoViewer } from "../GeoViewer";
+import { GeoCanvas } from "../GeoCanvas";
 
 /**
  * A style showing the composition of the grid cell as a "radar" chart.
@@ -43,7 +43,7 @@ export class RadarStyle extends Style {
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} r 
-     * @param {GeoViewer} cg 
+     * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
 

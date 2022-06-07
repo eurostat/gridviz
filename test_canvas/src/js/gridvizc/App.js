@@ -1,6 +1,6 @@
 //@ts-check
 
-import { GeoViewer, Envelope } from './GeoViewer';
+import { GeoCanvas, Envelope } from './GeoCanvas';
 import { Layer } from './Layer';
 import { Style } from './Style';
 import { Dataset, Cell } from './Dataset';
@@ -44,8 +44,8 @@ export class App {
         this.backgroundColor = opts.backgroundColor || "white"
 
         /** Make geo canvas
-         * @type {GeoViewer} @private */
-        this.cg = new GeoViewer();
+         * @type {GeoCanvas} @private */
+        this.cg = new GeoCanvas();
         this.cg.redraw = () => {
             //console.log(this.getZoomFactor())
 

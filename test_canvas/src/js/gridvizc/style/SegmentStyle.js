@@ -2,7 +2,7 @@
 
 import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
-import { GeoViewer } from "../GeoViewer";
+import { GeoCanvas } from "../GeoCanvas";
 
 /**
  * A style where each cell is represented by a segment whose length, width, color and orientation can vary according to statistical values.
@@ -46,7 +46,7 @@ export class SegmentStyle extends Style {
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} resolution 
-     * @param {GeoViewer} cg 
+     * @param {GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
 
