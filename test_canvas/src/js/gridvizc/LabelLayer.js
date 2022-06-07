@@ -81,19 +81,17 @@ export class LabelLayer {
         cg.initCanvasTransform()
         for (const lb of this.labels) {
 
-            //check label within the view, to be drawn
-            if(!cg.toDraw(lb)) continue;
-
             //get label style
             const st = this.style(lb, cg.zf);
             if (!st) continue;
             cg.ctx.font = st;
 
+            //check label within the view, to be drawn
+            if (!cg.toDraw(lb)) continue;
+
             //position
             const xP = cg.geoToPixX(lb.x)
             const yP = cg.geoToPixY(lb.y)
-            //console.log(lb.x, lb.y)
-            console.log(xP, yP)
 
             //label stroke, for the halo
             if (this.haloColor && this.haloWidth) {

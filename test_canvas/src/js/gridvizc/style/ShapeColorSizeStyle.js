@@ -51,7 +51,6 @@ export class ShapeColorSizeStyle extends Style {
      */
     draw(cells, resolution, cg) {
 
-
         let statSize
         if (this.sizeCol) {
             //if size is used, sort cells by size so that the biggest are drawn first
@@ -80,10 +79,8 @@ export class ShapeColorSizeStyle extends Style {
             //size
             /** @type {function(number,number,Stat,number):number} */
             let s_ = this.size || (() => resolution);
-            //size - in geo and pixel
+            //size - in geo unit
             const sG = s_(cell[this.sizeCol], resolution, statSize, cg.zf)
-            /** @type {number} */
-            const sP = sG / cg.zf
 
             //get offset
             const offset = this.offset(cell, resolution, cg.zf)
