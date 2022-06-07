@@ -189,4 +189,3 @@ const getLabel = function (valueM, withUnit = true) {
     //km
     return (valueM / 1000).toLocaleString() + (withUnit ? " km" : "");
 }
-
