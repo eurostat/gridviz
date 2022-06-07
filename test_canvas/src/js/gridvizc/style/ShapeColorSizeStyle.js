@@ -65,6 +65,7 @@ export class ShapeColorSizeStyle extends Style {
             statColor = getStatistics(cells, c => c[this.colorCol], true)
         }
 
+        cg.setCanvasTransform()
         for (let cell of cells) {
 
             //color

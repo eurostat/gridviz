@@ -118,7 +118,6 @@ export class App {
         this.cg.clear(this.backgroundColor);
 
         //draw cells, style by style
-        this.cg.setCanvasTransform()
         for (const style of layer.styles)
             style.draw(layer.dataset.getViewCache(), layer.dataset.getResolution(), this.cg)
 
