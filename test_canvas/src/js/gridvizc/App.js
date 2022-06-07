@@ -47,7 +47,6 @@ export class App {
          * @type {GeoCanvas} @private */
         this.cg = new GeoCanvas();
         this.cg.redraw = () => {
-            //console.log(this.getZoomFactor())
 
             //go through the list of layers and find the one(s) to draw
             for (const layer of this.getActiveLayers()) {
@@ -115,9 +114,11 @@ export class App {
         layer.dataset.updateViewCache(this.cg.extGeo)
 
         //clear
+        this.cg.initCanvasTransform()
         this.cg.clear(this.backgroundColor);
 
         //draw cells, style by style
+        this.cg.setCanvasTransform()
         for (const style of layer.styles)
             style.draw(layer.dataset.getViewCache(), layer.dataset.getResolution(), this.cg)
 
@@ -236,7 +237,7 @@ export class App {
      * @param {number} marginPx 
      * @returns {Envelope}
      */
-     updateExtentGeo(marginPx = 20) {
+    updateExtentGeo(marginPx = 20) {
         return this.cg.updateExtentGeo(marginPx);
     }
 

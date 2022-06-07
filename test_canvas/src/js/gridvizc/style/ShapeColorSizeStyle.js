@@ -92,16 +92,16 @@ export class ShapeColorSizeStyle extends Style {
                 //draw square
                 const d = resolution * (1 - sG / resolution) * 0.5
                 cg.ctx.fillRect(
-                    cg.geoToPixX(cell.x + d + offset.dx),
-                    cg.geoToPixY(cell.y + resolution - d + offset.dy),
-                    sP, sP);
+                    cell.x + d + offset.dx,
+                    cell.y + d + offset.dy,
+                    sG, sG);
             } else if (shape === "circle") {
                 //draw circle
                 cg.ctx.beginPath();
                 cg.ctx.arc(
-                    cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx),
-                    cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy),
-                    sP * 0.5,
+                    cell.x + resolution * 0.5 + offset.dx,
+                    cell.y + resolution * 0.5 + offset.dy,
+                    sG * 0.5,
                     0, 2 * Math.PI, false);
                 cg.ctx.fill();
             } else {

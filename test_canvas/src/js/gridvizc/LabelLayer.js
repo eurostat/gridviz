@@ -78,8 +78,11 @@ export class LabelLayer {
         cg.ctx.textAlign = "center";
 
         //draw labels, one by one
+        cg.initCanvasTransform()
         for (const lb of this.labels) {
 
+            //check label within the view, to be drawn
+            if(!cg.toDraw(lb)) continue;
 
             //get label style
             const st = this.style(lb, cg.zf);
@@ -89,6 +92,8 @@ export class LabelLayer {
             //position
             const xP = cg.geoToPixX(lb.x)
             const yP = cg.geoToPixY(lb.y)
+            //console.log(lb.x, lb.y)
+            console.log(xP, yP)
 
             //label stroke, for the halo
             if (this.haloColor && this.haloWidth) {
