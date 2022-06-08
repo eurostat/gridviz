@@ -60,10 +60,13 @@ export class Style {
     }
 
     /**
-     * @param {object} opts 
+     * @param {object} opts
+     * @abstract
+     * @returns {this}
      */
     addLegend(opts) {
         throw new Error('Method addLegend not implemented.');
+        return this;
     }
 
 

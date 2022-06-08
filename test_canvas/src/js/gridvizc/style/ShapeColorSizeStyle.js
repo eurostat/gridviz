@@ -136,9 +136,11 @@ export class ShapeColorSizeStyle extends Style {
 
     /**
      * @param {Object} opts
+     * @returns {this}
      */
     addLegend(opts) {
-        this.legend = new ColorLegend(this, opts);
+        this.legend = new ColorLegend(opts);
+        return this
     }
 
 }

@@ -10,13 +10,10 @@ import { select } from "d3-selection";
 export class Legend {
 
     /**
-     * @param {Style} style
      * @param {Object} opts 
      */
-    constructor(style, opts) {
+    constructor(opts) {
 		opts = opts || {};
-
-		this.style = style
 
 		/** @type {string} */
 		this.id = opts.id || "legend";
