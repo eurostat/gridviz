@@ -100,9 +100,9 @@ export class App {
 
 
         /**
- * The legend elements.
- * @type {Array.<Legend>}
- * */
+        * The legend elements.
+        * @type {Array.<Legend>}
+        * */
         this.legends = []
     }
 
