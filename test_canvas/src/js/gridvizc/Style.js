@@ -42,7 +42,7 @@ export class Style {
          * @private @type {number} */
         this.strokeWidth = opts.strokeWidth || 1.5;
 
-        /** @private @type {Legend} */
+        /** @protected @type {Legend} */
         this.legend = undefined
     }
 
