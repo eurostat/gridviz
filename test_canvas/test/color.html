@@ -20,8 +20,8 @@
             color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
             zfStroke: 50
         })
-            // show legend
-            .addLegend({ id: "clegend" });
+            //legend
+            .addLegend({ id: "clegend", colorRamp: gviz.interpolateOrRd, fun: (t,r,s)=> s.max*Math.pow(1/0.3) });
 
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500, { cellInfoHTML: ttfun });

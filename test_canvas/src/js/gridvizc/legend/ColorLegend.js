@@ -14,7 +14,22 @@ export class ColorLegend extends Legend {
     constructor(opts) {
         super(opts)
 
-        //needed: Function (t) -> value
+        this.colorRamp = opts.colorRamp
+        this.fun = opts.fun
+    }
+
+    /**
+     * @param {*} opts 
+     */
+    update(opts) {
+        //needed: function (t) -> value  +  color ramp
+
+        //clear
+        this.div.selectAll("*").remove();
+
+
+        console.log(this.colorRamp)
+        console.log(this.fun)
 
         const svg = this.div.append("svg")//.attr("width",50).attr("height",100)
         svg.append("rect").attr("x", 0).attr("y", 0).attr("width", 10).attr("height", 100).style("fill", "red")

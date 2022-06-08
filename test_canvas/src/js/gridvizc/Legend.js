@@ -56,16 +56,22 @@ export class Legend {
 
     }
 
+	/** Show the legend */
     show() {
 		this.div.style("visibility", "visible");
     }
 
+	/** Hide the legend */
     hide () {
 		this.div.style("visibility", "hidden");
     }
 
-    /** */
-    update() {
-        console.log("Legend update not implemented yet")
-    }
+	/**
+	 * @param {Object} opts 
+	 * @abstract
+	 */
+	update(opts) {
+		console.error("Legend update not implemented yet.")
+	}
+
 }
