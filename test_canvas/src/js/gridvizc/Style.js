@@ -141,6 +141,9 @@ export class Style {
     /** @param {number} val @returns {this} */
     setStrokeWidth(val) { this.strokeWidth = val; return this; }
 
+    /** @returns {Legend} */
+    getLegend() { return this.legend; }
+
 }
 
 

@@ -53,7 +53,8 @@ export class App {
             for (const layer of this.layers) {
                 //check if layer zoom extent contains current zoom factor
                 if (layer.maxZoom < zf || layer.minZoom >= zf) {
-                    //TODO hide style legends
+                    //hide layer legend
+                    layer.hideLegend()
                     continue;
                 }
 
@@ -62,6 +63,9 @@ export class App {
 
                 //draw cells
                 this.draw(layer);
+
+                //show layer legend
+                layer.showLegend()
             }
 
             //draw label layer
