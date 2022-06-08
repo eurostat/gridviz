@@ -10,8 +10,6 @@ import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
 import { LabelLayer } from './LabelLayer';
 
-import { Legend } from './Legend';
-
 /**
  * A gridviz on a HTML canvas.
  * 
@@ -50,24 +48,20 @@ export class App {
         this.cg = new GeoCanvas();
         this.cg.redraw = () => {
 
-            //TODO hide all legends
-            //for(let legend of this.legends) legend.hide()
-
             //go through the layers
             const zf = this.getZoomFactor();
             for (const layer of this.layers) {
                 //check if layer zoom extent contains current zoom factor
-                if (layer.maxZoom < zf) continue;
-                if (layer.minZoom >= zf) continue;
+                if (layer.maxZoom < zf || layer.minZoom >= zf) {
+                    //TODO hide style legends
+                    continue;
+                }
 
                 //get data to show
                 layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
 
                 //draw cells
                 this.draw(layer);
-
-                //TODO update and show legends of the active styles
-                //for(let legend of this.legends) if(legend.style == layer.styles ) legend.update().show()
             }
 
             //draw label layer
@@ -108,12 +102,6 @@ export class App {
         });
         this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
 
-
-        /**
-        * The legend elements.
-        * @type {Array.<Legend>}
-        * */
-        this.legends = []
     }
 
 
@@ -281,15 +269,5 @@ export class App {
     getLabelLayer() { return this.labelLayer; }
     /** @param {LabelLayer} val @returns {this} */
     setLabelLayer(val) { this.labelLayer = val; return this; }
-
-
-
-
-
-    /**
-     */
-    addLegend(legend) {
-        this.legends.push(legend)
-    }
 
 }
