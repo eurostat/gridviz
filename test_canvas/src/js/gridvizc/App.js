@@ -50,11 +50,15 @@ export class App {
         this.cg = new GeoCanvas();
         this.cg.redraw = () => {
 
-            //go through the list of layers and find the one(s) to draw
-            for (const layer of this.getActiveLayers()) {
+            //go through the layers
+            const zf = this.getZoomFactor();
+            for (const layer of this.layers) {
+                //check if layer zoom extent contains current zoom factor
+                if (layer.maxZoom < zf) continue;
+                if (layer.minZoom >= zf) continue;
 
                 //get data to show
-                layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw();/*this.draw(layer);*/ });
+                layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
 
                 //draw cells
                 this.draw(layer);
