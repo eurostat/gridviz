@@ -42,6 +42,8 @@ export class Style {
          * @private @type {number} */
         this.strokeWidth = opts.strokeWidth || 1.5;
 
+        /** @private @type {Legend} */
+        this.legend = undefined
     }
 
 
@@ -55,6 +57,13 @@ export class Style {
      */
     draw(cells, resolution, cg) {
         throw new Error('Method draw not implemented.');
+    }
+
+    /**
+     * @param {object} opts 
+     */
+    addLegend(opts) {
+        throw new Error('Method addLegend not implemented.');
     }
 
 

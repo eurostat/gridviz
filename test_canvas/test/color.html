@@ -28,7 +28,7 @@
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 4000, 9999999999, { cellInfoHTML: ttfun });
 
         // show legend
-        app.addLegend(s.getColorLegend({id:"clegend"}));
+        s.addLegend({id:"clegend"});
 
     </script>
 </body>
