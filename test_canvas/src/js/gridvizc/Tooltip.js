@@ -50,7 +50,7 @@ export class Tooltip {
 		//initialise
 		this.tooltip.style("max-width", this.maxWidth);
 		this.tooltip.style("overflow", "hidden");
-		this.tooltip.style("font-size", this.fontSize);
+		//this.tooltip.style("font-size", this.fontSize);
 		this.tooltip.style("background", this.background);
 		this.tooltip.style("padding", this.padding);
 		this.tooltip.style("border", this.border);

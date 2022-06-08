@@ -9,8 +9,8 @@ import { Legend } from "../Legend";
  */
 export class ColorLegend extends Legend {
 
-    constructor(id, opts) {
-        super(id, opts)
+    constructor(opts) {
+        super(opts)
 
         const svg = this.div.append("svg")//.attr("width",50).attr("height",100)
         svg.append("rect").attr("x",0).attr("y",0).attr("width",10).attr("height",100).style("fill", "red")
