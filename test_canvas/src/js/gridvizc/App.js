@@ -214,15 +214,6 @@ export class App {
 
 
     /**
-     * Returns the layer which is on top of the visible layers. This is the layer the user can interact with.
-     * @returns {Layer}
-     */
-    getTopActiveLayers() {
-        const lays = this.getActiveLayers();
-        return lays[lays.length - 1]
-    }
-
-    /**
      * Return the cell HTML info at a given geo position.
      * This is usefull for user interactions, to show this info where the user clicks for example.
      * 
@@ -231,8 +222,9 @@ export class App {
      */
     getCellInfoHTML(posGeo) {
         //get top layer
+        const lays = this.getActiveLayers();
         /** @type {Layer} */
-        const layer = this.getTopActiveLayers();
+        const layer = lays[lays.length - 1]
         if (!layer) return undefined;
         //get cell at mouse position
         /** @type {Cell} */
