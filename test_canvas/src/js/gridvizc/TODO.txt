@@ -1,10 +1,14 @@
-TODO pie chart -> donut
+TODO on pan/zoom, hide tooltip
+TODO legend
+TODO improve efficiency - on zoom/pan, interrupt all existing redraws ? Redraw only on release? Use time and redraw only every X ms ?
+TODO zoom/pan limits, in geocanvas
+
+
 TODO debug requests intensity - last check, etc. ! to ensure sent only once. Use promise ?
+TODO pie chart -> donut
 TODO composition as multi - make generic
-TODO modularise further canvasgeo (make ctx private)
 TODO draw cell stroke - shape stroke style ?
 TODO tiled datasets: accessibility, NL, etc.
-TODO labels - improve selection
 TODO make nice test with combination - need for client side join?
 TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache and remove inpriority the old-unused tiles.
 
@@ -16,7 +20,6 @@ TODO mouse over: Show rectangle.
 TODO zoom/pan smartphone/touchscreen - use d3 events - TODO make new canvasgeo based on d3 zoom/pan/over
 
 TODO webGL investigation
-TODO on zoom/pan, interrupt all existing redraws
 TODO background - images ?
 
 TODO finalise demos
