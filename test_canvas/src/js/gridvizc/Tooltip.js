@@ -10,36 +10,36 @@ import { transition } from "d3-transition";
 export class Tooltip {
 
 	/** 
-	 * @param {object} config
+	 * @param {object} opts
 	 */
-	constructor(config) {
-		config = config || {};
+	constructor(opts) {
+		opts = opts || {};
 
 		/** @type {string} */
-		this.div = config.div || "tooltip_eurostat";
+		this.div = opts.div || "tooltip_eurostat";
 		/** @type {string} */
-		this.maxWidth = config.maxWidth || "200px";
+		this.maxWidth = opts.maxWidth || "200px";
 		/** @type {string} */
-		this.fontSize = config.fontSize || "14px";
+		this.fontSize = opts.fontSize || "14px";
 		/** @type {string} */
-		this.background = config.background || "white";
+		this.background = opts.background || "white";
 		/** @type {string} */
-		this.padding = config.padding || "5px";
+		this.padding = opts.padding || "5px";
 		/** @type {string} */
-		this.border = config.border || "0px";
+		this.border = opts.border || "0px";
 		/** @type {string} */
-		this["border-radius"] = config["border-radius"] || "5px";
+		this["border-radius"] = opts["border-radius"] || "5px";
 		/** @type {string} */
-		this["box-shadow"] = config["box-shadow"] || "5px 5px 5px grey";
+		this["box-shadow"] = opts["box-shadow"] || "5px 5px 5px grey";
 		/** @type {string} */
-		this["font-family"] = config["font-family"] || "Helvetica, Arial, sans-serif";
+		this["font-family"] = opts["font-family"] || "Helvetica, Arial, sans-serif";
 
 		/** @type {number} */
-		this.transitionDuration = config.transitionDuration || 100;
+		this.transitionDuration = opts.transitionDuration || 100;
 		/** @type {number} */
-		this.xOffset = config.xOffset || 30;
+		this.xOffset = opts.xOffset || 30;
 		/** @type {number} */
-		this.yOffset = config.yOffset || 20;
+		this.yOffset = opts.yOffset || 20;
 
 
 		/** @private @type {Selection} */
