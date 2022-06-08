@@ -56,7 +56,6 @@ export class Tooltip {
 		this.tooltip.style("border", this.border);
 		this.tooltip.style("border-radius", this["border-radius"]);
 		this.tooltip.style("box-shadow", this["box-shadow"]);
-		this.tooltip.style("position", "absolute");
 		this.tooltip.style("font-family", this["font-family"]);
 		this.tooltip.style("position", "absolute");
 		this.tooltip.style("pointer-events", "none");
