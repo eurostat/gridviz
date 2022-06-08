@@ -7,7 +7,6 @@
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
-    <div id="clegend">AAA<div>
     <script src="../build/gridvizc.js"></script>
     <script>
 
@@ -29,7 +28,7 @@
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 4000, 9999999999, { cellInfoHTML: ttfun });
 
         // show legend
-        app.addLegend(s.getLegend("clegend"));
+        app.addLegend(s.getColorLegend("clegend"));
 
     </script>
 </body>

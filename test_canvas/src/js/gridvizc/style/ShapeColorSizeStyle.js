@@ -3,6 +3,7 @@
 import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
+import { ColorLegend } from "../legend/ColorLegend"
 
 /** @typedef {"square"|"circle"|"none"} Shape */
 
@@ -130,5 +131,15 @@ export class ShapeColorSizeStyle extends Style {
     getShape() { return this.shape; }
     /** @param {function(Cell):Shape} val @returns {this} */
     setShape(val) { this.shape = val; return this; }
+
+
+
+    /**
+     * @param {string} id 
+     * @returns 
+     */
+    getColorLegend(id) {
+        return new ColorLegend(id);
+    }
 
 }

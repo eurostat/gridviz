@@ -1,6 +1,7 @@
 //@ts-check
 
 import { Style } from "./Style";
+import { select } from "d3-selection";
 
 /**
  * 
@@ -8,8 +9,13 @@ import { Style } from "./Style";
  */
 export class Legend {
 
-    constructor() {
+    constructor(id, opts) {
 
+        this.div = select("#" + id);
+		if (this.div.empty()) {
+			this.div = select("body").append("div").attr("id", id)
+            .style("position", "absolute").style("left", "100px").style("top", "100px")
+        }
     }
 
 }

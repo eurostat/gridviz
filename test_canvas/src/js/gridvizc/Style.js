@@ -1,6 +1,7 @@
 //@ts-check
 import { Cell } from "./Dataset";
 import { GeoCanvas } from './GeoCanvas';
+import { Legend } from "./Legend";
 
 /**
  * Statistics of a set of values
