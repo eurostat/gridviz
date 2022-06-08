@@ -50,6 +50,9 @@ export class App {
         this.cg = new GeoCanvas();
         this.cg.redraw = () => {
 
+            //TODO hide all legends
+            //for(let legend of this.legends) legend.hide()
+
             //go through the layers
             const zf = this.getZoomFactor();
             for (const layer of this.layers) {
@@ -62,6 +65,9 @@ export class App {
 
                 //draw cells
                 this.draw(layer);
+
+                //TODO update and show legends of the active styles
+                //for(let legend of this.legends) if(legend.style == layer.styles ) legend.update().show()
             }
 
             //draw label layer
