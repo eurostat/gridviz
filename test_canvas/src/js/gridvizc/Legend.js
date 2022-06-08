@@ -57,7 +57,7 @@ export class Legend {
     }
 
     show() {
-		this.div.style("visibility", "visibile");
+		this.div.style("visibility", "visible");
     }
 
     hide () {

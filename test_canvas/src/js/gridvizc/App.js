@@ -48,15 +48,15 @@ export class App {
         this.cg = new GeoCanvas();
         this.cg.redraw = () => {
 
+            //hide legends
+            for (const layer of this.layers) layer.hideLegend()
+
             //go through the layers
             const zf = this.getZoomFactor();
             for (const layer of this.layers) {
                 //check if layer zoom extent contains current zoom factor
-                if (layer.maxZoom < zf || layer.minZoom >= zf) {
-                    //hide layer legend
-                    layer.hideLegend()
+                if (layer.maxZoom < zf || layer.minZoom >= zf)
                     continue;
-                }
 
                 //get data to show
                 layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
