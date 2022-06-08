@@ -10,6 +10,8 @@ import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
 import { LabelLayer } from './LabelLayer';
 
+import { Legend } from './Legend';
+
 /**
  * A gridviz on a HTML canvas.
  * 
@@ -97,6 +99,11 @@ export class App {
         this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
 
 
+        /**
+ * The legend elements.
+ * @type {Array.<Legend>}
+ * */
+        this.legends = []
     }
 
 
@@ -272,5 +279,17 @@ export class App {
     getLabelLayer() { return this.labelLayer; }
     /** @param {LabelLayer} val @returns {this} */
     setLabelLayer(val) { this.labelLayer = val; return this; }
+
+
+
+
+
+
+
+    /**
+     */
+    addLegend(legend) {
+        this.legends.push(legend)
+    }
 
 }
