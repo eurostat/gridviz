@@ -113,7 +113,7 @@ export class ShapeColorSizeStyle extends Style {
         }
 
         //update legend, if any
-        if(this.legend) this.legend.update({});
+        if (this.legend) this.legend.update({ r: resolution, s: statColor });
     }
 
 

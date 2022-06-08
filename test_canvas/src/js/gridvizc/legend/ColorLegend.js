@@ -1,9 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics } from "../Style"
 import { Legend } from "../Legend";
-import { ShapeColorSizeStyle } from "../style/ShapeColorSizeStyle";
-
 
 /**
  * @author Julien Gaffuri
@@ -17,7 +14,7 @@ export class ColorLegend extends Legend {
         this.colorRamp = opts.colorRamp
         this.fun = opts.fun
 
-        this.nbText = 4
+        this.nbText = 5
     }
 
     /**
@@ -40,16 +37,21 @@ export class ColorLegend extends Legend {
             svg.append("rect").attr("x", 0).attr("y", i).attr("width", w).attr("height", 1).style("fill", this.colorRamp(1- i / (h - 1)))
         }
         //draw color bar frame
-        svg.append("rect").attr("x", 0).attr("y", 0).attr("width", w).attr("height", h).style("fill", "none").style("stroke", "lightgray")
+        //svg.append("rect").attr("x", 0).attr("y", 0).attr("width", w).attr("height", h).style("fill", "none").style("stroke", "lightgray")
 
         for(let i=0; i<this.nbText; i++) {
+            const t = i/(this.nbText-1)
+            const v = this.fun(t, opts.r, opts.s)
+
             svg.append("text")
             .attr("x", w+5)
-            .attr("y", 5+h*i/this.nbText)
-            .text("Aaaa")
+            .attr("y", 5+h*(1-t))
             .style("font-size", 10)
             //.style("font-weight", "bold")
             .style("font-family", "Arial")
+            .text(v)
+
+            svg.append("line").attr("x1", 0).attr("y1", h*(1-t)).attr("x2", w).attr("y2", h*(1-t)).style("stroke", "black")
         }
     }
 
