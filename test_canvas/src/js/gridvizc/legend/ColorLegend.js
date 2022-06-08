@@ -2,6 +2,7 @@
 
 import { Style, Stat, getStatistics } from "../Style"
 import { Legend } from "../Legend";
+import { ShapeColorSizeStyle } from "../style/ShapeColorSizeStyle";
 
 
 /**
@@ -9,8 +10,13 @@ import { Legend } from "../Legend";
  */
 export class ColorLegend extends Legend {
 
-    constructor(opts) {
-        super(opts)
+    /**
+     * 
+     * @param {ShapeColorSizeStyle} style 
+     * @param {Object} opts 
+     */
+    constructor(style, opts) {
+        super(style, opts)
 
         const svg = this.div.append("svg")//.attr("width",50).attr("height",100)
         svg.append("rect").attr("x",0).attr("y",0).attr("width",10).attr("height",100).style("fill", "red")

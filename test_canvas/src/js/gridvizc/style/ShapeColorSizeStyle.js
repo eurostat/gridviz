@@ -139,7 +139,7 @@ export class ShapeColorSizeStyle extends Style {
      * @returns 
      */
     getColorLegend(id) {
-        return new ColorLegend(id);
+        return new ColorLegend(this, id);
     }
 
 }

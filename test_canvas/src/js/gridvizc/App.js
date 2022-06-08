@@ -280,8 +280,6 @@ export class App {
 
 
 
-
-
     /**
      */
     addLegend(legend) {
