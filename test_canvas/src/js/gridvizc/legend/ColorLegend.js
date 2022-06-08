@@ -16,6 +16,8 @@ export class ColorLegend extends Legend {
 
         this.colorRamp = opts.colorRamp
         this.fun = opts.fun
+
+        this.nbText = 4
     }
 
     /**
@@ -32,10 +34,23 @@ export class ColorLegend extends Legend {
 
         const w = 15
         const h = 100
+
+        //draw color bar
         for (let i = 0; i < h; i++) {
-            svg.append("rect").attr("x", 0).attr("y", i).attr("width", w).attr("height", 1).style("fill", this.colorRamp(i / (h - 1)))
+            svg.append("rect").attr("x", 0).attr("y", i).attr("width", w).attr("height", 1).style("fill", this.colorRamp(1- i / (h - 1)))
         }
+        //draw color bar frame
         svg.append("rect").attr("x", 0).attr("y", 0).attr("width", w).attr("height", h).style("fill", "none").style("stroke", "lightgray")
+
+        for(let i=0; i<this.nbText; i++) {
+            svg.append("text")
+            .attr("x", w+5)
+            .attr("y", 5+h*i/this.nbText)
+            .text("Aaaa")
+            .style("font-size", 10)
+            //.style("font-weight", "bold")
+            .style("font-family", "Arial")
+        }
     }
 
 }
