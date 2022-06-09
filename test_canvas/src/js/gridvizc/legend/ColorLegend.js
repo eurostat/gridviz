@@ -13,17 +13,20 @@ export class ColorLegend extends Legend {
     /** @param {Object} opts */
     constructor(opts) {
         super(opts)
+		opts = opts || {};
 
         this.colorRamp = opts.colorRamp
         this.fun = opts.fun
 
-        this.title = opts.title;
+        //this.title = opts.title;
         this.tickSize = opts.tickSize || 6
         this.width = opts.width || 300
         this.height = opts.height || 15
         this.margin = opts.margin || 5
-        this.ticks = opts.ticks || Math.floor(this.width / 64)
+        this.ticks = opts.ticks || Math.floor(this.width / 40)
         this.tickFormat = opts.tickFormat || ".0f"
+
+        this.fontSize = opts.fontSize || 9
     }
 
     /**
@@ -35,7 +38,7 @@ export class ColorLegend extends Legend {
         //clear
         this.div.selectAll("*").remove();
 
-        const svg = this.div.append("svg")//.attr("width",50).attr("height",100)
+        const svg = this.div.append("svg").attr("width",this.width + 2*this.margin).attr("height", this.height + 2*this.margin + this.tickSize + this.fontSize - 5)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
         const g = svg.append("g").attr("transform", "translate(" + this.margin + " " + this.margin + ")")
 
@@ -43,13 +46,12 @@ export class ColorLegend extends Legend {
         const h = this.height
 
         //draw color bar
-        const step = 2
+        const step = 5
         for (let i = 0; i < w; i += step) {
             g.append("rect").attr("x", i).attr("y", 0).attr("width", step).attr("height", h).style("fill", this.colorRamp(i / (w - 1)))
         }
 
-
-        //format
+        //label text format
         const f = this.tickFormat? format(this.tickFormat) : (v)=>v;
 
         for (let i = 0; i < this.ticks; i++) {
@@ -63,7 +65,7 @@ export class ColorLegend extends Legend {
             g.append("text")
                 .attr("x", w * t)
                 .attr("y", h + this.tickSize + 2)
-                .style("font-size", 9)
+                .style("font-size", this.fontSize)
                 //.style("font-weight", "bold")
                 .style("font-family", "Arial")
                 .style("text-anchor", i==0? "start" : i==(this.ticks-1)? "end" : "middle")

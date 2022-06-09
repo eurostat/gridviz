@@ -36,23 +36,27 @@ export class Legend {
 
 		//the div element
 		this.div = select("#" + this.id);
-		if (this.div.empty()) {
+		if (this.div.empty())
 			this.div = select("body").append("div").attr("id", this.id)
-				.style("position", "absolute")
-				.style("left", this.x + "px")
-				.style("top", this.y + "100px")
-		}
 
-		//initialise
-		//this.div.style("max-width", 100);
-		this.div.style("max-width", "100px");
-		//this.div.style("font-size", this.fontSize);
-		this.div.style("background", this.background);
-		this.div.style("padding", this.padding);
-		this.div.style("border", this.border);
-		this.div.style("border-radius", this["border-radius"]);
-		this.div.style("font-family", this["font-family"]);
-		//this.div.style("opacity", "0.5");
+		//set style
+		this.div
+			.style("position", "absolute")
+			.style("left", this.x + "px")
+			.style("top", this.y + "px")
+			.style("width", "auto")
+			.style("height", "auto")
+			//.style("min-width", "10px")
+			//.style("min-height", "10px")
+			//.style("overflow", "hidden")
+			//.style("max-width", 100)
+			//this.div.style("max-width", "100px")
+			//this.div.style("font-size", this.fontSize)
+			.style("background", this.background)
+			.style("padding", this.padding)
+			.style("border", this.border)
+			.style("border-radius", this["border-radius"])
+			.style("font-family", this["font-family"])
 
 	}
 
