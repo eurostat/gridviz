@@ -79,6 +79,8 @@ export class ColorLegend extends Legend {
      * @param {object} opts 
      */
     update(opts) {
+        //could happen when data is still loading
+        if (!opts.s) return
 
         //update tick labels
 
