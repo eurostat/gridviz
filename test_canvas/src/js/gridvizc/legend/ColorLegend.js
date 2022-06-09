@@ -16,6 +16,8 @@ export class ColorLegend extends Legend {
         opts = opts || {};
 
         this.colorRamp = opts.colorRamp
+
+        //function (t) -> v
         this.fun = opts.fun
 
         //this.title = opts.title;
@@ -29,13 +31,7 @@ export class ColorLegend extends Legend {
 
         this.fontSize = opts.fontSize || 9
         this.invert = opts.invert
-    }
 
-    /**
-     * @param {object} opts 
-     */
-    update(opts) {
-        //needed: function (t) -> value  +  color ramp
 
         //clear
         this.div.selectAll("*").remove();
@@ -74,8 +70,27 @@ export class ColorLegend extends Legend {
                 .style("alignment-baseline", "top")
                 .style("dominant-baseline", "hanging")
                 .style("pointer-events", "none")
-                .text(f(v) + (this.tickUnit? this.tickUnit : ""))
+                .text("aaa")
         }
+
+
+    }
+
+    /**
+     * @param {object} opts 
+     */
+    update(opts) {
+
+        //label text format
+        const f = this.tickFormat ? format(this.tickFormat) : (v) => v;
+        for (let i = 0; i < this.ticks; i++) {
+            let t = i / (this.ticks - 1)
+            const v = this.fun(t, opts.r, opts.s)
+
+            //tick label
+            //    .text(f(v) + (this.tickUnit? this.tickUnit : ""))
+        }
+
     }
 
 }
