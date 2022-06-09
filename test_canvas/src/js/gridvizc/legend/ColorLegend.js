@@ -37,9 +37,20 @@ export class ColorLegend extends Legend {
         //clear
         this.div.selectAll("*").remove();
 
-        const svg = this.div.append("svg").attr("width", this.width + 2 * this.margin).attr("height", this.height + 2 * this.margin + this.tickSize + this.fontSize - 5)
+        const titleHeight = 12
+        const svg = this.div.append("svg").attr("width", this.width + 2 * this.margin).attr("height", this.height + 3 * this.margin + titleHeight + this.tickSize + this.fontSize - 5)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
-        const g = svg.append("g").attr("transform", "translate(" + this.margin + " " + this.margin + ")")
+
+        //title
+        svg.append("text").attr("x", this.margin).attr("y", this.margin)
+            .style("font-size", "12")
+            .style("font-weight", "bold")
+            .style("alignment-baseline", "top")
+            .style("dominant-baseline", "hanging")
+            .style("pointer-events", "none")
+            .text(this.title)
+
+        const g = svg.append("g").attr("transform", "translate(" + this.margin + " " + (2 * this.margin + titleHeight) + ")")
 
         //draw color bar
         const w = this.width, h = this.height
