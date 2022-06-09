@@ -7,6 +7,8 @@ import { Legend } from "../Legend";
  */
 export class ColorLegend extends Legend {
 
+    //inspiration: https://observablehq.com/@d3/color-legend
+
     /** @param {Object} opts */
     constructor(opts) {
         super(opts)
@@ -14,7 +16,16 @@ export class ColorLegend extends Legend {
         this.colorRamp = opts.colorRamp
         this.fun = opts.fun
 
-        this.nbText = 5
+        this.title = opts.title;
+        this.tickSize = this.tickSize || 6
+        this.width = this.width || 320
+        this.height = this.height || 44 + this.tickSize
+        this.marginTop = this.marginTop || 18
+        this.marginRight = this.marginRight || 0
+        this.marginBottom = this.marginBottom || 16 + this.tickSize
+        this.marginLeft = this.marginLeft || 0
+        this.ticks = this.ticks || this.width / 64
+        this.tickFormat = this.tickFormat
     }
 
     /**
@@ -34,24 +45,24 @@ export class ColorLegend extends Legend {
 
         //draw color bar
         for (let i = 0; i < h; i++) {
-            svg.append("rect").attr("x", 0).attr("y", i).attr("width", w).attr("height", 1).style("fill", this.colorRamp(1- i / (h - 1)))
+            svg.append("rect").attr("x", 0).attr("y", i).attr("width", w).attr("height", 1).style("fill", this.colorRamp(1 - i / (h - 1)))
         }
         //draw color bar frame
         //svg.append("rect").attr("x", 0).attr("y", 0).attr("width", w).attr("height", h).style("fill", "none").style("stroke", "lightgray")
 
-        for(let i=0; i<this.nbText; i++) {
-            const t = i/(this.nbText-1)
+        for (let i = 0; i < this.nbText; i++) {
+            const t = i / (this.nbText - 1)
             const v = this.fun(t, opts.r, opts.s)
 
             svg.append("text")
-            .attr("x", w+5)
-            .attr("y", 5+h*(1-t))
-            .style("font-size", 10)
-            //.style("font-weight", "bold")
-            .style("font-family", "Arial")
-            .text(v)
+                .attr("x", w + 5)
+                .attr("y", 5 + h * (1 - t))
+                .style("font-size", 10)
+                //.style("font-weight", "bold")
+                .style("font-family", "Arial")
+                .text(v)
 
-            svg.append("line").attr("x1", 0).attr("y1", h*(1-t)).attr("x2", w).attr("y2", h*(1-t)).style("stroke", "black")
+            svg.append("line").attr("x1", 0).attr("y1", h * (1 - t)).attr("x2", w).attr("y2", h * (1 - t)).style("stroke", "black")
         }
     }
 
