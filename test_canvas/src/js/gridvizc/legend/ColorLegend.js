@@ -17,15 +17,12 @@ export class ColorLegend extends Legend {
         this.fun = opts.fun
 
         this.title = opts.title;
-        this.tickSize = this.tickSize || 6
-        this.width = this.width || 320
-        this.height = this.height || 44 + this.tickSize
-        this.marginTop = this.marginTop || 18
-        this.marginRight = this.marginRight || 0
-        this.marginBottom = this.marginBottom || 16 + this.tickSize
-        this.marginLeft = this.marginLeft || 0
-        this.ticks = this.ticks || this.width / 64
-        this.tickFormat = this.tickFormat
+        this.tickSize = opts.tickSize || 6
+        this.width = opts.width || 300
+        this.height = opts.height || 15
+        this.margin = opts.margin || 5
+        this.ticks = opts.ticks || opts.width / 64
+        this.tickFormat = opts.tickFormat
     }
 
     /**
@@ -39,30 +36,39 @@ export class ColorLegend extends Legend {
 
         const svg = this.div.append("svg")//.attr("width",50).attr("height",100)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+        const g = svg.append("g").attr("transform", "translate(" + this.margin + " " + this.margin + ")")
 
         const w = this.width
         const h = this.height
 
         //draw color bar
-        for (let i = 0; i < h; i++) {
-            svg.append("rect").attr("x", 0).attr("y", i).attr("width", w).attr("height", 1).style("fill", this.colorRamp(1 - i / (h - 1)))
+        const step = 3
+        for (let i = 0; i < w; i += step) {
+            g.append("rect").attr("x", i).attr("y", 0).attr("width", step).attr("height", h).style("fill", this.colorRamp(i / (w - 1)))
         }
-        //draw color bar frame
-        //svg.append("rect").attr("x", 0).attr("y", 0).attr("width", w).attr("height", h).style("fill", "none").style("stroke", "lightgray")
 
+
+        //format
+        const f = this.tickFormat? d3.format(this.tickFormat) : (v)=>v;
+f
         for (let i = 0; i < this.ticks; i++) {
             const t = i / (this.ticks - 1)
             const v = this.fun(t, opts.r, opts.s)
 
-            svg.append("text")
-                .attr("x", w + 5)
-                .attr("y", 5 + h * (1 - t))
-                .style("font-size", 10)
+            //tick line
+            g.append("line").attr("x1", w * t).attr("y1", 0).attr("x2", w * t).attr("y2", h + this.tickSize).style("stroke", "black")
+
+            //tick label
+            g.append("text")
+                .attr("x", w * t)
+                .attr("y", h + this.tickSize + 2)
+                .style("font-size", 9)
                 //.style("font-weight", "bold")
                 .style("font-family", "Arial")
-                .text(v)
-
-            svg.append("line").attr("x1", 0).attr("y1", h * (1 - t)).attr("x2", w).attr("y2", h * (1 - t)).style("stroke", "black")
+                .style("text-anchor", "middle")
+                .style("alignment-baseline", "top")
+                .style("dominant-baseline", "hanging")
+                .text(f(v))
         }
     }
 
