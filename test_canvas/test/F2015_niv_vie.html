@@ -21,7 +21,7 @@
             zfStroke: 15
         })
             //legend
-            .addLegend({ id: "clegend", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.min + (s.max - s.min) * Math.pow(1 - t, 1 / 1.5), invert: true, tickUnit: "€" });
+            .addLegend({ id: "clegend", top:"10px", left:"10px", title: "Niveau de vie (€/person)", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.min + (s.max - s.min) * Math.pow(1 - t, 1 / 1.5), invert: true, tickUnit: "€" });
 
         const ttfun = c => "<b>" + Math.floor(c.r) + "€</b>/month/person"
         const preprocess = c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }

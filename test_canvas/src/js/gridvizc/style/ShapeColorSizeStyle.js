@@ -139,6 +139,7 @@ export class ShapeColorSizeStyle extends Style {
      * @returns {this}
      */
     addLegend(opts) {
+        //TODO use "type" to build right type of legend
         this.legend = new ColorLegend(opts);
         return this
     }
