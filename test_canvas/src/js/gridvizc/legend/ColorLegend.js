@@ -27,6 +27,7 @@ export class ColorLegend extends Legend {
         this.tickFormat = opts.tickFormat || ".0f"
 
         this.fontSize = opts.fontSize || 9
+        this.invert = opts.invert
     }
 
     /**
@@ -46,14 +47,16 @@ export class ColorLegend extends Legend {
         const w = this.width, h = this.height
         const step = 5
         for (let i = 0; i < w; i += step) {
-            g.append("rect").attr("x", i).attr("y", 0).attr("width", step).attr("height", h).style("fill", this.colorRamp(i / (w - 1)))
+            let t = i / (w - 1)
+            if (this.invert) t = 1 - t
+            g.append("rect").attr("x", i).attr("y", 0).attr("width", step).attr("height", h).style("fill", this.colorRamp(t))
         }
 
         //label text format
         const f = this.tickFormat ? format(this.tickFormat) : (v) => v;
 
         for (let i = 0; i < this.ticks; i++) {
-            const t = i / (this.ticks - 1)
+            let t = i / (this.ticks - 1)
             const v = this.fun(t, opts.r, opts.s)
 
             //tick line
@@ -61,12 +64,12 @@ export class ColorLegend extends Legend {
 
             //tick label
             g.append("text")
-                .attr("x", w * t)
+                .attr("x", w * (this.invert ? 1 - t : t))
                 .attr("y", h + this.tickSize + 2)
                 .style("font-size", this.fontSize)
                 //.style("font-weight", "bold")
                 .style("font-family", "Arial")
-                .style("text-anchor", i == 0 ? "start" : i == (this.ticks - 1) ? "end" : "middle")
+                .style("text-anchor", i == 0 ? (this.invert ? "end" : "start") : i == (this.ticks - 1) ? (this.invert ? "start" : "end") : "middle")
                 .style("alignment-baseline", "top")
                 .style("dominant-baseline", "hanging")
                 .style("pointer-events", "none")
