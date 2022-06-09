@@ -12,16 +12,16 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setLabelLayer(gviz.getEuronymeLabelLayer())//.setBackgroundColor("black")
+            .setGeoCenter({ x: 3700000, y: 2760000 }).setZoomFactor(100).setLabelLayer(gviz.getEuronymeLabelLayer())//.setBackgroundColor("black")
 
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
             colorCol: "Ind",
-            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.35)),
-            zfStroke: 15
+            color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.35)),
+            zfStroke: 20
         })
             //legend
-            .addLegend({ id: "clegend", bottom: "10px", left: "10px", title: "Number of inhabitants", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.max * Math.pow(1 - t, 1 / 0.35), invert: true });
+            .addLegend({ id: "clegend", bottom: "10px", left: "10px", title: "Number of inhabitants", colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.35) });
 
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m/", [s], 0, 100, { cellInfoHTML: ttfun });
