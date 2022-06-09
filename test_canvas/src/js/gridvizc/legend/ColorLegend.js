@@ -1,5 +1,6 @@
 //@ts-check
 
+import { select } from "d3-selection";
 import { Legend } from "../Legend";
 import { format } from "d3-format";
 
@@ -49,28 +50,26 @@ export class ColorLegend extends Legend {
             g.append("rect").attr("x", i).attr("y", 0).attr("width", step).attr("height", h).style("fill", this.colorRamp(t))
         }
 
-        //label text format
-        const f = this.tickFormat ? format(this.tickFormat) : (v) => v;
 
         for (let i = 0; i < this.ticks; i++) {
             let t = i / (this.ticks - 1)
-            const v = this.fun(t, opts.r, opts.s)
 
             //tick line
             g.append("line").attr("x1", w * t).attr("y1", 0).attr("x2", w * t).attr("y2", h + this.tickSize).style("stroke", "black")
 
-            //tick label
+            //prepare tick label
             g.append("text")
+                .attr("id", this.id + "_ticklabel_" + i)
                 .attr("x", w * (this.invert ? 1 - t : t))
                 .attr("y", h + this.tickSize + 2)
                 .style("font-size", this.fontSize)
                 //.style("font-weight", "bold")
-                .style("font-family", "Arial")
+                //.style("font-family", "Arial")
                 .style("text-anchor", i == 0 ? (this.invert ? "end" : "start") : i == (this.ticks - 1) ? (this.invert ? "start" : "end") : "middle")
                 .style("alignment-baseline", "top")
                 .style("dominant-baseline", "hanging")
                 .style("pointer-events", "none")
-                .text("aaa")
+                .text("-")
         }
 
 
@@ -81,6 +80,8 @@ export class ColorLegend extends Legend {
      */
     update(opts) {
 
+        //update tick labels
+
         //label text format
         const f = this.tickFormat ? format(this.tickFormat) : (v) => v;
         for (let i = 0; i < this.ticks; i++) {
@@ -88,7 +89,7 @@ export class ColorLegend extends Legend {
             const v = this.fun(t, opts.r, opts.s)
 
             //tick label
-            //    .text(f(v) + (this.tickUnit? this.tickUnit : ""))
+            select("#" + this.id + "_ticklabel_" + i).text(f(v) + (this.tickUnit ? this.tickUnit : ""))
         }
 
     }
