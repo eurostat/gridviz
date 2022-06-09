@@ -21,7 +21,7 @@ export class ColorLegend extends Legend {
         //function (t) -> v
         this.fun = opts.fun
 
-        //this.title = opts.title;
+        this.title = opts.title;
         this.tickSize = opts.tickSize || 6
         this.width = opts.width || 300
         this.height = opts.height || 15
