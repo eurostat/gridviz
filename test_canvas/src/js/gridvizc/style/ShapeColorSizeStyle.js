@@ -1,11 +1,9 @@
 //@ts-check
 
-import { Style, Stat, getStatistics } from "../Style"
+import { Style, Stat, getStatistics, Shape } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 import { ColorLegend } from "../legend/ColorLegend"
-
-/** @typedef {"square"|"circle"|"none"} Shape */
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -66,6 +64,7 @@ export class ShapeColorSizeStyle extends Style {
             statColor = getStatistics(cells, c => c[this.colorCol], true)
         }
 
+        //draw in geo coordinates
         cg.setCanvasTransform()
         for (let cell of cells) {
 
@@ -108,8 +107,7 @@ export class ShapeColorSizeStyle extends Style {
             }
 
             //draw stroke
-            //TODO
-            //this.drawStroke(cell, resolution, cg, this.shape, this.size)
+            this.drawStroke(cell, resolution, cg, shape, sG, offset)
         }
 
         //update legend, if any

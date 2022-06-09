@@ -7,6 +7,8 @@ import { Legend } from "./Legend";
  * Statistics of a set of values
  * @typedef {{min:number,max:number}} Stat */
 
+/** @typedef {"square"|"circle"|"none"} Shape */
+
 /**
  * A style, to show a grid dataset.
  * 
@@ -36,11 +38,11 @@ export class Style {
 
         /** The stroke color.
          * @private @type {string} */
-        this.strokeColor = opts.strokeColor || "lightgray";
+        this.strokeColor = opts.strokeColor || "gray";
 
         /** The stroke line width, in pixels.
          * @private @type {number} */
-        this.strokeWidth = opts.strokeWidth || 1.5;
+        this.strokeWidth = opts.strokeWidth || 1;
 
         /** @protected @type {Legend} */
         this.legend = undefined
@@ -69,52 +71,46 @@ export class Style {
         return this;
     }
 
-
     /**
      * Draw the stroke of the cells, as rectangle, only for detailled zoom levels when the cells are quite big.
      * 
      * @param {Cell} cell The cell to draw the stroke of.
      * @param {number} resolution Their resolution (in geographic unit)
      * @param {GeoCanvas} cg The canvas where to draw them.
-     * @param {function(Cell):string} shape The shape of the stroke.
-     * @param {function(Cell,number,Stat,number):number} size A function returning the size of a cell (in geographical unit).
+     * @param {Shape} shape The shape.
+     * @param {number} size The cell size, in geo unit.
+     * @param {*} offset
      * @returns 
      */
-    drawStroke(cell, resolution, cg, shape, size = null) {
+    drawStroke(cell, resolution, cg, shape, size, offset) {
         if (!this.zfStroke || cg.zf > this.zfStroke) return;
 
         cg.ctx.strokeStyle = this.strokeColor;
-        cg.ctx.lineWidth = this.strokeWidth;
+        cg.ctx.lineWidth = this.strokeWidth * cg.getZf();
 
-        //size
-        /** @type {number} */
-        size = size || (() => resolution);
-        //size - in pixel and geo
-        const sG = size(cell, resolution, null, cg.zf)
-        const sP = sG / cg.zf;
-
-        const shape_ = shape(cell);
-        const offset = this.offset(cell, resolution, cg.zf)
-        if (shape_ === "square") {
+        if (shape === "square") {
             //draw square
-            const d = resolution * (1 - sG / resolution) * 0.5
+            const d = resolution * (1 - size / resolution) * 0.5
             cg.ctx.beginPath();
             cg.ctx.rect(
-                cg.geoToPixX(cell.x + d + offset.dx),
-                cg.geoToPixY(cell.y + resolution - d + offset.dy),
-                sP, sP);
+                cell.x + d + offset.dx,
+                cell.y + d + offset.dy,
+                size, size);
             cg.ctx.stroke();
 
-        } else if (shape_ === "circle") {
+        } else if (shape === "circle") {
             //draw circle
             cg.ctx.beginPath();
             cg.ctx.arc(
-                cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx),
-                cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy),
-                sP * 0.5,
+                cell.x + resolution * 0.5 + offset.dx,
+                cell.y + resolution * 0.5 + offset.dy,
+                size * 0.5,
                 0, 2 * Math.PI, false);
             cg.ctx.stroke();
+        } else {
+            throw new Error('Unexpected shape:' + shape);
         }
+
     }
 
 
