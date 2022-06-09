@@ -7,12 +7,16 @@
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
+    <div style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC;">
+        <span style="font-size: 17pt; font-weight: bold;">Population in Europe (2018)</span><br><span style="font-size: 10pt;">Source: European Commission (Eurostat - JRC - DG REGIO)</span>
+    </div>
     <script src="../build/gridvizc.js"></script>
     <script>
 
+
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setLabelLayer(gviz.getEuronymeLabelLayer())
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(700).setLabelLayer(gviz.getEuronymeLabelLayer())
 
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
@@ -21,7 +25,7 @@
             zfStroke: 50
         })
             //legend
-            .addLegend({ id: "clegend", colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) });
+            .addLegend({ id: "clegend", y:100, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) });
 
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500, { cellInfoHTML: ttfun });
