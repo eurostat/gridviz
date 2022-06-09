@@ -1,6 +1,7 @@
 //@ts-check
 
 import { Legend } from "../Legend";
+import { format } from "d3-format";
 
 /**
  * @author Julien Gaffuri
@@ -49,7 +50,7 @@ export class ColorLegend extends Legend {
 
 
         //format
-        const f = this.tickFormat? d3.format(this.tickFormat) : (v)=>v;
+        const f = this.tickFormat? format(this.tickFormat) : (v)=>v;
 f
         for (let i = 0; i < this.ticks; i++) {
             const t = i / (this.ticks - 1)
