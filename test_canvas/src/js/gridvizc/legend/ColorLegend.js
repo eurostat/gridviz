@@ -40,8 +40,8 @@ export class ColorLegend extends Legend {
         const svg = this.div.append("svg")//.attr("width",50).attr("height",100)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
 
-        const w = 15
-        const h = 100
+        const w = this.width
+        const h = this.height
 
         //draw color bar
         for (let i = 0; i < h; i++) {
@@ -50,8 +50,8 @@ export class ColorLegend extends Legend {
         //draw color bar frame
         //svg.append("rect").attr("x", 0).attr("y", 0).attr("width", w).attr("height", h).style("fill", "none").style("stroke", "lightgray")
 
-        for (let i = 0; i < this.nbText; i++) {
-            const t = i / (this.nbText - 1)
+        for (let i = 0; i < this.ticks; i++) {
+            const t = i / (this.ticks - 1)
             const v = this.fun(t, opts.r, opts.s)
 
             svg.append("text")
