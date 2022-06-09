@@ -22,8 +22,8 @@ export class ColorLegend extends Legend {
         this.width = opts.width || 300
         this.height = opts.height || 15
         this.margin = opts.margin || 5
-        this.ticks = opts.ticks || opts.width / 64
-        this.tickFormat = opts.tickFormat
+        this.ticks = opts.ticks || Math.floor(this.width / 64)
+        this.tickFormat = opts.tickFormat || ".0f"
     }
 
     /**
@@ -43,7 +43,7 @@ export class ColorLegend extends Legend {
         const h = this.height
 
         //draw color bar
-        const step = 3
+        const step = 2
         for (let i = 0; i < w; i += step) {
             g.append("rect").attr("x", i).attr("y", 0).attr("width", step).attr("height", h).style("fill", this.colorRamp(i / (w - 1)))
         }
@@ -51,7 +51,7 @@ export class ColorLegend extends Legend {
 
         //format
         const f = this.tickFormat? format(this.tickFormat) : (v)=>v;
-f
+
         for (let i = 0; i < this.ticks; i++) {
             const t = i / (this.ticks - 1)
             const v = this.fun(t, opts.r, opts.s)
@@ -66,9 +66,10 @@ f
                 .style("font-size", 9)
                 //.style("font-weight", "bold")
                 .style("font-family", "Arial")
-                .style("text-anchor", "middle")
+                .style("text-anchor", i==0? "start" : i==(this.ticks-1)? "end" : "middle")
                 .style("alignment-baseline", "top")
                 .style("dominant-baseline", "hanging")
+                .style("pointer-events", "none")
                 .text(f(v))
         }
     }
