@@ -18,9 +18,13 @@ export class Legend {
 		/** @type {string} */
 		this.id = opts.id || "legend";
 		/** @type {number} */
-		this.x = opts.x || 20;
+		this.top = opts.top;
 		/** @type {number} */
-		this.y = opts.y || 20;
+		this.bottom = opts.bottom;
+		/** @type {number} */
+		this.left = opts.left;
+		/** @type {number} */
+		this.right = opts.right;
 		/** @type {string} */
 		this.background = opts.background || "#FFFFFFCC";
 		/** @type {string} */
@@ -42,8 +46,6 @@ export class Legend {
 		//set style
 		this.div
 			.style("position", "absolute")
-			.style("left", this.x + "px")
-			.style("top", this.y + "px")
 			.style("width", "auto")
 			.style("height", "auto")
 			//.style("min-width", "10px")
@@ -58,6 +60,10 @@ export class Legend {
 			.style("border-radius", this["border-radius"])
 			.style("font-family", this["font-family"])
 
+		if (this.top) this.div.style("top", this.top)
+		if (this.bottom) this.div.style("bottom", this.bottom)
+		if (this.left) this.div.style("left", this.left)
+		if (this.right) this.div.style("right", this.right)
 	}
 
 	/** Show the legend */
