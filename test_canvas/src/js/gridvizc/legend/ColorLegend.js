@@ -25,6 +25,7 @@ export class ColorLegend extends Legend {
         this.margin = opts.margin || 5
         this.ticks = opts.ticks || Math.floor(this.width / 40)
         this.tickFormat = opts.tickFormat || ".0f"
+        this.tickUnit = opts.tickUnit
 
         this.fontSize = opts.fontSize || 9
         this.invert = opts.invert
@@ -73,7 +74,7 @@ export class ColorLegend extends Legend {
                 .style("alignment-baseline", "top")
                 .style("dominant-baseline", "hanging")
                 .style("pointer-events", "none")
-                .text(f(v))
+                .text(f(v) + (this.tickUnit? this.tickUnit : ""))
         }
     }
 
