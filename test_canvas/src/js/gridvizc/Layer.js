@@ -29,4 +29,16 @@ export class Layer {
 
     }
 
+    /** Show all legend elements of the layer, if any */
+    showLegend() {
+        for (const style of this.styles)
+            if (style.getLegend()) style.getLegend().show()
+    }
+
+    /** Hide all legend elements of the layer, if any */
+    hideLegend() {
+        for (const style of this.styles)
+            if (style.getLegend()) style.getLegend().hide()
+    }
+
 }

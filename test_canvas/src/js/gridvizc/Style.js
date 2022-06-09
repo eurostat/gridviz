@@ -1,6 +1,7 @@
 //@ts-check
 import { Cell } from "./Dataset";
-import { GeoViewer } from './GeoViewer';
+import { GeoCanvas } from './GeoCanvas';
+import { Legend } from "./Legend";
 
 /**
  * Statistics of a set of values
@@ -41,6 +42,8 @@ export class Style {
          * @private @type {number} */
         this.strokeWidth = opts.strokeWidth || 1.5;
 
+        /** @protected @type {Legend} */
+        this.legend = undefined
     }
 
 
@@ -49,11 +52,21 @@ export class Style {
      * 
      * @param {Array.<Cell>} cells The cells to draw.
      * @param {number} resolution Their resolution (in geographic unit)
-     * @param {GeoViewer} cg The canvas where to draw them.
+     * @param {GeoCanvas} cg The canvas where to draw them.
      * @abstract
      */
     draw(cells, resolution, cg) {
         throw new Error('Method draw not implemented.');
+    }
+
+    /**
+     * @param {object} opts
+     * @abstract
+     * @returns {this}
+     */
+    addLegend(opts) {
+        throw new Error('Method addLegend not implemented.');
+        return this;
     }
 
 
@@ -62,7 +75,7 @@ export class Style {
      * 
      * @param {Cell} cell The cell to draw the stroke of.
      * @param {number} resolution Their resolution (in geographic unit)
-     * @param {GeoViewer} cg The canvas where to draw them.
+     * @param {GeoCanvas} cg The canvas where to draw them.
      * @param {function(Cell):string} shape The shape of the stroke.
      * @param {function(Cell,number,Stat,number):number} size A function returning the size of a cell (in geographical unit).
      * @returns 
@@ -128,12 +141,16 @@ export class Style {
     /** @param {number} val @returns {this} */
     setStrokeWidth(val) { this.strokeWidth = val; return this; }
 
+    /** @returns {Legend} */
+    getLegend() { return this.legend; }
+
 }
 
 
 
 /**
  * Compute some statistics on a value of some cells.
+ * This is used to define how to draw specifically the cells within the view.
  * TODO: compute median ?
  * 
  * @param {Array.<Cell>} cells 

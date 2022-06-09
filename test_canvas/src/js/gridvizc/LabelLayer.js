@@ -1,7 +1,7 @@
 //@ts-check
 
 import { csv } from "d3-fetch";
-import { GeoViewer } from "./GeoViewer";
+import { GeoCanvas } from "./GeoCanvas";
 
 /** A label. The name is the text to show. (x,y) are the coordinates in the same CRS as the grid.
  * @typedef {{name: string, x:number, y:number }} Label */
@@ -63,7 +63,7 @@ export class LabelLayer {
     /**
      * Draw the label layer.
      * 
-     * @param {GeoViewer} cg The canvas where to draw the layer.
+     * @param {GeoCanvas} cg The canvas where to draw the layer.
      * @returns {void}
      */
     draw(cg) {
@@ -78,13 +78,16 @@ export class LabelLayer {
         cg.ctx.textAlign = "center";
 
         //draw labels, one by one
+        cg.initCanvasTransform()
         for (const lb of this.labels) {
-
 
             //get label style
             const st = this.style(lb, cg.zf);
             if (!st) continue;
             cg.ctx.font = st;
+
+            //check label within the view, to be drawn
+            if (!cg.toDraw(lb)) continue;
 
             //position
             const xP = cg.geoToPixX(lb.x)

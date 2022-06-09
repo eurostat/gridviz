@@ -1,6 +1,6 @@
 //@ts-check
 
-import { GeoViewer, Envelope } from './GeoViewer';
+import { GeoCanvas, Envelope } from './GeoCanvas';
 import { Layer } from './Layer';
 import { Style } from './Style';
 import { Dataset, Cell } from './Dataset';
@@ -44,19 +44,28 @@ export class App {
         this.backgroundColor = opts.backgroundColor || "white"
 
         /** Make geo canvas
-         * @type {GeoViewer} @private */
-        this.cg = new GeoViewer();
+         * @type {GeoCanvas} @private */
+        this.cg = new GeoCanvas();
         this.cg.redraw = () => {
-            //console.log(this.getZoomFactor())
 
-            //go through the list of layers and find the one(s) to draw
-            for (const layer of this.getActiveLayers()) {
+            //hide legends
+            for (const layer of this.layers) layer.hideLegend()
+
+            //go through the layers
+            const zf = this.getZoomFactor();
+            for (const layer of this.layers) {
+                //check if layer zoom extent contains current zoom factor
+                if (layer.maxZoom < zf || layer.minZoom >= zf)
+                    continue;
 
                 //get data to show
-                layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw();/*this.draw(layer);*/ });
+                layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
 
                 //draw cells
                 this.draw(layer);
+
+                //show layer legend
+                layer.showLegend()
             }
 
             //draw label layer
@@ -97,7 +106,6 @@ export class App {
         });
         this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
 
-
     }
 
 
@@ -115,6 +123,7 @@ export class App {
         layer.dataset.updateViewCache(this.cg.extGeo)
 
         //clear
+        this.cg.initCanvasTransform()
         this.cg.clear(this.backgroundColor);
 
         //draw cells, style by style
@@ -203,15 +212,6 @@ export class App {
 
 
     /**
-     * Returns the layer which is on top of the visible layers. This is the layer the user can interact with.
-     * @returns {Layer}
-     */
-    getTopActiveLayers() {
-        const lays = this.getActiveLayers();
-        return lays[lays.length - 1]
-    }
-
-    /**
      * Return the cell HTML info at a given geo position.
      * This is usefull for user interactions, to show this info where the user clicks for example.
      * 
@@ -220,8 +220,9 @@ export class App {
      */
     getCellInfoHTML(posGeo) {
         //get top layer
+        const lays = this.getActiveLayers();
         /** @type {Layer} */
-        const layer = this.getTopActiveLayers();
+        const layer = lays[lays.length - 1]
         if (!layer) return undefined;
         //get cell at mouse position
         /** @type {Cell} */
@@ -236,7 +237,7 @@ export class App {
      * @param {number} marginPx 
      * @returns {Envelope}
      */
-     updateExtentGeo(marginPx = 20) {
+    updateExtentGeo(marginPx = 20) {
         return this.cg.updateExtentGeo(marginPx);
     }
 

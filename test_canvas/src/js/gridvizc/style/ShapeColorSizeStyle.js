@@ -2,7 +2,8 @@
 
 import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
-import { GeoViewer } from "../GeoViewer";
+import { GeoCanvas } from "../GeoCanvas";
+import { ColorLegend } from "../legend/ColorLegend"
 
 /** @typedef {"square"|"circle"|"none"} Shape */
 
@@ -47,10 +48,9 @@ export class ShapeColorSizeStyle extends Style {
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} resolution 
-     * @param {GeoViewer} cg 
+     * @param {GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
-
 
         let statSize
         if (this.sizeCol) {
@@ -66,6 +66,7 @@ export class ShapeColorSizeStyle extends Style {
             statColor = getStatistics(cells, c => c[this.colorCol], true)
         }
 
+        cg.setCanvasTransform()
         for (let cell of cells) {
 
             //color
@@ -80,10 +81,8 @@ export class ShapeColorSizeStyle extends Style {
             //size
             /** @type {function(number,number,Stat,number):number} */
             let s_ = this.size || (() => resolution);
-            //size - in geo and pixel
+            //size - in geo unit
             const sG = s_(cell[this.sizeCol], resolution, statSize, cg.zf)
-            /** @type {number} */
-            const sP = sG / cg.zf
 
             //get offset
             const offset = this.offset(cell, resolution, cg.zf)
@@ -92,16 +91,16 @@ export class ShapeColorSizeStyle extends Style {
                 //draw square
                 const d = resolution * (1 - sG / resolution) * 0.5
                 cg.ctx.fillRect(
-                    cg.geoToPixX(cell.x + d + offset.dx),
-                    cg.geoToPixY(cell.y + resolution - d + offset.dy),
-                    sP, sP);
+                    cell.x + d + offset.dx,
+                    cell.y + d + offset.dy,
+                    sG, sG);
             } else if (shape === "circle") {
                 //draw circle
                 cg.ctx.beginPath();
                 cg.ctx.arc(
-                    cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx),
-                    cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy),
-                    sP * 0.5,
+                    cell.x + resolution * 0.5 + offset.dx,
+                    cell.y + resolution * 0.5 + offset.dy,
+                    sG * 0.5,
                     0, 2 * Math.PI, false);
                 cg.ctx.fill();
             } else {
@@ -113,6 +112,8 @@ export class ShapeColorSizeStyle extends Style {
             //this.drawStroke(cell, resolution, cg, this.shape, this.size)
         }
 
+        //update legend, if any
+        if (this.legend) this.legend.update({ r: resolution, s: statColor });
     }
 
 
@@ -132,5 +133,16 @@ export class ShapeColorSizeStyle extends Style {
     getShape() { return this.shape; }
     /** @param {function(Cell):Shape} val @returns {this} */
     setShape(val) { this.shape = val; return this; }
+
+
+
+    /**
+     * @param {Object} opts
+     * @returns {this}
+     */
+    addLegend(opts) {
+        this.legend = new ColorLegend(opts);
+        return this
+    }
 
 }

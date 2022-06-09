@@ -2,7 +2,7 @@
 
 import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
-import { GeoViewer } from "../GeoViewer";
+import { GeoCanvas } from "../GeoCanvas";
 
 /** @typedef {"flag"|"piechart"|"ring"} CompositionType */
 
@@ -54,7 +54,7 @@ export class CompositionStyle extends Style {
      * 
      * @param {Array.<Cell>} cells 
      * @param {number} resolution 
-     * @param {GeoViewer} cg 
+     * @param {GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
 

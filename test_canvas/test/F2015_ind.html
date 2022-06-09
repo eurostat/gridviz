@@ -17,9 +17,12 @@
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
             colorCol: "Ind",
-            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.35)),
+            color: (v, r, s) => gviz.interpolateSpectral(1-Math.pow(v / s.max, 0.35)),
             zfStroke: 15
         })
+            //legend
+            .addLegend({ id: "clegend", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.max * Math.pow(1-t, 1 / 0.35), invert:true });
+
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m/", [s], 0, 100, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m/", [s], 100, 200, { cellInfoHTML: ttfun });
