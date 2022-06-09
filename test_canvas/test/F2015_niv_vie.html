@@ -20,6 +20,9 @@
             color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
             zfStroke: 15
         })
+            //legend
+            .addLegend({ id: "clegend", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.min + (s.max - s.min) * Math.pow(1 - t, 1 / 1.5), invert: true });
+
         const ttfun = c => "<b>" + Math.floor(c.r) + "€</b>/month/person"
         const preprocess = c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m/", [s], 0, 100, { cellInfoHTML: ttfun, preprocess: preprocess });
