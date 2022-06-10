@@ -22,6 +22,9 @@
         const app = new gviz.App()
             .setGeoCenter({ x: 3700000, y: 2760000 }).setZoomFactor(100).setLabelLayer(gviz.getEuronymeLabelLayer())//.setBackgroundColor("black")
 
+        //test view from URL parameters, if any
+        app.cg.setViewFromURL()
+
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
             colorCol: "Ind",

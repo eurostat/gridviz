@@ -5,7 +5,7 @@ import { Legend } from "../Legend";
 import { format } from "d3-format";
 
 /**
- * A legend element for continuous color ramps.
+ * A legend element for continuous color style.
  * Inspiration: https://observablehq.com/@d3/color-legend
  * 
  * @author Julien Gaffuri
@@ -34,9 +34,7 @@ export class ColorLegend extends Legend {
         this.fontSize = opts.fontSize || 9
         this.invert = opts.invert
 
-        //clear
-        //this.div.selectAll("*").remove();
-
+        
         const titleHeight = 12
         const svg = this.div.append("svg").attr("width", this.width + 2 * this.margin).attr("height", this.height + 3 * this.margin + titleHeight + this.tickSize + this.fontSize - 5)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
