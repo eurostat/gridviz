@@ -176,21 +176,44 @@ export class GeoCanvas {
      * @param {number} xGeo Geo x coordinate, in m.
      * @returns {number} Screen x coordinate, in pix.
     */
-     geoToPixX(xGeo) { return (xGeo - this.center.x) / this.getZf() + this.w * 0.5; }
-     /**
-      * @param {number} yGeo Geo y coordinate, in m.
-      * @returns {number} Screen y coordinate, in pix.
-     */
-     geoToPixY(yGeo) { return -(yGeo - this.center.y) / this.getZf() + this.h * 0.5; }
-     /**
-      * @param {number} x Screen x coordinate, in pix.
-      * @returns {number} Geo x coordinate, in m.
-     */
-     pixToGeoX(x) { return (x - this.w * 0.5) * this.getZf() + this.center.x; }
-     /**
-      * @param {number} y Screen y coordinate, in pix.
-      * @returns {number} Geo y coordinate, in m.
-     */
-     pixToGeoY(y) { return -(y - this.h * 0.5) * this.getZf() + this.center.y; }
- 
+    geoToPixX(xGeo) { return (xGeo - this.center.x) / this.getZf() + this.w * 0.5; }
+    /**
+     * @param {number} yGeo Geo y coordinate, in m.
+     * @returns {number} Screen y coordinate, in pix.
+    */
+    geoToPixY(yGeo) { return -(yGeo - this.center.y) / this.getZf() + this.h * 0.5; }
+    /**
+     * @param {number} x Screen x coordinate, in pix.
+     * @returns {number} Geo x coordinate, in m.
+    */
+    pixToGeoX(x) { return (x - this.w * 0.5) * this.getZf() + this.center.x; }
+    /**
+     * @param {number} y Screen y coordinate, in pix.
+     * @returns {number} Geo y coordinate, in m.
+    */
+    pixToGeoY(y) { return -(y - this.h * 0.5) * this.getZf() + this.center.y; }
+
+
+    /** Get x,y,z elements from URL and assign them to the view center and zoom level. */
+    setViewFromURL() {
+        const x = getParameterByName("x"),
+            y = getParameterByName("y"),
+            z = getParameterByName("z")
+        const c = this.getCenter();
+        if (x != null && x != undefined && !isNaN(+x)) c.x = +x;
+        if (y != null && y != undefined && !isNaN(+y)) c.y = +y;
+        if (z != null && z != undefined && !isNaN(+z)) this.setZf(+z);
+    }
+
 }
+
+/**
+ * @param {string} name
+ * @returns {string}
+ */
+const getParameterByName = function (name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return !results ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
+};
