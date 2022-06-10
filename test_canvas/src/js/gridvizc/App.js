@@ -84,26 +84,23 @@ export class App {
         /** @private @type {Tooltip} */
         this.tooltip = new Tooltip()
 
-        /** @param {MouseEvent} e @returns {boolean} */
-        const showCellInfoTooltip = (e) => {
+        /** @param {MouseEvent} e */
+        const focusCell = (e) => {
             //compute mouse geo position
             const mousePositionGeo = { x: this.cg.pixToGeoX(e.clientX), y: this.cg.pixToGeoY(e.clientY) }
-            /** @type {string} */
-            const html = this.getCellInfoHTML(mousePositionGeo)
-            if (!html) return false;
-            this.tooltip.html(html);
-            return true;
+            /** @type {{cell:Cell,html:string}} */
+            const focus = this.getCellFocusInfo(mousePositionGeo)
+            if (focus) {
+                this.tooltip.setPosition(e);
+                this.tooltip.show();
+                this.tooltip.html(focus.html);
+                //TODO show cell position
+            } else {
+                this.tooltip.hide();
+            }
         }
-        this.cg.canvas.addEventListener("mouseover", e => {
-            const b = showCellInfoTooltip(e)
-            if (b) { this.tooltip.setPosition(e); this.tooltip.show(); }
-            else this.tooltip.hide();
-        });
-        this.cg.canvas.addEventListener("mousemove", e => {
-            const b = showCellInfoTooltip(e)
-            if (b) { this.tooltip.show(); this.tooltip.setPosition(e); }
-            else this.tooltip.hide();
-        });
+        this.cg.canvas.addEventListener("mouseover", e => { focusCell(e) });
+        this.cg.canvas.addEventListener("mousemove", e => { focusCell(e) });
         this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
 
     }
@@ -216,9 +213,9 @@ export class App {
      * This is usefull for user interactions, to show this info where the user clicks for example.
      * 
      * @param {{x:number,y:number}} posGeo 
-     * @returns {string}
+     * @returns {{cell:Cell,html:string}}
      */
-    getCellInfoHTML(posGeo) {
+    getCellFocusInfo(posGeo) {
         //get top layer
         const lays = this.getActiveLayers();
         /** @type {Layer} */
@@ -228,7 +225,7 @@ export class App {
         /** @type {Cell} */
         const cell = layer.dataset.getCellFromPosition(posGeo, layer.dataset.getViewCache());
         if (!cell) return undefined;
-        return layer.dataset.cellInfoHTML(cell);
+        return { cell: cell, html: layer.dataset.cellInfoHTML(cell) };
     }
 
 
