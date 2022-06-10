@@ -34,7 +34,7 @@ export class Legend {
 		/** @type {string} */
 		this["border-radius"] = opts["border-radius"] || "5px";
 		/** @type {string} */
-		//this["box-shadow"] = opts["box-shadow"] || "5px 5px 5px grey";
+		this["box-shadow"] = opts["box-shadow"] || "5px 5px 5px grey";
 		/** @type {string} */
 		this["font-family"] = opts["font-family"] || "Helvetica, Arial, sans-serif";
 
@@ -58,6 +58,7 @@ export class Legend {
 			.style("padding", this.padding)
 			.style("border", this.border)
 			.style("border-radius", this["border-radius"])
+			.style("box-shadow", this["box-shadow"])
 			.style("font-family", this["font-family"])
 
 		if (this.top) this.div.style("top", this.top)
