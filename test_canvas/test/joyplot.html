@@ -7,12 +7,24 @@
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
+    <div
+        style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
+        <span style="font-size: 17pt; font-weight: bold;">Population in Europe</span><br><span style="font-size: 10pt;">
+            Year: <select id="year">
+                <option value="2018" selected>2018</option>
+                <option value="2011">2011</option>
+                <option value="2006">2006</option>
+            </select><br>
+            Source: <a href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/grids" target="_blank"
+                rel="noopener noreferrer">Eurostat</a></span>
+    </div>
+
     <script src="../build/gridvizc.js"></script>
     <script>
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2300000 }).setZoomFactor(200).setLabelLayer(gviz.getEuronymeLabelLayer())
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(700).setLabelLayer(gviz.getEuronymeLabelLayer())
 
         //define datasets, styles and layers
         const s = new gviz.JoyPlotStyle({
@@ -26,6 +38,13 @@
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 600, 1500, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 1500, 3000, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 3000, 9999999999, { cellInfoHTML: ttfun });
+
+        //combo list - year selection
+        const select = document.querySelector('#year');
+        select.addEventListener('change', function () {
+            s.heightCol = select.value
+            app.cg.redraw();
+        });
 
     </script>
 </body>
