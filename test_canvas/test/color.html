@@ -42,33 +42,21 @@
             //legend
             .addLegend({ id: "clegend", bottom: "10px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) });
 
-        const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 500, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 500, 1000, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 1000, 2000, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 2000, 4000, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 4000, 9999999999, { cellInfoHTML: ttfun });
+        const ttfun = c => "Inhabitant(s)<br>2018: <b>" + c["2018"] + "</b><br>2011: <b>" + c["2011"] + "</b><br>2006: <b>" + c["2006"] + "</b>"
+        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
+        app.addTiledGridLayer(url+"1km/", [s], 0, 500, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url+"2km/", [s], 500, 1000, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url+"5km/", [s], 1000, 2000, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url+"10km/", [s], 2000, 4000, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url+"20km/", [s], 4000, 9999999999, { cellInfoHTML: ttfun });
 
 
         //combo list - year selection
         const select = document.querySelector('#year');
         select.addEventListener('change', function () {
-            console.log(select.value)
-            //set style
-            /*if (select.value === "radar") {
-                for (let lay of app.layers) lay.styles = [sRadar]
-            } else if (select.value === "pyramid") {
-                for (let lay of app.layers) lay.styles = [sPyramid]
-            } else if (select.value === "multi") {
-                for (let lay of app.layers) lay.styles = [s30, s14, s65]
-            } else {
-                s.setType(c => select.value)
-                for (let lay of app.layers) lay.styles = [s]
-            }*/
-            //redraw
+            s.colorCol = select.value
             app.cg.redraw();
         });
-
 
     </script>
 </body>
