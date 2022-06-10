@@ -1,5 +1,5 @@
 TODO change year with drop down list
-TODO where is Aubagne label ?
+TODO where are Aubagne - Morteau labels ?
 TODO improve efficiency - on zoom/pan, interrupt all existing redraws ? Redraw only on release? Use time and redraw only every X ms ?
 
 
