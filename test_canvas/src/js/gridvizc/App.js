@@ -96,13 +96,13 @@ export class App {
         }
         this.cg.canvas.addEventListener("mouseover", e => {
             const b = showCellInfoTooltip(e)
-            if (b) this.tooltip.show(); else this.tooltip.hide();
-            this.tooltip.setPosition(e);
+            if (b) { this.tooltip.setPosition(e); this.tooltip.show(); }
+            else this.tooltip.hide();
         });
         this.cg.canvas.addEventListener("mousemove", e => {
             const b = showCellInfoTooltip(e)
-            if (b) this.tooltip.show(); else this.tooltip.hide();
-            this.tooltip.setPosition(e);
+            if (b) { this.tooltip.show(); this.tooltip.setPosition(e); }
+            else this.tooltip.hide();
         });
         this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
 
