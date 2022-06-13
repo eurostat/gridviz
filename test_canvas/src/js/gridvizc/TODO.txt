@@ -8,7 +8,7 @@ TODO zoom/pan limits, in geocanvas
 TODO stripped circles
 
 TODO debug requests intensity - last check, etc. ! to ensure sent only once. Use promise ?
-TODO pie chart -> donut
+TODO pie chart -> donut <- Done?
 TODO composition as multi - make generic
 TODO tiled datasets: accessibility, NL, etc.
 TODO make nice test with combination - need for client side join?
@@ -20,8 +20,6 @@ TODO show accessibility data - merge datasets
 
 TODO webGL investigation
 TODO background - images ?
-
-TODO finalise demos
 
 TODO test canvas performance improvements: https://www.html5rocks.com/en/tutorials/canvas/performance/ and https://stackoverflow.com/questions/8205828/html5-canvas-performance-and-optimization-tips-tricks-and-coding-best-practices
 TODO test canvas performance improvements: test image drawing https://github.com/uwdata/fast-kde/blob/main/src/heatmap.js
