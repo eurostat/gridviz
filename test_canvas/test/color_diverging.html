@@ -12,7 +12,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setLabelLayer(gviz.getEuronymeLabelLayer())
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setZoomFactorExtent([75, 6000]).setLabelLayer(gviz.getEuronymeLabelLayer())
 
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
@@ -25,7 +25,7 @@
                 v = Math.pow(Math.abs(v), 0.3)
                 return gviz.interpolateSpectral(- sig * v * 0.5 + 0.5);
             },
-            zfStroke: 50
+            zfStroke: 80
         });
         const preprocess = c => {
             if (!c["2011"] && c["2018"]) c.r = Infinity
