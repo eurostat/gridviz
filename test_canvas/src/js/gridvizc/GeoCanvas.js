@@ -75,7 +75,7 @@ export class GeoCanvas {
 
         /** Zoom extent, to limit zoom in and out
          *  @type {Array.<number>} */
-         this.zfExtent = [0, Infinity]
+        this.zfExtent = [0, Infinity]
     }
 
     /** @param {{x:number,y:number}} v Geographical coordinates of the center */
@@ -143,6 +143,12 @@ export class GeoCanvas {
      */
     zoom(f = 1, xGeo = this.center.x, yGeo = this.center.y) {
         //TODO force extend to remain
+
+        //ensure zoom extent preserved
+        const newZf = f * this.getZf()
+        if (newZf < this.zfExtent[0]) f = this.zfExtent[0] / this.getZf()
+        if (newZf > this.zfExtent[1]) f = this.zfExtent[1] / this.getZf()
+
         this.setZf(f * this.getZf());
         this.center.x += (xGeo - this.center.x) * (1 - f)
         this.center.y += (yGeo - this.center.y) * (1 - f)
