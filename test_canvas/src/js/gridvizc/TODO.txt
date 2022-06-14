@@ -21,4 +21,3 @@ TODO contour style. and hypsometric. See https://observablehq.com/@d3/density-co
 
 TODO webGL investigation
 TODO background - images ?
-
