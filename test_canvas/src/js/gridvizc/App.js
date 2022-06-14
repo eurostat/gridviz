@@ -256,6 +256,11 @@ export class App {
     /** @param {number} val @returns {this} */
     setZoomFactor(val) { this.cg.zf = val; return this; }
 
+    /** @returns {Array.<number>} */
+    getZoomFactorExtent() { return this.cg.zfExtent; }
+    /** @param {Array.<number>} val @returns {this} */
+    setZoomFactorExtent(val) { this.cg.zfExtent = val; return this; }
+
     /** @returns {string} */
     getBackgroundColor() { return this.backgroundColor; }
     /** @param {string} val @returns {this} */

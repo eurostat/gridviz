@@ -20,10 +20,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 3700000, y: 2760000 }).setZoomFactor(100).setLabelLayer(gviz.getEuronymeLabelLayer())//.setBackgroundColor("black")
-
-        //limit zoom
-        app.cg.setZfExtent([15, 3000])
+            .setGeoCenter({ x: 3700000, y: 2760000 }).setZoomFactor(100).setZoomFactorExtent([15, 3000]).setLabelLayer(gviz.getEuronymeLabelLayer())//.setBackgroundColor("black")
 
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
@@ -32,7 +29,7 @@
         const s = new gviz.ShapeColorSizeStyle({
             colorCol: "Ind",
             color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.35)),
-            zfStroke: 20
+            zfStroke: 25
         })
             //legend
             .addLegend({ id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.35) });
