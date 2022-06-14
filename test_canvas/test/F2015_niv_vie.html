@@ -20,7 +20,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setLabelLayer(gviz.getEuronymeLabelLayer())
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setZoomFactorExtent([15, 3000]).setLabelLayer(gviz.getEuronymeLabelLayer())
 
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
@@ -29,7 +29,7 @@
         const s = new gviz.ShapeColorSizeStyle({
             colorCol: "r",
             color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
-            zfStroke: 15
+            zfStroke: 25
         })
             //legend
             .addLegend({ id: "clegend", bottom:"20px", left:"20px", title: "Revenu (€/'personne')", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.min + (s.max - s.min) * Math.pow(1 - t, 1 / 1.5), invert: true, tickUnit: " €" });
