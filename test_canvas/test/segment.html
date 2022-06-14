@@ -43,11 +43,12 @@
             if (c.r === Infinity) return "No population in 2011, <b>" + c["2018"] + "</b> in 2018"
             return "<b>" + (+c["2018"] > +c["2011"] ? "+" : "") + Math.floor(c.r * 1000) / 10 + "%</b> inhabitant(s)"
         }
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 100, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 100, 200, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 200, 500, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 500, 1000, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 1000, 9999999999, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
+        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
+        app.addTiledGridLayer(url + "1km/", [s], 0, 100, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
+        app.addTiledGridLayer(url + "2km/", [s], 100, 200, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
+        app.addTiledGridLayer(url + "5km/", [s], 200, 500, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
+        app.addTiledGridLayer(url + "10km/", [s], 500, 1000, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
+        app.addTiledGridLayer(url + "20km/", [s], 1000, 9999999999, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
 
     </script>
 </body>

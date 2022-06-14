@@ -25,11 +25,12 @@
             zfStroke: 90
         })
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/1km/", [s], 0, 150, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 150, 300, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/", [s], 300, 750, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 750, 1500, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/20km/", [s], 1500, 9999999999), null, ttfun;
+        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
+        app.addTiledGridLayer(url + "1km/", [s], 0, 150, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url + "2km/", [s], 150, 300, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url + "5km/", [s], 300, 750, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url + "10km/", [s], 750, 1500, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url + "20km/", [s], 1500, 9999999999), null, ttfun;
 
     </script>
 </body>
