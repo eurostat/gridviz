@@ -39,7 +39,7 @@ export class GeoCanvas {
         // set zoom factor: pixel size, in m/pix
         this.setZf(zf);
 
-        //extent
+        //current extent
         /** @type {Envelope} */
         this.extGeo = undefined;
         this.updateExtentGeo()
@@ -72,6 +72,10 @@ export class GeoCanvas {
         });
         z(select(this.canvas))
         //select(this.canvas).call(z);
+
+        /** Zoom extent, to limit zoom in and out
+         *  @type {Array.<number>} */
+         this.zfExtent = [0, Infinity]
     }
 
     /** @param {{x:number,y:number}} v Geographical coordinates of the center */
@@ -84,6 +88,10 @@ export class GeoCanvas {
     /** @returns {number} The zoom factor (pixel size, in ground m) */
     getZf() { return this.zf; }
 
+    /** @param {Array.<number>} v */
+    setZfExtent(v) { this.zfExtent = v; }
+    /** @returns {Array.<number>} */
+    getZfExtent() { return this.zfExtent; }
 
 
 
