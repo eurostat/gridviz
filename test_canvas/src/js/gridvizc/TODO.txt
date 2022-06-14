@@ -1,4 +1,5 @@
 TODO limit zoom level
+TODO debug pop by age- FR - for large zoom levels
 TODO legend categories for population by age
 TODO where are Aubagne - Morteau - Bertrix labels ?
 TODO improve efficiency - on zoom/pan, interrupt all existing redraws ? Redraw only on mouse release? Use time and redraw only every X ms ?
