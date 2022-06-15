@@ -1,4 +1,10 @@
-TODO new maps: donut, border/discontinuities, tcherneff faces, propcircle/color, arrow (left, right), 3D lines (moving on side depending on center)
+TODO new map type:
+3D lines (moving on side depending on center)
+border/discontinuities
+propcircle/color
+donut
+arrow (left, right)
+tchernioff faces - on FILOSOFI
 TODO limit pan
 TODO debug pop by age- FR - for large zoom levels
 TODO legend categories for population by age
