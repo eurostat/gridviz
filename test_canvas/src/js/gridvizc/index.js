@@ -100,7 +100,12 @@ export const getEurostatLabelLayer = function () {
  * 
  * @returns {LabelLayer}
  */
-export const getEuronymeLabelLayer = function (cc = "EUR", res = 50) {
+export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
+    opts = opts || {}
+    opts.style = opts.style || ((lb, zf) => { if (lb.rmax < zf) return; return "bold 14px Arial"; })
+    opts.color = opts.color || (() => "#000000AA") //"#00000044",
+    opts.haloColor = opts.haloColor || (() => "#FFFFFFAA")
+    opts.haloWidth = opts.haloWidth || (() => 2)
 
     //ETRS89-LAEA projection
     const proj = geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]);
@@ -108,16 +113,13 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50) {
     return new LabelLayer(
         "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v1/" + res + "/" + cc + ".csv",
         {
-            style: (lb, zf) => {
-                if (lb.rmax < zf) return;
-                return "bold 14px Arial";
-            },
+            style: opts.style,
             //color
-            color: () => "#000000AA", //"#00000044",
+            color: opts.color,
             //halo color
-            haloColor: () => "#FFFFFFAA",
+            haloColor: opts.haloColor,
             //halo width
-            haloWidth: () => 2,
+            haloWidth: opts.haloWidth,
             //preprocess
             preprocess: lb => {
                 //project from geo coordinates to ETRS89-LAEA
