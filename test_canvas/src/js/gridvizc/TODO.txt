@@ -1,5 +1,4 @@
 TODO new map type:
-3D lines (moving on side depending on center)
 border/discontinuities
 propcircle/color
 donut

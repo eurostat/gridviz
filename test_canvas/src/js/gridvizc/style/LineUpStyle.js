@@ -30,7 +30,7 @@ export class LineUpStyle extends Style {
         this.widthCol = opts.widthCol;
         /** A function returning the width of the line representing a cell, in geo unit
          * @private @type {function(number,number,Stat,number):number} */
-        this.width = opts.width || ((v, r) => 0.2 * r);
+        this.width = opts.width || ((v, r) => 0.5 * r);
     }
 
 
@@ -67,7 +67,7 @@ export class LineUpStyle extends Style {
         const cgx = cg.getCenter().x, cgy = cg.getCenter().y
 
         //set view height
-        const H = 3 * statHeight.max
+        const H = 10 * statHeight.max
 
         for (let c of cells) {
 
