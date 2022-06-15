@@ -64,7 +64,7 @@ export class LineUpStyle extends Style {
         }
 
         //get view center geo position
-        const cgx = cg.getCenter()[0], cgy = cg.getCenter()[1]
+        const cgx = cg.getCenter().x, cgy = cg.getCenter().y
 
         //set view height
         const H = 3 * statHeight.max
@@ -103,11 +103,10 @@ export class LineUpStyle extends Style {
             const a = Math.atan2(dy, dx);
             const D = Math.sqrt(dx * dx + dy * dy)
             const d = D * hG / (H - hG)
-            console.log(cx, cy, dx, dy, D, hG, a, d)
 
             //draw segment
             cg.ctx.beginPath();
-            cg.ctx.moveTo(cx, cy);
+            cg.ctx.moveTo(cg.geoToPixX(cx), cg.geoToPixY(cy));
             cg.ctx.lineTo(cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)));
             cg.ctx.stroke();
         }
