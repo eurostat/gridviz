@@ -32,9 +32,9 @@
             zfStroke: 25
         })
             //legend
-            .addLegend({ id: "clegend", bottom:"20px", left:"20px", title: "Revenu (€/'personne')", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.min + (s.max - s.min) * Math.pow(1 - t, 1 / 1.5), invert: true, tickUnit: " €" });
+            .addLegend({ id: "clegend", bottom:"20px", left:"20px", title: "Revenu (€/mois/'personne')", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.min + (s.max - s.min) * Math.pow(1 - t, 1 / 1.5), invert: true, tickUnit: " €" });
 
-        const ttfun = c => "<b>" + Math.floor(c.r) + "€</b>/month/person"
+        const ttfun = c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'"
         const preprocess = c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m/", [s], 0, 100, { cellInfoHTML: ttfun, preprocess: preprocess });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m/", [s], 100, 200, { cellInfoHTML: ttfun, preprocess: preprocess });
