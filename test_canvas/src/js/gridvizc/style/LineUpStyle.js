@@ -103,6 +103,7 @@ export class LineUpStyle extends Style {
             const a = Math.atan2(dy, dx);
             const D = Math.sqrt(dx * dx + dy * dy)
             const d = D * hG / (H - hG)
+            console.log(cx, cy, dx, dy, D, hG, a, d)
 
             //draw segment
             cg.ctx.beginPath();

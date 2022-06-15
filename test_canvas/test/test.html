@@ -25,7 +25,7 @@
         //define datasets, styles and layers
         const s = new gviz.LineUpStyle({
             heightCol: "2018",
-            height: (v, r, s) => v*10000,
+            height: (v, r, s) => v*1000000,
         })
 
         const ttfun = c => "Inhabitant(s)<br>2018: <b>" + c["2018"] + "</b><br>2011: <b>" + c["2011"] + "</b><br>2006: <b>" + c["2006"] + "</b>"
