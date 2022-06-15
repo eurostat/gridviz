@@ -23,10 +23,9 @@
         app.cg.setViewFromURL()
 
         //define datasets, styles and layers
-        const s = new gviz.ShapeColorSizeStyle({
-            colorCol: "2018",
-            color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
-            zfStroke: 80
+        const s = new gviz.LineUpStyle({
+            heightCol: "2018",
+            height: (v, r, s) => v*10000,
         })
             //legend
             .addLegend({ id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) });
