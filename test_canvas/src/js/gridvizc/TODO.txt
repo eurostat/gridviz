@@ -1,4 +1,5 @@
-TODO limit zoom level
+TODO new maps: donut, border/discontinuities, tcherneff faces, propcircle/color, arrow (left, right), 3D lines (moving on side depending on center)
+TODO limit pan
 TODO debug pop by age- FR - for large zoom levels
 TODO legend categories for population by age
 TODO where are Aubagne - Morteau - Bertrix labels ?
