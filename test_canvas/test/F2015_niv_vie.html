@@ -10,7 +10,8 @@
 
     <div
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
-        <span style="font-size: 17pt; font-weight: bold;">Revenus</span><span style="font-size: 10pt;"><br>Revenu disponible par unité de consommation<br>
+        <span style="font-size: 17pt; font-weight: bold;">Revenus</span><span style="font-size: 10pt;"><br>Revenu
+            disponible par unité de consommation<br>
             Source: <a href="https://www.insee.fr/fr/statistiques/4176290?sommaire=4176305" target="_blank"
                 rel="noopener noreferrer">INSEE - Filosofi 2015 - grille 200m</a></span>
     </div>
@@ -32,18 +33,19 @@
             zfStroke: 25
         })
             //legend
-            .addLegend({ id: "clegend", bottom:"20px", left:"20px", title: "Revenu (€/mois/'personne')", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.min + (s.max - s.min) * Math.pow(1 - t, 1 / 1.5), invert: true, tickUnit: " €" });
+            .addLegend({ id: "clegend", bottom: "20px", left: "20px", title: "Revenu (€/mois/'personne')", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.min + (s.max - s.min) * Math.pow(1 - t, 1 / 1.5), invert: true, tickUnit: " €" });
 
         const ttfun = c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'"
         const preprocess = c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/200m/", [s], 0, 100, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/400m/", [s], 100, 200, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/1000m/", [s], 200, 500, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/2000m/", [s], 500, 1000, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/5000m/", [s], 1000, 2500, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/10000m/", [s], 2500, 5000, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/20000m/", [s], 5000, 10000, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/50000m/", [s], 10000, 9999999999, { cellInfoHTML: ttfun, preprocess: preprocess });
+        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
+        app.addTiledGridLayer(url + "200m/", [s], 0, 100, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "400m/", [s], 100, 200, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "1000m/", [s], 200, 500, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "2000m/", [s], 500, 1000, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "5000m/", [s], 1000, 2500, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "10000m/", [s], 2500, 5000, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "20000m/", [s], 5000, 10000, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "50000m/", [s], 10000, 9999999999, { cellInfoHTML: ttfun, preprocess: preprocess });
 
     </script>
 </body>
