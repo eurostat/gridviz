@@ -100,16 +100,16 @@ export const getEurostatLabelLayer = function () {
  * 
  * @returns {LabelLayer}
  */
- export const getEuronymeLabelLayer = function () {
+export const getEuronymeLabelLayer = function (cc = "EUR", res = 50) {
 
     //ETRS89-LAEA projection
     const proj = geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]);
 
     return new LabelLayer(
-        "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v1/50/EUR.csv",
+        "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v1/" + res + "/" + cc + ".csv",
         {
             style: (lb, zf) => {
-                if(lb.rmax < zf) return;
+                if (lb.rmax < zf) return;
                 return "bold 14px Arial";
             },
             //color
