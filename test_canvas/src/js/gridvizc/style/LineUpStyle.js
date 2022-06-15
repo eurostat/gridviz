@@ -30,8 +30,7 @@ export class LineUpStyle extends Style {
         this.widthCol = opts.widthCol;
         /** A function returning the width of the line representing a cell, in geo unit
          * @private @type {function(number,number,Stat,number):number} */
-        this.width = opts.width || 3;
-
+        this.width = opts.width || ((v, r) => 0.2 * r);
     }
 
 
@@ -64,9 +63,11 @@ export class LineUpStyle extends Style {
             statWidth = getStatistics(cells, c => c[this.widthCol], true)
         }
 
+        //get view center geo position
+        const cgx = cg.getCenter()[0], cgy = cg.getCenter()[1]
 
-        //conversion factor degree -> radian
-        const f = Math.PI / 180;
+        //set view height
+        const H = 3 * statHeight.max
 
         for (let c of cells) {
 
@@ -82,32 +83,31 @@ export class LineUpStyle extends Style {
 
             //height
             /** @type {number} */
-            const lG = this.height ? this.height(c[this.heightCol], resolution, statHeight, cg.zf) : undefined
-            if (!lG || lG < 0) continue
-
-            //orientation (in radian)
-            //const or = this.orientation(c) * f
-            //if (or === undefined || isNaN(or)) continue;
+            const hG = this.height ? this.height(c[this.heightCol], resolution, statHeight, cg.zf) : undefined
+            if (!hG || hG < 0) continue
 
             //get offset
+            //TODO use that
             const offset = this.offset(c, resolution, cg.zf)
 
             //set color and width
             cg.ctx.strokeStyle = col
             cg.ctx.lineWidth = wG / cg.zf
 
-            //compute segment centre postition
-            const cx = cg.geoToPixX(c.x + resolution / 2 + offset.dx);
-            const cy = cg.geoToPixY(c.y + resolution / 2 + offset.dy);
+            //compute cell centre postition
+            const cx = c.x + resolution / 2;
+            const cy = c.y + resolution / 2;
 
-            //compute segment direction
-            const dx = 0.5 * /*Math.cos(or) **/ lG / cg.zf
-            const dy = 0.5 * /*Math.sin(or) **/ lG / cg.zf
+            //compute angle
+            const dx = cx - cgx, dy = cy - cgy
+            const a = Math.atan2(dy, dx);
+            const D = Math.sqrt(dx * dx + dy * dy)
+            const d = D * hG / (H - hG)
 
             //draw segment
             cg.ctx.beginPath();
-            cg.ctx.moveTo(cx - dx, cy - dy);
-            cg.ctx.lineTo(cx + dx, cy + dy);
+            cg.ctx.moveTo(cx, cy);
+            cg.ctx.lineTo(cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)));
             cg.ctx.stroke();
         }
 
