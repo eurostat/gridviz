@@ -19,6 +19,7 @@ export { TextStyle } from "./style/TextStyle"
 export { KernelSmoothingStyle } from "./style/KernelSmoothingStyle"
 export { RadarStyle } from "./style/RadarStyle"
 export { AgePyramidStyle } from "./style/AgePyramidStyle"
+export { LineUpStyle } from "./style/LinesUpStyle"
 
 //export label layer
 export { LabelLayer } from "./LabelLayer"
