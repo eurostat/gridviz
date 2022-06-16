@@ -24,13 +24,13 @@ export class LineUpStyle extends Style {
         this.colorCol = opts.colorCol;
         /** A function returning the color of the line representing a cell.
         * @private @type {function(number,number,Stat):string} */
-        this.color = opts.color || (() => "#EA6BACAA");
+        this.color = opts.color || (() => "#FF000088");
 
         /** @private @type {string} */
         this.widthCol = opts.widthCol;
         /** A function returning the width of the line representing a cell, in geo unit
          * @private @type {function(number,number,Stat,number):number} */
-        this.width = opts.width || ((v, r) => 0.2 * r);
+        this.width = opts.width || ((v, r) => 0.4 * r);
 
         this.viewHeightPix = 3000
 
@@ -38,8 +38,8 @@ export class LineUpStyle extends Style {
         this.shadowFactor = 0.5;
         this.shadowColor = "#00000022";
 
-        this.viewSX = -1
-        this.viewSY = -3
+        this.viewSX = -0.25
+        this.viewSY = -1.3
     }
 
 
@@ -138,10 +138,6 @@ export class LineUpStyle extends Style {
             //TODO use that
             const offset = this.offset(c, resolution, cg.zf)
 
-            //set color and width
-            cg.ctx.strokeStyle = col
-            cg.ctx.lineWidth = wG / cg.zf
-
             //compute cell centre postition
             const cx = c.x + resolution / 2;
             const cy = c.y + resolution / 2;
@@ -152,11 +148,39 @@ export class LineUpStyle extends Style {
             const D = Math.sqrt(dx * dx + dy * dy)
             const d = D * hG / (H - hG)
 
+            //draw bottom circle
+            //cg.ctx.strokeStyle = "black"
+            cg.ctx.fillStyle = "darkgray"
+            //cg.ctx.lineWidth = 3
+            cg.ctx.beginPath();
+            cg.ctx.arc(
+                cg.geoToPixX(cx), cg.geoToPixY(cy),
+                wG / cg.zf * 0.5,
+                0, 2 * Math.PI, false);
+            //cg.ctx.stroke();
+            cg.ctx.fill();
+
+
             //draw segment
+            cg.ctx.strokeStyle = col
+            cg.ctx.lineWidth = wG / cg.zf
             cg.ctx.beginPath();
             cg.ctx.moveTo(cg.geoToPixX(cx), cg.geoToPixY(cy));
             cg.ctx.lineTo(cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)));
             cg.ctx.stroke();
+
+            //draw top circle
+            cg.ctx.strokeStyle = "red"
+            //cg.ctx.fillStyle = "red"
+            cg.ctx.lineWidth = 1
+            cg.ctx.beginPath();
+            cg.ctx.arc(
+                cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)),
+                wG / cg.zf * 0.5 - 1,
+                0, 2 * Math.PI, false);
+            cg.ctx.stroke();
+            //cg.ctx.fill();
+
         }
 
     }
