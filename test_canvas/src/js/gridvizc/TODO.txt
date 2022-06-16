@@ -1,5 +1,5 @@
 TODO new map type:
-linesup: Fix. Test view center change. Test one direction only?
+linesup: Fix. Test view center change.
 border/discontinuities
 tchernioff faces - on FILOSOFI
 arrow (left, right)

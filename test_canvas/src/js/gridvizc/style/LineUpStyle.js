@@ -32,10 +32,14 @@ export class LineUpStyle extends Style {
          * @private @type {function(number,number,Stat,number):number} */
         this.width = opts.width || ((v, r) => 0.2 * r);
 
+        this.viewHeightPix = 3000
+
         this.shadowDirection = 210 * Math.PI / 180.0;
         this.shadowFactor = 0.5;
-        this.shadowColor = "#CCC";
+        this.shadowColor = "#00000022";
 
+        this.viewSX = -1
+        this.viewSY = -3
     }
 
 
@@ -69,10 +73,11 @@ export class LineUpStyle extends Style {
         }
 
         //get view center geo position
-        const cgx = cg.getCenter().x, cgy = cg.getCenter().y
+        const cvx = cg.getCenter().x + this.viewSX * cg.w * cg.getZf()
+        const cvy = cg.getCenter().y + this.viewSY * cg.h * cg.getZf()
 
         //set view height
-        const H = 1000 * cg.getZf()
+        const H = this.viewHeightPix * cg.getZf()
 
         cg.ctx.lineCap = "round";
 
@@ -142,7 +147,7 @@ export class LineUpStyle extends Style {
             const cy = c.y + resolution / 2;
 
             //compute angle
-            const dx = cx - cgx, dy = cy - cgy
+            const dx = cx - cvx, dy = cy - cvy
             const a = Math.atan2(dy, dx);
             const D = Math.sqrt(dx * dx + dy * dy)
             const d = D * hG / (H - hG)
