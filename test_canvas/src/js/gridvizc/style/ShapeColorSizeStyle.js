@@ -109,7 +109,7 @@ export class ShapeColorSizeStyle extends Style {
                 cg.ctx.beginPath();
                 cg.ctx.moveTo(xc, yc);
                 cg.ctx.arc(xc, yc, 0.5 * resolution, 0, 2 * Math.PI);
-                cg.ctx.arc(xc, yc, (1 - sG) * 0.5 * resolution, 0, 2 * Math.PI, true);
+                cg.ctx.arc(xc, yc, (1 - sG/resolution) * 0.5 * resolution, 0, 2 * Math.PI, true);
                 cg.ctx.closePath();
                 cg.ctx.fill();
             } else {

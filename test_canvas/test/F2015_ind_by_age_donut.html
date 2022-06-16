@@ -29,9 +29,9 @@
         app.cg.setViewFromURL()
 
         //donut style
-        const sDonut = new gviz.DonutStyle({
+        const sDonut = new gviz.ShapeColorSizeStyle({
             sizeCol: "Ind",
-            size: (v, r, s, zf) => Math.pow(v / s.max, 0.25),
+            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25),
             /*size: (v, r, s, zf) => {
                 let out = Math.pow(v / s.max, 0.3);
                 out = Math.ceil(out * 5);
@@ -39,7 +39,8 @@
                 return out;
             },*/
             colorCol: "age_ratio",
-            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5))
+            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5)),
+            shape: c => "donut"
         })
 
         //circle segment
