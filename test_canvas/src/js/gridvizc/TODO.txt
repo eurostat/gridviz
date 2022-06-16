@@ -1,9 +1,10 @@
 TODO new map type:
-border/discontinuities
-propcircle/color
 donut
-arrow (left, right)
+propcircle/color
+linesup: test shadow addition. Test one direction only. Test view center change.
+border/discontinuities
 tchernioff faces - on FILOSOFI
+arrow (left, right)
 TODO limit pan
 TODO debug pop by age- FR - for large zoom levels
 TODO legend categories for population by age

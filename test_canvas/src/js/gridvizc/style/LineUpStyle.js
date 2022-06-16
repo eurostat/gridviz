@@ -30,7 +30,7 @@ export class LineUpStyle extends Style {
         this.widthCol = opts.widthCol;
         /** A function returning the width of the line representing a cell, in geo unit
          * @private @type {function(number,number,Stat,number):number} */
-        this.width = opts.width || ((v, r) => 0.5 * r);
+        this.width = opts.width || ((v, r) => 0.1 * r);
     }
 
 
@@ -67,8 +67,9 @@ export class LineUpStyle extends Style {
         const cgx = cg.getCenter().x, cgy = cg.getCenter().y
 
         //set view height
-        const H = 10 * statHeight.max
+        const H = 1000 * cg.getZf()
 
+        cg.ctx.lineCap = "round";
         for (let c of cells) {
 
             //color
