@@ -1,19 +1,18 @@
-TODO new map type:
-linesup: Sort by distance to view center. Test with changeable width ?
-border/discontinuities
-tchernioff faces - on FILOSOFI
-arrow (left, right)
-TODO simplify euronym - show fewer. Add r/imp parameter on the local importance of the toponym
+TODO simplify euronym - show fewer. Check too long names from REGIO and filter. GISCO WS ? Add r/imp parameter on the local importance of the toponym
+TODO add missing legends: size, categories for composition, etc.
+TODO test style with border/discontinuities
+TODO linesup: Test with changeable width ?
+TODO test tchernioff faces - on FILOSOFI
+TODO style with arrows (left, right) (as segment enrichment ?)
 TODO radio buttons
 TODO limit pan
 TODO debug pop by age- FR - for large zoom levels
-TODO legend categories for population by age
-TODO where are Aubagne - Morteau - Bertrix labels ?
+
 TODO improve efficiency - on zoom/pan, interrupt all existing redraws ? Redraw only on mouse release? Use time and redraw only every X ms ?
 TODO test canvas performance improvements: https://www.html5rocks.com/en/tutorials/canvas/performance/ and https://stackoverflow.com/questions/8205828/html5-canvas-performance-and-optimization-tips-tricks-and-coding-best-practices
 TODO test canvas performance improvements: test image drawing https://github.com/uwdata/fast-kde/blob/main/src/heatmap.js
 TODO debug requests intensity - last check, etc. ! to ensure sent only once. Use promise ?
-TODO mouse over: Show rectangle.
+TODO mouse over: Show rectangle. Ask SE
 
 TODO on pan/zoom, hide tooltip
 TODO zoom/pan limits, in geocanvas
