@@ -29,9 +29,10 @@
         app.cg.setViewFromURL()
 
         //donut style
-        const sDonut = new gviz.ShapeColorSizeStyle({
+        const s = new gviz.ShapeColorSizeStyle({
             sizeCol: "Ind",
             size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25),
+            //size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
             /*size: (v, r, s, zf) => {
                 let out = Math.pow(v / s.max, 0.3);
                 out = Math.ceil(out * 5);
@@ -40,7 +41,9 @@
             },*/
             colorCol: "age_ratio",
             color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5)),
-            shape: c => "donut"
+            //color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
+            shape: () => "donut",
+            zfStroke: 9000000
         })
 
         //circle segment
@@ -53,16 +56,6 @@
             width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25),
         })
 
-        //circle style
-        const sCircle = new gviz.ShapeColorSizeStyle({
-            sizeCol: "Ind",
-            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
-            colorCol: "age_ratio",
-            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
-            shape: c => "circle",
-            zfStroke: 9000000
-        })
-
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>Below 25: " + c.yyy + "<br>Above 55: " + c.ooo;
         const pp = c => {
             c.yyy = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"];
@@ -71,36 +64,42 @@
             //if(isNaN(c.age_ratio)) console.log(c)
         }
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
-        app.addTiledGridLayer(url + "200m/", [sDonut], 0, 20, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "400m/", [sDonut], 20, 40, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "1000m/", [sDonut], 40, 100, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "2000m/", [sDonut], 100, 200, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "5000m/", [sDonut], 200, 500, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "10000m/", [sDonut], 500, 1000, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "20000m/", [sDonut], 1000, 2000, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "50000m/", [sDonut], 2000, 9999999999, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "200m/", [s], 0, 20, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "400m/", [s], 20, 40, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "1000m/", [s], 40, 100, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "2000m/", [s], 100, 200, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "5000m/", [s], 200, 500, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "10000m/", [s], 500, 1000, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "20000m/", [s], 1000, 2000, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "50000m/", [s], 2000, 9999999999, { cellInfoHTML: ttfun, preprocess: pp });
 
 
         //combo list
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
             //set style
-            if (select.value === "circle")
-                for (let lay of app.layers) lay.styles = [sCircle]
-            else if (select.value === "hseg") {
+            let st;
+            if (select.value === "donut") {
+                s.setShape(() => "donut")
+                st = s
+            } else if (select.value === "circle") {
+                s.setShape(() => "circle")
+                st = s
+            } else if (select.value === "hseg") {
                 sSegment.setOrientation(() => 0)
                 sSegment.setLength((v, r) => r)
-                for (let lay of app.layers) lay.styles = [sSegment]
+                st = sSegment
             } else if (select.value === "vseg") {
                 sSegment.setOrientation(() => 90)
                 sSegment.setLength((v, r) => r)
-                for (let lay of app.layers) lay.styles = [sSegment]
+                st = sSegment
             } else if (select.value === "oseg") {
                 sSegment.setOrientation(() => -45)
                 sSegment.setLength((v, r) => 1.4142 * r)
-                for (let lay of app.layers) lay.styles = [sSegment]
-            } else
-                for (let lay of app.layers) lay.styles = [sDonut]
+                st = sSegment
+            }
+            //set style
+            for (let lay of app.layers) lay.styles = [st]
             //redraw
             app.cg.redraw();
         });
