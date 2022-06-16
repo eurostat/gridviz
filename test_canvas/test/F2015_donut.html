@@ -17,33 +17,34 @@
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
 
-        //flag, piechart, ring style
+        
         const s = new gviz.DonutStyle({
             sizeCol: "Ind",
-            //size: (v, r, s, zf) => Math.pow(v / s.max, 0.25),
-            size: (v, r, s, zf) => {
+            size: (v, r, s, zf) => Math.pow(v / s.max, 0.25),
+            /*size: (v, r, s, zf) => {
                 let out = Math.pow(v / s.max, 0.3);
                 out = Math.ceil(out * 5);
                 out = out / 5;
                 return out;
-            },
+            },*/
             colorCol: "age_ratio",
             color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5))
         })
 
         /*const s = new gviz.ShapeColorSizeStyle({
-            //color: c => "#ff000066",
-            color: c => "#00000066",
-            sizeCol: "2018",
-            size: (v, r, s, zf) => 1.5*r * Math.pow(v / s.max, 0.3),
-            //size: (v, r, s, zf) => 2*r * Math.pow(v / s.max, 0.3),
+            sizeCol: "Ind",
+            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
+            colorCol: "age_ratio",
+            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
             shape: c => "circle",
-            zfStroke: 90
+            zfStroke: 9000000
         })*/
 
-        const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>Age ratio: " + c.age_ratio;
+        const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>Below 25: " + c.yyy +"<br>Above 55: " + c.ooo;
         const pp = c => {
-            c.age_ratio = +(+c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"]) / (+c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"] + +c["Ind_65_79"] + +c["Ind_80p"]);
+            c.yyy = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"];
+            c.ooo = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
+            c.age_ratio = c.yyy / (c.yyy+c.ooo);
             //if(isNaN(c.age_ratio)) console.log(c)
         }
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
