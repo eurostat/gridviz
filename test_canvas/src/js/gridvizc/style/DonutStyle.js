@@ -10,12 +10,6 @@ import { GeoCanvas } from "../GeoCanvas";
  */
 export class DonutStyle extends ShapeColorSizeStyle {
 
-    /** @param {object} opts */
-    constructor(opts) {
-        super(opts)
-    }
-
-
     /**
      * Draw cells as squares, with various colors and size.
      * 
