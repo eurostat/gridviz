@@ -7,18 +7,26 @@
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
+
+    <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
+        <select id="type">
+            <option value="donut" selected>Donut style</option>
+            <option value="circle">Circle style</option>
+        </select>
+    </div>
+
     <script src="../build/gridvizc.js"></script>
     <script>
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(150).setZoomFactorExtent([15, 3000]).setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { /*color: ()=>"white", haloColor: () => "black"*/ }))//.setBackgroundColor("#ddd")
+            .setGeoCenter({ x: 3700000, y: 2760000 }).setZoomFactor(50).setZoomFactorExtent([15, 3000]).setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { /*color: ()=>"white", haloColor: () => "black"*/ }))//.setBackgroundColor("#ddd")
 
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
 
-        
-        const s = new gviz.DonutStyle({
+        //donut style
+        const s1 = new gviz.DonutStyle({
             sizeCol: "Ind",
             size: (v, r, s, zf) => Math.pow(v / s.max, 0.25),
             /*size: (v, r, s, zf) => {
@@ -31,14 +39,15 @@
             color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5))
         })
 
-        /*const s = new gviz.ShapeColorSizeStyle({
+        //circle style
+        const s2 = new gviz.ShapeColorSizeStyle({
             sizeCol: "Ind",
             size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
             colorCol: "age_ratio",
             color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
             shape: c => "circle",
             zfStroke: 9000000
-        })*/
+        })
 
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>Below 25: " + c.yyy +"<br>Above 55: " + c.ooo;
         const pp = c => {
@@ -48,14 +57,14 @@
             //if(isNaN(c.age_ratio)) console.log(c)
         }
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
-        app.addTiledGridLayer(url + "200m/", [s], 0, 20, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "400m/", [s], 20, 40, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "1000m/", [s], 40, 100, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "2000m/", [s], 100, 200, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "5000m/", [s], 200, 500, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "10000m/", [s], 500, 1000, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "20000m/", [s], 1000, 2000, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "50000m/", [s], 2000, 9999999999, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "200m/", [s1], 0, 20, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "400m/", [s1], 20, 40, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "1000m/", [s1], 40, 100, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "2000m/", [s1], 100, 200, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "5000m/", [s1], 200, 500, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "10000m/", [s1], 500, 1000, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "20000m/", [s1], 1000, 2000, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "50000m/", [s1], 2000, 9999999999, { cellInfoHTML: ttfun, preprocess: pp });
 
     </script>
 
