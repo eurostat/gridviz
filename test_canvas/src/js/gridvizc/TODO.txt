@@ -1,10 +1,9 @@
 TODO new map type:
-simplify euronym - show fewer. Add r/imp parameter on the local importance of the toponym
-donut: merge with shapecolorsizestyle - use extend then
 linesup: test with transparency. test shadow addition. Test one direction only. Test view center change.
 border/discontinuities
 tchernioff faces - on FILOSOFI
 arrow (left, right)
+TODO simplify euronym - show fewer. Add r/imp parameter on the local importance of the toponym
 TODO radio buttons
 TODO limit pan
 TODO debug pop by age- FR - for large zoom levels
