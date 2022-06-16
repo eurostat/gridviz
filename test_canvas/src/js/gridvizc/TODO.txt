@@ -1,5 +1,5 @@
 TODO new map type:
-linesup: Sort by distance to view center.
+linesup: Sort by distance to view center. Test with changeable width ?
 border/discontinuities
 tchernioff faces - on FILOSOFI
 arrow (left, right)

@@ -54,9 +54,7 @@ export class LineUpStyle extends Style {
 
         let statHeight
         if (this.heightCol) {
-            //if length is used, sort cells by length so that the longests are drawn first
-            cells.sort((c1, c2) => c2[this.heightCol] - c1[this.heightCol]);
-            //and compute size variable statistics
+            //compute size variable statistics
             statHeight = getStatistics(cells, c => c[this.heightCol], true)
         }
 
@@ -78,6 +76,10 @@ export class LineUpStyle extends Style {
 
         //set view height
         const H = this.viewHeightPix * cg.getZf()
+
+        //sort cells by distance to view center
+        const distToViewCenter = (c) => { const dx = cvx - c.x, dy = cvy - c.y; return Math.sqrt(dx * dx + dy * dy) }
+        cells.sort((c1, c2) => distToViewCenter(c2) - distToViewCenter(c1));
 
         cg.ctx.lineCap = "round";
 
@@ -150,7 +152,7 @@ export class LineUpStyle extends Style {
 
             //draw bottom circle
             //cg.ctx.strokeStyle = "black"
-            cg.ctx.fillStyle = "darkgray"
+            cg.ctx.fillStyle = "gray"
             //cg.ctx.lineWidth = 3
             cg.ctx.beginPath();
             cg.ctx.arc(
@@ -159,7 +161,6 @@ export class LineUpStyle extends Style {
                 0, 2 * Math.PI, false);
             //cg.ctx.stroke();
             cg.ctx.fill();
-
 
             //draw segment
             cg.ctx.strokeStyle = col
@@ -170,16 +171,16 @@ export class LineUpStyle extends Style {
             cg.ctx.stroke();
 
             //draw top circle
-            cg.ctx.strokeStyle = "red"
-            //cg.ctx.fillStyle = "red"
+            //cg.ctx.strokeStyle = "red"
+            cg.ctx.fillStyle = "#F55"
             cg.ctx.lineWidth = 1
             cg.ctx.beginPath();
             cg.ctx.arc(
                 cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)),
                 wG / cg.zf * 0.5 - 1,
                 0, 2 * Math.PI, false);
-            cg.ctx.stroke();
-            //cg.ctx.fill();
+            //cg.ctx.stroke();
+            cg.ctx.fill();
 
         }
 
