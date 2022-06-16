@@ -20,20 +20,20 @@ export class ShapeColorSizeStyle extends Style {
 
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         *  @private @type {string} */
+         *  @protected @type {string} */
         this.colorCol = opts.colorCol;
 
         /** A function returning the color of the cell.
-        * @private @type {function(number,number,Stat):string} */
+        * @protected @type {function(number,number,Stat):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for size.
-         * @private @type {string} */
+         * @protected @type {string} */
         this.sizeCol = opts.sizeCol;
 
         /** A function returning the size of a cell in geographical unit.
-        * @private @type {function(number,number,Stat,number):number} */
+        * @protected @type {function(number,number,Stat,number):number} */
         this.size = opts.size;
 
 

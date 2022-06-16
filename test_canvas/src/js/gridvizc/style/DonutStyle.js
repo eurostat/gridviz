@@ -1,35 +1,18 @@
 //@ts-check
 
-import { Style, Stat, getStatistics, Shape } from "../Style"
+import { Stat, getStatistics } from "../Style"
+import {ShapeColorSizeStyle} from "./ShapeColorSizeStyle"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
 /**
  * @author Julien Gaffuri
  */
-export class DonutStyle extends Style {
+export class DonutStyle extends ShapeColorSizeStyle {
 
     /** @param {object} opts */
     constructor(opts) {
         super(opts)
-        opts = opts || {};
-
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for size.
-         * @private @type {string} */
-        this.sizeCol = opts.sizeCol;
-
-        /** A function returning the size parameter of the donut, within [0,1]. 1 correspond to the entire circle (donut without hole), 0 to the thinnest donut.
-        * @private @type {function(number,number,Stat,number):number} */
-        this.size = opts.size;
-
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         *  @private @type {string} */
-        this.colorCol = opts.colorCol;
-
-        /** A function returning the color of the cell.
-        * @private @type {function(number,number,Stat):string} */
-        this.color = opts.color || (() => "#EA6BAC");
-
     }
 
 
@@ -90,18 +73,5 @@ export class DonutStyle extends Style {
         //update legend, if any
         if (this.legend) this.legend.update({ r: resolution, s: statColor });
     }
-
-
-    //getters and setters
-
-    /** @returns {function(number,number,Stat,number):number} */
-    getSize() { return this.size; }
-    /** @param {function(number,number,Stat,number):number} val @returns {this} */
-    setSize(val) { this.size = val; return this; }
-
-    /** @returns {function(number,number,Stat):string} */
-    getColor() { return this.color; }
-    /** @param {function(number,number,Stat):string} val @returns {this} */
-    setColor(val) { this.color = val; return this; }
 
 }
