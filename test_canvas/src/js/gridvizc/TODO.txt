@@ -1,6 +1,6 @@
 TODO new map type:
+donut/circle: add style with horizontal segments, with pop-width and col-age
 donut: merge with shapecolorsizestyle - use extend then
-propcircle/color
 linesup: test with transparency. test shadow addition. Test one direction only. Test view center change.
 border/discontinuities
 tchernioff faces - on FILOSOFI

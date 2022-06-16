@@ -37,7 +37,6 @@ export class SegmentStyle extends Style {
         /** A function returning the width of the segment representing a cell, in geo unit
          * @private @type {function(number,number,Stat,number):number} */
         this.width = opts.width;
-
     }
 
 
