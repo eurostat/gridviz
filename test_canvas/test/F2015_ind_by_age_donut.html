@@ -49,11 +49,11 @@
             zfStroke: 9000000
         })
 
-        const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>Below 25: " + c.yyy +"<br>Above 55: " + c.ooo;
+        const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>Below 25: " + c.yyy + "<br>Above 55: " + c.ooo;
         const pp = c => {
             c.yyy = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"];
             c.ooo = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
-            c.age_ratio = c.yyy / (c.yyy+c.ooo);
+            c.age_ratio = c.yyy / (c.yyy + c.ooo);
             //if(isNaN(c.age_ratio)) console.log(c)
         }
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
@@ -65,6 +65,20 @@
         app.addTiledGridLayer(url + "10000m/", [s1], 500, 1000, { cellInfoHTML: ttfun, preprocess: pp });
         app.addTiledGridLayer(url + "20000m/", [s1], 1000, 2000, { cellInfoHTML: ttfun, preprocess: pp });
         app.addTiledGridLayer(url + "50000m/", [s1], 2000, 9999999999, { cellInfoHTML: ttfun, preprocess: pp });
+
+
+        //combo list
+        const select = document.querySelector('#type');
+        select.addEventListener('change', function () {
+            //set style
+            if (select.value === "circle") {
+                for (let lay of app.layers) lay.styles = [s2]
+            } else {
+                for (let lay of app.layers) lay.styles = [s1]
+            }
+            //redraw
+            app.cg.redraw();
+        });
 
     </script>
 
