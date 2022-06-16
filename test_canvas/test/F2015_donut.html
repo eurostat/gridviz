@@ -19,7 +19,7 @@
         const s = new gviz.DonutStyle({
             color: c => "#00000066",
             sizeCol: "Ind",
-            size: (v, r, s, zf) => Math.pow(v / s.max, 0.2)
+            size: (v, r, s, zf) => Math.pow(v / s.max, 0.25)
         })
 
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)";
