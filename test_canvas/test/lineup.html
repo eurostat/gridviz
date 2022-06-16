@@ -19,7 +19,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(70).setZoomFactorExtent([25, 6000]).setLabelLayer(gviz.getEuronymeLabelLayer())
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(900).setZoomFactorExtent([25, 6000]).setLabelLayer(gviz.getEuronymeLabelLayer())
 
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
@@ -27,7 +27,7 @@
         //define datasets, styles and layers
         const s = new gviz.LineUpStyle({
             heightCol: "2018",
-            height: (v, r, s) => 10 * r * Math.pow(v / s.max, 0.8),
+            height: (v, r, s) => 8 * r * Math.pow(v / s.max, 0.6),
         })
 
         const ttfun = c => "Inhabitant(s)<br>2018: <b>" + c["2018"] + "</b><br>2011: <b>" + c["2011"] + "</b><br>2006: <b>" + c["2006"] + "</b>"
