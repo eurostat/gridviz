@@ -5,6 +5,7 @@ linesup: test with transparency. test shadow addition. Test one direction only. 
 border/discontinuities
 tchernioff faces - on FILOSOFI
 arrow (left, right)
+TODO radio buttons
 TODO limit pan
 TODO debug pop by age- FR - for large zoom levels
 TODO legend categories for population by age

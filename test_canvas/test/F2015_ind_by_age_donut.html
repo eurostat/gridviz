@@ -26,7 +26,7 @@
         app.cg.setViewFromURL()
 
         //donut style
-        const s1 = new gviz.DonutStyle({
+        const sDonut = new gviz.DonutStyle({
             sizeCol: "Ind",
             size: (v, r, s, zf) => Math.pow(v / s.max, 0.25),
             /*size: (v, r, s, zf) => {
@@ -40,7 +40,7 @@
         })
 
         //circle style
-        const s2 = new gviz.ShapeColorSizeStyle({
+        const sCircle = new gviz.ShapeColorSizeStyle({
             sizeCol: "Ind",
             size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
             colorCol: "age_ratio",
@@ -57,14 +57,14 @@
             //if(isNaN(c.age_ratio)) console.log(c)
         }
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
-        app.addTiledGridLayer(url + "200m/", [s1], 0, 20, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "400m/", [s1], 20, 40, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "1000m/", [s1], 40, 100, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "2000m/", [s1], 100, 200, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "5000m/", [s1], 200, 500, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "10000m/", [s1], 500, 1000, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "20000m/", [s1], 1000, 2000, { cellInfoHTML: ttfun, preprocess: pp });
-        app.addTiledGridLayer(url + "50000m/", [s1], 2000, 9999999999, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "200m/", [sDonut], 0, 20, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "400m/", [sDonut], 20, 40, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "1000m/", [sDonut], 40, 100, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "2000m/", [sDonut], 100, 200, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "5000m/", [sDonut], 200, 500, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "10000m/", [sDonut], 500, 1000, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "20000m/", [sDonut], 1000, 2000, { cellInfoHTML: ttfun, preprocess: pp });
+        app.addTiledGridLayer(url + "50000m/", [sDonut], 2000, 9999999999, { cellInfoHTML: ttfun, preprocess: pp });
 
 
         //combo list
@@ -72,9 +72,9 @@
         select.addEventListener('change', function () {
             //set style
             if (select.value === "circle") {
-                for (let lay of app.layers) lay.styles = [s2]
+                for (let lay of app.layers) lay.styles = [sCircle]
             } else {
-                for (let lay of app.layers) lay.styles = [s1]
+                for (let lay of app.layers) lay.styles = [sDonut]
             }
             //redraw
             app.cg.redraw();
