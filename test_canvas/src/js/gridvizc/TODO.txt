@@ -1,5 +1,5 @@
 TODO new map type:
-donut: merge with shapecolorsizestyle
+donut: merge with shapecolorsizestyle - use extend then
 propcircle/color
 linesup: test shadow addition. Test one direction only. Test view center change.
 border/discontinuities
