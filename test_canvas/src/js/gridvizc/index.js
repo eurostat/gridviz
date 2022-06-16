@@ -29,9 +29,6 @@ export { LabelLayer } from "./LabelLayer"
 
 
 
-
-
-
 import { geoAzimuthalEqualArea } from 'd3-geo'
 import { LabelLayer } from "./LabelLayer"
 
