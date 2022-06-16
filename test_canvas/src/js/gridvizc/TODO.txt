@@ -1,5 +1,6 @@
+TODO: donut example: merge donut/cicle styles. Extend with square.
 TODO new map type:
-linesup: test with transparency. test shadow addition. Test one direction only. Test view center change.
+linesup: Fix. Test view center change. Test one direction only?
 border/discontinuities
 tchernioff faces - on FILOSOFI
 arrow (left, right)
