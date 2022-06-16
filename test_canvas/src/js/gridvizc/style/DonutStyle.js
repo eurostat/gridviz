@@ -1,7 +1,7 @@
 //@ts-check
 
 import { Stat, getStatistics } from "../Style"
-import {ShapeColorSizeStyle} from "./ShapeColorSizeStyle"
+import { ShapeColorSizeStyle } from "./ShapeColorSizeStyle"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
@@ -56,7 +56,7 @@ export class DonutStyle extends ShapeColorSizeStyle {
             cg.ctx.beginPath();
             cg.ctx.moveTo(xc, yc);
             cg.ctx.arc(xc, yc, 0.5 * resolution, 0, 2 * Math.PI);
-            cg.ctx.arc(xc, yc, (1-sF) * 0.5 * resolution, 0, 2 * Math.PI, true);
+            cg.ctx.arc(xc, yc, (1 - sF) * 0.5 * resolution, 0, 2 * Math.PI, true);
             cg.ctx.closePath();
             cg.ctx.fill();
 
