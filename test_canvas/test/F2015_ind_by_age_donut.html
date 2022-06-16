@@ -12,6 +12,9 @@
         <select id="type">
             <option value="donut" selected>Donut style</option>
             <option value="circle">Circle style</option>
+            <option value="hseg">Horizontal segments style</option>
+            <option value="vseg">Vertical segments style</option>
+            <option value="oseg">Oblique segments style</option>
         </select>
     </div>
 
@@ -37,6 +40,16 @@
             },*/
             colorCol: "age_ratio",
             color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5))
+        })
+
+        //circle segment
+        const sSegment = new gviz.SegmentStyle({
+            orientation: () => 0,
+            colorCol: "age_ratio",
+            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5)),
+            length: (v, r) => 1.4142 * r,
+            widthCol: "Ind",
+            width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25),
         })
 
         //circle style
@@ -71,11 +84,19 @@
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
             //set style
-            if (select.value === "circle") {
+            if (select.value === "circle")
                 for (let lay of app.layers) lay.styles = [sCircle]
-            } else {
+            else if (select.value === "hseg") {
+                sSegment.setOrientation(()=>0)
+                for (let lay of app.layers) lay.styles = [sSegment]
+            } else if (select.value === "vseg") {
+                sSegment.setOrientation(()=>90)
+                for (let lay of app.layers) lay.styles = [sSegment]
+            } else if (select.value === "oseg") {
+                sSegment.setOrientation(()=>-45)
+                for (let lay of app.layers) lay.styles = [sSegment]
+            } else
                 for (let lay of app.layers) lay.styles = [sDonut]
-            }
             //redraw
             app.cg.redraw();
         });
