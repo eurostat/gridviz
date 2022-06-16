@@ -47,7 +47,7 @@
             orientation: () => 0,
             colorCol: "age_ratio",
             color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5)),
-            length: (v, r) => 1.4142 * r,
+            length: (v, r) => r,
             widthCol: "Ind",
             width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25),
         })
@@ -87,13 +87,16 @@
             if (select.value === "circle")
                 for (let lay of app.layers) lay.styles = [sCircle]
             else if (select.value === "hseg") {
-                sSegment.setOrientation(()=>0)
+                sSegment.setOrientation(() => 0)
+                sSegment.setLength((v, r) => r)
                 for (let lay of app.layers) lay.styles = [sSegment]
             } else if (select.value === "vseg") {
-                sSegment.setOrientation(()=>90)
+                sSegment.setOrientation(() => 90)
+                sSegment.setLength((v, r) => r)
                 for (let lay of app.layers) lay.styles = [sSegment]
             } else if (select.value === "oseg") {
-                sSegment.setOrientation(()=>-45)
+                sSegment.setOrientation(() => -45)
+                sSegment.setLength((v, r) => 1.4142 * r)
                 for (let lay of app.layers) lay.styles = [sSegment]
             } else
                 for (let lay of app.layers) lay.styles = [sDonut]
