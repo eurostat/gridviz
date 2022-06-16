@@ -20,6 +20,7 @@ export { KernelSmoothingStyle } from "./style/KernelSmoothingStyle"
 export { RadarStyle } from "./style/RadarStyle"
 export { AgePyramidStyle } from "./style/AgePyramidStyle"
 export { LineUpStyle } from "./style/LineUpStyle"
+export { DonutStyle } from "./style/DonutStyle"
 
 //export label layer
 export { LabelLayer } from "./LabelLayer"
