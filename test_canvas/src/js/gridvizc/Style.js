@@ -7,7 +7,7 @@ import { Legend } from "./Legend";
  * Statistics of a set of values
  * @typedef {{min:number,max:number}} Stat */
 
-/** @typedef {"square"|"circle"|"none"} Shape */
+/** @typedef {"square"|"circle"|"donut"|"none"} Shape */
 
 /**
  * A style, to show a grid dataset.
@@ -107,6 +107,8 @@ export class Style {
                 size * 0.5,
                 0, 2 * Math.PI, false);
             cg.ctx.stroke();
+        } else if (shape === "donut") {
+            console.error("Not implemented")
         } else {
             throw new Error('Unexpected shape:' + shape);
         }

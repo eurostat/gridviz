@@ -104,6 +104,14 @@ export class ShapeColorSizeStyle extends Style {
                     sG * 0.5,
                     0, 2 * Math.PI, false);
                 cg.ctx.fill();
+            } else if (shape === "donut") {
+                const xc = cell.x + resolution * 0.5 + offset.dx, yc = cell.y + resolution * 0.5 + offset.dy
+                cg.ctx.beginPath();
+                cg.ctx.moveTo(xc, yc);
+                cg.ctx.arc(xc, yc, 0.5 * resolution, 0, 2 * Math.PI);
+                cg.ctx.arc(xc, yc, (1 - sG) * 0.5 * resolution, 0, 2 * Math.PI, true);
+                cg.ctx.closePath();
+                cg.ctx.fill();
             } else {
                 throw new Error('Unexpected shape:' + shape);
             }
