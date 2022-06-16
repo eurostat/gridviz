@@ -10,8 +10,9 @@
 
     <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
         <select id="type">
-            <option value="donut" selected>Donut style</option>
+            <option value="square">Square style</option>
             <option value="circle">Circle style</option>
+            <option value="donut" selected>Donut style</option>
             <option value="hseg">Horizontal segments style</option>
             <option value="vseg">Vertical segments style</option>
             <option value="oseg">Oblique segments style</option>
@@ -81,6 +82,9 @@
             let st;
             if (select.value === "donut") {
                 s.setShape(() => "donut")
+                st = s
+            } else if (select.value === "square") {
+                s.setShape(() => "square")
                 st = s
             } else if (select.value === "circle") {
                 s.setShape(() => "circle")

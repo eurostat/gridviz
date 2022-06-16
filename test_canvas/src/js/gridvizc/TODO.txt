@@ -1,4 +1,4 @@
-TODO: donut example: merge donut/cicle styles. Extend with square.
+TODO: donut example: Extend with square.
 TODO new map type:
 linesup: Fix. Test view center change. Test one direction only?
 border/discontinuities
