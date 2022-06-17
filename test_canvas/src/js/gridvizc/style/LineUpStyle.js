@@ -32,14 +32,14 @@ export class LineUpStyle extends Style {
          * @private @type {function(number,number,Stat,number):number} */
         this.width = opts.width || ((v, r) => 0.4 * r);
 
-        this.viewHeightPix = 3000
+        this.viewHeightFactor = 3
 
         this.shadowDirection = 127 * Math.PI / 180.0;
-        this.shadowFactor = 0.5;
-        this.shadowColor = "#00000033";
+        this.shadowFactor = 0.2;
+        this.shadowColor = "#00000022";
 
         this.viewSX = -0.25
-        this.viewSY = -1.3
+        this.viewSY = -1.5
     }
 
 
@@ -75,7 +75,7 @@ export class LineUpStyle extends Style {
         const cvy = cg.getCenter().y + this.viewSY * cg.h * cg.getZf()
 
         //set view height
-        const H = this.viewHeightPix * cg.getZf()
+        const H = this.viewHeightFactor * (cg.w+cg.h)*0.5 * cg.getZf()
 
         //sort cells by y and x
         //const distToViewCenter = (c) => { const dx = cvx - c.x, dy = cvy - c.y; return Math.sqrt(dx * dx + dy * dy) }
