@@ -147,10 +147,11 @@ export class CompositionStyle extends Style {
                 } else if (type_ === "segment") {
 
                     //draw segment sections
+                    const wG = sG * sG / resolution
                     cg.ctx.fillRect(
                         cg.geoToPixX(cell.x + cumul * resolution + offset.dx),
-                        cg.geoToPixY(cell.y + resolution / 2 + sG / 2 + offset.dy),
-                        share * resolution/cg.getZf(), sP);
+                        cg.geoToPixY(cell.y + resolution / 2 + wG / 2 + offset.dy),
+                        share * resolution / cg.getZf(), wG / cg.getZf());
 
                 } else {
                     throw new Error('Unexpected symbol type:' + type_);

@@ -13,6 +13,7 @@
             <option value="pyramid" selected>Age pyramid</option>
             <option value="radar">Radar</option>
             <option value="flag">Flag</option>
+            <option value="segment">Segment</option>
             <option value="ring">Ring</option>
             <option value="piechart">Pie chart</option>
         </select>
@@ -40,7 +41,7 @@
             color: colorDict,
             type: c => "flag",
             sizeCol: "pop",
-            size: (v, r, s, zf) => 1.2 * r * Math.pow(v / s.max, 0.2),
+            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
             zfStroke: 5
         })
 
