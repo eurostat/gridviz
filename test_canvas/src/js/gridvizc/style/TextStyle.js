@@ -68,7 +68,7 @@ export class TextStyle extends Style {
             cg.ctx.font = fontWeight + " " + fontSize + "px " + fontFamily;
 
             //get offset
-            const offset = this.offset(cell, r, cg.zf)
+            const offset = this.offset(cell, r, cg.getZf())
 
             //text position
             cg.ctx.textAlign = "center";
@@ -79,7 +79,7 @@ export class TextStyle extends Style {
             cg.ctx.fillText(text, tx, ty);
 
             //draw stroke of the cell as a square ?
-            this.drawStroke(cell, r, cg, c => "square")
+            //this.drawStroke(cell, r, cg, c => "square")
         }
 
     }
