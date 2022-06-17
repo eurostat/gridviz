@@ -28,7 +28,7 @@ export class JoyPlotStyle extends Style {
         /** @private @type {number} */
         this.lineWidth = opts.lineWidth || 1;
         /** @private @type {string} */
-        this.fillColor = opts.fillColor || "rgba(192, 140, 89, 0.4)"
+        this.fillColor = opts.fillColor || "#c08c5968"
     }
 
 
