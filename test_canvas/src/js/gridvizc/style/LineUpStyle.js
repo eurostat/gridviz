@@ -24,7 +24,7 @@ export class LineUpStyle extends Style {
         this.colorCol = opts.colorCol;
         /** A function returning the color of the line representing a cell.
         * @private @type {function(number,number,Stat):string} */
-        this.color = opts.color || (() => "#FF000088");
+        this.color = opts.color || (() => "#c08c59bb");
 
         /** @private @type {string} */
         this.widthCol = opts.widthCol;
@@ -172,7 +172,7 @@ export class LineUpStyle extends Style {
 
             //draw top circle
             //cg.ctx.strokeStyle = "red"
-            cg.ctx.fillStyle = "#F55"
+            cg.ctx.fillStyle = "#c08c59"
             cg.ctx.lineWidth = 1
             cg.ctx.beginPath();
             cg.ctx.arc(
