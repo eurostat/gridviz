@@ -37,7 +37,7 @@ export class TextStyle extends Style {
 
         /** A function returning the font size of a cell in geographical unit.
         * @protected @type {function(number,number,Stat|undefined,number):number} */
-        this.fontSize = opts.fontSize || (() => r / z - 2);
+        this.fontSize = opts.fontSize || ((v, r, s, z) => r / z - 2);
 
 
 

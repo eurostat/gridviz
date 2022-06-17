@@ -108,7 +108,7 @@ export class Style {
                 0, 2 * Math.PI, false);
             cg.ctx.stroke();
         } else if (shape === "donut") {
-            console.error("Not implemented")
+            //console.error("Not implemented")
         } else {
             throw new Error('Unexpected shape:' + shape);
         }

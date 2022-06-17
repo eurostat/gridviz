@@ -69,6 +69,8 @@ export class SegmentStyle extends Style {
             statWidth = getStatistics(cells, c => c[this.widthCol], true)
         }
 
+        //
+        cg.ctx.lineCap = "butt";
 
         //conversion factor degree -> radian
         const f = Math.PI / 180;
