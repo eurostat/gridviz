@@ -113,7 +113,7 @@ export class CompositionStyle extends Style {
 
                     //draw flag vertical stripe
                     cg.ctx.fillRect(
-                        cumul * resolution + cg.geoToPixX(cell.x + d + offset.dx),
+                        cg.geoToPixX(cell.x + d + cumul * sG + offset.dx),
                         cg.geoToPixY(cell.y + resolution - d + offset.dy),
                         share * sP, sP);
 
@@ -148,10 +148,9 @@ export class CompositionStyle extends Style {
 
                     //draw segment sections
                     cg.ctx.fillRect(
-                        cg.geoToPixX(cell.x - resolution / 2 + cumul * resolution + offset.dx),
-                        sP / 2 + cg.geoToPixY(cell.y + offset.dy),
-                        share * sP,
-                        sP);
+                        cg.geoToPixX(cell.x + cumul * resolution + offset.dx),
+                        cg.geoToPixY(cell.y + resolution / 2 + sG / 2 + offset.dy),
+                        share * resolution/cg.getZf(), sP);
 
                 } else {
                     throw new Error('Unexpected symbol type:' + type_);
