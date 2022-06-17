@@ -2,7 +2,7 @@ TODO simplify euronym - show fewer. Check too long names from REGIO and filter. 
 TODO add missing legends: size, categories for composition, etc.
 TODO fix labels on Sweden tests
 TODO test style with border/discontinuities
-TODO test tchernioff faces - on FILOSOFI
+TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?
 TODO style with arrows (left, right) (as segment enrichment ?)
 TODO radio buttons
 TODO limit pan
