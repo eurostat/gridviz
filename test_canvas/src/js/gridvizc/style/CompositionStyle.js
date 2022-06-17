@@ -4,7 +4,7 @@ import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
-/** @typedef {"flag"|"piechart"|"ring"} CompositionType */
+/** @typedef {"flag"|"piechart"|"ring"|"segment"} CompositionType */
 
 /**
  * A style showing the composition of a total in different categories, with different color hues.
@@ -40,7 +40,7 @@ export class CompositionStyle extends Style {
         this.sizeCol = opts.sizeCol
 
         /** A function returning the size of a cell.
-         * @private @type {function(number,number,Stat,number):number} */
+         * @private @type {function(number,number,Stat|undefined,number):number} */
         this.size = opts.size || ((v) => Math.sqrt(v));
 
         /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
@@ -78,19 +78,19 @@ export class CompositionStyle extends Style {
             if (!total || isNaN(total)) continue
 
             //size
-            /** @type {function(number,number,Stat,number):number} */
+            /** @type {function(number,number,Stat|undefined,number):number} */
             let s_ = this.size || (() => resolution);
             //size - in pixel and geo
             /** @type {number} */
-            const sG = s_(cell[this.sizeCol], resolution, stat, cg.zf)
+            const sG = s_(cell[this.sizeCol], resolution, stat, cg.getZf())
             /** @type {number} */
-            const sP = sG / cg.zf;
+            const sP = sG / cg.getZf();
 
             //get symbol type
             const type_ = this.type ? this.type(cell) : "flag"
 
             //get offset
-            const offset = this.offset(cell, resolution, cg.zf)
+            const offset = this.offset(cell, resolution, cg.getZf())
 
             //compute center position
             const xc = cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx);
@@ -144,6 +144,14 @@ export class CompositionStyle extends Style {
                         0, 2 * Math.PI);
                     cg.ctx.fill();
 
+                } else if (type_ === "segment") {
+
+                    /*/draw flag vertical stripe
+                    cg.ctx.fillRect(
+                        cumul * sP + cg.geoToPixX(cell.x + d + offset.dx),
+                        cg.geoToPixY(cell.y + resolution - d + offset.dy),
+                        share * sP, sP);*/
+
                 } else {
                     throw new Error('Unexpected symbol type:' + type_);
                 }
@@ -179,9 +187,9 @@ export class CompositionStyle extends Style {
     /** @param {string} val @returns {this} */
     setColSize(val) { this.sizeCol = val; return this; }
 
-    /** @returns {function(number,number,Stat,number):number} */
+    /** @returns {function(number,number,Stat|undefined,number):number} */
     getSize() { return this.size; }
-    /** @param {function(number,number,Stat,number):number} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
     /** @returns {function(number,number,Stat,number):number} */

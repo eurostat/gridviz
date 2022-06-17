@@ -40,7 +40,7 @@ export class GeoCanvas {
         this.setZf(zf);
 
         //current extent
-        /** @type {Envelope} */
+        /** @type {Envelope|undefined} */
         this.extGeo = undefined;
         this.updateExtentGeo()
 
