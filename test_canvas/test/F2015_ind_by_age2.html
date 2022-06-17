@@ -53,7 +53,7 @@
         const sSegment = new gviz.SegmentStyle({
             orientation: () => 0,
             colorCol: "age_ratio",
-            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5)),
+            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
             length: (v, r) => r,
             widthCol: "Ind",
             width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25),
@@ -62,7 +62,7 @@
         //lineup
         const sLineup = new gviz.LineUpStyle({
             colorCol: "age_ratio",
-            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5)),
+            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
             heightCol: "Ind",
             height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.6),
         })
@@ -71,7 +71,7 @@
         const sText = new gviz.TextStyle({
             text: c => ""+Math.trunc(100 * c["age_ratio"]),
             colorCol: "age_ratio",
-            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5)),
+            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
             fontSizeCol: "Ind",
             fontSize: (v, r, s, z) => (4 + 0.8*r * Math.pow(v / s.max, 0.2) / z),
         })
