@@ -16,6 +16,7 @@
             <option value="hseg">Horizontal segments style</option>
             <option value="vseg">Vertical segments style</option>
             <option value="oseg">Oblique segments style</option>
+            <option value="lineup">Lineup style</option>
         </select>
     </div>
 
@@ -55,6 +56,12 @@
             length: (v, r) => r,
             widthCol: "Ind",
             width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25),
+        })
+
+        //lineup
+        const sLineup = new gviz.LineUpStyle({
+            heightCol: "Ind",
+            height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.6),
         })
 
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>Below 25: " + c.yyy + "<br>Above 55: " + c.ooo;
@@ -101,6 +108,8 @@
                 sSegment.setOrientation(() => -45)
                 sSegment.setLength((v, r) => 1.4142 * r)
                 st = sSegment
+            } else if (select.value === "lineup") {
+                st = sLineup
             }
             //set style
             for (let lay of app.layers) lay.styles = [st]

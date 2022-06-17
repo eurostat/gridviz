@@ -30,7 +30,7 @@ export class LineUpStyle extends Style {
         this.widthCol = opts.widthCol;
         /** A function returning the width of the line representing a cell, in geo unit
          * @private @type {function(number,number,Stat,number):number} */
-        this.width = opts.width || ((v, r) => 0.4 * r);
+        this.width = opts.width || ((v, r) => 0.5 * r);
 
         this.viewHeightFactor = 5
 
