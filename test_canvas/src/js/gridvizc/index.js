@@ -48,7 +48,7 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
     opts.haloWidth = opts.haloWidth || (() => 2)
 
     //ETRS89-LAEA projection
-    const proj = geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]);
+    opts.proj = opts.proj || geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]);
 
     return new LabelLayer(
         "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v1/" + res + "/" + cc + ".csv",
@@ -63,7 +63,7 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
             //preprocess
             preprocess: lb => {
                 //project from geo coordinates to ETRS89-LAEA
-                const p = proj([lb.lon, lb.lat])
+                const p = opts.proj([lb.lon, lb.lat])
                 lb.x = p[0]; lb.y = p[1];
                 delete lb.lon; delete lb.lat;
             }
