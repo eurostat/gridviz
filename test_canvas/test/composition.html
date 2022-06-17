@@ -24,7 +24,8 @@
     <script>
 
         //make application
-        const app = new gviz.App().setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(1).setLabelLayer(gviz.getEuronymeLabelLayer())
+        const app = new gviz.App()
+            .setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(1).setLabelLayer(gviz.getEuronymeLabelLayer())
 
         const colorDict = { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" }
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)
