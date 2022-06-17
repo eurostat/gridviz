@@ -24,7 +24,7 @@ export class LineUpStyle extends Style {
         this.colorCol = opts.colorCol;
         /** A function returning the color of the line representing a cell.
         * @private @type {function(number,number,Stat):string} */
-        this.color = opts.color || (() => "#c08c59bb");
+        this.color = opts.color || (() => "#c08c59"); //bb
 
         /** @private @type {string} */
         this.widthCol = opts.widthCol;
@@ -32,7 +32,7 @@ export class LineUpStyle extends Style {
          * @private @type {function(number,number,Stat,number):number} */
         this.width = opts.width || ((v, r) => 0.4 * r);
 
-        this.viewHeightFactor = 3
+        this.viewHeightFactor = 5
 
         this.shadowDirection = 127 * Math.PI / 180.0;
         this.shadowFactor = 0.2;
@@ -162,6 +162,17 @@ export class LineUpStyle extends Style {
             const D = Math.sqrt(dx * dx + dy * dy)
             const d = D * hG / (H - hG)
 
+            const outlineCol = "#FFFFFF"
+            const outlineWidthPix = 0.5
+
+            //draw background segment
+            cg.ctx.strokeStyle = outlineCol
+            cg.ctx.lineWidth = wG / cg.zf + 2*outlineWidthPix
+            cg.ctx.beginPath();
+            cg.ctx.moveTo(cg.geoToPixX(cx), cg.geoToPixY(cy));
+            cg.ctx.lineTo(cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)));
+            cg.ctx.stroke();
+
             //draw segment
             cg.ctx.strokeStyle = col
             cg.ctx.lineWidth = wG / cg.zf
@@ -171,16 +182,16 @@ export class LineUpStyle extends Style {
             cg.ctx.stroke();
 
             //draw top circle
-            //cg.ctx.strokeStyle = "red"
-            cg.ctx.fillStyle = "#c08c59"
-            cg.ctx.lineWidth = 1
+            cg.ctx.strokeStyle = outlineCol
+            //cg.ctx.fillStyle = "#c08c59"
+            cg.ctx.lineWidth = outlineWidthPix
             cg.ctx.beginPath();
             cg.ctx.arc(
                 cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)),
-                wG / cg.zf * 0.5 - 1,
+                wG / cg.zf * 0.5 ,//- 1,
                 0, 2 * Math.PI, false);
-            //cg.ctx.stroke();
-            cg.ctx.fill();
+            cg.ctx.stroke();
+            //cg.ctx.fill();
 
         }
 

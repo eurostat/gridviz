@@ -1,4 +1,4 @@
-TODO linesup: correct distance to center. improve viewheight choice, based on screen pix size. Test with changeable width ?
+TODO linesup: Test with changeable width ?
 TODO simplify euronym - show fewer. Check too long names from REGIO and filter. GISCO WS ? Add r/imp parameter on the local importance of the toponym
 TODO add missing legends: size, categories for composition, etc.
 TODO test style with border/discontinuities
