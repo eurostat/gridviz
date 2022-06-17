@@ -17,6 +17,7 @@
             <option value="hseg">Horizontal segments style</option>
             <option value="vseg">Vertical segments style</option>
             <option value="oseg">Oblique segments style</option>
+            <option value="text">Text style</option>
         </select>
     </div>
 
@@ -66,6 +67,16 @@
             height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.6),
         })
 
+        //text
+        const sText = new gviz.TextStyle({
+            text: c => "XX", //Math.trunc(+c["age_ratio"]),
+            colorCol: "age_ratio",
+            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5)),
+            //fontSize: c => 12,
+            //strokeColor: "#dddddd",
+            //strokeWidth: 0.5
+        })
+
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>Below 25: " + c.yyy + "<br>Above 55: " + c.ooo;
         const pp = c => {
             c.yyy = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"];
@@ -112,6 +123,8 @@
                 st = sSegment
             } else if (select.value === "lineup") {
                 st = sLineup
+            } else if (select.value === "text") {
+                st = sText
             }
             //set style
             for (let lay of app.layers) lay.styles = [st]

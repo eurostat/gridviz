@@ -23,19 +23,19 @@ export class SegmentStyle extends Style {
         /** @private @type {string} */
         this.colorCol = opts.colorCol;
         /** A function returning the color of the cell segment.
-        * @private @type {function(number,number,Stat):string} */
+        * @private @type {function(number,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
         /** @private @type {string} */
         this.lengthCol = opts.lengthCol;
         /** A function returning the length of the segment representing a cell, in geo unit
-         * @private @type {function(number,number,Stat,number):number} */
+         * @private @type {function(number,number,Stat|undefined,number):number} */
         this.length = opts.length;
 
         /** @private @type {string} */
         this.widthCol = opts.widthCol;
         /** A function returning the width of the segment representing a cell, in geo unit
-         * @private @type {function(number,number,Stat,number):number} */
+         * @private @type {function(number,number,Stat|undefined,number):number} */
         this.width = opts.width;
     }
 
@@ -76,18 +76,18 @@ export class SegmentStyle extends Style {
         for (let c of cells) {
 
             //color
-            /** @type {string} */
+            /** @type {string|undefined} */
             const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined
             if (!col) continue
 
             //width
-            /** @type {number} */
-            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, cg.zf) : undefined
+            /** @type {number|undefined} */
+            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, cg.getZf()) : undefined
             if (!wG || wG < 0) continue
 
             //length
-            /** @type {number} */
-            const lG = this.length ? this.length(c[this.lengthCol], resolution, statLength, cg.zf) : undefined
+            /** @type {number|undefined} */
+            const lG = this.length ? this.length(c[this.lengthCol], resolution, statLength, cg.getZf()) : undefined
             if (!lG || lG < 0) continue
 
             //orientation (in radian)
@@ -96,19 +96,19 @@ export class SegmentStyle extends Style {
             if (or === undefined || isNaN(or)) continue;
 
             //get offset
-            const offset = this.offset(c, resolution, cg.zf)
+            const offset = this.offset(c, resolution, cg.getZf())
 
             //set color and width
             cg.ctx.strokeStyle = col
-            cg.ctx.lineWidth = wG / cg.zf
+            cg.ctx.lineWidth = wG / cg.getZf()
 
             //compute segment centre postition
             const cx = cg.geoToPixX(c.x + resolution / 2 + offset.dx);
             const cy = cg.geoToPixY(c.y + resolution / 2 + offset.dy);
 
             //compute segment direction
-            const dx = 0.5 * Math.cos(or) * lG / cg.zf
-            const dy = 0.5 * Math.sin(or) * lG / cg.zf
+            const dx = 0.5 * Math.cos(or) * lG / cg.getZf()
+            const dy = 0.5 * Math.sin(or) * lG / cg.getZf()
 
             //draw segment
             cg.ctx.beginPath();
@@ -132,21 +132,21 @@ export class SegmentStyle extends Style {
 
     /** @returns {function(number,number,Stat):string} */
     getColor() { return this.color; }
-    /** @param {function(number,number,Stat):string} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
     //TODO lengthCol
 
     /** @returns {function(number,number,Stat,number):number} */
     getLength() { return this.length; }
-    /** @param {function(number,number,Stat,number):number} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
     setLength(val) { this.length = val; return this; }
 
     //TODO widthCol
 
-    /** @returns {function(number,number,Stat,number):number} */
+    /** @returns {function(number,number,Stat|undefined,number):number} */
     getWidth() { return this.width; }
-    /** @param {function(number,number,Stat,number):number} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
     setWidth(val) { this.width = val; return this; }
 
 }

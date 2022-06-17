@@ -24,7 +24,7 @@ export class ShapeColorSizeStyle extends Style {
         this.colorCol = opts.colorCol;
 
         /** A function returning the color of the cell.
-        * @protected @type {function(number,number,Stat):string} */
+        * @protected @type {function(number,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
 
@@ -33,7 +33,7 @@ export class ShapeColorSizeStyle extends Style {
         this.sizeCol = opts.sizeCol;
 
         /** A function returning the size of a cell in geographical unit.
-        * @protected @type {function(number,number,Stat,number):number} */
+        * @protected @type {function(number,number,Stat|undefined,number):number} */
         this.size = opts.size;
 
 
@@ -80,13 +80,13 @@ export class ShapeColorSizeStyle extends Style {
             if (shape === "none") continue
 
             //size
-            /** @type {function(number,number,Stat,number):number} */
+            /** @type {function(number,number,Stat|undefined,number):number} */
             let s_ = this.size || (() => resolution);
             //size - in geo unit
-            const sG = s_(cell[this.sizeCol], resolution, statSize, cg.zf)
+            const sG = s_(cell[this.sizeCol], resolution, statSize, cg.getZf())
 
             //get offset
-            const offset = this.offset(cell, resolution, cg.zf)
+            const offset = this.offset(cell, resolution, cg.getZf())
 
             if (shape === "square") {
                 //draw square
@@ -129,12 +129,12 @@ export class ShapeColorSizeStyle extends Style {
 
     /** @returns {function(number,number,Stat):string} */
     getColor() { return this.color; }
-    /** @param {function(number,number,Stat):string} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
     /** @returns {function(number,number,Stat,number):number} */
     getSize() { return this.size; }
-    /** @param {function(number,number,Stat,number):number} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
     /** @returns {function(Cell):Shape} */

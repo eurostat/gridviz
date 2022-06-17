@@ -44,7 +44,7 @@ export class Style {
          * @private @type {number} */
         this.strokeWidth = opts.strokeWidth || 1;
 
-        /** @protected @type {Legend} */
+        /** @protected @type {Legend | undefined} */
         this.legend = undefined
     }
 
@@ -83,7 +83,7 @@ export class Style {
      * @returns 
      */
     drawStroke(cell, resolution, cg, shape, size, offset) {
-        if (!this.zfStroke || cg.zf > this.zfStroke) return;
+        if (!this.zfStroke || cg.getZf() > this.zfStroke) return;
 
         cg.ctx.strokeStyle = this.strokeColor;
         cg.ctx.lineWidth = this.strokeWidth * cg.getZf();
@@ -139,7 +139,7 @@ export class Style {
     /** @param {number} val @returns {this} */
     setStrokeWidth(val) { this.strokeWidth = val; return this; }
 
-    /** @returns {Legend} */
+    /** @returns {Legend | undefined} */
     getLegend() { return this.legend; }
 
 }
@@ -154,7 +154,7 @@ export class Style {
  * @param {Array.<Cell>} cells 
  * @param {function(Cell):number} valFun 
  * @param {boolean} ignoreZeros 
- * @returns {Stat}
+ * @returns {Stat | undefined}
  */
 export const getStatistics = function (cells, valFun, ignoreZeros) {
     if (!cells || cells.length == 0) return undefined
