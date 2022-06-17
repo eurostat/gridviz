@@ -34,9 +34,9 @@ export class LineUpStyle extends Style {
 
         this.viewHeightPix = 3000
 
-        this.shadowDirection = 210 * Math.PI / 180.0;
+        this.shadowDirection = 127 * Math.PI / 180.0;
         this.shadowFactor = 0.5;
-        this.shadowColor = "#00000022";
+        this.shadowColor = "#00000033";
 
         this.viewSX = -0.25
         this.viewSY = -1.3
@@ -77,9 +77,9 @@ export class LineUpStyle extends Style {
         //set view height
         const H = this.viewHeightPix * cg.getZf()
 
-        //sort cells by distance to view center
-        const distToViewCenter = (c) => { const dx = cvx - c.x, dy = cvy - c.y; return Math.sqrt(dx * dx + dy * dy) }
-        cells.sort((c1, c2) => distToViewCenter(c2) - distToViewCenter(c1));
+        //sort cells by y and x
+        //const distToViewCenter = (c) => { const dx = cvx - c.x, dy = cvy - c.y; return Math.sqrt(dx * dx + dy * dy) }
+        cells.sort((c1, c2) => 100000000 * (c2.y - c1.y) + c1.x - c2.x);
 
         cg.ctx.lineCap = "round";
 
@@ -115,6 +115,18 @@ export class LineUpStyle extends Style {
             cg.ctx.lineTo(cg.geoToPixX(cx + ls * Math.cos(this.shadowDirection)), cg.geoToPixY(cy + ls * Math.sin(this.shadowDirection)));
             cg.ctx.stroke();
 
+            //draw bottom circle
+            //cg.ctx.strokeStyle = "black"
+            cg.ctx.fillStyle = "gray"
+            //cg.ctx.lineWidth = 3
+            cg.ctx.beginPath();
+            cg.ctx.arc(
+                cg.geoToPixX(cx), cg.geoToPixY(cy),
+                wG / cg.zf * 0.5,
+                0, 2 * Math.PI, false);
+            //cg.ctx.stroke();
+            cg.ctx.fill();
+
         }
 
 
@@ -149,18 +161,6 @@ export class LineUpStyle extends Style {
             const a = Math.atan2(dy, dx);
             const D = Math.sqrt(dx * dx + dy * dy)
             const d = D * hG / (H - hG)
-
-            //draw bottom circle
-            //cg.ctx.strokeStyle = "black"
-            cg.ctx.fillStyle = "gray"
-            //cg.ctx.lineWidth = 3
-            cg.ctx.beginPath();
-            cg.ctx.arc(
-                cg.geoToPixX(cx), cg.geoToPixY(cy),
-                wG / cg.zf * 0.5,
-                0, 2 * Math.PI, false);
-            //cg.ctx.stroke();
-            cg.ctx.fill();
 
             //draw segment
             cg.ctx.strokeStyle = col
