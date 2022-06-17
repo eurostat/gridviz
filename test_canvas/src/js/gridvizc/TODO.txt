@@ -1,4 +1,3 @@
-TODO fix labels on Sweden tests
 TODO simplify euronym - show fewer. Check too long names from REGIO and filter. GISCO WS ? Add r/imp parameter on the local importance of the toponym
 TODO add missing legends: size, categories for composition, etc.
 TODO test style with border/discontinuities
