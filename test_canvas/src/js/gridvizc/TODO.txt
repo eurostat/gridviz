@@ -1,3 +1,4 @@
+TODO map type: segment composition - alternative to flag
 TODO simplify euronym - show fewer. Check too long names from REGIO and filter. GISCO WS ? Add r/imp parameter on the local importance of the toponym
 TODO linesup: Test with changeable width ?
 TODO add missing legends: size, categories for composition, etc.
@@ -9,7 +10,7 @@ TODO limit pan
 TODO debug pop by age- FR - for large zoom levels
 TODO map type: value by alpha ?
 TODO map type: composition as linesup... pile of lines
-TODO map type: segment composition - alternative to flag
+TODO map type: composition as donut ring
 
 TODO improve efficiency - on zoom/pan, interrupt all existing redraws ? Redraw only on mouse release? Use time and redraw only every X ms ?
 TODO test canvas performance improvements: https://www.html5rocks.com/en/tutorials/canvas/performance/ and https://stackoverflow.com/questions/8205828/html5-canvas-performance-and-optimization-tips-tricks-and-coding-best-practices
