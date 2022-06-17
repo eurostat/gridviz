@@ -113,7 +113,7 @@ export class CompositionStyle extends Style {
 
                     //draw flag vertical stripe
                     cg.ctx.fillRect(
-                        cumul * sP + cg.geoToPixX(cell.x + d + offset.dx),
+                        cumul * resolution + cg.geoToPixX(cell.x + d + offset.dx),
                         cg.geoToPixY(cell.y + resolution - d + offset.dy),
                         share * sP, sP);
 
@@ -146,11 +146,13 @@ export class CompositionStyle extends Style {
 
                 } else if (type_ === "segment") {
 
-                    /*/draw flag vertical stripe
+                    //draw segment sections
+
                     cg.ctx.fillRect(
-                        cumul * sP + cg.geoToPixX(cell.x + d + offset.dx),
-                        cg.geoToPixY(cell.y + resolution - d + offset.dy),
-                        share * sP, sP);*/
+                        cg.geoToPixX(cell.x - resolution / 2 + cumul * resolution + offset.dx),
+                        sP / 2 + cg.geoToPixY(cell.y + offset.dy),
+                        share * sP,
+                        sP);
 
                 } else {
                     throw new Error('Unexpected symbol type:' + type_);
