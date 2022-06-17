@@ -40,6 +40,10 @@ export class LineUpStyle extends Style {
 
         this.viewSX = -0.25
         this.viewSY = -1.5
+
+        this.outlineCol = "#FFFFFF"
+        this.outlineWidthPix = 0.5
+
     }
 
 
@@ -162,12 +166,9 @@ export class LineUpStyle extends Style {
             const D = Math.sqrt(dx * dx + dy * dy)
             const d = D * hG / (H - hG)
 
-            const outlineCol = "#FFFFFF"
-            const outlineWidthPix = 0.5
-
             //draw background segment
-            cg.ctx.strokeStyle = outlineCol
-            cg.ctx.lineWidth = wG / cg.zf + 2*outlineWidthPix
+            cg.ctx.strokeStyle = this.outlineCol
+            cg.ctx.lineWidth = wG / cg.zf + 2*this.outlineWidthPix
             cg.ctx.beginPath();
             cg.ctx.moveTo(cg.geoToPixX(cx), cg.geoToPixY(cy));
             cg.ctx.lineTo(cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)));
@@ -182,9 +183,9 @@ export class LineUpStyle extends Style {
             cg.ctx.stroke();
 
             //draw top circle
-            cg.ctx.strokeStyle = outlineCol
+            cg.ctx.strokeStyle = this.outlineCol
             //cg.ctx.fillStyle = "#c08c59"
-            cg.ctx.lineWidth = outlineWidthPix
+            cg.ctx.lineWidth = this.outlineWidthPix
             cg.ctx.beginPath();
             cg.ctx.arc(
                 cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)),
