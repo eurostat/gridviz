@@ -147,7 +147,6 @@ export class CompositionStyle extends Style {
                 } else if (type_ === "segment") {
 
                     //draw segment sections
-
                     cg.ctx.fillRect(
                         cg.geoToPixX(cell.x - resolution / 2 + cumul * resolution + offset.dx),
                         sP / 2 + cg.geoToPixY(cell.y + offset.dy),
