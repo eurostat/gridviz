@@ -13,10 +13,10 @@
             <option value="square">Square style</option>
             <option value="circle">Circle style</option>
             <option value="donut" selected>Donut style</option>
+            <option value="lineup">Lineup style</option>
             <option value="hseg">Horizontal segments style</option>
             <option value="vseg">Vertical segments style</option>
             <option value="oseg">Oblique segments style</option>
-            <option value="lineup">Lineup style</option>
         </select>
     </div>
 
@@ -60,6 +60,8 @@
 
         //lineup
         const sLineup = new gviz.LineUpStyle({
+            colorCol: "age_ratio",
+            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5)),
             heightCol: "Ind",
             height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.6),
         })
