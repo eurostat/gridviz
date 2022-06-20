@@ -42,7 +42,7 @@ import { LabelLayer } from "./LabelLayer"
  */
 export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
     opts = opts || {}
-    opts.style = opts.style || ((lb, zf) => { if (lb.rs < zf) return; return "bold 14px Arial"; })
+    opts.style = opts.style || ((lb, zf) => { if (lb.rs < zf) return; if(lb.r1 < zf) return "12px Arial"; return "18px Arial"; })
     opts.color = opts.color || (() => "#000000AA") //"#00000044",
     opts.haloColor = opts.haloColor || (() => "#FFFFFFAA")
     opts.haloWidth = opts.haloWidth || (() => 2)

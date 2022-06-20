@@ -1,4 +1,3 @@
-TODO simplify euronym - show fewer. Check too long names from REGIO and filter. GISCO WS ? Add r/imp parameter on the local importance of the toponym
 TODO segment composition: with horizontal stripes. Add parameter "stripe direction" horizontal/vertical. Use also for flag.
 TODO new version with indicator on gender unbalance
 TODO add missing legends: size, categories for composition, etc.
