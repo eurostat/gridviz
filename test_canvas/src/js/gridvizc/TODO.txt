@@ -1,5 +1,6 @@
-TODO new version with indicator on gender unbalance
 TODO simplify euronym - show fewer. Check too long names from REGIO and filter. GISCO WS ? Add r/imp parameter on the local importance of the toponym
+TODO segment composition: with horizontal stripes. Add parameter "stripe direction" horizontal/vertical. Use also for flag.
+TODO new version with indicator on gender unbalance
 TODO add missing legends: size, categories for composition, etc.
 TODO test style with border/discontinuities
 TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?
@@ -10,7 +11,9 @@ TODO map type: value by alpha ?
 TODO map type: composition as linesup... pile of lines
 TODO map type: composition as donut ring ?
 TODO map type: composition as stripped circles
-TODO linesup: Test with changeable width ?
+TODO linesup: Test with changeable width and fixed height ?
+TODO use filosofi 2017 to show evolutions
+TODO background image ? with relief shading.
 
 TODO improve efficiency - on zoom/pan, interrupt all existing redraws ? Redraw only on mouse release? Use time and redraw only every X ms ?
 TODO test canvas performance improvements: https://www.html5rocks.com/en/tutorials/canvas/performance/ and https://stackoverflow.com/questions/8205828/html5-canvas-performance-and-optimization-tips-tricks-and-coding-best-practices
