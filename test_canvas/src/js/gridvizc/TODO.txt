@@ -1,3 +1,4 @@
+change anderlecht / brussels, "greater city of athen" tessalonique alicante manchester valetta gijon cherbourg tyneside poland
 TODO segment composition: with horizontal stripes. Add parameter "stripe direction" horizontal/vertical. Use also for flag.
 TODO show adm boundaries
 TODO new version with indicator on gender unbalance

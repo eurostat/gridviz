@@ -46,6 +46,10 @@ export class CompositionStyle extends Style {
         /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
          * 0 for normal pie charts, 0.5 to empty half of the radius. */
         this.pieChartInternalRadiusFactor = opts.pieChartInternalRadiusFactor || 0.5
+
+        /** For style types with stripes, the orientation of the stripes.
+         * @private @type {number} */
+        this.stripesOrientation = opts.stripesOrientation || 0;
     }
 
 
@@ -112,11 +116,17 @@ export class CompositionStyle extends Style {
                 if (type_ === "flag") {
 
                     //draw flag vertical stripe
-                    cg.ctx.fillRect(
-                        cg.geoToPixX(cell.x + d + cumul * sG + offset.dx),
-                        cg.geoToPixY(cell.y + resolution - d + offset.dy),
-                        share * sP, sP);
-
+                    if (this.stripesOrientation == 0) {
+                        cg.ctx.fillRect(
+                            cg.geoToPixX(cell.x + d + offset.dx),
+                            cg.geoToPixY(cell.y + resolution - d - cumul * sG + offset.dy),
+                            sP, share * sP);
+                    } else {
+                        cg.ctx.fillRect(
+                            cg.geoToPixX(cell.x + d + cumul * sG + offset.dx),
+                            cg.geoToPixY(cell.y + resolution - d + offset.dy),
+                            share * sP, sP);
+                    }
                 } else if (type_ === "piechart") {
                     //draw pie chart angular sector
 
@@ -148,10 +158,17 @@ export class CompositionStyle extends Style {
 
                     //draw segment sections
                     const wG = sG * sG / resolution
-                    cg.ctx.fillRect(
-                        cg.geoToPixX(cell.x + cumul * resolution + offset.dx),
-                        cg.geoToPixY(cell.y + resolution / 2 + wG / 2 + offset.dy),
-                        share * resolution / cg.getZf(), wG / cg.getZf());
+                    if (this.stripesOrientation == 0) {
+                        cg.ctx.fillRect(
+                            cg.geoToPixX(cell.x + offset.dx),
+                            cg.geoToPixY(cell.y + resolution / 2 + wG / 2 - cumul * wG + offset.dy),
+                            resolution / cg.getZf(), share * wG / cg.getZf());
+                    } else {
+                        cg.ctx.fillRect(
+                            cg.geoToPixX(cell.x + cumul * resolution + offset.dx),
+                            cg.geoToPixY(cell.y + resolution / 2 + wG / 2 + offset.dy),
+                            share * resolution / cg.getZf(), wG / cg.getZf());
+                    }
 
                 } else {
                     throw new Error('Unexpected symbol type:' + type_);
