@@ -43,13 +43,13 @@ export class CompositionStyle extends Style {
          * @private @type {function(number,number,Stat|undefined,number):number} */
         this.size = opts.size || ((v) => Math.sqrt(v));
 
+        /** For style types with stripes (flag, segment), the orientation of the stripes.
+         * @private @type {function(number,number,number):number} */
+         this.stripesOrientation = opts.stripesOrientation || (()=>0);
+
         /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
          * 0 for normal pie charts, 0.5 to empty half of the radius. */
         this.pieChartInternalRadiusFactor = opts.pieChartInternalRadiusFactor || 0.5
-
-        /** For style types with stripes, the orientation of the stripes.
-         * @private @type {number} */
-        this.stripesOrientation = opts.stripesOrientation || 0;
     }
 
 
@@ -116,7 +116,7 @@ export class CompositionStyle extends Style {
                 if (type_ === "flag") {
 
                     //draw flag vertical stripe
-                    if (this.stripesOrientation == 0) {
+                    if (this.stripesOrientation(cell[this.sizeCol], resolution, cg.getZf()) == 0) {
                         cg.ctx.fillRect(
                             cg.geoToPixX(cell.x + d + offset.dx),
                             cg.geoToPixY(cell.y + resolution - d - cumul * sG + offset.dy),
@@ -158,7 +158,7 @@ export class CompositionStyle extends Style {
 
                     //draw segment sections
                     const wG = sG * sG / resolution
-                    if (this.stripesOrientation == 0) {
+                    if (this.stripesOrientation(cell[this.sizeCol], resolution, cg.getZf()) == 0) {
                         cg.ctx.fillRect(
                             cg.geoToPixX(cell.x + offset.dx),
                             cg.geoToPixY(cell.y + resolution / 2 + wG / 2 - cumul * wG + offset.dy),
@@ -210,8 +210,17 @@ export class CompositionStyle extends Style {
     /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
+    /** @returns {function(number,number,number):number} */
+    getStripesOrientation() { return this.stripesOrientation; }
+    /** @param {function(number,number,number):number} val @returns {this} */
+    setStripesOrientation(val) { this.stripesOrientation = val; return this; }
+
     /** @returns {function(number,number,Stat,number):number} */
     getPieChartInternalRadiusFactor() { return this.pieChartInternalRadiusFactor; }
     /** @param {function(number,number,Stat,number):number} val @returns {this} */
     setPieChartInternalRadiusFactor(val) { this.pieChartInternalRadiusFactor = val; return this; }
+
+    
+
+
 }
