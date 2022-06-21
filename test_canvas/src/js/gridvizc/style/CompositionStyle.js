@@ -45,7 +45,7 @@ export class CompositionStyle extends Style {
 
         /** For style types with stripes (flag, segment), the orientation of the stripes.
          * @private @type {function(number,number,number):number} */
-         this.stripesOrientation = opts.stripesOrientation || (()=>0);
+        this.stripesOrientation = opts.stripesOrientation || (() => 0);
 
         /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
          * 0 for normal pie charts, 0.5 to empty half of the radius. */
@@ -119,13 +119,13 @@ export class CompositionStyle extends Style {
                         //horizontal
                         cg.ctx.fillRect(
                             cell.x + d + offset.dx,
-                            cell.y + resolution - d - cumul * sG + offset.dy,
+                            cell.y + d + cumul * sG + offset.dy,
                             sG, share * sG);
                     } else {
                         //vertical
                         cg.ctx.fillRect(
                             cell.x + d + cumul * sG + offset.dx,
-                            cell.y + resolution - d + offset.dy,
+                            cell.y + d + offset.dy,
                             share * sG, sG);
                     }
                 } else if (type_ === "piechart") {
@@ -163,14 +163,14 @@ export class CompositionStyle extends Style {
                         //horizontal
                         cg.ctx.fillRect(
                             cell.x + offset.dx,
-                            cell.y + resolution / 2 + wG / 2 - cumul * wG + offset.dy,
+                            cell.y + (resolution - wG) / 2 + cumul * wG + offset.dy,
                             resolution, share * wG);
                     } else {
                         //vertical
                         cg.ctx.fillRect(
                             cell.x + cumul * resolution + offset.dx,
-                            cell.y + resolution / 2 + wG / 2 + offset.dy,
-                            share * resolution, wG );
+                            cell.y + (resolution - wG) / 2 + offset.dy,
+                            share * resolution, wG);
                     }
 
                 } else {
@@ -223,7 +223,7 @@ export class CompositionStyle extends Style {
     /** @param {function(number,number,Stat,number):number} val @returns {this} */
     setPieChartInternalRadiusFactor(val) { this.pieChartInternalRadiusFactor = val; return this; }
 
-    
+
 
 
 }

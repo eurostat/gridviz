@@ -49,7 +49,7 @@ export class AgePyramidStyle extends Style {
         const nbCat = Object.entries(this.color).length
 
         //height, in pixel
-        const h = this.height(r) / cg.zf
+        const h = this.height(r) / cg.getZf()
         const hPerCat = h / nbCat
 
         //get the stat
@@ -58,10 +58,10 @@ export class AgePyramidStyle extends Style {
         for (let cell of cells) {
 
             //get offset
-            const offset = this.offset(cell, r, cg.zf)
+            const offset = this.offset(cell, r, cg.getZf())
 
             //
-            let hCumul = (-r / cg.zf + h) * 0.5
+            let hCumul = (-r / cg.getZf() + h) * 0.5
 
             //compute cell position
             const xc = cg.geoToPixX(cell.x + offset.dx);
@@ -78,11 +78,11 @@ export class AgePyramidStyle extends Style {
 
                 //compute category length - in pixel
                 /** @type {number} */
-                const wP = this.length(val, r, stat, cg.zf) / cg.zf
+                const wP = this.length(val, r, stat, cg.getZf()) / cg.getZf()
 
                 //draw bar
                 cg.ctx.fillRect(
-                    xc + (r / cg.zf - wP) * 0.5,
+                    xc + (r / cg.getZf() - wP) * 0.5,
                     yc + hCumul,
                     wP, -hPerCat);
 
