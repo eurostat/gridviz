@@ -17,19 +17,19 @@ export class LineUpStyle extends Style {
         /** @private @type {string} */
         this.heightCol = opts.heightCol;
         /** A function returning the height of the line representing a cell, in geo unit
-         * @private @type {function(number,number,Stat,number):number} */
+         * @private @type {function(number,number,Stat|undefined,number):number} */
         this.height = opts.height;
 
         /** @private @type {string} */
         this.colorCol = opts.colorCol;
         /** A function returning the color of the line representing a cell.
-        * @private @type {function(number,number,Stat):string} */
+        * @private @type {function(number,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#c08c59"); //bb
 
         /** @private @type {string} */
         this.widthCol = opts.widthCol;
         /** A function returning the width of the line representing a cell, in geo unit
-         * @private @type {function(number,number,Stat,number):number} */
+         * @private @type {function(number,number,Stat|undefined,number):number} */
         this.width = opts.width || ((v, r) => 0.5 * r);
 
         this.viewHeightFactor = 5
@@ -94,21 +94,21 @@ export class LineUpStyle extends Style {
         for (let c of cells) {
 
             //width
-            /** @type {number} */
-            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, cg.zf) : undefined
+            /** @type {number|undefined} */
+            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, zf) : undefined
             if (!wG || wG < 0) continue
 
             //height
-            /** @type {number} */
-            const hG = this.height ? this.height(c[this.heightCol], resolution, statHeight, cg.zf) : undefined
+            /** @type {number|undefined} */
+            const hG = this.height ? this.height(c[this.heightCol], resolution, statHeight, zf) : undefined
             if (!hG || hG < 0) continue
 
             //get offset
             //TODO use that
-            const offset = this.offset(c, resolution, cg.zf)
+            const offset = this.offset(c, resolution, zf)
 
             //set width
-            cg.ctx.lineWidth = wG / cg.zf
+            cg.ctx.lineWidth = wG / zf
 
             //compute cell centre postition
             const cx = c.x + resolution / 2;
@@ -128,7 +128,7 @@ export class LineUpStyle extends Style {
             cg.ctx.beginPath();
             cg.ctx.arc(
                 cg.geoToPixX(cx), cg.geoToPixY(cy),
-                wG / cg.zf * 0.5,
+                wG / zf * 0.5,
                 0, 2 * Math.PI, false);
             //cg.ctx.stroke();
             cg.ctx.fill();
@@ -140,23 +140,23 @@ export class LineUpStyle extends Style {
         for (let c of cells) {
 
             //color
-            /** @type {string} */
+            /** @type {string|undefined} */
             const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined
             if (!col) continue
 
             //width
-            /** @type {number} */
-            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, cg.zf) : undefined
+            /** @type {number|undefined} */
+            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, zf) : undefined
             if (!wG || wG < 0) continue
 
             //height
-            /** @type {number} */
-            const hG = this.height ? this.height(c[this.heightCol], resolution, statHeight, cg.zf) : undefined
+            /** @type {number|undefined} */
+            const hG = this.height ? this.height(c[this.heightCol], resolution, statHeight, zf) : undefined
             if (!hG || hG < 0) continue
 
             //get offset
             //TODO use that
-            const offset = this.offset(c, resolution, cg.zf)
+            const offset = this.offset(c, resolution, zf)
 
             //compute cell centre postition
             const cx = c.x + resolution / 2;
@@ -170,7 +170,7 @@ export class LineUpStyle extends Style {
 
             //draw background segment
             cg.ctx.strokeStyle = this.outlineCol
-            cg.ctx.lineWidth = wG / cg.zf + 2*this.outlineWidthPix
+            cg.ctx.lineWidth = wG / zf + 2*this.outlineWidthPix
             cg.ctx.beginPath();
             cg.ctx.moveTo(cg.geoToPixX(cx), cg.geoToPixY(cy));
             cg.ctx.lineTo(cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)));
@@ -178,7 +178,7 @@ export class LineUpStyle extends Style {
 
             //draw segment
             cg.ctx.strokeStyle = col
-            cg.ctx.lineWidth = wG / cg.zf
+            cg.ctx.lineWidth = wG / zf
             cg.ctx.beginPath();
             cg.ctx.moveTo(cg.geoToPixX(cx), cg.geoToPixY(cy));
             cg.ctx.lineTo(cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)));
@@ -191,7 +191,7 @@ export class LineUpStyle extends Style {
             cg.ctx.beginPath();
             cg.ctx.arc(
                 cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)),
-                wG / cg.zf * 0.5 ,//- 1,
+                wG / zf * 0.5 ,//- 1,
                 0, 2 * Math.PI, false);
             cg.ctx.stroke();
             //cg.ctx.fill();
@@ -206,23 +206,23 @@ export class LineUpStyle extends Style {
 
     //TODO colorCol
 
-    /** @returns {function(number,number,Stat):string} */
+    /** @returns {function(number,number,Stat|undefined):string} */
     getColor() { return this.color; }
-    /** @param {function(number,number,Stat):string} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
     //TODO heightCol
 
-    /** @returns {function(number,number,Stat,number):number} */
+    /** @returns {function(number,number,Stat|undefined,number):number} */
     getHeight() { return this.height; }
-    /** @param {function(number,number,Stat,number):number} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
     setHeight(val) { this.height = val; return this; }
 
     //TODO widthCol
 
-    /** @returns {function(number,number,Stat,number):number} */
+    /** @returns {function(number,number,Stat|undefined,number):number} */
     getWidth() { return this.width; }
-    /** @param {function(number,number,Stat,number):number} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
     setWidth(val) { this.width = val; return this; }
 
 }
