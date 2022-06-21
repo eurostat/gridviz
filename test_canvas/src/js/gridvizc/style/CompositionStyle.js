@@ -57,10 +57,10 @@ export class CompositionStyle extends Style {
      * Draw cells as squares depending on their value.
      * 
      * @param {Array.<Cell>} cells 
-     * @param {number} resolution 
+     * @param {number} r 
      * @param {GeoCanvas} cg 
      */
-    draw(cells, resolution, cg) {
+    draw(cells, r, cg) {
 
         let stat
         if (this.sizeCol) {
@@ -86,24 +86,24 @@ export class CompositionStyle extends Style {
 
             //size
             /** @type {function(number,number,Stat|undefined,number):number} */
-            let s_ = this.size || (() => resolution);
+            let s_ = this.size || (() => r);
             //size - in geo
             /** @type {number} */
-            const sG = s_(cell[this.sizeCol], resolution, stat, cg.getZf())
+            const sG = s_(cell[this.sizeCol], r, stat, cg.getZf())
 
             //get symbol type
             const type_ = this.type ? this.type(cell) : "flag"
 
             //get offset
-            const offset = this.offset(cell, resolution, cg.getZf())
+            const offset = this.offset(cell, r, cg.getZf())
 
             //compute center position
-            const xc = cell.x + resolution * 0.5 + offset.dx;
-            const yc = cell.y + resolution * 0.5 + offset.dy;
+            const xc = cell.x + r * 0.5 + offset.dx;
+            const yc = cell.y + r * 0.5 + offset.dy;
 
             //draw decomposition symbol
             let cumul = 0;
-            const d = resolution * (1 - sG / resolution) * 0.5
+            const d = r * (1 - sG / r) * 0.5
             for (let [column, color] of Object.entries(this.color)) {
 
                 //get share
@@ -117,7 +117,7 @@ export class CompositionStyle extends Style {
                 if (type_ === "flag") {
 
                     //draw flag stripe
-                    if (this.stripesOrientation(cell[this.sizeCol], resolution, cg.getZf()) == 0) {
+                    if (this.stripesOrientation(cell[this.sizeCol], r, cg.getZf()) == 0) {
                         //horizontal
                         cg.ctx.fillRect(
                             cell.x + d + offset.dx,
@@ -160,19 +160,19 @@ export class CompositionStyle extends Style {
                 } else if (type_ === "segment") {
 
                     //draw segment sections
-                    const wG = sG * sG / resolution
-                    if (this.stripesOrientation(cell[this.sizeCol], resolution, cg.getZf()) == 0) {
+                    const wG = sG * sG / r
+                    if (this.stripesOrientation(cell[this.sizeCol], r, cg.getZf()) == 0) {
                         //horizontal
                         cg.ctx.fillRect(
                             cell.x + offset.dx,
-                            cell.y + (resolution - wG) / 2 + cumul * wG + offset.dy,
-                            resolution, share * wG);
+                            cell.y + (r - wG) / 2 + cumul * wG + offset.dy,
+                            r, share * wG);
                     } else {
                         //vertical
                         cg.ctx.fillRect(
-                            cell.x + cumul * resolution + offset.dx,
-                            cell.y + (resolution - wG) / 2 + offset.dy,
-                            share * resolution, wG);
+                            cell.x + cumul * r + offset.dx,
+                            cell.y + (r - wG) / 2 + offset.dy,
+                            share * r, wG);
                     }
 
                 } else {
@@ -224,8 +224,5 @@ export class CompositionStyle extends Style {
     getPieChartInternalRadiusFactor() { return this.pieChartInternalRadiusFactor; }
     /** @param {function(number,number,Stat,number):number} val @returns {this} */
     setPieChartInternalRadiusFactor(val) { this.pieChartInternalRadiusFactor = val; return this; }
-
-
-
 
 }

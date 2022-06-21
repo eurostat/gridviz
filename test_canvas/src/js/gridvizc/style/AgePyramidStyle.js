@@ -48,12 +48,15 @@ export class AgePyramidStyle extends Style {
         //nb categories
         const nbCat = Object.entries(this.color).length
 
-        //height, in pixel
-        const h = this.height(r) / cg.getZf()
-        const hPerCat = h / nbCat
+        //height, in geo
+        const hG = this.height(r)
+        const hPerCatG = hG / nbCat
 
         //get the stat
         const stat = getStat(cells, this.color, true);
+
+        //draw in geo coordinates
+        cg.setCanvasTransform()
 
         for (let cell of cells) {
 
@@ -61,11 +64,11 @@ export class AgePyramidStyle extends Style {
             const offset = this.offset(cell, r, cg.getZf())
 
             //
-            let hCumul = (-r / cg.getZf() + h) * 0.5
+            let hCumul = (r - hG)/2
 
             //compute cell position
-            const xc = cg.geoToPixX(cell.x + offset.dx);
-            const yc = cg.geoToPixY(cell.y + offset.dy);
+            const xc = cell.x + offset.dx;
+            const yc = cell.y + offset.dy;
 
             //draw decomposition symbols
             for (let [column, color] of Object.entries(this.color)) {
@@ -73,21 +76,21 @@ export class AgePyramidStyle extends Style {
                 //set category color
                 cg.ctx.fillStyle = color;
 
-                //get categroy value
+                //get category value
                 const val = cell[column]
 
-                //compute category length - in pixel
+                //compute category length - in geo
                 /** @type {number} */
-                const wP = this.length(val, r, stat, cg.getZf()) / cg.getZf()
+                const wG = this.length(val, r, stat, cg.getZf())
 
                 //draw bar
                 cg.ctx.fillRect(
-                    xc + (r / cg.getZf() - wP) * 0.5,
+                    xc + (r - wG)/2,
                     yc + hCumul,
-                    wP, -hPerCat);
+                    wG, hPerCatG);
 
                 //next height
-                hCumul -= hPerCat
+                hCumul += hPerCatG
             }
 
         }
