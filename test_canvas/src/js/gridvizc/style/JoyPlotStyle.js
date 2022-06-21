@@ -20,7 +20,7 @@ export class JoyPlotStyle extends Style {
         this.heightCol = opts.heightCol
 
         /** A function returning the height of a cell.
-         * @private @type {function(number,number,Stat,number):number} */
+         * @private @type {function(number,number,Stat|undefined,number):number} */
         this.height = opts.height || ((v) => Math.sqrt(v));
 
         /** @private @type {string} */
@@ -40,6 +40,8 @@ export class JoyPlotStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
+        //zoom factor
+        const zf = cg.getZf()
 
         //compute statistics
         const stat = getStatistics(cells, c => c[this.heightCol], true)
@@ -50,12 +52,13 @@ export class JoyPlotStyle extends Style {
         for (const cell of cells) {
             let row = ind[cell.y];
             if (!row) { row = {}; ind[cell.y] = row }
-            row[cell.x] = this.height(cell[this.heightCol], r, stat, cg.zf);
+            row[cell.x] = this.height(cell[this.heightCol], r, stat, zf);
         }
 
 
         //compute extent
         const e = cg.extGeo;
+        if (!e) return;
         const xMin = Math.floor(e.xMin / r) * r;
         const xMax = Math.floor(e.xMax / r) * r;
         const yMin = Math.floor(e.yMin / r) * r;
@@ -63,13 +66,14 @@ export class JoyPlotStyle extends Style {
 
         //set color and width
         cg.ctx.strokeStyle = this.lineColor;
-        cg.ctx.lineWidth = this.lineWidth;
+        cg.ctx.lineWidth = this.lineWidth * zf;
         cg.ctx.fillStyle = this.fillColor;
+
+        //draw in geo coordinates
+        cg.setCanvasTransform()
 
         //draw lines, row by row, stating from the top
         for (let y = yMax; y >= yMin; y -= r) {
-            //zoom factor
-            const zf = cg.getZf()
 
             //get row
             const row = ind[y]
@@ -77,15 +81,12 @@ export class JoyPlotStyle extends Style {
             //no row
             if (!row) continue;
 
-            //compute row baseline
-            const yP = cg.geoToPixY(y);
-
             //place first point
             cg.ctx.beginPath();
-            cg.ctx.moveTo(cg.geoToPixX(xMin - r / 2), yP);
+            cg.ctx.moveTo(xMin - r / 2, y);
 
             //store the previous height
-            /** @type {number} */
+            /** @type {number|undefined} */
             let hG_;
 
             //go through the line cells
@@ -99,11 +100,10 @@ export class JoyPlotStyle extends Style {
                 if (hG || hG_) {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo
-                    const dyP = hG / zf
-                    cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - dyP);
+                    cg.ctx.lineTo(x + r / 2, y + hG);
                 } else {
                     //else move the point
-                    cg.ctx.moveTo(cg.geoToPixX(x + r / 2), yP);
+                    cg.ctx.moveTo(x + r / 2, y);
                 }
                 //store the previous value
                 hG_ = hG;
@@ -111,7 +111,7 @@ export class JoyPlotStyle extends Style {
 
             //last point
             if (hG_)
-                cg.ctx.lineTo(cg.geoToPixX(xMax + r / 2), yP);
+                cg.ctx.lineTo(xMax + r / 2, y);
 
             //draw fill
             if (this.fillColor)
@@ -131,9 +131,9 @@ export class JoyPlotStyle extends Style {
     /** @param {string} val @returns {this} */
     setHeightCol(val) { this.heightCol = val; return this; }
 
-    /** @returns {function(number,number,Stat,number):number} */
+    /** @returns {function(number,number,Stat|undefined,number):number} */
     getHeight() { return this.height; }
-    /** @param {function(number,number,Stat,number):number} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
     setHeight(val) { this.height = val; return this; }
 
     /** @returns {string} */
