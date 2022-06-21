@@ -19,7 +19,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(900).setZoomFactorExtent([25, 6000]).setLabelLayer(gviz.getEuronymeLabelLayer())
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(900).setZoomFactorExtent([25, 4000]).setLabelLayer(gviz.getEuronymeLabelLayer())
 
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
@@ -32,13 +32,13 @@
 
         const ttfun = c => "Inhabitant(s)<br>2018: <b>" + c["2018"] + "</b><br>2011: <b>" + c["2011"] + "</b><br>2006: <b>" + c["2006"] + "</b>"
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
-        app.addTiledGridLayer(url + "1km/", [s], 0, 100, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer(url + "2km/", [s], 100, 200, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer(url + "5km/", [s], 200, 400, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer(url + "10km/", [s], 400, 800, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer(url + "20km/", [s], 800, 2000, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer(url + "50km/", [s], 2000, 4000, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer(url + "100km/", [s], 4000, 9999999999, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url + "1km/", [s], 0, 50, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url + "2km/", [s], 50, 100, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url + "5km/", [s], 100, 250, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url + "10km/", [s], 250, 500, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url + "20km/", [s], 500, 1000, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url + "50km/", [s], 1000, 2000, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer(url + "100km/", [s], 2000, 9999999999, { cellInfoHTML: ttfun });
 
     </script>
 </body>
