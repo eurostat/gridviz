@@ -1,11 +1,12 @@
 TODO remove more "geoToPix"
 TODO show adm boundaries
-TODO new version with indicator on gender unbalance
+TODO radio buttons
 TODO add missing legends: size, categories for composition, etc.
+
+TODO new version with indicator on gender unbalance
 TODO test style with border/discontinuities
 TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?
 TODO style with arrows (left, right) (as segment enrichment ?)
-TODO radio buttons
 TODO map type: value by alpha ?
 TODO map type: composition as linesup... pile of lines
 TODO map type: composition as donut ring ?
@@ -24,13 +25,13 @@ TODO mouse over: Show rectangle. Ask SE
 TODO on pan/zoom, hide tooltip
 TODO limit pan
 
-TODO composition as multi - make generic
+TODO map type: composition as multi - make generic
 TODO tiled datasets: accessibility (merge datasets), NL, etc.
 TODO make nice test with combination - need for client side join?
 TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache and remove inpriority the old-unused tiles.
 
-TODO style trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php
-TODO contour style. and hypsometric. See https://observablehq.com/@d3/density-contours https://observablehq.com/@sahilchinoy/contour-map?collection=@sahilchinoy/geo-experiments
+TODO map type: trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php
+TODO map type: contour style. and hypsometric. See https://observablehq.com/@d3/density-contours https://observablehq.com/@sahilchinoy/contour-map?collection=@sahilchinoy/geo-experiments
 
 TODO webGL investigation
 TODO background - images ?
