@@ -1,3 +1,4 @@
+TODO line up correct shadow direction ?
 TODO remove more "geoToPix"
 TODO show adm boundaries
 TODO new version with indicator on gender unbalance
