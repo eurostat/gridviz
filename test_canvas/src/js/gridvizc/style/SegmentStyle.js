@@ -77,6 +77,9 @@ export class SegmentStyle extends Style {
         //conversion factor degree -> radian
         const f = Math.PI / 180;
 
+        //draw in geo coordinates
+        cg.setCanvasTransform()
+
         for (let c of cells) {
 
             //color
@@ -107,12 +110,12 @@ export class SegmentStyle extends Style {
             cg.ctx.lineWidth = wG / zf
 
             //compute segment centre postition
-            const cx = cg.geoToPixX(c.x + resolution / 2 + offset.dx);
-            const cy = cg.geoToPixY(c.y + resolution / 2 + offset.dy);
+            const cx = c.x + resolution / 2 + offset.dx;
+            const cy = c.y + resolution / 2 + offset.dy;
 
             //compute segment direction
-            const dx = 0.5 * Math.cos(or) * lG / zf
-            const dy = 0.5 * Math.sin(or) * lG / zf
+            const dx = 0.5 * Math.cos(or) * lG
+            const dy = 0.5 * Math.sin(or) * lG
 
             //draw segment
             cg.ctx.beginPath();
