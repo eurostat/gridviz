@@ -13,7 +13,7 @@
         //make application
         const app = new gviz.App()
             .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setBackgroundColor("black")
-            .setLabelLayer(gviz.getEuronymeLabelLayer().setColor(c => "#fff8"))
+            .setLabelLayer(gviz.getEuronymeLabelLayer("EUR", 50, { haloColor: (() => "#222222BB"), color: (() => "#FFFFFF") }).setColor(c => "#fff8"))
 
         //define datasets, styles and layers
         const s = new gviz.SegmentStyle({
@@ -21,8 +21,7 @@
             colorCol: "2018",
             color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
             length: (v, r) => r,
-            width: (v, r, s, zf) => 2 * zf,
-            zfStroke: 50
+            width: (v, r, s, z) => 2 * z
         })
 
         const preprocess = c => {

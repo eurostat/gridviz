@@ -36,7 +36,7 @@ export class LabelLayer {
 
         /** Specify the label color, depending on its importance and the zoom level.
          * @private @type {function(Label,number):string} */
-        this.color = opts.color || (() => "#000000BB")
+        this.color = opts.color || (() => "#222")
 
         /** Specify the label halo color, depending on its importance and the zoom level.
          * @private @type {function(Label,number):string} */
