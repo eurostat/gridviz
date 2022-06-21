@@ -70,6 +70,7 @@ export class CompositionStyle extends Style {
             stat = getStatistics(cells, c => c[this.sizeCol], true)
         }
 
+        cg.setCanvasTransform()
         for (let cell of cells) {
 
             //compute total
@@ -84,11 +85,9 @@ export class CompositionStyle extends Style {
             //size
             /** @type {function(number,number,Stat|undefined,number):number} */
             let s_ = this.size || (() => resolution);
-            //size - in pixel and geo
+            //size - in geo
             /** @type {number} */
             const sG = s_(cell[this.sizeCol], resolution, stat, cg.getZf())
-            /** @type {number} */
-            const sP = sG / cg.getZf();
 
             //get symbol type
             const type_ = this.type ? this.type(cell) : "flag"
@@ -97,8 +96,8 @@ export class CompositionStyle extends Style {
             const offset = this.offset(cell, resolution, cg.getZf())
 
             //compute center position
-            const xc = cg.geoToPixX(cell.x + resolution * 0.5 + offset.dx);
-            const yc = cg.geoToPixY(cell.y + resolution * 0.5 + offset.dy);
+            const xc = cell.x + resolution * 0.5 + offset.dx;
+            const yc = cell.y + resolution * 0.5 + offset.dy;
 
             //draw decomposition symbol
             let cumul = 0;
@@ -115,17 +114,19 @@ export class CompositionStyle extends Style {
                 //draw symbol part
                 if (type_ === "flag") {
 
-                    //draw flag vertical stripe
+                    //draw flag stripe
                     if (this.stripesOrientation(cell[this.sizeCol], resolution, cg.getZf()) == 0) {
+                        //horizontal
                         cg.ctx.fillRect(
-                            cg.geoToPixX(cell.x + d + offset.dx),
-                            cg.geoToPixY(cell.y + resolution - d - cumul * sG + offset.dy),
-                            sP, share * sP);
+                            cell.x + d + offset.dx,
+                            cell.y + resolution - d - cumul * sG + offset.dy,
+                            sG, share * sG);
                     } else {
+                        //vertical
                         cg.ctx.fillRect(
-                            cg.geoToPixX(cell.x + d + cumul * sG + offset.dx),
-                            cg.geoToPixY(cell.y + resolution - d + offset.dy),
-                            share * sP, sP);
+                            cell.x + d + cumul * sG + offset.dx,
+                            cell.y + resolution - d + offset.dy,
+                            share * sG, sG);
                     }
                 } else if (type_ === "piechart") {
                     //draw pie chart angular sector
@@ -137,9 +138,9 @@ export class CompositionStyle extends Style {
                     //draw
                     cg.ctx.beginPath();
                     cg.ctx.moveTo(xc, yc);
-                    cg.ctx.arc(xc, yc, sP * 0.5, a1, a2);
+                    cg.ctx.arc(xc, yc, sG * 0.5, a1, a2);
                     if (this.pieChartInternalRadiusFactor)
-                        cg.ctx.arc(xc, yc, sP * 0.5 * this.pieChartInternalRadiusFactor, a2, a1, true);
+                        cg.ctx.arc(xc, yc, sG * 0.5 * this.pieChartInternalRadiusFactor, a2, a1, true);
                     cg.ctx.closePath();
                     cg.ctx.fill();
 
@@ -150,7 +151,7 @@ export class CompositionStyle extends Style {
                     cg.ctx.arc(
                         xc,
                         yc,
-                        Math.sqrt(1 - cumul) * sP * 0.5,
+                        Math.sqrt(1 - cumul) * sG * 0.5,
                         0, 2 * Math.PI);
                     cg.ctx.fill();
 
@@ -159,15 +160,17 @@ export class CompositionStyle extends Style {
                     //draw segment sections
                     const wG = sG * sG / resolution
                     if (this.stripesOrientation(cell[this.sizeCol], resolution, cg.getZf()) == 0) {
+                        //horizontal
                         cg.ctx.fillRect(
-                            cg.geoToPixX(cell.x + offset.dx),
-                            cg.geoToPixY(cell.y + resolution / 2 + wG / 2 - cumul * wG + offset.dy),
-                            resolution / cg.getZf(), share * wG / cg.getZf());
+                            cell.x + offset.dx,
+                            cell.y + resolution / 2 + wG / 2 - cumul * wG + offset.dy,
+                            resolution, share * wG);
                     } else {
+                        //vertical
                         cg.ctx.fillRect(
-                            cg.geoToPixX(cell.x + cumul * resolution + offset.dx),
-                            cg.geoToPixY(cell.y + resolution / 2 + wG / 2 + offset.dy),
-                            share * resolution / cg.getZf(), wG / cg.getZf());
+                            cell.x + cumul * resolution + offset.dx,
+                            cell.y + resolution / 2 + wG / 2 + offset.dy,
+                            share * resolution, wG );
                     }
 
                 } else {

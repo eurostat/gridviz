@@ -1,3 +1,4 @@
+TODO remove more "geoToPix"
 TODO show adm boundaries
 TODO new version with indicator on gender unbalance
 TODO add missing legends: size, categories for composition, etc.
@@ -5,11 +6,11 @@ TODO test style with border/discontinuities
 TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?
 TODO style with arrows (left, right) (as segment enrichment ?)
 TODO radio buttons
-TODO limit pan
 TODO map type: value by alpha ?
 TODO map type: composition as linesup... pile of lines
 TODO map type: composition as donut ring ?
 TODO map type: composition as stripped circles
+TODO map style: joyplot composition
 TODO linesup: Test with changeable width and fixed height ?
 TODO use filosofi 2017 to show evolutions
 TODO background image ? with relief shading.
@@ -21,6 +22,7 @@ TODO debug requests intensity - last check, etc. ! to ensure sent only once. Use
 TODO mouse over: Show rectangle. Ask SE
 
 TODO on pan/zoom, hide tooltip
+TODO limit pan
 
 TODO composition as multi - make generic
 TODO tiled datasets: accessibility (merge datasets), NL, etc.
