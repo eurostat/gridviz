@@ -35,9 +35,9 @@ export class TextStyle extends Style {
          * @protected @type {string} */
         this.fontSizeCol = opts.fontSizeCol;
 
-        /** A function returning the font size of a cell in geographical unit.
+        /** A function returning the font size of a cell in geo unit.
         * @protected @type {function(number,number,Stat|undefined,number):number} */
-        this.fontSize = opts.fontSize || ((v, r, s, z) => r / z - 2);
+        this.fontSize = opts.fontSize || ((v, r, s, z) => r - 2);
 
 
 
@@ -91,13 +91,13 @@ export class TextStyle extends Style {
             //font size
             /** @type {function(number,number,Stat|undefined,number):number} */
             let s_ = this.fontSize || (() => r / zf - 2);
-            //size - in geo unit
-            const fontSize = s_(cell[this.fontSizeCol], r, statFontSize, zf)
+            //size - in pixel unit
+            const fontSizePix = s_(cell[this.fontSizeCol], r, statFontSize, zf) / zf;
 
             //set font
             const fontFamily = this.fontFamily || "Arial";
             const fontWeight = this.fontWeight || "bold";
-            cg.ctx.font = fontWeight + " " + fontSize + "px " + fontFamily;
+            cg.ctx.font = fontWeight + " " + fontSizePix + "px " + fontFamily;
 
             //get offset
             const offset = this.offset(cell, r, zf)
@@ -105,7 +105,7 @@ export class TextStyle extends Style {
             //text position
             cg.ctx.textAlign = "center";
             const tx = cg.geoToPixX(cell.x + r * 0.5 + offset.dx);
-            const ty = cg.geoToPixY(cell.y + r * 0.5 + offset.dy) + fontSize * 0.5;
+            const ty = cg.geoToPixY(cell.y + r * 0.5 + offset.dy) + fontSizePix * 0.5;
 
             //draw the text
             cg.ctx.fillText(text, tx, ty);
