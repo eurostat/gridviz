@@ -107,7 +107,7 @@ export class SegmentStyle extends Style {
 
             //set color and width
             cg.ctx.strokeStyle = col
-            cg.ctx.lineWidth = wG / zf
+            cg.ctx.lineWidth = wG
 
             //compute segment centre postition
             const cx = c.x + resolution / 2 + offset.dx;
