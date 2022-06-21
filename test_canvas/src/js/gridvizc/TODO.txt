@@ -1,4 +1,3 @@
-TODO change anderlecht / brussels, "greater city of athen" tessalonique alicante manchester valetta gijon cherbourg tyneside poland
 TODO show adm boundaries
 TODO new version with indicator on gender unbalance
 TODO add missing legends: size, categories for composition, etc.
