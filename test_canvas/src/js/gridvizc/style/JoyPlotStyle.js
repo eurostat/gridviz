@@ -68,6 +68,8 @@ export class JoyPlotStyle extends Style {
 
         //draw lines, row by row, stating from the top
         for (let y = yMax; y >= yMin; y -= r) {
+            //zoom factor
+            const zf = cg.getZf()
 
             //get row
             const row = ind[y]
@@ -97,7 +99,7 @@ export class JoyPlotStyle extends Style {
                 if (hG || hG_) {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo
-                    const dyP = hG / cg.zf
+                    const dyP = hG / zf
                     cg.ctx.lineTo(cg.geoToPixX(x + r / 2), yP - dyP);
                 } else {
                     //else move the point

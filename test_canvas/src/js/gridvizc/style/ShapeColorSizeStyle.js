@@ -51,6 +51,8 @@ export class ShapeColorSizeStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
+        //zoom factor
+        const zf = cg.getZf()
 
         let statSize
         if (this.sizeCol) {
@@ -83,10 +85,10 @@ export class ShapeColorSizeStyle extends Style {
             /** @type {function(number,number,Stat|undefined,number):number} */
             let s_ = this.size || (() => resolution);
             //size - in geo unit
-            const sG = s_(cell[this.sizeCol], resolution, statSize, cg.getZf())
+            const sG = s_(cell[this.sizeCol], resolution, statSize, zf)
 
             //get offset
-            const offset = this.offset(cell, resolution, cg.getZf())
+            const offset = this.offset(cell, resolution, zf)
 
             if (shape === "square") {
                 //draw square

@@ -55,6 +55,8 @@ export class LineUpStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
+        //zoom factor
+        const zf = cg.getZf()
 
         let statHeight
         if (this.heightCol) {
@@ -75,11 +77,11 @@ export class LineUpStyle extends Style {
         }
 
         //get view center geo position
-        const cvx = cg.getCenter().x + this.viewSX * cg.w * cg.getZf()
-        const cvy = cg.getCenter().y + this.viewSY * cg.h * cg.getZf()
+        const cvx = cg.getCenter().x + this.viewSX * cg.w * zf
+        const cvy = cg.getCenter().y + this.viewSY * cg.h * zf
 
         //set view height
-        const H = this.viewHeightFactor * (cg.w+cg.h)*0.5 * cg.getZf()
+        const H = this.viewHeightFactor * (cg.w+cg.h)*0.5 * zf
 
         //sort cells by y and x
         //const distToViewCenter = (c) => { const dx = cvx - c.x, dy = cvy - c.y; return Math.sqrt(dx * dx + dy * dy) }

@@ -46,6 +46,8 @@ export class RadarStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
+        //zoom factor
+        const zf = cg.getZf()
 
         //nb categories
         const nbCat = Object.entries(this.color).length
@@ -60,10 +62,10 @@ export class RadarStyle extends Style {
         for (let cell of cells) {
 
             //get offset
-            const offset = this.offset(cell, r, cg.zf)
+            const offset = this.offset(cell, r, zf)
 
             //get offset angle
-            const offsetAngle = this.offsetAngle ? this.offsetAngle(cell, r, cg.zf) : 0
+            const offsetAngle = this.offsetAngle ? this.offsetAngle(cell, r, zf) : 0
             let angleCumul = Math.PI + offsetAngle * f
 
             //compute cell center position
@@ -81,7 +83,7 @@ export class RadarStyle extends Style {
 
                 //compute category radius - in pixel
                 /** @type {number} */
-                const rP = this.radius(val, r, stat, cg.zf) / cg.zf
+                const rP = this.radius(val, r, stat, zf) / zf
 
                 //draw angular sector
                 cg.ctx.beginPath();

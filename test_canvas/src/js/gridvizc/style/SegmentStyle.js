@@ -48,6 +48,8 @@ export class SegmentStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
+        //zoom factor
+        const zf = cg.getZf()
 
         let statColor
         if (this.colorCol) {
@@ -84,12 +86,12 @@ export class SegmentStyle extends Style {
 
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, cg.getZf()) : undefined
+            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, zf) : undefined
             if (!wG || wG < 0) continue
 
             //length
             /** @type {number|undefined} */
-            const lG = this.length ? this.length(c[this.lengthCol], resolution, statLength, cg.getZf()) : undefined
+            const lG = this.length ? this.length(c[this.lengthCol], resolution, statLength, zf) : undefined
             if (!lG || lG < 0) continue
 
             //orientation (in radian)
@@ -98,19 +100,19 @@ export class SegmentStyle extends Style {
             if (or === undefined || isNaN(or)) continue;
 
             //get offset
-            const offset = this.offset(c, resolution, cg.getZf())
+            const offset = this.offset(c, resolution, zf)
 
             //set color and width
             cg.ctx.strokeStyle = col
-            cg.ctx.lineWidth = wG / cg.getZf()
+            cg.ctx.lineWidth = wG / zf
 
             //compute segment centre postition
             const cx = cg.geoToPixX(c.x + resolution / 2 + offset.dx);
             const cy = cg.geoToPixY(c.y + resolution / 2 + offset.dy);
 
             //compute segment direction
-            const dx = 0.5 * Math.cos(or) * lG / cg.getZf()
-            const dy = 0.5 * Math.sin(or) * lG / cg.getZf()
+            const dx = 0.5 * Math.cos(or) * lG / zf
+            const dy = 0.5 * Math.sin(or) * lG / zf
 
             //draw segment
             cg.ctx.beginPath();

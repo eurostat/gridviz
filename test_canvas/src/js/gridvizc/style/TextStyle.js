@@ -59,6 +59,8 @@ export class TextStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
+        //zoom factor
+        const zf = cg.getZf()
 
         let statColor
         if (this.colorCol) {
@@ -88,9 +90,9 @@ export class TextStyle extends Style {
 
             //font size
             /** @type {function(number,number,Stat|undefined,number):number} */
-            let s_ = this.fontSize || (() => r / cg.getZf() - 2);
+            let s_ = this.fontSize || (() => r / zf - 2);
             //size - in geo unit
-            const fontSize = s_(cell[this.fontSizeCol], r, statFontSize, cg.getZf())
+            const fontSize = s_(cell[this.fontSizeCol], r, statFontSize, zf)
 
             //set font
             const fontFamily = this.fontFamily || "Arial";
@@ -98,7 +100,7 @@ export class TextStyle extends Style {
             cg.ctx.font = fontWeight + " " + fontSize + "px " + fontFamily;
 
             //get offset
-            const offset = this.offset(cell, r, cg.getZf())
+            const offset = this.offset(cell, r, zf)
 
             //text position
             cg.ctx.textAlign = "center";

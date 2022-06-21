@@ -61,6 +61,8 @@ export class CompositionStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
+        //zoom factor
+        const zf = cg.getZf()
 
         let stat
         if (this.sizeCol) {
@@ -89,13 +91,13 @@ export class CompositionStyle extends Style {
             let s_ = this.size || (() => r);
             //size - in geo
             /** @type {number} */
-            const sG = s_(cell[this.sizeCol], r, stat, cg.getZf())
+            const sG = s_(cell[this.sizeCol], r, stat, zf)
 
             //get symbol type
             const type_ = this.type ? this.type(cell) : "flag"
 
             //get offset
-            const offset = this.offset(cell, r, cg.getZf())
+            const offset = this.offset(cell, r, zf)
 
             //compute center position
             const xc = cell.x + r * 0.5 + offset.dx;
@@ -117,7 +119,7 @@ export class CompositionStyle extends Style {
                 if (type_ === "flag") {
 
                     //draw flag stripe
-                    if (this.stripesOrientation(cell[this.sizeCol], r, cg.getZf()) == 0) {
+                    if (this.stripesOrientation(cell[this.sizeCol], r, zf) == 0) {
                         //horizontal
                         cg.ctx.fillRect(
                             cell.x + d + offset.dx,
@@ -161,7 +163,7 @@ export class CompositionStyle extends Style {
 
                     //draw segment sections
                     const wG = sG * sG / r
-                    if (this.stripesOrientation(cell[this.sizeCol], r, cg.getZf()) == 0) {
+                    if (this.stripesOrientation(cell[this.sizeCol], r, zf) == 0) {
                         //horizontal
                         cg.ctx.fillRect(
                             cell.x + offset.dx,

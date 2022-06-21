@@ -44,6 +44,8 @@ export class AgePyramidStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
+        //zoom factor
+        const zf = cg.getZf()
 
         //nb categories
         const nbCat = Object.entries(this.color).length
@@ -61,10 +63,10 @@ export class AgePyramidStyle extends Style {
         for (let cell of cells) {
 
             //get offset
-            const offset = this.offset(cell, r, cg.getZf())
+            const offset = this.offset(cell, r, zf)
 
             //
-            let hCumul = (r - hG)/2
+            let hCumul = (r - hG) / 2
 
             //compute cell position
             const xc = cell.x + offset.dx;
@@ -81,11 +83,11 @@ export class AgePyramidStyle extends Style {
 
                 //compute category length - in geo
                 /** @type {number} */
-                const wG = this.length(val, r, stat, cg.getZf())
+                const wG = this.length(val, r, stat, zf)
 
                 //draw bar
                 cg.ctx.fillRect(
-                    xc + (r - wG)/2,
+                    xc + (r - wG) / 2,
                     yc + hCumul,
                     wG, hPerCatG);
 
