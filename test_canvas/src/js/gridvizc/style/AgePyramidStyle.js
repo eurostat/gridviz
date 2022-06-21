@@ -24,7 +24,7 @@ export class AgePyramidStyle extends Style {
         /**
          * The function specifying how the length of a bar depending on the statistical value, in geo unit.
          * 
-         * @private @type {function(number,number,Stat,number):number} */
+         * @private @type {function(number,number,Stat|undefined,number):number} */
         this.length = opts.length;
 
         /**
@@ -107,9 +107,9 @@ export class AgePyramidStyle extends Style {
     /** @param {function(Cell):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
-    /** @returns {function(number,number,Stat,number):number} */
+    /** @returns {function(number,number,Stat|undefined,number):number} */
     getLength() { return this.length; }
-    /** @param {function(number,number,Stat,number):number} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
     setLength(val) { this.length = val; return this; }
 
     /** @returns {function(number):number} */

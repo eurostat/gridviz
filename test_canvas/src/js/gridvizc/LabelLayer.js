@@ -52,8 +52,8 @@ export class LabelLayer {
          * @private @type {function(object):void} */
         this.preprocess = opts.preprocess
 
-        /** @private @type {Array.<Label>} */
-        this.labels = undefined
+        /** @private @type {Array.<Label> | undefined} */
+        this.labels
 
         /** @private @type {string} */
         this.loadingStatus = "notLoaded"
@@ -74,15 +74,21 @@ export class LabelLayer {
             return;
         }
 
+        //zoom factor
+        const zf = cg.getZf()
+
         //maybe another position (top right?)
         cg.ctx.textAlign = "center";
 
-        //draw labels, one by one
+
+        //draw in pix coordinates
         cg.initCanvasTransform()
+
+        //draw labels, one by one
         for (const lb of this.labels) {
 
             //get label style
-            const st = this.style(lb, cg.zf);
+            const st = this.style(lb, zf);
             if (!st) continue;
             cg.ctx.font = st;
 
@@ -95,8 +101,8 @@ export class LabelLayer {
 
             //label stroke, for the halo
             if (this.haloColor && this.haloWidth) {
-                const hc = this.haloColor(lb, cg.zf);
-                const hw = this.haloWidth(lb, cg.zf);
+                const hc = this.haloColor(lb, zf);
+                const hw = this.haloWidth(lb, zf);
                 if (hc && hw && hw > 0) {
                     cg.ctx.strokeStyle = hc;
                     cg.ctx.lineWidth = hw;
@@ -106,7 +112,7 @@ export class LabelLayer {
 
             //label fill
             if (this.color) {
-                const col = this.color(lb, cg.zf);
+                const col = this.color(lb, zf);
                 if (col) {
                     cg.ctx.fillStyle = col;
                     cg.ctx.fillText(lb.name, xP, yP);
