@@ -9,16 +9,41 @@
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
 
     <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
-        <select id="type">
-            <option value="square">Square style</option>
-            <option value="circle">Circle style</option>
-            <option value="donut" selected>Donut style</option>
-            <option value="lineup">Lineup style</option>
-            <option value="hseg">Horizontal segments style</option>
-            <option value="vseg">Vertical segments style</option>
-            <option value="oseg">Oblique segments style</option>
-            <option value="text">Text style</option>
-        </select>
+        <fieldset id="style" style="background-color: #FFFFFFDD; font-size: 13px;">
+            <legend>Style</legend>
+            <div>
+                <input type="radio" name="style" id="square" value="square">
+                <label for="square">Square</label>
+            </div>
+            <div>
+                <input type="radio" name="style" id="circle" value="circle">
+                <label for="circle">Circle</label>
+            </div>
+            <div>
+                <input type="radio" name="style" id="donut" value="donut" checked>
+                <label for="donut">Donut</label>
+            </div>
+            <div>
+                <input type="radio" name="style" id="lineup" value="lineup">
+                <label for="lineup">Lineup</label>
+            </div>
+            <div>
+                <input type="radio" name="style" id="hseg" value="hseg">
+                <label for="hseg">Horizontal segments</label>
+            </div>
+            <div>
+                <input type="radio" name="style" id="vseg" value="vseg">
+                <label for="vseg">Vertical segments</label>
+            </div>
+            <div>
+                <input type="radio" name="style" id="oseg" value="oseg">
+                <label for="oseg">Oblique segments</label>
+            </div>
+            <div>
+                <input type="radio" name="style" id="text" value="text">
+                <label for="text">Text</label>
+            </div>
+        </fieldset>
     </div>
 
     <script src="../build/gridvizc.js"></script>
@@ -26,7 +51,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 3700000, y: 2760000 }).setZoomFactor(50).setZoomFactorExtent([15, 3000]).setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { /*color: ()=>"white", haloColor: () => "black"*/ }))//.setBackgroundColor("#ddd")
+            .setGeoCenter({ x: 3700000, y: 2760000 }).setZoomFactor(50).setZoomFactorExtent([15, 3000]).setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { color: ()=>"white", haloColor: () => "black" })).setBackgroundColor("#000")
 
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
@@ -93,43 +118,44 @@
         app.addTiledGridLayer(url + "20000m/", [s], 1000, 2000, { cellInfoHTML: ttfun, preprocess: pp });
         app.addTiledGridLayer(url + "50000m/", [s], 2000, 9999999999, { cellInfoHTML: ttfun, preprocess: pp });
 
-
-        //combo list
-        const select = document.querySelector('#type');
-        select.addEventListener('change', function () {
+        //style selector
+        document.querySelector('#style').addEventListener('change', function () {
             //set style
+            const value = document.querySelector('input[name="style"]:checked').value
             let st;
-            if (select.value === "donut") {
+            if (value === "donut") {
                 s.setShape(() => "donut")
                 st = s
-            } else if (select.value === "square") {
+            } else if (value === "square") {
                 s.setShape(() => "square")
                 st = s
-            } else if (select.value === "circle") {
+            } else if (value === "circle") {
                 s.setShape(() => "circle")
                 st = s
-            } else if (select.value === "hseg") {
+            } else if (value === "hseg") {
                 sSegment.setOrientation(() => 0)
                 sSegment.setLength((v, r) => r)
                 st = sSegment
-            } else if (select.value === "vseg") {
+            } else if (value === "vseg") {
                 sSegment.setOrientation(() => 90)
                 sSegment.setLength((v, r) => r)
                 st = sSegment
-            } else if (select.value === "oseg") {
+            } else if (value === "oseg") {
                 sSegment.setOrientation(() => -45)
                 sSegment.setLength((v, r) => 1.4142 * r)
                 st = sSegment
-            } else if (select.value === "lineup") {
+            } else if (value === "lineup") {
                 st = sLineup
-            } else if (select.value === "text") {
+            } else if (value === "text") {
                 st = sText
             }
             //set style
             for (let lay of app.layers) lay.styles = [st]
             //redraw
             app.cg.redraw();
-        });
+        })
+
+
 
     </script>
 

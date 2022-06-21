@@ -1,6 +1,5 @@
-labels: cg.ctx.textAlign = "center";
-TODO show adm boundaries
 TODO radio buttons
+TODO show adm boundaries
 TODO add missing legends: size, categories for composition, etc.
 
 TODO new version with indicator on gender unbalance
