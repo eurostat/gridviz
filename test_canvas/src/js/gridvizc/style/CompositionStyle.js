@@ -70,7 +70,9 @@ export class CompositionStyle extends Style {
             stat = getStatistics(cells, c => c[this.sizeCol], true)
         }
 
+        //draw in geo coordinates
         cg.setCanvasTransform()
+
         for (let cell of cells) {
 
             //compute total
