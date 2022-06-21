@@ -59,6 +59,9 @@ export class RadarStyle extends Style {
         //get the stat
         const stat = getStat(cells, this.color, true);
 
+        //draw in geo coordinates
+        cg.setCanvasTransform()
+
         for (let cell of cells) {
 
             //get offset
@@ -69,8 +72,8 @@ export class RadarStyle extends Style {
             let angleCumul = Math.PI + offsetAngle * f
 
             //compute cell center position
-            const xc = cg.geoToPixX(cell.x + r * 0.5 + offset.dx);
-            const yc = cg.geoToPixY(cell.y + r * 0.5 + offset.dy);
+            const xc = cell.x + r * 0.5 + offset.dx;
+            const yc = cell.y + r * 0.5 + offset.dy;
 
             //draw decomposition symbols
             for (let [column, color] of Object.entries(this.color)) {
@@ -81,14 +84,14 @@ export class RadarStyle extends Style {
                 //get categroy value
                 const val = cell[column]
 
-                //compute category radius - in pixel
+                //compute category radius - in geo
                 /** @type {number} */
-                const rP = this.radius(val, r, stat, zf) / zf
+                const rG = this.radius(val, r, stat, zf)
 
                 //draw angular sector
                 cg.ctx.beginPath();
                 cg.ctx.moveTo(xc, yc);
-                cg.ctx.arc(xc, yc, rP, angleCumul - angle, angleCumul);
+                cg.ctx.arc(xc, yc, rG, angleCumul - angle, angleCumul);
                 cg.ctx.lineTo(xc, yc);
                 cg.ctx.fill();
 
