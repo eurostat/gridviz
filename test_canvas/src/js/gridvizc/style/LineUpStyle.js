@@ -81,13 +81,16 @@ export class LineUpStyle extends Style {
         const cvy = cg.getCenter().y + this.viewSY * cg.h * zf
 
         //set view height
-        const H = this.viewHeightFactor * (cg.w+cg.h)*0.5 * zf
+        const H = this.viewHeightFactor * (cg.w + cg.h) * 0.5 * zf
 
         //sort cells by y and x
         //const distToViewCenter = (c) => { const dx = cvx - c.x, dy = cvy - c.y; return Math.sqrt(dx * dx + dy * dy) }
         cells.sort((c1, c2) => 100000000 * (c2.y - c1.y) + c1.x - c2.x);
 
         cg.ctx.lineCap = "round";
+
+        //draw in geo coordinates
+        cg.setCanvasTransform()
 
         //shadows
         cg.ctx.strokeStyle = this.shadowColor
@@ -108,7 +111,7 @@ export class LineUpStyle extends Style {
             const offset = this.offset(c, resolution, zf)
 
             //set width
-            cg.ctx.lineWidth = wG / zf
+            cg.ctx.lineWidth = wG
 
             //compute cell centre postition
             const cx = c.x + resolution / 2;
@@ -117,8 +120,8 @@ export class LineUpStyle extends Style {
 
             //draw segment
             cg.ctx.beginPath();
-            cg.ctx.moveTo(cg.geoToPixX(cx), cg.geoToPixY(cy));
-            cg.ctx.lineTo(cg.geoToPixX(cx + ls * Math.cos(this.shadowDirection)), cg.geoToPixY(cy + ls * Math.sin(this.shadowDirection)));
+            cg.ctx.moveTo(cx, cy);
+            cg.ctx.lineTo(cx + ls * Math.cos(this.shadowDirection), cy + ls * Math.sin(this.shadowDirection));
             cg.ctx.stroke();
 
             //draw bottom circle
@@ -127,8 +130,8 @@ export class LineUpStyle extends Style {
             //cg.ctx.lineWidth = 3
             cg.ctx.beginPath();
             cg.ctx.arc(
-                cg.geoToPixX(cx), cg.geoToPixY(cy),
-                wG / zf * 0.5,
+                cx, cy,
+                wG * 0.5,
                 0, 2 * Math.PI, false);
             //cg.ctx.stroke();
             cg.ctx.fill();
@@ -170,28 +173,28 @@ export class LineUpStyle extends Style {
 
             //draw background segment
             cg.ctx.strokeStyle = this.outlineCol
-            cg.ctx.lineWidth = wG / zf + 2*this.outlineWidthPix
+            cg.ctx.lineWidth = wG + 2 * this.outlineWidthPix * zf
             cg.ctx.beginPath();
-            cg.ctx.moveTo(cg.geoToPixX(cx), cg.geoToPixY(cy));
-            cg.ctx.lineTo(cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)));
+            cg.ctx.moveTo(cx, cy);
+            cg.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a));
             cg.ctx.stroke();
 
             //draw segment
             cg.ctx.strokeStyle = col
-            cg.ctx.lineWidth = wG / zf
+            cg.ctx.lineWidth = wG
             cg.ctx.beginPath();
-            cg.ctx.moveTo(cg.geoToPixX(cx), cg.geoToPixY(cy));
-            cg.ctx.lineTo(cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)));
+            cg.ctx.moveTo(cx, cy);
+            cg.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a));
             cg.ctx.stroke();
 
             //draw top circle
             cg.ctx.strokeStyle = this.outlineCol
             //cg.ctx.fillStyle = "#c08c59"
-            cg.ctx.lineWidth = this.outlineWidthPix
+            cg.ctx.lineWidth = this.outlineWidthPix * zf
             cg.ctx.beginPath();
             cg.ctx.arc(
-                cg.geoToPixX(cx + d * Math.cos(a)), cg.geoToPixY(cy + d * Math.sin(a)),
-                wG / zf * 0.5 ,//- 1,
+                cx + d * Math.cos(a), cy + d * Math.sin(a),
+                wG * 0.5,
                 0, 2 * Math.PI, false);
             cg.ctx.stroke();
             //cg.ctx.fill();
