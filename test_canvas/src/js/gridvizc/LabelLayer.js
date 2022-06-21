@@ -46,6 +46,15 @@ export class LabelLayer {
         * @private @type {function(Label,number):number} */
         this.haloWidth = opts.haloWidth || (() => 3)
 
+        /** The anchor where to draw the text, from label position. See HTML-canvas textAlign property.
+         * "left" || "right" || "center" || "start" || "end"
+         * @private @type {string} */
+        this.textAlign = opts.textAlign || "start"
+
+        /**
+        * @private @type {Array.<number>} */
+        this.offsetPix = opts.offsetPix || [5, 5]
+
         /** 
          * A preprocess to run on each label after loading.
          * It can be used to apply some specific treatment before, format the label data, project coordinates, etc.
@@ -77,8 +86,8 @@ export class LabelLayer {
         //zoom factor
         const zf = cg.getZf()
 
-        //maybe another position (top right?)
-        cg.ctx.textAlign = "center";
+        //text align
+        cg.ctx.textAlign = this.textAlign || "start";
 
 
         //draw in pix coordinates
@@ -96,8 +105,8 @@ export class LabelLayer {
             if (!cg.toDraw(lb)) continue;
 
             //position
-            const xP = cg.geoToPixX(lb.x)
-            const yP = cg.geoToPixY(lb.y)
+            const xP = cg.geoToPixX(lb.x) + this.offsetPix[0]
+            const yP = cg.geoToPixY(lb.y) - this.offsetPix[1]
 
             //label stroke, for the halo
             if (this.haloColor && this.haloWidth) {

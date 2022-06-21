@@ -1,5 +1,4 @@
 labels: cg.ctx.textAlign = "center";
-TODO remove more "geoToPix"
 TODO show adm boundaries
 TODO radio buttons
 TODO add missing legends: size, categories for composition, etc.
