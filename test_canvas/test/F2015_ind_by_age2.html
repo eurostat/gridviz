@@ -69,11 +69,11 @@
 
         //text
         const sText = new gviz.TextStyle({
-            text: c => ""+Math.trunc(100 * c["age_ratio"]),
+            text: c => "" + Math.trunc(100 * c["age_ratio"]),
             colorCol: "age_ratio",
             color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
             fontSizeCol: "Ind",
-            fontSize: (v, r, s, z) => (4 + 0.8*r * Math.pow(v / s.max, 0.2)),
+            fontSize: (v, r, s, z) => (5 + 1.0 * r * Math.pow(v / s.max, 0.2)),
         })
 
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>Below 25: " + c.yyy + "<br>Above 55: " + c.ooo;
