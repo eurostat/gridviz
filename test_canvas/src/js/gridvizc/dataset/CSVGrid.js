@@ -27,7 +27,7 @@ export class CSVGrid extends Dataset {
     /**
      * Request data within a geographic envelope.
      * 
-     * @param {Envelope} e 
+     * @param {Envelope|undefined} e 
      * @param {function():void} redraw 
      */
     getData(e, redraw) {

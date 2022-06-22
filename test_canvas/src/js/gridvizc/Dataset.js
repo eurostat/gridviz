@@ -51,7 +51,7 @@ export class Dataset {
      * Request data within a geographic envelope.
      * 
      * @abstract
-     * @param {Envelope} extGeo 
+     * @param {Envelope|undefined} extGeo 
      * @param {function():void} callback 
      * @returns {this}
      */

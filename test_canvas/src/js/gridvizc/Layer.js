@@ -31,16 +31,30 @@ export class Layer extends ALayer {
 
     }
 
+    /**
+     * @param {number} zf 
+     * @returns {Layer|undefined}  */
+    getLayer(zf) {
+        if (this.maxZoom < zf || this.minZoom >= zf)
+            return;
+        return this;
+    }
+
+
     /** Show all legend elements of the layer, if any */
     showLegend() {
-        for (const style of this.styles)
-            if (style.getLegend()) style.getLegend().show()
+        for (const style of this.styles) {
+            const lg = style.getLegend()
+            if (lg) lg.show()
+        }
     }
 
     /** Hide all legend elements of the layer, if any */
     hideLegend() {
-        for (const style of this.styles)
-            if (style.getLegend()) style.getLegend().hide()
+        for (const style of this.styles) {
+            const lg = style.getLegend()
+            if (lg) lg.hide()
+        }
     }
 
 }

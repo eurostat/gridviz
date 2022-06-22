@@ -82,9 +82,14 @@ export class TiledGrid extends Dataset {
      * This is the function to use to know which tiles to download for a geographical view.
      * 
      * @param {Envelope} e 
-     * @returns {Envelope}
+     * @returns {Envelope|undefined}
      */
     getTilingEnvelope(e) {
+        if (!this.info) {
+            this.loadInfo(() => { });
+            return;
+        }
+
         const po = this.info.originPoint,
             r = this.info.resolutionGeo,
             s = this.info.tileSizeCell;
@@ -112,8 +117,9 @@ export class TiledGrid extends Dataset {
         if (!this.info) return this;
 
         //tiles within the scope
-        /** @type {Envelope} */
+        /** @type {Envelope|undefined} */
         const tb = this.getTilingEnvelope(extGeo);
+        if (!tb) return this;
 
         //grid bounds
         /** @type {Envelope} */
@@ -200,8 +206,9 @@ export class TiledGrid extends Dataset {
         if (!this.info) return;
 
         //tiles within the scope
-        /** @type {Envelope} */
+        /** @type {Envelope|undefined} */
         const tb = this.getTilingEnvelope(extGeo);
+        if (!tb) return;
 
         //grid bounds
         /** @type {Envelope} */

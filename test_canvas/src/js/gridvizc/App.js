@@ -1,6 +1,7 @@
 //@ts-check
 
 import { GeoCanvas, Envelope } from './GeoCanvas';
+import { ALayer } from './ALayer';
 import { Layer } from './Layer';
 import { Style } from './Style';
 import { Dataset, Cell } from './Dataset';
@@ -26,7 +27,7 @@ export class App {
 
         /**
          * The layers.
-         * @type {Array.<Layer>}
+         * @type {Array.<ALayer>}
          * */
         this.layers = [];
 
@@ -54,14 +55,15 @@ export class App {
         this.cg.redraw = () => {
 
             //hide legends
-            for (const layer of this.layers) layer.hideLegend()
+            for (const alayer of this.layers) alayer.hideLegend()
 
             //go through the layers
             const zf = this.getZoomFactor();
-            for (const layer of this.layers) {
-                //check if layer zoom extent contains current zoom factor
-                if (layer.maxZoom < zf || layer.minZoom >= zf)
-                    continue;
+            for (const alayer of this.layers) {
+
+                //get layer
+                const layer = alayer.getLayer(zf)
+                if(!layer) continue;
 
                 //get data to show
                 layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
@@ -174,7 +176,7 @@ export class App {
      */
     addCSVGridLayer(url, resolution, styles, minZoom, maxZoom, opts) {
         return this.addLayer(
-            new CSVGrid(url, resolution, opts).getData(null, () => { this.cg.redraw(); }),
+            new CSVGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); }),
             styles, minZoom, maxZoom
         )
     }
@@ -196,10 +198,9 @@ export class App {
 
         //go through the layers
         const zf = this.getZoomFactor();
-        for (const layer of this.layers) {
-            //check if layer zoom extent contains current zoom factor
-            if (layer.maxZoom < zf) continue;
-            if (layer.minZoom >= zf) continue;
+        for (const alayer of this.layers) {
+            const layer = alayer.getLayer(zf)
+            if (!layer) continue;
             out.push(layer);
         }
         return out;
@@ -220,7 +221,7 @@ export class App {
         const layer = lays[lays.length - 1]
         if (!layer) return undefined;
         //get cell at mouse position
-        /** @type {Cell} */
+        /** @type {Cell|undefined} */
         const cell = layer.dataset.getCellFromPosition(posGeo, layer.dataset.getViewCache());
         if (!cell) return undefined;
         return { cell: cell, html: layer.dataset.cellInfoHTML(cell) };
