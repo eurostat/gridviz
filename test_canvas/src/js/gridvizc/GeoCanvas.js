@@ -34,14 +34,14 @@ export class GeoCanvas {
         this.ctx = this.canvas.getContext("2d");
 
         // set geo coordinates of the center
-        this.setCenter(center || { x: this.w * 0.5, y: this.h * 0.5 })
+        this.center = center || { x: this.w * 0.5, y: this.h * 0.5 };
 
         // set zoom factor: pixel size, in m/pix
-        this.setZf(zf);
+        this.zf = zf;
 
         //current extent
-        /** @type {Envelope|undefined} */
-        this.extGeo = undefined;
+        /** @type {Envelope} */
+        this.extGeo = { xMin: NaN, xMax: NaN, yMin: NaN, yMax: NaN };
         this.updateExtentGeo()
 
         //rely on d3 zoom for pan/zoom
@@ -223,7 +223,7 @@ export class GeoCanvas {
 
 /**
  * @param {string} name
- * @returns {string}
+ * @returns {string | null}
  */
 const getParameterByName = function (name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
