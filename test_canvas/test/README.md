@@ -1,14 +1,10 @@
 # Tests
 
-- By Color:
-  - https://eurostat.github.io/gridviz/test_canvas/test/color.html
-  - https://eurostat.github.io/gridviz/test_canvas/test/color_diverging.html
-- By size: https://eurostat.github.io/gridviz/test_canvas/test/size.html
+- Europe population by color, size, joyplot and lineup styles: https://eurostat.github.io/gridviz/test_canvas/test/EUR_population.html
+- Europe population change by Color: https://eurostat.github.io/gridviz/test_canvas/test/color_diverging.html
 - Composition: https://eurostat.github.io/gridviz/test_canvas/test/composition.html
 - Segment orientation: https://eurostat.github.io/gridviz/test_canvas/test/segment.html
 - Gaussian kernel smoothing: https://eurostat.github.io/gridviz/test_canvas/test/kernelsmoothing.html
-- Joy plot: https://eurostat.github.io/gridviz/test_canvas/test/joyplot.html
-- Lines up: https://eurostat.github.io/gridviz/test_canvas/test/lineup.html
 - Combination: https://eurostat.github.io/gridviz/test_canvas/test/combination.html
 
 # France - 200m (Filosofi 2015)
