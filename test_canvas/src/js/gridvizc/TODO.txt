@@ -1,4 +1,3 @@
-TODO radio buttons
 TODO show adm boundaries
 TODO add missing legends: size, categories for composition, etc.
 
