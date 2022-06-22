@@ -48,7 +48,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(700).setZoomFactorExtent([25, 10000])
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(700).setZoomFactorExtent([25, 100000])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //test view from URL parameters, if any
@@ -99,8 +99,10 @@
                 { code: "5km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
                 { code: "10km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
                 { code: "20km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
+                { code: "50km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
+                { code: "100km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
             ],
-            [0, 500, 1000, 2000, 4000, 999999999]
+            [0, 500, 1000, 2500, 5000, 10000, 25000, 50000]
         )
 
         //combo list - year selection
