@@ -21,17 +21,21 @@
                 <option value="2018" selected>2018</option>
                 <option value="2011">2011</option>
                 <option value="2006">2006</option>
-            </select><br>
-            Source: <a href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/grids" target="_blank"
-                rel="noopener noreferrer">Eurostat</a></span>
-    </div>
-
-    <div
-        style="position: absolute; right: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
+            </select>
+            <hr>Style<br>
+            <input type="radio" name="style" id="color" value="color">
+            <label for="color">Color</label>
+            <input type="radio" name="style" id="size" value="size">
+            <label for="size">Size</label>
+            <input type="radio" name="style" id="joyplot" value="joyplot">
+            <label for="joyplot">Joyplot</label>
+            <hr>
             <input type="checkbox" id="label" checked>
             <label for="label">Show labels</label><br>
             <input type="checkbox" id="boundary" checked>
             <label for="boundary">Show boundaries</label>
+            <hr>Source: <a href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/grids" target="_blank"
+                rel="noopener noreferrer">Eurostat</a></span>
     </div>
 
     <script src="../build/gridvizc.js"></script>
