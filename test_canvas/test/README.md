@@ -1,9 +1,9 @@
 # Europe population - geostat grid (1km)
 
 - Europe population by color, size, joyplot and lineup styles: https://eurostat.github.io/gridviz/test_canvas/test/EUR_population.html
-- Europe population change by Color: https://eurostat.github.io/gridviz/test_canvas/test/color_diverging.html
-- Segment orientation: https://eurostat.github.io/gridviz/test_canvas/test/segment.html
-- Gaussian kernel smoothing: https://eurostat.github.io/gridviz/test_canvas/test/kernelsmoothing.html
+- Europe population change by Color: https://eurostat.github.io/gridviz/test_canvas/test/EUR_color_diverging.html
+- Segment orientation: https://eurostat.github.io/gridviz/test_canvas/test/EUR_segment.html
+- Gaussian kernel smoothing: https://eurostat.github.io/gridviz/test_canvas/test/EUR_kernelsmoothing.html
 
 # France - 200m (Filosofi 2015)
 
@@ -22,5 +22,5 @@
 
 # NL
 
-- Composition: https://eurostat.github.io/gridviz/test_canvas/test/composition.html
-- Combination: https://eurostat.github.io/gridviz/test_canvas/test/combination.html
+- Composition: https://eurostat.github.io/gridviz/test_canvas/test/NL_composition.html
+- Combination: https://eurostat.github.io/gridviz/test_canvas/test/NL_combination.html
