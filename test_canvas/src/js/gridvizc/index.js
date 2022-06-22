@@ -64,7 +64,7 @@ export const getEurostatBoundariesLayer = function (opts) {
     opts = opts || {}
     const nutsYear = opts.nutsYear || "2021"
     const crs = opts.crs || "3035"
-    const scale = opts.scale || "03M"
+    const scale = opts.scale || "10M"
     const nutsLevel = opts.nutsLevel || "3"
 
     opts.color = opts.color || ((f, zf) => {
