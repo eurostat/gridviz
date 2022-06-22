@@ -8,8 +8,11 @@
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
 
-    <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
-        <fieldset id="style" style="background-color: #FFFFFFDD; font-size: 13px;">
+    <div
+        style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFEE; line-height: 1.6; box-shadow: 5px 5px 5px grey">
+        <span style="font-size: 17pt; font-weight: bold;">France agée et France jeune</span>
+        <br>
+        <fieldset id="style" style="font-size: 13px;">
             <legend>Style</legend>
             <div>
                 <input type="radio" name="style" id="square" value="square">
@@ -44,6 +47,9 @@
                 <label for="text">Text</label>
             </div>
         </fieldset>
+        <span style="font-size: 10pt;">
+            Source: <a href="https://www.insee.fr/fr/statistiques/4176290?sommaire=4176305" target="_blank"
+                rel="noopener noreferrer">INSEE - Filosofi 2015 - 200m grid</a></span>
     </div>
 
     <script src="../build/gridvizc.js"></script>
@@ -51,7 +57,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 3700000, y: 2760000 }).setZoomFactor(50).setZoomFactorExtent([15, 3000]).setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { color: ()=>"white", haloColor: () => "black" })).setBackgroundColor("#000")
+            .setGeoCenter({ x: 3700000, y: 2760000 }).setZoomFactor(50).setZoomFactorExtent([15, 3000]).setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { color: () => "white", haloColor: () => "black" })).setBackgroundColor("#000")
 
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
