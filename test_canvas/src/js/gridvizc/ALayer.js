@@ -1,7 +1,5 @@
 //@ts-check
 
-import { Layer } from "./Layer";
-
 /**
  * 
  * @author Julien Gaffuri
@@ -15,7 +13,7 @@ export class ALayer {
     /**
      * @abstract
      * @param {number} zf 
-     * @returns {Layer|undefined}  */
+     * @returns {object}  */
     getLayer(zf) {
         throw new Error('Method getLayer not implemented.');
     }
