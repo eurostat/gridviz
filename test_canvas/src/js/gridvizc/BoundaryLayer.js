@@ -23,6 +23,13 @@ export class BoundaryLayer {
          * @private @type {function(object):void} */
         this.preprocess = opts.preprocess
 
+        /** 
+         * @private @type {function(object,number):string} */
+         this.color = opts.color || ((f,zf) => "gray")
+        /** 
+         * @private @type {function(object,number):number} */
+         this.width = opts.width || ((f,zf) => 2)
+
         /** @private @type {Array.<object> | undefined} */
         this.fs
 
@@ -44,23 +51,33 @@ export class BoundaryLayer {
             return;
         }
 
+        //TODO sort lines by width ?
+
         //zoom factor
         const zf = cg.getZf()
 
         //draw in geo coordinates
         cg.setCanvasTransform()
 
-        cg.ctx.strokeStyle = "red";
-        cg.ctx.lineWidth = 2 * zf;
-
         for (const f of this.fs) {
             const cs = f.geometry.coordinates
-            if(cs.length <2) continue;
+            if (cs.length < 2) continue;
 
+            //set color
+            const col = this.color(f, zf);
+            if(!col || col == "none") continue
+            cg.ctx.strokeStyle = col;
+
+            //set linewidth
+            const wP = this.width(f, zf);
+            if(!wP || wP<0) continue
+            cg.ctx.lineWidth = wP * zf;
+
+            //draw line
             cg.ctx.beginPath();
             cg.ctx.moveTo(cs[0][0], cs[0][1]);
-            for(let i=1; i<cs.legend; i++)
-            cg.ctx.lineTo(cs[i][0], cs[i][1]);
+            for (let i = 1; i < cs.length; i++)
+                cg.ctx.lineTo(cs[i][0], cs[i][1]);
             cg.ctx.stroke();
         }
 
