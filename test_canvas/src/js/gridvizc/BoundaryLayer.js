@@ -44,50 +44,26 @@ export class BoundaryLayer {
             return;
         }
 
-        console.log("Draw boundaries: ", this.fs)
-
         //zoom factor
-        //const zf = cg.getZf()
+        const zf = cg.getZf()
 
-        /*/draw in pix coordinates
-        cg.initCanvasTransform()
+        //draw in geo coordinates
+        cg.setCanvasTransform()
 
-        //draw labels, one by one
-        for (const lb of this.labels) {
+        cg.ctx.strokeStyle = "red";
+        cg.ctx.lineWidth = 2 * zf;
 
-            //get label style
-            const st = this.style(lb, zf);
-            if (!st) continue;
-            cg.ctx.font = st;
+        for (const f of this.fs) {
+            const cs = f.geometry.coordinates
+            if(cs.length <2) continue;
 
-            //check label within the view, to be drawn
-            if (!cg.toDraw(lb)) continue;
+            cg.ctx.beginPath();
+            cg.ctx.moveTo(cs[0][0], cs[0][1]);
+            for(let i=1; i<cs.legend; i++)
+            cg.ctx.lineTo(cs[i][0], cs[i][1]);
+            cg.ctx.stroke();
+        }
 
-            //position
-            const xP = cg.geoToPixX(lb.x) + this.offsetPix[0]
-            const yP = cg.geoToPixY(lb.y) - this.offsetPix[1]
-
-            //label stroke, for the halo
-            if (this.haloColor && this.haloWidth) {
-                const hc = this.haloColor(lb, zf);
-                const hw = this.haloWidth(lb, zf);
-                if (hc && hw && hw > 0) {
-                    cg.ctx.strokeStyle = hc;
-                    cg.ctx.lineWidth = hw;
-                    cg.ctx.strokeText(lb.name, xP, yP);
-                }
-            }
-
-            //label fill
-            if (this.color) {
-                const col = this.color(lb, zf);
-                if (col) {
-                    cg.ctx.fillStyle = col;
-                    cg.ctx.fillText(lb.name, xP, yP);
-                }
-
-            }
-        }*/
     }
 
     /**
