@@ -54,7 +54,6 @@
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
 
-
         //style data
         const sd = {
             color: {
@@ -62,7 +61,7 @@
                     colorCol: "2018",
                     color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
                     zfStroke: 80
-                }).addLegend({ id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) }),
+                }), //.addLegend({ id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) }),
                 zooms: []
             },
             size: {
@@ -115,12 +114,13 @@
 
         //style selector
         document.querySelector('#style').addEventListener('change', function () {
-            //set style
+            //get checked value
             const value = document.querySelector('input[name="style"]:checked').value
-            console.log(value)
 
-            //set style
-            //for (let lay of app.layers) lay.styles = [st]
+            //set new style
+            const ml = app.layers[0];
+            for (const lay of ml.layers) lay.styles = [sd[value].style]
+
             //redraw
             app.cg.redraw();
         })
