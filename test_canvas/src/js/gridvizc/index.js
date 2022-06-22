@@ -64,21 +64,25 @@ export const getEurostatBoundariesLayer = function (opts) {
     opts = opts || {}
     const nutsYear = opts.nutsYear || "2021"
     const crs = opts.crs || "3035"
-    const scale = opts.scale || "10M"
+    const scale = opts.scale || "03M"
     const nutsLevel = opts.nutsLevel || "3"
 
     opts.color = opts.color || ((f, zf) => {
         const p = f.properties
-        if(p.co === "T") return
-        //lvl - zf
-        return "gray"
+        if (p.co === "T") return
+        if (zf < 400) return "gray"
+        else if (zf < 1000) return p.lvl >= 3 ? "" : "gray"
+        else if (zf < 2000) return p.lvl >= 2 ? "" : "gray"
+        else return p.lvl >= 1 ? "" : "gray"
     })
 
     opts.width = opts.width || ((f, zf) => {
         const p = f.properties
-        if(p.co === "T") return
-        //lvl - zf
-        return 1
+        if (p.co === "T") return
+        if (zf < 400) return p.lvl == 3 ? 1 : p.lvl == 2 ? 2.2 : p.lvl == 1 ? 2.2 : 4
+        else if (zf < 1000) return p.lvl == 2 ? 1.2 : p.lvl == 1 ? 1.2 : 2.5
+        else if (zf < 2000) return p.lvl == 1 ? 1 : 2
+        else return 1.2
     })
 
     const url = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/" + nutsYear + "/" + crs + "/" + scale + "/nutsbn_" + nutsLevel + ".json"
