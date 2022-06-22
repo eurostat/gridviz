@@ -29,7 +29,8 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(700).setZoomFactorExtent([75, 6000]).setLabelLayer(gviz.getEuronymeLabelLayer())
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(700).setZoomFactorExtent([75, 6000])
+            .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //test view from URL parameters, if any
         app.cg.setViewFromURL()

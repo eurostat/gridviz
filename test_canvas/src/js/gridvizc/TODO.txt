@@ -1,6 +1,6 @@
-TODO show adm boundaries
 TODO adm boundaries: draw above/below
 TODO add missing legends: size, categories for composition, etc.
+TODO show/hide toponyms/boundaries
 
 TODO new version with indicator on gender unbalance
 TODO test style with border/discontinuities
