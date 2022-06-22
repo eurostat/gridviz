@@ -188,15 +188,14 @@ export class App {
 
     /**
      * @param {string} urlBase
-     * @param {Array.<{ code:string, styles:Array.<Style> }>} layersInfo
+     * @param {Array.<{ code:string, styles:Array.<Style>, opts:object }>} layersInfo
      * @param {Array.<number>} zooms
      * @returns {this}
      */
     addMultiScaleTiledGridLayer(urlBase, layersInfo, zooms) {
         const layers = [];
-        for (const li of layersInfo) {
-            layers.push(new Layer(new TiledGrid(urlBase + li.code, this).loadInfo(() => { this.cg.redraw(); }), li.styles))
-        }
+        for (const li of layersInfo)
+            layers.push(new Layer(new TiledGrid(urlBase + li.code, this, li.opts).loadInfo(() => { this.cg.redraw(); }), li.styles))
         this.layers.push(new MultiScaleLayer(layers, zooms));
         return this;
     }

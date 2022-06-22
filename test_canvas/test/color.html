@@ -63,11 +63,11 @@
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
         app.addMultiScaleTiledGridLayer(url,
             [
-                { code: "1km/", styles: [s] },
-                { code: "2km/", styles: [s] },
-                { code: "5km/", styles: [s] },
-                { code: "10km/", styles: [s] },
-                { code: "20km/", styles: [s] },
+                { code: "1km/", styles: [s], opts: { cellInfoHTML: ttfun } },
+                { code: "2km/", styles: [s], opts: { cellInfoHTML: ttfun } },
+                { code: "5km/", styles: [s], opts: { cellInfoHTML: ttfun } },
+                { code: "10km/", styles: [s], opts: { cellInfoHTML: ttfun } },
+                { code: "20km/", styles: [s], opts: { cellInfoHTML: ttfun } },
             ],
             [0, 500, 1000, 2000, 4000, 999999999]
         )
