@@ -61,8 +61,6 @@
 
         const ttfun = c => "Inhabitant(s)<br>2018: <b>" + c["2018"] + "</b><br>2011: <b>" + c["2011"] + "</b><br>2006: <b>" + c["2006"] + "</b>"
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
-
-
         app.addMultiScaleTiledGridLayer(url,
             [
                 { code: "1km/", styles: [s] },
@@ -73,22 +71,6 @@
             ],
             [0, 500, 1000, 2000, 4000, 999999999]
         )
-
-        /*
-        app.addMultiScaleLayer(
-            [
-                new gviz.Layer(new gviz.TiledGrid(url + "10km/", app).loadInfo(() => { this.cg.redraw(); }), [s]),
-                new gviz.Layer(new gviz.TiledGrid(url + "20km/", app).loadInfo(() => { this.cg.redraw(); }), [s])
-            ],
-            [0, 1000, 999999999]
-        )
-        /*
-                app.addTiledGridLayer(url + "1km/", [s], 0, 500, { cellInfoHTML: ttfun });
-                app.addTiledGridLayer(url + "2km/", [s], 500, 1000, { cellInfoHTML: ttfun });
-                app.addTiledGridLayer(url + "5km/", [s], 1000, 2000, { cellInfoHTML: ttfun });
-                app.addTiledGridLayer(url + "10km/", [s], 2000, 4000, { cellInfoHTML: ttfun });
-                app.addTiledGridLayer(url + "20km/", [s], 4000, 9999999999, { cellInfoHTML: ttfun });
-        */
 
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
