@@ -1,5 +1,6 @@
 //@ts-check
 
+import { ALayer } from "./ALayer";
 import { Dataset } from "./Dataset";
 import { Style } from "./Style";
 
@@ -8,7 +9,7 @@ import { Style } from "./Style";
  * 
  * @author Julien Gaffuri
  */
-export class Layer {
+export class Layer extends ALayer {
 
     /**
      * @param {Dataset} dataset The dataset to show
@@ -17,6 +18,7 @@ export class Layer {
      * @param {number} maxZoom The maximum zoom level when to show the layer
      */
     constructor(dataset, styles, minZoom, maxZoom) {
+        super()
 
         /** @type {Dataset} */
         this.dataset = dataset;

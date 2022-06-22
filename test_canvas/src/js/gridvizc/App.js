@@ -66,8 +66,16 @@ export class App {
                 //get data to show
                 layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
 
-                //draw cells
-                this.draw(layer);
+                //update dataset view cache
+                layer.dataset.updateViewCache(this.cg.extGeo);
+
+                //clear
+                this.cg.initCanvasTransform()
+                this.cg.clear(this.backgroundColor);
+
+                //draw cells, style by style
+                for (const style of layer.styles)
+                    style.draw(layer.dataset.getViewCache(), layer.dataset.getResolution(), this.cg)
 
                 //show layer legend
                 layer.showLegend()
@@ -119,30 +127,6 @@ export class App {
         this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
     }
 
-
-    /**
-     * @private
-     * 
-     * Draw a layer.
-     * 
-     * @param {Layer} layer 
-     * @returns {this}
-     */
-    draw(layer) {
-
-        //update dataset view cache
-        layer.dataset.updateViewCache(this.cg.extGeo);
-
-        //clear
-        this.cg.initCanvasTransform()
-        this.cg.clear(this.backgroundColor);
-
-        //draw cells, style by style
-        for (const style of layer.styles)
-            style.draw(layer.dataset.getViewCache(), layer.dataset.getResolution(), this.cg)
-
-        return this;
-    }
 
 
     /**

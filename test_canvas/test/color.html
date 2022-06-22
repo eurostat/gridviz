@@ -61,6 +61,15 @@
 
         const ttfun = c => "Inhabitant(s)<br>2018: <b>" + c["2018"] + "</b><br>2011: <b>" + c["2011"] + "</b><br>2006: <b>" + c["2006"] + "</b>"
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
+
+        /*
+        //TODO
+        app.addMultiscaleGridLayer(
+            {"1km":{ styles:[s], opts:{ cellInfoHTML: ttfun } }},
+            code => url + code + "/",
+            [500,1000,2000,4000]
+        )*/
+
         app.addTiledGridLayer(url + "1km/", [s], 0, 500, { cellInfoHTML: ttfun });
         app.addTiledGridLayer(url + "2km/", [s], 500, 1000, { cellInfoHTML: ttfun });
         app.addTiledGridLayer(url + "5km/", [s], 1000, 2000, { cellInfoHTML: ttfun });
