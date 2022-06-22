@@ -74,11 +74,11 @@ export class App {
             }
 
             //draw boundary layer
-            if ((this.boundaryLayer))
+            if ((this.showBoundaries && this.boundaryLayer))
                 this.boundaryLayer.draw(this.cg)
 
             //draw label layer
-            if ((this.labelLayer))
+            if (this.showLabels && this.labelLayer)
                 this.labelLayer.draw(this.cg)
 
             return this
@@ -86,9 +86,13 @@ export class App {
 
         /** @type {LabelLayer | undefined} */
         this.labelLayer = undefined;
+        /** @type {boolean} */
+        this.showLabels = true
 
         /** @type {BoundaryLayer | undefined} */
         this.boundaryLayer = undefined;
+        /** @type {boolean} */
+        this.showBoundaries = true
 
         //tooltip
 

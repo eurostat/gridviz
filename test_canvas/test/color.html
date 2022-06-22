@@ -8,8 +8,10 @@
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
 
-    <svg width="50" height="50" style="position: absolute; left: -250px; top:320px;z-index: 2; fill:none; background: none; user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;">
-        <rect width="50" height="50" style="fill:none; background: none; stroke-width:5; stroke:purple; user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;" />
+    <svg width="50" height="50"
+        style="position: absolute; left: -250px; top:320px;z-index: 2; fill:none; background: none; user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;">
+        <rect width="50" height="50"
+            style="fill:none; background: none; stroke-width:5; stroke:purple; user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none;" />
     </svg>
 
     <div
@@ -22,6 +24,14 @@
             </select><br>
             Source: <a href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/grids" target="_blank"
                 rel="noopener noreferrer">Eurostat</a></span>
+    </div>
+
+    <div
+        style="position: absolute; right: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
+            <input type="checkbox" id="label" checked>
+            <label for="label">Show labels</label><br>
+            <input type="checkbox" id="boundary" checked>
+            <label for="boundary">Show boundaries</label>
     </div>
 
     <script src="../build/gridvizc.js"></script>
@@ -53,9 +63,17 @@
         app.addTiledGridLayer(url + "20km/", [s], 4000, 9999999999, { cellInfoHTML: ttfun });
 
         //combo list - year selection
-        const select = document.querySelector('#year');
-        select.addEventListener('change', function () {
-            s.colorCol = select.value
+        document.querySelector('#year').addEventListener('change', function () {
+            s.colorCol = this.value
+            app.cg.redraw();
+        });
+
+        document.querySelector('#label').addEventListener('change', function () {
+            app.showLabels = this.checked
+            app.cg.redraw();
+        });
+        document.querySelector('#boundary').addEventListener('change', function () {
+            app.showBoundaries = this.checked
             app.cg.redraw();
         });
 
