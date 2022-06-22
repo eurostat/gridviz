@@ -25,10 +25,10 @@ export class BoundaryLayer {
 
         /** 
          * @private @type {function(object,number):string} */
-         this.color = opts.color || ((f,zf) => "gray")
+         this.color = opts.color || ((f,zf) => "white")
         /** 
          * @private @type {function(object,number):number} */
-         this.width = opts.width || ((f,zf) => 2)
+         this.width = opts.width || ((f,zf) => 5)
 
         /** @private @type {Array.<object> | undefined} */
         this.fs
