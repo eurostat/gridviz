@@ -21,8 +21,9 @@ export { RadarStyle } from "./style/RadarStyle"
 export { AgePyramidStyle } from "./style/AgePyramidStyle"
 export { LineUpStyle } from "./style/LineUpStyle"
 
-//export label layer
+//export additional layers
 export { LabelLayer } from "./LabelLayer"
+export { BoundaryLayer } from "./BoundaryLayer"
 
 
 
@@ -30,6 +31,7 @@ export { LabelLayer } from "./LabelLayer"
 
 import { geoAzimuthalEqualArea } from 'd3-geo'
 import { LabelLayer } from "./LabelLayer"
+import { BoundaryLayer } from "./BoundaryLayer"
 
 
 
@@ -42,7 +44,7 @@ import { LabelLayer } from "./LabelLayer"
  */
 export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
     opts = opts || {}
-    opts.style = opts.style || ((lb, zf) => { if (lb.rs < zf) return; if(lb.r1 < zf) return "12px Arial"; return "18px Arial"; })
+    opts.style = opts.style || ((lb, zf) => { if (lb.rs < zf) return; if (lb.r1 < zf) return "12px Arial"; return "18px Arial"; })
     //ETRS89-LAEA projection
     opts.proj = opts.proj || geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]);
     opts.preprocess = lb => {
@@ -53,4 +55,13 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
     }
 
     return new LabelLayer("https://raw.githubusercontent.com/eurostat/euronym/main/pub/v1/" + res + "/" + cc + ".csv", opts)
+}
+
+/**
+ * @returns {BoundaryLayer}
+ */
+export const getEurostatBoundariesLayer = function (opts) {
+    opts = opts || {}
+
+    return new BoundaryLayer("https://github.com/eurostat/Nuts2json/blob/master/pub/v2/2021/3035/03M/nutsbn_1.json", opts)
 }
