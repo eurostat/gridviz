@@ -63,5 +63,5 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
 export const getEurostatBoundariesLayer = function (opts) {
     opts = opts || {}
 
-    return new BoundaryLayer("https://github.com/eurostat/Nuts2json/blob/master/pub/v2/2021/3035/03M/nutsbn_1.json", opts)
+    return new BoundaryLayer("https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2021/3035/03M/nutsbn_1.json", opts)
 }

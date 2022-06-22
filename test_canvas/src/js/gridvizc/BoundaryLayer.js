@@ -1,6 +1,7 @@
 //@ts-check
 
 import { GeoCanvas } from "./GeoCanvas";
+import { json } from "d3-fetch";
 
 /**
  * @author Julien Gaffuri
@@ -106,20 +107,19 @@ export class BoundaryLayer {
         if (this.loadingStatus === "notLoaded") {
             this.loadingStatus = "loading";
 
-            console.log("Load boundaries here..." + this.url)
-
-            /*
-            csv(this.url)
+            json(this.url)
                 .then(
+                    /** @param {object} data */
                     (data) => {
+                        data = data.features
 
                         //apply preprocess, if any
                         if (this.preprocess)
-                            for (const lb of data)
-                                this.preprocess(lb)
+                            for (const f of data)
+                                this.preprocess(f)
 
-                        //store labels
-                        this.labels = data;
+                        //store boundaries
+                        this.fs = data;
 
                         this.loadingStatus = "loaded"
 
@@ -127,10 +127,10 @@ export class BoundaryLayer {
                         if (callback) callback()
                     })
                 .catch(() => {
-                    console.log("Failed loading labels from " + this.url)
-                    this.labels = []
+                    console.log("Failed loading boundaries from " + this.url)
+                    this.fs = []
                     this.loadingStatus = "failed"
-                });*/
+                });
         }
     }
 
