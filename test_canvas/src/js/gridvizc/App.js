@@ -121,8 +121,7 @@ export class App {
     draw(layer) {
 
         //update dataset view cache
-        const e = this.cg.extGeo; if (!e) return this;
-        layer.dataset.updateViewCache(e);
+        layer.dataset.updateViewCache(this.cg.extGeo);
 
         //clear
         this.cg.initCanvasTransform()
