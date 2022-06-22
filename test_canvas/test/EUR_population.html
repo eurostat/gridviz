@@ -62,7 +62,7 @@
                     color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
                     zfStroke: 80
                 }), //.addLegend({ id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) }),
-                zooms: []
+                zooms: [0, 500, 1000, 2500, 5000, 10000, 25000, 50000]
             },
             size: {
                 style: new gviz.ShapeColorSizeStyle({
@@ -72,21 +72,21 @@
                     shape: c => "circle",
                     zfStroke: 90
                 }),
-                zooms: []
+                zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
             },
             joyplot: {
                 style: new gviz.JoyPlotStyle({
                     heightCol: "2018",
                     height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max)
                 }),
-                zooms: []
+                zooms: [0, 300, 600, 1500, 3000, 6000, 15000, 30000]
             },
             lineup: {
                 style: new gviz.LineUpStyle({
                     heightCol: "2018",
                     height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.6),
                 }),
-                zooms: []
+                zooms: [0, 50, 100, 250, 500, 1000, 2500, 5000]
             }
         }
 
@@ -122,6 +122,9 @@
             //set new style
             const ml = app.layers[0];
             for (const lay of ml.layers) lay.styles = [sd[value].style]
+
+            //set new zoom breaks
+            ml.zooms = sd[value].zooms
 
             //redraw
             app.cg.redraw();
