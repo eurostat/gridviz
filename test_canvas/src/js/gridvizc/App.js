@@ -32,7 +32,7 @@ export class App {
         //get canvas element
         opts.canvasId = opts.canvasId || "vacanvas";
         const canvas = document.getElementById(opts.canvasId);
-        if(!canvas) {
+        if (!canvas) {
             console.error("Cannot find canvas element " + opts.canvasId)
             return;
         }
@@ -92,7 +92,7 @@ export class App {
         const focusCell = (e) => {
             //compute mouse geo position
             const mousePositionGeo = { x: this.cg.pixToGeoX(e.clientX), y: this.cg.pixToGeoY(e.clientY) }
-            /** @type {{cell:Cell,html:string}} */
+            /** @type {{cell:Cell,html:string} | undefined} */
             const focus = this.getCellFocusInfo(mousePositionGeo)
             if (focus) {
                 this.tooltip.setPosition(e);
@@ -121,7 +121,8 @@ export class App {
     draw(layer) {
 
         //update dataset view cache
-        layer.dataset.updateViewCache(this.cg.extGeo)
+        const e = this.cg.extGeo; if (!e) return this;
+        layer.dataset.updateViewCache(e);
 
         //clear
         this.cg.initCanvasTransform()
@@ -217,7 +218,7 @@ export class App {
      * This is usefull for user interactions, to show this info where the user clicks for example.
      * 
      * @param {{x:number,y:number}} posGeo 
-     * @returns {{cell:Cell,html:string}}
+     * @returns {{cell:Cell,html:string} | undefined}
      */
     getCellFocusInfo(posGeo) {
         //get top layer
@@ -251,33 +252,33 @@ export class App {
     //getters and setters
 
     /** @returns {{x:number,y:number}} */
-    getGeoCenter() { return this.cg.center; }
+    getGeoCenter() { return this.cg.getCenter(); }
     /** @param {{x:number,y:number}} val @returns {this} */
-    setGeoCenter(val) { this.cg.center = val; return this; }
+    setGeoCenter(val) { this.cg.setCenter(val); return this; }
 
     /** @returns {number} */
-    getZoomFactor() { return this.cg.zf; }
+    getZoomFactor() { return this.cg.getZf(); }
     /** @param {number} val @returns {this} */
-    setZoomFactor(val) { this.cg.zf = val; return this; }
+    setZoomFactor(val) { this.cg.setZf(val); return this; }
 
     /** @returns {Array.<number>} */
-    getZoomFactorExtent() { return this.cg.zfExtent; }
+    getZoomFactorExtent() { return this.cg.getZfExtent(); }
     /** @param {Array.<number>} val @returns {this} */
-    setZoomFactorExtent(val) { this.cg.zfExtent = val; return this; }
+    setZoomFactorExtent(val) { this.cg.setZfExtent(val); return this; }
 
     /** @returns {string} */
-    getBackgroundColor() { return this.backgroundColor; }
+    getBackgroundColor() { return this.getBackgroundColor(); }
     /** @param {string} val @returns {this} */
-    setBackgroundColor(val) { this.backgroundColor = val; return this; }
+    setBackgroundColor(val) { this.setBackgroundColor(val); return this; }
 
     /** @returns {function} */
-    getProjection() { return this.projection; }
+    getProjection() { return this.getProjection(); }
     /** @param {function} val @returns {this} */
-    setProjection(val) { this.projection = val; return this; }
+    setProjection(val) { this.setProjection(val); return this; }
 
     /** @returns {LabelLayer} */
-    getLabelLayer() { return this.labelLayer; }
+    getLabelLayer() { return this.getLabelLayer(); }
     /** @param {LabelLayer} val @returns {this} */
-    setLabelLayer(val) { this.labelLayer = val; return this; }
+    setLabelLayer(val) { this.setLabelLayer(val); return this; }
 
 }
