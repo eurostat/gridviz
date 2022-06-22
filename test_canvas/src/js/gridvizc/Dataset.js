@@ -84,7 +84,7 @@ export class Dataset {
      * 
      * @param {{x:number,y:number}} posGeo 
      * @param {Array.<Cell>} cells Some cells from the dataset (a subset if necessary, usually the view cache).
-     * @returns {Cell}
+     * @returns {Cell|undefined}
      */
     getCellFromPosition(posGeo, cells) {
 

@@ -19,7 +19,7 @@ export class TiledGrid extends Dataset {
      * @param {object} opts 
      */
     constructor(url, app, opts) {
-        super(url, null, opts)
+        super(url, 0, opts)
 
         /**
          * The app being used.
@@ -29,7 +29,7 @@ export class TiledGrid extends Dataset {
 
         /**
          * The grid info object, from the info.json file.
-         *  @type {GridInfo}
+         *  @type {GridInfo | undefined}
          * @private
          *  */
         this.info = undefined;
@@ -109,7 +109,7 @@ export class TiledGrid extends Dataset {
         //TODO empty cache when it gets too big ?
 
         //check if info has been loaded
-        if (!this.info) return;
+        if (!this.info) return this;
 
         //tiles within the scope
         /** @type {Envelope} */
@@ -139,6 +139,7 @@ export class TiledGrid extends Dataset {
                         /** @param {*} data */
                         (data) => {
                             //store tile in cache
+                            if (!this.info) { console.error("Tile info inknown"); return }
                             const tile_ = new GridTile(data, xT, yT, this.info);
                             this.cache[xT][yT] = tile_;
 

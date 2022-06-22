@@ -20,7 +20,7 @@ export class CSVGrid extends Dataset {
         super(url, resolution, opts)
 
         /** @private @type {Array.<Cell>} */
-        this.cells = undefined;
+        this.cells = [];
     }
 
 
