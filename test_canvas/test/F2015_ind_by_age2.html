@@ -57,7 +57,10 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 3700000, y: 2760000 }).setZoomFactor(50).setZoomFactorExtent([15, 3000]).setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { color: () => "white", haloColor: () => "black" })).setBackgroundColor("#000")
+            .setGeoCenter({ x: 3700000, y: 2760000 }).setZoomFactor(50).setZoomFactorExtent([15, 3000])
+            .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { color: () => "white", haloColor: () => "black" }))
+            .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+            .setBackgroundColor("#000")
 
         //test view from URL parameters, if any
         app.cg.setViewFromURL()

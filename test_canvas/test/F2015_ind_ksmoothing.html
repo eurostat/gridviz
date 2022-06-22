@@ -17,7 +17,10 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20"))//.setBackgroundColor("black")
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100)
+            .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20"))
+            .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+            //.setBackgroundColor("black")
 
         //styles
         const styles = {}
