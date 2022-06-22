@@ -10,8 +10,19 @@ import { Style } from "./Style";
  */
 export class MultiScaleLayer extends ALayer {
 
-    constructor() {
+    constructor(layers, zooms) {
         super()
+
+        if (layers.length + 1 != zooms.length)
+            throw new Error('Inconsistant number of layers / zooms in multiscale layer definition.');
+
+        /** @type {Array.<Layer>} */
+        this.layers = layers;
+
+        /** @type {Array.<number>} */
+        this.zooms = zooms;
+
+        //NB: minZoom and maxZoom of layers do not need to be maintained consistant with this.zooms
     }
 
 
@@ -19,10 +30,19 @@ export class MultiScaleLayer extends ALayer {
     /**
      * @param {number} zf 
      * @returns {Layer|undefined}  */
-     getLayer(zf) {
-        //TODO
-        return
+    getLayer(zf) {
+        let i = 0;
+        let z = this.zooms[i];
+        if (zf < z) return;
+        while (z < zf && i < this.zooms.length) { i++; z = this.zooms[i] }
+        if (i == this.zooms.length) return;
+        return this.layers[i - 1];
     }
 
+    /** @abstract */
+    hideLegend() {
+        for (const l of this.layers)
+            l.hideLegend()
+    }
 
 }

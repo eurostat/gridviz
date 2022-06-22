@@ -9,7 +9,7 @@ import { Dataset, Cell, Envelope } from "../Dataset"
  */
 export class GeoTiff extends Dataset {
 
-    constructor(url, opts) {
+    constructor(url, opts=undefined) {
         super(url, 0, opts)
     }
 

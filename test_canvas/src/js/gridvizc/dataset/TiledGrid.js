@@ -18,7 +18,7 @@ export class TiledGrid extends Dataset {
      * @param {App} app The application.
      * @param {object} opts 
      */
-    constructor(url, app, opts) {
+    constructor(url, app, opts = undefined) {
         super(url, 0, opts)
 
         /**

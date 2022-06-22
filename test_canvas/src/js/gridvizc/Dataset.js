@@ -18,7 +18,7 @@ export class Dataset {
      * @param {object} opts 
      * @abstract
      */
-    constructor(url, resolution, opts) {
+    constructor(url, resolution, opts=undefined) {
         opts = opts || {};
 
         /**

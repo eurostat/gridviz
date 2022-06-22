@@ -3,6 +3,7 @@
 import { GeoCanvas, Envelope } from './GeoCanvas';
 import { ALayer } from './ALayer';
 import { Layer } from './Layer';
+import { MultiScaleLayer } from './MultiScaleLayer';
 import { Style } from './Style';
 import { Dataset, Cell } from './Dataset';
 import { Tooltip } from './Tooltip';
@@ -62,8 +63,9 @@ export class App {
             for (const alayer of this.layers) {
 
                 //get layer
+                /** @type {Layer} */
                 const layer = alayer.getLayer(zf)
-                if(!layer) continue;
+                if (!layer) continue;
 
                 //get data to show
                 layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
@@ -184,6 +186,30 @@ export class App {
 
 
 
+    /**
+     * @param {string} urlBase
+     * @param {Array.<{ code:string, styles:Array.<Style> }>} layersInfo
+     * @param {Array.<number>} zooms
+     * @returns {this}
+     */
+    addMultiScaleTiledGridLayer(urlBase, layersInfo, zooms) {
+        const layers = [];
+        for (const li of layersInfo) {
+            layers.push(new Layer(new TiledGrid(urlBase + li.code, this).loadInfo(() => { this.cg.redraw(); }), li.styles))
+        }
+        this.layers.push(new MultiScaleLayer(layers, zooms));
+        return this;
+    }
+
+    /**
+     * @param {Array.<Layer>} layers
+     * @param {Array.<number>} zooms
+     * @returns {this}
+     */
+    addMultiScaleLayer(layers, zooms) {
+        this.layers.push(new MultiScaleLayer(layers, zooms));
+        return this;
+    }
 
 
 

@@ -17,7 +17,7 @@ export class Layer extends ALayer {
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
      */
-    constructor(dataset, styles, minZoom, maxZoom) {
+    constructor(dataset, styles, minZoom=0, maxZoom=0) {
         super()
 
         /** @type {Dataset} */

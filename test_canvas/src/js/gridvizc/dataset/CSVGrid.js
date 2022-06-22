@@ -16,7 +16,7 @@ export class CSVGrid extends Dataset {
      * @param {number} resolution The dataset resolution in geographical unit.
      * @param {object} opts 
      */
-    constructor(url, resolution, opts) {
+    constructor(url, resolution, opts=undefined) {
         super(url, resolution, opts)
 
         /** @private @type {Array.<Cell>} */
