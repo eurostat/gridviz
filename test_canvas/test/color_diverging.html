@@ -12,7 +12,9 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setZoomFactorExtent([75, 6000]).setLabelLayer(gviz.getEuronymeLabelLayer())
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setZoomFactorExtent([75, 6000])
+            .setLabelLayer(gviz.getEuronymeLabelLayer())
+            .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
