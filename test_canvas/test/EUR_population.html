@@ -23,14 +23,16 @@
                 <option value="2006">2006</option>
             </select>
             <hr>Style<br>
-            <input type="radio" name="style" id="color" value="color" checked>
-            <label for="color">Color</label>
-            <input type="radio" name="style" id="size" value="size">
-            <label for="size">Size</label>
-            <input type="radio" name="style" id="joyplot" value="joyplot">
-            <label for="joyplot">Joyplot</label>
-            <input type="radio" name="style" id="lineup" value="lineup">
-            <label for="lineup">Lineup</label>
+            <div id="style">
+                <input type="radio" name="style" id="color" value="color" checked>
+                <label for="color">Color</label>
+                <input type="radio" name="style" id="size" value="size">
+                <label for="size">Size</label>
+                <input type="radio" name="style" id="joyplot" value="joyplot">
+                <label for="joyplot">Joyplot</label>
+                <input type="radio" name="style" id="lineup" value="lineup">
+                <label for="lineup">Lineup</label>
+            </div>
             <hr>
             <input type="checkbox" id="label" checked>
             <label for="label">City names</label>
@@ -111,10 +113,25 @@
             app.cg.redraw();
         });
 
+        //style selector
+        document.querySelector('#style').addEventListener('change', function () {
+            //set style
+            const value = document.querySelector('input[name="style"]:checked').value
+            console.log(value)
+
+            //set style
+            //for (let lay of app.layers) lay.styles = [st]
+            //redraw
+            app.cg.redraw();
+        })
+
+        // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
             app.showLabels = this.checked
             app.cg.redraw();
         });
+
+        // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
             app.showBoundaries = this.checked
             app.cg.redraw();
