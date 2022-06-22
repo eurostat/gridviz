@@ -1,4 +1,5 @@
 TODO show adm boundaries
+TODO adm boundaries: draw above/below
 TODO add missing legends: size, categories for composition, etc.
 
 TODO new version with indicator on gender unbalance
