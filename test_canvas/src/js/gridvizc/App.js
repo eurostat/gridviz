@@ -32,6 +32,10 @@ export class App {
         //get canvas element
         opts.canvasId = opts.canvasId || "vacanvas";
         const canvas = document.getElementById(opts.canvasId);
+        if(!canvas) {
+            console.error("Cannot find canvas element " + opts.canvasId)
+            return;
+        }
 
         //set dimensions
         /** @type {number} */
@@ -75,7 +79,7 @@ export class App {
             return this
         };
 
-        /** @type {LabelLayer} */
+        /** @type {LabelLayer | undefined} */
         this.labelLayer = undefined;
 
 

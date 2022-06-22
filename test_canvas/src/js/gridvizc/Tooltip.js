@@ -1,7 +1,7 @@
 //@ts-check
 
 import { select, Selection } from "d3-selection";
-import { transition } from "d3-transition";
+//import { transition } from "d3-transition";
 
 /**
  * A generic class to make a tooltip.
@@ -12,7 +12,7 @@ export class Tooltip {
 	/** 
 	 * @param {object} opts
 	 */
-	constructor(opts) {
+	constructor(opts = undefined) {
 		opts = opts || {};
 
 		/** @type {string} */
