@@ -9,6 +9,7 @@ import { Tooltip } from './Tooltip';
 import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
 import { LabelLayer } from './LabelLayer';
+import { BoundaryLayer } from './BoundaryLayer';
 
 /**
  * A gridviz on a HTML canvas.
@@ -72,6 +73,10 @@ export class App {
                 layer.showLegend()
             }
 
+            //draw boundary layer
+            if ((this.boundaryLayer))
+                this.boundaryLayer.draw(this.cg)
+
             //draw label layer
             if ((this.labelLayer))
                 this.labelLayer.draw(this.cg)
@@ -82,6 +87,8 @@ export class App {
         /** @type {LabelLayer | undefined} */
         this.labelLayer = undefined;
 
+        /** @type {BoundaryLayer | undefined} */
+        this.boundaryLayer = undefined;
 
         //tooltip
 
@@ -106,7 +113,6 @@ export class App {
         this.cg.canvas.addEventListener("mouseover", e => { focusCell(e) });
         this.cg.canvas.addEventListener("mousemove", e => { focusCell(e) });
         this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
-
     }
 
 
@@ -266,18 +272,25 @@ export class App {
     setZoomFactorExtent(val) { this.cg.setZfExtent(val); return this; }
 
     /** @returns {string} */
-    getBackgroundColor() { return this.getBackgroundColor(); }
+    getBackgroundColor() { return this.backgroundColor; }
     /** @param {string} val @returns {this} */
-    setBackgroundColor(val) { this.setBackgroundColor(val); return this; }
+    setBackgroundColor(val) { this.backgroundColor = val; return this; }
 
-    /** @returns {function} */
-    getProjection() { return this.getProjection(); }
+    /** @returns {function|undefined} */
+    getProjection() { return this.projection; }
     /** @param {function} val @returns {this} */
-    setProjection(val) { this.setProjection(val); return this; }
+    setProjection(val) { this.projection = val; return this; }
 
-    /** @returns {LabelLayer} */
-    getLabelLayer() { return this.getLabelLayer(); }
+
+
+    /** @returns {BoundaryLayer | undefined} */
+    getBoundaryLayer() { return this.boundaryLayer; }
+    /** @param {BoundaryLayer} val @returns {this} */
+    setBoundaryLayer(val) { this.boundaryLayer = val; return this; }
+
+    /** @returns {LabelLayer | undefined} */
+    getLabelLayer() { return this.labelLayer; }
     /** @param {LabelLayer} val @returns {this} */
-    setLabelLayer(val) { this.setLabelLayer(val); return this; }
+    setLabelLayer(val) { this.labelLayer = val; return this; }
 
 }
