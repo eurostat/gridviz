@@ -23,7 +23,7 @@
                 <option value="2006">2006</option>
             </select>
             <hr>Style<br>
-            <input type="radio" name="style" id="color" value="color" selected>
+            <input type="radio" name="style" id="color" value="color" checked>
             <label for="color">Color</label>
             <input type="radio" name="style" id="size" value="size">
             <label for="size">Size</label>
@@ -53,7 +53,8 @@
         app.cg.setViewFromURL()
 
 
-        const styleData = {
+        //style data
+        const sd = {
             color: {
                 style: new gviz.ShapeColorSizeStyle({
                     colorCol: "2018",
@@ -64,11 +65,9 @@
             },
             size: {
                 style: new gviz.ShapeColorSizeStyle({
-                    //color: c => "#ff000066",
                     color: c => "#00000066",
                     sizeCol: "2018",
                     size: (v, r, s, zf) => 1.5 * r * Math.pow(v / s.max, 0.3),
-                    //size: (v, r, s, zf) => 2*r * Math.pow(v / s.max, 0.3),
                     shape: c => "circle",
                     zfStroke: 90
                 }),
@@ -94,18 +93,21 @@
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
         app.addMultiScaleTiledGridLayer(url,
             [
-                { code: "1km/", styles: [sColor], opts: { cellInfoHTML: ttfun } },
-                { code: "2km/", styles: [sColor], opts: { cellInfoHTML: ttfun } },
-                { code: "5km/", styles: [sColor], opts: { cellInfoHTML: ttfun } },
-                { code: "10km/", styles: [sColor], opts: { cellInfoHTML: ttfun } },
-                { code: "20km/", styles: [sColor], opts: { cellInfoHTML: ttfun } },
+                { code: "1km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
+                { code: "2km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
+                { code: "5km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
+                { code: "10km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
+                { code: "20km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
             ],
             [0, 500, 1000, 2000, 4000, 999999999]
         )
 
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
-            sColor.colorCol = this.value
+            sd.color.style.colorCol = this.value
+            sd.size.style.sizeCol = this.value
+            sd.joyplot.style.heightCol = this.value
+            sd.lineup.style.heightCol = this.value
             app.cg.redraw();
         });
 
