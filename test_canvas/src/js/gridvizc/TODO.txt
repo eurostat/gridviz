@@ -1,4 +1,4 @@
-TODO legend - size + characters + segments
+TODO legend - size + donut + segment width + column + characters
 TODO tw population FR EUR
 
 TODO more efficient multiscale layer creation?
