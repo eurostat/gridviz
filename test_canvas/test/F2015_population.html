@@ -50,7 +50,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 3700000, y: 2760000 }).setZoomFactor(100).setZoomFactorExtent([10, 3000])
+            .setGeoCenter({ x: 3700000, y: 2760000 }).setZoomFactor(600).setZoomFactorExtent([10, 1500])
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //test view from URL parameters, if any
@@ -71,9 +71,9 @@
                 style: new gviz.ShapeColorSizeStyle({
                     colorCol: "Ind",
                     color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
-                    zfStroke: 100
+                    zfStroke: 25
                 }).addLegend({ id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) }),
-                zooms: [0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
+                zooms: [0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]
             },
             size: {
                 style: new gviz.ShapeColorSizeStyle({
@@ -81,9 +81,9 @@
                     sizeCol: "Ind",
                     size: (v, r, s, zf) => 1.5 * r * Math.pow(v / s.max, 0.3),
                     shape: c => "circle",
-                    zfStroke: 80
+                    zfStroke: 20
                 }),
-                zooms: [0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
+                zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
             donut: {
                 style: new gviz.ShapeColorSizeStyle({
@@ -101,7 +101,7 @@
                     height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
                     //fillColor: "rgba(241, 108, 73, 0.45)"
                 }),
-                zooms: [0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
+                zooms: [0, 40, 80, 200, 400, 1000, 2000, 4000, 10000]
             },
             segment: {
                 style: new gviz.SegmentStyle({
@@ -111,14 +111,14 @@
                     widthCol: "Ind",
                     width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25) / 1.4142,
                 }),
-                zooms: [0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
+                zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
             lineup: {
                 style: new gviz.LineUpStyle({
                     heightCol: "Ind",
                     height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.7),
                 }),
-                zooms: [0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
+                zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
             text: {
                 style: new gviz.TextStyle({

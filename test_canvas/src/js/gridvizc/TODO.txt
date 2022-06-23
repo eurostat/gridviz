@@ -1,3 +1,4 @@
+TODO move character stuff to textstyle
 TODO legend - size + donut + segment width + column + characters
 TODO tw population FR EUR
 
