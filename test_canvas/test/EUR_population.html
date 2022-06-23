@@ -28,6 +28,8 @@
                 <label for="color">Color</label>
                 <input type="radio" name="style" id="size" value="size">
                 <label for="size">Circle</label>
+                <input type="radio" name="style" id="donut" value="donut">
+                <label for="donut">Donut</label>
                 <input type="radio" name="style" id="segment" value="segment">
                 <label for="segment">Line</label>
                 <br>
@@ -82,13 +84,23 @@
             },
             size: {
                 style: new gviz.ShapeColorSizeStyle({
-                    color: c => "#c08c59bb", //"rgba(241, 108, 73, 0.7)",
+                    color: c => "#c08c59bb",
                     sizeCol: "2018",
                     size: (v, r, s, zf) => 1.5 * r * Math.pow(v / s.max, 0.3),
                     shape: c => "circle",
                     zfStroke: 80
                 }),
                 zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+            },
+            donut: {
+                style: new gviz.ShapeColorSizeStyle({
+                    sizeCol: "2018",
+                    size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
+                    color: c => "#c08c59bb", //"rgba(241, 108, 73, 0.7)",
+                    shape: () => "donut",
+                    zfStroke: 80
+                }),
+                zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
             joyplot: {
                 style: new gviz.JoyPlotStyle({
@@ -190,7 +202,8 @@
 
     <div
         style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
-        <span style="font-size: 8pt;"><a href="https://github.com/eurostat/gridviz" style="text-decoration:none">GridViz</a> |
+        <span style="font-size: 8pt;"><a href="https://github.com/eurostat/gridviz"
+                style="text-decoration:none">GridViz</a> |
             © <a href="https://eurogeographics.org" style="text-decoration:none">EuroGeographics</a></span>
     </div>
 
