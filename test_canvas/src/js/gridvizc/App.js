@@ -11,7 +11,7 @@ import { Tooltip } from './Tooltip';
 import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
 import { LabelLayer } from './LabelLayer';
-import { BoundaryLayer } from './BoundaryLayer';
+import { LineLayer } from './LineLayer';
 
 /**
  * A gridviz on a HTML canvas.
@@ -58,6 +58,10 @@ export class App {
             //hide legends
             for (const alayer of this.layers) alayer.hideLegend()
 
+            //draw boundary layer
+            if ((this.showBoundaries && this.boundaryLayer))
+                this.boundaryLayer.draw(this.cg)
+
             //go through the layers
             const zf = this.getZoomFactor();
             for (const alayer of this.layers) {
@@ -86,8 +90,8 @@ export class App {
             }
 
             //draw boundary layer
-            if ((this.showBoundaries && this.boundaryLayer))
-                this.boundaryLayer.draw(this.cg)
+            //if ((this.showBoundaries && this.boundaryLayer))
+            //    this.boundaryLayer.draw(this.cg)
 
             //draw label layer
             if (this.showLabels && this.labelLayer)
@@ -101,7 +105,7 @@ export class App {
         /** @type {boolean} */
         this.showLabels = true
 
-        /** @type {BoundaryLayer | undefined} */
+        /** @type {LineLayer | undefined} */
         this.boundaryLayer = undefined;
         /** @type {boolean} */
         this.showBoundaries = true
@@ -297,9 +301,9 @@ export class App {
 
 
 
-    /** @returns {BoundaryLayer | undefined} */
+    /** @returns {LineLayer | undefined} */
     getBoundaryLayer() { return this.boundaryLayer; }
-    /** @param {BoundaryLayer} val @returns {this} */
+    /** @param {LineLayer} val @returns {this} */
     setBoundaryLayer(val) { this.boundaryLayer = val; return this; }
 
     /** @returns {LabelLayer | undefined} */

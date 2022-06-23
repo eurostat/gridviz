@@ -6,7 +6,7 @@ import { json } from "d3-fetch";
 /**
  * @author Julien Gaffuri
  */
-export class BoundaryLayer {
+export class LineLayer {
 
     /**
      * @param {string} url 

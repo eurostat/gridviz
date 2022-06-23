@@ -1,5 +1,4 @@
 TODO test coastline - bottom?
-TODO test size: larger with transparency?
 TODO legend - size + characters + segments
 TODO tw population FR EUR
 

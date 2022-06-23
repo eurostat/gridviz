@@ -23,7 +23,7 @@ export { LineUpStyle } from "./style/LineUpStyle"
 
 //export additional layers
 export { LabelLayer } from "./LabelLayer"
-export { BoundaryLayer } from "./BoundaryLayer"
+export { LineLayer as BoundaryLayer } from "./LineLayer"
 
 
 
@@ -31,7 +31,7 @@ export { BoundaryLayer } from "./BoundaryLayer"
 
 import { geoAzimuthalEqualArea } from 'd3-geo'
 import { LabelLayer } from "./LabelLayer"
-import { BoundaryLayer } from "./BoundaryLayer"
+import { LineLayer } from "./LineLayer"
 
 
 
@@ -58,7 +58,7 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
 }
 
 /**
- * @returns {BoundaryLayer}
+ * @returns {LineLayer}
  */
 export const getEurostatBoundariesLayer = function (opts) {
     opts = opts || {}
@@ -96,5 +96,5 @@ export const getEurostatBoundariesLayer = function (opts) {
     })
 
     const url = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/" + nutsYear + "/" + crs + "/" + scale + "/nutsbn_" + nutsLevel + ".json"
-    return new BoundaryLayer(url, opts)
+    return new LineLayer(url, opts)
 }
