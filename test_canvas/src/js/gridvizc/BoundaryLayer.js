@@ -88,6 +88,9 @@ export class BoundaryLayer {
             cg.ctx.stroke();
         }
 
+        //...
+        cg.ctx.setLineDash([]);
+
     }
 
     /**

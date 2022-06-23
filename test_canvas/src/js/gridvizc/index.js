@@ -69,7 +69,7 @@ export const getEurostatBoundariesLayer = function (opts) {
 
     opts.color = opts.color || ((f, zf) => {
         const p = f.properties
-        const col = "#BBB"
+        const col = "#AAA"
         if (p.co === "T") return
         if (zf < 400) return col
         else if (zf < 1000) return p.lvl >= 3 ? "" : col
@@ -85,6 +85,8 @@ export const getEurostatBoundariesLayer = function (opts) {
         else if (zf < 2000) return p.lvl == 1 ? 1 : 2
         else return 1.2
     })
+
+    opts.lineDash = opts.lineDash || ((f, zf) => [10 * zf, 5 * zf])
 
     const url = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/" + nutsYear + "/" + crs + "/" + scale + "/nutsbn_" + nutsLevel + ".json"
     return new BoundaryLayer(url, opts)
