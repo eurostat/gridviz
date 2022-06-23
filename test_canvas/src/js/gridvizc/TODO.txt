@@ -1,5 +1,5 @@
-TODO style text
-TODO style segment
+TODO attribution
+TODO test coastline - bottom?
 TODO test size: larger with transparency?
 TODO legend size
 TODO more efficient layer creation?
