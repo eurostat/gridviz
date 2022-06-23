@@ -201,6 +201,8 @@ export class LineUpStyle extends Style {
 
         }
 
+        //in case...
+        cg.ctx.lineCap = "butt";
     }
 
 
