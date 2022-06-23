@@ -54,6 +54,9 @@
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
 
+        const col = gviz.interpolateOrRd(0.5)
+        console.log(col)
+
         //style data
         const sd = {
             color: {
@@ -66,7 +69,7 @@
             },
             size: {
                 style: new gviz.ShapeColorSizeStyle({
-                    color: c => "#c08c59bb",
+                    color: c => col, //"#c08c59bb", 
                     sizeCol: "2018",
                     size: (v, r, s, zf) => 1.5 * r * Math.pow(v / s.max, 0.3),
                     shape: c => "circle",
@@ -77,7 +80,8 @@
             joyplot: {
                 style: new gviz.JoyPlotStyle({
                     heightCol: "2018",
-                    height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max)
+                    height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
+                    fillColor: col
                 }),
                 zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
             },

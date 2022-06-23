@@ -1,5 +1,5 @@
-TODO adjust zoom breaks
 TODO test size: larger with transparency?
+TODO legend size
 TODO more efficient layer creation?
 TODO test dashed boundaries
 TODO tw population FR EUR
