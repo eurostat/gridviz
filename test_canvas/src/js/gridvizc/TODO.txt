@@ -1,14 +1,14 @@
-TODO better characterset
 TODO attribution
 TODO test coastline - bottom?
 TODO test size: larger with transparency?
-TODO legend size
+TODO legend - size + characters + segments
 TODO more efficient layer creation?
 TODO tw population FR EUR
 
 TODO adm boundaries: draw above/below
 TODO add missing legends: size, categories for composition, etc.
 
+TODO map style: cell based on its neighboors. Contour like ?
 TODO test style with border/discontinuities
 TODO new version with indicator on gender unbalance
 TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?
@@ -22,6 +22,7 @@ TODO linesup: Test with changeable width and fixed height ?
 TODO use filosofi 2017 to show evolutions
 TODO background image ? with relief shading.
 TODO window resize
+TODO better shaded characterset for text style
 
 TODO improve efficiency - on zoom/pan, interrupt all existing redraws ? Redraw only on mouse release? Use time and redraw only every X ms ?
 TODO test canvas performance improvements: https://www.html5rocks.com/en/tutorials/canvas/performance/ and https://stackoverflow.com/questions/8205828/html5-canvas-performance-and-optimization-tips-tricks-and-coding-best-practices
