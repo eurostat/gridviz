@@ -1,11 +1,10 @@
-TODO donut
 TODO test coastline - bottom?
 TODO test size: larger with transparency?
 TODO legend - size + characters + segments
-TODO more efficient layer creation?
 TODO tw population FR EUR
 
 TODO adm boundaries: draw above/below
+TODO more efficient multiscale layer creation?
 TODO add missing legends: size, categories for composition, etc.
 
 TODO rename lineup column

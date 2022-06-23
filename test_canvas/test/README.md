@@ -1,6 +1,6 @@
 # Europe population - geostat grid (1km)
 
-- Europe population by color, size, joyplot and lineup styles: https://eurostat.github.io/gridviz/test_canvas/test/EUR_population.html
+- Europe population by color, size, donut, segment, joyplot, lineup and text styles: https://eurostat.github.io/gridviz/test_canvas/test/EUR_population.html
 - Europe population change by Color: https://eurostat.github.io/gridviz/test_canvas/test/EUR_color_diverging.html
 - Segment orientation: https://eurostat.github.io/gridviz/test_canvas/test/EUR_segment.html
 - Gaussian kernel smoothing: https://eurostat.github.io/gridviz/test_canvas/test/EUR_kernelsmoothing.html
