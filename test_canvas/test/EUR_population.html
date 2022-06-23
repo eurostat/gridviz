@@ -54,8 +54,9 @@
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
 
-        const col = gviz.interpolateOrRd(0.5)
-        console.log(col)
+        const col = gviz.interpolateOrRd(0.6)
+        //console.log(col)
+        //rgb(241, 108, 73)
 
         //style data
         const sd = {
@@ -69,7 +70,7 @@
             },
             size: {
                 style: new gviz.ShapeColorSizeStyle({
-                    color: c => col, //"#c08c59bb", 
+                    color: c => "rgba(241, 108, 73, 0.8)", //"#c08c59bb", 
                     sizeCol: "2018",
                     size: (v, r, s, zf) => 1.5 * r * Math.pow(v / s.max, 0.3),
                     shape: c => "circle",
@@ -81,7 +82,7 @@
                 style: new gviz.JoyPlotStyle({
                     heightCol: "2018",
                     height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
-                    fillColor: col
+                    fillColor: "rgba(241, 108, 73, 0.8)"
                 }),
                 zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
             },
@@ -89,7 +90,7 @@
                 style: new gviz.LineUpStyle({
                     heightCol: "2018",
                     height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.6),
-                    color: () => col
+                    color: () => "rgba(241, 108, 73, 0.8)"
                 }),
                 zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
             }
