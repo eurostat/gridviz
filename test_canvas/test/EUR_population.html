@@ -89,6 +89,7 @@
                 style: new gviz.LineUpStyle({
                     heightCol: "2018",
                     height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.6),
+                    color: () => col
                 }),
                 zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
             }
