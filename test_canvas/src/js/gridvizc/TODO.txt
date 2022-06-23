@@ -1,7 +1,6 @@
 TODO color back
 TODO style text
 TODO style segment
-TODO test dashed boundaries
 TODO test size: larger with transparency?
 TODO legend size
 TODO more efficient layer creation?
