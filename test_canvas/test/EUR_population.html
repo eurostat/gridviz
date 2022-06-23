@@ -91,6 +91,14 @@
                 }),
                 zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
             },
+            segment: {
+                style: new gviz.ShapeColorSizeStyle({
+                    colorCol: "2018",
+                    color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
+                    zfStroke: 100
+                }),
+                zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
+            },
             lineup: {
                 style: new gviz.LineUpStyle({
                     heightCol: "2018",
@@ -98,6 +106,14 @@
                     color: () => "rgba(241, 108, 73)"
                 }),
                 zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
+            },
+            text: {
+                style: new gviz.ShapeColorSizeStyle({
+                    colorCol: "2018",
+                    color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
+                    zfStroke: 100
+                }),
+                zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
             }
         }
 

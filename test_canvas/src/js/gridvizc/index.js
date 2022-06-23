@@ -69,7 +69,7 @@ export const getEurostatBoundariesLayer = function (opts) {
 
     opts.color = opts.color || ((f, zf) => {
         const p = f.properties
-        const col = "#AAA"
+        const col = "#999"
         if (p.co === "T") return
         if (zf < 400) return col
         else if (zf < 1000) return p.lvl >= 3 ? "" : col
@@ -80,13 +80,19 @@ export const getEurostatBoundariesLayer = function (opts) {
     opts.width = opts.width || ((f, zf) => {
         const p = f.properties
         if (p.co === "T") return
-        if (zf < 400) return p.lvl == 3 ? 1 : p.lvl == 2 ? 2.2 : p.lvl == 1 ? 2.2 : 4
+        if (zf < 400) return p.lvl == 3 ? 2.2 : p.lvl == 2 ? 2.2 : p.lvl == 1 ? 2.2 : 4
         else if (zf < 1000) return p.lvl == 2 ? 1.2 : p.lvl == 1 ? 1.2 : 2.5
         else if (zf < 2000) return p.lvl == 1 ? 1 : 2
         else return 1.2
     })
 
-    opts.lineDash = opts.lineDash || ((f, zf) => [10 * zf, 5 * zf])
+    opts.lineDash = opts.lineDash || ((f, zf) => {
+        const p = f.properties
+        if (zf < 400) return p.lvl == 3 ? [2 * zf, 2 * zf] : p.lvl == 2 ? [5 * zf, 2 * zf] : p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
+        else if (zf < 1000) return p.lvl == 2 ? [5 * zf, 2 * zf] : p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
+        else if (zf < 2000) return p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
+        else return [10 * zf, 3 * zf]
+    })
 
     const url = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/" + nutsYear + "/" + crs + "/" + scale + "/nutsbn_" + nutsLevel + ".json"
     return new BoundaryLayer(url, opts)
