@@ -69,11 +69,12 @@ export const getEurostatBoundariesLayer = function (opts) {
 
     opts.color = opts.color || ((f, zf) => {
         const p = f.properties
+        const col = "#BBB"
         if (p.co === "T") return
-        if (zf < 400) return "gray"
-        else if (zf < 1000) return p.lvl >= 3 ? "" : "gray"
-        else if (zf < 2000) return p.lvl >= 2 ? "" : "gray"
-        else return p.lvl >= 1 ? "" : "gray"
+        if (zf < 400) return col
+        else if (zf < 1000) return p.lvl >= 3 ? "" : col
+        else if (zf < 2000) return p.lvl >= 2 ? "" : col
+        else return p.lvl >= 1 ? "" : col
     })
 
     opts.width = opts.width || ((f, zf) => {

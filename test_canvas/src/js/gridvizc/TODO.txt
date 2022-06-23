@@ -1,7 +1,7 @@
+TODO test dashed boundaries
 TODO test size: larger with transparency?
 TODO legend size
 TODO more efficient layer creation?
-TODO test dashed boundaries
 TODO tw population FR EUR
 
 TODO adm boundaries: draw above/below
