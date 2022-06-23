@@ -8,6 +8,7 @@ TODO tw population FR EUR
 TODO adm boundaries: draw above/below
 TODO add missing legends: size, categories for composition, etc.
 
+TODO rename lineup column
 TODO map style: cell based on its neighboors. Contour like ?
 TODO test style with border/discontinuities
 TODO new version with indicator on gender unbalance
