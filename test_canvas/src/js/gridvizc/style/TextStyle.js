@@ -85,10 +85,9 @@ export class TextStyle extends Style {
         }
 
         for (let cell of cells) {
-            //see https://www.w3schools.com/graphics/canvas_text.asp
 
             //get cell text
-            const text = this.text ? this.text(cell[this.textCol], r, statColor) : undefined;
+            const text = this.text ? this.text(cell[this.textCol], r, statText) : undefined;
             if (!text) continue;
 
             //color

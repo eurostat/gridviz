@@ -110,7 +110,11 @@
             text: {
                 style: new gviz.TextStyle({
                     textCol: "2018",
-                    text: (v, r, s, z) => "" + v,
+                    text: (v, r, s, z) => {
+                        console.log(v,s)
+                        const t = Math.pow(v/s.max, 0.4);
+                        return "-" //;t+""
+                    },
                     color: (v, r, s) => "red",
                     fontWeight: "normal"
                 }),
