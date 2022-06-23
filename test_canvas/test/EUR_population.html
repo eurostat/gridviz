@@ -28,13 +28,13 @@
                 <label for="color">Color</label>
                 <input type="radio" name="style" id="size" value="size">
                 <label for="size">Size</label>
+                <input type="radio" name="style" id="segment" value="segment">
+                <label for="segment">Line</label>
+                <br>
                 <input type="radio" name="style" id="joyplot" value="joyplot">
                 <label for="joyplot">Joyplot</label>
-                <br>
-                <input type="radio" name="style" id="segment" value="segment">
-                <label for="segment">Segment</label>
                 <input type="radio" name="style" id="lineup" value="lineup">
-                <label for="lineup">Lineup</label>
+                <label for="lineup">Column</label>
                 <input type="radio" name="style" id="text" value="text">
                 <label for="text">Text</label>
             </div>
@@ -98,12 +98,14 @@
                 zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
             },
             segment: {
-                style: new gviz.ShapeColorSizeStyle({
-                    colorCol: "2018",
-                    color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
-                    zfStroke: 100
+                style: new gviz.SegmentStyle({
+                    orientation: () => 45,
+                    color: (v, r, s) => "#c08c59bb",
+                    length: (v, r) => r * 1.4142,
+                    widthCol: "2018",
+                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25) / 1.4142,
                 }),
-                zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
+                zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
             },
             lineup: {
                 style: new gviz.LineUpStyle({
@@ -148,6 +150,7 @@
             sd.color.style.colorCol = this.value
             sd.size.style.sizeCol = this.value
             sd.joyplot.style.heightCol = this.value
+            sd.segment.style.widthCol = this.value
             sd.lineup.style.heightCol = this.value
             sd.text.style.textCol = this.value
             app.cg.redraw();
