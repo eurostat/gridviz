@@ -1,6 +1,7 @@
+TODO adjust zoom breaks
 TODO test size: larger with transparency?
 TODO more efficient layer creation?
-TODO adjust zoom breaks
+TODO test dashed boundaries
 TODO tw population FR EUR
 
 TODO adm boundaries: draw above/below
