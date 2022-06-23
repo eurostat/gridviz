@@ -66,7 +66,8 @@
             const nb = chars.length
             return (t) => t == 0 ? "" : t == 1 ? chars[nb - 1] : chars[Math.floor(t * nb)]
         }
-        const charFun = getCharFun([".", "-", "+", "0", "#", "@"]);
+        const charFun = getCharFun([".", "-", "~", "+", "=", "#", "€", "@"]);
+        //&IOSHXV?/§!*$€0O      .  - ~ + =  €%#@
         //for (let t = 0; t <= 1; t += 0.05) console.log(t, charFun(t))
 
         //style data
