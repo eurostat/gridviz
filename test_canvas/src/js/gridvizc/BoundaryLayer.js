@@ -25,10 +25,13 @@ export class BoundaryLayer {
 
         /** 
          * @private @type {function(object,number):string} */
-         this.color = opts.color || ((f,zf) => "gray")
+        this.color = opts.color || ((f, zf) => "gray")
         /** 
          * @private @type {function(object,number):number} */
-         this.width = opts.width || ((f,zf) => 2)
+        this.width = opts.width || ((f, zf) => 2)
+        /** 
+         * @private @type {function(object,number):Array.<number>|undefined} */
+        this.lineDash = opts.lineDash || ((f, zf) => undefined)
 
         /** @private @type {Array.<object> | undefined} */
         this.fs
@@ -65,13 +68,17 @@ export class BoundaryLayer {
 
             //set color
             const col = this.color(f, zf);
-            if(!col || col == "none") continue
+            if (!col || col == "none") continue
             cg.ctx.strokeStyle = col;
 
             //set linewidth
             const wP = this.width(f, zf);
-            if(!wP || wP<0) continue
+            if (!wP || wP < 0) continue
             cg.ctx.lineWidth = wP * zf;
+
+            //set line dash
+            const ldP = this.lineDash(f, zf);
+            if (ldP) cg.ctx.setLineDash(ldP);
 
             //draw line
             cg.ctx.beginPath();
