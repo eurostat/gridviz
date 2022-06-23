@@ -7,8 +7,7 @@
 
 # France - 200m (Filosofi 2015)
 
-- Population: https://eurostat.github.io/gridviz/test_canvas/test/F2015_ind.html
-- Population as joyplot: https://eurostat.github.io/gridviz/test_canvas/test/F2015_ind_joy.html
+- Population: https://eurostat.github.io/gridviz/test_canvas/test/F2015_population.html
 - Population by age: https://eurostat.github.io/gridviz/test_canvas/test/F2015_ind_by_age.html
 - Juniors VS Seniors: https://eurostat.github.io/gridviz/test_canvas/test/F2015_ind_by_age2.html
 - Poverty: https://eurostat.github.io/gridviz/test_canvas/test/F2015_men_pauv.html

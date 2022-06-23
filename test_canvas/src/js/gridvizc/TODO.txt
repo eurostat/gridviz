@@ -1,7 +1,6 @@
 TODO legend - size + characters + segments
 TODO tw population FR EUR
 
-TODO adm boundaries: draw above/below
 TODO more efficient multiscale layer creation?
 TODO add missing legends: size, categories for composition, etc.
 
