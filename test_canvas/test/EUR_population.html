@@ -48,7 +48,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(1500).setZoomFactorExtent([25, 100000])
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(1500).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //test view from URL parameters, if any
@@ -70,7 +70,7 @@
             },
             size: {
                 style: new gviz.ShapeColorSizeStyle({
-                    color: c => "rgba(241, 108, 73, 0.8)", //"#c08c59bb", 
+                    color: c => "rgba(241, 108, 73, 0.7)", //"#c08c59bb", 
                     sizeCol: "2018",
                     size: (v, r, s, zf) => 1.5 * r * Math.pow(v / s.max, 0.3),
                     shape: c => "circle",
@@ -82,7 +82,7 @@
                 style: new gviz.JoyPlotStyle({
                     heightCol: "2018",
                     height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
-                    fillColor: "rgba(241, 108, 73, 0.8)"
+                    fillColor: "rgba(241, 108, 73, 0.45)"
                 }),
                 zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
             },
@@ -90,7 +90,7 @@
                 style: new gviz.LineUpStyle({
                     heightCol: "2018",
                     height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.6),
-                    color: () => "rgba(241, 108, 73, 0.8)"
+                    color: () => "rgba(241, 108, 73)"
                 }),
                 zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
             }
