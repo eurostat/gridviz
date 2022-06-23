@@ -1,4 +1,4 @@
-TODO attribution
+TODO donut
 TODO test coastline - bottom?
 TODO test size: larger with transparency?
 TODO legend - size + characters + segments
