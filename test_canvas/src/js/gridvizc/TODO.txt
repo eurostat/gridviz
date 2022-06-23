@@ -1,3 +1,4 @@
+TODO better characterset
 TODO attribution
 TODO test coastline - bottom?
 TODO test size: larger with transparency?
