@@ -70,7 +70,7 @@ export const getEurostatBoundariesLayer = function (opts) {
     opts.color = opts.color || ((f, zf) => {
         const p = f.properties
         const col = "#999"
-        if (p.co === "T") return "#007577"
+        if (p.co === "T") return col //"#007577"
         if (zf < 400) return col
         else if (zf < 1000) return p.lvl >= 3 ? "" : col
         else if (zf < 2000) return p.lvl >= 2 ? "" : col
@@ -79,7 +79,7 @@ export const getEurostatBoundariesLayer = function (opts) {
 
     opts.width = opts.width || ((f, zf) => {
         const p = f.properties
-        if (p.co === "T") return 0.8
+        if (p.co === "T") return 0.5
         if (zf < 400) return p.lvl == 3 ? 2.2 : p.lvl == 2 ? 2.2 : p.lvl == 1 ? 2.2 : 4
         else if (zf < 1000) return p.lvl == 2 ? 1.2 : p.lvl == 1 ? 1.2 : 2.5
         else if (zf < 2000) return p.lvl == 1 ? 1 : 2

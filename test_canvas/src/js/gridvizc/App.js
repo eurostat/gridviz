@@ -58,9 +58,9 @@ export class App {
             //hide legends
             for (const alayer of this.layers) alayer.hideLegend()
 
-            //draw boundary layer
-            if ((this.showBoundaries && this.boundaryLayer))
-                this.boundaryLayer.draw(this.cg)
+            //clear
+            this.cg.initCanvasTransform()
+            this.cg.clear(this.backgroundColor);
 
             //go through the layers
             const zf = this.getZoomFactor();
@@ -77,10 +77,6 @@ export class App {
                 //update dataset view cache
                 layer.dataset.updateViewCache(this.cg.extGeo);
 
-                //clear
-                this.cg.initCanvasTransform()
-                this.cg.clear(this.backgroundColor);
-
                 //draw cells, style by style
                 for (const style of layer.styles)
                     style.draw(layer.dataset.getViewCache(), layer.dataset.getResolution(), this.cg)
@@ -90,8 +86,8 @@ export class App {
             }
 
             //draw boundary layer
-            //if ((this.showBoundaries && this.boundaryLayer))
-            //    this.boundaryLayer.draw(this.cg)
+            if ((this.showBoundaries && this.boundaryLayer))
+                this.boundaryLayer.draw(this.cg)
 
             //draw label layer
             if (this.showLabels && this.labelLayer)
