@@ -103,7 +103,8 @@
 
         //text
         const sText = new gviz.TextStyle({
-            text: c => "" + Math.trunc(100 * c["age_ratio"]),
+            textCol: "age_ratio",
+            text: (v, r, s) => "" + Math.trunc(100 * v),
             colorCol: "age_ratio",
             color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
             fontSizeCol: "Ind",

@@ -1,4 +1,3 @@
-TODO color back
 TODO style text
 TODO style segment
 TODO test size: larger with transparency?

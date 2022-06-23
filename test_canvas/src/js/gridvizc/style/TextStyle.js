@@ -15,11 +15,13 @@ export class TextStyle extends Style {
         super(opts)
         opts = opts || {};
 
+        /** The name of the column/attribute of the tabular data where to retrieve the variable for text.
+         *  @protected @type {string} */
+         this.textCol = opts.colorCol;
+
         /** A function returning the text of a cell.
-         * @private @type {function(Cell):string} */
-        this.text = opts.text || (c => c + "")
-
-
+         * @private @type {function(number,number,Stat|undefined):string} */
+        this.text = opts.text || ((v, r, s, z) => "X")
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
          *  @protected @type {string} */
@@ -62,6 +64,12 @@ export class TextStyle extends Style {
         //zoom factor
         const zf = cg.getZf()
 
+        let statText
+        if (this.textCol) {
+            //compute text variable statistics
+            statText = getStatistics(cells, c => c[this.textCol], true)
+        }
+
         let statColor
         if (this.colorCol) {
             //compute color variable statistics
@@ -80,7 +88,7 @@ export class TextStyle extends Style {
             //see https://www.w3schools.com/graphics/canvas_text.asp
 
             //get cell text
-            const text = this.text(cell);
+            const text = this.text ? this.text(cell[this.colorCol], r, statColor) : undefined;
             if (!text) continue;
 
             //color

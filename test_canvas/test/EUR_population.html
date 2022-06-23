@@ -75,7 +75,7 @@
             },
             size: {
                 style: new gviz.ShapeColorSizeStyle({
-                    color: c => "rgba(241, 108, 73, 0.7)", //"#c08c59bb", 
+                    color: c => "#c08c59bb", //"rgba(241, 108, 73, 0.7)",
                     sizeCol: "2018",
                     size: (v, r, s, zf) => 1.5 * r * Math.pow(v / s.max, 0.3),
                     shape: c => "circle",
@@ -87,7 +87,7 @@
                 style: new gviz.JoyPlotStyle({
                     heightCol: "2018",
                     height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
-                    fillColor: "rgba(241, 108, 73, 0.45)"
+                    //fillColor: "rgba(241, 108, 73, 0.45)"
                 }),
                 zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
             },
@@ -103,17 +103,18 @@
                 style: new gviz.LineUpStyle({
                     heightCol: "2018",
                     height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.6),
-                    color: () => "rgba(241, 108, 73)"
+                    //color: () => "rgba(241, 108, 73)"
                 }),
                 zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
             },
             text: {
-                style: new gviz.ShapeColorSizeStyle({
-                    colorCol: "2018",
-                    color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
-                    zfStroke: 100
+                style: new gviz.TextStyle({
+                    textCol: "2018",
+                    text: ((v, r, s, z) => "X"),
+                    color: (v, r, s) => "red",
+                    fontWeight: "normal"
                 }),
-                zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
+                zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
             }
         }
 
