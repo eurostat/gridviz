@@ -17,7 +17,7 @@ export class TextStyle extends Style {
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for text.
          *  @protected @type {string} */
-         this.textCol = opts.colorCol;
+        this.textCol = opts.textCol;
 
         /** A function returning the text of a cell.
          * @private @type {function(number,number,Stat|undefined):string} */
@@ -88,7 +88,7 @@ export class TextStyle extends Style {
             //see https://www.w3schools.com/graphics/canvas_text.asp
 
             //get cell text
-            const text = this.text ? this.text(cell[this.colorCol], r, statColor) : undefined;
+            const text = this.text ? this.text(cell[this.textCol], r, statColor) : undefined;
             if (!text) continue;
 
             //color
