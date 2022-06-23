@@ -24,7 +24,7 @@ export class JoyPlotStyle extends Style {
         this.height = opts.height || ((v) => Math.sqrt(v));
 
         /** @private @type {string} */
-        this.lineColor = opts.lineColor || "gray"
+        this.lineColor = opts.lineColor || "#BBB"
         /** @private @type {number} */
         this.lineWidth = opts.lineWidth || 1;
         /** @private @type {string} */
