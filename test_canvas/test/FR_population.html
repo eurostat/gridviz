@@ -57,14 +57,6 @@
         app.cg.setViewFromURL()
 
 
-        //TODO move to textstyle
-        //[".","-","+","*","#","@"]
-        const getCharFun = (chars) => {
-            const nb = chars.length
-            return (t) => t == 0 ? "" : t == 1 ? chars[nb - 1] : chars[Math.floor(t * nb)]
-        }
-        const charFun = getCharFun([".", "-", "~", "+", "=", "#", "€", "@"]);
-
         //style data
         const sd = {
             color: {
@@ -125,7 +117,7 @@
                     textCol: "Ind",
                     text: (v, r, s, z) => {
                         const t = Math.pow(v / s.max, 0.2);
-                        return charFun(t);
+                        return gviz.charLegendFun(t);
                     },
                     color: (v, r, s) => "#c08c59",
                     fontSize: ((v, r, s, z) => 1.2 * r),
