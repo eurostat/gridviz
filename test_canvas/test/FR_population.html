@@ -80,8 +80,8 @@
             donut: {
                 style: new gviz.ShapeColorSizeStyle({
                     sizeCol: "Ind",
-                    size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
-                    color: c => "#c08c59bb", //"rgba(241, 108, 73, 0.7)",
+                    size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3),
+                    color: c => "#c08c59bb",
                     shape: () => "donut",
                     zfStroke: 80
                 }),
@@ -91,7 +91,6 @@
                 style: new gviz.JoyPlotStyle({
                     heightCol: "Ind",
                     height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
-                    //fillColor: "rgba(241, 108, 73, 0.45)"
                 }),
                 zooms: [0, 40, 80, 200, 400, 1000, 2000, 4000, 10000]
             },

@@ -84,8 +84,8 @@
             donut: {
                 style: new gviz.ShapeColorSizeStyle({
                     sizeCol: "2018",
-                    size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
-                    color: c => "#c08c59bb", //"rgba(241, 108, 73, 0.7)",
+                    size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3),
+                    color: c => "#c08c59bb",
                     shape: () => "donut",
                     zfStroke: 80
                 }),
@@ -95,7 +95,6 @@
                 style: new gviz.JoyPlotStyle({
                     heightCol: "2018",
                     height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
-                    //fillColor: "rgba(241, 108, 73, 0.45)"
                 }),
                 zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
             },
@@ -113,7 +112,6 @@
                 style: new gviz.LineUpStyle({
                     heightCol: "2018",
                     height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.7),
-                    //color: () => "rgba(241, 108, 73)"
                 }),
                 zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
             },
@@ -126,7 +124,6 @@
                     },
                     color: (v, r, s) => "#c08c59",
                     fontSize: ((v, r, s, z) => 1.2 * r),
-                    //fontWeight: "normal"
                 }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             }
