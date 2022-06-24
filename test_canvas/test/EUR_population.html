@@ -38,7 +38,7 @@
                 <input type="radio" name="style" id="lineup" value="lineup">
                 <label for="lineup">Column</label>
                 <input type="radio" name="style" id="text" value="text">
-                <label for="text">Text</label>
+                <label for="text">#@=€</label>
             </div>
             <hr>
             <input type="checkbox" id="label" checked>
@@ -119,7 +119,7 @@
                 style: new gviz.TextStyle({
                     textCol: "2018",
                     text: (v, r, s, z) => {
-                        const t = Math.pow(v / s.max, 0.2);
+                        const t = Math.pow(v / s.max, 0.25);
                         return gviz.charLegendFun(t);
                     },
                     color: (v, r, s) => "#c08c59",
