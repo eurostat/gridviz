@@ -122,7 +122,7 @@
                     textCol: "2018",
                     text: (v, r, s, z) => {
                         const t = Math.pow(v / s.max, 0.2);
-                        return charFun(t);
+                        return gviz.charLegendFun(t);
                     },
                     color: (v, r, s) => "#c08c59",
                     fontSize: ((v, r, s, z) => 1.2 * r),
