@@ -19,7 +19,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(50).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //style data
@@ -41,21 +41,47 @@
                 { code: "50km/", styles: [s], opts: { cellInfoHTML: ttfun } },
                 { code: "100km/", styles: [s], opts: { cellInfoHTML: ttfun } },
             ],
-            [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
+            [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
         )
 
     </script>
     <script>
 
-        setTimeout((a, b, c) => {
+        /*setTimeout((a, b, c) => {
             console.log("aaa", a, b, c)
-        }, 5000)
+        }, 5000)*/
 
-        const i = 0
+        /*let i = 0
         let timer = setInterval(() => {
             console.log(i++)
             if (i > 10) clearInterval(timer)
-        }, 1000);
+        }, 1000);*/
+
+
+        const zoomTo = (zfTarget, factor=1.01, delayMs=0) => {
+
+            //ensure good factor value: >1
+            factor = factor || 1.01
+            if (factor < 1) {
+                console.error("Unexpected value for factor: " + factor + ". Set to default value 1.01")
+                factor == 1.01
+            }
+
+            const zfIni = app.getZoomFactor()
+            if (zfTarget == zfIni) return
+            if (zfTarget < zfIni) factor = 1 / factor
+            let zf = zfIni
+            let timer = setInterval(() => {
+                zf = zf * factor
+                if (zf > zfTarget) zf = zfTarget
+                app.setZoomFactor(zf)
+                app.cg.redraw()
+                if (zf == zfTarget) clearInterval(timer)
+            }, delayMs)
+            return timer;
+        }
+
+        zoomTo(200, 1.01, 0)
 
 
     </script>
