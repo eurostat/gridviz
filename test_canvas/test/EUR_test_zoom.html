@@ -19,7 +19,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(50).setZoomFactorExtent([40, 7500])
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(100).setZoomFactorExtent([1, 100000])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //style data
@@ -72,8 +72,9 @@
             if (zfTarget < zfIni) factor = 1 / factor
             let zf = zfIni
             let timer = setInterval(() => {
-                zf = zf * factor
-                if (zf > zfTarget) zf = zfTarget
+                zf = app.getZoomFactor() * factor
+                if (zfTarget > zfIni && zf > zfTarget) zf = zfTarget
+                if (zfTarget < zfIni && zf < zfTarget) zf = zfTarget
                 app.setZoomFactor(zf)
                 app.cg.redraw()
                 if (zf == zfTarget) clearInterval(timer)
@@ -81,7 +82,7 @@
             return timer;
         }
 
-        zoomTo(1000, 1.01, 0)
+        zoomTo(50, 1.01, 0)
 
 
     </script>
