@@ -1,11 +1,10 @@
 TODO test continuous zoom
-TODO legend - size + donut + segment width + column + characters
+TODO legend - size + donut + segment width + pillar + characters
 TODO tw population FR
 
 TODO more efficient multiscale layer creation?
 TODO add missing legends: size, categories for composition, etc.
 
-TODO rename lineup -> column
 TODO map style: cell based on its neighboors. Contour like ?
 TODO test style with border/discontinuities
 TODO new version with indicator on gender unbalance

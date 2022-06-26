@@ -27,8 +27,8 @@
                 <label for="donut">Donut</label>
             </div>
             <div>
-                <input type="radio" name="style" id="lineup" value="lineup">
-                <label for="lineup">Lineup</label>
+                <input type="radio" name="style" id="pillar" value="pillar">
+                <label for="pillar">Lineup</label>
             </div>
             <div>
                 <input type="radio" name="style" id="hseg" value="hseg">
@@ -93,8 +93,8 @@
             width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25),
         })
 
-        //lineup
-        const sLineup = new gviz.LineUpStyle({
+        //pillar
+        const sPillar = new gviz.PillarStyle({
             colorCol: "age_ratio",
             color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
             heightCol: "Ind",
@@ -154,8 +154,8 @@
                 sSegment.setOrientation(() => -45)
                 sSegment.setLength((v, r) => 1.4142 * r)
                 st = sSegment
-            } else if (value === "lineup") {
-                st = sLineup
+            } else if (value === "pillar") {
+                st = sPillar
             } else if (value === "text") {
                 st = sText
             }

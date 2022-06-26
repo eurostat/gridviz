@@ -30,8 +30,8 @@
                 <br>
                 <input type="radio" name="style" id="joyplot" value="joyplot">
                 <label for="joyplot">Joyplot</label>
-                <input type="radio" name="style" id="lineup" value="lineup">
-                <label for="lineup">Column</label>
+                <input type="radio" name="style" id="pillar" value="pillar">
+                <label for="pillar">Pillar</label>
                 <input type="radio" name="style" id="text" value="text">
                 <label for="text">#@=€</label>
             </div>
@@ -104,8 +104,8 @@
                 }),
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
-            lineup: {
-                style: new gviz.LineUpStyle({
+            pillar: {
+                style: new gviz.PillarStyle({
                     heightCol: "Ind",
                     height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.7),
                 }),
