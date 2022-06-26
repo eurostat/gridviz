@@ -30,8 +30,13 @@
                 <label for="size">Circle</label>
                 <input type="radio" name="style" id="donut" value="donut">
                 <label for="donut">Donut</label>
-                <input type="radio" name="style" id="segment" value="segment">
-                <label for="segment">Line</label>
+                <br>
+                Line: <input type="radio" name="style" id="segmentH" value="segmentH">
+                <label for="segmentH">Horizontal</label>
+                <input type="radio" name="style" id="segmentV" value="segmentV">
+                <label for="segmentV">Vertical</label>
+                <input type="radio" name="style" id="segmentO" value="segmentO">
+                <label for="segmentO">Oblique</label>
                 <br>
                 <input type="radio" name="style" id="joyplot" value="joyplot">
                 <label for="joyplot">Joyplot</label>
@@ -73,7 +78,7 @@
             },
             size: {
                 style: new gviz.ShapeColorSizeStyle({
-                    color: c => "#c08c59bb",
+                    color: c => "#c08c59cc",
                     sizeCol: "2018",
                     size: (v, r, s, zf) => 1.5 * r * Math.pow(v / s.max, 0.3),
                     shape: c => "circle",
@@ -85,9 +90,39 @@
                 style: new gviz.ShapeColorSizeStyle({
                     sizeCol: "2018",
                     size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3),
-                    color: c => "#c08c59bb",
+                    color: c => "#c08c59",
                     shape: () => "donut",
                     zfStroke: 80
+                }),
+                zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+            },
+            segmentH: {
+                style: new gviz.SegmentStyle({
+                    orientation: () => 0,
+                    color: (v, r, s) => "#c08c59",
+                    length: (v, r) => r ,
+                    widthCol: "2018",
+                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
+                }),
+                zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+            },
+            segmentV: {
+                style: new gviz.SegmentStyle({
+                    orientation: () => 90,
+                    color: (v, r, s) => "#c08c59",
+                    length: (v, r) => r ,
+                    widthCol: "2018",
+                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
+                }),
+                zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+            },
+            segmentO: {
+                style: new gviz.SegmentStyle({
+                    orientation: () => 45,
+                    color: (v, r, s) => "#c08c59",
+                    length: (v, r) => r * 1.4142,
+                    widthCol: "2018",
+                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25) / 1.4142,
                 }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
@@ -95,18 +130,9 @@
                 style: new gviz.JoyPlotStyle({
                     heightCol: "2018",
                     height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
+                    fillColor: "#c08c59bb"
                 }),
                 zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
-            },
-            segment: {
-                style: new gviz.SegmentStyle({
-                    orientation: () => 45,
-                    color: (v, r, s) => "#c08c59bb",
-                    length: (v, r) => r * 1.4142,
-                    widthCol: "2018",
-                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25) / 1.4142,
-                }),
-                zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
             },
             pillar: {
                 style: new gviz.PillarStyle({
@@ -148,8 +174,11 @@
         document.querySelector('#year').addEventListener('change', function () {
             sd.color.style.colorCol = this.value
             sd.size.style.sizeCol = this.value
+            sd.donut.style.sizeCol = this.value
+            sd.segmentH.style.widthCol = this.value
+            sd.segmentV.style.widthCol = this.value
+            sd.segmentO.style.widthCol = this.value
             sd.joyplot.style.heightCol = this.value
-            sd.segment.style.widthCol = this.value
             sd.pillar.style.heightCol = this.value
             sd.text.style.textCol = this.value
             app.cg.redraw();

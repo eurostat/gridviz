@@ -1,9 +1,11 @@
+TODO donut - size
+
 TODO test continuous zoom
 TODO legend - size + donut + segment width + pillar + characters
 TODO tw population FR
 
 TODO more efficient multiscale layer creation?
-TODO add missing legends: size, categories for composition, etc.
+TODO add missing legends: categories for composition, etc.
 
 TODO map style: cell based on its neighboors. Contour like ?
 TODO test style with border/discontinuities
