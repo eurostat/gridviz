@@ -19,7 +19,7 @@ export { TextStyle, getCharLegendFun, charLegendFun } from "./style/TextStyle"
 export { KernelSmoothingStyle } from "./style/KernelSmoothingStyle"
 export { RadarStyle } from "./style/RadarStyle"
 export { AgePyramidStyle } from "./style/AgePyramidStyle"
-export { LineUpStyle } from "./style/LineUpStyle"
+export { PillarStyle } from "./style/PillarStyle"
 
 //export additional layers
 export { LabelLayer } from "./LabelLayer"

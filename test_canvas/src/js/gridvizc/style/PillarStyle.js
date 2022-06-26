@@ -7,7 +7,7 @@ import { GeoCanvas } from "../GeoCanvas";
 /**
  * @author Julien Gaffuri
  */
-export class LineUpStyle extends Style {
+export class PillarStyle extends Style {
 
     /** @param {object} opts */
     constructor(opts) {
