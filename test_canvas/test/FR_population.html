@@ -208,11 +208,30 @@
             app.cg.redraw();
         });
 
+
+        //demo animation
+
         //x:3716912, y: 2786497
         //20
         //1000
+        app.setGeoCenter({ x: 3716912, y: 2786497 }).setZoomFactor(20)
 
-    </script>
+        app.zoomTo(1000, 1.05, 0, () => {
+            app.zoomTo(20, 1.05, 0, () => {
+                app.zoomTo(1000, 1.05, 0, () => {
+                    app.zoomTo(20, 1.05, 0, () => {
+                        app.zoomTo(1000, 1.05, 0, () => {
+                            app.zoomTo(20, 1.05, 0, () => {
+                            }, 1000)
+                        }, 1000)
+                    }, 1000)
+                }, 1000)
+            }, 1000)
+        }, 1000)
+
+
+
+</script>
 
     <div
         style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">

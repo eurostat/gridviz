@@ -54,7 +54,7 @@ export class App {
          * @type {GeoCanvas} @private */
         this.cg = new GeoCanvas();
         this.cg.redraw = () => {
-            console.log(this.cg.getZf(), this.cg.getCenter())
+            //console.log(this.cg.getZf(), this.cg.getCenter())
 
             //hide legends
             for (const alayer of this.layers) alayer.hideLegend()
