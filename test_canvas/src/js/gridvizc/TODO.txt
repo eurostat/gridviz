@@ -1,8 +1,7 @@
-TODO donut - size
-
-TODO test continuous zoom
-TODO legend - size + donut + segment width + pillar + characters
 TODO tw population FR
+
+TODO legend - size + donut + segment width + pillar + characters
+TODO test continuous zoom
 
 TODO more efficient multiscale layer creation?
 TODO add missing legends: categories for composition, etc.
