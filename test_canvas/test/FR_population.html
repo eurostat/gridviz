@@ -141,6 +141,7 @@
                     fillColor: "#c08c59bb"
                 }),
                 zooms: [0, 40, 80, 200, 400, 1000, 2000, 4000, 10000]
+                //zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
             pillar: {
                 style: new gviz.PillarStyle({
@@ -209,15 +210,16 @@
         });
 
 
-        //demo animation
+        /*/demo animation
 
         //set style
         const ml = app.layers[0];
         ml.hideLegend()
-        for (const lay of ml.layers) lay.styles = [sd.joyplot.style]
+        for (const lay of ml.layers) lay.styles = [sd.color.style]
+        ml.zooms = sd.color.zooms
 
         //launch
-        const z1 = 20, z2=1000, pauseMs = 1000, delayMs = 100, factor = 1.05
+        const z1 = 60, z2=1400, pauseMs = 2000, delayMs = 0, factor = 1.06
         app.setGeoCenter({ x: 3716912, y: 2786497 }).setZoomFactor(z1)
         app.zoomTo(z2, factor, delayMs, () => {
             app.zoomTo(z1, factor, delayMs, () => {
@@ -230,9 +232,7 @@
                     }, pauseMs)
                 }, pauseMs)
             }, pauseMs)
-        }, pauseMs)
-
-
+        }, pauseMs)*/
 
 </script>
 
