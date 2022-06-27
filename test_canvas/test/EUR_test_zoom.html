@@ -58,31 +58,16 @@
         }, 1000);*/
 
 
-        const zoomTo = (zfTarget, factor=1.01, delayMs=0) => {
 
-            //ensure good factor value: >1
-            factor = factor || 1.01
-            if (factor < 1) {
-                console.error("Unexpected value for factor: " + factor + ". Set to default value 1.01")
-                factor == 1.01
-            }
+        app.zoomTo(1000, 1.05, 0, () => {
+            app.zoomTo(110, 1.05, 0, () => {
+                app.zoomTo(1000, 1.05, 0, () => {
+                    app.zoomTo(110, 1.05, 0, () => {
 
-            const zfIni = app.getZoomFactor()
-            if (zfTarget == zfIni) return
-            if (zfTarget < zfIni) factor = 1 / factor
-            let zf = zfIni
-            let timer = setInterval(() => {
-                zf = app.getZoomFactor() * factor
-                if (zfTarget > zfIni && zf > zfTarget) zf = zfTarget
-                if (zfTarget < zfIni && zf < zfTarget) zf = zfTarget
-                app.setZoomFactor(zf)
-                app.cg.redraw()
-                if (zf == zfTarget) clearInterval(timer)
-            }, delayMs)
-            return timer;
-        }
-
-        zoomTo(1000, 1.05, 0)
+                    }, 1000)
+                }, 1000)
+            }, 1000)
+        }, 1000)
 
 
     </script>

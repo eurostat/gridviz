@@ -317,9 +317,11 @@ export class App {
      * @param {number} zfTarget 
      * @param {number} factor 
      * @param {number} delayMs 
+     * @param {function} callback 
+     * @param {number} delayBeforeCallBackMs 
      * @returns 
      */
-    zoomTo(zfTarget, factor=1.01, delayMs=0) {
+    zoomTo(zfTarget, factor = 1.01, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
 
         //ensure good factor value: >1
         factor = factor || 1.01
@@ -333,12 +335,25 @@ export class App {
         if (zfTarget < zfIni) factor = 1 / factor
         let zf = zfIni
         let timer = setInterval(() => {
+
+            //compute new zoom level
             zf = this.getZoomFactor() * factor
             if (zfTarget > zfIni && zf > zfTarget) zf = zfTarget
             if (zfTarget < zfIni && zf < zfTarget) zf = zfTarget
+
+            //set new zoom level
             this.setZoomFactor(zf)
             this.cg.redraw()
-            if (zf == zfTarget) clearInterval(timer)
+
+            //target reached
+            if (zf == zfTarget) {
+                clearInterval(timer)
+                //trigger callback, if any
+                if (callback)
+                    setTimeout(() => {
+                        callback()
+                    }, delayBeforeCallBackMs)
+            }
         }, delayMs)
         return timer;
     }
