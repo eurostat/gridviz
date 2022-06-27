@@ -34,7 +34,7 @@ export class PillarStyle extends Style {
 
         this.viewHeightFactor = 5
 
-        this.shadowDirection = - 40.3 * Math.PI / 180.0;
+        this.shadowDirection = 40.3 * Math.PI / 180.0;
         this.shadowFactor = 0.2;
         this.shadowColor = "#00000033";
 
