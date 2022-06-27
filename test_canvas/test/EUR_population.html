@@ -26,12 +26,14 @@
             <div id="style">
                 <input type="radio" name="style" id="color" value="color" checked>
                 <label for="color">Color</label>
-                <input type="radio" name="style" id="size" value="size">
-                <label for="size">Circle</label>
+                <input type="radio" name="style" id="square" value="square">
+                <label for="square">Square</label>
+                <input type="radio" name="style" id="circle" value="circle">
+                <label for="circle">Circle</label>
                 <input type="radio" name="style" id="donut" value="donut">
                 <label for="donut">Donut</label>
                 <br>
-                Line: <input type="radio" name="style" id="segmentH" value="segmentH">
+                <input type="radio" name="style" id="segmentH" value="segmentH">
                 <label for="segmentH">Horizontal</label>
                 <input type="radio" name="style" id="segmentV" value="segmentV">
                 <label for="segmentV">Vertical</label>
@@ -76,7 +78,17 @@
                 }).addLegend({ id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) }),
                 zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
             },
-            size: {
+            square: {
+                style: new gviz.ShapeColorSizeStyle({
+                    color: c => "#c08c59cc",
+                    sizeCol: "2018",
+                    size: (v, r, s, zf) => 1.5 * r * Math.pow(v / s.max, 0.3),
+                    shape: c => "square",
+                    zfStroke: 80
+                }),
+                zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+            },
+            circle: {
                 style: new gviz.ShapeColorSizeStyle({
                     color: c => "#c08c59cc",
                     sizeCol: "2018",
@@ -173,7 +185,8 @@
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
             sd.color.style.colorCol = this.value
-            sd.size.style.sizeCol = this.value
+            sd.square.style.sizeCol = this.value
+            sd.circle.style.sizeCol = this.value
             sd.donut.style.sizeCol = this.value
             sd.segmentH.style.widthCol = this.value
             sd.segmentV.style.widthCol = this.value
