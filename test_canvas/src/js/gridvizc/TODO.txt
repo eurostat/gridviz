@@ -1,4 +1,5 @@
 TODO tw population FR
+TODO zoom pane - with touch
 
 TODO legend - size + donut + segment width + pillar + characters
 TODO test continuous zoom

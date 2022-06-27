@@ -54,7 +54,7 @@ export class App {
          * @type {GeoCanvas} @private */
         this.cg = new GeoCanvas();
         this.cg.redraw = () => {
-            //console.log(this.cg.getZf(), this.cg.getCenter())
+            console.log(this.cg.getZf(), this.cg.getCenter())
 
             //hide legends
             for (const alayer of this.layers) alayer.hideLegend()
@@ -307,5 +307,40 @@ export class App {
     getLabelLayer() { return this.labelLayer; }
     /** @param {LabelLayer} val @returns {this} */
     setLabelLayer(val) { this.labelLayer = val; return this; }
+
+
+
+
+
+    /**
+     * 
+     * @param {number} zfTarget 
+     * @param {number} factor 
+     * @param {number} delayMs 
+     * @returns 
+     */
+    zoomTo(zfTarget, factor=1.01, delayMs=0) {
+
+        //ensure good factor value: >1
+        factor = factor || 1.01
+        if (factor < 1) {
+            console.error("Unexpected value for factor: " + factor + ". Set to default value 1.01")
+            factor == 1.01
+        }
+
+        const zfIni = this.getZoomFactor()
+        if (zfTarget == zfIni) return
+        if (zfTarget < zfIni) factor = 1 / factor
+        let zf = zfIni
+        let timer = setInterval(() => {
+            zf = this.getZoomFactor() * factor
+            if (zfTarget > zfIni && zf > zfTarget) zf = zfTarget
+            if (zfTarget < zfIni && zf < zfTarget) zf = zfTarget
+            this.setZoomFactor(zf)
+            this.cg.redraw()
+            if (zf == zfTarget) clearInterval(timer)
+        }, delayMs)
+        return timer;
+    }
 
 }
