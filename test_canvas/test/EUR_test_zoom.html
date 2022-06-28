@@ -4,13 +4,12 @@
 <head>
     <title></title>
 
-
     <style>
         .slider {
             -webkit-appearance: none;
             width: 500px;
             height: 40px;
-            background: white;
+            background: lightgray;
             outline: none;
             opacity: 0.8;
             -webkit-transition: .2s;
@@ -44,7 +43,7 @@
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
 
     <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
-        <input type="range" min="1" max="16" value="5" class="slider" id="zoomslider" orient="vertical">
+        <input type="range" min="50" max="11000" value="100" class="slider" id="zoomslider">
     </div>
 
     <script src="../build/gridvizc.js"></script>
@@ -52,7 +51,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(100).setZoomFactorExtent([1, 100000])
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(100).setZoomFactorExtent([50, 11000])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //style data
@@ -76,6 +75,15 @@
             ],
             [0, 100, 200, 500, 1000, 2000, 5000, 10000]
         )
+
+        //sigma selection
+        document.getElementById('zoomslider').oninput = function () {
+            //console.log(this.value)
+            app.setZoomFactor(+this.value)
+            //redraw
+            app.cg.redraw()
+        }
+
 
     </script>
     <script>
