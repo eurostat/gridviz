@@ -361,20 +361,25 @@ export class App {
 
     /**
      * 
-     * @param {number} xTarget 
-     * @param {number} yTarget 
-     * @param {number} zfTarget 
+     * @param {number|undefined} xTarget 
+     * @param {number|undefined} yTarget 
+     * @param {number|undefined} zfTarget 
      * @param {number} progressFactorPix
      * @param {number} delayMs 
      * @param {function} callback 
      * @param {number} delayBeforeCallBackMs 
      * @returns 
      */
-    goToStraight(xTarget, yTarget, zfTarget, progressFactorPix = 5, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
+    goToStraight(xTarget = undefined, yTarget = undefined, zfTarget = undefined, progressFactorPix = 5, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
 
         //store initial position/zoom
         const zfIni = this.getZoomFactor();
         const cIni = this.getGeoCenter();
+
+        //default
+        xTarget = xTarget || cIni.x
+        yTarget = yTarget || cIni.y
+        zfTarget = zfTarget || zfIni
 
         //prepare for pan
         const dx = xTarget - cIni.x
@@ -410,8 +415,8 @@ export class App {
                 const zf = this.getZoomFactor()
                 let nzf = zoomFactor * zf
                 //if went too far, stop at target values
-                if(nzf < zfTarget && zfTarget < zf) nzf = zfTarget
-                if(zf < zfTarget && zfTarget < nzf) nzf = zfTarget
+                if (nzf < zfTarget && zfTarget < zf) nzf = zfTarget
+                if (zf < zfTarget && zfTarget < nzf) nzf = zfTarget
                 this.setZoomFactor(nzf)
                 if (nzf == zfTarget) r = 1
             }
