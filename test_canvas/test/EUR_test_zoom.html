@@ -57,8 +57,11 @@
             if (i > 10) clearInterval(timer)
         }, 1000);*/
 
-        //app.goToStraight(4000000, 2960000, 500, 1.1, 500);
-        app.goToStraight(4050000, 2900000, 100, 1.1, 500);
+        //app.goToStraight(4000000, 2960000, 100, undefined, 1.1, 500);
+        //app.goToStraight(4000000, 2960000, 500, undefined, 1.1, 100);
+        //app.goToStraight(4050000, 2900000, 100, 100, 1.1, 1);
+        app.goToStraight(4050000, 2900000, 200, 100, 1.1, 100);
+        //TODO dx/dy nb factor in pixels instead of nb of iteration
 
 /*
         app.zoomTo(1000, 1.05, 0, () => {

@@ -364,66 +364,56 @@ export class App {
      * @param {number} xTarget 
      * @param {number} yTarget 
      * @param {number} zfTarget 
-     * @param {number} panFactorNb 
-     * @param {number} zFactor 
+     * @param {number} pixProgressFactor
      * @param {number} delayMs 
      * @param {function} callback 
      * @param {number} delayBeforeCallBackMs 
      * @returns 
      */
-    goToStraight(xTarget, yTarget, zfTarget, panFactorNb = 50, zFactor = 1.01, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
-
-        //ensure good factor value: >1
-        zFactor = zFactor || 1.01
-        if (zFactor < 1) {
-            console.error("Unexpected value for factor: " + zFactor + ". Set to default value 1.01")
-            zFactor == 1.01
-        }
-
-        //choose if zoom in or out
-        const zfIni = this.getZoomFactor()
-        if (zfTarget < zfIni) zFactor = 1 / zFactor
-
-        //compute pan step
-        panFactorNb = panFactorNb || 50
-        const dx = (xTarget - this.getGeoCenter().x) / panFactorNb
-        const dy = (yTarget - this.getGeoCenter().y) / panFactorNb
+    goToStraight(xTarget, yTarget, zfTarget, pixProgressFactor, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
 
         //timer
         let timer = setInterval(() => {
 
-            //compute new zoom level
-            let zf = this.getZoomFactor() * zFactor
-            //compute new position
-            let nC = {
-                x: this.getGeoCenter().x + dx,
-                y: this.getGeoCenter().y + dy,
+            const c = this.getGeoCenter();
+            const zf = this.getZoomFactor();
+
+            //compute and set new position
+            const dx = xTarget - c.x
+            const dy = yTarget - c.y
+            const d = Math.hypot(dx, dy)
+            if (d > 0) {
+                const ddx = pixProgressFactor * zf * dx / d
+                const ddy = pixProgressFactor * zf * dy / d
+                const nx = c.x + ddx
+                const ny = c.y + ddy
+                this.setGeoCenter({ x: nx, y: ny })
             }
 
-            //check if target reached
-            if (
-                nC.x === this.getGeoCenter().x &&
-                nC.y === this.getGeoCenter().y &&
-                ((zfTarget > zfIni && zf > zfTarget) || (zfTarget < zfIni && zf < zfTarget))
-            ) {
+
+            /*/compute and set new zoom
+            let zf = this.getZoomFactor() * zFactor
+
+            //check zoom target
+            if (((zfTarget >= zfIni && zf >= zfTarget) || (zfTarget <= zfIni && zf <= zfTarget)))
                 zf = zfTarget
-                nC = { x: xTarget, y: yTarget }
-            }
 
             //set new position and zoom level
-            this.setGeoCenter(nC)
-            this.setZoomFactor(zf)
-            this.cg.redraw()
+            this.setZoomFactor(zf)*/
 
-            //if target reached, stop
-            if (nC.x === this.getGeoCenter().x && nC.y === this.getGeoCenter().y && zf == zfTarget) {
+            if (d > 0 || zoomcondition) {
+                this.cg.redraw()
+            } else {
+                //if target reached, stop
                 clearInterval(timer)
                 //trigger callback, if any
                 if (callback)
                     setTimeout(() => {
                         callback()
                     }, delayBeforeCallBackMs)
+
             }
+
         }, delayMs)
 
         return timer;
