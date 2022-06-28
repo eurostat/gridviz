@@ -407,7 +407,11 @@ export class App {
 
             //compute and set new zoom
             if (r != 1) {
-                const nzf = zoomFactor * this.getZoomFactor()
+                const zf = this.getZoomFactor()
+                let nzf = zoomFactor * zf
+                //if went too far, stop at target values
+                if(nzf < zfTarget && zfTarget < zf) nzf = zfTarget
+                if(zf < zfTarget && zfTarget < nzf) nzf = zfTarget
                 this.setZoomFactor(nzf)
                 if (nzf == zfTarget) r = 1
             }
