@@ -361,25 +361,25 @@ export class App {
 
     /**
      * 
-     * @param {number|undefined} xTarget 
-     * @param {number|undefined} yTarget 
-     * @param {number|undefined} zfTarget 
+     * @param {number} xTarget 
+     * @param {number} yTarget 
+     * @param {number} zfTarget 
      * @param {number} progressFactorPix
      * @param {number} delayMs 
      * @param {function} callback 
      * @param {number} delayBeforeCallBackMs 
      * @returns 
      */
-    goToStraight(xTarget = undefined, yTarget = undefined, zfTarget = undefined, progressFactorPix = 5, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
+    goToStraight(xTarget = NaN, yTarget = NaN, zfTarget = NaN, progressFactorPix = 5, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
 
         //store initial position/zoom
         const zfIni = this.getZoomFactor();
         const cIni = this.getGeoCenter();
 
         //default
-        xTarget = xTarget || cIni.x
-        yTarget = yTarget || cIni.y
-        zfTarget = zfTarget || zfIni
+        xTarget = isNaN(xTarget) ? cIni.x : xTarget
+        yTarget = isNaN(yTarget) ? cIni.y : yTarget
+        zfTarget = isNaN(zfTarget) ? zfIni : zfTarget
 
         //prepare for pan
         const dx = xTarget - cIni.x
