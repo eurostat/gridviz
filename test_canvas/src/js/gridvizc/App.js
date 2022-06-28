@@ -385,8 +385,12 @@ export class App {
             if (d > 0) {
                 const ddx = pixProgressFactor * zf * dx / d
                 const ddy = pixProgressFactor * zf * dy / d
-                const nx = c.x + ddx
-                const ny = c.y + ddy
+                let nx = c.x + ddx
+                let ny = c.y + ddy
+                if(nx < xTarget && xTarget < c.x) nx = xTarget
+                if(c.x < xTarget && xTarget < nx) nx = xTarget
+                if(ny < yTarget && yTarget < c.y) ny = yTarget
+                if(c.y < yTarget && yTarget < ny) ny = yTarget
                 this.setGeoCenter({ x: nx, y: ny })
             }
 
