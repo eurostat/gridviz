@@ -387,25 +387,24 @@ export class App {
                 const ddy = pixProgressFactor * zf * dy / d
                 let nx = c.x + ddx
                 let ny = c.y + ddy
-                if(nx < xTarget && xTarget < c.x) nx = xTarget
-                if(c.x < xTarget && xTarget < nx) nx = xTarget
-                if(ny < yTarget && yTarget < c.y) ny = yTarget
-                if(c.y < yTarget && yTarget < ny) ny = yTarget
+                if (nx < xTarget && xTarget < c.x) nx = xTarget
+                if (c.x < xTarget && xTarget < nx) nx = xTarget
+                if (ny < yTarget && yTarget < c.y) ny = yTarget
+                if (c.y < yTarget && yTarget < ny) ny = yTarget
                 this.setGeoCenter({ x: nx, y: ny })
             }
 
+            //compute and set new zoom
+            const r = zf / zfTarget
+            if (r != 1) {
 
-            /*/compute and set new zoom
-            let zf = this.getZoomFactor() * zFactor
+                //TODO
 
-            //check zoom target
-            if (((zfTarget >= zfIni && zf >= zfTarget) || (zfTarget <= zfIni && zf <= zfTarget)))
-                zf = zfTarget
+                let nzf = zfTarget
+                this.setZoomFactor(nzf)
+            }
 
-            //set new position and zoom level
-            this.setZoomFactor(zf)*/
-
-            if (d > 0 || zoomcondition) {
+            if (d > 0 || r != 1) {
                 this.cg.redraw()
             } else {
                 //if target reached, stop
@@ -415,7 +414,6 @@ export class App {
                     setTimeout(() => {
                         callback()
                     }, delayBeforeCallBackMs)
-
             }
 
         }, delayMs)
