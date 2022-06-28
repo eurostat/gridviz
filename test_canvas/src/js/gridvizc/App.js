@@ -387,6 +387,7 @@ export class App {
                 const ddy = pixProgressFactor * zf * dy / d
                 let nx = c.x + ddx
                 let ny = c.y + ddy
+                //if went too far, stop at target values
                 if (nx < xTarget && xTarget < c.x) nx = xTarget
                 if (c.x < xTarget && xTarget < nx) nx = xTarget
                 if (ny < yTarget && yTarget < c.y) ny = yTarget
