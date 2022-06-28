@@ -370,21 +370,30 @@ export class App {
      * @param {number} delayBeforeCallBackMs 
      * @returns 
      */
-    goToStraight(xTarget, yTarget, zfTarget, progressFactorPix, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
+    goToStraight(xTarget, yTarget, zfTarget, progressFactorPix = 5, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
+
+        //store initial position/zoom
+        const zfIni = this.getZoomFactor();
+        const cIni = this.getGeoCenter();
+
+        //prepare for pan
+        const dx = xTarget - cIni.x
+        const dy = yTarget - cIni.y
+        let d = Math.hypot(dx, dy)
+        const ddx = progressFactorPix * zfIni * dx / d
+        const ddy = progressFactorPix * zfIni * dy / d
+
+        //prepare for zoom
+        let r = zfTarget / zfIni
+        const n = d / (progressFactorPix * zfIni)
+        const zoomFactor = d > 0 ? Math.pow(r, 1 / n) : Math.pow(r, 1 / 10) //TODO not 10 ?
 
         //timer
         let timer = setInterval(() => {
 
-            const c = this.getGeoCenter();
-            const zf = this.getZoomFactor();
-
             //compute and set new position
-            const dx = xTarget - c.x
-            const dy = yTarget - c.y
-            const d = Math.hypot(dx, dy)
             if (d > 0) {
-                const ddx = progressFactorPix * zf * dx / d
-                const ddy = progressFactorPix * zf * dy / d
+                const c = this.getGeoCenter();
                 let nx = c.x + ddx
                 let ny = c.y + ddy
                 //if went too far, stop at target values
@@ -393,28 +402,22 @@ export class App {
                 if (ny < yTarget && yTarget < c.y) ny = yTarget
                 if (c.y < yTarget && yTarget < ny) ny = yTarget
                 this.setGeoCenter({ x: nx, y: ny })
+                if (nx == xTarget && ny == yTarget) d = 0
             }
 
             //compute and set new zoom
-            const r = zf / zfTarget
             if (r != 1) {
-
-                //compute zoom factor
-                let zoomFactor = 1
-                if (d > 0) {
-                    //zoom out and pan at the same time
-                    const n = d / (progressFactorPix * zf)
-                    zoomFactor = Math.pow(zfTarget/zf, 1/n)
-                } else {
-                    //no pan: zoom only
-                }
-                this.setZoomFactor(zf * zoomFactor)
+                const nzf = zoomFactor * this.getZoomFactor()
+                this.setZoomFactor(nzf)
+                if (nzf == zfTarget) r = 1
             }
 
-            if (d > 0 || r != 1) {
-                this.cg.redraw()
-            } else {
-                //if target reached, stop
+            //redraw
+            this.cg.redraw()
+
+            //if target reached, stop
+            if (d == 0 && r == 1) {
+                console.log("OK !")
                 clearInterval(timer)
                 //trigger callback, if any
                 if (callback)
