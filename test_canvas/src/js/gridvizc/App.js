@@ -364,13 +364,13 @@ export class App {
      * @param {number} xTarget 
      * @param {number} yTarget 
      * @param {number} zfTarget 
-     * @param {number} pixProgressFactor
+     * @param {number} progressFactorPix
      * @param {number} delayMs 
      * @param {function} callback 
      * @param {number} delayBeforeCallBackMs 
      * @returns 
      */
-    goToStraight(xTarget, yTarget, zfTarget, pixProgressFactor, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
+    goToStraight(xTarget, yTarget, zfTarget, progressFactorPix, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
 
         //timer
         let timer = setInterval(() => {
@@ -383,8 +383,8 @@ export class App {
             const dy = yTarget - c.y
             const d = Math.hypot(dx, dy)
             if (d > 0) {
-                const ddx = pixProgressFactor * zf * dx / d
-                const ddy = pixProgressFactor * zf * dy / d
+                const ddx = progressFactorPix * zf * dx / d
+                const ddy = progressFactorPix * zf * dy / d
                 let nx = c.x + ddx
                 let ny = c.y + ddy
                 //if went too far, stop at target values
@@ -399,10 +399,16 @@ export class App {
             const r = zf / zfTarget
             if (r != 1) {
 
-                //TODO
-
-                let nzf = zfTarget
-                this.setZoomFactor(nzf)
+                //compute zoom factor
+                let zoomFactor = 1
+                if (d > 0) {
+                    //zoom out and pan at the same time
+                    const n = d / (progressFactorPix * zf)
+                    zoomFactor = Math.pow(zfTarget/zf, 1/n)
+                } else {
+                    //no pan: zoom only
+                }
+                this.setZoomFactor(zf * zoomFactor)
             }
 
             if (d > 0 || r != 1) {
