@@ -358,4 +358,76 @@ export class App {
         return timer;
     }
 
+
+    /**
+     * 
+     * @param {number} xTarget 
+     * @param {number} yTarget 
+     * @param {number} zfTarget 
+     * @param {number} panFactorNb 
+     * @param {number} zFactor 
+     * @param {number} delayMs 
+     * @param {function} callback 
+     * @param {number} delayBeforeCallBackMs 
+     * @returns 
+     */
+    goToStraight(xTarget, yTarget, zfTarget, panFactorNb = 50, zFactor = 1.01, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
+
+        //ensure good factor value: >1
+        zFactor = zFactor || 1.01
+        if (zFactor < 1) {
+            console.error("Unexpected value for factor: " + zFactor + ". Set to default value 1.01")
+            zFactor == 1.01
+        }
+
+        //choose if zoom in or out
+        const zfIni = this.getZoomFactor()
+        if (zfTarget < zfIni) zFactor = 1 / zFactor
+
+        //compute pan step
+        panFactorNb = panFactorNb || 50
+        const dx = (xTarget - this.getGeoCenter().x) / panFactorNb
+        const dy = (yTarget - this.getGeoCenter().y) / panFactorNb
+
+        //timer
+        let timer = setInterval(() => {
+
+            //compute new zoom level
+            let zf = this.getZoomFactor() * zFactor
+            //compute new position
+            let nC = {
+                x: this.getGeoCenter().x + dx,
+                y: this.getGeoCenter().y + dy,
+            }
+
+            //check if target reached
+            if (
+                nC.x === this.getGeoCenter().x &&
+                nC.y === this.getGeoCenter().y &&
+                ((zfTarget > zfIni && zf > zfTarget) || (zfTarget < zfIni && zf < zfTarget))
+            ) {
+                zf = zfTarget
+                nC = { x: xTarget, y: yTarget }
+            }
+
+            //set new position and zoom level
+            this.setGeoCenter(nC)
+            this.setZoomFactor(zf)
+            this.cg.redraw()
+
+            //if target reached, stop
+            if (nC.x === this.getGeoCenter().x && nC.y === this.getGeoCenter().y && zf == zfTarget) {
+                clearInterval(timer)
+                //trigger callback, if any
+                if (callback)
+                    setTimeout(() => {
+                        callback()
+                    }, delayBeforeCallBackMs)
+            }
+        }, delayMs)
+
+        return timer;
+    }
+
+
 }
