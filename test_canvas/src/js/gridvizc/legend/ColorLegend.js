@@ -19,7 +19,7 @@ export class ColorLegend extends Legend {
 
         this.colorRamp = opts.colorRamp
 
-        //function (t) -> v
+        //function (t[0,1], r, s) -> v (for label text)
         this.fun = opts.fun
 
         this.title = opts.title;
