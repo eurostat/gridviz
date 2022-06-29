@@ -18,21 +18,28 @@
 
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
-            colorCol: "r",
+            colorCol: "diff", //"r",
             color: (v, r, s) => {
-                if (isNaN(v)) return "white"
+                /*if (isNaN(v)) return "white"
                 if (v === Infinity) return gviz.schemeSet1[0]
                 if (v === -1) return gviz.schemeSet1[3]
                 const sig = Math.sign(v)
                 v = Math.pow(Math.abs(v), 0.3)
-                return gviz.interpolateSpectral(- sig * v * 0.5 + 0.5);
+                return gviz.interpolateSpectral(- sig * v * 0.5 + 0.5);*/
             },
             zfStroke: 80
-        });
+        })
+            .addLegend({ color: { id: "clegend", bottom: "20px", left: "20px", title: "Population change", ticks: 6, colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } })
+
         const preprocess = c => {
-            if (!c["2011"] && c["2018"]) c.r = Infinity
+            /*if (!c["2011"] && c["2018"]) c.r = Infinity
             else if (!c["2011"] && !c["2018"]) c.r = NaN
-            else c.r = ((+c["2018"]) - (+c["2011"])) / (+c["2011"]);
+            else c.r = ((+c["2018"]) - (+c["2011"])) / (+c["2011"]);*/
+
+            if (!c["2011"] && !c["2018"]) c.diff = 0
+            else if (!c["2011"] && c["2018"]) c.diff = +c["2018"]
+            else if (c["2011"] && !c["2018"]) c.diff = - c["2011"]
+            else c.diff = c["2018"] - c["2011"]
         }
         const cellInfoHTML = c => {
             if (isNaN(c.r)) return ""

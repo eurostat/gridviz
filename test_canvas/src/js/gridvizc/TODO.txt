@@ -1,5 +1,6 @@
-TODO legend - donut + segment width orientation + pillar + characters + categories/composition
-TODO euronyme
+TODO diverging case: central value
+TODO legend - show several symbols - donut + segment width orientation + pillar + characters + categories/composition
+TODO document and improve euronyme
 
 TODO tw size+rate example: population, youth VS old FR ? Income FR ? Gender balance FR ?
 TODO tw composition example: population by age ?
