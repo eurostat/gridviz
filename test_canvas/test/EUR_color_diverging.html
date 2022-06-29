@@ -62,7 +62,15 @@
             else c.d06_11 = c["2011"] - c["2006"]
         }
 
-        const ttfun = c => "Inhabitant(s)<br>2018: <b>" + c["2018"] + "</b><br>2011: <b>" + c["2011"] + "</b><br>2006: <b>" + c["2006"] + "</b>"
+        const ttfun = c => {
+            const sel = document.querySelector('#year').value
+            const v = c[sel]
+            return (v == 0 ? "No change" : "<b>" + (v > 0 ? "+" : "") + v + "</b> inhabitants") + "<br>" + (
+                sel === "d11_18" ?
+                    "2011: " + c["2011"] + "<br>2018: " + c["2018"]
+                    : "2006: " + c["2006"] + "<br>2011: " + c["2011"]
+            )
+        }
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
         app.addTiledGridLayer(url + "1km/", [s], 0, 500, { cellInfoHTML: ttfun, preprocess: preprocess });
         app.addTiledGridLayer(url + "2km/", [s], 500, 1000, { cellInfoHTML: ttfun, preprocess: preprocess });
