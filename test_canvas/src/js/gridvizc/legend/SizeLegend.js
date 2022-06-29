@@ -3,7 +3,8 @@
 import { select } from "d3-selection";
 import { Legend } from "../Legend";
 import { format } from "d3-format";
-import { Stat, Shape } from "../Style"
+import { Style, Stat, Shape } from "../Style"
+import { ShapeColorSizeStyle } from "../style/ShapeColorSizeStyle"
 
 /**
  * A legend element for proportional symbols.
@@ -37,7 +38,7 @@ export class SizeLegend extends Legend {
     }
 
     /**
-     * @param {{ r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
+     * @param {{ style: ShapeColorSizeStyle, r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
      */
     update(opts) {
 
@@ -47,7 +48,13 @@ export class SizeLegend extends Legend {
         //clear
         this.div.selectAll("*").remove();
 
-        const size = 100
+        //compute size of symbol
+        //get max value
+        const maxV = opts.sSize.max
+        //get corresponding size
+        const size = opts.style.getSize()(maxV, opts.r, opts.sSize, opts.zf) / opts.zf;
+        console.log(size)
+
         const svg = this.div.append("svg").attr("width", size).attr("height", size)
         if (this.shape === "square") {
             //TODO
