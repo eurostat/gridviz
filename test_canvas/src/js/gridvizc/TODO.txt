@@ -1,14 +1,14 @@
-TODO legend - donut + segment width orientation + pillar + characters
+TODO legend - donut + segment width orientation + pillar + characters + categories/composition
 
-TODO more efficient multiscale layer creation?
-TODO add missing legends: categories for composition, etc.
+TODO tw size+rate example: population, youth VS old ? Income ? Gender balance ?
+TODO tw composition example: population by age ?
+
+TODO map type: value by alpha ?
 
 TODO map style: cell based on its neighboors. Contour like ?
 TODO test style with border/discontinuities
-TODO new version with indicator on gender unbalance
 TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?
 TODO style with arrows (left, right) (as segment enrichment ?)
-TODO map type: value by alpha ?
 TODO map type: composition as linesup... pile of lines
 TODO map type: composition as donut ring ?
 TODO map type: composition as stripped circles
@@ -19,6 +19,7 @@ TODO background image ? with relief shading.
 TODO window resize
 TODO zoom pane, with toucheable slider: improve. Make vertical.
 TODO better shaded characterset for text style
+TODO more efficient multiscale layer creation?
 
 check https://blog.scottlogic.com/2020/05/01/rendering-one-million-points-with-d3.html and https://blog.scottlogic.com/2021/10/15/efficiently-loading-massive-d3-datasets-using-apache-arrow.html
 TODO improve efficiency - on zoom/pan, interrupt all existing redraws ? Redraw only on mouse release? Use time and redraw only every X ms ?
