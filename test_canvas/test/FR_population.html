@@ -105,7 +105,7 @@
                     length: (v, r) => r,
                     widthCol: "Ind",
                     width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
-                }),
+                }).addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } }),
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
             segmentV: {
@@ -115,7 +115,7 @@
                     length: (v, r) => r,
                     widthCol: "Ind",
                     width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
-                }),
+                }).addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
             segmentO: {
@@ -125,9 +125,10 @@
                     length: (v, r) => r * 1.4142,
                     widthCol: "Ind",
                     width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25) / 1.4142,
-                }),
+                }).addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
+
             joyplot: {
                 style: new gviz.JoyPlotStyle({
                     heightCol: "Ind",

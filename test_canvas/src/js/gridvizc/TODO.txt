@@ -1,4 +1,4 @@
-TODO legend - donut + segment width + pillar + characters
+TODO legend - donut + segment width orientation + pillar + characters
 
 TODO more efficient multiscale layer creation?
 TODO add missing legends: categories for composition, etc.
