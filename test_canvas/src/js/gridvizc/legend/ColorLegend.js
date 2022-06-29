@@ -3,6 +3,7 @@
 import { select } from "d3-selection";
 import { Legend } from "../Legend";
 import { format } from "d3-format";
+import { Stat } from "../Style"
 
 /**
  * A legend element for continuous color style.
@@ -34,7 +35,7 @@ export class ColorLegend extends Legend {
         this.fontSize = opts.fontSize || 9
         this.invert = opts.invert
 
-        
+
         const titleHeight = 12
         const svg = this.div.append("svg").attr("width", this.width + 2 * this.margin).attr("height", this.height + 3 * this.margin + titleHeight + this.tickSize + this.fontSize - 5)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
@@ -80,16 +81,14 @@ export class ColorLegend extends Legend {
                 .style("pointer-events", "none")
                 .text("-")
         }
-
-
     }
 
     /**
-     * @param {object} opts 
+     * @param {{ r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
      */
     update(opts) {
         //could happen when data is still loading
-        if (!opts.s) return
+        if (!opts.sColor) return
 
         //update tick labels
 
@@ -97,7 +96,7 @@ export class ColorLegend extends Legend {
         const f = this.tickFormat ? format(this.tickFormat) : (v) => v;
         for (let i = 0; i < this.ticks; i++) {
             let t = i / (this.ticks - 1)
-            const v = this.fun(t, opts.r, opts.s)
+            const v = this.fun(t, opts.r, opts.sColor)
 
             //tick label
             select("#" + this.id + "_ticklabel_" + i).text(f(v) + (this.tickUnit ? this.tickUnit : ""))

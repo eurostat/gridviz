@@ -3,6 +3,7 @@
 import { select } from "d3-selection";
 import { Legend } from "../Legend";
 import { format } from "d3-format";
+import { Stat, Shape } from "../Style"
 
 /**
  * A legend element for proportional symbols.
@@ -16,21 +17,15 @@ export class SizeLegend extends Legend {
         super(opts)
         opts = opts || {};
 
-        //this.style = opts.style
-
         //function (t[0,1], r, s) -> v (for label text)
         //this.fun = opts.fun
-
-        this.margin = opts.margin || 5
-
-        //title
-        this.title = opts.title;
-        this.titleFontSize = opts.titleFontSize || 12
 
         //nb symbols
         this.nb = opts.nb || 3
 
         //symbol
+        /** @private @type {Shape} */
+        this.shape = opts.shape || "circle"
         this.fillColor = opts.fillColor || "none"
         this.strokeColor = opts.strokeColor || "black"
         this.strokeWidth = opts.strokeWidth || 1
@@ -38,31 +33,44 @@ export class SizeLegend extends Legend {
         //label
         this.labelFontSize = opts.labelFontSize || 9
         this.labelUnitText = opts.labelUnitText || ""
+
     }
 
     /**
-     * @param {object} opts 
+     * @param {{ r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
      */
     update(opts) {
+
         //could happen when data is still loading
-        if (!opts.s) return
+        if (!opts.sSize) return
 
         //clear
         this.div.selectAll("*").remove();
 
-        const w = 100
-        const h = 100
+        const size = 100
+        const svg = this.div.append("svg").attr("width", size).attr("height", size)
+        if (this.shape === "square") {
+            //TODO
+        } else if (this.shape === "circle") {
+            //TODO
+        } else if (this.shape === "donut") {
+            //TODO
+        } else {
+            throw new Error('Unexpected shape:' + this.shape);
+        }
 
-        const svg = this.div.append("svg").attr("width", w).attr("height",h)
+        this.div.append("div")
+            .style("font-size", this.labelFontSize+"pt")
+            .text("XXX" + " " + this.labelUnitText)
 
-        //title
+        /*/title
         svg.append("text").attr("x", this.margin).attr("y", this.margin)
             .style("font-size", this.titleFontSize)
             .style("font-weight", "bold")
             .style("alignment-baseline", "top")
             .style("dominant-baseline", "hanging")
             .style("pointer-events", "none")
-            .text(this.title)
+            .text(this.title)*/
 
         /*
         const g = svg.append("g").attr("transform", "translate(" + this.margin + " " + (2 * this.margin + titleHeight) + ")")
