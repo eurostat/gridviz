@@ -2,7 +2,7 @@
 
 import { Legend } from "../Legend";
 import { format } from "d3-format";
-import { Stat, Shape } from "../Style"
+import { Stat } from "../Style"
 import { SegmentStyle } from "../style/SegmentStyle"
 
 /**
@@ -56,6 +56,7 @@ export class SegmentWidthLegend extends Legend {
         else if (value * 2.5 <= value_) value *= 2.5
         else if (value * 2 <= value_) value *= 2
 
+        /*
         //compute size of symbol, in pix
         const size = opts.style.getSize()(value, opts.r, opts.sSize, opts.zf) / opts.zf;
 
@@ -83,11 +84,13 @@ export class SegmentWidthLegend extends Legend {
             throw new Error('Unexpected shape:' + this.shape);
         }
 
+        */
+
         const valueT = format(",.2r")(value);
         this.div.append("div")
             .style("font-size", this.labelFontSize + "pt")
             //.style("font-weight", "bold")
             .style("", "inline-block")
-            .text(valueT + (this.labelUnitText? " ":"") + this.labelUnitText)
+            .text(valueT + (this.labelUnitText ? " " : "") + this.labelUnitText)
     }
 }
