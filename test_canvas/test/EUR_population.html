@@ -108,7 +108,7 @@
                     length: (v, r) => r,
                     widthCol: "2018",
                     width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
-                }),
+                }).addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59" } }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
             segmentV: {
