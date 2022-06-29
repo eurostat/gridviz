@@ -32,6 +32,8 @@ export class SizeLegend extends Legend {
         this.labelFontSize = opts.labelFontSize || 9
         this.labelUnitText = opts.labelUnitText || ""
 
+        //
+        this.div.style("text-align", "center")
     }
 
     /**
@@ -60,7 +62,9 @@ export class SizeLegend extends Legend {
         //compute size of symbol, in pix
         const size = opts.style.getSize()(value, opts.r, opts.sSize, opts.zf) / opts.zf;
 
-        const svg = this.div.append("svg").attr("width", size + this.strokeWidth).attr("height", size + this.strokeWidth)
+        const svg = this.div.append("svg").attr("width", size + this.strokeWidth + 2).attr("height", size + this.strokeWidth + 2)
+            .style("", "inline-block")
+
         if (this.shape === "square") {
             svg.append("rect")
                 .attr("x", 0).attr("y", 0).attr("width", size).attr("height", size)
@@ -72,7 +76,7 @@ export class SizeLegend extends Legend {
             // <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
             const r = (size + this.strokeWidth) * 0.5
             svg.append("circle")
-                .attr("cx", r).attr("cy", r).attr("r", r)
+                .attr("cx", r + 1).attr("cy", r + 1).attr("r", r)
                 .style("fill", this.fillColor)
                 .style("stroke", this.strokeColor)
                 .style("stroke-width", this.strokeWidth)
@@ -85,7 +89,8 @@ export class SizeLegend extends Legend {
         const valueT = format(",.2r")(value);
         this.div.append("div")
             .style("font-size", this.labelFontSize + "pt")
-            .style("font-weight", "bold")
-            .text(valueT + " " + this.labelUnitText)
+            //.style("font-weight", "bold")
+            .style("", "inline-block")
+            .text(valueT + (this.labelUnitText? " ":"") + this.labelUnitText)
     }
 }
