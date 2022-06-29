@@ -7,6 +7,25 @@
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
+
+    <div
+        style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
+        <span style="font-size: 17pt; font-weight: bold;">Population change in Europe</span><br><span
+            style="font-size: 10pt;">
+            <select id="year">
+                <option value="d11_18" selected>From 2011 to 2018</option>
+                <option value="d06_11">From 2006 to 2011</option>
+            </select>
+            <hr>
+            <input type="checkbox" id="label" checked>
+            <label for="label">City names</label>
+            <input type="checkbox" id="boundary" checked>
+            <label for="boundary">Boundaries</label>
+            <hr>Source: <a href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/grids" target="_blank"
+                rel="noopener noreferrer">European Commission</a>
+        </span>
+    </div>
+
     <script src="../build/gridvizc.js"></script>
     <script>
 
@@ -18,27 +37,32 @@
 
         //define datasets, styles and layers
         const s = new gviz.ShapeColorSizeStyle({
-            colorCol: "d18_11", //"r",
+            colorCol: "d11_18",
             color: (v, r, s) => {
                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                let t = Math.abs(v)/max
-                t = Math.pow(t, 0.1)
+                let t = Math.abs(v) / max
+                t = Math.pow(t, 0.15)
                 t = Math.sign(v) * t
-                t = t/2 + 0.5
-                return gviz.interpolateSpectral(1-t);
+                t = t / 2 + 0.5
+                return gviz.interpolateSpectral(1 - t);
             },
             zfStroke: 80
         })
             .addLegend({ color: { id: "clegend", bottom: "20px", left: "20px", title: "Population change", ticks: 6, colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } })
 
         const preprocess = c => {
-            if (!c["2011"] && !c["2018"]) c.d18_11 = 0
-            else if (!c["2011"] && c["2018"]) c.d18_11 = +c["2018"]
-            else if (c["2011"] && !c["2018"]) c.d18_11 = - c["2011"]
-            else c.d18_11 = c["2018"] - c["2011"]
+            if (!c["2011"] && !c["2018"]) c.d11_18 = 0
+            else if (!c["2011"] && c["2018"]) c.d11_18 = + c["2018"]
+            else if (c["2011"] && !c["2018"]) c.d11_18 = - c["2011"]
+            else c.d11_18 = c["2018"] - c["2011"]
+
+            if (!c["2006"] && !c["2011"]) c.d06_11 = 0
+            else if (!c["2006"] && c["2011"]) c.d06_11 = +c["2011"]
+            else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
+            else c.d06_11 = c["2011"] - c["2006"]
         }
         const cellInfoHTML = c => {
-            return c.d18_11
+            return c.d11_18
             /*if (!c.r) return "No change"
             if (isNaN(c.r)) return ""
             if (c.r === Infinity) return "No population in 2011, <b>" + c["2018"] + "</b> in 2018"
@@ -50,6 +74,12 @@
         app.addTiledGridLayer(url + "5km/", [s], 1000, 2000, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
         app.addTiledGridLayer(url + "10km/", [s], 2000, 4000, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
         app.addTiledGridLayer(url + "20km/", [s], 4000, 9999999999, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
+
+        //combo list - year selection
+        document.querySelector('#year').addEventListener('change', function () {
+            s.colorCol = this.value
+            app.cg.redraw();
+        });
 
     </script>
 
