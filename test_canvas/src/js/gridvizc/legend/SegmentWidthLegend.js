@@ -20,8 +20,10 @@ export class SegmentWidthLegend extends Legend {
         //exageration
         this.exaggerationFactor = opts.exaggerationFactor || 0.7
 
-        //stroke
+        //color
         this.color = opts.color || "gray"
+        //orienation
+        this.orientation = opts.orientation || 0
 
         //label
         this.labelFontSize = opts.labelFontSize || 9
@@ -60,6 +62,8 @@ export class SegmentWidthLegend extends Legend {
         //compute segment width and length, in pix
         const sWidth = opts.style.getWidth()(value, opts.r, opts.sWidth, opts.zf) / opts.zf;
         const sLength = 3 * opts.r / opts.zf
+
+        //TODO use orientation
 
         const svg = this.div.append("svg").attr("width", sLength).attr("height", sWidth)
             .style("", "inline-block")
