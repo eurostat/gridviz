@@ -3,6 +3,7 @@
 import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
+import { SegmentWidthLegend } from "../legend/SegmentWidthLegend"
 
 /**
  * A style where each cell is represented by a segment whose length, width, color and orientation can vary according to statistical values.
@@ -124,6 +125,8 @@ export class SegmentStyle extends Style {
             cg.ctx.stroke();
         }
 
+        //update legend, if any
+        if (this.legend) this.legend.update({ style: this, r: resolution, zf: zf, sColor: statColor, sLength: statLength, sWidth: statWidth });
     }
 
 
@@ -155,5 +158,17 @@ export class SegmentStyle extends Style {
     getWidth() { return this.width; }
     /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
     setWidth(val) { this.width = val; return this; }
+
+
+    /**
+     * @param {Object} opts
+     * @returns {this}
+     */
+     addLegend(opts) {
+        //TODO make it possible to have several legends ?
+        if (opts.width)
+            this.legend = new SegmentWidthLegend(opts.width);
+        return this
+    }
 
 }
