@@ -48,18 +48,30 @@ export class SizeLegend extends Legend {
         //clear
         this.div.selectAll("*").remove();
 
-        //compute size of symbol
         //get max value
-        const maxV = opts.sSize.max
-        //get corresponding size
-        const size = opts.style.getSize()(maxV, opts.r, opts.sSize, opts.zf) / opts.zf;
-        console.log(size)
+        const value = opts.sSize.max
+
+
+        //TODO exagerate value + make nice
+
+        //compute size of symbol, in pix
+        const size = opts.style.getSize()(value, opts.r, opts.sSize, opts.zf) / opts.zf;
 
         const svg = this.div.append("svg").attr("width", size).attr("height", size)
         if (this.shape === "square") {
-            //TODO
+            svg.append("rect")
+                .attr("x", 0).attr("y", 0).attr("width", size).attr("height", size)
+                .style("fill", this.fillColor)
+                .style("stroke", this.strokeColor)
+                .style("stroke-width", this.strokeWidth)
+            //TODO test
         } else if (this.shape === "circle") {
-            //TODO
+            // <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
+            svg.append("circle")
+                .attr("cx", size / 2).attr("cy", size / 2).attr("r", size / 2)
+                .style("fill", this.fillColor)
+                .style("stroke", this.strokeColor)
+                .style("stroke-width", this.strokeWidth)
         } else if (this.shape === "donut") {
             //TODO
         } else {
@@ -67,69 +79,8 @@ export class SizeLegend extends Legend {
         }
 
         this.div.append("div")
-            .style("font-size", this.labelFontSize+"pt")
-            .text("XXX" + " " + this.labelUnitText)
-
-        /*/title
-        svg.append("text").attr("x", this.margin).attr("y", this.margin)
-            .style("font-size", this.titleFontSize)
+            .style("font-size", this.labelFontSize + "pt")
             .style("font-weight", "bold")
-            .style("alignment-baseline", "top")
-            .style("dominant-baseline", "hanging")
-            .style("pointer-events", "none")
-            .text(this.title)*/
-
-        /*
-        const g = svg.append("g").attr("transform", "translate(" + this.margin + " " + (2 * this.margin + titleHeight) + ")")
-
-        //draw color bar
-        const w = this.width, h = this.height
-        const step = 5
-        for (let i = 0; i < w; i += step) {
-            let t = i / (w - 1)
-            if (this.invert) t = 1 - t
-            g.append("rect").attr("x", i).attr("y", 0).attr("width", step).attr("height", h).style("fill", this.colorRamp(t))
-        }
-
-
-        for (let i = 0; i < this.ticks; i++) {
-            let t = i / (this.ticks - 1)
-
-            //tick line
-            g.append("line").attr("x1", w * t).attr("y1", 0).attr("x2", w * t).attr("y2", h + this.tickSize).style("stroke", "black")
-
-            //prepare tick label
-            g.append("text")
-                .attr("id", this.id + "_ticklabel_" + i)
-                .attr("x", w * (this.invert ? 1 - t : t))
-                .attr("y", h + this.tickSize + 2)
-                .style("font-size", this.fontSize)
-                //.style("font-weight", "bold")
-                //.style("font-family", "Arial")
-                .style("text-anchor", i == 0 ? (this.invert ? "end" : "start") : i == (this.ticks - 1) ? (this.invert ? "start" : "end") : "middle")
-                .style("alignment-baseline", "top")
-                .style("dominant-baseline", "hanging")
-                .style("pointer-events", "none")
-                .text("-")
-        }*/
-
-
-
-
-
-
-        //update tick labels
-
-        /*/label text format
-        const f = this.tickFormat ? format(this.tickFormat) : (v) => v;
-        for (let i = 0; i < this.ticks; i++) {
-            let t = i / (this.ticks - 1)
-            const v = this.fun(t, opts.r, opts.s)
-
-            //tick label
-            select("#" + this.id + "_ticklabel_" + i).text(f(v) + (this.tickUnit ? this.tickUnit : ""))
-        }*/
-
+            .text("XXX" + " " + this.labelUnitText)
     }
-
 }
