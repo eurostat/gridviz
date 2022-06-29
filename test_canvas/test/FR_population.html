@@ -75,7 +75,7 @@
                     size: (v, r, s, zf) => 1 * r * Math.pow(v / s.max, 0.3),
                     shape: c => "square",
                     zfStroke: 20
-                }),
+                }).addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
             circle: {
@@ -85,7 +85,7 @@
                     size: (v, r, s, zf) => 1.5 * r * Math.pow(v / s.max, 0.3),
                     shape: c => "circle",
                     zfStroke: 20
-                }),
+                }).addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
             donut: {
