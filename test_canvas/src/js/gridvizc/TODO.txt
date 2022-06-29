@@ -1,6 +1,7 @@
 TODO legend - donut + segment width orientation + pillar + characters + categories/composition
+TODO euronyme
 
-TODO tw size+rate example: population, youth VS old ? Income ? Gender balance ?
+TODO tw size+rate example: population, youth VS old FR ? Income FR ? Gender balance FR ?
 TODO tw composition example: population by age ?
 
 TODO map type: value by alpha ?
