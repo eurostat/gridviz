@@ -18,10 +18,10 @@ export class SegmentWidthLegend extends Legend {
         opts = opts || {};
 
         //exageration
-        this.exaggerationFactor = opts.exaggerationFactor || 0.8
+        this.exaggerationFactor = opts.exaggerationFactor || 0.7
 
         //stroke
-        this.strokeColor = opts.strokeColor || "gray"
+        this.color = opts.color || "gray"
 
         //label
         this.labelFontSize = opts.labelFontSize || 9
@@ -31,19 +31,20 @@ export class SegmentWidthLegend extends Legend {
         this.div.style("text-align", "center")
     }
 
+
     /**
-     * @param {{ style: SegmentStyle, r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
+     * @param {{ style: SegmentStyle, r: number, zf: number, sColor: Stat, sLength: Stat, sWidth: Stat }} opts 
      */
     update(opts) {
 
         //could happen when data is still loading
-        if (!opts.sSize) return
+        if (!opts.sWidth) return
 
         //clear
         this.div.selectAll("*").remove();
 
         //get max value
-        const value_ = opts.sSize.max * this.exaggerationFactor
+        const value_ = opts.sWidth.max * this.exaggerationFactor
 
         //take 'nice' value (power of ten, or multiple)
         let pow10 = Math.log10(value_)
@@ -56,35 +57,19 @@ export class SegmentWidthLegend extends Legend {
         else if (value * 2.5 <= value_) value *= 2.5
         else if (value * 2 <= value_) value *= 2
 
-        /*
-        //compute size of symbol, in pix
-        const size = opts.style.getSize()(value, opts.r, opts.sSize, opts.zf) / opts.zf;
+        //compute segment width and length, in pix
+        const sWidth = opts.style.getWidth()(value, opts.r, opts.sWidth, opts.zf) / opts.zf;
+        const sLength = 3 * opts.r / opts.zf
 
-        const svg = this.div.append("svg").attr("width", size + this.strokeWidth + 2).attr("height", size + this.strokeWidth + 2)
+        const svg = this.div.append("svg").attr("width", sLength).attr("height", sWidth)
             .style("", "inline-block")
 
-        if (this.shape === "square") {
-            svg.append("rect")
-                .attr("x", 0).attr("y", 0).attr("width", size).attr("height", size)
-                .style("fill", this.fillColor)
-                .style("stroke", this.strokeColor)
-                .style("stroke-width", this.strokeWidth)
-            //TODO test
-        } else if (this.shape === "circle") {
-            // <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
-            const r = (size + this.strokeWidth) * 0.5
-            svg.append("circle")
-                .attr("cx", r + 1).attr("cy", r + 1).attr("r", r)
-                .style("fill", this.fillColor)
-                .style("stroke", this.strokeColor)
-                .style("stroke-width", this.strokeWidth)
-        } else if (this.shape === "donut") {
-            //TODO
-        } else {
-            throw new Error('Unexpected shape:' + this.shape);
-        }
-
-        */
+        //<line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
+        svg.append("line")
+            .attr("x1", 0).attr("y1", sWidth / 2)
+            .attr("x2", sLength).attr("y2", sWidth / 2)
+            .style("stroke", this.color)
+            .style("stroke-width", sWidth)
 
         const valueT = format(",.2r")(value);
         this.div.append("div")

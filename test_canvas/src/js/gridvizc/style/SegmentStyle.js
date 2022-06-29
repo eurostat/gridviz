@@ -161,10 +161,10 @@ export class SegmentStyle extends Style {
 
 
     /**
-     * @param {Object} opts
+     * @param {{ width:object}} opts 
      * @returns {this}
      */
-     addLegend(opts) {
+    addLegend(opts) {
         //TODO make it possible to have several legends ?
         if (opts.width)
             this.legend = new SegmentWidthLegend(opts.width);
