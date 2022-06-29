@@ -16,12 +16,13 @@
                 <option value="d11_18" selected>From 2011 to 2018</option>
                 <option value="d06_11">From 2006 to 2011</option>
             </select>
-            <hr>
+            <br>
             <input type="checkbox" id="label" checked>
             <label for="label">City names</label>
             <input type="checkbox" id="boundary" checked>
             <label for="boundary">Boundaries</label>
-            <hr>Source: <a href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/grids" target="_blank"
+            <br>
+            Source: <a href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/grids" target="_blank"
                 rel="noopener noreferrer">European Commission</a>
         </span>
     </div>
@@ -81,6 +82,18 @@
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
             s.colorCol = this.value
+            app.cg.redraw();
+        });
+
+        // show/hide labels
+        document.querySelector('#label').addEventListener('change', function () {
+            app.showLabels = this.checked
+            app.cg.redraw();
+        });
+
+        // show/hide boundaries
+        document.querySelector('#boundary').addEventListener('change', function () {
+            app.showBoundaries = this.checked
             app.cg.redraw();
         });
 
