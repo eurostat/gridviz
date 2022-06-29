@@ -35,7 +35,7 @@
             zfStroke: 25
         })
             //legend
-            .addLegend({ id: "clegend", bottom: "20px", left: "20px", title: "Revenu (€/mois/'personne')", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.min + (s.max - s.min) * Math.pow(1 - t, 1 / 1.5), invert: true, tickUnit: " €" });
+            .addLegend({ color: { id: "clegend", bottom: "20px", left: "20px", title: "Revenu (€/mois/'personne')", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.min + (s.max - s.min) * Math.pow(1 - t, 1 / 1.5), invert: true, tickUnit: " €" } });
 
         const ttfun = c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'"
         const preprocess = c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }

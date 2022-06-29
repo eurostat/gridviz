@@ -69,7 +69,7 @@
                     colorCol: "2018",
                     color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
                     zfStroke: 100
-                }).addLegend({ id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) }),
+                }).addLegend({ color: { id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
                 zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
             },
             square: {

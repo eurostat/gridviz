@@ -1,7 +1,9 @@
-TODO zoom pane - with touch
+legend linked to a style but style not linked to the legend - the applicationis linked to a single legend, which may have several components
+
 
 TODO legend - size + donut + segment width + pillar + characters
-TODO test continuous zoom
+
+TODO zoom pane - with touch
 
 TODO more efficient multiscale layer creation?
 TODO add missing legends: categories for composition, etc.

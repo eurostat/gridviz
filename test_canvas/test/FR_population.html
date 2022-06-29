@@ -65,7 +65,7 @@
                     colorCol: "Ind",
                     color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
                     zfStroke: 25
-                }).addLegend({ id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) }),
+                }).addLegend({ color: { id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
                 zooms: [0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]
             },
             square: {
@@ -228,7 +228,7 @@
             }, pauseMs)
         }, pauseMs)*/
 
-</script>
+    </script>
 
     <div
         style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
