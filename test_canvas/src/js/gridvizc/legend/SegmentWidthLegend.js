@@ -18,7 +18,7 @@ export class SegmentWidthLegend extends Legend {
         opts = opts || {};
 
         //exageration
-        this.exaggerationFactor = opts.exaggerationFactor || 0.7
+        this.exaggerationFactor = opts.exaggerationFactor || 0.5
 
         //color
         this.color = opts.color || "gray"
@@ -61,7 +61,7 @@ export class SegmentWidthLegend extends Legend {
 
         //compute segment width and length, in pix
         const sWidth = opts.style.getWidth()(value, opts.r, opts.sWidth, opts.zf) / opts.zf;
-        const sLength = 3 * opts.r / opts.zf
+        const sLength = 1 * opts.r / opts.zf
 
         //TODO use orientation
 
