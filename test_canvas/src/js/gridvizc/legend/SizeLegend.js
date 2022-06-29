@@ -18,9 +18,6 @@ export class SizeLegend extends Legend {
         super(opts)
         opts = opts || {};
 
-        //function (t[0,1], r, s) -> v (for label text)
-        //this.fun = opts.fun
-
         //exageration
         this.exaggerationFactor = opts.exaggerationFactor || 2
 
@@ -49,8 +46,16 @@ export class SizeLegend extends Legend {
         this.div.selectAll("*").remove();
 
         //get max value
-        const value = opts.sSize.max * this.exaggerationFactor
-        //TODO make nice
+        const value_ = opts.sSize.max * this.exaggerationFactor
+
+        //take 'nice' value (power of ten, or multiple)
+        let pow10 = Math.log10(value_)
+        pow10 = Math.floor(pow10)
+        let value = Math.pow(10, pow10)
+        if (value * 7.5 <= value_) value *= 7.5
+        else if (value * 5 <= value_) value *= 5
+        else if (value * 2.5 <= value_) value *= 2.5
+        else if (value * 2 <= value_) value *= 2
 
         //compute size of symbol, in pix
         const size = opts.style.getSize()(value, opts.r, opts.sSize, opts.zf) / opts.zf;
@@ -77,9 +82,10 @@ export class SizeLegend extends Legend {
             throw new Error('Unexpected shape:' + this.shape);
         }
 
+        const valueT = format(",.2r")(value);
         this.div.append("div")
             .style("font-size", this.labelFontSize + "pt")
             .style("font-weight", "bold")
-            .text("XXX" + " " + this.labelUnitText)
+            .text(valueT + " " + this.labelUnitText)
     }
 }
