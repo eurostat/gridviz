@@ -4,6 +4,7 @@ import { Style, Stat, getStatistics, Shape } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 import { ColorLegend } from "../legend/ColorLegend"
+import { SizeLegend } from "../legend/SizeLegend"
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -111,7 +112,7 @@ export class ShapeColorSizeStyle extends Style {
                 cg.ctx.beginPath();
                 cg.ctx.moveTo(xc, yc);
                 cg.ctx.arc(xc, yc, 0.5 * resolution, 0, 2 * Math.PI);
-                cg.ctx.arc(xc, yc, (1 - sG/resolution) * 0.5 * resolution, 0, 2 * Math.PI, true);
+                cg.ctx.arc(xc, yc, (1 - sG / resolution) * 0.5 * resolution, 0, 2 * Math.PI, true);
                 cg.ctx.closePath();
                 cg.ctx.fill();
             } else {
@@ -151,8 +152,11 @@ export class ShapeColorSizeStyle extends Style {
      * @returns {this}
      */
     addLegend(opts) {
-        //TODO use "type" to build right type of legend
-        this.legend = new ColorLegend(opts.color);
+        //TODO make it possible to have several legends
+        if (opts.color)
+            this.legend = new ColorLegend(opts.color);
+        if (opts.size)
+            this.legend = new SizeLegend(opts.size);
         return this
     }
 
