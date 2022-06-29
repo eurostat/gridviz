@@ -21,14 +21,14 @@ export class SizeLegend extends Legend {
         //function (t[0,1], r, s) -> v (for label text)
         //this.fun = opts.fun
 
-        //nb symbols
-        this.nb = opts.nb || 3
+        //exageration
+        this.exaggerationFactor = opts.exaggerationFactor || 2
 
         //symbol
         /** @private @type {Shape} */
         this.shape = opts.shape || "circle"
         this.fillColor = opts.fillColor || "none"
-        this.strokeColor = opts.strokeColor || "black"
+        this.strokeColor = opts.strokeColor || "gray"
         this.strokeWidth = opts.strokeWidth || 1
 
         //label
@@ -49,15 +49,13 @@ export class SizeLegend extends Legend {
         this.div.selectAll("*").remove();
 
         //get max value
-        const value = opts.sSize.max
-
-
-        //TODO exagerate value + make nice
+        const value = opts.sSize.max * this.exaggerationFactor
+        //TODO make nice
 
         //compute size of symbol, in pix
         const size = opts.style.getSize()(value, opts.r, opts.sSize, opts.zf) / opts.zf;
 
-        const svg = this.div.append("svg").attr("width", size).attr("height", size)
+        const svg = this.div.append("svg").attr("width", size + this.strokeWidth).attr("height", size + this.strokeWidth)
         if (this.shape === "square") {
             svg.append("rect")
                 .attr("x", 0).attr("y", 0).attr("width", size).attr("height", size)
@@ -67,8 +65,9 @@ export class SizeLegend extends Legend {
             //TODO test
         } else if (this.shape === "circle") {
             // <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
+            const r = (size + this.strokeWidth) * 0.5
             svg.append("circle")
-                .attr("cx", size / 2).attr("cy", size / 2).attr("r", size / 2)
+                .attr("cx", r).attr("cy", r).attr("r", r)
                 .style("fill", this.fillColor)
                 .style("stroke", this.strokeColor)
                 .style("stroke-width", this.strokeWidth)
