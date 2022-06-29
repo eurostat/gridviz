@@ -1,9 +1,8 @@
 //@ts-check
 
-import { select } from "d3-selection";
 import { Legend } from "../Legend";
 import { format } from "d3-format";
-import { Style, Stat, Shape } from "../Style"
+import { Stat, Shape } from "../Style"
 import { ShapeColorSizeStyle } from "../style/ShapeColorSizeStyle"
 
 /**
