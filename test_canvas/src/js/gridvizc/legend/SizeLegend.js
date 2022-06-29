@@ -19,7 +19,7 @@ export class SizeLegend extends Legend {
         opts = opts || {};
 
         //exageration
-        this.exaggerationFactor = opts.exaggerationFactor || 2
+        this.exaggerationFactor = opts.exaggerationFactor || 0.8
 
         //symbol
         /** @private @type {Shape} */
@@ -54,8 +54,10 @@ export class SizeLegend extends Legend {
         let pow10 = Math.log10(value_)
         pow10 = Math.floor(pow10)
         let value = Math.pow(10, pow10)
-        if (value * 7.5 <= value_) value *= 7.5
+        if (value * 8 <= value_) value *= 8
+        else if (value * 6 <= value_) value *= 6
         else if (value * 5 <= value_) value *= 5
+        else if (value * 4 <= value_) value *= 4
         else if (value * 2.5 <= value_) value *= 2.5
         else if (value * 2 <= value_) value *= 2
 
