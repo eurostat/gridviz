@@ -61,19 +61,14 @@
             else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
             else c.d06_11 = c["2011"] - c["2006"]
         }
-        const cellInfoHTML = c => {
-            return c.d11_18
-            /*if (!c.r) return "No change"
-            if (isNaN(c.r)) return ""
-            if (c.r === Infinity) return "No population in 2011, <b>" + c["2018"] + "</b> in 2018"
-            return "<b>" + (+c["2018"] > +c["2011"] ? "+" : "") + Math.floor(c.r * 1000) / 10 + "%</b> inhabitant(s)"*/
-        }
+
+        const ttfun = c => "Inhabitant(s)<br>2018: <b>" + c["2018"] + "</b><br>2011: <b>" + c["2011"] + "</b><br>2006: <b>" + c["2006"] + "</b>"
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
-        app.addTiledGridLayer(url + "1km/", [s], 0, 500, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
-        app.addTiledGridLayer(url + "2km/", [s], 500, 1000, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
-        app.addTiledGridLayer(url + "5km/", [s], 1000, 2000, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
-        app.addTiledGridLayer(url + "10km/", [s], 2000, 4000, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
-        app.addTiledGridLayer(url + "20km/", [s], 4000, 9999999999, { cellInfoHTML: cellInfoHTML, preprocess: preprocess });
+        app.addTiledGridLayer(url + "1km/", [s], 0, 500, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "2km/", [s], 500, 1000, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "5km/", [s], 1000, 2000, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "10km/", [s], 2000, 4000, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "20km/", [s], 4000, 9999999999, { cellInfoHTML: ttfun, preprocess: preprocess });
 
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
