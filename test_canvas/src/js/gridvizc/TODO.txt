@@ -4,6 +4,7 @@ TODO tw size+rate example: population, youth VS old ? Income ? Gender balance ?
 TODO tw composition example: population by age ?
 
 TODO map type: value by alpha ?
+TODO map type: bi/tri-variate colors ?
 
 TODO map style: cell based on its neighboors. Contour like ?
 TODO test style with border/discontinuities
