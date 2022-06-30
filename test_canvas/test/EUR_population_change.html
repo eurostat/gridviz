@@ -51,7 +51,6 @@
         app.cg.setViewFromURL()
 
         //style data
-        const colNeg = gviz.interpolateSpectral(0.9), colPos = gviz.interpolateSpectral(0.1)
         const sd = {
             color: {
                 style: new gviz.ShapeColorSizeStyle({
@@ -73,11 +72,24 @@
                 }),
                 zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
             },
-            square: undefined,
+            square: {
+                style: new gviz.ShapeColorSizeStyle({
+                    colorCol: "d11_18",
+                    color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                    sizeCol: "d11_18",
+                    size: (v, r, s, zf) => {
+                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                        return 1 * r * Math.pow(Math.abs(v) / max, 0.2)
+                    },
+                    shape: () => "square",
+                    zfStroke: 80
+                }), //.addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
+                zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+            },
             circle: {
                 style: new gviz.ShapeColorSizeStyle({
                     colorCol: "d11_18",
-                    color: (v) => v > 0 ? colPos : colNeg,
+                    color: (v) => v > 0 ? "#d13c4bcc" : "#4288b5cc",
                     sizeCol: "d11_18",
                     size: (v, r, s, zf) => {
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max))
@@ -88,7 +100,20 @@
                 }), //.addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
                 zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
             },
-            donut: undefined
+            donut: {
+                style: new gviz.ShapeColorSizeStyle({
+                    colorCol: "d11_18",
+                    color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                    sizeCol: "d11_18",
+                    size: (v, r, s, zf) => {
+                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                        return 1.5 * r * Math.pow(Math.abs(v) / max, 0.2)
+                    },
+                    shape: () => "donut",
+                    zfStroke: 80
+                }), //.addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
+                zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+            }
         }
 
         const preprocess = c => {
