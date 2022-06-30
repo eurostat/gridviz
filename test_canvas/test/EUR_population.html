@@ -98,7 +98,7 @@
                     size: (v, r, s, zf) => 1 * r * Math.pow(v / s.max, 0.3),
                     shape: () => "square",
                     zfStroke: 80
-                }).addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
+                }).addLegend({ size: { id: "sslegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
                 zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
             },
             circle: {
@@ -138,7 +138,7 @@
                     length: (v, r) => r,
                     widthCol: "2018",
                     width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
-                }).addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
+                }).addLegend({ width: { id: "segVlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
             segmentO: {
@@ -148,7 +148,7 @@
                     length: (v, r) => r * 1.4142,
                     widthCol: "2018",
                     width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25) / 1.4142,
-                }).addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
+                }).addLegend({ width: { id: "segOlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
 
