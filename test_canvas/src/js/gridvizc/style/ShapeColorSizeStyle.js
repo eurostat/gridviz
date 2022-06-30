@@ -124,8 +124,8 @@ export class ShapeColorSizeStyle extends Style {
             this.drawStroke(cell, resolution, cg, shape, sG, offset)
         }
 
-        //update legend, if any
-        if (this.legend) this.legend.update({ style: this, r: resolution, zf: zf, sSize: statSize, sColor: statColor });
+        //update legends
+        this.updateLegends({ style: this, r: resolution, zf: zf, sSize: statSize, sColor: statColor });
     }
 
 

@@ -140,6 +140,13 @@ export class Style {
     setStrokeWidth(val) { this.strokeWidth = val; return this; }
 
 
+    /** Hide all legend elements of the style, if any
+     * @param {object} opts
+    * @returns {this} */
+    updateLegends(opts) {
+        for (const lg of this.legends) lg.update(opts)
+        return this
+    }
 
     /** Show all legend elements of the style, if any
     * @returns {this} */

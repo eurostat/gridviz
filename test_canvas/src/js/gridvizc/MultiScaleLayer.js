@@ -40,9 +40,9 @@ export class MultiScaleLayer extends ALayer {
     }
 
     /** @abstract */
-    hideLegend() {
+    hideLegends() {
         for (const l of this.layers)
-            l.hideLegend()
+            l.hideLegends()
     }
 
 }

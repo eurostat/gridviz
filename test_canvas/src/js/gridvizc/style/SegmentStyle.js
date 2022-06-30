@@ -126,7 +126,7 @@ export class SegmentStyle extends Style {
         }
 
         //update legend, if any
-        if (this.legend) this.legend.update({ style: this, r: resolution, zf: zf, sColor: statColor, sLength: statLength, sWidth: statWidth });
+        this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor, sLength: statLength, sWidth: statWidth });
     }
 
 

@@ -58,7 +58,7 @@ export class App {
 
             //hide legends
             for (const alayer of this.layers)
-                alayer.hideLegend()
+                alayer.hideLegends()
 
             //clear
             this.cg.initCanvasTransform()
@@ -84,7 +84,7 @@ export class App {
                     style.draw(layer.dataset.getViewCache(), layer.dataset.getResolution(), this.cg)
 
                 //show layer legend
-                layer.showLegend()
+                layer.showLegends()
             }
 
             //draw boundary layer
