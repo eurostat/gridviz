@@ -44,9 +44,8 @@ export class Style {
          * @private @type {number} */
         this.strokeWidth = opts.strokeWidth || 1;
 
-        /** @protected @type {Legend | undefined} */
-        //TODO make it an array - add show/hide legend fun
-        this.legend = undefined
+        /** @protected @type {Array.<Legend>} */
+        this.legends = []
     }
 
 
@@ -140,8 +139,21 @@ export class Style {
     /** @param {number} val @returns {this} */
     setStrokeWidth(val) { this.strokeWidth = val; return this; }
 
-    /** @returns {Legend | undefined} */
-    getLegend() { return this.legend; }
+
+
+    /** Show all legend elements of the style, if any
+    * @returns {this} */
+    showLegend() {
+        for (const lg of this.legends) lg.show()
+        return this
+    }
+
+    /** Hide all legend elements of the style, if any
+    * @returns {this} */
+     hideLegend() {
+        for (const lg of this.legends) lg.hide()
+        return this
+    }
 
 }
 
