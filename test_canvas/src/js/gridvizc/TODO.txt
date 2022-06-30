@@ -1,11 +1,12 @@
 TODO check API
-TODO fix problems + add more types
 TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
 
 TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
 TODO styles for diverging: joyplot and pilar - and then merge population and population change
 
-TODO legend - donut + fix segment width orientation + pillar + characters + categories/composition
+TODO legend - donut + pillar + characters
+TODO legend - add several elements on size legend
+TODO legend - handle orientation in segment width legend
 TODO document and improve euronyme
 
 TODO tw composition example: population by age ?
@@ -14,6 +15,7 @@ TODO map type: value by alpha ?
 TODO map type: bi/tri-variate colors ?
 
 TODO check IE, firefox
+TODO fix compilation problems + add more typescript types
 TODO map style: cell based on its neighboors. Contour like ?
 TODO test style with border/discontinuities
 TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?
