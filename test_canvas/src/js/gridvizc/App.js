@@ -57,7 +57,8 @@ export class App {
             //console.log(this.cg.getZf(), this.cg.getCenter())
 
             //hide legends
-            for (const alayer of this.layers) alayer.hideLegend()
+            for (const alayer of this.layers)
+                alayer.hideLegend()
 
             //clear
             this.cg.initCanvasTransform()

@@ -51,8 +51,8 @@ export class Layer extends ALayer {
 
     /** Hide all legend elements of the layer, if any */
     hideLegend() {
-        for (const style of this.styles) {
-            const lg = style.getLegend()
+        for (const s of this.styles) {
+            const lg = s.getLegend()
             if (lg) lg.hide()
         }
     }

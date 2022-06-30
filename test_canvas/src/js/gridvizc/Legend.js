@@ -65,6 +65,9 @@ export class Legend {
 		if (this.bottom) this.div.style("bottom", this.bottom)
 		if (this.left) this.div.style("left", this.left)
 		if (this.right) this.div.style("right", this.right)
+
+		//hide
+		this.div.style("visibility", "hidden");
 	}
 
 	/** Show the legend */
