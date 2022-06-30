@@ -40,6 +40,10 @@
                 <label for="segmentV">Vertical</label>
                 <input type="radio" name="style" id="segmentO" value="segmentO">
                 <label for="segmentO">Oblique</label>
+                <br>
+                Others: 
+                <input type="radio" name="style" id="text" value="text">
+                <label for="text">#@=€</label>
             </div>
             <hr>
             <input type="checkbox" id="label" checked>
@@ -192,6 +196,21 @@
                 }), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
+
+            text: {
+                style: new gviz.TextStyle({
+                    textCol: "d11_18",
+                    text: (v, r, s, z) => {
+                        const max = Math.max(Math.abs(s.min), Math.abs(s.max));
+                        const t = Math.pow(Math.abs(v) / max, 0.25);
+                        return gviz.charLegendFun(t);
+                    },
+                    colorCol: "d11_18",
+                    color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                    fontSize: ((v, r, s, z) => 1.2 * r),
+                }),
+                zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+            }
         }
 
         const preprocess = c => {
@@ -249,6 +268,9 @@
             sd.segmentV.style.colorCol = this.value
             sd.segmentO.style.widthCol = this.value
             sd.segmentO.style.colorCol = this.value
+
+            sd.text.style.textCol = this.value
+            sd.text.style.colorCol = this.value
 
             app.cg.redraw();
         });

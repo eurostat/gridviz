@@ -198,17 +198,22 @@
 
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
+
             sd.scolor.style.colorCol = this.value
             sd.ccolor.style.colorCol = this.value
+
             sd.square.style.sizeCol = this.value
             sd.circle.style.sizeCol = this.value
             sd.donut.style.sizeCol = this.value
+
             sd.segmentH.style.widthCol = this.value
             sd.segmentV.style.widthCol = this.value
             sd.segmentO.style.widthCol = this.value
+
             sd.joyplot.style.heightCol = this.value
             sd.pillar.style.heightCol = this.value
             sd.text.style.textCol = this.value
+
             app.cg.redraw();
         });
 

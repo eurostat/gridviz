@@ -1,3 +1,4 @@
+TODO legend bug
 TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
 TODO test styles for diverging
 
