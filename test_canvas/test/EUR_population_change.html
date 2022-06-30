@@ -230,14 +230,13 @@
         const ttfun = c => {
             const sel = document.querySelector('#year').value
             const v = c[sel]
-            return
-            (
+            return (
                 sel === "d11_18" ?
                     "2011: " + c["2011"] + "<br>2018: " + c["2018"]
                     : "2006: " + c["2006"] + "<br>2011: " + c["2011"]
             )
                 + "<br>"
-                + (v == 0 ? "No change" : "<b>" + (v > 0 ? "+" : "") + v + "</b> inhabitants")
+                + "<b>" +(v == 0 ? "No change" : (v > 0 ? "+" : "") + v + " inhabitants") + "</b>"
         }
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
         app.addMultiScaleTiledGridLayer(url,
