@@ -190,9 +190,9 @@
 
         //tooltip text
         const ttfun = c => {
-            const y = getMapType()
-            if (y === "pop")
-                return "<b>" + c[y] + "</b> inhabitant(s) in " + y
+            const v = document.querySelector('#year').value
+            if (getMapType() === "pop")
+                return "<b>" + c[v] + "</b> inhabitant(s) in " + v
             else
                 return "TODO"
         }
