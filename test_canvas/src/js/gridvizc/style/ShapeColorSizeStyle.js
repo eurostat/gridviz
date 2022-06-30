@@ -153,13 +153,12 @@ export class ShapeColorSizeStyle extends Style {
      * @returns {this}
      */
     addLegend(opts) {
-        //TODO add to list instead
         if (opts.color)
-            this.legend = new ColorLegend(opts.color);
+            this.legends.push(new ColorLegend(opts.color))
         if (opts.size)
-            this.legend = new SizeLegend(opts.size);
+            this.legends.push(new SizeLegend(opts.size))
         if (opts.colorCat)
-            this.legend = new ColorCategoryLegend(opts.colorCat);
+            this.legends.push(new ColorCategoryLegend(opts.colorCat))
         return this
     }
 

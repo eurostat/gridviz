@@ -1,12 +1,13 @@
-TODO legend color category -> make it possible to show several legend components - style with several legends ?
-1. several legends per style
+TODO check API
+TODO fix problems + add more types
+TODO make it possible to show several legend components
 2. test on pop change
 3. define default legend div in app, for all legend divs to appear ?
 
 TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
-TODO test styles for diverging
+TODO styles for diverging: joyplot and pilar - then merge population and population change
 
-TODO legend - show several symbols - donut + segment width orientation + pillar + characters + categories/composition
+TODO legend - donut + fix segment width orientation + pillar + characters + categories/composition
 TODO document and improve euronyme
 
 TODO tw composition example: population by age ?
@@ -14,6 +15,7 @@ TODO tw composition example: population by age ?
 TODO map type: value by alpha ?
 TODO map type: bi/tri-variate colors ?
 
+TODO check IE, firefox
 TODO map style: cell based on its neighboors. Contour like ?
 TODO test style with border/discontinuities
 TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?

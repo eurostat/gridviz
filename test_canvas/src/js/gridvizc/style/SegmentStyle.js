@@ -165,9 +165,8 @@ export class SegmentStyle extends Style {
      * @returns {this}
      */
     addLegend(opts) {
-        //TODO add to list instead
         if (opts.width)
-            this.legend = new SegmentWidthLegend(opts.width);
+            this.legends.push(new SegmentWidthLegend(opts.width))
         return this
     }
 
