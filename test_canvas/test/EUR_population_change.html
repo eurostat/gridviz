@@ -148,7 +148,38 @@
                     shape: () => "donut",
                 }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
-            }
+            },
+
+            segmentH: {
+                style: new gviz.SegmentStyle({
+                    orientation: () => 0,
+                    color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                    length: (v, r) => r,
+                    widthCol: "2018",
+                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
+                }), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } }),
+                zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+            },
+            segmentV: {
+                style: new gviz.SegmentStyle({
+                    orientation: () => 90,
+                    color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                    length: (v, r) => r,
+                    widthCol: "2018",
+                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
+                }), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
+                zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+            },
+            segmentO: {
+                style: new gviz.SegmentStyle({
+                    orientation: () => 45,
+                    color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                    length: (v, r) => r * 1.4142,
+                    widthCol: "2018",
+                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25) / 1.4142,
+                }), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
+                zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+            },
         }
 
         const preprocess = c => {

@@ -90,6 +90,7 @@
                 }).addLegend({ color: { id: "ccollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
                 zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
             },
+
             square: {
                 style: new gviz.ShapeColorSizeStyle({
                     color: () => "#c08c59cc",
