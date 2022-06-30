@@ -43,7 +43,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setZoomFactorExtent([50, 6000])
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(110).setZoomFactorExtent([50, 6000])
             .setLabelLayer(gviz.getEuronymeLabelLayer())
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
@@ -102,17 +102,16 @@
             },
             donut: {
                 style: new gviz.ShapeColorSizeStyle({
-                    colorCol: "d11_18",
-                    color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                     sizeCol: "d11_18",
                     size: (v, r, s, zf) => {
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                        return 1.5 * r * Math.pow(Math.abs(v) / max, 0.2)
+                        return r * Math.pow(Math.abs(v) / max, 0.3)
                     },
+                    colorCol: "d11_18",
+                    color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                     shape: () => "donut",
-                    zfStroke: 80
-                }), //.addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
-                zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+                }),
+                zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             }
         }
 
@@ -156,9 +155,9 @@
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
             sd.color.style.colorCol = this.value
-            //sd.square.style.sizeCol = this.value
+            sd.square.style.sizeCol = this.value
             sd.circle.style.sizeCol = this.value
-            //sd.donut.style.sizeCol = this.value
+            sd.donut.style.sizeCol = this.value
             app.cg.redraw();
         });
 
