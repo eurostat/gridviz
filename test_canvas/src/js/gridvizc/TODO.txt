@@ -1,6 +1,7 @@
 TODO legend color category -> make it possible to show several legend components - style with several legends ?
 1. several legends per style
-2. define default legend div in app, for all legend divs to appear
+2. test on pop change
+3. define default legend div in app, for all legend divs to appear ?
 
 TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
 TODO test styles for diverging
