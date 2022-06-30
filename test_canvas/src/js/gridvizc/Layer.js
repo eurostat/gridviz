@@ -17,7 +17,7 @@ export class Layer extends ALayer {
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
      */
-    constructor(dataset, styles, minZoom=0, maxZoom=0) {
+    constructor(dataset, styles, minZoom = 0, maxZoom = 0) {
         super()
 
         /** @type {Dataset} */
@@ -41,22 +41,18 @@ export class Layer extends ALayer {
     }
 
 
-    /** Show all legend elements of the layer, if any */
-    showLegend() {
-        for (const style of this.styles) {
-            //TODO use style method instead
-            const lg = style.getLegend()
-            if (lg) lg.show()
-        }
+    /** Show all legend elements of the layer, if any
+    * @returns {this} */
+    showLegends() {
+        for (const s of this.styles) s.showLegends()
+        return this
     }
 
-    /** Hide all legend elements of the layer, if any */
-    hideLegend() {
-        for (const s of this.styles) {
-            //TODO use style method instead
-            const lg = s.getLegend()
-            if (lg) lg.hide()
-        }
+    /** Hide all legend elements of the layer, if any
+    * @returns {this} */
+    hideLegends() {
+        for (const s of this.styles) s.hideLegends()
+        return this
     }
 
 }

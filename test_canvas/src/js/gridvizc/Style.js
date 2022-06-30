@@ -143,14 +143,14 @@ export class Style {
 
     /** Show all legend elements of the style, if any
     * @returns {this} */
-    showLegend() {
+    showLegends() {
         for (const lg of this.legends) lg.show()
         return this
     }
 
     /** Hide all legend elements of the style, if any
     * @returns {this} */
-     hideLegend() {
+    hideLegends() {
         for (const lg of this.legends) lg.hide()
         return this
     }
