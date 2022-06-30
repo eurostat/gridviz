@@ -44,6 +44,7 @@ export class Layer extends ALayer {
     /** Show all legend elements of the layer, if any */
     showLegend() {
         for (const style of this.styles) {
+            //TODO use style method instead
             const lg = style.getLegend()
             if (lg) lg.show()
         }
@@ -52,6 +53,7 @@ export class Layer extends ALayer {
     /** Hide all legend elements of the layer, if any */
     hideLegend() {
         for (const s of this.styles) {
+            //TODO use style method instead
             const lg = s.getLegend()
             if (lg) lg.hide()
         }

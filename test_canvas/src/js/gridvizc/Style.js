@@ -45,6 +45,7 @@ export class Style {
         this.strokeWidth = opts.strokeWidth || 1;
 
         /** @protected @type {Legend | undefined} */
+        //TODO make it an array - add show/hide legend fun
         this.legend = undefined
     }
 

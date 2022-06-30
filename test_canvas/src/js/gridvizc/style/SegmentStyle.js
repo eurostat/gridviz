@@ -165,7 +165,7 @@ export class SegmentStyle extends Style {
      * @returns {this}
      */
     addLegend(opts) {
-        //TODO make it possible to have several legends ?
+        //TODO add to list instead
         if (opts.width)
             this.legend = new SegmentWidthLegend(opts.width);
         return this

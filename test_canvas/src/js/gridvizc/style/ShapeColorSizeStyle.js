@@ -153,7 +153,7 @@ export class ShapeColorSizeStyle extends Style {
      * @returns {this}
      */
     addLegend(opts) {
-        //TODO make it possible to have several legends ?
+        //TODO add to list instead
         if (opts.color)
             this.legend = new ColorLegend(opts.color);
         if (opts.size)

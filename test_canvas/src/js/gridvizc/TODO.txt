@@ -1,4 +1,7 @@
 TODO legend color category -> make it possible to show several legend components - style with several legends ?
+1. several legends per style
+2. define default legend div in app, for all legend divs to appear
+
 TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
 TODO test styles for diverging
 
@@ -22,7 +25,7 @@ TODO linesup: Test with changeable width and fixed height ?
 TODO use filosofi 2017 to show evolutions
 TODO background image ? with relief shading.
 TODO window resize
-TODO zoom pane, with toucheable slider: improve. Make vertical.
+TODO zoom pane, with touchable slider: improve. Make vertical.
 TODO better shaded characterset for text style
 TODO more efficient multiscale layer creation?
 
