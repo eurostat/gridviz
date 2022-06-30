@@ -72,12 +72,18 @@
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
 
+        //function to quickly get the type of map, population or population change
+        const getMapType = () => document.querySelector('#year').value.length === 4 ? "pop" : "popchange"
+
+        //retrieve column to show
+        const getColumn = () => document.querySelector('#year').value
+
         //style data
         const sd = {
             pop: {
                 scolor: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: "2018",
+                        colorCol: getColumn(),
                         color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
                         shape: () => "square",
                         zfStroke: 80,
@@ -86,7 +92,7 @@
                 },
                 ccolor: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: "2018",
+                        colorCol: getColumn(),
                         color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
                         shape: () => "circle",
                         zfStroke: 80,
@@ -97,7 +103,7 @@
                 square: {
                     style: new gviz.ShapeColorSizeStyle({
                         color: () => "#c08c59cc",
-                        sizeCol: "2018",
+                        sizeCol: getColumn(),
                         size: (v, r, s, zf) => 1 * r * Math.pow(v / s.max, 0.3),
                         shape: () => "square",
                         zfStroke: 80
@@ -107,7 +113,7 @@
                 circle: {
                     style: new gviz.ShapeColorSizeStyle({
                         color: () => "#c08c59cc",
-                        sizeCol: "2018",
+                        sizeCol: getColumn(),
                         size: (v, r, s, zf) => 1.5 * r * Math.pow(v / s.max, 0.3),
                         shape: () => "circle",
                         zfStroke: 80
@@ -116,7 +122,7 @@
                 },
                 donut: {
                     style: new gviz.ShapeColorSizeStyle({
-                        sizeCol: "2018",
+                        sizeCol: getColumn(),
                         size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3),
                         color: () => "#c08c59",
                         shape: () => "donut",
@@ -129,7 +135,7 @@
                         orientation: () => 0,
                         color: (v, r, s) => "#c08c59",
                         length: (v, r) => r,
-                        widthCol: "2018",
+                        widthCol: getColumn(),
                         width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
                     }).addLegend({ width: { id: "segoHlehvgend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } }),
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
@@ -139,7 +145,7 @@
                         orientation: () => 90,
                         color: (v, r, s) => "#c08c59",
                         length: (v, r) => r,
-                        widthCol: "2018",
+                        widthCol: getColumn(),
                         width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
                     }).addLegend({ width: { id: "seqegVlegsend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
@@ -149,7 +155,7 @@
                         orientation: () => 45,
                         color: (v, r, s) => "#c08c59",
                         length: (v, r) => r * 1.4142,
-                        widthCol: "2018",
+                        widthCol: getColumn(),
                         width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25) / 1.4142,
                     }).addLegend({ width: { id: "segsfxOlegendw", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
@@ -157,7 +163,7 @@
 
                 joyplot: {
                     style: new gviz.JoyPlotStyle({
-                        heightCol: "2018",
+                        heightCol: getColumn(),
                         height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
                         fillColor: "#c08c59bb"
                     }),
@@ -165,14 +171,14 @@
                 },
                 pillar: {
                     style: new gviz.PillarStyle({
-                        heightCol: "2018",
+                        heightCol: getColumn(),
                         height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.7),
                     }),
                     zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
                 },
                 text: {
                     style: new gviz.TextStyle({
-                        textCol: "2018",
+                        textCol: getColumn(),
                         text: (v, r, s, z) => {
                             const t = Math.pow(v / s.max, 0.25);
                             return gviz.charLegendFun(t);
@@ -186,7 +192,7 @@
             popchange: {
                 scolor: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: "d11_18",
+                        colorCol: getColumn(),
                         color: (v, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             const t = Math.sign(v) * Math.pow(Math.abs(v) / max, 0.2) / 2 + 0.5
@@ -207,7 +213,7 @@
                 },
                 ccolor: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: "d11_18",
+                        colorCol: getColumn(),
                         color: (v, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             const t = Math.sign(v) * Math.pow(Math.abs(v) / max, 0.2) / 2 + 0.5
@@ -229,9 +235,9 @@
 
                 square: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: "d11_18",
+                        colorCol: getColumn(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
-                        sizeCol: "d11_18",
+                        sizeCol: getColumn(),
                         size: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return 1 * r * Math.pow(Math.abs(v) / max, 0.2)
@@ -246,9 +252,9 @@
                 },
                 circle: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: "d11_18",
+                        colorCol: getColumn(),
                         color: (v) => v > 0 ? "#d13c4bcc" : "#4288b5cc",
-                        sizeCol: "d11_18",
+                        sizeCol: getColumn(),
                         size: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return 1.5 * r * Math.pow(Math.abs(v) / max, 0.2)
@@ -263,9 +269,9 @@
                 },
                 donut: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: "d11_18",
+                        colorCol: getColumn(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
-                        sizeCol: "d11_18",
+                        sizeCol: getColumn(),
                         size: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return r * Math.pow(Math.abs(v) / max, 0.3)
@@ -278,10 +284,10 @@
                 segmentH: {
                     style: new gviz.SegmentStyle({
                         orientation: () => 0,
-                        colorCol: "d11_18",
+                        colorCol: getColumn(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         length: (v, r) => r,
-                        widthCol: "d11_18",
+                        widthCol: getColumn(),
                         width: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * Math.pow(Math.abs(v) / max, 0.25)
@@ -295,10 +301,10 @@
                 segmentV: {
                     style: new gviz.SegmentStyle({
                         orientation: () => 90,
-                        colorCol: "d11_18",
+                        colorCol: getColumn(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         length: (v, r) => r,
-                        widthCol: "d11_18",
+                        widthCol: getColumn(),
                         width: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * Math.pow(Math.abs(v) / max, 0.25)
@@ -312,10 +318,10 @@
                 segmentO: {
                     style: new gviz.SegmentStyle({
                         orientation: () => 45,
-                        colorCol: "d11_18",
+                        colorCol: getColumn(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         length: (v, r) => r * 1.4142,
-                        widthCol: "d11_18",
+                        widthCol: getColumn(),
                         width: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * Math.pow(Math.abs(v) / max, 0.25) / 1.4142
@@ -329,13 +335,13 @@
 
                 text: {
                     style: new gviz.TextStyle({
-                        textCol: "d11_18",
+                        textCol: getColumn(),
                         text: (v, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             const t = Math.pow(Math.abs(v) / max, 0.25);
                             return gviz.charLegendFun(t);
                         },
-                        colorCol: "d11_18",
+                        colorCol: getColumn(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         fontSize: ((v, r, s, z) => 1.2 * r),
                     }).addLegend({ colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
@@ -394,13 +400,10 @@
         )
 
 
-
-        //function to quickly get the type of map, population or population change
-        const getMapType = () => document.querySelector('#year').value.length === 4 ? "pop" : "popchange"
-
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
 
+            //population
             sd.pop.scolor.style.colorCol = this.value
             sd.pop.ccolor.style.colorCol = this.value
 
@@ -417,22 +420,26 @@
             sd.pop.text.style.textCol = this.value
 
 
+            //pop change
             sd.popchange.scolor.style.colorCol = this.value
             sd.popchange.ccolor.style.colorCol = this.value
 
             sd.popchange.square.style.sizeCol = this.value
+            sd.popchange.square.style.colorCol = this.value
             sd.popchange.circle.style.sizeCol = this.value
+            sd.popchange.circle.style.colorCol = this.value
             sd.popchange.donut.style.sizeCol = this.value
+            sd.popchange.donut.style.colorCol = this.value
 
             sd.popchange.segmentH.style.widthCol = this.value
+            sd.popchange.segmentH.style.colorCol = this.value
             sd.popchange.segmentV.style.widthCol = this.value
+            sd.popchange.segmentV.style.colorCol = this.value
             sd.popchange.segmentO.style.widthCol = this.value
+            sd.popchange.segmentO.style.colorCol = this.value
 
-            //TODO
-            //sd.popchange.joyplot.style.heightCol = this.value
-            //sd.popchange.pillar.style.heightCol = this.value
             sd.popchange.text.style.textCol = this.value
-
+            sd.popchange.text.style.colorCol = this.value
 
             app.cg.redraw();
         });
