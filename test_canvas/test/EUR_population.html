@@ -190,7 +190,7 @@
 
         //tooltip text
         const ttfun = c => {
-            const y = document.querySelector('#year').value;
+            const y = getMapType()
             if (y === "pop")
                 return "<b>" + c[y] + "</b> inhabitant(s) in " + y
             else
@@ -208,11 +208,11 @@
                 { code: "50km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun } },
                 { code: "100km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun } },
             ],
-            sd.scolor.zooms
+            sd.pop.scolor.zooms
         )
 
         //function to quickly get the type of map, population or population change
-        const getMapType = () => document.querySelector('#year').length === 4 ? "pop" : "popchange"
+        const getMapType = () => document.querySelector('#year').value.length === 4 ? "pop" : "popchange"
 
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
