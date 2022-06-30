@@ -11,10 +11,16 @@
     <div
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
         <span style="font-size: 17pt; font-weight: bold;">Population of France</span><br><span style="font-size: 10pt;">
-            <hr>Style<br>
+            <hr>
+            <span style="font-size: 11pt; font-weight: bold;">Style</span><br>
             <div id="style">
-                <input type="radio" name="style" id="color" value="color" checked>
-                <label for="color">Color</label>
+                By color: 
+                <input type="radio" name="style" id="scolor" value="scolor" checked>
+                <label for="scolor">Square</label>
+                <input type="radio" name="style" id="ccolor" value="ccolor">
+                <label for="ccolor">Circle</label>
+                <br>
+                By size: 
                 <input type="radio" name="style" id="square" value="square">
                 <label for="square">Square</label>
                 <input type="radio" name="style" id="circle" value="circle">
@@ -22,6 +28,7 @@
                 <input type="radio" name="style" id="donut" value="donut">
                 <label for="donut">Donut</label>
                 <br>
+                As lines: 
                 <input type="radio" name="style" id="segmentH" value="segmentH">
                 <label for="segmentH">Horizontal</label>
                 <input type="radio" name="style" id="segmentV" value="segmentV">
@@ -29,6 +36,7 @@
                 <input type="radio" name="style" id="segmentO" value="segmentO">
                 <label for="segmentO">Oblique</label>
                 <br>
+                Others: 
                 <input type="radio" name="style" id="joyplot" value="joyplot">
                 <label for="joyplot">Joyplot</label>
                 <input type="radio" name="style" id="pillar" value="pillar">
@@ -60,13 +68,23 @@
 
         //style data
         const sd = {
-            color: {
+            scolor: {
                 style: new gviz.ShapeColorSizeStyle({
                     colorCol: "Ind",
                     color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
-                    zfStroke: 25
-                }).addLegend({ color: { id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
+                    shape: () => "square",
+                    zfStroke: 20
+                }).addLegend({ color: { id: "scollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
                 zooms: [0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]
+            },
+            ccolor: {
+                style: new gviz.ShapeColorSizeStyle({
+                    colorCol: "Ind",
+                    color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
+                    shape: () => "circle",
+                    zfStroke: 20
+                }).addLegend({ color: { id: "ccollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
+                zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
             square: {
                 style: new gviz.ShapeColorSizeStyle({
@@ -163,16 +181,16 @@
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
         app.addMultiScaleTiledGridLayer(url,
             [
-                { code: "200m/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
-                { code: "400m/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
-                { code: "1000m/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
-                { code: "2000m/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
-                { code: "5000m/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
-                { code: "10000m/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
-                { code: "20000m/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
-                { code: "50000m/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
+                { code: "200m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "400m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "1000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "2000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "5000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "10000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "20000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "50000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
             ],
-            sd.color.zooms
+            sd.scolor.zooms
         )
 
         //style selector
