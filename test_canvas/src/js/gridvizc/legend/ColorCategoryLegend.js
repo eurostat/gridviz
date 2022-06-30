@@ -18,74 +18,67 @@ export class ColorCategoryLegend extends Legend {
 
         //col/categories array, in display order
         /** @private @type {Array.<Array.<string>>} */
-        this.colCat = opts.colCat || ["gray", "-"]
+        this.colCat = opts.colCat || [["gray", "-"]]
 
         /** @private @type {Shape} */
         this.shape = opts.shape || "circle"
+        this.dimension = opts.dimension || { r: 8 }
         this.strokeColor = opts.strokeColor || "gray"
         this.strokeWidth = opts.strokeWidth || 1
 
         //label
         this.labelFontSize = opts.labelFontSize || 9
-    }
 
-    /**
-     * @param {{ style: Style, r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
-     */
-    update(opts) {
 
-        //could happen when data is still loading
-        if (!opts.sSize) return
+        //build
 
-        //clear
-        this.div.selectAll("*").remove();
+        const nb = this.colCat.length
+        if (nb == 0) return
 
-        //get max value
-        const value_ = opts.sSize.max * this.exaggerationFactor
+        for (let i = 0; i < nb; i++) {
+            const cat = this.colCat[i]
+            const d = this.div.append("div")
+            const sw = this.strokeWidth
 
-        //take 'nice' value (power of ten, or multiple)
-        let pow10 = Math.log10(value_)
-        pow10 = Math.floor(pow10)
-        let value = Math.pow(10, pow10)
-        if (value * 8 <= value_) value *= 8
-        else if (value * 6 <= value_) value *= 6
-        else if (value * 5 <= value_) value *= 5
-        else if (value * 4 <= value_) value *= 4
-        else if (value * 2.5 <= value_) value *= 2.5
-        else if (value * 2 <= value_) value *= 2
+            //draw box / circle
+            if (this.shape === "square") {
+                d.append("svg").attr("width", (this.dimension.w || 20) + 2 * sw).attr("height", (this.dimension.h || 15) + 2 * sw)
+                    .append("rect")
+                    .attr("x", sw).attr("y", sw).attr("width", (this.dimension.w || 20) + 2 * sw).attr("height", (this.dimension.h || 15) + 2 * sw)
+                    .style("fill", cat[0])
+                    .style("stroke", this.strokeColor)
+                    .style("stroke-width", this.strokeWidth)
+            } else if (this.shape === "circle") {
+                const r = this.dimension.r || 8
+                d.append("svg").attr("width", 2 * r + 2 * sw).attr("height", 2 * r + 2 * sw)
+                    .append("circle")
+                    .attr("cx", r + sw).attr("cy", r + sw).attr("r", r)
+                    .style("fill", cat[0])
+                    .style("stroke", this.strokeColor)
+                    .style("stroke-width", this.strokeWidth)
+            } else {
+                throw new Error('Unexpected shape:' + this.shape);
+            }
 
-        //compute size of symbol, in pix
-        const size = opts.style.getSize()(value, opts.r, opts.sSize, opts.zf) / opts.zf;
+            //Write label
 
-        const svg = this.div.append("svg").attr("width", size + this.strokeWidth + 2).attr("height", size + this.strokeWidth + 2)
-            .style("", "inline-block")
+            //d.ap
 
-        if (this.shape === "square") {
-            svg.append("rect")
-                .attr("x", 0).attr("y", 0).attr("width", size).attr("height", size)
-                .style("fill", this.fillColor)
-                .style("stroke", this.strokeColor)
-                .style("stroke-width", this.strokeWidth)
-            //TODO test
-        } else if (this.shape === "circle") {
-            // <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
-            const r = (size + this.strokeWidth) * 0.5
-            svg.append("circle")
-                .attr("cx", r + 1).attr("cy", r + 1).attr("r", r)
-                .style("fill", this.fillColor)
-                .style("stroke", this.strokeColor)
-                .style("stroke-width", this.strokeWidth)
-        } else if (this.shape === "donut") {
-            //TODO
-        } else {
-            throw new Error('Unexpected shape:' + this.shape);
         }
-
+/*
         const valueT = format(",.2r")(value);
         this.div.append("div")
             .style("font-size", this.labelFontSize + "pt")
             //.style("font-weight", "bold")
             .style("", "inline-block")
             .text(valueT + (this.labelUnitText ? " " : "") + this.labelUnitText)
+*/
+
     }
+
+    /**
+     * @param {{ style: Style, r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
+     */
+    update(opts) { }
+
 }

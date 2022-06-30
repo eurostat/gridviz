@@ -159,7 +159,7 @@ export class ShapeColorSizeStyle extends Style {
         if (opts.size)
             this.legend = new SizeLegend(opts.size);
         if (opts.colorCat)
-            this.legend = new ColorCategoryLegend(opts.color);
+            this.legend = new ColorCategoryLegend(opts.colorCat);
         return this
     }
 

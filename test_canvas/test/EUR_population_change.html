@@ -70,6 +70,7 @@
 
         //style data
         const sd = {
+
             scolor: {
                 style: new gviz.ShapeColorSizeStyle({
                     colorCol: "d11_18",
@@ -112,6 +113,7 @@
                 }),
                 zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
             },
+
             square: {
                 style: new gviz.ShapeColorSizeStyle({
                     colorCol: "d11_18",
@@ -123,7 +125,7 @@
                     },
                     shape: () => "square",
                     zfStroke: 80
-                }), //.addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
+                }).addLegend({ colorCat: { id: "sscatlegend", bottom: "20px", left: "20px", /*shape: "square",*/ colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
                 zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
             },
             circle: {
@@ -236,7 +238,7 @@
                     : "2006: " + c["2006"] + "<br>2011: " + c["2011"]
             )
                 + "<br>"
-                + "<b>" +(v == 0 ? "No change" : (v > 0 ? "+" : "") + v + " inhabitants") + "</b>"
+                + "<b>" + (v == 0 ? "No change" : (v > 0 ? "+" : "") + v + " inhabitants") + "</b>"
         }
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
         app.addMultiScaleTiledGridLayer(url,
