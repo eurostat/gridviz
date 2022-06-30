@@ -39,7 +39,7 @@
         //flag, piechart, ring style
         const s = new gviz.CompositionStyle({
             color: colorDict,
-            type: c => "ring",
+            type: () => "ring",
             sizeCol: "pop",
             size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
             zfStroke: 5
@@ -68,7 +68,7 @@
             if (select.value === "radar") {
                 for (let lay of app.layers) lay.styles = [sRadar]
             } else {
-                s.setType(c => select.value)
+                s.setType(() => select.value)
                 for (let lay of app.layers) lay.styles = [s]
             }
             //redraw

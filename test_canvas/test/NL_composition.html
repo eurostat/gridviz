@@ -33,7 +33,7 @@
         //flag, piechart, ring style
         const s = new gviz.CompositionStyle({
             color: colorDict,
-            type: c => "flag",
+            type: () => "flag",
             sizeCol: "Inhabitants",
             size: (v, r, s, zf) => r * Math.sqrt(v / s.max),
             zfStroke: 5
@@ -57,7 +57,7 @@
             color: () => colorDict["Population under 14"],
             sizeCol: "Population under 14",
             size: (v, r, s, zf) => 5 * Math.sqrt(v),
-            shape: c => "circle",
+            shape: () => "circle",
             offset: (c, r, zf) => ({ dx: -0.183 * r, dy: -0.183 * r }),
             zfStroke: 1
         })
@@ -65,7 +65,7 @@
             color: () => colorDict["pop_"],
             sizeCol: "pop_",
             size: (v, r, s, zf) => 5 * Math.sqrt(v),
-            shape: c => "circle",
+            shape: () => "circle",
             offset: (c, r, zf) => ({ dx: 0, dy: 0.183 * r }),
             zfStroke: 1
         })
@@ -73,7 +73,7 @@
             color: () => colorDict["Population over 65"],
             sizeCol: "Population over 65",
             size: (v, r, s, zf) => 5 * Math.sqrt(v),
-            shape: c => "circle",
+            shape: () => "circle",
             offset: (c, r, zf) => ({ dx: 0.183 * r, dy: -0.183 * r }),
             zfStroke: 1
         })
@@ -100,7 +100,7 @@
             } else if (select.value === "multi") {
                 for (let lay of app.layers) lay.styles = [s30, s14, s65]
             } else {
-                s.setType(c => select.value)
+                s.setType(() => select.value)
                 for (let lay of app.layers) lay.styles = [s]
             }
             //redraw
