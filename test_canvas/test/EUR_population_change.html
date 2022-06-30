@@ -19,13 +19,13 @@
             <hr>
             <span style="font-size: 11pt; font-weight: bold;">Style</span><br>
             <div id="style">
-                By color: 
+                By color:
                 <input type="radio" name="style" id="scolor" value="scolor" checked>
                 <label for="scolor">Square</label>
                 <input type="radio" name="style" id="ccolor" value="ccolor">
                 <label for="ccolor">Circle</label>
                 <br>
-                By size: 
+                By size:
                 <input type="radio" name="style" id="square" value="square">
                 <label for="square">Square</label>
                 <input type="radio" name="style" id="circle" value="circle">
@@ -33,7 +33,7 @@
                 <input type="radio" name="style" id="donut" value="donut">
                 <label for="donut">Donut</label>
                 <br>
-                As lines: 
+                As lines:
                 <input type="radio" name="style" id="segmentH" value="segmentH">
                 <label for="segmentH">Horizontal</label>
                 <input type="radio" name="style" id="segmentV" value="segmentV">
@@ -153,30 +153,42 @@
             segmentH: {
                 style: new gviz.SegmentStyle({
                     orientation: () => 0,
+                    colorCol: "d11_18",
                     color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                     length: (v, r) => r,
-                    widthCol: "2018",
-                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
+                    widthCol: "d11_18",
+                    width: (v, r, s, zf) => {
+                        const max = Math.max(Math.abs(s.min), Math.abs(s.max));
+                        return r * Math.pow(Math.abs(v) / max, 0.25)
+                    }
                 }), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
             segmentV: {
                 style: new gviz.SegmentStyle({
                     orientation: () => 90,
+                    colorCol: "d11_18",
                     color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                     length: (v, r) => r,
-                    widthCol: "2018",
-                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
+                    widthCol: "d11_18",
+                    width: (v, r, s, zf) => {
+                        const max = Math.max(Math.abs(s.min), Math.abs(s.max));
+                        return r * Math.pow(Math.abs(v) / max, 0.25)
+                    }
                 }), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
             segmentO: {
                 style: new gviz.SegmentStyle({
                     orientation: () => 45,
+                    colorCol: "d11_18",
                     color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                     length: (v, r) => r * 1.4142,
-                    widthCol: "2018",
-                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25) / 1.4142,
+                    widthCol: "d11_18",
+                    width: (v, r, s, zf) => {
+                        const max = Math.max(Math.abs(s.min), Math.abs(s.max));
+                        return r * Math.pow(Math.abs(v) / max, 0.25) / 1.4142
+                    }
                 }), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
@@ -226,6 +238,9 @@
             sd.square.style.sizeCol = this.value
             sd.circle.style.sizeCol = this.value
             sd.donut.style.sizeCol = this.value
+            sd.segmentH.style.widthCol = this.value
+            sd.segmentV.style.widthCol = this.value
+            sd.segmentO.style.widthCol = this.value
             app.cg.redraw();
         });
 
