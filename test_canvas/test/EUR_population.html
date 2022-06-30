@@ -81,7 +81,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
                         shape: () => "square",
                         zfStroke: 80,
-                    }).addLegend({ color: { id: "scollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
+                    }).addLegend({ color: { id: "schgvvgolleggcend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
                     zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
                 },
                 ccolor: {
@@ -90,7 +90,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
                         shape: () => "circle",
                         zfStroke: 80,
-                    }).addLegend({ color: { id: "ccollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
+                    }).addLegend({ color: { id: "chcggchllekhgend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
 
@@ -101,7 +101,7 @@
                         size: (v, r, s, zf) => 1 * r * Math.pow(v / s.max, 0.3),
                         shape: () => "square",
                         zfStroke: 80
-                    }).addLegend({ size: { id: "sslegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
+                    }).addLegend({ size: { id: "sshklegegnd", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
                 circle: {
@@ -111,7 +111,7 @@
                         size: (v, r, s, zf) => 1.5 * r * Math.pow(v / s.max, 0.3),
                         shape: () => "circle",
                         zfStroke: 80
-                    }).addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
+                    }).addLegend({ size: { id: "slgenvhvd", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
                 donut: {
@@ -131,7 +131,7 @@
                         length: (v, r) => r,
                         widthCol: "2018",
                         width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
-                    }).addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } }),
+                    }).addLegend({ width: { id: "segoHlehvgend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } }),
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
                 segmentV: {
@@ -141,7 +141,7 @@
                         length: (v, r) => r,
                         widthCol: "2018",
                         width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
-                    }).addLegend({ width: { id: "segVlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
+                    }).addLegend({ width: { id: "seqegVlegsend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
                 segmentO: {
@@ -151,7 +151,7 @@
                         length: (v, r) => r * 1.4142,
                         widthCol: "2018",
                         width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25) / 1.4142,
-                    }).addLegend({ width: { id: "segOlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
+                    }).addLegend({ width: { id: "segsfxOlegendw", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
 
@@ -184,32 +184,216 @@
                 }
             },
             popchange: {
-                //TODO
+                scolor: {
+                    style: new gviz.ShapeColorSizeStyle({
+                        colorCol: "d11_18",
+                        color: (v, r, s) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            const t = Math.sign(v) * Math.pow(Math.abs(v) / max, 0.2) / 2 + 0.5
+                            return gviz.interpolateSpectral(1 - t);
+                        },
+                        shape: () => "square",
+                        zfStroke: 80,
+                    }).addLegend({
+                        color: {
+                            id: "scfolleggend", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+                            fun: (t, r, s) => {
+                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                return (t < 0.5 ? -1 : 1) * max * Math.pow(Math.abs(2 * t - 1), 1 / 0.2)
+                            }
+                        }
+                    }),
+                    zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
+                },
+                ccolor: {
+                    style: new gviz.ShapeColorSizeStyle({
+                        colorCol: "d11_18",
+                        color: (v, r, s) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            const t = Math.sign(v) * Math.pow(Math.abs(v) / max, 0.2) / 2 + 0.5
+                            return gviz.interpolateSpectral(1 - t);
+                        },
+                        shape: () => "circle",
+                        zfStroke: 80,
+                    }).addLegend({
+                        color: {
+                            id: "ccolylegeuytnd", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+                            fun: (t, r, s) => {
+                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                return (t < 0.5 ? -1 : 1) * max * Math.pow(Math.abs(2 * t - 1), 1 / 0.2)
+                            }
+                        }
+                    }),
+                    zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+                },
+
+                square: {
+                    style: new gviz.ShapeColorSizeStyle({
+                        colorCol: "d11_18",
+                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                        sizeCol: "d11_18",
+                        size: (v, r, s, zf) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            return 1 * r * Math.pow(Math.abs(v) / max, 0.2)
+                        },
+                        shape: () => "square",
+                        zfStroke: 80
+                    }).addLegend({
+                        colorCat: { id: "ssckatleghkend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+                        size: { id: "jhjhghjghg", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "gray" }
+                    }),
+                    zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+                },
+                circle: {
+                    style: new gviz.ShapeColorSizeStyle({
+                        colorCol: "d11_18",
+                        color: (v) => v > 0 ? "#d13c4bcc" : "#4288b5cc",
+                        sizeCol: "d11_18",
+                        size: (v, r, s, zf) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            return 1.5 * r * Math.pow(Math.abs(v) / max, 0.2)
+                        },
+                        shape: () => "circle",
+                        zfStroke: 80
+                    }).addLegend({
+                        colorCat: { id: "cscatlegehjnd", bottom: "20px", left: "20px", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+                        size: { id: "jhjhgjghg", bottom: "20px", right: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }
+                    }),
+                    zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+                },
+                donut: {
+                    style: new gviz.ShapeColorSizeStyle({
+                        colorCol: "d11_18",
+                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                        sizeCol: "d11_18",
+                        size: (v, r, s, zf) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            return r * Math.pow(Math.abs(v) / max, 0.3)
+                        },
+                        shape: () => "donut",
+                    }).addLegend({ colorCat: { id: "dscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
+                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                },
+
+                segmentH: {
+                    style: new gviz.SegmentStyle({
+                        orientation: () => 0,
+                        colorCol: "d11_18",
+                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                        length: (v, r) => r,
+                        widthCol: "d11_18",
+                        width: (v, r, s, zf) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
+                            return r * Math.pow(Math.abs(v) / max, 0.25)
+                        }
+                    }).addLegend({
+                        colorCat: { id: "guygudscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+                        width: { id: "svuvhegHlegend", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
+                    }),
+                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                },
+                segmentV: {
+                    style: new gviz.SegmentStyle({
+                        orientation: () => 90,
+                        colorCol: "d11_18",
+                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                        length: (v, r) => r,
+                        widthCol: "d11_18",
+                        width: (v, r, s, zf) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
+                            return r * Math.pow(Math.abs(v) / max, 0.25)
+                        }
+                    }).addLegend({
+                        colorCat: { id: "guyguscatlend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+                        width: { id: "svunivhegHend", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
+                    }),
+                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                },
+                segmentO: {
+                    style: new gviz.SegmentStyle({
+                        orientation: () => 45,
+                        colorCol: "d11_18",
+                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                        length: (v, r) => r * 1.4142,
+                        widthCol: "d11_18",
+                        width: (v, r, s, zf) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
+                            return r * Math.pow(Math.abs(v) / max, 0.25) / 1.4142
+                        }
+                    }).addLegend({
+                        colorCat: { id: "gubbkjgend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+                        width: { id: "svghvvhegHkjbnd", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
+                    }),
+                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                },
+
+                text: {
+                    style: new gviz.TextStyle({
+                        textCol: "d11_18",
+                        text: (v, r, s, z) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
+                            const t = Math.pow(Math.abs(v) / max, 0.25);
+                            return gviz.charLegendFun(t);
+                        },
+                        colorCol: "d11_18",
+                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                        fontSize: ((v, r, s, z) => 1.2 * r),
+                    }).addLegend({ colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
+                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                }
             }
         }
+
 
         //tooltip text
         const ttfun = c => {
             const v = document.querySelector('#year').value
             if (getMapType() === "pop")
                 return "<b>" + c[v] + "</b> inhabitant(s) in " + v
-            else
-                return "TODO"
+            else {
+                const sel = document.querySelector('#year').value
+                const v = c[sel]
+                return (
+                    sel === "d11_18" ?
+                        "2011: " + c["2011"] + "<br>2018: " + c["2018"]
+                        : "2006: " + c["2006"] + "<br>2011: " + c["2011"]
+                )
+                    + "<br>"
+                    + "<b>" + (v == 0 ? "No change" : (v > 0 ? "+" : "") + v + " inhabitants") + "</b>"
+            }
         }
+
+
+        const preprocess = c => {
+            //prepare 2011 -> 2018 change data
+            if (!c["2011"] && !c["2018"]) c.d11_18 = 0
+            else if (!c["2011"] && c["2018"]) c.d11_18 = + c["2018"]
+            else if (c["2011"] && !c["2018"]) c.d11_18 = - c["2011"]
+            else c.d11_18 = c["2018"] - c["2011"]
+
+            //prepare 2006 -> 2011 change data
+            if (!c["2006"] && !c["2011"]) c.d06_11 = 0
+            else if (!c["2006"] && c["2011"]) c.d06_11 = +c["2011"]
+            else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
+            else c.d06_11 = c["2011"] - c["2006"]
+        }
+
 
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
         app.addMultiScaleTiledGridLayer(url,
             [
-                { code: "1km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "2km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "5km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "10km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "20km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "50km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "100km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "1km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "2km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "5km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "10km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "20km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "50km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "100km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
             ],
             sd.pop.scolor.zooms
         )
+
+
 
         //function to quickly get the type of map, population or population change
         const getMapType = () => document.querySelector('#year').value.length === 4 ? "pop" : "popchange"
@@ -232,9 +416,23 @@
             sd.pop.pillar.style.heightCol = this.value
             sd.pop.text.style.textCol = this.value
 
-            /*
-            TODO same for popchange
-            */
+
+            sd.popchange.scolor.style.colorCol = this.value
+            sd.popchange.ccolor.style.colorCol = this.value
+
+            sd.popchange.square.style.sizeCol = this.value
+            sd.popchange.circle.style.sizeCol = this.value
+            sd.popchange.donut.style.sizeCol = this.value
+
+            sd.popchange.segmentH.style.widthCol = this.value
+            sd.popchange.segmentV.style.widthCol = this.value
+            sd.popchange.segmentO.style.widthCol = this.value
+
+            //TODO
+            //sd.popchange.joyplot.style.heightCol = this.value
+            //sd.popchange.pillar.style.heightCol = this.value
+            sd.popchange.text.style.textCol = this.value
+
 
             app.cg.redraw();
         });
