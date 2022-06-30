@@ -1,11 +1,9 @@
 TODO check API
 TODO fix problems + add more types
-TODO make it possible to show several legend components
-2. test on pop change
-3. define default legend div in app, for all legend divs to appear ?
+TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
 
 TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
-TODO styles for diverging: joyplot and pilar - then merge population and population change
+TODO styles for diverging: joyplot and pilar - and then merge population and population change
 
 TODO legend - donut + fix segment width orientation + pillar + characters + categories/composition
 TODO document and improve euronyme

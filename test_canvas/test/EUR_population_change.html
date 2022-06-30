@@ -173,8 +173,10 @@
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                         return r * Math.pow(Math.abs(v) / max, 0.25)
                     }
-                }).addLegend({ colorCat: { id: "guygudscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
-                //}), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } }),
+                }).addLegend({
+                    colorCat: { id: "guygudscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+                    width: { id: "svuvhegHlegend", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
+                }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
             segmentV: {
@@ -188,8 +190,10 @@
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                         return r * Math.pow(Math.abs(v) / max, 0.25)
                     }
-                }).addLegend({ colorCat: { id: "ggudscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
-                //}), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
+                }).addLegend({
+                    colorCat: { id: "guyguscatlend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+                    width: { id: "svunivhegHend", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
+                }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
             segmentO: {
@@ -203,8 +207,10 @@
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                         return r * Math.pow(Math.abs(v) / max, 0.25) / 1.4142
                     }
-                }).addLegend({ colorCat: { id: "guygudscjhvjhvatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
-                //}), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
+                }).addLegend({
+                    colorCat: { id: "gubbkjgend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+                    width: { id: "svghvvhegHkjbnd", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
+                }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
 
