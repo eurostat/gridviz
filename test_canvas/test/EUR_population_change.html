@@ -125,7 +125,7 @@
                     },
                     shape: () => "square",
                     zfStroke: 80
-                }).addLegend({ colorCat: { id: "sscatlegend", bottom: "20px", left: "20px", /*shape: "square",*/ colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
+                }).addLegend({ colorCat: { id: "sscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
                 zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
             },
             circle: {
@@ -139,7 +139,7 @@
                     },
                     shape: () => "circle",
                     zfStroke: 80
-                }), //.addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
+                }).addLegend({ colorCat: { id: "cscatlegend", bottom: "20px", left: "20px", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
                 zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
             },
             donut: {
@@ -152,7 +152,7 @@
                         return r * Math.pow(Math.abs(v) / max, 0.3)
                     },
                     shape: () => "donut",
-                }),
+                }).addLegend({ colorCat: { id: "dscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
 

@@ -26,7 +26,7 @@ export class ColorCategoryLegend extends Legend {
         this.strokeColor = opts.strokeColor || "gray"
         this.strokeWidth = opts.strokeWidth || 1
 
-        //label
+        //label font
         this.labelFontSize = opts.labelFontSize || 9
 
 
@@ -38,6 +38,7 @@ export class ColorCategoryLegend extends Legend {
         for (let i = 0; i < nb; i++) {
             const cat = this.colCat[i]
             const d = this.div.append("div")
+
             const sw = this.strokeWidth
 
             //draw box / circle
@@ -60,20 +61,15 @@ export class ColorCategoryLegend extends Legend {
                 throw new Error('Unexpected shape:' + this.shape);
             }
 
-            //Write label
-
-            //d.ap
-
+            //Write label text
+            d.append("div")
+                .style("float", "right")
+                .style("padding-left", "5px")
+                //.style("text-align", "left")
+                .style("font-size", this.labelFontSize + "pt")
+                //.style("font-weight", "bold")
+                .text(cat[1])
         }
-/*
-        const valueT = format(",.2r")(value);
-        this.div.append("div")
-            .style("font-size", this.labelFontSize + "pt")
-            //.style("font-weight", "bold")
-            .style("", "inline-block")
-            .text(valueT + (this.labelUnitText ? " " : "") + this.labelUnitText)
-*/
-
     }
 
     /**
