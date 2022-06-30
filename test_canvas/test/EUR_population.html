@@ -18,12 +18,15 @@
             </select>
             <hr>Style<br>
             <div id="style">
-                <input type="radio" name="style" id="color" value="color" checked>
-                <label for="color">Color</label>
+                <input type="radio" name="style" id="scolor" value="scolor" checked>
+                <label for="scolor">Square color</label>
+                <input type="radio" name="style" id="ccolor" value="ccolor">
+                <label for="ccolor">Circle color</label>
+                <br>
                 <input type="radio" name="style" id="square" value="square">
-                <label for="square">Square</label>
+                <label for="square">Square size</label>
                 <input type="radio" name="style" id="circle" value="circle">
-                <label for="circle">Circle</label>
+                <label for="circle">Circle size</label>
                 <input type="radio" name="style" id="donut" value="donut">
                 <label for="donut">Donut</label>
                 <br>
@@ -64,13 +67,23 @@
 
         //style data
         const sd = {
-            color: {
+            scolor: {
                 style: new gviz.ShapeColorSizeStyle({
                     colorCol: "2018",
                     color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
-                    zfStroke: 100
-                }).addLegend({ color: { id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
+                    shape: () => "square",
+                    zfStroke: 80,
+                }).addLegend({ color: { id: "scollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
                 zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
+            },
+            ccolor: {
+                style: new gviz.ShapeColorSizeStyle({
+                    colorCol: "2018",
+                    color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
+                    shape: () => "circle",
+                    zfStroke: 80,
+                }).addLegend({ color: { id: "ccollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
+                zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
             },
             square: {
                 style: new gviz.ShapeColorSizeStyle({
@@ -166,20 +179,21 @@
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
         app.addMultiScaleTiledGridLayer(url,
             [
-                { code: "1km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
-                { code: "2km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
-                { code: "5km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
-                { code: "10km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
-                { code: "20km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
-                { code: "50km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
-                { code: "100km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun } },
+                { code: "1km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "2km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "5km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "10km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "20km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "50km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "100km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
             ],
-            sd.color.zooms
+            sd.scolor.zooms
         )
 
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
-            sd.color.style.colorCol = this.value
+            sd.scolor.style.colorCol = this.value
+            sd.ccolor.style.colorCol = this.value
             sd.square.style.sizeCol = this.value
             sd.circle.style.sizeCol = this.value
             sd.donut.style.sizeCol = this.value
