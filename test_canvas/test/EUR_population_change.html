@@ -51,6 +51,7 @@
         app.cg.setViewFromURL()
 
         //style data
+        const colNeg = gviz.interpolateSpectral(0.9), colPos = gviz.interpolateSpectral(0.1)
         const sd = {
             color: {
                 style: new gviz.ShapeColorSizeStyle({
@@ -63,7 +64,7 @@
                     zfStroke: 80
                 }).addLegend({
                     color: {
-                        id: "clegend", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral,
+                        id: "clegend", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
                         fun: (t, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return (t < 0.5 ? -1 : 1) * max * Math.pow(Math.abs(2 * t - 1), 1 / 0.2)
@@ -73,7 +74,20 @@
                 zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
             },
             square: undefined,
-            circle: undefined,
+            circle: {
+                style: new gviz.ShapeColorSizeStyle({
+                    colorCol: "d11_18",
+                    color: (v) => v > 0 ? colPos : colNeg,
+                    sizeCol: "d11_18",
+                    size: (v, r, s, zf) => {
+                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                        return 1.5 * r * Math.pow(Math.abs(v) / max, 0.2)
+                    },
+                    shape: () => "circle",
+                    zfStroke: 80
+                }), //.addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
+                zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+            },
             donut: undefined
         }
 
@@ -117,8 +131,28 @@
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
             sd.color.style.colorCol = this.value
+            //sd.square.style.sizeCol = this.value
+            sd.circle.style.sizeCol = this.value
+            //sd.donut.style.sizeCol = this.value
             app.cg.redraw();
         });
+
+        //style selector
+        document.querySelector('#style').addEventListener('change', function () {
+            //get checked value
+            const value = document.querySelector('input[name="style"]:checked').value
+
+            //set new style
+            const ml = app.layers[0];
+            ml.hideLegend()
+            for (const lay of ml.layers) lay.styles = [sd[value].style]
+
+            //set new zoom breaks
+            ml.zooms = sd[value].zooms
+
+            //redraw
+            app.cg.redraw();
+        })
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
