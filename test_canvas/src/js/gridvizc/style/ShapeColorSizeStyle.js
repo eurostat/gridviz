@@ -5,6 +5,7 @@ import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 import { ColorLegend } from "../legend/ColorLegend"
 import { SizeLegend } from "../legend/SizeLegend"
+import { ColorCategoryLegend } from "../legend/ColorCategoryLegend"
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -157,6 +158,8 @@ export class ShapeColorSizeStyle extends Style {
             this.legend = new ColorLegend(opts.color);
         if (opts.size)
             this.legend = new SizeLegend(opts.size);
+        if (opts.colorCat)
+            this.legend = new ColorCategoryLegend(opts.color);
         return this
     }
 
