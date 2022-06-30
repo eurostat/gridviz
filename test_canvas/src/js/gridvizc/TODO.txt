@@ -1,4 +1,4 @@
-TODO tw size+rate example: population, youth VS old FR ? Income FR ? Gender balance FR ?
+TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
 TODO test styles for diverging
 
 TODO legend - show several symbols - donut + segment width orientation + pillar + characters + categories/composition
