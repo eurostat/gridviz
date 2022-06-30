@@ -16,16 +16,30 @@
                 <option value="d11_18" selected>From 2011 to 2018</option>
                 <option value="d06_11">From 2006 to 2011</option>
             </select>
-            <hr>Style<br>
+            <hr>
+            <span style="font-size: 11pt; font-weight: bold;">Style</span><br>
             <div id="style">
-                <input type="radio" name="style" id="color" value="color" checked>
-                <label for="color">Color</label>
+                By color: 
+                <input type="radio" name="style" id="scolor" value="scolor" checked>
+                <label for="scolor">Square</label>
+                <input type="radio" name="style" id="ccolor" value="ccolor">
+                <label for="ccolor">Circle</label>
+                <br>
+                By size: 
                 <input type="radio" name="style" id="square" value="square">
                 <label for="square">Square</label>
                 <input type="radio" name="style" id="circle" value="circle">
                 <label for="circle">Circle</label>
                 <input type="radio" name="style" id="donut" value="donut">
                 <label for="donut">Donut</label>
+                <br>
+                As lines: 
+                <input type="radio" name="style" id="segmentH" value="segmentH">
+                <label for="segmentH">Horizontal</label>
+                <input type="radio" name="style" id="segmentV" value="segmentV">
+                <label for="segmentV">Vertical</label>
+                <input type="radio" name="style" id="segmentO" value="segmentO">
+                <label for="segmentO">Oblique</label>
             </div>
             <hr>
             <input type="checkbox" id="label" checked>
@@ -52,7 +66,7 @@
 
         //style data
         const sd = {
-            color: {
+            scolor: {
                 style: new gviz.ShapeColorSizeStyle({
                     colorCol: "d11_18",
                     color: (v, r, s) => {
@@ -60,10 +74,11 @@
                         const t = Math.sign(v) * Math.pow(Math.abs(v) / max, 0.2) / 2 + 0.5
                         return gviz.interpolateSpectral(1 - t);
                     },
-                    zfStroke: 80
+                    shape: () => "square",
+                    zfStroke: 80,
                 }).addLegend({
                     color: {
-                        id: "clegend", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+                        id: "scollegend", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
                         fun: (t, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return (t < 0.5 ? -1 : 1) * max * Math.pow(Math.abs(2 * t - 1), 1 / 0.2)
@@ -71,6 +86,27 @@
                     }
                 }),
                 zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
+            },
+            ccolor: {
+                style: new gviz.ShapeColorSizeStyle({
+                    colorCol: "d11_18",
+                    color: (v, r, s) => {
+                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                        const t = Math.sign(v) * Math.pow(Math.abs(v) / max, 0.2) / 2 + 0.5
+                        return gviz.interpolateSpectral(1 - t);
+                    },
+                    shape: () => "circle",
+                    zfStroke: 80,
+                }).addLegend({
+                    color: {
+                        id: "ccollegend", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+                        fun: (t, r, s) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            return (t < 0.5 ? -1 : 1) * max * Math.pow(Math.abs(2 * t - 1), 1 / 0.2)
+                        }
+                    }
+                }),
+                zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
             },
             square: {
                 style: new gviz.ShapeColorSizeStyle({
@@ -141,20 +177,21 @@
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
         app.addMultiScaleTiledGridLayer(url,
             [
-                { code: "1km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "2km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "5km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "10km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "20km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "50km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "100km/", styles: [sd.color.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "1km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "2km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "5km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "10km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "20km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "50km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "100km/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
             ],
-            sd.color.zooms
+            sd.scolor.zooms
         )
 
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
-            sd.color.style.colorCol = this.value
+            sd.scolor.style.colorCol = this.value
+            sd.ccolor.style.colorCol = this.value
             sd.square.style.sizeCol = this.value
             sd.circle.style.sizeCol = this.value
             sd.donut.style.sizeCol = this.value
