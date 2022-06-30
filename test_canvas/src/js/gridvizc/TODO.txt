@@ -1,5 +1,4 @@
-TODO legend color category
-TODO legend bug
+TODO legend color category -> make it possible to show several legend components - style with several legends ?
 TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
 TODO test styles for diverging
 
