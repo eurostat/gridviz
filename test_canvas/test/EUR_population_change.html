@@ -16,12 +16,23 @@
                 <option value="d11_18" selected>From 2011 to 2018</option>
                 <option value="d06_11">From 2006 to 2011</option>
             </select>
-            <br>
+            <hr>Style<br>
+            <div id="style">
+                <input type="radio" name="style" id="color" value="color" checked>
+                <label for="color">Color</label>
+                <input type="radio" name="style" id="square" value="square">
+                <label for="square">Square</label>
+                <input type="radio" name="style" id="circle" value="circle">
+                <label for="circle">Circle</label>
+                <input type="radio" name="style" id="donut" value="donut">
+                <label for="donut">Donut</label>
+            </div>
+            <hr>
             <input type="checkbox" id="label" checked>
             <label for="label">City names</label>
             <input type="checkbox" id="boundary" checked>
             <label for="boundary">Boundaries</label>
-            <br>
+            <hr>
             Source: <a href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/grids" target="_blank"
                 rel="noopener noreferrer">European Commission</a>
         </span>
@@ -36,32 +47,44 @@
             .setLabelLayer(gviz.getEuronymeLabelLayer())
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
-        //define datasets, styles and layers
-        const exp = 0.2
-        const s = new gviz.ShapeColorSizeStyle({
-            colorCol: "d11_18",
-            color: (v, r, s) => {
-                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                const t = Math.sign(v) * Math.pow(Math.abs(v) / max, exp) / 2 + 0.5
-                return gviz.interpolateSpectral(1 - t);
-            },
-            zfStroke: 80
-        }).addLegend({
+        //test view from URL parameters, if any
+        app.cg.setViewFromURL()
+
+        //style data
+        const sd = {
             color: {
-                id: "clegend", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral,
-                fun: (t, r, s) => {
-                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                    return (t<0.5?-1:1)* max * Math.pow(Math.abs(2 * t - 1), 1 / exp)
-                }
-            }
-        })
+                style: new gviz.ShapeColorSizeStyle({
+                    colorCol: "d11_18",
+                    color: (v, r, s) => {
+                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                        const t = Math.sign(v) * Math.pow(Math.abs(v) / max, 0.2) / 2 + 0.5
+                        return gviz.interpolateSpectral(1 - t);
+                    },
+                    zfStroke: 80
+                }).addLegend({
+                    color: {
+                        id: "clegend", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral,
+                        fun: (t, r, s) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            return (t < 0.5 ? -1 : 1) * max * Math.pow(Math.abs(2 * t - 1), 1 / 0.2)
+                        }
+                    }
+                }),
+                zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
+            },
+            square: undefined,
+            circle: undefined,
+            donut: undefined
+        }
 
         const preprocess = c => {
+            //prepare 2011 -> 2018 change data
             if (!c["2011"] && !c["2018"]) c.d11_18 = 0
             else if (!c["2011"] && c["2018"]) c.d11_18 = + c["2018"]
             else if (c["2011"] && !c["2018"]) c.d11_18 = - c["2011"]
             else c.d11_18 = c["2018"] - c["2011"]
 
+            //prepare 2006 -> 2011 change data
             if (!c["2006"] && !c["2011"]) c.d06_11 = 0
             else if (!c["2006"] && c["2011"]) c.d06_11 = +c["2011"]
             else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
@@ -78,15 +101,15 @@
             )
         }
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
-        app.addTiledGridLayer(url + "1km/", [s], 0, 500, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer(url + "2km/", [s], 500, 1000, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer(url + "5km/", [s], 1000, 2000, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer(url + "10km/", [s], 2000, 4000, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer(url + "20km/", [s], 4000, 9999999999, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "1km/", [sd.color.style], 0, 500, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "2km/", [sd.color.style], 500, 1000, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "5km/", [sd.color.style], 1000, 2000, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "10km/", [sd.color.style], 2000, 4000, { cellInfoHTML: ttfun, preprocess: preprocess });
+        app.addTiledGridLayer(url + "20km/", [sd.color.style], 4000, 9999999999, { cellInfoHTML: ttfun, preprocess: preprocess });
 
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
-            s.colorCol = this.value
+            sd.color.style.colorCol = this.value
             app.cg.redraw();
         });
 
