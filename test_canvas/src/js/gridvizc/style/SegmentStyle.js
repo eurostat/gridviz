@@ -4,6 +4,7 @@ import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 import { SegmentWidthLegend } from "../legend/SegmentWidthLegend"
+import { ColorCategoryLegend } from "../legend/ColorCategoryLegend"
 
 /**
  * A style where each cell is represented by a segment whose length, width, color and orientation can vary according to statistical values.
@@ -161,12 +162,14 @@ export class SegmentStyle extends Style {
 
 
     /**
-     * @param {{ width:object}} opts 
+     * @param {object} opts 
      * @returns {this}
      */
     addLegend(opts) {
         if (opts.width)
             this.legends.push(new SegmentWidthLegend(opts.width))
+        if (opts.colorCat)
+            this.legends.push(new ColorCategoryLegend(opts.colorCat))
         return this
     }
 

@@ -3,6 +3,7 @@
 import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
+import { ColorCategoryLegend } from "../legend/ColorCategoryLegend"
 
 /**
  * 
@@ -127,6 +128,18 @@ export class TextStyle extends Style {
     //getters and setters
 
     //TODO
+
+
+
+    /**
+     * @param {object} opts 
+     * @returns {this}
+     */
+     addLegend(opts) {
+        if (opts.colorCat)
+            this.legends.push(new ColorCategoryLegend(opts.colorCat))
+        return this
+    }
 
 }
 

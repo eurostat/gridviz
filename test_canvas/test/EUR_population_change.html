@@ -88,8 +88,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return (t < 0.5 ? -1 : 1) * max * Math.pow(Math.abs(2 * t - 1), 1 / 0.2)
                         }
-                    },
-                    size: { id: "jhjhgjghg", bottom: "20px", right: "20px", shape: "square", labelUnitText: "Population change", fillColor: "gray" }
+                    }
                 }),
                 zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
             },
@@ -126,7 +125,10 @@
                     },
                     shape: () => "square",
                     zfStroke: 80
-                }).addLegend({ colorCat: { id: "sscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
+                }).addLegend({
+                    colorCat: { id: "sscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+                    size: { id: "jhjhgjghg", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "gray" }
+                }),
                 zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
             },
             circle: {
@@ -140,7 +142,10 @@
                     },
                     shape: () => "circle",
                     zfStroke: 80
-                }).addLegend({ colorCat: { id: "cscatlegend", bottom: "20px", left: "20px", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
+                }).addLegend({
+                    colorCat: { id: "cscatlegend", bottom: "20px", left: "20px", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+                    size: { id: "jhjhgjghg", bottom: "20px", right: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }
+                }),
                 zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
             },
             donut: {
@@ -168,7 +173,8 @@
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                         return r * Math.pow(Math.abs(v) / max, 0.25)
                     }
-                }), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } }),
+                }).addLegend({ colorCat: { id: "guygudscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
+                //}), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
             segmentV: {
@@ -182,7 +188,8 @@
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                         return r * Math.pow(Math.abs(v) / max, 0.25)
                     }
-                }), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
+                }).addLegend({ colorCat: { id: "ggudscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
+                //}), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
             segmentO: {
@@ -196,7 +203,8 @@
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                         return r * Math.pow(Math.abs(v) / max, 0.25) / 1.4142
                     }
-                }), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
+                }).addLegend({ colorCat: { id: "guygudscjhvjhvatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
+                //}), //.addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             },
 
@@ -211,7 +219,7 @@
                     colorCol: "d11_18",
                     color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                     fontSize: ((v, r, s, z) => 1.2 * r),
-                }),
+                }).addLegend({ colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
                 zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
             }
         }
