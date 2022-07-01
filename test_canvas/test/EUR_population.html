@@ -22,16 +22,16 @@
             <span style="font-size: 11pt; font-weight: bold;">Style</span><br>
             <div id="style">
                 By color:
-                <input type="radio" name="style" id="scolor" value="scolor" checked>
-                <label for="scolor">Square</label>
-                <input type="radio" name="style" id="ccolor" value="ccolor">
-                <label for="ccolor">Circle</label>
+                <input type="radio" name="style" id="squareColor" value="squareColor" checked>
+                <label for="squareColor">Square</label>
+                <input type="radio" name="style" id="circleColor" value="circleColor">
+                <label for="circleColor">Circle</label>
                 <br>
                 By size:
-                <input type="radio" name="style" id="square" value="square">
-                <label for="square">Square</label>
-                <input type="radio" name="style" id="circle" value="circle">
-                <label for="circle">Circle</label>
+                <input type="radio" name="style" id="squareSize" value="squareSize">
+                <label for="squareSize">Square</label>
+                <input type="radio" name="style" id="circleSize" value="circleSize">
+                <label for="circleSize">Circle</label>
                 <input type="radio" name="style" id="donut" value="donut">
                 <label for="donut">Donut</label>
                 <br>
@@ -72,27 +72,30 @@
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
 
-        //function to quickly get the type of map, population or population change
-        const getMapType = () => document.querySelector('#year').value.length === 4 ? "pop" : "popchange"
+        //retrieve the selected year (the column to show)
+        const getSelectedYear = () => document.querySelector('#year').value
 
-        //retrieve column to show
-        const getColumn = () => document.querySelector('#year').value
+        //function to quickly get the type of map, population or population change
+        const getSelectedMapType = () => getSelectedYear().length === 4 ? "pop" : "popchange"
+
+        //function to quickly get the selected style
+        const getSelectedStyle = () => document.querySelector('input[name="style"]:checked').value
 
         //style data
         const sd = {
             pop: {
-                scolor: {
+                squareColor: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: getColumn(),
+                        colorCol: getSelectedYear(),
                         color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
                         shape: () => "square",
                         zfStroke: 80,
                     }).addLegend({ color: { id: "schgvvgolleggcend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
                     zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
                 },
-                ccolor: {
+                circleColor: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: getColumn(),
+                        colorCol: getSelectedYear(),
                         color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
                         shape: () => "circle",
                         zfStroke: 80,
@@ -100,20 +103,20 @@
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
 
-                square: {
+                squareSize: {
                     style: new gviz.ShapeColorSizeStyle({
                         color: () => "#c08c59cc",
-                        sizeCol: getColumn(),
+                        sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => 1 * r * Math.pow(v / s.max, 0.3),
                         shape: () => "square",
                         zfStroke: 80
                     }).addLegend({ size: { id: "sshklegegnd", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
-                circle: {
+                circleSize: {
                     style: new gviz.ShapeColorSizeStyle({
                         color: () => "#c08c59cc",
-                        sizeCol: getColumn(),
+                        sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => 1.5 * r * Math.pow(v / s.max, 0.3),
                         shape: () => "circle",
                         zfStroke: 80
@@ -122,7 +125,7 @@
                 },
                 donut: {
                     style: new gviz.ShapeColorSizeStyle({
-                        sizeCol: getColumn(),
+                        sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3),
                         color: () => "#c08c59",
                         shape: () => "donut",
@@ -135,7 +138,7 @@
                         orientation: () => 0,
                         color: (v, r, s) => "#c08c59",
                         length: (v, r) => r,
-                        widthCol: getColumn(),
+                        widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
                     }).addLegend({ width: { id: "segoHlehvgend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } }),
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
@@ -145,7 +148,7 @@
                         orientation: () => 90,
                         color: (v, r, s) => "#c08c59",
                         length: (v, r) => r,
-                        widthCol: getColumn(),
+                        widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
                     }).addLegend({ width: { id: "seqegVlegsend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
@@ -155,7 +158,7 @@
                         orientation: () => 45,
                         color: (v, r, s) => "#c08c59",
                         length: (v, r) => r * 1.4142,
-                        widthCol: getColumn(),
+                        widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25) / 1.4142,
                     }).addLegend({ width: { id: "segsfxOlegendw", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
@@ -163,7 +166,7 @@
 
                 joyplot: {
                     style: new gviz.JoyPlotStyle({
-                        heightCol: getColumn(),
+                        heightCol: getSelectedYear(),
                         height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
                         fillColor: "#c08c59bb"
                     }),
@@ -171,14 +174,14 @@
                 },
                 pillar: {
                     style: new gviz.PillarStyle({
-                        heightCol: getColumn(),
+                        heightCol: getSelectedYear(),
                         height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.7),
                     }),
                     zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
                 },
                 text: {
                     style: new gviz.TextStyle({
-                        textCol: getColumn(),
+                        textCol: getSelectedYear(),
                         text: (v, r, s, z) => {
                             const t = Math.pow(v / s.max, 0.25);
                             return gviz.charLegendFun(t);
@@ -190,9 +193,9 @@
                 }
             },
             popchange: {
-                scolor: {
+                squareColor: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: getColumn(),
+                        colorCol: getSelectedYear(),
                         color: (v, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             const t = Math.sign(v) * Math.pow(Math.abs(v) / max, 0.2) / 2 + 0.5
@@ -211,9 +214,9 @@
                     }),
                     zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
                 },
-                ccolor: {
+                circleColor: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: getColumn(),
+                        colorCol: getSelectedYear(),
                         color: (v, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             const t = Math.sign(v) * Math.pow(Math.abs(v) / max, 0.2) / 2 + 0.5
@@ -233,11 +236,11 @@
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
 
-                square: {
+                squareSize: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: getColumn(),
+                        colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
-                        sizeCol: getColumn(),
+                        sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return 1 * r * Math.pow(Math.abs(v) / max, 0.2)
@@ -250,11 +253,11 @@
                     }),
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
-                circle: {
+                circleSize: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: getColumn(),
+                        colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4bcc" : "#4288b5cc",
-                        sizeCol: getColumn(),
+                        sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return 1.5 * r * Math.pow(Math.abs(v) / max, 0.2)
@@ -269,9 +272,9 @@
                 },
                 donut: {
                     style: new gviz.ShapeColorSizeStyle({
-                        colorCol: getColumn(),
+                        colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
-                        sizeCol: getColumn(),
+                        sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return r * Math.pow(Math.abs(v) / max, 0.3)
@@ -284,10 +287,10 @@
                 segmentH: {
                     style: new gviz.SegmentStyle({
                         orientation: () => 0,
-                        colorCol: getColumn(),
+                        colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         length: (v, r) => r,
-                        widthCol: getColumn(),
+                        widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * Math.pow(Math.abs(v) / max, 0.25)
@@ -301,10 +304,10 @@
                 segmentV: {
                     style: new gviz.SegmentStyle({
                         orientation: () => 90,
-                        colorCol: getColumn(),
+                        colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         length: (v, r) => r,
-                        widthCol: getColumn(),
+                        widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * Math.pow(Math.abs(v) / max, 0.25)
@@ -318,10 +321,10 @@
                 segmentO: {
                     style: new gviz.SegmentStyle({
                         orientation: () => 45,
-                        colorCol: getColumn(),
+                        colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         length: (v, r) => r * 1.4142,
-                        widthCol: getColumn(),
+                        widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * Math.pow(Math.abs(v) / max, 0.25) / 1.4142
@@ -335,13 +338,13 @@
 
                 text: {
                     style: new gviz.TextStyle({
-                        textCol: getColumn(),
+                        textCol: getSelectedYear(),
                         text: (v, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             const t = Math.pow(Math.abs(v) / max, 0.25);
                             return gviz.charLegendFun(t);
                         },
-                        colorCol: getColumn(),
+                        colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         fontSize: ((v, r, s, z) => 1.2 * r),
                     }).addLegend({ colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
@@ -354,7 +357,7 @@
         //tooltip text
         const ttfun = c => {
             const v = document.querySelector('#year').value
-            if (getMapType() === "pop")
+            if (getSelectedMapType() === "pop")
                 return "<b>" + c[v] + "</b> inhabitant(s) in " + v
             else {
                 const sel = document.querySelector('#year').value
@@ -388,27 +391,43 @@
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
         app.addMultiScaleTiledGridLayer(url,
             [
-                { code: "1km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "2km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "5km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "10km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "20km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "50km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "100km/", styles: [sd.pop.scolor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "1km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "2km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "5km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "10km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "20km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "50km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "100km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
             ],
-            sd.pop.scolor.zooms
+            sd.pop.squareColor.zooms
         )
+
+
+        //change the style to the selected one
+        changeStyle = () => {
+
+            //get layer
+            const ml = app.layers[0];
+            ml.hideLegends()
+
+            //set new style
+            const s = sd[getSelectedMapType()][getSelectedStyle()]
+            for (const lay of ml.layers) lay.styles = [s.style]
+
+            //set new zoom breaks
+            ml.zooms = s.zooms
+        }
 
 
         //combo list - year selection
         document.querySelector('#year').addEventListener('change', function () {
 
             //population
-            sd.pop.scolor.style.colorCol = this.value
-            sd.pop.ccolor.style.colorCol = this.value
+            sd.pop.squareColor.style.colorCol = this.value
+            sd.pop.circleColor.style.colorCol = this.value
 
-            sd.pop.square.style.sizeCol = this.value
-            sd.pop.circle.style.sizeCol = this.value
+            sd.pop.squareSize.style.sizeCol = this.value
+            sd.pop.circleSize.style.sizeCol = this.value
             sd.pop.donut.style.sizeCol = this.value
 
             sd.pop.segmentH.style.widthCol = this.value
@@ -421,13 +440,13 @@
 
 
             //pop change
-            sd.popchange.scolor.style.colorCol = this.value
-            sd.popchange.ccolor.style.colorCol = this.value
+            sd.popchange.squareColor.style.colorCol = this.value
+            sd.popchange.circleColor.style.colorCol = this.value
 
-            sd.popchange.square.style.sizeCol = this.value
-            sd.popchange.square.style.colorCol = this.value
-            sd.popchange.circle.style.sizeCol = this.value
-            sd.popchange.circle.style.colorCol = this.value
+            sd.popchange.squareSize.style.sizeCol = this.value
+            sd.popchange.squareSize.style.colorCol = this.value
+            sd.popchange.circleSize.style.sizeCol = this.value
+            sd.popchange.circleSize.style.colorCol = this.value
             sd.popchange.donut.style.sizeCol = this.value
             sd.popchange.donut.style.colorCol = this.value
 
@@ -441,24 +460,13 @@
             sd.popchange.text.style.textCol = this.value
             sd.popchange.text.style.colorCol = this.value
 
+            changeStyle();
             app.cg.redraw();
         });
 
         //style selector
         document.querySelector('#style').addEventListener('change', function () {
-
-            //get style from checked value
-            const value = document.querySelector('input[name="style"]:checked').value
-
-            //set new style
-            const ml = app.layers[0];
-            ml.hideLegends()
-            for (const lay of ml.layers) lay.styles = [sd[getMapType()][value].style]
-
-            //set new zoom breaks
-            ml.zooms = sd[getMapType()][value].zooms
-
-            //redraw
+            changeStyle();
             app.cg.redraw();
         })
 
