@@ -30,7 +30,7 @@ export class SideStyle extends Style {
 
         /** A function returning the width of a cell side, in geo unit
          * @private @type {function(Side,number,Stat|undefined,number):number} */
-        this.width = opts.width || (() => 10);
+        this.width = opts.width || ((side, r, s, z) => r * side.value/500);
     }
 
 
@@ -83,7 +83,6 @@ export class SideStyle extends Style {
 
         //compute stats on sides
         const statSides = getStatistics(sides, true)
-        console.log(statSides)
 
         //draw sides
 
@@ -107,12 +106,12 @@ export class SideStyle extends Style {
             cg.ctx.strokeStyle = col
             cg.ctx.lineWidth = wG
 
-            /*/draw segment
+            //draw segment with correct orientation
             cg.ctx.beginPath();
-            cg.ctx.moveTo(cx - dx, cy - dy);
-            cg.ctx.lineTo(cx + dx, cy + dy);
+            cg.ctx.moveTo(s.x, s.y);
+            cg.ctx.lineTo(s.x + (s.or === "h" ? r : 0), s.y + (s.or === "v" ? r : 0));
             cg.ctx.stroke();
-*/
+
         }
     }
 
