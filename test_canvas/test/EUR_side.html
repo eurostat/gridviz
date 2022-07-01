@@ -17,9 +17,12 @@
 
         //define datasets, styles and layers
         const s = new gviz.SideStyle({
+            value: (c1, c2) => Math.abs(c2["2018"] - c2["2018"]),
+            color: (side, r, s, z) => "darkgray",
+            width: (side, r, s, z) => 0.6 * r * Math.pow(side.value / s.max, 1)
         })
 
-        const preprocess = c => {}
+        const preprocess = c => { }
         const cellInfoHTML = c => {
             if (isNaN(c.r)) return ""
             if (!c.r) return "No change"
