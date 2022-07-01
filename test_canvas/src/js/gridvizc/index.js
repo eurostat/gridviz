@@ -20,7 +20,7 @@ export { KernelSmoothingStyle } from "./style/KernelSmoothingStyle"
 export { RadarStyle } from "./style/RadarStyle"
 export { AgePyramidStyle } from "./style/AgePyramidStyle"
 export { PillarStyle } from "./style/PillarStyle"
-export { DiscontinuitiesStyle } from "./style/DiscontinuitiesStyle"
+export { SideStyle } from "./style/SideStyle"
 
 
 //export additional layers

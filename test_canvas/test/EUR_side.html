@@ -12,30 +12,14 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setBackgroundColor("black")
-            .setLabelLayer(gviz.getEuronymeLabelLayer("EUR", 50, { haloColor: (() => "#222222BB"), color: (() => "white") }))
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
+            .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //define datasets, styles and layers
-        const s = new gviz.SegmentStyle({
-            orientation: c => c.a,
-            colorCol: "2018",
-            color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
-            length: (v, r) => r,
-            width: (v, r, s, z) => 2 * z
+        const s = new gviz.SideStyle({
         })
 
-        const preprocess = c => {
-            if (!+c["2011"] && +c["2018"]) c.a = 80
-            else if (+c["2011"] && !+c["2018"]) c.a = -85
-            else if (!+c["2011"] && !+c["2018"]) c.a = NaN
-            else {
-                let v = (+c["2018"] - +c["2011"]) / +c["2011"];
-                v = Math.min(v, 1);
-                const sig = Math.sign(v)
-                v = Math.pow(Math.abs(v), 0.3)
-                c.a = sig * 80 * v
-            }
-        }
+        const preprocess = c => {}
         const cellInfoHTML = c => {
             if (isNaN(c.r)) return ""
             if (!c.r) return "No change"
