@@ -184,11 +184,7 @@
                         },
                         fillColor: "#fafafa",
                     }),
-                    //zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
-                    //zooms: [0, 300, 600, 1500, 3000, 6000, 15000, 30000]
-                    //zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
-                    //zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
                 pillar: {
                     style: new gviz.PillarStyle({
@@ -481,8 +477,8 @@
             sd.pop.segmentO.style.widthCol = this.value
 
             sd.pop.joyplot.style.heightCol = this.value
-            sd.pop.side.style.heightCol = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) },
-                sd.pop.pillar.style.heightCol = this.value
+            sd.pop.side.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
+            sd.pop.pillar.style.heightCol = this.value
             sd.pop.text.style.textCol = this.value
 
 
@@ -505,8 +501,8 @@
             sd.popchange.segmentO.style.colorCol = this.value
 
             sd.popchange.joyplot.style.heightCol = this.value
-            sd.popchange.side.style.heightCol = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) },
-                sd.popchange.pillar.style.heightCol = this.value
+            //sd.popchange.side.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
+            sd.popchange.pillar.style.heightCol = this.value
             sd.popchange.pillar.style.colorCol = this.value
             sd.popchange.text.style.textCol = this.value
             sd.popchange.text.style.colorCol = this.value
