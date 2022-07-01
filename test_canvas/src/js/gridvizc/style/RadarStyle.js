@@ -26,7 +26,7 @@ export class RadarStyle extends Style {
         /**
          * The function specifying how the radius evolves depending on the statistical value.
          * 
-         * @private @type {function(number,number,Stat|undefined,number):number} */
+         * @private @type {function(number,number,Stat|undefined,Stat|undefined,number):number} */
         this.radius = opts.radius;
 
         /**
@@ -116,9 +116,9 @@ export class RadarStyle extends Style {
     /** @param {function(Cell):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
-    /** @returns {function(number,number,Stat|undefined,number):number} */
+    /** @returns {function(number,number,Stat|undefined,Stat|undefined,number):number} */
     getRadius() { return this.radius; }
-    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined,Stat|undefined,number):number} val @returns {this} */
     setRadius(val) { this.radius = val; return this; }
 
     /** @returns {function(Cell,number,number):number} */

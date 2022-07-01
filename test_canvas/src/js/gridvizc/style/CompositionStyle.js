@@ -49,7 +49,7 @@ export class CompositionStyle extends Style {
 
         /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
          * 0 for normal pie charts, 0.5 to empty half of the radius. */
-        this.pieChartInternalRadiusFactor = opts.pieChartInternalRadiusFactor || 0.5
+        this.pieChartInternalRadiusFactor = opts.pieChartInternalRadiusFactor || 0
     }
 
 

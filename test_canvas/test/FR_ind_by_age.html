@@ -15,12 +15,12 @@
             <hr>
             <span style="font-size: 11pt; font-weight: bold;">Style</span><br>
             <div id="style">
-                <input type="radio" name="style" id="pyramid" value="pyramid" checked>
-                <label for="pyramid">Age pyramid</label>
-                <input type="radio" name="style" id="segment" value="segment">
+                <input type="radio" name="style" id="segment" value="segment" checked>
                 <label for="segment">Segment</label>
                 <input type="radio" name="style" id="flag" value="flag">
                 <label for="flag">Flag</label>
+                <input type="radio" name="style" id="pyramid" value="pyramid">
+                <label for="pyramid">Age pyramid</label>
                 <br>
                 <input type="radio" name="style" id="ring" value="ring">
                 <label for="ring">Ring</label>
@@ -85,16 +85,17 @@
             color: colorDict,
             type: () => "ring",
             sizeCol: "Ind",
-            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.1),
+            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3),
+            stripesOrientation: () => 90,
         })
         s.size_ = (v, r, s, zf) => r
 
         //radar style
         const sRadar = new gviz.RadarStyle({
             color: colorDict,
-            radius: (v, r, s, cs, zf) => 0.5 * r * Math.pow(v / s.max, 0.5),
+            radius: (v, r, s, cs, zf) => 0.5 * r * Math.pow(v / s.max, 0.3),
         })
-        sRadar.radius_ = (v, r, s, cs, zf) => 0.5 * r * Math.pow(v / cs.max, 0.5)
+        sRadar.radius_ = (v, r, s, cs, zf) => 0.5 * r * Math.pow(v / cs.max, 0.3)
 
         //age pyramid style
         const sPyramid = new gviz.AgePyramidStyle({
