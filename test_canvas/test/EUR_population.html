@@ -336,6 +336,27 @@
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
 
+                //TODO
+                /*joyplot: {
+                    style: new gviz.JoyPlotStyle({
+                        heightCol: getSelectedYear(),
+                        height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
+                        fillColor: "#c08c59bb"
+                    }),
+                    zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
+                },*/
+                pillar: {
+                    style: new gviz.PillarStyle({
+                        colorCol: getSelectedYear(),
+                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                        heightCol: getSelectedYear(),
+                        height: (v, r, s, z) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
+                            return 15 * r * Math.pow(Math.abs(v) / max, 0.7)
+                        },
+                    }),
+                    zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
+                },
                 text: {
                     style: new gviz.TextStyle({
                         textCol: getSelectedYear(),
@@ -458,6 +479,8 @@
             sd.popchange.segmentO.style.widthCol = this.value
             sd.popchange.segmentO.style.colorCol = this.value
 
+            sd.popchange.pillar.style.heightCol = this.value
+            sd.popchange.pillar.style.colorCol = this.value
             sd.popchange.text.style.textCol = this.value
             sd.popchange.text.style.colorCol = this.value
 

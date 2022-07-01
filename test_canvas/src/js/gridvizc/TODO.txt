@@ -1,7 +1,6 @@
-TODO check old doc
+TODO styles for diverging: joyplot and pilar
 TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
 TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
-TODO styles for diverging: joyplot and pilar - and then merge population and population change
 
 TODO legend - donut + pillar + characters
 TODO legend - add several elements on size legend
