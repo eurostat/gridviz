@@ -21,6 +21,7 @@
                 <label for="radar">Radar</label>
                 <input type="radio" name="style" id="flag" value="flag">
                 <label for="flag">Flag</label>
+                <br>
                 <input type="radio" name="style" id="segment" value="segment">
                 <label for="segment">Segment</label>
                 <input type="radio" name="style" id="ring" value="ring">
@@ -136,7 +137,9 @@
 
         const updateStyle = () => {
             const s = getStyle()
-            for (let lay of app.layers) lay.styles = [s]
+            const ml = app.layers[0];
+            ml.hideLegends()
+            for (const lay of ml.layers) lay.styles = [s]
         }
 
         //combo list
