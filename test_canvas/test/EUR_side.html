@@ -18,12 +18,12 @@
         //define datasets, styles and layers
         const s = new gviz.SideStyle({
             value: (c1, c2) => { return (c2 ? +c2["2018"] : 0) - (c1 ? +c1["2018"] : 0) },
-            color: (side, r, s, z) => { return side.value < 0 ? "red" : "blue" },
+            color: (side, r, s, z) => "#c08c59",
             width: (side, r, s, z) => {
                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                return r * (0.02 + 0.6 * Math.pow(Math.abs(side.value) / max, 0.7))
+                return r * (0.01 + 0.75 * Math.pow(Math.abs(side.value) / max, 0.5))
             },
-            fillColor: "#f5f5f5",
+            fillColor: "#fafafa",
         })
 
         const preprocess = c => { }
