@@ -15,7 +15,7 @@
             <hr>
             <span style="font-size: 11pt; font-weight: bold;">Style</span><br>
             <div id="style">
-                <input type="radio" name="style" id="pyramid" value="pyramid">
+                <input type="radio" name="style" id="pyramid" value="pyramid" checked>
                 <label for="pyramid">Age pyramid</label>
                 <input type="radio" name="style" id="radar" value="radar">
                 <label for="radar">Radar</label>
@@ -89,6 +89,21 @@
             height: r => r * 0.9
         })
 
+
+        const getStyle = () => {
+            const v = document.querySelector('input[name="style"]:checked').value
+            if (v === "radar") {
+                return sRadar
+            } else if (v === "pyramid") {
+                return sPyramid
+            } else {
+                s.setType(() => v)
+                return s
+            }
+        }
+
+
+
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
             " < 3 : " + Math.floor(["Ind_0_3"]) + "<br>" +
             " 4-5 : " + Math.floor(c["Ind_4_5"]) + "<br>" +
@@ -105,31 +120,40 @@
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
         app.addMultiScaleTiledGridLayer(url,
             [
-                { code: "200m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "400m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "1000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "2000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "5000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "10000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "20000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "50000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "200m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
+                { code: "400m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
+                { code: "1000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
+                { code: "2000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
+                { code: "5000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
+                { code: "10000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
+                { code: "20000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
+                { code: "50000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
             ],
             [0, 10, 20, 50, 100, 250, 500, 1000, 2500]
         )
 
+
+
+        const updateStyle = () => {
+            const s = getStyle()
+            for (let lay of app.layers) lay.styles = [s]
+        }
+
         //combo list
-        const select = document.querySelector('#style');
-        select.addEventListener('change', function () {
-            //set style
-            if (select.value === "radar") {
-                for (let lay of app.layers) lay.styles = [sRadar]
-            } else if (select.value === "pyramid") {
-                for (let lay of app.layers) lay.styles = [sPyramid]
-            } else {
-                s.setType(() => select.value)
-                for (let lay of app.layers) lay.styles = [s]
-            }
-            //redraw
+        document.querySelector('#style').addEventListener('change', function () {
+            updateStyle()
+            app.cg.redraw();
+        });
+
+        // show/hide labels
+        document.querySelector('#label').addEventListener('change', function () {
+            app.showLabels = this.checked
+            app.cg.redraw();
+        });
+
+        // show/hide boundaries
+        document.querySelector('#boundary').addEventListener('change', function () {
+            app.showBoundaries = this.checked
             app.cg.redraw();
         });
 
