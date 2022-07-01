@@ -362,8 +362,16 @@
                     zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
                 },
                 side: {
-                    style: undefined, //TODO
-                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                    style: new gviz.SideStyle({
+                        value: (c1, c2) => { return (c2 ? +c2[getSelectedYear()] : 0) - (c1 ? +c1[getSelectedYear()] : 0) },
+                        color: (side, r, s, z) => "#c08c59",
+                        width: (side, r, s, z) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            return r * (0.01 + 0.75 * Math.pow(Math.abs(side.value) / max, 0.5))
+                        },
+                        fillColor: "#fafafa",
+                    }),
+                    zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
                 pillar: {
                     style: new gviz.PillarStyle({
@@ -501,7 +509,7 @@
             sd.popchange.segmentO.style.colorCol = this.value
 
             sd.popchange.joyplot.style.heightCol = this.value
-            //sd.popchange.side.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
+            sd.popchange.side.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
             sd.popchange.pillar.style.heightCol = this.value
             sd.popchange.pillar.style.colorCol = this.value
             sd.popchange.text.style.textCol = this.value
