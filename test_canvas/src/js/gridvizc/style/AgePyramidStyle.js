@@ -1,7 +1,7 @@
 //@ts-check
 
 import { Style, Stat } from "../Style"
-import { getStat } from "./RadarStyle"
+import { getStat, getCellStat } from "./RadarStyle"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
@@ -24,7 +24,7 @@ export class AgePyramidStyle extends Style {
         /**
          * The function specifying how the length of a bar depending on the statistical value, in geo unit.
          * 
-         * @private @type {function(number,number,Stat|undefined,number):number} */
+         * @private @type {function(number,number,Stat|undefined,Stat|undefined,number):number} */
         this.length = opts.length;
 
         /**
@@ -55,7 +55,8 @@ export class AgePyramidStyle extends Style {
         const hPerCatG = hG / nbCat
 
         //get the stat
-        const stat = getStat(cells, this.color, true);
+        const keys = Object.keys(this.color)
+        const stat = getStat(cells, keys, true);
 
         //draw in geo coordinates
         cg.setCanvasTransform()
@@ -72,6 +73,9 @@ export class AgePyramidStyle extends Style {
             const xc = cell.x + offset.dx;
             const yc = cell.y + offset.dy;
 
+            //get cell stats
+            const cellStat = getCellStat(cell, keys, true);
+
             //draw decomposition symbols
             for (let [column, color] of Object.entries(this.color)) {
 
@@ -83,7 +87,7 @@ export class AgePyramidStyle extends Style {
 
                 //compute category length - in geo
                 /** @type {number} */
-                const wG = this.length(val, r, stat, zf)
+                const wG = this.length(val, r, stat, cellStat, zf)
 
                 //draw bar
                 cg.ctx.fillRect(
@@ -107,14 +111,14 @@ export class AgePyramidStyle extends Style {
     /** @param {function(Cell):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
-    /** @returns {function(number,number,Stat|undefined,number):number} */
+    /** @returns {function(number,number,Stat|undefined,Stat|undefined,number):number} */
     getLength() { return this.length; }
-    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined,Stat|undefined,number):number} val @returns {this} */
     setLength(val) { this.length = val; return this; }
 
     /** @returns {function(number):number} */
     getHeight() { return this.height; }
     /** @param {function(number):number} val @returns {this} */
-    sethHight(val) { this.height = val; return this; }
+    sethHeight(val) { this.height = val; return this; }
 
 }

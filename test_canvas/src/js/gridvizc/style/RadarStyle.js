@@ -57,7 +57,8 @@ export class RadarStyle extends Style {
         const f = Math.PI / 180
 
         //get the stat
-        const stat = getStat(cells, this.color, true);
+        const keys = Object.keys(this.color)
+        const stat = getStat(cells, keys, true);
 
         //draw in geo coordinates
         cg.setCanvasTransform()
@@ -75,6 +76,9 @@ export class RadarStyle extends Style {
             const xc = cell.x + r * 0.5 + offset.dx;
             const yc = cell.y + r * 0.5 + offset.dy;
 
+            //get cell stats
+            const cellStat = getCellStat(cell, keys, true);
+
             //draw decomposition symbols
             for (let [column, color] of Object.entries(this.color)) {
 
@@ -86,7 +90,7 @@ export class RadarStyle extends Style {
 
                 //compute category radius - in geo
                 /** @type {number} */
-                const rG = this.radius(val, r, stat, zf)
+                const rG = this.radius(val, r, stat, cellStat, zf)
 
                 //draw angular sector
                 cg.ctx.beginPath();
@@ -129,19 +133,18 @@ export class RadarStyle extends Style {
 /** 
 * Get the stat, all categories together.
 * @param {Array.<Cell>} cells 
-* @param {object} color 
+* @param {Array.<string>} catKeys
 * @param {boolean} ignoreZeros 
 * @returns {Stat | undefined}
 */
-export const getStat = function (cells, color, ignoreZeros) {
+export const getStat = function (cells, catKeys, ignoreZeros) {
     if (!cells || cells.length == 0) return undefined
     let min = Infinity
     let max = -Infinity
     //let sum = 0
     //let nb = 0
-    const keys = Object.keys(color)
     for (const cell of cells) {
-        for (let key of keys) {
+        for (let key of catKeys) {
             const v = +cell[key];
             if (ignoreZeros && !v) continue
             if (v < min) min = v
@@ -149,6 +152,30 @@ export const getStat = function (cells, color, ignoreZeros) {
             //sum += v
             //nb++
         }
+    }
+    return { min: min, max: max/*, mean: (sum / nb)*/ }
+}
+
+
+/** 
+* Get the stat, all categories together.
+* @param {Cell} cell
+* @param {Array.<string>} catKeys
+* @param {boolean} ignoreZeros 
+* @returns {Stat | undefined}
+*/
+export const getCellStat = function (cell, catKeys, ignoreZeros) {
+    let min = Infinity
+    let max = -Infinity
+    //let sum = 0
+    //let nb = 0
+    for (let key of catKeys) {
+        const v = +cell[key];
+        if (ignoreZeros && !v) continue
+        if (v < min) min = v
+        if (v > max) max = v
+        //sum += v
+        //nb++
     }
     return { min: min, max: max/*, mean: (sum / nb)*/ }
 }

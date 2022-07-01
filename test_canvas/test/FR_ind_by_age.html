@@ -42,6 +42,7 @@
         </span>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
     <script src="../build/gridvizc.js"></script>
     <script>
 
@@ -86,22 +87,22 @@
             sizeCol: "Ind",
             size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.1),
         })
-        s.size_ = (v, r, s, zf) => r //TODO
+        s.size_ = (v, r, s, zf) => r
 
         //radar style
         const sRadar = new gviz.RadarStyle({
             color: colorDict,
-            radius: (v, r, s, zf) => 0.7 * r * Math.pow(v / s.max, 0.2),
+            radius: (v, r, s, cs, zf) => 0.5 * r * Math.pow(v / s.max, 0.5),
         })
-        sRadar.radius_ = (v, r, s, zf) => 0.7 * r * Math.pow(v / s.max, 0.2) //TODO
+        sRadar.radius_ = (v, r, s, cs, zf) => 0.5 * r * Math.pow(v / cs.max, 0.5)
 
         //age pyramid style
         const sPyramid = new gviz.AgePyramidStyle({
             color: colorDict,
-            height: r => r * 0.9,
-            length: (v, r, s, zf) => r * Math.pow(v / s.max, 0.5),
+            height: r => r * 0.95,
+            length: (v, r, s, cs, zf) => r * Math.pow(v / s.max, 0.6),
         })
-        sPyramid.length_ = (v, r, s, zf) => r
+        sPyramid.length_ = (v, r, s, cs, zf) => r * Math.pow(v / cs.max, 0.6)
 
 
         const getStyle = () => {
@@ -120,10 +121,10 @@
         const ttfun = c => {
             let out = "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>"
             if (agg) {
-                out = out + "  < 24: " + (c["Ind_0_24"]) + "<br>" +
-                    " 25-54: " + (c["Ind_25_54"]) + "<br>" +
-                    "  > 55: " + (c["Ind_55p"]) + "<br>" +
-                    " unk.: " + (c["Ind_inc"]) + "<br>";
+                out = out + "  < 24: " + d3.format(".1f")(c["Ind_0_24"]) + "<br>" +
+                    " 25-54: " + d3.format(".1f")(c["Ind_25_54"]) + "<br>" +
+                    "  > 55: " + d3.format(".1f")(c["Ind_55p"]) + "<br>" +
+                    " unk.: " + d3.format(".1f")(c["Ind_inc"]) + "<br>";
             } else {
                 out = out + " < 3 : " + (c["Ind_0_3"]) + "<br>" +
                     " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
