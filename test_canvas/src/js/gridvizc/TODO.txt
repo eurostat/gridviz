@@ -1,4 +1,5 @@
-TODO test style with border/discontinuities
+TODO side style: test color change based on change direction
+TODO side style: check single cells - of all sides are indeed shown. Compound style with fill color ?
 
 TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
 TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
