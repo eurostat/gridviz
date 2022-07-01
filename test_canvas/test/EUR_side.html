@@ -17,9 +17,9 @@
 
         //define datasets, styles and layers
         const s = new gviz.SideStyle({
-            value: (c1, c2) => Math.abs(c2["2018"] - c2["2018"]),
+            value: (c1, c2) => Math.abs(c2["2018"] - c1["2018"]),
             color: (side, r, s, z) => "darkgray",
-            width: (side, r, s, z) => 0.6 * r * Math.pow(side.value / s.max, 1)
+            width: (side, r, s, z) => 0.6 * r * Math.pow(side.value / s.max, 0.5)
         })
 
         const preprocess = c => { }
