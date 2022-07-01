@@ -17,17 +17,20 @@
             <div id="style">
                 <input type="radio" name="style" id="pyramid" value="pyramid" checked>
                 <label for="pyramid">Age pyramid</label>
-                <input type="radio" name="style" id="radar" value="radar">
-                <label for="radar">Radar</label>
+                <input type="radio" name="style" id="segment" value="segment">
+                <label for="segment">Segment</label>
                 <input type="radio" name="style" id="flag" value="flag">
                 <label for="flag">Flag</label>
                 <br>
-                <input type="radio" name="style" id="segment" value="segment">
-                <label for="segment">Segment</label>
                 <input type="radio" name="style" id="ring" value="ring">
                 <label for="ring">Ring</label>
+                <input type="radio" name="style" id="radar" value="radar">
+                <label for="radar">Radar</label>
                 <input type="radio" name="style" id="piechart" value="piechart">
                 <label for="piechart">Pie chart</label>
+                <br>
+                <input type="checkbox" id="adsize" checked>
+                <label for="adsize">Size to total population</label>
             </div>
             <hr>
             <input type="checkbox" id="label" checked>
@@ -42,6 +45,8 @@
     <script src="../build/gridvizc.js"></script>
     <script>
 
+        const agg = true
+
 
         //make application
         const app = new gviz.App()
@@ -52,7 +57,11 @@
         app.cg.setViewFromURL()
 
         const col = gviz.interpolateSpectral;
-        const colorDict = {
+        const colorDict = agg ? {
+            "Ind_0_24": col(0),
+            "Ind_25_54": col(0.5),
+            "Ind_55p": col(1),
+        } : {
             "Ind_0_3": col(0),
             "Ind_4_5": col(4 / 80),
             "Ind_6_10": col(6 / 80),
@@ -63,8 +72,9 @@
             "Ind_55_64": col(55 / 80),
             "Ind_65_79": col(65 / 80),
             "Ind_80p": col(1),
-            //"Ind_inc": "gray"
+            //"Ind_inc": "black"
         }
+
 
         //style data
 
@@ -73,26 +83,29 @@
             color: colorDict,
             type: () => "ring",
             sizeCol: "Ind",
-            size: (v, r, s, zf) => 1 * r * Math.pow(v / s.max, 0.2),
-            zfStroke: 5
+            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
         })
+        s.size_ = (v, r, s, zf) => r //TODO
 
         //radar style
         const sRadar = new gviz.RadarStyle({
             color: colorDict,
             radius: (v, r, s, zf) => 0.7 * r * Math.pow(v / s.max, 0.2),
         })
+        sRadar.radius_ = (v, r, s, zf) => 0.7 * r * Math.pow(v / s.max, 0.2) //TODO
 
         //age pyramid style
         const sPyramid = new gviz.AgePyramidStyle({
             color: colorDict,
+            height: r => r * 0.9,
             length: (v, r, s, zf) => r * Math.pow(v / s.max, 0.5),
-            height: r => r * 0.9
         })
+        sPyramid.length_ = (v, r, s, zf) => r
 
 
         const getStyle = () => {
             const v = document.querySelector('input[name="style"]:checked').value
+            //const as = document.querySelector('#label').checked
             if (v === "radar") {
                 return sRadar
             } else if (v === "pyramid") {
@@ -103,32 +116,56 @@
             }
         }
 
+        const ttfun = c => {
+            let out = "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>"
+            if (agg) {
+                out = out + "  < 24: " + (c["Ind_0_24"]) + "<br>" +
+                    " 25-54: " + (c["Ind_25_54"]) + "<br>" +
+                    "  > 55: " + (c["Ind_55p"]) + "<br>" +
+                    " unk.: " + (c["Ind_inc"]) + "<br>";
+            } else {
+                out = out + " < 3 : " + (c["Ind_0_3"]) + "<br>" +
+                    " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
+                    " 6-10: " + (c["Ind_6_10"]) + "<br>" +
+                    "11-17: " + (c["Ind_11_17"]) + "<br>" +
+                    "18-24: " + (c["Ind_18_24"]) + "<br>" +
+                    "25-39: " + (c["Ind_25_39"]) + "<br>" +
+                    "40-54: " + (c["Ind_40_54"]) + "<br>" +
+                    "55-64: " + (c["Ind_55_64"]) + "<br>" +
+                    "65-79: " + (c["Ind_65_79"]) + "<br>" +
+                    " > 80: " + (c["Ind_80p"]) + "<br>" +
+                    " unk.: " + (c["Ind_inc"]) + "<br>";
+            }
+            return out
+        }
 
+        preprocess = c => {
+            if (agg) {
+                c["Ind_0_24"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"]
+                c["Ind_25_54"] = +c["Ind_25_39"] + +c["Ind_40_54"]
+                c["Ind_55p"] = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
+            }
 
-        const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
-            " < 3 : " + Math.floor(["Ind_0_3"]) + "<br>" +
-            " 4-5 : " + Math.floor(c["Ind_4_5"]) + "<br>" +
-            " 6-10: " + Math.floor(c["Ind_6_10"]) + "<br>" +
-            "11-17: " + Math.floor(c["Ind_11_17"]) + "<br>" +
-            "18-24: " + Math.floor(c["Ind_18_24"]) + "<br>" +
-            "25-39: " + Math.floor(c["Ind_25_39"]) + "<br>" +
-            "40-54: " + Math.floor(c["Ind_40_54"]) + "<br>" +
-            "55-64: " + Math.floor(c["Ind_55_64"]) + "<br>" +
-            "65-79: " + Math.floor(c["Ind_65_79"]) + "<br>" +
-            " > 80: " + Math.floor(c["Ind_80p"]) + "<br>"
-        //" unk.: " + Math.floor(c["Ind_inc"]) + "<br>";
+            //SE
+            /*c["0_15"] = +c["0_5"] + +c["5_10"] + +c["10_15"]
+            c["15_25"] = +c["15_20"] + +c["20_25"]
+            c["25_50"] = +c["25_30"] + +c["30_35"] + +c["35_40"] + +c["40_45"] + +c["45_50"]
+            c["50_65"] = +c["50_55"] + +c["55_60"] + +c["60_65"]
+            c["65_80"] = +c["65_70"] + +c["70_75"] + +c["75_80"]
+            c["80_"] = +c["80_85"] + +c["85_90"] + +c["90_95"] + +c["95_100"] + +c["100_"]*/
+        }
 
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
         app.addMultiScaleTiledGridLayer(url,
             [
-                { code: "200m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
-                { code: "400m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
-                { code: "1000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
-                { code: "2000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
-                { code: "5000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
-                { code: "10000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
-                { code: "20000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
-                { code: "50000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun } },
+                { code: "200m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "400m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "1000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "2000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "5000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "10000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "20000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "50000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
             ],
             [0, 10, 20, 50, 100, 250, 500, 1000, 2500]
         )
@@ -136,10 +173,10 @@
 
 
         const updateStyle = () => {
-            const s = getStyle()
+            const ssel = getStyle()
             const ml = app.layers[0];
             ml.hideLegends()
-            for (const lay of ml.layers) lay.styles = [s]
+            for (const lay of ml.layers) lay.styles = [ssel]
         }
 
         //combo list
@@ -147,6 +184,19 @@
             updateStyle()
             app.cg.redraw();
         });
+
+        // size adaptation
+        document.querySelector('#adsize').addEventListener('change', function () {
+            const swap = (s, col) => { const aux = s[col]; s[col] = s[col + "_"]; s[col + "_"] = aux }
+            swap(s, "size")
+            swap(sRadar, "radius")
+            swap(sPyramid, "length")
+
+            updateStyle()
+            app.cg.redraw();
+        });
+
+
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
