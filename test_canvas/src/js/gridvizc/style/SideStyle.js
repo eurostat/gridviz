@@ -22,7 +22,7 @@ export class SideStyle extends Style {
          * For horizontal sides, c1 is below and c2 above.
          * For vertical sides, c1 is left and c2 right.
         * @private @type {function(Cell,Cell):number} */
-        this.value = opts.value || ((c1, c2) => 100 * Math.random());
+        this.value = opts.value || ((c1, c2) => 1);
 
         /** A function returning the color of a cell side.
         * @private @type {function(Side,number,Stat|undefined):string} */
@@ -30,7 +30,7 @@ export class SideStyle extends Style {
 
         /** A function returning the width of a cell side, in geo unit
          * @private @type {function(Side,number,Stat|undefined,number):number} */
-        this.width = opts.width || ((side, r, s, z) => r * side.value/500);
+        this.width = opts.width || ((side, r, s, z) => r * side.value/5);
     }
 
 
@@ -55,6 +55,8 @@ export class SideStyle extends Style {
         let c1 = cells[0]
         for (let i = 1; i < cells.length; i++) {
             let c2 = cells[i]
+
+            //TODO side with only one of the two cells should also be drawn
 
             //cells should be in the same column
             //cells should be touching along horizontal side
