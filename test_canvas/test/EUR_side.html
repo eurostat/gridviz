@@ -20,7 +20,7 @@
             value: (c1, c2) => { return Math.abs((c2 ? +c2["2018"] : 0) - (c1 ? +c1["2018"] : 0)) },
             color: (side, r, s, z) => "black",
             width: (side, r, s, z) => r*(0.1 + 0.6 * Math.pow(side.value / s.max, 0.5)),
-            fillColor: "cyan",
+            fillColor: "#eee",
         })
 
         const preprocess = c => { }

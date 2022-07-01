@@ -61,18 +61,15 @@ export class SideStyle extends Style {
         for (let i = 1; i < cells.length; i++) {
             let c2 = cells[i]
 
-            //cells should be in the same column
-            if (c1.x != c2.x) { c1 = c2; continue }
-
-            if (c1.y + r == c2.y)
-                //cells touch along horizontal side
-                //make side
+            if (c1.y + r == c2.y && c1.x == c2.x)
+                //cells in same column and touch along horizontal side
+                //make shared side
                 sides.push({ x: c1.x, y: c2.y, or: "h", value: this.value(c1, c2) })
             else {
                 //cells do not touch along horizontal side
-                //make two sides
+                //make two sides: top one for c1, bottom for c2
                 sides.push({ x: c1.x, y: c1.y + r, or: "h", value: this.value(c1, undefined) })
-                sides.push({ x: c1.x, y: c2.y, or: "h", value: this.value(undefined, c2) })
+                sides.push({ x: c2.x, y: c2.y, or: "h", value: this.value(undefined, c2) })
             }
 
             c1 = c2
@@ -85,16 +82,13 @@ export class SideStyle extends Style {
         for (let i = 1; i < cells.length; i++) {
             let c2 = cells[i]
 
-            //cells should be in the same row
-            if (c1.y != c2.y) { c1 = c2; continue }
-
-            if (c1.x + r == c2.x)
-                //cells touch along vertical side
-                //make side
+            if (c1.x + r == c2.x && c1.y == c2.y)
+                //cells in same row and touch along vertical side
+                //make shared side
                 sides.push({ x: c1.x + r, y: c1.y, or: "v", value: this.value(c1, c2) })
             else {
                 //cells do not touch along vertical side
-                //make two sides
+                //make two sides: right one for c1, left for c2
                 sides.push({ x: c1.x + r, y: c1.y, or: "v", value: this.value(c1, undefined) })
                 sides.push({ x: c2.x, y: c2.y, or: "v", value: this.value(undefined, c2) })
             }
