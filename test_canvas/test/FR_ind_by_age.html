@@ -61,6 +61,7 @@
             "Ind_0_24": "#66a61e",
             "Ind_25_54": "#e6ab02",
             "Ind_55p": "#a6761d",
+            //"Ind_inc": "black"
         } : {
             "Ind_0_3": col(0),
             "Ind_4_5": col(4 / 80),
@@ -83,7 +84,7 @@
             color: colorDict,
             type: () => "ring",
             sizeCol: "Ind",
-            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
+            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.1),
         })
         s.size_ = (v, r, s, zf) => r //TODO
 
