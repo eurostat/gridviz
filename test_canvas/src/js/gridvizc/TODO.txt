@@ -1,4 +1,3 @@
-TODO side style: fix: missing sides
 TODO side style: test color change based on change direction ?
 
 TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
