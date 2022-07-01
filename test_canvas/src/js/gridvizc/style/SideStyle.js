@@ -90,7 +90,7 @@ export class SideStyle extends Style {
             else {
                 //cells do not touch along vertical side
                 //make two sides
-                sides.push({ x: c1.x+r, y: c1.y, or: "v", value: this.value(c1, undefined) })
+                sides.push({ x: c1.x + r, y: c1.y, or: "v", value: this.value(c1, undefined) })
                 sides.push({ x: c2.x, y: c2.y, or: "v", value: this.value(undefined, c2) })
             }
 
