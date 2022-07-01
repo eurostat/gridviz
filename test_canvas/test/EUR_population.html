@@ -389,17 +389,18 @@
 
 
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
+        const s = sd[getSelectedMapType()][getSelectedStyle()]
         app.addMultiScaleTiledGridLayer(url,
             [
-                { code: "1km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "2km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "5km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "10km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "20km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "50km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "100km/", styles: [sd.pop.squareColor.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "1km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "2km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "5km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "10km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "20km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "50km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "100km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
             ],
-            sd.pop.squareColor.zooms
+            s.zooms
         )
 
 
