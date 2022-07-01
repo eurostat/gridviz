@@ -12,14 +12,15 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(40).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //define datasets, styles and layers
         const s = new gviz.SideStyle({
             value: (c1, c2) => { return Math.abs((c2 ? +c2["2018"] : 0) - (c1 ? +c1["2018"] : 0)) },
             color: (side, r, s, z) => "black",
-            width: (side, r, s, z) => 0.8 * r * Math.pow(side.value / s.max, 0.5)
+            width: (side, r, s, z) => r*(0.1 + 0.6 * Math.pow(side.value / s.max, 0.5)),
+            fillColor: "cyan",
         })
 
         const preprocess = c => { }
