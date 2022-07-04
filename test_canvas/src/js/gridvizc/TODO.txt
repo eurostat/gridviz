@@ -1,13 +1,22 @@
-TODO improve halftone: add necessary parameters
+TODO test log scale instead of pow
 
 TODO check other datasets: list + assets folder
+croatia tourism - PT ?
+HR: https://geostat.dzs.hr/?lang=en   1km. toutirsm, education, businesses, etc. Request sent.
 AT: https://www.statistik.at/atlas/?mapid=them_bevoelkerung_bevoelkerungsstand&layerid=layer1&sublayerid=sublayer0&languageid=1
+https://www.statistik.at/en/services/tools/services/regional-information/regional-statistics
+250m population by year... not free. free: 10km sample. Citizenship/origin
+IT: http://gisportal.istat.it/GriAnalyst
+griglia di popolazione 2011 https://www.istat.it/it/archivio/155162
+FI: https://kartta.paikkatietoikkuna.fi/?lang=en
+1km. pop by gender and age, yearly since 2005.
+http://www.stat.fi/org/avoindata/paikkatietoaineistot/vaestoruutuaineisto_1km_en.html
+as WFS: https://geo.stat.fi/geoserver/vaestoruutu/wfs
+SE: https://www.scb.se/en/services/open-data-api/open-geodata/grid-statistics/
+IE: https://www.cso.ie/en/census/census2016reports/workplacezonesand1kmpopulationgrids/
 EE: https://estat.stat.ee/StatistikaKaart/VKR
 SI: https://gis.stat.si/#lang=en
-IT: http://gisportal.istat.it/GriAnalyst
-FI: https://kartta.paikkatietoikkuna.fi/?lang=en
-FI: http://www.stat.fi/org/avoindata/paikkatietoaineistot/vaestoruutuaineisto_1km_en.html
-PL: https://geo.stat.gov.pl/imap/?locale=en
+UK-NI: irregular grid - with 100m. population https://www.nisra.gov.uk/support/geography/grid-square-products
 
 TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
 TODO tw size+rate example: Gender balance SE ? population, youth VS old FR ? Income FR ?
@@ -22,7 +31,6 @@ TODO tw composition example: population by age ?
 TODO map type: value by alpha ?
 TODO map type: bi/tri-variate colors ?
 
-TODO test log scale instead of pow
 TODO check IE, firefox
 TODO fix compilation problems + add more typescript types
 TODO map style: cell based on its neighboors. Contour like ?
