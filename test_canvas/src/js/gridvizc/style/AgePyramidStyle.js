@@ -21,19 +21,13 @@ export class AgePyramidStyle extends Style {
         this.color = opts.color;
 
 
-        /** The column where to get the size factor [0,1].
+        /** The column where to get the size values.
          * @private @type {string} */
-        this.sizeFactorCol = opts.sizeFactorCol
+        this.sizeCol = opts.sizeCol
 
-        /** A function returning the size factor [0,1] of a cell.
+        /** A function returning the size of a cell.
          * @private @type {function(number,number,Stat|undefined,number):number} */
-        this.sizeFactor = opts.sizeFactor || ((v, r, s, zf) => 1);
-
-        /**
-        * The function specifying the margin, in geo unit.
-        * 
-        * @private @type {function(number:number):number} */
-        this.margin = opts.margin || ((r, zf) => 1 * zf);
+        this.size = opts.size || ((v) => Math.sqrt(v));
 
     }
 
@@ -53,15 +47,13 @@ export class AgePyramidStyle extends Style {
         const nbCat = Object.entries(this.color).length
 
         //dimension, in geo
-        const mG = this.margin(r, zf)
-        const sideMaxG = r - 2 * mG
-        const hPerCatG = sideMaxG / nbCat
+        const hPerCatG = r / nbCat
 
         //get size stats
         let stat
-        if (this.sizeFactorCol) {
+        if (this.sizeCol) {
             //compute statistics
-            stat = getStatistics(cells, c => c[this.sizeFactorCol], true)
+            stat = getStatistics(cells, c => c[this.sizeCol], true)
         }
 
         //draw in geo coordinates
@@ -73,18 +65,18 @@ export class AgePyramidStyle extends Style {
             const offset = this.offset(cell, r, zf)
 
             //
-            let hCumul = mG
+            let hCumul = 0
 
             //compute cell position
             const xc = cell.x + offset.dx;
             const yc = cell.y + offset.dy;
 
-            //size factor
+            //size
             /** @type {function(number,number,Stat|undefined,number):number} */
-            let sF_ = this.sizeFactor || (() => 1);
+            let s_ = this.size || (() => r);
             //size - in geo
             /** @type {number} */
-            const sF = sF_(cell[this.sizeFactorCol], r, stat, zf)
+            const sG = s_(cell[this.sizeCol], r, stat, zf)
 
             //get cell category max value
             let maxVal = -Infinity
@@ -104,7 +96,7 @@ export class AgePyramidStyle extends Style {
 
                 //compute category length - in geo
                 /** @type {number} */
-                const wG = sF * sideMaxG * val / maxVal
+                const wG = sG * val / maxVal
 
                 //draw bar
                 cg.ctx.fillRect(
@@ -129,18 +121,13 @@ export class AgePyramidStyle extends Style {
     setColor(val) { this.color = val; return this; }
 
     /** @returns {string} */
-    getColSize() { return this.sizeFactorCol; }
+    getColSize() { return this.sizeCol; }
     /** @param {string} val @returns {this} */
-    setColSize(val) { this.sizeFactorCol = val; return this; }
+    setColSize(val) { this.sizeCol = val; return this; }
 
     /** @returns {function(number,number,Stat|undefined,number):number} */
-    getSizeFactor() { return this.sizeFactor; }
+    getSize() { return this.size; }
     /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
-    setSizeFactor(val) { this.sizeFactor = val; return this; }
-
-    /** @returns {function(number,number):number} */
-    getMargin() { return this.margin; }
-    /** @param {function(number,number):number} val @returns {this} */
-    sethMargin(val) { this.margin = val; return this; }
+    setSize(val) { this.size = val; return this; }
 
 }
