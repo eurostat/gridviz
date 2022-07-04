@@ -101,7 +101,7 @@
         const sPyramid = new gviz.AgePyramidStyle({
             color: colorDict,
             //margin: (r,zf) => r*0.1,
-            length: (v, r, s, cs, zf) => r * Math.pow(v / s.max, 0.6),
+            //length: (v, r, s, cs, zf) => r * Math.pow(v / s.max, 0.6),
         })
         sPyramid.length_ = (v, r, s, cs, zf) => r * Math.pow(v / cs.max, 0.6)
 

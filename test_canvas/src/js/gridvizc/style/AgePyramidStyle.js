@@ -1,7 +1,6 @@
 //@ts-check
 
-import { Style, Stat } from "../Style"
-import { getStat, getCellStat } from "./RadarStyle"
+import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
@@ -21,17 +20,20 @@ export class AgePyramidStyle extends Style {
          * @private @type {object} */
         this.color = opts.color;
 
-        /**
-         * The function specifying how the length of a bar depending on the statistical value, in geo unit.
-         * 
-         * @private @type {function(number,number,Stat|undefined,Stat|undefined,number):number} */
-        this.length = opts.length;
+
+        /** The column where to get the size values.
+         * @private @type {string} */
+        this.sizeCol = opts.sizeCol
+
+        /** A function returning the size of a cell.
+         * @private @type {function(number,number,Stat|undefined,number):number} */
+        this.size = opts.size || ((v) => Math.sqrt(v));
 
         /**
         * The function specifying the margin, in geo unit.
         * 
         * @private @type {function(number:number):number} */
-        this.margin = opts.margin || ((r,zf) => 1*zf);
+        this.margin = opts.margin || ((r, zf) => 1 * zf);
 
     }
 
@@ -50,14 +52,22 @@ export class AgePyramidStyle extends Style {
         //nb categories
         const nbCat = Object.entries(this.color).length
 
-        //height, in geo
+        //dimension, in geo
         const mG = this.margin(r, zf)
-        const hG = r - 2 * mG
-        const hPerCatG = hG / nbCat
+        const sideMaxG = r - 2 * mG
+        const hPerCatG = sideMaxG / nbCat
 
-        //get the stat
-        const keys = Object.keys(this.color)
-        const stat = getStat(cells, keys, true);
+        //get category keys
+        const catKeys = Object.keys(this.color)
+
+        //get size stats
+        let stat
+        if (this.sizeCol) {
+            //if size is used, sort cells by size so that the biggest are drawn first
+            cells.sort((c1, c2) => c2[this.sizeCol] - c1[this.sizeCol]);
+            //and compute statistics
+            stat = getStatistics(cells, c => c[this.sizeCol], true)
+        }
 
         //draw in geo coordinates
         cg.setCanvasTransform()
@@ -74,8 +84,12 @@ export class AgePyramidStyle extends Style {
             const xc = cell.x + offset.dx;
             const yc = cell.y + offset.dy;
 
-            //get cell stats
-            const cellStat = getCellStat(cell, keys, true);
+            //get cell category max value
+            let maxVal = -Infinity
+            for (let key of catKeys) {
+                const v = +cell[key];
+                if (v > maxVal) maxVal = v
+            }
 
             //draw decomposition symbols
             for (let [column, color] of Object.entries(this.color)) {
@@ -88,7 +102,7 @@ export class AgePyramidStyle extends Style {
 
                 //compute category length - in geo
                 /** @type {number} */
-                const wG = this.length(val, r, stat, cellStat, zf)
+                const wG = sideMaxG * val / maxVal
 
                 //draw bar
                 cg.ctx.fillRect(
@@ -112,10 +126,15 @@ export class AgePyramidStyle extends Style {
     /** @param {function(Cell):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
-    /** @returns {function(number,number,Stat|undefined,Stat|undefined,number):number} */
-    getLength() { return this.length; }
-    /** @param {function(number,number,Stat|undefined,Stat|undefined,number):number} val @returns {this} */
-    setLength(val) { this.length = val; return this; }
+    /** @returns {string} */
+    getColSize() { return this.sizeCol; }
+    /** @param {string} val @returns {this} */
+    setColSize(val) { this.sizeCol = val; return this; }
+
+    /** @returns {function(number,number,Stat|undefined,number):number} */
+    getSize() { return this.size; }
+    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
+    setSize(val) { this.size = val; return this; }
 
     /** @returns {function(number,number):number} */
     getMargin() { return this.margin; }
