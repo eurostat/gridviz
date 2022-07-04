@@ -73,19 +73,19 @@
             scolor: {
                 style: new gviz.ShapeColorSizeStyle({
                     colorCol: "Ind",
-                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.3)),
+                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                     shape: () => "square",
                     zfStroke: 20
-                }).addLegend({ color: { id: "scollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
+                }).addLegend({ color: { id: "scollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } }),
                 zooms: [0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]
             },
             ccolor: {
                 style: new gviz.ShapeColorSizeStyle({
                     colorCol: "Ind",
-                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.3)),
+                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                     shape: () => "circle",
                     zfStroke: 20
-                }).addLegend({ color: { id: "ccollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
+                }).addLegend({ color: { id: "ccollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } }),
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
 
