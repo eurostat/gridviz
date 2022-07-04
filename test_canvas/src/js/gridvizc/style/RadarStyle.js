@@ -49,10 +49,6 @@ export class RadarStyle extends Style {
         //nb categories
         const nbCat = Object.entries(this.color).length
 
-        //angle for each category: the same for all.
-        const angle = 2 * Math.PI / nbCat
-        const f = Math.PI / 180
-
         //get size stats
         let stat
         if (this.sizeCol) {
@@ -63,14 +59,14 @@ export class RadarStyle extends Style {
         //draw in geo coordinates
         cg.setCanvasTransform()
 
+
+        //angle for each category: the same for all.
+        const angle = 2 * Math.PI / nbCat
+
         for (let cell of cells) {
 
             //get offset
             const offset = this.offset(cell, r, zf)
-
-            //get offset angle
-            const offsetAngle = this.offsetAngle ? this.offsetAngle(cell, r, zf) : 0
-            let angleCumul = Math.PI + offsetAngle * f
 
             //compute cell center position
             const xc = cell.x + r * 0.5 + offset.dx;
@@ -91,6 +87,9 @@ export class RadarStyle extends Style {
             }
 
             //draw decomposition symbols
+            //get offset angle
+            const offsetAngle = this.offsetAngle ? this.offsetAngle(cell, r, zf) : 0
+            let cumul = Math.PI + offsetAngle * Math.PI / 180
             for (let [column, color] of Object.entries(this.color)) {
 
                 //set category color
@@ -107,12 +106,12 @@ export class RadarStyle extends Style {
                 //draw angular sector
                 cg.ctx.beginPath();
                 cg.ctx.moveTo(xc, yc);
-                cg.ctx.arc(xc, yc, rG, angleCumul - angle, angleCumul);
+                cg.ctx.arc(xc, yc, rG, cumul - angle, cumul);
                 cg.ctx.lineTo(xc, yc);
                 cg.ctx.fill();
 
                 //next angular sector
-                angleCumul -= angle
+                cumul -= angle
             }
 
         }

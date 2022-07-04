@@ -4,7 +4,7 @@ import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
-/** @typedef {"flag"|"piechart"|"ring"|"segment"} CompositionType */
+/** @typedef {"flag"|"piechart"|"ring"|"segment"|"radar"|"agepyramid"} CompositionType */
 
 /**
  * A style showing the composition of a total in different categories, with different color hues.
@@ -61,6 +61,7 @@ export class CompositionStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
+
         //zoom factor
         const zf = cg.getZf()
 
@@ -72,19 +73,20 @@ export class CompositionStyle extends Style {
             stat = getStatistics(cells, c => c[this.sizeCol], true)
         }
 
+        //nb categories - used for radar and agepyramid
+        const nbCat = Object.entries(this.color).length
+
         //draw in geo coordinates
         cg.setCanvasTransform()
 
-        for (let cell of cells) {
 
-            //compute total
-            let total = 0;
-            for (let column of Object.keys(this.color)) {
-                const v = +cell[column];
-                if (!v) continue
-                total += v
-            }
-            if (!total || isNaN(total)) continue
+
+
+
+
+
+
+        for (let cell of cells) {
 
             //size
             /** @type {function(number,number,Stat|undefined,number):number} */
@@ -93,9 +95,6 @@ export class CompositionStyle extends Style {
             /** @type {number} */
             const sG = s_(cell[this.sizeCol], r, stat, zf)
 
-            //get symbol type
-            const type_ = this.type ? this.type(cell) : "flag"
-
             //get offset
             const offset = this.offset(cell, r, zf)
 
@@ -103,85 +102,171 @@ export class CompositionStyle extends Style {
             const xc = cell.x + r * 0.5 + offset.dx;
             const yc = cell.y + r * 0.5 + offset.dy;
 
-            //draw decomposition symbol
-            let cumul = 0;
-            const d = r * (1 - sG / r) * 0.5
-            for (let [column, color] of Object.entries(this.color)) {
+            //get symbol type
+            const type_ = this.type ? this.type(cell) : "flag"
 
-                //get share
-                const share = cell[column] / total;
-                if (!share || isNaN(share)) continue
 
-                //set color
-                cg.ctx.fillStyle = color;
+            if (type_ === "agepyramid" || type_ === "radar") {
 
-                //draw symbol part
-                if (type_ === "flag") {
 
-                    //draw flag stripe
-                    if (this.stripesOrientation(cell[this.sizeCol], r, zf) == 0) {
-                        //horizontal
-                        cg.ctx.fillRect(
-                            cell.x + d + offset.dx,
-                            cell.y + d + cumul * sG + offset.dy,
-                            sG, share * sG);
-                    } else {
-                        //vertical
-                        cg.ctx.fillRect(
-                            cell.x + d + cumul * sG + offset.dx,
-                            cell.y + d + offset.dy,
-                            share * sG, sG);
-                    }
-                } else if (type_ === "piechart") {
-                    //draw pie chart angular sector
-
-                    //compute angles
-                    const a1 = cumul * 2 * Math.PI
-                    const a2 = (cumul + share) * 2 * Math.PI
-
-                    //draw
-                    cg.ctx.beginPath();
-                    cg.ctx.moveTo(xc, yc);
-                    cg.ctx.arc(xc, yc, sG * 0.5, a1, a2);
-                    if (this.pieChartInternalRadiusFactor)
-                        cg.ctx.arc(xc, yc, sG * 0.5 * this.pieChartInternalRadiusFactor, a2, a1, true);
-                    cg.ctx.closePath();
-                    cg.ctx.fill();
-
-                } else if (type_ === "ring") {
-
-                    //draw ring
-                    cg.ctx.beginPath();
-                    cg.ctx.arc(
-                        xc,
-                        yc,
-                        Math.sqrt(1 - cumul) * sG * 0.5,
-                        0, 2 * Math.PI);
-                    cg.ctx.fill();
-
-                } else if (type_ === "segment") {
-
-                    //draw segment sections
-                    const wG = sG * sG / r
-                    if (this.stripesOrientation(cell[this.sizeCol], r, zf) == 0) {
-                        //horizontal
-                        cg.ctx.fillRect(
-                            cell.x + offset.dx,
-                            cell.y + (r - wG) / 2 + cumul * wG + offset.dy,
-                            r, share * wG);
-                    } else {
-                        //vertical
-                        cg.ctx.fillRect(
-                            cell.x + cumul * r + offset.dx,
-                            cell.y + (r - wG) / 2 + offset.dy,
-                            share * r, wG);
-                    }
-
-                } else {
-                    throw new Error('Unexpected symbol type:' + type_);
+                //get cell category max value
+                let maxVal = -Infinity
+                for (let key of Object.keys(this.color)) {
+                    const v = +cell[key];
+                    if (v > maxVal) maxVal = v
                 }
 
-                cumul += share;
+                //draw decomposition symbols
+                let cumul = 0
+
+                //compute the increment, which is the value to increment the cumul for each category
+                let incr = (type_ === "agepyramid") ? r / nbCat : (type_ === "radar") ? 2 * Math.PI / nbCat : undefined
+                if (incr === undefined) throw new Error('Unexpected symbol type:' + type_);
+
+                //TODO
+                //for radar
+                //const offsetAngle = this.offsetAngle ? this.offsetAngle(cell, r, zf) : 0
+                //let cumul = Math.PI + offsetAngle * Math.PI / 180
+
+                for (let [column, color] of Object.entries(this.color)) {
+
+                    if (type_ === "agepyramid") {
+                        //set category color
+                        cg.ctx.fillStyle = color;
+
+                        //get category value
+                        const val = cell[column]
+
+                        //compute category length - in geo
+                        /** @type {number} */
+                        const wG = sG * val / maxVal
+
+                        //draw bar
+                        cg.ctx.fillRect(
+                            xc + (r - wG) / 2,
+                            yc + cumul,
+                            wG, incr);
+
+                        //next height
+                        cumul += incr
+
+                    } else if (type_ === "radar") {
+                        //set category color
+                        cg.ctx.fillStyle = color;
+
+                        //get categroy value
+                        const val = cell[column]
+
+                        //compute category radius - in geo
+                        /** @type {number} */
+                        //const rG = this.radius(val, r, stat, cellStat, zf)
+                        const rG = sG / 2 * Math.sqrt(val / maxVal)
+
+                        //draw angular sector
+                        cg.ctx.beginPath();
+                        cg.ctx.moveTo(xc, yc);
+                        cg.ctx.arc(xc, yc, rG, cumul - incr, cumul);
+                        cg.ctx.lineTo(xc, yc);
+                        cg.ctx.fill();
+
+                        //next angular sector
+                        cumul -= incr
+                    } else {
+                        throw new Error('Unexpected symbol type:' + type_);
+                    }
+                }
+
+            } else {
+
+                //compute total
+                let total = 0;
+                for (let column of Object.keys(this.color)) {
+                    const v = +cell[column];
+                    if (!v) continue
+                    total += v
+                }
+                if (!total || isNaN(total)) continue
+
+                //draw decomposition symbol
+                let cumul = 0;
+                const d = r * (1 - sG / r) * 0.5
+                for (let [column, color] of Object.entries(this.color)) {
+
+                    //get share
+                    const share = cell[column] / total;
+                    if (!share || isNaN(share)) continue
+
+                    //set color
+                    cg.ctx.fillStyle = color;
+
+                    //draw symbol part
+                    if (type_ === "flag") {
+
+                        //draw flag stripe
+                        if (this.stripesOrientation(cell[this.sizeCol], r, zf) == 0) {
+                            //horizontal
+                            cg.ctx.fillRect(
+                                cell.x + d + offset.dx,
+                                cell.y + d + cumul * sG + offset.dy,
+                                sG, share * sG);
+                        } else {
+                            //vertical
+                            cg.ctx.fillRect(
+                                cell.x + d + cumul * sG + offset.dx,
+                                cell.y + d + offset.dy,
+                                share * sG, sG);
+                        }
+                    } else if (type_ === "piechart") {
+                        //draw pie chart angular sector
+
+                        //compute angles
+                        const a1 = cumul * 2 * Math.PI
+                        const a2 = (cumul + share) * 2 * Math.PI
+
+                        //draw
+                        cg.ctx.beginPath();
+                        cg.ctx.moveTo(xc, yc);
+                        cg.ctx.arc(xc, yc, sG * 0.5, a1, a2);
+                        if (this.pieChartInternalRadiusFactor)
+                            cg.ctx.arc(xc, yc, sG * 0.5 * this.pieChartInternalRadiusFactor, a2, a1, true);
+                        cg.ctx.closePath();
+                        cg.ctx.fill();
+
+                    } else if (type_ === "ring") {
+
+                        //draw ring
+                        cg.ctx.beginPath();
+                        cg.ctx.arc(
+                            xc,
+                            yc,
+                            Math.sqrt(1 - cumul) * sG * 0.5,
+                            0, 2 * Math.PI);
+                        cg.ctx.fill();
+
+                    } else if (type_ === "segment") {
+
+                        //draw segment sections
+                        const wG = sG * sG / r
+                        if (this.stripesOrientation(cell[this.sizeCol], r, zf) == 0) {
+                            //horizontal
+                            cg.ctx.fillRect(
+                                cell.x + offset.dx,
+                                cell.y + (r - wG) / 2 + cumul * wG + offset.dy,
+                                r, share * wG);
+                        } else {
+                            //vertical
+                            cg.ctx.fillRect(
+                                cell.x + cumul * r + offset.dx,
+                                cell.y + (r - wG) / 2 + offset.dy,
+                                share * r, wG);
+                        }
+
+                    } else {
+                        throw new Error('Unexpected symbol type:' + type_);
+                    }
+
+                    cumul += share;
+                }
             }
 
             /*/draw stroke

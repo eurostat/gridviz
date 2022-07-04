@@ -28,7 +28,6 @@ export class AgePyramidStyle extends Style {
         /** A function returning the size of a cell.
          * @private @type {function(number,number,Stat|undefined,number):number} */
         this.size = opts.size || ((v) => Math.sqrt(v));
-
     }
 
 
@@ -40,14 +39,14 @@ export class AgePyramidStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
+
+
+
         //zoom factor
         const zf = cg.getZf()
 
         //nb categories
         const nbCat = Object.entries(this.color).length
-
-        //dimension, in geo
-        const hPerCatG = r / nbCat
 
         //get size stats
         let stat
@@ -59,13 +58,15 @@ export class AgePyramidStyle extends Style {
         //draw in geo coordinates
         cg.setCanvasTransform()
 
+
+
+        //dimension, in geo
+        const hPerCatG = r / nbCat
+
         for (let cell of cells) {
 
             //get offset
             const offset = this.offset(cell, r, zf)
-
-            //
-            let hCumul = 0
 
             //compute cell position
             const xc = cell.x + offset.dx;
@@ -86,6 +87,7 @@ export class AgePyramidStyle extends Style {
             }
 
             //draw decomposition symbols
+            let cumul = 0
             for (let [column, color] of Object.entries(this.color)) {
 
                 //set category color
@@ -101,11 +103,11 @@ export class AgePyramidStyle extends Style {
                 //draw bar
                 cg.ctx.fillRect(
                     xc + (r - wG) / 2,
-                    yc + hCumul,
+                    yc + cumul,
                     wG, hPerCatG);
 
                 //next height
-                hCumul += hPerCatG
+                cumul += hPerCatG
             }
 
         }
