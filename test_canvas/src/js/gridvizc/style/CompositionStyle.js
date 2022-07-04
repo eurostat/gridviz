@@ -83,13 +83,7 @@ export class CompositionStyle extends Style {
         //draw in geo coordinates
         cg.setCanvasTransform()
 
-
-
-
-
-
-
-
+        //draw calls
         for (let cell of cells) {
 
             //size
@@ -102,13 +96,12 @@ export class CompositionStyle extends Style {
             //get offset
             const offset = this.offset(cell, r, zf)
 
-            //compute center position
-            const xc = cell.x + r * 0.5 + offset.dx;
-            const yc = cell.y + r * 0.5 + offset.dy;
-
             //get symbol type
             const type_ = this.type ? this.type(cell) : "flag"
 
+            //compute center position
+            const xc = cell.x + offset.dx + (type_==="agepyramid"?0:r * 0.5);
+            const yc = cell.y + offset.dy + (type_==="agepyramid"?0:r * 0.5);
 
             if (type_ === "agepyramid" || type_ === "radar") {
 
@@ -120,17 +113,13 @@ export class CompositionStyle extends Style {
                     if (v > maxVal) maxVal = v
                 }
 
-                //draw decomposition symbols
-                let cumul = 0
+                //cumul
+                let cumul = 0;
+                if (type_ === "radar" && this.radarOffsetAngle) cumul = this.radarOffsetAngle(cell, r, zf) * Math.PI / 180
 
                 //compute the increment, which is the value to increment the cumul for each category
-                let incr = (type_ === "agepyramid") ? r / nbCat : (type_ === "radar") ? 2 * Math.PI / nbCat : undefined
+                const incr = (type_ === "agepyramid") ? r / nbCat : (type_ === "radar") ? 2 * Math.PI / nbCat : undefined
                 if (incr === undefined) throw new Error('Unexpected symbol type:' + type_);
-
-                //TODO
-                //for radar
-                //const offsetAngle = this.offsetAngle ? this.offsetAngle(cell, r, zf) : 0
-                //let cumul = Math.PI + offsetAngle * Math.PI / 180
 
                 for (let [column, color] of Object.entries(this.color)) {
 
