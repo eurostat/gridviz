@@ -73,7 +73,7 @@
             scolor: {
                 style: new gviz.ShapeColorSizeStyle({
                     colorCol: "Ind",
-                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.15)),
+                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.3)),
                     shape: () => "square",
                     zfStroke: 20
                 }).addLegend({ color: { id: "scollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
@@ -82,7 +82,7 @@
             ccolor: {
                 style: new gviz.ShapeColorSizeStyle({
                     colorCol: "Ind",
-                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.15)),
+                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.3)),
                     shape: () => "circle",
                     zfStroke: 20
                 }).addLegend({ color: { id: "ccollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } }),
@@ -93,7 +93,7 @@
                 style: new gviz.ShapeColorSizeStyle({
                     color: () => "#c08c59cc",
                     sizeCol: "Ind",
-                    size: (v, r, s, zf) => 1 * r * gviz.s(v / s.max, 0.15),
+                    size: (v, r, s, zf) => 1 * r * gviz.s(v / s.max, 0.3),
                     shape: () => "square",
                     zfStroke: 20
                 }).addLegend({ size: { id: "sslegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
@@ -103,7 +103,7 @@
                 style: new gviz.ShapeColorSizeStyle({
                     color: () => "#c08c59cc",
                     sizeCol: "Ind",
-                    size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.15,
+                    size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
                     shape: () => "circle",
                     zfStroke: 20
                 }).addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
@@ -112,7 +112,7 @@
             donut: {
                 style: new gviz.ShapeColorSizeStyle({
                     sizeCol: "Ind",
-                    size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3),
+                    size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.3),
                     color: () => "#c08c59",
                     shape: () => "donut",
                 }),
@@ -125,7 +125,7 @@
                     color: (v, r, s) => "#c08c59",
                     length: (v, r) => r,
                     widthCol: "Ind",
-                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
+                    width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
                 }).addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } }),
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
@@ -135,7 +135,7 @@
                     color: (v, r, s) => "#c08c59",
                     length: (v, r) => r,
                     widthCol: "Ind",
-                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25)
+                    width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
                 }).addLegend({ width: { id: "segVlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
@@ -145,7 +145,7 @@
                     color: (v, r, s) => "#c08c59",
                     length: (v, r) => r * 1.4142,
                     widthCol: "Ind",
-                    width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25) / 1.4142,
+                    width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25) / 1.4142,
                 }).addLegend({ width: { id: "segOlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
@@ -165,7 +165,7 @@
                     color: (side, r, s, z) => "#c08c59",
                     width: (side, r, s, z) => {
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                        return r * (0.01 + 0.75 * Math.pow(Math.abs(side.value) / max, 0.5))
+                        return r * (0.01 + 0.75 * gviz.s(Math.abs(side.value) / max, 0.5))
                     },
                     fillColor: "#fafafa",
                 }),
@@ -174,7 +174,7 @@
             pillar: {
                 style: new gviz.PillarStyle({
                     heightCol: "Ind",
-                    height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.7),
+                    height: (v, r, s, z) => 15 * r * gviz.s(v / s.max, 0.7),
                 }),
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
@@ -182,7 +182,7 @@
                 style: new gviz.TextStyle({
                     textCol: "Ind",
                     text: (v, r, s, z) => {
-                        const t = Math.pow(v / s.max, 0.25);
+                        const t = gviz.s(v / s.max, 0.25);
                         return gviz.charLegendFun(t);
                     },
                     color: (v, r, s) => "#c08c59",

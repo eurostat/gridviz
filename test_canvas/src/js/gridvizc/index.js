@@ -42,8 +42,8 @@ import { LineLayer } from "./LineLayer"
  * @returns The stretched value, within [0,1]
  */
 export const s = function (t, alpha, type = 0) {
-    if (!type) return 0.5 * (Math.pow(t, alpha) + 1 - Math.pow(1 - t, 1 / alpha))
-    else if (type == 1) return Math.pow(t, alpha)
+    if (!type) return Math.pow(t, alpha)
+    else if (type == 1) return 0.5 * (Math.pow(t, alpha) + 1 - Math.pow(1 - t, 1 / alpha))
     return 1 - Math.pow(1 - t, 1 / alpha)
 }
 
