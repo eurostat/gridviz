@@ -4,7 +4,7 @@ import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
-/** @typedef {"flag"|"piechart"|"ring"|"segment"|"radar"|"agepyramid"} CompositionType */
+/** @typedef {"flag"|"piechart"|"ring"|"segment"|"radar"|"agepyramid"|"halftone"} CompositionType */
 
 /**
  * A style showing the composition of a total in different categories, with different color hues.
@@ -52,9 +52,9 @@ export class CompositionStyle extends Style {
          * 0 for normal pie charts, 0.5 to empty half of the radius. */
         this.pieChartInternalRadiusFactor = opts.pieChartInternalRadiusFactor || 0
 
-        /** The function specifying an offset angle for a radar.
+        /** The function specifying an offset angle for a radar or halftone style.
          * @private @type {function(Cell,number,number):number} */
-        this.radarOffsetAngle = opts.radarOffsetAngle;
+        this.offsetAngle = opts.offsetAngle;
 
         /** The function specifying the height of the age pyramid, in geo unit.
         * @private @type {function(number):number} */
@@ -121,7 +121,7 @@ export class CompositionStyle extends Style {
                 //cumul
                 let cumul = 0;
                 if (type_ === "agepyramid" && this.agePyramidHeight) cumul = (r - this.agePyramidHeight(r)) / 2
-                if (type_ === "radar") cumul = Math.PI/2 + (this.radarOffsetAngle ? this.radarOffsetAngle(cell, r, zf) * Math.PI / 180 : 0)
+                if (type_ === "radar") cumul = Math.PI/2 + (this.offsetAngle ? this.offsetAngle(cell, r, zf) * Math.PI / 180 : 0)
 
                 //compute the increment, which is the value to increment the cumul for each category
                 const incr = (type_ === "agepyramid") ?
@@ -318,9 +318,9 @@ export class CompositionStyle extends Style {
     setPieChartInternalRadiusFactor(val) { this.pieChartInternalRadiusFactor = val; return this; }
 
     /** @returns {function(Cell,number,number):number} */
-    getRadarOffsetAngle() { return this.radarOffsetAngle; }
+    getOffsetAngle() { return this.offsetAngle; }
     /** @param {function(Cell,number,number):number} val @returns {this} */
-    setRadarOffsetAngle(val) { this.offsetAngle = val; return this; }
+    setOffsetAngle(val) { this.offsetAngle = val; return this; }
 
     /** @returns {function(number):number} */
     getAgePyramidHeight() { return this.agePyramidHeight; }

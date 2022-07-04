@@ -1,4 +1,4 @@
-TODO composition type: little dots
+TODO map type: halftone composition style
 TODO check niveau de vie - unite de consommation
 TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
 TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
@@ -42,7 +42,6 @@ TODO mouse over: Show rectangle. Ask SE
 TODO on pan/zoom, hide tooltip
 TODO limit pan
 
-TODO map type: composition as multi - make generic
 TODO tiled datasets: accessibility (merge datasets), NL, etc.
 TODO make nice test with combination - need for client side join?
 TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache and remove inpriority the old-unused tiles.
