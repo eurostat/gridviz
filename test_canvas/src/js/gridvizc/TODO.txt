@@ -1,3 +1,4 @@
+TODO improve halftone: add necessary parameters
 TODO check niveau de vie - unite de consommation
 TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
 TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
