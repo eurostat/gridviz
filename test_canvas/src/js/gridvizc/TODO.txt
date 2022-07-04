@@ -1,6 +1,9 @@
+TODO comp size/no size
+TODO check niveau de vie - unite de consommation
 TODO check age groups census 2021
 TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
 TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
+TODO map style: contours with color
 
 TODO legend - donut + pillar + characters
 TODO legend - handle orientation in segment width legend
