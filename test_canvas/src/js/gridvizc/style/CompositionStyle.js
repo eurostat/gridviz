@@ -108,7 +108,7 @@ export class CompositionStyle extends Style {
             const xc = cell.x + offset.dx + (type_ === "agepyramid" ? 0 : r * 0.5);
             const yc = cell.y + offset.dy + (type_ === "agepyramid" ? 0 : r * 0.5);
 
-            if (type_ === "agepyramid" || type_ === "radar") {
+            if (type_ === "agepyramid" || type_ === "radar" || type_ === "halftone") {
 
 
                 //get cell category max value
@@ -121,12 +121,12 @@ export class CompositionStyle extends Style {
                 //cumul
                 let cumul = 0;
                 if (type_ === "agepyramid" && this.agePyramidHeight) cumul = (r - this.agePyramidHeight(r)) / 2
-                if (type_ === "radar") cumul = Math.PI/2 + (this.offsetAngle ? this.offsetAngle(cell, r, zf) * Math.PI / 180 : 0)
+                if (type_ === "radar" || type_ === "halftone") cumul = Math.PI / 2 + (this.offsetAngle ? this.offsetAngle(cell, r, zf) * Math.PI / 180 : 0)
 
                 //compute the increment, which is the value to increment the cumul for each category
                 const incr = (type_ === "agepyramid") ?
                     (this.agePyramidHeight ? this.agePyramidHeight(r) : r) / nbCat
-                    : (type_ === "radar") ?
+                    : (type_ === "radar" || type_ === "halftone") ?
                         2 * Math.PI / nbCat : undefined
                 if (incr === undefined) throw new Error('Unexpected symbol type:' + type_);
 
@@ -169,6 +169,30 @@ export class CompositionStyle extends Style {
                         cg.ctx.moveTo(xc, yc);
                         cg.ctx.arc(xc, yc, rG, cumul - incr, cumul);
                         cg.ctx.lineTo(xc, yc);
+                        cg.ctx.fill();
+
+                        //next angular sector
+                        cumul += incr
+
+                    } else if (type_ === "halftone") {
+                        //set category color
+                        cg.ctx.fillStyle = color;
+
+                        //get categroy value
+                        const val = cell[column]
+
+                        //compute category radius - in geo
+                        /** @type {number} */
+                        //const rG = this.radius(val, r, stat, cellStat, zf)
+                        const rG = sG / 4 * Math.sqrt(val / maxVal)
+
+                        //draw circle
+                        cg.ctx.beginPath();
+                        cg.ctx.arc(
+                            xc + r / 4 * Math.cos(cumul),
+                            yc + r / 4 * Math.sin(cumul),
+                            rG,
+                            0, 2 * Math.PI);
                         cg.ctx.fill();
 
                         //next angular sector
