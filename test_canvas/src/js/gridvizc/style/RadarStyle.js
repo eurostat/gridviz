@@ -136,7 +136,7 @@ export class RadarStyle extends Style {
                 //compute category radius - in geo
                 /** @type {number} */
                 //const rG = this.radius(val, r, stat, cellStat, zf)
-                const rG = sF * rMaxG * val / maxVal
+                const rG = sF * rMaxG * Math.sqrt(val / maxVal)
 
                 //draw angular sector
                 cg.ctx.beginPath();
