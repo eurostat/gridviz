@@ -19,8 +19,8 @@
                 <label for="segment">Segment</label>
                 <input type="radio" name="style" id="flag" value="flag">
                 <label for="flag">Flag</label>
-                <input type="radio" name="style" id="pyramid" value="pyramid">
-                <label for="pyramid">Age pyramid</label>
+                <input type="radio" name="style" id="agepyramid" value="agepyramid">
+                <label for="agepyramid">Age pyramid</label>
                 <br>
                 <input type="radio" name="style" id="ring" value="ring">
                 <label for="ring">Ring</label>
@@ -80,44 +80,20 @@
 
         //style data
 
-        //flag, piechart, ring style
+        //style
         const s = new gviz.CompositionStyle({
             color: colorDict,
             type: () => "ring",
             sizeCol: "Ind",
             size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3),
-            //stripesOrientation: () => 90,
         })
         s.size_ = (v, r, s, zf) => r
-
-        //radar style
-        const sRadar = new gviz.RadarStyle({
-            color: colorDict,
-            sizeCol: "Ind",
-            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3)
-        })
-        sRadar.size_ = (v, r, s, zf) => r
-
-        //age pyramid style
-        const sPyramid = new gviz.AgePyramidStyle({
-            color: colorDict,
-            sizeCol: "Ind",
-            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3)
-        })
-        sPyramid.size_ = (v, r, s, zf) => r
 
 
         const getStyle = () => {
             const v = document.querySelector('input[name="style"]:checked').value
-            //const as = document.querySelector('#label').checked
-            if (v === "radar") {
-                return sRadar
-            } else if (v === "pyramid") {
-                return sPyramid
-            } else {
-                s.setType(() => v)
-                return s
-            }
+            s.setType(() => v)
+            return s
         }
 
         const ttfun = c => {
@@ -174,8 +150,6 @@
             [0, 10, 20, 50, 100, 250, 500, 1000, 2500]
         )
 
-
-
         const updateStyle = () => {
             const ssel = getStyle()
             const ml = app.layers[0];
@@ -193,9 +167,6 @@
         document.querySelector('#adsize').addEventListener('change', function () {
             const swap = (s, col) => { const aux = s[col]; s[col] = s[col + "_"]; s[col + "_"] = aux }
             swap(s, "size")
-            swap(sRadar, "size")
-            swap(sPyramid, "size")
-
             updateStyle()
             app.cg.redraw();
         });

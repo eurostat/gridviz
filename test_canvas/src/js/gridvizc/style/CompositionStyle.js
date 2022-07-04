@@ -50,6 +50,10 @@ export class CompositionStyle extends Style {
         /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
          * 0 for normal pie charts, 0.5 to empty half of the radius. */
         this.pieChartInternalRadiusFactor = opts.pieChartInternalRadiusFactor || 0
+
+        /** The function specifying an offset angle for a radar.
+         * @private @type {function(Cell,number,number):number} */
+        this.radarOffsetAngle = opts.radarOffsetAngle;
     }
 
 
@@ -302,6 +306,9 @@ export class CompositionStyle extends Style {
     /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
+
+
+
     /** @returns {function(number,number,number):number} */
     getStripesOrientation() { return this.stripesOrientation; }
     /** @param {function(number,number,number):number} val @returns {this} */
@@ -311,5 +318,10 @@ export class CompositionStyle extends Style {
     getPieChartInternalRadiusFactor() { return this.pieChartInternalRadiusFactor; }
     /** @param {function(number,number,Stat,number):number} val @returns {this} */
     setPieChartInternalRadiusFactor(val) { this.pieChartInternalRadiusFactor = val; return this; }
+
+    /** @returns {function(Cell,number,number):number} */
+    getRadarOffsetAngle() { return this.radarOffsetAngle; }
+    /** @param {function(Cell,number,number):number} val @returns {this} */
+    setRadarOffsetAngle(val) { this.offsetAngle = val; return this; }
 
 }
