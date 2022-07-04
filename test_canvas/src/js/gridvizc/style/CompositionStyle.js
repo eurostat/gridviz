@@ -58,7 +58,7 @@ export class CompositionStyle extends Style {
 
         /** The function specifying the height of the age pyramid, in geo unit.
         * @private @type {function(number):number} */
-        this.agePyramidheight = opts.agePyramidheight;
+        this.agePyramidHeight = opts.agePyramidHeight;
     }
 
 
@@ -120,12 +120,12 @@ export class CompositionStyle extends Style {
 
                 //cumul
                 let cumul = 0;
-                if (type_ === "agepyramid" && this.agePyramidheight) cumul = (r - this.agePyramidheight(r)) / 2
+                if (type_ === "agepyramid" && this.agePyramidHeight) cumul = (r - this.agePyramidHeight(r)) / 2
                 if (type_ === "radar") cumul = Math.PI/2 + (this.radarOffsetAngle ? this.radarOffsetAngle(cell, r, zf) * Math.PI / 180 : 0)
 
                 //compute the increment, which is the value to increment the cumul for each category
                 const incr = (type_ === "agepyramid") ?
-                    (this.agePyramidheight ? this.agePyramidheight(r) : r) / nbCat
+                    (this.agePyramidHeight ? this.agePyramidHeight(r) : r) / nbCat
                     : (type_ === "radar") ?
                         2 * Math.PI / nbCat : undefined
                 if (incr === undefined) throw new Error('Unexpected symbol type:' + type_);
@@ -323,8 +323,8 @@ export class CompositionStyle extends Style {
     setRadarOffsetAngle(val) { this.offsetAngle = val; return this; }
 
     /** @returns {function(number):number} */
-    getAgePyramidHeight() { return this.agePyramidheight; }
+    getAgePyramidHeight() { return this.agePyramidHeight; }
     /** @param {function(number):number} val @returns {this} */
-    sethAgePyramidHeight(val) { this.agePyramidheight = val; return this; }
+    sethAgePyramidHeight(val) { this.agePyramidHeight = val; return this; }
 
 }

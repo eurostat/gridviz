@@ -46,7 +46,7 @@
     <script src="../build/gridvizc.js"></script>
     <script>
 
-        const agg = true
+        const agg = false
 
 
         //make application
@@ -84,6 +84,7 @@
             type: () => "ring",
             sizeCol: "Ind",
             size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3),
+            agePyramidHeight: (r) => 0.9 * r
         })
         s.size_ = (v, r, s, zf) => r
 
