@@ -1,4 +1,4 @@
-TODO test log scale instead of pow
+TODO legend categories, for composition
 
 TODO check other datasets: list + assets folder
 croatia tourism - PT ?
