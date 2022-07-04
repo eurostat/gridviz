@@ -121,7 +121,7 @@ export class CompositionStyle extends Style {
                 //cumul
                 let cumul = 0;
                 if (type_ === "agepyramid" && this.agePyramidheight) cumul = (r - this.agePyramidheight(r)) / 2
-                if (type_ === "radar" && this.radarOffsetAngle) cumul = this.radarOffsetAngle(cell, r, zf) * Math.PI / 180
+                if (type_ === "radar") cumul = Math.PI/2 + (this.radarOffsetAngle ? this.radarOffsetAngle(cell, r, zf) * Math.PI / 180 : 0)
 
                 //compute the increment, which is the value to increment the cumul for each category
                 const incr = (type_ === "agepyramid") ?
@@ -172,7 +172,7 @@ export class CompositionStyle extends Style {
                         cg.ctx.fill();
 
                         //next angular sector
-                        cumul -= incr
+                        cumul += incr
                     } else {
                         throw new Error('Unexpected symbol type:' + type_);
                     }
