@@ -43,6 +43,7 @@ export class CompositionStyle extends Style {
          * @private @type {function(number,number,Stat|undefined,number):number} */
         this.size = opts.size || ((v) => Math.sqrt(v));
 
+
         /** For style types with stripes (flag, segment), the orientation of the stripes.
          * @private @type {function(number,number,number):number} */
         this.stripesOrientation = opts.stripesOrientation || (() => 0);
@@ -54,6 +55,10 @@ export class CompositionStyle extends Style {
         /** The function specifying an offset angle for a radar.
          * @private @type {function(Cell,number,number):number} */
         this.radarOffsetAngle = opts.radarOffsetAngle;
+
+        /** The function specifying the height of the age pyramid, in geo unit.
+        * @private @type {function(number):number} */
+        this.agePyramidheight = opts.agePyramidheight;
     }
 
 
@@ -100,8 +105,8 @@ export class CompositionStyle extends Style {
             const type_ = this.type ? this.type(cell) : "flag"
 
             //compute center position
-            const xc = cell.x + offset.dx + (type_==="agepyramid"?0:r * 0.5);
-            const yc = cell.y + offset.dy + (type_==="agepyramid"?0:r * 0.5);
+            const xc = cell.x + offset.dx + (type_ === "agepyramid" ? 0 : r * 0.5);
+            const yc = cell.y + offset.dy + (type_ === "agepyramid" ? 0 : r * 0.5);
 
             if (type_ === "agepyramid" || type_ === "radar") {
 
@@ -115,10 +120,14 @@ export class CompositionStyle extends Style {
 
                 //cumul
                 let cumul = 0;
+                if (type_ === "agepyramid" && this.agePyramidheight) cumul = (r - this.agePyramidheight(r)) / 2
                 if (type_ === "radar" && this.radarOffsetAngle) cumul = this.radarOffsetAngle(cell, r, zf) * Math.PI / 180
 
                 //compute the increment, which is the value to increment the cumul for each category
-                const incr = (type_ === "agepyramid") ? r / nbCat : (type_ === "radar") ? 2 * Math.PI / nbCat : undefined
+                const incr = (type_ === "agepyramid") ?
+                    (this.agePyramidheight ? this.agePyramidheight(r) : r) / nbCat
+                    : (type_ === "radar") ?
+                        2 * Math.PI / nbCat : undefined
                 if (incr === undefined) throw new Error('Unexpected symbol type:' + type_);
 
                 for (let [column, color] of Object.entries(this.color)) {
@@ -312,5 +321,10 @@ export class CompositionStyle extends Style {
     getRadarOffsetAngle() { return this.radarOffsetAngle; }
     /** @param {function(Cell,number,number):number} val @returns {this} */
     setRadarOffsetAngle(val) { this.offsetAngle = val; return this; }
+
+    /** @returns {function(number):number} */
+    getAgePyramidHeight() { return this.agePyramidheight; }
+    /** @param {function(number):number} val @returns {this} */
+    sethAgePyramidHeight(val) { this.agePyramidheight = val; return this; }
 
 }
