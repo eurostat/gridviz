@@ -57,9 +57,6 @@ export class AgePyramidStyle extends Style {
         const sideMaxG = r - 2 * mG
         const hPerCatG = sideMaxG / nbCat
 
-        //get category keys
-        const catKeys = Object.keys(this.color)
-
         //get size stats
         let stat
         if (this.sizeFactorCol) {
@@ -91,7 +88,7 @@ export class AgePyramidStyle extends Style {
 
             //get cell category max value
             let maxVal = -Infinity
-            for (let key of catKeys) {
+            for (let key of Object.keys(this.color)) {
                 const v = +cell[key];
                 if (v > maxVal) maxVal = v
             }
