@@ -230,7 +230,7 @@ export class CompositionStyle extends Style {
                         cg.ctx.moveTo(xc, yc);
                         cg.ctx.arc(xc, yc, sG * 0.5, a1, a2);
                         if (this.pieChartInternalRadiusFactor)
-                            cg.ctx.arc(xc, yc, sG * 0.5 * this.pieChartInternalRadiusFactor, a2, a1, true);
+                            cg.ctx.arc(xc, yc, sG * 0.5 * this.pieChartInternalRadiusFactor, a1, a2, true);
                         cg.ctx.closePath();
                         cg.ctx.fill();
 
