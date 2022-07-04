@@ -30,8 +30,8 @@ export class AgePyramidStyle extends Style {
         /**
         * The function specifying the margin, in geo unit.
         * 
-        * @private @type {function(number):number} */
-        this.margin = opts.margin || (r => 0.9 * r);
+        * @private @type {function(number:number):number} */
+        this.margin = opts.margin || ((r,zf) => 1*zf);
 
     }
 
@@ -51,7 +51,7 @@ export class AgePyramidStyle extends Style {
         const nbCat = Object.entries(this.color).length
 
         //height, in geo
-        const mG = this.margin(r)
+        const mG = this.margin(r, zf)
         const hG = r - 2 * mG
         const hPerCatG = hG / nbCat
 
@@ -117,9 +117,9 @@ export class AgePyramidStyle extends Style {
     /** @param {function(number,number,Stat|undefined,Stat|undefined,number):number} val @returns {this} */
     setLength(val) { this.length = val; return this; }
 
-    /** @returns {function(number):number} */
+    /** @returns {function(number,number):number} */
     getMargin() { return this.margin; }
-    /** @param {function(number):number} val @returns {this} */
+    /** @param {function(number,number):number} val @returns {this} */
     sethMargin(val) { this.margin = val; return this; }
 
 }
