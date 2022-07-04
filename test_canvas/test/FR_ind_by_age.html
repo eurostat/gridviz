@@ -93,16 +93,16 @@
         //radar style
         const sRadar = new gviz.RadarStyle({
             color: colorDict,
-            radius: (v, r, s, cs, zf) => 0.5 * r * Math.pow(v / s.max, 0.3),
+            sizeFactorCol: "Ind",
+            sizeFactor: (v, r, s, zf) => Math.pow(v/s.max, 0.3)
         })
-        sRadar.radius_ = (v, r, s, cs, zf) => 0.5 * r * Math.pow(v / cs.max, 0.3)
+        sRadar.sizeFactor_ = () => 1
 
         //age pyramid style
         const sPyramid = new gviz.AgePyramidStyle({
             color: colorDict,
             sizeFactorCol: "Ind",
             sizeFactor: (v, r, s, zf) => Math.pow(v/s.max, 0.3)
-            //margin: (r,zf) => r*0.1,
         })
         sPyramid.sizeFactor_ = () => 1
 
@@ -193,7 +193,7 @@
         document.querySelector('#adsize').addEventListener('change', function () {
             const swap = (s, col) => { const aux = s[col]; s[col] = s[col + "_"]; s[col + "_"] = aux }
             swap(s, "size")
-            swap(sRadar, "radius")
+            swap(sRadar, "sizeFactor")
             swap(sPyramid, "sizeFactor")
 
             updateStyle()
