@@ -10,7 +10,7 @@
 
     <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
         <select id="type">
-            <option value="pyramid" selected>Age pyramid</option>
+            <option value="agepyramid" selected>Age pyramid</option>
             <option value="flag">Flag</option>
             <option value="segment">Segment</option>
             <option value="radar">Radar</option>
@@ -57,28 +57,13 @@
             "100_": col(20 / 20),
         }
 
-        //flag, piechart, ring style
+        //style
         const s = new gviz.CompositionStyle({
             color: colorDict,
-            type: () => "flag",
+            type: () => "agepyramid",
             sizeCol: "pop",
             size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3),
-            zfStroke: 5
         })
-
-        //radar style
-        const sRadar = new gviz.RadarStyle({
-            color: colorDict,
-            radius: (v, r, s, zf) => 0.5 * r * Math.pow(v / s.max, 0.3),
-        })
-
-        //age pyramid style
-        const sPyramid = new gviz.AgePyramidStyle({
-            color: colorDict,
-            length: (v, r, s, zf) => r * Math.pow(v / s.max, 0.5),
-            height: r => r * 0.8
-        })
-
 
         const ttfun = c => "<b>" + c["pop"] + "</b> inhabitant(s)"
             + "<br>0_5: " + c["0_5"]
@@ -103,25 +88,19 @@
             + "<br>95_100: " + c["95_100"]
             + "<br>100_: " + c["100_"]
 
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/1000m/", [sPyramid], 0, 25, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/2000m/", [sPyramid], 25, 50, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/5000m/", [sPyramid], 50, 125, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/10000m/", [sPyramid], 125, 250, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/20000m/", [sPyramid], 250, 500, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/50000m/", [sPyramid], 500, 9999999999, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/1000m/", [s], 0, 25, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/2000m/", [s], 25, 50, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/5000m/", [s], 50, 125, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/10000m/", [s], 125, 250, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/20000m/", [s], 250, 500, { cellInfoHTML: ttfun });
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/50000m/", [s], 500, 9999999999, { cellInfoHTML: ttfun });
 
         //combo list
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
             //set style
-            if (select.value === "radar") {
-                for (let lay of app.layers) lay.styles = [sRadar]
-            } else if (select.value === "pyramid") {
-                for (let lay of app.layers) lay.styles = [sPyramid]
-            } else {
-                s.setType(() => select.value)
-                for (let lay of app.layers) lay.styles = [s]
-            }
+            s.setType(() => select.value)
+            for (let lay of app.layers) lay.styles = [s]
             //redraw
             app.cg.redraw();
         });
