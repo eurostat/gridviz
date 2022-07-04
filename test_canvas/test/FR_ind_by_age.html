@@ -15,10 +15,10 @@
             <hr>
             <span style="font-size: 11pt; font-weight: bold;">Style</span><br>
             <div id="style">
-                <input type="radio" name="style" id="segment" value="segment" checked>
-                <label for="segment">Segment</label>
-                <input type="radio" name="style" id="flag" value="flag">
+                <input type="radio" name="style" id="flag" value="flag" checked>
                 <label for="flag">Flag</label>
+                <input type="radio" name="style" id="segment" value="segment">
+                <label for="segment">Segment</label>
                 <input type="radio" name="style" id="agepyramid" value="agepyramid">
                 <label for="agepyramid">Age pyramid</label>
                 <br>
@@ -51,7 +51,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(100).setZoomFactorExtent([10, 1500])
+            .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(100).setZoomFactorExtent([2, 1500])
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //test view from URL parameters, if any
@@ -87,9 +87,9 @@
             type: () => "ring",
             sizeCol: "Ind",
             size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
-            agePyramidHeight: (r) => 0.9 * r
+            agePyramidHeight: (r) => 0.95 * r
         })
-        s.size_ = (v, r, s, zf) => r
+        s.size_ = (v, r, s, zf) => 0.95 * r
 
 
         const getStyle = () => {
@@ -105,10 +105,10 @@
                     " 18-64: " + d3.format(".1f")(c["Ind_18_64"]) + "<br>" +
                     "  > 65: " + d3.format(".1f")(c["Ind_65p"]) + "<br>" +
                     " unk.: " + d3.format(".1f")(c["Ind_inc"]) + "<br>";
-                    /*out = out + "  < 24: " + d3.format(".1f")(c["Ind_0_24"]) + "<br>" +
-                    " 25-54: " + d3.format(".1f")(c["Ind_25_54"]) + "<br>" +
-                    "  > 55: " + d3.format(".1f")(c["Ind_55p"]) + "<br>" +
-                    " unk.: " + d3.format(".1f")(c["Ind_inc"]) + "<br>";*/
+                /*out = out + "  < 24: " + d3.format(".1f")(c["Ind_0_24"]) + "<br>" +
+                " 25-54: " + d3.format(".1f")(c["Ind_25_54"]) + "<br>" +
+                "  > 55: " + d3.format(".1f")(c["Ind_55p"]) + "<br>" +
+                " unk.: " + d3.format(".1f")(c["Ind_inc"]) + "<br>";*/
             } else {
                 out = out + " < 3 : " + (c["Ind_0_3"]) + "<br>" +
                     " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
@@ -148,7 +148,10 @@
                 { code: "20000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
                 { code: "50000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
             ],
-            [0, 10, 20, 50, 100, 250, 500, 1000, 2500]
+            //[0, 5, 10, 25, 50, 125, 250, 500, 1250]
+            //[0, 10, 20, 50, 100, 250, 500, 1000, 2500]
+            [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
+            //[0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
         )
 
         const updateStyle = () => {
