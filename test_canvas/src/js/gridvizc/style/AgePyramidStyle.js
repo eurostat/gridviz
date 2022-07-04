@@ -21,13 +21,13 @@ export class AgePyramidStyle extends Style {
         this.color = opts.color;
 
 
-        /** The column where to get the size values.
+        /** The column where to get the size factor [0,1].
          * @private @type {string} */
-        this.sizeCol = opts.sizeCol
+        this.sizeFactorCol = opts.sizeCol
 
-        /** A function returning the size of a cell.
+        /** A function returning the size factor [0,1] of a cell.
          * @private @type {function(number,number,Stat|undefined,number):number} */
-        this.size = opts.size || ((v) => Math.sqrt(v));
+        this.sizeFactor = opts.size || ((v, r, s, zf) => 1);
 
         /**
         * The function specifying the margin, in geo unit.
@@ -62,11 +62,11 @@ export class AgePyramidStyle extends Style {
 
         //get size stats
         let stat
-        if (this.sizeCol) {
+        if (this.sizeFactorCol) {
             //if size is used, sort cells by size so that the biggest are drawn first
-            cells.sort((c1, c2) => c2[this.sizeCol] - c1[this.sizeCol]);
+            cells.sort((c1, c2) => c2[this.sizeFactorCol] - c1[this.sizeFactorCol]);
             //and compute statistics
-            stat = getStatistics(cells, c => c[this.sizeCol], true)
+            stat = getStatistics(cells, c => c[this.sizeFactorCol], true)
         }
 
         //draw in geo coordinates
@@ -83,6 +83,15 @@ export class AgePyramidStyle extends Style {
             //compute cell position
             const xc = cell.x + offset.dx;
             const yc = cell.y + offset.dy;
+
+
+            //size factor
+            /** @type {function(number,number,Stat|undefined,number):number} */
+            let sF_ = this.sizeFactor || (() => 1);
+            //size - in geo
+            /** @type {number} */
+            const sF = sF_(cell[this.sizeFactorCol], r, stat, zf)
+
 
             //get cell category max value
             let maxVal = -Infinity
@@ -102,7 +111,7 @@ export class AgePyramidStyle extends Style {
 
                 //compute category length - in geo
                 /** @type {number} */
-                const wG = sideMaxG * val / maxVal
+                const wG = sF * sideMaxG * val / maxVal
 
                 //draw bar
                 cg.ctx.fillRect(
@@ -127,14 +136,14 @@ export class AgePyramidStyle extends Style {
     setColor(val) { this.color = val; return this; }
 
     /** @returns {string} */
-    getColSize() { return this.sizeCol; }
+    getColSize() { return this.sizeFactorCol; }
     /** @param {string} val @returns {this} */
-    setColSize(val) { this.sizeCol = val; return this; }
+    setColSize(val) { this.sizeFactorCol = val; return this; }
 
     /** @returns {function(number,number,Stat|undefined,number):number} */
-    getSize() { return this.size; }
+    getSizeFactor() { return this.sizeFactor; }
     /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
-    setSize(val) { this.size = val; return this; }
+    setSizeFactor(val) { this.sizeFactor = val; return this; }
 
     /** @returns {function(number,number):number} */
     getMargin() { return this.margin; }
