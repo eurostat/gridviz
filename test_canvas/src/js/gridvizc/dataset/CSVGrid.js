@@ -16,11 +16,14 @@ export class CSVGrid extends Dataset {
      * @param {number} resolution The dataset resolution in geographical unit.
      * @param {object} opts 
      */
-    constructor(url, resolution, opts=undefined) {
+    constructor(url, resolution, opts = undefined) {
         super(url, resolution, opts)
 
         /** @private @type {Array.<Cell>} */
         this.cells = [];
+
+        /**  @type {string} @private  */
+        this.infoLoadingStatus = "notLoaded";
     }
 
 
@@ -32,12 +35,11 @@ export class CSVGrid extends Dataset {
      */
     getData(e, redraw) {
 
-        //TODO ensure it is not loading twice ?
-
         //check if data already loaded
-        if (this.cells) return this;
+        if (this.infoLoadingStatus != "notLoaded") return this;
 
         //load data
+        this.infoLoadingStatus = "loading";
         csv(this.url)
             .then(
                 /** @param {*} data */
@@ -55,9 +57,12 @@ export class CSVGrid extends Dataset {
 
                     //execute the callback, usually a draw function
                     if (redraw) redraw()
+
+                    this.infoLoadingStatus = "loaded";
                 })
             .catch(() => {
                 //mark as failed
+                this.infoLoadingStatus = "failed";
                 this.cells = []
             });
 
@@ -76,7 +81,6 @@ export class CSVGrid extends Dataset {
         //data not loaded yet
         if (!this.cells) return;
 
-        /** @type {Array.<Cell>} */
         this.cellsViewCache = []
         for (const cell of this.cells) {
             if (+cell.x + this.resolution < extGeo.xMin) continue;
@@ -86,5 +90,4 @@ export class CSVGrid extends Dataset {
             this.cellsViewCache.push(cell)
         }
     }
-
 }
