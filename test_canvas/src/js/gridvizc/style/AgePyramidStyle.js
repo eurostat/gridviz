@@ -82,7 +82,6 @@ export class AgePyramidStyle extends Style {
             const xc = cell.x + offset.dx;
             const yc = cell.y + offset.dy;
 
-
             //size factor
             /** @type {function(number,number,Stat|undefined,number):number} */
             let sF_ = this.sizeFactor || (() => 1);
