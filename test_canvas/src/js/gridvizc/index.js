@@ -17,8 +17,6 @@ export { CompositionStyle } from "./style/CompositionStyle"
 export { SegmentStyle } from "./style/SegmentStyle"
 export { TextStyle, getCharLegendFun, charLegendFun } from "./style/TextStyle"
 export { KernelSmoothingStyle } from "./style/KernelSmoothingStyle"
-export { RadarStyle } from "./style/RadarStyle"
-export { AgePyramidStyle } from "./style/AgePyramidStyle"
 export { PillarStyle } from "./style/PillarStyle"
 export { SideStyle } from "./style/SideStyle"
 
