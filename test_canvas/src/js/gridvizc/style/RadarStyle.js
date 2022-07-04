@@ -17,44 +17,21 @@ export class RadarStyle extends Style {
         super(opts)
         opts = opts || {};
 
-        /**
-         * The dictionary which give the color of each category.
-         * 
+        /** The dictionary which give the color of each category.
          * @private @type {object} */
         this.color = opts.color;
 
-
-
-
-        /** The column where to get the size factor [0,1].
+        /** The column where to get the size values.
          * @private @type {string} */
-        this.sizeFactorCol = opts.sizeFactorCol
+        this.sizeCol = opts.sizeCol
 
-        /** A function returning the size factor [0,1] of a cell.
+        /** A function returning the size of a cell.
          * @private @type {function(number,number,Stat|undefined,number):number} */
-        this.sizeFactor = opts.sizeFactor || ((v, r, s, zf) => 1);
+        this.size = opts.size || ((v) => Math.sqrt(v));
 
-        /**
-        * The function specifying the margin, in geo unit.
-        * 
-        * @private @type {function(number:number):number} */
-        this.margin = opts.margin || ((r, zf) => 1 * zf);
-
-
-
-
-        /**
-         * The function specifying how the radius evolves depending on the statistical value.
-         * 
-         * @private @type {function(number,number,Stat|undefined,Stat|undefined,number):number} */
-        //this.radius = opts.radius;
-
-        /**
-         * The function specifying how the offser angle.
-         * 
+        /** The function specifying how the offser angle.
          * @private @type {function(Cell,number,number):number} */
         this.offsetAngle = opts.offsetAngle;
-
     }
 
 
@@ -76,23 +53,12 @@ export class RadarStyle extends Style {
         const angle = 2 * Math.PI / nbCat
         const f = Math.PI / 180
 
-        //get the stat
-        //const keys = Object.keys(this.color)
-        //const stat = getStat(cells, keys, true);
-
-        //dimension, in geo
-        const mG = this.margin(r, zf)
-        const rMaxG = r / 2 - mG
-
         //get size stats
         let stat
-        if (this.sizeFactorCol) {
+        if (this.sizeCol) {
             //compute statistics
-            stat = getStatistics(cells, c => c[this.sizeFactorCol], true)
+            stat = getStatistics(cells, c => c[this.sizeCol], true)
         }
-
-
-
 
         //draw in geo coordinates
         cg.setCanvasTransform()
@@ -110,12 +76,12 @@ export class RadarStyle extends Style {
             const xc = cell.x + r * 0.5 + offset.dx;
             const yc = cell.y + r * 0.5 + offset.dy;
 
-            //size factor
+            //size
             /** @type {function(number,number,Stat|undefined,number):number} */
-            let sF_ = this.sizeFactor || (() => 1);
+            let s_ = this.size || (() => r);
             //size - in geo
             /** @type {number} */
-            const sF = sF_(cell[this.sizeFactorCol], r, stat, zf)
+            const sG = s_(cell[this.sizeCol], r, stat, zf)
 
             //get cell category max value
             let maxVal = -Infinity
@@ -136,7 +102,7 @@ export class RadarStyle extends Style {
                 //compute category radius - in geo
                 /** @type {number} */
                 //const rG = this.radius(val, r, stat, cellStat, zf)
-                const rG = sF * rMaxG * Math.sqrt(val / maxVal)
+                const rG = sG / 2 * Math.sqrt(val / maxVal)
 
                 //draw angular sector
                 cg.ctx.beginPath();
@@ -163,19 +129,14 @@ export class RadarStyle extends Style {
     setColor(val) { this.color = val; return this; }
 
     /** @returns {string} */
-    getColSize() { return this.sizeFactorCol; }
+    getColSize() { return this.sizeCol; }
     /** @param {string} val @returns {this} */
-    setColSize(val) { this.sizeFactorCol = val; return this; }
+    setColSize(val) { this.sizeCol = val; return this; }
 
     /** @returns {function(number,number,Stat|undefined,number):number} */
-    getSizeFactor() { return this.sizeFactor; }
+    getSize() { return this.size; }
     /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
-    setSizeFactor(val) { this.sizeFactor = val; return this; }
-
-    /** @returns {function(number,number):number} */
-    getMargin() { return this.margin; }
-    /** @param {function(number,number):number} val @returns {this} */
-    sethMargin(val) { this.margin = val; return this; }
+    setSize(val) { this.size = val; return this; }
 
     /** @returns {function(Cell,number,number):number} */
     getOffsetAngle() { return this.offsetAngle; }

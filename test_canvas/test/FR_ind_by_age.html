@@ -93,10 +93,10 @@
         //radar style
         const sRadar = new gviz.RadarStyle({
             color: colorDict,
-            sizeFactorCol: "Ind",
-            sizeFactor: (v, r, s, zf) => Math.pow(v / s.max, 0.3)
+            sizeCol: "Ind",
+            size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.3)
         })
-        sRadar.sizeFactor_ = () => 1
+        sRadar.size_ = (v, r, s, zf) => r
 
         //age pyramid style
         const sPyramid = new gviz.AgePyramidStyle({
