@@ -100,12 +100,11 @@
         //age pyramid style
         const sPyramid = new gviz.AgePyramidStyle({
             color: colorDict,
-            sizeCol: "Ind",
-            sizeFactor: (v, r, s, zf) => 1
+            sizeFactorCol: "Ind",
+            sizeFactor: (v, r, s, zf) => (v, r, s, zf) => v/s.max
             //margin: (r,zf) => r*0.1,
-            //length: (v, r, s, cs, zf) => r * Math.pow(v / s.max, 0.6),
         })
-        sPyramid.length_ = (v, r, s, cs, zf) => r * Math.pow(v / cs.max, 0.6)
+        sPyramid.sizeFactor_ = () => 1
 
 
         const getStyle = () => {
@@ -195,7 +194,7 @@
             const swap = (s, col) => { const aux = s[col]; s[col] = s[col + "_"]; s[col + "_"] = aux }
             swap(s, "size")
             swap(sRadar, "radius")
-            swap(sPyramid, "length")
+            swap(sPyramid, "sizeFactor")
 
             updateStyle()
             app.cg.redraw();

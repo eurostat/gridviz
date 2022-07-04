@@ -23,11 +23,11 @@ export class AgePyramidStyle extends Style {
 
         /** The column where to get the size factor [0,1].
          * @private @type {string} */
-        this.sizeFactorCol = opts.sizeCol
+        this.sizeFactorCol = opts.sizeFactorCol
 
         /** A function returning the size factor [0,1] of a cell.
          * @private @type {function(number,number,Stat|undefined,number):number} */
-        this.sizeFactor = opts.size || ((v, r, s, zf) => 1);
+        this.sizeFactor = opts.sizeFactor || ((v, r, s, zf) => 1);
 
         /**
         * The function specifying the margin, in geo unit.
@@ -63,9 +63,7 @@ export class AgePyramidStyle extends Style {
         //get size stats
         let stat
         if (this.sizeFactorCol) {
-            //if size is used, sort cells by size so that the biggest are drawn first
-            cells.sort((c1, c2) => c2[this.sizeFactorCol] - c1[this.sizeFactorCol]);
-            //and compute statistics
+            //compute statistics
             stat = getStatistics(cells, c => c[this.sizeFactorCol], true)
         }
 
