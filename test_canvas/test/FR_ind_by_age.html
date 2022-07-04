@@ -109,7 +109,7 @@
             size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
             agePyramidHeight: (r) => 0.95 * r
         })
-        s.size_ = (v, r, s, zf) => 0.95 * r
+        s.size_ = (v, r, s, zf) => r - 1.5 * zf
 
 
         const getStyle = () => {

@@ -1,7 +1,16 @@
 TODO improve halftone: add necessary parameters
 
+TODO check other datasets: list + assets folder
+AT: https://www.statistik.at/atlas/?mapid=them_bevoelkerung_bevoelkerungsstand&layerid=layer1&sublayerid=sublayer0&languageid=1
+EE: https://estat.stat.ee/StatistikaKaart/VKR
+SI: https://gis.stat.si/#lang=en
+IT: http://gisportal.istat.it/GriAnalyst
+FI: https://kartta.paikkatietoikkuna.fi/?lang=en
+FI: http://www.stat.fi/org/avoindata/paikkatietoaineistot/vaestoruutuaineisto_1km_en.html
+PL: https://geo.stat.gov.pl/imap/?locale=en
+
 TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
-TODO tw size+rate example: Gender balance FR ? population, youth VS old FR ? Income FR ?
+TODO tw size+rate example: Gender balance SE ? population, youth VS old FR ? Income FR ?
 TODO map style: contours with color
 
 TODO legend - donut + pillar + characters
@@ -51,3 +60,11 @@ TODO map type: contour style. and hypsometric. See https://observablehq.com/@d3/
 
 TODO webGL investigation
 TODO background - images ?
+
+ 
+
+- Gender (males, females)
+- Age (under 15, 15 to 64, 65 and over)
+- Employment
+- Place of birth (in the reporting country, in another EU country, outside EU)
+- Usual residence 12 months before (unchanged, within reporting country, outside of the reporting country).

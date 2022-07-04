@@ -183,13 +183,13 @@ export class CompositionStyle extends Style {
 
                         //compute category radius - in geo
                         /** @type {number} */
-                        const rG = sG * 0.333 * Math.sqrt(val / maxVal)
+                        const rG = sG * 0.25 * Math.sqrt(val / maxVal)
 
                         //draw circle
                         cg.ctx.beginPath();
                         cg.ctx.arc(
-                            xc + r * 0.333 * Math.cos(cumul),
-                            yc + r * 0.333 * Math.sin(cumul),
+                            xc + r * 0.25 * Math.cos(cumul),
+                            yc + r * 0.25 * Math.sin(cumul),
                             rG,
                             0, 2 * Math.PI);
                         cg.ctx.fill();
