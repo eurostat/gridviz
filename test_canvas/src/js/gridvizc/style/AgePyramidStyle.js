@@ -90,7 +90,6 @@ export class AgePyramidStyle extends Style {
             /** @type {number} */
             const sF = sF_(cell[this.sizeFactorCol], r, stat, zf)
 
-
             //get cell category max value
             let maxVal = -Infinity
             for (let key of catKeys) {
