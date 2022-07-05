@@ -99,7 +99,7 @@
             "Ind_80p": col(1),
             //"Ind_inc": "black"
         }
-
+        const colCat = [["#66a61e", "< 17"], ["#e6ab02", "18 to 65"], ["#a6761d", "> 65"]]
 
         //style
         const s = new gviz.CompositionStyle({
@@ -108,7 +108,7 @@
             sizeCol: "Ind",
             size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
             agePyramidHeight: (r) => 0.95 * r
-        })
+        }).addLegend({ colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: colCat } })
         s.size_ = (v, r, s, zf) => r - 1.5 * zf
 
 
