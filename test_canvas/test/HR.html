@@ -43,6 +43,25 @@
             zfStroke: 80,
         }).addLegend({ color: { id: "schgvvgolleggcend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
 
+        const sPopulationMenWomenRatio = new gviz.ShapeColorSizeStyle({
+            colorCol: "DIFF_MEN_WOMEN",
+            color: (v, r, s) => {
+                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
+                return gviz.interpolateSpectral(1 - t);
+            },
+            shape: () => "square",
+            zfStroke: 80,
+        }).addLegend({
+            color: {
+                id: "scfolleggend", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+                fun: (t, r, s) => {
+                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                    return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
+                }
+            }
+        })
+
         const col = gviz.interpolateSpectral;
         const sPopulationAge = new gviz.CompositionStyle({
             color: {
@@ -54,13 +73,13 @@
             sizeCol: "TOTAL",
             size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
             agePyramidHeight: (r) => 0.95 * r
-        }).addLegend({ colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() } })
+        }).addLegend({ colorCat: { id: "guyextscatlend534", bottom: "20px", left: "20px", shape: "square", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() } })
 
 
         const ttfun = c => ""
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
 
-        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationAge], 0, 9999999999,
+        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationMenWomenRatio], 0, 9999999999,
             {
                 preprocess: c => {
                     //parse position
@@ -70,6 +89,7 @@
                     c.x = (+d[1]) * 1000
                     delete c.IDENTIFIER
                     c.TOTAL = c.TOTAL === "D" ? 0 : +c.TOTAL
+                    c.DIFF_MEN_WOMEN = c.MEN - c.WOMEN
                     //TOTAL,WOMEN,MEN,
                     //TOTAL_0_14,WOMEN_0_14,MEN_0_14,TOTAL_15_64,WOMEN_15_64,MEN_15_64_,TOTAL_65p,WOMEN_65p,MEN_65p,
                     //INACTIVE_POPULATION,LABOUR_FORCE,
