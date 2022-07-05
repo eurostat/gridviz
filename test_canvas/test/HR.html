@@ -49,9 +49,11 @@
         app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [s], 0, 9999999999,
             {
                 preprocess: c => {
+                    //parse position
                     //IDENTIFIER: "1kmN2621E4812"
-                    const id = c.IDENTIFIER
-                    console.log(id)
+                    let d = (c.IDENTIFIER + "").replace("1kmN", "").split("E")
+                    c.y = (+d[0]) * 1000
+                    c.x = (+d[1]) * 1000
                 }
             })
 
