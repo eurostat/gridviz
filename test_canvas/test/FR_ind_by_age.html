@@ -83,7 +83,7 @@
         //const col = gviz.interpolateYlOrRd;
         const colorDict = agg ? {
             "Ind_0_17": "#66a61e",
-            "Ind_18_64": "#e6ab02",
+            "Ind_18_64": "#e6ab0277",
             "Ind_65p": "#a6761d",
             /*"Ind_0_24": "#66a61e",
             "Ind_25_54": "#e6ab02",
@@ -102,7 +102,7 @@
             "Ind_80p": col(1),
             //"Ind_inc": "black"
         }
-        let colCat = agg ? [["#66a61e", "< 17"], ["#e6ab02", "18 to 65"], ["#a6761d", "> 65"]]
+        let colCat = agg ? [["#66a61e", "< 17"], ["#e6ab0277", "18 to 65"], ["#a6761d", "> 65"]]
             : [[col(0), "< 3"], [col(2 / 80), "4 to 5"], [col(7 / 80), "6 to 10"], [col(14 / 80), "11 to 17"],
             [col(21 / 80), "18 to 24"], [col(36 / 80), "25 to 39"], [col(51 / 80), "40 to 54"], [col(61 / 80), "55 to 64"],
             [col(76 / 80), "65 to 79"], [col(1), ">80"]]
