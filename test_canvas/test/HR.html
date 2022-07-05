@@ -10,14 +10,15 @@
 
     <div
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
-        <span style="font-size: 17pt; font-weight: bold;">Statistical grids - Croatia</span><br><span style="font-size: 10pt;">
+        <span style="font-size: 17pt; font-weight: bold;">Statistical grids - Croatia</span><br><span
+            style="font-size: 10pt;">
             <hr>
             <input type="checkbox" id="label" checked>
             <label for="label">City names</label>
             <input type="checkbox" id="boundary" checked>
             <label for="boundary">Boundaries</label>
-            <hr>Source: Croatian Bureau of Statistics, 2015, <a href="https://podaci.dzs.hr/media/selhhzke/metod_74.pdf" target="_blank"
-                rel="noopener noreferrer">URL</a>
+            <hr>Source: Croatian Bureau of Statistics, 2015, <a href="https://podaci.dzs.hr/media/selhhzke/metod_74.pdf"
+                target="_blank" rel="noopener noreferrer">URL</a>
         </span>
     </div>
 
@@ -26,18 +27,34 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(100).setZoomFactorExtent([10, 1500])
+            .setGeoCenter({ x: 4785299, y: 2540380 }).setZoomFactor(100).setZoomFactorExtent([10, 1500])
             .setLabelLayer(gviz.getEuronymeLabelLayer("HR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
 
 
-        //style data
+        //style
+        const s = new gviz.ShapeColorSizeStyle({
+            colorCol: "TOTAL",
+            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+            shape: () => "square",
+            zfStroke: 80,
+        }).addLegend({ color: { id: "schgvvgolleggcend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
 
 
         const ttfun = c => ""
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
+
+        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [s], 0, 9999999999,
+            {
+                preprocess: c => {
+                    //IDENTIFIER: "1kmN2621E4812"
+                    const id = c.IDENTIFIER
+                    console.log(id)
+                }
+            })
+
 
 
         // show/hide labels
