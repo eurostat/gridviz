@@ -122,11 +122,11 @@
         const getLegendOpts = () => {
             const opts = { colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square" } }
             if (getAggUI()) {
-                opts.colCat = [[colorDict["Ind_0_17"], "< 17"], [colorDict["Ind_18_64"], "18 to 65"], [colorDict["Ind_65p"], "> 65"]]
+                opts.colorCat.colCat = [[colorDict["Ind_0_17"], "< 17"], [colorDict["Ind_18_64"], "18 to 65"], [colorDict["Ind_65p"], "> 65"]]
                     .reverse()
             }
             else {
-                opts.colCat = [[col(0), "< 3"], [col(2 / 80), "4 to 5"], [col(7 / 80), "6 to 10"], [col(14 / 80), "11 to 17"],
+                opts.colorCat.colCat = [[col(0), "< 3"], [col(2 / 80), "4 to 5"], [col(7 / 80), "6 to 10"], [col(14 / 80), "11 to 17"],
                 [col(21 / 80), "18 to 24"], [col(36 / 80), "25 to 39"], [col(51 / 80), "40 to 54"], [col(61 / 80), "55 to 64"],
                 [col(76 / 80), "65 to 79"], [col(1), ">80"]]
                     .reverse()
