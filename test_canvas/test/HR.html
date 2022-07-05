@@ -35,18 +35,26 @@
 
 
         //style
-        const s = new gviz.ShapeColorSizeStyle({
+        const sPopulationTotal = new gviz.ShapeColorSizeStyle({
             colorCol: "TOTAL",
             color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
             shape: () => "square",
             zfStroke: 80,
         }).addLegend({ color: { id: "schgvvgolleggcend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
 
+        const sPopulationAge = new gviz.CompositionStyle({
+            color: getColorDict(),
+            type: () => "flag",
+            sizeCol: "TOTAL",
+            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+            agePyramidHeight: (r) => 0.95 * r
+        }).addLegend(getLegendOpts())
+
 
         const ttfun = c => ""
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
 
-        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [s], 0, 9999999999,
+        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationTotal], 0, 9999999999,
             {
                 preprocess: c => {
                     //parse position
@@ -54,6 +62,12 @@
                     let d = (c.IDENTIFIER + "").replace("1kmN", "").split("E")
                     c.y = (+d[0]) * 1000
                     c.x = (+d[1]) * 1000
+                    delete c.IDENTIFIER
+                    c.TOTAL = c.TOTAL === "D" ? 0 : +c.TOTAL
+                    //TOTAL,WOMEN,MEN,
+                    //TOTAL_0_14,WOMEN_0_14,MEN_0_14,TOTAL_15_64,WOMEN_15_64,MEN_15_64_,TOTAL_65p,WOMEN_65p,MEN_65p,
+                    //INACTIVE_POPULATION,LABOUR_FORCE,
+                    //BASIC_EDUCATION_OR_LESS,UPPER_SECONDARY_EDUCATION,TERTIARY_EDUCATION
                 }
             })
 
