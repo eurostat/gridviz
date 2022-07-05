@@ -1,4 +1,5 @@
 
+TODO legend refresh on composition
 https://twitter.com/neocartocnrs/status/1543860970111524864
 
 TODO check other datasets: list + assets folder

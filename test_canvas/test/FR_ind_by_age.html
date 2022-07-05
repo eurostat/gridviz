@@ -55,22 +55,14 @@
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer({
                 color: (f, zf) => {
                     const p = f.properties
-                    const col = "#444"
+                    const col = "#888"
                     if (p.co === "T") return col //"#007577"
                     if (zf < 400) return col
                     else if (zf < 1000) return p.lvl >= 3 ? "" : col
                     else if (zf < 2000) return p.lvl >= 2 ? "" : col
                     else return p.lvl >= 1 ? "" : col
                 },
-
-                width: (f, zf) => {
-                    const p = f.properties
-                    if (p.co === "T") return 1.5
-                    if (zf < 400) return p.lvl == 3 ? 2.2 : p.lvl == 2 ? 2.2 : p.lvl == 1 ? 2.2 : 3.5
-                    else if (zf < 1000) return p.lvl == 2 ? 1.2 : p.lvl == 1 ? 1.2 : 2.5
-                    else if (zf < 2000) return p.lvl == 1 ? 1 : 3
-                    else return 2.2
-                }
+                lineDash: () => [],
             }))
 
         //test view from URL parameters, if any
@@ -141,7 +133,7 @@
             color: getColorDict(),
             type: () => "ring",
             sizeCol: "Ind",
-            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.05, 1),
+            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
             agePyramidHeight: (r) => 0.95 * r
         }).addLegend(getLegendOpts())
         s.size_ = (v, r, s, zf) => r - 1.5 * zf
