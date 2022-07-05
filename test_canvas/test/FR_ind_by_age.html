@@ -12,6 +12,8 @@
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
         <span style="font-size: 17pt; font-weight: bold;">Population of France by age</span><br><span
             style="font-size: 10pt;">
+            <input type="checkbox" id="agg">
+            <label for="agg">Aggregate to 3 age groups</label>
             <hr>
             <span style="font-size: 11pt; font-weight: bold;">Style</span><br>
             <div id="style">
@@ -47,9 +49,6 @@
     <script src="../build/gridvizc.js"></script>
     <script>
 
-        const agg = true
-
-
         //make application
         const app = new gviz.App()
             .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(100).setZoomFactorExtent([2, 1500])
@@ -77,59 +76,80 @@
         //test view from URL parameters, if any
         app.cg.setViewFromURL()
 
-        //TODO group younger
-        const col = gviz.interpolateSpectral;
-        //const col = gviz.interpolateTurbo;
-        //const col = gviz.interpolateYlOrRd;
-        const colorDict = agg ? {
-            "Ind_0_17": "#66a61e",
-            "Ind_18_64": "#e6ab0277",
-            "Ind_65p": "#a6761d",
-            /*"Ind_0_24": "#66a61e",
-            "Ind_25_54": "#e6ab02",
-            "Ind_55p": "#a6761d",*/
-            //"Ind_inc": "black"
-        } : {
-            "Ind_0_3": col(0/80),
-            "Ind_4_5": col(2 / 80),
-            "Ind_6_10": col(7 / 80),
-            "Ind_11_17": col(14 / 80),
-            "Ind_18_24": col(21 / 80),
-            "Ind_25_39": col(36 / 80),
-            "Ind_40_54": col(51 / 80),
-            "Ind_55_64": col(61 / 80),
-            "Ind_65_79": col(76 / 80),
-            "Ind_80p": col(1),
-            //"Ind_inc": "black"
+        //get aggregation from UI
+        const getAggUI = () => {
+            return document.querySelector('#agg').checked
         }
-        let colCat = agg ? [["#66a61e", "< 17"], ["#e6ab0277", "18 to 65"], ["#a6761d", "> 65"]]
-            : [[col(0), "< 3"], [col(2 / 80), "4 to 5"], [col(7 / 80), "6 to 10"], [col(14 / 80), "11 to 17"],
-            [col(21 / 80), "18 to 24"], [col(36 / 80), "25 to 39"], [col(51 / 80), "40 to 54"], [col(61 / 80), "55 to 64"],
-            [col(76 / 80), "65 to 79"], [col(1), ">80"]]
-        colCat = colCat.reverse();
 
-
-
-        //style
-        const s = new gviz.CompositionStyle({
-            color: colorDict,
-            type: () => "ring",
-            sizeCol: "Ind",
-            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.05, 1),
-            agePyramidHeight: (r) => 0.95 * r
-        }).addLegend({ colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: colCat } })
-        s.size_ = (v, r, s, zf) => r - 1.5 * zf
-
-
+        //get style from UI
         const getStyle = () => {
             const v = document.querySelector('input[name="style"]:checked').value
             s.setType(() => v)
             return s
         }
 
+        const col = gviz.interpolateSpectral;
+        //const col = gviz.interpolateTurbo;
+        //const col = gviz.interpolateYlOrRd;
+        const getColorDict = () => {
+            if (getAggUI())
+                return {
+                    "Ind_0_17": col(0.2),
+                    "Ind_18_64": col(0.4),
+                    "Ind_65p": col(0.9),
+                    /*"Ind_0_24": "#66a61e",
+                    "Ind_25_54": "#e6ab02",
+                    "Ind_55p": "#a6761d",*/
+                    //"Ind_inc": "black"
+                };
+            else
+                return {
+                    "Ind_0_3": col(0 / 80),
+                    "Ind_4_5": col(2 / 80),
+                    "Ind_6_10": col(7 / 80),
+                    "Ind_11_17": col(14 / 80),
+                    "Ind_18_24": col(21 / 80),
+                    "Ind_25_39": col(36 / 80),
+                    "Ind_40_54": col(51 / 80),
+                    "Ind_55_64": col(61 / 80),
+                    "Ind_65_79": col(76 / 80),
+                    "Ind_80p": col(1),
+                    //"Ind_inc": "black"
+                }
+        }
+
+        //labels for the legend
+        const getLegendOpts = () => {
+            const opts = { colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square" } }
+            if (getAggUI()) {
+                opts.colCat = [[colorDict["Ind_0_17"], "< 17"], [colorDict["Ind_18_64"], "18 to 65"], [colorDict["Ind_65p"], "> 65"]]
+                    .reverse()
+            }
+            else {
+                opts.colCat = [[col(0), "< 3"], [col(2 / 80), "4 to 5"], [col(7 / 80), "6 to 10"], [col(14 / 80), "11 to 17"],
+                [col(21 / 80), "18 to 24"], [col(36 / 80), "25 to 39"], [col(51 / 80), "40 to 54"], [col(61 / 80), "55 to 64"],
+                [col(76 / 80), "65 to 79"], [col(1), ">80"]]
+                    .reverse()
+            }
+            return opts
+        }
+
+
+
+        //style
+        const s = new gviz.CompositionStyle({
+            color: getColorDict(),
+            type: () => "ring",
+            sizeCol: "Ind",
+            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.05, 1),
+            agePyramidHeight: (r) => 0.95 * r
+        }).addLegend(getLegendOpts())
+        s.size_ = (v, r, s, zf) => r - 1.5 * zf
+
+
         const ttfun = c => {
             let out = "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>"
-            if (agg) {
+            if (getAggUI()) {
                 out = out + "  < 18: " + d3.format(".1f")(c["Ind_0_17"]) + "<br>" +
                     " 18-64: " + d3.format(".1f")(c["Ind_18_64"]) + "<br>" +
                     "  > 65: " + d3.format(".1f")(c["Ind_65p"]) + "<br>" +
@@ -155,14 +175,12 @@
         }
 
         preprocess = c => {
-            if (agg) {
-                c["Ind_0_17"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"]
-                c["Ind_18_64"] = +c["Ind_18_24"] + +c["Ind_25_39"] + +c["Ind_40_54"] + +c["Ind_55_64"]
-                c["Ind_65p"] = +c["Ind_65_79"] + +c["Ind_80p"]
-                //c["Ind_0_24"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"]
-                //c["Ind_25_54"] = +c["Ind_25_39"] + +c["Ind_40_54"]
-                //c["Ind_55p"] = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
-            }
+            c["Ind_0_17"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"]
+            c["Ind_18_64"] = +c["Ind_18_24"] + +c["Ind_25_39"] + +c["Ind_40_54"] + +c["Ind_55_64"]
+            c["Ind_65p"] = +c["Ind_65_79"] + +c["Ind_80p"]
+            //c["Ind_0_24"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"]
+            //c["Ind_25_54"] = +c["Ind_25_39"] + +c["Ind_40_54"]
+            //c["Ind_55p"] = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
         }
 
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
@@ -205,6 +223,12 @@
         });
 
 
+
+        // aggregation
+        document.querySelector('#agg').addEventListener('change', function () {
+            s.color = getColorDict()
+            app.cg.redraw();
+        });
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
