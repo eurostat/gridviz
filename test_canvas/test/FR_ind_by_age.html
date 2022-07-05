@@ -106,7 +106,7 @@
             color: colorDict,
             type: () => "ring",
             sizeCol: "Ind",
-            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.15),
+            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.05, 1),
             agePyramidHeight: (r) => 0.95 * r
         }).addLegend({ colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: colCat } })
         s.size_ = (v, r, s, zf) => r - 1.5 * zf

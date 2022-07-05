@@ -190,8 +190,8 @@ export class CompositionStyle extends Style {
                         //draw circle
                         cg.ctx.beginPath();
                         cg.ctx.arc(
-                            xc + r * 0.25 * Math.cos(cumul),
-                            yc + r * 0.25 * Math.sin(cumul),
+                            xc + r * 0.3 * Math.cos(cumul),
+                            yc + r * 0.3 * Math.sin(cumul),
                             rG,
                             0, 2 * Math.PI);
                         cg.ctx.fill();
