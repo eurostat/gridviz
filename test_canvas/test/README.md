@@ -12,6 +12,10 @@
 - Poverty: https://eurostat.github.io/gridviz/test_canvas/test/FR_men_pauv.html
 - Income: https://eurostat.github.io/gridviz/test_canvas/test/FR_niv_vie.html
 
+# Croatia
+
+https://eurostat.github.io/gridviz/test_canvas/test/HR.html
+
 # Sweden
 
 - Population by age: https://eurostat.github.io/gridviz/test_canvas/test/SE_pop_by_age.html
