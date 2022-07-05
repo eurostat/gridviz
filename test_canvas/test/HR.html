@@ -51,10 +51,12 @@
                 return gviz.interpolateSpectral(1 - t);
             },
             shape: () => "square",
+            sizeCol: "TOTAL",
+            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1),
             zfStroke: 80,
         }).addLegend({
             color: {
-                id: "scfolleggend", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+                id: "scfolleggend", bottom: "20px", left: "20px", title: "Men / women difference", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
                 fun: (t, r, s) => {
                     const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                     return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
@@ -90,6 +92,8 @@
                     delete c.IDENTIFIER
                     c.TOTAL = c.TOTAL === "D" ? 0 : +c.TOTAL
                     c.DIFF_MEN_WOMEN = c.MEN - c.WOMEN
+                    c.DIFF_MEN_WOMEN = 100 * c.DIFF_MEN_WOMEN / c.TOTAL
+                    if(isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
                     //TOTAL,WOMEN,MEN,
                     //TOTAL_0_14,WOMEN_0_14,MEN_0_14,TOTAL_15_64,WOMEN_15_64,MEN_15_64_,TOTAL_65p,WOMEN_65p,MEN_65p,
                     //INACTIVE_POPULATION,LABOUR_FORCE,
