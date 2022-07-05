@@ -47,7 +47,7 @@
     <script src="../build/gridvizc.js"></script>
     <script>
 
-        const agg = false
+        const agg = true
 
 
         //make application
@@ -78,9 +78,9 @@
         app.cg.setViewFromURL()
 
         //TODO group younger
-        //const col = gviz.interpolateSpectral;
+        const col = gviz.interpolateSpectral;
         //const col = gviz.interpolateTurbo;
-        const col = gviz.interpolateYlOrRd;
+        //const col = gviz.interpolateYlOrRd;
         const colorDict = agg ? {
             "Ind_0_17": "#66a61e",
             "Ind_18_64": "#e6ab02",
