@@ -52,7 +52,7 @@
         //make application
         const app = new gviz.App()
             .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(100).setZoomFactorExtent([2, 1500])
-            .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { haloWidth: () => 6 })).setBoundaryLayer(gviz.getEurostatBoundariesLayer({
+            .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { haloWidth: () => 5, haloColor:()=>"#FFFFFFDD" })).setBoundaryLayer(gviz.getEurostatBoundariesLayer({
                 color: (f, zf) => {
                     const p = f.properties
                     const col = "#888"
