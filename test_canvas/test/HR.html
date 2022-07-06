@@ -133,7 +133,7 @@
             },
             type: () => "piechart",
             sizeCol: "TOTAL",
-            size: (v, r, s, zf) => 1.25*r * gviz.s(v / s.max, 0.1),
+            size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
         }).addLegend({
             colorCat: {
                 id: "guyehvhgvjhgxtscjhgatlend534", bottom: "20px", left: "20px", shape: "square",
@@ -146,7 +146,8 @@
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
 
         //app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationInact], 0, 9999999999,
-        app.addCSVGridLayer(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, [sBusinessesSector], 0, 9999999999,
+        //app.addCSVGridLayer(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, [sBusinessesSector], 0, 9999999999,
+        app.addCSVGridLayer(url + "Tourism_2017_Grid_1000m.csv", 1000, [sBusinessesSector], 0, 9999999999,
             {
                 preprocess: c => {
                     //parse position
@@ -180,7 +181,7 @@
                     //console.log(c.INACT_RATE)
 */
 
-                    //IDENTIFIER,TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
+                    /*/TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
                     //see https://nacev2.com/fr
                     let sum = 0
                     for (let s of ["TOTAL", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"]) {
@@ -195,6 +196,21 @@
                     c.s3 = c.I + c.J + c.K + c.L + c.M + c.N + c.O + c.P + c.Q + c.R + c.S + c.T
                     //console.log(c.s1, c.s2, c.s3)
                     //console.log(c.s1 + c.s2 + c.s3 == c.TOTAL)
+                    */
+
+
+                    c["ESTABLISHMENTS - TOTAL"] = c["ESTABLISHMENTS - TOTAL"] === "Z" ? 0 : +c["ESTABLISHMENTS - TOTAL"]
+                    c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] = c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] === "Z" ? 0 : +c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"]
+                    c["NUMBER OF PERMANENT BEDS"] = c["NUMBER OF PERMANENT BEDS"] === "Z" ? 0 : +c["NUMBER OF PERMANENT BEDS"]
+                    //console.log(c)
+
+
+                    //TOTAL ARRIVALS
+                    //A_DOMESTIC TOURISTS - TOTAL,A_FOREIGN TOURISTS - TOTAL,A_AUSTRIAN TOURISTS,A_GERMAN TOURISTS,A_ITALIAN TOURISTS,A_SLOVENIAN TOURISTS,
+                    //TOTAL NIGHTS
+                    //N_DOMESTIC TOURISTS - TOTAL,N_FOREIGN TOURISTS - TOTAL,N_AUSTRIAN TOURISTS,N_GERMAN TOURISTS,N_ITALIAN TOURISTS,N_SLOVENIAN TOURISTS
+
+
                 }
             })
 

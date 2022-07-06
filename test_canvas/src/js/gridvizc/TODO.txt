@@ -1,5 +1,4 @@
 TODO test data HR
-* businesses by NACE
 * tourism: accomodation - number of bed / units / total. composition by origin, for arrivals and number of nights
 * 2000 - 4000 aggregation. On the fly ???
 
