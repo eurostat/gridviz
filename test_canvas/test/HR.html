@@ -38,27 +38,25 @@
 
         const colors = ["#a9bb9e", "#c9dcaa", "#f0f1af", "#fde89f", "#f9a579", "#eb444b"]
         const breaks = [10, 50, 200, 500, 2000]
+        const getClass = (v) => {
+            for (let i = 0; i < breaks.length; i++)
+                if (v < breaks[i]) return i
+            return breaks.length
+        }
 
         const sPopulationTotalDiscrete = new gviz.ShapeColorSizeStyle({
             colorCol: "TOTAL",
-            color: (v, r, s) => {
-                for (let i = 0; i < breaks.length; i++)
-                    if (v < breaks[i]) return colors[i]
-                return colors[breaks.length]
-            },
+            color: (v, r, s) => colors[getClass(v)],
             shape: () => "square",
             zfStroke: 80,
-        }).addLegend({ color: { id: "sch234vgollejknggcend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
-
+        })
 
         const sPopulationTotalSide = new gviz.SideStyle({
-            value: (c1, c2) => { return (c2 ? +c2["TOTAL"] : 0) - (c1 ? +c1["TOTAL"] : 0) },
-            color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
-            width: (side, r, s, z) => {
-                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                return r * (0.02 + 0.4 * gviz.s(Math.abs(side.value) / max, 0.5))
+            value: (c1, c2) => {
+                return (c2 ? getClass(c2["TOTAL"]) : 0) - (c1 ? getClass(c1["TOTAL"]) : 0)
             },
-            //fillColor: "#fafafa",
+            color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "#222" : "#ddd",
+            width: (side, r, s, z) => 0.15 * r * side.value,
         })
 
         /*
