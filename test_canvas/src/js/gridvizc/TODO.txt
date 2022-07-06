@@ -1,4 +1,4 @@
-TODO style hypso (color discrete)
+TODO show tanaka style on FR-EUR population
 TODO make tests using offset ?
 TODO test tanaka with smoothing
 

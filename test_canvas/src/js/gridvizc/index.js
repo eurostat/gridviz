@@ -19,7 +19,7 @@ export { TextStyle, getCharLegendFun, charLegendFun } from "./style/TextStyle"
 export { KernelSmoothingStyle } from "./style/KernelSmoothingStyle"
 export { PillarStyle } from "./style/PillarStyle"
 export { SideStyle } from "./style/SideStyle"
-
+export { getTanakaStyle } from "./style/TanakaStyle"
 
 //export additional layers
 export { LabelLayer } from "./LabelLayer"

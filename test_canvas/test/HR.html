@@ -36,28 +36,11 @@
 
         //styles
 
-        const colors = ["#a9bb9e", "#c9dcaa", "#f0f1af", "#fde89f", "#f9a579", "#eb444b"]
-        const breaks = [10, 50, 200, 500, 2000]
-        const getClass = (v) => {
-            for (let i = 0; i < breaks.length; i++)
-                if (v < breaks[i]) return i
-            return breaks.length
-        }
 
-        const sPopulationTotalDiscrete = new gviz.ShapeColorSizeStyle({
-            colorCol: "TOTAL",
-            color: (v, r, s) => colors[getClass(v)],
-            shape: () => "square",
-            zfStroke: 80,
-        })
 
-        const sPopulationTotalSide = new gviz.SideStyle({
-            value: (c1, c2) => {
-                return (c2 ? getClass(c2["TOTAL"]) : 0) - (c1 ? getClass(c1["TOTAL"]) : 0)
-            },
-            color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "#222" : "#ddd",
-            width: (side, r, s, z) => 0.15 * r * side.value,
-        })
+
+
+
 
         /*
         const sPopulationTotal = new gviz.ShapeColorSizeStyle({
@@ -233,7 +216,7 @@
         const ttfun = c => ""
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
 
-        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationTotalDiscrete, sPopulationTotalSide], 0, 9999999999,
+        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, gviz.getTanakaStyle("TOTAL"), 0, 9999999999,
             //app.addCSVGridLayer(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, [sBusinessesSector], 0, 9999999999,
             //app.addCSVGridLayer(url + "Tourism_2017_Grid_1000m.csv", 1000, [sTourismNat], 0, 9999999999,
             {
