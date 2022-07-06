@@ -1,5 +1,6 @@
 TODO style hypso (color discrete)
 TODO make tests using offset ?
+TODO test tanaka with smoothing
 
 TODO style lego?
 
