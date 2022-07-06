@@ -163,6 +163,7 @@
 */
 
                     //IDENTIFIER,TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
+                    //see https://nacev2.com/fr
                     let sum = 0
                     for (let s of ["TOTAL", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"]) {
                         c[s] = +c[s]
@@ -170,6 +171,11 @@
                         if (isNaN(c[s])) console.log(c)
                     }
                     if (c.TOTAL != sum) console.log(c, c.TOTAL, sum)
+
+                    c.s1 = c.A
+                    c.s2 = c.B + c.C + c.D + c.E + c.F + c.G + c.H
+                    c.s2 = c.I + c.J + c.K + c.L + c.M + c.N + c.O + c.P + c.Q + c.R + c.S + c.T
+                    console.log(c.s1, c.s2, c.s3)
                 }
             })
 
