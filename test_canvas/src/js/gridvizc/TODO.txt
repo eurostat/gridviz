@@ -1,6 +1,4 @@
 TODO test data HR
-* population total - men/women - by age
-* education level: BASIC_EDUCATION_OR_LESS,UPPER_SECONDARY_EDUCATION,TERTIARY_EDUCATION
 * by employment: INACTIVE_POPULATION,LABOUR_FORCE
 * businesses by NACE
 * tourism: accomodation - number of bed / units / total. composition by origin, for arrivals and number of nights

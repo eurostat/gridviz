@@ -111,21 +111,19 @@
                     c.DIFF_MEN_WOMEN = 100 * c.DIFF_MEN_WOMEN / c.TOTAL
                     if (isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
 
-                    //BASIC_EDUCATION_OR_LESS
-                    //UPPER_SECONDARY_EDUCATION
-                    //TERTIARY_EDUCATION
-
+                    //education
                     c.BASIC_EDUCATION_OR_LESS = c.BASIC_EDUCATION_OR_LESS === "D" ? 0 : +c.BASIC_EDUCATION_OR_LESS
                     c.UPPER_SECONDARY_EDUCATION = c.UPPER_SECONDARY_EDUCATION === "D" ? 0 : +c.UPPER_SECONDARY_EDUCATION
                     c.TERTIARY_EDUCATION = c.TERTIARY_EDUCATION === "D" ? 0 : +c.TERTIARY_EDUCATION
                     c.OTHER_EDUC = c.TOTAL - c.BASIC_EDUCATION_OR_LESS - c.UPPER_SECONDARY_EDUCATION - c.TERTIARY_EDUCATION
 
-
-
-                    //TOTAL,WOMEN,MEN,
-                    //TOTAL_0_14,WOMEN_0_14,MEN_0_14,TOTAL_15_64,WOMEN_15_64,MEN_15_64_,TOTAL_65p,WOMEN_65p,MEN_65p,
-                    //INACTIVE_POPULATION,LABOUR_FORCE,
-                    //BASIC_EDUCATION_OR_LESS,UPPER_SECONDARY_EDUCATION,TERTIARY_EDUCATION
+                    //labor
+                    c.INACTIVE_POPULATION = c.INACTIVE_POPULATION === "D" ? 0 : +c.INACTIVE_POPULATION
+                    c.LABOUR_FORCE = c.LABOUR_FORCE === "D" ? 0 : +c.LABOUR_FORCE
+                    c.OTHER_LABOR = c.TOTAL - c.INACTIVE_POPULATION - c.LABOUR_FORCE
+                    //console.log(c.INACTIVE_POPULATION > c.LABOUR_FORCE)  // true and false
+                    //console.log(c.OTHER_LABOR > 0) // true and false
+                    //console.log(c.LABOUR_FORCE/c.INACTIVE_POPULATION <1)  // true and false
                 }
             })
 
