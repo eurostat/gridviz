@@ -125,23 +125,19 @@
 
 
 
-
-
-
         const sBusinessesSector = new gviz.CompositionStyle({
             color: {
-                "s1": "green",
-                "s2": "yellow",
-                "s3": "blue",
+                "s1": "#1b9e77",
+                "s2": "#d95f02",
+                "s3": "#7570b3",
             },
-            type: () => "flag",
+            type: () => "piechart",
             sizeCol: "TOTAL",
-            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-            agePyramidHeight: (r) => 0.95 * r
+            size: (v, r, s, zf) => 1.25*r * gviz.s(v / s.max, 0.1),
         }).addLegend({
             colorCat: {
                 id: "guyehvhgvjhgxtscjhgatlend534", bottom: "20px", left: "20px", shape: "square",
-                colCat: [["green", "Primary"], ["yellow", "Secondary"], ["blue", "Tertiary"]].reverse()
+                colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse()
             }
         })
 
