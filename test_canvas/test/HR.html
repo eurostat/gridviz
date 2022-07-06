@@ -161,15 +161,15 @@
         //const p = "A"
         const sTourismNat = new gviz.CompositionStyle({
             color: {
-                "_DOMESTIC TOURISTS - TOTAL": "green",
-                "_AUSTRIAN TOURISTS": "yellow",
-                "_GERMAN TOURISTS": "red",
-                "_ITALIAN TOURISTS": "blue",
-                "_SLOVENIAN TOURISTS": "magenta",
-                "_OTHER": "black",
+                "A_DOMESTIC TOURISTS - TOTAL": "green",
+                "A_AUSTRIAN TOURISTS": "yellow",
+                "A_GERMAN TOURISTS": "red",
+                "A_ITALIAN TOURISTS": "blue",
+                "A_SLOVENIAN TOURISTS": "magenta",
+                "A_OTHER": "black",
             },
             type: () => "piechart",
-            sizeCol: "TOTAL",
+            sizeCol: "TOTAL ARRIVALS",
             size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
         })/*.addLegend({
             colorCat: {
