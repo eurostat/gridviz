@@ -158,21 +158,25 @@
 
 
 
+        //const p = "A"
         const sTourismNat = new gviz.CompositionStyle({
             color: {
-                "s1": "#1b9e77",
-                "s2": "#d95f02",
-                "s3": "#7570b3",
+                "_DOMESTIC TOURISTS - TOTAL": "green",
+                "_AUSTRIAN TOURISTS": "yellow",
+                "_GERMAN TOURISTS": "red",
+                "_ITALIAN TOURISTS": "blue",
+                "_SLOVENIAN TOURISTS": "magenta",
+                "_OTHER": "black",
             },
             type: () => "piechart",
             sizeCol: "TOTAL",
             size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
-        }).addLegend({
+        })/*.addLegend({
             colorCat: {
                 id: "guyehvhggvjhgcgccjhgatlend534", bottom: "20px", left: "20px", shape: "square",
                 colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse()
             }
-        })
+        })*/
 
 
 
@@ -182,7 +186,7 @@
 
         //app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationInact], 0, 9999999999,
         //app.addCSVGridLayer(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, [sBusinessesSector], 0, 9999999999,
-        app.addCSVGridLayer(url + "Tourism_2017_Grid_1000m.csv", 1000, [sTourismAccomod], 0, 9999999999,
+        app.addCSVGridLayer(url + "Tourism_2017_Grid_1000m.csv", 1000, [sTourismNat], 0, 9999999999,
             {
                 preprocess: c => {
                     //parse position
@@ -251,9 +255,7 @@
 
                     for (let p of ["A", "N"])
                         c[p + "_OTHER"] = +c[p + "_FOREIGN TOURISTS - TOTAL"] - c[p + "_AUSTRIAN TOURISTS"] - c[p + "_GERMAN TOURISTS"] - c[p + "_ITALIAN TOURISTS"] - c[p + "_SLOVENIAN TOURISTS"]
-
-                    console.log(c["A_OTHER"] >= 0)
-                    console.log(c["N_OTHER"] >= 0)
+                    //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
 
                     //TOTAL ARRIVALS
                     //A_DOMESTIC TOURISTS - TOTAL
