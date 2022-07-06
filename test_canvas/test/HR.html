@@ -161,22 +161,22 @@
         //const p = "A"
         const sTourismNat = new gviz.CompositionStyle({
             color: {
-                "A_DOMESTIC TOURISTS - TOTAL": "green",
-                "A_AUSTRIAN TOURISTS": "yellow",
-                "A_GERMAN TOURISTS": "red",
-                "A_ITALIAN TOURISTS": "blue",
-                "A_SLOVENIAN TOURISTS": "magenta",
-                "A_OTHER": "black",
+                "N_DOMESTIC TOURISTS - TOTAL": "cyan",
+                "N_AUSTRIAN TOURISTS": "orange",
+                "N_GERMAN TOURISTS": "red",
+                "N_ITALIAN TOURISTS": "blue",
+                "N_SLOVENIAN TOURISTS": "magenta",
+                "N_OTHER": "gray",
             },
             type: () => "piechart",
-            sizeCol: "TOTAL ARRIVALS",
+            sizeCol: "TOTAL NIGHTS",
             size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
-        })/*.addLegend({
+        }).addLegend({
             colorCat: {
-                id: "guyehvhggvjhgcgccjhgatlend534", bottom: "20px", left: "20px", shape: "square",
-                colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse()
+                id: "guyeh35cgccjhgatlend534", bottom: "20px", left: "20px", shape: "square",
+                colCat: [["cyan", "Croatian"],["orange", "Austrian"],["red", "German"],["blue", "Italian"],["magenta", "Slovenian"],["gray", "Other"]].reverse()
             }
-        })*/
+        })
 
 
 
