@@ -171,6 +171,8 @@
                     c.x = (+d[1]) * 1000
                     delete c.IDENTIFIER
 
+                    const overrideZ = (c, col) => c[col] = c[col] === "Z" ? 0 : +c[col]
+
                     /*
                     c.TOTAL = c.TOTAL === "D" ? 0 : +c.TOTAL
                     c.DIFF_MEN_WOMEN = c.MEN - c.WOMEN
@@ -213,17 +215,33 @@
                     */
 
 
-                    c["ESTABLISHMENTS - TOTAL"] = c["ESTABLISHMENTS - TOTAL"] === "Z" ? 0 : +c["ESTABLISHMENTS - TOTAL"]
-                    c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] = c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] === "Z" ? 0 : +c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"]
-                    c["NUMBER OF PERMANENT BEDS"] = c["NUMBER OF PERMANENT BEDS"] === "Z" ? 0 : +c["NUMBER OF PERMANENT BEDS"]
-                    //console.log(c)
-
+                    for (let s of ["ESTABLISHMENTS - TOTAL", "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL", "NUMBER OF PERMANENT BEDS"])
+                        overrideZ(c, s)
+                    for (let s of ["TOTAL ARRIVALS", "TOTAL NIGHTS"])
+                        overrideZ(c, s)
+                    for (let p of ["A", "N"]) {
+                        overrideZ(c, p + "_DOMESTIC TOURISTS - TOTAL")
+                        overrideZ(c, p + "_FOREIGN TOURISTS - TOTAL")
+                        for (let nat of ["AUSTRIAN", "GERMAN", "ITALIAN", "SLOVENIAN"])
+                            overrideZ(c, p + "_" + nat + " TOURISTS")
+                    }
+                    console.log(c)
 
                     //TOTAL ARRIVALS
-                    //A_DOMESTIC TOURISTS - TOTAL,A_FOREIGN TOURISTS - TOTAL,A_AUSTRIAN TOURISTS,A_GERMAN TOURISTS,A_ITALIAN TOURISTS,A_SLOVENIAN TOURISTS,
-                    //TOTAL NIGHTS
-                    //N_DOMESTIC TOURISTS - TOTAL,N_FOREIGN TOURISTS - TOTAL,N_AUSTRIAN TOURISTS,N_GERMAN TOURISTS,N_ITALIAN TOURISTS,N_SLOVENIAN TOURISTS
+                    //A_DOMESTIC TOURISTS - TOTAL
+                    //A_FOREIGN TOURISTS - TOTAL
+                    //A_AUSTRIAN TOURISTS
+                    //A_GERMAN TOURISTS
+                    //A_ITALIAN TOURISTS
+                    //A_SLOVENIAN TOURISTS
 
+                    //TOTAL NIGHTS
+                    //N_DOMESTIC TOURISTS - TOTAL
+                    //N_FOREIGN TOURISTS - TOTAL
+                    //N_AUSTRIAN TOURISTS
+                    //N_GERMAN TOURISTS
+                    //N_ITALIAN TOURISTS
+                    //N_SLOVENIAN TOURISTS
 
                 }
             })
