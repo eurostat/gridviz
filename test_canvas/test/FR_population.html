@@ -165,7 +165,7 @@
                     color: (side, r, s, z) => side.value>0 && side.or==="h" || side.value<0 && side.or==="v" ? "black" : "white",
                     width: (side, r, s, z) => {
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                        return r * (0.01 + 0.75 * gviz.s(Math.abs(side.value) / max, 0.5))
+                        return r * (0.01 + 0.333 * gviz.s(Math.abs(side.value) / max, 0.3))
                     },
                     fillColor: "#c08c59",
                 }),
