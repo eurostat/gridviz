@@ -30,9 +30,9 @@ export class KernelSmoothingStyle extends Style {
          * @type {function(number):number} @private */
         this.sigma = opts.sigma
 
-        /** The style to represent the smoothed cells.
-         * @type {Style} @private */
-        this.style = opts.style
+        /** The styles to represent the smoothed cells.
+         * @type {Array.<Style>} @private */
+        this.styles = opts.styles
     }
 
 
@@ -232,9 +232,9 @@ export class KernelSmoothingStyle extends Style {
         //apply kernel smoothing
         cells = this.kernelSmoothing(cells, cg.extGeo, r, sG / r)
 
-        //draw smoothed cells from style
-        this.style.draw(cells, r, cg);
-
+        //draw smoothed cells from styles
+        for (let s of this.styles)
+            s.draw(cells, r, cg);
     }
 
 
@@ -250,9 +250,9 @@ export class KernelSmoothingStyle extends Style {
     /** @param {function(number):number} val @returns {this} */
     setSigma(val) { this.sigma = val; return this; }
 
-    /** @returns {Style} */
-    getStyle() { return this.style; }
-    /** @param {Style} val @returns {this} */
-    setStyle(val) { this.style = val; return this; }
+    /** @returns {Array.<Style>} */
+    getStyles() { return this.styles; }
+    /** @param {Array.<Style>} val @returns {this} */
+    setStyles(val) { this.styles = val; return this; }
 
 }
