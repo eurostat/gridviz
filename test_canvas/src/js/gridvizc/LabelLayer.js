@@ -44,7 +44,7 @@ export class LabelLayer {
 
         /** Specify the label halo width, depending on its importance and the zoom level.
         * @private @type {function(Label,number):number} */
-        this.haloWidth = opts.haloWidth || (() => 3)
+        this.haloWidth = opts.haloWidth || (() => 4)
 
         /** The anchor where to draw the text, from label position. See HTML-canvas textAlign property.
          * "left" || "right" || "center" || "start" || "end"

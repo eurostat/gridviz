@@ -1,15 +1,11 @@
-TODO test side with color
+TODO: ajust side to make tanaka map - white/black
 
-
-TODO test data HR
-* 2000 - 4000 aggregation. On the fly ???
+TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
+TODO HR: 2000 - 4000 aggregation. On the fly ???
 
 
 TODO test data NO - 250m. long timeseries
 TODO legend refresh on composition
-
-TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
-
 
 TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
 TODO tw size+rate example: Gender balance SE ? population, youth VS old FR ? Income FR ?
