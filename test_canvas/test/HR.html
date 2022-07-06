@@ -75,14 +75,29 @@
             sizeCol: "TOTAL",
             size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
             agePyramidHeight: (r) => 0.95 * r
-        }).addLegend({ colorCat: { id: "guyextscatlend534", bottom: "20px", left: "20px", shape: "square", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() } })
+        })//.addLegend({ colorCat: { id: "guyextscatlend534", bottom: "20px", left: "20px", shape: "square", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() } })
+
+
+        const sPopulationEducation = new gviz.CompositionStyle({
+            color: {
+                "OTHER_EDUC": "gray",
+                "TERTIARY_EDUCATION": col(0.9),
+                "UPPER_SECONDARY_EDUCATION": col(0.4),
+                "BASIC_EDUCATION_OR_LESS": col(0.2),
+            },
+            type: () => "ring",
+            sizeCol: "TOTAL",
+            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+            agePyramidHeight: (r) => 0.95 * r
+        }).addLegend({ colorCat: { id: "guyextscatlend534", bottom: "20px", left: "20px", shape: "square", 
+        colCat: [[col(0.2), "basic or less"], [col(0.4), "secondary"], [col(0.9), "tertiary"], ["gray", "other"]].reverse() } })
 
 
 
         const ttfun = c => ""
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
 
-        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationMenWomen], 0, 9999999999,
+        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationEducation], 0, 9999999999,
             {
                 preprocess: c => {
                     //parse position
