@@ -41,7 +41,7 @@
         const s = new gviz.KernelSmoothingStyle({
             value: c => +c["Ind"],
             sigma: zf => zf * 5,
-            style: styles.color
+            styles: [styles.color]
         });
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
