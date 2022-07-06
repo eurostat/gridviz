@@ -71,115 +71,115 @@
         //style data
         const sd = {
             scolor: {
-                style: new gviz.ShapeColorSizeStyle({
+                style: [new gviz.ShapeColorSizeStyle({
                     colorCol: "Ind",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                     shape: () => "square",
                     zfStroke: 20
-                }).addLegend({ color: { id: "scollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } }),
+                }).addLegend({ color: { id: "scollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })],
                 zooms: [0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]
             },
             ccolor: {
-                style: new gviz.ShapeColorSizeStyle({
+                style: [new gviz.ShapeColorSizeStyle({
                     colorCol: "Ind",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                     shape: () => "circle",
                     zfStroke: 20
-                }).addLegend({ color: { id: "ccollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } }),
+                }).addLegend({ color: { id: "ccollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })],
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
 
             square: {
-                style: new gviz.ShapeColorSizeStyle({
+                style: [new gviz.ShapeColorSizeStyle({
                     color: () => "#c08c59cc",
                     sizeCol: "Ind",
                     size: (v, r, s, zf) => 1 * r * gviz.s(v / s.max, 0.3),
                     shape: () => "square",
                     zfStroke: 20
-                }).addLegend({ size: { id: "sslegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
+                }).addLegend({ size: { id: "sslegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" } })],
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
             circle: {
-                style: new gviz.ShapeColorSizeStyle({
+                style: [new gviz.ShapeColorSizeStyle({
                     color: () => "#c08c59cc",
                     sizeCol: "Ind",
                     size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
                     shape: () => "circle",
                     zfStroke: 20
-                }).addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
+                }).addLegend({ size: { id: "cslegend", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } })],
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
             donut: {
-                style: new gviz.ShapeColorSizeStyle({
+                style: [new gviz.ShapeColorSizeStyle({
                     sizeCol: "Ind",
                     size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.3),
                     color: () => "#c08c59",
                     shape: () => "donut",
-                }),
+                })],
                 zooms: [0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
             },
 
             segmentH: {
-                style: new gviz.SegmentStyle({
+                style: [new gviz.SegmentStyle({
                     orientation: () => 0,
                     color: (v, r, s) => "#c08c59",
                     length: (v, r) => r,
                     widthCol: "Ind",
                     width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                }).addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } }),
+                }).addLegend({ width: { id: "segHlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } })],
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
             segmentV: {
-                style: new gviz.SegmentStyle({
+                style: [new gviz.SegmentStyle({
                     orientation: () => 90,
                     color: (v, r, s) => "#c08c59",
                     length: (v, r) => r,
                     widthCol: "Ind",
                     width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                }).addLegend({ width: { id: "segVlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
+                }).addLegend({ width: { id: "segVlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } })],
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
             segmentO: {
-                style: new gviz.SegmentStyle({
+                style: [new gviz.SegmentStyle({
                     orientation: () => 45,
                     color: (v, r, s) => "#c08c59",
                     length: (v, r) => r * 1.4142,
                     widthCol: "Ind",
                     width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25) / 1.4142,
-                }).addLegend({ width: { id: "segOlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
+                }).addLegend({ width: { id: "segOlegend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } })],
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
 
             joyplot: {
-                style: new gviz.JoyPlotStyle({
+                style: [new gviz.JoyPlotStyle({
                     heightCol: "Ind",
                     height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
                     fillColor: "#c08c59bb"
-                }),
+                })],
                 zooms: [0, 40, 80, 200, 400, 1000, 2000, 4000, 10000]
                 //zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
             tanaka: {
-                style: new gviz.SideStyle({
+                style: [new gviz.SideStyle({
                     value: (c1, c2) => { return (c2 ? +c2["Ind"] : 0) - (c1 ? +c1["Ind"] : 0) },
-                    color: (side, r, s, z) => side.value>0 && side.or==="h" || side.value<0 && side.or==="v" ? "black" : "white",
+                    color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                     width: (side, r, s, z) => {
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                         return r * (0.01 + 0.333 * gviz.s(Math.abs(side.value) / max, 0.3))
                     },
                     fillColor: "#e2c9b2",
-                }),
+                })],
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
             pillar: {
-                style: new gviz.PillarStyle({
+                style: [new gviz.PillarStyle({
                     heightCol: "Ind",
                     height: (v, r, s, z) => 15 * r * gviz.s(v / s.max, 0.7),
-                }),
+                })],
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
             text: {
-                style: new gviz.TextStyle({
+                style: [new gviz.TextStyle({
                     textCol: "Ind",
                     text: (v, r, s, z) => {
                         const t = gviz.s(v / s.max, 0.25);
@@ -187,7 +187,7 @@
                     },
                     color: (v, r, s) => "#c08c59",
                     fontSize: ((v, r, s, z) => 1.2 * r),
-                }),
+                })],
                 zooms: [0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
             }
         }
@@ -196,14 +196,14 @@
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
         app.addMultiScaleTiledGridLayer(url,
             [
-                { code: "200m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "400m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "1000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "2000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "5000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "10000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "20000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
-                { code: "50000m/", styles: [sd.scolor.style], opts: { cellInfoHTML: ttfun } },
+                { code: "200m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
+                { code: "400m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
+                { code: "1000m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
+                { code: "2000m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
+                { code: "5000m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
+                { code: "10000m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
+                { code: "20000m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
+                { code: "50000m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
             ],
             sd.scolor.zooms
         )
@@ -216,7 +216,7 @@
             //set new style
             const ml = app.layers[0];
             ml.hideLegends()
-            for (const lay of ml.layers) lay.styles = [sd[value].style]
+            for (const lay of ml.layers) lay.styles = sd[value].style
 
             //set new zoom breaks
             ml.zooms = sd[value].zooms
