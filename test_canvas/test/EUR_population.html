@@ -46,8 +46,8 @@
                 Others:
                 <input type="radio" name="style" id="joyplot" value="joyplot">
                 <label for="joyplot">Joyplot</label>
-                <input type="radio" name="style" id="tanaka" value="tanaka">
-                <label for="tanaka">Tanaka</label>
+                <input type="radio" name="style" id="side" value="side">
+                <label for="side">Side</label>
                 <input type="radio" name="style" id="pillar" value="pillar">
                 <label for="pillar">Pillar</label>
                 <input type="radio" name="style" id="text" value="text">
@@ -174,7 +174,7 @@
                     }),
                     zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
                 },
-                tanaka: {
+                side: {
                     style: new gviz.SideStyle({
                         value: (c1, c2) => { return (c2 ? +c2[getSelectedYear()] : 0) - (c1 ? +c1[getSelectedYear()] : 0) },
                         color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
@@ -361,7 +361,7 @@
                     }),
                     zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
                 },
-                tanaka: {
+                side: {
                     style: new gviz.SideStyle({
                         value: (c1, c2) => { return (c2 ? +c2[getSelectedYear()] : 0) - (c1 ? +c1[getSelectedYear()] : 0) },
                         color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
@@ -485,7 +485,7 @@
             sd.pop.segmentO.style.widthCol = this.value
 
             sd.pop.joyplot.style.heightCol = this.value
-            sd.pop.tanaka.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
+            sd.pop.side.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
             sd.pop.pillar.style.heightCol = this.value
             sd.pop.text.style.textCol = this.value
 
@@ -509,7 +509,7 @@
             sd.popchange.segmentO.style.colorCol = this.value
 
             sd.popchange.joyplot.style.heightCol = this.value
-            sd.popchange.tanaka.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
+            sd.popchange.side.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
             sd.popchange.pillar.style.heightCol = this.value
             sd.popchange.pillar.style.colorCol = this.value
             sd.popchange.text.style.textCol = this.value
