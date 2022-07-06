@@ -45,10 +45,10 @@
 
         const sPopulationTotalSide = new gviz.SideStyle({
             value: (c1, c2) => { return (c2 ? +c2["TOTAL"] : 0) - (c1 ? +c1["TOTAL"] : 0) },
-            color: (side, r, s, z) => "black",
+            color: (side, r, s, z) => "#000",
             width: (side, r, s, z) => {
                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                return r * (0.05 + 0.5 * gviz.s(Math.abs(side.value) / max, 0.25))
+                return r * (0.02 + 0.5 * gviz.s(Math.abs(side.value) / max, 0.7))
             },
             //fillColor: "#fafafa",
         })
