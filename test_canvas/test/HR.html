@@ -174,7 +174,7 @@
         }).addLegend({
             colorCat: {
                 id: "guyeh35cgccjhgatlend534", bottom: "20px", left: "20px", shape: "square",
-                colCat: [["cyan", "Croatian"],["orange", "Austrian"],["red", "German"],["blue", "Italian"],["magenta", "Slovenian"],["gray", "Other"]].reverse()
+                colCat: [["cyan", "Croatian"], ["orange", "Austrian"], ["red", "German"], ["blue", "Italian"], ["magenta", "Slovenian"], ["gray", "Other"]].reverse()
             }
         })
 
@@ -184,9 +184,9 @@
         const ttfun = c => ""
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
 
-        //app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationInact], 0, 9999999999,
-        //app.addCSVGridLayer(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, [sBusinessesSector], 0, 9999999999,
-        app.addCSVGridLayer(url + "Tourism_2017_Grid_1000m.csv", 1000, [sTourismNat], 0, 9999999999,
+        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationTotal], 0, 9999999999,
+            //app.addCSVGridLayer(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, [sBusinessesSector], 0, 9999999999,
+            //app.addCSVGridLayer(url + "Tourism_2017_Grid_1000m.csv", 1000, [sTourismNat], 0, 9999999999,
             {
                 preprocess: c => {
                     //parse position
@@ -197,22 +197,22 @@
                     delete c.IDENTIFIER
 
                     const overrideZ = (c, col) => c[col] = c[col] === "Z" ? 0 : +c[col]
+                    const overrideD = (c, col) => c[col] = c[col] === "Z" ? 0 : +c[col]
 
-                    /*
-                    c.TOTAL = c.TOTAL === "D" ? 0 : +c.TOTAL
+                    overrideD(c, "TOTAL")
                     c.DIFF_MEN_WOMEN = c.MEN - c.WOMEN
                     c.DIFF_MEN_WOMEN = 100 * c.DIFF_MEN_WOMEN / c.TOTAL
                     if (isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
 
                     //education
-                    c.BASIC_EDUCATION_OR_LESS = c.BASIC_EDUCATION_OR_LESS === "D" ? 0 : +c.BASIC_EDUCATION_OR_LESS
-                    c.UPPER_SECONDARY_EDUCATION = c.UPPER_SECONDARY_EDUCATION === "D" ? 0 : +c.UPPER_SECONDARY_EDUCATION
-                    c.TERTIARY_EDUCATION = c.TERTIARY_EDUCATION === "D" ? 0 : +c.TERTIARY_EDUCATION
+                    overrideD(c, "BASIC_EDUCATION_OR_LESS")
+                    overrideD(c, "UPPER_SECONDARY_EDUCATION")
+                    overrideD(c, "TERTIARY_EDUCATION")
                     c.OTHER_EDUC = c.TOTAL - c.BASIC_EDUCATION_OR_LESS - c.UPPER_SECONDARY_EDUCATION - c.TERTIARY_EDUCATION
 
                     //labor
-                    c.INACTIVE_POPULATION = c.INACTIVE_POPULATION === "D" ? 0 : +c.INACTIVE_POPULATION
-                    c.LABOUR_FORCE = c.LABOUR_FORCE === "D" ? 0 : +c.LABOUR_FORCE
+                    overrideD(c, "INACTIVE_POPULATION")
+                    overrideD(c, "LABOUR_FORCE")
                     c.OTHER_LABOR = c.TOTAL - c.INACTIVE_POPULATION - c.LABOUR_FORCE
                     //console.log(c.INACTIVE_POPULATION > c.LABOUR_FORCE)  // true and false
                     //console.log(c.OTHER_LABOR > 0) // true and false
@@ -220,7 +220,7 @@
                     c.INACT_RATE = 100 * c.INACTIVE_POPULATION / c.TOTAL
                     if (isNaN(c.INACT_RATE)) c.INACT_RATE = 0
                     //console.log(c.INACT_RATE)
-*/
+
 
                     /*/TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
                     //see https://nacev2.com/fr
@@ -239,39 +239,24 @@
                     //console.log(c.s1 + c.s2 + c.s3 == c.TOTAL)
                     */
 
-
-                    for (let s of ["ESTABLISHMENTS - TOTAL", "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL", "NUMBER OF PERMANENT BEDS"])
-                        overrideZ(c, s)
-                    for (let s of ["TOTAL ARRIVALS", "TOTAL NIGHTS"])
-                        overrideZ(c, s)
-                    for (let p of ["A", "N"]) {
-                        overrideZ(c, p + "_DOMESTIC TOURISTS - TOTAL")
-                        overrideZ(c, p + "_FOREIGN TOURISTS - TOTAL")
-                        for (let nat of ["AUSTRIAN", "GERMAN", "ITALIAN", "SLOVENIAN"])
-                            overrideZ(c, p + "_" + nat + " TOURISTS")
-                    }
-                    //console.log(c["TOTAL ARRIVALS"] == c["A_DOMESTIC TOURISTS - TOTAL"]+c["A_FOREIGN TOURISTS - TOTAL"]) true
-                    //console.log(c["TOTAL NIGHTS"] == c["N_DOMESTIC TOURISTS - TOTAL"]+c["N_FOREIGN TOURISTS - TOTAL"]) true
-
-                    for (let p of ["A", "N"])
-                        c[p + "_OTHER"] = +c[p + "_FOREIGN TOURISTS - TOTAL"] - c[p + "_AUSTRIAN TOURISTS"] - c[p + "_GERMAN TOURISTS"] - c[p + "_ITALIAN TOURISTS"] - c[p + "_SLOVENIAN TOURISTS"]
-                    //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
-
-                    //TOTAL ARRIVALS
-                    //A_DOMESTIC TOURISTS - TOTAL
-                    //A_FOREIGN TOURISTS - TOTAL
-                    //A_AUSTRIAN TOURISTS
-                    //A_GERMAN TOURISTS
-                    //A_ITALIAN TOURISTS
-                    //A_SLOVENIAN TOURISTS
-
-                    //TOTAL NIGHTS
-                    //N_DOMESTIC TOURISTS - TOTAL
-                    //N_FOREIGN TOURISTS - TOTAL
-                    //N_AUSTRIAN TOURISTS
-                    //N_GERMAN TOURISTS
-                    //N_ITALIAN TOURISTS
-                    //N_SLOVENIAN TOURISTS
+                    /*
+                                        for (let s of ["ESTABLISHMENTS - TOTAL", "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL", "NUMBER OF PERMANENT BEDS"])
+                                            overrideZ(c, s)
+                                        for (let s of ["TOTAL ARRIVALS", "TOTAL NIGHTS"])
+                                            overrideZ(c, s)
+                                        for (let p of ["A", "N"]) {
+                                            overrideZ(c, p + "_DOMESTIC TOURISTS - TOTAL")
+                                            overrideZ(c, p + "_FOREIGN TOURISTS - TOTAL")
+                                            for (let nat of ["AUSTRIAN", "GERMAN", "ITALIAN", "SLOVENIAN"])
+                                                overrideZ(c, p + "_" + nat + " TOURISTS")
+                                        }
+                                        //console.log(c["TOTAL ARRIVALS"] == c["A_DOMESTIC TOURISTS - TOTAL"]+c["A_FOREIGN TOURISTS - TOTAL"]) true
+                                        //console.log(c["TOTAL NIGHTS"] == c["N_DOMESTIC TOURISTS - TOTAL"]+c["N_FOREIGN TOURISTS - TOTAL"]) true
+                    
+                                        for (let p of ["A", "N"])
+                                            c[p + "_OTHER"] = +c[p + "_FOREIGN TOURISTS - TOTAL"] - c[p + "_AUSTRIAN TOURISTS"] - c[p + "_GERMAN TOURISTS"] - c[p + "_ITALIAN TOURISTS"] - c[p + "_SLOVENIAN TOURISTS"]
+                                        //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
+                    */
 
                 }
             })
