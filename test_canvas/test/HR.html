@@ -142,12 +142,26 @@
         })
 
 
+
+
+        // ESTABLISHMENTS - TOTAL
+        // ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL
+        // NUMBER OF PERMANENT BEDS
+        const sTourismAccomod = new gviz.ShapeColorSizeStyle({
+            colorCol: "NUMBER OF PERMANENT BEDS",
+            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+            shape: () => "square",
+            zfStroke: 80,
+        }).addLegend({ color: { id: "schgvgend", bottom: "20px", left: "20px", title: "Tourism accomodation", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+
+
+
         const ttfun = c => ""
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
 
         //app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationInact], 0, 9999999999,
         //app.addCSVGridLayer(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, [sBusinessesSector], 0, 9999999999,
-        app.addCSVGridLayer(url + "Tourism_2017_Grid_1000m.csv", 1000, [sBusinessesSector], 0, 9999999999,
+        app.addCSVGridLayer(url + "Tourism_2017_Grid_1000m.csv", 1000, [sTourismAccomod], 0, 9999999999,
             {
                 preprocess: c => {
                     //parse position
