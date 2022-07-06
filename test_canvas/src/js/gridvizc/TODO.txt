@@ -1,5 +1,5 @@
 TODO style hypso (color discrete)
-["#a9bb9e", "#c9dcaa", "#f0f1af", "#fde89f", "#f9a579", "#eb444b"]
+TODO make tests using offset ?
 
 TODO style lego?
 
