@@ -119,7 +119,8 @@
         const ttfun = c => ""
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
 
-        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationInact], 0, 9999999999,
+        //app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationInact], 0, 9999999999,
+        app.addCSVGridLayer(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, [sPopulationInact], 0, 9999999999,
             {
                 preprocess: c => {
                     //parse position
@@ -128,6 +129,8 @@
                     c.y = (+d[0]) * 1000
                     c.x = (+d[1]) * 1000
                     delete c.IDENTIFIER
+
+                    /*
                     c.TOTAL = c.TOTAL === "D" ? 0 : +c.TOTAL
                     c.DIFF_MEN_WOMEN = c.MEN - c.WOMEN
                     c.DIFF_MEN_WOMEN = 100 * c.DIFF_MEN_WOMEN / c.TOTAL
@@ -146,9 +149,15 @@
                     //console.log(c.INACTIVE_POPULATION > c.LABOUR_FORCE)  // true and false
                     //console.log(c.OTHER_LABOR > 0) // true and false
                     //console.log(c.LABOUR_FORCE/c.INACTIVE_POPULATION <1)  // true and false
-                    c.INACT_RATE = 100 * c.INACTIVE_POPULATION / (/*c.INACTIVE_POPULATION + c.LABOUR_FORCE*/ c.TOTAL)
+                    c.INACT_RATE = 100 * c.INACTIVE_POPULATION / c.TOTAL
                     if (isNaN(c.INACT_RATE)) c.INACT_RATE = 0
                     //console.log(c.INACT_RATE)
+*/
+
+                    //,IDENTIFIER,TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
+console.log(c)
+
+
                 }
             })
 
