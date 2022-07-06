@@ -124,11 +124,33 @@
 
 
 
+
+
+
+
+        const sBusinessesSector = new gviz.CompositionStyle({
+            color: {
+                "s1": "green",
+                "s2": "yellow",
+                "s3": "blue",
+            },
+            type: () => "flag",
+            sizeCol: "TOTAL",
+            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+            agePyramidHeight: (r) => 0.95 * r
+        }).addLegend({
+            colorCat: {
+                id: "guyehvhgvjhgxtscjhgatlend534", bottom: "20px", left: "20px", shape: "square",
+                colCat: [["green", "Primary"], ["yellow", "Secondary"], ["blue", "Tertiary"]].reverse()
+            }
+        })
+
+
         const ttfun = c => ""
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
 
         //app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationInact], 0, 9999999999,
-        app.addCSVGridLayer(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, [sPopulationInact], 0, 9999999999,
+        app.addCSVGridLayer(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, [sBusinessesSector], 0, 9999999999,
             {
                 preprocess: c => {
                     //parse position
@@ -174,8 +196,9 @@
 
                     c.s1 = c.A
                     c.s2 = c.B + c.C + c.D + c.E + c.F + c.G + c.H
-                    c.s2 = c.I + c.J + c.K + c.L + c.M + c.N + c.O + c.P + c.Q + c.R + c.S + c.T
-                    console.log(c.s1, c.s2, c.s3)
+                    c.s3 = c.I + c.J + c.K + c.L + c.M + c.N + c.O + c.P + c.Q + c.R + c.S + c.T
+                    //console.log(c.s1, c.s2, c.s3)
+                    //console.log(c.s1 + c.s2 + c.s3 == c.TOTAL)
                 }
             })
 
