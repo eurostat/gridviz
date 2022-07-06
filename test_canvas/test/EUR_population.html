@@ -46,8 +46,8 @@
                 Others:
                 <input type="radio" name="style" id="joyplot" value="joyplot">
                 <label for="joyplot">Joyplot</label>
-                <input type="radio" name="style" id="side" value="side">
-                <label for="side">Side</label>
+                <input type="radio" name="style" id="tanaka" value="tanaka">
+                <label for="tanaka">Tanaka</label>
                 <input type="radio" name="style" id="pillar" value="pillar">
                 <label for="pillar">Pillar</label>
                 <input type="radio" name="style" id="text" value="text">
@@ -174,15 +174,15 @@
                     }),
                     zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
                 },
-                side: {
+                tanaka: {
                     style: new gviz.SideStyle({
                         value: (c1, c2) => { return (c2 ? +c2[getSelectedYear()] : 0) - (c1 ? +c1[getSelectedYear()] : 0) },
-                        color: (side, r, s, z) => "#c08c59",
+                        color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                         width: (side, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return r * (0.01 + 0.75 * gviz.s(Math.abs(side.value) / max, 0.5))
+                            return r * (0.01 + 0.333 * gviz.s(Math.abs(side.value) / max, 0.3))
                         },
-                        fillColor: "#fafafa",
+                        fillColor: "#e2c9b2",
                     }),
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
@@ -361,15 +361,15 @@
                     }),
                     zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
                 },
-                side: {
+                tanaka: {
                     style: new gviz.SideStyle({
                         value: (c1, c2) => { return (c2 ? +c2[getSelectedYear()] : 0) - (c1 ? +c1[getSelectedYear()] : 0) },
-                        color: (side, r, s, z) => "#c08c59",
+                        color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                         width: (side, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return r * (0.01 + 0.75 * gviz.s(Math.abs(side.value) / max, 0.5))
+                            return r * (0.01 + 0.333 * gviz.s(Math.abs(side.value) / max, 0.3))
                         },
-                        fillColor: "#fafafa",
+                        fillColor: "#e2c9b2",
                     }),
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
@@ -485,7 +485,7 @@
             sd.pop.segmentO.style.widthCol = this.value
 
             sd.pop.joyplot.style.heightCol = this.value
-            sd.pop.side.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
+            sd.pop.tanaka.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
             sd.pop.pillar.style.heightCol = this.value
             sd.pop.text.style.textCol = this.value
 
@@ -509,7 +509,7 @@
             sd.popchange.segmentO.style.colorCol = this.value
 
             sd.popchange.joyplot.style.heightCol = this.value
-            sd.popchange.side.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
+            sd.popchange.tanaka.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
             sd.popchange.pillar.style.heightCol = this.value
             sd.popchange.pillar.style.colorCol = this.value
             sd.popchange.text.style.textCol = this.value
