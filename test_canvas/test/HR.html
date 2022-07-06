@@ -96,15 +96,15 @@
         const sPopulationLabor = new gviz.CompositionStyle({
             color: {
                 "OTHER_LABOR": "gray",
-                "LABOUR_FORCE": col(0.9),
-                "INACTIVE_POPULATION": col(0.2),
+                "LABOUR_FORCE": col(0.2),
+                "INACTIVE_POPULATION": col(0.9),
             },
-            type: () => "ring",
+            type: () => "flag",
             sizeCol: "TOTAL",
             size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
             agePyramidHeight: (r) => 0.95 * r
         }).addLegend({ colorCat: { id: "guyehvhgvxtscatlend534", bottom: "20px", left: "20px", shape: "square", 
-        colCat: [[col(0.2), "labour force"], [col(0.9), "inactive"], ["gray", "other"]].reverse() } })
+        colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]].reverse() } })
 
 
 
@@ -138,6 +138,8 @@
                     //console.log(c.INACTIVE_POPULATION > c.LABOUR_FORCE)  // true and false
                     //console.log(c.OTHER_LABOR > 0) // true and false
                     //console.log(c.LABOUR_FORCE/c.INACTIVE_POPULATION <1)  // true and false
+                    c.INACT_RATE = 100 * c.INACTIVE_POPULATION / (c.INACTIVE_POPULATION + c.LABOUR_FORCE)
+                    console.log(c.INACT_RATE)
                 }
             })
 
