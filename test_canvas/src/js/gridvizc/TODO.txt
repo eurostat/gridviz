@@ -1,5 +1,4 @@
 TODO test data HR
-* by employment: INACTIVE_POPULATION,LABOUR_FORCE
 * businesses by NACE
 * tourism: accomodation - number of bed / units / total. composition by origin, for arrivals and number of nights
 

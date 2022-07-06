@@ -107,11 +107,19 @@
         colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]].reverse() } })
 
 
+        const sPopulationInact = new gviz.ShapeColorSizeStyle({
+            colorCol: "INACT_RATE",
+            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
+            shape: () => "square",
+            zfStroke: 80,
+        }).addLegend({ color: { id: "schggozeDleggc45end", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) } })
+
+
 
         const ttfun = c => ""
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
 
-        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationLabor], 0, 9999999999,
+        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationInact], 0, 9999999999,
             {
                 preprocess: c => {
                     //parse position
@@ -138,8 +146,9 @@
                     //console.log(c.INACTIVE_POPULATION > c.LABOUR_FORCE)  // true and false
                     //console.log(c.OTHER_LABOR > 0) // true and false
                     //console.log(c.LABOUR_FORCE/c.INACTIVE_POPULATION <1)  // true and false
-                    c.INACT_RATE = 100 * c.INACTIVE_POPULATION / (c.INACTIVE_POPULATION + c.LABOUR_FORCE)
-                    console.log(c.INACT_RATE)
+                    c.INACT_RATE = 100 * c.INACTIVE_POPULATION / (/*c.INACTIVE_POPULATION + c.LABOUR_FORCE*/ c.TOTAL)
+                    if (isNaN(c.INACT_RATE)) c.INACT_RATE = 0
+                    //console.log(c.INACT_RATE)
                 }
             })
 
