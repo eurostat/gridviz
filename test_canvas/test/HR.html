@@ -89,8 +89,12 @@
             sizeCol: "TOTAL",
             size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
             agePyramidHeight: (r) => 0.95 * r
-        }).addLegend({ colorCat: { id: "guyextlend533434", bottom: "20px", left: "20px", shape: "square", 
-        colCat: [[col(0.2), "basic or less"], [col(0.4), "secondary"], [col(0.9), "tertiary"], ["gray", "other"]].reverse() } })
+        }).addLegend({
+            colorCat: {
+                id: "guyextlend533434", bottom: "20px", left: "20px", shape: "square",
+                colCat: [[col(0.2), "basic or less"], [col(0.4), "secondary"], [col(0.9), "tertiary"], ["gray", "other"]].reverse()
+            }
+        })
 
 
         const sPopulationLabor = new gviz.CompositionStyle({
@@ -103,8 +107,12 @@
             sizeCol: "TOTAL",
             size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
             agePyramidHeight: (r) => 0.95 * r
-        }).addLegend({ colorCat: { id: "guyehvhgvxtscatlend534", bottom: "20px", left: "20px", shape: "square", 
-        colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]].reverse() } })
+        }).addLegend({
+            colorCat: {
+                id: "guyehvhgvxtscatlend534", bottom: "20px", left: "20px", shape: "square",
+                colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]].reverse()
+            }
+        })
 
 
         const sPopulationInact = new gviz.ShapeColorSizeStyle({
@@ -154,10 +162,14 @@
                     //console.log(c.INACT_RATE)
 */
 
-                    //,IDENTIFIER,TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
-console.log(c)
-
-
+                    //IDENTIFIER,TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
+                    let sum = 0
+                    for (let s of ["TOTAL", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"]) {
+                        c[s] = +c[s]
+                        if (s != "TOTAL") sum += c[s]
+                        if (isNaN(c[s])) console.log(c)
+                    }
+                    if (c.TOTAL != sum) console.log(c, c.TOTAL, sum)
                 }
             })
 
