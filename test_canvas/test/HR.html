@@ -43,7 +43,7 @@
             zfStroke: 80,
         }).addLegend({ color: { id: "schgvvgolleggcend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
 
-        const sPopulationMenWomenRatio = new gviz.ShapeColorSizeStyle({
+        const sPopulationMenWomen = new gviz.ShapeColorSizeStyle({
             colorCol: "DIFF_MEN_WOMEN",
             color: (v, r, s) => {
                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
@@ -78,10 +78,11 @@
         }).addLegend({ colorCat: { id: "guyextscatlend534", bottom: "20px", left: "20px", shape: "square", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() } })
 
 
+
         const ttfun = c => ""
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
 
-        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationMenWomenRatio], 0, 9999999999,
+        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, [sPopulationMenWomen], 0, 9999999999,
             {
                 preprocess: c => {
                     //parse position
@@ -93,7 +94,19 @@
                     c.TOTAL = c.TOTAL === "D" ? 0 : +c.TOTAL
                     c.DIFF_MEN_WOMEN = c.MEN - c.WOMEN
                     c.DIFF_MEN_WOMEN = 100 * c.DIFF_MEN_WOMEN / c.TOTAL
-                    if(isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
+                    if (isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
+
+                    //BASIC_EDUCATION_OR_LESS
+                    //UPPER_SECONDARY_EDUCATION
+                    //TERTIARY_EDUCATION
+
+                    c.BASIC_EDUCATION_OR_LESS = c.BASIC_EDUCATION_OR_LESS === "D" ? 0 : +c.BASIC_EDUCATION_OR_LESS
+                    c.UPPER_SECONDARY_EDUCATION = c.UPPER_SECONDARY_EDUCATION === "D" ? 0 : +c.UPPER_SECONDARY_EDUCATION
+                    c.TERTIARY_EDUCATION = c.TERTIARY_EDUCATION === "D" ? 0 : +c.TERTIARY_EDUCATION
+                    console.log(c.TOTAL - c.BASIC_EDUCATION_OR_LESS - c.UPPER_SECONDARY_EDUCATION - c.TERTIARY_EDUCATION)
+
+
+
                     //TOTAL,WOMEN,MEN,
                     //TOTAL_0_14,WOMEN_0_14,MEN_0_14,TOTAL_15_64,WOMEN_15_64,MEN_15_64_,TOTAL_65p,WOMEN_65p,MEN_65p,
                     //INACTIVE_POPULATION,LABOUR_FORCE,
