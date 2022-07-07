@@ -16,7 +16,7 @@ export const getTanakaStyle = function (col, opts) {
     opts.valueStretch = opts.valueStretch
 
     //width of the segment (share of the resolution)
-    opts.widthFactor = opts.widthFactor || 0.1
+    opts.widthFactor = opts.widthFactor || 0.15
 
     const getClass = (v) => {
 
@@ -54,7 +54,7 @@ export const getTanakaStyle = function (col, opts) {
             //return (v2 != undefined ? getClass(v2) + 1 : 0) - (v1 != undefined ? getClass(v1) + 1 : 0)
         },
         //white or black, depending on orientation
-        color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "#222" : "#ddd",
+        color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "#333" : "#ccc",
         //width depends on the value, that is the number of classes of difference
         width: (side, r, s, z) => opts.widthFactor * r * side.value,
     })

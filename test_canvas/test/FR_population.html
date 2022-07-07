@@ -178,7 +178,12 @@
             tanaka: {
                 style: gviz.getTanakaStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
                 //style: gviz.getTanakaStyle("Ind", { breaks: [10, 50, 200, 500, 2000] }),
-                zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
+                //zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
+                //zooms: [0, 40, 80, 200, 400, 1000, 2000, 4000, 10000]
+                zooms: [0, 50, 100, 250, 500, 1250, 2500, 5000, 12500]
+                //zooms: [0, 60, 120, 300, 600, 1500, 3000, 6000, 15000]
+                //zooms: [0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]
+
             },
             pillar: {
                 style: [new gviz.PillarStyle({
