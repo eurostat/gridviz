@@ -185,11 +185,12 @@
                     .addLegend({ color: { id: "schvv124903cnd", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
                 ,
                 new gviz.SideStyle({
-                    value: (c1, c2) => { return (c2 ? +c2["TOTAL"] : 0) - (c1 ? +c1["TOTAL"] : 0) },
+                    valueCol: "TOTAL",
+                    value: (v1, v2) => { return (v2!=undefined ? +v2 : 0) - (v1!=undefined ? +v1 : 0) },
                     color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                     width: (side, r, s, z) => {
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                        return r * (0.02 + 0.4 * gviz.s(Math.abs(side.value) / max, 0.5))
+                        return r * (0.02 + 0.2 * gviz.s(Math.abs(side.value) / max, 0.5))
                     },
                 })
             ], 0, 9999999999),

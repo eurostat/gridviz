@@ -176,7 +176,8 @@
                 },
                 side: {
                     style: new gviz.SideStyle({
-                        value: (c1, c2) => { return (c2 ? +c2[getSelectedYear()] : 0) - (c1 ? +c1[getSelectedYear()] : 0) },
+                        valueCol: getSelectedYear(),
+                        value: (v1, v2) => { return (v2!=undefined ? +v2 : 0) - (v1!=undefined ? +v1 : 0) },
                         color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                         width: (side, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
@@ -363,7 +364,8 @@
                 },
                 side: {
                     style: new gviz.SideStyle({
-                        value: (c1, c2) => { return (c2 ? +c2[getSelectedYear()] : 0) - (c1 ? +c1[getSelectedYear()] : 0) },
+                        valueCol: getSelectedYear(),
+                        value: (v1, v2) => { return (v2!=undefined ? +v2 : 0) - (v1!=undefined ? +v1 : 0) },
                         color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                         width: (side, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
@@ -485,7 +487,7 @@
             sd.pop.segmentO.style.widthCol = this.value
 
             sd.pop.joyplot.style.heightCol = this.value
-            sd.pop.side.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
+            sd.pop.side.style.valueCol = this.value
             sd.pop.pillar.style.heightCol = this.value
             sd.pop.text.style.textCol = this.value
 
@@ -509,7 +511,7 @@
             sd.popchange.segmentO.style.colorCol = this.value
 
             sd.popchange.joyplot.style.heightCol = this.value
-            sd.popchange.side.style.value = (c1, c2) => { return (c2 ? +c2[this.value] : 0) - (c1 ? +c1[this.value] : 0) }
+            sd.popchange.side.style.valueCol = this.value
             sd.popchange.pillar.style.heightCol = this.value
             sd.popchange.pillar.style.colorCol = this.value
             sd.popchange.text.style.textCol = this.value
