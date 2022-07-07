@@ -41,7 +41,7 @@
                 <label for="tourAccUnits">units</label>
                 <input type="radio" name="layer" id="tourAccBeds" value="tourAccBeds">
                 <label for="tourAccBeds">beds</label>
-                <br>Tourist origin: by number of 
+                <br>Tourist origin: by number of
                 <input type="radio" name="layer" id="tourOriginArr" value="tourOriginArr">
                 <label for="tourOriginArr">arrivals</label>
                 <input type="radio" name="layer" id="tourOriginNights" value="tourOriginNights">
@@ -86,6 +86,7 @@
         const overrideZ = (c, col) => c[col] = c[col] === "Z" ? 0 : +c[col]
         const overrideD = (c, col) => c[col] = c[col] === "D" ? 0 : +c[col]
 
+
         //population / education / labor
         const popData = new gviz.CSVGrid(url + "Population_2011_Grid_1000m.csv", 1000, {
             preprocess: c => {
@@ -116,63 +117,59 @@
         }).getData(undefined, () => { app.cg.redraw(); });
 
 
+        //businesses
+        const businessData = new gviz.CSVGrid(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, {
+            preprocess: c => {
+                setPosition(c)
+
+                //TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
+                //see https://nacev2.com/fr
+                let sum = 0
+                for (let s of ["TOTAL", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"]) {
+                    c[s] = +c[s]
+                    if (s != "TOTAL") sum += c[s]
+                    if (isNaN(c[s])) console.error(c)
+                }
+                if (c.TOTAL != sum) console.error(c, c.TOTAL, sum)
+
+                //sum by sector
+                c.s1 = c.A
+                c.s2 = c.B + c.C + c.D + c.E + c.F + c.G + c.H
+                c.s3 = c.I + c.J + c.K + c.L + c.M + c.N + c.O + c.P + c.Q + c.R + c.S + c.T
+                //console.log(c.s1, c.s2, c.s3)
+                //console.log(c.s1 + c.s2 + c.s3 == c.TOTAL)
+            }
+        }).getData(undefined, () => { app.cg.redraw(); });
+
+
+        //tourism
+        const tourismData = new gviz.CSVGrid(url + "Tourism_2017_Grid_1000m.csv", 1000, {
+            preprocess: c => {
+                setPosition(c)
+
+                for (let s of ["ESTABLISHMENTS - TOTAL", "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL", "NUMBER OF PERMANENT BEDS"])
+                    overrideZ(c, s)
+                for (let s of ["TOTAL ARRIVALS", "TOTAL NIGHTS"])
+                    overrideZ(c, s)
+                for (let p of ["A", "N"]) {
+                    overrideZ(c, p + "_DOMESTIC TOURISTS - TOTAL")
+                    overrideZ(c, p + "_FOREIGN TOURISTS - TOTAL")
+                    for (let nat of ["AUSTRIAN", "GERMAN", "ITALIAN", "SLOVENIAN"])
+                        overrideZ(c, p + "_" + nat + " TOURISTS")
+                }
+                //console.log(c["TOTAL ARRIVALS"] == c["A_DOMESTIC TOURISTS - TOTAL"]+c["A_FOREIGN TOURISTS - TOTAL"]) true
+                //console.log(c["TOTAL NIGHTS"] == c["N_DOMESTIC TOURISTS - TOTAL"]+c["N_FOREIGN TOURISTS - TOTAL"]) true
+
+                for (let p of ["A", "N"])
+                    c[p + "_OTHER"] = +c[p + "_FOREIGN TOURISTS - TOTAL"] - c[p + "_AUSTRIAN TOURISTS"] - c[p + "_GERMAN TOURISTS"] - c[p + "_ITALIAN TOURISTS"] - c[p + "_SLOVENIAN TOURISTS"]
+                //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
+            }
+        }).getData(undefined, () => { app.cg.redraw(); });
 
 
 
 
 
-        /*
-        const ttfun = c => ""
-
-        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, gviz.getTanakaStyle("TOTAL"), 0, 9999999999,
-            //app.addCSVGridLayer(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, [sBusinessesSector], 0, 9999999999,
-            //app.addCSVGridLayer(url + "Tourism_2017_Grid_1000m.csv", 1000, [sTourismNat], 0, 9999999999,
-            {
-                preprocess: c => {
-
-
-                    /*TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
-                    //see https://nacev2.com/fr
-                    let sum = 0
-                    for (let s of ["TOTAL", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"]) {
-                        c[s] = +c[s]
-                        if (s != "TOTAL") sum += c[s]
-                        if (isNaN(c[s])) console.log(c)
-                    }
-                    if (c.TOTAL != sum) console.log(c, c.TOTAL, sum)
-
-                    c.s1 = c.A
-                    c.s2 = c.B + c.C + c.D + c.E + c.F + c.G + c.H
-                    c.s3 = c.I + c.J + c.K + c.L + c.M + c.N + c.O + c.P + c.Q + c.R + c.S + c.T
-                    //console.log(c.s1, c.s2, c.s3)
-                    //console.log(c.s1 + c.s2 + c.s3 == c.TOTAL)
-                    */
-
-        /*
-                            for (let s of ["ESTABLISHMENTS - TOTAL", "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL", "NUMBER OF PERMANENT BEDS"])
-                                overrideZ(c, s)
-                            for (let s of ["TOTAL ARRIVALS", "TOTAL NIGHTS"])
-                                overrideZ(c, s)
-                            for (let p of ["A", "N"]) {
-                                overrideZ(c, p + "_DOMESTIC TOURISTS - TOTAL")
-                                overrideZ(c, p + "_FOREIGN TOURISTS - TOTAL")
-                                for (let nat of ["AUSTRIAN", "GERMAN", "ITALIAN", "SLOVENIAN"])
-                                    overrideZ(c, p + "_" + nat + " TOURISTS")
-                            }
-                            //console.log(c["TOTAL ARRIVALS"] == c["A_DOMESTIC TOURISTS - TOTAL"]+c["A_FOREIGN TOURISTS - TOTAL"]) true
-                            //console.log(c["TOTAL NIGHTS"] == c["N_DOMESTIC TOURISTS - TOTAL"]+c["N_FOREIGN TOURISTS - TOTAL"]) true
-        
-                            for (let p of ["A", "N"])
-                                c[p + "_OTHER"] = +c[p + "_FOREIGN TOURISTS - TOTAL"] - c[p + "_AUSTRIAN TOURISTS"] - c[p + "_GERMAN TOURISTS"] - c[p + "_ITALIAN TOURISTS"] - c[p + "_SLOVENIAN TOURISTS"]
-                            //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
-        
-
-    }
-})
-*/
-
-
-        
 
 
 
