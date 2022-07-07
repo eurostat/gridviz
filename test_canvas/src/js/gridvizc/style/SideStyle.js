@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat } from "../Style"
+import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
@@ -18,11 +18,15 @@ export class SideStyle extends Style {
         super(opts)
         opts = opts || {};
 
-        /** A function returning the value of a cell side. This value is computed from the two adjacent cells.
-         * For horizontal sides, c1 is below and c2 above.
-         * For vertical sides, c1 is left and c2 right.
-        * @private @type {function(Cell|undefined,Cell|undefined):number} */
-        this.value = opts.value || ((c1, c2) => 1);
+        /** The name of the column/attribute of the tabular data where to retrieve the variable for the cell values.
+         *  @protected @type {string} */
+        this.valueCol = opts.valueCol;
+
+        /** A function returning the value of a cell side. This value is computed from the two adjacent cell values.
+         * For horizontal sides, v1 is the value of the cell below and v2 the value of the cell above.
+         * For vertical sides, v1 is the value of the cell left and v2 the value of the cell right.
+         * @private @type {function(number|undefined,number|undefined,number,Stat|undefined,number):number} */
+        this.value = opts.value || ((v1, v2, r, s, zf) => 1);
 
         /** A function returning the color of a cell side.
         * @private @type {function(Side,number,Stat|undefined):string} */
@@ -51,6 +55,13 @@ export class SideStyle extends Style {
         //zoom factor
         const zf = cg.getZf()
 
+        //compute stats on cell values
+        let statValue
+        if (this.valueCol) {
+            //compute color variable statistics
+            statValue = getStatistics(cells, c => c[this.valueCol], true)
+        }
+
         /**  @type {Array.<Side>} */
         const sides = []
 
@@ -64,12 +75,12 @@ export class SideStyle extends Style {
             if (c1.y + r == c2.y && c1.x == c2.x)
                 //cells in same column and touch along horizontal side
                 //make shared side
-                sides.push({ x: c1.x, y: c2.y, or: "h", value: this.value(c1, c2) })
+                sides.push({ x: c1.x, y: c2.y, or: "h", value: this.value(c1[this.valueCol], c2[this.valueCol], r, statValue, zf) })
             else {
                 //cells do not touch along horizontal side
                 //make two sides: top one for c1, bottom for c2
-                sides.push({ x: c1.x, y: c1.y + r, or: "h", value: this.value(c1, undefined) })
-                sides.push({ x: c2.x, y: c2.y, or: "h", value: this.value(undefined, c2) })
+                sides.push({ x: c1.x, y: c1.y + r, or: "h", value: this.value(c1[this.valueCol], undefined, r, statValue, zf) })
+                sides.push({ x: c2.x, y: c2.y, or: "h", value: this.value(undefined, c2[this.valueCol], r, statValue, zf) })
             }
 
             c1 = c2
@@ -85,19 +96,19 @@ export class SideStyle extends Style {
             if (c1.x + r == c2.x && c1.y == c2.y)
                 //cells in same row and touch along vertical side
                 //make shared side
-                sides.push({ x: c1.x + r, y: c1.y, or: "v", value: this.value(c1, c2) })
+                sides.push({ x: c1.x + r, y: c1.y, or: "v", value: this.value(c1[this.valueCol], c2[this.valueCol], r, statValue, zf) })
             else {
                 //cells do not touch along vertical side
                 //make two sides: right one for c1, left for c2
-                sides.push({ x: c1.x + r, y: c1.y, or: "v", value: this.value(c1, undefined) })
-                sides.push({ x: c2.x, y: c2.y, or: "v", value: this.value(undefined, c2) })
+                sides.push({ x: c1.x + r, y: c1.y, or: "v", value: this.value(c1[this.valueCol], undefined, r, statValue, zf) })
+                sides.push({ x: c2.x, y: c2.y, or: "v", value: this.value(undefined, c2[this.valueCol], r, statValue, zf) })
             }
 
             c1 = c2
         }
 
         //compute stats on sides
-        const statSides = getStatistics(sides, true)
+        const statSides = getSideStatistics(sides, true)
 
         //draw sides
 
@@ -156,7 +167,7 @@ export class SideStyle extends Style {
  * @param {boolean} ignoreZeros
  * @returns {Stat | undefined}
  */
-const getStatistics = function (sides, ignoreZeros) {
+const getSideStatistics = function (sides, ignoreZeros) {
     if (!sides || sides.length == 0) return undefined
     let min = Infinity
     let max = -Infinity

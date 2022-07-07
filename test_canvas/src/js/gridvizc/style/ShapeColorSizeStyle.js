@@ -38,7 +38,6 @@ export class ShapeColorSizeStyle extends Style {
         * @protected @type {function(number,number,Stat|undefined,number):number} */
         this.size = opts.size;
 
-
         /** A function returning the shape of a cell.
          * @private @type {function(Cell):Shape} */
         this.shape = opts.shape || (() => "square");
