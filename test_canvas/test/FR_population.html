@@ -83,19 +83,20 @@
         }
 
         const getClassColor = (i) => colFun(1 - i / (nb - 1));
+        const valueStretch = (v, r, s, zf) => gviz.s(v / s.max, 0.3)
 
         const colStyle = new gviz.ShapeColorSizeStyle({
             colorCol: col,
-            color: (v, r, s) => getClassColor(getClass(gviz.s(v / s.max, 0.3))),
+            color: (v, r, s, zf) => getClassColor(getClass(valueStretch(v, r, s, zf))),
             shape: () => "square",
             zfStroke: 0,
         })
 
         const sideStyle = new gviz.SideStyle({
-            value: (c1, c2) => {
+            valueCol: col,
+            value: (v1, v2, r, s, zf) => {
                 //the number of classes of difference
-                console.log( (c2 ? getClass(c2[col]) + 1 : 0) - (c1 ? getClass(c1[col]) + 1 : 0) )
-                return (c2 ? getClass(c2[col]) + 1 : 0) - (c1 ? getClass(c1[col]) + 1 : 0)
+                return (v2 != undefined ? getClass(valueStretch(v2, r, s, zf)) + 1 : 0) - (v1 != undefined ? getClass(valueStretch(v1, r, s, zf)) + 1 : 0)
             },
             //white or black, depending on orientation
             color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "#222" : "#ddd",
@@ -200,7 +201,8 @@
             },
             side: {
                 style: [new gviz.SideStyle({
-                    value: (c1, c2) => { return (c2 ? +c2["Ind"] : 0) - (c1 ? +c1["Ind"] : 0) },
+                    valueCol: "Ind",
+                    value: (v1, v2) => { return (v2!=undefined ? +v2 : 0) - (v1!=undefined ? +v1 : 0) },
                     color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                     width: (side, r, s, z) => {
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max))
