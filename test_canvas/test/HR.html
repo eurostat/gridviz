@@ -170,36 +170,49 @@
 
 
 
+        //layers, with styles
+        const layers = {
+            pop: new gviz.Layer(popData, [
+                new gviz.ShapeColorSizeStyle({
+                    colorCol: "TOTAL",
+                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                    shape: () => "square",
+                    zfStroke: 80,
+                })//.addLegend({ color: { id: "schgvvgolleggcend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })    
+                ,
+                new gviz.SideStyle({
+                    value: (c1, c2) => { return (c2 ? +c2["TOTAL"] : 0) - (c1 ? +c1["TOTAL"] : 0) },
+                    color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
+                    width: (side, r, s, z) => {
+                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                        return r * (0.02 + 0.4 * gviz.s(Math.abs(side.value) / max, 0.5))
+                    },
+                })
+            ], 0, 9999999999),
+            popGender: {},
+            popAge: {},
+            popEducation: {},
+            popLabor: {},
+            popInact: {},
+            busSector: {},
+            tourAccNb: {},
+            tourAccUnits: {},
+            tourAccBeds: {},
+            tourOriginArr: {},
+            tourOriginNights: {},
+        }
 
 
 
+        //add layer
+        app.layers.push(layers.pop);
 
 
-
-
-        //layers
-        //TODO as dictionnary
 
 
         //styles
 
-        const sPopulationTotal = new gviz.ShapeColorSizeStyle({
-            colorCol: "TOTAL",
-            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-            shape: () => "square",
-            zfStroke: 80,
-        }).addLegend({ color: { id: "schgvvgolleggcend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
 
-
-        const sPopulationTotalSide = new gviz.SideStyle({
-            value: (c1, c2) => { return (c2 ? +c2["TOTAL"] : 0) - (c1 ? +c1["TOTAL"] : 0) },
-            color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
-            width: (side, r, s, z) => {
-                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                return r * (0.02 + 0.4 * gviz.s(Math.abs(side.value) / max, 0.5))
-            },
-            //fillColor: "#fafafa",
-        })
 
 
         /*
@@ -357,12 +370,6 @@
 
 
 
-        //layers
-        const popLay = new gviz.Layer(popData, [sPopulationTotal, sPopulationTotalSide], 0, 9999999999);
-
-
-        //add layer
-        app.layers.push(popLay);
 
 
 
