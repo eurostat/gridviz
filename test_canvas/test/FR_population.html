@@ -76,8 +76,7 @@
 
 
 
-        const tanakaStyle = [colStyle, sideStyle]
-
+        const tanakaStyle = gviz.getTanakaStyle({ valueStretch: (v, r, s, zf) => str((v - s.min) / (s.max - s.min), 0.3) })
 
 
         //style data
