@@ -70,39 +70,11 @@
         app.cg.setViewFromURL()
 
 
+
         //tests on tanaka style
-        const col = "Ind"
-        const colFun = gviz.interpolateRdYlGn //interpolateSpectral
-        const nb = 6
-        const widthFactor = 0.15
+        //const col = "Ind"
 
-        const getClass = (t) => {
-            for (let i = 0; i < nb - 1; i++)
-                if (t <= (i + 1) / nb) return i
-            return nb - 1
-        }
 
-        const getClassColor = (i) => colFun(1 - i / (nb - 1));
-        const valueStretch = (v, r, s, zf) => gviz.s(v / s.max, 0.3)
-
-        const colStyle = new gviz.ShapeColorSizeStyle({
-            colorCol: col,
-            color: (v, r, s, zf) => getClassColor(getClass(valueStretch(v, r, s, zf))),
-            shape: () => "square",
-            zfStroke: 0,
-        })
-
-        const sideStyle = new gviz.SideStyle({
-            valueCol: col,
-            value: (v1, v2, r, s, zf) => {
-                //the number of classes of difference
-                return (v2 != undefined ? getClass(valueStretch(v2, r, s, zf)) + 1 : 0) - (v1 != undefined ? getClass(valueStretch(v1, r, s, zf)) + 1 : 0)
-            },
-            //white or black, depending on orientation
-            color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "#222" : "#ddd",
-            //width depends on the value, that is the number of classes of difference
-            width: (side, r, s, z) => widthFactor * r * side.value,
-        })
 
         const tanakaStyle = [colStyle, sideStyle]
 
@@ -202,7 +174,7 @@
             side: {
                 style: [new gviz.SideStyle({
                     valueCol: "Ind",
-                    value: (v1, v2) => { return (v2!=undefined ? +v2 : 0) - (v1!=undefined ? +v1 : 0) },
+                    value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
                     color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                     width: (side, r, s, z) => {
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max))
