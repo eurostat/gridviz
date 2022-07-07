@@ -1,8 +1,8 @@
-TODO tanaka style on FR population: make it scale dependant
-TODO tanaka style on EUR, pop + pop change
-TODO make tests using offset ?
+TODO tanaka style on EUR, pop
+TODO adapt tanaka and side on EUR pop change
 
-TODO lego style based on tanaka?
+TODO make tests using offset ?
+TODO lego style based on tanaka? random color + little circle on top ?
 
 TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
 TODO HR: add 2000 - 5000 - 10000 aggregation. On the fly ???

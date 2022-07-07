@@ -48,6 +48,8 @@
                 <label for="joyplot">Joyplot</label>
                 <input type="radio" name="style" id="side" value="side">
                 <label for="side">Side</label>
+                <input type="radio" name="style" id="tanaka" value="tanaka">
+                <label for="tanaka">Tanaka</label>
                 <input type="radio" name="style" id="pillar" value="pillar">
                 <label for="pillar">Pillar</label>
                 <input type="radio" name="style" id="text" value="text">
@@ -87,115 +89,119 @@
         const sd = {
             pop: {
                 squareColor: {
-                    style: new gviz.ShapeColorSizeStyle({
+                    style: [new gviz.ShapeColorSizeStyle({
                         colorCol: getSelectedYear(),
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                         shape: () => "square",
                         zfStroke: 80,
-                    }).addLegend({ color: { id: "schgvvgolleggcend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } }),
+                    }).addLegend({ color: { id: "schgvvgolleggcend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })],
                     zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
                 },
                 circleColor: {
-                    style: new gviz.ShapeColorSizeStyle({
+                    style: [new gviz.ShapeColorSizeStyle({
                         colorCol: getSelectedYear(),
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                         shape: () => "circle",
                         zfStroke: 80,
-                    }).addLegend({ color: { id: "chcggchllekhgend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } }),
+                    }).addLegend({ color: { id: "chcggchllekhgend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
 
                 squareSize: {
-                    style: new gviz.ShapeColorSizeStyle({
+                    style: [new gviz.ShapeColorSizeStyle({
                         color: () => "#c08c59cc",
                         sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => 1 * r * gviz.s(v / s.max, 0.3),
                         shape: () => "square",
                         zfStroke: 80
-                    }).addLegend({ size: { id: "sshklegegnd", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
+                    }).addLegend({ size: { id: "sshklegegnd", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" } })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
                 circleSize: {
-                    style: new gviz.ShapeColorSizeStyle({
+                    style: [new gviz.ShapeColorSizeStyle({
                         color: () => "#c08c59cc",
                         sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
                         shape: () => "circle",
                         zfStroke: 80
-                    }).addLegend({ size: { id: "slgenvhvd", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } }),
+                    }).addLegend({ size: { id: "slgenvhvd", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
                 donut: {
-                    style: new gviz.ShapeColorSizeStyle({
+                    style: [new gviz.ShapeColorSizeStyle({
                         sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.3),
                         color: () => "#c08c59",
                         shape: () => "donut",
-                    }),
+                    })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
 
                 segmentH: {
-                    style: new gviz.SegmentStyle({
+                    style: [new gviz.SegmentStyle({
                         orientation: () => 0,
                         color: (v, r, s) => "#c08c59",
                         length: (v, r) => r,
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                    }).addLegend({ width: { id: "segoHlehvgend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } }),
+                    }).addLegend({ width: { id: "segoHlehvgend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
                 segmentV: {
-                    style: new gviz.SegmentStyle({
+                    style: [new gviz.SegmentStyle({
                         orientation: () => 90,
                         color: (v, r, s) => "#c08c59",
                         length: (v, r) => r,
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                    }).addLegend({ width: { id: "seqegVlegsend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } }),
+                    }).addLegend({ width: { id: "seqegVlegsend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
                 segmentO: {
-                    style: new gviz.SegmentStyle({
+                    style: [new gviz.SegmentStyle({
                         orientation: () => 45,
                         color: (v, r, s) => "#c08c59",
                         length: (v, r) => r * 1.4142,
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25) / 1.4142,
-                    }).addLegend({ width: { id: "segsfxOlegendw", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } }),
+                    }).addLegend({ width: { id: "segsfxOlegendw", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
 
                 joyplot: {
-                    style: new gviz.JoyPlotStyle({
+                    style: [new gviz.JoyPlotStyle({
                         heightCol: getSelectedYear(),
                         height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
                         fillColor: "#c08c59bb"
-                    }),
+                    })],
                     zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
                 },
                 side: {
-                    style: new gviz.SideStyle({
+                    style: [new gviz.SideStyle({
                         valueCol: getSelectedYear(),
-                        value: (v1, v2) => { return (v2!=undefined ? +v2 : 0) - (v1!=undefined ? +v1 : 0) },
+                        value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
                         color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                         width: (side, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return r * (0.01 + 0.333 * gviz.s(Math.abs(side.value) / max, 0.3))
                         },
                         fillColor: "#e2c9b2",
-                    }),
+                    })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
+                tanaka: {
+                    style: gviz.getTanakaStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                    zooms: [0, 250, 500, 1250, 2500, 5000, 12500, 25000]
+                },
                 pillar: {
-                    style: new gviz.PillarStyle({
+                    style: [new gviz.PillarStyle({
                         heightCol: getSelectedYear(),
                         height: (v, r, s, z) => 15 * r * gviz.s(v / s.max, 0.7),
-                    }),
+                    })],
                     zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
                 },
                 text: {
-                    style: new gviz.TextStyle({
+                    style: [new gviz.TextStyle({
                         textCol: getSelectedYear(),
                         text: (v, r, s, z) => {
                             const t = gviz.s(v / s.max, 0.25);
@@ -203,13 +209,13 @@
                         },
                         color: (v, r, s) => "#c08c59",
                         fontSize: ((v, r, s, z) => 1.2 * r),
-                    }),
+                    })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 }
             },
             popchange: {
                 squareColor: {
-                    style: new gviz.ShapeColorSizeStyle({
+                    style: [new gviz.ShapeColorSizeStyle({
                         colorCol: getSelectedYear(),
                         color: (v, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
@@ -226,11 +232,11 @@
                                 return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
                             }
                         }
-                    }),
+                    })],
                     zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
                 },
                 circleColor: {
-                    style: new gviz.ShapeColorSizeStyle({
+                    style: [new gviz.ShapeColorSizeStyle({
                         colorCol: getSelectedYear(),
                         color: (v, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
@@ -247,12 +253,12 @@
                                 return (t < 0.5 ? -1 : 1) * max * Math.pow(Math.abs(2 * t - 1), 1 / 0.2)
                             }
                         }
-                    }),
+                    })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
 
                 squareSize: {
-                    style: new gviz.ShapeColorSizeStyle({
+                    style: [new gviz.ShapeColorSizeStyle({
                         colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         sizeCol: getSelectedYear(),
@@ -265,11 +271,11 @@
                     }).addLegend({
                         colorCat: { id: "ssckatleghkend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
                         size: { id: "jhjhghjghg", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "gray" }
-                    }),
+                    })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
                 circleSize: {
-                    style: new gviz.ShapeColorSizeStyle({
+                    style: [new gviz.ShapeColorSizeStyle({
                         colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4bcc" : "#4288b5cc",
                         sizeCol: getSelectedYear(),
@@ -282,11 +288,11 @@
                     }).addLegend({
                         colorCat: { id: "cscatlegehjnd", bottom: "20px", left: "20px", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
                         size: { id: "jhjhgjghg", bottom: "20px", right: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }
-                    }),
+                    })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
                 donut: {
-                    style: new gviz.ShapeColorSizeStyle({
+                    style: [new gviz.ShapeColorSizeStyle({
                         colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         sizeCol: getSelectedYear(),
@@ -295,12 +301,12 @@
                             return r * gviz.s(Math.abs(v) / max, 0.3)
                         },
                         shape: () => "donut",
-                    }).addLegend({ colorCat: { id: "dscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
+                    }).addLegend({ colorCat: { id: "dscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
 
                 segmentH: {
-                    style: new gviz.SegmentStyle({
+                    style: [new gviz.SegmentStyle({
                         orientation: () => 0,
                         colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
@@ -313,11 +319,11 @@
                     }).addLegend({
                         colorCat: { id: "guygudscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
                         width: { id: "svuvhegHlegend", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
-                    }),
+                    })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
                 segmentV: {
-                    style: new gviz.SegmentStyle({
+                    style: [new gviz.SegmentStyle({
                         orientation: () => 90,
                         colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
@@ -330,11 +336,11 @@
                     }).addLegend({
                         colorCat: { id: "guyguscatlend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
                         width: { id: "svunivhegHend", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
-                    }),
+                    })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
                 segmentO: {
-                    style: new gviz.SegmentStyle({
+                    style: [new gviz.SegmentStyle({
                         orientation: () => 45,
                         colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
@@ -347,36 +353,42 @@
                     }).addLegend({
                         colorCat: { id: "gubbkjgend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
                         width: { id: "svghvvhegHkjbnd", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
-                    }),
+                    })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
 
                 joyplot: {
-                    style: new gviz.JoyPlotStyle({
+                    style: [new gviz.JoyPlotStyle({
                         heightCol: getSelectedYear(),
                         height: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return Math.sign(v) * 5 * r * Math.sqrt(Math.abs(v) / max)
                         },
                         fillColor: "#c08c59bb"
-                    }),
+                    })],
                     zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
                 },
                 side: {
-                    style: new gviz.SideStyle({
+                    style: [new gviz.SideStyle({
                         valueCol: getSelectedYear(),
-                        value: (v1, v2) => { return (v2!=undefined ? +v2 : 0) - (v1!=undefined ? +v1 : 0) },
+                        value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
                         color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                         width: (side, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return r * (0.01 + 0.333 * gviz.s(Math.abs(side.value) / max, 0.3))
                         },
+                        //TODO adapt to change
                         fillColor: "#e2c9b2",
-                    }),
+                    })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
+                tanaka: {
+                    //TODO adapt to change
+                    style: gviz.getTanakaStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                    zooms: [0, 250, 500, 1250, 2500, 5000, 12500, 25000]
+                },
                 pillar: {
-                    style: new gviz.PillarStyle({
+                    style: [new gviz.PillarStyle({
                         colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         heightCol: getSelectedYear(),
@@ -384,11 +396,11 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return 15 * r * gviz.s(Math.abs(v) / max, 0.7)
                         },
-                    }),
+                    })],
                     zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
                 },
                 text: {
-                    style: new gviz.TextStyle({
+                    style: [new gviz.TextStyle({
                         textCol: getSelectedYear(),
                         text: (v, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
@@ -398,7 +410,7 @@
                         colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         fontSize: ((v, r, s, z) => 1.2 * r),
-                    }).addLegend({ colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } }),
+                    }).addLegend({ colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 }
             }
@@ -464,7 +476,7 @@
 
             //set new style
             const s = sd[getSelectedMapType()][getSelectedStyle()]
-            for (const lay of ml.layers) lay.styles = [s.style]
+            for (const lay of ml.layers) lay.styles = s.style
 
             //set new zoom breaks
             ml.zooms = s.zooms
@@ -488,6 +500,8 @@
 
             sd.pop.joyplot.style.heightCol = this.value
             sd.pop.side.style.valueCol = this.value
+            sd.pop.tanaka.style[0].colorCol = this.value
+            sd.pop.tanaka.style[1].valueCol = this.value
             sd.pop.pillar.style.heightCol = this.value
             sd.pop.text.style.textCol = this.value
 
@@ -512,6 +526,8 @@
 
             sd.popchange.joyplot.style.heightCol = this.value
             sd.popchange.side.style.valueCol = this.value
+            sd.popchange.tanaka.style[0].colorCol = this.value
+            sd.ppopchangeop.tanaka.style[1].valueCol = this.value
             sd.popchange.pillar.style.heightCol = this.value
             sd.popchange.pillar.style.colorCol = this.value
             sd.popchange.text.style.textCol = this.value
