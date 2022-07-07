@@ -455,13 +455,13 @@
         const s = sd[getSelectedMapType()][getSelectedStyle()]
         app.addMultiScaleTiledGridLayer(url,
             [
-                { code: "1km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "2km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "5km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "10km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "20km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "50km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "100km/", styles: [s.style], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "1km/", styles: s.style, opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "2km/", styles: s.style, opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "5km/", styles: s.style, opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "10km/", styles: s.style, opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "20km/", styles: s.style, opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "50km/", styles: s.style, opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "100km/", styles: s.style, opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
             ],
             s.zooms
         )
@@ -487,51 +487,51 @@
         document.querySelector('#year').addEventListener('change', function () {
 
             //population
-            sd.pop.squareColor.style.colorCol = this.value
-            sd.pop.circleColor.style.colorCol = this.value
+            sd.pop.squareColor.style[0].colorCol = this.value
+            sd.pop.circleColor.style[0].colorCol = this.value
 
-            sd.pop.squareSize.style.sizeCol = this.value
-            sd.pop.circleSize.style.sizeCol = this.value
-            sd.pop.donut.style.sizeCol = this.value
+            sd.pop.squareSize.style[0].sizeCol = this.value
+            sd.pop.circleSize.style[0].sizeCol = this.value
+            sd.pop.donut.style[0].sizeCol = this.value
 
-            sd.pop.segmentH.style.widthCol = this.value
-            sd.pop.segmentV.style.widthCol = this.value
-            sd.pop.segmentO.style.widthCol = this.value
+            sd.pop.segmentH.style[0].widthCol = this.value
+            sd.pop.segmentV.style[0].widthCol = this.value
+            sd.pop.segmentO.style[0].widthCol = this.value
 
-            sd.pop.joyplot.style.heightCol = this.value
-            sd.pop.side.style.valueCol = this.value
+            sd.pop.joyplot.style[0].heightCol = this.value
+            sd.pop.side.style[0].valueCol = this.value
             sd.pop.tanaka.style[0].colorCol = this.value
             sd.pop.tanaka.style[1].valueCol = this.value
-            sd.pop.pillar.style.heightCol = this.value
-            sd.pop.text.style.textCol = this.value
+            sd.pop.pillar.style[0].heightCol = this.value
+            sd.pop.text.style[0].textCol = this.value
 
 
             //pop change
-            sd.popchange.squareColor.style.colorCol = this.value
-            sd.popchange.circleColor.style.colorCol = this.value
+            sd.popchange.squareColor.style[0].colorCol = this.value
+            sd.popchange.circleColor.style[0].colorCol = this.value
 
-            sd.popchange.squareSize.style.sizeCol = this.value
-            sd.popchange.squareSize.style.colorCol = this.value
-            sd.popchange.circleSize.style.sizeCol = this.value
-            sd.popchange.circleSize.style.colorCol = this.value
-            sd.popchange.donut.style.sizeCol = this.value
-            sd.popchange.donut.style.colorCol = this.value
+            sd.popchange.squareSize.style[0].sizeCol = this.value
+            sd.popchange.squareSize.style[0].colorCol = this.value
+            sd.popchange.circleSize.style[0].sizeCol = this.value
+            sd.popchange.circleSize.style[0].colorCol = this.value
+            sd.popchange.donut.style[0].sizeCol = this.value
+            sd.popchange.donut.style[0].colorCol = this.value
 
-            sd.popchange.segmentH.style.widthCol = this.value
-            sd.popchange.segmentH.style.colorCol = this.value
-            sd.popchange.segmentV.style.widthCol = this.value
-            sd.popchange.segmentV.style.colorCol = this.value
-            sd.popchange.segmentO.style.widthCol = this.value
-            sd.popchange.segmentO.style.colorCol = this.value
+            sd.popchange.segmentH.style[0].widthCol = this.value
+            sd.popchange.segmentH.style[0].colorCol = this.value
+            sd.popchange.segmentV.style[0].widthCol = this.value
+            sd.popchange.segmentV.style[0].colorCol = this.value
+            sd.popchange.segmentO.style[0].widthCol = this.value
+            sd.popchange.segmentO.style[0].colorCol = this.value
 
-            sd.popchange.joyplot.style.heightCol = this.value
-            sd.popchange.side.style.valueCol = this.value
+            sd.popchange.joyplot.style[0].heightCol = this.value
+            sd.popchange.side.style[0].valueCol = this.value
             sd.popchange.tanaka.style[0].colorCol = this.value
-            sd.ppopchangeop.tanaka.style[1].valueCol = this.value
-            sd.popchange.pillar.style.heightCol = this.value
-            sd.popchange.pillar.style.colorCol = this.value
-            sd.popchange.text.style.textCol = this.value
-            sd.popchange.text.style.colorCol = this.value
+            sd.popchange.tanaka.style[1].valueCol = this.value
+            sd.popchange.pillar.style[0].heightCol = this.value
+            sd.popchange.pillar.style[0].colorCol = this.value
+            sd.popchange.text.style[0].textCol = this.value
+            sd.popchange.text.style[0].colorCol = this.value
 
             changeStyle();
             app.cg.redraw();
