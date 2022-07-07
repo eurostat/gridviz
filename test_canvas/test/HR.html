@@ -69,8 +69,119 @@
         app.cg.setViewFromURL()
 
 
-        //datasets
 
+
+
+        //datasets
+        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
+
+        //few functions for data preprocessing
+        const setPosition = c => {
+            //IDENTIFIER: "1kmN2621E4812"
+            let d = (c.IDENTIFIER + "").replace("1kmN", "").split("E")
+            c.y = (+d[0]) * 1000
+            c.x = (+d[1]) * 1000
+            delete c.IDENTIFIER
+        }
+        const overrideZ = (c, col) => c[col] = c[col] === "Z" ? 0 : +c[col]
+        const overrideD = (c, col) => c[col] = c[col] === "D" ? 0 : +c[col]
+
+        //population / education / labor
+        const popData = new gviz.CSVGrid(url + "Population_2011_Grid_1000m.csv", 1000, {
+            preprocess: c => {
+                setPosition(c)
+
+                overrideD(c, "TOTAL")
+                c.DIFF_MEN_WOMEN = c.MEN - c.WOMEN
+                c.DIFF_MEN_WOMEN = 100 * c.DIFF_MEN_WOMEN / c.TOTAL
+                if (isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
+
+                //education
+                overrideD(c, "BASIC_EDUCATION_OR_LESS")
+                overrideD(c, "UPPER_SECONDARY_EDUCATION")
+                overrideD(c, "TERTIARY_EDUCATION")
+                c.OTHER_EDUC = c.TOTAL - c.BASIC_EDUCATION_OR_LESS - c.UPPER_SECONDARY_EDUCATION - c.TERTIARY_EDUCATION
+
+                //labor
+                overrideD(c, "INACTIVE_POPULATION")
+                overrideD(c, "LABOUR_FORCE")
+                c.OTHER_LABOR = c.TOTAL - c.INACTIVE_POPULATION - c.LABOUR_FORCE
+                //console.log(c.INACTIVE_POPULATION > c.LABOUR_FORCE)  // true and false
+                //console.log(c.OTHER_LABOR > 0) // true and false
+                //console.log(c.LABOUR_FORCE/c.INACTIVE_POPULATION <1)  // true and false
+                c.INACT_RATE = 100 * c.INACTIVE_POPULATION / c.TOTAL
+                if (isNaN(c.INACT_RATE)) c.INACT_RATE = 0
+                //console.log(c.INACT_RATE)
+            }
+        }).getData(undefined, () => { app.cg.redraw(); });
+
+
+
+
+
+
+
+        /*
+        const ttfun = c => ""
+
+        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, gviz.getTanakaStyle("TOTAL"), 0, 9999999999,
+            //app.addCSVGridLayer(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, [sBusinessesSector], 0, 9999999999,
+            //app.addCSVGridLayer(url + "Tourism_2017_Grid_1000m.csv", 1000, [sTourismNat], 0, 9999999999,
+            {
+                preprocess: c => {
+
+
+                    /*TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
+                    //see https://nacev2.com/fr
+                    let sum = 0
+                    for (let s of ["TOTAL", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"]) {
+                        c[s] = +c[s]
+                        if (s != "TOTAL") sum += c[s]
+                        if (isNaN(c[s])) console.log(c)
+                    }
+                    if (c.TOTAL != sum) console.log(c, c.TOTAL, sum)
+
+                    c.s1 = c.A
+                    c.s2 = c.B + c.C + c.D + c.E + c.F + c.G + c.H
+                    c.s3 = c.I + c.J + c.K + c.L + c.M + c.N + c.O + c.P + c.Q + c.R + c.S + c.T
+                    //console.log(c.s1, c.s2, c.s3)
+                    //console.log(c.s1 + c.s2 + c.s3 == c.TOTAL)
+                    */
+
+        /*
+                            for (let s of ["ESTABLISHMENTS - TOTAL", "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL", "NUMBER OF PERMANENT BEDS"])
+                                overrideZ(c, s)
+                            for (let s of ["TOTAL ARRIVALS", "TOTAL NIGHTS"])
+                                overrideZ(c, s)
+                            for (let p of ["A", "N"]) {
+                                overrideZ(c, p + "_DOMESTIC TOURISTS - TOTAL")
+                                overrideZ(c, p + "_FOREIGN TOURISTS - TOTAL")
+                                for (let nat of ["AUSTRIAN", "GERMAN", "ITALIAN", "SLOVENIAN"])
+                                    overrideZ(c, p + "_" + nat + " TOURISTS")
+                            }
+                            //console.log(c["TOTAL ARRIVALS"] == c["A_DOMESTIC TOURISTS - TOTAL"]+c["A_FOREIGN TOURISTS - TOTAL"]) true
+                            //console.log(c["TOTAL NIGHTS"] == c["N_DOMESTIC TOURISTS - TOTAL"]+c["N_FOREIGN TOURISTS - TOTAL"]) true
+        
+                            for (let p of ["A", "N"])
+                                c[p + "_OTHER"] = +c[p + "_FOREIGN TOURISTS - TOTAL"] - c[p + "_AUSTRIAN TOURISTS"] - c[p + "_GERMAN TOURISTS"] - c[p + "_ITALIAN TOURISTS"] - c[p + "_SLOVENIAN TOURISTS"]
+                            //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
+        
+
+    }
+})
+*/
+
+
+        
+
+
+
+
+
+
+
+        //layers
+        //TODO as dictionnary
 
 
         //styles
@@ -243,49 +354,6 @@
         })
 
 
-        //datasets
-        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
-
-        //few functions for data preprocessing
-        const setPosition = c => {
-            //IDENTIFIER: "1kmN2621E4812"
-            let d = (c.IDENTIFIER + "").replace("1kmN", "").split("E")
-            c.y = (+d[0]) * 1000
-            c.x = (+d[1]) * 1000
-            delete c.IDENTIFIER
-        }
-        const overrideZ = (c, col) => c[col] = c[col] === "Z" ? 0 : +c[col]
-        const overrideD = (c, col) => c[col] = c[col] === "D" ? 0 : +c[col]
-
-        //population / education / labor
-        const popData = new gviz.CSVGrid(url + "Population_2011_Grid_1000m.csv", 1000, {
-            preprocess: c => {
-                setPosition(c)
-
-                overrideD(c, "TOTAL")
-                c.DIFF_MEN_WOMEN = c.MEN - c.WOMEN
-                c.DIFF_MEN_WOMEN = 100 * c.DIFF_MEN_WOMEN / c.TOTAL
-                if (isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
-
-                //education
-                overrideD(c, "BASIC_EDUCATION_OR_LESS")
-                overrideD(c, "UPPER_SECONDARY_EDUCATION")
-                overrideD(c, "TERTIARY_EDUCATION")
-                c.OTHER_EDUC = c.TOTAL - c.BASIC_EDUCATION_OR_LESS - c.UPPER_SECONDARY_EDUCATION - c.TERTIARY_EDUCATION
-
-                //labor
-                overrideD(c, "INACTIVE_POPULATION")
-                overrideD(c, "LABOUR_FORCE")
-                c.OTHER_LABOR = c.TOTAL - c.INACTIVE_POPULATION - c.LABOUR_FORCE
-                //console.log(c.INACTIVE_POPULATION > c.LABOUR_FORCE)  // true and false
-                //console.log(c.OTHER_LABOR > 0) // true and false
-                //console.log(c.LABOUR_FORCE/c.INACTIVE_POPULATION <1)  // true and false
-                c.INACT_RATE = 100 * c.INACTIVE_POPULATION / c.TOTAL
-                if (isNaN(c.INACT_RATE)) c.INACT_RATE = 0
-                //console.log(c.INACT_RATE)
-            }
-        }).getData(undefined, () => { app.cg.redraw(); });
-
 
 
 
@@ -301,55 +369,6 @@
 
 
 
-        /*
-        const ttfun = c => ""
-
-        app.addCSVGridLayer(url + "Population_2011_Grid_1000m.csv", 1000, gviz.getTanakaStyle("TOTAL"), 0, 9999999999,
-            //app.addCSVGridLayer(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, [sBusinessesSector], 0, 9999999999,
-            //app.addCSVGridLayer(url + "Tourism_2017_Grid_1000m.csv", 1000, [sTourismNat], 0, 9999999999,
-            {
-                preprocess: c => {
-
-
-                    /*TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
-                    //see https://nacev2.com/fr
-                    let sum = 0
-                    for (let s of ["TOTAL", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"]) {
-                        c[s] = +c[s]
-                        if (s != "TOTAL") sum += c[s]
-                        if (isNaN(c[s])) console.log(c)
-                    }
-                    if (c.TOTAL != sum) console.log(c, c.TOTAL, sum)
-
-                    c.s1 = c.A
-                    c.s2 = c.B + c.C + c.D + c.E + c.F + c.G + c.H
-                    c.s3 = c.I + c.J + c.K + c.L + c.M + c.N + c.O + c.P + c.Q + c.R + c.S + c.T
-                    //console.log(c.s1, c.s2, c.s3)
-                    //console.log(c.s1 + c.s2 + c.s3 == c.TOTAL)
-                    */
-
-        /*
-                            for (let s of ["ESTABLISHMENTS - TOTAL", "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL", "NUMBER OF PERMANENT BEDS"])
-                                overrideZ(c, s)
-                            for (let s of ["TOTAL ARRIVALS", "TOTAL NIGHTS"])
-                                overrideZ(c, s)
-                            for (let p of ["A", "N"]) {
-                                overrideZ(c, p + "_DOMESTIC TOURISTS - TOTAL")
-                                overrideZ(c, p + "_FOREIGN TOURISTS - TOTAL")
-                                for (let nat of ["AUSTRIAN", "GERMAN", "ITALIAN", "SLOVENIAN"])
-                                    overrideZ(c, p + "_" + nat + " TOURISTS")
-                            }
-                            //console.log(c["TOTAL ARRIVALS"] == c["A_DOMESTIC TOURISTS - TOTAL"]+c["A_FOREIGN TOURISTS - TOTAL"]) true
-                            //console.log(c["TOTAL NIGHTS"] == c["N_DOMESTIC TOURISTS - TOTAL"]+c["N_FOREIGN TOURISTS - TOTAL"]) true
-        
-                            for (let p of ["A", "N"])
-                                c[p + "_OTHER"] = +c[p + "_FOREIGN TOURISTS - TOTAL"] - c[p + "_AUSTRIAN TOURISTS"] - c[p + "_GERMAN TOURISTS"] - c[p + "_ITALIAN TOURISTS"] - c[p + "_SLOVENIAN TOURISTS"]
-                            //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
-        
-
-    }
-})
-*/
 
 
         // show/hide labels
