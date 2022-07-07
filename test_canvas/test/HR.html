@@ -172,6 +172,7 @@
 
         //layers, with styles
         const layers = {
+
             pop: new gviz.Layer(popData, [
                 new gviz.ShapeColorSizeStyle({
                     colorCol: "TOTAL",
@@ -189,17 +190,50 @@
                     },
                 })
             ], 0, 9999999999),
-            popGender: {},
-            popAge: {},
-            popEducation: {},
-            popLabor: {},
-            popInact: {},
-            busSector: {},
-            tourAccNb: {},
-            tourAccUnits: {},
-            tourAccBeds: {},
-            tourOriginArr: {},
-            tourOriginNights: {},
+
+            popGender: new gviz.Layer(popData, [
+
+            ], 0, 9999999999),
+
+            popAge: new gviz.Layer(popData, [
+
+            ], 0, 9999999999),
+
+            popEducation: new gviz.Layer(popData, [
+
+            ], 0, 9999999999),
+
+            popLabor: new gviz.Layer(popData, [
+                
+            ], 0, 9999999999),
+
+            popInact: new gviz.Layer(popData, [
+
+            ], 0, 9999999999),
+
+            busSector: new gviz.Layer(businessData, [
+
+            ], 0, 9999999999),
+
+            tourAccNb: new gviz.Layer(tourismData, [
+
+            ], 0, 9999999999),
+
+            tourAccUnits: new gviz.Layer(tourismData, [
+
+            ], 0, 9999999999),
+
+            tourAccBeds: new gviz.Layer(tourismData, [
+
+            ], 0, 9999999999),
+
+            tourOriginArr: new gviz.Layer(tourismData, [
+
+            ], 0, 9999999999),
+
+            tourOriginNights: new gviz.Layer(tourismData, [
+
+            ], 0, 9999999999),
         }
 
 
@@ -211,20 +245,6 @@
 
 
         //styles
-
-
-
-
-        /*
-        const sPopulationTotalSide = new gviz.SideStyle({
-            value: (c1, c2) => { return (c2 ? +c2["TOTAL"] : 0) - (c1 ? +c1["TOTAL"] : 0) },
-            color: (side, r, s, z) => "#000",
-            width: (side, r, s, z) => {
-                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                return r * (0.02 + 0.5 * gviz.s(Math.abs(side.value) / max, 0.7))
-            },
-        })*/
-
 
 
 
