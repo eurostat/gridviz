@@ -369,8 +369,14 @@
 
 
 
-        //add layer
-        app.layers.push(layers.pop);
+
+
+        //function to quickly get the selected layer
+        const getSelectedLayer = () => document.querySelector('input[name="layer"]:checked').value
+
+
+        //show selected layer
+        app.layers = [layers[getSelectedLayer()]];
 
 
 
