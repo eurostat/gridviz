@@ -11,15 +11,15 @@ export const getTanakaStyle = function (col, opts) {
     opts.colors = opts.colors || ["#a9bb9e", "#c9dcaa", "#f0f1af", "#fde89f", "#f9a579", "#eb444b"]
 
     //for fixed classification
-    opts.breaks = opts.breaks //|| [10, 50, 200, 500, 2000]
+    opts.breaks = opts.breaks
     //for dynamic classification
     opts.valueStretch = opts.valueStretch
 
     //width of the segment (share of the resolution)
     opts.widthFactor = opts.widthFactor || 0.1
 
-
     const getClass = (v) => {
+
         if (opts.breaks) {
             //fixed classification
             for (let i = 0; i < opts.breaks.length; i++)
@@ -39,7 +39,7 @@ export const getTanakaStyle = function (col, opts) {
     const colStyle = new ShapeColorSizeStyle({
         colorCol: col,
         //the color corresponding to the class
-        color: (v, r, s, zf) => opts.colors[getClass(v)],
+        color: (v, r, s, zf) => opts.colors[getClass(opts.valueStretch ? opts.valueStretch(v, r, s, zf) : v)],
         shape: () => "square",
         zfStroke: 0,
     })
@@ -59,5 +59,5 @@ export const getTanakaStyle = function (col, opts) {
         width: (side, r, s, z) => opts.widthFactor * r * side.value,
     })
 
-    return [colStyle]
+    return [colStyle, sideStyle]
 }

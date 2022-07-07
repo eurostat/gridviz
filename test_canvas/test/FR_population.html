@@ -71,14 +71,6 @@
 
 
 
-        //tests on tanaka style
-        //const col = "Ind"
-
-
-
-        const tanakaStyle = gviz.getTanakaStyle({ valueStretch: (v, r, s, zf) => str((v - s.min) / (s.max - s.min), 0.3) })
-
-
         //style data
         const sd = {
             scolor: {
@@ -184,7 +176,8 @@
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
             tanaka: {
-                style: tanakaStyle,
+                style: gviz.getTanakaStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                //style: gviz.getTanakaStyle("Ind", { breaks: [10, 50, 200, 500, 2000] }),
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
             pillar: {
