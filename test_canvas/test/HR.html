@@ -13,24 +13,39 @@
         <span style="font-size: 17pt; font-weight: bold;">Statistical grids - Croatia</span><br><span
             style="font-size: 10pt;">
             <div id="layer">
-                <input type="radio" name="style" id="pop" value="pop" checked>
-                <label for="pop">Population</label>
+                <span style="font-size: 11pt; font-weight: bold;">Population</span><br>
+                <input type="radio" name="layer" id="pop" value="pop" checked>
+                <label for="pop">Total</label>
+                <input type="radio" name="layer" id="popGender" value="popGender">
+                <label for="popGender">by gender</label>
+                <input type="radio" name="layer" id="popAge" value="popAge">
+                <label for="popAge">by age</label>
                 <br>
-                <input type="radio" name="style" id="popGender" value="popGender">
-                <label for="popGender">Population by gender</label>
+                <input type="radio" name="layer" id="popEducation" value="popEducation">
+                <label for="popEducation">by education</label>
+                <input type="radio" name="layer" id="popLabor" value="popLabor">
+                <label for="popLabor">by labor status</label>
+                <input type="radio" name="layer" id="popInact" value="popInact">
+                <label for="popInact">inactivity</label>
                 <br>
-                <input type="radio" name="style" id="popAge" value="popAge">
-                <label for="popAge">Population by age</label>
+                <span style="font-size: 11pt; font-weight: bold;">Businesses</span>
                 <br>
-                <input type="radio" name="style" id="popEducation" value="popEducation">
-                <label for="popEducation">Population by education</label>
+                <input type="radio" name="layer" id="busSector" value="busSector">
+                <label for="busSector">by sector</label>
                 <br>
-                <input type="radio" name="style" id="popLabor" value="popLabor">
-                <label for="popLabor">Population by labor status</label>
-                <br>
-                <input type="radio" name="style" id="popInact" value="popInact">
-                <label for="popInact">Population inactivity</label>
-                <br>
+                <span style="font-size: 11pt; font-weight: bold;">Tourism</span>
+                <br>Accomodation: Number of
+                <input type="radio" name="layer" id="tourAccNb" value="tourAccNb">
+                <label for="tourAccNb">number</label>
+                <input type="radio" name="layer" id="tourAccUnits" value="tourAccUnits">
+                <label for="tourAccUnits">units</label>
+                <input type="radio" name="layer" id="tourAccBeds" value="tourAccBeds">
+                <label for="tourAccBeds">beds</label>
+                <br>Tourist origin: by number of 
+                <input type="radio" name="layer" id="tourOriginArr" value="tourOriginArr">
+                <label for="tourOriginArr">arrivals</label>
+                <input type="radio" name="layer" id="tourOriginNights" value="tourOriginNights">
+                <label for="tourOriginNights">nights</label>
             </div>
             <hr>
             <input type="checkbox" id="label" checked>
@@ -278,7 +293,7 @@
 
 
         //layers
-        const popLay = new gviz.Layer(popData, [sPopulationTotal], 0, 9999999999);
+        const popLay = new gviz.Layer(popData, [sPopulationTotal, sPopulationTotalSide], 0, 9999999999);
 
 
         //add layer
