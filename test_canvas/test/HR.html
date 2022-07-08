@@ -71,13 +71,8 @@
 
 
 
-
-        //datasets
-        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
-
-
+        //define data preprocesses
         const override = (c, col) => c[col] = +c[col]
-
 
         //population / education / labor
         const ppPop = c => {
@@ -149,6 +144,7 @@
 
 
         //define tiled datasets
+        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
         const resolutions = [1000, 2000, 3000, 4000, 5000, 7000, 10000]
         const datasets = {}
         for (let ds of ["Population_2011", "Active_business_entities_2016", "Tourism_2017"]) {
@@ -363,9 +359,8 @@
         for (let layCode of ["pop", "popGender", "popAge", "popEducation", "popLabor", "popInact", "busSector", "tourAccNb", "tourAccUnits", "tourAccBeds", "tourOriginArr", "tourOriginNights"]) {
             const ds = datasets[layCode.startsWith("pop") ? "Population_2011" : layCode.startsWith("bus") ? "Active_business_entities_2016" : "Tourism_2017"]
             const ls = []
-            for (let r of resolutions) {
+            for (let r of resolutions)
                 ls.push(new gviz.Layer(ds[r], styles[layCode]))
-            }
             layers[layCode] = [new gviz.MultiScaleLayer(ls, [0, 100, 200, 300, 400, 500, 700, 1000])]
         }
 
