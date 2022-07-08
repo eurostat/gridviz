@@ -22,8 +22,8 @@
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
         //.setBackgroundColor("black")
 
-        //color style
-        const colorStyle = new gviz.ShapeColorSizeStyle({
+        /*/color style
+        const styles = [new gviz.ShapeColorSizeStyle({
             colorCol: "ksmval",
             color: (v, r, s) => {
                 const v_ = Math.pow((v) / s.max, 0.2)
@@ -32,14 +32,21 @@
                 if (cl < 1 / nbClass) return "white"
                 return gviz.interpolateRdYlGn(1 - cl)
             }
+        })]*/
+
+        //d3.schemeTableau10
+        const c = "orange"
+        const styles = gviz.getTanakaStyle("ksmval", {
+            //colors : gviz.schemeTableau10,
+            colors: [c, c, c, c, c, c, c, c, c, c],
+            valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2)
         })
 
         //define datasets, styles and layers
         const s = new gviz.KernelSmoothingStyle({
             value: c => +c["Ind"],
             sigma: zf => zf * 5,
-            //styles: [colorStyle]
-            styles: gviz.getTanakaStyle("ksmval", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) })
+            styles: styles
         });
 
 
