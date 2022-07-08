@@ -387,7 +387,7 @@
             ],
         }
 
-        //define layers from datasets and styles
+        /*/define layers from datasets and styles
         const layers = {}
         for (let layCode of ["pop", "popGender", "popAge", "popEducation", "popLabor", "popInact", "busSector", "tourAccNb", "tourAccUnits", "tourAccBeds", "tourOriginArr", "tourOriginNights"]) {
             const ds = datasets[layCode.startsWith("pop") ? "Population_2011" : layCode.startsWith("bus") ? "Active_business_entities_2016" : "Tourism_2017"]
@@ -397,13 +397,13 @@
             }
             layers[layCode] = [new gviz.MultiScaleLayer(ls, [0, 100, 200, 300, 400, 500, 700, 1000])]
         }
-
+*/
 
 
 
         //layers, with styles
         //TODO change that
-        const layers_ = {
+        const layers = {
             pop: [new gviz.Layer(popData, styles.pop, 0, 9999999999)],
             popGender: [new gviz.Layer(popData, styles.popGender, 0, 9999999999)],
             popAge: [new gviz.Layer(popData, styles.popAge, 0, 9999999999)],
@@ -418,8 +418,8 @@
             tourOriginNights: [new gviz.Layer(tourismData, styles.tourOriginNights, 0, 9999999999)],
         }
 
-        console.log(layers_)
-        console.log(layers)
+        //console.log(layers_)
+        //console.log(layers)
 
 
         //function to quickly get the selected layer
