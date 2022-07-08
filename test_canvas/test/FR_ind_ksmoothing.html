@@ -22,11 +22,8 @@
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
         //.setBackgroundColor("black")
 
-        //styles
-        const styles = {}
-
         //color style
-        styles.color = new gviz.ShapeColorSizeStyle({
+        const colorStyle = new gviz.ShapeColorSizeStyle({
             colorCol: "ksmval",
             color: (v, r, s) => {
                 const v_ = Math.pow((v) / s.max, 0.2)
@@ -41,19 +38,29 @@
         const s = new gviz.KernelSmoothingStyle({
             value: c => +c["Ind"],
             sigma: zf => zf * 5,
-            //styles: [styles.color]
-            styles: gviz.getTanakaStyle("ksmval")
+            //styles: [colorStyle]
+            styles: gviz.getTanakaStyle("ksmval", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) })
         });
+
+
         const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
-        app.addTiledGridLayer(url + "200m/", [s], 0, 80, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer(url + "400m/", [s], 80, 160, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer(url + "1000m/", [s], 160, 400, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer(url + "2000m/", [s], 400, 800, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer(url + "5000m/", [s], 800, 2000, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer(url + "10000m/", [s], 2000, 4000, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer(url + "20000m/", [s], 4000, 8000, { cellInfoHTML: ttfun });
-        app.addTiledGridLayer(url + "50000m/", [s], 8000, 9999999999, { cellInfoHTML: ttfun });
+        app.addMultiScaleTiledGridLayer(url,
+            [
+                { code: "200m/", styles: [s], opts: { cellInfoHTML: ttfun } },
+                { code: "400m/", styles: [s], opts: { cellInfoHTML: ttfun } },
+                { code: "1000m/", styles: [s], opts: { cellInfoHTML: ttfun } },
+                { code: "2000m/", styles: [s], opts: { cellInfoHTML: ttfun } },
+                { code: "5000m/", styles: [s], opts: { cellInfoHTML: ttfun } },
+                { code: "10000m/", styles: [s], opts: { cellInfoHTML: ttfun } },
+                { code: "20000m/", styles: [s], opts: { cellInfoHTML: ttfun } },
+                { code: "50000m/", styles: [s], opts: { cellInfoHTML: ttfun } },
+            ],
+            //[0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
+            //[0, 40, 80, 200, 400, 1000, 2000, 4000, 10000]
+            [0, 50, 100, 250, 500, 1250, 2500, 5000, 12500]
+        )
+
 
         //sigma selection
         const slider = document.getElementById('sigma');
