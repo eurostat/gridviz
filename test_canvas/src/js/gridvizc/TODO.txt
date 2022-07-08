@@ -1,4 +1,4 @@
-TODO HR: publish aggregations and use
+TODO HR: use tiled
 
 TODO FR pop by age: fix legend update when aggregating + use better color ramp - d3.schemeCategory10 ?
 TODO adapt tanaka to diverging - use on EUR pop change
