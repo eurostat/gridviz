@@ -1,4 +1,3 @@
-TODO HR: use tiled
 TODO line styles, based on side style
 
 TODO FR pop by age: fix legend update when aggregating + use better color ramp - d3.schemeCategory10 ?
