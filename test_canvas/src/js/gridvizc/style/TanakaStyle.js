@@ -2,8 +2,15 @@
 
 import { ShapeColorSizeStyle } from "./ShapeColorSizeStyle"
 import { SideStyle } from "./SideStyle"
+import { Style } from "../Style"
 
-
+/**
+ * https://manifold.net/doc/mfd9/example__tanaka_contours.htm
+ * 
+ * @param {string} col 
+ * @param {object} opts 
+ * @returns {Array.<Style>}
+ */
 export const getTanakaStyle = function (col, opts) {
     opts = opts || {}
 
@@ -50,12 +57,12 @@ export const getTanakaStyle = function (col, opts) {
             //the number of classes of difference
             const a2 = opts.valueStretch ? opts.valueStretch(v2, r, s, zf) : v2
             const a1 = opts.valueStretch ? opts.valueStretch(v1, r, s, zf) : v1
-            return (v2!=undefined ? getClass(a2) + 1 : 0) - (v1!=undefined ? getClass(a1) + 1 : 0)
+            return (v2 != undefined ? getClass(a2) + 1 : 0) - (v1 != undefined ? getClass(a1) + 1 : 0)
         },
         //white or black, depending on orientation
         color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "#333" : "#ccc",
         //width depends on the value, that is the number of classes of difference
-        width: (side, r, s, z) => opts.widthFactor * r * side.value,
+        width: (side, r, s, z) => opts.widthFactor * r * side.value * (side.or === "v" ? 0.5 : 1),
     })
 
     return [colStyle, sideStyle]
