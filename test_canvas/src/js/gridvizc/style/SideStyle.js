@@ -36,8 +36,8 @@ export class SideStyle extends Style {
          * @private @type {function(Side,number,Stat|undefined,number):number} */
         this.width = opts.width || ((side, r, s, z) => r * side.value / 5);
 
-        /** A uniform fill color for the cells.
-        * @private @type {string} */
+        /** A fill color for the cells.
+        * @private @type {function(Cell):string} */
         this.fillColor = opts.fillColor
 
     }
@@ -117,11 +117,13 @@ export class SideStyle extends Style {
 
 
         //draw cells, if fillColor specified
-        if (this.fillColor && this.fillColor != "none") {
-            cg.ctx.fillStyle = this.fillColor;
-            for (let c of cells)
+        if (this.fillColor)
+            for (let c of cells) {
+                const fc = this.fillColor(c)
+                if (!fc || fc == "none") continue
+                cg.ctx.fillStyle = fc;
                 cg.ctx.fillRect(c.x, c.y, r, r);
-        }
+            }
 
 
         cg.ctx.lineCap = "butt";
