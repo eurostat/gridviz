@@ -4,7 +4,6 @@ TODO adapt tanaka and side on EUR pop change
 TODO test tanaka with single hue ramp
 TODO EUR kernel smoothin: fix + add tanaka
 TODO FR pop by age: fix legend update when aggregating + use better color ramp - d3.schemeCategory10 ?
-TODO HR tourism nationality: use d3.schemeCategory10
 
 
 TODO make tests using offset ?
