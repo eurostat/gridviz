@@ -1,6 +1,4 @@
 TODO adapt tanaka and side on EUR pop change
-TODO test tanaka with single hue ramp
-TODO EUR kernel smoothing: fix + add tanaka
 TODO FR pop by age: fix legend update when aggregating + use better color ramp - d3.schemeCategory10 ?
 TODO kernel smoothing: fix artifact - empty line below from center point toward south
 TODO HR: add 2000 - 5000 - 10000 aggregation
