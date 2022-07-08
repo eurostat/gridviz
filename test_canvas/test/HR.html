@@ -218,7 +218,7 @@
                             "TOTAL_15_64": col(0.4),
                             "TOTAL_65p": col(0.9),
                         },
-                        type: () => "flag",
+                        type: () => "agepyramid",
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         agePyramidHeight: (r) => 0.95 * r
@@ -346,7 +346,7 @@
                         },
                         type: () => "piechart",
                         sizeCol: "TOTAL ARRIVALS",
-                        size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
+                        size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
                     }).addLegend({
                         colorCat: {
                             id: "guychgatlend534", bottom: "20px", left: "20px", shape: "square",
@@ -369,7 +369,7 @@
                         },
                         type: () => "piechart",
                         sizeCol: "TOTAL NIGHTS",
-                        size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
+                        size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
                     }).addLegend({
                         colorCat: {
                             id: "guyeh35cgcd34", bottom: "20px", left: "20px", shape: "square",
