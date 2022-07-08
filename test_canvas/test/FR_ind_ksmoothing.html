@@ -34,11 +34,10 @@
             }
         })]*/
 
-        //d3.schemeTableau10
-        const c = "#ffbf73"
+        //const c = "#ffbf73"
         const styles = gviz.getTanakaStyle("ksmval", {
             //colors : gviz.schemeTableau10,
-            colors: [c, c, c, c, c, c, c, c, c, c],
+            //colors: [c, c, c, c, c, c, c, c, c, c],
             valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2)
         })
 
