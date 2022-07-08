@@ -113,9 +113,6 @@
             if (isNaN(c.INACT_RATE)) c.INACT_RATE = 0
             //console.log(c.INACT_RATE)
         }
-        const popData = new gviz.CSVGrid(url + "Population_2011_Grid_1000m.csv", 1000, {
-            preprocess: ppPop
-        }).getData(undefined, () => { app.cg.redraw(); });
 
 
         //businesses
@@ -139,9 +136,6 @@
             //console.log(c.s1, c.s2, c.s3)
             //console.log(c.s1 + c.s2 + c.s3 == c.TOTAL)
         }
-        const businessData = new gviz.CSVGrid(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, {
-            preprocess: ppBusiness
-        }).getData(undefined, () => { app.cg.redraw(); });
 
 
         //tourism
@@ -165,24 +159,34 @@
                 c[p + "_OTHER"] = +c[p + "_FOREIGN TOURISTS - TOTAL"] - c[p + "_AUSTRIAN TOURISTS"] - c[p + "_GERMAN TOURISTS"] - c[p + "_ITALIAN TOURISTS"] - c[p + "_SLOVENIAN TOURISTS"]
             //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
         }
+
+
+        //define CSV datasets
+        //TODO remove
+        const popData = new gviz.CSVGrid(url + "Population_2011_Grid_1000m.csv", 1000, {
+            preprocess: ppPop
+        }).getData(undefined, () => { app.cg.redraw(); });
+
+        const businessData = new gviz.CSVGrid(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, {
+            preprocess: ppBusiness
+        }).getData(undefined, () => { app.cg.redraw(); });
+
         const tourismData = new gviz.CSVGrid(url + "Tourism_2017_Grid_1000m.csv", 1000, {
             preprocess: ppTourism
         }).getData(undefined, () => { app.cg.redraw(); });
 
 
 
-        //define datasets
+        //define tiled datasets
         const datasets = {}
         for (let ds of ["Population_2011", "Active_business_entities_2016", "Tourism_2017"]) {
             datasets[ds] = {}
             for (let r of [1000, 2000, 3000, 4000, 5000, 7000, 10000]) {
-                datasets[ds][r] = new gviz.TiledGrid(url + ds + "/" + r + "m/", app).loadInfo(() => { app.cg.redraw(); })
+                const pp = ds.startsWith("Pop") ? ppPop : ds.startsWith("Acti") ? ppBusiness : ppTourism
+                datasets[ds][r] = new gviz.TiledGrid(url + ds + "/" + r + "m/", app, { preprocess: pp }).loadInfo(() => { app.cg.redraw(); })
             }
         }
-        //console.log(datasets)
 
-        //TODO make layers
-        //new Layer(dataset, styles, minZoom, maxZoom);
 
         //define styles
         const col = gviz.interpolateSpectral
@@ -387,26 +391,29 @@
         const layers_ = {}
         for (let layCode of ["pop", "popGender", "popAge", "popEducation", "popLabor", "popInact", "busSector", "tourAccNb", "tourAccUnits", "tourAccBeds", "tourOriginArr", "tourOriginNights"]) {
             layers_[layCode] = {}
+            const ds = datasets[layCode.startsWith("pop") ? "Population_2011" : layCode.startsWith("bus") ? "Active_business_entities_2016" : "Tourism_2017"]
+            //new Layer(dataset, styles, minZoom, maxZoom);
         }
+
+
 
 
         //layers, with styles
         //TODO change that
         const layers = {
-            pop: new gviz.Layer(popData, styles.pop, 0, 9999999999),
-            popGender: new gviz.Layer(popData, styles.popGender, 0, 9999999999),
-            popAge: new gviz.Layer(popData, styles.popAge, 0, 9999999999),
-            popEducation: new gviz.Layer(popData, styles.popEducation, 0, 9999999999),
-            popLabor: new gviz.Layer(popData, styles.popLabor, 0, 9999999999),
-            popInact: new gviz.Layer(popData, styles.popInact, 0, 9999999999),
-            busSector: new gviz.Layer(businessData, styles.busSector, 0, 9999999999),
-            tourAccNb: new gviz.Layer(tourismData, styles.tourAccNb, 0, 9999999999),
-            tourAccUnits: new gviz.Layer(tourismData, styles.tourAccUnits, 0, 9999999999),
-            tourAccBeds: new gviz.Layer(tourismData, styles.tourAccBeds, 0, 9999999999),
-            tourOriginArr: new gviz.Layer(tourismData, styles.tourOriginArr, 0, 9999999999),
-            tourOriginNights: new gviz.Layer(tourismData, styles.tourOriginNights, 0, 9999999999),
+            pop: [new gviz.Layer(popData, styles.pop, 0, 9999999999)],
+            popGender: [new gviz.Layer(popData, styles.popGender, 0, 9999999999)],
+            popAge: [new gviz.Layer(popData, styles.popAge, 0, 9999999999)],
+            popEducation: [new gviz.Layer(popData, styles.popEducation, 0, 9999999999)],
+            popLabor: [new gviz.Layer(popData, styles.popLabor, 0, 9999999999)],
+            popInact: [new gviz.Layer(popData, styles.popInact, 0, 9999999999)],
+            busSector: [new gviz.Layer(businessData, styles.busSector, 0, 9999999999)],
+            tourAccNb: [new gviz.Layer(tourismData, styles.tourAccNb, 0, 9999999999)],
+            tourAccUnits: [new gviz.Layer(tourismData, styles.tourAccUnits, 0, 9999999999)],
+            tourAccBeds: [new gviz.Layer(tourismData, styles.tourAccBeds, 0, 9999999999)],
+            tourOriginArr: [new gviz.Layer(tourismData, styles.tourOriginArr, 0, 9999999999)],
+            tourOriginNights: [new gviz.Layer(tourismData, styles.tourOriginNights, 0, 9999999999)],
         }
-
 
 
 
@@ -416,7 +423,7 @@
 
 
         //show selected layer
-        app.layers = [layers[getSelectedLayer()]];
+        app.layers = layers[getSelectedLayer()];
 
 
 
@@ -424,7 +431,7 @@
         document.querySelector('#layer').addEventListener('change', function () {
 
             app.layers[0].hideLegends()
-            app.layers = [layers[getSelectedLayer()]];
+            app.layers = layers[getSelectedLayer()];
 
             //redraw
             app.cg.redraw();
