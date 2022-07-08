@@ -76,26 +76,25 @@
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
 
 
-        const overrideZ = (c, col) => c[col] = c[col] === "Z" ? 0 : +c[col]
-        const overrideD = (c, col) => c[col] = c[col] === "D" ? 0 : +c[col]
+        const override = (c, col) => c[col] = +c[col]
 
 
         //population / education / labor
         const ppPop = c => {
-            overrideD(c, "TOTAL")
+            override(c, "TOTAL")
             c.DIFF_MEN_WOMEN = c.MEN - c.WOMEN
             c.DIFF_MEN_WOMEN = 100 * c.DIFF_MEN_WOMEN / c.TOTAL
             if (isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
 
             //education
-            overrideD(c, "BASIC_EDUCATION_OR_LESS")
-            overrideD(c, "UPPER_SECONDARY_EDUCATION")
-            overrideD(c, "TERTIARY_EDUCATION")
+            override(c, "BASIC_EDUCATION_OR_LESS")
+            override(c, "UPPER_SECONDARY_EDUCATION")
+            override(c, "TERTIARY_EDUCATION")
             c.OTHER_EDUC = c.TOTAL - c.BASIC_EDUCATION_OR_LESS - c.UPPER_SECONDARY_EDUCATION - c.TERTIARY_EDUCATION
 
             //labor
-            overrideD(c, "INACTIVE_POPULATION")
-            overrideD(c, "LABOUR_FORCE")
+            override(c, "INACTIVE_POPULATION")
+            override(c, "LABOUR_FORCE")
             c.OTHER_LABOR = c.TOTAL - c.INACTIVE_POPULATION - c.LABOUR_FORCE
             //console.log(c.INACTIVE_POPULATION > c.LABOUR_FORCE)  // true and false
             //console.log(c.OTHER_LABOR > 0) // true and false
@@ -130,14 +129,14 @@
         //tourism
         const ppTourism = c => {
             for (let s of ["ESTABLISHMENTS - TOTAL", "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL", "NUMBER OF PERMANENT BEDS"])
-                overrideZ(c, s)
+                override(c, s)
             for (let s of ["TOTAL ARRIVALS", "TOTAL NIGHTS"])
-                overrideZ(c, s)
+                override(c, s)
             for (let p of ["A", "N"]) {
-                overrideZ(c, p + "_DOMESTIC TOURISTS - TOTAL")
-                overrideZ(c, p + "_FOREIGN TOURISTS - TOTAL")
+                override(c, p + "_DOMESTIC TOURISTS - TOTAL")
+                override(c, p + "_FOREIGN TOURISTS - TOTAL")
                 for (let nat of ["AUSTRIAN", "GERMAN", "ITALIAN", "SLOVENIAN"])
-                    overrideZ(c, p + "_" + nat + " TOURISTS")
+                    override(c, p + "_" + nat + " TOURISTS")
             }
             //console.log(c["TOTAL ARRIVALS"] == c["A_DOMESTIC TOURISTS - TOTAL"]+c["A_FOREIGN TOURISTS - TOTAL"]) true
             //console.log(c["TOTAL NIGHTS"] == c["N_DOMESTIC TOURISTS - TOTAL"]+c["N_FOREIGN TOURISTS - TOTAL"]) true
@@ -146,21 +145,6 @@
                 c[p + "_OTHER"] = +c[p + "_FOREIGN TOURISTS - TOTAL"] - c[p + "_AUSTRIAN TOURISTS"] - c[p + "_GERMAN TOURISTS"] - c[p + "_ITALIAN TOURISTS"] - c[p + "_SLOVENIAN TOURISTS"]
             //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
         }
-
-
-        //define CSV datasets
-        //TODO remove
-        const popData = new gviz.CSVGrid(url + "Population_2011_Grid_1000m.csv", 1000, {
-            preprocess: ppPop
-        }).getData(undefined, () => { app.cg.redraw(); });
-
-        const businessData = new gviz.CSVGrid(url + "Active_business_entities_2016_Grid_1000m.csv", 1000, {
-            preprocess: ppBusiness
-        }).getData(undefined, () => { app.cg.redraw(); });
-
-        const tourismData = new gviz.CSVGrid(url + "Tourism_2017_Grid_1000m.csv", 1000, {
-            preprocess: ppTourism
-        }).getData(undefined, () => { app.cg.redraw(); });
 
 
 
@@ -375,14 +359,14 @@
         }
 
         //define layers from datasets and styles
-        const layers_ = {}
+        const layers = {}
         for (let layCode of ["pop", "popGender", "popAge", "popEducation", "popLabor", "popInact", "busSector", "tourAccNb", "tourAccUnits", "tourAccBeds", "tourOriginArr", "tourOriginNights"]) {
             const ds = datasets[layCode.startsWith("pop") ? "Population_2011" : layCode.startsWith("bus") ? "Active_business_entities_2016" : "Tourism_2017"]
             const ls = []
             for (let r of resolutions) {
                 ls.push(new gviz.Layer(ds[r], styles[layCode]))
             }
-            layers_[layCode] = [new gviz.MultiScaleLayer(ls, [0, 100, 200, 300, 400, 500, 700, 1000])]
+            layers[layCode] = [new gviz.MultiScaleLayer(ls, [0, 100, 200, 300, 400, 500, 700, 1000])]
         }
 
         //function to quickly get the selected layer
@@ -390,14 +374,14 @@
 
 
         //show selected layer
-        app.layers = layers_[getSelectedLayer()];
+        app.layers = layers[getSelectedLayer()];
 
 
         //style selector
         document.querySelector('#layer').addEventListener('change', function () {
 
             app.layers[0].hideLegends()
-            app.layers = layers_[getSelectedLayer()];
+            app.layers = layers[getSelectedLayer()];
 
             //redraw
             app.cg.redraw();
