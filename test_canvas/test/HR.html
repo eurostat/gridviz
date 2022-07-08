@@ -75,22 +75,13 @@
         //datasets
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
 
-        //few functions for data preprocessing
-        const setPosition = c => {
-            //IDENTIFIER: "1kmN2621E4812"
-            let d = (c.IDENTIFIER + "").replace("1kmN", "").split("E")
-            c.y = (+d[0]) * 1000
-            c.x = (+d[1]) * 1000
-            delete c.IDENTIFIER
-        }
+
         const overrideZ = (c, col) => c[col] = c[col] === "Z" ? 0 : +c[col]
         const overrideD = (c, col) => c[col] = c[col] === "D" ? 0 : +c[col]
 
 
         //population / education / labor
         const ppPop = c => {
-            setPosition(c)
-
             overrideD(c, "TOTAL")
             c.DIFF_MEN_WOMEN = c.MEN - c.WOMEN
             c.DIFF_MEN_WOMEN = 100 * c.DIFF_MEN_WOMEN / c.TOTAL
@@ -117,8 +108,6 @@
 
         //businesses
         const ppBusiness = c => {
-            setPosition(c)
-
             //TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
             //see https://nacev2.com/fr
             let sum = 0
@@ -140,8 +129,6 @@
 
         //tourism
         const ppTourism = c => {
-            setPosition(c)
-
             for (let s of ["ESTABLISHMENTS - TOTAL", "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL", "NUMBER OF PERMANENT BEDS"])
                 overrideZ(c, s)
             for (let s of ["TOTAL ARRIVALS", "TOTAL NIGHTS"])
@@ -387,55 +374,30 @@
             ],
         }
 
-        /*/define layers from datasets and styles
-        const layers = {}
+        //define layers from datasets and styles
+        const layers_ = {}
         for (let layCode of ["pop", "popGender", "popAge", "popEducation", "popLabor", "popInact", "busSector", "tourAccNb", "tourAccUnits", "tourAccBeds", "tourOriginArr", "tourOriginNights"]) {
             const ds = datasets[layCode.startsWith("pop") ? "Population_2011" : layCode.startsWith("bus") ? "Active_business_entities_2016" : "Tourism_2017"]
             const ls = []
             for (let r of resolutions) {
-                ls.push( new gviz.Layer(ds[r], styles[layCode]) )
+                ls.push(new gviz.Layer(ds[r], styles[layCode]))
             }
-            layers[layCode] = [new gviz.MultiScaleLayer(ls, [0, 100, 200, 300, 400, 500, 700, 1000])]
+            layers_[layCode] = [new gviz.MultiScaleLayer(ls, [0, 100, 200, 300, 400, 500, 700, 1000])]
         }
-*/
-
-
-
-        //layers, with styles
-        //TODO change that
-        const layers = {
-            pop: [new gviz.Layer(popData, styles.pop, 0, 9999999999)],
-            popGender: [new gviz.Layer(popData, styles.popGender, 0, 9999999999)],
-            popAge: [new gviz.Layer(popData, styles.popAge, 0, 9999999999)],
-            popEducation: [new gviz.Layer(popData, styles.popEducation, 0, 9999999999)],
-            popLabor: [new gviz.Layer(popData, styles.popLabor, 0, 9999999999)],
-            popInact: [new gviz.Layer(popData, styles.popInact, 0, 9999999999)],
-            busSector: [new gviz.Layer(businessData, styles.busSector, 0, 9999999999)],
-            tourAccNb: [new gviz.Layer(tourismData, styles.tourAccNb, 0, 9999999999)],
-            tourAccUnits: [new gviz.Layer(tourismData, styles.tourAccUnits, 0, 9999999999)],
-            tourAccBeds: [new gviz.Layer(tourismData, styles.tourAccBeds, 0, 9999999999)],
-            tourOriginArr: [new gviz.Layer(tourismData, styles.tourOriginArr, 0, 9999999999)],
-            tourOriginNights: [new gviz.Layer(tourismData, styles.tourOriginNights, 0, 9999999999)],
-        }
-
-        //console.log(layers_)
-        //console.log(layers)
-
 
         //function to quickly get the selected layer
         const getSelectedLayer = () => document.querySelector('input[name="layer"]:checked').value
 
 
         //show selected layer
-        app.layers = layers[getSelectedLayer()];
-
+        app.layers = layers_[getSelectedLayer()];
 
 
         //style selector
         document.querySelector('#layer').addEventListener('change', function () {
 
             app.layers[0].hideLegends()
-            app.layers = layers[getSelectedLayer()];
+            app.layers = layers_[getSelectedLayer()];
 
             //redraw
             app.cg.redraw();
