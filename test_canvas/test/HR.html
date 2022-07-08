@@ -145,7 +145,7 @@
 
         //define tiled datasets
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
-        const resolutions = [1000, 2000, 3000, 4000, 5000, 7000, 10000]
+        const resolutions = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000]
         const datasets = {}
         for (let ds of ["Population_2011", "Active_business_entities_2016", "Tourism_2017"]) {
             datasets[ds] = {}
@@ -361,9 +361,10 @@
             const ls = []
             for (let r of resolutions)
                 ls.push(new gviz.Layer(ds[r], styles[layCode]))
-            layers[layCode] = [new gviz.MultiScaleLayer(ls, [0, 100, 200, 300, 400, 500, 700, 99999999999])]
+            layers[layCode] = [new gviz.MultiScaleLayer(ls, [0, 100, 200, 300, 500, 700, 1000, 1500, 2500, 4000, 99999999])]
         }
 
+        //resolutions: 1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000
         //zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
 
         //function to quickly get the selected layer
