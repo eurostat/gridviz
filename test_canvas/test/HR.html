@@ -171,11 +171,12 @@
 
 
 
+        //define datasets
         const datasets = {}
         for (let ds of ["Population_2011", "Active_business_entities_2016", "Tourism_2017"]) {
             datasets[ds] = {}
             for (let r of [1000, 2000, 3000, 4000, 5000, 7000, 10000]) {
-                datasets[ds][r] = new gviz.TiledGrid(url+ds+"/"+r+"m/", app).loadInfo(() => { app.cg.redraw(); })
+                datasets[ds][r] = new gviz.TiledGrid(url + ds + "/" + r + "m/", app).loadInfo(() => { app.cg.redraw(); })
             }
         }
         //console.log(datasets)
@@ -183,31 +184,12 @@
         //TODO make layers
         //new Layer(dataset, styles, minZoom, maxZoom);
 
-
-
-        //tiled versions
-        /*
-                const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
-                app.addTiledGridLayer(url + "200m/", [s], 0, 100, { cellInfoHTML: ttfun, preprocess: preprocess });
-                app.addTiledGridLayer(url + "400m/", [s], 100, 200, { cellInfoHTML: ttfun, preprocess: preprocess });
-                app.addTiledGridLayer(url + "1000m/", [s], 200, 500, { cellInfoHTML: ttfun, preprocess: preprocess });
-                app.addTiledGridLayer(url + "2000m/", [s], 500, 1000, { cellInfoHTML: ttfun, preprocess: preprocess });
-                app.addTiledGridLayer(url + "5000m/", [s], 1000, 2500, { cellInfoHTML: ttfun, preprocess: preprocess });
-                app.addTiledGridLayer(url + "10000m/", [s], 2500, 5000, { cellInfoHTML: ttfun, preprocess: preprocess });
-                app.addTiledGridLayer(url + "20000m/", [s], 5000, 10000, { cellInfoHTML: ttfun, preprocess: preprocess });
-                app.addTiledGridLayer(url + "50000m/", [s], 10000, 9999999999, { cellInfoHTML: ttfun, preprocess: preprocess });
-        
-        */
-
-
-
-        //layers, with styles
+        //define styles
         const col = gviz.interpolateSpectral
         const col2 = gviz.schemeCategory10
+        const styles = {
 
-        const layers = {
-
-            pop: new gviz.Layer(popData, [
+            pop: [
                 new gviz.ShapeColorSizeStyle({
                     colorCol: "TOTAL",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
@@ -225,9 +207,9 @@
                         return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
                     },
                 })
-            ], 0, 9999999999),
+            ],
 
-            popGender: new gviz.Layer(popData, [
+            popGender: [
                 new gviz.ShapeColorSizeStyle({
                     colorCol: "DIFF_MEN_WOMEN",
                     color: (v, r, s) => {
@@ -248,9 +230,9 @@
                         }
                     }
                 })
-            ], 0, 9999999999),
+            ],
 
-            popAge: new gviz.Layer(popData, [
+            popAge: [
                 new gviz.CompositionStyle({
                     color: {
                         "TOTAL_0_14": col(0.2),
@@ -262,9 +244,9 @@
                     size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                     agePyramidHeight: (r) => 0.95 * r
                 }).addLegend({ colorCat: { id: "guyxhtscaend534", bottom: "20px", left: "20px", shape: "square", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() } })
-            ], 0, 9999999999),
+            ],
 
-            popEducation: new gviz.Layer(popData, [
+            popEducation: [
                 new gviz.CompositionStyle({
                     color: {
                         "OTHER_EDUC": "gray",
@@ -282,9 +264,9 @@
                         colCat: [[col(0.2), "basic or less"], [col(0.4), "secondary"], [col(0.9), "tertiary"], ["gray", "other"]].reverse()
                     }
                 })
-            ], 0, 9999999999),
+            ],
 
-            popLabor: new gviz.Layer(popData, [
+            popLabor: [
                 new gviz.CompositionStyle({
                     color: {
                         "OTHER_LABOR": "gray",
@@ -301,18 +283,18 @@
                         colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]].reverse()
                     }
                 })
-            ], 0, 9999999999),
+            ],
 
-            popInact: new gviz.Layer(popData, [
+            popInact: [
                 new gviz.ShapeColorSizeStyle({
                     colorCol: "INACT_RATE",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
                     shape: () => "square",
                     zfStroke: 80,
                 }).addLegend({ color: { id: "schggozeDleggc45end", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) } })
-            ], 0, 9999999999),
+            ],
 
-            busSector: new gviz.Layer(businessData, [
+            busSector: [
                 new gviz.CompositionStyle({
                     color: {
                         "s1": "#1b9e77",
@@ -328,36 +310,36 @@
                         colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse()
                     }
                 })
-            ], 0, 9999999999),
+            ],
 
-            tourAccNb: new gviz.Layer(tourismData, [
+            tourAccNb: [
                 new gviz.ShapeColorSizeStyle({
                     colorCol: "ESTABLISHMENTS - TOTAL",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                     shape: () => "square",
                     zfStroke: 80,
                 }).addLegend({ color: { id: "scc13iugfend", bottom: "20px", left: "20px", title: "Tourism - establishments", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
-            ], 0, 9999999999),
+            ],
 
-            tourAccUnits: new gviz.Layer(tourismData, [
+            tourAccUnits: [
                 new gviz.ShapeColorSizeStyle({
                     colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                     shape: () => "square",
                     zfStroke: 80,
                 }).addLegend({ color: { id: "sc1hhgfggnd", bottom: "20px", left: "20px", title: "Tourism - units", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
-            ], 0, 9999999999),
+            ],
 
-            tourAccBeds: new gviz.Layer(tourismData, [
+            tourAccBeds: [
                 new gviz.ShapeColorSizeStyle({
                     colorCol: "NUMBER OF PERMANENT BEDS",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                     shape: () => "square",
                     zfStroke: 80,
                 }).addLegend({ color: { id: "sc1hgfend", bottom: "20px", left: "20px", title: "Tourism - beds", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
-            ], 0, 9999999999),
+            ],
 
-            tourOriginArr: new gviz.Layer(tourismData, [
+            tourOriginArr: [
                 new gviz.CompositionStyle({
                     color: {
                         "A_DOMESTIC TOURISTS - TOTAL": col2[0],
@@ -376,10 +358,9 @@
                         colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], [col2[7], "Other"]].reverse()
                     }
                 })
-            ], 0, 9999999999),
+            ],
 
-
-            tourOriginNights: new gviz.Layer(tourismData, [
+            tourOriginNights: [
                 new gviz.CompositionStyle({
                     color: {
                         "N_DOMESTIC TOURISTS - TOTAL": col2[0],
@@ -398,7 +379,32 @@
                         colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], [col2[7], "Other"]].reverse()
                     }
                 })
-            ], 0, 9999999999),
+            ],
+        }
+
+
+        //define layers from datasets and styles
+        const layers_ = {}
+        for (let layCode of ["pop", "popGender", "popAge", "popEducation", "popLabor", "popInact", "busSector", "tourAccNb", "tourAccUnits", "tourAccBeds", "tourOriginArr", "tourOriginNights"]) {
+            layers_[layCode] = {}
+        }
+
+
+        //layers, with styles
+        //TODO change that
+        const layers = {
+            pop: new gviz.Layer(popData, styles.pop, 0, 9999999999),
+            popGender: new gviz.Layer(popData, styles.popGender, 0, 9999999999),
+            popAge: new gviz.Layer(popData, styles.popAge, 0, 9999999999),
+            popEducation: new gviz.Layer(popData, styles.popEducation, 0, 9999999999),
+            popLabor: new gviz.Layer(popData, styles.popLabor, 0, 9999999999),
+            popInact: new gviz.Layer(popData, styles.popInact, 0, 9999999999),
+            busSector: new gviz.Layer(businessData, styles.busSector, 0, 9999999999),
+            tourAccNb: new gviz.Layer(tourismData, styles.tourAccNb, 0, 9999999999),
+            tourAccUnits: new gviz.Layer(tourismData, styles.tourAccUnits, 0, 9999999999),
+            tourAccBeds: new gviz.Layer(tourismData, styles.tourAccBeds, 0, 9999999999),
+            tourOriginArr: new gviz.Layer(tourismData, styles.tourOriginArr, 0, 9999999999),
+            tourOriginNights: new gviz.Layer(tourismData, styles.tourOriginNights, 0, 9999999999),
         }
 
 
