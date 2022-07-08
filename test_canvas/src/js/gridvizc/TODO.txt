@@ -1,4 +1,5 @@
 TODO HR: use tiled
+TODO line styles, based on side style
 
 TODO FR pop by age: fix legend update when aggregating + use better color ramp - d3.schemeCategory10 ?
 TODO adapt tanaka to diverging - use on EUR pop change
@@ -7,6 +8,7 @@ TODO kernel smoothing: fix artifact - empty line below from center point toward 
 TODO make tests using offset ?
 TODO lego style based on tanaka? random color + little circle on top ?
 TODO aggregation on the fly ??? NO. except for csv...
+TODO chocolate style
 
 TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
 
@@ -20,8 +22,6 @@ TODO map style: contours with color
 TODO legend - donut + pillar + characters
 TODO legend - handle orientation in segment width legend
 TODO document and improve euronyme
-
-TODO tw composition example: population by age ?
 
 TODO map type: value by alpha ?
 TODO map type: bi/tri-variate colors ?
