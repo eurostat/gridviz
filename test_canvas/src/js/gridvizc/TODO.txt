@@ -1,4 +1,4 @@
-TODO EUR population: fix tanaka artifact
+TODO EUR population: fix tanaka artifact. 0 cells appear red, and high.
 TODO adapt tanaka to diverging - use on EUR pop change
 TODO FR pop by age: fix legend update when aggregating + use better color ramp - d3.schemeCategory10 ?
 TODO kernel smoothing: fix artifact - empty line below from center point toward south

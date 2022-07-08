@@ -61,6 +61,7 @@ export const getTanakaStyle = function (col, opts) {
         valueCol: col,
         value: (v1, v2, r, s, zf) => {
             //the number of classes of difference
+            if(!v1 && !v2) return 0
             const v2_ = opts.valueStretch ? opts.valueStretch(v2, r, s, zf) : v2
             const v1_ = opts.valueStretch ? opts.valueStretch(v1, r, s, zf) : v1
             return (v2 != undefined ? getClass(v2_) + 1 : 0) - (v1 != undefined ? getClass(v1_) + 1 : 0)
