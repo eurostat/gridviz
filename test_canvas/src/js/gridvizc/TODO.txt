@@ -1,4 +1,3 @@
-TODO FR kernel smoothing: fix
 TODO tanaka style on EUR, pop BUG !
 TODO adapt tanaka and side on EUR pop change
 TODO test tanaka with single hue ramp
