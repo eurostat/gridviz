@@ -10,6 +10,10 @@ import { Style } from "./Style";
  */
 export class MultiScaleLayer extends ALayer {
 
+    /**
+     * @param {Array.<Layer>} layers 
+     * @param {Array.<number>} zooms 
+     */
     constructor(layers, zooms) {
         super()
 
