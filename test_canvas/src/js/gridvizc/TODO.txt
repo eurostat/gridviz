@@ -6,7 +6,7 @@ TODO HR: add 2000 - 5000 - 10000 aggregation
 
 TODO make tests using offset ?
 TODO lego style based on tanaka? random color + little circle on top ?
-TODO aggregation on the fly ??? NO.
+TODO aggregation on the fly ??? NO. except for csv...
 
 TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
 
