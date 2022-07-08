@@ -37,6 +37,8 @@
         //const c = "#ffbf73"
         const styles = gviz.getTanakaStyle("ksmval", {
             //colors : gviz.schemeTableau10,
+            //colors: gviz.schemeRdYlGn[11].reverse(),
+            //colors: gviz.schemeGreens[8].reverse(),
             //colors: [c, c, c, c, c, c, c, c, c, c],
             valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2)
         })
