@@ -66,7 +66,7 @@
         //define datasets, styles and layers
         const s = new gviz.KernelSmoothingStyle({
             value: c => +c["2018"],
-            sigma: zf => zf * 8,
+            sigma: (r, zf) => zf * 8,
             styles: styles.color
         });
 
@@ -89,7 +89,7 @@
         const slider = document.getElementById('sigma');
         slider.oninput = function () {
             //set sigma
-            s.sigma = zf => zf * (+this.value)
+            s.sigma = (r, zf) => zf * (+this.value)
             //redraw
             app.cg.redraw()
         }
