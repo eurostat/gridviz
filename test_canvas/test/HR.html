@@ -62,7 +62,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4785299, y: 2540380 }).setZoomFactor(100).setZoomFactorExtent([10, 5000])
+            .setGeoCenter({ x: 4785299, y: 2540380 }).setZoomFactor(500).setZoomFactorExtent([10, 10000])
             .setLabelLayer(gviz.getEuronymeLabelLayer("HR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //test view from URL parameters, if any
@@ -161,197 +161,223 @@
         const col2 = gviz.schemeCategory10
         const styles = {
 
-            pop: [
-                new gviz.ShapeColorSizeStyle({
-                    colorCol: "TOTAL",
-                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                    shape: () => "square",
-                    zfStroke: 80,
-                })
-                    .addLegend({ color: { id: "schvv124903cnd", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
-                ,
-                new gviz.SideStyle({
-                    valueCol: "TOTAL",
-                    value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
-                    color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
-                    width: (side, r, s, z) => {
-                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                        return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
-                    },
-                })
-            ],
-
-            popGender: [
-                new gviz.ShapeColorSizeStyle({
-                    colorCol: "DIFF_MEN_WOMEN",
-                    color: (v, r, s) => {
-                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                        const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
-                        return gviz.interpolateSpectral(1 - t);
-                    },
-                    shape: () => "square",
-                    sizeCol: "TOTAL",
-                    size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
-                    zfStroke: 80,
-                }).addLegend({
-                    color: {
-                        id: "scfolleggend", bottom: "20px", left: "20px", title: "Men / women difference", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
-                        fun: (t, r, s) => {
+            pop: {
+                style: [
+                    new gviz.ShapeColorSizeStyle({
+                        colorCol: "TOTAL",
+                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                        shape: () => "square",
+                        zfStroke: 80,
+                    })
+                        .addLegend({ color: { id: "schvv124903cnd", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+                    ,
+                    new gviz.SideStyle({
+                        valueCol: "TOTAL",
+                        value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
+                        color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
+                        width: (side, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
+                            return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
+                        },
+                    })
+                    //], zooms: [0, 200, 400, 600, 1000, 1400, 2000, 300, 5000, 8000, 99999999]
+                ], zooms: [0, 300, 600, 900, 1500, 2100, 3000, 4500, 7500, 12000, 99999999]
+                //], zooms: [0, 400, 800, 1200, 2000, 2800, 4000, 6000, 10000, 16000, 99999999]
+            },
+
+            popGender: {
+                style: [
+                    new gviz.ShapeColorSizeStyle({
+                        colorCol: "DIFF_MEN_WOMEN",
+                        color: (v, r, s) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
+                            return gviz.interpolateSpectral(1 - t);
+                        },
+                        shape: () => "square",
+                        sizeCol: "TOTAL",
+                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
+                        zfStroke: 80,
+                    }).addLegend({
+                        color: {
+                            id: "scfolleggend", bottom: "20px", left: "20px", title: "Men / women difference", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+                            fun: (t, r, s) => {
+                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
+                            }
                         }
-                    }
-                })
-            ],
+                    })
+                ], zooms: [0, 100, 200, 300, 500, 700, 1000, 1500, 2500, 4000, 99999999]
+            },
 
-            popAge: [
-                new gviz.CompositionStyle({
-                    color: {
-                        "TOTAL_0_14": col(0.2),
-                        "TOTAL_15_64": col(0.4),
-                        "TOTAL_65p": col(0.9),
-                    },
-                    type: () => "flag",
-                    sizeCol: "TOTAL",
-                    size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                    agePyramidHeight: (r) => 0.95 * r
-                }).addLegend({ colorCat: { id: "guyxhtscaend534", bottom: "20px", left: "20px", shape: "square", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() } })
-            ],
+            popAge: {
+                style: [
+                    new gviz.CompositionStyle({
+                        color: {
+                            "TOTAL_0_14": col(0.2),
+                            "TOTAL_15_64": col(0.4),
+                            "TOTAL_65p": col(0.9),
+                        },
+                        type: () => "flag",
+                        sizeCol: "TOTAL",
+                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                        agePyramidHeight: (r) => 0.95 * r
+                    }).addLegend({ colorCat: { id: "guyxhtscaend534", bottom: "20px", left: "20px", shape: "square", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() } })
+                ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
+            },
 
-            popEducation: [
-                new gviz.CompositionStyle({
-                    color: {
-                        "OTHER_EDUC": "gray",
-                        "TERTIARY_EDUCATION": col(0.9),
-                        "UPPER_SECONDARY_EDUCATION": col(0.4),
-                        "BASIC_EDUCATION_OR_LESS": col(0.2),
-                    },
-                    type: () => "ring",
-                    sizeCol: "TOTAL",
-                    size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                    agePyramidHeight: (r) => 0.95 * r
-                }).addLegend({
-                    colorCat: {
-                        id: "guyextlend533434", bottom: "20px", left: "20px", shape: "square",
-                        colCat: [[col(0.2), "basic or less"], [col(0.4), "secondary"], [col(0.9), "tertiary"], ["gray", "other"]].reverse()
-                    }
-                })
-            ],
+            popEducation: {
+                style: [
+                    new gviz.CompositionStyle({
+                        color: {
+                            "OTHER_EDUC": "gray",
+                            "TERTIARY_EDUCATION": col(0.9),
+                            "UPPER_SECONDARY_EDUCATION": col(0.4),
+                            "BASIC_EDUCATION_OR_LESS": col(0.2),
+                        },
+                        type: () => "ring",
+                        sizeCol: "TOTAL",
+                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                        agePyramidHeight: (r) => 0.95 * r
+                    }).addLegend({
+                        colorCat: {
+                            id: "guyextlend533434", bottom: "20px", left: "20px", shape: "square",
+                            colCat: [[col(0.2), "basic or less"], [col(0.4), "secondary"], [col(0.9), "tertiary"], ["gray", "other"]].reverse()
+                        }
+                    })
+                ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
+            },
 
-            popLabor: [
-                new gviz.CompositionStyle({
-                    color: {
-                        "OTHER_LABOR": "gray",
-                        "LABOUR_FORCE": col(0.2),
-                        "INACTIVE_POPULATION": col(0.9),
-                    },
-                    type: () => "flag",
-                    sizeCol: "TOTAL",
-                    size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                    agePyramidHeight: (r) => 0.95 * r
-                }).addLegend({
-                    colorCat: {
-                        id: "guyehvhgvxtscatlend534", bottom: "20px", left: "20px", shape: "square",
-                        colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]].reverse()
-                    }
-                })
-            ],
+            popLabor: {
+                style: [
+                    new gviz.CompositionStyle({
+                        color: {
+                            "OTHER_LABOR": "gray",
+                            "LABOUR_FORCE": col(0.2),
+                            "INACTIVE_POPULATION": col(0.9),
+                        },
+                        type: () => "flag",
+                        sizeCol: "TOTAL",
+                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                        agePyramidHeight: (r) => 0.95 * r
+                    }).addLegend({
+                        colorCat: {
+                            id: "guyehvhgvxtscatlend534", bottom: "20px", left: "20px", shape: "square",
+                            colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]].reverse()
+                        }
+                    })
+                ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
+            },
 
-            popInact: [
-                new gviz.ShapeColorSizeStyle({
-                    colorCol: "INACT_RATE",
-                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
-                    shape: () => "square",
-                    zfStroke: 80,
-                }).addLegend({ color: { id: "schggozeDleggc45end", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) } })
-            ],
+            popInact: {
+                style: [
+                    new gviz.ShapeColorSizeStyle({
+                        colorCol: "INACT_RATE",
+                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
+                        shape: () => "square",
+                        zfStroke: 80,
+                    }).addLegend({ color: { id: "schggozeDleggc45end", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) } })
+                ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
+            },
 
-            busSector: [
-                new gviz.CompositionStyle({
-                    color: {
-                        "s1": "#1b9e77",
-                        "s2": "#d95f02",
-                        "s3": "#7570b3",
-                    },
-                    type: () => "piechart",
-                    sizeCol: "TOTAL",
-                    size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
-                }).addLegend({
-                    colorCat: {
-                        id: "guyehvhgvjhgxtscjhgatlend534", bottom: "20px", left: "20px", shape: "square",
-                        colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse()
-                    }
-                })
-            ],
+            busSector: {
+                style: [
+                    new gviz.CompositionStyle({
+                        color: {
+                            "s1": "#1b9e77",
+                            "s2": "#d95f02",
+                            "s3": "#7570b3",
+                        },
+                        type: () => "piechart",
+                        sizeCol: "TOTAL",
+                        size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
+                    }).addLegend({
+                        colorCat: {
+                            id: "guyehvhgvjhgxtscjhgatlend534", bottom: "20px", left: "20px", shape: "square",
+                            colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse()
+                        }
+                    })
+                ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
+            },
 
-            tourAccNb: [
-                new gviz.ShapeColorSizeStyle({
-                    colorCol: "ESTABLISHMENTS - TOTAL",
-                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                    shape: () => "square",
-                    zfStroke: 80,
-                }).addLegend({ color: { id: "scc13iugfend", bottom: "20px", left: "20px", title: "Tourism - establishments", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
-            ],
+            tourAccNb: {
+                style: [
+                    new gviz.ShapeColorSizeStyle({
+                        colorCol: "ESTABLISHMENTS - TOTAL",
+                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                        shape: () => "square",
+                        zfStroke: 80,
+                    }).addLegend({ color: { id: "scc13iugfend", bottom: "20px", left: "20px", title: "Tourism - establishments", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+                ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
+            },
 
-            tourAccUnits: [
-                new gviz.ShapeColorSizeStyle({
-                    colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
-                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                    shape: () => "square",
-                    zfStroke: 80,
-                }).addLegend({ color: { id: "sc1hhgfggnd", bottom: "20px", left: "20px", title: "Tourism - units", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
-            ],
+            tourAccUnits: {
+                style: [
+                    new gviz.ShapeColorSizeStyle({
+                        colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
+                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                        shape: () => "square",
+                        zfStroke: 80,
+                    }).addLegend({ color: { id: "sc1hhgfggnd", bottom: "20px", left: "20px", title: "Tourism - units", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+                ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
+            },
 
-            tourAccBeds: [
-                new gviz.ShapeColorSizeStyle({
-                    colorCol: "NUMBER OF PERMANENT BEDS",
-                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                    shape: () => "square",
-                    zfStroke: 80,
-                }).addLegend({ color: { id: "sc1hgfend", bottom: "20px", left: "20px", title: "Tourism - beds", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
-            ],
+            tourAccBeds: {
+                style: [
+                    new gviz.ShapeColorSizeStyle({
+                        colorCol: "NUMBER OF PERMANENT BEDS",
+                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                        shape: () => "square",
+                        zfStroke: 80,
+                    }).addLegend({ color: { id: "sc1hgfend", bottom: "20px", left: "20px", title: "Tourism - beds", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+                ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
+            },
 
-            tourOriginArr: [
-                new gviz.CompositionStyle({
-                    color: {
-                        "A_DOMESTIC TOURISTS - TOTAL": col2[0],
-                        "A_AUSTRIAN TOURISTS": col2[1],
-                        "A_GERMAN TOURISTS": col2[2],
-                        "A_ITALIAN TOURISTS": col2[3],
-                        "A_SLOVENIAN TOURISTS": col2[4],
-                        "A_OTHER": col2[7],
-                    },
-                    type: () => "piechart",
-                    sizeCol: "TOTAL ARRIVALS",
-                    size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
-                }).addLegend({
-                    colorCat: {
-                        id: "guychgatlend534", bottom: "20px", left: "20px", shape: "square",
-                        colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], [col2[7], "Other"]].reverse()
-                    }
-                })
-            ],
+            tourOriginArr: {
+                style: [
+                    new gviz.CompositionStyle({
+                        color: {
+                            "A_DOMESTIC TOURISTS - TOTAL": col2[0],
+                            "A_AUSTRIAN TOURISTS": col2[1],
+                            "A_GERMAN TOURISTS": col2[2],
+                            "A_ITALIAN TOURISTS": col2[3],
+                            "A_SLOVENIAN TOURISTS": col2[4],
+                            "A_OTHER": col2[7],
+                        },
+                        type: () => "piechart",
+                        sizeCol: "TOTAL ARRIVALS",
+                        size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
+                    }).addLegend({
+                        colorCat: {
+                            id: "guychgatlend534", bottom: "20px", left: "20px", shape: "square",
+                            colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], [col2[7], "Other"]].reverse()
+                        }
+                    })
+                ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
+            },
 
-            tourOriginNights: [
-                new gviz.CompositionStyle({
-                    color: {
-                        "N_DOMESTIC TOURISTS - TOTAL": col2[0],
-                        "N_AUSTRIAN TOURISTS": col2[1],
-                        "N_GERMAN TOURISTS": col2[2],
-                        "N_ITALIAN TOURISTS": col2[3],
-                        "N_SLOVENIAN TOURISTS": col2[4],
-                        "N_OTHER": col2[7],
-                    },
-                    type: () => "piechart",
-                    sizeCol: "TOTAL NIGHTS",
-                    size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
-                }).addLegend({
-                    colorCat: {
-                        id: "guyeh35cgcd34", bottom: "20px", left: "20px", shape: "square",
-                        colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], [col2[7], "Other"]].reverse()
-                    }
-                })
-            ],
+            tourOriginNights: {
+                style: [
+                    new gviz.CompositionStyle({
+                        color: {
+                            "N_DOMESTIC TOURISTS - TOTAL": col2[0],
+                            "N_AUSTRIAN TOURISTS": col2[1],
+                            "N_GERMAN TOURISTS": col2[2],
+                            "N_ITALIAN TOURISTS": col2[3],
+                            "N_SLOVENIAN TOURISTS": col2[4],
+                            "N_OTHER": col2[7],
+                        },
+                        type: () => "piechart",
+                        sizeCol: "TOTAL NIGHTS",
+                        size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
+                    }).addLegend({
+                        colorCat: {
+                            id: "guyeh35cgcd34", bottom: "20px", left: "20px", shape: "square",
+                            colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], [col2[7], "Other"]].reverse()
+                        }
+                    })
+                ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
+            },
         }
 
         //define layers from datasets and styles
@@ -359,21 +385,17 @@
         for (let layCode of ["pop", "popGender", "popAge", "popEducation", "popLabor", "popInact", "busSector", "tourAccNb", "tourAccUnits", "tourAccBeds", "tourOriginArr", "tourOriginNights"]) {
             const ds = datasets[layCode.startsWith("pop") ? "Population_2011" : layCode.startsWith("bus") ? "Active_business_entities_2016" : "Tourism_2017"]
             const ls = []
+            const style = styles[layCode].style
             for (let r of resolutions)
-                ls.push(new gviz.Layer(ds[r], styles[layCode]))
-            layers[layCode] = [new gviz.MultiScaleLayer(ls, [0, 100, 200, 300, 500, 700, 1000, 1500, 2500, 4000, 99999999])]
+                ls.push(new gviz.Layer(ds[r], style))
+            layers[layCode] = [new gviz.MultiScaleLayer(ls, styles[layCode].zooms)]
         }
-
-        //resolutions: 1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000
-        //zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
 
         //function to quickly get the selected layer
         const getSelectedLayer = () => document.querySelector('input[name="layer"]:checked').value
 
-
         //show selected layer
         app.layers = layers[getSelectedLayer()];
-
 
         //style selector
         document.querySelector('#layer').addEventListener('change', function () {
@@ -384,10 +406,6 @@
             //redraw
             app.cg.redraw();
         })
-
-
-
-
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
