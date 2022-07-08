@@ -15,6 +15,7 @@
             <option value="piechart">Pie chart</option>
             <option value="ring" selected>Ring</option>
             <option value="radar">Radar</option>
+            <option value="halftone">Halftone</option>
         </select>
     </div>
 
@@ -45,14 +46,6 @@
             zfStroke: 5
         })
 
-
-        //radar style
-        const sRadar = new gviz.RadarStyle({
-            color: colorDict,
-            radius: (v, r, s, zf) => 0.5 * r * Math.pow(v / s.max, 0.2),
-            offsetAngle: () => 90
-        })
-
         const ttfun = c => "<b>" + c["pop"] + "</b> inhabitant(s)<br>Female: " + c["f"] + "<br>Male: " + c["m"]
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/1000m/", [s], 0, 50, { cellInfoHTML: ttfun });
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Sweden/pop_tiled/2000m/", [s], 50, 100, { cellInfoHTML: ttfun });
@@ -64,13 +57,8 @@
         //combo list
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
-            //set style
-            if (select.value === "radar") {
-                for (let lay of app.layers) lay.styles = [sRadar]
-            } else {
-                s.setType(() => select.value)
-                for (let lay of app.layers) lay.styles = [s]
-            }
+            s.setType(() => select.value)
+            for (let lay of app.layers) lay.styles = [s]
             //redraw
             app.cg.redraw();
         });
