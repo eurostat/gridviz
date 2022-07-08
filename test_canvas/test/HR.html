@@ -364,6 +364,8 @@
             layers[layCode] = [new gviz.MultiScaleLayer(ls, [0, 100, 200, 300, 400, 500, 700, 99999999999])]
         }
 
+        //zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+
         //function to quickly get the selected layer
         const getSelectedLayer = () => document.querySelector('input[name="layer"]:checked').value
 
