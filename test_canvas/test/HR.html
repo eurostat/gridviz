@@ -361,7 +361,7 @@
             const ls = []
             for (let r of resolutions)
                 ls.push(new gviz.Layer(ds[r], styles[layCode]))
-            layers[layCode] = [new gviz.MultiScaleLayer(ls, [0, 100, 200, 300, 400, 500, 700, 1000])]
+            layers[layCode] = [new gviz.MultiScaleLayer(ls, [0, 100, 200, 300, 400, 500, 700, 99999999999])]
         }
 
         //function to quickly get the selected layer
