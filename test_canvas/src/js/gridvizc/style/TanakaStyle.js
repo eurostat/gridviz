@@ -50,8 +50,7 @@ export const getTanakaStyle = function (col, opts) {
             //the number of classes of difference
             const a2 = opts.valueStretch ? opts.valueStretch(v2, r, s, zf) : v2
             const a1 = opts.valueStretch ? opts.valueStretch(v1, r, s, zf) : v1
-            return (v2 != undefined ? getClass(a2) + 1 : 0) - (v1 != undefined ? getClass(a1) + 1 : 0)
-            //return (v2 != undefined ? getClass(v2) + 1 : 0) - (v1 != undefined ? getClass(v1) + 1 : 0)
+            return (v2!=undefined ? getClass(a2) + 1 : 0) - (v1!=undefined ? getClass(a1) + 1 : 0)
         },
         //white or black, depending on orientation
         color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "#333" : "#ccc",
