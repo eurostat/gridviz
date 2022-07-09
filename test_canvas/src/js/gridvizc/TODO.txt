@@ -1,8 +1,9 @@
-TODO line styles, based on side style
+TODO line styles, based on side style - "mesh" style, with side orientation
 
 TODO FR pop by age: fix legend update when aggregating + use better color ramp - d3.schemeCategory10 ?
 TODO adapt tanaka to diverging - use on EUR pop change
 TODO kernel smoothing: fix artifact - empty line below from center point toward south
+TODO webGL test
 
 TODO make tests using offset ?
 TODO lego style based on tanaka? random color + little circle on top ?
