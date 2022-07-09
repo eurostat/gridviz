@@ -21,6 +21,7 @@ TODO map style: contours with color
 TODO legend - donut + pillar + characters
 TODO legend - handle orientation in segment width legend
 TODO document and improve euronyme
+TODO fix euronym - local names, with accents ?
 
 TODO map type: value by alpha ?
 TODO map type: bi/tri-variate colors ?
@@ -67,6 +68,8 @@ TODO background - images ?
 
 
 TODO test gridded datasets:
+NL
+World: https://wopr.worldpop.org/?NGA/Population/v2.0
 HR: https://geostat.dzs.hr/?lang=en   1km. toutirsm, education, businesses, etc. Request sent.
 AT: https://www.statistik.at/atlas/?mapid=them_bevoelkerung_bevoelkerungsstand&layerid=layer1&sublayerid=sublayer0&languageid=1
 https://www.statistik.at/en/services/tools/services/regional-information/regional-statistics
