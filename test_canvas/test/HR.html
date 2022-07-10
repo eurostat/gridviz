@@ -143,6 +143,9 @@
 
 
 
+        //tooltip text
+        const ttfun = c => "aaa"
+
         //define tiled datasets
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
         const resolutions = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000]
@@ -151,7 +154,7 @@
             datasets[ds] = {}
             for (let r of resolutions) {
                 const pp = ds.startsWith("Pop") ? ppPop : ds.startsWith("Acti") ? ppBusiness : ppTourism
-                datasets[ds][r] = new gviz.TiledGrid(url + ds + "/" + r + "m/", app, { preprocess: pp }).loadInfo(() => { app.cg.redraw(); })
+                datasets[ds][r] = new gviz.TiledGrid(url + ds + "/" + r + "m/", app, { preprocess: pp, cellInfoHTML: ttfun }).loadInfo(() => { app.cg.redraw(); })
             }
         }
 
@@ -379,6 +382,7 @@
                 ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
             },
         }
+
 
         //define layers from datasets and styles
         const layers = {}
