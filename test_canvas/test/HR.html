@@ -165,14 +165,16 @@
                         + "Secondary: " + c.UPPER_SECONDARY_EDUCATION + "<br>"
                         + "Tertiary: " + c.TERTIARY_EDUCATION + "<br>"
                         + "Other: " + c.OTHER_EDUC
+                case "popLabor":
+                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
+                        + "Labour force: " + c.LABOUR_FORCE + "<br>"
+                        + "Inactive population: " + c.INACTIVE_POPULATION + "<br>"
+                        + "Other: " + c.OTHER_LABOR
+                case "popInact":
+                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
+                        + "Inactivity rate: " + d3.format(".1f")(c.INACT_RATE) + "<br>"
 
                 /*
-                           popLabor: {
-                                            "OTHER_LABOR": "gray",
-                                            "LABOUR_FORCE": col(0.2),
-                                            "INACTIVE_POPULATION": col(0.9),
-                            popInact: {
-                                        colorCol: "INACT_RATE",
                             busSector: {
                                             "s1": "#1b9e77",
                                             "s2": "#d95f02",
