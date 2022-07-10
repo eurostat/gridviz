@@ -184,24 +184,20 @@
                     return "<b>" + c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] + "</b> touristic accomodation units (rooms, appartements, camping sites)"
                 case "tourAccBeds":
                     return "<b>" + c["NUMBER OF PERMANENT BEDS"] + "</b> touristic accomodation permanent beds"
-
-                /*
-                            tourOriginArr: {
-                                            "A_DOMESTIC TOURISTS - TOTAL": col2[0],
-                                            "A_AUSTRIAN TOURISTS": col2[1],
-                                            "A_GERMAN TOURISTS": col2[2],
-                                            "A_ITALIAN TOURISTS": col2[3],
-                                            "A_SLOVENIAN TOURISTS": col2[4],
-                                            "A_OTHER": col2[7],
-                            tourOriginNights: {
-                                            "N_DOMESTIC TOURISTS - TOTAL": col2[0],
-                                            "N_AUSTRIAN TOURISTS": col2[1],
-                                            "N_GERMAN TOURISTS": col2[2],
-                                            "N_ITALIAN TOURISTS": col2[3],
-                                            "N_SLOVENIAN TOURISTS": col2[4],
-                                            "N_OTHER": col2[7],
-                */
-
+                case "tourOriginArr":
+                    return "<b>" + c["TOTAL ARRIVALS"] + "</b> tourist arrivals<br>"
+                        + c["A_AUSTRIAN TOURISTS"] + " austrians<br>" +
+                        + c["A_GERMAN TOURISTS"] + " germans<br>" +
+                        + c["A_ITALIAN TOURISTS"] + " italians<br>" +
+                        + c["A_SLOVENIAN TOURISTS"] + " slovenians<br>" +
+                        + c["A_OTHER"] + " other countries"
+                case "tourOriginNights":
+                    return "<b>" + c["TOTAL NIGHTS"] + "</b> tourist nights<br>"
+                        + c["N_AUSTRIAN TOURISTS"] + " austrians<br>" +
+                        + c["N_GERMAN TOURISTS"] + " germans<br>" +
+                        + c["N_ITALIAN TOURISTS"] + " italians<br>" +
+                        + c["N_SLOVENIAN TOURISTS"] + " slovenians<br>" +
+                        + c["N_OTHER"] + " other countries"
                 default:
                     return getSelectedLayer()
             }
