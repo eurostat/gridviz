@@ -144,9 +144,9 @@
 
 
         //tooltip text
-        const ttfunPop = c => "pop"
-        const ttfunBusiness = c => "busi"
-        const ttfunTourism = c => "tour"
+        const ttfun = c => {
+            return getSelectedLayer()
+        }
 
         //define tiled datasets
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
@@ -155,8 +155,8 @@
         for (let ds of ["Population_2011", "Active_business_entities_2016", "Tourism_2017"]) {
             datasets[ds] = {}
             for (let r of resolutions) {
-                const pp = ds.startsWith("Pop") ? [ppPop, ttfunPop] : ds.startsWith("Acti") ? [ppBusiness, ttfunBusiness] : [ppTourism, ttfunTourism]
-                datasets[ds][r] = new gviz.TiledGrid(url + ds + "/" + r + "m/", app, { preprocess: pp[0], cellInfoHTML: pp[1] }).loadInfo(() => { app.cg.redraw(); })
+                const pp = ds.startsWith("Pop") ? ppPop : ds.startsWith("Acti") ? ppBusiness : ppTourism
+                datasets[ds][r] = new gviz.TiledGrid(url + ds + "/" + r + "m/", app, { preprocess: pp, cellInfoHTML: ttfun }).loadInfo(() => { app.cg.redraw(); })
             }
         }
 
