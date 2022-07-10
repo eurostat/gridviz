@@ -153,13 +153,14 @@
                     return "<b>" + c["TOTAL"] + "</b> inhabitants<br>"
                         + c.MEN + " men<br>"
                         + c.WOMEN + " women<br>Difference: <b>"
-                        + (c.DIFF_MEN_WOMEN > 0 ? "+" : "") + d3.format(".1f")(c.DIFF_MEN_WOMEN) + " %</b>"
+                        + (c.DIFF_MEN_WOMEN > 0 ? "+" : "") + d3.format(".1f")(c.DIFF_MEN_WOMEN) + " % men</b>"
+                case "popAge":
+                    return "<b>" + c["TOTAL"] + "</b> inhabitants<br>"
+                        + " <15 : " + c.TOTAL_0_14 + "<br>"
+                        + "15-64: " + c.TOTAL_15_64 + "<br>"
+                        + " >65 : " + c.TOTAL_65p
 
                 /*
-                            popAge: {
-                                            "TOTAL_0_14": col(0.2),
-                                            "TOTAL_15_64": col(0.4),
-                                            "TOTAL_65p": col(0.9),
                             popEducation: {
                                             "OTHER_EDUC": "gray",
                                             "TERTIARY_EDUCATION": col(0.9),
