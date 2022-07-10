@@ -148,25 +148,26 @@
         const ttfun = c => {
             switch (getSelectedLayer()) {
                 case "pop":
-                    return "<b>" + c["TOTAL"] + "</b> inhabitants"
+                    return "<b>" + c.TOTAL + "</b> inhabitants"
                 case "popGender":
-                    return "<b>" + c["TOTAL"] + "</b> inhabitants<br>"
+                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
                         + c.MEN + " men<br>"
                         + c.WOMEN + " women<br>Difference: <b>"
                         + (c.DIFF_MEN_WOMEN > 0 ? "+" : "") + d3.format(".1f")(c.DIFF_MEN_WOMEN) + " % men</b>"
                 case "popAge":
-                    return "<b>" + c["TOTAL"] + "</b> inhabitants<br>"
+                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
                         + " >65 : " + c.TOTAL_65p + "<br>"
                         + "15-64: " + c.TOTAL_15_64 + "<br>"
                         + " <15 : " + c.TOTAL_0_14
+                case "popEducation":
+                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
+                        + "Basic or less: " + c.BASIC_EDUCATION_OR_LESS + "<br>"
+                        + "Secondary: " + c.UPPER_SECONDARY_EDUCATION + "<br>"
+                        + "Tertiary: " + c.TERTIARY_EDUCATION + "<br>"
+                        + "Other: " + c.OTHER_EDUC
 
                 /*
-                            popEducation: {
-                                            "OTHER_EDUC": "gray",
-                                            "TERTIARY_EDUCATION": col(0.9),
-                                            "UPPER_SECONDARY_EDUCATION": col(0.4),
-                                            "BASIC_EDUCATION_OR_LESS": col(0.2),
-                            popLabor: {
+                           popLabor: {
                                             "OTHER_LABOR": "gray",
                                             "LABOUR_FORCE": col(0.2),
                                             "INACTIVE_POPULATION": col(0.9),
@@ -260,7 +261,7 @@
                         zfStroke: 80,
                     }).addLegend({
                         color: {
-                            id: "scfolleggend", bottom: "20px", left: "20px", title: "Men / women difference", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+                            id: "scfolleggend", bottom: "20px", left: "20px", title: "Men / women difference (%)", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
                             fun: (t, r, s) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                                 return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
