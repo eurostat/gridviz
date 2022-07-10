@@ -178,14 +178,14 @@
                         + "Primary sector: " + c.s1 + "<br>"
                         + "Secondary sector: " + c.s2 + "<br>"
                         + "Tertiary sector: " + c.s3
+                case "tourAccNb":
+                    return "<b>" + c["ESTABLISHMENTS - TOTAL"] + "</b> touristic accomodation establishments<br>"
+                case "tourAccUnits":
+                    return "<b>" + c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] + "</b> touristic accomodation units (rooms, appartements, camping sites)<br>"
+                case "tourAccBeds":
+                    return "<b>" + c["NUMBER OF PERMANENT BEDS"] + "</b> touristic accomodation permanent beds<br>"
 
                 /*
-                            tourAccNb: {
-                                        colorCol: "ESTABLISHMENTS - TOTAL",
-                           tourAccUnits: {
-                                        colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
-                            tourAccBeds: {
-                                        colorCol: "NUMBER OF PERMANENT BEDS",
                             tourOriginArr: {
                                             "A_DOMESTIC TOURISTS - TOTAL": col2[0],
                                             "A_AUSTRIAN TOURISTS": col2[1],
