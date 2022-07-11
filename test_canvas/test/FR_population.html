@@ -166,29 +166,15 @@
                 style: [new gviz.SideStyle({
                     valueCol: "Ind",
                     value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
-                    color: (side, r, s, z) => "red", //side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "#f33" : "#aaf",
+                    color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                     width: (side, r, s, z) => {
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                        return r * (0.01 + 0.8 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.3))
+                        return r * (0.01 + 0.333 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.3))
                     },
-                    orientation: 90,
-                    //fillColor: (c) => "#e2c9b2",
+                    fillColor: (c) => "#e2c9b2",
                 })],
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
-            /*            side: {
-                            style: [new gviz.SideStyle({
-                                valueCol: "Ind",
-                                value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
-                                color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
-                                width: (side, r, s, z) => {
-                                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                    return r * (0.01 + 0.333 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.3))
-                                },
-                                fillColor: (c) => "#e2c9b2",
-                            })],
-                            zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
-                        },*/
             tanaka: {
                 style: gviz.getTanakaStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
                 //style: gviz.getTanakaStyle("Ind", { breaks: [10, 50, 200, 500, 2000] }),
