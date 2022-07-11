@@ -338,7 +338,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
                         shape: () => "square",
                         zfStroke: 80,
-                    }).addLegend({ color: { id: "schggozeDleggc45end", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) } })
+                    }).addLegend({ color: { id: "schggozeDleggc45end", bottom: "20px", left: "20px", title: "Inactivity rate (%)", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) } })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
             },
 
