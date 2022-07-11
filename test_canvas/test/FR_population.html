@@ -83,6 +83,7 @@
                     colorCol: "Ind",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                     shape: () => "square",
+                    webGL: true,
                     zfStroke: 20
                 }).addLegend({ color: { id: "scollegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })],
                 zooms: [0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]

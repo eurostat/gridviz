@@ -73,9 +73,14 @@ export class ShapeColorSizeStyle extends Style {
             statColor = getStatistics(cells, c => c[this.colorCol], true)
         }
 
-        if (this.webGL && cg.ctxGL) {
+
+        //console.log(this.webGL, cg.ctxGL)
+        if (this.webGL /*&& cg.ctxGL*/) {
             //draw witt webGL
-            console.log(cg.ctxGL)
+            //console.log(cg.ctxGL)
+
+            //test: create canvas, same size, draw as webgl, draw canvas on canvas
+
 
         } else {
             //draw with canvas
