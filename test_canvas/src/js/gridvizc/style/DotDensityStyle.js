@@ -58,7 +58,7 @@ export class DotDensityStyle extends Style {
         //size of the dots
         const s = this.dotSize ? this.dotSize(r, zf) : 2 * zf
 
-        for (let cell of cells) {
+        for (let c of cells) {
 
             //get color
             const col = this.color(c);
@@ -67,16 +67,16 @@ export class DotDensityStyle extends Style {
             cg.ctx.fillStyle = col;
 
             //get offset
-            const offset = this.offset(cell, r, zf)
+            const offset = this.offset(c, r, zf)
 
             //number of dots
-            const nb = this.nb(cell[this.col], r, stat, zf)
+            const nb = this.nb(c[this.col], r, stat, zf)
 
             //draw random dots
             for (let i = 0; i <= nb; i++) {
                 cg.ctx.fillRect(
-                    cell.x + offset.dx + r * Math.random(),
-                    cell.y + offset.dy + r * Math.random(),
+                    c.x + offset.dx + r * Math.random(),
+                    c.y + offset.dy + r * Math.random(),
                     s, s);
             }
 
