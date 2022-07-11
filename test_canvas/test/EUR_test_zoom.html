@@ -8,7 +8,7 @@
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
 
-    <div id="zoomS" style="display: block; position: absolute; right: 20px; top: 20px;">
+    <div id="zoomSlider" style="display: block; position: absolute; right: 20px; top: 20px;">
     </div>
 
     <script src="../build/gridvizc.js"></script>
@@ -20,7 +20,7 @@
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //add zoom slider
-        app.addZoomSlider("zoomS")
+        app.addZoomSlider("zoomSlider")
 
         //style data
         const s = new gviz.ShapeColorSizeStyle({
