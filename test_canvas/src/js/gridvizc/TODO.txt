@@ -5,13 +5,14 @@ TODO kernel smoothing: fix artifact - empty line below from center point toward 
 
 TODO make tests using offset ?
 TODO lego style based on tanaka? random color + little circle on top ?
-TODO aggregation on the fly ??? NO. except for csv...
+TODO aggregation on the fly ??? No. except for csv...
 TODO chocolate style
 TODO watercolor style ? Draw random plots around central point of pixel - https://github.com/rolyatmax/watercolor-canvas
 
 TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
 
 TODO test data NO - 250m. long timeseries
+TODO test data on NL
 TODO legend refresh on composition
 
 TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
@@ -67,7 +68,7 @@ TODO background - images ?
 
 
 TODO test gridded datasets:
-NL
+NL: https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken
 World: https://wopr.worldpop.org/?NGA/Population/v2.0
 HR: https://geostat.dzs.hr/?lang=en   1km. toutirsm, education, businesses, etc. Request sent.
 AT: https://www.statistik.at/atlas/?mapid=them_bevoelkerung_bevoelkerungsstand&layerid=layer1&sublayerid=sublayer0&languageid=1

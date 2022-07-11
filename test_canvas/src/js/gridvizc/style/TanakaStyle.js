@@ -29,15 +29,20 @@ export const getTanakaStyle = function (col, opts) {
     //width of the segment (share of the resolution)
     opts.widthFactor = opts.widthFactor || 0.15
 
+    /**
+     * @param {number} v A cell value (within [0,1] for a dynamic classification).
+     * @returns the class number of the value
+     */
     const getClass = (v) => {
 
+        //fixed classification
         if (opts.breaks) {
-            //fixed classification
             for (let i = 0; i < opts.breaks.length; i++)
                 if (v < opts.breaks[i]) return i
             return opts.breaks.length
-        } else if (opts.valueStretch) {
+
             //dynamic classification
+        } else if (opts.valueStretch) {
             const t = v //within [0,1] !
             const nb = opts.colors.length
             for (let i = 0; i < nb - 1; i++)
@@ -45,8 +50,10 @@ export const getTanakaStyle = function (col, opts) {
             return nb - 1
         }
         return NaN
+
     }
 
+    /** The color style */
     const colStyle = new ShapeColorSizeStyle({
         colorCol: col,
         //the color corresponding to the class
@@ -61,23 +68,24 @@ export const getTanakaStyle = function (col, opts) {
         zfStroke: 0,
     })
 
+
+    /** The side style, for the shadow effect */
     const sideStyle = new SideStyle({
         valueCol: col,
         value: (v1, v2, r, s, zf) => {
             //the number of classes of difference
 
+            //Stretch values, if necessary
             const v1_ = opts.valueStretch ? opts.valueStretch(v1, r, s, zf) : v1
-            const c1 =
-                (v1 == 0 && opts.valueStretch && isNaN(v1_)) ? -1
-                    : !v1 ? -1
-                        : getClass(v1_);
             const v2_ = opts.valueStretch ? opts.valueStretch(v2, r, s, zf) : v2
-            const c2 =
-                (v2 == 0 && opts.valueStretch && isNaN(v2_)) ? -1
-                    : !v2 ? -1
-                        : getClass(v2_);
-
-            return c2 - c1
+            //if no v1, no v2
+            if (((!v1_ || isNaN(v1_)) && (!v2_ || isNaN(v2_)))) return 0;
+            //if no v1
+            else if (!v1_ || isNaN(v1_)) return getClass(v2_) //+1
+            //if no v2
+            else if (!v2_ || isNaN(v2_)) return -getClass(v1_) //-1
+            //else, difference between two class numbers
+            return getClass(v2_) - getClass(v1_);
         },
         //white or black, depending on orientation and value
         color: (side, r, s, z) => {
