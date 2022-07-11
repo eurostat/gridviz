@@ -211,6 +211,9 @@
             dot: {
                 style: [new gviz.DotDensityStyle({
                     col: "Ind",
+                    nb: ((v, r, s, zf) => 0.3 * r * r / (zf * zf) * gviz.s(v / s.max, 0.4))
+                    //this.nb = opts.nb || ((v, r, s, zf) => 0.3 * r * r / (zf * zf) * v / s.max)
+                    //this.nbMaxPix * r * r / (zf * zf) * s(cell[this.col] / stat.max, 0.4);
                 })],
                 //zooms: [0, 10, 20, 50, 100, 250, 500, 1000, 2500]
                 //zooms: [0, 20, 40, 100, 200, 500, 1000, 2000, 5000]

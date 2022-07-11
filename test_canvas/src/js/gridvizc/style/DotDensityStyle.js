@@ -16,18 +16,21 @@ export class DotDensityStyle extends Style {
         super(opts)
         opts = opts || {};
 
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for text.
+        /** The name of the column/attribute of the tabular data where to retrieve the variable for dot density.
          *  @protected @type {string} */
         this.col = opts.col;
 
-        /** 
-        * @protected @type {function(number,number,Stat|undefined):string} */
-        this.nb = opts.nbMaxPix || 0.3
+        /** A function returning the number of dots for a cell value.
+        * @protected @type {function(number,number,Stat,number):number} */
+        this.nb = opts.nb || ((v, r, s, zf) => 0.3 * r * r / (zf * zf) * v / s.max)
 
-        /** The color of the points.
+        /** The color of the dots
         * @protected @type {string} */
         this.color = opts.color || "#FF5733";
 
+        /** A function returning the size of the dots.
+        * @protected @type {function(number,number):number} */
+         this.dotSize = opts.dotSize //|| ((r, zf) => ...
     }
 
 
@@ -55,37 +58,23 @@ export class DotDensityStyle extends Style {
         //set color
         cg.ctx.fillStyle = this.color;
 
-        //compute max number of points per cell
-        const nbMaxCell = this.nbMaxPix * r * r / (zf * zf)
+        //size of the dots
+        const s = this.dotSize ? this.dotSize(r, zf) : 2 * zf
 
-        const r2 = r / 2
         for (let cell of cells) {
 
-            //get center
+            //get offset
             const offset = this.offset(cell, r, zf)
-            const cx = cell.x + r2 + offset.dx
-            const cy = cell.y + r2 + offset.dy
 
-            //radius
-            const rc = 1 * zf; //pixel radius
+            //number of dots
+            const nb = this.nb(cell[this.col], r, stat, zf)
 
-            //draw circles
-            const nb = nbMaxCell * s(cell[this.col] / stat.max, 0.4);
-
+            //draw random dots
             for (let i = 0; i <= nb; i++) {
-                /*/draw circle
-                cg.ctx.beginPath();
-                cg.ctx.arc(
-                    cx + r * (Math.random() - 0.5),
-                    cy + r * (Math.random() - 0.5),
-                    rc,
-                    0, 2 * Math.PI, false);
-                cg.ctx.fill();*/
-
                 cg.ctx.fillRect(
                     cell.x + offset.dx + r * Math.random(),
                     cell.y + offset.dy + r * Math.random(),
-                    rc * 2, rc * 2);
+                    s, s);
             }
 
         }
