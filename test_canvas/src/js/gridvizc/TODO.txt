@@ -1,4 +1,3 @@
-TODO zoom pane, with touchable slider: improve. Make vertical.
 TODO webgl test
 
 TODO FR pop by age: fix legend update when aggregating + use better color ramp - d3.schemeCategory10 ?
