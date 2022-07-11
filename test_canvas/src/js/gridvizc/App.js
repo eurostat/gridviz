@@ -451,66 +451,7 @@ export class App {
      * @returns 
      */
     addZoomSlider(id, opts) {
-        opts = opts || {}
-        opts.width = opts.width || "30px"
-        opts.height = opts.height || "300px"
-
-
-        //the div element
-        const div = select("#" + id);
-        if (div.empty()) {
-            console.error("Could not find div element to build zoom slider. Id: " + id)
-            return;
-        }
-
-        const app = this
-        const slider = div.append("input")
-            .attr("type", "range")
-            .attr("min", this.cg.getZfExtent()[0])
-            .attr("max", this.cg.getZfExtent()[1])
-            .attr("value", this.cg.getZf())
-            .on("input", function (d) {
-                app.setZoomFactor(+this.value)
-                //redraw
-                app.cg.redraw()
-            })
-            .style("width", opts.width)
-            .style("height", opts.height)
-            .style("opacity", 0.7)
-            .on("mouseover", function (d) {
-                select(this).style("opacity", 1)
-            })
-            .on("mouseout", function (d) {
-                select(this).style("opacity", 0.7)
-            })
-            .style("-webkit-appearance", "slider-vertical") //for chrome
-            .style("writing-mode", "bt-lr") //for IE/edge
-            .attr("orient", "vertical") //for firefox
-            .style("background", "lightgray")
-            .style("outline", "none")
-            .style("-webkit-transition", ".2s")
-            .style("transition", "opacity .2s")
-
-        //TODO
-        /*select(".slider::-webkit-slider-thumb")
-            .style("-webkit-appearance", "none")
-            .style("appearance", "none")
-            .style("width", "30px")
-            .style("height", "40px")
-            .style("background", "black")
-            .style("cursor", "pointer")*/
-
-        /*select("slider::-moz-range-thumb")
-            .style("-webkit-appearance", "none")
-            .style("width", "30px")
-            .style("height", "40px")
-            .style("background", "#04AA6D")
-            .style("cursor", "pointer")*/
-        /*
-            .slider::ms-thumb,
-        .slider::-moz-range-thumb {
-        }*/
-
+        this.cg.addZoomSlider(id, opts)
         return this
     }
 
