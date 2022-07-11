@@ -36,10 +36,13 @@ export class SideStyle extends Style {
          * @private @type {function(Side,number,Stat|undefined,number):number} */
         this.width = opts.width || ((side, r, s, z) => r * side.value / 5);
 
+        /** orientation. Set to 90 to show sides as slope lines for example.
+        * @private @type {number} */
+        this.orientation = opts.orientation
+
         /** A fill color for the cells.
         * @private @type {function(Cell):string} */
         this.fillColor = opts.fillColor
-
     }
 
 
@@ -127,6 +130,7 @@ export class SideStyle extends Style {
 
 
         cg.ctx.lineCap = "butt";
+        const r2 = r / 2
         for (let s of sides) {
 
             //color
@@ -145,8 +149,16 @@ export class SideStyle extends Style {
 
             //draw segment with correct orientation
             cg.ctx.beginPath();
-            cg.ctx.moveTo(s.x, s.y);
-            cg.ctx.lineTo(s.x + (s.or === "h" ? r : 0), s.y + (s.or === "v" ? r : 0));
+            if (this.orientation == 90) {
+                cg.ctx.moveTo(s.x + r2, s.y + r2);
+                if (s.or === "h")
+                    cg.ctx.lineTo(s.x + r2, s.y - r2);
+                else
+                    cg.ctx.lineTo(s.x - r2, s.y + r2);
+            } else {
+                cg.ctx.moveTo(s.x, s.y);
+                cg.ctx.lineTo(s.x + (s.or === "h" ? r : 0), s.y + (s.or === "v" ? r : 0));
+            }
             cg.ctx.stroke();
 
         }
