@@ -13,6 +13,8 @@ import { TiledGrid } from './dataset/TiledGrid';
 import { LabelLayer } from './LabelLayer';
 import { LineLayer } from './LineLayer';
 
+import { select } from "d3-selection";
+
 /**
  * A gridviz on a HTML canvas.
  * 
@@ -442,4 +444,59 @@ export class App {
     }
 
 
+    addZoomSlider(id, opts) {
+        opts = opts || {}
+        opts.width = opts.width || "300px"
+        opts.height = opts.height || "30px"
+
+
+        //the div element
+        const div = select("#" + id);
+        if (div.empty()) {
+            console.error("Could not find div element to build zoom slider. Id: " + id)
+            return;
+        }
+
+        const app = this
+        const slider = div.append("input")
+            .attr("type", "range")
+            .attr("min", this.cg.getZfExtent()[0])
+            .attr("max", this.cg.getZfExtent()[1])
+            .attr("value", this.cg.getZf())
+            .on("input", function (d) {
+                app.setZoomFactor(+this.value)
+                //redraw
+                app.cg.redraw()
+            })
+            .style("width", opts.width)
+            .style("height", opts.height)
+            .style("opacity", 0.7)
+            .on("mouseover", function (d) {
+                select(this).style("opacity", 1)
+            })
+            .on("mouseout", function (d) {
+                select(this).style("opacity", 0.7)
+            })
+            .style("-webkit-appearance", "none")
+            .style("background", "lightgray")
+            .style("outline", "none")
+            .style("-webkit-transition", ".2s")
+            .style("transition", "opacity .2s")
+
+        //TODO
+        select("-webkit-slider-thumb")
+            .style("-webkit-appearance", "none")
+            .style("appearance", "none")
+            .style("width", "30px")
+            .style("height", "40px")
+            .style("background", "black")
+            .style("cursor", "pointer")
+
+        select("-moz-range-thumb")
+            .style("-webkit-appearance", "none")
+            .style("width", "30px")
+            .style("height", "40px")
+            .style("background", "#04AA6D")
+            .style("cursor", "pointer")
+    }
 }

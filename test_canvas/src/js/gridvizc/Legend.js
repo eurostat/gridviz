@@ -1,6 +1,5 @@
 //@ts-check
 
-import { Style } from "./Style";
 import { select } from "d3-selection";
 
 /**

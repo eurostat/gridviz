@@ -3,47 +3,12 @@
 
 <head>
     <title></title>
-
-    <style>
-        .slider {
-            -webkit-appearance: none;
-            width: 500px;
-            height: 40px;
-            background: lightgray;
-            outline: none;
-            opacity: 0.8;
-            -webkit-transition: .2s;
-            transition: opacity .2s;
-        }
-
-        .slider:hover {
-            opacity: 1;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 30px;
-            height: 40px;
-            background: black;
-            cursor: pointer;
-        }
-
-        .slider::-moz-range-thumb {
-            width: 30px;
-            height: 40px;
-            background: #04AA6D;
-            cursor: pointer;
-        }
-    </style>
-
 </head>
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
     <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
 
-    <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
-        <input type="range" min="50" max="11000" value="100" class="slider" id="zoomslider">
+    <div id="zoomS" style="display: block; position: absolute; right: 20px; top: 20px;">
     </div>
 
     <script src="../build/gridvizc.js"></script>
@@ -53,6 +18,9 @@
         const app = new gviz.App()
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(100).setZoomFactorExtent([50, 11000])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+
+        //add zoom slider
+        app.addZoomSlider("zoomS")
 
         //style data
         const s = new gviz.ShapeColorSizeStyle({
@@ -75,15 +43,6 @@
             ],
             [0, 100, 200, 500, 1000, 2000, 5000, 10000]
         )
-
-        //
-        document.getElementById('zoomslider').oninput = function () {
-            //console.log(this.value)
-            app.setZoomFactor(+this.value)
-            //redraw
-            app.cg.redraw()
-        }
-
 
     </script>
     <script>
