@@ -444,10 +444,16 @@ export class App {
     }
 
 
+    /**
+     * 
+     * @param {string} id 
+     * @param {object} opts 
+     * @returns 
+     */
     addZoomSlider(id, opts) {
         opts = opts || {}
-        opts.width = opts.width || "300px"
-        opts.height = opts.height || "30px"
+        opts.width = opts.width || "30px"
+        opts.height = opts.height || "300px"
 
 
         //the div element
@@ -477,26 +483,35 @@ export class App {
             .on("mouseout", function (d) {
                 select(this).style("opacity", 0.7)
             })
-            .style("-webkit-appearance", "none")
+            .style("-webkit-appearance", "slider-vertical") //for chrome
+            .style("writing-mode", "bt-lr") //for IE/edge
+            .attr("orient", "vertical") //for firefox
             .style("background", "lightgray")
             .style("outline", "none")
             .style("-webkit-transition", ".2s")
             .style("transition", "opacity .2s")
 
         //TODO
-        select("-webkit-slider-thumb")
+        /*select(".slider::-webkit-slider-thumb")
             .style("-webkit-appearance", "none")
             .style("appearance", "none")
             .style("width", "30px")
             .style("height", "40px")
             .style("background", "black")
-            .style("cursor", "pointer")
+            .style("cursor", "pointer")*/
 
-        select("-moz-range-thumb")
+        /*select("slider::-moz-range-thumb")
             .style("-webkit-appearance", "none")
             .style("width", "30px")
             .style("height", "40px")
             .style("background", "#04AA6D")
-            .style("cursor", "pointer")
+            .style("cursor", "pointer")*/
+        /*
+            .slider::ms-thumb,
+        .slider::-moz-range-thumb {
+        }*/
+
+        return this
     }
+
 }
