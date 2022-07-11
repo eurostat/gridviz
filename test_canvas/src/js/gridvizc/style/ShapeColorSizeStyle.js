@@ -76,7 +76,7 @@ export class ShapeColorSizeStyle extends Style {
 
         //console.log(this.webGL, cg.ctxGL)
         if (this.webGL /*&& cg.ctxGL*/) {
-            //draw witt webGL
+            //draw with webGL
             //console.log(cg.ctxGL)
 
             //test: create canvas, same size, draw as webgl, draw canvas on canvas
