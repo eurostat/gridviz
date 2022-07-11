@@ -9,7 +9,7 @@ import { s } from "../index"
  * 
  * @author Julien Gaffuri
  */
-export class RandomStyle extends Style {
+export class DotDensityStyle extends Style {
 
     /** @param {object} opts */
     constructor(opts) {
@@ -20,9 +20,13 @@ export class RandomStyle extends Style {
          *  @protected @type {string} */
         this.col = opts.col;
 
-        /** A function returning the color of the cell.
+        /** 
         * @protected @type {function(number,number,Stat|undefined):string} */
-        this.color = opts.color || "#ff000066";
+        this.nb = opts.nbMaxPix || 0.3
+
+        /** The color of the points.
+        * @protected @type {string} */
+        this.color = opts.color || "#FF5733";
 
     }
 
@@ -51,8 +55,8 @@ export class RandomStyle extends Style {
         //set color
         cg.ctx.fillStyle = this.color;
 
-        const nbMaxPix = 0.3
-        const nbMaxCell = nbMaxPix * r * r / (zf * zf)
+        //compute max number of points per cell
+        const nbMaxCell = this.nbMaxPix * r * r / (zf * zf)
 
         const r2 = r / 2
         for (let cell of cells) {
@@ -66,7 +70,8 @@ export class RandomStyle extends Style {
             const rc = 1 * zf; //pixel radius
 
             //draw circles
-            const nb = nbMaxCell * s(cell[this.col] / stat.max, 0.5);
+            const nb = nbMaxCell * s(cell[this.col] / stat.max, 0.4);
+
             for (let i = 0; i <= nb; i++) {
                 /*/draw circle
                 cg.ctx.beginPath();
