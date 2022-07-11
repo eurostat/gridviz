@@ -33,6 +33,9 @@ export class GeoCanvas {
         /**@type {object} */
         this.ctx = this.canvas.getContext("2d");
 
+        /**@type {object} */
+        this.ctxGL = this.canvas.getContext("webgl");
+
         // set geo coordinates of the center
         this.center = center || { x: this.w * 0.5, y: this.h * 0.5 };
 
