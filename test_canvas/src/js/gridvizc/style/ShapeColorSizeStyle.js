@@ -41,6 +41,10 @@ export class ShapeColorSizeStyle extends Style {
         /** A function returning the shape of a cell.
          * @private @type {function(Cell):Shape} */
         this.shape = opts.shape || (() => "square");
+
+        /** A function returning the shape of a cell.
+         * @private @type {boolean} */
+        this.webGL = opts.webGL || false
     }
 
 
@@ -69,59 +73,67 @@ export class ShapeColorSizeStyle extends Style {
             statColor = getStatistics(cells, c => c[this.colorCol], true)
         }
 
-        //draw in geo coordinates
-        cg.setCanvasTransform()
+        if (this.webGL && cg.ctxGL) {
+            //draw witt webGL
+            console.log(cg.ctxGL)
 
-        for (let cell of cells) {
+        } else {
+            //draw with canvas
 
-            //color
-            const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined;
-            if (!col) continue
-            cg.ctx.fillStyle = col;
+            //draw in geo coordinates
+            cg.setCanvasTransform()
 
-            //shape
-            const shape = this.shape ? this.shape(cell) : "square";
-            if (shape === "none") continue
+            for (let cell of cells) {
 
-            //size
-            /** @type {function(number,number,Stat|undefined,number):number} */
-            let s_ = this.size || (() => resolution);
-            //size - in geo unit
-            const sG = s_(cell[this.sizeCol], resolution, statSize, zf)
+                //color
+                const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined;
+                if (!col) continue
+                cg.ctx.fillStyle = col;
 
-            //get offset
-            const offset = this.offset(cell, resolution, zf)
+                //shape
+                const shape = this.shape ? this.shape(cell) : "square";
+                if (shape === "none") continue
 
-            if (shape === "square") {
-                //draw square
-                const d = resolution * (1 - sG / resolution) * 0.5
-                cg.ctx.fillRect(
-                    cell.x + d + offset.dx,
-                    cell.y + d + offset.dy,
-                    sG, sG);
-            } else if (shape === "circle") {
-                //draw circle
-                cg.ctx.beginPath();
-                cg.ctx.arc(
-                    cell.x + resolution * 0.5 + offset.dx,
-                    cell.y + resolution * 0.5 + offset.dy,
-                    sG * 0.5,
-                    0, 2 * Math.PI, false);
-                cg.ctx.fill();
-            } else if (shape === "donut") {
-                const xc = cell.x + resolution * 0.5 + offset.dx, yc = cell.y + resolution * 0.5 + offset.dy
-                cg.ctx.beginPath();
-                cg.ctx.moveTo(xc, yc);
-                cg.ctx.arc(xc, yc, 0.5 * resolution, 0, 2 * Math.PI);
-                cg.ctx.arc(xc, yc, (1 - sG / resolution) * 0.5 * resolution, 0, 2 * Math.PI, true);
-                cg.ctx.closePath();
-                cg.ctx.fill();
-            } else {
-                throw new Error('Unexpected shape:' + shape);
+                //size
+                /** @type {function(number,number,Stat|undefined,number):number} */
+                let s_ = this.size || (() => resolution);
+                //size - in geo unit
+                const sG = s_(cell[this.sizeCol], resolution, statSize, zf)
+
+                //get offset
+                const offset = this.offset(cell, resolution, zf)
+
+                if (shape === "square") {
+                    //draw square
+                    const d = resolution * (1 - sG / resolution) * 0.5
+                    cg.ctx.fillRect(
+                        cell.x + d + offset.dx,
+                        cell.y + d + offset.dy,
+                        sG, sG);
+                } else if (shape === "circle") {
+                    //draw circle
+                    cg.ctx.beginPath();
+                    cg.ctx.arc(
+                        cell.x + resolution * 0.5 + offset.dx,
+                        cell.y + resolution * 0.5 + offset.dy,
+                        sG * 0.5,
+                        0, 2 * Math.PI, false);
+                    cg.ctx.fill();
+                } else if (shape === "donut") {
+                    const xc = cell.x + resolution * 0.5 + offset.dx, yc = cell.y + resolution * 0.5 + offset.dy
+                    cg.ctx.beginPath();
+                    cg.ctx.moveTo(xc, yc);
+                    cg.ctx.arc(xc, yc, 0.5 * resolution, 0, 2 * Math.PI);
+                    cg.ctx.arc(xc, yc, (1 - sG / resolution) * 0.5 * resolution, 0, 2 * Math.PI, true);
+                    cg.ctx.closePath();
+                    cg.ctx.fill();
+                } else {
+                    throw new Error('Unexpected shape:' + shape);
+                }
+
+                //draw stroke
+                this.drawStroke(cell, resolution, cg, shape, sG, offset)
             }
-
-            //draw stroke
-            this.drawStroke(cell, resolution, cg, shape, sG, offset)
         }
 
         //update legends
