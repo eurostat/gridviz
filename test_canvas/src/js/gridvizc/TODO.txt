@@ -1,6 +1,6 @@
 TODO webgl test
 TODO FR pop by age: fix legend update when aggregating + use better color ramp - d3.schemeCategory10 ?
-TODO adapt tanaka to diverging - use on EUR pop change
+TODO adapt tanaka/dotdensity to diverging - use on EUR pop change
 TODO kernel smoothing: fix artifact - empty line below from center point toward south
 
 TODO make tests using offset ?
