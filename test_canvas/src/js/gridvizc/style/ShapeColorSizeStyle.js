@@ -71,6 +71,7 @@ export class ShapeColorSizeStyle extends Style {
 
         //draw in geo coordinates
         cg.setCanvasTransform()
+
         for (let cell of cells) {
 
             //color
