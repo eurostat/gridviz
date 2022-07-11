@@ -51,7 +51,8 @@ export class RandomStyle extends Style {
         //set color
         cg.ctx.fillStyle = this.color;
 
-        const nbMax = 50
+        const nbMaxPix = 0.3
+        const nbMaxCell = nbMaxPix * r * r / (zf * zf)
 
         const r2 = r / 2
         for (let cell of cells) {
@@ -65,8 +66,8 @@ export class RandomStyle extends Style {
             const rc = 1 * zf; //pixel radius
 
             //draw circles
-            const nb = nbMax * s(cell[this.col] / stat.max, 0.4);
-            for (let i = 0; i < nb; i++) {
+            const nb = nbMaxCell * s(cell[this.col] / stat.max, 0.5);
+            for (let i = 0; i <= nb; i++) {
                 /*/draw circle
                 cg.ctx.beginPath();
                 cg.ctx.arc(
@@ -77,8 +78,8 @@ export class RandomStyle extends Style {
                 cg.ctx.fill();*/
 
                 cg.ctx.fillRect(
-                    cx + r * (Math.random() - 0.5) - r2,
-                    cy + r * (Math.random() - 0.5) - r2,
+                    cell.x + offset.dx + r * Math.random(),
+                    cell.y + offset.dy + r * Math.random(),
                     rc * 2, rc * 2);
             }
 
