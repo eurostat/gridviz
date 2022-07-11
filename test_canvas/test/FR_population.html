@@ -47,8 +47,8 @@
                 <label for="pillar">Pillar</label>
                 <input type="radio" name="style" id="text" value="text">
                 <label for="text">#@=€</label>
-                <input type="radio" name="style" id="test" value="test">
-                <label for="test">Test</label>
+                <input type="radio" name="style" id="dot" value="dot">
+                <label for="dot">Dot</label>
             </div>
             <hr>
             <input type="checkbox" id="label" checked>
@@ -208,8 +208,8 @@
                 })],
                 zooms: [0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
             },
-            test: {
-                style: [new gviz.RandomStyle({
+            dot: {
+                style: [new gviz.DotDensityStyle({
                     col: "Ind",
                 })],
                 //zooms: [0, 10, 20, 50, 100, 250, 500, 1000, 2500]
