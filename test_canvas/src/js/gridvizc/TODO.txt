@@ -1,4 +1,6 @@
 TODO line styles, based on side style - "mesh" style, with side orientation
+TODO zoom pane, with touchable slider: improve. Make vertical.
+TODO webgl test
 
 TODO FR pop by age: fix legend update when aggregating + use better color ramp - d3.schemeCategory10 ?
 TODO adapt tanaka to diverging - use on EUR pop change
@@ -40,7 +42,6 @@ TODO linesup: Test with changeable width and fixed height ?
 TODO use filosofi 2017 to show evolutions
 TODO background image ? with relief shading.
 TODO window resize
-TODO zoom pane, with touchable slider: improve. Make vertical.
 TODO better shaded characterset for text style
 TODO more efficient multiscale layer creation?
 TODO joyplot: fill color depending on value ? for negative/positive values
