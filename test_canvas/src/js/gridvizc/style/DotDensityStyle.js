@@ -25,12 +25,12 @@ export class DotDensityStyle extends Style {
         this.nb = opts.nb || ((v, r, s, zf) => 0.3 * r * r / (zf * zf) * v / s.max)
 
         /** The color of the dots
-        * @protected @type {string} */
-        this.color = opts.color || "#FF5733";
+        * @protected @type {function(Cell):string} */
+        this.color = opts.color || (() => "#FF5733");
 
         /** A function returning the size of the dots.
         * @protected @type {function(number,number):number} */
-         this.dotSize = opts.dotSize //|| ((r, zf) => ...
+        this.dotSize = opts.dotSize //|| ((r, zf) => ...
     }
 
 
@@ -55,13 +55,16 @@ export class DotDensityStyle extends Style {
         //draw in geo coordinates
         cg.setCanvasTransform()
 
-        //set color
-        cg.ctx.fillStyle = this.color;
-
         //size of the dots
         const s = this.dotSize ? this.dotSize(r, zf) : 2 * zf
 
         for (let cell of cells) {
+
+            //get color
+            const col = this.color(c);
+            if (!col || col === "none") continue
+            //set color
+            cg.ctx.fillStyle = col;
 
             //get offset
             const offset = this.offset(cell, r, zf)
