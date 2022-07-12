@@ -25,15 +25,15 @@ export class Legend {
 		/** @type {number} */
 		this.right = opts.right;
 		/** @type {string} */
-		this.background = opts.background || "#FFFFFFCC";
+		this.background = opts.background || "none";
 		/** @type {string} */
 		this.padding = opts.padding || "5px";
 		/** @type {string} */
 		this.border = opts.border || "0px";
 		/** @type {string} */
-		this["border-radius"] = opts["border-radius"] || "5px";
+		this["border-radius"] = opts["border-radius"] || "none";
 		/** @type {string} */
-		this["box-shadow"] = opts["box-shadow"] || "5px 5px 5px grey";
+		this["box-shadow"] = opts["box-shadow"] || "none";
 		/** @type {string} */
 		this["font-family"] = opts["font-family"] || "Helvetica, Arial, sans-serif";
 
