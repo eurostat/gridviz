@@ -1,4 +1,6 @@
+TODO do not hide legend element but clear (and rebuild) or detach (a,d re-attach).
 TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
+
 TODO adapt dotdensity to diverging - use on EUR pop change
 TODO FR pop by age: add title to category legend
 
