@@ -81,10 +81,12 @@ export class DotDensityStyle extends Style {
             const nb = this.nb(c[this.col], r, stat, zf)
 
             //draw random dots
+            const cx = c.x + offset.dx + r / 2,
+                cy = c.y + offset.dy + r / 2
             for (let i = 0; i <= nb; i++) {
                 cg.ctx.fillRect(
-                    c.x + offset.dx + rand(),
-                    c.y + offset.dy + rand(),
+                    cx + rand(),
+                    cy + rand(),
                     s, s);
             }
 
