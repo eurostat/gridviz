@@ -157,8 +157,15 @@ export class Style {
 
     /** Hide all legend elements of the style, if any
     * @returns {this} */
-    hideLegends() {
+     hideLegends() {
         for (const lg of this.legends) lg.hide()
+        return this
+    }
+
+    /** Clear all legend elements of the style, if any
+    * @returns {this} */
+     clearLegends() {
+        for (const lg of this.legends) lg.clear()
         return this
     }
 

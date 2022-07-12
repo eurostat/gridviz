@@ -79,6 +79,11 @@ export class Legend {
 		this.div.style("visibility", "hidden");
 	}
 
+	/** Clear the legend */
+	clear() {
+		this.div.selectAll("*").remove();
+	}
+
 	/**
 	 * @param {Object} opts 
 	 * @abstract

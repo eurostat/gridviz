@@ -114,7 +114,7 @@
         const getLegendOpts = () => {
             const opts = { colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square" } }
             if (getAggUI()) {
-                opts.colorCat.colCat = [[colorDict["Ind_0_17"], "< 17"], [colorDict["Ind_18_64"], "18 to 65"], [colorDict["Ind_65p"], "> 65"]]
+                opts.colorCat.colCat = [[getColorDict()["Ind_0_17"], "< 17"], [getColorDict()["Ind_18_64"], "18 to 65"], [getColorDict()["Ind_65p"], "> 65"]]
                     .reverse()
             }
             else {
@@ -218,6 +218,7 @@
 
         // aggregation
         document.querySelector('#agg').addEventListener('change', function () {
+            s.addLegend(getLegendOpts())
             s.color = getColorDict()
             app.cg.redraw();
         });
