@@ -34,7 +34,7 @@ export class DotDensityStyle extends Style {
 
         /** A function returning the sigma of the distribution from the resolution, in geo unit.
         * @protected @type {function(number):number} */
-         this.sigma = opts.sigma //|| ((r) => ...
+        this.sigma = opts.sigma //|| ((r) => ...
     }
 
 
@@ -62,6 +62,10 @@ export class DotDensityStyle extends Style {
         //size of the dots
         const s = this.dotSize ? this.dotSize(r, zf) : 2 * zf
 
+        //make random function
+        const sig = this.sigma ? this.sigma(r) : r * 0.4
+        const rand = randomNormal(0, sig);
+
         for (let c of cells) {
 
             //get color
@@ -79,8 +83,8 @@ export class DotDensityStyle extends Style {
             //draw random dots
             for (let i = 0; i <= nb; i++) {
                 cg.ctx.fillRect(
-                    c.x + offset.dx + r * Math.random(),
-                    c.y + offset.dy + r * Math.random(),
+                    c.x + offset.dx + rand(),
+                    c.y + offset.dy + rand(),
                     s, s);
             }
 
