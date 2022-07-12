@@ -44,7 +44,7 @@ export class Style {
          * @private @type {number} */
         this.strokeWidth = opts.strokeWidth || 1;
 
-        /** @protected @type {Array.<Legend>} */
+        /** @public @type {Array.<Legend>} */
         this.legends = []
     }
 
@@ -59,16 +59,6 @@ export class Style {
      */
     draw(cells, resolution, cg) {
         throw new Error('Method draw not implemented.');
-    }
-
-    /**
-     * @param {object} opts
-     * @abstract
-     * @returns {this}
-     */
-    addLegend(opts) {
-        throw new Error('Method addLegend not implemented.');
-        return this;
     }
 
     /**

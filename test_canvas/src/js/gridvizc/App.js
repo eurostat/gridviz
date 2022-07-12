@@ -13,6 +13,11 @@ import { TiledGrid } from './dataset/TiledGrid';
 import { LabelLayer } from './LabelLayer';
 import { LineLayer } from './LineLayer';
 
+import { ColorLegend } from './legend/ColorLegend'
+import { ColorCategoryLegend } from './legend/ColorCategoryLegend'
+import { SizeLegend } from './legend/SizeLegend'
+import { SegmentWidthLegend } from './legend/SegmentWidthLegend'
+
 import { select } from "d3-selection";
 
 /**
@@ -130,8 +135,8 @@ export class App {
                 .style("font-family", "Helvetica, Arial, sans-serif")
                 .style("bottom", "20px")
                 .style("left", "20px")
-                //hide
-                //.style("visibility", "hidden")
+            //hide
+            //.style("visibility", "hidden")
         }
 
 
@@ -480,5 +485,31 @@ export class App {
         this.cg.addZoomSlider(id, opts)
         return this
     }
+
+    /**
+     * @param {object} opts 
+     * @param {Array.<Style>} styles 
+     */
+    addLegend(opts, styles) {
+        let lg;
+        switch (opts.type) {
+            case "color":
+                lg = new ColorLegend(this, opts)
+                break
+            case "colorCat":
+                lg = new ColorCategoryLegend(this, opts)
+                break
+            case "size":
+                lg = new SizeLegend(this, opts)
+                break
+            case "segWidth":
+                lg = new SegmentWidthLegend(this, opts)
+                break
+        }
+        //link legend to styles
+        styles.forEach((s) => s.legends.push(lg))
+        return this
+    }
+
 
 }

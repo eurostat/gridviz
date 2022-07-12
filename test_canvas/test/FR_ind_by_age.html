@@ -112,23 +112,6 @@
                 }
         }
 
-        //labels for the legend
-        const getLegendOpts = () => {
-            const opts = { colorCat: { id: "guytextscatlegend", top: "20px", right: "20px", shape: "square" } }
-            if (getAggUI()) {
-                opts.colorCat.colCat = [[getColorDict()["Ind_0_17"], "< 17"], [getColorDict()["Ind_18_64"], "18 to 65"], [getColorDict()["Ind_65p"], "> 65"]]
-                    .reverse()
-            }
-            else {
-                opts.colorCat.colCat = [[col(0), "< 3"], [col(2 / 80), "4 to 5"], [col(7 / 80), "6 to 10"], [col(14 / 80), "11 to 17"],
-                [col(21 / 80), "18 to 24"], [col(36 / 80), "25 to 39"], [col(51 / 80), "40 to 54"], [col(61 / 80), "55 to 64"],
-                [col(76 / 80), "65 to 79"], [col(1), ">80"]]
-                    .reverse()
-            }
-            return opts
-        }
-
-
 
         //style
         const s = new gviz.CompositionStyle({
@@ -137,7 +120,7 @@
             sizeCol: "Ind",
             size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
             agePyramidHeight: (r) => 0.95 * r
-        }).addLegend(getLegendOpts())
+        })
         s.size_ = (v, r, s, zf) => r - 1.5 * zf
 
 
@@ -194,6 +177,29 @@
             [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             //[0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
         )
+
+
+
+        //legend
+
+        const getLegendOpts = () => {
+            const opts = { colorCat: { id: "guytextscatlegend", top: "20px", right: "20px", shape: "square" } }
+            if (getAggUI()) {
+                opts.colorCat.colCat = [[getColorDict()["Ind_0_17"], "< 17"], [getColorDict()["Ind_18_64"], "18 to 65"], [getColorDict()["Ind_65p"], "> 65"]]
+                    .reverse()
+            }
+            else {
+                opts.colorCat.colCat = [[col(0), "< 3"], [col(2 / 80), "4 to 5"], [col(7 / 80), "6 to 10"], [col(14 / 80), "11 to 17"],
+                [col(21 / 80), "18 to 24"], [col(36 / 80), "25 to 39"], [col(51 / 80), "40 to 54"], [col(61 / 80), "55 to 64"],
+                [col(76 / 80), "65 to 79"], [col(1), ">80"]]
+                    .reverse()
+            }
+            return opts
+        }
+        app.addLegend(getLegendOpts, [s])
+
+
+
 
         const updateStyle = () => {
             const ssel = getStyle()
