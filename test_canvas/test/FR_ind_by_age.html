@@ -52,7 +52,7 @@
         //make application
         const app = new gviz.App()
             .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(100).setZoomFactorExtent([5, 1500])
-            .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { haloWidth: () => 5, haloColor:()=>"#FFFFFFDD" })).setBoundaryLayer(gviz.getEurostatBoundariesLayer({
+            .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { haloWidth: () => 5, haloColor: () => "#FFFFFFDD" })).setBoundaryLayer(gviz.getEurostatBoundariesLayer({
                 color: (f, zf) => {
                     const p = f.properties
                     const col = "#888"
@@ -80,9 +80,11 @@
             return s
         }
 
-        const col = gviz.interpolateSpectral;
-        //const col = gviz.interpolateTurbo;
-        //const col = gviz.interpolateYlOrRd;
+        const col = gviz.interpolateSpectral
+        //const col = gviz.interpolateRdYlBu
+        //const col = gviz.interpolateTurbo
+        //const col = gviz.interpolateYlOrRd
+        //const col = gviz.interpolateRainbow
         const getColorDict = () => {
             if (getAggUI())
                 return {
@@ -112,7 +114,7 @@
 
         //labels for the legend
         const getLegendOpts = () => {
-            const opts = { colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square" } }
+            const opts = { colorCat: { id: "guytextscatlegend", top: "20px", right: "20px", shape: "square" } }
             if (getAggUI()) {
                 opts.colorCat.colCat = [[getColorDict()["Ind_0_17"], "< 17"], [getColorDict()["Ind_18_64"], "18 to 65"], [getColorDict()["Ind_65p"], "> 65"]]
                     .reverse()
