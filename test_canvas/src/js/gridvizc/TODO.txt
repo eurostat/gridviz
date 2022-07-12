@@ -1,4 +1,4 @@
-TODO FR pop by age: fix legend update when aggregating + use better color ramp - d3.schemeCategory10 ?
+TODO FR pop by age: add title to category legend
 
 TODO webgl test
 
