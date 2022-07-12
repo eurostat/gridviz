@@ -1,3 +1,5 @@
+TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
+
 TODO FR pop by age: add title to category legend
 
 TODO webgl test
@@ -17,7 +19,6 @@ TODO test data NO - 250m. long timeseries
 TODO test data on NL
 TODO legend refresh on composition
 
-TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
 TODO tw size+rate example: Gender balance SE ? population, youth VS old FR ? Income FR ?
 TODO map style: contours with color
 
