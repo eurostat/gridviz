@@ -181,7 +181,7 @@
 
 
         //legend
-
+/*
         const getLegendOpts = () => {
             const opts = { colorCat: { id: "guytextscatlegend", top: "20px", right: "20px", shape: "square" } }
             if (getAggUI()) {
@@ -197,7 +197,7 @@
             return opts
         }
         app.addLegend(getLegendOpts, [s])
-
+*/
 
 
 
@@ -226,8 +226,8 @@
 
         // aggregation
         document.querySelector('#agg').addEventListener('change', function () {
-            s.clearLegends()
-            s.addLegend(getLegendOpts())
+            //s.clearLegends()
+            //s.addLegend(getLegendOpts())
             s.color = getColorDict()
             app.cg.redraw();
         });

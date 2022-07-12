@@ -494,16 +494,16 @@ export class App {
         let lg;
         switch (opts.type) {
             case "color":
-                lg = new ColorLegend(this, opts)
+                lg = new ColorLegend(this.legend, opts)
                 break
             case "colorCat":
-                lg = new ColorCategoryLegend(this, opts)
+                lg = new ColorCategoryLegend(this.legend, opts)
                 break
             case "size":
-                lg = new SizeLegend(this, opts)
+                lg = new SizeLegend(this.legend, opts)
                 break
             case "segWidth":
-                lg = new SegmentWidthLegend(this, opts)
+                lg = new SegmentWidthLegend(this.legend, opts)
                 break
         }
         //link legend to styles
