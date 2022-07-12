@@ -14,6 +14,10 @@
             alert("Unable to initialize WebGL. Your browser or machine may not support it.");
         }
 
+        //https://medium.com/trabe/a-brief-introduction-to-webgl-5b584db3d6d6
+        //https://observablehq.com/d/dfb2674035a1f388
+        //https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Adding_2D_content_to_a_WebGL_context
+
 
         // Initialize a shader program, so WebGL knows how to draw our data
         function initShaderProgram(gl, ...shaders) {
@@ -36,6 +40,8 @@
 
 
         // Vertex shader program
+        // the vertex shader runs for each input vertex and generates a new one as output.
+        // We use the pos attribute as input. the output is placed in the gl_Position variable - no transformation here.
         const vertexShaderSource = `
     attribute vec4 pos;
     //uniform mat4 uModelViewMatrix;
@@ -46,11 +52,21 @@
   `;
 
         // Fragment shader program
-        const fragmentShaderSource = `
+        // gl_FragColor is the output color of the shader - no color transformation here.
+        /*const fragmentShaderSource = `
     void main() {
       gl_FragColor = vec4(1, 0.8, 0.6, 1);
     }
-  `;
+  `;*/
+
+        // Fragment shader
+        const fragmentShaderSource = `
+    precision mediump float;
+    uniform vec4 color;
+    void main() {
+        gl_FragColor = color;
+    }`;
+
 
         //make program
         const program = initShaderProgram(
@@ -63,14 +79,10 @@
         {
             //define input vertices
             const vertices = new Float32Array([
-                0.5,
-                0.5,
-                -0.5,
-                0.5,
-                0.5,
-                -0.5,
-                -0.5,
-                -0.5
+                0.5, 0.5,
+                -0.5, 0.5,
+                0.5, -0.5,
+                -0.5, -0.5
             ]);
 
             const positionBuffer = gl.createBuffer();
@@ -86,6 +98,15 @@
                 0 //offset
             );
             gl.enableVertexAttribArray(position);
+        }
+
+
+        {
+            // Shader uniform variable for color (read-only)
+            const color = gl.getUniformLocation(program, "color");
+
+            // Set color        R  G  B  A
+            gl.uniform4f(color, 0, 1, 0, 1);
         }
 
         // Set the shader uniforms
@@ -112,7 +133,6 @@
             0, // vertex list start
             4 // vertex count
         );
-
 
 
 
