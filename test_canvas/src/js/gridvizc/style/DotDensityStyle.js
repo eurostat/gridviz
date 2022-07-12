@@ -3,7 +3,7 @@
 import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
-import { s } from "../index"
+import { randomNormal } from "d3-random"
 
 /**
  * 
@@ -31,6 +31,10 @@ export class DotDensityStyle extends Style {
         /** A function returning the size of the dots, in geo unit.
         * @protected @type {function(number,number):number} */
         this.dotSize = opts.dotSize //|| ((r, zf) => ...
+
+        /** A function returning the sigma of the distribution from the resolution, in geo unit.
+        * @protected @type {function(number):number} */
+         this.sigma = opts.sigma //|| ((r) => ...
     }
 
 
