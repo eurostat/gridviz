@@ -28,7 +28,7 @@ export class DotDensityStyle extends Style {
         * @protected @type {function(Cell):string} */
         this.color = opts.color || (() => "#FF5733");
 
-        /** A function returning the size of the dots.
+        /** A function returning the size of the dots, in geo unit.
         * @protected @type {function(number,number):number} */
         this.dotSize = opts.dotSize //|| ((r, zf) => ...
     }
