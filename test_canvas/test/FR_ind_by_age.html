@@ -218,6 +218,7 @@
 
         // aggregation
         document.querySelector('#agg').addEventListener('change', function () {
+            s.clearLegends()
             s.addLegend(getLegendOpts())
             s.color = getColorDict()
             app.cg.redraw();
