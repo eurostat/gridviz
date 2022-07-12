@@ -11,7 +11,7 @@ export class Legend {
 	/**
 	 * @param {Object} opts 
 	 */
-	constructor(opts) {
+	constructor(legendDiv, opts) {
 		opts = opts || {};
 
 		/** @type {string} */
@@ -40,11 +40,11 @@ export class Legend {
 		//the div element
 		this.div = select("#" + this.id);
 		if (this.div.empty())
-			this.div = select("body").append("div").attr("id", this.id)
+			this.div = legendDiv.append("div").attr("id", this.id)
 
 		//set style
 		this.div
-			.style("position", "absolute")
+			//.style("position", "absolute")
 			.style("width", "auto")
 			.style("height", "auto")
 			//.style("min-width", "10px")

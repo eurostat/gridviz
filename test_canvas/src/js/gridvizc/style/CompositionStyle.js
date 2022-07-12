@@ -3,8 +3,6 @@
 import { Style, Stat, getStatistics } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
-import { SizeLegend } from "../legend/SizeLegend"
-import { ColorCategoryLegend } from "../legend/ColorCategoryLegend"
 
 /** @typedef {"flag"|"piechart"|"ring"|"segment"|"radar"|"agepyramid"|"halftone"} CompositionType */
 
@@ -349,18 +347,5 @@ export class CompositionStyle extends Style {
     getAgePyramidHeight() { return this.agePyramidHeight; }
     /** @param {function(number):number} val @returns {this} */
     sethAgePyramidHeight(val) { this.agePyramidHeight = val; return this; }
-
-
-    /**
-     * @param {Object} opts
-     * @returns {this}
-     */
-     addLegend(opts) {
-        if (opts.size)
-            this.legends.push(new SizeLegend(opts.size))
-        if (opts.colorCat)
-            this.legends.push(new ColorCategoryLegend(opts.colorCat))
-        return this
-    }
 
 }

@@ -14,8 +14,8 @@ import { Style, Stat } from "../Style"
 export class ColorLegend extends Legend {
 
     /** @param {Object} opts */
-    constructor(opts) {
-        super(opts)
+    constructor(ld, opts) {
+        super(ld, opts)
         opts = opts || {};
 
         this.colorRamp = opts.colorRamp

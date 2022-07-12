@@ -3,9 +3,6 @@
 import { Style, Stat, getStatistics, Shape } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
-import { ColorLegend } from "../legend/ColorLegend"
-import { SizeLegend } from "../legend/SizeLegend"
-import { ColorCategoryLegend } from "../legend/ColorCategoryLegend"
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -162,21 +159,5 @@ export class ShapeColorSizeStyle extends Style {
     getShape() { return this.shape; }
     /** @param {function(Cell):Shape} val @returns {this} */
     setShape(val) { this.shape = val; return this; }
-
-
-
-    /**
-     * @param {Object} opts
-     * @returns {this}
-     */
-    addLegend(opts) {
-        if (opts.color)
-            this.legends.push(new ColorLegend(opts.color))
-        if (opts.size)
-            this.legends.push(new SizeLegend(opts.size))
-        if (opts.colorCat)
-            this.legends.push(new ColorCategoryLegend(opts.colorCat))
-        return this
-    }
 
 }

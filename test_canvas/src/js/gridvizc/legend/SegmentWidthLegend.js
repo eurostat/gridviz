@@ -13,8 +13,8 @@ import { SegmentStyle } from "../style/SegmentStyle"
 export class SegmentWidthLegend extends Legend {
 
     /** @param {Object} opts */
-    constructor(opts) {
-        super(opts)
+    constructor(ld, opts) {
+        super(ld, opts)
         opts = opts || {};
 
         //exageration
