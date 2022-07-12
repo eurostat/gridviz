@@ -110,6 +110,32 @@ export class App {
         /** @type {boolean} */
         this.showBoundaries = true
 
+
+
+        //legend div
+
+        this.legendDivId = opts.legendDivId || "gvizLegend";
+        this.legend = select("#" + this.legendDivId);
+        if (this.legend.empty()) {
+            this.legend = select("body").append("div")
+                .attr("id", this.legendDivId)
+                .style("position", "absolute")
+                .style("width", "auto")
+                .style("height", "auto")
+                .style("background", "#FFFFFFCC")
+                //.style("padding", this.padding)
+                .style("border", "0px")
+                .style("border-radius", "5px")
+                .style("box-shadow", "5px 5px 5px grey")
+                .style("font-family", "Helvetica, Arial, sans-serif")
+                .style("bottom", "20px")
+                .style("left", "20px")
+                //hide
+                //.style("visibility", "hidden")
+        }
+
+
+
         //tooltip
 
         /** @private @type {Tooltip} */
