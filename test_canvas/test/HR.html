@@ -233,7 +233,7 @@
                         shape: () => "square",
                         zfStroke: 80,
                     })
-                        .addLegend({ color: { id: "schvv124903cnd", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+                        //.addLegend({ color: { id: "schvv124903cnd", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
                     ,
                     new gviz.SideStyle({
                         valueCol: "TOTAL",
@@ -262,7 +262,7 @@
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
                         zfStroke: 80,
-                    }).addLegend({
+                    })/*.addLegend({
                         color: {
                             id: "scfolleggend", bottom: "20px", left: "20px", title: "Men / women difference (%)", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
                             fun: (t, r, s) => {
@@ -270,7 +270,7 @@
                                 return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
                             }
                         }
-                    })
+                    })*/
                 ], zooms: [0, 100, 200, 300, 500, 700, 1000, 1500, 2500, 4000, 99999999]
             },
 
@@ -286,7 +286,7 @@
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         agePyramidHeight: (r) => 0.95 * r
-                    }).addLegend({ colorCat: { id: "guyxhtscaend534", bottom: "20px", left: "20px", shape: "square", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() } })
+                    })//.addLegend({ colorCat: { id: "guyxhtscaend534", bottom: "20px", left: "20px", shape: "square", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() } })
                 ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
             },
 
@@ -303,12 +303,12 @@
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         agePyramidHeight: (r) => 0.95 * r
-                    }).addLegend({
+                    })/*.addLegend({
                         colorCat: {
                             id: "guyextlend533434", bottom: "20px", left: "20px", shape: "square",
                             colCat: [[col(0.2), "basic or less"], [col(0.4), "secondary"], [col(0.9), "tertiary"], ["gray", "other"]]
                         }
-                    })
+                    })*/
                 ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
             },
 
@@ -324,12 +324,12 @@
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         stripesOrientation: () => 90
-                    }).addLegend({
+                    })/*.addLegend({
                         colorCat: {
                             id: "guyehvhgvxtscatlend534", bottom: "20px", left: "20px", shape: "square",
                             colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]]
                         }
-                    })
+                    })*/
                 ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
             },
 
@@ -340,7 +340,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
                         shape: () => "square",
                         zfStroke: 80,
-                    }).addLegend({ color: { id: "schggozeDleggc45end", bottom: "20px", left: "20px", title: "Inactivity rate (%)", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) } })
+                    })//.addLegend({ color: { id: "schggozeDleggc45end", bottom: "20px", left: "20px", title: "Inactivity rate (%)", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) } })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
             },
 
@@ -355,12 +355,12 @@
                         type: () => "piechart",
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
-                    }).addLegend({
+                    })/*.addLegend({
                         colorCat: {
                             id: "guyehvhgvjhgxtscjhgatlend534", bottom: "20px", left: "20px", shape: "square",
                             colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse()
                         }
-                    })
+                    })*/
                 ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
             },
 
@@ -371,7 +371,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                         shape: () => "square",
                         zfStroke: 80,
-                    }).addLegend({ color: { id: "scc13iugfend", bottom: "20px", left: "20px", title: "Tourism - establishments", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+                    })//.addLegend({ color: { id: "scc13iugfend", bottom: "20px", left: "20px", title: "Tourism - establishments", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
             },
 
@@ -382,7 +382,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                         shape: () => "square",
                         zfStroke: 80,
-                    }).addLegend({ color: { id: "sc1hhgfggnd", bottom: "20px", left: "20px", title: "Tourism - units", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+                    })//.addLegend({ color: { id: "sc1hhgfggnd", bottom: "20px", left: "20px", title: "Tourism - units", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
             },
 
@@ -393,7 +393,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                         shape: () => "square",
                         zfStroke: 80,
-                    }).addLegend({ color: { id: "sc1hgfend", bottom: "20px", left: "20px", title: "Tourism - beds", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+                    })//.addLegend({ color: { id: "sc1hgfend", bottom: "20px", left: "20px", title: "Tourism - beds", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
             },
 
@@ -411,12 +411,12 @@
                         type: () => "piechart",
                         sizeCol: "TOTAL ARRIVALS",
                         size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
-                    }).addLegend({
+                    })/*.addLegend({
                         colorCat: {
                             id: "guychgatlend534", bottom: "20px", left: "20px", shape: "square",
                             colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], ["#bbb", "Other"]]
                         }
-                    })
+                    })*/
                 ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
             },
 
@@ -434,12 +434,12 @@
                         type: () => "piechart",
                         sizeCol: "TOTAL NIGHTS",
                         size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
-                    }).addLegend({
+                    })/*.addLegend({
                         colorCat: {
                             id: "guyeh35cgcd34", bottom: "20px", left: "20px", shape: "square",
                             colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], ["#bbb", "Other"]]
                         }
-                    })
+                    })*/
                 ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
             },
         }
@@ -465,7 +465,7 @@
         //style selector
         document.querySelector('#layer').addEventListener('change', function () {
 
-            app.layers[0].hideLegends()
+            //app.layers[0].hideLegends()
             app.layers = layers[getSelectedLayer()];
 
             //redraw
