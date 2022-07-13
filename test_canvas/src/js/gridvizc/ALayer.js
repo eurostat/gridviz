@@ -7,8 +7,7 @@
  */
 export class ALayer {
 
-    constructor() {
-    }
+    constructor() { }
 
     /**
      * @abstract
@@ -17,10 +16,5 @@ export class ALayer {
     getLayer(zf) {
         throw new Error('Method getLayer not implemented.');
     }
-
-    /** @abstract */
-    /*hideLegends() {
-        throw new Error('Method hideLegend not implemented.');
-    }*/
 
 }

@@ -29,8 +29,6 @@ export class MultiScaleLayer extends ALayer {
         //NB: minZoom and maxZoom of layers do not need to be maintained consistant with this.zooms
     }
 
-
-
     /**
      * @param {number} zf 
      * @returns {Layer|undefined}  */
@@ -42,11 +40,5 @@ export class MultiScaleLayer extends ALayer {
         if (i == this.zooms.length) return;
         return this.layers[i - 1];
     }
-
-    /** @abstract */
-    /*hideLegends() {
-        for (const l of this.layers)
-            l.hideLegends()
-    }*/
 
 }
