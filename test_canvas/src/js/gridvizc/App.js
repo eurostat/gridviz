@@ -63,13 +63,9 @@ export class App {
         this.cg.redraw = () => {
             //console.log(this.cg.getZf(), this.cg.getCenter())
 
-            //hide legends
-            //for (const alayer of this.layers)
-            //    alayer.hideLegends()
+            //detach all legend elements
             if (this.legend)
                 this.legend.selectAll("*").remove();
-
-
 
             //clear
             this.cg.initCanvasTransform()
@@ -99,6 +95,7 @@ export class App {
                 if (this.legend)
                     for (const s of layer.styles) {
                         for (const lg of s.legends) {
+                            //console.log(s, lg)
                             //this.legend.append(lg.div)
                             //s1.node().appendChild(s2.node())
                             this.legend.node().append(lg.div.node())
@@ -518,6 +515,8 @@ export class App {
             case "segWidth":
                 lg = new SegmentWidthLegend(opts)
                 break
+            default:
+                throw ("Unexpected legend type: " + opts.type)
         }
         //link legend to styles
         styles.forEach((s) => s.legends.push(lg))

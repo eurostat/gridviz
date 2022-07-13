@@ -249,10 +249,10 @@
                 { type: "color", id: "scollegend", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                 [sd.scolor.style[0]]
             )
-            .addLegend(
+            /*.addLegend(
                 { type: "color", id: "ccollegnend", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                 [sd.ccolor.style[0]]
-            )
+            )*/
             .addLegend(
                 { type: "size", id: "sslegend", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" },
                 [sd.square.style[0]]

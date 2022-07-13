@@ -37,7 +37,15 @@ export class ColorLegend extends Legend {
 
 
         const titleHeight = 12
-        const svg = this.div.append("svg").attr("width", this.width + 2 * this.margin).attr("height", this.height + 3 * this.margin + titleHeight + this.tickSize + this.fontSize - 5)
+        console.log(this.div.node())
+
+        //this.div.text("kdfkjsdhfkjshf")
+        //if(true) return
+
+        const svgW = this.width + 2 * this.margin
+        const svgH = this.height + 3 * this.margin + titleHeight + this.tickSize + this.fontSize - 5
+        console.log(svgW,svgH)
+        const svg = this.div.append("svg").attr("width", svgW).attr("height", svgH)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
 
         //title
@@ -81,6 +89,9 @@ export class ColorLegend extends Legend {
                 .style("pointer-events", "none")
                 .text("-")
         }
+
+        console.log("aajghgaaa")
+
     }
 
     /**
@@ -92,6 +103,8 @@ export class ColorLegend extends Legend {
 
         //update tick labels
 
+        console.log("b")
+
         //label text format
         const f = this.tickFormat ? format(this.tickFormat) : (v) => v;
         for (let i = 0; i < this.ticks; i++) {
@@ -101,6 +114,8 @@ export class ColorLegend extends Legend {
             //tick label
             select("#" + this.id + "_ticklabel_" + i).text(f(v) + (this.tickUnit ? this.tickUnit : ""))
         }
+
+        console.log("c")
 
     }
 
