@@ -184,7 +184,7 @@
 
         //add legends
         const getLegendOpts = () => {
-            const opts = { type: "colorCat", title: "Age groups", shape: "circle" }
+            const opts = { type: "colorCat", title: "Age group", shape: "circle" }
             if (getAggUI())
                 opts.colCat = [[getColorDict()["Ind_0_17"], "< 17"], [getColorDict()["Ind_18_64"], "18 to 65"], [getColorDict()["Ind_65p"], "> 65"]]
                     .reverse()
