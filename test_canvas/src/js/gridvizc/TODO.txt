@@ -1,3 +1,5 @@
+TODO lego style: classify by color (not random) + draw little circle on top, with shadow effect
+
 TODO restore legends
 TODO show several elements on size legend
 
@@ -7,7 +9,6 @@ TODO adapt tanaka to diverging - use on EUR pop change
 TODO kernel smoothing: fix artifact - empty line below from center point toward south
 
 TODO make tests using offset ?
-TODO lego style based on tanaka? random color + little circle on top ?
 TODO aggregation on the fly ??? No. except for csv...
 TODO chocolate style
 TODO watercolor style ? Draw random plots around central point of pixel - https://github.com/rolyatmax/watercolor-canvas

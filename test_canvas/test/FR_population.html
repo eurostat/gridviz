@@ -44,6 +44,8 @@
                 <input type="radio" name="style" id="tanaka" value="tanaka">
                 <label for="tanaka">Tanaka</label>
                 <br>
+                <input type="radio" name="style" id="lego" value="lego">
+                <label for="lego">Lego</label>
                 <input type="radio" name="style" id="pillar" value="pillar">
                 <label for="pillar">Pillar</label>
                 <input type="radio" name="style" id="dot" value="dot">
@@ -183,8 +185,7 @@
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
             tanaka: {
-                style: gviz.getLegoStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
-                //style: gviz.getTanakaStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                style: gviz.getTanakaStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
                 //style: gviz.getTanakaStyle("Ind", { breaks: [10, 50, 200, 500, 2000] }),
                 //zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
                 //zooms: [0, 40, 80, 200, 400, 1000, 2000, 4000, 10000]
@@ -192,6 +193,10 @@
                 //zooms: [0, 60, 120, 300, 600, 1500, 3000, 6000, 15000]
                 //zooms: [0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]
 
+            },
+            lego: {
+                style: gviz.getLegoStyle("Ind", {  }),
+                zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             },
             pillar: {
                 style: [new gviz.PillarStyle({
