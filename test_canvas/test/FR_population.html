@@ -246,31 +246,31 @@
         //add legends
         app
             .addLegend(
-                { type: "color", id: "scollegend", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                 [sd.scolor.style[0]]
             )
-            /*.addLegend(
-                { type: "color", id: "ccollegnend", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
-                [sd.ccolor.style[0]]
-            )*/
             .addLegend(
-                { type: "size", id: "sslegend", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" },
+                { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                [sd.ccolor.style[0]]
+            )
+            .addLegend(
+                { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" },
                 [sd.square.style[0]]
             )
             .addLegend(
-                { type: "size", id: "sclegend", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" },
+                { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" },
                 [sd.circle.style[0]]
             )
             .addLegend(
-                { type: "segWidth", id: "segHlegend", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 },
+                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 },
                 [sd.segmentH.style[0]]
             )
             .addLegend(
-                { type: "segWidth", id: "segVlegend", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 },
+                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 },
                 [sd.segmentV.style[0]]
             )
             .addLegend(
-                { type: "segWidth", id: "segOlegend", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 },
+                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 },
                 [sd.segmentO.style[0]]
             )
 

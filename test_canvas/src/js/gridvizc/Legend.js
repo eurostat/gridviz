@@ -15,7 +15,7 @@ export class Legend {
 		opts = opts || {};
 
 		/** @type {string} */
-		this.id = opts.id || "legend";
+		this.id = opts.id;
 		/** @type {number} */
 		this.top = opts.top;
 		/** @type {number} */
@@ -38,9 +38,13 @@ export class Legend {
 		this["font-family"] = opts["font-family"] || "Helvetica, Arial, sans-serif";
 
 		//the div element
-		this.div = select("#" + this.id);
-		if (this.div.empty())
-			this.div = select(document.createElement("div")).attr("id", this.id);
+		if (this.id)
+			this.div = select("#" + this.id);
+		if (!this.div || this.div.empty()) {
+			this.div = select(document.createElement("div"))
+			if (this.id)
+				this.div.attr("id", this.id);
+		}
 
 		//set style
 		this.div
@@ -81,9 +85,9 @@ export class Legend {
 	//}
 
 	/** Clear the legend */
-	clear() {
+	/*clear() {
 		this.div.selectAll("*").remove();
-	}
+	}*/
 
 	/**
 	 * @param {Object} opts 

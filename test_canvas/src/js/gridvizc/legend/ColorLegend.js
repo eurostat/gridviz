@@ -35,16 +35,27 @@ export class ColorLegend extends Legend {
         this.fontSize = opts.fontSize || 9
         this.invert = opts.invert
 
+    }
+
+    /**
+     * @param {{ style: Style, r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
+     */
+    update(opts) {
+
+        //could happen when data is still loading
+        if (!opts.sColor) return
+
+
+        //clear
+        this.div.selectAll("*").remove();
+
+
+
 
         const titleHeight = 12
-        console.log(this.div.node())
-
-        //this.div.text("kdfkjsdhfkjshf")
-        //if(true) return
 
         const svgW = this.width + 2 * this.margin
         const svgH = this.height + 3 * this.margin + titleHeight + this.tickSize + this.fontSize - 5
-        console.log(svgW,svgH)
         const svg = this.div.append("svg").attr("width", svgW).attr("height", svgH)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
 
@@ -77,7 +88,7 @@ export class ColorLegend extends Legend {
 
             //prepare tick label
             g.append("text")
-                .attr("id", this.id + "_ticklabel_" + i)
+                .attr("id", "ticklabel_" + i)
                 .attr("x", w * t)
                 .attr("y", h + this.tickSize + 2)
                 .style("font-size", this.fontSize)
@@ -87,23 +98,14 @@ export class ColorLegend extends Legend {
                 .style("alignment-baseline", "top")
                 .style("dominant-baseline", "hanging")
                 .style("pointer-events", "none")
-                .text("-")
+                //.text("-")
         }
 
-        console.log("aajghgaaa")
 
-    }
 
-    /**
-     * @param {{ style: Style, r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
-     */
-    update(opts) {
-        //could happen when data is still loading
-        if (!opts.sColor) return
+
 
         //update tick labels
-
-        console.log("b")
 
         //label text format
         const f = this.tickFormat ? format(this.tickFormat) : (v) => v;
@@ -112,11 +114,8 @@ export class ColorLegend extends Legend {
             const v = this.fun(t, opts.r, opts.sColor)
 
             //tick label
-            select("#" + this.id + "_ticklabel_" + i).text(f(v) + (this.tickUnit ? this.tickUnit : ""))
+            this.div.select("#" + "ticklabel_" + i).text(f(v) + (this.tickUnit ? this.tickUnit : ""))
         }
-
-        console.log("c")
-
     }
 
 }
