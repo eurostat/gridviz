@@ -43,16 +43,16 @@ export class Layer extends ALayer {
 
     /** Show all legend elements of the layer, if any
     * @returns {this} */
-    showLegends() {
+    /*showLegends() {
         for (const s of this.styles) s.showLegends()
         return this
-    }
+    }*/
 
     /** Hide all legend elements of the layer, if any
     * @returns {this} */
-    hideLegends() {
+    /*hideLegends() {
         for (const s of this.styles) s.hideLegends()
         return this
-    }
+    }*/
 
 }

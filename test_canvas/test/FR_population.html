@@ -267,7 +267,6 @@
             )
             .addLegend(
                 { type: "segWidth", id: "segVlegend", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 },
-                //segmentV.addLegend({ segWidth: { id: "segVlegend", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } })
                 [sd.segmentV.style[0]]
             )
             .addLegend(
@@ -284,7 +283,7 @@
 
             //set new style
             const ml = app.layers[0];
-            ml.hideLegends()
+            //ml.hideLegends()
             for (const lay of ml.layers) lay.styles = sd[value].style
 
             //set new zoom breaks

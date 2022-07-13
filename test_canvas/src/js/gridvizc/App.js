@@ -64,8 +64,12 @@ export class App {
             //console.log(this.cg.getZf(), this.cg.getCenter())
 
             //hide legends
-            for (const alayer of this.layers)
-                alayer.hideLegends()
+            //for (const alayer of this.layers)
+            //    alayer.hideLegends()
+            if (this.legend)
+                this.legend.selectAll("*").remove();
+
+
 
             //clear
             this.cg.initCanvasTransform()
@@ -91,7 +95,16 @@ export class App {
                     style.draw(layer.dataset.getViewCache(), layer.dataset.getResolution(), this.cg)
 
                 //show layer legend
-                layer.showLegends()
+                //layer.showLegends()
+                if (this.legend)
+                    for (const s of layer.styles) {
+                        for (const lg of s.legends) {
+                            //this.legend.append(lg.div)
+                            //s1.node().appendChild(s2.node())
+                            this.legend.node().append(lg.div.node())
+                        }
+                    }
+
             }
 
             //draw boundary layer

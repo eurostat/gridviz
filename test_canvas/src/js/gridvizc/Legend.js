@@ -40,13 +40,16 @@ export class Legend {
 		//the div element
 		this.div = select("#" + this.id);
 		if (this.div.empty())
-			this.div = legendDiv.append("div").attr("id", this.id)
+			//this.div = legendDiv.append("div").attr("id", this.id)
+			//this.div = legendDiv.create("div").attr("id", this.id)
+			// create a selection of a detached element
+			this.div = select(document.createElement("div")).attr("id", this.id);
 
 		//set style
 		this.div
 			//.style("position", "absolute")
-			.style("width", "auto")
-			.style("height", "auto")
+			//.style("width", "auto")
+			//.style("height", "auto")
 			//.style("min-width", "10px")
 			//.style("min-height", "10px")
 			//.style("overflow", "hidden")
@@ -60,24 +63,25 @@ export class Legend {
 			.style("box-shadow", this["box-shadow"])
 			.style("font-family", this["font-family"])
 
+			/*
 		if (this.top) this.div.style("top", this.top)
 		if (this.bottom) this.div.style("bottom", this.bottom)
 		if (this.left) this.div.style("left", this.left)
-		if (this.right) this.div.style("right", this.right)
+		if (this.right) this.div.style("right", this.right)*/
 
 		//hide
-		this.div.style("visibility", "hidden");
+		//this.div.style("visibility", "hidden");
 	}
 
 	/** Show the legend */
-	show() {
-		this.div.style("visibility", "visible");
-	}
+	//show() {
+		//this.div.style("visibility", "visible");
+	//}
 
 	/** Hide the legend */
-	hide() {
-		this.div.style("visibility", "hidden");
-	}
+	//hide() {
+		//this.div.style("visibility", "hidden");
+	//}
 
 	/** Clear the legend */
 	clear() {

@@ -19,8 +19,8 @@ export class ALayer {
     }
 
     /** @abstract */
-    hideLegends() {
+    /*hideLegends() {
         throw new Error('Method hideLegend not implemented.');
-    }
+    }*/
 
 }
