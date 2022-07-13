@@ -51,6 +51,8 @@
                 <input type="radio" name="style" id="tanaka" value="tanaka">
                 <label for="tanaka">Tanaka</label>
                 <br>
+                <input type="radio" name="style" id="lego" value="lego">
+                <label for="lego">Lego</label>
                 <input type="radio" name="style" id="pillar" value="pillar">
                 <label for="pillar">Pillar</label>
                 <input type="radio" name="style" id="dot" value="dot">
@@ -197,6 +199,10 @@
                 tanaka: {
                     style: gviz.getTanakaStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
                     zooms: [0, 250, 500, 1250, 2500, 5000, 12500, 25000]
+                },
+                lego: {
+                    style: gviz.getLegoStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
                 pillar: {
                     style: [new gviz.PillarStyle({
