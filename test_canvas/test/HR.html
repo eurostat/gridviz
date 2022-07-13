@@ -457,8 +457,12 @@
                 },
                 [styles.popGender.style[0]]
             )
+            .addLegend(
+                { type: "colorCat", title: "Age groups", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() },
+                [styles.popAge.style[0]]
+            )
 
-        //popAge.addLegend({ colorCat: { id: "guyxhtscaend534", bottom: "20px", left: "20px", shape: "square", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() } })
+        //popAge.addLegend({  {   } })
         /*popEducation.addLegend({
             colorCat: {
                 id: "guyextlend533434", bottom: "20px", left: "20px", shape: "square",
