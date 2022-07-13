@@ -461,6 +461,7 @@
                 { type: "colorCat", title: "Age group", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() },
                 [styles.popAge.style[0]]
             )
+
             .addLegend(
                 { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#ccc" },
                 [styles.popEducation.style[0]]
@@ -470,13 +471,18 @@
                 [styles.popEducation.style[0]]
             )
 
-        /*popLabor.addLegend({
-            colorCat: {
-                id: "guyehvhgvxtscatlend534", bottom: "20px", left: "20px", shape: "square",
-                colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]]
-            }
-        })*/
-        //popInact.addLegend({ color: { id: "schggozeDleggc45end", bottom: "20px", left: "20px", title: "Inactivity rate (%)", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) } })
+            .addLegend(
+                { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "#ccc" },
+                [styles.popLabor.style[0]]
+            )
+            .addLegend(
+                { type: "colorCat", title: "Labor status", colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]] },
+                [styles.popLabor.style[0]]
+            )
+            .addLegend(
+                { type: "color", title: "Inactivity rate (%)", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) },
+                [styles.popInact.style[0]]
+            )
 
 
 
