@@ -138,23 +138,9 @@ export class Style {
         return this
     }
 
-    /** Show all legend elements of the style, if any
-    * @returns {this} */
-    showLegends() {
-        for (const lg of this.legends) lg.show()
-        return this
-    }
-
-    /** Hide all legend elements of the style, if any
-    * @returns {this} */
-     hideLegends() {
-        for (const lg of this.legends) lg.hide()
-        return this
-    }
-
     /** Clear all legend elements of the style, if any
     * @returns {this} */
-     clearLegends() {
+    clearLegends() {
         for (const lg of this.legends) lg.clear()
         return this
     }
