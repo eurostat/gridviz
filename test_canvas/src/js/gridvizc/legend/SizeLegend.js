@@ -30,6 +30,7 @@ export class SizeLegend extends Legend {
         //label
         this.labelFontSize = opts.labelFontSize || 9
         this.labelUnitText = opts.labelUnitText || ""
+        this.labelFormat = opts.labelFormat || ",.2r"
 
         //
         //this.div.style("text-align", "center")
@@ -87,11 +88,11 @@ export class SizeLegend extends Legend {
             throw new Error('Unexpected shape:' + this.shape);
         }
 
-        const valueT = format(",.2r")(value);
+        const valueT = format(this.labelFormat)(value);
         this.div.append("div")
+            .style("display", "inline-block")
+            .style("left", "4px")
             .style("font-size", this.labelFontSize + "pt")
-            //.style("font-weight", "bold")
-            .style("", "inline-block")
-            .text(valueT + (this.labelUnitText? " ":"") + this.labelUnitText)
+            .text(valueT + (this.labelUnitText ? " " : "") + this.labelUnitText)
     }
 }

@@ -98,7 +98,7 @@ export class ColorLegend extends Legend {
                 .style("alignment-baseline", "top")
                 .style("dominant-baseline", "hanging")
                 .style("pointer-events", "none")
-                //.text("-")
+            //.text("-")
         }
 
 
@@ -114,7 +114,7 @@ export class ColorLegend extends Legend {
             const v = this.fun(t, opts.r, opts.sColor)
 
             //tick label
-            this.div.select("#" + "ticklabel_" + i).text(f(v) + (this.tickUnit ? this.tickUnit : ""))
+            this.div.select("#" + "ticklabel_" + i).text((v ? f(v) : "0") + (this.tickUnit ? this.tickUnit : ""))
         }
     }
 
