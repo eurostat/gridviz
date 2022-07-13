@@ -335,12 +335,7 @@
                         type: () => "piechart",
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
-                    })/*.addLegend({
-                        colorCat: {
-                            id: "guyehvhgvjhgxtscjhgatlend534", bottom: "20px", left: "20px", shape: "square",
-                            colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse()
-                        }
-                    })*/
+                    })
                 ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
             },
 
@@ -351,7 +346,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                         shape: () => "square",
                         zfStroke: 80,
-                    })//.addLegend({ color: { id: "scc13iugfend", bottom: "20px", left: "20px", title: "Tourism - establishments", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+                    })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
             },
 
@@ -362,7 +357,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                         shape: () => "square",
                         zfStroke: 80,
-                    })//.addLegend({ color: { id: "sc1hhgfggnd", bottom: "20px", left: "20px", title: "Tourism - units", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+                    })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
             },
 
@@ -373,7 +368,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                         shape: () => "square",
                         zfStroke: 80,
-                    })//.addLegend({ color: { id: "sc1hgfend", bottom: "20px", left: "20px", title: "Tourism - beds", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+                    })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
             },
 
@@ -391,12 +386,7 @@
                         type: () => "piechart",
                         sizeCol: "TOTAL ARRIVALS",
                         size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
-                    })/*.addLegend({
-                        colorCat: {
-                            id: "guychgatlend534", bottom: "20px", left: "20px", shape: "square",
-                            colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], ["#bbb", "Other"]]
-                        }
-                    })*/
+                    })
                 ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
             },
 
@@ -414,12 +404,7 @@
                         type: () => "piechart",
                         sizeCol: "TOTAL NIGHTS",
                         size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
-                    })/*.addLegend({
-                        colorCat: {
-                            id: "guyeh35cgcd34", bottom: "20px", left: "20px", shape: "square",
-                            colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], ["#bbb", "Other"]]
-                        }
-                    })*/
+                    })
                 ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
             },
         }
@@ -484,6 +469,27 @@
                 [styles.popInact.style[0]]
             )
 
+        /*busSector.addLegend({
+colorCat: {
+id: "guyehvhgvjhgxtscjhgatlend534", bottom: "20px", left: "20px", shape: "square",
+colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse()
+}
+})*/
+        //tourAccNb.addLegend({ color: { id: "scc13iugfend", bottom: "20px", left: "20px", title: "Tourism - establishments", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+        //tourAccUnits.addLegend({ color: { id: "sc1hhgfggnd", bottom: "20px", left: "20px", title: "Tourism - units", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+        //tourAccBeds.addLegend({ color: { id: "sc1hgfend", bottom: "20px", left: "20px", title: "Tourism - beds", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
+        /*tourOriginArr.addLegend({
+            colorCat: {
+                id: "guychgatlend534", bottom: "20px", left: "20px", shape: "square",
+                colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], ["#bbb", "Other"]]
+            }
+        })*/
+        /*tourOriginNights.addLegend({
+            colorCat: {
+                id: "guyeh35cgcd34", bottom: "20px", left: "20px", shape: "square",
+                colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], ["#bbb", "Other"]]
+            }
+        })*/
 
 
 
