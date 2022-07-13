@@ -1,6 +1,5 @@
-TODO restore legends on HR
-TODO Add several elements on size legend
-TODO adapt dotdensity to diverging - use on EUR pop change
+TODO restore legends
+TODO show several elements on size legend
 
 TODO webgl test
 
