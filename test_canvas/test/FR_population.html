@@ -183,7 +183,8 @@
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
             },
             tanaka: {
-                style: gviz.getTanakaStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                style: gviz.getLegoStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                //style: gviz.getTanakaStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
                 //style: gviz.getTanakaStyle("Ind", { breaks: [10, 50, 200, 500, 2000] }),
                 //zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
                 //zooms: [0, 40, 80, 200, 400, 1000, 2000, 4000, 10000]

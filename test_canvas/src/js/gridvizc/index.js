@@ -23,6 +23,7 @@ export { PillarStyle } from "./style/PillarStyle"
 export { SideStyle } from "./style/SideStyle"
 export { DotDensityStyle } from "./style/DotDensityStyle"
 export { getTanakaStyle } from "./style/TanakaStyle"
+export { getLegoStyle } from "./style/LegoStyle"
 
 //export additional layers
 export { LabelLayer } from "./LabelLayer"
