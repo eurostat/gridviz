@@ -302,7 +302,7 @@ export class CompositionStyle extends Style {
         }
 
         //update legends
-        this.updateLegends();
+        this.updateLegends({ style: this, r: r, zf: zf, sSize: stat });
     }
 
 
