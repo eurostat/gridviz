@@ -32,7 +32,7 @@ export class SizeLegend extends Legend {
         this.labelUnitText = opts.labelUnitText || ""
 
         //
-        this.div.style("text-align", "center")
+        //this.div.style("text-align", "center")
     }
 
     /**
