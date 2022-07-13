@@ -1,4 +1,4 @@
-TODO lego style: classify by color (not random) + draw little circle on top, with shadow effect
+TODO lego style: classify by color (not random)
 
 TODO restore legends
 TODO show several elements on size legend

@@ -1,6 +1,5 @@
 //@ts-check
 
-import { ShapeColorSizeStyle } from "./ShapeColorSizeStyle"
 import { SideStyle } from "./SideStyle"
 import { Style } from "../Style"
 import { s } from "../index"
