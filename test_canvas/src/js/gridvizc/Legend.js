@@ -74,21 +74,6 @@ export class Legend {
 		//this.div.style("visibility", "hidden");
 	}
 
-	/** Show the legend */
-	//show() {
-	//this.div.style("visibility", "visible");
-	//}
-
-	/** Hide the legend */
-	//hide() {
-	//this.div.style("visibility", "hidden");
-	//}
-
-	/** Clear the legend */
-	/*clear() {
-		this.div.selectAll("*").remove();
-	}*/
-
 	/**
 	 * @param {Object} opts 
 	 * @abstract

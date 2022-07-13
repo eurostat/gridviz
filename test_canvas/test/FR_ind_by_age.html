@@ -183,20 +183,19 @@
 
 
         //add legends
-        const getLegendColCat = () => {
+        const getLegendOpts = () => {
+            const opts = { type: "colorCat", title: "Age groups", shape: "circle" }
             if (getAggUI())
-                return [[getColorDict()["Ind_0_17"], "< 17"], [getColorDict()["Ind_18_64"], "18 to 65"], [getColorDict()["Ind_65p"], "> 65"]]
+                opts.colCat = [[getColorDict()["Ind_0_17"], "< 17"], [getColorDict()["Ind_18_64"], "18 to 65"], [getColorDict()["Ind_65p"], "> 65"]]
                     .reverse()
             else
-                return [[col(0), "< 3"], [col(2 / 80), "4 to 5"], [col(7 / 80), "6 to 10"], [col(14 / 80), "11 to 17"],
+                opts.colCat = [[col(0), "< 3"], [col(2 / 80), "4 to 5"], [col(7 / 80), "6 to 10"], [col(14 / 80), "11 to 17"],
                 [col(21 / 80), "18 to 24"], [col(36 / 80), "25 to 39"], [col(51 / 80), "40 to 54"], [col(61 / 80), "55 to 64"],
                 [col(76 / 80), "65 to 79"], [col(1), ">80"]]
                     .reverse()
+            return opts
         }
-        app.addLegend(
-            { type: "colorCat", shape: "square", colCat: getLegendColCat() },
-            [s]
-        )
+        app.addLegend(getLegendOpts(), [s])
 
 
 
@@ -229,10 +228,7 @@
 
             //update legend
             s.legends = []
-            app.addLegend(
-                { type: "colorCat", shape: "square", colCat: getLegendColCat() },
-                [s]
-            )
+            app.addLegend(getLegendOpts(), [s])
 
             app.cg.redraw();
         });

@@ -26,8 +26,12 @@ export class ColorCategoryLegend extends Legend {
         this.strokeColor = opts.strokeColor || "gray"
         this.strokeWidth = opts.strokeWidth || 1
 
+        this.title = opts.title;
+        this.titleFontSize = opts.titleFontSize || "10pt";
+        this.titleFontWeight = opts.titleFontWeight || "bold";
+
         //label font
-        this.labelFontSize = opts.labelFontSize || 9
+        this.labelFontSize = opts.labelFontSize || "9pt"
 
     }
 
@@ -43,6 +47,15 @@ export class ColorCategoryLegend extends Legend {
 
 
         //build
+
+        if(this.title) {
+            const d = this.div.append("div")
+            .style("font-size", this.titleFontSize)
+            .style("font-weight", this.titleFontWeight)
+            .style("margin-bottom", "7px")
+            d.text(this.title)
+        }
+
 
         const nb = this.colCat.length
         if (nb == 0) return
@@ -78,7 +91,7 @@ export class ColorCategoryLegend extends Legend {
                 .style("float", "right")
                 .style("padding-left", "5px")
                 //.style("text-align", "left")
-                .style("font-size", this.labelFontSize + "pt")
+                .style("font-size", this.labelFontSize)
                 //.style("font-weight", "bold")
                 .text(cat[1])
         }
