@@ -301,6 +301,8 @@ export class CompositionStyle extends Style {
             //TODO
         }
 
+        //update legends
+        this.updateLegends();
     }
 
 

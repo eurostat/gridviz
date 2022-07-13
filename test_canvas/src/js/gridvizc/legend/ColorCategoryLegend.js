@@ -29,6 +29,18 @@ export class ColorCategoryLegend extends Legend {
         //label font
         this.labelFontSize = opts.labelFontSize || 9
 
+    }
+
+    /**
+     * @param {{ style: Style, r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
+     */
+    update(opts) {
+
+        //clear
+        this.div.selectAll("*").remove();
+
+
+
 
         //build
 
@@ -70,11 +82,7 @@ export class ColorCategoryLegend extends Legend {
                 //.style("font-weight", "bold")
                 .text(cat[1])
         }
-    }
 
-    /**
-     * @param {{ style: Style, r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
-     */
-    update(opts) { }
+    }
 
 }
