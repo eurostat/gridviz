@@ -27,7 +27,7 @@
             colorCol: "2018",
             color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
             zfStroke: 100
-        }).addLegend({ color: { id: "clegend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.3) } })
+        })
 
         const ttfun = c => "Inhabitant(s)<br>2018: <b>" + c["2018"] + "</b><br>2011: <b>" + c["2011"] + "</b><br>2006: <b>" + c["2006"] + "</b>"
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/"
