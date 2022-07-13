@@ -469,12 +469,15 @@
                 [styles.popInact.style[0]]
             )
 
-        /*busSector.addLegend({
-colorCat: {
-id: "guyehvhgvjhgxtscjhgatlend534", bottom: "20px", left: "20px", shape: "square",
-colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse()
-}
-})*/
+            .addLegend(
+                { type: "size", shape: "circle", labelUnitText: " businesses", fillColor: "#ccc" },
+                [styles.busSector.style[0]]
+            )
+            .addLegend(
+                { type: "colorCat", title: "Sector", colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse() },
+                [styles.busSector.style[0]]
+            )
+
         //tourAccNb.addLegend({ color: { id: "scc13iugfend", bottom: "20px", left: "20px", title: "Tourism - establishments", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
         //tourAccUnits.addLegend({ color: { id: "sc1hhgfggnd", bottom: "20px", left: "20px", title: "Tourism - units", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
         //tourAccBeds.addLegend({ color: { id: "sc1hgfend", bottom: "20px", left: "20px", title: "Tourism - beds", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
