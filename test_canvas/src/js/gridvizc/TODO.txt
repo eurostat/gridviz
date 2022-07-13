@@ -1,8 +1,4 @@
-TODO FR pop by age: add title to category legend
-
-TODO restore legends
-TODO multi component legends: Define default legend div in app, for all legend divs to appear ?
-
+TODO restore legends on HR: test several. Add several elements on size legend
 TODO adapt dotdensity to diverging - use on EUR pop change
 
 

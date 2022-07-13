@@ -232,9 +232,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                         shape: () => "square",
                         zfStroke: 80,
-                    })
-                        //.addLegend({ color: { id: "schvv124903cnd", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
-                    ,
+                    }),
                     new gviz.SideStyle({
                         valueCol: "TOTAL",
                         value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
@@ -262,15 +260,7 @@
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
                         zfStroke: 80,
-                    })/*.addLegend({
-                        color: {
-                            id: "scfolleggend", bottom: "20px", left: "20px", title: "Men / women difference (%)", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
-                            fun: (t, r, s) => {
-                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
-                            }
-                        }
-                    })*/
+                    })
                 ], zooms: [0, 100, 200, 300, 500, 700, 1000, 1500, 2500, 4000, 99999999]
             },
 
@@ -286,7 +276,7 @@
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         agePyramidHeight: (r) => 0.95 * r
-                    })//.addLegend({ colorCat: { id: "guyxhtscaend534", bottom: "20px", left: "20px", shape: "square", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() } })
+                    })
                 ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
             },
 
@@ -303,12 +293,7 @@
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         agePyramidHeight: (r) => 0.95 * r
-                    })/*.addLegend({
-                        colorCat: {
-                            id: "guyextlend533434", bottom: "20px", left: "20px", shape: "square",
-                            colCat: [[col(0.2), "basic or less"], [col(0.4), "secondary"], [col(0.9), "tertiary"], ["gray", "other"]]
-                        }
-                    })*/
+                    })
                 ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
             },
 
@@ -324,12 +309,7 @@
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         stripesOrientation: () => 90
-                    })/*.addLegend({
-                        colorCat: {
-                            id: "guyehvhgvxtscatlend534", bottom: "20px", left: "20px", shape: "square",
-                            colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]]
-                        }
-                    })*/
+                    })
                 ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
             },
 
@@ -340,7 +320,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
                         shape: () => "square",
                         zfStroke: 80,
-                    })//.addLegend({ color: { id: "schggozeDleggc45end", bottom: "20px", left: "20px", title: "Inactivity rate (%)", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) } })
+                    })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
             },
 
@@ -455,6 +435,42 @@
                 ls.push(new gviz.Layer(ds[r], style))
             layers[layCode] = [new gviz.MultiScaleLayer(ls, styles[layCode].zooms)]
         }
+
+
+        //add legends
+        app
+            .addLegend(
+                { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                [styles.pop.style[0]]
+            )
+
+        /*popGender.addLegend({
+            color: {
+                id: "scfolleggend", bottom: "20px", left: "20px", title: "Men / women difference (%)", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+                fun: (t, r, s) => {
+                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                    return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
+                }
+            }
+        })*/
+        //popAge.addLegend({ colorCat: { id: "guyxhtscaend534", bottom: "20px", left: "20px", shape: "square", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() } })
+        /*popEducation.addLegend({
+            colorCat: {
+                id: "guyextlend533434", bottom: "20px", left: "20px", shape: "square",
+                colCat: [[col(0.2), "basic or less"], [col(0.4), "secondary"], [col(0.9), "tertiary"], ["gray", "other"]]
+            }
+        })*/
+        /*popLabor.addLegend({
+            colorCat: {
+                id: "guyehvhgvxtscatlend534", bottom: "20px", left: "20px", shape: "square",
+                colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]]
+            }
+        })*/
+        //popInact.addLegend({ color: { id: "schggozeDleggc45end", bottom: "20px", left: "20px", title: "Inactivity rate (%)", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) } })
+
+
+
+
 
         //function to quickly get the selected layer
         const getSelectedLayer = () => document.querySelector('input[name="layer"]:checked').value
