@@ -125,7 +125,7 @@ export const getLegoStyle = function (col, opts) {
         constructor(opts = undefined) { super(opts) }
 
         draw(cells, r, cg) {
-            cg.ctx.lineWidth = 0.5 * cg.getZf();
+            cg.ctx.lineWidth = 0.6 * cg.getZf();
 
             //dark part
             cg.ctx.strokeStyle = opts.colDark;
