@@ -36,7 +36,7 @@
                 <span style="font-size: 11pt; font-weight: bold;">Tourism</span>
                 <br>Accomodation: Number of
                 <input type="radio" name="layer" id="tourAccNb" value="tourAccNb">
-                <label for="tourAccNb">number</label>
+                <label for="tourAccNb">estab.</label>
                 <input type="radio" name="layer" id="tourAccUnits" value="tourAccUnits">
                 <label for="tourAccUnits">units</label>
                 <input type="radio" name="layer" id="tourAccBeds" value="tourAccBeds">
@@ -470,7 +470,7 @@
             )
 
             .addLegend(
-                { type: "size", shape: "circle", labelUnitText: " businesses", fillColor: "#ccc" },
+                { type: "size", shape: "circle", labelUnitText: "businesses", fillColor: "#ccc" },
                 [styles.busSector.style[0]]
             )
             .addLegend(
@@ -478,21 +478,29 @@
                 [styles.busSector.style[0]]
             )
 
-        //tourAccNb.addLegend({ color: { id: "scc13iugfend", bottom: "20px", left: "20px", title: "Tourism - establishments", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
-        //tourAccUnits.addLegend({ color: { id: "sc1hhgfggnd", bottom: "20px", left: "20px", title: "Tourism - units", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
-        //tourAccBeds.addLegend({ color: { id: "sc1hgfend", bottom: "20px", left: "20px", title: "Tourism - beds", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })
-        /*tourOriginArr.addLegend({
-            colorCat: {
-                id: "guychgatlend534", bottom: "20px", left: "20px", shape: "square",
-                colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], ["#bbb", "Other"]]
-            }
-        })*/
-        /*tourOriginNights.addLegend({
-            colorCat: {
-                id: "guyeh35cgcd34", bottom: "20px", left: "20px", shape: "square",
-                colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], ["#bbb", "Other"]]
-            }
-        })*/
+
+            .addLegend(
+                { type: "color", title: "Tourism - number of establishments", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                [styles.tourAccNb.style[0]]
+            )
+            .addLegend(
+                { type: "color", title: "Tourism - number of units", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                [styles.tourAccUnits.style[0]]
+            )
+            .addLegend(
+                { type: "color", title: "Tourism - number of beds", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                [styles.tourAccBeds.style[0]]
+            )
+
+
+            .addLegend(
+                { type: "colorCat", title: "Tourist origin", colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], ["#bbb", "Other"]] },
+                [styles.tourOriginArr.style[0]]
+            )
+            .addLegend(
+                { type: "colorCat", title: "Tourist origin", colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], ["#bbb", "Other"]] },
+                [styles.tourOriginNights.style[0]]
+            )
 
 
 
