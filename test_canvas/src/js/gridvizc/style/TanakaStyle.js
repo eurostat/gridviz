@@ -27,7 +27,7 @@ export const getTanakaStyle = function (col, opts) {
     opts.colBright = opts.colBright || "#ddd"
 
     //width of the segment (share of the resolution)
-    opts.widthFactor = opts.widthFactor || 0.15
+    opts.widthFactor = opts.widthFactor || 0.1
 
     /**
      * @param {number} v A cell value (within [0,1] for a dynamic classification).
