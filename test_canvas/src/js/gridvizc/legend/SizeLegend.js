@@ -13,8 +13,8 @@ import { ShapeColorSizeStyle } from "../style/ShapeColorSizeStyle"
 export class SizeLegend extends Legend {
 
     /** @param {Object} opts */
-    constructor(ld, opts) {
-        super(ld, opts)
+    constructor(opts) {
+        super(opts)
         opts = opts || {};
 
         //exageration

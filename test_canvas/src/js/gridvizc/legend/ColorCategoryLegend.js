@@ -12,8 +12,8 @@ import { Stat, Shape, Style } from "../Style"
 export class ColorCategoryLegend extends Legend {
 
     /** @param {Object} opts */
-    constructor(ld, opts) {
-        super(ld, opts)
+    constructor(opts) {
+        super(opts)
         opts = opts || {};
 
         //col/categories array, in display order
