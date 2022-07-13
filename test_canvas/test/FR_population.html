@@ -70,7 +70,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(20).setZoomFactorExtent([10, 1500]).addZoomSlider("zoomSlider")
+            .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(20.1).setZoomFactorExtent([10, 1500]).addZoomSlider("zoomSlider")
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //test view from URL parameters, if any
@@ -195,8 +195,9 @@
 
             },
             lego: {
-                style: gviz.getLegoStyle("Ind", {  }),
-                zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
+                style: gviz.getLegoStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                //zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
+                zooms: [0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
             },
             pillar: {
                 style: [new gviz.PillarStyle({
