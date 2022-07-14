@@ -29,6 +29,7 @@ export class WebGLTestStyle extends Style {
         //zoom factor
         const zf = cg.getZf()
 
+        console.log("webgl test")
 
         //1
         //test: create canvas, same size
@@ -39,6 +40,16 @@ export class WebGLTestStyle extends Style {
         //2
         //same but draw with webGL
 
+
+        //...
+        //draw several objects
+        //draw in correct position
+        //compute as much as possible in GPU:
+        //compute geoToScreen in vector shader
+        //compute value to color in fragment shader
+
+        //generic functions to draw rectangles + lines with width
+        //use webGL mode in relevant styles
     }
 
 }
