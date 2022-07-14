@@ -24,6 +24,7 @@ export { SideStyle } from "./style/SideStyle"
 export { DotDensityStyle } from "./style/DotDensityStyle"
 export { getTanakaStyle } from "./style/TanakaStyle"
 export { getLegoStyle } from "./style/LegoStyle"
+export { WebGLTestStyle } from "./style/WebGLTestStyle"
 
 //export additional layers
 export { LabelLayer } from "./LabelLayer"

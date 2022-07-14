@@ -10,7 +10,7 @@ import { GeoCanvas } from "../GeoCanvas";
  * 
  * @author Julien Gaffuri
  */
-export class ShapeColorSizeStyle extends Style {
+export class WebGLTestStyle extends Style {
 
     /** @param {object} opts */
     constructor(opts) {
