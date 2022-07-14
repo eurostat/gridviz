@@ -508,6 +508,10 @@
 
             //set new style
             const s = sd[getSelectedMapType()][getSelectedStyle()]
+            if (!s) {
+                console.error("No style for " + getSelectedMapType() + " " + getSelectedStyle())
+                return
+            }
             for (const lay of ml.layers) lay.styles = s.style
 
             //set new zoom breaks
@@ -534,7 +538,8 @@
             sd.pop.side.style[0].valueCol = this.value
             sd.pop.tanaka.style[0].colorCol = this.value
             sd.pop.tanaka.style[1].valueCol = this.value
-            //TODO sd.pop.lego.style[0].heightCol = this.value
+            sd.pop.lego.style[0].colorCol = this.value
+            sd.pop.lego.style[1].valueCol = this.value
             sd.pop.pillar.style[0].heightCol = this.value
             sd.pop.dot.style[0].col = this.value
             sd.pop.text.style[0].textCol = this.value
