@@ -135,6 +135,15 @@ export class WebGLTestStyle extends Style {
         drawRect(0, 0.1, 0.3, 0.3)
         drawRect(-0.2, -0.9, 0.9, 0)
 
+        //...
+        //draw with correct color
+        //draw in correct position
+        //compute as much as possible in GPU:
+        //compute geoToScreen in vector shader
+        //compute value to color in fragment shader
+
+        //generic functions to draw rectangles + lines with width
+        //use webGL mode in relevant styles
 
 
 
@@ -146,17 +155,6 @@ export class WebGLTestStyle extends Style {
         cg.initCanvasTransform()
         cg.ctx.drawImage(cv2, 0, 0);
 
-
-
-        //...
-        //draw several objects
-        //draw in correct position
-        //compute as much as possible in GPU:
-        //compute geoToScreen in vector shader
-        //compute value to color in fragment shader
-
-        //generic functions to draw rectangles + lines with width
-        //use webGL mode in relevant styles
     }
 
 }
