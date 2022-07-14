@@ -403,9 +403,14 @@
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
                 tanaka: {
-                    //TODO adapt to change
+                    //TODO adapt to pop change
                     style: gviz.getTanakaStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
                     zooms: [0, 250, 500, 1250, 2500, 5000, 12500, 25000]
+                },
+                lego: {
+                    //TODO adapt to pop change
+                    style: gviz.getLegoStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
                 pillar: {
                     style: [new gviz.PillarStyle({
