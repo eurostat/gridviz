@@ -203,6 +203,10 @@ export class PillarStyle extends Style {
 
         //in case...
         cg.ctx.lineCap = "butt";
+
+
+        //update legends
+        this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor });
     }
 
 

@@ -121,6 +121,8 @@ export class TextStyle extends Style {
             //this.drawStroke(cell, r, cg, c => "square")
         }
 
+        //update legends
+        this.updateLegends({ style: this, r: r, zf: zf, sColor: statColor });
     }
 
 

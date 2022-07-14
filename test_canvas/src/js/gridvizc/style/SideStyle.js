@@ -162,6 +162,9 @@ export class SideStyle extends Style {
             cg.ctx.stroke();
 
         }
+
+        //update legends
+        this.updateLegends({ style: this, r: r, zf: zf });
     }
 
 

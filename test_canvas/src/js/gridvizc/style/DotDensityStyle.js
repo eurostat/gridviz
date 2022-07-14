@@ -92,6 +92,8 @@ export class DotDensityStyle extends Style {
 
         }
 
+        //update legends
+        this.updateLegends({ style: this, r: r, zf: zf });
     }
 
 }
