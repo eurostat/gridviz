@@ -1,4 +1,5 @@
-TODO restore legends
+TODO EUR: restore legends
+
 TODO show several elements on size legend
 TODO deploy accessiblity grid - as tanaka ?
 
