@@ -41,43 +41,23 @@ export class WebGLTestStyle extends Style {
 
 
 
-
-
-
-        // Vertex shader program
-        // the vertex shader runs for each input vertex and generates a new one as output.
-        // We use the pos attribute as input. the output is placed in the gl_Position variable - no transformation here.
-        const vertexShaderSource = `
-    attribute vec4 pos;
-    //uniform mat4 uModelViewMatrix;
-    //uniform mat4 uProjectionMatrix;
-    void main() {
-      gl_Position = /*uProjectionMatrix **/ /**uModelViewMatrix **/ pos;
-    }
-  `;
-
-        // Fragment shader program
-        // gl_FragColor is the output color of the shader - no color transformation here.
-        /*const fragmentShaderSource = `
-    void main() {
-      gl_FragColor = vec4(1, 0.8, 0.6, 1);
-    }
-  `;*/
-
-        // Fragment shader
-        const fragmentShaderSource = `
-    precision mediump float;
-    uniform vec4 color;
-    void main() {
-        gl_FragColor = color;
-    }`;
-
-
         //make program
         const program = initShaderProgram(
             gl,
-            createShader(gl, gl.VERTEX_SHADER, vertexShaderSource),
-            createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource)
+            createShader(gl, gl.VERTEX_SHADER, `
+            attribute vec4 pos;
+            //uniform mat4 uModelViewMatrix;
+            //uniform mat4 uProjectionMatrix;
+            void main() {
+              gl_Position = /*uProjectionMatrix **/ /**uModelViewMatrix **/ pos;
+            }
+          `),
+            createShader(gl, gl.FRAGMENT_SHADER, `
+            precision mediump float;
+            uniform vec4 color;
+            void main() {
+                gl_FragColor = color;
+            }`)
         );
         gl.useProgram(program);
 
@@ -137,7 +117,7 @@ export class WebGLTestStyle extends Style {
         drawRect(-0.2, -0.9, 0.9, 0)
 
         //...
-        //draw with correct color
+        //draw with correct color - handle color as attribute and not uniform ?
         //draw in correct position
         //compute as much as possible in GPU:
         //compute geoToScreen in vector shader
