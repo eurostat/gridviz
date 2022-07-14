@@ -288,9 +288,9 @@
             //get checked value
             const value = document.querySelector('input[name="style"]:checked').value
 
-            //set new style
             const ml = app.layers[0];
-            //ml.hideLegends()
+
+            //set new style
             for (const lay of ml.layers) lay.styles = sd[value].style
 
             //set new zoom breaks

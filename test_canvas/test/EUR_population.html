@@ -101,7 +101,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                         shape: () => "square",
                         zfStroke: 80,
-                    })],//.addLegend({ color: { id: "schgvvgolleggcend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })],
+                    })],
                     zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
                 },
                 circleColor: {
@@ -110,7 +110,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                         shape: () => "circle",
                         zfStroke: 80,
-                    })],//.addLegend({ color: { id: "chcggchllekhgend", bottom: "20px", left: "20px", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) } })],
+                    })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
 
@@ -121,7 +121,7 @@
                         size: (v, r, s, zf) => 1 * r * gviz.s(v / s.max, 0.3),
                         shape: () => "square",
                         zfStroke: 80
-                    })],//.addLegend({ size: { id: "sshklegegnd", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" } })],
+                    })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
                 circleSize: {
@@ -131,7 +131,7 @@
                         size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
                         shape: () => "circle",
                         zfStroke: 80
-                    })],//.addLegend({ size: { id: "slgenvhvd", bottom: "20px", left: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" } })],
+                    })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
                 donut: {
@@ -151,7 +151,7 @@
                         length: (v, r) => r,
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                    })],//.addLegend({ width: { id: "segoHlehvgend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 } })],
+                    })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
                 segmentV: {
@@ -161,7 +161,7 @@
                         length: (v, r) => r,
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                    })],//.addLegend({ width: { id: "seqegVlegsend", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 } })],
+                    })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
                 segmentO: {
@@ -171,7 +171,7 @@
                         length: (v, r) => r * 1.4142,
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25) / 1.4142,
-                    })],//.addLegend({ width: { id: "segsfxOlegendw", bottom: "20px", left: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 } })],
+                    })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
 
@@ -452,6 +452,39 @@
                 }
             }
         }
+
+
+        //legends
+        app
+            .addLegend(
+                { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                [sd.pop.squareColor.style[0]]
+            )
+            .addLegend(
+                { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                [sd.pop.circleColor.style[0]]
+            )
+            .addLegend(
+                { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" },
+                [sd.pop.squareSize.style[0]]
+            )
+            .addLegend(
+                { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" },
+                [sd.pop.circleSize.style[0]]
+            )
+            .addLegend(
+                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 },
+                [sd.pop.segmentH.style[0]]
+            )
+            .addLegend(
+                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 },
+                [sd.pop.segmentV.style[0]]
+            )
+            .addLegend(
+                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 },
+                [sd.pop.segmentO.style[0]]
+            )
+
 
 
         //tooltip text
