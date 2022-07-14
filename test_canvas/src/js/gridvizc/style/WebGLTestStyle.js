@@ -83,16 +83,6 @@ export class WebGLTestStyle extends Style {
 
 
 
-        {
-            // Shader uniform variable for color (read-only)
-            const color = gl.getUniformLocation(program, "color");
-
-            // Set color        R  G  B  A
-            gl.uniform4f(color, 1, 1, 0, 1);
-        }
-
-
-
         const drawRect = function (x1, y1, x2, y2) {
             //define input vertices
             const vertices = new Float32Array([
@@ -132,7 +122,18 @@ export class WebGLTestStyle extends Style {
 
         }
 
+        const setColor = function (r, g, b, a) {
+            // Shader uniform variable for color (read-only)
+            const color = gl.getUniformLocation(program, "color");
+
+            // Set color        R  G  B  A
+            gl.uniform4f(color, r, g, b, a);
+        }
+
+
+        setColor(0.5, 0.3, 1, 0.6)
         drawRect(0, 0.1, 0.3, 0.3)
+        setColor(1, 0.1, 0.4, 0.8)
         drawRect(-0.2, -0.9, 0.9, 0)
 
         //...
