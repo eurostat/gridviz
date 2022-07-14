@@ -247,18 +247,11 @@
 
 
 
-        //legend
-
-
-        //add legends
+        //legends
         app
             .addLegend(
                 { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
-                [sd.scolor.style[0]]
-            )
-            .addLegend(
-                { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
-                [sd.ccolor.style[0]]
+                [sd.scolor.style[0], sd.ccolor.style[0]]
             )
             .addLegend(
                 { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" },
