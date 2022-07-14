@@ -18,7 +18,7 @@
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //color style
-        const s = [new gviz.ShapeColorSizeStyle({
+        const s = new gviz.ShapeColorSizeStyle({
             colorCol: "2018",
             color: (v, r, s) => {
                 const v_ = Math.pow((v) / s.max, 0.2)
@@ -27,7 +27,7 @@
                 if (cl < 1 / nbClass) return "white"
                 return gviz.interpolateRdYlGn(1 - cl)
             }
-        })]
+        })
 
         const ttfun = c => "<b>" + c["2018"] + "</b> inhabitant(s)"
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s], 0, 99999999, { cellInfoHTML: ttfun });
