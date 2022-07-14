@@ -117,13 +117,13 @@ export class WebGLTestStyle extends Style {
         //drawRect(p, -0.2, -0.9, 0.9, 0)
 
         console.log(cells.length)
-        for (let i = 0; i < 1000; i++) {
+        for (let i = 0; i < cells.length; i++) {
             //set random color
             setColor(p, Math.random(), Math.random(), Math.random(), 1)
             //random position
             const x1 = 2 * Math.random() - 1
             const y1 = 2 * Math.random() - 1
-            drawRect(p, x1, y1, x1 + 0.02, y1 + 0.02)
+            drawRect(p, x1, y1, x1 + 0.003, y1 + 0.01)
         }
 
 
