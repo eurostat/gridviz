@@ -126,6 +126,32 @@ export class WebGLTestStyle extends Style {
             drawRect(p, x1, y1, x1 + 0.003, y1 + 0.01)
         }
 
+        //test with: making one single large vertex buffer + draw it with index
+        //gl.drawElements ?
+
+        /*
+        
+        Vertex Shader Code:
+
+        attribute vec4 vertexPosition;
+        attribute vec3 vertexColor;
+        uniform mat4 mvpMatrix;
+        varying highp vec3 color;
+        
+        void main() {
+          gl_Position = mvpMatrix * vertexPosition;
+          color = vertexColor;
+        }
+        
+        Fragment Shader Code:
+        
+        varying lowp vec3 color;
+        void main() {
+          gl_FragColor = vec4(color, 1);
+        }
+        */
+
+
 
 
         //for(let c of cells) {
@@ -134,7 +160,6 @@ export class WebGLTestStyle extends Style {
 
 
         //...
-        //draw with correct color - handle color as attribute and not uniform ?
         //draw in correct position
         //compute as much as possible in GPU:
         //- compute geoToScreen in vector shader
