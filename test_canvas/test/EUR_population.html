@@ -425,6 +425,7 @@
 
         //legends
         app
+            //pop
             .addLegend(
                 { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                 [sd.pop.squareColor.style[0], sd.pop.circleColor.style[0]]
@@ -450,8 +451,7 @@
                 [sd.pop.segmentO.style[0]]
             )
 
-            //TODO
-
+            //popchange
             .addLegend(
                 {
                     type: "color", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
@@ -479,18 +479,18 @@
                 { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "gray" },
                 [sd.popchange.circleSize.style[0]]
             )
-
-        /*segmentH.addLegend({
-            width: { id: "svuvhegHlegend", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
-        })],*/
-        /*segmentV.addLegend({
-            width: { id: "svunivhegHend", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
-        })],*/
-        /*segmentO.addLegend({
-            width: { id: "svghvvhegHkjbnd", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
-        })],*/
-
-
+            .addLegend(
+                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 },
+                [sd.popchange.segmentH.style[0]]
+            )
+            .addLegend(
+                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 },
+                [sd.popchange.segmentV.style[0]]
+            )
+            .addLegend(
+                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 },
+                [sd.popchange.segmentO.style[0]]
+            )
 
 
 
