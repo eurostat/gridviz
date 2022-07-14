@@ -42,7 +42,7 @@ export class WebGLTestStyle extends Style {
 
 
         //make program
-        const program = initShaderProgram(
+        const p = initShaderProgram(
             gl,
             createShader(gl, gl.VERTEX_SHADER, `
             attribute vec4 pos;
@@ -59,11 +59,11 @@ export class WebGLTestStyle extends Style {
                 gl_FragColor = color;
             }`)
         );
-        gl.useProgram(program);
+        gl.useProgram(p);
 
 
 
-        const drawRect = function (x1, y1, x2, y2) {
+        const drawRect = function (program, x1, y1, x2, y2) {
             //define input vertices
             const vertices = new Float32Array([
                 x1, y1,
@@ -102,7 +102,7 @@ export class WebGLTestStyle extends Style {
 
         }
 
-        const setColor = function (r, g, b, a) {
+        const setColor = function (program, r, g, b, a) {
             // Shader uniform variable for color (read-only)
             const color = gl.getUniformLocation(program, "color");
 
@@ -111,10 +111,10 @@ export class WebGLTestStyle extends Style {
         }
 
 
-        setColor(0.5, 0.3, 1, 0.6)
-        drawRect(0, 0.1, 0.3, 0.3)
-        setColor(1, 0.1, 0.4, 0.8)
-        drawRect(-0.2, -0.9, 0.9, 0)
+        setColor(p, 0.5, 0.3, 1, 0.6)
+        drawRect(p, 0, 0.1, 0.3, 0.3)
+        setColor(p, 1, 0.1, 0.4, 0.8)
+        drawRect(p, -0.2, -0.9, 0.9, 0)
 
         //...
         //draw with correct color - handle color as attribute and not uniform ?
