@@ -2,6 +2,7 @@ TODO lego style: for EUR
 
 TODO restore legends
 TODO show several elements on size legend
+TODO deploy accessiblity grid - as tanaka
 
 TODO webgl test
 
