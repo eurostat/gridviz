@@ -244,15 +244,7 @@
                         },
                         shape: () => "square",
                         zfStroke: 80,
-                    })],/*.addLegend({
-                        color: {
-                            id: "scfolleggend", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
-                            fun: (t, r, s) => {
-                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
-                            }
-                        }
-                    })],*/
+                    })],
                     zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
                 },
                 circleColor: {
@@ -265,15 +257,7 @@
                         },
                         shape: () => "circle",
                         zfStroke: 80,
-                    })],/*.addLegend({
-                        color: {
-                            id: "ccolylegeuytnd", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
-                            fun: (t, r, s) => {
-                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                return (t < 0.5 ? -1 : 1) * max * Math.pow(Math.abs(2 * t - 1), 1 / 0.2)
-                            }
-                        }
-                    })],*/
+                    })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
 
@@ -288,10 +272,7 @@
                         },
                         shape: () => "square",
                         zfStroke: 80
-                    })],/*.addLegend({
-                        colorCat: { id: "ssckatleghkend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
-                        size: { id: "jhjhghjghg", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "gray" }
-                    })],*/
+                    })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
                 circleSize: {
@@ -305,10 +286,7 @@
                         },
                         shape: () => "circle",
                         zfStroke: 80
-                    })],/*.addLegend({
-                        colorCat: { id: "cscatlegehjnd", bottom: "20px", left: "20px", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
-                        size: { id: "jhjhgjghg", bottom: "20px", right: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }
-                    })],*/
+                    })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
                 donut: {
@@ -321,7 +299,7 @@
                             return r * gviz.s(Math.abs(v) / max, 0.3)
                         },
                         shape: () => "donut",
-                    })],//.addLegend({ colorCat: { id: "dscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } })],
+                    })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
 
@@ -336,10 +314,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * gviz.s(Math.abs(v) / max, 0.25)
                         }
-                    })],/*.addLegend({
-                        colorCat: { id: "guygudscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
-                        width: { id: "svuvhegHlegend", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
-                    })],*/
+                    })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
                 segmentV: {
@@ -353,10 +328,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * gviz.s(Math.abs(v) / max, 0.25)
                         }
-                    })],/*.addLegend({
-                        colorCat: { id: "guyguscatlend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
-                        width: { id: "svunivhegHend", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
-                    })],*/
+                    })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
                 segmentO: {
@@ -370,10 +342,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * gviz.s(Math.abs(v) / max, 0.25) / 1.4142
                         }
-                    })],/*.addLegend({
-                        colorCat: { id: "gubbkjgend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
-                        width: { id: "svghvvhegHkjbnd", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
-                    })],*/
+                    })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 },
 
@@ -447,7 +416,7 @@
                         colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         fontSize: ((v, r, s, z) => 1.2 * r),
-                    })],//.addLegend({ colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } })],
+                    })],
                     zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
                 }
             }
@@ -484,6 +453,51 @@
                 { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 },
                 [sd.pop.segmentO.style[0]]
             )
+
+        //TODO
+
+        /*squareColor.addLegend({
+            color: {
+                id: "scfolleggend", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+                fun: (t, r, s) => {
+                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                    return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
+                }
+            }
+        })],*/
+        /*circleColor.addLegend({
+            color: {
+                id: "ccolylegeuytnd", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+                fun: (t, r, s) => {
+                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                    return (t < 0.5 ? -1 : 1) * max * Math.pow(Math.abs(2 * t - 1), 1 / 0.2)
+                }
+            }
+        })],*/
+        /*squareSize.addLegend({
+            colorCat: { id: "ssckatleghkend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+            size: { id: "jhjhghjghg", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "gray" }
+        })],*/
+        /*circleSize.addLegend({
+            colorCat: { id: "cscatlegehjnd", bottom: "20px", left: "20px", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+            size: { id: "jhjhgjghg", bottom: "20px", right: "20px", shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }
+        })],*/
+        //donut.addLegend({ colorCat: { id: "dscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } })],
+        /*segmentH.addLegend({
+            colorCat: { id: "guygudscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+            width: { id: "svuvhegHlegend", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
+        })],*/
+        /*segmentV.addLegend({
+            colorCat: { id: "guyguscatlend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+            width: { id: "svunivhegHend", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
+        })],*/
+        /*segmentO.addLegend({
+            colorCat: { id: "gubbkjgend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
+            width: { id: "svghvvhegHkjbnd", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }
+        })],*/
+        //text.addLegend({ colorCat: { id: "guytextscatlegend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] } })],
+
+
 
 
 
