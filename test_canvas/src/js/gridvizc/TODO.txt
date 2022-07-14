@@ -9,6 +9,7 @@ TODO adapt tanaka and lego to diverging - use on EUR pop change
 TODO kernel smoothing: fix artifact - empty line below from center point toward south
 
 TODO use canvas shadow? https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/shadowBlur
+TODO use canvas.drawimage to make style whith 1 square icon per cell - emoticon
 
 TODO make tests using offset ?
 TODO aggregation on the fly ??? No. except for csv...
