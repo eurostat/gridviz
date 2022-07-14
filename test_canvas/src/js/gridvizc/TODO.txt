@@ -1,12 +1,10 @@
-TODO lego style: for EUR
-
 TODO restore legends
 TODO show several elements on size legend
-TODO deploy accessiblity grid - as tanaka
+TODO deploy accessiblity grid - as tanaka ?
 
 TODO webgl test
 
-TODO adapt tanaka to diverging - use on EUR pop change
+TODO adapt tanaka and lego to diverging - use on EUR pop change
 TODO kernel smoothing: fix artifact - empty line below from center point toward south
 
 TODO make tests using offset ?
