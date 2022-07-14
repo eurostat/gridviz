@@ -14,8 +14,8 @@
         //make application
         const app = new gviz.App()
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(1000)
-            .setLabelLayer(gviz.getEuronymeLabelLayer().setColor(c => "#0005"))
-            .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+            .setLabelLayer(gviz.getEuronymeLabelLayer().setColor(c => "#000"))
+            //.setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //color style
         const s = new gviz.ShapeColorSizeStyle({
@@ -30,7 +30,7 @@
             zfStroke: 1000
         })
 
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s, sW], 0, 99999999);
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s,sW], 0, 99999999);
 
     </script>
 
