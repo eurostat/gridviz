@@ -35,29 +35,41 @@ export class WebGLTestStyle extends Style {
         cg.ctx.fillRect(300, 10, 60, 100);
 
 
+        /*
+                const cv = document.createElement("canvas");
+                cv.setAttribute("width", cg.w);
+                cv.setAttribute("height", cg.h);
+                const ctx = cv.getContext("2d");
+                ctx.fillStyle = "blue";
+                ctx.fillRect(400, 60, 160, 150);
+                cg.ctx.drawImage(cv, 0, 0);
+        */
 
-        const cv = document.createElement("canvas");
-        //var newElem = document.createElementNS(d3.ns.prefix.svg, tagname);
-        cv.setAttribute("width", cg.w);
-        cv.setAttribute("height", cg.h);
-        //console.log(cg.canvas)
-        //console.log(cv)
-
-        const ctx = cv.getContext("2d");
-
-        //console.log(cg.ctx)
-        //console.log(ctx)
-
-        ctx.fillStyle = "blue";
-        ctx.fillRect(400, 60, 160, 150);
-
-        cg.ctx.drawImage(cv, 0, 0);
 
 
 
 
         //2
         //same but draw with webGL
+
+
+
+        const cv2 = document.createElement("canvas");
+        cv2.setAttribute("width", cg.w);
+        cv2.setAttribute("height", cg.h);
+        //document.body.appendChild(cv2);
+        //document.body.append(cv2);
+
+        const gl = cv2.getContext("webgl");
+        if (!gl) {
+            console.error(gl, "Unable to initialize WebGL. Your browser or machine may not support it.");
+        }
+        console.log(gl)
+
+
+
+
+
 
 
         //...
