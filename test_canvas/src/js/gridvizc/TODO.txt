@@ -1,4 +1,4 @@
-TODO EUR: restore legends
+TODO simplify tiled multires creation
 
 TODO show several elements on size legend
 TODO deploy accessiblity grid - as tanaka ?
