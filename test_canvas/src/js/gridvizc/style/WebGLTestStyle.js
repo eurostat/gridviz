@@ -116,6 +116,15 @@ export class WebGLTestStyle extends Style {
         setColor(p, 1, 0.1, 0.4, 0.8)
         drawRect(p, -0.2, -0.9, 0.9, 0)
 
+
+        for(let c of cells) {
+
+            //get coords
+
+
+        }
+
+
         //...
         //draw with correct color - handle color as attribute and not uniform ?
         //draw in correct position
