@@ -22,14 +22,14 @@ export class WebGLTestStyle extends Style {
      * Draw cells as squares, with various colors and size.
      * 
      * @param {Array.<Cell>} cells 
-     * @param {number} resolution 
+     * @param {number} r 
      * @param {GeoCanvas} cg 
      */
-    draw(cells, resolution, cg) {
+    draw(cells, r, cg) {
         //zoom factor
         const zf = cg.getZf()
 
-        console.log("webgl test")
+        console.log("webgl test ", cells.length, r)
 
         //1
         //test: create canvas, same size
