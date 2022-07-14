@@ -427,11 +427,7 @@
         app
             .addLegend(
                 { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
-                [sd.pop.squareColor.style[0]]
-            )
-            .addLegend(
-                { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
-                [sd.pop.circleColor.style[0]]
+                [sd.pop.squareColor.style[0], sd.pop.circleColor.style[0]]
             )
             .addLegend(
                 { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" },
@@ -464,18 +460,9 @@
                         return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
                     }
                 },
-                [sd.popchange.squareColor.style[0]]
+                [sd.popchange.squareColor.style[0], sd.popchange.circleColor.style[0]]
             )
 
-        /*circleColor.addLegend({
-            color: {
-                id: "ccolylegeuytnd", bottom: "20px", left: "20px", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
-                fun: (t, r, s) => {
-                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                    return (t < 0.5 ? -1 : 1) * max * Math.pow(Math.abs(2 * t - 1), 1 / 0.2)
-                }
-            }
-        })],*/
         /*squareSize.addLegend({
             colorCat: { id: "ssckatleghkend", bottom: "20px", left: "20px", shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
             size: { id: "jhjhghjghg", bottom: "20px", right: "20px", shape: "square", labelUnitText: "inhab.", fillColor: "gray" }
