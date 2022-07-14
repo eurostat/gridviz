@@ -120,8 +120,8 @@ export class WebGLTestStyle extends Style {
         //draw with correct color - handle color as attribute and not uniform ?
         //draw in correct position
         //compute as much as possible in GPU:
-        //compute geoToScreen in vector shader
-        //compute value to color in fragment shader
+        //- compute geoToScreen in vector shader
+        //- compute value to color in fragment shader
 
         //generic functions to draw rectangles + lines with width
         //use webGL mode in relevant styles
