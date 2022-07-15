@@ -56,7 +56,7 @@ export class WebGLTestStyle extends Style {
             precision mediump float;
             varying vec3 vColor;
             void main(void) {
-               gl_FragColor = vec4(vColor, 0.5);
+               gl_FragColor = vec4(vColor, 1.0);
             }`)
         );
         gl.useProgram(p);
@@ -90,7 +90,7 @@ export class WebGLTestStyle extends Style {
             for (let i = 0; i < v.length / 8; i++) {
                 gl.drawArrays(
                     gl.TRIANGLE_STRIP, // mode,see https://miro.medium.com/max/700/0*HQHB5lCGqlOUiysy.jpg
-                    i * 8, // vertex list start
+                    i * 4, // vertex list start
                     4 // vertex count
                 );
             }
@@ -121,12 +121,10 @@ export class WebGLTestStyle extends Style {
 
             //colors, 3 parts (RGB), one per vertice
             const randR = Math.random()
-            const randG = Math.random()
-            const randB = Math.random()
-            cols.push(randR); cols.push(randG); cols.push(randB)
-            cols.push(randR); cols.push(randG); cols.push(randB)
-            cols.push(randR); cols.push(randG); cols.push(randB)
-            cols.push(randR); cols.push(randG); cols.push(randB)
+            cols.push(randR); cols.push(0.5); cols.push(1)
+            cols.push(randR); cols.push(0.5); cols.push(1)
+            cols.push(randR); cols.push(0.5); cols.push(1)
+            cols.push(randR); cols.push(0.5); cols.push(1)
         }
 
         //setColor(p, 1, 0.1, 0.4, 0.8)
