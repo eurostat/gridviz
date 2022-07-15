@@ -46,45 +46,51 @@ export class WebGLTestStyle extends Style {
             gl,
             createShader(gl, gl.VERTEX_SHADER, `
             attribute vec4 pos;
+            //attribute vec4 vertexColor;
             //uniform mat4 uModelViewMatrix;
             //uniform mat4 uProjectionMatrix;
             void main() {
               gl_Position = /*uProjectionMatrix **/ /**uModelViewMatrix **/ pos;
+              //color = vertexColor;
             }
           `),
             createShader(gl, gl.FRAGMENT_SHADER, `
             precision mediump float;
             uniform vec4 color;
+            //varying lowp vec4 color;
             void main() {
                 gl_FragColor = color;
             }`)
         );
         gl.useProgram(p);
 
-                /*
-        
-        Vertex Shader Code:
-
-        attribute vec4 vertexPosition;
-        attribute vec3 vertexColor;
-        uniform mat4 mvpMatrix;
-        varying highp vec3 color;
-        
-        void main() {
-          gl_Position = mvpMatrix * vertexPosition;
-          color = vertexColor;
-        }
-        
-        Fragment Shader Code:
-        
-        varying lowp vec3 color;
-        void main() {
-          gl_FragColor = vec4(color, 1);
-        }
-        */
 
 
-        const drawRects = function (program, v) {
+
+        /*
+ 
+Vertex Shader Code:
+
+attribute vec4 vertexPosition;
+attribute vec3 vertexColor;
+uniform mat4 mvpMatrix;
+varying highp vec3 color;
+ 
+void main() {
+  gl_Position = mvpMatrix * vertexPosition;
+  color = vertexColor;
+}
+ 
+Fragment Shader Code:
+ 
+varying lowp vec3 color;
+void main() {
+  gl_FragColor = vec4(color, 1);
+}
+*/
+
+
+        const drawRects = function (program, v, c) {
 
             //define input vertices
             const vertices = new Float32Array(v);
@@ -102,6 +108,31 @@ export class WebGLTestStyle extends Style {
                 0 //offset
             );
             gl.enableVertexAttribArray(position);
+
+
+
+
+            //define vertex colors
+            /*const colors = new Float32Array(c);
+
+            const colorBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+            const vertexColor = gl.getAttribLocation(program, "vertexColor");*/
+            /*gl.vertexAttribPointer(
+                vertexColor,
+                2, //numComponents
+                gl.FLOAT, //type
+                false, //normalise
+                0, //stride
+                0 //offset
+            );
+            gl.enableVertexAttribArray(vertexColor);*/
+
+
+
+
+
 
             // Draw the scene
             //gl.clearColor(0.3, 0.3, 0.0, 1.0);
@@ -131,6 +162,7 @@ export class WebGLTestStyle extends Style {
             // Set color        R  G  B  A
             gl.uniform4f(color, r, g, b, a);
         }
+
 
 
         //setColor(p, 0.5, 0.3, 1, 0.6)
