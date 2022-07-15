@@ -231,6 +231,7 @@
                         colorCol: "TOTAL",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                         shape: () => "square",
+                        webGLSquare: true,
                         zfStroke: 80,
                     }),
                     new gviz.SideStyle({
@@ -257,6 +258,7 @@
                             return gviz.interpolateSpectral(1 - t);
                         },
                         shape: () => "square",
+                        webGLSquare: true,
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
                         zfStroke: 80,
@@ -319,6 +321,7 @@
                         colorCol: "INACT_RATE",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
                         shape: () => "square",
+                        webGLSquare: true,
                         zfStroke: 80,
                     })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
@@ -345,6 +348,7 @@
                         colorCol: "ESTABLISHMENTS - TOTAL",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                         shape: () => "square",
+                        webGLSquare: true,
                         zfStroke: 80,
                     })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
@@ -356,6 +360,7 @@
                         colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                         shape: () => "square",
+                        webGLSquare: true,
                         zfStroke: 80,
                     })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
@@ -367,6 +372,7 @@
                         colorCol: "NUMBER OF PERMANENT BEDS",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                         shape: () => "square",
+                        webGLSquare: true,
                         zfStroke: 80,
                     })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
