@@ -90,15 +90,13 @@ export class ShapeColorSizeStyle extends Style {
                     const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
                     if (!col || col === "none") continue
 
-                    const r2 = resolution / 2
-                    const xC = c.x + r2
-                    const yC = c.y + r2
-
                     /** @type {import("d3-color").RGBColor | import("d3-color").HSLColor| null} */
                     //TODO include - move to fragment ?
                     const cc = color(col)
                     if (!cc) continue
-                    prog.addPointData(xC, yC, cc.r / 255, cc.g / 255, cc.b / 255, cc.opacity)
+
+                    const r2 = resolution / 2
+                    prog.addPointData(c.x + r2, c.y + r2, cc.r / 255, cc.g / 255, cc.b / 255, cc.opacity)
                 }
 
                 //draw
