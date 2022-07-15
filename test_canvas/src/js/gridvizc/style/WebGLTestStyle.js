@@ -65,12 +65,16 @@ export class WebGLTestStyle extends Style {
 
         const drawRect = function (program, x1, y1, x2, y2) {
             //define input vertices
-            const vertices = new Float32Array([
+            const v = [
                 x1, y1,
                 x2, y1,
                 x1, y2,
                 x2, y2
-            ]);
+            ]
+            //console.log(v)
+
+            const vertices = new Float32Array(v);
+            //console.log(vertices)
 
             const positionBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);

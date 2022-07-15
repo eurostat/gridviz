@@ -61,13 +61,12 @@
         const drawRandomRect = function (program) {
 
             const nb = 1
-
             const v = []
             for (let i = 0; i < nb; i++) {
                 const x1 = 2 * Math.random() - 1
                 const y1 = 2 * Math.random() - 1
-                const x2 = x1 + 0.003
-                const y2 = y1 + 0.01
+                const x2 = x1 + 0.03
+                const y2 = y1 + 0.1
 
                 v.push(x1); v.push(y1)
                 v.push(x2); v.push(y1)
@@ -75,11 +74,8 @@
                 v.push(x2); v.push(y2)
             }
 
-            console.log(v)
-
             //define input vertices
             const vertices = new Float32Array(v);
-            console.log(vertices)
 
             const positionBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -111,6 +107,8 @@
 
         }
 
+
+
         const setColor = function (program, r, g, b, a) {
             // Shader uniform variable for color (read-only)
             const color = gl.getUniformLocation(program, "color");
@@ -118,6 +116,7 @@
             // Set color        R  G  B  A
             gl.uniform4f(color, r, g, b, a);
         }
+
 
 
 
