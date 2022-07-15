@@ -102,6 +102,6 @@ export class WebGLSquareColoring {
         // Set the view port
         //gl.viewport(0, 0, cg.w, cg.h);
 
-        gl.drawArrays(gl.POINTS, 0, this.verticesBuffer.length/2)
+        gl.drawArrays(gl.POINTS, 0, this.verticesBuffer.length / 2)
     }
 }
