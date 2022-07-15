@@ -111,6 +111,17 @@ export class GeoCanvas {
         this.ctx.setTransform(k, 0, 0, -k, tx, ty);
     }
 
+    getWebGLTransform() {
+        const kx = 2 / (this.w * this.getZf());
+        const ky = 2 / (this.h * this.getZf());
+        return [
+            kx, 0.0, 0.0, -kx * this.center.x,
+            0.0, ky, 0.0, -ky * this.center.y,
+            0.0, 0.0, 1.0, 0.0,
+            0.0, 0.0, 0.0, 1.0
+        ]
+    }
+
 
     /** The function specifying how to draw the map. */
     redraw() {

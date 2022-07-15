@@ -65,7 +65,7 @@ export class WebGLTestStyle extends Style {
 
 
 
-        const drawRects = function (program, v, c) {
+        const drawRects = function (program, v, c, transfoMat) {
 
             //vertice data
             gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
@@ -90,16 +90,7 @@ export class WebGLTestStyle extends Style {
 
 
             //transformation
-            var Sx = 1.0, Sy = 1.0, Sz = 1.0;
-            var transfoMat = new Float32Array([
-                Sx, 0.0, 0.0, 0.0,
-                0.0, Sy, 0.0, 0.0,
-                0.0, 0.0, Sz, 0.0,
-                0.0, 0.0, 0.0, 1.0
-            ]);
-
-            var mat = gl.getUniformLocation(program, "mat");
-            gl.uniformMatrix4fv(mat, false, transfoMat);
+            gl.uniformMatrix4fv(gl.getUniformLocation(program, "mat"), false, new Float32Array(transfoMat));
 
 
 
@@ -145,9 +136,18 @@ export class WebGLTestStyle extends Style {
             cols.push(randR); cols.push(0.5); cols.push(1)
         }
 
+        var Sx = 1, Sy = 1, Sz = 1;
+        const transfoMat = [
+            Sx, 0.0, 0.0, 0.0,
+            0.0, Sy, 0.0, 0.0,
+            0.0, 0.0, Sz, 0.0,
+            0.0, 0.0, 0.0, 1.0
+        ]
+
+
         //setColor(p, 1, 0.1, 0.4, 0.8)
         //draw all rectangles
-        drawRects(p, v, cols)
+        drawRects(p, v, cols, transfoMat)
 
 
         //...
