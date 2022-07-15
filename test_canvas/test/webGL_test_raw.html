@@ -58,14 +58,28 @@
 
 
 
-        const drawRect = function (program, x1, y1, x2, y2) {
+        const drawRandomRect = function (program) {
+
+            const nb = 100
+
+            const v = []
+
+            for (let i = 0; i < nb; i++) {
+                const x1 = 2 * Math.random() - 1
+                const y1 = 2 * Math.random() - 1
+                const x2 = x1 + 0.003
+                const y2 = y1 + 0.01
+
+                v.push(x1); v.push(y1)
+                v.push(x2); v.push(y1)
+                v.push(x1); v.push(y2)
+                v.push(x2); v.push(y2)
+            }
+
+
+
             //define input vertices
-            const vertices = new Float32Array([
-                x1, y1,
-                x2, y1,
-                x1, y2,
-                x2, y2
-            ]);
+            const vertices = new Float32Array(v);
 
             const positionBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -107,8 +121,16 @@
 
 
 
-        setColor(p, 0.5, 0.3, 1, 0.6)
-        drawRect(p, 0, 0.1, 0.3, 0.3)
+        //setColor(p, 0.5, 0.3, 1, 0.6)
+        //drawRect(p, 0, 0.1, 0.3, 0.3)
+        /*for (let i = 0; i < 1000; i++) {
+            //set random color
+            setColor(p, Math.random(), Math.random(), Math.random(), 1)
+            //random position
+            const x1 = 2 * Math.random() - 1
+            const y1 = 2 * Math.random() - 1
+            drawRect(p, x1, y1, x1 + 0.01, y1 + 0.02)
+        }*/
 
 
 
