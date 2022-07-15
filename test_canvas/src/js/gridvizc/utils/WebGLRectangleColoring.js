@@ -1,7 +1,17 @@
 //@ts-check
 
+import { initShaderProgram, createShader } from "./webGLUtils";
+
+
+/**
+ * Aything to easily draw colored rectangles with webGL.
+ */
 export class WebGLRectangleColoring {
 
+    /**
+     * 
+     * @param {*} gl 
+     */
     constructor(gl) {
 
         this.gl = gl
@@ -94,5 +104,4 @@ export class WebGLRectangleColoring {
         }
 
     }
-
 }

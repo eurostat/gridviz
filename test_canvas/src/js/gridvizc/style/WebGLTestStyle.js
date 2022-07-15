@@ -1,8 +1,9 @@
 //@ts-check
 
 import { Style } from "../Style"
-import { Cell } from "../Dataset"
-import { GeoCanvas } from "../GeoCanvas";
+import { makeWebGLCanvas } from "../utils/webGLUtils";
+import { WebGLRectangleColoring } from "../utils/WebGLRectangleColoring";
+
 
 export class WebGLTestStyle extends Style {
 
