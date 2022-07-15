@@ -6,7 +6,7 @@
 </head>
 
 <body>
-    <canvas id="canvas" width="600" height="400"></canvas>
+    <canvas id="canvas" width="800" height="500"></canvas>
 
     <script>
 
@@ -60,13 +60,13 @@
 
         const drawRandomRect = function (program) {
 
-            const nb = 10
+            const nb = 100000
             const v = []
             for (let i = 0; i < nb; i++) {
                 const x1 = 2 * Math.random() - 1
                 const y1 = 2 * Math.random() - 1
-                const x2 = x1 + 0.02
-                const y2 = y1 + 0.02
+                const x2 = x1 + 0.005
+                const y2 = y1 + 0.01
 
                 v.push(x1); v.push(y1)
                 v.push(x2); v.push(y1)
