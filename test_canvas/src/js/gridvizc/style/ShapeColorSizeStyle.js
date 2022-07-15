@@ -80,7 +80,7 @@ export class ShapeColorSizeStyle extends Style {
             //create canvas and webgl renderer
             const cvWGL = makeWebGLCanvas(cg)
             if (cvWGL) {
-                const prog = new WebGLSquareColoring(cvWGL.gl, resolution/zf)
+                const prog = new WebGLSquareColoring(cvWGL.gl, resolution/zf + 0.3)
 
                 //add vertice and fragment data
                 for (let c of cells) {
