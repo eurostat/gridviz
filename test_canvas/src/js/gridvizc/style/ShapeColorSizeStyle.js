@@ -83,7 +83,27 @@ export class ShapeColorSizeStyle extends Style {
 
                 //add vertice and fragment data
                 for (let c of cells) {
-                    prog.addRectangleData(c.x, c.x + resolution, c.y, c.y + resolution, 1, Math.random(), Math.random())
+
+                    //color
+                    const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
+                    if (!col || col === "none") continue
+                    cg.ctx.fillStyle = col;
+
+                    //size
+                    /** @type {function(number,number,Stat|undefined,number):number} */
+                    let s_ = this.size || (() => resolution);
+                    //size - in geo unit
+                    const sG = s_(c[this.sizeCol], resolution, statSize, zf)
+
+                    //get offset
+                    const offset = this.offset(c, resolution, zf)
+
+                    const d = resolution * (1 - sG / resolution) * 0.5
+                    const x = c.x + d + offset.dx
+                    const y = c.y + d + offset.dy
+
+                    //
+                    prog.addRectangleData(x, x + sG, y, y + sG, 1, Math.random(), Math.random())
                 }
 
                 //draw
