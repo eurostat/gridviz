@@ -49,8 +49,7 @@ export class WebGLTestStyle extends Style {
             attribute vec3 color;
             varying vec3 vColor;
             void main() {
-              gl_Position = mat * vec4(pos, 0.0, 1.0);
-              //gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
+              gl_Position = mat * vec4(pos, 1.0, 1.0);
               vColor = color;
             }
           `),
@@ -89,11 +88,8 @@ export class WebGLTestStyle extends Style {
             gl.vertexAttribPointer(color, 3, gl.FLOAT, false, 0, 0);
             gl.enableVertexAttribArray(color);
 
-
             //transformation
             gl.uniformMatrix4fv(gl.getUniformLocation(program, "mat"), false, new Float32Array(transfoMat));
-
-
 
             for (let i = 0; i < v.length / 8; i++) {
                 gl.drawArrays(
@@ -106,29 +102,15 @@ export class WebGLTestStyle extends Style {
 
         }
 
-
-
-        //create random vertices
+        //create vertice and fragment data
         const v = []
         const cols = []
         for (let c of cells) {
 
-
-            const x1 = cg.geoToPixX(c.x) / cg.w * 2 - 1
-            const y1 = -cg.geoToPixY(c.y) / cg.h * 2 + 1
-
-            const dx = r / zf * 2 / cg.w
-            const dy = r / zf * 2 / cg.h
-
-            const x2 = x1 + dx
-            const y2 = y1 + dy
-
-
-            /*
-                        const x1 = c.x
-                        const y1 = c.y
-                        const x2 = x1 + r
-                        const y2 = y1 + r*/
+            const x1 = c.x
+            const y1 = c.y
+            const x2 = x1 + r
+            const y2 = y1 + r
 
             v.push(x1); v.push(y1)
             v.push(x2); v.push(y1)
@@ -143,17 +125,9 @@ export class WebGLTestStyle extends Style {
             cols.push(randR); cols.push(0.5); cols.push(1)
         }
 
-        const tr = [
-            1, 0.0, 0.0, 0.0,
-            0.0, 1, 0.0, 0.0,
-            0.0, 0.0, 1, 0.0,
-            0.0, 0.0, 0.0, 1,
-        ]
-
-        //const tr = cg.getWebGLTransform()
-        //console.log(tr)
 
         //draw all rectangles
+        const tr = cg.getWebGLTransform()
         drawRects(p, v, cols, tr)
 
 
