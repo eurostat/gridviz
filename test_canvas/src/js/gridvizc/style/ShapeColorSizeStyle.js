@@ -105,7 +105,7 @@ export class ShapeColorSizeStyle extends Style {
                     /** @type {import("d3-color").RGBColor | import("d3-color").HSLColor| null} */
                     const cc = color(col)
                     if (!cc) continue
-                    prog.addPointData(x+sG/2, y+sG/2, sG/zf, cc.r / 255, cc.g / 255, cc.b / 255, cc.opacity)
+                    prog.addPointData(x+sG/2, y+sG/2, sG/zf + 0.1, cc.r / 255, cc.g / 255, cc.b / 255, cc.opacity)
                 }
 
                 //draw

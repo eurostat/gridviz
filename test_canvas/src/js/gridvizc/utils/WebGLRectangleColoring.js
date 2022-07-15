@@ -4,13 +4,13 @@ import { initShaderProgram, createShader } from "./webGLUtils";
 
 
 /**
- * Aything to easily draw colored rectangles with webGL.
+ * Everything to easily draw colored rectangles with webGL.
  */
 export class WebGLRectangleColoring {
 
     /**
      * 
-     * @param {*} gl 
+     * @param {WebGLRenderingContext} gl 
      */
     constructor(gl) {
 

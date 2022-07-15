@@ -4,13 +4,13 @@ import { initShaderProgram, createShader } from "./webGLUtils";
 
 
 /**
- * Aything to easily draw colored points (square) with webGL.
+ * Everything to easily draw colored squares with webGL.
  */
 export class WebGLSquareColoring {
 
     /**
      * 
-     * @param {*} gl 
+     * @param {WebGLRenderingContext} gl 
      */
     constructor(gl) {
 
