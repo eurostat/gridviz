@@ -5,6 +5,7 @@ import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
 import { WebGLRectangleColoring } from "../utils/WebGLRectangleColoring";
+import { color } from "d3-color";
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -87,7 +88,6 @@ export class ShapeColorSizeStyle extends Style {
                     //color
                     const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
                     if (!col || col === "none") continue
-                    cg.ctx.fillStyle = col;
 
                     //size
                     /** @type {function(number,number,Stat|undefined,number):number} */
@@ -102,8 +102,10 @@ export class ShapeColorSizeStyle extends Style {
                     const x = c.x + d + offset.dx
                     const y = c.y + d + offset.dy
 
-                    //
-                    prog.addRectangleData(x, x + sG, y, y + sG, 1, Math.random(), Math.random())
+                    /** @type {import("d3-color").RGBColor | import("d3-color").HSLColor| null} */
+                    const cc = color(col)
+                    if (!cc) continue
+                    prog.addRectangleData(x, x + sG, y, y + sG, cc.r / 255, cc.g / 255, cc.b / 255, cc.opacity)
                 }
 
                 //draw
@@ -113,10 +115,18 @@ export class ShapeColorSizeStyle extends Style {
                 cg.initCanvasTransform()
                 cg.ctx.drawImage(cvWGL.canvas, 0, 0);
 
-                //draw stroke
+                /*/draw stroke
                 //TODO
-                //for (let c of cells)
-                //    this.drawStroke(s, resolution, cg, "square", sG, offset)
+                for (let c of cells) {
+                    //size
+                    /** @type {function(number,number,Stat|undefined,number):number} */
+                    //let s_ = this.size || (() => resolution);
+                    //size - in geo unit
+                    //const sG = s_(c[this.sizeCol], resolution, statSize, zf)
+                    //get offset
+                    /*const offset = this.offset(c, resolution, zf)
+                    this.drawStroke(c, resolution, cg, "square", sG, offset)
+                }*/
 
                 //update legends
                 this.updateLegends({ style: this, r: resolution, zf: zf, sSize: statSize, sColor: statColor });
