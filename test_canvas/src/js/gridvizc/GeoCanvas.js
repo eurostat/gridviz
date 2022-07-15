@@ -116,10 +116,9 @@ export class GeoCanvas {
         const kx = 2.0 / (this.w * this.getZf());
         const ky = 2.0 / (this.h * this.getZf());
         return [
-            kx, 0.0, 0.0, 0.0,
-            0.0, ky, 0.0, 0.0,
-            0.0, 0.0, 1.0, 0.0,
-            -kx * this.center.x, -ky * this.center.y, 0.0, 1.0
+            kx, 0.0, 0.0,
+            0.0, ky, 0.0,
+            -kx * this.center.x, -ky * this.center.y, 1.0
         ]
     }
 

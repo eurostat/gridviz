@@ -45,11 +45,11 @@ export class WebGLTestStyle extends Style {
             gl,
             createShader(gl, gl.VERTEX_SHADER, `
             attribute vec2 pos;
-            uniform mat4 mat;
+            uniform mat3 mat;
             attribute vec3 color;
             varying vec3 vColor;
             void main() {
-              gl_Position = mat * vec4(pos, 1.0, 1.0);
+              gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
               vColor = color;
             }
           `),
@@ -89,7 +89,7 @@ export class WebGLTestStyle extends Style {
             gl.enableVertexAttribArray(color);
 
             //transformation
-            gl.uniformMatrix4fv(gl.getUniformLocation(program, "mat"), false, new Float32Array(transfoMat));
+            gl.uniformMatrix3fv(gl.getUniformLocation(program, "mat"), false, new Float32Array(transfoMat));
 
             for (let i = 0; i < v.length / 8; i++) {
                 gl.drawArrays(
