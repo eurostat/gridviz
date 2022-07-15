@@ -45,10 +45,11 @@ export class WebGLTestStyle extends Style {
             gl,
             createShader(gl, gl.VERTEX_SHADER, `
             attribute vec2 pos;
+            uniform mat4 mat;
             attribute vec3 color;
             varying vec3 vColor;
             void main() {
-              gl_Position = vec4(pos, 1, 1);
+              gl_Position = mat * vec4(pos, 1, 1);
               vColor = color;
             }
           `),
@@ -87,6 +88,21 @@ export class WebGLTestStyle extends Style {
             gl.vertexAttribPointer(color, 3, gl.FLOAT, false, 0, 0);
             gl.enableVertexAttribArray(color);
 
+
+            //transformation
+            var Sx = 1.0, Sy = 1.0, Sz = 1.0;
+            var transfoMat = new Float32Array([
+                Sx, 0.0, 0.0, 0.0,
+                0.0, Sy, 0.0, 0.0,
+                0.0, 0.0, Sz, 0.0,
+                0.0, 0.0, 0.0, 1.0
+            ]);
+
+            var mat = gl.getUniformLocation(program, "mat");
+            gl.uniformMatrix4fv(mat, false, transfoMat);
+
+
+
             for (let i = 0; i < v.length / 8; i++) {
                 gl.drawArrays(
                     gl.TRIANGLE_STRIP, // mode,see https://miro.medium.com/max/700/0*HQHB5lCGqlOUiysy.jpg
@@ -108,6 +124,8 @@ export class WebGLTestStyle extends Style {
             const x1 = cg.geoToPixX(c.x) / cg.w * 2 - 1
             const y1 = -cg.geoToPixY(c.y) / cg.h * 2 + 1
 
+            //TODO include that in vertex shader
+            //TODO matrix uniform
             const dx = r / zf * 2 / cg.w
             const dy = r / zf * 2 / cg.h
 
