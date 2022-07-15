@@ -73,12 +73,13 @@
           `),
             createShader(gl, gl.FRAGMENT_SHADER, `
             precision mediump float;
-            uniform vec4 color;
-            void main() {
-                gl_FragColor = color;
+            varying vec3 vColor;
+            void main(void) {
+               gl_FragColor = vec4(vColor, 1.);
             }`)
         );
         gl.useProgram(p);
+
 
 
 
@@ -122,6 +123,10 @@
             //color data
             gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+            var color = gl.getAttribLocation(program, "color");
+            gl.vertexAttribPointer(color, 3, gl.FLOAT, false, 0, 0);
+            gl.enableVertexAttribArray(color);
+
 
 
 
