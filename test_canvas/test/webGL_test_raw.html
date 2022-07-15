@@ -60,7 +60,7 @@
 
         const drawRandomRect = function (program) {
 
-            const nb = 100
+            const nb = 1
 
             const v = []
             for (let i = 0; i < nb; i++) {
@@ -75,9 +75,11 @@
                 v.push(x2); v.push(y2)
             }
 
+            console.log(v)
 
             //define input vertices
             const vertices = new Float32Array(v);
+            console.log(vertices)
 
             const positionBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -119,7 +121,9 @@
 
 
 
-        //setColor(p, 0.5, 0.3, 1, 0.6)
+        setColor(p, 0.5, 0.3, 1, 0.6)
+        drawRandomRect(p)
+
         //drawRect(p, 0, 0.1, 0.3, 0.3)
         /*for (let i = 0; i < 1000; i++) {
             //set random color
