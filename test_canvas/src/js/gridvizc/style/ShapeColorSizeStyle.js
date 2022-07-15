@@ -120,13 +120,13 @@ export class ShapeColorSizeStyle extends Style {
                 for (let c of cells) {
                     //size
                     /** @type {function(number,number,Stat|undefined,number):number} */
-                    //let s_ = this.size || (() => resolution);
-                    //size - in geo unit
-                    //const sG = s_(c[this.sizeCol], resolution, statSize, zf)
-                    //get offset
-                    /*const offset = this.offset(c, resolution, zf)
-                    this.drawStroke(c, resolution, cg, "square", sG, offset)
-                }*/
+                //let s_ = this.size || (() => resolution);
+                //size - in geo unit
+                //const sG = s_(c[this.sizeCol], resolution, statSize, zf)
+                //get offset
+                /*const offset = this.offset(c, resolution, zf)
+                this.drawStroke(c, resolution, cg, "square", sG, offset)
+            }*/
 
                 //update legends
                 this.updateLegends({ style: this, r: resolution, zf: zf, sSize: statSize, sColor: statColor });

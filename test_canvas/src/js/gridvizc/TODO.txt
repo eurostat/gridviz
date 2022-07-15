@@ -1,3 +1,11 @@
+Implement:
+https://www.tutorialspoint.com/webgl/webgl_drawing_points.htm
+
+See gl_PointSize
+gl.POINTS, // mode,see https://miro.medium.com/max/700/0*HQHB5lCGqlOUiysy.jpg
+
+
+
 TODO webgl: use for all styles where filled rectangles
 segment
 sideStyle
