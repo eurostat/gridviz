@@ -108,7 +108,7 @@ export class WebGLTestStyle extends Style {
             let x1 = cg.geoToPixX(c.x)
             x1 = x1/cg.w * 2 -1
             let y1 = cg.geoToPixY(c.y)
-            y1 = y1/cg.h * 2 -1
+            y1 = -y1/cg.h * 2 +1
 
             const x2 = x1 + 0.005
             const y2 = y1 + 0.01
