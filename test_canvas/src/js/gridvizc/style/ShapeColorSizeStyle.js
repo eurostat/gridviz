@@ -80,7 +80,7 @@ export class ShapeColorSizeStyle extends Style {
             //create canvas and webgl renderer
             const cvWGL = makeWebGLCanvas(cg)
             if (cvWGL) {
-                const prog = new WebGLSquareColoring(cvWGL.gl)
+                const prog = new WebGLSquareColoring(cvWGL.gl, resolution/zf)
 
                 //add vertice and fragment data
                 for (let c of cells) {
@@ -89,23 +89,17 @@ export class ShapeColorSizeStyle extends Style {
                     const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
                     if (!col || col === "none") continue
 
-                    //size
-                    /** @type {function(number,number,Stat|undefined,number):number} */
-                    let s_ = this.size || (() => resolution);
-                    //size - in geo unit
-                    const sG = s_(c[this.sizeCol], resolution, statSize, zf)
-
                     //get offset
                     const offset = this.offset(c, resolution, zf)
 
-                    const d = resolution * (1 - sG / resolution) * 0.5 + +sG / 2
-                    const xC = c.x + d + offset.dx
-                    const yC = c.y + d + offset.dy
+                    const r2 = resolution / 2
+                    const xC = c.x + r2 + offset.dx
+                    const yC = c.y + r2 + offset.dy
 
                     /** @type {import("d3-color").RGBColor | import("d3-color").HSLColor| null} */
                     const cc = color(col)
                     if (!cc) continue
-                    prog.addPointData(xC, yC, sG / zf + 0.1, cc.r / 255, cc.g / 255, cc.b / 255, cc.opacity)
+                    prog.addPointData(xC, yC, cc.r / 255, cc.g / 255, cc.b / 255, cc.opacity)
                 }
 
                 //draw

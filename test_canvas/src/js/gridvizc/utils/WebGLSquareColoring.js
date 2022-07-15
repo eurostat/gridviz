@@ -5,6 +5,7 @@ import { initShaderProgram, createShader } from "./webGLUtils";
 
 /**
  * Everything to easily draw colored squares with webGL.
+ * All the same size, but different fill color.
  */
 export class WebGLSquareColoring {
 
@@ -12,15 +13,16 @@ export class WebGLSquareColoring {
      * 
      * @param {WebGLRenderingContext} gl 
      */
-    constructor(gl) {
+    constructor(gl, sizePix) {
 
         this.gl = gl
+        this.sizePix = sizePix || 10.0
 
         this.program = initShaderProgram(
             gl,
             createShader(gl, gl.VERTEX_SHADER, `
             attribute vec2 pos;
-            attribute float sizePix;
+            uniform float sizePix;
             uniform mat3 mat;
             attribute vec3 color;
             varying vec3 vColor;
@@ -41,18 +43,14 @@ export class WebGLSquareColoring {
 
         //buffer data
         this.verticesBuffer = [];
-        this.sizeBuffer = [];
         this.colorsBuffer = [];
     }
 
     /** Add data to vertices/size/color buffers for color squares drawing */
-    addPointData(xC, yC, sizePix, cR = 0, cG = 0, cB = 1, cA = 0) { //TODO cA
+    addPointData(xC, yC, cR = 0, cG = 0, cB = 1, cA = 0) { //TODO cA
         //add vertices
         const v = this.verticesBuffer
         v.push(xC); v.push(yC)
-
-        //add size
-        this.sizeBuffer.push(sizePix)
 
         //colors, 3 parts (RGB)
         const c = this.colorsBuffer
@@ -78,19 +76,15 @@ export class WebGLSquareColoring {
         );
         gl.enableVertexAttribArray(position);
 
-        //size data
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.sizeBuffer), gl.STATIC_DRAW);
-        var sizePix = gl.getAttribLocation(this.program, "sizePix");
-        gl.vertexAttribPointer(sizePix, 1, gl.FLOAT, false, 0, 0);
-        gl.enableVertexAttribArray(sizePix);
-
         //color data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.colorsBuffer), gl.STATIC_DRAW);
         var color = gl.getAttribLocation(this.program, "color");
         gl.vertexAttribPointer(color, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(color);
+
+        //sizePix
+        gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0*this.sizePix);
 
         //transformation
         gl.uniformMatrix3fv(gl.getUniformLocation(this.program, "mat"), false, new Float32Array(transfoMat));

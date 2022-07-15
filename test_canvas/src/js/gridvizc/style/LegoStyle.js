@@ -78,8 +78,8 @@ export const getLegoStyle = function (col, opts) {
         },
         shape: () => "square",
         webGLSquare: true,
-        sizeCol: col,
-        size: (v, r, s, zf) => r,
+        //sizeCol: col,
+        //size: (v, r, s, zf) => r,
         zfStroke: 0,
     })
 
