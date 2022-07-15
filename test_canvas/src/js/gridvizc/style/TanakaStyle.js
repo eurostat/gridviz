@@ -63,6 +63,7 @@ export const getTanakaStyle = function (col, opts) {
             return opts.colors[getClass(opts.valueStretch ? opts.valueStretch(v, r, s, zf) : v)]
         },
         shape: () => "square",
+        webGLSquare: true,
         sizeCol: col,
         size: (v, r, s, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
         zfStroke: 0,

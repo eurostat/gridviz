@@ -77,6 +77,7 @@ export const getLegoStyle = function (col, opts) {
             return opts.colors[getClass(opts.valueStretch ? opts.valueStretch(v, r, s, zf) : v)]
         },
         shape: () => "square",
+        webGLSquare: true,
         sizeCol: col,
         size: (v, r, s, zf) => r,
         zfStroke: 0,
