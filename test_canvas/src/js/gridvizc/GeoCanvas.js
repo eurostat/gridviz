@@ -111,6 +111,7 @@ export class GeoCanvas {
         this.ctx.setTransform(k, 0, 0, -k, tx, ty);
     }
 
+    /** Get the transformation matrix to webGL screen coordinates, within [-1,1]*[-1,1] */
     getWebGLTransform() {
         const kx = 2 / (this.w * this.getZf());
         const ky = 2 / (this.h * this.getZf());
