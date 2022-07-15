@@ -13,7 +13,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(10000)
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(100)
             .setLabelLayer(gviz.getEuronymeLabelLayer().setColor(c => "#000"))
             //.setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
@@ -26,7 +26,7 @@
 
         const sW = new gviz.WebGLTestStyle()
 
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/100km/", [s, sW], 0, 99999999);
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [sW], 0, 99999999);
 
     </script>
 

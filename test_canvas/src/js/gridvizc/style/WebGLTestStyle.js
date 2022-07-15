@@ -32,15 +32,14 @@ export class WebGLTestStyle extends Style {
         const cvWGL = makeWebGLCanvas(cg)
         if (!cvWGL) return
 
-        const p = new WebGLRectangleColoring(cvWGL.gl)
+        const prog = new WebGLRectangleColoring(cvWGL.gl)
 
-        //create vertice and fragment data
-        for (let c of cells) {
-            p.addRectangleData(c.x, c.x + r, c.y, c.y + r, 1, Math.random(), Math.random())
-        }
+        //add vertice and fragment data
+        for (let c of cells)
+            prog.addRectangleData(c.x, c.x + r, c.y, c.y + r, 1, Math.random(), Math.random())
 
         //draw
-        p.draw(cg.getWebGLTransform())
+        prog.draw(cg.getWebGLTransform())
 
         //draw in canvas geo
         cg.initCanvasTransform()

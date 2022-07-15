@@ -1,7 +1,16 @@
+TODO webgl: use for all styles where filled rectangles
+colorShapeSize
+segment
+sideStyle
+dot density
+composition (flag?)
+
+webgl: draw elements VS draw array
+
+
 TODO simplify tiled multires creation
 TODO show several elements on size legend
 TODO deploy accessiblity grid - as tanaka ?
-TODO webgl test
 
 
 TODO adapt tanaka and lego to diverging - use on EUR pop change
