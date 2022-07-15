@@ -36,7 +36,9 @@ export class WebGLTestStyle extends Style {
         if (!cvWGL) return
         const gl = cvWGL.gl
 
-        const p = getRectangleColoringWebGLProgram(gl)
+        const p = new WebGLRectangleColoring(gl)
+
+
 
         const drawRects = function (program, v, c, transfoMat) {
 
@@ -91,7 +93,7 @@ export class WebGLTestStyle extends Style {
 
         //draw all rectangles
         const tr = cg.getWebGLTransform()
-        drawRects(p, v, cols, tr)
+        drawRects(p.program, v, cols, tr)
 
         //draw in canvas geo
         cg.initCanvasTransform()
@@ -101,47 +103,62 @@ export class WebGLTestStyle extends Style {
 }
 
 
-//rectangle coloring
 
-const getRectangleColoringWebGLProgram = function (gl) {
-    const p = initShaderProgram(
-        gl,
-        createShader(gl, gl.VERTEX_SHADER, `
-        attribute vec2 pos;
-        uniform mat3 mat;
-        attribute vec3 color;
-        varying vec3 vColor;
-        void main() {
-          gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
-          vColor = color;
-        }
-      `),
-        createShader(gl, gl.FRAGMENT_SHADER, `
-        precision mediump float;
-        varying vec3 vColor;
-        void main(void) {
-           gl_FragColor = vec4(vColor, 1.0);
-        }`)
-    );
-    gl.useProgram(p);
-    return p
+export class WebGLRectangleColoring {
+
+    constructor(gl) {
+
+        this.program = initShaderProgram(
+            gl,
+            createShader(gl, gl.VERTEX_SHADER, `
+            attribute vec2 pos;
+            uniform mat3 mat;
+            attribute vec3 color;
+            varying vec3 vColor;
+            void main() {
+              gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
+              vColor = color;
+            }
+          `),
+            createShader(gl, gl.FRAGMENT_SHADER, `
+            precision mediump float;
+            varying vec3 vColor;
+            void main(void) {
+               gl_FragColor = vec4(vColor, 1.0);
+            }`)
+        );
+        gl.useProgram(this.program);
+
+        //buffer data
+        this.verticesBuffer = [];
+        this.colorsBuffer = [];
+    }
+
+    /** Add data to vertices/color buffers for color rectangle drawing */
+    addRectangleData(x1, x2, y1, y2, cR = 0, cG = 0, cB = 1, cA = 0) {
+        //add vertices
+        const v = this.verticesBuffer
+        v.push(x1); v.push(y1)
+        v.push(x2); v.push(y1)
+        v.push(x1); v.push(y2)
+        v.push(x2); v.push(y2)
+
+        //colors, 3 parts (RGB), one per vertice
+        const c = this.colorsBuffer
+        c.push(cR); c.push(cG); c.push(cB)
+        c.push(cR); c.push(cG); c.push(cB)
+        c.push(cR); c.push(cG); c.push(cB)
+        c.push(cR); c.push(cG); c.push(cB)
+    }
+
+
+
+
 }
 
 
-/** Add data to vertices/color buffers for color rectangle drawing */
-const addRectangleData = function (verticesBuffer, colorsBuffer, x1, x2, y1, y2, cR = 0, cG = 0, cB = 1, cA = 0) {
-    //add vertices
-    verticesBuffer.push(x1); verticesBuffer.push(y1)
-    verticesBuffer.push(x2); verticesBuffer.push(y1)
-    verticesBuffer.push(x1); verticesBuffer.push(y2)
-    verticesBuffer.push(x2); verticesBuffer.push(y2)
 
-    //colors, 3 parts (RGB), one per vertice
-    colorsBuffer.push(cR); colorsBuffer.push(cG); colorsBuffer.push(cB)
-    colorsBuffer.push(cR); colorsBuffer.push(cG); colorsBuffer.push(cB)
-    colorsBuffer.push(cR); colorsBuffer.push(cG); colorsBuffer.push(cB)
-    colorsBuffer.push(cR); colorsBuffer.push(cG); colorsBuffer.push(cB)
-}
+
 
 
 
