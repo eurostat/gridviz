@@ -99,10 +99,10 @@
             // Clear the canvas before we start drawing on it.
             //gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-            for (let i = 0; i < nb; i++) {
+            for (let i = 0; i < v.length/8; i++) {
                 gl.drawArrays(
                     gl.TRIANGLE_STRIP, // mode,see https://miro.medium.com/max/700/0*HQHB5lCGqlOUiysy.jpg
-                    i * 4, // vertex list start
+                    i * 8, // vertex list start
                     4 // vertex count
                 );
             }

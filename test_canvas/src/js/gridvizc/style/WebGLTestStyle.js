@@ -61,79 +61,7 @@ export class WebGLTestStyle extends Style {
         );
         gl.useProgram(p);
 
-
-
-        const drawRect = function (program, x1, y1, x2, y2) {
-            //define input vertices
-            const v = [
-                x1, y1,
-                x2, y1,
-                x1, y2,
-                x2, y2
-            ]
-            //console.log(v)
-
-            const vertices = new Float32Array(v);
-            //console.log(vertices)
-
-            const positionBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-            const position = gl.getAttribLocation(program, "pos");
-            gl.vertexAttribPointer(
-                position,
-                2, //numComponents
-                gl.FLOAT, //type
-                false, //normalise
-                0, //stride
-                0 //offset
-            );
-            gl.enableVertexAttribArray(position);
-
-            // Draw the scene
-            //gl.clearColor(0.3, 0.3, 0.0, 1.0);
-            //gl.clearDepth(1.0); // Clear everything
-            //gl.enable(gl.DEPTH_TEST); // Enable depth testing
-            //gl.depthFunc(gl.LEQUAL); // Near things obscure far things
-            // Clear the canvas before we start drawing on it.
-            //gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            gl.drawArrays(
-                gl.TRIANGLE_STRIP, // mode,see https://miro.medium.com/max/700/0*HQHB5lCGqlOUiysy.jpg
-                0, // vertex list start
-                4 // vertex count
-            );
-
-
-        }
-
-        const setColor = function (program, r, g, b, a) {
-            // Shader uniform variable for color (read-only)
-            const color = gl.getUniformLocation(program, "color");
-
-            // Set color        R  G  B  A
-            gl.uniform4f(color, r, g, b, a);
-        }
-
-
-        //setColor(p, 0.5, 0.3, 1, 0.6)
-        //drawRect(p, 0, 0.1, 0.3, 0.3)
-        //setColor(p, 1, 0.1, 0.4, 0.8)
-        //drawRect(p, -0.2, -0.9, 0.9, 0)
-
-        console.log(cells.length)
-        for (let i = 0; i < cells.length; i++) {
-            //set random color
-            setColor(p, Math.random(), Math.random(), Math.random(), 1)
-            //random position
-            const x1 = 2 * Math.random() - 1
-            const y1 = 2 * Math.random() - 1
-            drawRect(p, x1, y1, x1 + 0.003, y1 + 0.01)
-        }
-
-        //test with: making one single large vertex buffer + draw it with index
-        //gl.drawElements ?
-
-        /*
+                /*
         
         Vertex Shader Code:
 
@@ -156,6 +84,83 @@ export class WebGLTestStyle extends Style {
         */
 
 
+        const drawRects = function (program, v) {
+
+            //define input vertices
+            const vertices = new Float32Array(v);
+
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+            const position = gl.getAttribLocation(program, "pos");
+            gl.vertexAttribPointer(
+                position,
+                2, //numComponents
+                gl.FLOAT, //type
+                false, //normalise
+                0, //stride
+                0 //offset
+            );
+            gl.enableVertexAttribArray(position);
+
+            // Draw the scene
+            //gl.clearColor(0.3, 0.3, 0.0, 1.0);
+            //gl.clearDepth(1.0); // Clear everything
+            //gl.enable(gl.DEPTH_TEST); // Enable depth testing
+            //gl.depthFunc(gl.LEQUAL); // Near things obscure far things
+            // Clear the canvas before we start drawing on it.
+            //gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+            for (let i = 0; i < v.length / 8; i++) {
+                gl.drawArrays(
+                    gl.TRIANGLE_STRIP, // mode,see https://miro.medium.com/max/700/0*HQHB5lCGqlOUiysy.jpg
+                    i * 8, // vertex list start
+                    4 // vertex count
+                );
+            }
+
+
+        }
+
+
+
+        const setColor = function (program, r, g, b, a) {
+            // Shader uniform variable for color (read-only)
+            const color = gl.getUniformLocation(program, "color");
+
+            // Set color        R  G  B  A
+            gl.uniform4f(color, r, g, b, a);
+        }
+
+
+        //setColor(p, 0.5, 0.3, 1, 0.6)
+        //drawRect(p, 0, 0.1, 0.3, 0.3)
+        //setColor(p, 1, 0.1, 0.4, 0.8)
+        //drawRect(p, -0.2, -0.9, 0.9, 0)
+
+        //set random color
+        //setColor(p, Math.random(), Math.random(), Math.random(), 1)
+
+        console.log(cells.length)
+
+        //create random vertices
+        const v = []
+        for (let i = 0; i < cells.length; i++) {
+            //random position
+            const x1 = 2 * Math.random() - 1
+            const y1 = 2 * Math.random() - 1
+            const x2 = x1 + 0.005
+            const y2 = y1 + 0.01
+
+            v.push(x1); v.push(y1)
+            v.push(x2); v.push(y1)
+            v.push(x1); v.push(y2)
+            v.push(x2); v.push(y2)
+        }
+
+        setColor(p, 1, 0.1, 0.4, 0.8)
+        //draw all rectangles
+        drawRects(p, v)
 
 
         //for(let c of cells) {
