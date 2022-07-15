@@ -4,7 +4,7 @@ import { Style, Stat, getStatistics, Shape } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
-import { WebGLRectangleColoring } from "../utils/WebGLRectangleColoring";
+import { WebGLSquareColoring } from "../utils/WebGLSquareColoring";
 import { color } from "d3-color";
 
 /**
@@ -80,7 +80,7 @@ export class ShapeColorSizeStyle extends Style {
             //create canvas and webgl renderer
             const cvWGL = makeWebGLCanvas(cg)
             if (cvWGL) {
-                const prog = new WebGLRectangleColoring(cvWGL.gl)
+                const prog = new WebGLSquareColoring(cvWGL.gl)
 
                 //add vertice and fragment data
                 for (let c of cells) {
@@ -105,7 +105,7 @@ export class ShapeColorSizeStyle extends Style {
                     /** @type {import("d3-color").RGBColor | import("d3-color").HSLColor| null} */
                     const cc = color(col)
                     if (!cc) continue
-                    prog.addRectangleData(x, x + sG, y, y + sG, cc.r / 255, cc.g / 255, cc.b / 255, cc.opacity)
+                    prog.addPointData(x+sG/2, y+sG/2, sG/zf, cc.r / 255, cc.g / 255, cc.b / 255, cc.opacity)
                 }
 
                 //draw

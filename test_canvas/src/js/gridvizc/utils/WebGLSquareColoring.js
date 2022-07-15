@@ -54,11 +54,8 @@ export class WebGLSquareColoring {
         //add size
         this.sizeBuffer.push(sizePix)
 
-        //colors, 3 parts (RGB), one per vertice
+        //colors, 3 parts (RGB)
         const c = this.colorsBuffer
-        c.push(cR); c.push(cG); c.push(cB)
-        c.push(cR); c.push(cG); c.push(cB)
-        c.push(cR); c.push(cG); c.push(cB)
         c.push(cR); c.push(cG); c.push(cB)
     }
 
