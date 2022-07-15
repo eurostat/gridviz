@@ -49,7 +49,8 @@ export class WebGLTestStyle extends Style {
             attribute vec3 color;
             varying vec3 vColor;
             void main() {
-              gl_Position = mat * vec4(pos, 1, 1);
+              gl_Position = mat * vec4(pos, 0.0, 1.0);
+              //gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
               vColor = color;
             }
           `),
@@ -112,16 +113,22 @@ export class WebGLTestStyle extends Style {
         const cols = []
         for (let c of cells) {
 
+
             const x1 = cg.geoToPixX(c.x) / cg.w * 2 - 1
             const y1 = -cg.geoToPixY(c.y) / cg.h * 2 + 1
 
-            //TODO include that in vertex shader
-            //TODO matrix uniform
             const dx = r / zf * 2 / cg.w
             const dy = r / zf * 2 / cg.h
 
             const x2 = x1 + dx
             const y2 = y1 + dy
+
+
+            /*
+                        const x1 = c.x
+                        const y1 = c.y
+                        const x2 = x1 + r
+                        const y2 = y1 + r*/
 
             v.push(x1); v.push(y1)
             v.push(x2); v.push(y1)
@@ -136,29 +143,27 @@ export class WebGLTestStyle extends Style {
             cols.push(randR); cols.push(0.5); cols.push(1)
         }
 
-        var Sx = 1, Sy = 1, Sz = 1;
-        const transfoMat = [
-            Sx, 0.0, 0.0, 0.0,
-            0.0, Sy, 0.0, 0.0,
-            0.0, 0.0, Sz, 0.0,
-            0.0, 0.0, 0.0, 1.0
+        const tr = [
+            1, 0.0, 0.0, 0.0,
+            0.0, 1, 0.0, 0.0,
+            0.0, 0.0, 1, 0.0,
+            0.0, 0.0, 0.0, 1,
         ]
 
+        //const tr = cg.getWebGLTransform()
+        //console.log(tr)
 
-        //setColor(p, 1, 0.1, 0.4, 0.8)
         //draw all rectangles
-        drawRects(p, v, cols, transfoMat)
+        drawRects(p, v, cols, tr)
 
 
         //...
-        //draw in correct position
         //compute as much as possible in GPU:
         //- compute geoToScreen in vector shader
         //- compute value to color in fragment shader
 
         //generic functions to draw rectangles + lines with width
         //use webGL mode in relevant styles
-
 
 
         //draw in canvas geo
