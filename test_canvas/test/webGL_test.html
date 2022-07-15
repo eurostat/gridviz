@@ -24,11 +24,7 @@
             zfStroke: 1000
         })
 
-        const sW = new gviz.WebGLTestStyle({
-            colorCol: "2018",
-            color: (v, r, s) => "lightgray",
-            zfStroke: 1000
-        })
+        const sW = new gviz.WebGLTestStyle()
 
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/10km/", [s, sW], 0, 99999999);
 
