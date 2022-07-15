@@ -100,10 +100,13 @@
                 v.push(x2); v.push(y2)
 
                 //colors, 3 parts (RGB), one per vertice
-                colors.push(0.5); colors.push(0); colors.push(0)
-                colors.push(0.5); colors.push(0); colors.push(0)
-                colors.push(0.5); colors.push(0); colors.push(0)
-                colors.push(0.5); colors.push(0); colors.push(0)
+                const randR = Math.random()
+                const randG = Math.random()
+                const randB = Math.random()
+                colors.push(randR); colors.push(randG); colors.push(randB)
+                colors.push(randR); colors.push(randG); colors.push(randB)
+                colors.push(randR); colors.push(randG); colors.push(randB)
+                colors.push(randR); colors.push(randG); colors.push(randB)
             }
 
             //vertice data
