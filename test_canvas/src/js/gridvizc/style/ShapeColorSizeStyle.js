@@ -98,14 +98,14 @@ export class ShapeColorSizeStyle extends Style {
                     //get offset
                     const offset = this.offset(c, resolution, zf)
 
-                    const d = resolution * (1 - sG / resolution) * 0.5
-                    const x = c.x + d + offset.dx
-                    const y = c.y + d + offset.dy
+                    const d = resolution * (1 - sG / resolution) * 0.5 + +sG / 2
+                    const xC = c.x + d + offset.dx
+                    const yC = c.y + d + offset.dy
 
                     /** @type {import("d3-color").RGBColor | import("d3-color").HSLColor| null} */
                     const cc = color(col)
                     if (!cc) continue
-                    prog.addPointData(x+sG/2, y+sG/2, sG/zf + 0.1, cc.r / 255, cc.g / 255, cc.b / 255, cc.opacity)
+                    prog.addPointData(xC, yC, sG / zf + 0.1, cc.r / 255, cc.g / 255, cc.b / 255, cc.opacity)
                 }
 
                 //draw
