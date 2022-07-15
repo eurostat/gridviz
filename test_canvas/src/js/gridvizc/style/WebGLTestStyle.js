@@ -109,28 +109,33 @@ export class WebGLTestStyle extends Style {
 
         }
 
-        //create vertice and fragment data
-        const v = []
-        const cols = []
-        for (let c of cells) {
 
-            const x1 = c.x
-            const y1 = c.y
-            const x2 = x1 + r
-            const y2 = y1 + r
 
+        const addRectangleData = function (v, cols, x1, x2, y1, y2, cR = 0, cG = 0, cB = 1, cA = 0) {
+            //add vertices
             v.push(x1); v.push(y1)
             v.push(x2); v.push(y1)
             v.push(x1); v.push(y2)
             v.push(x2); v.push(y2)
 
             //colors, 3 parts (RGB), one per vertice
-            const randR = Math.random()
-            cols.push(randR); cols.push(0.5); cols.push(1)
-            cols.push(randR); cols.push(0.5); cols.push(1)
-            cols.push(randR); cols.push(0.5); cols.push(1)
-            cols.push(randR); cols.push(0.5); cols.push(1)
+            cols.push(cR); cols.push(cG); cols.push(cB)
+            cols.push(cR); cols.push(cG); cols.push(cB)
+            cols.push(cR); cols.push(cG); cols.push(cB)
+            cols.push(cR); cols.push(cG); cols.push(cB)
         }
+
+
+
+        //create vertice and fragment data
+        const v = []
+        const cols = []
+        for (let c of cells) {
+            addRectangleData(v, cols, c.x, c.x + r, c.y, c.y + r, 1, Math.random(), Math.random())
+        }
+
+
+
 
 
         //draw all rectangles
