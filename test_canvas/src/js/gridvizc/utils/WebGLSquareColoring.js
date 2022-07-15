@@ -20,13 +20,13 @@ export class WebGLSquareColoring {
             gl,
             createShader(gl, gl.VERTEX_SHADER, `
             attribute vec2 pos;
-            //attribute float size;
+            attribute float sizePix;
             uniform mat3 mat;
             attribute vec3 color;
             varying vec3 vColor;
             void main() {
               gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
-              gl_PointSize = 10.0;
+              gl_PointSize = sizePix;
               vColor = color;
             }
           `),
@@ -80,6 +80,13 @@ export class WebGLSquareColoring {
             0 //offset
         );
         gl.enableVertexAttribArray(position);
+
+        //size data
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.sizeBuffer), gl.STATIC_DRAW);
+        var sizePix = gl.getAttribLocation(this.program, "sizePix");
+        gl.vertexAttribPointer(sizePix, 1, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(sizePix);
 
         //color data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
