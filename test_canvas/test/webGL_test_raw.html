@@ -60,13 +60,13 @@
 
         const drawRandomRect = function (program) {
 
-            const nb = 1
+            const nb = 10
             const v = []
             for (let i = 0; i < nb; i++) {
                 const x1 = 2 * Math.random() - 1
                 const y1 = 2 * Math.random() - 1
-                const x2 = x1 + 0.03
-                const y2 = y1 + 0.1
+                const x2 = x1 + 0.02
+                const y2 = y1 + 0.02
 
                 v.push(x1); v.push(y1)
                 v.push(x2); v.push(y1)
@@ -98,11 +98,14 @@
             //gl.depthFunc(gl.LEQUAL); // Near things obscure far things
             // Clear the canvas before we start drawing on it.
             //gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            gl.drawArrays(
+
+            for (let i = 0; i < nb; i++) {
+                gl.drawArrays(
                 gl.TRIANGLE_STRIP, // mode,see https://miro.medium.com/max/700/0*HQHB5lCGqlOUiysy.jpg
-                0, // vertex list start
+                i*4, // vertex list start
                 4 // vertex count
             );
+            }
 
 
         }
@@ -120,7 +123,7 @@
 
 
 
-        setColor(p, 0.5, 0.3, 1, 0.6)
+        setColor(p, 0.5, 0.3, 1, 1)
         drawRandomRect(p)
 
         //drawRect(p, 0, 0.1, 0.3, 0.3)
