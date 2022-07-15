@@ -100,6 +100,7 @@
                         colorCol: getSelectedYear(),
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                         shape: () => "square",
+                        webGLSquare: true,
                         zfStroke: 80,
                     })],
                     zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]

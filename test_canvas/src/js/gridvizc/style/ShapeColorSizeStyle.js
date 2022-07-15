@@ -3,6 +3,8 @@
 import { Style, Stat, getStatistics, Shape } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
+import { makeWebGLCanvas } from "../utils/webGLUtils";
+import { WebGLRectangleColoring } from "../utils/WebGLRectangleColoring";
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -71,68 +73,93 @@ export class ShapeColorSizeStyle extends Style {
 
 
         if (this.webGLSquare) {
-            console.log("Draw webGL")
 
+            //draw with webGL
 
-        } else {
+            //create canvas and webgl renderer
+            const cvWGL = makeWebGLCanvas(cg)
+            if (cvWGL) {
+                const prog = new WebGLRectangleColoring(cvWGL.gl)
 
-            //draw with HTML canvas
-
-            //draw in geo coordinates
-            cg.setCanvasTransform()
-
-            for (let cell of cells) {
-
-                //color
-                const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined;
-                if (!col || col === "none") continue
-                cg.ctx.fillStyle = col;
-
-                //shape
-                const shape = this.shape ? this.shape(cell) : "square";
-                if (shape === "none") continue
-
-                //size
-                /** @type {function(number,number,Stat|undefined,number):number} */
-                let s_ = this.size || (() => resolution);
-                //size - in geo unit
-                const sG = s_(cell[this.sizeCol], resolution, statSize, zf)
-
-                //get offset
-                const offset = this.offset(cell, resolution, zf)
-
-                if (shape === "square") {
-                    //draw square
-                    const d = resolution * (1 - sG / resolution) * 0.5
-                    cg.ctx.fillRect(
-                        cell.x + d + offset.dx,
-                        cell.y + d + offset.dy,
-                        sG, sG);
-                } else if (shape === "circle") {
-                    //draw circle
-                    cg.ctx.beginPath();
-                    cg.ctx.arc(
-                        cell.x + resolution * 0.5 + offset.dx,
-                        cell.y + resolution * 0.5 + offset.dy,
-                        sG * 0.5,
-                        0, 2 * Math.PI, false);
-                    cg.ctx.fill();
-                } else if (shape === "donut") {
-                    const xc = cell.x + resolution * 0.5 + offset.dx, yc = cell.y + resolution * 0.5 + offset.dy
-                    cg.ctx.beginPath();
-                    cg.ctx.moveTo(xc, yc);
-                    cg.ctx.arc(xc, yc, 0.5 * resolution, 0, 2 * Math.PI);
-                    cg.ctx.arc(xc, yc, (1 - sG / resolution) * 0.5 * resolution, 0, 2 * Math.PI, true);
-                    cg.ctx.closePath();
-                    cg.ctx.fill();
-                } else {
-                    throw new Error('Unexpected shape:' + shape);
+                //add vertice and fragment data
+                for (let c of cells) {
+                    prog.addRectangleData(c.x, c.x + resolution, c.y, c.y + resolution, 1, Math.random(), Math.random())
                 }
 
+                //draw
+                prog.draw(cg.getWebGLTransform())
+
+                //draw in canvas geo
+                cg.initCanvasTransform()
+                cg.ctx.drawImage(cvWGL.canvas, 0, 0);
+
                 //draw stroke
-                this.drawStroke(cell, resolution, cg, shape, sG, offset)
+                //TODO
+                //for (let c of cells)
+                //    this.drawStroke(s, resolution, cg, "square", sG, offset)
+
+                //update legends
+                this.updateLegends({ style: this, r: resolution, zf: zf, sSize: statSize, sColor: statColor });
+
+                return
+            }
+        }
+
+        //draw with HTML canvas
+
+        //draw in geo coordinates
+        cg.setCanvasTransform()
+
+        for (let cell of cells) {
+
+            //color
+            const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined;
+            if (!col || col === "none") continue
+            cg.ctx.fillStyle = col;
+
+            //shape
+            const shape = this.shape ? this.shape(cell) : "square";
+            if (shape === "none") continue
+
+            //size
+            /** @type {function(number,number,Stat|undefined,number):number} */
+            let s_ = this.size || (() => resolution);
+            //size - in geo unit
+            const sG = s_(cell[this.sizeCol], resolution, statSize, zf)
+
+            //get offset
+            const offset = this.offset(cell, resolution, zf)
+
+            if (shape === "square") {
+                //draw square
+                const d = resolution * (1 - sG / resolution) * 0.5
+                cg.ctx.fillRect(
+                    cell.x + d + offset.dx,
+                    cell.y + d + offset.dy,
+                    sG, sG);
+            } else if (shape === "circle") {
+                //draw circle
+                cg.ctx.beginPath();
+                cg.ctx.arc(
+                    cell.x + resolution * 0.5 + offset.dx,
+                    cell.y + resolution * 0.5 + offset.dy,
+                    sG * 0.5,
+                    0, 2 * Math.PI, false);
+                cg.ctx.fill();
+            } else if (shape === "donut") {
+                const xc = cell.x + resolution * 0.5 + offset.dx, yc = cell.y + resolution * 0.5 + offset.dy
+                cg.ctx.beginPath();
+                cg.ctx.moveTo(xc, yc);
+                cg.ctx.arc(xc, yc, 0.5 * resolution, 0, 2 * Math.PI);
+                cg.ctx.arc(xc, yc, (1 - sG / resolution) * 0.5 * resolution, 0, 2 * Math.PI, true);
+                cg.ctx.closePath();
+                cg.ctx.fill();
+            } else {
+                throw new Error('Unexpected shape:' + shape);
             }
 
+            //draw stroke
+            this.drawStroke(cell, resolution, cg, shape, sG, offset)
         }
 
         //update legends
