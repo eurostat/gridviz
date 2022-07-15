@@ -46,13 +46,13 @@ export class WebGLSquareColoring {
     }
 
     /** Add data to vertices/size/color buffers for color squares drawing */
-    addPointData(x, y, size, cR = 0, cG = 0, cB = 1, cA = 0) { //TODO cA
+    addPointData(xC, yC, sizePix, cR = 0, cG = 0, cB = 1, cA = 0) { //TODO cA
         //add vertices
         const v = this.verticesBuffer
-        v.push(x); v.push(y)
+        v.push(xC); v.push(yC)
 
         //add size
-        this.sizeBuffer.push(size)
+        this.sizeBuffer.push(sizePix)
 
         //colors, 3 parts (RGB), one per vertice
         const c = this.colorsBuffer

@@ -47,7 +47,7 @@ export class WebGLTestStyle extends Style {
 
         //add vertice and fragment data
         for (let c of cells) {
-            prog.addPointData(c.x, c.y, r, 1, Math.random(), Math.random())
+            prog.addPointData(c.x + r / 2, c.y + r / 2, r / zf, 1, Math.random(), Math.random())
         }
 
 
