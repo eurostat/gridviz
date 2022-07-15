@@ -1,8 +1,13 @@
+make style "webGL pixel color"
+simplify - move more computation to fragment side
+
 TODO webgl: use for all styles where filled rectangles
 segment
 sideStyle
 dot density
 composition (flag?)
+
+webgl: add color alpha
 
 webgl: draw elements VS draw array
 
