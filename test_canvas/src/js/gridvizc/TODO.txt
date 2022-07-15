@@ -1,5 +1,4 @@
 TODO webgl: use for all styles where filled rectangles
-colorShapeSize
 segment
 sideStyle
 dot density
