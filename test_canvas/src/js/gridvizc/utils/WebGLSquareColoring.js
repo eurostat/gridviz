@@ -26,7 +26,7 @@ export class WebGLSquareColoring {
             varying vec3 vColor;
             void main() {
               gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
-              gl_PointSize = 1000.0
+              gl_PointSize = 10.0;
               vColor = color;
             }
           `),

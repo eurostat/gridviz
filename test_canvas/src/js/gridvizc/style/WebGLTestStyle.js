@@ -3,6 +3,7 @@
 import { Style } from "../Style"
 import { makeWebGLCanvas } from "../utils/webGLUtils";
 import { WebGLRectangleColoring } from "../utils/WebGLRectangleColoring";
+import { WebGLSquareColoring } from "../utils/WebGLSquareColoring";
 
 
 export class WebGLTestStyle extends Style {
@@ -32,11 +33,24 @@ export class WebGLTestStyle extends Style {
         const cvWGL = makeWebGLCanvas(cg)
         if (!cvWGL) return
 
+
+        /*
         const prog = new WebGLRectangleColoring(cvWGL.gl)
 
         //add vertice and fragment data
         for (let c of cells)
             prog.addRectangleData(c.x, c.x + r, c.y, c.y + r, 1, Math.random(), Math.random())
+*/
+
+
+        const prog = new WebGLSquareColoring(cvWGL.gl)
+
+        //add vertice and fragment data
+        for (let c of cells) {
+            prog.addPointData(c.x, c.y, r, 1, Math.random(), Math.random())
+        }
+
+
 
         //draw
         prog.draw(cg.getWebGLTransform())
