@@ -60,22 +60,15 @@
 
 
 
-/*
-        var vertCode = 'attribute vec3 coordinates;'+
-            'attribute vec3 color;'+
-            'varying vec3 vColor;'+
-            'void main(void) {' +
-               ' gl_Position = vec4(coordinates, 1.0);' +
-               'vColor = color;'+
-            '}';
-*/
-
         const p = initShaderProgram(
             gl,
             createShader(gl, gl.VERTEX_SHADER, `
-            attribute vec4 pos;
+            attribute vec2 pos;
+            attribute vec3 color;
+            varying vec3 vColor;
             void main() {
-              gl_Position = pos;
+              gl_Position = vec4(pos, 1, 1);
+              vColor = color;
             }
           `),
             createShader(gl, gl.FRAGMENT_SHADER, `
