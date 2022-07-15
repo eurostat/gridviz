@@ -41,7 +41,7 @@ export class WebGLTestStyle extends Style {
 
 
 
-        //make program
+        /*/make program
         const p = initShaderProgram(
             gl,
             createShader(gl, gl.VERTEX_SHADER, `
@@ -50,20 +50,40 @@ export class WebGLTestStyle extends Style {
             //uniform mat4 uModelViewMatrix;
             //uniform mat4 uProjectionMatrix;
             void main() {
-              gl_Position = /*uProjectionMatrix **/ /**uModelViewMatrix **/ pos;
-              //color = vertexColor;
+              gl_Position = /*uProjectionMatrix **/ /**uModelViewMatrix  pos;
+  //color = vertexColor;
+}
+`),
+createShader(gl, gl.FRAGMENT_SHADER, `
+precision mediump float;
+uniform vec4 color;
+//varying lowp vec4 color;
+void main() {
+    gl_FragColor = color;
+}`)
+);
+gl.useProgram(p);*/
+
+
+        const p = initShaderProgram(
+            gl,
+            createShader(gl, gl.VERTEX_SHADER, `
+            attribute vec2 pos;
+            attribute vec3 color;
+            varying vec3 vColor;
+            void main() {
+              gl_Position = vec4(pos, 1, 1);
+              vColor = color;
             }
           `),
             createShader(gl, gl.FRAGMENT_SHADER, `
             precision mediump float;
-            uniform vec4 color;
-            //varying lowp vec4 color;
-            void main() {
-                gl_FragColor = color;
+            varying vec3 vColor;
+            void main(void) {
+               gl_FragColor = vec4(vColor, 1.);
             }`)
         );
         gl.useProgram(p);
-
 
 
 
@@ -92,12 +112,9 @@ void main() {
 
         const drawRects = function (program, v, c) {
 
-            //define input vertices
-            const vertices = new Float32Array(v);
-
-            const positionBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+            //vertice data
+            gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(v), gl.STATIC_DRAW);
             const position = gl.getAttribLocation(program, "pos");
             gl.vertexAttribPointer(
                 position,
@@ -109,6 +126,12 @@ void main() {
             );
             gl.enableVertexAttribArray(position);
 
+            //color data
+            gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(c), gl.STATIC_DRAW);
+            var color = gl.getAttribLocation(program, "color");
+            gl.vertexAttribPointer(color, 3, gl.FLOAT, false, 0, 0);
+            gl.enableVertexAttribArray(color);
 
 
 
@@ -155,13 +178,14 @@ void main() {
 
 
 
+        /*
         const setColor = function (program, r, g, b, a) {
             // Shader uniform variable for color (read-only)
             const color = gl.getUniformLocation(program, "color");
 
             // Set color        R  G  B  A
             gl.uniform4f(color, r, g, b, a);
-        }
+        }*/
 
 
 
@@ -177,6 +201,7 @@ void main() {
 
         //create random vertices
         const v = []
+        const c = []
         for (let i = 0; i < cells.length; i++) {
             //random position
             const x1 = 2 * Math.random() - 1
@@ -188,16 +213,20 @@ void main() {
             v.push(x2); v.push(y1)
             v.push(x1); v.push(y2)
             v.push(x2); v.push(y2)
+
+            //colors, 3 parts (RGB), one per vertice
+            const randR = Math.random()
+            const randG = Math.random()
+            const randB = Math.random()
+            c.push(randR); c.push(randG); c.push(randB)
+            c.push(randR); c.push(randG); c.push(randB)
+            c.push(randR); c.push(randG); c.push(randB)
+            c.push(randR); c.push(randG); c.push(randB)
         }
 
-        setColor(p, 1, 0.1, 0.4, 0.8)
+        //setColor(p, 1, 0.1, 0.4, 0.8)
         //draw all rectangles
-        drawRects(p, v)
-
-
-        //for(let c of cells) {
-        //get coords
-        //}
+        drawRects(p, v, c)
 
 
         //...
