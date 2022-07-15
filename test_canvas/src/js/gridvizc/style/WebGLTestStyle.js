@@ -41,30 +41,6 @@ export class WebGLTestStyle extends Style {
 
 
 
-        /*/make program
-        const p = initShaderProgram(
-            gl,
-            createShader(gl, gl.VERTEX_SHADER, `
-            attribute vec4 pos;
-            //attribute vec4 vertexColor;
-            //uniform mat4 uModelViewMatrix;
-            //uniform mat4 uProjectionMatrix;
-            void main() {
-              gl_Position = /*uProjectionMatrix **/ /**uModelViewMatrix  pos;
-  //color = vertexColor;
-}
-`),
-createShader(gl, gl.FRAGMENT_SHADER, `
-precision mediump float;
-uniform vec4 color;
-//varying lowp vec4 color;
-void main() {
-    gl_FragColor = color;
-}`)
-);
-gl.useProgram(p);*/
-
-
         const p = initShaderProgram(
             gl,
             createShader(gl, gl.VERTEX_SHADER, `
@@ -80,34 +56,12 @@ gl.useProgram(p);*/
             precision mediump float;
             varying vec3 vColor;
             void main(void) {
-               gl_FragColor = vec4(vColor, 1.);
+               gl_FragColor = vec4(vColor, 0.5);
             }`)
         );
         gl.useProgram(p);
 
 
-
-        /*
- 
-Vertex Shader Code:
-
-attribute vec4 vertexPosition;
-attribute vec3 vertexColor;
-uniform mat4 mvpMatrix;
-varying highp vec3 color;
- 
-void main() {
-  gl_Position = mvpMatrix * vertexPosition;
-  color = vertexColor;
-}
- 
-Fragment Shader Code:
- 
-varying lowp vec3 color;
-void main() {
-  gl_FragColor = vec4(color, 1);
-}
-*/
 
 
         const drawRects = function (program, v, c) {
@@ -133,38 +87,6 @@ void main() {
             gl.vertexAttribPointer(color, 3, gl.FLOAT, false, 0, 0);
             gl.enableVertexAttribArray(color);
 
-
-
-            //define vertex colors
-            /*const colors = new Float32Array(c);
-
-            const colorBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
-            const vertexColor = gl.getAttribLocation(program, "vertexColor");*/
-            /*gl.vertexAttribPointer(
-                vertexColor,
-                2, //numComponents
-                gl.FLOAT, //type
-                false, //normalise
-                0, //stride
-                0 //offset
-            );
-            gl.enableVertexAttribArray(vertexColor);*/
-
-
-
-
-
-
-            // Draw the scene
-            //gl.clearColor(0.3, 0.3, 0.0, 1.0);
-            //gl.clearDepth(1.0); // Clear everything
-            //gl.enable(gl.DEPTH_TEST); // Enable depth testing
-            //gl.depthFunc(gl.LEQUAL); // Near things obscure far things
-            // Clear the canvas before we start drawing on it.
-            //gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
             for (let i = 0; i < v.length / 8; i++) {
                 gl.drawArrays(
                     gl.TRIANGLE_STRIP, // mode,see https://miro.medium.com/max/700/0*HQHB5lCGqlOUiysy.jpg
@@ -178,34 +100,16 @@ void main() {
 
 
 
-        /*
-        const setColor = function (program, r, g, b, a) {
-            // Shader uniform variable for color (read-only)
-            const color = gl.getUniformLocation(program, "color");
-
-            // Set color        R  G  B  A
-            gl.uniform4f(color, r, g, b, a);
-        }*/
-
-
-
-        //setColor(p, 0.5, 0.3, 1, 0.6)
-        //drawRect(p, 0, 0.1, 0.3, 0.3)
-        //setColor(p, 1, 0.1, 0.4, 0.8)
-        //drawRect(p, -0.2, -0.9, 0.9, 0)
-
-        //set random color
-        //setColor(p, Math.random(), Math.random(), Math.random(), 1)
-
-        console.log(cells.length)
-
         //create random vertices
         const v = []
-        const c = []
-        for (let i = 0; i < cells.length; i++) {
-            //random position
-            const x1 = 2 * Math.random() - 1
-            const y1 = 2 * Math.random() - 1
+        const cols = []
+        for (let c of cells) {
+
+            let x1 = cg.geoToPixX(c.x)
+            x1 = x1/cg.w * 2 -1
+            let y1 = cg.geoToPixY(c.y)
+            y1 = y1/cg.h * 2 -1
+
             const x2 = x1 + 0.005
             const y2 = y1 + 0.01
 
@@ -218,15 +122,15 @@ void main() {
             const randR = Math.random()
             const randG = Math.random()
             const randB = Math.random()
-            c.push(randR); c.push(randG); c.push(randB)
-            c.push(randR); c.push(randG); c.push(randB)
-            c.push(randR); c.push(randG); c.push(randB)
-            c.push(randR); c.push(randG); c.push(randB)
+            cols.push(randR); cols.push(randG); cols.push(randB)
+            cols.push(randR); cols.push(randG); cols.push(randB)
+            cols.push(randR); cols.push(randG); cols.push(randB)
+            cols.push(randR); cols.push(randG); cols.push(randB)
         }
 
         //setColor(p, 1, 0.1, 0.4, 0.8)
         //draw all rectangles
-        drawRects(p, v, c)
+        drawRects(p, v, cols)
 
 
         //...
@@ -237,10 +141,6 @@ void main() {
 
         //generic functions to draw rectangles + lines with width
         //use webGL mode in relevant styles
-
-
-
-
 
 
 
