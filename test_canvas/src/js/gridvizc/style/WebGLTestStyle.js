@@ -30,40 +30,13 @@ export class WebGLTestStyle extends Style {
 
 
         //create canvas and webgl renderer
-        const cv2 = document.createElement("canvas");
-        cv2.setAttribute("width", cg.w);
-        cv2.setAttribute("height", cg.h);
-        const gl = cv2.getContext("webgl");
-        if (!gl) {
-            console.error(gl, "Unable to initialize WebGL. Your browser or machine may not support it.");
-            return
-        }
 
 
+        const cvWGL = makeWebGLCanvas(cg)
+        if (!cvWGL) return
+        const gl = cvWGL.gl
 
-        const p = initShaderProgram(
-            gl,
-            createShader(gl, gl.VERTEX_SHADER, `
-            attribute vec2 pos;
-            uniform mat3 mat;
-            attribute vec3 color;
-            varying vec3 vColor;
-            void main() {
-              gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
-              vColor = color;
-            }
-          `),
-            createShader(gl, gl.FRAGMENT_SHADER, `
-            precision mediump float;
-            varying vec3 vColor;
-            void main(void) {
-               gl_FragColor = vec4(vColor, 1.0);
-            }`)
-        );
-        gl.useProgram(p);
-
-
-
+        const p = getRectangleColoringWebGLProgram(gl)
 
         const drawRects = function (program, v, c, transfoMat) {
 
@@ -109,24 +82,6 @@ export class WebGLTestStyle extends Style {
 
         }
 
-
-
-        const addRectangleData = function (v, cols, x1, x2, y1, y2, cR = 0, cG = 0, cB = 1, cA = 0) {
-            //add vertices
-            v.push(x1); v.push(y1)
-            v.push(x2); v.push(y1)
-            v.push(x1); v.push(y2)
-            v.push(x2); v.push(y2)
-
-            //colors, 3 parts (RGB), one per vertice
-            cols.push(cR); cols.push(cG); cols.push(cB)
-            cols.push(cR); cols.push(cG); cols.push(cB)
-            cols.push(cR); cols.push(cG); cols.push(cB)
-            cols.push(cR); cols.push(cG); cols.push(cB)
-        }
-
-
-
         //create vertice and fragment data
         const v = []
         const cols = []
@@ -134,21 +89,77 @@ export class WebGLTestStyle extends Style {
             addRectangleData(v, cols, c.x, c.x + r, c.y, c.y + r, 1, Math.random(), Math.random())
         }
 
-
-
-
-
         //draw all rectangles
         const tr = cg.getWebGLTransform()
         drawRects(p, v, cols, tr)
 
         //draw in canvas geo
         cg.initCanvasTransform()
-        cg.ctx.drawImage(cv2, 0, 0);
+        cg.ctx.drawImage(cvWGL.canvas, 0, 0);
     }
 
 }
 
+
+//rectangle coloring
+
+const getRectangleColoringWebGLProgram = function (gl) {
+    const p = initShaderProgram(
+        gl,
+        createShader(gl, gl.VERTEX_SHADER, `
+        attribute vec2 pos;
+        uniform mat3 mat;
+        attribute vec3 color;
+        varying vec3 vColor;
+        void main() {
+          gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
+          vColor = color;
+        }
+      `),
+        createShader(gl, gl.FRAGMENT_SHADER, `
+        precision mediump float;
+        varying vec3 vColor;
+        void main(void) {
+           gl_FragColor = vec4(vColor, 1.0);
+        }`)
+    );
+    gl.useProgram(p);
+    return p
+}
+
+
+/** Add data to vertices/color buffers for color rectangle drawing */
+const addRectangleData = function (verticesBuffer, colorsBuffer, x1, x2, y1, y2, cR = 0, cG = 0, cB = 1, cA = 0) {
+    //add vertices
+    verticesBuffer.push(x1); verticesBuffer.push(y1)
+    verticesBuffer.push(x2); verticesBuffer.push(y1)
+    verticesBuffer.push(x1); verticesBuffer.push(y2)
+    verticesBuffer.push(x2); verticesBuffer.push(y2)
+
+    //colors, 3 parts (RGB), one per vertice
+    colorsBuffer.push(cR); colorsBuffer.push(cG); colorsBuffer.push(cB)
+    colorsBuffer.push(cR); colorsBuffer.push(cG); colorsBuffer.push(cB)
+    colorsBuffer.push(cR); colorsBuffer.push(cG); colorsBuffer.push(cB)
+    colorsBuffer.push(cR); colorsBuffer.push(cG); colorsBuffer.push(cB)
+}
+
+
+
+
+// generic webgl
+
+/**  */
+const makeWebGLCanvas = function (cg) {
+    const canvas = document.createElement("canvas");
+    canvas.setAttribute("width", cg.w);
+    canvas.setAttribute("height", cg.h);
+    const gl = canvas.getContext("webgl");
+    if (!gl) {
+        console.error(gl, "Unable to initialize WebGL. Your browser or machine may not support it.");
+        return
+    }
+    return { canvas: canvas, gl: gl }
+}
 
 // Initialize a shader program, so WebGL knows how to draw our data
 function initShaderProgram(gl, ...shaders) {
