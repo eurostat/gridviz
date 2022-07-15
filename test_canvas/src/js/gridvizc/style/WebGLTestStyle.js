@@ -105,13 +105,14 @@ export class WebGLTestStyle extends Style {
         const cols = []
         for (let c of cells) {
 
-            let x1 = cg.geoToPixX(c.x)
-            x1 = x1/cg.w * 2 -1
-            let y1 = cg.geoToPixY(c.y)
-            y1 = -y1/cg.h * 2 +1
+            const x1 = cg.geoToPixX(c.x) / cg.w * 2 - 1
+            const y1 = -cg.geoToPixY(c.y) / cg.h * 2 + 1
 
-            const x2 = x1 + 0.005
-            const y2 = y1 + 0.01
+            const dx = r/zf * 2/cg.w -1
+            const dy = r/zf * 2/cg.h -1
+
+            const x2 = x1 + dx
+            const y2 = y1 + dy
 
             v.push(x1); v.push(y1)
             v.push(x2); v.push(y1)
