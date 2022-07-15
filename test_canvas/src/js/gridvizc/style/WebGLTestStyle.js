@@ -91,6 +91,13 @@ export class WebGLTestStyle extends Style {
             //transformation
             gl.uniformMatrix3fv(gl.getUniformLocation(program, "mat"), false, new Float32Array(transfoMat));
 
+            // Enable the depth test
+            //gl.enable(gl.DEPTH_TEST);
+            // Clear the color buffer bit
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            // Set the view port
+            gl.viewport(0, 0, cg.w, cg.h);
+
             for (let i = 0; i < v.length / 8; i++) {
                 gl.drawArrays(
                     gl.TRIANGLE_STRIP, // mode,see https://miro.medium.com/max/700/0*HQHB5lCGqlOUiysy.jpg
@@ -130,20 +137,9 @@ export class WebGLTestStyle extends Style {
         const tr = cg.getWebGLTransform()
         drawRects(p, v, cols, tr)
 
-
-        //...
-        //compute as much as possible in GPU:
-        //- compute geoToScreen in vector shader
-        //- compute value to color in fragment shader
-
-        //generic functions to draw rectangles + lines with width
-        //use webGL mode in relevant styles
-
-
         //draw in canvas geo
         cg.initCanvasTransform()
         cg.ctx.drawImage(cv2, 0, 0);
-
     }
 
 }
