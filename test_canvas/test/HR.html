@@ -227,11 +227,9 @@
 
             pop: {
                 style: [
-                    new gviz.ShapeColorSizeStyle({
+                    new gviz.SquareColoringWebGLStyle({
                         colorCol: "TOTAL",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                        shape: () => "square",
-                        zfStroke: 80,
                     }),
                     new gviz.SideStyle({
                         valueCol: "TOTAL",
@@ -315,11 +313,9 @@
 
             popInact: {
                 style: [
-                    new gviz.ShapeColorSizeStyle({
+                    new gviz.SquareColoringWebGLStyle({
                         colorCol: "INACT_RATE",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
-                        shape: () => "square",
-                        zfStroke: 80,
                     })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
             },
@@ -341,33 +337,27 @@
 
             tourAccNb: {
                 style: [
-                    new gviz.ShapeColorSizeStyle({
+                    new gviz.SquareColoringWebGLStyle({
                         colorCol: "ESTABLISHMENTS - TOTAL",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                        shape: () => "square",
-                        zfStroke: 80,
                     })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
             },
 
             tourAccUnits: {
                 style: [
-                    new gviz.ShapeColorSizeStyle({
+                    new gviz.SquareColoringWebGLStyle({
                         colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                        shape: () => "square",
-                        zfStroke: 80,
                     })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
             },
 
             tourAccBeds: {
                 style: [
-                    new gviz.ShapeColorSizeStyle({
+                    new gviz.SquareColoringWebGLStyle({
                         colorCol: "NUMBER OF PERMANENT BEDS",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                        shape: () => "square",
-                        zfStroke: 80,
                     })
                 ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
             },
