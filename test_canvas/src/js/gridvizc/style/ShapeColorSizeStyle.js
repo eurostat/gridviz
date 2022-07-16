@@ -3,8 +3,6 @@
 import { Style, Stat, getStatistics, Shape } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
-import { makeWebGLCanvas } from "../utils/webGLUtils";
-import { WebGLSquareColoring } from "../utils/WebGLSquareColoring";
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -39,10 +37,6 @@ export class ShapeColorSizeStyle extends Style {
         /** A function returning the shape of a cell.
          * @private @type {function(Cell):Shape} */
         this.shape = opts.shape || (() => "square");
-
-        /** Set to true when 1/ all cells have square shape 2/ webGL is authorised
-         * @private @type {boolean} */
-        this.webGLSquare = opts.webGLSquare
     }
 
 
@@ -71,58 +65,8 @@ export class ShapeColorSizeStyle extends Style {
             statColor = getStatistics(cells, c => c[this.colorCol], true)
         }
 
-
-        if (this.webGLSquare) {
-
-            //draw with webGL
-
-            //create canvas and webgl renderer
-            const cvWGL = makeWebGLCanvas(cg)
-            if (cvWGL) {
-                const prog = new WebGLSquareColoring(cvWGL.gl, resolution/zf + 0.2)
-
-                //add vertice and fragment data
-                for (let c of cells) {
-
-                    //color
-                    //TODO get it directly in RGBA ?
-                    const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
-                    if (!col || col === "none") continue
-
-                    const r2 = resolution / 2
-                    prog.addPointData(c.x + r2, c.y + r2, col)
-                }
-
-                //draw
-                prog.draw(cg.getWebGLTransform())
-
-                //draw in canvas geo
-                cg.initCanvasTransform()
-                cg.ctx.drawImage(cvWGL.canvas, 0, 0);
-
-                /*/draw stroke
-                //TODO
-                for (let c of cells) {
-                    //size
-                    /** @type {function(number,number,Stat|undefined,number):number} */
-                //let s_ = this.size || (() => resolution);
-                //size - in geo unit
-                //const sG = s_(c[this.sizeCol], resolution, statSize, zf)
-                //get offset
-                /*const offset = this.offset(c, resolution, zf)
-                this.drawStroke(c, resolution, cg, "square", sG, offset)
-            }*/
-
-                //update legends
-                this.updateLegends({ style: this, r: resolution, zf: zf, sSize: statSize, sColor: statColor });
-
-                return
-            }
-        }
-
         //draw with HTML canvas
-
-        //draw in geo coordinates
+        //in geo coordinates
         cg.setCanvasTransform()
 
         for (let cell of cells) {
