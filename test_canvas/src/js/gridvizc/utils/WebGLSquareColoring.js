@@ -24,8 +24,8 @@ export class WebGLSquareColoring {
             attribute vec2 pos;
             uniform float sizePix;
             uniform mat3 mat;
-            attribute vec3 color;
-            varying vec3 vColor;
+            attribute vec4 color;
+            varying vec4 vColor;
             void main() {
               gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
               gl_PointSize = sizePix;
@@ -34,9 +34,11 @@ export class WebGLSquareColoring {
           `),
             createShader(gl, gl.FRAGMENT_SHADER, `
             precision mediump float;
-            varying vec3 vColor;
+            varying vec4 vColor;
             void main(void) {
-                gl_FragColor = vec4(vColor / 255.0, 1.0);
+                vec4 vColor_ = vColor / 255.0;
+                vColor_[3] = 255.0 * vColor_[3];
+                gl_FragColor = vColor_;
             }`)
         );
         gl.useProgram(this.program);
@@ -51,11 +53,10 @@ export class WebGLSquareColoring {
         //vertices
         this.verticesBuffer.push(xC, yC)
 
-        //colors, 3 parts (RGB)
-        //TODO add cc.opacity
+        //colors, 4 parts (RGBA)
         const cc = color(col)
         if (!cc) return
-        this.colorsBuffer.push(cc.r, cc.g, cc.b)
+        this.colorsBuffer.push(cc.r, cc.g, cc.b, cc.opacity)
     }
 
 
@@ -81,7 +82,7 @@ export class WebGLSquareColoring {
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.colorsBuffer), gl.STATIC_DRAW);
         var color = gl.getAttribLocation(this.program, "color");
-        gl.vertexAttribPointer(color, 3, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(color, 4, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(color);
 
         //sizePix
