@@ -32,7 +32,7 @@
         const styles = {}
 
         //color style
-        styles.color = [new gviz.ShapeColorSizeStyle({
+        styles.color = [new gviz.SquareColoringWebGLStyle({
             colorCol: "ksmval",
             color: (v, r, s) => {
                 const v_ = Math.pow((v) / s.max, 0.2)
