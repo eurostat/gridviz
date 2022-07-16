@@ -14,19 +14,20 @@
         //make application
         const app = new gviz.App()
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(100)
-            .setLabelLayer(gviz.getEuronymeLabelLayer().setColor(c => "#000"))
+            //.setLabelLayer(gviz.getEuronymeLabelLayer().setColor(c => "#000"))
             //.setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //color style
         const s = new gviz.ShapeColorSizeStyle({
             colorCol: "2018",
             color: (v, r, s) => "lightgray",
+            webGLSquare: true,
             zfStroke: 1000
         })
 
-        const sW = new gviz.WebGLTestStyle()
+        //const sW = new gviz.WebGLTestStyle()
 
-        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [sW], 0, 99999999);
+        app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 0, 99999999);
 
     </script>
 
