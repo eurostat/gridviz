@@ -1,3 +1,4 @@
+check redraws intensity
 make style "webGL pixel color" independant
 simplify - move more computation to fragment side
 
