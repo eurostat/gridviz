@@ -8,6 +8,10 @@ import { initShaderProgram, createShader } from "./webGLUtils";
  */
 export class WebGLRectangleColoring {
 
+
+    //TODO: add color alpha/opacity
+
+
     /**
      * 
      * @param {WebGLRenderingContext} gl 
@@ -45,18 +49,20 @@ export class WebGLRectangleColoring {
     /** Add data to vertices/color buffers for color rectangle drawing */
     addRectangleData(x1, x2, y1, y2, cR = 0, cG = 0, cB = 1, cA = 0) { //TODO cA
         //add vertices
-        const v = this.verticesBuffer
-        v.push(x1); v.push(y1)
-        v.push(x2); v.push(y1)
-        v.push(x1); v.push(y2)
-        v.push(x2); v.push(y2)
+        this.verticesBuffer.push(
+            x1, y1,
+            x2, y1,
+            x1, y2,
+            x2, y2
+        )
 
         //colors, 3 parts (RGB), one per vertice
-        const c = this.colorsBuffer
-        c.push(cR); c.push(cG); c.push(cB)
-        c.push(cR); c.push(cG); c.push(cB)
-        c.push(cR); c.push(cG); c.push(cB)
-        c.push(cR); c.push(cG); c.push(cB)
+        this.colorsBuffer.push(
+            cR, cG, cB,
+            cR, cG, cB,
+            cR, cG, cB,
+            cR, cG, cB
+        )
     }
 
 

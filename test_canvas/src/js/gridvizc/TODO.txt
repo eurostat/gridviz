@@ -1,7 +1,11 @@
-check redraws intensity
 make style "webGL pixel color" independant
+style for cell border - independant. No size, just square/circle, stroke width and color + zoom limit
+
+check redraws intensity
 simplify - move more computation to fragment side
 
+
+TODO BIG DEPLOY ?
 
 
     //https://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html
@@ -13,16 +17,11 @@ simplify - move more computation to fragment side
     //https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html
 
 
-
-style for cell border - independant. No size, just square/circle, stroke width and color + zoom limit
-
 TODO webgl: use for all styles where filled rectangles
 dot density
 sideStyle - new webGL class for line segments ?
 
 value by alpha style: implement it for income map + accessibility
-
-webgl: add color alpha
 
 webgl: draw elements VS draw array
 
