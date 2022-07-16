@@ -1,9 +1,8 @@
 //@ts-check
 
-import { ShapeColorSizeStyle } from "./ShapeColorSizeStyle"
+import { SquareColoringWebGLStyle } from "./SquareColoringWebGLStyle"
 import { SideStyle } from "./SideStyle"
 import { Style } from "../Style"
-import { s } from "../index"
 
 /**
  * 
@@ -68,6 +67,18 @@ export const getLegoStyle = function (col, opts) {
 
 
     /** The color style */
+    const colStyle = new SquareColoringWebGLStyle({
+        colorCol: col,
+        //the color corresponding to the class
+        color: (v, r, s, zf) => {
+            if (v == 0 && opts.valueStretch && isNaN(opts.valueStretch(v, r, s, zf)))
+                return undefined
+            return opts.colors[getClass(opts.valueStretch ? opts.valueStretch(v, r, s, zf) : v)]
+        },
+    })
+
+    /*
+    if no webgl:
     const colStyle = new ShapeColorSizeStyle({
         colorCol: col,
         //the color corresponding to the class
@@ -79,7 +90,7 @@ export const getLegoStyle = function (col, opts) {
         shape: () => "square",
         zfStroke: 0,
     })
-
+*/
 
     /** The side style, for the shadow effect */
     const sideStyle = new SideStyle({

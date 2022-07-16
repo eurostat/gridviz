@@ -1,6 +1,6 @@
 //@ts-check
 
-import { ShapeColorSizeStyle } from "./ShapeColorSizeStyle"
+import { SquareColoringWebGLStyle } from "./SquareColoringWebGLStyle"
 import { SideStyle } from "./SideStyle"
 import { Style } from "../Style"
 
@@ -54,7 +54,8 @@ export const getTanakaStyle = function (col, opts) {
     }
 
     /** The color style */
-    const colStyle = new ShapeColorSizeStyle({
+
+    const colStyle = new SquareColoringWebGLStyle({
         colorCol: col,
         //the color corresponding to the class
         color: (v, r, s, zf) => {
@@ -62,10 +63,24 @@ export const getTanakaStyle = function (col, opts) {
                 return undefined
             return opts.colors[getClass(opts.valueStretch ? opts.valueStretch(v, r, s, zf) : v)]
         },
-        shape: () => "square",
-        size: (v, r, s, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
-        zfStroke: 0,
+        size: (r, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
     })
+
+    /*
+    if no web gl:    
+        const colStyle = new ShapeColorSizeStyle({
+            colorCol: col,
+            //the color corresponding to the class
+            color: (v, r, s, zf) => {
+                if (v == 0 && opts.valueStretch && isNaN(opts.valueStretch(v, r, s, zf)))
+                    return undefined
+                return opts.colors[getClass(opts.valueStretch ? opts.valueStretch(v, r, s, zf) : v)]
+            },
+            shape: () => "square",
+            size: (v, r, s, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
+            zfStroke: 0,
+        })
+    */
 
 
     /** The side style, for the shadow effect */

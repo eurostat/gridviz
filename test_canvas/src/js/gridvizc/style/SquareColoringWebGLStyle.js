@@ -20,7 +20,6 @@ export class SquareColoringWebGLStyle extends Style {
         super(opts)
         opts = opts || {};
 
-
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
          *  @protected @type {string} */
         this.colorCol = opts.colorCol;
@@ -32,7 +31,6 @@ export class SquareColoringWebGLStyle extends Style {
         /** A function returning the size of the cells, in geographical unit.
         * @protected @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
-
     }
 
 
@@ -91,5 +89,7 @@ export class SquareColoringWebGLStyle extends Style {
     getColor() { return this.color; }
     /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
+
+    //TODO for size
 
 }
