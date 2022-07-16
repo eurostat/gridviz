@@ -81,11 +81,9 @@
         //style data
         const sd = {
             scolor: {
-                style: [new gviz.ShapeColorSizeStyle({
+                style: [new gviz.SquareColoringWebGLStyle({
                     colorCol: "Ind",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                    shape: () => "square",
-                    zfStroke: 20
                 })],
                 zooms: [0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]
             },
