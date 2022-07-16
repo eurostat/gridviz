@@ -17,14 +17,12 @@
             //.setLabelLayer(gviz.getEuronymeLabelLayer().setColor(c => "#000"))
             //.setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
-        //color style
+        //style
         const s = new gviz.SquareColoringWebGLStyle({
             colorCol: "2018",
-            color: (v, r, s) => "lightgray",
-            //sizePix: (r, z) => ,
+            color: (v, r, s) => "gray",
+            size: (r, z) => r*0.9,
         })
-
-        //const sW = new gviz.WebGLTestStyle()
 
         app.addTiledGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/2km/", [s], 0, 99999999);
 
