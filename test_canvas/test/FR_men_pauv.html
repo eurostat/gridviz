@@ -18,12 +18,11 @@
         //.setBackgroundColor("black")
 
         //define datasets, styles and layers
-        const s = new gviz.ShapeColorSizeStyle({
+        const s = new gviz.SquareColoringWebGLStyle({
             colorCol: "r",
             color: (v, r, s) => {
                 return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
             },
-            zfStroke: 25
         })
         const ttfun = c => "<b>" + (Math.floor(1000 * c.r) / 10) + "%</b> of poor households."
         const preprocess = c => { c.r = c["Men_pauv"] / c["Men"]; }
