@@ -1,7 +1,7 @@
 //@ts-check
 
 import { initShaderProgram, createShader } from "./webGLUtils";
-
+import { color } from "d3-color";
 
 /**
  * Everything to easily draw colored squares with webGL.
@@ -36,7 +36,7 @@ export class WebGLSquareColoring {
             precision mediump float;
             varying vec3 vColor;
             void main(void) {
-               gl_FragColor = vec4(vColor, 1.0);
+               gl_FragColor = vec4(vColor / 255.0, 1.0);
             }`)
         );
         gl.useProgram(this.program);
@@ -47,14 +47,15 @@ export class WebGLSquareColoring {
     }
 
     /** Add data to vertices/size/color buffers for color squares drawing */
-    addPointData(xC, yC, cR = 0, cG = 0, cB = 1, cA = 0) { //TODO cA
-        //add vertices
-        const v = this.verticesBuffer
-        v.push(xC); v.push(yC)
+    addPointData(xC, yC, col) {
+        //vertices
+        this.verticesBuffer.push(xC, yC)
 
         //colors, 3 parts (RGB)
-        const c = this.colorsBuffer
-        c.push(cR); c.push(cG); c.push(cB)
+        //TODO add cc.opacity
+        const cc = color(col)
+        if (!cc) return
+        this.colorsBuffer.push(cc.r, cc.g, cc.b)
     }
 
 
@@ -84,7 +85,7 @@ export class WebGLSquareColoring {
         gl.enableVertexAttribArray(color);
 
         //sizePix
-        gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0*this.sizePix);
+        gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * this.sizePix);
 
         //transformation
         gl.uniformMatrix3fv(gl.getUniformLocation(this.program, "mat"), false, new Float32Array(transfoMat));

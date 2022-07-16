@@ -1,11 +1,13 @@
-make style "webGL pixel color"
+make style "webGL pixel color" independant
 simplify - move more computation to fragment side
 
+style for cell border - independant. No size, just square/circle, stroke width and color + zoom limit
+
 TODO webgl: use for all styles where filled rectangles
-segment
-sideStyle
 dot density
-composition (flag?)
+sideStyle - new webGL class for line segments ?
+
+value by alpha style: implement it for income map + accessibility
 
 webgl: add color alpha
 

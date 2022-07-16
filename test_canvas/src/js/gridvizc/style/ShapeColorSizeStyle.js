@@ -5,7 +5,6 @@ import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
 import { WebGLSquareColoring } from "../utils/WebGLSquareColoring";
-import { color } from "d3-color";
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -80,23 +79,18 @@ export class ShapeColorSizeStyle extends Style {
             //create canvas and webgl renderer
             const cvWGL = makeWebGLCanvas(cg)
             if (cvWGL) {
-                const prog = new WebGLSquareColoring(cvWGL.gl, resolution/zf + 0.3)
+                const prog = new WebGLSquareColoring(cvWGL.gl, resolution/zf + 0.2)
 
                 //add vertice and fragment data
                 for (let c of cells) {
 
                     //color
-                    //TODO get it dirctly in RGBA ?
+                    //TODO get it directly in RGBA ?
                     const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
                     if (!col || col === "none") continue
 
-                    /** @type {import("d3-color").RGBColor | import("d3-color").HSLColor| null} */
-                    //TODO include - move to fragment ?
-                    const cc = color(col)
-                    if (!cc) continue
-
                     const r2 = resolution / 2
-                    prog.addPointData(c.x + r2, c.y + r2, cc.r / 255, cc.g / 255, cc.b / 255, cc.opacity)
+                    prog.addPointData(c.x + r2, c.y + r2, col)
                 }
 
                 //draw
