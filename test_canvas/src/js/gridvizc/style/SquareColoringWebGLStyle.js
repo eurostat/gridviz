@@ -7,6 +7,9 @@ import { makeWebGLCanvas } from "../utils/webGLUtils";
 import { WebGLSquareColoring } from "../utils/WebGLSquareColoring";
 
 /**
+ * Style based on webGL
+ * To show cells as colored squares
+ * Alls squares with the same size
  * 
  * @author Julien Gaffuri
  */
@@ -25,6 +28,11 @@ export class SquareColoringWebGLStyle extends Style {
         /** A function returning the color of the cell.
         * @protected @type {function(number,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
+
+        /** A function returning the size of the cells, in geographical unit.
+        * @protected @type {function(number,number):number} */
+        this.size = opts.size; // (resolution, zf) => ...
+
     }
 
 
@@ -50,7 +58,8 @@ export class SquareColoringWebGLStyle extends Style {
             return
         }
 
-        const prog = new WebGLSquareColoring(cvWGL.gl, resolution / zf + 0.2)
+        const size = this.size ? this.size(resolution, zf) :  || resolution / zf + 0.2
+        const prog = new WebGLSquareColoring(cvWGL.gl, size)
 
         //add vertice and fragment data
         for (let c of cells) {
