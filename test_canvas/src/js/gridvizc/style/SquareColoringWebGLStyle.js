@@ -58,8 +58,8 @@ export class SquareColoringWebGLStyle extends Style {
             return
         }
 
-        const size = this.size ? this.size(resolution, zf) :  || resolution / zf + 0.2
-        const prog = new WebGLSquareColoring(cvWGL.gl, size)
+        const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
+        const prog = new WebGLSquareColoring(cvWGL.gl, sizeGeo / zf)
 
         //add vertice and fragment data
         for (let c of cells) {

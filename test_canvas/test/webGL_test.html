@@ -18,9 +18,10 @@
             //.setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //color style
-        const s = new gviz.ShapeColorSizeStyle({
+        const s = new gviz.SquareColoringWebGLStyle({
             colorCol: "2018",
             color: (v, r, s) => "lightgray",
+            //sizePix: (r, z) => ,
         })
 
         //const sW = new gviz.WebGLTestStyle()
