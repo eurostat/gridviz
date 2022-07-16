@@ -1,4 +1,5 @@
 make style "webGL pixel color" independant
+
 style for cell border - independant. No size, just square/circle, stroke width and color + zoom limit
 
 check redraws intensity
