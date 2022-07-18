@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <title></title>
+</head>
+
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
+    <canvas id="vacanvas" style="height:100%; width:100%;"></canvas>
+
+    <script src="../build/gridvizc.js"></script>
+    <script>
+
+        //make application
+        const app = new gviz.App()
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setZoomFactorExtent([15, 3000])
+            .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20"))
+            .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+
+        //test view from URL parameters, if any
+        app.cg.setViewFromURL()
+
+        //define datasets, styles and layers
+        const s = new gviz.SquareColoringWebGLStyle({
+            colorCol: "r",
+            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
+        })
+        //legend
+        //.addLegend({ color: { id: "clegend", bottom: "20px", left: "20px", title: "Revenu (€/mois/'personne')", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.min + (s.max - s.min) * Math.pow(1 - t, 1 / 1.5), invert: true, tickUnit: " €" } });
+
+        const ttfun = c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'"
+        const preprocess = c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
+        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
+        app.addMultiScaleTiledGridLayer(url,
+            [
+                { code: "200m/", styles: [s], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "400m/", styles: [s], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "1000m/", styles: [s], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "2000m/", styles: [s], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "5000m/", styles: [s], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "10000m/", styles: [s], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "20000m/", styles: [s], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+                { code: "50000m/", styles: [s], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
+            ],
+            [0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]
+        )
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
