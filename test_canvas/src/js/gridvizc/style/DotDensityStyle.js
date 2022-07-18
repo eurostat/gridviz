@@ -52,10 +52,7 @@ export class DotDensityStyle extends Style {
         const zf = cg.getZf()
 
         let stat
-        if (this.col) {
-            //compute variable statistics
-            stat = getStatistics(cells, c => c[this.col], true)
-        }
+        if (this.col) stat = getStatistics(cells, c => c[this.col], true)
         if (!stat) return
 
         //size of the dots
@@ -67,80 +64,80 @@ export class DotDensityStyle extends Style {
 
 
 
+        /*
+                if (checkWebGLSupport()) {
+        
+                    //create canvas and webgl renderer
+                    const cvWGL = makeWebGLCanvas(cg)
+                    if (!cvWGL) {
+                        console.error("No webGL")
+                        return
+                    }
+        
+                    //create webGL program
+                    const prog = new WebGLSquareColoring(cvWGL.gl, sGeo / zf)
+        
+                    const r2 = r / 2
+                    for (let c of cells) {
+        
+                        //get color
+                        const col = this.color(c);
+                        if (!col || col === "none") continue
+        
+                        //get offset
+                        const offset = this.offset(c, r, zf)
+        
+                        //number of dots
+                        const nb = this.nb(c[this.col], r, stat, zf) * 0.01
+        
+                        //cell center
+                        const cx = c.x + offset.dx + r2,
+                            cy = c.y + offset.dy + r2
+        
+                        //random points
+                        for (let i = 0; i <= nb; i++)
+                            prog.addPointData(cx + rand(), cy + rand(), col)
+        
+                        //draw
+                        prog.draw(cg.getWebGLTransform())
+        
+                        //draw in canvas geo
+                        cg.initCanvasTransform()
+                        cg.ctx.drawImage(cvWGL.canvas, 0, 0);
+                    }
+        
+                } else {*/
 
-        if (checkWebGLSupport()) {
+        //draw with HTML canvas
 
-            //create canvas and webgl renderer
-            const cvWGL = makeWebGLCanvas(cg)
-            if (!cvWGL) {
-                console.error("No webGL")
-                return
+        //draw in geo coordinates
+        cg.setCanvasTransform()
+
+        for (let c of cells) {
+
+            //get color
+            const col = this.color(c);
+            if (!col || col === "none") continue
+            //set color
+            cg.ctx.fillStyle = col;
+
+            //get offset
+            const offset = this.offset(c, r, zf)
+
+            //number of dots
+            const nb = this.nb(c[this.col], r, stat, zf)
+
+            //draw random dots
+            const cx = c.x + offset.dx + r / 2,
+                cy = c.y + offset.dy + r / 2
+            for (let i = 0; i <= nb; i++) {
+                cg.ctx.fillRect(
+                    cx + rand(),
+                    cy + rand(),
+                    sGeo, sGeo);
             }
 
-            //create webGL program
-            const prog = new WebGLSquareColoring(cvWGL.gl, sGeo / zf)
-
-            const r2 = r / 2
-            for (let c of cells) {
-
-                //get color
-                const col = this.color(c);
-                if (!col || col === "none") continue
-
-                //get offset
-                const offset = this.offset(c, r, zf)
-
-                //number of dots
-                const nb = this.nb(c[this.col], r, stat, zf) * 0.01
-
-                //cell center
-                const cx = c.x + offset.dx + r2,
-                    cy = c.y + offset.dy + r2
-
-                //random points
-                for (let i = 0; i <= nb; i++)
-                    prog.addPointData(cx + rand(), cy + rand(), col)
-
-                //draw
-                prog.draw(cg.getWebGLTransform())
-
-                //draw in canvas geo
-                cg.initCanvasTransform()
-                cg.ctx.drawImage(cvWGL.canvas, 0, 0);
-            }
-
-        } else {
-
-            //draw with HTML canvas
-
-            //draw in geo coordinates
-            cg.setCanvasTransform()
-
-            for (let c of cells) {
-
-                //get color
-                const col = this.color(c);
-                if (!col || col === "none") continue
-                //set color
-                cg.ctx.fillStyle = col;
-
-                //get offset
-                const offset = this.offset(c, r, zf)
-
-                //number of dots
-                const nb = this.nb(c[this.col], r, stat, zf)
-
-                //draw random dots
-                const cx = c.x + offset.dx + r / 2,
-                    cy = c.y + offset.dy + r / 2
-                for (let i = 0; i <= nb; i++) {
-                    cg.ctx.fillRect(
-                        cx + rand(),
-                        cy + rand(),
-                        sGeo, sGeo);
-                }
-
-            }
+            //  }
 
         }
 
