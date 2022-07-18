@@ -33,3 +33,18 @@ export function createShader(gl, type, ...sources) {
     if (gl.getShaderParameter(shader, gl.COMPILE_STATUS)) return shader;
     throw new Error(gl.getShaderInfoLog(shader));
 }
+
+
+/**
+ * Check if webGL is supported
+ * 
+ * @returns {boolean}
+ */
+export function checkWebGLSupport() {
+    try {
+        const canvas = document.createElement('canvas');
+        return !!window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+    } catch (err) {
+        return false;
+    }
+};

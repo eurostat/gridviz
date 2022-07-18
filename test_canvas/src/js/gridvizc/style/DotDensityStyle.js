@@ -66,6 +66,8 @@ export class DotDensityStyle extends Style {
         const sig = this.sigma ? this.sigma(r) : r * 0.4
         const rand = randomNormal(0, sig);
 
+        
+
         for (let c of cells) {
 
             //get color
