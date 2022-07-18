@@ -22,7 +22,6 @@ text style: test smaller
 
 
 TODO webgl: use for all styles where filled rectangles
-dot density
 sideStyle - new webGL class for line segments ?
 
 value by alpha style: implement it for income map + accessibility

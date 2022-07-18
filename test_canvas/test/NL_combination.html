@@ -19,7 +19,6 @@
             heightCol: "Inhabitants",
             height: (v, r, s, zf) => 2 * r * Math.sqrt(v / s.max),
             fillColor: "#77777777",
-            zfStroke: 3
         });
         const s2 = new gviz.ShapeColorSizeStyle({
             colorCol: "r",
@@ -27,7 +26,6 @@
             sizeCol: "Inhabitants",
             size: (v, r, s, zf) => r * Math.sqrt(v / s.max),
             shape: () => "circle",
-            zfStroke: 1
         });
         app.addCSVGridLayer("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Netherlands/100m/NL_census.csv", 100, [s1, s2], 0, 9999999999,
             {

@@ -107,7 +107,6 @@
                         colorCol: getSelectedYear(),
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                         shape: () => "circle",
-                        zfStroke: 80,
                     })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
@@ -118,7 +117,6 @@
                         sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => 1 * r * gviz.s(v / s.max, 0.3),
                         shape: () => "square",
-                        zfStroke: 80
                     })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
@@ -128,7 +126,6 @@
                         sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
                         shape: () => "circle",
-                        zfStroke: 80
                     })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
@@ -241,7 +238,6 @@
                             return gviz.interpolateSpectral(1 - t);
                         },
                         shape: () => "square",
-                        zfStroke: 80,
                     })],
                     zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
                 },
@@ -254,7 +250,6 @@
                             return gviz.interpolateSpectral(1 - t);
                         },
                         shape: () => "circle",
-                        zfStroke: 80,
                     })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
@@ -269,7 +264,6 @@
                             return 1 * r * gviz.s(Math.abs(v) / max, 0.2)
                         },
                         shape: () => "square",
-                        zfStroke: 80
                     })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },
@@ -283,7 +277,6 @@
                             return 1.5 * r * gviz.s(Math.abs(v) / max, 0.2)
                         },
                         shape: () => "circle",
-                        zfStroke: 80
                     })],
                     zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
                 },

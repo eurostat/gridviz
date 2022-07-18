@@ -37,6 +37,8 @@ export class ShapeColorSizeStyle extends Style {
         /** A function returning the shape of a cell.
          * @private @type {function(Cell):Shape} */
         this.shape = opts.shape || (() => "square");
+
+        this.strokeOnly = opts.strokeOnly || false
     }
 
 

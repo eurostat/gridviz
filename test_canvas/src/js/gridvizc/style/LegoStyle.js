@@ -88,7 +88,6 @@ export const getLegoStyle = function (col, opts) {
             return opts.colors[getClass(opts.valueStretch ? opts.valueStretch(v, r, s, zf) : v)]
         },
         shape: () => "square",
-        zfStroke: 0,
     })
 */
 
