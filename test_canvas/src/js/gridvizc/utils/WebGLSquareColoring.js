@@ -54,7 +54,8 @@ export class WebGLSquareColoring {
         this.verticesBuffer.push(xC, yC)
 
         //colors, 4 parts (RGBA)
-        const cc = color(col)
+        //const cc = color(col)
+        const cc = {r:45,g:87,b:98,opacity:0.9}
         if (!cc) return
         this.colorsBuffer.push(cc.r, cc.g, cc.b, cc.opacity)
     }

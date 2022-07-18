@@ -71,9 +71,8 @@ export class SquareColoringWebGLStyle extends Style {
 
             //color
             //TODO get it directly in RGBA ?
-            //const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
-            //if (!col || col === "none") continue
-            const col = "red"
+            const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
+            if (!col || col === "none") continue
 
             const r2 = resolution / 2
             prog.addPointData(c.x + r2, c.y + r2, col)
