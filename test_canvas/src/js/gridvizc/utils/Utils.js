@@ -2,18 +2,18 @@
 
 
 
-let duration
+let previousDate
 export function monitorDuration(message) {
-    const nD = Date.now();
+    const nowDate = Date.now();
 
     //first call
-    if (!duration) {
-        duration = nD
-        console.log(duration, message)
+    if (!previousDate) {
+        previousDate = nowDate
+        console.log(previousDate, message)
         return
     }
 
-    const d = nD - duration
-    duration = nD
+    const d = nowDate - previousDate
+    previousDate = nowDate
     console.log(d, message)
 }
