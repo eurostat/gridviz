@@ -62,7 +62,7 @@ export class App {
          * @type {GeoCanvas} @private */
         this.cg = new GeoCanvas();
         this.cg.redraw = () => {
-            monitorDuration("Start redraw")
+            if (this.monitorDuration) monitorDuration("Start redraw")
             //console.log(this.cg.getZf(), this.cg.getCenter())
 
             //detach all legend elements
@@ -114,7 +114,7 @@ export class App {
             if (this.showLabels && this.labelLayer)
                 this.labelLayer.draw(this.cg)
 
-            monitorDuration("End redraw")
+            if (this.monitorDuration) monitorDuration("End redraw")
 
             return this
         };
@@ -178,6 +178,8 @@ export class App {
         this.cg.canvas.addEventListener("mouseover", e => { focusCell(e) });
         this.cg.canvas.addEventListener("mousemove", e => { focusCell(e) });
         this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
+
+        this.monitorDuration = false
     }
 
 
