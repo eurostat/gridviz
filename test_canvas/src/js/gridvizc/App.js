@@ -19,6 +19,7 @@ import { SizeLegend } from './legend/SizeLegend'
 import { SegmentWidthLegend } from './legend/SegmentWidthLegend'
 
 import { select } from "d3-selection";
+import { monitorDuration } from "./utils/Utils"
 
 /**
  * A gridviz on a HTML canvas.
@@ -61,6 +62,7 @@ export class App {
          * @type {GeoCanvas} @private */
         this.cg = new GeoCanvas();
         this.cg.redraw = () => {
+            monitorDuration("Start redraw")
             //console.log(this.cg.getZf(), this.cg.getCenter())
 
             //detach all legend elements
@@ -111,6 +113,8 @@ export class App {
             //draw label layer
             if (this.showLabels && this.labelLayer)
                 this.labelLayer.draw(this.cg)
+
+            monitorDuration("End redraw")
 
             return this
         };
