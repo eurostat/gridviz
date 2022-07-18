@@ -5,6 +5,7 @@ import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
 import { WebGLSquareColoring } from "../utils/WebGLSquareColoring";
+import { monitorDuration } from "../utils/Utils"
 
 /**
  * Style based on webGL
@@ -40,6 +41,8 @@ export class SquareColoringWebGLStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
+        monitorDuration("SquareColoringWebGLStyle draw")
+
         //zoom factor
         const zf = cg.getZf()
 
@@ -48,6 +51,7 @@ export class SquareColoringWebGLStyle extends Style {
             //compute color variable statistics
             statColor = getStatistics(cells, c => c[this.colorCol], true)
         }
+        monitorDuration("   color stats computation")
 
         //create canvas and webgl renderer
         const cvWGL = makeWebGLCanvas(cg)
@@ -55,9 +59,12 @@ export class SquareColoringWebGLStyle extends Style {
             console.error("No webGL")
             return
         }
+        monitorDuration("   web GL canvas creation")
 
         const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
         const prog = new WebGLSquareColoring(cvWGL.gl, sizeGeo / zf)
+
+        monitorDuration("   preparation")
 
         //add vertice and fragment data
         for (let c of cells) {
@@ -71,15 +78,23 @@ export class SquareColoringWebGLStyle extends Style {
             prog.addPointData(c.x + r2, c.y + r2, col)
         }
 
+        monitorDuration("   webgl drawing data preparation")
+
         //draw
         prog.draw(cg.getWebGLTransform())
+
+        monitorDuration("   webgl drawing")
 
         //draw in canvas geo
         cg.initCanvasTransform()
         cg.ctx.drawImage(cvWGL.canvas, 0, 0);
 
+        monitorDuration("   canvas drawing")
+
         //update legends
         this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor });
+
+        monitorDuration("SquareColoringWebGLStyle end draw")
     }
 
 
