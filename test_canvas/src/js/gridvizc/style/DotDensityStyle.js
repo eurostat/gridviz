@@ -6,6 +6,8 @@ import { GeoCanvas } from "../GeoCanvas";
 import { randomNormal } from "d3-random"
 import { checkWebGLSupport, makeWebGLCanvas } from "../utils/webGLUtils"
 import { WebGLSquareColoring } from "../utils/WebGLSquareColoring";
+import { color } from "d3-color";
+import { monitorDuration } from "../utils/Utils";
 
 /**
  * 
@@ -37,6 +39,8 @@ export class DotDensityStyle extends Style {
         /** A function returning the sigma of the distribution from the resolution, in geo unit.
         * @protected @type {function(number):number} */
         this.sigma = opts.sigma //|| ((r) => ...
+
+        this.monitorDuration = true
     }
 
 
@@ -48,6 +52,8 @@ export class DotDensityStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
+        if (this.monitorDuration) monitorDuration("*** DotDensityStyle draw")
+
         //zoom factor
         const zf = cg.getZf()
 
@@ -62,89 +68,100 @@ export class DotDensityStyle extends Style {
         const sig = this.sigma ? this.sigma(r) : r * 0.4
         const rand = randomNormal(0, sig);
 
+        if (this.monitorDuration) monitorDuration(" preparation")
 
+        if (checkWebGLSupport()) {
 
-        /*
-                if (checkWebGLSupport()) {
-        
-                    //create canvas and webgl renderer
-                    const cvWGL = makeWebGLCanvas(cg)
-                    if (!cvWGL) {
-                        console.error("No webGL")
-                        return
-                    }
-        
-                    //create webGL program
-                    const prog = new WebGLSquareColoring(cvWGL.gl, sGeo / zf)
-        
-                    const r2 = r / 2
-                    for (let c of cells) {
-        
-                        //get color
-                        const col = this.color(c);
-                        if (!col || col === "none") continue
-        
-                        //get offset
-                        const offset = this.offset(c, r, zf)
-        
-                        //number of dots
-                        const nb = this.nb(c[this.col], r, stat, zf)
-        
-                        //cell center
-                        const cx = c.x + offset.dx + r2,
-                            cy = c.y + offset.dy + r2
-        
-                        //random points
-                        for (let i = 0; i <= nb; i++)
-                            prog.addPointData(cx + rand(), cy + rand(), col)
-        
-                        //draw
-                        prog.draw(cg.getWebGLTransform())
-        
-                        //draw in canvas geo
-                        cg.initCanvasTransform()
-                        cg.ctx.drawImage(cvWGL.canvas, 0, 0);
-                    }
-        
-                } else {*/
-
-        //draw with HTML canvas
-
-        //draw in geo coordinates
-        cg.setCanvasTransform()
-
-        for (let c of cells) {
-
-            //get color
-            const col = this.color(c);
-            if (!col || col === "none") continue
-            //set color
-            cg.ctx.fillStyle = col;
-
-            //get offset
-            const offset = this.offset(c, r, zf)
-
-            //number of dots
-            const nb = this.nb(c[this.col], r, stat, zf)
-
-            //draw random dots
-            const cx = c.x + offset.dx + r / 2,
-                cy = c.y + offset.dy + r / 2
-            for (let i = 0; i <= nb; i++) {
-                cg.ctx.fillRect(
-                    cx + rand(),
-                    cy + rand(),
-                    sGeo, sGeo);
+            //create canvas and webgl renderer
+            const cvWGL = makeWebGLCanvas(cg)
+            if (!cvWGL) {
+                console.error("No webGL")
+                return
             }
 
-            //  }
+            //create webGL program
+            const prog = new WebGLSquareColoring(cvWGL.gl, sGeo / zf)
+
+            if (this.monitorDuration) monitorDuration(" webgl creation")
+
+            const r2 = r / 2
+            for (let c of cells) {
+
+                //get color
+                const col = this.color(c);
+                if (!col || col === "none") continue
+
+                //get offset
+                const offset = this.offset(c, r, zf)
+
+                //number of dots
+                const nb = this.nb(c[this.col], r, stat, zf)
+
+                //cell center
+                const cx = c.x + offset.dx + r2,
+                    cy = c.y + offset.dy + r2
+
+                //convert color
+                const cc = color(col)
+                if (!cc) return
+
+                //random points
+                for (let i = 0; i <= nb; i++)
+                    prog.addPointData2(cx + rand(), cy + rand(), cc)
+
+            }
+
+            if (this.monitorDuration) monitorDuration(" data preparation")
+
+            //draw
+            prog.draw(cg.getWebGLTransform())
+
+            if (this.monitorDuration) monitorDuration(" webgl drawing")
+
+            //draw in canvas geo
+            cg.initCanvasTransform()
+            cg.ctx.drawImage(cvWGL.canvas, 0, 0);
+
+            if (this.monitorDuration) monitorDuration(" canvas drawing")
+        } else {
+
+            //draw with HTML canvas
+
+            //draw in geo coordinates
+            cg.setCanvasTransform()
+
+            for (let c of cells) {
+
+                //get color
+                const col = this.color(c);
+                if (!col || col === "none") continue
+                //set color
+                cg.ctx.fillStyle = col;
+
+                //get offset
+                const offset = this.offset(c, r, zf)
+
+                //number of dots
+                const nb = this.nb(c[this.col], r, stat, zf)
+
+                //draw random dots
+                const cx = c.x + offset.dx + r / 2,
+                    cy = c.y + offset.dy + r / 2
+                for (let i = 0; i <= nb; i++) {
+                    cg.ctx.fillRect(
+                        cx + rand(),
+                        cy + rand(),
+                        sGeo, sGeo);
+                }
+
+            }
 
         }
 
-
-
         //update legends
         this.updateLegends({ style: this, r: r, zf: zf });
+
+        if (this.monitorDuration) monitorDuration("*** DotDensityStyle end draw")
     }
 
 }
