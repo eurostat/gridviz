@@ -396,9 +396,9 @@
                         col: getSelectedYear(),
                         nb: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            return 0.3 * r * r / (zf * zf) * gviz.s(Math.abs(v) / max, 0.4)
+                            return 1 * r * r / (zf * zf) * gviz.s(Math.abs(v) / max, 0.4)
                         },
-                        dotSize: (r, zf) => 2.5 * zf,
+                        dotSize: (r, zf) => 1.2 * zf,
                         color: (c) => c[getSelectedYear()] > 0 ? "#d13c4b" : "#4288b5",
                     })],
                     zooms: [0, 250, 500, 1250, 2500, 5000, 12500, 25000]
