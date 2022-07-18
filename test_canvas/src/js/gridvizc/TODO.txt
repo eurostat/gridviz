@@ -1,9 +1,11 @@
 style for cell border - independant. No size, just square/circle, stroke width and color + zoom limit
 
 improve performence:
+monitor dirations - find limit - improve it
 check "cg.redraw" intensity
 check gl parameters?
 simplify - move more computation to fragment side
+Possible: on tile loading, after loading, redraw only if necessary, that is if the tile is within the viewport
 
 
 TODO BIG DEPLOY ?
