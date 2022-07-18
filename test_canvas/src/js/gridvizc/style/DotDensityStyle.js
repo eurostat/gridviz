@@ -40,7 +40,7 @@ export class DotDensityStyle extends Style {
         * @protected @type {function(number):number} */
         this.sigma = opts.sigma //|| ((r) => ...
 
-        this.monitorDuration = true
+        this.monitorDuration = false
     }
 
 
