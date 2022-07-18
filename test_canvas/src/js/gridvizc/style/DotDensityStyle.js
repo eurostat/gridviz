@@ -88,7 +88,7 @@ export class DotDensityStyle extends Style {
                         const offset = this.offset(c, r, zf)
         
                         //number of dots
-                        const nb = this.nb(c[this.col], r, stat, zf) * 0.01
+                        const nb = this.nb(c[this.col], r, stat, zf)
         
                         //cell center
                         const cx = c.x + offset.dx + r2,

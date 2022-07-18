@@ -50,14 +50,19 @@ export class WebGLSquareColoring {
 
     /** Add data to vertices/size/color buffers for color squares drawing */
     addPointData(xC, yC, col) {
-        //vertices
-        this.verticesBuffer.push(xC, yC)
-
-        //colors, 4 parts (RGBA)
+        //convert color
         const cc = color(col)
         //const cc = {r:45,g:87,b:98,opacity:0.9}
         if (!cc) return
-        this.colorsBuffer.push(cc.r, cc.g, cc.b, cc.opacity)
+
+        this.addPointData2(xC, yC, cc)
+    }
+
+    addPointData2(xC, yC, { r: r, g: g, b: b, opacity: o }) {
+        //vertices
+        this.verticesBuffer.push(xC, yC)
+        //color
+        this.colorsBuffer.push(r, g, b, o)
     }
 
 
