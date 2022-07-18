@@ -41,7 +41,7 @@ export class SquareColoringWebGLStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
-        monitorDuration("SquareColoringWebGLStyle draw")
+        monitorDuration("*** SquareColoringWebGLStyle draw")
 
         //zoom factor
         const zf = cg.getZf()
@@ -71,8 +71,9 @@ export class SquareColoringWebGLStyle extends Style {
 
             //color
             //TODO get it directly in RGBA ?
-            const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
-            if (!col || col === "none") continue
+            //const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
+            //if (!col || col === "none") continue
+            const col = "red"
 
             const r2 = resolution / 2
             prog.addPointData(c.x + r2, c.y + r2, col)
@@ -94,7 +95,7 @@ export class SquareColoringWebGLStyle extends Style {
         //update legends
         this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor });
 
-        monitorDuration("SquareColoringWebGLStyle end draw")
+        monitorDuration("*** SquareColoringWebGLStyle end draw")
     }
 
 
