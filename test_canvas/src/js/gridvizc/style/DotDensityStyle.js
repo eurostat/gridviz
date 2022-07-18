@@ -91,15 +91,22 @@ export class DotDensityStyle extends Style {
                 const offset = this.offset(c, r, zf)
 
                 //number of dots
-                const nb = this.nb(c[this.col], r, stat, zf)
+                const nb = this.nb(c[this.col], r, stat, zf) * 0.01
 
-                //draw random dots
+                //cell center
                 const cx = c.x + offset.dx + r2,
                     cy = c.y + offset.dy + r2
 
-                //Random points
+                //random points
                 for (let i = 0; i <= nb; i++)
-                    prog.addPointData(c.x + rand(), c.y + rand(), col)
+                    prog.addPointData(cx + rand(), cy + rand(), col)
+
+                //draw
+                prog.draw(cg.getWebGLTransform())
+
+                //draw in canvas geo
+                cg.initCanvasTransform()
+                cg.ctx.drawImage(cvWGL.canvas, 0, 0);
             }
 
         } else {
