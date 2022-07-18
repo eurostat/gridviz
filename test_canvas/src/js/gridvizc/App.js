@@ -273,6 +273,9 @@ export class App {
         const zooms = [];
         zooms.push(z0);
         for (let r of resolutions) zooms.push(resToZoomMult * r)
+        zooms.pop()
+        zooms.push(zMax);
+        console.log(zooms)
 
         //make layer
         this.layers.push(new MultiScaleLayer(layers, zooms));

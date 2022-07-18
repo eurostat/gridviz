@@ -13,7 +13,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setZoomFactorExtent([0, Infinity])
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(100).setZoomFactorExtent([30, 30000])
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20"))
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
@@ -28,17 +28,13 @@
         //legend
         //.addLegend({ color: { id: "clegend", bottom: "20px", left: "20px", title: "Revenu (€/mois/'personne')", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => s.min + (s.max - s.min) * Math.pow(1 - t, 1 / 1.5), invert: true, tickUnit: " €" } });
 
-        const ttfun = c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'"
-        const preprocess = c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
         const urlBase = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
-
         const resolutions = [200, 400, 1000, 2000, 5000, 10000, 20000, 50000]
-        app.addMultiScaleTiledGridLayer2(urlBase, resolutions, r => r + "m/", [s], 0, 2, Infinity, { cellInfoHTML: ttfun, preprocess: preprocess })
-
-        //[0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]
-
-
-
+        app.addMultiScaleTiledGridLayer2(urlBase, resolutions, r => r + "m/", [s],
+            0, 0.75, Infinity, {
+            cellInfoHTML: c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'",
+            preprocess: c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
+        })
     </script>
 
 </body>
