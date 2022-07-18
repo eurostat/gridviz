@@ -32,6 +32,8 @@ export class SquareColoringWebGLStyle extends Style {
         /** A function returning the size of the cells, in geographical unit.
         * @protected @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
+
+        this.monitorDuration = false
     }
 
 
@@ -41,7 +43,7 @@ export class SquareColoringWebGLStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
-        monitorDuration("*** SquareColoringWebGLStyle draw")
+        if(this.monitorDuration) monitorDuration("*** SquareColoringWebGLStyle draw")
 
         //zoom factor
         const zf = cg.getZf()
@@ -51,7 +53,7 @@ export class SquareColoringWebGLStyle extends Style {
             //compute color variable statistics
             statColor = getStatistics(cells, c => c[this.colorCol], true)
         }
-        monitorDuration("   color stats computation")
+        if(this.monitorDuration) monitorDuration("   color stats computation")
 
         //create canvas and webgl renderer
         const cvWGL = makeWebGLCanvas(cg)
@@ -59,12 +61,12 @@ export class SquareColoringWebGLStyle extends Style {
             console.error("No webGL")
             return
         }
-        monitorDuration("   web GL canvas creation")
+        if(this.monitorDuration) monitorDuration("   web GL canvas creation")
 
         const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
         const prog = new WebGLSquareColoring(cvWGL.gl, sizeGeo / zf)
 
-        monitorDuration("   preparation")
+        if(this.monitorDuration) monitorDuration("   preparation")
 
         //add vertice and fragment data
         for (let c of cells) {
@@ -78,23 +80,23 @@ export class SquareColoringWebGLStyle extends Style {
             prog.addPointData(c.x + r2, c.y + r2, col)
         }
 
-        monitorDuration("   webgl drawing data preparation")
+        if(this.monitorDuration) monitorDuration("   webgl drawing data preparation")
 
         //draw
         prog.draw(cg.getWebGLTransform())
 
-        monitorDuration("   webgl drawing")
+        if(this.monitorDuration) monitorDuration("   webgl drawing")
 
         //draw in canvas geo
         cg.initCanvasTransform()
         cg.ctx.drawImage(cvWGL.canvas, 0, 0);
 
-        monitorDuration("   canvas drawing")
+        if(this.monitorDuration) monitorDuration("   canvas drawing")
 
         //update legends
         this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor });
 
-        monitorDuration("*** SquareColoringWebGLStyle end draw")
+        if(this.monitorDuration) monitorDuration("*** SquareColoringWebGLStyle end draw")
     }
 
 
