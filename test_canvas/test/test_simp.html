@@ -30,8 +30,13 @@
 
         const ttfun = c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'"
         const preprocess = c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
-        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
-        app.addMultiScaleTiledGridLayer(url,
+        const urlBase = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
+
+        const resolutions = [200, 400, 1000, 2000, 5000, 10000, 20000, 50000]
+        app.addMultiScaleTiledGridLayer2(urlBase, resolutions, r => r + "m", [s], { cellInfoHTML: ttfun, preprocess: preprocess })
+        //(urlBase, resolutions, resToURLCode, styles, opts) {
+
+        app.addMultiScaleTiledGridLayer(urlBase,
             [
                 { code: "200m/", styles: [s], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
                 { code: "400m/", styles: [s], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
