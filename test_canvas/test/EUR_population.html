@@ -212,9 +212,9 @@
                 dot: {
                     style: [new gviz.DotDensityStyle({
                         col: getSelectedYear(),
-                        nb: (v, r, s, zf) => 0.9 * r * r / (zf * zf) * gviz.s(v / s.max, 0.4),
-                        dotSize: (r, zf) => 1 * zf,
-                        color: () => "#FF5733aa"
+                        nb: (v, r, s, zf) => 1 * r * r / (zf * zf) * gviz.s(v / s.max, 0.4),
+                        dotSize: (r, zf) => 1.2 * zf,
+                        color: () => "#FF5733"
                     })],
                     zooms: [0, 250, 500, 1250, 2500, 5000, 12500, 25000]
                 },
