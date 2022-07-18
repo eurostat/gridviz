@@ -5,17 +5,16 @@ import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
 /**
- * A very generic style that shows grid cells with specific color, size and shape.
- * It can be used to show variables as cell colors, cell size, cell shape, or any combination of the three visual variables.
  * 
  * @author Julien Gaffuri
  */
-export class ShapeColorSizeStyle extends Style {
+export class StrokeStyle extends Style {
 
     /** @param {object} opts */
     constructor(opts) {
         super(opts)
         opts = opts || {};
+
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
          *  @protected @type {string} */
@@ -33,9 +32,14 @@ export class ShapeColorSizeStyle extends Style {
         * @protected @type {function(number,number,Stat|undefined,number):number} */
         this.size = opts.size;
 
+        /** The stroke line width, in pixels.
+        * @protected @type {function(number,number,Stat|undefined,number):number} */
+         this.strokeWidth = opts.strokeWidth || (() => 1);
+
         /** A function returning the shape of a cell.
          * @private @type {function(Cell):Shape} */
         this.shape = opts.shape || (() => "square");
+
     }
 
 
@@ -115,11 +119,52 @@ export class ShapeColorSizeStyle extends Style {
             } else {
                 throw new Error('Unexpected shape:' + shape);
             }
-
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: zf, sSize: statSize, sColor: statColor });
+        //this.updateLegends({ style: this, r: resolution, zf: zf, sSize: statSize, sColor: statColor });
+
+
+
+
+/*
+
+        if (!this.zfStroke || cg.getZf() > this.zfStroke) return;
+
+        cg.ctx.strokeStyle = this.strokeColor;
+        cg.ctx.lineWidth = this.strokeWidth * cg.getZf();
+
+        if (shape === "square") {
+            //draw square
+            const d = resolution * (1 - size / resolution) * 0.5
+            cg.ctx.beginPath();
+            cg.ctx.rect(
+                cell.x + d + offset.dx,
+                cell.y + d + offset.dy,
+                size, size);
+            cg.ctx.stroke();
+
+        } else if (shape === "circle") {
+            //draw circle
+            cg.ctx.beginPath();
+            cg.ctx.arc(
+                cell.x + resolution * 0.5 + offset.dx,
+                cell.y + resolution * 0.5 + offset.dy,
+                size * 0.5,
+                0, 2 * Math.PI, false);
+            cg.ctx.stroke();
+        } else if (shape === "donut") {
+            //console.error("Not implemented")
+        } else {
+            throw new Error('Unexpected shape:' + shape);
+        }
+
+
+
+*/
+
+
+
     }
 
 
@@ -134,6 +179,14 @@ export class ShapeColorSizeStyle extends Style {
     getSize() { return this.size; }
     /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
     setSize(val) { this.size = val; return this; }
+
+
+    /** @returns {number} */
+    getStrokeWidth() { return this.strokeWidth; }
+    /** @param {number} val @returns {this} */
+    setStrokeWidth(val) { this.strokeWidth = val; return this; }
+
+
 
     /** @returns {function(Cell):Shape} */
     getShape() { return this.shape; }

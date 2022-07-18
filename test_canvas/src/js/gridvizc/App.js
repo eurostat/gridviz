@@ -64,7 +64,7 @@ export class App {
         this.cg.redraw = () => {
             if (this.monitorDuration) monitorDuration("Start redraw")
             //console.log(this.cg.getZf(), this.cg.getCenter())
-            console.log("redraw")
+            //console.log("redraw")
 
             //detach all legend elements
             if (this.legend)
