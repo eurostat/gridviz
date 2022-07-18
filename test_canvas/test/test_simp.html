@@ -33,9 +33,8 @@
         const urlBase = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
 
         const resolutions = [200, 400, 1000, 2000, 5000, 10000, 20000, 50000]
-        app.addMultiScaleTiledGridLayer2(urlBase, resolutions, r => r + "m", [s], { cellInfoHTML: ttfun, preprocess: preprocess })
-        //(urlBase, resolutions, resToURLCode, styles, opts) {
-
+        app.addMultiScaleTiledGridLayer2(urlBase, resolutions, r => r + "m/", [s], { cellInfoHTML: ttfun, preprocess: preprocess })
+/*
         app.addMultiScaleTiledGridLayer(urlBase,
             [
                 { code: "200m/", styles: [s], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
@@ -49,7 +48,7 @@
             ],
             [0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]
         )
-
+*/
 
 
 
