@@ -65,7 +65,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 4806935, y: 2446234 }).setZoomFactor(400).setZoomFactorExtent([10, 2000]).addZoomSlider("zoomSlider")
+            .setGeoCenter({ x: 4806935, y: 2446234 }).setZoomFactor(400.1).setZoomFactorExtent([10, 2000]).addZoomSlider("zoomSlider")
             .setLabelLayer(gviz.getEuronymeLabelLayer("HR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //test view from URL parameters, if any
@@ -240,7 +240,7 @@
                             return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
                         },
                     })
-                ], resZF: 0.3
+                ], resZF: 0.2
             },
 
             popGender: {
