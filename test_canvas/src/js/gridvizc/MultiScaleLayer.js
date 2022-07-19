@@ -49,7 +49,7 @@ export class MultiScaleLayer extends ALayer {
             i++;
             z = this.resToZoomFactor * this.resolutions[i]
         }
-        if (i == this.resolutions.length) return;
+        if (i == 0) return this.layers[0];
         return this.layers[i - 1];
     }
 
