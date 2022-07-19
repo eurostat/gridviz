@@ -122,41 +122,6 @@
         s.size_ = (v, r, s, zf) => r - 1.5 * zf
 
 
-        const ttfun = c => {
-            let out = "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>"
-            if (getAggUI()) {
-                out = out + "  < 18: " + d3.format(".1f")(c["Ind_0_17"]) + "<br>" +
-                    " 18-64: " + d3.format(".1f")(c["Ind_18_64"]) + "<br>" +
-                    "  > 65: " + d3.format(".1f")(c["Ind_65p"]) + "<br>" +
-                    " unk.: " + d3.format(".1f")(c["Ind_inc"]) + "<br>";
-                /*out = out + "  < 24: " + d3.format(".1f")(c["Ind_0_24"]) + "<br>" +
-                " 25-54: " + d3.format(".1f")(c["Ind_25_54"]) + "<br>" +
-                "  > 55: " + d3.format(".1f")(c["Ind_55p"]) + "<br>" +
-                " unk.: " + d3.format(".1f")(c["Ind_inc"]) + "<br>";*/
-            } else {
-                out = out + " < 3 : " + (c["Ind_0_3"]) + "<br>" +
-                    " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
-                    " 6-10: " + (c["Ind_6_10"]) + "<br>" +
-                    "11-17: " + (c["Ind_11_17"]) + "<br>" +
-                    "18-24: " + (c["Ind_18_24"]) + "<br>" +
-                    "25-39: " + (c["Ind_25_39"]) + "<br>" +
-                    "40-54: " + (c["Ind_40_54"]) + "<br>" +
-                    "55-64: " + (c["Ind_55_64"]) + "<br>" +
-                    "65-79: " + (c["Ind_65_79"]) + "<br>" +
-                    " > 80: " + (c["Ind_80p"]) + "<br>" +
-                    " unk.: " + (c["Ind_inc"]) + "<br>";
-            }
-            return out
-        }
-
-        preprocess = c => {
-            c["Ind_0_17"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"]
-            c["Ind_18_64"] = +c["Ind_18_24"] + +c["Ind_25_39"] + +c["Ind_40_54"] + +c["Ind_55_64"]
-            c["Ind_65p"] = +c["Ind_65_79"] + +c["Ind_80p"]
-            //c["Ind_0_24"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"]
-            //c["Ind_25_54"] = +c["Ind_25_39"] + +c["Ind_40_54"]
-            //c["Ind_55p"] = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
-        }
 
         /*
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
@@ -184,10 +149,42 @@
             r => r + "m/",
             [getStyle()],
             {
-                cellInfoHTML: ttfun,
-                preprocess: preprocess
+                cellInfoHTML: c => {
+                    let out = "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>"
+                    if (getAggUI()) {
+                        out = out + "  < 18: " + d3.format(".1f")(c["Ind_0_17"]) + "<br>" +
+                            " 18-64: " + d3.format(".1f")(c["Ind_18_64"]) + "<br>" +
+                            "  > 65: " + d3.format(".1f")(c["Ind_65p"]) + "<br>" +
+                            " unk.: " + d3.format(".1f")(c["Ind_inc"]) + "<br>";
+                        /*out = out + "  < 24: " + d3.format(".1f")(c["Ind_0_24"]) + "<br>" +
+                        " 25-54: " + d3.format(".1f")(c["Ind_25_54"]) + "<br>" +
+                        "  > 55: " + d3.format(".1f")(c["Ind_55p"]) + "<br>" +
+                        " unk.: " + d3.format(".1f")(c["Ind_inc"]) + "<br>";*/
+                    } else {
+                        out = out + " < 3 : " + (c["Ind_0_3"]) + "<br>" +
+                            " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
+                            " 6-10: " + (c["Ind_6_10"]) + "<br>" +
+                            "11-17: " + (c["Ind_11_17"]) + "<br>" +
+                            "18-24: " + (c["Ind_18_24"]) + "<br>" +
+                            "25-39: " + (c["Ind_25_39"]) + "<br>" +
+                            "40-54: " + (c["Ind_40_54"]) + "<br>" +
+                            "55-64: " + (c["Ind_55_64"]) + "<br>" +
+                            "65-79: " + (c["Ind_65_79"]) + "<br>" +
+                            " > 80: " + (c["Ind_80p"]) + "<br>" +
+                            " unk.: " + (c["Ind_inc"]) + "<br>";
+                    }
+                    return out
+                },
+                preprocess: c => {
+                    c["Ind_0_17"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"]
+                    c["Ind_18_64"] = +c["Ind_18_24"] + +c["Ind_25_39"] + +c["Ind_40_54"] + +c["Ind_55_64"]
+                    c["Ind_65p"] = +c["Ind_65_79"] + +c["Ind_80p"]
+                    //c["Ind_0_24"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"]
+                    //c["Ind_25_54"] = +c["Ind_25_39"] + +c["Ind_40_54"]
+                    //c["Ind_55p"] = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
+                }
             },
-            15/200)
+            0.05)
 
 
 
