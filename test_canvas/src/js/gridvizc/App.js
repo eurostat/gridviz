@@ -237,15 +237,17 @@ export class App {
 
 
     /**
+     * 
+     * 
      * @param {string} urlBase 
-    * @param {Array.<number>} resolutions 
+     * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURLCode 
      * @param {Array.<Style>} styles 
      * @param {object} opts 
-    * @param {number} resToZoomFactor 
-    * @param {number} z0 
-    * @param {number} zMax 
-     * @returns 
+     * @param {number} resToZoomFactor 
+     * @param {number} z0 
+     * @param {number} zMax 
+     * @returns {this}
      */
     addMultiScaleTiledGridLayer2(urlBase, resolutions, resToURLCode, styles, opts, resToZoomFactor = 0.5, z0 = 0, zMax = Infinity) {
         this.layers.push(this.makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, resToZoomFactor = 0.5, z0 = 0, zMax = Infinity));
