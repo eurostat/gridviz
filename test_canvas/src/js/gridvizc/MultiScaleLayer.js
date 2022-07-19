@@ -11,8 +11,14 @@ import { Style } from "./Style";
 export class MultiScaleLayer extends ALayer {
 
     /**
+     * 
+     * @param {Array.<Layer>} layers 
+     * @param {Array.<number>} resolutions 
+     * @param {number} resToZoomFactor 
+     * @param {number} z0 
+     * @param {number} zMax 
      */
-    constructor(layers, resolutions, resToZoomFactor, z0 = 0, zMax=Infinity) {
+    constructor(layers, resolutions, resToZoomFactor, z0 = 0, zMax = Infinity) {
         super()
 
         /** @type {Array.<Layer>} */
@@ -36,16 +42,16 @@ export class MultiScaleLayer extends ALayer {
      * @returns {Layer|undefined}  */
     getLayer(zf) {
 
-/*
-        //zoom breaks
-        const zooms = [];
-        zooms.push(z0);
-        for (let r of resolutions) zooms.push(resToZoomMult * r)
-        zooms.pop()
-        zooms.push(zMax);
-        console.log(zooms)
-
-*/
+        /*
+                //zoom breaks
+                const zooms = [];
+                zooms.push(z0);
+                for (let r of resolutions) zooms.push(resToZoomMult * r)
+                zooms.pop()
+                zooms.push(zMax);
+                console.log(zooms)
+        
+        */
 
         let i = 0;
         let z = this.zooms[i];
