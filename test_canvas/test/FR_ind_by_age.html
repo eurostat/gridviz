@@ -64,9 +64,7 @@
                 },
                 lineDash: () => [],
             }))
-
-        //test view from URL parameters, if any
-        app.cg.setViewFromURL()
+            .setViewFromURL()
 
         //get aggregation from UI
         const getAggUI = () => {
@@ -160,6 +158,7 @@
             //c["Ind_55p"] = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
         }
 
+        /*
         const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
         app.addMultiScaleTiledGridLayer(url,
             [
@@ -177,7 +176,18 @@
             [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
             //[0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
         )
+*/
 
+        app.addMultiScaleTiledGridLayer2(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
+            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+            r => r + "m/",
+            [getStyle()],
+            {
+                cellInfoHTML: ttfun,
+                preprocess: preprocess
+            },
+            15/200)
 
 
 
