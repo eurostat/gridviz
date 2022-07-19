@@ -86,6 +86,7 @@
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                 })],
                 zooms: [0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]
+                , resZF: 80 / 200
             },
             ccolor: {
                 style: [new gviz.ShapeColorSizeStyle({
@@ -94,6 +95,7 @@
                     shape: () => "circle",
                 })],
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
+                , resZF: 30 / 200
             },
 
             square: {
@@ -104,6 +106,7 @@
                     shape: () => "square",
                 })],
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
+                , resZF: 30 / 200
             },
             circle: {
                 style: [new gviz.ShapeColorSizeStyle({
@@ -113,6 +116,7 @@
                     shape: () => "circle",
                 })],
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
+                , resZF: 30 / 200
             },
             donut: {
                 style: [new gviz.ShapeColorSizeStyle({
@@ -122,6 +126,7 @@
                     shape: () => "donut",
                 })],
                 zooms: [0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
+                , resZF: 20 / 200
             },
 
 
@@ -134,6 +139,7 @@
                     width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
                 })],
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
+                , resZF: 15 / 200
             },
             segmentV: {
                 style: [new gviz.SegmentStyle({
@@ -144,6 +150,7 @@
                     width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
                 })],
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
+                , resZF: 15 / 200
             },
             segmentO: {
                 style: [new gviz.SegmentStyle({
@@ -154,6 +161,7 @@
                     width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25) / 1.4142,
                 })],
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
+                , resZF: 15 / 200
             },
 
             joyplot: {
@@ -164,6 +172,7 @@
                 })],
                 zooms: [0, 40, 80, 200, 400, 1000, 2000, 4000, 10000]
                 //zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
+                , resZF: 40 / 200
             },
             side: {
                 style: [new gviz.SideStyle({
@@ -177,6 +186,7 @@
                     fillColor: (c) => "#e2c9b2",
                 })],
                 zooms: [0, 30, 60, 150, 300, 750, 1500, 3000, 7500]
+                , resZF: 30 / 200
             },
             tanaka: {
                 style: gviz.getTanakaStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
@@ -186,12 +196,13 @@
                 zooms: [0, 50, 100, 250, 500, 1250, 2500, 5000, 12500]
                 //zooms: [0, 60, 120, 300, 600, 1500, 3000, 6000, 15000]
                 //zooms: [0, 80, 160, 400, 800, 2000, 4000, 8000, 20000]
-
+                , resZF: 50 / 200
             },
             lego: {
                 style: gviz.getLegoStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
                 //zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
                 zooms: [0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
+                , resZF: 20 / 200
             },
             pillar: {
                 style: [new gviz.PillarStyle({
@@ -199,6 +210,7 @@
                     height: (v, r, s, z) => 15 * r * gviz.s(v / s.max, 0.7),
                 })],
                 zooms: [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
+                , resZF: 15 / 200
             },
             dot: {
                 style: [new gviz.DotDensityStyle({
@@ -208,6 +220,7 @@
                     color: () => "#FF5733"
                 })],
                 zooms: [0, 50, 100, 250, 500, 1250, 2500, 5000, 12500]
+                , resZF: 50 / 200
             },
             text: {
                 style: [new gviz.TextStyle({
@@ -220,6 +233,7 @@
                     fontSize: ((v, r, s, z) => 1.2 * r),
                 })],
                 zooms: [0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
+                , resZF: 0.1
             }
         }
 
