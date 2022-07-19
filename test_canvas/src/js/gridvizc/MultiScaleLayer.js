@@ -43,22 +43,13 @@ export class MultiScaleLayer extends ALayer {
     getLayer(zf) {
         if (zf < this.z0 || zf > this.zMax) return;
 
-        /*
-                //zoom breaks
-                const zooms = [];
-                zooms.push(z0);
-                for (let r of resolutions) zooms.push(resToZoomMult * r)
-                zooms.pop()
-                zooms.push(zMax);
-                console.log(zooms)
-        
-        */
-
         let i = 0;
-        let r = this.resolutions[i];
-        let z = this.resToZoomFactor * r
-        while (z < zf && i < this.zooms.length) { i++; z = this.zooms[i] }
-        if (i == this.zooms.length) return;
+        let z = this.resToZoomFactor * this.resolutions[i]
+        while (z < zf && i < this.resolutions.length) {
+            i++;
+            z = this.resToZoomFactor * this.resolutions[i]
+        }
+        if (i == this.resolutions.length) return;
         return this.layers[i - 1];
     }
 
