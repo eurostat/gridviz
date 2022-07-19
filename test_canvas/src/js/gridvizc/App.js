@@ -236,25 +236,18 @@ export class App {
     }
 
 
-
-
     /**
-     * @param {string} urlBase
-     * @param {Array.<{ code:string, styles:Array.<Style>, opts:object }>} layersInfo
-     * @param {Array.<number>} zooms
-     * @returns {this}
+     * 
+     * @param {string} urlBase 
+    * @param {Array.<number>} resolutions 
+     * @param {function(number):string} resToURLCode 
+     * @param {Array.<Style>} styles 
+     * @param {object} opts 
+    * @param {number} resToZoomFactor 
+    * @param {number} z0 
+    * @param {number} zMax 
+     * @returns 
      */
-    addMultiScaleTiledGridLayer(urlBase, layersInfo, zooms) {
-        const layers = [];
-        for (const li of layersInfo)
-            layers.push(new Layer(new TiledGrid(urlBase + li.code, this, li.opts).loadInfo(() => { this.cg.redraw(); }), li.styles))
-        this.layers.push(new MultiScaleLayer(layers, zooms));
-        return this;
-    }
-
-
-
-
     addMultiScaleTiledGridLayer2(urlBase, resolutions, resToURLCode, styles, opts, resToZoomFactor = 0.5, z0 = 0, zMax = Infinity) {
 
         //create the layers
