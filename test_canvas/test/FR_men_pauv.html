@@ -24,17 +24,16 @@
                 return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
             },
         })
-        const ttfun = c => "<b>" + (Math.floor(1000 * c.r) / 10) + "%</b> of poor households."
-        const preprocess = c => { c.r = c["Men_pauv"] / c["Men"]; }
-        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
-        app.addTiledGridLayer(url + "200m/", [s], 0, 100, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer(url + "400m/", [s], 100, 200, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer(url + "1000m/", [s], 200, 500, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer(url + "2000m/", [s], 500, 1000, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer(url + "5000m/", [s], 1000, 2500, { cellInfoHTML: ttfun, preprocess: preprocess });
-        app.addTiledGridLayer(url + "10000m/", [s], 2500, 5000, { cellInfoHTML: ttfun, preprocess: preprocess });
-        //app.addTiledGridLayer(url + "20000m/", [s], 5000, 10000, { cellInfoHTML: ttfun, preprocess: preprocess });
-        //app.addTiledGridLayer(url + "50000m/", [s], 10000, 9999999999, { cellInfoHTML: ttfun, preprocess: preprocess });
+
+        const urlBase = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
+        const resolutions = [200, 400, 1000, 2000, 5000, 10000, 20000, 50000]
+        app.addMultiScaleTiledGridLayer2(urlBase, resolutions, r => r + "m/", [s],
+            {
+                cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.r) / 10) + "%</b> of poor households.",
+                preprocess: c => { c.r = c["Men_pauv"] / c["Men"]; }
+            },
+            0.25)
+
     </script>
 
     <div
