@@ -122,30 +122,6 @@
         s.size_ = (v, r, s, zf) => r - 1.5 * zf
 
 
-
-        /*
-        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
-        app.addMultiScaleTiledGridLayer(url,
-            [
-                { code: "200m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "400m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "1000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "2000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "5000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "10000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "20000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-                { code: "50000m/", styles: [getStyle()], opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
-            ],
-            //[0, 5, 10, 25, 50, 125, 250, 500, 1250]
-            //[0, 10, 20, 50, 100, 250, 500, 1000, 2500]
-            [0, 15, 30, 75, 150, 375, 750, 1500, 3750]
-            //[0, 20, 40, 100, 200, 500, 1000, 2000, 5000]
-        )
-*/
-
-
-
-
         app.addMultiScaleTiledGridLayer2(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
@@ -187,7 +163,7 @@
                     //c["Ind_55p"] = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
                 }
             },
-            0.00005)
+            0.025)
 
 
 
