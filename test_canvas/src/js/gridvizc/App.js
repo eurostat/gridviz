@@ -237,7 +237,6 @@ export class App {
 
 
     /**
-     * 
      * @param {string} urlBase 
     * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURLCode 
@@ -249,6 +248,11 @@ export class App {
      * @returns 
      */
     addMultiScaleTiledGridLayer2(urlBase, resolutions, resToURLCode, styles, opts, resToZoomFactor = 0.5, z0 = 0, zMax = Infinity) {
+        this.layers.push(this.makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, resToZoomFactor = 0.5, z0 = 0, zMax = Infinity));
+        return this;
+    }
+
+    makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, resToZoomFactor = 0.5, z0 = 0, zMax = Infinity) {
 
         //create the layers
         const layers = [];
@@ -263,9 +267,9 @@ export class App {
         }
 
         //make layer
-        this.layers.push(new MultiScaleLayer(layers, resolutions, resToZoomFactor, z0, zMax));
-        return this;
+        return new MultiScaleLayer(layers, resolutions, resToZoomFactor, z0, zMax)
     }
+
 
 
     /**
