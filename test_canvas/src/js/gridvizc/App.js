@@ -539,4 +539,10 @@ export class App {
     }
 
 
+    /** */
+    setViewFromURL() {
+        this.cg.setViewFromURL()
+        return this
+    }
+
 }
