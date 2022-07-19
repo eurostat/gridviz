@@ -11,20 +11,22 @@ import { Style } from "./Style";
 export class MultiScaleLayer extends ALayer {
 
     /**
-     * @param {Array.<Layer>} layers 
-     * @param {Array.<number>} zooms 
      */
-    constructor(layers, zooms) {
+    constructor(layers, resolutions, resToZoomFactor, z0 = 0, zMax=Infinity) {
         super()
-
-        if (layers.length + 1 != zooms.length)
-            throw new Error('Inconsistant number of layers / zooms in multiscale layer definition.');
 
         /** @type {Array.<Layer>} */
         this.layers = layers;
 
         /** @type {Array.<number>} */
-        this.zooms = zooms;
+        this.resolutions = resolutions;
+
+        /** @type {number} */
+        this.resToZoomFactor = resToZoomFactor;
+        /** @type {number} */
+        this.z0 = z0;
+        /** @type {number} */
+        this.zMax = zMax;
 
         //NB: minZoom and maxZoom of layers do not need to be maintained consistant with this.zooms
     }
@@ -33,6 +35,18 @@ export class MultiScaleLayer extends ALayer {
      * @param {number} zf 
      * @returns {Layer|undefined}  */
     getLayer(zf) {
+
+/*
+        //zoom breaks
+        const zooms = [];
+        zooms.push(z0);
+        for (let r of resolutions) zooms.push(resToZoomMult * r)
+        zooms.pop()
+        zooms.push(zMax);
+        console.log(zooms)
+
+*/
+
         let i = 0;
         let z = this.zooms[i];
         if (zf < z) return;

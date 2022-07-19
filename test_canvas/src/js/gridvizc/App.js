@@ -255,7 +255,7 @@ export class App {
 
 
 
-    addMultiScaleTiledGridLayer2(urlBase, resolutions, resToURLCode, styles, z0 = 0, resToZoomMult, zMax=Infinity, opts) {
+    addMultiScaleTiledGridLayer2(urlBase, resolutions, resToURLCode, styles, opts, resToZoomFactor = 0.5, z0 = 0, zMax = Infinity) {
 
         //create the layers
         const layers = [];
@@ -269,16 +269,8 @@ export class App {
                 styles))
         }
 
-        //zoom breaks
-        const zooms = [];
-        zooms.push(z0);
-        for (let r of resolutions) zooms.push(resToZoomMult * r)
-        zooms.pop()
-        zooms.push(zMax);
-        console.log(zooms)
-
         //make layer
-        this.layers.push(new MultiScaleLayer(layers, zooms));
+        this.layers.push(new MultiScaleLayer(layers, resolutions, resToZoomFactor, z0, zMax));
         return this;
     }
 

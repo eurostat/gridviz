@@ -31,10 +31,11 @@
         const urlBase = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
         const resolutions = [200, 400, 1000, 2000, 5000, 10000, 20000, 50000]
         app.addMultiScaleTiledGridLayer2(urlBase, resolutions, r => r + "m/", [s],
-            0, 0.75, Infinity, {
-            cellInfoHTML: c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'",
-            preprocess: c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
-        })
+            {
+                cellInfoHTML: c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'",
+                preprocess: c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
+            },
+            0.75)
     </script>
 
 </body>
