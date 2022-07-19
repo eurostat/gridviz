@@ -41,6 +41,7 @@ export class MultiScaleLayer extends ALayer {
      * @param {number} zf 
      * @returns {Layer|undefined}  */
     getLayer(zf) {
+        if (zf < this.z0 || zf > this.zMax) return;
 
         /*
                 //zoom breaks
@@ -54,8 +55,8 @@ export class MultiScaleLayer extends ALayer {
         */
 
         let i = 0;
-        let z = this.zooms[i];
-        if (zf < z) return;
+        let r = this.resolutions[i];
+        let z = this.resToZoomFactor * r
         while (z < zf && i < this.zooms.length) { i++; z = this.zooms[i] }
         if (i == this.zooms.length) return;
         return this.layers[i - 1];
