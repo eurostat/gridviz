@@ -539,7 +539,7 @@ export class App {
     }
 
 
-    /** */
+    /** @returns {this} */
     setViewFromURL() {
         this.cg.setViewFromURL()
         return this
