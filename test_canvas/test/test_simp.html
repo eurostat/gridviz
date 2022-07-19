@@ -16,25 +16,20 @@
             .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(500).setZoomFactorExtent([0, 9990000])
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20"))
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
-
-        //test view from URL parameters, if any
-        .cg.setViewFromURL()
-
-        //define datasets, styles and layers
-        const s = new gviz.SquareColoringWebGLStyle({
-            colorCol: "r",
-            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
-        })
-
-        app.addMultiScaleTiledGridLayer2(
-            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
-            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-            r => r + "m/", [s],
-            {
-                cellInfoHTML: c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'",
-                preprocess: c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
-            },
-            0.25)
+            .setViewFromURL()
+            .addMultiScaleTiledGridLayer2(
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
+                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+                r => r + "m/",
+                [new gviz.SquareColoringWebGLStyle({
+                    colorCol: "r",
+                    color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
+                })],
+                {
+                    cellInfoHTML: c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'",
+                    preprocess: c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
+                },
+                0.25)
 
     </script>
 
