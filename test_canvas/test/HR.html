@@ -240,8 +240,7 @@
                             return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
                         },
                     })
-                ], zooms: [0, 300, 600, 900, 1500, 2100, 3000, 4500, 7500, 12000, 99999999]
-                , resZF: 0.3
+                ], resZF: 0.3
             },
 
             popGender: {
@@ -257,8 +256,7 @@
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
                     })
-                ], zooms: [0, 100, 200, 300, 500, 700, 1000, 1500, 2500, 4000, 99999999]
-                , resZF: 0.1
+                ], resZF: 0.1
             },
 
             popAge: {
@@ -274,8 +272,7 @@
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         agePyramidHeight: (r) => 0.95 * r
                     })
-                ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
-                , resZF: 0.05
+                ], resZF: 0.05
             },
 
             popEducation: {
@@ -292,8 +289,7 @@
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         agePyramidHeight: (r) => 0.95 * r
                     })
-                ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
-                , resZF: 0.05
+                ], resZF: 0.05
             },
 
             popLabor: {
@@ -309,8 +305,7 @@
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         stripesOrientation: () => 90
                     })
-                ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
-                , resZF: 0.05
+                ], resZF: 0.05
             },
 
             popInact: {
@@ -319,8 +314,7 @@
                         colorCol: "INACT_RATE",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
                     })
-                ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
-                , resZF: 0.5
+                ], resZF: 0.5
             },
 
             busSector: {
@@ -335,8 +329,7 @@
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
                     })
-                ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
-                , resZF: 0.05
+                ], resZF: 0.05
             },
 
             tourAccNb: {
@@ -345,8 +338,7 @@
                         colorCol: "ESTABLISHMENTS - TOTAL",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                     })
-                ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
-                , resZF: 0.5
+                ], resZF: 0.5
             },
 
             tourAccUnits: {
@@ -355,8 +347,7 @@
                         colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                     })
-                ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
-                , resZF: 0.5
+                ], resZF: 0.5
             },
 
             tourAccBeds: {
@@ -365,8 +356,7 @@
                         colorCol: "NUMBER OF PERMANENT BEDS",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                     })
-                ], zooms: [0, 500, 1000, 1500, 2500, 3500, 5000, 7500, 12500, 20000, 99999999]
-                , resZF: 0.5
+                ], resZF: 0.5
             },
 
             tourOriginArr: {
@@ -384,8 +374,7 @@
                         sizeCol: "TOTAL ARRIVALS",
                         size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
                     })
-                ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
-                , resZF: 0.05
+                ], resZF: 0.05
             },
 
             tourOriginNights: {
@@ -403,8 +392,7 @@
                         sizeCol: "TOTAL NIGHTS",
                         size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
                     })
-                ], zooms: [0, 50, 100, 150, 250, 350, 500, 750, 1250, 2000, 99999999]
-                , resZF: 0.05
+                ], resZF: 0.05
             },
         }
 
@@ -417,7 +405,7 @@
             const style = styles[layCode].style
             for (let r of resolutions)
                 ls.push(new gviz.Layer(ds[r], style))
-            layers[layCode] = [new gviz.MultiScaleLayer(ls, styles[layCode].zooms)]
+            layers[layCode] = [new gviz.MultiScaleLayer(ls, resolutions, styles[layCode].resZF)]
         }
 
 
