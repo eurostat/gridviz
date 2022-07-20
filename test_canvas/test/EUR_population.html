@@ -99,7 +99,7 @@
                     style: [new gviz.SquareColoringWebGLStyle({
                         colorCol: getSelectedYear(),
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                    })], resZF: 10
+                    })], resZF: 5
                 },
                 circleColor: {
                     style: [new gviz.ShapeColorSizeStyle({
@@ -115,7 +115,7 @@
                         sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => 1 * r * gviz.s(v / s.max, 0.3),
                         shape: () => "square",
-                    })], resZF: 10
+                    })], resZF: 15
                 },
                 circleSize: {
                     style: [new gviz.ShapeColorSizeStyle({
@@ -123,7 +123,7 @@
                         sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
                         shape: () => "circle",
-                    })], resZF: 10
+                    })], resZF: 15
                 },
                 donut: {
                     style: [new gviz.ShapeColorSizeStyle({
@@ -131,7 +131,7 @@
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.3),
                         color: () => "#c08c59",
                         shape: () => "donut",
-                    })], resZF: 10
+                    })], resZF: 20
                 },
 
                 segmentH: {
@@ -141,7 +141,7 @@
                         length: (v, r) => r,
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                    })], resZF: 10
+                    })], resZF: 15
                 },
                 segmentV: {
                     style: [new gviz.SegmentStyle({
@@ -150,7 +150,7 @@
                         length: (v, r) => r,
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                    })], resZF: 10
+                    })], resZF: 15
                 },
                 segmentO: {
                     style: [new gviz.SegmentStyle({
@@ -159,7 +159,7 @@
                         length: (v, r) => r * 1.4142,
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25) / 1.4142,
-                    })], resZF: 10
+                    })], resZF: 15
                 },
 
                 joyplot: {
@@ -187,13 +187,13 @@
                 },
                 lego: {
                     style: gviz.getLegoStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
-                    resZF: 10
+                    resZF: 20
                 },
                 pillar: {
                     style: [new gviz.PillarStyle({
                         heightCol: getSelectedYear(),
                         height: (v, r, s, z) => 15 * r * gviz.s(v / s.max, 0.7),
-                    })], resZF: 10
+                    })], resZF: 25
                 },
                 dot: {
                     style: [new gviz.DotDensityStyle({
@@ -212,7 +212,7 @@
                         },
                         color: (v, r, s) => "#c08c59",
                         fontSize: ((v, r, s, z) => 1.2 * r),
-                    })], resZF: 10
+                    })], resZF: 15
                 }
             },
             popchange: {
@@ -225,7 +225,7 @@
                             return gviz.interpolateSpectral(1 - t);
                         },
                         shape: () => "square",
-                    })], resZF: 10
+                    })], resZF: 5
                 },
                 circleColor: {
                     style: [new gviz.ShapeColorSizeStyle({
@@ -249,7 +249,7 @@
                             return 1 * r * gviz.s(Math.abs(v) / max, 0.2)
                         },
                         shape: () => "square",
-                    })], resZF: 10
+                    })], resZF: 15
                 },
                 circleSize: {
                     style: [new gviz.ShapeColorSizeStyle({
@@ -261,7 +261,7 @@
                             return 1.5 * r * gviz.s(Math.abs(v) / max, 0.2)
                         },
                         shape: () => "circle",
-                    })], resZF: 10
+                    })], resZF: 15
                 },
                 donut: {
                     style: [new gviz.ShapeColorSizeStyle({
@@ -273,7 +273,7 @@
                             return r * gviz.s(Math.abs(v) / max, 0.3)
                         },
                         shape: () => "donut",
-                    })], resZF: 10
+                    })], resZF: 20
                 },
 
                 segmentH: {
@@ -287,7 +287,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * gviz.s(Math.abs(v) / max, 0.25)
                         }
-                    })], resZF: 10
+                    })], resZF: 15
                 },
                 segmentV: {
                     style: [new gviz.SegmentStyle({
@@ -300,7 +300,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * gviz.s(Math.abs(v) / max, 0.25)
                         }
-                    })], resZF: 10
+                    })], resZF: 15
                 },
                 segmentO: {
                     style: [new gviz.SegmentStyle({
@@ -313,7 +313,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * gviz.s(Math.abs(v) / max, 0.25) / 1.4142
                         }
-                    })], resZF: 10
+                    })], resZF: 15
                 },
 
                 joyplot: {
@@ -347,7 +347,7 @@
                 lego: {
                     //TODO adapt to pop change
                     style: gviz.getLegoStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
-                    resZF: 10
+                    resZF: 20
                 },
                 pillar: {
                     style: [new gviz.PillarStyle({
@@ -358,7 +358,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return 15 * r * gviz.s(Math.abs(v) / max, 0.7)
                         },
-                    })], resZF: 10
+                    })], resZF: 25
                 },
                 dot: {
                     style: [new gviz.DotDensityStyle({
@@ -382,7 +382,7 @@
                         colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         fontSize: ((v, r, s, z) => 1.2 * r),
-                    })], resZF: 10
+                    })], resZF: 15
                 }
             }
         }
