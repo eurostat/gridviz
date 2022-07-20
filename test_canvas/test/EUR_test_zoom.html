@@ -18,9 +18,7 @@
         const app = new gviz.App()
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(100).setZoomFactorExtent([50, 11000])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
-
-        //add zoom slider
-        app.addZoomSlider("zoomSlider")
+            .addZoomSlider("zoomSlider")
 
         //style data
         const s = new gviz.SquareColoringWebGLStyle({
