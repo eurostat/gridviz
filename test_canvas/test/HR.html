@@ -235,7 +235,7 @@
                             return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
                         },
                     })
-                ], resZF: 5
+                ], pixNb: 5
             },
 
             popGender: {
@@ -251,7 +251,7 @@
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
                     })
-                ], resZF: 10
+                ], pixNb: 10
             },
 
             popAge: {
@@ -267,7 +267,7 @@
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         agePyramidHeight: (r) => 0.95 * r
                     })
-                ], resZF: 20
+                ], pixNb: 20
             },
 
             popEducation: {
@@ -284,7 +284,7 @@
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         agePyramidHeight: (r) => 0.95 * r
                     })
-                ], resZF: 20
+                ], pixNb: 20
             },
 
             popLabor: {
@@ -300,7 +300,7 @@
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         stripesOrientation: () => 90
                     })
-                ], resZF: 20
+                ], pixNb: 20
             },
 
             popInact: {
@@ -309,7 +309,7 @@
                         colorCol: "INACT_RATE",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
                     })
-                ], resZF: 3
+                ], pixNb: 3
             },
 
             busSector: {
@@ -324,7 +324,7 @@
                         sizeCol: "TOTAL",
                         size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
                     })
-                ], resZF: 20
+                ], pixNb: 20
             },
 
             tourAccNb: {
@@ -333,7 +333,7 @@
                         colorCol: "ESTABLISHMENTS - TOTAL",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                     })
-                ], resZF: 3
+                ], pixNb: 3
             },
 
             tourAccUnits: {
@@ -342,7 +342,7 @@
                         colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                     })
-                ], resZF: 3
+                ], pixNb: 3
             },
 
             tourAccBeds: {
@@ -351,7 +351,7 @@
                         colorCol: "NUMBER OF PERMANENT BEDS",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                     })
-                ], resZF: 3
+                ], pixNb: 3
             },
 
             tourOriginArr: {
@@ -369,7 +369,7 @@
                         sizeCol: "TOTAL ARRIVALS",
                         size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
                     })
-                ], resZF: 20
+                ], pixNb: 20
             },
 
             tourOriginNights: {
@@ -387,7 +387,7 @@
                         sizeCol: "TOTAL NIGHTS",
                         size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
                     })
-                ], resZF: 20
+                ], pixNb: 20
             },
         }
 
@@ -400,7 +400,7 @@
             const style = styles[layCode].style
             for (let r of resolutions)
                 ls.push(new gviz.Layer(ds[r], style))
-            layers[layCode] = [new gviz.MultiScaleLayer(ls, resolutions, styles[layCode].resZF)]
+            layers[layCode] = [new gviz.MultiScaleLayer(ls, resolutions, styles[layCode].pixNb)]
         }
 
 
