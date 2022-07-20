@@ -14,11 +14,11 @@ export class MultiScaleLayer extends ALayer {
      * 
      * @param {Array.<Layer>} layers 
      * @param {Array.<number>} resolutions 
-     * @param {number} resToZoomFactor 
+     * @param {number} pixNb 
      * @param {number} z0 
      * @param {number} zMax 
      */
-    constructor(layers, resolutions, resToZoomFactor = 3, z0 = 0, zMax = Infinity) {
+    constructor(layers, resolutions, pixNb = 5, z0 = 0, zMax = Infinity) {
         super()
 
         /** @type {Array.<Layer>} */
@@ -27,8 +27,9 @@ export class MultiScaleLayer extends ALayer {
         /** @type {Array.<number>} */
         this.resolutions = resolutions;
 
-        /** @type {number} */
-        this.resToZoomFactor = resToZoomFactor || 3;
+        /** Unit: number of pixels
+         * @type {number} */
+        this.pixNb = pixNb || 5;
         /** @type {number} */
         this.z0 = z0;
         /** @type {number} */
@@ -44,10 +45,10 @@ export class MultiScaleLayer extends ALayer {
         if (zf < this.z0 || zf > this.zMax) return;
 
         let i = 0;
-        let z = this.resolutions[i] / this.resToZoomFactor
+        let z = this.resolutions[i] / this.pixNb
         while (z < zf && i < this.resolutions.length) {
             i++;
-            z = this.resolutions[i] / this.resToZoomFactor
+            z = this.resolutions[i] / this.pixNb
         }
         if (i == 0) return this.layers[0];
         return this.layers[i - 1];
