@@ -1,4 +1,4 @@
-1/zf
+finalise simpl
 style for cell border - independant. No size, just square/circle, stroke width and color + zoom limit
 
 improve performence:
