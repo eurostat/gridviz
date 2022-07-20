@@ -256,7 +256,7 @@
             for (const lay of ml.layers) lay.styles = sd[value].style
 
             //set new zoom breaks
-            ml.resToZoomFactor = sd[value].resZF
+            ml.pixNb = sd[value].resZF
 
             //redraw
             app.cg.redraw();

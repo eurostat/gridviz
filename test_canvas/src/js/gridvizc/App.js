@@ -244,19 +244,19 @@ export class App {
      * @param {function(number):string} resToURLCode 
      * @param {Array.<Style>} styles 
      * @param {object} opts 
-     * @param {number} resToZoomFactor 
+     * @param {number} pixNb 
      * @param {number} z0 
      * @param {number} zMax 
      * @returns {this}
      */
-    addMultiScaleTiledGridLayer2(urlBase, resolutions, resToURLCode, styles, opts, resToZoomFactor = 3, z0 = 0, zMax = Infinity) {
-        this.layers.push(this.makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, resToZoomFactor, z0, zMax));
+    addMultiScaleTiledGridLayer2(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5, z0 = 0, zMax = Infinity) {
+        this.layers.push(this.makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb, z0, zMax));
         return this;
     }
 
-    makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, resToZoomFactor = 3, z0 = 0, zMax = Infinity) {
+    makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5, z0 = 0, zMax = Infinity) {
 
-        //console.log(resToZoomFactor)
+        //console.log(pixNb)
 
         //create the layers
         const layers = [];
@@ -271,7 +271,7 @@ export class App {
         }
 
         //make layer
-        return new MultiScaleLayer(layers, resolutions, resToZoomFactor, z0, zMax)
+        return new MultiScaleLayer(layers, resolutions, pixNb, z0, zMax)
     }
 
 
