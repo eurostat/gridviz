@@ -237,21 +237,16 @@
             }
         }
 
-        const ttfun = c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
-        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/";
-        app.addMultiScaleTiledGridLayer(url,
-            [
-                { code: "200m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
-                { code: "400m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
-                { code: "1000m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
-                { code: "2000m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
-                { code: "5000m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
-                { code: "10000m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
-                { code: "20000m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
-                { code: "50000m/", styles: sd.scolor.style, opts: { cellInfoHTML: ttfun } },
-            ],
-            sd.scolor.zooms
-        )
+
+
+        app.addMultiScaleTiledGridLayer2(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
+            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+            r => r + "m/",
+            [sd.scolor.style],
+            { cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)", },
+            200 / 30)
+
 
 
 
