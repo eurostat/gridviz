@@ -99,16 +99,14 @@
                     style: [new gviz.SquareColoringWebGLStyle({
                         colorCol: getSelectedYear(),
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                    })],
-                    zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
+                    })], resZF: 10
                 },
                 circleColor: {
                     style: [new gviz.ShapeColorSizeStyle({
                         colorCol: getSelectedYear(),
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                         shape: () => "circle",
-                    })],
-                    zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+                    })], resZF: 10
                 },
 
                 squareSize: {
@@ -117,8 +115,7 @@
                         sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => 1 * r * gviz.s(v / s.max, 0.3),
                         shape: () => "square",
-                    })],
-                    zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+                    })], resZF: 10
                 },
                 circleSize: {
                     style: [new gviz.ShapeColorSizeStyle({
@@ -126,8 +123,7 @@
                         sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
                         shape: () => "circle",
-                    })],
-                    zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+                    })], resZF: 10
                 },
                 donut: {
                     style: [new gviz.ShapeColorSizeStyle({
@@ -135,8 +131,7 @@
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.3),
                         color: () => "#c08c59",
                         shape: () => "donut",
-                    })],
-                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                    })], resZF: 10
                 },
 
                 segmentH: {
@@ -146,8 +141,7 @@
                         length: (v, r) => r,
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                    })],
-                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                    })], resZF: 10
                 },
                 segmentV: {
                     style: [new gviz.SegmentStyle({
@@ -156,8 +150,7 @@
                         length: (v, r) => r,
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                    })],
-                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                    })], resZF: 10
                 },
                 segmentO: {
                     style: [new gviz.SegmentStyle({
@@ -166,8 +159,7 @@
                         length: (v, r) => r * 1.4142,
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25) / 1.4142,
-                    })],
-                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                    })], resZF: 10
                 },
 
                 joyplot: {
@@ -175,8 +167,7 @@
                         heightCol: getSelectedYear(),
                         height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
                         fillColor: "#c08c59bb"
-                    })],
-                    zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
+                    })], resZF: 10
                 },
                 side: {
                     style: [new gviz.SideStyle({
@@ -188,23 +179,21 @@
                             return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.s(Math.abs(side.value) / max, 0.3))
                         },
                         fillColor: (c) => "#e2c9b2",
-                    })],
-                    zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+                    })], resZF: 10
                 },
                 tanaka: {
                     style: gviz.getTanakaStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
-                    zooms: [0, 250, 500, 1250, 2500, 5000, 12500, 25000]
+                    resZF: 10
                 },
                 lego: {
                     style: gviz.getLegoStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
-                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                    resZF: 10
                 },
                 pillar: {
                     style: [new gviz.PillarStyle({
                         heightCol: getSelectedYear(),
                         height: (v, r, s, z) => 15 * r * gviz.s(v / s.max, 0.7),
-                    })],
-                    zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
+                    })], resZF: 10
                 },
                 dot: {
                     style: [new gviz.DotDensityStyle({
@@ -212,8 +201,7 @@
                         nb: (v, r, s, zf) => 1 * r * r / (zf * zf) * gviz.s(v / s.max, 0.4),
                         dotSize: (r, zf) => 1.2 * zf,
                         color: () => "#FF5733"
-                    })],
-                    zooms: [0, 250, 500, 1250, 2500, 5000, 12500, 25000]
+                    })], resZF: 10
                 },
                 text: {
                     style: [new gviz.TextStyle({
@@ -224,8 +212,7 @@
                         },
                         color: (v, r, s) => "#c08c59",
                         fontSize: ((v, r, s, z) => 1.2 * r),
-                    })],
-                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                    })], resZF: 10
                 }
             },
             popchange: {
@@ -238,8 +225,7 @@
                             return gviz.interpolateSpectral(1 - t);
                         },
                         shape: () => "square",
-                    })],
-                    zooms: [0, 400, 800, 2000, 4000, 8000, 20000, 40000]
+                    })], resZF: 10
                 },
                 circleColor: {
                     style: [new gviz.ShapeColorSizeStyle({
@@ -250,8 +236,7 @@
                             return gviz.interpolateSpectral(1 - t);
                         },
                         shape: () => "circle",
-                    })],
-                    zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+                    })], resZF: 10
                 },
 
                 squareSize: {
@@ -264,8 +249,7 @@
                             return 1 * r * gviz.s(Math.abs(v) / max, 0.2)
                         },
                         shape: () => "square",
-                    })],
-                    zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+                    })], resZF: 10
                 },
                 circleSize: {
                     style: [new gviz.ShapeColorSizeStyle({
@@ -277,8 +261,7 @@
                             return 1.5 * r * gviz.s(Math.abs(v) / max, 0.2)
                         },
                         shape: () => "circle",
-                    })],
-                    zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+                    })], resZF: 10
                 },
                 donut: {
                     style: [new gviz.ShapeColorSizeStyle({
@@ -290,8 +273,7 @@
                             return r * gviz.s(Math.abs(v) / max, 0.3)
                         },
                         shape: () => "donut",
-                    })],
-                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                    })], resZF: 10
                 },
 
                 segmentH: {
@@ -305,8 +287,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * gviz.s(Math.abs(v) / max, 0.25)
                         }
-                    })],
-                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                    })], resZF: 10
                 },
                 segmentV: {
                     style: [new gviz.SegmentStyle({
@@ -319,8 +300,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * gviz.s(Math.abs(v) / max, 0.25)
                         }
-                    })],
-                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                    })], resZF: 10
                 },
                 segmentO: {
                     style: [new gviz.SegmentStyle({
@@ -333,8 +313,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * gviz.s(Math.abs(v) / max, 0.25) / 1.4142
                         }
-                    })],
-                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                    })], resZF: 10
                 },
 
                 joyplot: {
@@ -345,8 +324,7 @@
                             return Math.sign(v) * 5 * r * Math.sqrt(Math.abs(v) / max)
                         },
                         fillColor: "#c08c59bb"
-                    })],
-                    zooms: [0, 200, 400, 1000, 2000, 4000, 10000, 20000]
+                    })], resZF: 10
                 },
                 side: {
                     style: [
@@ -359,18 +337,17 @@
                                 return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.s(Math.abs(side.value) / max, 0.3))
                             },
                             fillColor: (c) => c[getSelectedYear()] < 0 ? "#d13c4b" : "#4288b5",
-                        })],
-                    zooms: [0, 150, 300, 750, 1500, 3000, 7500, 15000]
+                        })], resZF: 10
                 },
                 tanaka: {
                     //TODO adapt to pop change
                     style: gviz.getTanakaStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
-                    zooms: [0, 250, 500, 1250, 2500, 5000, 12500, 25000]
+                    resZF: 10
                 },
                 lego: {
                     //TODO adapt to pop change
                     style: gviz.getLegoStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
-                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                    resZF: 10
                 },
                 pillar: {
                     style: [new gviz.PillarStyle({
@@ -381,8 +358,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return 15 * r * gviz.s(Math.abs(v) / max, 0.7)
                         },
-                    })],
-                    zooms: [0, 75, 150, 375, 750, 1500, 3750, 7500]
+                    })], resZF: 10
                 },
                 dot: {
                     style: [new gviz.DotDensityStyle({
@@ -393,8 +369,7 @@
                         },
                         dotSize: (r, zf) => 1.2 * zf,
                         color: (c) => c[getSelectedYear()] > 0 ? "#d13c4b" : "#4288b5",
-                    })],
-                    zooms: [0, 250, 500, 1250, 2500, 5000, 12500, 25000]
+                    })], resZF: 10
                 },
                 text: {
                     style: [new gviz.TextStyle({
@@ -407,8 +382,7 @@
                         colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         fontSize: ((v, r, s, z) => 1.2 * r),
-                    })],
-                    zooms: [0, 100, 200, 500, 1000, 2000, 5000, 10000]
+                    })], resZF: 10
                 }
             }
         }
@@ -531,7 +505,7 @@
                 { code: "50km/", styles: s.style, opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
                 { code: "100km/", styles: s.style, opts: { cellInfoHTML: ttfun, preprocess: preprocess } },
             ],
-            s.zooms
+            s.resZF
         )
 
 
@@ -551,7 +525,7 @@
             for (const lay of ml.layers) lay.styles = s.style
 
             //set new zoom breaks
-            ml.zooms = s.zooms
+            ml.resZF = s.resZF
         }
 
 
