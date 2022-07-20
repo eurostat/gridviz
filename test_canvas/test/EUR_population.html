@@ -459,39 +459,6 @@
 
 
 
-        //tooltip text
-        const ttfun = c => {
-            const v = document.querySelector('#year').value
-            if (getSelectedMapType() === "pop")
-                return "<b>" + c[v] + "</b> inhabitant(s) in " + v
-            else {
-                const sel = document.querySelector('#year').value
-                const v = c[sel]
-                return (
-                    sel === "d11_18" ?
-                        "2011: " + c["2011"] + "<br>2018: " + c["2018"]
-                        : "2006: " + c["2006"] + "<br>2011: " + c["2011"]
-                )
-                    + "<br>"
-                    + "<b>" + (v == 0 ? "No change" : (v > 0 ? "+" : "") + v + " inhabitants") + "</b>"
-            }
-        }
-
-
-        const preprocess = c => {
-            //prepare 2011 -> 2018 change data
-            if (!c["2011"] && !c["2018"]) c.d11_18 = 0
-            else if (!c["2011"] && c["2018"]) c.d11_18 = + c["2018"]
-            else if (c["2011"] && !c["2018"]) c.d11_18 = - c["2011"]
-            else c.d11_18 = c["2018"] - c["2011"]
-
-            //prepare 2006 -> 2011 change data
-            if (!c["2006"] && !c["2011"]) c.d06_11 = 0
-            else if (!c["2006"] && c["2011"]) c.d06_11 = +c["2011"]
-            else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
-            else c.d06_11 = c["2011"] - c["2006"]
-        }
-
 
         const s = sd[getSelectedMapType()][getSelectedStyle()]
         app.addMultiScaleTiledGridLayer2(
@@ -500,8 +467,35 @@
             r => Math.round(r / 1000) + "km/",
             s.style,
             {
-                cellInfoHTML: ttfun,
-                preprocess: preprocess
+                cellInfoHTML: c => {
+                    const v = document.querySelector('#year').value
+                    if (getSelectedMapType() === "pop")
+                        return "<b>" + c[v] + "</b> inhabitant(s) in " + v
+                    else {
+                        const sel = document.querySelector('#year').value
+                        const v = c[sel]
+                        return (
+                            sel === "d11_18" ?
+                                "2011: " + c["2011"] + "<br>2018: " + c["2018"]
+                                : "2006: " + c["2006"] + "<br>2011: " + c["2011"]
+                        )
+                            + "<br>"
+                            + "<b>" + (v == 0 ? "No change" : (v > 0 ? "+" : "") + v + " inhabitants") + "</b>"
+                    }
+                },
+                preprocess: c => {
+                    //prepare 2011 -> 2018 change data
+                    if (!c["2011"] && !c["2018"]) c.d11_18 = 0
+                    else if (!c["2011"] && c["2018"]) c.d11_18 = + c["2018"]
+                    else if (c["2011"] && !c["2018"]) c.d11_18 = - c["2011"]
+                    else c.d11_18 = c["2018"] - c["2011"]
+
+                    //prepare 2006 -> 2011 change data
+                    if (!c["2006"] && !c["2011"]) c.d06_11 = 0
+                    else if (!c["2006"] && c["2011"]) c.d06_11 = +c["2011"]
+                    else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
+                    else c.d06_11 = c["2011"] - c["2006"]
+                }
             },
             s.resZF)
 
