@@ -28,9 +28,12 @@
             color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
         })
 
-        const urlBase = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/";
         const resolutions = [1000, 2000, 5000, 10000, 20000, 50000, 100000]
-        app.addMultiScaleTiledGridLayer2(urlBase, resolutions, r => Math.round(r/1000) + "km/", [s],
+        app.addMultiScaleTiledGridLayer2(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/",
+            resolutions,
+            r => Math.round(r / 1000) + "km/",
+            [s],
             {
                 cellInfoHTML: c => "Inhabitant(s)<br>2018: <b>" + c["2018"] + "</b><br>2011: <b>" + c["2011"] + "</b><br>2006: <b>" + c["2006"] + "</b>",
                 preprocess: c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
