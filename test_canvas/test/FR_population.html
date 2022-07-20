@@ -127,7 +127,7 @@
                     length: (v, r) => r,
                     widthCol: "Ind",
                     width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                })], resZF: 13
+                })], resZF: 15
             },
             segmentV: {
                 style: [new gviz.SegmentStyle({
@@ -136,7 +136,7 @@
                     length: (v, r) => r,
                     widthCol: "Ind",
                     width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                })], resZF: 13
+                })], resZF: 15
             },
             segmentO: {
                 style: [new gviz.SegmentStyle({
@@ -145,7 +145,7 @@
                     length: (v, r) => r * 1.4142,
                     widthCol: "Ind",
                     width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25) / 1.4142,
-                })], resZF: 13
+                })], resZF: 15
             },
 
             joyplot: {
@@ -153,7 +153,7 @@
                     heightCol: "Ind",
                     height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
                     fillColor: "#c08c59bb"
-                })], resZF: 5
+                })], resZF: 10
             },
             side: {
                 style: [new gviz.SideStyle({
@@ -165,12 +165,12 @@
                         return r * (0.01 + 0.333 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.3))
                     },
                     fillColor: (c) => "#e2c9b2",
-                })], resZF: 6.666667
+                })], resZF: 10
             },
             tanaka: {
                 style: gviz.getTanakaStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
                 //style: gviz.getTanakaStyle("Ind", { breaks: [10, 50, 200, 500, 2000] }),
-                resZF: 40
+                resZF: 10
             },
             lego: {
                 style: gviz.getLegoStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
@@ -180,7 +180,7 @@
                 style: [new gviz.PillarStyle({
                     heightCol: "Ind",
                     height: (v, r, s, z) => 15 * r * gviz.s(v / s.max, 0.7),
-                })], resZF: 200 / 15
+                })], resZF: 25
             },
             dot: {
                 style: [new gviz.DotDensityStyle({
@@ -188,7 +188,7 @@
                     nb: (v, r, s, zf) => 1.0 * r * r / (zf * zf) * gviz.s(v / s.max, 0.4),
                     dotSize: (r, zf) => 1.2 * zf,
                     color: () => "#FF5733"
-                })], resZF: 4
+                })], resZF: 10
             },
             text: {
                 style: [new gviz.TextStyle({
@@ -199,7 +199,7 @@
                     },
                     color: (v, r, s) => "#c08c59",
                     fontSize: ((v, r, s, z) => 1.2 * r),
-                })], resZF: 10
+                })], resZF: 15
             }
         }
 
