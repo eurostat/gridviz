@@ -34,7 +34,7 @@ export class SquareColoringWebGLStyle extends Style {
         * @protected @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
 
-        this.monitorDuration = true
+        this.monitorDuration = false
     }
 
 
