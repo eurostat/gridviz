@@ -97,7 +97,8 @@
                     style: [new gviz.SquareColoringWebGLStyle({
                         colorCol: getSelectedYear(),
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                    })], pixNb: 5
+                    }), new gviz.StrokeStyle({ zf: 15 })
+                    ], pixNb: 5
                 },
                 circleColor: {
                     style: [new gviz.ShapeColorSizeStyle({
