@@ -5,6 +5,7 @@ improve performance:
    check gl parameters?
    simplify - move more computation to fragment side
 
+"WARNING: Too many active WebGL contexts. Oldest context will be lost."
 
 TODO BIG DEPLOY ?
 
