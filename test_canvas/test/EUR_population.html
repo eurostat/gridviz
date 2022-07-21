@@ -79,9 +79,7 @@
         const app = new gviz.App()
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500]).addZoomSlider("zoomSlider")
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
-
-        //test view from URL parameters, if any
-        app.cg.setViewFromURL()
+            .setViewFromURL()
 
         //retrieve the selected year (the column to show)
         const getSelectedYear = () => document.querySelector('#year').value

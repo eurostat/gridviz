@@ -72,9 +72,7 @@
         const app = new gviz.App()
             .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(20.1).setZoomFactorExtent([10, 1500]).addZoomSlider("zoomSlider")
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
-
-        //test view from URL parameters, if any
-        app.cg.setViewFromURL()
+            .setViewFromURL()
 
 
 

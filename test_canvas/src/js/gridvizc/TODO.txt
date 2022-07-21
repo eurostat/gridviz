@@ -1,4 +1,3 @@
-finalise simpl in HR: use makemsl
 style for cell border - independant. No size, just square/circle, stroke width and color + zoom limit
 
 improve performence:
