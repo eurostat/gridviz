@@ -20,6 +20,8 @@ import { SegmentWidthLegend } from './legend/SegmentWidthLegend'
 
 import { select } from "d3-selection";
 import { monitorDuration } from "./utils/Utils"
+import { interpolateSpectral } from 'd3-scale-chromatic';
+import { color } from 'd3-color';
 
 /**
  * A gridviz on a HTML canvas.

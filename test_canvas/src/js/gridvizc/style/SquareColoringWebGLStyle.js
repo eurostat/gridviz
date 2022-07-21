@@ -6,7 +6,6 @@ import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
 import { WebGLSquareColoring } from "../utils/WebGLSquareColoring";
 import { monitorDuration } from "../utils/Utils"
-import { NoBlending } from "three";
 
 /**
  * Style based on webGL

@@ -1,5 +1,8 @@
 improve performance:
    what takes time: color computation + color conversion
+https://github.com/d3/d3-interpolate/blob/main/src/rgb.js
+
+
    monitor durations - find limit - improve it
    check "cg.redraw" intensity
    check gl parameters?
