@@ -82,7 +82,7 @@
                 style: [new gviz.SquareColoringWebGLStyle({
                     colorCol: "Ind",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                }), new gviz.StrokeStyle({ zf: 20 })
+                }), new gviz.StrokeStyle({ zf: 15 })
                 ], pixNb: 5
             },
             ccolor: {
@@ -90,7 +90,7 @@
                     colorCol: "Ind",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                     shape: () => "circle",
-                }), new gviz.StrokeStyle({ zf: 20 })
+                }), new gviz.StrokeStyle({ zf: 15, shape: () => "circle" })
                 ], pixNb: 10
             },
 
@@ -100,7 +100,12 @@
                     sizeCol: "Ind",
                     size: (v, r, s, zf) => 1 * r * gviz.s(v / s.max, 0.3),
                     shape: () => "square",
-                })], pixNb: 15
+                }), new gviz.StrokeStyle({
+                    zf: 15,
+                    sizeCol: "Ind",
+                    size: (v, r, s, zf) => 1 * r * gviz.s(v / s.max, 0.3),
+                })
+                ], pixNb: 15
             },
             circle: {
                 style: [new gviz.ShapeColorSizeStyle({
@@ -108,7 +113,13 @@
                     sizeCol: "Ind",
                     size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
                     shape: () => "circle",
-                })], pixNb: 15
+                }), new gviz.StrokeStyle({
+                    zf: 15,
+                    sizeCol: "Ind",
+                    size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
+                    shape: () => "circle",
+                })
+            ], pixNb: 15
             },
             donut: {
                 style: [new gviz.ShapeColorSizeStyle({
