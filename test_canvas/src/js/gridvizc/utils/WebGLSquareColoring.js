@@ -55,14 +55,14 @@ export class WebGLSquareColoring {
         //const cc = {r:45,g:87,b:98,opacity:0.9}
         if (!cc) return
 
-        this.addPointData2(xC, yC, cc)
+        this.addPointData2(xC, yC, cc.r, cc.g, cc.b, cc.opacity)
     }
 
-    addPointData2(xC, yC, { r: r, g: g, b: b, opacity: o }) {
+    addPointData2(xC, yC, r, g, b, opacity) {
         //vertices
         this.verticesBuffer.push(xC, yC)
         //color
-        this.colorsBuffer.push(r, g, b, o)
+        this.colorsBuffer.push(r, g, b, opacity)
     }
 
 

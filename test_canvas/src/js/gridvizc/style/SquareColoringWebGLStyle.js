@@ -6,6 +6,7 @@ import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
 import { WebGLSquareColoring } from "../utils/WebGLSquareColoring";
 import { monitorDuration } from "../utils/Utils"
+import { NoBlending } from "three";
 
 /**
  * Style based on webGL
@@ -43,7 +44,7 @@ export class SquareColoringWebGLStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
-        if(this.monitorDuration) monitorDuration("*** SquareColoringWebGLStyle draw")
+        if (this.monitorDuration) monitorDuration("*** SquareColoringWebGLStyle draw")
 
         //zoom factor
         const zf = cg.getZf()
@@ -53,7 +54,7 @@ export class SquareColoringWebGLStyle extends Style {
             //compute color variable statistics
             statColor = getStatistics(cells, c => c[this.colorCol], true)
         }
-        if(this.monitorDuration) monitorDuration("   color stats computation")
+        if (this.monitorDuration) monitorDuration("   color stats computation")
 
         //create canvas and webgl renderer
         const cvWGL = makeWebGLCanvas(cg)
@@ -61,43 +62,46 @@ export class SquareColoringWebGLStyle extends Style {
             console.error("No webGL")
             return
         }
-        if(this.monitorDuration) monitorDuration("   web GL canvas creation")
+        if (this.monitorDuration) monitorDuration("   web GL canvas creation")
 
         const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
         const prog = new WebGLSquareColoring(cvWGL.gl, sizeGeo / zf)
 
-        if(this.monitorDuration) monitorDuration("   preparation")
+        if (this.monitorDuration) monitorDuration("   preparation")
 
         //add vertice and fragment data
-        let col
+        let col = "#AA76CC"
         const r2 = resolution / 2
-        for (let c of cells) {
+        let c, nb = cells.length
+        for (let i = 0; i < nb; i++) {
+            c = cells[i]
 
             //color
             //TODO get it directly in RGBA ?
-            col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
-            if (!col || col === "none") continue
+            //col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
+            //if (!col || col === "none") continue
 
-            prog.addPointData(c.x + r2, c.y + r2, col)
+            //prog.addPointData(c.x + r2, c.y + r2, col)
+            prog.addPointData2(c.x + r2, c.y + r2, 0.4, 0.6, 0.1, 1)
         }
 
-        if(this.monitorDuration) monitorDuration("   webgl drawing data preparation")
+        if (this.monitorDuration) monitorDuration("   webgl drawing data preparation")
 
         //draw
         prog.draw(cg.getWebGLTransform())
 
-        if(this.monitorDuration) monitorDuration("   webgl drawing")
+        if (this.monitorDuration) monitorDuration("   webgl drawing")
 
         //draw in canvas geo
         cg.initCanvasTransform()
         cg.ctx.drawImage(cvWGL.canvas, 0, 0);
 
-        if(this.monitorDuration) monitorDuration("   canvas drawing")
+        if (this.monitorDuration) monitorDuration("   canvas drawing")
 
         //update legends
         this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor });
 
-        if(this.monitorDuration) monitorDuration("*** SquareColoringWebGLStyle end draw")
+        if (this.monitorDuration) monitorDuration("*** SquareColoringWebGLStyle end draw")
     }
 
 
