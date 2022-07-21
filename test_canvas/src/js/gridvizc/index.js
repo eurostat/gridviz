@@ -14,6 +14,7 @@ export { TiledGrid } from "./dataset/TiledGrid"
 
 //export styles
 export { ShapeColorSizeStyle } from "./style/ShapeColorSizeStyle"
+export { StrokeStyle } from "./style/StrokeStyle"
 export { JoyPlotStyle } from "./style/JoyPlotStyle"
 export { CompositionStyle } from "./style/CompositionStyle"
 export { SegmentStyle } from "./style/SegmentStyle"

@@ -237,6 +237,7 @@
         //styles
         const col = gviz.interpolateSpectral
         const col2 = gviz.schemeCategory10
+        const sStroke = new gviz.StrokeStyle({ zf: 100 })
         const styles = {
 
             pop: {
@@ -253,8 +254,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
                         },
-                    })
-                ], pixNb: 5
+                    })], pixNb: 5
             },
 
             popGender: {
@@ -327,7 +327,7 @@
                     new gviz.SquareColoringWebGLStyle({
                         colorCol: "INACT_RATE",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
-                    })
+                    }), sStroke
                 ], pixNb: 3
             },
 
@@ -351,7 +351,7 @@
                     new gviz.SquareColoringWebGLStyle({
                         colorCol: "ESTABLISHMENTS - TOTAL",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                    })
+                    }), sStroke
                 ], pixNb: 3
             },
 
@@ -360,7 +360,7 @@
                     new gviz.SquareColoringWebGLStyle({
                         colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                    })
+                    }), sStroke
                 ], pixNb: 3
             },
 
@@ -369,7 +369,7 @@
                     new gviz.SquareColoringWebGLStyle({
                         colorCol: "NUMBER OF PERMANENT BEDS",
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                    })
+                    }), sStroke
                 ], pixNb: 3
             },
 

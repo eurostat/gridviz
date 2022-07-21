@@ -17,13 +17,19 @@ export class StrokeStyle extends Style {
 
 
 
+        /**
+         *  @protected @type {number} */
+        this.zf = opts.zf;
+
+
+
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
          *  @protected @type {string} */
         this.strokeColorCol = opts.strokeColorCol;
 
         /** A function returning the color of the stroke.
         * @protected @type {function(number,number,Stat|undefined):string} */
-        this.strokeColor = opts.strokeColor;
+        this.strokeColor = opts.strokeColor || (() => "darkgray");
 
 
 
@@ -65,6 +71,9 @@ export class StrokeStyle extends Style {
         //zoom factor
         const zf = cg.getZf()
 
+        //
+        if (zf > this.zf) return
+
         let statColor
         if (this.strokeColorCol)
             statColor = getStatistics(cells, c => c[this.strokeColorCol], true)
@@ -95,8 +104,8 @@ export class StrokeStyle extends Style {
             const sG = s_(cell[this.sizeCol], resolution, statSize, zf)
 
             //width
-            const wi = this.strokeWidth ? this.strokeWidth(cell[this.strokeWidthCol], resolution, statWidth, zf) : undefined;
-            if (!col || col === "none") continue
+            const wi = this.strokeWidth ? this.strokeWidth(cell[this.strokeWidthCol], resolution, statWidth, zf) : 1 * zf;
+            if (!wi || wi <= 0) continue
             cg.ctx.lineWidth = wi;
 
             //shape
