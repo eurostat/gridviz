@@ -23,7 +23,7 @@
                 [new gviz.SquareColoringWebGLStyle({
                     colorCol: "r",
                     color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
-                }), new gviz.StrokeStyle({ zf: 15 })],
+                }),
                 {
                     cellInfoHTML: c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'",
                     preprocess: c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }

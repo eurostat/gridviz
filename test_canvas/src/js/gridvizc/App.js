@@ -64,7 +64,6 @@ export class App {
         this.cg.redraw = () => {
             if (this.monitorDuration) monitorDuration("Start redraw")
             //console.log(this.cg.getZf(), this.cg.getCenter())
-            //console.log("redraw")
 
             //detach all legend elements
             if (this.legend)
@@ -255,10 +254,6 @@ export class App {
     }
 
     makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5, z0 = 0, zMax = Infinity) {
-
-        //console.log(pixNb)
-
-        //create the layers
         const layers = [];
         for (const res of resolutions) {
             layers.push(new Layer(
@@ -269,8 +264,6 @@ export class App {
                     .loadInfo(() => { this.cg.redraw(); }),
                 styles))
         }
-
-        //make layer
         return new MultiScaleLayer(layers, resolutions, pixNb, z0, zMax)
     }
 

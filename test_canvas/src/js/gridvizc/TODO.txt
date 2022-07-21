@@ -1,8 +1,8 @@
 improve performance:
-monitor durations - find limit - improve it
-check "cg.redraw" intensity
-check gl parameters?
-simplify - move more computation to fragment side
+   monitor durations - find limit - improve it
+   check "cg.redraw" intensity
+   check gl parameters?
+   simplify - move more computation to fragment side
 
 
 TODO BIG DEPLOY ?
