@@ -16086,7 +16086,7 @@ class App {
      * @param {number} zMax 
      * @returns {this}
      */
-    addMultiScaleTiledGridLayer2(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5, z0 = 0, zMax = Infinity) {
+    addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5, z0 = 0, zMax = Infinity) {
         this.layers.push(this.makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb, z0, zMax));
         return this;
     }
