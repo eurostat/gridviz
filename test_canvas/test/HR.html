@@ -515,6 +515,11 @@
         const getSelectedLayer = () => document.querySelector('input[name="layer"]:checked').value
 
         //show selected layer
+
+
+        //initialise layer
+        mslPop.setStyles(styles[getSelectedLayer()].style)
+        mslPop.pixNb = styles[getSelectedLayer()].pixNb
         app.layers = [mslPop];
 
 
@@ -523,17 +528,16 @@
         //style selector
         document.querySelector('#layer').addEventListener('change', function () {
 
-            const layCode = getSelectedLayer()
-            console.log(layCode)
-
             //select layer
+            const layCode = getSelectedLayer()
             const mls = layCode.startsWith("pop") ? mslPop : layCode.startsWith("bus") ? mslBusiness : mslTourism
+
+            //Set style
             const s = styles[layCode]
-            //TODO mls.setStyles(s)
+            mls.setStyles(s.style)
+            mls.pixNb = s.pixNb
 
-            console.log(mls, s)
 
-            //app.layers[0].hideLegends()
             app.layers = [mls];
 
             //redraw
