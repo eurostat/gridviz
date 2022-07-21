@@ -203,16 +203,17 @@
         }
 
         //define tiled datasets
-        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
+        const urlBase = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
         const resolutions = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000]
         const datasets = {}
         for (let ds of ["Population_2011", "Active_business_entities_2016", "Tourism_2017"]) {
             datasets[ds] = {}
             for (let r of resolutions) {
                 const pp = ds.startsWith("Pop") ? ppPop : ds.startsWith("Acti") ? ppBusiness : ppTourism
-                datasets[ds][r] = new gviz.TiledGrid(url + ds + "/" + r + "m/", app, { preprocess: pp, cellInfoHTML: ttfun }).loadInfo(() => { app.cg.redraw(); })
+                datasets[ds][r] = new gviz.TiledGrid(urlBase + ds + "/" + r + "m/", app, { preprocess: pp, cellInfoHTML: ttfun }).loadInfo(() => { app.cg.redraw(); })
             }
         }
+
 
 
         //define styles
@@ -501,6 +502,22 @@
 
         //show selected layer
         app.layers = layers[getSelectedLayer()];
+
+
+        //make mls
+        const msl = {}
+        for (let ds of ["Population_2011", "Active_business_entities_2016", "Tourism_2017"]) {
+            const pp = ds.startsWith("Pop") ? ppPop : ds.startsWith("Acti") ? ppBusiness : ppTourism
+            msl[ds] = app.makeMultiScaleTiledGridLayer(
+                urlBase,
+                resolutions,
+                r => r + "m/",
+                [],
+                { preprocess: pp, cellInfoHTML: ttfun }
+            );
+        }
+
+
 
         //style selector
         document.querySelector('#layer').addEventListener('change', function () {
