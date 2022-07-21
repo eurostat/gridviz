@@ -70,7 +70,7 @@
 
         //make application
         const app = new gviz.App()
-            .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(20.1).setZoomFactorExtent([10, 1500]).addZoomSlider("zoomSlider")
+            .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(50.1).setZoomFactorExtent([10, 1500]).addZoomSlider("zoomSlider")
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
 
@@ -82,14 +82,16 @@
                 style: [new gviz.SquareColoringWebGLStyle({
                     colorCol: "Ind",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                })], pixNb: 5
+                }), new gviz.StrokeStyle({ zf: 20 })
+                ], pixNb: 5
             },
             ccolor: {
                 style: [new gviz.ShapeColorSizeStyle({
                     colorCol: "Ind",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                     shape: () => "circle",
-                })], pixNb: 10
+                }), new gviz.StrokeStyle({ zf: 20 })
+                ], pixNb: 10
             },
 
             square: {

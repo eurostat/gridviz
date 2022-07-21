@@ -29,7 +29,7 @@ export class StrokeStyle extends Style {
 
         /** A function returning the color of the stroke.
         * @protected @type {function(number,number,Stat|undefined):string} */
-        this.strokeColor = opts.strokeColor || (() => "darkgray");
+        this.strokeColor = opts.strokeColor || (() => "#666");
 
 
 
