@@ -59,8 +59,8 @@ export class MultiScaleLayer extends ALayer {
      * @param {Array.<Style>} styles 
      */
     setStyles(styles) {
-        for (let lay of this.layers) {
-        }
+        for (let lay of this.layers)
+            lay.styles = styles
     }
 
 }
