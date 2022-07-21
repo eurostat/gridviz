@@ -179,7 +179,7 @@ export class App {
         this.cg.canvas.addEventListener("mousemove", e => { focusCell(e) });
         this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
 
-        this.monitorDuration = false
+        this.monitorDuration = true
     }
 
 

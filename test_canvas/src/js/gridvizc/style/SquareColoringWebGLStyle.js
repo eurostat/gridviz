@@ -33,7 +33,7 @@ export class SquareColoringWebGLStyle extends Style {
         * @protected @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
 
-        this.monitorDuration = false
+        this.monitorDuration = true
     }
 
 
@@ -69,14 +69,15 @@ export class SquareColoringWebGLStyle extends Style {
         if(this.monitorDuration) monitorDuration("   preparation")
 
         //add vertice and fragment data
+        let col
+        const r2 = resolution / 2
         for (let c of cells) {
 
             //color
             //TODO get it directly in RGBA ?
-            const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
+            col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
             if (!col || col === "none") continue
 
-            const r2 = resolution / 2
             prog.addPointData(c.x + r2, c.y + r2, col)
         }
 
