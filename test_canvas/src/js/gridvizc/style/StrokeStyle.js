@@ -15,14 +15,13 @@ export class StrokeStyle extends Style {
         super(opts)
         opts = opts || {};
 
-
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
          *  @protected @type {string} */
-        this.colorCol = opts.colorCol;
+        this.strokeColorCol = opts.strokeColorCol;
 
-        /** A function returning the color of the cell.
+        /** A function returning the color of the stroke.
         * @protected @type {function(number,number,Stat|undefined):string} */
-        this.color = opts.color || (() => "#EA6BAC");
+        this.strokeColor = opts.strokeColor;
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for size.
          * @protected @type {string} */
@@ -33,8 +32,12 @@ export class StrokeStyle extends Style {
         this.size = opts.size;
 
         /** The stroke line width, in pixels.
-        * @protected @type {function(number,number,Stat|undefined,number):number} */
-         this.strokeWidth = opts.strokeWidth || (() => 1);
+        * @protected @type {string} */
+        this.strokeWidthCol = opts.strokeWidthCol;
+
+        /** The stroke line width in geographical unit.
+       * @protected @type {function(number,number,Stat|undefined,number):number} */
+        this.strokeWidth = opts.strokeWidth;
 
         /** A function returning the shape of a cell.
          * @private @type {function(Cell):Shape} */
@@ -63,9 +66,9 @@ export class StrokeStyle extends Style {
         }
 
         let statColor
-        if (this.colorCol) {
+        if (this.strokeColorCol) {
             //compute color variable statistics
-            statColor = getStatistics(cells, c => c[this.colorCol], true)
+            statColor = getStatistics(cells, c => c[this.strokeColorCol], true)
         }
 
         //draw with HTML canvas
@@ -75,7 +78,7 @@ export class StrokeStyle extends Style {
         for (let cell of cells) {
 
             //color
-            const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined;
+            const col = this.strokeColor ? this.strokeColor(cell[this.strokeColorCol], resolution, statColor) : undefined;
             if (!col || col === "none") continue
             cg.ctx.fillStyle = col;
 
@@ -127,41 +130,41 @@ export class StrokeStyle extends Style {
 
 
 
-/*
-
-        if (!this.zfStroke || cg.getZf() > this.zfStroke) return;
-
-        cg.ctx.strokeStyle = this.strokeColor;
-        cg.ctx.lineWidth = this.strokeWidth * cg.getZf();
-
-        if (shape === "square") {
-            //draw square
-            const d = resolution * (1 - size / resolution) * 0.5
-            cg.ctx.beginPath();
-            cg.ctx.rect(
-                cell.x + d + offset.dx,
-                cell.y + d + offset.dy,
-                size, size);
-            cg.ctx.stroke();
-
-        } else if (shape === "circle") {
-            //draw circle
-            cg.ctx.beginPath();
-            cg.ctx.arc(
-                cell.x + resolution * 0.5 + offset.dx,
-                cell.y + resolution * 0.5 + offset.dy,
-                size * 0.5,
-                0, 2 * Math.PI, false);
-            cg.ctx.stroke();
-        } else if (shape === "donut") {
-            //console.error("Not implemented")
-        } else {
-            throw new Error('Unexpected shape:' + shape);
-        }
-
-
-
-*/
+        /*
+        
+                if (!this.zfStroke || cg.getZf() > this.zfStroke) return;
+        
+                cg.ctx.strokeStyle = this.strokeColor;
+                cg.ctx.lineWidth = this.strokeWidth * cg.getZf();
+        
+                if (shape === "square") {
+                    //draw square
+                    const d = resolution * (1 - size / resolution) * 0.5
+                    cg.ctx.beginPath();
+                    cg.ctx.rect(
+                        cell.x + d + offset.dx,
+                        cell.y + d + offset.dy,
+                        size, size);
+                    cg.ctx.stroke();
+        
+                } else if (shape === "circle") {
+                    //draw circle
+                    cg.ctx.beginPath();
+                    cg.ctx.arc(
+                        cell.x + resolution * 0.5 + offset.dx,
+                        cell.y + resolution * 0.5 + offset.dy,
+                        size * 0.5,
+                        0, 2 * Math.PI, false);
+                    cg.ctx.stroke();
+                } else if (shape === "donut") {
+                    //console.error("Not implemented")
+                } else {
+                    throw new Error('Unexpected shape:' + shape);
+                }
+        
+        
+        
+        */
 
 
 
@@ -171,9 +174,9 @@ export class StrokeStyle extends Style {
     //getters and setters
 
     /** @returns {function(number,number,Stat):string} */
-    getColor() { return this.color; }
+    getColor() { return this.strokeColor; }
     /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
-    setColor(val) { this.color = val; return this; }
+    setColor(val) { this.strokeColor = val; return this; }
 
     /** @returns {function(number,number,Stat,number):number} */
     getSize() { return this.size; }
