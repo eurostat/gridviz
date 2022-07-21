@@ -505,17 +505,27 @@
 
 
         //make mls
-        const msl = {}
-        for (let ds of ["Population_2011", "Active_business_entities_2016", "Tourism_2017"]) {
-            const pp = ds.startsWith("Pop") ? ppPop : ds.startsWith("Acti") ? ppBusiness : ppTourism
-            msl[ds] = app.makeMultiScaleTiledGridLayer(
-                urlBase,
-                resolutions,
-                r => r + "m/",
-                [],
-                { preprocess: pp, cellInfoHTML: ttfun }
-            );
-        }
+        const mslPop = app.makeMultiScaleTiledGridLayer(
+            urlBase + "Population_2011/",
+            resolutions,
+            r => r + "m/",
+            [],
+            { preprocess: ppPop, cellInfoHTML: ttfun }
+        );
+        const mslBusiness = app.makeMultiScaleTiledGridLayer(
+            urlBase + "Active_business_entities_2016/",
+            resolutions,
+            r => r + "m/",
+            [],
+            { preprocess: ppBusiness, cellInfoHTML: ttfun }
+        );
+        const mslTourism = app.makeMultiScaleTiledGridLayer(
+            urlBase + "Tourism_2017/",
+            resolutions,
+            r => r + "m/",
+            [],
+            { preprocess: ppTourism, cellInfoHTML: ttfun }
+        );
 
 
 
