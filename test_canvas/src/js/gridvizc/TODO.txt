@@ -1,5 +1,5 @@
 improve performance:
-   //TODO move color conversion to fragment shader
+   //TODO move color conversion to fragment shader ?
    monitor durations - find limit - improve it
    check "cg.redraw" intensity
    check gl parameters?
