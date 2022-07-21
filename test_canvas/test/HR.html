@@ -69,76 +69,6 @@
             .setLabelLayer(gviz.getEuronymeLabelLayer("HR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
 
-        //define data preprocesses
-        const override = (c, col) => c[col] = +c[col]
-
-        //population / education / labor
-        const ppPop = c => {
-            override(c, "TOTAL")
-            c.DIFF_MEN_WOMEN = +c.MEN - c.WOMEN
-            c.DIFF_MEN_WOMEN = 100 * c.DIFF_MEN_WOMEN / c.TOTAL
-            if (isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
-
-            //education
-            override(c, "BASIC_EDUCATION_OR_LESS")
-            override(c, "UPPER_SECONDARY_EDUCATION")
-            override(c, "TERTIARY_EDUCATION")
-            c.OTHER_EDUC = c.TOTAL - c.BASIC_EDUCATION_OR_LESS - c.UPPER_SECONDARY_EDUCATION - c.TERTIARY_EDUCATION
-
-            //labor
-            override(c, "INACTIVE_POPULATION")
-            override(c, "LABOUR_FORCE")
-            c.OTHER_LABOR = c.TOTAL - c.INACTIVE_POPULATION - c.LABOUR_FORCE
-            //console.log(c.INACTIVE_POPULATION > c.LABOUR_FORCE)  // true and false
-            //console.log(c.OTHER_LABOR > 0) // true and false
-            //console.log(c.LABOUR_FORCE/c.INACTIVE_POPULATION <1)  // true and false
-            c.INACT_RATE = 100 * c.INACTIVE_POPULATION / c.TOTAL
-            if (isNaN(c.INACT_RATE)) c.INACT_RATE = 0
-            //console.log(c.INACT_RATE)
-        }
-
-
-        //businesses
-        const ppBusiness = c => {
-            //TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
-            //see https://nacev2.com/fr
-            let sum = 0
-            for (let s of ["TOTAL", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"]) {
-                c[s] = +c[s]
-                if (s != "TOTAL") sum += c[s]
-                if (isNaN(c[s])) console.error(c)
-            }
-            if (c.TOTAL != sum) console.error(c, c.TOTAL, sum)
-
-            //sum by sector
-            c.s1 = c.A
-            c.s2 = c.B + c.C + c.D + c.E + c.F + c.G + c.H
-            c.s3 = c.I + c.J + c.K + c.L + c.M + c.N + c.O + c.P + c.Q + c.R + c.S + c.T
-            //console.log(c.s1, c.s2, c.s3)
-            //console.log(c.s1 + c.s2 + c.s3 == c.TOTAL)
-        }
-
-
-        //tourism
-        const ppTourism = c => {
-            for (let s of ["ESTABLISHMENTS - TOTAL", "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL", "NUMBER OF PERMANENT BEDS"])
-                override(c, s)
-            for (let s of ["TOTAL ARRIVALS", "TOTAL NIGHTS"])
-                override(c, s)
-            for (let p of ["A", "N"]) {
-                override(c, p + "_DOMESTIC TOURISTS - TOTAL")
-                override(c, p + "_FOREIGN TOURISTS - TOTAL")
-                for (let nat of ["AUSTRIAN", "GERMAN", "ITALIAN", "SLOVENIAN"])
-                    override(c, p + "_" + nat + " TOURISTS")
-            }
-            //console.log(c["TOTAL ARRIVALS"] == c["A_DOMESTIC TOURISTS - TOTAL"]+c["A_FOREIGN TOURISTS - TOTAL"]) true
-            //console.log(c["TOTAL NIGHTS"] == c["N_DOMESTIC TOURISTS - TOTAL"]+c["N_FOREIGN TOURISTS - TOTAL"]) true
-
-            for (let p of ["A", "N"])
-                c[p + "_OTHER"] = +c[p + "_FOREIGN TOURISTS - TOTAL"] - c[p + "_AUSTRIAN TOURISTS"] - c[p + "_GERMAN TOURISTS"] - c[p + "_ITALIAN TOURISTS"] - c[p + "_SLOVENIAN TOURISTS"]
-            //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
-        }
-
 
 
         //tooltip text
@@ -202,17 +132,112 @@
             }
         }
 
-        //define tiled datasets
+
+
+
+
+
+
+
+        //make mls
         const urlBase = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
         const resolutions = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000]
-        const datasets = {}
-        for (let ds of ["Population_2011", "Active_business_entities_2016", "Tourism_2017"]) {
-            datasets[ds] = {}
-            for (let r of resolutions) {
-                const pp = ds.startsWith("Pop") ? ppPop : ds.startsWith("Acti") ? ppBusiness : ppTourism
-                datasets[ds][r] = new gviz.TiledGrid(urlBase + ds + "/" + r + "m/", app, { preprocess: pp, cellInfoHTML: ttfun }).loadInfo(() => { app.cg.redraw(); })
+        const override = (c, col) => c[col] = +c[col]
+
+        //population layer
+        const mslPop = app.makeMultiScaleTiledGridLayer(
+            urlBase + "Population_2011/",
+            resolutions,
+            r => r + "m/",
+            [],
+            {
+                preprocess: c => {
+                    override(c, "TOTAL")
+                    c.DIFF_MEN_WOMEN = +c.MEN - c.WOMEN
+                    c.DIFF_MEN_WOMEN = 100 * c.DIFF_MEN_WOMEN / c.TOTAL
+                    if (isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
+
+                    //education
+                    override(c, "BASIC_EDUCATION_OR_LESS")
+                    override(c, "UPPER_SECONDARY_EDUCATION")
+                    override(c, "TERTIARY_EDUCATION")
+                    c.OTHER_EDUC = c.TOTAL - c.BASIC_EDUCATION_OR_LESS - c.UPPER_SECONDARY_EDUCATION - c.TERTIARY_EDUCATION
+
+                    //labor
+                    override(c, "INACTIVE_POPULATION")
+                    override(c, "LABOUR_FORCE")
+                    c.OTHER_LABOR = c.TOTAL - c.INACTIVE_POPULATION - c.LABOUR_FORCE
+                    //console.log(c.INACTIVE_POPULATION > c.LABOUR_FORCE)  // true and false
+                    //console.log(c.OTHER_LABOR > 0) // true and false
+                    //console.log(c.LABOUR_FORCE/c.INACTIVE_POPULATION <1)  // true and false
+                    c.INACT_RATE = 100 * c.INACTIVE_POPULATION / c.TOTAL
+                    if (isNaN(c.INACT_RATE)) c.INACT_RATE = 0
+                    //console.log(c.INACT_RATE)
+                },
+                cellInfoHTML: ttfun
             }
-        }
+        );
+
+        //business layer
+        const mslBusiness = app.makeMultiScaleTiledGridLayer(
+            urlBase + "Active_business_entities_2016/",
+            resolutions,
+            r => r + "m/",
+            [],
+            {
+                preprocess: c => {
+                    //TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
+                    //see https://nacev2.com/fr
+                    let sum = 0
+                    for (let s of ["TOTAL", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"]) {
+                        c[s] = +c[s]
+                        if (s != "TOTAL") sum += c[s]
+                        if (isNaN(c[s])) console.error(c)
+                    }
+                    if (c.TOTAL != sum) console.error(c, c.TOTAL, sum)
+
+                    //sum by sector
+                    c.s1 = c.A
+                    c.s2 = c.B + c.C + c.D + c.E + c.F + c.G + c.H
+                    c.s3 = c.I + c.J + c.K + c.L + c.M + c.N + c.O + c.P + c.Q + c.R + c.S + c.T
+                    //console.log(c.s1, c.s2, c.s3)
+                    //console.log(c.s1 + c.s2 + c.s3 == c.TOTAL)
+                },
+                cellInfoHTML: ttfun
+            }
+        );
+
+        //tourism layer
+        const mslTourism = app.makeMultiScaleTiledGridLayer(
+            urlBase + "Tourism_2017/",
+            resolutions,
+            r => r + "m/",
+            [],
+            {
+                preprocess: c => {
+                    for (let s of ["ESTABLISHMENTS - TOTAL", "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL", "NUMBER OF PERMANENT BEDS"])
+                        override(c, s)
+                    for (let s of ["TOTAL ARRIVALS", "TOTAL NIGHTS"])
+                        override(c, s)
+                    for (let p of ["A", "N"]) {
+                        override(c, p + "_DOMESTIC TOURISTS - TOTAL")
+                        override(c, p + "_FOREIGN TOURISTS - TOTAL")
+                        for (let nat of ["AUSTRIAN", "GERMAN", "ITALIAN", "SLOVENIAN"])
+                            override(c, p + "_" + nat + " TOURISTS")
+                    }
+                    //console.log(c["TOTAL ARRIVALS"] == c["A_DOMESTIC TOURISTS - TOTAL"]+c["A_FOREIGN TOURISTS - TOTAL"]) true
+                    //console.log(c["TOTAL NIGHTS"] == c["N_DOMESTIC TOURISTS - TOTAL"]+c["N_FOREIGN TOURISTS - TOTAL"]) true
+
+                    for (let p of ["A", "N"])
+                        c[p + "_OTHER"] = +c[p + "_FOREIGN TOURISTS - TOTAL"] - c[p + "_AUSTRIAN TOURISTS"] - c[p + "_GERMAN TOURISTS"] - c[p + "_ITALIAN TOURISTS"] - c[p + "_SLOVENIAN TOURISTS"]
+                    //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
+                },
+                cellInfoHTML: ttfun
+            }
+        );
+
+
+
 
 
 
@@ -393,19 +418,8 @@
         }
 
 
-        //define layers from datasets and styles
-        const layers = {}
-        for (let layCode of ["pop", "popGender", "popAge", "popEducation", "popLabor", "popInact", "busSector", "tourAccNb", "tourAccUnits", "tourAccBeds", "tourOriginArr", "tourOriginNights"]) {
-            const ds = datasets[layCode.startsWith("pop") ? "Population_2011" : layCode.startsWith("bus") ? "Active_business_entities_2016" : "Tourism_2017"]
-            const ls = []
-            const style = styles[layCode].style
-            for (let r of resolutions)
-                ls.push(new gviz.Layer(ds[r], style))
-            layers[layCode] = [new gviz.MultiScaleLayer(ls, resolutions, styles[layCode].pixNb)]
-        }
 
-
-        //add legends
+        //legends
         app
             .addLegend(
                 { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
@@ -501,39 +515,26 @@
         const getSelectedLayer = () => document.querySelector('input[name="layer"]:checked').value
 
         //show selected layer
-        app.layers = layers[getSelectedLayer()];
+        app.layers = [mslPop];
 
-
-        //make mls
-        const mslPop = app.makeMultiScaleTiledGridLayer(
-            urlBase + "Population_2011/",
-            resolutions,
-            r => r + "m/",
-            [],
-            { preprocess: ppPop, cellInfoHTML: ttfun }
-        );
-        const mslBusiness = app.makeMultiScaleTiledGridLayer(
-            urlBase + "Active_business_entities_2016/",
-            resolutions,
-            r => r + "m/",
-            [],
-            { preprocess: ppBusiness, cellInfoHTML: ttfun }
-        );
-        const mslTourism = app.makeMultiScaleTiledGridLayer(
-            urlBase + "Tourism_2017/",
-            resolutions,
-            r => r + "m/",
-            [],
-            { preprocess: ppTourism, cellInfoHTML: ttfun }
-        );
 
 
 
         //style selector
         document.querySelector('#layer').addEventListener('change', function () {
 
+            const layCode = getSelectedLayer()
+            console.log(layCode)
+
+            //select layer
+            const mls = layCode.startsWith("pop") ? mslPop : layCode.startsWith("bus") ? mslBusiness : mslTourism
+            const s = styles[layCode]
+            //TODO mls.setStyles(s)
+
+            console.log(mls, s)
+
             //app.layers[0].hideLegends()
-            app.layers = layers[getSelectedLayer()];
+            app.layers = [mls];
 
             //redraw
             app.cg.redraw();
