@@ -7,9 +7,6 @@ simplify - move more computation to fragment side
 
 TODO BIG DEPLOY ?
 
-text style: test smaller
-
-
     //https://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html
     //2D section
 
@@ -27,7 +24,6 @@ value by alpha style: implement it for income map + accessibility
 webgl: draw elements VS draw array
 
 
-TODO simplify tiled multires creation
 TODO show several elements on size legend
 TODO deploy accessiblity grid - as tanaka ?
 
