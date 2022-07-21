@@ -70,19 +70,17 @@ export class SquareColoringWebGLStyle extends Style {
         if (this.monitorDuration) monitorDuration("   preparation")
 
         //add vertice and fragment data
-        let col = "#AA76CC"
+        let col
         const r2 = resolution / 2
         let c, nb = cells.length
         for (let i = 0; i < nb; i++) {
             c = cells[i]
 
             //color
-            //TODO get it directly in RGBA ?
-            //col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
-            //if (!col || col === "none") continue
+            col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
+            if (!col || col === "none") continue
 
-            //prog.addPointData(c.x + r2, c.y + r2, col)
-            prog.addPointData2(c.x + r2, c.y + r2, 0.4, 0.6, 0.1, 1)
+            prog.addPointData(c.x + r2, c.y + r2, col)
         }
 
         if (this.monitorDuration) monitorDuration("   webgl drawing data preparation")
