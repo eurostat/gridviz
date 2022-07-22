@@ -51,8 +51,8 @@ export class GeoCanvas {
             const f = tP.k / t.k
             if (f == 1) {
                 //pan
-                const dx = tP.x - t.x
-                const dy = tP.y - t.y
+                const dx = tP.x - t.x //- e.sourceEvent.movementX//tP.x - t.x
+                const dy = tP.y - t.y //- e.sourceEvent.movementY //tP.y - t.y
                 this.pan(dx * this.getZf(), -dy * this.getZf())
                 this.redraw()
             } else {
@@ -73,12 +73,12 @@ export class GeoCanvas {
             }
             tP = t
         });
-        //z(select(this.canvas))
-        select(this.canvas).call(z);
+        z(select(this.canvas))
+        //select(this.canvas).call(z);
 
-        this.canvas.addEventListener("mouseup", function (e) {
+        /*this.canvas.addEventListener("mouseup", function (e) {
             console.log(e)
-        });
+        });*/
 
 
         /*this.canvas.onmousemove = function (e) {
