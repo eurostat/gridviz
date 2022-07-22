@@ -72,11 +72,15 @@ export class GeoCanvas {
                 }
             }
             tP = t
+        }).on("start", (e) => {
+            //store the image
+            //console.log(e)
         }).on("end", (e) => {
-            this.redraw()
+            this.redraw(true)
         });
         z(select(this.canvas))
         //select(this.canvas).call(z);
+
 
         /** Zoom extent, to limit zoom in and out
          *  @type {Array.<number>} */
