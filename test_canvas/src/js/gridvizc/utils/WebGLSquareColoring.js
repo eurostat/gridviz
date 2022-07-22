@@ -48,10 +48,12 @@ export class WebGLSquareColoring {
         this.colorsBuffer = [];
     }
 
+    //let cc;
+
     /** Add data to vertices/size/color buffers for color squares drawing */
     addPointData(xC, yC, col) {
         //convert color
-        const cc = color(col)
+        this.cc = color(col)
         //const cc = {r:45,g:87,b:98,opacity:0.9}
         if (!cc) return
 
