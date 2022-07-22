@@ -93,11 +93,11 @@ export class App {
                     layer.dataset.updateViewCache(this.cg.extGeo);
 
                 //draw cells, style by style
-                for (const style of layer.styles)
-                    style.draw(layer.dataset.getViewCache(), layer.dataset.getResolution(), this.cg)
+                if (strong)
+                    for (const style of layer.styles)
+                        style.draw(layer.dataset.getViewCache(), layer.dataset.getResolution(), this.cg)
 
                 //show layer legend
-                //layer.showLegends()
                 if (this.legend && strong)
                     for (const s of layer.styles) {
                         for (const lg of s.legends) {
@@ -116,9 +116,9 @@ export class App {
                     this.boundaryLayer.draw(this.cg)
 
             //draw label layer
-            if (strong)
-                if (this.showLabels && this.labelLayer)
-                    this.labelLayer.draw(this.cg)
+            //if (strong)
+            if (this.showLabels && this.labelLayer)
+                this.labelLayer.draw(this.cg)
 
             if (monitor) monitorDuration("End redraw")
 
