@@ -73,8 +73,22 @@ export class GeoCanvas {
             }
             tP = t
         });
-        z(select(this.canvas))
-        //select(this.canvas).call(z);
+        //z(select(this.canvas))
+        select(this.canvas).call(z);
+
+        this.canvas.addEventListener("mouseup", function (e) {
+            console.log(e)
+        });
+
+
+        /*this.canvas.onmousemove = function (e) {
+            console.log(e)
+        };*/
+
+        /*
+        select("body").on("click", function(event) {
+            select(this).style("color", "red");
+          });*/
 
         /*
                 this.canvas.addEventListener("mouseup", e => {

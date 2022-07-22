@@ -1,3 +1,5 @@
+canvas to div
+
 improve performance:
    check "cg.redraw" intensity: redraw only an mouse release
    what takes time: color computation + color conversion. Mainly color interpolation
