@@ -1,7 +1,7 @@
 improve performance:
+   check "cg.redraw" intensity: redraw only an mouse release
    what takes time: color computation + color conversion. Mainly color interpolation
 https://github.com/d3/d3-interpolate/blob/main/src/rgb.js
-   check "cg.redraw" intensity
 
 attribute: pix value
 uniform: min, max, t formula, colors
