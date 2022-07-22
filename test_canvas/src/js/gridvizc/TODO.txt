@@ -1,5 +1,5 @@
 improve performance:
-   what takes time: color computation + color conversion
+   what takes time: color computation + color conversion. Mainly color interpolation
 https://github.com/d3/d3-interpolate/blob/main/src/rgb.js
    check "cg.redraw" intensity
 
