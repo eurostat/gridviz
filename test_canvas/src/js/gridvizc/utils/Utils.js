@@ -2,6 +2,10 @@
 
 
 
+
+
+export let monitor = false
+
 let previousDate
 export function monitorDuration(message) {
     const nowDate = Date.now();

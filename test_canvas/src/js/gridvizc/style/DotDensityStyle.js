@@ -7,7 +7,7 @@ import { randomNormal } from "d3-random"
 import { checkWebGLSupport, makeWebGLCanvas } from "../utils/webGLUtils"
 import { WebGLSquareColoring } from "../utils/WebGLSquareColoring";
 import { color } from "d3-color";
-import { monitorDuration } from "../utils/Utils";
+import { monitor, monitorDuration } from "../utils/Utils";
 
 /**
  * 
@@ -39,8 +39,6 @@ export class DotDensityStyle extends Style {
         /** A function returning the sigma of the distribution from the resolution, in geo unit.
         * @protected @type {function(number):number} */
         this.sigma = opts.sigma //|| ((r) => ...
-
-        this.monitorDuration = false
     }
 
 
@@ -52,7 +50,7 @@ export class DotDensityStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
-        if (this.monitorDuration) monitorDuration("*** DotDensityStyle draw")
+        if (monitor) monitorDuration("*** DotDensityStyle draw")
 
         //zoom factor
         const zf = cg.getZf()
@@ -68,7 +66,7 @@ export class DotDensityStyle extends Style {
         const sig = this.sigma ? this.sigma(r) : r * 0.4
         const rand = randomNormal(0, sig);
 
-        if (this.monitorDuration) monitorDuration(" preparation")
+        if (monitor) monitorDuration(" preparation")
 
         if (checkWebGLSupport()) {
 
@@ -82,7 +80,7 @@ export class DotDensityStyle extends Style {
             //create webGL program
             const prog = new WebGLSquareColoring(cvWGL.gl, sGeo / zf)
 
-            if (this.monitorDuration) monitorDuration(" webgl creation")
+            if (monitor) monitorDuration(" webgl creation")
 
             const r2 = r / 2
             for (let c of cells) {
@@ -111,18 +109,18 @@ export class DotDensityStyle extends Style {
 
             }
 
-            if (this.monitorDuration) monitorDuration(" data preparation")
+            if (monitor) monitorDuration(" data preparation")
 
             //draw
             prog.draw(cg.getWebGLTransform())
 
-            if (this.monitorDuration) monitorDuration(" webgl drawing")
+            if (monitor) monitorDuration(" webgl drawing")
 
             //draw in canvas geo
             cg.initCanvasTransform()
             cg.ctx.drawImage(cvWGL.canvas, 0, 0);
 
-            if (this.monitorDuration) monitorDuration(" canvas drawing")
+            if (monitor) monitorDuration(" canvas drawing")
         } else {
 
             //draw with HTML canvas
@@ -161,7 +159,7 @@ export class DotDensityStyle extends Style {
         //update legends
         this.updateLegends({ style: this, r: r, zf: zf });
 
-        if (this.monitorDuration) monitorDuration("*** DotDensityStyle end draw")
+        if (monitor) monitorDuration("*** DotDensityStyle end draw")
     }
 
 }
