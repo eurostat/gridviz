@@ -54,13 +54,13 @@ export class GeoCanvas {
                 const dx = tP.x - t.x //- e.sourceEvent.movementX
                 const dy = tP.y - t.y //- e.sourceEvent.movementY
                 this.pan(dx * this.getZf(), -dy * this.getZf())
-                //this.redraw()
+                this.redraw(false)
             } else {
                 const se = e.sourceEvent;
                 if (se instanceof WheelEvent) {
                     //zoom at the mouse position
                     this.zoom(f, this.pixToGeoX(e.sourceEvent.offsetX), this.pixToGeoY(e.sourceEvent.offsetY))
-                    this.redraw()
+                    this.redraw(false)
                 } else if (se instanceof TouchEvent) {
                     //compute average position of the touches
                     let tx = 0, ty = 0
@@ -68,7 +68,7 @@ export class GeoCanvas {
                     tx /= se.targetTouches.length; ty /= se.targetTouches.length
                     //zoom at this average position
                     this.zoom(f, this.pixToGeoX(tx), this.pixToGeoY(ty))
-                    //this.redraw()
+                    this.redraw(false)
                 }
             }
             tP = t

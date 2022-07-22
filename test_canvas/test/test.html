@@ -13,8 +13,8 @@
 
         new gviz.App()
             .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(500).setZoomFactorExtent([15, 3000])
-            //.setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20"))
-            //.setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+            .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20"))
+            .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
             .addMultiScaleTiledGridLayer(
                 "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
