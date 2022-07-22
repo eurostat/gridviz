@@ -54,11 +54,13 @@ export class GeoCanvas {
                 const dx = tP.x - t.x
                 const dy = tP.y - t.y
                 this.pan(dx * this.getZf(), -dy * this.getZf())
+                this.redraw()
             } else {
                 const se = e.sourceEvent;
                 if (se instanceof WheelEvent) {
                     //zoom at the mouse position
                     this.zoom(f, this.pixToGeoX(e.sourceEvent.offsetX), this.pixToGeoY(e.sourceEvent.offsetY))
+                    this.redraw()
                 } else if (se instanceof TouchEvent) {
                     //compute average position of the touches
                     let tx = 0, ty = 0
@@ -66,6 +68,7 @@ export class GeoCanvas {
                     tx /= se.targetTouches.length; ty /= se.targetTouches.length
                     //zoom at this average position
                     this.zoom(f, this.pixToGeoX(tx), this.pixToGeoY(ty))
+                    this.redraw()
                 }
             }
             tP = t
@@ -73,13 +76,11 @@ export class GeoCanvas {
         z(select(this.canvas))
         //select(this.canvas).call(z);
 
-        this.canvas.addEventListener("mouseup", e => {
-            console.log(e)
-            //const x = e.clientX - rect.left;
-            //const y = e.clientY - rect.top;
-            //const isDrawing = true;
-        });
-
+        /*
+                this.canvas.addEventListener("mouseup", e => {
+                    console.log(e)
+                });
+        */
 
 
         /** Zoom extent, to limit zoom in and out
@@ -149,13 +150,14 @@ export class GeoCanvas {
     /**
      * @param {number} dxGeo
      * @param {number} dyGeo
+     * @param {boolean} withRedraw
      */
-    pan(dxGeo, dyGeo) {
+    pan(dxGeo = 0, dyGeo = 0, withRedraw = false) {
         //TODO force extend to remain
         this.center.x += dxGeo;
         this.center.y += dyGeo;
         this.updateExtentGeo()
-        this.redraw();
+        if (withRedraw) this.redraw();
     }
 
     /**
@@ -163,8 +165,9 @@ export class GeoCanvas {
      * @param {number} f The zoom factor, within ]0, Infinity]. 1 is for no change. <1 to zoom-in, >1 to zoom-out.
      * @param {number} xGeo The x geo position fixed in the screen.
      * @param {number} yGeo The y geo position fixed in the screen.
+     * @param {boolean} withRedraw
      */
-    zoom(f = 1, xGeo = this.center.x, yGeo = this.center.y) {
+    zoom(f = 1, xGeo = this.center.x, yGeo = this.center.y, withRedraw = false) {
         //TODO force extend to remain
 
         //ensure zoom extent preserved
@@ -176,7 +179,7 @@ export class GeoCanvas {
         this.center.x += (xGeo - this.center.x) * (1 - f)
         this.center.y += (yGeo - this.center.y) * (1 - f)
         this.updateExtentGeo()
-        this.redraw();
+        if (withRedraw) this.redraw();
     }
 
     /**
