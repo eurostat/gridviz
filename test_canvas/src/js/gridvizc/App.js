@@ -111,9 +111,9 @@ export class App {
             }
 
             //draw boundary layer
-            if (strong)
-                if ((this.showBoundaries && this.boundaryLayer))
-                    this.boundaryLayer.draw(this.cg)
+            //if (strong)
+            if ((this.showBoundaries && this.boundaryLayer))
+                this.boundaryLayer.draw(this.cg)
 
             //draw label layer
             //if (strong)
