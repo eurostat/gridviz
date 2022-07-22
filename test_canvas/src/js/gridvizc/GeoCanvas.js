@@ -73,6 +73,15 @@ export class GeoCanvas {
         z(select(this.canvas))
         //select(this.canvas).call(z);
 
+        this.canvas.addEventListener("mouseup", e => {
+            console.log(e)
+            //const x = e.clientX - rect.left;
+            //const y = e.clientY - rect.top;
+            //const isDrawing = true;
+        });
+
+
+
         /** Zoom extent, to limit zoom in and out
          *  @type {Array.<number>} */
         this.zfExtent = [0, Infinity]
