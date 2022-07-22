@@ -51,14 +51,17 @@ export class WebGLSquareColoring {
     //let cc;
 
     /** Add data to vertices/size/color buffers for color squares drawing */
-    /*addPointData(xC, yC, col) {
+    addPointData(xC, yC, col) {
         //convert color
         const cc = color(col)
         //const cc = {r:45,g:87,b:98,opacity:0.9}
         if (!cc) return
 
-        this.addPointData2(xC, yC, cc.r, cc.g, cc.b, cc.opacity)
-    }*/
+        //vertices
+        this.verticesBuffer.push(xC, yC)
+        //color
+        this.colorsBuffer.push(cc.r, cc.g, cc.b, cc.opacity)
+    }
 
     addPointData2(xC, yC, r, g, b, opacity) {
         //vertices

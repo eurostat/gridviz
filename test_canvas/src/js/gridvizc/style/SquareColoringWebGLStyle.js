@@ -6,7 +6,6 @@ import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
 import { WebGLSquareColoring } from "../utils/WebGLSquareColoring";
 import { monitorDuration } from "../utils/Utils"
-import { color } from "d3-color";
 
 /**
  * Style based on webGL
@@ -80,16 +79,7 @@ export class SquareColoringWebGLStyle extends Style {
             col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined;
             if (!col || col === "none") continue
 
-            //prog.addPointData(c.x + r2, c.y + r2, col)
-
-
-            //convert color
-            cc = color(col)
-            //const cc = {r:45,g:87,b:98,opacity:0.9}
-            if (!cc) return
-
-            prog.addPointData2(c.x + r2, c.y + r2, cc.r, cc.g, cc.b, cc.opacity)
-
+            prog.addPointData(c.x + r2, c.y + r2, col)
         }
 
         if (this.monitorDuration) monitorDuration("   webgl drawing data preparation")
