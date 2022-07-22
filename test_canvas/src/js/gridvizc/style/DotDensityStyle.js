@@ -83,29 +83,31 @@ export class DotDensityStyle extends Style {
             if (monitor) monitorDuration(" webgl creation")
 
             const r2 = r / 2
+
+            let col, offset, nb, cx, cy, cc
             for (let c of cells) {
 
                 //get color
-                const col = this.color(c);
+                col = this.color(c);
                 if (!col || col === "none") continue
 
                 //get offset
-                const offset = this.offset(c, r, zf)
+                offset = this.offset(c, r, zf)
 
                 //number of dots
-                const nb = this.nb(c[this.col], r, stat, zf)
+                nb = this.nb(c[this.col], r, stat, zf)
 
                 //cell center
-                const cx = c.x + offset.dx + r2,
-                    cy = c.y + offset.dy + r2
+                cx = c.x + offset.dx + r2
+                cy = c.y + offset.dy + r2
 
                 //convert color
-                const cc = color(col)
+                cc = color(col)
                 if (!cc) return
 
                 //random points
                 for (let i = 0; i <= nb; i++)
-                    prog.addPointData2(cx + rand(), cy + rand(), cc)
+                    prog.addPointData2(cx + rand(), cy + rand(), cc.r, cc.g, cc.b, cc.opacity)
 
             }
 
