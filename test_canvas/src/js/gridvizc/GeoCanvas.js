@@ -51,10 +51,10 @@ export class GeoCanvas {
             const f = tP.k / t.k
             if (f == 1) {
                 //pan
-                const dx = tP.x - t.x //- e.sourceEvent.movementX//tP.x - t.x
-                const dy = tP.y - t.y //- e.sourceEvent.movementY //tP.y - t.y
+                const dx = tP.x - t.x //- e.sourceEvent.movementX
+                const dy = tP.y - t.y //- e.sourceEvent.movementY
                 this.pan(dx * this.getZf(), -dy * this.getZf())
-                this.redraw()
+                //this.redraw()
             } else {
                 const se = e.sourceEvent;
                 if (se instanceof WheelEvent) {
@@ -68,34 +68,15 @@ export class GeoCanvas {
                     tx /= se.targetTouches.length; ty /= se.targetTouches.length
                     //zoom at this average position
                     this.zoom(f, this.pixToGeoX(tx), this.pixToGeoY(ty))
-                    this.redraw()
+                    //this.redraw()
                 }
             }
             tP = t
+        }).on("end", (e) => {
+            this.redraw()
         });
         z(select(this.canvas))
         //select(this.canvas).call(z);
-
-        /*this.canvas.addEventListener("mouseup", function (e) {
-            console.log(e)
-        });*/
-
-
-        /*this.canvas.onmousemove = function (e) {
-            console.log(e)
-        };*/
-
-        /*
-        select("body").on("click", function(event) {
-            select(this).style("color", "red");
-          });*/
-
-        /*
-                this.canvas.addEventListener("mouseup", e => {
-                    console.log(e)
-                });
-        */
-
 
         /** Zoom extent, to limit zoom in and out
          *  @type {Array.<number>} */
@@ -147,8 +128,9 @@ export class GeoCanvas {
     }
 
 
-    /** The function specifying how to draw the map. */
-    redraw() {
+    /** The function specifying how to draw the map.
+     * @param {boolean} strong */
+    redraw(strong = true) {
         throw new Error('Method redraw not implemented.');
     }
 

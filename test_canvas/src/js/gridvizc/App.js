@@ -63,12 +63,12 @@ export class App {
         /** Make geo canvas
          * @type {GeoCanvas} @private */
         this.cg = new GeoCanvas();
-        this.cg.redraw = () => {
+        this.cg.redraw = (strong = true) => {
             if (monitor) monitorDuration("Start redraw")
             //console.log(this.cg.getZf(), this.cg.getCenter())
 
             //detach all legend elements
-            if (this.legend)
+            if (this.legend && strong)
                 this.legend.selectAll("*").remove();
 
             //clear
@@ -85,10 +85,12 @@ export class App {
                 if (!layer) continue;
 
                 //get data to show
-                layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
+                if (strong)
+                    layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
 
                 //update dataset view cache
-                layer.dataset.updateViewCache(this.cg.extGeo);
+                if (strong)
+                    layer.dataset.updateViewCache(this.cg.extGeo);
 
                 //draw cells, style by style
                 for (const style of layer.styles)
@@ -96,7 +98,7 @@ export class App {
 
                 //show layer legend
                 //layer.showLegends()
-                if (this.legend)
+                if (this.legend && strong)
                     for (const s of layer.styles) {
                         for (const lg of s.legends) {
                             //console.log(s, lg)
@@ -109,12 +111,14 @@ export class App {
             }
 
             //draw boundary layer
-            if ((this.showBoundaries && this.boundaryLayer))
-                this.boundaryLayer.draw(this.cg)
+            if (strong)
+                if ((this.showBoundaries && this.boundaryLayer))
+                    this.boundaryLayer.draw(this.cg)
 
             //draw label layer
-            if (this.showLabels && this.labelLayer)
-                this.labelLayer.draw(this.cg)
+            if (strong)
+                if (this.showLabels && this.labelLayer)
+                    this.labelLayer.draw(this.cg)
 
             if (monitor) monitorDuration("End redraw")
 
