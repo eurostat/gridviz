@@ -13,16 +13,16 @@ export class GeoCanvas {
 
     /**
      * @constructor
-     * @param {string} canvasId
+     * @param {HTMLCanvasElement} canvas
      * @param {object} center Geographical coordinates of the center
      * @param {number} zf The zoom factor (pixel size, in ground m)
      * @param {object} opts
      */
-    constructor(canvasId = "vacanvas", center = undefined, zf = 1, opts) {
+    constructor(canvas, center = undefined, zf = 1, opts) {
         opts = opts || {}
 
         /** @type {object} */
-        this.canvas = document.getElementById(canvasId);
+        this.canvas = canvas;
 
         /** @type {number} */
         this.w = this.canvas.offsetWidth;

@@ -29,9 +29,10 @@ import { monitor, monitorDuration } from "./utils/Utils"
 export class App {
 
     /**
+     * @param {HTMLDivElement} container 
      * @param {object} opts 
      */
-    constructor(opts) {
+    constructor(container, opts) {
         opts = opts || {};
 
         /**
@@ -40,23 +41,37 @@ export class App {
          * */
         this.layers = [];
 
+        //get container element
+        container = container || document.getElementById("gridviz");
+        if (!container) {
+            console.error("Cannot find gridviz container element.")
+            return;
+        }
+
         //get canvas element
-        opts.canvasId = opts.canvasId || "vacanvas";
+        /*opts.canvasId = opts.canvasId || "vacanvas";
         const canvas = document.getElementById(opts.canvasId);
         if (!canvas) {
             console.error("Cannot find canvas element " + opts.canvasId)
             return;
-        }
+        }*/
 
         //set dimensions
         /** @type {number} */
-        this.w = opts.w || canvas.offsetWidth;
+        this.w = opts.w || container.offsetWidth;
         /** @type {number} */
-        this.h = opts.h || canvas.offsetHeight;
+        this.h = opts.h || container.offsetHeight;
+
+        //create canvas element
+        /** @type {HTMLCanvasElement} */
+        const canvas = document.createElement("canvas");
+        canvas.setAttribute("width", ""+this.w);
+        canvas.setAttribute("height", ""+this.h);
+        container.appendChild(canvas);
 
         /** Make geo canvas
          * @type {GeoCanvas} @private */
-        this.cg = new GeoCanvas();
+        this.cg = new GeoCanvas(canvas);
         this.cg.redraw = (strong = true) => {
             if (monitor) monitorDuration("Start redraw")
             //console.log(this.cg.getZf(), this.cg.getCenter())
