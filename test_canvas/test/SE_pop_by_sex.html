@@ -25,7 +25,9 @@
     <script>
 
         //make application
-        const app = new gviz.App().setGeoCenter({ x: 673515, y: 6580880 }).setZoomFactor(10)
+        let containerDiv = document.getElementById("viz-container");
+        const app = new gviz.App(containerDiv)
+            .setGeoCenter({ x: 673515, y: 6580880 }).setZoomFactor(10)
 
         //labels
         const projSweden = d3.geoTransverseMercator().rotate([-15, -0.22]).reflectX(false).reflectY(true).scale(0.9996 * 6378137).translate([500000, 0]);

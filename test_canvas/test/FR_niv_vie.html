@@ -19,7 +19,8 @@
     <script src="../build/gridvizc.js"></script>
     <script>
 
-        new gviz.App()
+        let containerDiv = document.getElementById("viz-container");
+        new gviz.App(containerDiv)
             .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(500).setZoomFactorExtent([15, 3000])
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20"))
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())

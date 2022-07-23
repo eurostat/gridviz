@@ -68,8 +68,8 @@
     <script src="../build/gridvizc.js"></script>
     <script>
 
-        //make application
-        const app = new gviz.App()
+        let containerDiv = document.getElementById("viz-container");
+        const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(50.1).setZoomFactorExtent([10, 1500]).addZoomSlider("zoomSlider")
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
@@ -119,7 +119,7 @@
                     size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
                     shape: () => "circle",
                 })
-            ], pixNb: 15
+                ], pixNb: 15
             },
             donut: {
                 style: [new gviz.ShapeColorSizeStyle({

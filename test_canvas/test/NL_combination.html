@@ -10,8 +10,8 @@
     <script src="../build/gridvizc.js"></script>
     <script>
 
-        //make application
-        const app = new gviz.App()
+        let containerDiv = document.getElementById("viz-container");
+        const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(3)
 
         //x,y,Inhabitants,Total men,Total women,Population under 14,Population over 65,Both parents born in NL (%)

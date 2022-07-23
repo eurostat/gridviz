@@ -23,8 +23,8 @@
     <script src="../build/gridvizc.js"></script>
     <script>
 
-        //make application
-        const app = new gviz.App()
+        let containerDiv = document.getElementById("viz-container");
+        const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 135000, y: 456000 }).setZoomFactor(1).setLabelLayer(gviz.getEuronymeLabelLayer())
 
         const colorDict = { "Population under 14": "#e6ab02", "pop_": "#1b9e77", "Population over 65": "#d95f02" }
