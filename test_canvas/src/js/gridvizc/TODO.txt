@@ -91,8 +91,6 @@ TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache an
 
 TODO map type: trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php
 TODO map type: contour style. and hypsometric. See https://observablehq.com/@d3/density-contours https://observablehq.com/@sahilchinoy/contour-map?collection=@sahilchinoy/geo-experiments
-
-TODO webGL investigation
 TODO background - images ?
 
 
@@ -134,6 +132,4 @@ Census 2021:
 - Employment
 - Place of birth (in the reporting country, in another EU country, outside EU)
 - Usual residence 12 months before (unchanged, within reporting country, outside of the reporting country).
-
-
 
