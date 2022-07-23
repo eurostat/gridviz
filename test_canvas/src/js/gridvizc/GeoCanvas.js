@@ -16,8 +16,10 @@ export class GeoCanvas {
      * @param {string} canvasId
      * @param {object} center Geographical coordinates of the center
      * @param {number} zf The zoom factor (pixel size, in ground m)
+     * @param {object} opts
      */
-    constructor(canvasId = "vacanvas", center = undefined, zf = 1) {
+    constructor(canvasId = "vacanvas", center = undefined, zf = 1, opts) {
+        opts = opts || {}
 
         /** @type {object} */
         this.canvas = document.getElementById(canvasId);
@@ -39,6 +41,10 @@ export class GeoCanvas {
         // set zoom factor: pixel size, in m/pix
         this.zf = zf;
 
+        /** Background color.
+         * @type {string} */
+        this.backgroundColor = opts.backgroundColor || "white"
+
         //current extent
         /** @type {Envelope} */
         this.extGeo = { xMin: NaN, xMax: NaN, yMin: NaN, yMax: NaN };
@@ -55,6 +61,8 @@ export class GeoCanvas {
                 const dy = tP.y - t.y //- e.sourceEvent.movementY
                 this.pan(dx * this.getZf(), -dy * this.getZf())
                 //this.redraw(false)
+                this.canvasSave.dx -= dx
+                this.canvasSave.dy -= dy
                 this.ctx.drawImage(this.canvasSave, this.canvasSave.dx, this.canvasSave.dy);
             } else {
                 const se = e.sourceEvent;

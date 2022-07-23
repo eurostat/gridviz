@@ -56,10 +56,6 @@ export class App {
         /** @type {number} */
         this.h = opts.h || canvas.offsetHeight;
 
-        /** Background color.
-         * @type {string} */
-        this.backgroundColor = opts.backgroundColor || "white"
-
         /** Make geo canvas
          * @type {GeoCanvas} @private */
         this.cg = new GeoCanvas();
@@ -73,7 +69,7 @@ export class App {
 
             //clear
             this.cg.initCanvasTransform()
-            this.cg.clear(this.backgroundColor);
+            this.cg.clear(this.cg.backgroundColor);
 
             //go through the layers
             const zf = this.getZoomFactor();
@@ -347,9 +343,9 @@ export class App {
     setZoomFactorExtent(val) { this.cg.setZfExtent(val); return this; }
 
     /** @returns {string} */
-    getBackgroundColor() { return this.backgroundColor; }
+    getBackgroundColor() { return this.cg.backgroundColor; }
     /** @param {string} val @returns {this} */
-    setBackgroundColor(val) { this.backgroundColor = val; return this; }
+    setBackgroundColor(val) { this.cg.backgroundColor = val; return this; }
 
     /** @returns {function|undefined} */
     getProjection() { return this.projection; }
