@@ -1,7 +1,4 @@
-canvas to div
-
 improve performance:
-   check "cg.redraw" intensity: redraw only an mouse release
    what takes time: color computation + color conversion. Mainly color interpolation
 https://github.com/d3/d3-interpolate/blob/main/src/rgb.js
 
@@ -29,12 +26,8 @@ sideStyle - new webGL class for line segments ?
 
 value by alpha style: implement it for income map + accessibility
 
-webgl: draw elements VS draw array
-
-
 TODO show several elements on size legend
 TODO deploy accessiblity grid - as tanaka ?
-
 
 TODO adapt tanaka and lego to diverging - use on EUR pop change
 TODO kernel smoothing: fix artifact - empty line below from center point toward south
@@ -44,7 +37,6 @@ TODO use canvas.drawimage to make style whith 1 square icon per cell - emoticon
 
 TODO make tests using offset ?
 TODO aggregation on the fly ??? No. except for csv...
-TODO chocolate style
 TODO watercolor style ? Draw random plots around central point of pixel - https://github.com/rolyatmax/watercolor-canvas
 
 TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
