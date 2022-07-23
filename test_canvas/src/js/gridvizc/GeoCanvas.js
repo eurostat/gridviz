@@ -54,7 +54,8 @@ export class GeoCanvas {
                 const dx = tP.x - t.x //- e.sourceEvent.movementX
                 const dy = tP.y - t.y //- e.sourceEvent.movementY
                 this.pan(dx * this.getZf(), -dy * this.getZf())
-                this.redraw(false)
+                //this.redraw(false)
+                this.ctx.drawImage(this.canvasSave, this.canvasSave.dx, this.canvasSave.dy);
             } else {
                 const se = e.sourceEvent;
                 if (se instanceof WheelEvent) {
@@ -77,6 +78,8 @@ export class GeoCanvas {
             this.canvasSave.setAttribute("width", this.w);
             this.canvasSave.setAttribute("height", this.h);
             this.canvasSave.getContext("2d").drawImage(this.canvas, 0, 0);
+            this.canvasSave.dx = 0
+            this.canvasSave.dy = 0
         }).on("end", (e) => {
             this.redraw(true)
         });
