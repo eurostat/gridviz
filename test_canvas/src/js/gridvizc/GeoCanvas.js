@@ -73,8 +73,10 @@ export class GeoCanvas {
             }
             tP = t
         }).on("start", (e) => {
-            //store the image
-            //console.log(e)
+            this.canvasSave = document.createElement("canvas");
+            this.canvasSave.setAttribute("width", this.w);
+            this.canvasSave.setAttribute("height", this.h);
+            this.canvasSave.getContext("2d").drawImage(this.canvas, 0, 0);
         }).on("end", (e) => {
             this.redraw(true)
         });
