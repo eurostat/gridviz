@@ -21,7 +21,7 @@ export class GeoCanvas {
     constructor(canvas, center = undefined, zf = 1, opts) {
         opts = opts || {}
 
-        /** @type {object} */
+        /** @type {HTMLCanvasElement} */
         this.canvas = canvas;
 
         /** @type {number} */
@@ -32,13 +32,15 @@ export class GeoCanvas {
         this.canvas.width = this.w;
         this.canvas.height = this.h;
 
-        /**@type {object} */
+        /**@type {CanvasRenderingContext2D} */
         this.ctx = this.canvas.getContext("2d");
+        if (!this.ctx) throw ("Impossible to create canvas 2D context")
 
         // set geo coordinates of the center
         this.center = center || { x: this.w * 0.5, y: this.h * 0.5 };
 
-        // set zoom factor: pixel size, in m/pix
+        // zoom factor: pixel size, in m/pix
+        /** @type {number} */
         this.zf = zf;
 
         /** Background color.
@@ -76,9 +78,10 @@ export class GeoCanvas {
             }
             tP = t
         }).on("start", (e) => {
+            /** @type {HTMLCanvasElement} */
             this.canvasSave = document.createElement("canvas");
-            this.canvasSave.setAttribute("width", this.w);
-            this.canvasSave.setAttribute("height", this.h);
+            this.canvasSave.setAttribute("width", "" + this.w);
+            this.canvasSave.setAttribute("height", "" + this.h);
             this.canvasSave.getContext("2d").drawImage(this.canvas, 0, 0);
             this.canvasSave.dx = 0
             this.canvasSave.dy = 0
@@ -308,8 +311,10 @@ export class GeoCanvas {
             .attr("max", this.getZfExtent()[1])
             .attr("value", this.getZf())
             .on("input", function (d) {
-                select(this).attr("value", +this.value)
-                th.setZf(+this.value)
+                if (!this || !this.value) return
+                const v = +this.value
+                select(this).attr("value", v)
+                th.setZf(v)
                 //redraw
                 th.redraw()
             })
