@@ -57,19 +57,14 @@ export class GeoCanvas {
             const f = tP.k / t.k
             if (f == 1) {
                 //pan
-                const dx = tP.x - t.x //- e.sourceEvent.movementX
-                const dy = tP.y - t.y //- e.sourceEvent.movementY
+                const dx = tP.x - t.x
+                const dy = tP.y - t.y
                 this.pan(dx * this.getZf(), -dy * this.getZf())
-                //this.redraw(false)
-                this.canvasSave.dx -= dx
-                this.canvasSave.dy -= dy
-                this.ctx.drawImage(this.canvasSave, this.canvasSave.dx, this.canvasSave.dy);
             } else {
                 const se = e.sourceEvent;
                 if (se instanceof WheelEvent) {
                     //zoom at the mouse position
                     this.zoom(f, this.pixToGeoX(e.sourceEvent.offsetX), this.pixToGeoY(e.sourceEvent.offsetY))
-                    this.redraw(false)
                 } else if (se instanceof TouchEvent) {
                     //compute average position of the touches
                     let tx = 0, ty = 0
@@ -77,7 +72,6 @@ export class GeoCanvas {
                     tx /= se.targetTouches.length; ty /= se.targetTouches.length
                     //zoom at this average position
                     this.zoom(f, this.pixToGeoX(tx), this.pixToGeoY(ty))
-                    this.redraw(false)
                 }
             }
             tP = t
@@ -88,8 +82,10 @@ export class GeoCanvas {
             this.canvasSave.getContext("2d").drawImage(this.canvas, 0, 0);
             this.canvasSave.dx = 0
             this.canvasSave.dy = 0
+            this.canvasSave.f = 1
         }).on("end", (e) => {
             this.redraw(true)
+            this.canvasSave = undefined
         });
         z(select(this.canvas))
         //select(this.canvas).call(z);
@@ -171,6 +167,13 @@ export class GeoCanvas {
         this.center.y += dyGeo;
         this.updateExtentGeo()
         if (withRedraw) this.redraw();
+
+        if (this.canvasSave) {
+            this.canvasSave.dx -= dxGeo / this.getZf()
+            this.canvasSave.dy += dyGeo / this.getZf()
+            this.clear(this.backgroundColor);
+            this.ctx.drawImage(this.canvasSave, this.canvasSave.dx, this.canvasSave.dy);
+        }
     }
 
     /**
@@ -189,10 +192,22 @@ export class GeoCanvas {
         if (newZf > this.zfExtent[1]) f = this.zfExtent[1] / this.getZf()
 
         this.setZf(f * this.getZf());
-        this.center.x += (xGeo - this.center.x) * (1 - f)
-        this.center.y += (yGeo - this.center.y) * (1 - f)
+        const dxGeo = (xGeo - this.center.x) * (1 - f)
+        this.center.x += dxGeo
+        const dyGeo = (yGeo - this.center.y) * (1 - f)
+        this.center.y += dyGeo
         this.updateExtentGeo()
         if (withRedraw) this.redraw();
+
+        if (this.canvasSave) {
+            this.clear(this.backgroundColor);
+            this.canvasSave.f /= f
+            this.canvasSave.dx -= dxGeo / this.getZf()
+            this.canvasSave.dy += dyGeo / this.getZf()
+            this.ctx.drawImage(this.canvasSave,
+                this.canvasSave.dx, this.canvasSave.dy,
+                this.canvasSave.f * this.canvasSave.width, this.canvasSave.f * this.canvasSave.height);
+        }
     }
 
     /**
