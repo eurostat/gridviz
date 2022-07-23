@@ -48,14 +48,6 @@ export class App {
             return;
         }
 
-        //get canvas element
-        /*opts.canvasId = opts.canvasId || "vacanvas";
-        const canvas = document.getElementById(opts.canvasId);
-        if (!canvas) {
-            console.error("Cannot find canvas element " + opts.canvasId)
-            return;
-        }*/
-
         //set dimensions
         /** @type {number} */
         this.w = opts.w || container.offsetWidth;
