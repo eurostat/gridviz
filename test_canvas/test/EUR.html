@@ -470,6 +470,7 @@
             )
 */
 
+        const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40]
 
 
         //const s = sd[getSelectedMapType()][getSelectedStyle()]
@@ -479,7 +480,18 @@
             r => r + "m/",
             [new gviz.SquareColoringWebGLStyle({
                 colorCol: "avg_time_nearest",
-                color: (v, r, s) => gviz.interpolateSpectral(gviz.s(v / s.max, 1)),
+                color: (v, r, s) => {
+                    let i = 0
+                    for (let b of breaks) {
+                        //console.log(b)
+                        if (+v <= b) break;
+                        i++
+                    }
+                    //console.log(i, +v)
+                    return gviz.interpolateSpectral((i - 1) / breaks.length)
+                    //const t = gviz.s(v / s.max, 1)
+                    //return gviz.interpolateSpectral(t)
+                },
             }), new gviz.StrokeStyle({ zf: 80 })],
             {},
             5
