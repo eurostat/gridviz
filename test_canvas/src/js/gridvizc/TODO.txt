@@ -1,3 +1,8 @@
+EUR:
+finalise mockup.
+accessiblity grid as tanaka ?
+
+
 improve performance:
    what takes time: color computation + color conversion. Mainly color interpolation
 https://github.com/d3/d3-interpolate/blob/main/src/rgb.js
@@ -27,7 +32,6 @@ sideStyle - new webGL class for line segments ?
 value by alpha style: implement it for income map + accessibility
 
 TODO show several elements on size legend
-TODO deploy accessiblity grid - as tanaka ?
 
 TODO adapt tanaka and lego to diverging - use on EUR pop change
 TODO kernel smoothing: fix artifact - empty line below from center point toward south
