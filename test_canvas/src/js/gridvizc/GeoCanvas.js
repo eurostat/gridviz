@@ -204,8 +204,8 @@ export class GeoCanvas {
 
 
         //TODO
-        //this.redraw(false)
-        if (this.canvasSave) {
+        this.redraw(false)
+        /*if (this.canvasSave) {
             this.clear(this.backgroundColor);
             this.canvasSave.f /= f
             this.canvasSave.dx -= 0//dxGeo / this.getZf()
@@ -214,7 +214,7 @@ export class GeoCanvas {
             this.ctx.drawImage(this.canvasSave,
                 this.canvasSave.dx, this.canvasSave.dy,
                 this.canvasSave.f * this.canvasSave.width, this.canvasSave.f * this.canvasSave.height);
-        }
+        }*/
     }
 
     /**
