@@ -482,6 +482,7 @@
                 new gviz.SquareColoringWebGLStyle({
                     colorCol: "avg_time_nearest_h",
                     color: (v, r, s) => {
+                        if(v==="NA") return
                         let i = 0
                         for (let b of breaks) {
                             if (+v <= b) break;
@@ -493,14 +494,14 @@
                 }),
                 new gviz.StrokeStyle({ zf: 80 }),
                 new gviz.ShapeColorSizeStyle({
-                    color: () => "#ffffffaa",
+                    color: () => "#000000dd",
                     sizeCol: "TOT_P",
-                    size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
+                    size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
                     shape: () => "circle",
                 })
             ],
             {},
-            4
+            20
         )
 
 
