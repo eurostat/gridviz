@@ -51,6 +51,9 @@
                 <br>
                 <input type="radio" name="layer" id="accHealth" value="accHealth">
                 <label for="accHealth">Healthcare services</label>
+                <br>
+                <input type="radio" name="layer" id="accEducPrim" value="accEducPrim">
+                <label for="accEducPrim">Primary schools</label>
             </div>
 
             <hr>
@@ -214,61 +217,65 @@
 
                 //accessibility
                 case "accHealth":
-                    let breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
-                    layAcc.setStyles([
-                        new gviz.SquareColoringWebGLStyle({
-                            colorCol: "avg_time_nearest_h",
-                            color: (v, r, s) => {
-                                if (v === "NA") return
-                                let i = 0
-                                for (let b of breaks) {
-                                    if (+v <= b) break;
-                                    i++
-                                }
-                                const t = gviz.s(1 - (i - 1) / breaks.length, 2)
-                                return gviz.interpolateSpectral(t)
-                            },
-                        }),
-                        new gviz.StrokeStyle({ zf: 80 }),
-                        new gviz.ShapeColorSizeStyle({
-                            color: () => "#000000dd",
-                            sizeCol: "TOT_P",
-                            size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
-                            shape: () => "circle",
-                        })
-                    ])
-                    //layAcc.setStyles(gviz.getTanakaStyle("avg_time_nearest_h", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.5) }))
+                    {
+                        const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
+                        layAcc.setStyles([
+                            new gviz.SquareColoringWebGLStyle({
+                                colorCol: "avg_time_nearest_h",
+                                color: (v, r, s) => {
+                                    if (v === "NA") return
+                                    let i = 0
+                                    for (let b of breaks) {
+                                        if (+v <= b) break;
+                                        i++
+                                    }
+                                    const t = gviz.s(1 - (i - 1) / breaks.length, 2)
+                                    return gviz.interpolateSpectral(t)
+                                },
+                            }),
+                            new gviz.StrokeStyle({ zf: 80 }),
+                            new gviz.ShapeColorSizeStyle({
+                                color: () => "#000000dd",
+                                sizeCol: "TOT_P",
+                                size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
+                                shape: () => "circle",
+                            })
+                        ])
+                        //layAcc.setStyles(gviz.getTanakaStyle("avg_time_nearest_h", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.5) }))
 
-                    layAcc.pixNb = 17;
-                    lay = layAcc
+                        layAcc.pixNb = 17;
+                        lay = layAcc
+                    }
                     break;
 
                 case "accEducPrim":
-                    breaks = [0, 2, 4, 6, 8, 10, 20, 30]
-                    layAcc.setStyles([
-                        new gviz.SquareColoringWebGLStyle({
-                            colorCol: "avg_time_nearest_ep",
-                            color: (v, r, s) => {
-                                if (v === "NA") return
-                                let i = 0
-                                for (let b of breaks) {
-                                    if (+v <= b) break;
-                                    i++
-                                }
-                                const t = gviz.s(1 - (i - 1) / breaks.length, 2)
-                                return gviz.interpolateSpectral(t)
-                            },
-                        }),
-                        new gviz.StrokeStyle({ zf: 80 }),
-                        new gviz.ShapeColorSizeStyle({
-                            color: () => "#000000dd",
-                            sizeCol: "TOT_P",
-                            size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
-                            shape: () => "circle",
-                        })
-                    ])
-                    layAcc.pixNb = 17;
-                    lay = layAcc
+                    {
+                        const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
+                        layAcc.setStyles([
+                            new gviz.SquareColoringWebGLStyle({
+                                colorCol: "avg_time_nearest_ep",
+                                color: (v, r, s) => {
+                                    if (v === "NA") return
+                                    let i = 0
+                                    for (let b of breaks) {
+                                        if (+v <= b) break;
+                                        i++
+                                    }
+                                    const t = gviz.s(1 - (i - 1) / breaks.length, 2)
+                                    return gviz.interpolateSpectral(t)
+                                },
+                            }),
+                            new gviz.StrokeStyle({ zf: 80 }),
+                            new gviz.ShapeColorSizeStyle({
+                                color: () => "#000000dd",
+                                sizeCol: "TOT_P",
+                                size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
+                                shape: () => "circle",
+                            })
+                        ])
+                        layAcc.pixNb = 17;
+                        lay = layAcc
+                    }
                     break;
 
                 default:
