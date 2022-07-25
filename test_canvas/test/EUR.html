@@ -15,38 +15,26 @@
 
             <hr>
             <div id="layer">
-                <span style="font-size: 11pt; font-weight: bold;">Population in </span>
-                <select id="yearPop">
-                    <option value="2018" selected>2018</option>
-                    <option value="2011">2011</option>
-                    <option value="2006">2006</option>
-                </select>
+
+                <span style="font-size: 11pt; font-weight: bold;">Population</span>
                 <br>
-                <input type="radio" name="layer" id="squareColor" value="squareColor" checked>
-                <label for="squareColor">Color</label>
-                <input type="radio" name="layer" id="circleSize" value="circleSize">
-                <label for="circleSize">Size</label>
-                <input type="radio" name="layer" id="dots" value="dots">
-                <label for="dots">Dots</label>
-                <br>
-                <input type="radio" name="layer" id="joyplot" value="joyplot">
-                <label for="joyplot">Joyplot</label>
-                <input type="radio" name="layer" id="tanaka" value="tanaka">
-                <label for="tanaka">Tanaka</label>
-                <input type="radio" name="layer" id="lego" value="lego">
-                <label for="lego">Lego</label>
+                <input type="radio" name="layer" id="2018" value="2018" checked>
+                <label for="2018">2018</label>
+                <input type="radio" name="layer" id="2011" value="2011">
+                <label for="2011">2011</label>
+                <input type="radio" name="layer" id="2006" value="2006">
+                <label for="2006">2006</label>
                 <hr>
-                <span style="font-size: 11pt; font-weight: bold;">Population change</span><br>
-                <select id="yearPopCh">
-                    <option value="d11_18" selected>from 2011 to 2018</option>
-                    <option value="d06_11">from 2006 to 2011</option>
-                </select>
+
+                <span style="font-size: 11pt; font-weight: bold;">Population change</span>
                 <br>
-                <input type="radio" name="layer" id="squareColorCh" value="squareColorCh">
-                <label for="squareColorCh">Color</label>
-                <input type="radio" name="layer" id="SegOCh" value="SegOCh">
-                <label for="SegOCh">Hatching</label>
+                <input type="radio" name="layer" id="d11_18" value="d11_18">
+                <label for="d11_18">2011 to 2018</label>
+                <br>
+                <input type="radio" name="layer" id="d06_11" value="d06_11">
+                <label for="d06_11">2006 to 2011</label>
                 <hr>
+
                 <span style="font-size: 11pt; font-weight: bold;">Accessibility</span>
                 <br>
                 <input type="radio" name="layer" id="accHealth" value="accHealth">
@@ -128,159 +116,89 @@
 
             //read GUI selection
             const layCode = document.querySelector('input[name="layer"]:checked').value
-            const yearPop = document.querySelector('#yearPop').value
-            const yearPopCh = document.querySelector('#yearPopCh').value
 
             //select right layer, style and resolution
             let lay
-            switch (layCode) {
 
-                //population
-                case "squareColor":
-                    layPop.setStyles([new gviz.SquareColoringWebGLStyle({
-                        colorCol: yearPop,
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                    }), new gviz.StrokeStyle({ zf: 80 })
-                    ])
-                    layPop.pixNb = 5;
-                    lay = layPop
-                    break;
-                case "circleSize":
-                    layPop.setStyles([new gviz.ShapeColorSizeStyle({
-                        color: () => "#dd3333cc", //"#c08c59cc",
-                        sizeCol: yearPop,
-                        size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
-                        shape: () => "circle",
-                    })])
-                    layPop.pixNb = 15;
-                    lay = layPop
-                    break;
-                case "dots":
-                    layPop.setStyles([new gviz.DotDensityStyle({
-                        col: yearPop,
-                        nb: (v, r, s, zf) => 1 * r * r / (zf * zf) * gviz.s(v / s.max, 0.4),
-                        dotSize: (r, zf) => 1.2 * zf,
-                        color: () => "#FF5733"
-                    })])
-                    layPop.pixNb = 10;
-                    lay = layPop
-                    break;
-                case "joyplot":
-                    layPop.setStyles([new gviz.JoyPlotStyle({
-                        heightCol: yearPop,
-                        height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
-                        fillColor: "#c08c59bb"
-                    })])
-                    layPop.pixNb = 10;
-                    lay = layPop
-                    break;
-                case "tanaka":
-                    layPop.setStyles(gviz.getTanakaStyle(yearPop, { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }))
-                    layPop.pixNb = 10;
-                    lay = layPop
-                    break;
-                case "lego":
-                    layPop.setStyles(gviz.getLegoStyle(yearPop, { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }))
-                    layPop.pixNb = 20;
-                    lay = layPop
-                    break;
-
-                //population change
-                case "squareColorCh":
-                    layPop.setStyles([new gviz.ShapeColorSizeStyle({
-                        colorCol: yearPopCh,
-                        color: (v, r, s) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
-                            return gviz.interpolateSpectral(1 - t);
-                        },
-                        shape: () => "square",
-                    })])
-                    layPop.pixNb = 5;
-                    lay = layPop
-                    break;
-                case "SegOCh":
-                    layPop.setStyles([new gviz.SegmentStyle({
-                        orientation: () => 45,
-                        colorCol: yearPopCh,
-                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
-                        length: (v, r) => r * 1.4142,
-                        widthCol: yearPopCh,
-                        width: (v, r, s, zf) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            return r * gviz.s(Math.abs(v) / max, 0.25) / 1.4142
-                        }
-                    })])
-                    layPop.pixNb = 15;
-                    lay = layPop
-                    break;
+            if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
+                layPop.setStyles([new gviz.SquareColoringWebGLStyle({
+                    colorCol: layCode,
+                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                }), new gviz.StrokeStyle({ zf: 80 })
+                ])
+                layPop.pixNb = 5;
+                lay = layPop
+            } else if(layCode === "d06_11" || layCode === "d11_18") {
+                layPop.setStyles([new gviz.ShapeColorSizeStyle({
+                    colorCol: layCode,
+                    color: (v, r, s) => {
+                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                        const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
+                        return gviz.interpolateSpectral(1 - t);
+                    },
+                    shape: () => "square",
+                })])
+                layPop.pixNb = 5;
+                lay = layPop
 
                 //accessibility
-                case "accHealth":
-                    {
-                        const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
-                        layAcc.setStyles([
-                            new gviz.SquareColoringWebGLStyle({
-                                colorCol: "avg_time_nearest_h",
-                                color: (v, r, s) => {
-                                    if (v === "NA") return
-                                    let i = 0
-                                    for (let b of breaks) {
-                                        if (+v <= b) break;
-                                        i++
-                                    }
-                                    const t = gviz.s(1 - (i - 1) / breaks.length, 2)
-                                    return gviz.interpolateSpectral(t)
-                                },
-                            }),
-                            new gviz.StrokeStyle({ zf: 80 }),
-                            new gviz.ShapeColorSizeStyle({
-                                color: () => "#000000dd",
-                                sizeCol: "TOT_P",
-                                size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
-                                shape: () => "circle",
-                            })
-                        ])
-                        //layAcc.setStyles(gviz.getTanakaStyle("avg_time_nearest_h", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.5) }))
+            } else if(layCode === "accHealth") {
+                const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
+                layAcc.setStyles([
+                    new gviz.SquareColoringWebGLStyle({
+                        colorCol: "avg_time_nearest_h",
+                        color: (v, r, s) => {
+                            if (v === "NA") return
+                            let i = 0
+                            for (let b of breaks) {
+                                if (+v <= b) break;
+                                i++
+                            }
+                            const t = gviz.s(1 - (i - 1) / breaks.length, 2)
+                            return gviz.interpolateSpectral(t)
+                        },
+                    }),
+                    new gviz.StrokeStyle({ zf: 80 }),
+                    new gviz.ShapeColorSizeStyle({
+                        color: () => "#000000dd",
+                        sizeCol: "TOT_P",
+                        size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
+                        shape: () => "circle",
+                    })
+                ])
+                //layAcc.setStyles(gviz.getTanakaStyle("avg_time_nearest_h", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.5) }))
+                layAcc.pixNb = 17;
+                lay = layAcc
+            } else if(layCode === "accEducPrim") {
+                const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
+                layAcc.setStyles([
+                    new gviz.SquareColoringWebGLStyle({
+                        colorCol: "avg_time_nearest_ep",
+                        color: (v, r, s) => {
+                            if (v === "NA") return
+                            let i = 0
+                            for (let b of breaks) {
+                                if (+v <= b) break;
+                                i++
+                            }
+                            const t = gviz.s(1 - (i - 1) / breaks.length, 2)
+                            return gviz.interpolateSpectral(t)
+                        },
+                    }),
+                    new gviz.StrokeStyle({ zf: 80 }),
+                    new gviz.ShapeColorSizeStyle({
+                        color: () => "#000000dd",
+                        sizeCol: "TOT_P",
+                        size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
+                        shape: () => "circle",
+                    })
+                ])
+                layAcc.pixNb = 17;
+                lay = layAcc
 
-                        layAcc.pixNb = 17;
-                        lay = layAcc
-                    }
-                    break;
-
-                case "accEducPrim":
-                    {
-                        const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
-                        layAcc.setStyles([
-                            new gviz.SquareColoringWebGLStyle({
-                                colorCol: "avg_time_nearest_ep",
-                                color: (v, r, s) => {
-                                    if (v === "NA") return
-                                    let i = 0
-                                    for (let b of breaks) {
-                                        if (+v <= b) break;
-                                        i++
-                                    }
-                                    const t = gviz.s(1 - (i - 1) / breaks.length, 2)
-                                    return gviz.interpolateSpectral(t)
-                                },
-                            }),
-                            new gviz.StrokeStyle({ zf: 80 }),
-                            new gviz.ShapeColorSizeStyle({
-                                color: () => "#000000dd",
-                                sizeCol: "TOT_P",
-                                size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
-                                shape: () => "circle",
-                            })
-                        ])
-                        layAcc.pixNb = 17;
-                        lay = layAcc
-                    }
-                    break;
-
-                default:
-                    console.log("Unexpected layer code: " + layCode);
-                    return;
+            } else {
+                console.log("Unexpected layer code: " + layCode);
+                return;
             }
 
             //set layer
