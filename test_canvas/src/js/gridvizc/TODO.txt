@@ -1,6 +1,9 @@
 EUR:
-tooltip + legends
+tooltip
+legends
+
 accessiblity grid as tanaka ?
+
 filosofi
 
 improve performance:
