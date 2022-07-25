@@ -1,5 +1,5 @@
-x,y,TOT_P,avg_time_nearest_h
-119,109,373,NA
-119,110,323,NA
-120,109,1367,NA
-120,110,187,NA
+x,y,TOT_P,avg_time_nearest_ep,avg_time_nearest_h
+119,109,373,NA,NA
+119,110,323,NA,NA
+120,109,1367,NA,NA
+120,110,187,NA,NA

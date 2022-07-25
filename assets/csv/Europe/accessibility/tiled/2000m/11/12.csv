@@ -1,4 +1,4 @@
-x,y,TOT_P,avg_time_nearest_h
-83,127,48,20
-84,127,17,23
-103,127,3,24
+x,y,TOT_P,avg_time_nearest_ep,avg_time_nearest_h
+83,127,48,4.6,20
+84,127,17,3.8,23
+103,127,3,10.8,24
