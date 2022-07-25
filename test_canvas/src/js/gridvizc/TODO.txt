@@ -1,7 +1,7 @@
 EUR:
 tooltip + legends
 accessiblity grid as tanaka ?
-
+filosofi
 
 improve performance:
    what takes time: color computation + color conversion. Mainly color interpolation
