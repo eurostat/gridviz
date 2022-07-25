@@ -162,14 +162,12 @@ export class GeoCanvas {
     /**
      * @param {number} dxGeo
      * @param {number} dyGeo
-     * @param {boolean} withRedraw
      */
-    pan(dxGeo = 0, dyGeo = 0, withRedraw = false) {
+    pan(dxGeo = 0, dyGeo = 0) {
         //TODO force extend to remain
         this.center.x += dxGeo;
         this.center.y += dyGeo;
         this.updateExtentGeo()
-        if (withRedraw) this.redraw();
 
         if (this.canvasSave) {
             this.canvasSave.dx -= dxGeo / this.getZf()
@@ -184,14 +182,13 @@ export class GeoCanvas {
      * @param {number} f The zoom factor, within ]0, Infinity]. 1 is for no change. <1 to zoom-in, >1 to zoom-out.
      * @param {number} xGeo The x geo position fixed in the screen.
      * @param {number} yGeo The y geo position fixed in the screen.
-     * @param {boolean} withRedraw
      */
-    zoom(f = 1, xGeo = this.center.x, yGeo = this.center.y, withRedraw = false) {
+    zoom(f = 1, xGeo = this.center.x, yGeo = this.center.y) {
         //TODO force extend to remain
 
         //trying to zoom in/out beyond limit
-        if(this.zfExtent[0] == this.getZf() && f<=1) return
-        if(this.zfExtent[1] == this.getZf() && f>=1) return
+        if (this.zfExtent[0] == this.getZf() && f <= 1) return
+        if (this.zfExtent[1] == this.getZf() && f >= 1) return
 
         //ensure zoom extent preserved
         const newZf = f * this.getZf()
@@ -204,21 +201,20 @@ export class GeoCanvas {
         const dyGeo = (yGeo - this.center.y) * (1 - f)
         this.center.y += dyGeo
         this.updateExtentGeo()
-        if (withRedraw) this.redraw();
 
 
         //TODO
-        this.redraw(false)
-        /*if (this.canvasSave) {
+        //this.redraw(false)
+        if (this.canvasSave) {
             this.clear(this.backgroundColor);
             this.canvasSave.f /= f
-            this.canvasSave.dx -= 0//dxGeo / this.getZf()
-            this.canvasSave.dy += 0//dyGeo / this.getZf()
+            this.canvasSave.dx += this.geoToPixX(xGeo) * (1 - f)
+            this.canvasSave.dy += this.geoToPixY(yGeo) * (1 - f)
             this.clear(this.backgroundColor);
             this.ctx.drawImage(this.canvasSave,
                 this.canvasSave.dx, this.canvasSave.dy,
                 this.canvasSave.f * this.canvasSave.width, this.canvasSave.f * this.canvasSave.height);
-        }*/
+        }
     }
 
     /**
