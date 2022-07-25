@@ -1,5 +1,5 @@
 EUR:
-finalise mockup.
+tooltip + legends
 accessiblity grid as tanaka ?
 
 
