@@ -11,9 +11,39 @@
     <div
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
         <span style="font-size: 17pt; font-weight: bold;">Europe grid</span><br><span style="font-size: 10pt;">
+
+
+            <div id="layer">
+                <span style="font-size: 11pt; font-weight: bold;">Population</span><br>
+                Year: <select id="year">
+                    <option value="2018" selected>2018</option>
+                    <option value="2011">2011</option>
+                    <option value="2006">2006</option>
+                </select>
+                <input type="radio" name="style" id="squareColor" value="squareColor" checked>
+                <label for="squareColor">By color</label>
+                <input type="radio" name="style" id="circleColor" value="circleColor">
+                <label for="circleColor">Circle</label>
+                <input type="radio" name="style" id="circleColor" value="circleColor">
+                <label for="circleColor">Dots</label>
+                <br>
+                <input type="radio" name="style" id="circleColor" value="circleColor">
+                <label for="circleColor">Joyplot</label>
+                <input type="radio" name="style" id="circleColor" value="circleColor">
+                <label for="circleColor">Tanaka</label>
+                <input type="radio" name="style" id="circleColor" value="circleColor">
+                <label for="circleColor">Lego</label>
+
+                <span style="font-size: 11pt; font-weight: bold;">Population change</span><br>
+                Year: <select id="year">
+                    <option value="2018" selected>2011 to 2018</option>
+                    <option value="2018" selected>2006 to 2011</option>
+                </select>
+
+            </div>
+
             Total population<br>
             Year selection<br>
-            As color, circle size, dots, joyplot, tanaka, lego<br>
 
             Population change<br>
             color, segment oblique<br>
@@ -482,7 +512,7 @@
                 new gviz.SquareColoringWebGLStyle({
                     colorCol: "avg_time_nearest_h",
                     color: (v, r, s) => {
-                        if(v==="NA") return
+                        if (v === "NA") return
                         let i = 0
                         for (let b of breaks) {
                             if (+v <= b) break;
