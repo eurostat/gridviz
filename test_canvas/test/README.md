@@ -1,7 +1,8 @@
-# Europe population - geostat grid (1km)
+# Europe
 
-- Europe population by color, size, donut, segment, joyplot, tanaka, pillar, dot density and text styles: https://eurostat.github.io/gridviz/test_canvas/test/EUR_population.html
-- Segment orientation: https://eurostat.github.io/gridviz/test_canvas/test/EUR_segment.html
+- Europe population and healcare/education services accessiblity: https://eurostat.github.io/gridviz/test_canvas/test/EUR.html
+- Europe population style tests (by color, size, donut, segment, joyplot, tanaka, pillar, dot density, lego, tanaka, text styles): https://eurostat.github.io/gridviz/test_canvas/test/EUR_population.html
+- Test, segment orientation style: https://eurostat.github.io/gridviz/test_canvas/test/EUR_segment.html
 - Gaussian kernel smoothing: https://eurostat.github.io/gridviz/test_canvas/test/EUR_kernelsmoothing.html
 
 # France - 200m (Filosofi 2015)
@@ -14,7 +15,7 @@
 
 # Croatia
 
-https://eurostat.github.io/gridviz/test_canvas/test/HR.html
+Population composition, businesses by sector, tourism: https://eurostat.github.io/gridviz/test_canvas/test/HR.html
 
 # Sweden
 
