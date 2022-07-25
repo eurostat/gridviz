@@ -101,10 +101,41 @@
             let lay
             switch (layCode) {
 
-                case 'Oranges':
+                case "squareColor":
+                    layPop.setStyles([])
+                    layPop.pixNb = 20;
+                    lay = layPop
+                    break;
+                case "circleSize":
+                    layPop.setStyles([])
+                    layPop.pixNb = 20;
+                    lay = layPop
+                    break;
+                case "dots":
+                    layPop.setStyles([])
+                    layPop.pixNb = 20;
+                    lay = layPop
+                    break;
+                case "joyplot":
+                    layPop.setStyles([])
+                    layPop.pixNb = 20;
+                    lay = layPop
+                    break;
+                case "tanaka":
+                    layPop.setStyles([])
+                    layPop.pixNb = 20;
+                    lay = layPop
+                    break;
+                case "lego":
+                    layPop.setStyles([])
+                    layPop.pixNb = 20;
+                    lay = layPop
+                    break;
+
+                case "accHealth":
                     //acc healthcare
                     const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
-                    layAcc.styles = [
+                    layAcc.setStyles([
                         new gviz.SquareColoringWebGLStyle({
                             colorCol: "avg_time_nearest_h",
                             color: (v, r, s) => {
@@ -125,13 +156,13 @@
                             size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
                             shape: () => "circle",
                         })
-                    ];
+                    ])
                     layAcc.pixNb = 20;
                     lay = layAcc
                     break;
 
                 default:
-                    console.log("Unexpected layer code: ${layCode}");
+                    console.log("Unexpected layer code: " + layCode);
                     return;
             }
 
