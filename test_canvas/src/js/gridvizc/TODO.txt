@@ -1,4 +1,3 @@
-zoom
 EUR:
 tooltip + legends
 accessiblity grid as tanaka ?
