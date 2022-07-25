@@ -88,7 +88,7 @@ export class GeoCanvas {
             this.canvasSave.f = 1
         }).on("end", (e) => {
             this.redraw(true)
-            this.canvasSave = undefined
+            this.canvasSave = null
         });
         z(select(this.canvas))
         //select(this.canvas).call(z);
@@ -184,7 +184,7 @@ export class GeoCanvas {
      * @param {number} yGeo The y geo position fixed in the screen.
      */
     zoom(f = 1, xGeo = this.center.x, yGeo = this.center.y) {
-        //TODO force extend to remain
+        //TODO force geo extend to remain
 
         //trying to zoom in/out beyond limit
         if (this.zfExtent[0] == this.getZf() && f <= 1) return
@@ -208,8 +208,8 @@ export class GeoCanvas {
         if (this.canvasSave) {
             this.clear(this.backgroundColor);
             this.canvasSave.f /= f
-            this.canvasSave.dx += this.geoToPixX(xGeo) * (1 - f)
-            this.canvasSave.dy += this.geoToPixY(yGeo) * (1 - f)
+            this.canvasSave.dx = this.geoToPixX(xGeo) * (1 - this.canvasSave.f)
+            this.canvasSave.dy = this.geoToPixY(yGeo) * (1 - this.canvasSave.f)
             this.clear(this.backgroundColor);
             this.ctx.drawImage(this.canvasSave,
                 this.canvasSave.dx, this.canvasSave.dy,
