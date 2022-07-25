@@ -13,13 +13,16 @@
         <span style="font-size: 17pt; font-weight: bold;">Europe grid</span><br><span style="font-size: 10pt;">
 
 
+            <hr>
             <div id="layer">
-                <span style="font-size: 11pt; font-weight: bold;">Population</span><br>
+                <span style="font-size: 11pt; font-weight: bold;">Population</span>
+                <br>
                 Year: <select id="year">
                     <option value="2018" selected>2018</option>
                     <option value="2011">2011</option>
                     <option value="2006">2006</option>
                 </select>
+                <br>
                 <input type="radio" name="style" id="squareColor" value="squareColor" checked>
                 <label for="squareColor">By color</label>
                 <input type="radio" name="style" id="circleColor" value="circleColor">
@@ -33,74 +36,22 @@
                 <label for="circleColor">Tanaka</label>
                 <input type="radio" name="style" id="circleColor" value="circleColor">
                 <label for="circleColor">Lego</label>
-
+                <hr>
                 <span style="font-size: 11pt; font-weight: bold;">Population change</span><br>
-                Year: <select id="year">
-                    <option value="2018" selected>2011 to 2018</option>
-                    <option value="2018" selected>2006 to 2011</option>
+                Year: <select id="yearch">
+                    <option value="d11_18" selected>2011 to 2018</option>
+                    <option value="d06_11">2006 to 2011</option>
                 </select>
-
+                <br>
+                <input type="radio" name="style" id="circleColor" value="circleColor">
+                <label for="circleColor">Color</label>
+                <input type="radio" name="style" id="circleColor" value="circleColor">
+                <label for="circleColor">Segment oblique</label>
             </div>
 
-            Total population<br>
-            Year selection<br>
-
-            Population change<br>
-            color, segment oblique<br>
 
             Accessibility
-            <br>
 
-
-            Year: <select id="year">
-                <option value="2018" selected>2018</option>
-                <option value="2011">2011</option>
-                <option value="2006">2006</option>
-                <option value="d06_11">Change from 2006 to 2011</option>
-                <option value="d11_18">Change from 2011 to 2018</option>
-            </select>
-            <hr>
-            <span style="font-size: 11pt; font-weight: bold;">Style</span><br>
-            <div id="style">
-                By color:
-                <input type="radio" name="style" id="squareColor" value="squareColor" checked>
-                <label for="squareColor">Square</label>
-                <input type="radio" name="style" id="circleColor" value="circleColor">
-                <label for="circleColor">Circle</label>
-                <br>
-                By size:
-                <input type="radio" name="style" id="squareSize" value="squareSize">
-                <label for="squareSize">Square</label>
-                <input type="radio" name="style" id="circleSize" value="circleSize">
-                <label for="circleSize">Circle</label>
-                <input type="radio" name="style" id="donut" value="donut">
-                <label for="donut">Donut</label>
-                <br>
-                As lines:
-                <input type="radio" name="style" id="segmentH" value="segmentH">
-                <label for="segmentH">Horizontal</label>
-                <input type="radio" name="style" id="segmentV" value="segmentV">
-                <label for="segmentV">Vertical</label>
-                <input type="radio" name="style" id="segmentO" value="segmentO">
-                <label for="segmentO">Oblique</label>
-                <br>
-                Others:
-                <input type="radio" name="style" id="joyplot" value="joyplot">
-                <label for="joyplot">Joyplot</label>
-                <input type="radio" name="style" id="side" value="side">
-                <label for="side">Choco</label>
-                <input type="radio" name="style" id="tanaka" value="tanaka">
-                <label for="tanaka">Tanaka</label>
-                <br>
-                <input type="radio" name="style" id="lego" value="lego">
-                <label for="lego">Lego</label>
-                <input type="radio" name="style" id="pillar" value="pillar">
-                <label for="pillar">Pillar</label>
-                <input type="radio" name="style" id="dot" value="dot">
-                <label for="dot">Dots</label>
-                <input type="radio" name="style" id="text" value="text">
-                <label for="text">#@=€</label>
-            </div>
             <hr>
             <input type="checkbox" id="label" checked>
             <label for="label">City names</label>
