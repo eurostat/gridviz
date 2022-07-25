@@ -22,18 +22,18 @@
                     <option value="2006">2006</option>
                 </select>
                 <br>
-                <input type="radio" name="style" id="squareColor" value="squareColor" checked>
+                <input type="radio" name="layer" id="squareColor" value="squareColor" checked>
                 <label for="squareColor">Color</label>
-                <input type="radio" name="style" id="circleSize" value="circleSize">
+                <input type="radio" name="layer" id="circleSize" value="circleSize">
                 <label for="circleSize">Size</label>
-                <input type="radio" name="style" id="dots" value="dots">
+                <input type="radio" name="layer" id="dots" value="dots">
                 <label for="dots">Dots</label>
                 <br>
-                <input type="radio" name="style" id="joyplot" value="joyplot">
+                <input type="radio" name="layer" id="joyplot" value="joyplot">
                 <label for="joyplot">Joyplot</label>
-                <input type="radio" name="style" id="tanaka" value="tanaka">
+                <input type="radio" name="layer" id="tanaka" value="tanaka">
                 <label for="tanaka">Tanaka</label>
-                <input type="radio" name="style" id="lego" value="lego">
+                <input type="radio" name="layer" id="lego" value="lego">
                 <label for="lego">Lego</label>
                 <hr>
                 <span style="font-size: 11pt; font-weight: bold;">Population change</span><br>
@@ -42,14 +42,14 @@
                     <option value="d06_11">from 2006 to 2011</option>
                 </select>
                 <br>
-                <input type="radio" name="style" id="squareColorCh" value="squareColorCh">
+                <input type="radio" name="layer" id="squareColorCh" value="squareColorCh">
                 <label for="squareColorCh">Color</label>
-                <input type="radio" name="style" id="SegOCh" value="SegOCh">
+                <input type="radio" name="layer" id="SegOCh" value="SegOCh">
                 <label for="SegOCh">Hatching</label>
                 <hr>
                 <span style="font-size: 11pt; font-weight: bold;">Accessibility</span>
                 <br>
-                <input type="radio" name="style" id="accHealth" value="accHealth">
+                <input type="radio" name="layer" id="accHealth" value="accHealth">
                 <label for="accHealth">Healthcare services</label>
             </div>
 
@@ -97,38 +97,46 @@
             const yearPop = document.querySelector('#yearPop').value
             const yearPopCh = document.querySelector('#yearPopCh').value
 
-            console.log(layCode, yearPop, yearPopCh)
+            //select right layer, style and resolution
+            let lay
+            switch (layCode) {
 
+                case 'Oranges':
+                    //acc healthcare
+                    const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
+                    layAcc.styles = [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "avg_time_nearest_h",
+                            color: (v, r, s) => {
+                                if (v === "NA") return
+                                let i = 0
+                                for (let b of breaks) {
+                                    if (+v <= b) break;
+                                    i++
+                                }
+                                const t = gviz.s(1 - (i - 1) / breaks.length, 2)
+                                return gviz.interpolateSpectral(t)
+                            },
+                        }),
+                        new gviz.StrokeStyle({ zf: 80 }),
+                        new gviz.ShapeColorSizeStyle({
+                            color: () => "#000000dd",
+                            sizeCol: "TOT_P",
+                            size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
+                            shape: () => "circle",
+                        })
+                    ];
+                    layAcc.pixNb = 20;
+                    lay = layAcc
+                    break;
 
+                default:
+                    console.log("Unexpected layer code: ${layCode}");
+                    return;
+            }
 
-
-
-            //acc healthcare
-            const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
-            layAcc.styles = [
-                new gviz.SquareColoringWebGLStyle({
-                    colorCol: "avg_time_nearest_h",
-                    color: (v, r, s) => {
-                        if (v === "NA") return
-                        let i = 0
-                        for (let b of breaks) {
-                            if (+v <= b) break;
-                            i++
-                        }
-                        const t = gviz.s(1 - (i - 1) / breaks.length, 2)
-                        return gviz.interpolateSpectral(t)
-                    },
-                }),
-                new gviz.StrokeStyle({ zf: 80 }),
-                new gviz.ShapeColorSizeStyle({
-                    color: () => "#000000dd",
-                    sizeCol: "TOT_P",
-                    size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
-                    shape: () => "circle",
-                })
-            ];
-            layAcc.pixNb = 20;
-            app.layers = [layAcc]
+            //set layer
+            app.layers = [lay]
 
             app.cg.redraw();
         }
