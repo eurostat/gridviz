@@ -81,7 +81,38 @@
         //for population
         const layPop = app.makeMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/",
-            resolutions, r => Math.round(r / 1000) + "km/", [], {}
+            resolutions, r => Math.round(r / 1000) + "km/", [],
+            {
+                /*                cellInfoHTML: c => {
+                                    const v = document.querySelector('#year').value
+                                    if (getSelectedMapType() === "pop")
+                                        return "<b>" + c[v] + "</b> inhabitant(s) in " + v
+                                    else {
+                                        const sel = document.querySelector('#year').value
+                                        const v = c[sel]
+                                        return (
+                                            sel === "d11_18" ?
+                                                "2011: " + c["2011"] + "<br>2018: " + c["2018"]
+                                                : "2006: " + c["2006"] + "<br>2011: " + c["2011"]
+                                        )
+                                            + "<br>"
+                                            + "<b>" + (v == 0 ? "No change" : (v > 0 ? "+" : "") + v + " inhabitants") + "</b>"
+                                    }
+                                },*/
+                preprocess: c => {
+                    //prepare 2011 -> 2018 change data
+                    if (!c["2011"] && !c["2018"]) c.d11_18 = 0
+                    else if (!c["2011"] && c["2018"]) c.d11_18 = + c["2018"]
+                    else if (c["2011"] && !c["2018"]) c.d11_18 = - c["2011"]
+                    else c.d11_18 = c["2018"] - c["2011"]
+
+                    //prepare 2006 -> 2011 change data
+                    if (!c["2006"] && !c["2011"]) c.d06_11 = 0
+                    else if (!c["2006"] && c["2011"]) c.d06_11 = +c["2011"]
+                    else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
+                    else c.d06_11 = c["2011"] - c["2006"]
+                }
+            }
         )
         //for accessibility
         const layAcc = app.makeMultiScaleTiledGridLayer(
@@ -154,7 +185,7 @@
                 //population change
                 case "squareColorCh":
                     layPop.setStyles([new gviz.ShapeColorSizeStyle({
-                        colorCol: getSelectedYear(),
+                        colorCol: yearPopCh,
                         color: (v, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
@@ -168,10 +199,10 @@
                 case "SegOCh":
                     layPop.setStyles([new gviz.SegmentStyle({
                         orientation: () => 45,
-                        colorCol: getSelectedYear(),
+                        colorCol: yearPopCh,
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
                         length: (v, r) => r * 1.4142,
-                        widthCol: getSelectedYear(),
+                        widthCol: yearPopCh,
                         width: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return r * gviz.s(Math.abs(v) / max, 0.25) / 1.4142
