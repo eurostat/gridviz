@@ -17,38 +17,41 @@
             <div id="layer">
                 <span style="font-size: 11pt; font-weight: bold;">Population</span>
                 <br>
-                Year: <select id="year">
+                Year: <select id="yearPop">
                     <option value="2018" selected>2018</option>
                     <option value="2011">2011</option>
                     <option value="2006">2006</option>
                 </select>
                 <br>
                 <input type="radio" name="style" id="squareColor" value="squareColor" checked>
-                <label for="squareColor">By color</label>
-                <input type="radio" name="style" id="circleColor" value="circleColor">
-                <label for="circleColor">Circle</label>
-                <input type="radio" name="style" id="circleColor" value="circleColor">
-                <label for="circleColor">Dots</label>
+                <label for="squareColor">Color</label>
+                <input type="radio" name="style" id="circleSize" value="circleSize">
+                <label for="circleSize">Size</label>
+                <input type="radio" name="style" id="dots" value="dots">
+                <label for="dots">Dots</label>
                 <br>
-                <input type="radio" name="style" id="circleColor" value="circleColor">
-                <label for="circleColor">Joyplot</label>
-                <input type="radio" name="style" id="circleColor" value="circleColor">
-                <label for="circleColor">Tanaka</label>
-                <input type="radio" name="style" id="circleColor" value="circleColor">
-                <label for="circleColor">Lego</label>
+                <input type="radio" name="style" id="joyplot" value="joyplot">
+                <label for="joyplot">Joyplot</label>
+                <input type="radio" name="style" id="tanaka" value="tanaka">
+                <label for="tanaka">Tanaka</label>
+                <input type="radio" name="style" id="lego" value="lego">
+                <label for="lego">Lego</label>
                 <hr>
                 <span style="font-size: 11pt; font-weight: bold;">Population change</span><br>
-                Year: <select id="yearch">
+                Year: <select id="yearPopCh">
                     <option value="d11_18" selected>2011 to 2018</option>
                     <option value="d06_11">2006 to 2011</option>
                 </select>
                 <br>
-                <input type="radio" name="style" id="circleColor" value="circleColor">
-                <label for="circleColor">Color</label>
-                <input type="radio" name="style" id="circleColor" value="circleColor">
-                <label for="circleColor">Segment oblique</label>
+                <input type="radio" name="style" id="squareColorCh" value="squareColorCh">
+                <label for="squareColorCh">Color</label>
+                <input type="radio" name="style" id="SegOCh" value="SegOCh">
+                <label for="SegOCh">Hatching</label>
                 <hr>
-                <span style="font-size: 11pt; font-weight: bold;">Accessibility</span><br>
+                <span style="font-size: 11pt; font-weight: bold;">Accessibility</span>
+                <br>
+                <input type="radio" name="style" id="accHealth" value="accHealth">
+                <label for="accHealth">Healthcare services</label>
             </div>
 
             <hr>
@@ -69,8 +72,8 @@
         let containerDiv = document.getElementById("viz-container");
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
-            //.addZoomSlider("zoomSlider")
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+            .addZoomSlider("zoomSlider")
             .setViewFromURL()
 
         //retrieve the selected year (the column to show)
@@ -449,6 +452,9 @@
                 [sd.popchange.segmentO.style[0]]
             )
 */
+
+
+
 
         const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
 
