@@ -115,22 +115,18 @@
 
 
 
-        //style selector
-        document.querySelector('#layer').addEventListener('change', function () {
-            console.log("layer")
+
+        const update = () => {
+console.log("aaa")
             app.cg.redraw();
-        })
+        }
 
 
-        document.querySelector('#yearPop').addEventListener('change', function () {
-            console.log("yearPop")
-            app.cg.redraw();
-        })
 
-        document.querySelector('#yearPopCh').addEventListener('change', function () {
-            console.log("yearPopCh")
-            app.cg.redraw();
-        })
+        //layer selector
+        document.querySelector('#layer').addEventListener('change', update)
+
+
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
