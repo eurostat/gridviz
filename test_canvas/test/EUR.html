@@ -76,18 +76,37 @@
             .setViewFromURL()
 
 
-
-
-
-        const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
-
-
-        //const s = sd[getSelectedMapType()][getSelectedStyle()]
-        app.addMultiScaleTiledGridLayer(
+        //prepare layers
+        const resolutions = [1000, 2000, 5000, 10000, 20000, 50000, 100000]
+        //for population
+        const layPop = app.makeMultiScaleTiledGridLayer(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/",
+            resolutions, r => Math.round(r / 1000) + "km/", [], {}
+        )
+        //for accessibility
+        const layAcc = app.makeMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/",
-            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => r + "m/",
-            [
+            resolutions, r => r + "m/", [], {}
+        )
+
+        //
+        const update = () => {
+            console.log("aaa")
+
+            //read GUI selection
+            const layCode = document.querySelector('input[name="layer"]:checked').value
+            const yearPop = document.querySelector('#yearPop').value
+            const yearPopCh = document.querySelector('#yearPopCh').value
+
+            console.log(layCode, yearPop, yearPopCh)
+
+
+
+
+
+            //acc healthcare
+            const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
+            layAcc.styles = [
                 new gviz.SquareColoringWebGLStyle({
                     colorCol: "avg_time_nearest_h",
                     color: (v, r, s) => {
@@ -108,16 +127,10 @@
                     size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
                     shape: () => "circle",
                 })
-            ],
-            {},
-            20
-        )
+            ];
+            layAcc.pixNb = 20;
+            app.layers = [layAcc]
 
-
-
-
-        const update = () => {
-console.log("aaa")
             app.cg.redraw();
         }
 
@@ -125,8 +138,6 @@ console.log("aaa")
 
         //layer selector
         document.querySelector('#layer').addEventListener('change', update)
-
-
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
@@ -139,469 +150,6 @@ console.log("aaa")
             app.showBoundaries = this.checked
             app.cg.redraw();
         });
-
-
-
-
-        //retrieve the selected year (the column to show)
-        //const getSelectedYear = () => document.querySelector('#year').value
-
-        //function to quickly get the type of map, population or population change
-        //const getSelectedMapType = () => getSelectedYear().length === 4 ? "pop" : "popchange"
-
-        //function to quickly get the selected style
-        //const getSelectedStyle = () => document.querySelector('input[name="style"]:checked').value
-
-        //style data
-        /*const sd = {
-            pop: {
-                squareColor: {
-                    style: [new gviz.SquareColoringWebGLStyle({
-                        colorCol: getSelectedYear(),
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                    }), new gviz.StrokeStyle({ zf: 80 })
-                    ], pixNb: 5
-                },
-                circleColor: {
-                    style: [new gviz.ShapeColorSizeStyle({
-                        colorCol: getSelectedYear(),
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                        shape: () => "circle",
-                    }), new gviz.StrokeStyle({ zf: 80, shape: () => "circle" })
-                    ], pixNb: 10
-                },
-
-                squareSize: {
-                    style: [new gviz.ShapeColorSizeStyle({
-                        color: () => "#c08c59cc",
-                        sizeCol: getSelectedYear(),
-                        size: (v, r, s, zf) => 1 * r * gviz.s(v / s.max, 0.3),
-                        shape: () => "square",
-                    })], pixNb: 15
-                },
-                circleSize: {
-                    style: [new gviz.ShapeColorSizeStyle({
-                        color: () => "#c08c59cc",
-                        sizeCol: getSelectedYear(),
-                        size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
-                        shape: () => "circle",
-                    })], pixNb: 15
-                },
-                donut: {
-                    style: [new gviz.ShapeColorSizeStyle({
-                        sizeCol: getSelectedYear(),
-                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.3),
-                        color: () => "#c08c59",
-                        shape: () => "donut",
-                    })], pixNb: 20
-                },
-
-                segmentH: {
-                    style: [new gviz.SegmentStyle({
-                        orientation: () => 0,
-                        color: (v, r, s) => "#c08c59",
-                        length: (v, r) => r,
-                        widthCol: getSelectedYear(),
-                        width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                    })], pixNb: 15
-                },
-                segmentV: {
-                    style: [new gviz.SegmentStyle({
-                        orientation: () => 90,
-                        color: (v, r, s) => "#c08c59",
-                        length: (v, r) => r,
-                        widthCol: getSelectedYear(),
-                        width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                    })], pixNb: 15
-                },
-                segmentO: {
-                    style: [new gviz.SegmentStyle({
-                        orientation: () => 45,
-                        color: (v, r, s) => "#c08c59",
-                        length: (v, r) => r * 1.4142,
-                        widthCol: getSelectedYear(),
-                        width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25) / 1.4142,
-                    })], pixNb: 15
-                },
-
-                joyplot: {
-                    style: [new gviz.JoyPlotStyle({
-                        heightCol: getSelectedYear(),
-                        height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
-                        fillColor: "#c08c59bb"
-                    })], pixNb: 10
-                },
-                side: {
-                    style: [new gviz.SideStyle({
-                        valueCol: getSelectedYear(),
-                        value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
-                        color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
-                        width: (side, r, s, z) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.s(Math.abs(side.value) / max, 0.3))
-                        },
-                        fillColor: (c) => "#e2c9b2",
-                    })], pixNb: 10
-                },
-                tanaka: {
-                    style: gviz.getTanakaStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
-                    pixNb: 10
-                },
-                lego: {
-                    style: gviz.getLegoStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
-                    pixNb: 20
-                },
-                pillar: {
-                    style: [new gviz.PillarStyle({
-                        heightCol: getSelectedYear(),
-                        height: (v, r, s, z) => 15 * r * gviz.s(v / s.max, 0.7),
-                    })], pixNb: 25
-                },
-                dot: {
-                    style: [new gviz.DotDensityStyle({
-                        col: getSelectedYear(),
-                        nb: (v, r, s, zf) => 1 * r * r / (zf * zf) * gviz.s(v / s.max, 0.4),
-                        dotSize: (r, zf) => 1.2 * zf,
-                        color: () => "#FF5733"
-                    })], pixNb: 10
-                },
-                text: {
-                    style: [new gviz.TextStyle({
-                        textCol: getSelectedYear(),
-                        text: (v, r, s, z) => {
-                            const t = gviz.s(v / s.max, 0.25);
-                            return gviz.charLegendFun(t);
-                        },
-                        color: (v, r, s) => "#c08c59",
-                        fontSize: ((v, r, s, z) => 1.2 * r),
-                    })], pixNb: 15
-                }
-            },
-            popchange: {
-                squareColor: {
-                    style: [new gviz.ShapeColorSizeStyle({
-                        colorCol: getSelectedYear(),
-                        color: (v, r, s) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
-                            return gviz.interpolateSpectral(1 - t);
-                        },
-                        shape: () => "square",
-                    })], pixNb: 5
-                },
-                circleColor: {
-                    style: [new gviz.ShapeColorSizeStyle({
-                        colorCol: getSelectedYear(),
-                        color: (v, r, s) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
-                            return gviz.interpolateSpectral(1 - t);
-                        },
-                        shape: () => "circle",
-                    })], pixNb: 10
-                },
-
-                squareSize: {
-                    style: [new gviz.ShapeColorSizeStyle({
-                        colorCol: getSelectedYear(),
-                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
-                        sizeCol: getSelectedYear(),
-                        size: (v, r, s, zf) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return 1 * r * gviz.s(Math.abs(v) / max, 0.2)
-                        },
-                        shape: () => "square",
-                    })], pixNb: 15
-                },
-                circleSize: {
-                    style: [new gviz.ShapeColorSizeStyle({
-                        colorCol: getSelectedYear(),
-                        color: (v) => v > 0 ? "#d13c4bcc" : "#4288b5cc",
-                        sizeCol: getSelectedYear(),
-                        size: (v, r, s, zf) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return 1.5 * r * gviz.s(Math.abs(v) / max, 0.2)
-                        },
-                        shape: () => "circle",
-                    })], pixNb: 15
-                },
-                donut: {
-                    style: [new gviz.ShapeColorSizeStyle({
-                        colorCol: getSelectedYear(),
-                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
-                        sizeCol: getSelectedYear(),
-                        size: (v, r, s, zf) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return r * gviz.s(Math.abs(v) / max, 0.3)
-                        },
-                        shape: () => "donut",
-                    })], pixNb: 20
-                },
-
-                segmentH: {
-                    style: [new gviz.SegmentStyle({
-                        orientation: () => 0,
-                        colorCol: getSelectedYear(),
-                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
-                        length: (v, r) => r,
-                        widthCol: getSelectedYear(),
-                        width: (v, r, s, zf) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            return r * gviz.s(Math.abs(v) / max, 0.25)
-                        }
-                    })], pixNb: 15
-                },
-                segmentV: {
-                    style: [new gviz.SegmentStyle({
-                        orientation: () => 90,
-                        colorCol: getSelectedYear(),
-                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
-                        length: (v, r) => r,
-                        widthCol: getSelectedYear(),
-                        width: (v, r, s, zf) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            return r * gviz.s(Math.abs(v) / max, 0.25)
-                        }
-                    })], pixNb: 15
-                },
-                segmentO: {
-                    style: [new gviz.SegmentStyle({
-                        orientation: () => 45,
-                        colorCol: getSelectedYear(),
-                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
-                        length: (v, r) => r * 1.4142,
-                        widthCol: getSelectedYear(),
-                        width: (v, r, s, zf) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            return r * gviz.s(Math.abs(v) / max, 0.25) / 1.4142
-                        }
-                    })], pixNb: 15
-                },
-
-                joyplot: {
-                    style: [new gviz.JoyPlotStyle({
-                        heightCol: getSelectedYear(),
-                        height: (v, r, s, zf) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            return Math.sign(v) * 5 * r * Math.sqrt(Math.abs(v) / max)
-                        },
-                        fillColor: "#c08c59bb"
-                    })], pixNb: 10
-                },
-                side: {
-                    style: [
-                        new gviz.SideStyle({
-                            valueCol: getSelectedYear(),
-                            value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
-                            color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
-                            width: (side, r, s, z) => {
-                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.s(Math.abs(side.value) / max, 0.3))
-                            },
-                            fillColor: (c) => c[getSelectedYear()] < 0 ? "#d13c4b" : "#4288b5",
-                        })], pixNb: 10
-                },
-                tanaka: {
-                    //TODO adapt to pop change
-                    style: gviz.getTanakaStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
-                    pixNb: 10
-                },
-                lego: {
-                    //TODO adapt to pop change
-                    style: gviz.getLegoStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
-                    pixNb: 20
-                },
-                pillar: {
-                    style: [new gviz.PillarStyle({
-                        colorCol: getSelectedYear(),
-                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
-                        heightCol: getSelectedYear(),
-                        height: (v, r, s, z) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            return 15 * r * gviz.s(Math.abs(v) / max, 0.7)
-                        },
-                    })], pixNb: 25
-                },
-                dot: {
-                    style: [new gviz.DotDensityStyle({
-                        col: getSelectedYear(),
-                        nb: (v, r, s, zf) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            return 1 * r * r / (zf * zf) * gviz.s(Math.abs(v) / max, 0.4)
-                        },
-                        dotSize: (r, zf) => 1.2 * zf,
-                        color: (c) => c[getSelectedYear()] > 0 ? "#d13c4b" : "#4288b5",
-                    })], pixNb: 10
-                },
-                text: {
-                    style: [new gviz.TextStyle({
-                        textCol: getSelectedYear(),
-                        text: (v, r, s, z) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            const t = gviz.s(Math.abs(v) / max, 0.25);
-                            return gviz.charLegendFun(t);
-                        },
-                        colorCol: getSelectedYear(),
-                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
-                        fontSize: ((v, r, s, z) => 1.2 * r),
-                    })], pixNb: 15
-                }
-            }
-        }*/
-
-
-        /*/legends
-        app
-            //pop
-            .addLegend(
-                { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
-                [sd.pop.squareColor.style[0], sd.pop.circleColor.style[0]]
-            )
-            .addLegend(
-                { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" },
-                [sd.pop.squareSize.style[0]]
-            )
-            .addLegend(
-                { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" },
-                [sd.pop.circleSize.style[0]]
-            )
-            .addLegend(
-                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 },
-                [sd.pop.segmentH.style[0]]
-            )
-            .addLegend(
-                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 },
-                [sd.pop.segmentV.style[0]]
-            )
-            .addLegend(
-                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 },
-                [sd.pop.segmentO.style[0]]
-            )
-
-            //popchange
-            .addLegend(
-                {
-                    type: "color", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
-                    fun: (t, r, s) => {
-                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                        return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
-                    }
-                },
-                [sd.popchange.squareColor.style[0], sd.popchange.circleColor.style[0]]
-            )
-            .addLegend(
-                { type: "colorCat", title: "", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
-                [sd.popchange.squareSize.style[0], sd.popchange.circleSize.style[0], sd.popchange.donut.style[0],
-                sd.popchange.segmentH.style[0], sd.popchange.segmentV.style[0], sd.popchange.segmentO.style[0],
-                sd.popchange.side.style[0],
-                sd.popchange.pillar.style[0],
-                sd.popchange.dot.style[0],
-                sd.popchange.text.style[0]]
-            )
-            .addLegend(
-                { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "gray" },
-                [sd.popchange.squareSize.style[0]]
-            )
-            .addLegend(
-                { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "gray" },
-                [sd.popchange.circleSize.style[0]]
-            )
-            .addLegend(
-                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 },
-                [sd.popchange.segmentH.style[0]]
-            )
-            .addLegend(
-                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 },
-                [sd.popchange.segmentV.style[0]]
-            )
-            .addLegend(
-                { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 },
-                [sd.popchange.segmentO.style[0]]
-            )
-*/
-
-
-        //change the style to the selected one
-        /*changeStyle = () => {
-
-            //get layer
-            const ml = app.layers[0];
-            //ml.hideLegends()
-
-            //set new style
-            const s = sd[getSelectedMapType()][getSelectedStyle()]
-            if (!s) {
-                console.error("No style for " + getSelectedMapType() + " " + getSelectedStyle())
-                return
-            }
-            for (const lay of ml.layers) lay.styles = s.style
-
-            //set new zoom breaks
-            ml.pixNb = s.pixNb
-        }
-
-
-        //combo list - year selection
-        document.querySelector('#year').addEventListener('change', function () {
-
-            //population
-            sd.pop.squareColor.style[0].colorCol = this.value
-            sd.pop.circleColor.style[0].colorCol = this.value
-
-            sd.pop.squareSize.style[0].sizeCol = this.value
-            sd.pop.circleSize.style[0].sizeCol = this.value
-            sd.pop.donut.style[0].sizeCol = this.value
-
-            sd.pop.segmentH.style[0].widthCol = this.value
-            sd.pop.segmentV.style[0].widthCol = this.value
-            sd.pop.segmentO.style[0].widthCol = this.value
-
-            sd.pop.joyplot.style[0].heightCol = this.value
-            sd.pop.side.style[0].valueCol = this.value
-            sd.pop.tanaka.style[0].colorCol = this.value
-            sd.pop.tanaka.style[1].valueCol = this.value
-            sd.pop.lego.style[0].colorCol = this.value
-            sd.pop.lego.style[1].valueCol = this.value
-            sd.pop.pillar.style[0].heightCol = this.value
-            sd.pop.dot.style[0].col = this.value
-            sd.pop.text.style[0].textCol = this.value
-
-
-            //pop change
-            sd.popchange.squareColor.style[0].colorCol = this.value
-            sd.popchange.circleColor.style[0].colorCol = this.value
-
-            sd.popchange.squareSize.style[0].sizeCol = this.value
-            sd.popchange.squareSize.style[0].colorCol = this.value
-            sd.popchange.circleSize.style[0].sizeCol = this.value
-            sd.popchange.circleSize.style[0].colorCol = this.value
-            sd.popchange.donut.style[0].sizeCol = this.value
-            sd.popchange.donut.style[0].colorCol = this.value
-
-            sd.popchange.segmentH.style[0].widthCol = this.value
-            sd.popchange.segmentH.style[0].colorCol = this.value
-            sd.popchange.segmentV.style[0].widthCol = this.value
-            sd.popchange.segmentV.style[0].colorCol = this.value
-            sd.popchange.segmentO.style[0].widthCol = this.value
-            sd.popchange.segmentO.style[0].colorCol = this.value
-
-            sd.popchange.joyplot.style[0].heightCol = this.value
-            sd.popchange.side.style[0].valueCol = this.value
-            sd.popchange.tanaka.style[0].colorCol = this.value
-            sd.popchange.tanaka.style[1].valueCol = this.value
-            sd.popchange.lego.style[0].colorCol = this.value
-            sd.popchange.lego.style[1].valueCol = this.value
-            sd.popchange.pillar.style[0].heightCol = this.value
-            sd.popchange.pillar.style[0].colorCol = this.value
-            sd.popchange.dot.style[0].col = this.value
-            sd.popchange.dot.style[0].color = (c) => c[this.value] > 0 ? "#d13c4b" : "#4288b5"
-            sd.popchange.text.style[0].textCol = this.value
-            sd.popchange.text.style[0].colorCol = this.value
-
-            changeStyle();
-            app.cg.redraw();
-        });
-*/
 
     </script>
 
