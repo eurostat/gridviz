@@ -15,9 +15,8 @@
 
             <hr>
             <div id="layer">
-                <span style="font-size: 11pt; font-weight: bold;">Population</span>
-                <br>
-                Year: <select id="yearPop">
+                <span style="font-size: 11pt; font-weight: bold;">Population in </span>
+                <select id="yearPop">
                     <option value="2018" selected>2018</option>
                     <option value="2011">2011</option>
                     <option value="2006">2006</option>
@@ -38,9 +37,9 @@
                 <label for="lego">Lego</label>
                 <hr>
                 <span style="font-size: 11pt; font-weight: bold;">Population change</span><br>
-                Year: <select id="yearPopCh">
-                    <option value="d11_18" selected>2011 to 2018</option>
-                    <option value="d06_11">2006 to 2011</option>
+                <select id="yearPopCh">
+                    <option value="d11_18" selected>from 2011 to 2018</option>
+                    <option value="d06_11">from 2006 to 2011</option>
                 </select>
                 <br>
                 <input type="radio" name="style" id="squareColorCh" value="squareColorCh">
@@ -75,6 +74,78 @@
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .addZoomSlider("zoomSlider")
             .setViewFromURL()
+
+
+
+
+
+        const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
+
+
+        //const s = sd[getSelectedMapType()][getSelectedStyle()]
+        app.addMultiScaleTiledGridLayer(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/",
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            r => r + "m/",
+            [
+                new gviz.SquareColoringWebGLStyle({
+                    colorCol: "avg_time_nearest_h",
+                    color: (v, r, s) => {
+                        if (v === "NA") return
+                        let i = 0
+                        for (let b of breaks) {
+                            if (+v <= b) break;
+                            i++
+                        }
+                        const t = gviz.s(1 - (i - 1) / breaks.length, 2)
+                        return gviz.interpolateSpectral(t)
+                    },
+                }),
+                new gviz.StrokeStyle({ zf: 80 }),
+                new gviz.ShapeColorSizeStyle({
+                    color: () => "#000000dd",
+                    sizeCol: "TOT_P",
+                    size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
+                    shape: () => "circle",
+                })
+            ],
+            {},
+            20
+        )
+
+
+
+        //style selector
+        document.querySelector('#layer').addEventListener('change', function () {
+            console.log("layer")
+            app.cg.redraw();
+        })
+
+
+        document.querySelector('#yearPop').addEventListener('change', function () {
+            console.log("yearPop")
+            app.cg.redraw();)
+        }
+
+        document.querySelector('#yearPopCh').addEventListener('change', function () {
+            console.log("yearPopCh")
+            app.cg.redraw();
+        })
+
+        // show/hide labels
+        document.querySelector('#label').addEventListener('change', function () {
+            app.showLabels = this.checked
+            app.cg.redraw();
+        });
+
+        // show/hide boundaries
+        document.querySelector('#boundary').addEventListener('change', function () {
+            app.showBoundaries = this.checked
+            app.cg.redraw();
+        });
+
+
+
 
         //retrieve the selected year (the column to show)
         //const getSelectedYear = () => document.querySelector('#year').value
@@ -454,43 +525,6 @@
 */
 
 
-
-
-        const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
-
-
-        //const s = sd[getSelectedMapType()][getSelectedStyle()]
-        app.addMultiScaleTiledGridLayer(
-            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/",
-            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => r + "m/",
-            [
-                new gviz.SquareColoringWebGLStyle({
-                    colorCol: "avg_time_nearest_h",
-                    color: (v, r, s) => {
-                        if (v === "NA") return
-                        let i = 0
-                        for (let b of breaks) {
-                            if (+v <= b) break;
-                            i++
-                        }
-                        const t = gviz.s(1 - (i - 1) / breaks.length, 2)
-                        return gviz.interpolateSpectral(t)
-                    },
-                }),
-                new gviz.StrokeStyle({ zf: 80 }),
-                new gviz.ShapeColorSizeStyle({
-                    color: () => "#000000dd",
-                    sizeCol: "TOT_P",
-                    size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
-                    shape: () => "circle",
-                })
-            ],
-            {},
-            20
-        )
-
-
         //change the style to the selected one
         /*changeStyle = () => {
 
@@ -571,24 +605,7 @@
             changeStyle();
             app.cg.redraw();
         });
-
-        //style selector
-        document.querySelector('#style').addEventListener('change', function () {
-            changeStyle();
-            app.cg.redraw();
-        })*/
-
-        // show/hide labels
-        document.querySelector('#label').addEventListener('change', function () {
-            app.showLabels = this.checked
-            app.cg.redraw();
-        });
-
-        // show/hide boundaries
-        document.querySelector('#boundary').addEventListener('change', function () {
-            app.showBoundaries = this.checked
-            app.cg.redraw();
-        });
+*/
 
     </script>
 
