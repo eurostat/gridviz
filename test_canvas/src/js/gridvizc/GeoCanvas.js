@@ -189,6 +189,10 @@ export class GeoCanvas {
     zoom(f = 1, xGeo = this.center.x, yGeo = this.center.y, withRedraw = false) {
         //TODO force extend to remain
 
+        //trying to zoom in/out beyond limit
+        if(this.zfExtent[0] == this.getZf() && f<=1) return
+        if(this.zfExtent[1] == this.getZf() && f>=1) return
+
         //ensure zoom extent preserved
         const newZf = f * this.getZf()
         if (newZf < this.zfExtent[0]) f = this.zfExtent[0] / this.getZf()
