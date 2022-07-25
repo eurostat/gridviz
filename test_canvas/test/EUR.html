@@ -101,6 +101,7 @@
             let lay
             switch (layCode) {
 
+                //population
                 case "squareColor":
                     layPop.setStyles([new gviz.SquareColoringWebGLStyle({
                         colorCol: yearPop,
@@ -150,8 +151,20 @@
                     lay = layPop
                     break;
 
+                //population change
+                case "squareColorCh":
+                    layPop.setStyles([])
+                    layPop.pixNb = 10;
+                    lay = layPop
+                    break;
+                case "SegOCh":
+                    layPop.setStyles([])
+                    layPop.pixNb = 10;
+                    lay = layPop
+                    break;
+
+                //accessibility
                 case "accHealth":
-                    //acc healthcare
                     const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
                     layAcc.setStyles([
                         new gviz.SquareColoringWebGLStyle({
@@ -206,6 +219,8 @@
             app.showBoundaries = this.checked
             app.cg.redraw();
         });
+
+        update()
 
     </script>
 
