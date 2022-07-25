@@ -153,13 +153,31 @@
 
                 //population change
                 case "squareColorCh":
-                    layPop.setStyles([])
-                    layPop.pixNb = 10;
+                    layPop.setStyles([new gviz.ShapeColorSizeStyle({
+                        colorCol: getSelectedYear(),
+                        color: (v, r, s) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
+                            return gviz.interpolateSpectral(1 - t);
+                        },
+                        shape: () => "square",
+                    })])
+                    layPop.pixNb = 5;
                     lay = layPop
                     break;
                 case "SegOCh":
-                    layPop.setStyles([])
-                    layPop.pixNb = 10;
+                    layPop.setStyles([new gviz.SegmentStyle({
+                        orientation: () => 45,
+                        colorCol: getSelectedYear(),
+                        color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
+                        length: (v, r) => r * 1.4142,
+                        widthCol: getSelectedYear(),
+                        width: (v, r, s, zf) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max));
+                            return r * gviz.s(Math.abs(v) / max, 0.25) / 1.4142
+                        }
+                    })])
+                    layPop.pixNb = 15;
                     lay = layPop
                     break;
 
