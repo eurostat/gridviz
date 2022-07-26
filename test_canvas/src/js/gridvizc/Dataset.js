@@ -1,5 +1,7 @@
 //@ts-check
 
+import { ADataset } from "./ADataset";
+
 /** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 /** @typedef {{x: number, y: number}} Cell */
 
@@ -10,7 +12,7 @@
  * 
  * @author Julien Gaffuri
  */
-export class Dataset {
+export class Dataset extends ADataset {
 
     /**
      * @param {string} url The URL of the dataset.
@@ -19,6 +21,7 @@ export class Dataset {
      * @abstract
      */
     constructor(url, resolution, opts = undefined) {
+        super()
         opts = opts || {};
 
         /**
@@ -42,34 +45,11 @@ export class Dataset {
     }
 
 
-    /**
-     * Request data within a geographic envelope.
-     * 
-     * @abstract
-     * @param {Envelope|undefined} extGeo 
-     * @param {function():void} callback 
-     * @returns {this}
-     */
-    getData(extGeo, callback) {
-        throw new Error('Method getData not implemented.');
-    }
 
-
-
-
-
-    /** @returns {Array.<Cell>} */
-    getViewCache() { return this.cellsViewCache }
-
-    /**
-     * Fill the view cache with all cells which are within a geographical envelope.
-     * @abstract
-     * @param {Envelope} extGeo 
-     * @returns {void}
-     */
-    updateViewCache(extGeo) {
-        throw new Error('Method updateViewCache not implemented.');
-    }
+    /** 
+     * @param {number} zf 
+     * @returns {Array.<Cell>} */
+    getViewCache(zf) { return this.cellsViewCache }
 
 
 
