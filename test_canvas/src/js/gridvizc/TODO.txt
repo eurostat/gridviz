@@ -1,10 +1,10 @@
-EUR: finalise, with simplification
-tooltip - attach to layer, not dataset
-legends
-Adopt everywhere.
+EUR: finalise
+add legends
+simplification
+Adopt everywhere else.
 
 
-maque FR with pop + revenus + pov
+make FR with pop + revenus + pov
 
 new EUR layers:
 https://www.eea.europa.eu/data-and-maps/figures/spatial-pattern-of-land-take
