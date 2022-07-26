@@ -160,35 +160,7 @@
                     for (let p of ["A", "N"])
                         c[p + "_OTHER"] = +c[p + "_FOREIGN TOURISTS - TOTAL"] - c[p + "_AUSTRIAN TOURISTS"] - c[p + "_GERMAN TOURISTS"] - c[p + "_ITALIAN TOURISTS"] - c[p + "_SLOVENIAN TOURISTS"]
                     //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
-                },
-                /*cellInfoHTML: c => {
-                    switch (getSelectedLayer()) {
-                        case "tourAccNb":
-                            return "<b>" + c["ESTABLISHMENTS - TOTAL"] + "</b> touristic accomodation establishments"
-                        case "tourAccUnits":
-                            return "<b>" + c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] + "</b> touristic accomodation units (rooms, appartements, camping sites)"
-                        case "tourAccBeds":
-                            return "<b>" + c["NUMBER OF PERMANENT BEDS"] + "</b> touristic accomodation permanent beds"
-                        case "tourOriginArr":
-                            return "<b>" + c["TOTAL ARRIVALS"] + "</b> tourist arrivals<br>"
-                                + c["A_DOMESTIC TOURISTS - TOTAL"] + " croatians<br>" +
-                                + c["A_AUSTRIAN TOURISTS"] + " austrians<br>" +
-                                + c["A_GERMAN TOURISTS"] + " germans<br>" +
-                                + c["A_ITALIAN TOURISTS"] + " italians<br>" +
-                                + c["A_SLOVENIAN TOURISTS"] + " slovenians<br>" +
-                                + c["A_OTHER"] + " other countries"
-                        case "tourOriginNights":
-                            return "<b>" + c["TOTAL NIGHTS"] + "</b> tourist nights<br>"
-                                + c["N_DOMESTIC TOURISTS - TOTAL"] + " croatians<br>" +
-                                + c["N_AUSTRIAN TOURISTS"] + " austrians<br>" +
-                                + c["N_GERMAN TOURISTS"] + " germans<br>" +
-                                + c["N_ITALIAN TOURISTS"] + " italians<br>" +
-                                + c["N_SLOVENIAN TOURISTS"] + " slovenians<br>" +
-                                + c["N_OTHER"] + " other countries"
-                        default:
-                            return getSelectedLayer()
-                    }
-                }*/
+                }
             }
         );
 
@@ -379,7 +351,7 @@
                 lay.setStyles(styles)
                 lay.pixNb = 3;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => { return "" })
+                lay.setCellInfoHTML((c) => "<b>" + c["ESTABLISHMENTS - TOTAL"] + "</b> touristic accomodation establishments")
 
             } else if (layCode === "tourAccUnits") {
                 const lay = app.layers[2]
@@ -392,7 +364,7 @@
                 lay.setStyles(styles)
                 lay.pixNb = 3;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => { return "" })
+                lay.setCellInfoHTML((c) => "<b>" + c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] + "</b> touristic accomodation units (rooms, appartements, camping sites)")
 
             } else if (layCode === "tourAccBeds") {
                 const lay = app.layers[2]
@@ -405,7 +377,7 @@
                 lay.setStyles(styles)
                 lay.pixNb = 3;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => { return "" })
+                lay.setCellInfoHTML((c) => "<b>" + c["NUMBER OF PERMANENT BEDS"] + "</b> touristic accomodation permanent beds")
 
             } else if (layCode === "tourOriginArr") {
                 const lay = app.layers[2]
@@ -427,7 +399,15 @@
                 lay.setStyles(styles)
                 lay.pixNb = 20;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => { return "" })
+                lay.setCellInfoHTML((c) => {
+                    return "<b>" + c["TOTAL ARRIVALS"] + "</b> tourist arrivals<br>"
+                        + c["A_DOMESTIC TOURISTS - TOTAL"] + " croatians<br>" +
+                        + c["A_AUSTRIAN TOURISTS"] + " austrians<br>" +
+                        + c["A_GERMAN TOURISTS"] + " germans<br>" +
+                        + c["A_ITALIAN TOURISTS"] + " italians<br>" +
+                        + c["A_SLOVENIAN TOURISTS"] + " slovenians<br>" +
+                        + c["A_OTHER"] + " other countries"
+                })
 
             } else if (layCode === "tourOriginNights") {
                 const lay = app.layers[2]
@@ -449,17 +429,25 @@
                 lay.setStyles(styles)
                 lay.pixNb = 20;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => { return "" })
+                lay.setCellInfoHTML((c) => {
+                    return "<b>" + c["TOTAL NIGHTS"] + "</b> tourist nights<br>"
+                        + c["N_DOMESTIC TOURISTS - TOTAL"] + " croatians<br>" +
+                        + c["N_AUSTRIAN TOURISTS"] + " austrians<br>" +
+                        + c["N_GERMAN TOURISTS"] + " germans<br>" +
+                        + c["N_ITALIAN TOURISTS"] + " italians<br>" +
+                        + c["N_SLOVENIAN TOURISTS"] + " slovenians<br>" +
+                        + c["N_OTHER"] + " other countries"
+                })
 
             } else {
                 console.log("Unexpected layer code: " + layCode);
                 return;
             }
 
+
             //redraw
             app.cg.redraw();
         }
-
 
         //layer selector
         document.querySelector('#layer').addEventListener('change', update)
