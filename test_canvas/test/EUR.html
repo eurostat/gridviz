@@ -114,6 +114,10 @@
                 lay.visible = true;
                 lay.setCellInfoHTML((c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined)
 
+                app.addLegend(
+                    { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                    [lay.styles[0]]
+                )
 
             } else if (layCode === "d06_11" || layCode === "d11_18") {
                 const lay = app.layers[0]
