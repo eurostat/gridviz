@@ -105,7 +105,7 @@
                     if (isNaN(c.INACT_RATE)) c.INACT_RATE = 0
                     //console.log(c.INACT_RATE)
                 },
-                cellInfoHTML: c => {
+                /*cellInfoHTML: c => {
                     switch (getSelectedLayer()) {
                         case "pop":
                             return "<b>" + c.TOTAL + "</b> inhabitants"
@@ -136,7 +136,7 @@
                         default:
                             return getSelectedLayer()
                     }
-                }
+                }*/
             }
         );
 
@@ -165,7 +165,7 @@
                     //console.log(c.s1, c.s2, c.s3)
                     //console.log(c.s1 + c.s2 + c.s3 == c.TOTAL)
                 },
-                cellInfoHTML: c => {
+                /*cellInfoHTML: c => {
                     switch (getSelectedLayer()) {
                         case "busSector":
                             return "<b>" + c.TOTAL + "</b> businesses<br>"
@@ -175,7 +175,7 @@
                         default:
                             return getSelectedLayer()
                     }
-                }
+                }*/
             }
         );
 
@@ -204,7 +204,7 @@
                         c[p + "_OTHER"] = +c[p + "_FOREIGN TOURISTS - TOTAL"] - c[p + "_AUSTRIAN TOURISTS"] - c[p + "_GERMAN TOURISTS"] - c[p + "_ITALIAN TOURISTS"] - c[p + "_SLOVENIAN TOURISTS"]
                     //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
                 },
-                cellInfoHTML: c => {
+                /*cellInfoHTML: c => {
                     switch (getSelectedLayer()) {
                         case "tourAccNb":
                             return "<b>" + c["ESTABLISHMENTS - TOTAL"] + "</b> touristic accomodation establishments"
@@ -231,14 +231,9 @@
                         default:
                             return getSelectedLayer()
                     }
-                }
+                }*/
             }
         );
-
-        const mslPop = app.layers[0]
-        const mslBusiness = app.layers[1]
-        const mslTourism = app.layers[2]
-
 
 
         //
@@ -250,27 +245,29 @@
             //hide layers
             app.hideAllLayers()
 
-
-            //select layer and style
-            if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
-                /*const lay = app.layers[0]
-                const styles = [new gviz.SquareColoringWebGLStyle({
-                    colorCol: layCode,
-                    color: (v, r, s) => v == 0 ? "" : gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                }),
-                new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", zf: 80 })
-                ]
-                lay.setStyles(styles)
-                lay.pixNb = 5;
-                lay.visible = true;
-                lay.setCellInfoHTML((c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined)
-                app.addLegend(
-                    { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
-                    [styles[0]]
-                )*/
-
-            } else if (layCode === "hgfhf") {
-
+            if (layCode === "pop") {
+            } else if (layCode === "popGender") {
+                console.log(layCode)
+            } else if (layCode === "popAge") {
+                console.log(layCode)
+            } else if (layCode === "popEducation") {
+                console.log(layCode)
+            } else if (layCode === "popLabor") {
+                console.log(layCode)
+            } else if (layCode === "popInact") {
+                console.log(layCode)
+            } else if (layCode === "busSector") {
+                console.log(layCode)
+            } else if (layCode === "tourAccNb") {
+                console.log(layCode)
+            } else if (layCode === "tourAccUnits") {
+                console.log(layCode)
+            } else if (layCode === "tourAccBeds") {
+                console.log(layCode)
+            } else if (layCode === "tourOriginArr") {
+                console.log(layCode)
+            } else if (layCode === "tourOriginNights") {
+                console.log(layCode)
             } else {
                 console.log("Unexpected layer code: " + layCode);
                 return;
@@ -278,13 +275,56 @@
 
             //redraw
             app.cg.redraw();
+
+            //select layer and style
+            //if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
+            /*const lay = app.layers[0]
+            const styles = [new gviz.SquareColoringWebGLStyle({
+                colorCol: layCode,
+                color: (v, r, s) => v == 0 ? "" : gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+            }),
+            new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", zf: 80 })
+            ]
+            lay.setStyles(styles)
+            lay.pixNb = 5;
+            lay.visible = true;
+            lay.setCellInfoHTML((c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined)
+            app.addLegend(
+                { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                [styles[0]]
+            )*/
+
         }
 
 
+        //layer selector
+        document.querySelector('#layer').addEventListener('change', update)
+
+        // show/hide labels
+        document.querySelector('#label').addEventListener('change', function () {
+            app.showLabels = this.checked
+            app.cg.redraw();
+        });
+
+        // show/hide boundaries
+        document.querySelector('#boundary').addEventListener('change', function () {
+            app.showBoundaries = this.checked
+            app.cg.redraw();
+        });
+
+        //initialise
+        update()
 
 
 
-        //styles
+        /*
+const mslPop = app.layers[0]
+const mslBusiness = app.layers[1]
+const mslTourism = app.layers[2]
+*/
+
+
+        /*/styles
         const col = gviz.interpolateSpectral
         const col2 = gviz.schemeCategory10
         const sStroke = new gviz.StrokeStyle({ zf: 100 })
@@ -459,10 +499,10 @@
                 ], pixNb: 20
             },
         }
+*/
 
 
-
-        //legends
+        /*/legends
         app
             .addLegend(
                 { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
@@ -550,11 +590,11 @@
                 { type: "colorCat", title: "Tourist origin", colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], ["#bbb", "Other"]] },
                 [styles.tourOriginNights.style[0]]
             )
+*/
 
 
 
-
-        //function to quickly get the selected layer
+        /*/function to quickly get the selected layer
         const getSelectedLayer = () => document.querySelector('input[name="layer"]:checked').value
 
 
@@ -581,19 +621,7 @@
 
             //redraw
             app.cg.redraw();
-        })
-
-        // show/hide labels
-        document.querySelector('#label').addEventListener('change', function () {
-            app.showLabels = this.checked
-            app.cg.redraw();
-        });
-
-        // show/hide boundaries
-        document.querySelector('#boundary').addEventListener('change', function () {
-            app.showBoundaries = this.checked
-            app.cg.redraw();
-        });
+        })*/
 
     </script>
 
