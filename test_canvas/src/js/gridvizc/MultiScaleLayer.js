@@ -3,6 +3,7 @@
 import { ALayer } from "./ALayer";
 import { Layer } from "./Layer";
 import { Style } from "./Style";
+import { Cell } from "./Dataset";
 
 /**
  * 
@@ -61,6 +62,16 @@ export class MultiScaleLayer extends ALayer {
     setStyles(styles) {
         for (let lay of this.layers)
             lay.styles = styles
+    }
+
+
+    /**
+    * @param {function(Cell):string} v 
+    * @returns {this}  */
+    setCellInfoHTML(v) {
+        for (let lay of this.layers)
+            lay.setCellInfoHTML(v)
+        return this;
     }
 
 }

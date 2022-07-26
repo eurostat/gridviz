@@ -45,6 +45,15 @@ export class Layer extends ALayer {
         return this;
     }
 
+
+    /**
+    * @param {function(Cell):string} v 
+    * @returns {this}  */
+    setCellInfoHTML(v) {
+        this.cellInfoHTML = v;
+        return this;
+    }
+
 }
 
 
