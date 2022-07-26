@@ -165,6 +165,9 @@
                 //lay.setStyles(gviz.getTanakaStyle("avg_time_nearest_h", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.5) }))
                 lay.pixNb = 17;
                 lay.visible = true;
+                lay.setCellInfoHTML((c) => {
+                    return "<b>" + c.avg_time_nearest_h + "</b> min. to nearest service<br><b>"+ c.TOT_P +"</b> inhabitant(s)"
+                })
             } else if (layCode === "accEducPrim") {
                 const lay = app.layers[1]
                 const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
@@ -192,6 +195,9 @@
                 ])
                 lay.pixNb = 17;
                 lay.visible = true;
+                lay.setCellInfoHTML((c) => {
+                    return "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>"+ c.TOT_P +"</b> inhabitant(s)"
+                })
 
             } else {
                 console.log("Unexpected layer code: " + layCode);
