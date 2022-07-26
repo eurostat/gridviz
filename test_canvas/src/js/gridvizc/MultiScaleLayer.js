@@ -15,11 +15,11 @@ export class MultiScaleLayer extends ALayer {
      * @param {Array.<Layer>} layers 
      * @param {Array.<number>} resolutions 
      * @param {number} pixNb 
-     * @param {number} z0 
-     * @param {number} zMax 
+     * @param {{z0?:number,zMax?:number,visible?:boolean}} opts 
      */
-    constructor(layers, resolutions, pixNb = 5, z0 = 0, zMax = Infinity, opts) {
+    constructor(layers, resolutions, pixNb = 5, opts) {
         super(opts)
+        opts = opts || {}
 
         /** @type {Array.<Layer>} */
         this.layers = layers;
@@ -31,9 +31,9 @@ export class MultiScaleLayer extends ALayer {
          * @type {number} */
         this.pixNb = pixNb || 5;
         /** @type {number} */
-        this.z0 = z0;
+        this.z0 = opts.z0 == undefined ? 0 : opts.z0;
         /** @type {number} */
-        this.zMax = zMax;
+        this.zMax = opts.zMax || Infinity;
 
         //NB: minZoom and maxZoom of layers do not need to be maintained consistant with this.zooms
     }

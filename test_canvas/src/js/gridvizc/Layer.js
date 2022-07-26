@@ -16,8 +16,9 @@ export class Layer extends ALayer {
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
+     * @param {{visible?:boolean}} opts 
      */
-    constructor(dataset, styles, minZoom = 0, maxZoom = 0, opts) {
+    constructor(dataset, styles, minZoom = 0, maxZoom = 0, opts = {}) {
         super(opts)
 
         /** @type {Dataset} */
