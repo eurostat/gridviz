@@ -251,7 +251,7 @@ export class App {
      * @param {Array.<Style>} styles 
      * @param {object} opts 
      * @param {number} pixNb 
-     * @param {{z0?:number,zMax?:number,visible?:boolean}} opts 
+     * @param {object} opts 
      * @returns {this}
      */
     addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5) {
