@@ -104,39 +104,7 @@
                     c.INACT_RATE = 100 * c.INACTIVE_POPULATION / c.TOTAL
                     if (isNaN(c.INACT_RATE)) c.INACT_RATE = 0
                     //console.log(c.INACT_RATE)
-                },
-                /*cellInfoHTML: c => {
-                    switch (getSelectedLayer()) {
-                        case "pop":
-                            return "<b>" + c.TOTAL + "</b> inhabitants"
-                        case "popGender":
-                            return "<b>" + c.TOTAL + "</b> inhabitants<br>"
-                                + c.MEN + " men<br>"
-                                + c.WOMEN + " women<br>Difference: <b>"
-                                + (c.DIFF_MEN_WOMEN > 0 ? "+" : "") + d3.format(".1f")(c.DIFF_MEN_WOMEN) + " % men</b>"
-                        case "popAge":
-                            return "<b>" + c.TOTAL + "</b> inhabitants<br>"
-                                + " >65 : " + c.TOTAL_65p + "<br>"
-                                + "15-64: " + c.TOTAL_15_64 + "<br>"
-                                + " <15 : " + c.TOTAL_0_14
-                        case "popEducation":
-                            return "<b>" + c.TOTAL + "</b> inhabitants<br>"
-                                + "Basic or less: " + c.BASIC_EDUCATION_OR_LESS + "<br>"
-                                + "Secondary: " + c.UPPER_SECONDARY_EDUCATION + "<br>"
-                                + "Tertiary: " + c.TERTIARY_EDUCATION + "<br>"
-                                + "Other: " + c.OTHER_EDUC
-                        case "popLabor":
-                            return "<b>" + c.TOTAL + "</b> inhabitants<br>"
-                                + "Labour force: " + c.LABOUR_FORCE + "<br>"
-                                + "Inactive population: " + c.INACTIVE_POPULATION + "<br>"
-                                + "Other: " + c.OTHER_LABOR
-                        case "popInact":
-                            return "<b>" + c.TOTAL + "</b> inhabitants<br>"
-                                + "Inactivity rate: " + d3.format(".1f")(c.INACT_RATE) + " %<br>"
-                        default:
-                            return getSelectedLayer()
-                    }
-                }*/
+                }
             }
         );
 
@@ -257,7 +225,7 @@
                 lay.setStyles(styles)
                 lay.pixNb = 5;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => { return "" })
+                lay.setCellInfoHTML((c) => "<b>" + c.TOTAL + "</b> inhabitants")
                 /*app.addLegend(
                     { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                     [styles[0]]*/
@@ -280,7 +248,12 @@
                 lay.setStyles(styles)
                 lay.pixNb = 10;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => { return "" })
+                lay.setCellInfoHTML((c) => {
+                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
+                        + c.MEN + " men<br>"
+                        + c.WOMEN + " women<br>Difference: <b>"
+                        + (c.DIFF_MEN_WOMEN > 0 ? "+" : "") + d3.format(".1f")(c.DIFF_MEN_WOMEN) + " % men</b>"
+                })
 
             } else if (layCode === "popAge") {
                 const lay = app.layers[0]
@@ -298,7 +271,12 @@
                 lay.setStyles(styles)
                 lay.pixNb = 20;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => { return "" })
+                lay.setCellInfoHTML((c) => {
+                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
+                        + " >65 : " + c.TOTAL_65p + "<br>"
+                        + "15-64: " + c.TOTAL_15_64 + "<br>"
+                        + " <15 : " + c.TOTAL_0_14
+                })
 
             } else if (layCode === "popEducation") {
                 const lay = app.layers[0]
@@ -319,7 +297,13 @@
                 lay.setStyles(styles)
                 lay.pixNb = 20;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => { return "" })
+                lay.setCellInfoHTML((c) => {
+                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
+                        + "Basic or less: " + c.BASIC_EDUCATION_OR_LESS + "<br>"
+                        + "Secondary: " + c.UPPER_SECONDARY_EDUCATION + "<br>"
+                        + "Tertiary: " + c.TERTIARY_EDUCATION + "<br>"
+                        + "Other: " + c.OTHER_EDUC
+                })
 
             } else if (layCode === "popLabor") {
                 const lay = app.layers[0]
@@ -337,7 +321,12 @@
                 lay.setStyles(styles)
                 lay.pixNb = 20;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => { return "" })
+                lay.setCellInfoHTML((c) => {
+                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
+                        + "Labour force: " + c.LABOUR_FORCE + "<br>"
+                        + "Inactive population: " + c.INACTIVE_POPULATION + "<br>"
+                        + "Other: " + c.OTHER_LABOR
+                })
 
             } else if (layCode === "popInact") {
                 const lay = app.layers[0]
@@ -350,7 +339,10 @@
                 lay.setStyles(styles)
                 lay.pixNb = 3;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => { return "" })
+                lay.setCellInfoHTML((c) => {
+                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
+                        + "Inactivity rate: " + d3.format(".1f")(c.INACT_RATE) + " %<br>"
+                })
 
             } else if (layCode === "busSector") {
                 const lay = app.layers[1]
