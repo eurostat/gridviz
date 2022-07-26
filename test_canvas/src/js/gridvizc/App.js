@@ -176,6 +176,7 @@ export class App {
             const mousePositionGeo = { x: this.cg.pixToGeoX(e.clientX), y: this.cg.pixToGeoY(e.clientY) }
             /** @type {{cell:Cell,html:string} | undefined} */
             const focus = this.getCellFocusInfo(mousePositionGeo)
+            console.log(focus)
             if (focus) {
                 this.tooltip.setPosition(e);
                 this.tooltip.show();
@@ -283,6 +284,7 @@ export class App {
         //go through the layers
         const zf = this.getZoomFactor();
         for (const alayer of this.layers) {
+            if(!alayer.visible) continue
             const layer = alayer.getLayer(zf)
             if (!layer) continue;
             out.push(layer);
@@ -316,6 +318,7 @@ export class App {
         /** @type {Cell|undefined} */
         const cell = layer.dataset.getCellFromPosition(posGeo, layer.dataset.getViewCache());
         if (!cell) return undefined;
+        console.log(cell, layer)
         return { cell: cell, html: layer.cellInfoHTML(cell) };
     }
 

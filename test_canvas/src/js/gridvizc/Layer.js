@@ -34,7 +34,6 @@ export class Layer extends ALayer {
         * The HTML content providing information on the grid cell.
         * @type {function(Cell):string} */
         this.cellInfoHTML = opts.cellInfoHTML || defaultCellInfoHTML;
-
     }
 
     /**
