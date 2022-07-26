@@ -251,29 +251,10 @@ export class App {
      * @param {Array.<Style>} styles 
      * @param {object} opts 
      * @param {number} pixNb 
-     * @param {number} z0 
-     * @param {number} zMax 
+     * @param {{z0?:number,zMax?:number,visible?:boolean}} opts 
      * @returns {this}
      */
-    addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5, z0 = 0, zMax = Infinity) {
-        this.layers.push(this.makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb, z0, zMax));
-        return this;
-    }
-
-    /**
-     * @deprecated stop using it. use "add" equivalent with .visible attribute instead.
-     * 
-     * @param {*} urlBase 
-     * @param {*} resolutions 
-     * @param {*} resToURLCode 
-     * @param {*} styles 
-     * @param {*} opts 
-     * @param {*} pixNb 
-     * @param {*} z0 
-     * @param {*} zMax 
-     * @returns 
-     */
-    makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5, z0 = 0, zMax = Infinity) {
+    addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5) {
         const layers = [];
         for (const res of resolutions) {
             layers.push(new Layer(
@@ -284,9 +265,9 @@ export class App {
                     .loadInfo(() => { this.cg.redraw(); }),
                 styles))
         }
-        return new MultiScaleLayer(layers, resolutions, pixNb, z0, zMax)
+        this.layers.push( new MultiScaleLayer(layers, resolutions, pixNb, opts) )
+        return this;
     }
-
 
 
     /**
