@@ -144,6 +144,16 @@
                         + "<br>"
                         + "<b>" + (c[layCode] == 0 ? "No change" : (c[layCode] > 0 ? "+" : "") + c[layCode] + " inhabitants") + "</b>"
                 )
+                app.addLegend(
+                    {
+                        type: "color", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+                        fun: (t, r, s) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
+                        }
+                    },
+                    [styles[0]]
+                )
 
 
                 //accessibility
