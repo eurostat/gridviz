@@ -191,6 +191,18 @@
                 lay.setCellInfoHTML((c) => {
                     return "<b>" + c.avg_time_nearest_h + "</b> min. to nearest service<br><b>" + c.TOT_P + "</b> inhabitant(s)"
                 })
+                //TODO replace with classified colors
+                /*app.addLegend(
+                    {
+                        type: "color", title: "Travel time to nearest service", ticks: 7, colorRamp: gviz.interpolateSpectral, //invert: true,
+                        fun: (t, r, s) => {
+                            return t
+                            //const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            //return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
+                        }
+                    },
+                    [styles[0]]
+                )*/
                 app.addLegend(
                     { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" },
                     [styles[2]]

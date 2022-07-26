@@ -3,6 +3,7 @@ add legends
 simplification
 Adopt everywhere else.
 
+legend for discrete color classes - use for accessibility map legend
 
 make FR with pop + revenus + pov
 
