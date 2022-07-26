@@ -76,8 +76,7 @@
         const override = (c, col) => c[col] = +c[col]
 
         //population layer
-        //TODO
-        const mslPop = app.makeMultiScaleTiledGridLayer(
+        app.addMultiScaleTiledGridLayer(
             urlBase + "Population_2011/",
             resolutions,
             r => r + "m/",
@@ -142,8 +141,7 @@
         );
 
         //business layer
-        //TODO
-        const mslBusiness = app.makeMultiScaleTiledGridLayer(
+        app.addMultiScaleTiledGridLayer(
             urlBase + "Active_business_entities_2016/",
             resolutions,
             r => r + "m/",
@@ -182,8 +180,7 @@
         );
 
         //tourism layer
-        //TODO
-        const mslTourism = app.makeMultiScaleTiledGridLayer(
+        app.addMultiScaleTiledGridLayer(
             urlBase + "Tourism_2017/",
             resolutions,
             r => r + "m/",
@@ -237,6 +234,13 @@
                 }
             }
         );
+
+        const mslPop = app.layers[0]
+        const mslBusiness = app.layers[1]
+        const mslTourism = app.layers[2]
+
+
+
 
         //styles
         const col = gviz.interpolateSpectral
