@@ -18,8 +18,8 @@ export class MultiScaleLayer extends ALayer {
      * @param {number} z0 
      * @param {number} zMax 
      */
-    constructor(layers, resolutions, pixNb = 5, z0 = 0, zMax = Infinity) {
-        super()
+    constructor(layers, resolutions, pixNb = 5, z0 = 0, zMax = Infinity, opts) {
+        super(opts)
 
         /** @type {Array.<Layer>} */
         this.layers = layers;
