@@ -245,29 +245,191 @@
             //hide layers
             app.hideAllLayers()
 
+            const col = gviz.interpolateSpectral
+            const col2 = gviz.schemeCategory10
+            const sStroke = new gviz.StrokeStyle({ zf: 100 })
+
             if (layCode === "pop") {
+                console.log(layCode)
+                /*
+                                style: [
+                                    new gviz.SquareColoringWebGLStyle({
+                                        colorCol: "TOTAL",
+                                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                                    }),
+                                    new gviz.SideStyle({
+                                        valueCol: "TOTAL",
+                                        value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
+                                        color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
+                                        width: (side, r, s, z) => {
+                                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                            return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
+                                        },
+                                    })], pixNb: 5*/
+
             } else if (layCode === "popGender") {
                 console.log(layCode)
+                /*
+                                style: [
+                                    new gviz.ShapeColorSizeStyle({
+                                        colorCol: "DIFF_MEN_WOMEN",
+                                        color: (v, r, s) => {
+                                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                            const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
+                                            return gviz.interpolateSpectral(1 - t);
+                                        },
+                                        shape: () => "square",
+                                        sizeCol: "TOTAL",
+                                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
+                                    })
+                                ], pixNb: 10
+                */
             } else if (layCode === "popAge") {
                 console.log(layCode)
+                /*
+                        style: [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    "TOTAL_0_14": col(0.2),
+                                    "TOTAL_15_64": col(0.4),
+                                    "TOTAL_65p": col(0.9),
+                                },
+                                type: () => "agepyramid",
+                                sizeCol: "TOTAL",
+                                size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                                agePyramidHeight: (r) => 0.95 * r
+                            })
+                        ], pixNb: 20
+                */
             } else if (layCode === "popEducation") {
                 console.log(layCode)
+                /*
+                        style: [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    "OTHER_EDUC": "gray",
+                                    "TERTIARY_EDUCATION": col(0.9),
+                                    "UPPER_SECONDARY_EDUCATION": col(0.4),
+                                    "BASIC_EDUCATION_OR_LESS": col(0.2),
+                                },
+                                type: () => "ring",
+                                sizeCol: "TOTAL",
+                                size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                                agePyramidHeight: (r) => 0.95 * r
+                            })
+                        ], pixNb: 20
+                */
             } else if (layCode === "popLabor") {
                 console.log(layCode)
+                /*
+                        style: [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    "OTHER_LABOR": "gray",
+                                    "LABOUR_FORCE": col(0.2),
+                                    "INACTIVE_POPULATION": col(0.9),
+                                },
+                                type: () => "flag",
+                                sizeCol: "TOTAL",
+                                size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                                stripesOrientation: () => 90
+                            })
+                        ], pixNb: 20
+                */
             } else if (layCode === "popInact") {
                 console.log(layCode)
+                /*
+                        style: [
+                            new gviz.SquareColoringWebGLStyle({
+                                colorCol: "INACT_RATE",
+                                color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
+                            }), sStroke
+                        ], pixNb: 3
+                */
             } else if (layCode === "busSector") {
                 console.log(layCode)
+                /*
+                        style: [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    "s1": "#1b9e77",
+                                    "s2": "#d95f02",
+                                    "s3": "#7570b3",
+                                },
+                                type: () => "piechart",
+                                sizeCol: "TOTAL",
+                                size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
+                            })
+                        ], pixNb: 20
+                */
             } else if (layCode === "tourAccNb") {
                 console.log(layCode)
+                /*
+                style: [
+                            new gviz.SquareColoringWebGLStyle({
+                                colorCol: "ESTABLISHMENTS - TOTAL",
+                                color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                            }), sStroke
+                        ], pixNb: 3
+                */
             } else if (layCode === "tourAccUnits") {
                 console.log(layCode)
+                /*
+                        style: [
+                            new gviz.SquareColoringWebGLStyle({
+                                colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
+                                color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                            }), sStroke
+                        ], pixNb: 3
+                */
             } else if (layCode === "tourAccBeds") {
                 console.log(layCode)
+                /*
+                        style: [
+                            new gviz.SquareColoringWebGLStyle({
+                                colorCol: "NUMBER OF PERMANENT BEDS",
+                                color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                            }), sStroke
+                        ], pixNb: 3
+                */
             } else if (layCode === "tourOriginArr") {
                 console.log(layCode)
+                /*
+                        style: [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    "A_DOMESTIC TOURISTS - TOTAL": col2[0],
+                                    "A_AUSTRIAN TOURISTS": col2[1],
+                                    "A_GERMAN TOURISTS": col2[2],
+                                    "A_ITALIAN TOURISTS": col2[3],
+                                    "A_SLOVENIAN TOURISTS": col2[4],
+                                    "A_OTHER": "#bbb",
+                                },
+                                type: () => "piechart",
+                                sizeCol: "TOTAL ARRIVALS",
+                                size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
+                            })
+                        ], pixNb: 20                */
             } else if (layCode === "tourOriginNights") {
                 console.log(layCode)
+                /*
+                    tourOriginNights: {
+                        style: [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    "N_DOMESTIC TOURISTS - TOTAL": col2[0],
+                                    "N_AUSTRIAN TOURISTS": col2[1],
+                                    "N_GERMAN TOURISTS": col2[2],
+                                    "N_ITALIAN TOURISTS": col2[3],
+                                    "N_SLOVENIAN TOURISTS": col2[4],
+                                    "N_OTHER": "#bbb",
+                                },
+                                type: () => "piechart",
+                                sizeCol: "TOTAL NIGHTS",
+                                size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
+                            })
+                        ], pixNb: 20
+        */
             } else {
                 console.log("Unexpected layer code: " + layCode);
                 return;
@@ -315,191 +477,6 @@
         //initialise
         update()
 
-
-
-        /*
-const mslPop = app.layers[0]
-const mslBusiness = app.layers[1]
-const mslTourism = app.layers[2]
-*/
-
-
-        /*/styles
-        const col = gviz.interpolateSpectral
-        const col2 = gviz.schemeCategory10
-        const sStroke = new gviz.StrokeStyle({ zf: 100 })
-        const styles = {
-
-            pop: {
-                style: [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "TOTAL",
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                    }),
-                    new gviz.SideStyle({
-                        valueCol: "TOTAL",
-                        value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
-                        color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
-                        width: (side, r, s, z) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
-                        },
-                    })], pixNb: 5
-            },
-
-            popGender: {
-                style: [
-                    new gviz.ShapeColorSizeStyle({
-                        colorCol: "DIFF_MEN_WOMEN",
-                        color: (v, r, s) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
-                            return gviz.interpolateSpectral(1 - t);
-                        },
-                        shape: () => "square",
-                        sizeCol: "TOTAL",
-                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
-                    })
-                ], pixNb: 10
-            },
-
-            popAge: {
-                style: [
-                    new gviz.CompositionStyle({
-                        color: {
-                            "TOTAL_0_14": col(0.2),
-                            "TOTAL_15_64": col(0.4),
-                            "TOTAL_65p": col(0.9),
-                        },
-                        type: () => "agepyramid",
-                        sizeCol: "TOTAL",
-                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                        agePyramidHeight: (r) => 0.95 * r
-                    })
-                ], pixNb: 20
-            },
-
-            popEducation: {
-                style: [
-                    new gviz.CompositionStyle({
-                        color: {
-                            "OTHER_EDUC": "gray",
-                            "TERTIARY_EDUCATION": col(0.9),
-                            "UPPER_SECONDARY_EDUCATION": col(0.4),
-                            "BASIC_EDUCATION_OR_LESS": col(0.2),
-                        },
-                        type: () => "ring",
-                        sizeCol: "TOTAL",
-                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                        agePyramidHeight: (r) => 0.95 * r
-                    })
-                ], pixNb: 20
-            },
-
-            popLabor: {
-                style: [
-                    new gviz.CompositionStyle({
-                        color: {
-                            "OTHER_LABOR": "gray",
-                            "LABOUR_FORCE": col(0.2),
-                            "INACTIVE_POPULATION": col(0.9),
-                        },
-                        type: () => "flag",
-                        sizeCol: "TOTAL",
-                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                        stripesOrientation: () => 90
-                    })
-                ], pixNb: 20
-            },
-
-            popInact: {
-                style: [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "INACT_RATE",
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
-                    }), sStroke
-                ], pixNb: 3
-            },
-
-            busSector: {
-                style: [
-                    new gviz.CompositionStyle({
-                        color: {
-                            "s1": "#1b9e77",
-                            "s2": "#d95f02",
-                            "s3": "#7570b3",
-                        },
-                        type: () => "piechart",
-                        sizeCol: "TOTAL",
-                        size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
-                    })
-                ], pixNb: 20
-            },
-
-            tourAccNb: {
-                style: [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "ESTABLISHMENTS - TOTAL",
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                    }), sStroke
-                ], pixNb: 3
-            },
-
-            tourAccUnits: {
-                style: [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                    }), sStroke
-                ], pixNb: 3
-            },
-
-            tourAccBeds: {
-                style: [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "NUMBER OF PERMANENT BEDS",
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                    }), sStroke
-                ], pixNb: 3
-            },
-
-            tourOriginArr: {
-                style: [
-                    new gviz.CompositionStyle({
-                        color: {
-                            "A_DOMESTIC TOURISTS - TOTAL": col2[0],
-                            "A_AUSTRIAN TOURISTS": col2[1],
-                            "A_GERMAN TOURISTS": col2[2],
-                            "A_ITALIAN TOURISTS": col2[3],
-                            "A_SLOVENIAN TOURISTS": col2[4],
-                            "A_OTHER": "#bbb",
-                        },
-                        type: () => "piechart",
-                        sizeCol: "TOTAL ARRIVALS",
-                        size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
-                    })
-                ], pixNb: 20
-            },
-
-            tourOriginNights: {
-                style: [
-                    new gviz.CompositionStyle({
-                        color: {
-                            "N_DOMESTIC TOURISTS - TOTAL": col2[0],
-                            "N_AUSTRIAN TOURISTS": col2[1],
-                            "N_GERMAN TOURISTS": col2[2],
-                            "N_ITALIAN TOURISTS": col2[3],
-                            "N_SLOVENIAN TOURISTS": col2[4],
-                            "N_OTHER": "#bbb",
-                        },
-                        type: () => "piechart",
-                        sizeCol: "TOTAL NIGHTS",
-                        size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
-                    })
-                ], pixNb: 20
-            },
-        }
-*/
 
 
         /*/legends
