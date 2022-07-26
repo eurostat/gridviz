@@ -2,7 +2,7 @@ EUR:
 tooltip
 legends
 
-
+new EUR layers:
 https://www.eea.europa.eu/data-and-maps/figures/spatial-pattern-of-land-take
 https://www.eea.europa.eu/data-and-maps/figures/fragmentation-increase-in-europe-during
 https://www.eea.europa.eu/data-and-maps/data/copernicus-land-monitoring-service-high
