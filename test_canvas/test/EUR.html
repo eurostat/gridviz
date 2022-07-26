@@ -66,13 +66,10 @@
             .addZoomSlider("zoomSlider")
             .setViewFromURL()
 
-
-        //prepare layers
-        const resolutions = [1000, 2000, 5000, 10000, 20000, 50000, 100000]
         //for population
-        const layPop = app.makeMultiScaleTiledGridLayer(
+        app.addMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/",
-            resolutions, r => Math.round(r / 1000) + "km/", [],
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => Math.round(r / 1000) + "km/", [],
             {
                 /*                cellInfoHTML: c => {
                                     const v = document.querySelector('#year').value
@@ -106,10 +103,13 @@
             }
         )
         //for accessibility
-        const layAcc = app.makeMultiScaleTiledGridLayer(
+        app.addMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/",
-            resolutions, r => r + "m/", [], {}
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => r + "m/", [], {}
         )
+
+        const layPop = app.layers[0]
+        const layAcc = app.layers[1]
 
         //
         const update = () => {
@@ -128,7 +128,7 @@
                 ])
                 layPop.pixNb = 5;
                 lay = layPop
-            } else if(layCode === "d06_11" || layCode === "d11_18") {
+            } else if (layCode === "d06_11" || layCode === "d11_18") {
                 layPop.setStyles([new gviz.ShapeColorSizeStyle({
                     colorCol: layCode,
                     color: (v, r, s) => {
@@ -142,7 +142,7 @@
                 lay = layPop
 
                 //accessibility
-            } else if(layCode === "accHealth") {
+            } else if (layCode === "accHealth") {
                 const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
                 layAcc.setStyles([
                     new gviz.SquareColoringWebGLStyle({
@@ -169,7 +169,7 @@
                 //layAcc.setStyles(gviz.getTanakaStyle("avg_time_nearest_h", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.5) }))
                 layAcc.pixNb = 17;
                 lay = layAcc
-            } else if(layCode === "accEducPrim") {
+            } else if (layCode === "accEducPrim") {
                 const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
                 layAcc.setStyles([
                     new gviz.SquareColoringWebGLStyle({
