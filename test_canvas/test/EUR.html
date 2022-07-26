@@ -100,6 +100,7 @@
             //hide layers
             app.hideAllLayers()
 
+
             //select layer and style
             if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
                 const lay = app.layers[0]
@@ -112,6 +113,8 @@
                 lay.pixNb = 5;
                 lay.visible = true;
                 lay.setCellInfoHTML((c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined)
+
+
             } else if (layCode === "d06_11" || layCode === "d11_18") {
                 const lay = app.layers[0]
                 lay.setStyles([new gviz.ShapeColorSizeStyle({
@@ -136,7 +139,11 @@
                         + "<br>"
                         + "<b>" + (c[layCode] == 0 ? "No change" : (c[layCode] > 0 ? "+" : "") + c[layCode] + " inhabitants") + "</b>"
                 )
+
+
                 //accessibility
+
+
             } else if (layCode === "accHealth") {
                 const lay = app.layers[1]
                 const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
@@ -166,8 +173,10 @@
                 lay.pixNb = 17;
                 lay.visible = true;
                 lay.setCellInfoHTML((c) => {
-                    return "<b>" + c.avg_time_nearest_h + "</b> min. to nearest service<br><b>"+ c.TOT_P +"</b> inhabitant(s)"
+                    return "<b>" + c.avg_time_nearest_h + "</b> min. to nearest service<br><b>" + c.TOT_P + "</b> inhabitant(s)"
                 })
+
+
             } else if (layCode === "accEducPrim") {
                 const lay = app.layers[1]
                 const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
@@ -196,8 +205,9 @@
                 lay.pixNb = 17;
                 lay.visible = true;
                 lay.setCellInfoHTML((c) => {
-                    return "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>"+ c.TOT_P +"</b> inhabitant(s)"
+                    return "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>" + c.TOT_P + "</b> inhabitant(s)"
                 })
+
 
             } else {
                 console.log("Unexpected layer code: " + layCode);
