@@ -90,16 +90,16 @@ export class App {
 
                 //get data to show
                 if (strong)
-                    layer.dataset.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
+                    layer.dataset.getData(this.cg.updateExtentGeo(),zf , () => { this.cg.redraw(); });
 
                 //update dataset view cache
                 if (strong)
-                    layer.dataset.updateViewCache(this.cg.extGeo);
+                    layer.dataset.updateViewCache(this.cg.extGeo, zf);
 
                 //draw cells, style by style
                 if (strong)
                     for (const style of layer.styles)
-                        style.draw(layer.dataset.getViewCache(), layer.dataset.getResolution(), this.cg)
+                        style.draw(layer.dataset.getViewCache(zf), layer.dataset.getResolution(), this.cg)
 
                 //show layer legend
                 if (this.legend && strong)
@@ -315,7 +315,7 @@ export class App {
         if (!layer) return undefined;
         //get cell at mouse position
         /** @type {Cell|undefined} */
-        const cell = layer.dataset.getCellFromPosition(posGeo, layer.dataset.getViewCache());
+        const cell = layer.dataset.getCellFromPosition(posGeo, layer.dataset.getViewCache(this.getZoomFactor()));
         if (!cell) return undefined;
         return { cell: cell, html: layer.cellInfoHTML(cell) };
     }
