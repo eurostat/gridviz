@@ -7,7 +7,16 @@
  */
 export class ALayer {
 
-    constructor() { }
+    /**
+     * @param {boolean} visible 
+     */
+    constructor(visible = true) {
+
+        /** An attribute to specify if a layer should be drawn or not
+         * @type {boolean} */
+        this.visible = visible;
+
+    }
 
     /**
      * @abstract

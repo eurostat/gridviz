@@ -80,6 +80,9 @@ export class App {
             const zf = this.getZoomFactor();
             for (const alayer of this.layers) {
 
+                //
+                if(!alayer.visible) continue;
+
                 //get layer
                 /** @type {Layer} */
                 const layer = alayer.getLayer(zf)
