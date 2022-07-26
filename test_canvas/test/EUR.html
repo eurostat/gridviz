@@ -104,24 +104,24 @@
             //select layer and style
             if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
                 const lay = app.layers[0]
-                lay.setStyles([new gviz.SquareColoringWebGLStyle({
+                const styles = [new gviz.SquareColoringWebGLStyle({
                     colorCol: layCode,
                     color: (v, r, s) => v == 0 ? "" : gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                 }),
                 new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", zf: 80 })
-                ])
+                ]
+                lay.setStyles(styles)
                 lay.pixNb = 5;
                 lay.visible = true;
                 lay.setCellInfoHTML((c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined)
-
                 app.addLegend(
                     { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
-                    [lay.styles[0]]
+                    [styles[0]]
                 )
 
             } else if (layCode === "d06_11" || layCode === "d11_18") {
                 const lay = app.layers[0]
-                lay.setStyles([new gviz.ShapeColorSizeStyle({
+                const styles = [new gviz.ShapeColorSizeStyle({
                     colorCol: layCode,
                     color: (v, r, s) => {
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max))
@@ -131,7 +131,8 @@
                     shape: () => "square",
                 }),
                 new gviz.StrokeStyle({ zf: 80 })
-                ])
+                ]
+                lay.setStyles(styles)
                 lay.pixNb = 5;
                 lay.visible = true;
                 lay.setCellInfoHTML(
@@ -151,7 +152,7 @@
             } else if (layCode === "accHealth") {
                 const lay = app.layers[1]
                 const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
-                lay.setStyles([
+                const styles = [
                     new gviz.SquareColoringWebGLStyle({
                         colorCol: "avg_time_nearest_h",
                         color: (v, r, s) => {
@@ -172,7 +173,8 @@
                         size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
                         shape: () => "circle",
                     })
-                ])
+                ]
+                lay.setStyles(styles)
                 //lay.setStyles(gviz.getTanakaStyle("avg_time_nearest_h", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.5) }))
                 lay.pixNb = 17;
                 lay.visible = true;
@@ -184,7 +186,7 @@
             } else if (layCode === "accEducPrim") {
                 const lay = app.layers[1]
                 const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
-                lay.setStyles([
+                const styles = [
                     new gviz.SquareColoringWebGLStyle({
                         colorCol: "avg_time_nearest_ep",
                         color: (v, r, s) => {
@@ -205,7 +207,8 @@
                         size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
                         shape: () => "circle",
                     })
-                ])
+                ]
+                lay.setStyles(styles)
                 lay.pixNb = 17;
                 lay.visible = true;
                 lay.setCellInfoHTML((c) => {
