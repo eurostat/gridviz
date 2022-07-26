@@ -65,8 +65,8 @@
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .addZoomSlider("zoomSlider")
             .setViewFromURL()
-            //population layer
             .addMultiScaleTiledGridLayer(
+                //population layer
                 "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/",
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => Math.round(r / 1000) + "km/", [],
                 {
@@ -85,8 +85,8 @@
                     }
                 }
             )
-            //accessibility layer
             .addMultiScaleTiledGridLayer(
+                //accessibility layer
                 "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/",
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => r + "m/", [], {}
             )
