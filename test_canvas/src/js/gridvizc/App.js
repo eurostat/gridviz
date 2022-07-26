@@ -264,7 +264,7 @@ export class App {
                     this,
                     opts)
                     .loadInfo(() => { this.cg.redraw(); }),
-                styles))
+                styles, 0, 0, opts))
         }
         this.layers.push(new MultiScaleLayer(layers, resolutions, pixNb, opts))
         return this;
