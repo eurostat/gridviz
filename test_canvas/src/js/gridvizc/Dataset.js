@@ -21,7 +21,7 @@ export class Dataset extends ADataset {
      * @abstract
      */
     constructor(url, resolution, opts = undefined) {
-        super()
+        super(opts)
         opts = opts || {};
 
         /**
@@ -34,25 +34,15 @@ export class Dataset extends ADataset {
          * @protected @type {number} */
         this.resolution = resolution;
 
-        /**
-         * A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
-         * @protected @type {function(Cell):void} */
-        this.preprocess = opts.preprocess;
-
         /** The cells within the view
          * @protected @type {Array.<Cell>} */
         this.cellsViewCache = []
     }
 
-
-
     /** 
      * @param {number} zf 
      * @returns {Array.<Cell>} */
     getViewCache(zf) { return this.cellsViewCache }
-
-
-
 
     /**
      * Get a cell under a given position, if any.

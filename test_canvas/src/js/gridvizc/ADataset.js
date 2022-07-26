@@ -11,7 +11,18 @@
  */
 export class ADataset {
 
-    constructor() {
+    /**
+     * 
+     * @param {object} opts 
+     */
+    constructor(opts) {
+        opts = opts || {};
+
+        /**
+         * A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+         * @protected @type {function(Cell):void} */
+        this.preprocess = opts.preprocess;
+
     }
 
 
