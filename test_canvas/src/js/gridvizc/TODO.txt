@@ -1,8 +1,8 @@
-HR make TODO
-
-EUR:
-tooltip
+EUR: finalise, with simplification
+tooltip - attach to layer, not dataset
 legends
+Adopt everywhere.
+
 
 maque FR with pop + revenus + pov
 
