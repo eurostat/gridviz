@@ -91,9 +91,6 @@
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => r + "m/", [], {}
             )
 
-        const layPop = app.layers[0]
-        const layAcc = app.layers[1]
-
         //
         const update = () => {
 
@@ -105,15 +102,18 @@
 
             //select layer and style
             if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
-                layPop.setStyles([new gviz.SquareColoringWebGLStyle({
+                const lay = app.layers[0]
+                lay.setStyles([new gviz.SquareColoringWebGLStyle({
                     colorCol: layCode,
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                }), new gviz.StrokeStyle({ zf: 80 })
+                }),
+                new gviz.StrokeStyle({ zf: 80 })
                 ])
-                layPop.pixNb = 5;
-                layPop.visible = true;
+                lay.pixNb = 5;
+                lay.visible = true;
             } else if (layCode === "d06_11" || layCode === "d11_18") {
-                layPop.setStyles([new gviz.ShapeColorSizeStyle({
+                const lay = app.layers[0]
+                lay.setStyles([new gviz.ShapeColorSizeStyle({
                     colorCol: layCode,
                     color: (v, r, s) => {
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max))
@@ -121,14 +121,17 @@
                         return gviz.interpolateSpectral(1 - t);
                     },
                     shape: () => "square",
-                })])
-                layPop.pixNb = 5;
-                layPop.visible = true;
+                }),
+                new gviz.StrokeStyle({ zf: 80 })
+                ])
+                lay.pixNb = 5;
+                lay.visible = true;
 
                 //accessibility
             } else if (layCode === "accHealth") {
+                const lay = app.layers[1]
                 const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
-                layAcc.setStyles([
+                lay.setStyles([
                     new gviz.SquareColoringWebGLStyle({
                         colorCol: "avg_time_nearest_h",
                         color: (v, r, s) => {
@@ -150,12 +153,13 @@
                         shape: () => "circle",
                     })
                 ])
-                //layAcc.setStyles(gviz.getTanakaStyle("avg_time_nearest_h", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.5) }))
-                layAcc.pixNb = 17;
-                layAcc.visible = true;
+                //lay.setStyles(gviz.getTanakaStyle("avg_time_nearest_h", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.5) }))
+                lay.pixNb = 17;
+                lay.visible = true;
             } else if (layCode === "accEducPrim") {
+                const lay = app.layers[1]
                 const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
-                layAcc.setStyles([
+                lay.setStyles([
                     new gviz.SquareColoringWebGLStyle({
                         colorCol: "avg_time_nearest_ep",
                         color: (v, r, s) => {
@@ -177,8 +181,8 @@
                         shape: () => "circle",
                     })
                 ])
-                layAcc.pixNb = 17;
-                layAcc.visible = true;
+                lay.pixNb = 17;
+                lay.visible = true;
 
             } else {
                 console.log("Unexpected layer code: " + layCode);
