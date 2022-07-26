@@ -72,7 +72,7 @@ export class CSVGrid extends Dataset {
 
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
-     * @abstract
+     * 
      * @param {Envelope} extGeo 
      * @returns {void}
      */
