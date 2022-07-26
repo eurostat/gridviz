@@ -1,7 +1,7 @@
 //@ts-check
 
 import { ALayer } from "./ALayer";
-import { Dataset } from "./Dataset";
+import { Dataset, Cell } from "./Dataset";
 import { Style } from "./Style";
 
 /**
@@ -16,7 +16,7 @@ export class Layer extends ALayer {
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
-     * @param {{visible?:boolean}} opts 
+     * @param {{visible?:boolean,cellInfoHTML?:function(Cell):string}} opts 
      */
     constructor(dataset, styles, minZoom = 0, maxZoom = 0, opts = {}) {
         super(opts)
@@ -30,6 +30,11 @@ export class Layer extends ALayer {
         /** @type {number} */
         this.maxZoom = maxZoom;
 
+        /**
+        * The HTML content providing information on the grid cell.
+        * @type {function(Cell):string} */
+        this.cellInfoHTML = opts.cellInfoHTML || defaultCellInfoHTML;
+
     }
 
     /**
@@ -41,4 +46,28 @@ export class Layer extends ALayer {
         return this;
     }
 
+}
+
+
+
+/**
+ * The default function returning cell information as HTML.
+ * This is typically used for tooltip information.
+ * 
+ * @param {Cell} cell 
+ * @returns {string}
+ */
+const defaultCellInfoHTML = function (cell) {
+    const buf = []
+    for (const key of Object.keys(cell)) {
+        if (key === "x") continue;
+        if (key === "y") continue;
+        buf.push("<b>")
+        buf.push(key)
+        buf.push("</b>")
+        buf.push(" : ")
+        buf.push(cell[key])
+        buf.push("<br>")
+    }
+    return buf.join("");
 }

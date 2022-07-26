@@ -36,11 +36,6 @@ export class Dataset {
          * @protected @type {function(Cell):void} */
         this.preprocess = opts.preprocess;
 
-        /**
-         * The HTML content providing information on the grid cell.
-         * @type {function(Cell):string} */
-        this.cellInfoHTML = opts.cellInfoHTML || defaultCellInfoHTML;
-
         /** The cells within the view
          * @protected @type {Array.<Cell>} */
         this.cellsViewCache = []
@@ -110,27 +105,4 @@ export class Dataset {
     /** @returns {number} */
     getResolution() { return this.resolution; }
 
-}
-
-
-/**
- * The default function returning cell information as HTML.
- * This is typically used for tooltip information.
- * 
- * @param {Cell} cell 
- * @returns {string}
- */
-const defaultCellInfoHTML = function (cell) {
-    const buf = []
-    for (const key of Object.keys(cell)) {
-        if (key === "x") continue;
-        if (key === "y") continue;
-        buf.push("<b>")
-        buf.push(key)
-        buf.push("</b>")
-        buf.push(" : ")
-        buf.push(cell[key])
-        buf.push("<br>")
-    }
-    return buf.join("");
 }
