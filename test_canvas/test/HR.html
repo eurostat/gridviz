@@ -250,150 +250,180 @@
             const sStroke = new gviz.StrokeStyle({ zf: 100 })
 
             if (layCode === "pop") {
-                console.log(layCode)
-                /*
-                                style: [
-                                    new gviz.SquareColoringWebGLStyle({
-                                        colorCol: "TOTAL",
-                                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                                    }),
-                                    new gviz.SideStyle({
-                                        valueCol: "TOTAL",
-                                        value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
-                                        color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
-                                        width: (side, r, s, z) => {
-                                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                            return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
-                                        },
-                                    })], pixNb: 5*/
+                const lay = app.layers[0]
+                const styles = [
+                    new gviz.SquareColoringWebGLStyle({
+                        colorCol: "TOTAL",
+                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                    }),
+                    new gviz.SideStyle({
+                        valueCol: "TOTAL",
+                        value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
+                        color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
+                        width: (side, r, s, z) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
+                        },
+                    })]
+                lay.setStyles(styles)
+                lay.pixNb = 5;
+                lay.visible = true;
+                //lay.setCellInfoHTML((c) => "")
+                /*app.addLegend(
+                    { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                    [styles[0]]*/
 
             } else if (layCode === "popGender") {
-                console.log(layCode)
-                /*
-                                style: [
-                                    new gviz.ShapeColorSizeStyle({
-                                        colorCol: "DIFF_MEN_WOMEN",
-                                        color: (v, r, s) => {
-                                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                            const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
-                                            return gviz.interpolateSpectral(1 - t);
-                                        },
-                                        shape: () => "square",
-                                        sizeCol: "TOTAL",
-                                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
-                                    })
-                                ], pixNb: 10
-                */
+                const lay = app.layers[0]
+                const styles = [
+                    new gviz.ShapeColorSizeStyle({
+                        colorCol: "DIFF_MEN_WOMEN",
+                        color: (v, r, s) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
+                            return gviz.interpolateSpectral(1 - t);
+                        },
+                        shape: () => "square",
+                        sizeCol: "TOTAL",
+                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
+                    })
+                ]
+                lay.setStyles(styles)
+                lay.pixNb = 10;
+                lay.visible = true;
+                //lay.setCellInfoHTML((c) => "")
+
             } else if (layCode === "popAge") {
-                console.log(layCode)
-                /*
-                        style: [
-                            new gviz.CompositionStyle({
-                                color: {
-                                    "TOTAL_0_14": col(0.2),
-                                    "TOTAL_15_64": col(0.4),
-                                    "TOTAL_65p": col(0.9),
-                                },
-                                type: () => "agepyramid",
-                                sizeCol: "TOTAL",
-                                size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                                agePyramidHeight: (r) => 0.95 * r
-                            })
-                        ], pixNb: 20
-                */
+                const lay = app.layers[0]
+                const styles = [new gviz.CompositionStyle({
+                    color: {
+                        "TOTAL_0_14": col(0.2),
+                        "TOTAL_15_64": col(0.4),
+                        "TOTAL_65p": col(0.9),
+                    },
+                    type: () => "agepyramid",
+                    sizeCol: "TOTAL",
+                    size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                    agePyramidHeight: (r) => 0.95 * r
+                })]
+                lay.setStyles(styles)
+                lay.pixNb = 20;
+                lay.visible = true;
+                //lay.setCellInfoHTML((c) => "")
             } else if (layCode === "popEducation") {
-                console.log(layCode)
-                /*
-                        style: [
-                            new gviz.CompositionStyle({
-                                color: {
-                                    "OTHER_EDUC": "gray",
-                                    "TERTIARY_EDUCATION": col(0.9),
-                                    "UPPER_SECONDARY_EDUCATION": col(0.4),
-                                    "BASIC_EDUCATION_OR_LESS": col(0.2),
-                                },
-                                type: () => "ring",
-                                sizeCol: "TOTAL",
-                                size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                                agePyramidHeight: (r) => 0.95 * r
-                            })
-                        ], pixNb: 20
-                */
+                const lay = app.layers[0]
+                const styles = [
+                    new gviz.CompositionStyle({
+                        color: {
+                            "OTHER_EDUC": "gray",
+                            "TERTIARY_EDUCATION": col(0.9),
+                            "UPPER_SECONDARY_EDUCATION": col(0.4),
+                            "BASIC_EDUCATION_OR_LESS": col(0.2),
+                        },
+                        type: () => "ring",
+                        sizeCol: "TOTAL",
+                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                        agePyramidHeight: (r) => 0.95 * r
+                    })
+                ]
+                lay.setStyles(styles)
+                lay.pixNb = 20;
+                lay.visible = true;
+                //lay.setCellInfoHTML((c) => "")
             } else if (layCode === "popLabor") {
-                console.log(layCode)
-                /*
-                        style: [
-                            new gviz.CompositionStyle({
-                                color: {
-                                    "OTHER_LABOR": "gray",
-                                    "LABOUR_FORCE": col(0.2),
-                                    "INACTIVE_POPULATION": col(0.9),
-                                },
-                                type: () => "flag",
-                                sizeCol: "TOTAL",
-                                size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                                stripesOrientation: () => 90
-                            })
-                        ], pixNb: 20
-                */
+                const lay = app.layers[0]
+                const styles = [new gviz.CompositionStyle({
+                    color: {
+                        "OTHER_LABOR": "gray",
+                        "LABOUR_FORCE": col(0.2),
+                        "INACTIVE_POPULATION": col(0.9),
+                    },
+                    type: () => "flag",
+                    sizeCol: "TOTAL",
+                    size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                    stripesOrientation: () => 90
+                })]
+                lay.setStyles(styles)
+                lay.pixNb = 20;
+                lay.visible = true;
+                //lay.setCellInfoHTML((c) => "")
             } else if (layCode === "popInact") {
-                console.log(layCode)
-                /*
-                        style: [
-                            new gviz.SquareColoringWebGLStyle({
-                                colorCol: "INACT_RATE",
-                                color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
-                            }), sStroke
-                        ], pixNb: 3
-                */
+                const lay = app.layers[0]
+                const styles = [
+                    new gviz.SquareColoringWebGLStyle({
+                        colorCol: "INACT_RATE",
+                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
+                    }), sStroke
+                ]
+                lay.setStyles(styles)
+                lay.pixNb = 3;
+                lay.visible = true;
+                //lay.setCellInfoHTML((c) => "")
             } else if (layCode === "busSector") {
-                console.log(layCode)
-                /*
-                        style: [
-                            new gviz.CompositionStyle({
-                                color: {
-                                    "s1": "#1b9e77",
-                                    "s2": "#d95f02",
-                                    "s3": "#7570b3",
-                                },
-                                type: () => "piechart",
-                                sizeCol: "TOTAL",
-                                size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
-                            })
-                        ], pixNb: 20
-                */
+                const lay = app.layers[0]
+                const styles = [
+                    new gviz.CompositionStyle({
+                        color: {
+                            "s1": "#1b9e77",
+                            "s2": "#d95f02",
+                            "s3": "#7570b3",
+                        },
+                        type: () => "piechart",
+                        sizeCol: "TOTAL",
+                        size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
+                    })
+                ]
+                lay.setStyles(styles)
+                lay.pixNb = 20;
+                lay.visible = true;
+                //lay.setCellInfoHTML((c) => "")
             } else if (layCode === "tourAccNb") {
-                console.log(layCode)
-                /*
-                style: [
-                            new gviz.SquareColoringWebGLStyle({
-                                colorCol: "ESTABLISHMENTS - TOTAL",
-                                color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                            }), sStroke
-                        ], pixNb: 3
-                */
+                const lay = app.layers[0]
+                const styles = [
+                    new gviz.SquareColoringWebGLStyle({
+                        colorCol: "ESTABLISHMENTS - TOTAL",
+                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                    }), sStroke
+                ]
+                lay.setStyles(styles)
+                lay.pixNb = 3;
+                lay.visible = true;
+                //lay.setCellInfoHTML((c) => "")
             } else if (layCode === "tourAccUnits") {
-                console.log(layCode)
-                /*
-                        style: [
-                            new gviz.SquareColoringWebGLStyle({
-                                colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
-                                color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                            }), sStroke
-                        ], pixNb: 3
-                */
+                const lay = app.layers[0]
+                const styles = [
+                    new gviz.SquareColoringWebGLStyle({
+                        colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
+                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                    }), sStroke
+                ]
+                lay.setStyles(styles)
+                lay.pixNb = 3;
+                lay.visible = true;
+                //lay.setCellInfoHTML((c) => "")
             } else if (layCode === "tourAccBeds") {
-                console.log(layCode)
-                /*
-                        style: [
-                            new gviz.SquareColoringWebGLStyle({
-                                colorCol: "NUMBER OF PERMANENT BEDS",
-                                color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                            }), sStroke
-                        ], pixNb: 3
-                */
+                const lay = app.layers[0]
+                const styles = [
+                    new gviz.SquareColoringWebGLStyle({
+                        colorCol: "NUMBER OF PERMANENT BEDS",
+                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                    }), sStroke
+                ]
+                lay.setStyles(styles)
+                lay.pixNb = 3;
+                lay.visible = true;
+                //lay.setCellInfoHTML((c) => "")
             } else if (layCode === "tourOriginArr") {
                 console.log(layCode)
+                /*
+                const lay = app.layers[0]
+                const styles = []
+                lay.setStyles(styles)
+                lay.pixNb = 5;
+                lay.visible = true;
+                //lay.setCellInfoHTML((c) => "")
+                */
+
                 /*
                         style: [
                             new gviz.CompositionStyle({
@@ -412,6 +442,15 @@
                         ], pixNb: 20                */
             } else if (layCode === "tourOriginNights") {
                 console.log(layCode)
+                /*
+                const lay = app.layers[0]
+                const styles = []
+                lay.setStyles(styles)
+                lay.pixNb = 5;
+                lay.visible = true;
+                //lay.setCellInfoHTML((c) => "")
+                */
+
                 /*
                     tourOriginNights: {
                         style: [
@@ -437,25 +476,6 @@
 
             //redraw
             app.cg.redraw();
-
-            //select layer and style
-            //if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
-            /*const lay = app.layers[0]
-            const styles = [new gviz.SquareColoringWebGLStyle({
-                colorCol: layCode,
-                color: (v, r, s) => v == 0 ? "" : gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-            }),
-            new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", zf: 80 })
-            ]
-            lay.setStyles(styles)
-            lay.pixNb = 5;
-            lay.visible = true;
-            lay.setCellInfoHTML((c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined)
-            app.addLegend(
-                { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
-                [styles[0]]
-            )*/
-
         }
 
 
