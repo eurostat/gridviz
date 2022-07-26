@@ -111,7 +111,7 @@
                 ])
                 lay.pixNb = 5;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => { return "sfbsdjbfj" })
+                lay.setCellInfoHTML((c) => "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode)
             } else if (layCode === "d06_11" || layCode === "d11_18") {
                 const lay = app.layers[0]
                 lay.setStyles([new gviz.ShapeColorSizeStyle({
@@ -127,7 +127,14 @@
                 ])
                 lay.pixNb = 5;
                 lay.visible = true;
-
+                lay.setCellInfoHTML((c) => (
+                    layCode === "d11_18" ?
+                        "2011: " + c["2011"] + "<br>2018: " + c["2018"]
+                        : "2006: " + c["2006"] + "<br>2011: " + c["2011"]
+                )
+                    + "<br>"
+                    + "<b>" + (c[layCode] == 0 ? "No change" : (c[layCode] > 0 ? "+" : "") + c[layCode] + " inhabitants") + "</b>"
+                )
                 //accessibility
             } else if (layCode === "accHealth") {
                 const lay = app.layers[1]
