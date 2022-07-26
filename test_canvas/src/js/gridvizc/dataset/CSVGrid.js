@@ -31,9 +31,10 @@ export class CSVGrid extends Dataset {
      * Request data within a geographic envelope.
      * 
      * @param {Envelope|undefined} e 
+     * @param {number} zf
      * @param {function():void} redraw 
      */
-    getData(e, redraw) {
+    getData(e, zf, redraw) {
 
         //check if data already loaded
         if (this.infoLoadingStatus != "notLoaded") return this;

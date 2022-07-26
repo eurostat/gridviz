@@ -106,10 +106,11 @@ export class TiledGrid extends Dataset {
      * Request data within a geographic envelope.
      * 
      * @param {Envelope} extGeo 
+     * @param {number} zf
      * @param {function():void} redrawFun
      * @returns {this}
      */
-    getData(extGeo, redrawFun) {
+    getData(extGeo, zf, redrawFun) {
 
         //TODO empty cache when it gets too big ?
 

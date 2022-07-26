@@ -18,7 +18,7 @@ export class GeoCanvas {
      * @param {number} zf The zoom factor (pixel size, in ground m)
      * @param {object} opts
      */
-    constructor(canvas, center = undefined, zf = 1, opts) {
+    constructor(canvas, center = undefined, zf = 1, opts = undefined) {
         opts = opts || {}
 
         /** @type {HTMLCanvasElement} */

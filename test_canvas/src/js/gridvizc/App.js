@@ -238,7 +238,7 @@ export class App {
      */
     addCSVGridLayer(url, resolution, styles, minZoom, maxZoom, opts) {
         return this.addLayer(
-            new CSVGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); }),
+            new CSVGrid(url, resolution, opts).getData(undefined, 9999, () => { this.cg.redraw(); }),
             styles, minZoom, maxZoom, opts
         )
     }
