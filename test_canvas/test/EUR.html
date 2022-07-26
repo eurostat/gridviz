@@ -191,6 +191,10 @@
                 lay.setCellInfoHTML((c) => {
                     return "<b>" + c.avg_time_nearest_h + "</b> min. to nearest service<br><b>" + c.TOT_P + "</b> inhabitant(s)"
                 })
+                app.addLegend(
+                    { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" },
+                    [styles[2]]
+                )
 
 
             } else if (layCode === "accEducPrim") {
@@ -224,6 +228,10 @@
                 lay.setCellInfoHTML((c) => {
                     return "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>" + c.TOT_P + "</b> inhabitant(s)"
                 })
+                app.addLegend(
+                    { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" },
+                    [styles[2]]
+                )
 
 
             } else {
