@@ -164,18 +164,7 @@
                     c.s3 = c.I + c.J + c.K + c.L + c.M + c.N + c.O + c.P + c.Q + c.R + c.S + c.T
                     //console.log(c.s1, c.s2, c.s3)
                     //console.log(c.s1 + c.s2 + c.s3 == c.TOTAL)
-                },
-                /*cellInfoHTML: c => {
-                    switch (getSelectedLayer()) {
-                        case "busSector":
-                            return "<b>" + c.TOTAL + "</b> businesses<br>"
-                                + "Primary sector: " + c.s1 + "<br>"
-                                + "Secondary sector: " + c.s2 + "<br>"
-                                + "Tertiary sector: " + c.s3
-                        default:
-                            return getSelectedLayer()
-                    }
-                }*/
+                }
             }
         );
 
@@ -268,7 +257,7 @@
                 lay.setStyles(styles)
                 lay.pixNb = 5;
                 lay.visible = true;
-                //lay.setCellInfoHTML((c) => "")
+                lay.setCellInfoHTML((c) => { return "" })
                 /*app.addLegend(
                     { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                     [styles[0]]*/
@@ -291,7 +280,7 @@
                 lay.setStyles(styles)
                 lay.pixNb = 10;
                 lay.visible = true;
-                //lay.setCellInfoHTML((c) => "")
+                lay.setCellInfoHTML((c) => { return "" })
 
             } else if (layCode === "popAge") {
                 const lay = app.layers[0]
@@ -309,7 +298,8 @@
                 lay.setStyles(styles)
                 lay.pixNb = 20;
                 lay.visible = true;
-                //lay.setCellInfoHTML((c) => "")
+                lay.setCellInfoHTML((c) => { return "" })
+
             } else if (layCode === "popEducation") {
                 const lay = app.layers[0]
                 const styles = [
@@ -329,7 +319,8 @@
                 lay.setStyles(styles)
                 lay.pixNb = 20;
                 lay.visible = true;
-                //lay.setCellInfoHTML((c) => "")
+                lay.setCellInfoHTML((c) => { return "" })
+
             } else if (layCode === "popLabor") {
                 const lay = app.layers[0]
                 const styles = [new gviz.CompositionStyle({
@@ -346,7 +337,8 @@
                 lay.setStyles(styles)
                 lay.pixNb = 20;
                 lay.visible = true;
-                //lay.setCellInfoHTML((c) => "")
+                lay.setCellInfoHTML((c) => { return "" })
+
             } else if (layCode === "popInact") {
                 const lay = app.layers[0]
                 const styles = [
@@ -358,7 +350,8 @@
                 lay.setStyles(styles)
                 lay.pixNb = 3;
                 lay.visible = true;
-                //lay.setCellInfoHTML((c) => "")
+                lay.setCellInfoHTML((c) => { return "" })
+
             } else if (layCode === "busSector") {
                 const lay = app.layers[1]
                 const styles = [
@@ -376,7 +369,13 @@
                 lay.setStyles(styles)
                 lay.pixNb = 20;
                 lay.visible = true;
-                //lay.setCellInfoHTML((c) => "")
+                lay.setCellInfoHTML((c) => {
+                    return "<b>" + c.TOTAL + "</b> businesses<br>"
+                        + "Primary sector: " + c.s1 + "<br>"
+                        + "Secondary sector: " + c.s2 + "<br>"
+                        + "Tertiary sector: " + c.s3
+                })
+
             } else if (layCode === "tourAccNb") {
                 const lay = app.layers[2]
                 const styles = [
@@ -388,7 +387,8 @@
                 lay.setStyles(styles)
                 lay.pixNb = 3;
                 lay.visible = true;
-                //lay.setCellInfoHTML((c) => "")
+                lay.setCellInfoHTML((c) => { return "" })
+
             } else if (layCode === "tourAccUnits") {
                 const lay = app.layers[2]
                 const styles = [
@@ -400,7 +400,8 @@
                 lay.setStyles(styles)
                 lay.pixNb = 3;
                 lay.visible = true;
-                //lay.setCellInfoHTML((c) => "")
+                lay.setCellInfoHTML((c) => { return "" })
+
             } else if (layCode === "tourAccBeds") {
                 const lay = app.layers[2]
                 const styles = [
@@ -412,7 +413,8 @@
                 lay.setStyles(styles)
                 lay.pixNb = 3;
                 lay.visible = true;
-                //lay.setCellInfoHTML((c) => "")
+                lay.setCellInfoHTML((c) => { return "" })
+
             } else if (layCode === "tourOriginArr") {
                 const lay = app.layers[2]
                 const styles = [
@@ -433,7 +435,8 @@
                 lay.setStyles(styles)
                 lay.pixNb = 20;
                 lay.visible = true;
-                //lay.setCellInfoHTML((c) => "")
+                lay.setCellInfoHTML((c) => { return "" })
+
             } else if (layCode === "tourOriginNights") {
                 const lay = app.layers[2]
                 const styles = [
@@ -454,7 +457,8 @@
                 lay.setStyles(styles)
                 lay.pixNb = 20;
                 lay.visible = true;
-                //lay.setCellInfoHTML((c) => "")
+                lay.setCellInfoHTML((c) => { return "" })
+
             } else {
                 console.log("Unexpected layer code: " + layCode);
                 return;
