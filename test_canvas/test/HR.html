@@ -414,61 +414,47 @@
                 lay.visible = true;
                 //lay.setCellInfoHTML((c) => "")
             } else if (layCode === "tourOriginArr") {
-                console.log(layCode)
-                /*
                 const lay = app.layers[0]
-                const styles = []
+                const styles = [
+                    new gviz.CompositionStyle({
+                        color: {
+                            "A_DOMESTIC TOURISTS - TOTAL": col2[0],
+                            "A_AUSTRIAN TOURISTS": col2[1],
+                            "A_GERMAN TOURISTS": col2[2],
+                            "A_ITALIAN TOURISTS": col2[3],
+                            "A_SLOVENIAN TOURISTS": col2[4],
+                            "A_OTHER": "#bbb",
+                        },
+                        type: () => "piechart",
+                        sizeCol: "TOTAL ARRIVALS",
+                        size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
+                    })
+                ]
                 lay.setStyles(styles)
-                lay.pixNb = 5;
+                lay.pixNb = 20;
                 lay.visible = true;
                 //lay.setCellInfoHTML((c) => "")
-                */
-
-                /*
-                        style: [
-                            new gviz.CompositionStyle({
-                                color: {
-                                    "A_DOMESTIC TOURISTS - TOTAL": col2[0],
-                                    "A_AUSTRIAN TOURISTS": col2[1],
-                                    "A_GERMAN TOURISTS": col2[2],
-                                    "A_ITALIAN TOURISTS": col2[3],
-                                    "A_SLOVENIAN TOURISTS": col2[4],
-                                    "A_OTHER": "#bbb",
-                                },
-                                type: () => "piechart",
-                                sizeCol: "TOTAL ARRIVALS",
-                                size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
-                            })
-                        ], pixNb: 20                */
             } else if (layCode === "tourOriginNights") {
-                console.log(layCode)
-                /*
                 const lay = app.layers[0]
-                const styles = []
+                const styles = [
+                    new gviz.CompositionStyle({
+                        color: {
+                            "N_DOMESTIC TOURISTS - TOTAL": col2[0],
+                            "N_AUSTRIAN TOURISTS": col2[1],
+                            "N_GERMAN TOURISTS": col2[2],
+                            "N_ITALIAN TOURISTS": col2[3],
+                            "N_SLOVENIAN TOURISTS": col2[4],
+                            "N_OTHER": "#bbb",
+                        },
+                        type: () => "piechart",
+                        sizeCol: "TOTAL NIGHTS",
+                        size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
+                    })
+                ]
                 lay.setStyles(styles)
-                lay.pixNb = 5;
+                lay.pixNb = 20;
                 lay.visible = true;
                 //lay.setCellInfoHTML((c) => "")
-                */
-
-                /*
-                    tourOriginNights: {
-                        style: [
-                            new gviz.CompositionStyle({
-                                color: {
-                                    "N_DOMESTIC TOURISTS - TOTAL": col2[0],
-                                    "N_AUSTRIAN TOURISTS": col2[1],
-                                    "N_GERMAN TOURISTS": col2[2],
-                                    "N_ITALIAN TOURISTS": col2[3],
-                                    "N_SLOVENIAN TOURISTS": col2[4],
-                                    "N_OTHER": "#bbb",
-                                },
-                                type: () => "piechart",
-                                sizeCol: "TOTAL NIGHTS",
-                                size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
-                            })
-                        ], pixNb: 20
-        */
             } else {
                 console.log("Unexpected layer code: " + layCode);
                 return;
