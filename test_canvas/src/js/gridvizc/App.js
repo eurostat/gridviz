@@ -199,10 +199,11 @@ export class App {
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
+     * @param {object=} opts The parameters of the layer.
      * @returns {this}
      */
-    addLayer(dataset, styles, minZoom, maxZoom) {
-        this.layers.push(new Layer(dataset, styles, minZoom, maxZoom));
+    addLayer(dataset, styles, minZoom, maxZoom, opts) {
+        this.layers.push(new Layer(dataset, styles, minZoom, maxZoom, opts));
         return this;
     }
 
@@ -213,13 +214,13 @@ export class App {
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
-     * @param {object=} opts The parameters of the dataset.
+     * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
     addTiledGridLayer(url, styles, minZoom, maxZoom, opts) {
         return this.addLayer(
             new TiledGrid(url, this, opts).loadInfo(() => { this.cg.redraw(); }),
-            styles, minZoom, maxZoom
+            styles, minZoom, maxZoom, opts
         )
     }
 
@@ -232,13 +233,13 @@ export class App {
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
-     * @param {object=} opts The parameters of the dataset.
+     * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
     addCSVGridLayer(url, resolution, styles, minZoom, maxZoom, opts) {
         return this.addLayer(
             new CSVGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); }),
-            styles, minZoom, maxZoom
+            styles, minZoom, maxZoom, opts
         )
     }
 
@@ -265,7 +266,7 @@ export class App {
                     .loadInfo(() => { this.cg.redraw(); }),
                 styles))
         }
-        this.layers.push( new MultiScaleLayer(layers, resolutions, pixNb, opts) )
+        this.layers.push(new MultiScaleLayer(layers, resolutions, pixNb, opts))
         return this;
     }
 
@@ -315,7 +316,7 @@ export class App {
         /** @type {Cell|undefined} */
         const cell = layer.dataset.getCellFromPosition(posGeo, layer.dataset.getViewCache());
         if (!cell) return undefined;
-        return { cell: cell, html: layer.dataset.cellInfoHTML(cell) };
+        return { cell: cell, html: layer.cellInfoHTML(cell) };
     }
 
 
