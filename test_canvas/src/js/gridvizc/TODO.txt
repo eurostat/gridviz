@@ -2,6 +2,8 @@ EUR:
 tooltip
 legends
 
+maque FR with pop + revenus + pov
+
 new EUR layers:
 https://www.eea.europa.eu/data-and-maps/figures/spatial-pattern-of-land-take
 https://www.eea.europa.eu/data-and-maps/figures/fragmentation-increase-in-europe-during

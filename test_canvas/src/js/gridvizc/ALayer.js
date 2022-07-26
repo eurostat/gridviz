@@ -8,13 +8,14 @@
 export class ALayer {
 
     /**
-     * @param {boolean} visible 
+     * @param {{visible?:boolean}} opts 
      */
-    constructor(visible = true) {
+    constructor(opts) {
+        opts = opts || {}
 
         /** An attribute to specify if a layer should be drawn or not
          * @type {boolean} */
-        this.visible = visible;
+        this.visible = opts.visible == false ? false : true;
 
     }
 
