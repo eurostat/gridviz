@@ -1,8 +1,14 @@
-use layer visible attribute
-
 EUR:
 tooltip
 legends
+
+
+https://www.eea.europa.eu/data-and-maps/figures/spatial-pattern-of-land-take
+https://www.eea.europa.eu/data-and-maps/figures/fragmentation-increase-in-europe-during
+https://www.eea.europa.eu/data-and-maps/data/copernicus-land-monitoring-service-high
+https://www.eea.europa.eu/data-and-maps/data/copernicus-10-km-grid
+
+
 
 accessiblity grid as tanaka ?
 
