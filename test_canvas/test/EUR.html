@@ -65,48 +65,31 @@
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .addZoomSlider("zoomSlider")
             .setViewFromURL()
+            //population layer
+            .addMultiScaleTiledGridLayer(
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/",
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => Math.round(r / 1000) + "km/", [],
+                {
+                    preprocess: c => {
+                        //prepare 2011 -> 2018 change data
+                        if (!c["2011"] && !c["2018"]) c.d11_18 = 0
+                        else if (!c["2011"] && c["2018"]) c.d11_18 = + c["2018"]
+                        else if (c["2011"] && !c["2018"]) c.d11_18 = - c["2011"]
+                        else c.d11_18 = c["2018"] - c["2011"]
 
-        //for population
-        app.addMultiScaleTiledGridLayer(
-            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/",
-            [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => Math.round(r / 1000) + "km/", [],
-            {
-                /*                cellInfoHTML: c => {
-                                    const v = document.querySelector('#year').value
-                                    if (getSelectedMapType() === "pop")
-                                        return "<b>" + c[v] + "</b> inhabitant(s) in " + v
-                                    else {
-                                        const sel = document.querySelector('#year').value
-                                        const v = c[sel]
-                                        return (
-                                            sel === "d11_18" ?
-                                                "2011: " + c["2011"] + "<br>2018: " + c["2018"]
-                                                : "2006: " + c["2006"] + "<br>2011: " + c["2011"]
-                                        )
-                                            + "<br>"
-                                            + "<b>" + (v == 0 ? "No change" : (v > 0 ? "+" : "") + v + " inhabitants") + "</b>"
-                                    }
-                                },*/
-                preprocess: c => {
-                    //prepare 2011 -> 2018 change data
-                    if (!c["2011"] && !c["2018"]) c.d11_18 = 0
-                    else if (!c["2011"] && c["2018"]) c.d11_18 = + c["2018"]
-                    else if (c["2011"] && !c["2018"]) c.d11_18 = - c["2011"]
-                    else c.d11_18 = c["2018"] - c["2011"]
-
-                    //prepare 2006 -> 2011 change data
-                    if (!c["2006"] && !c["2011"]) c.d06_11 = 0
-                    else if (!c["2006"] && c["2011"]) c.d06_11 = +c["2011"]
-                    else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
-                    else c.d06_11 = c["2011"] - c["2006"]
+                        //prepare 2006 -> 2011 change data
+                        if (!c["2006"] && !c["2011"]) c.d06_11 = 0
+                        else if (!c["2006"] && c["2011"]) c.d06_11 = +c["2011"]
+                        else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
+                        else c.d06_11 = c["2011"] - c["2006"]
+                    }
                 }
-            }
-        )
-        //for accessibility
-        app.addMultiScaleTiledGridLayer(
-            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/",
-            [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => r + "m/", [], {}
-        )
+            )
+            //accessibility layer
+            .addMultiScaleTiledGridLayer(
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/",
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => r + "m/", [], {}
+            )
 
         const layPop = app.layers[0]
         const layAcc = app.layers[1]
@@ -117,9 +100,10 @@
             //read GUI selection
             const layCode = document.querySelector('input[name="layer"]:checked').value
 
-            //select right layer, style and resolution
-            let lay
+            //hide layers
+            hideAllLayers()
 
+            //select layer and style
             if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
                 layPop.setStyles([new gviz.SquareColoringWebGLStyle({
                     colorCol: layCode,
@@ -127,7 +111,7 @@
                 }), new gviz.StrokeStyle({ zf: 80 })
                 ])
                 layPop.pixNb = 5;
-                lay = layPop
+                layPop.visible = true;
             } else if (layCode === "d06_11" || layCode === "d11_18") {
                 layPop.setStyles([new gviz.ShapeColorSizeStyle({
                     colorCol: layCode,
@@ -139,7 +123,7 @@
                     shape: () => "square",
                 })])
                 layPop.pixNb = 5;
-                lay = layPop
+                layPop.visible = true;
 
                 //accessibility
             } else if (layCode === "accHealth") {
@@ -168,7 +152,7 @@
                 ])
                 //layAcc.setStyles(gviz.getTanakaStyle("avg_time_nearest_h", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.5) }))
                 layAcc.pixNb = 17;
-                lay = layAcc
+                layAcc.visible = true;
             } else if (layCode === "accEducPrim") {
                 const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
                 layAcc.setStyles([
@@ -194,16 +178,14 @@
                     })
                 ])
                 layAcc.pixNb = 17;
-                lay = layAcc
+                layAcc.visible = true;
 
             } else {
                 console.log("Unexpected layer code: " + layCode);
                 return;
             }
 
-            //set layer
-            app.layers = [lay]
-
+            //redraw
             app.cg.redraw();
         }
 
@@ -224,6 +206,7 @@
             app.cg.redraw();
         });
 
+        //initialise
         update()
 
     </script>

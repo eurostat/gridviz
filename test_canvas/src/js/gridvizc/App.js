@@ -57,8 +57,8 @@ export class App {
         //create canvas element
         /** @type {HTMLCanvasElement} */
         const canvas = document.createElement("canvas");
-        canvas.setAttribute("width", ""+this.w);
-        canvas.setAttribute("height", ""+this.h);
+        canvas.setAttribute("width", "" + this.w);
+        canvas.setAttribute("height", "" + this.h);
         container.appendChild(canvas);
 
         /** Make geo canvas
@@ -81,7 +81,7 @@ export class App {
             for (const alayer of this.layers) {
 
                 //
-                if(!alayer.visible) continue;
+                if (!alayer.visible) continue;
 
                 //get layer
                 /** @type {Layer} */
@@ -245,7 +245,6 @@ export class App {
 
     /**
      * 
-     * 
      * @param {string} urlBase 
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURLCode 
@@ -261,6 +260,19 @@ export class App {
         return this;
     }
 
+    /**
+     * @deprecated stop using it. use "add" equivalent with .visible attribute instead.
+     * 
+     * @param {*} urlBase 
+     * @param {*} resolutions 
+     * @param {*} resToURLCode 
+     * @param {*} styles 
+     * @param {*} opts 
+     * @param {*} pixNb 
+     * @param {*} z0 
+     * @param {*} zMax 
+     * @returns 
+     */
     makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5, z0 = 0, zMax = Infinity) {
         const layers = [];
         for (const res of resolutions) {
@@ -295,6 +307,14 @@ export class App {
         }
         return out;
     }
+
+
+    hideAllLayers() {
+        for (const al of this.layers)
+            al.visible = false
+        return this;
+    }
+
 
 
     /**
