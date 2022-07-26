@@ -5,6 +5,8 @@ Adopt everywhere else.
 
 legend for discrete color classes - use for accessibility map legend
 
+HR legends
+
 make FR with pop + revenus + pov
 
 new EUR layers:
