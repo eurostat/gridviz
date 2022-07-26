@@ -241,6 +241,48 @@
 
 
 
+        //
+        const update = () => {
+
+            //read GUI selection
+            const layCode = document.querySelector('input[name="layer"]:checked').value
+
+            //hide layers
+            app.hideAllLayers()
+
+
+            //select layer and style
+            if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
+                /*const lay = app.layers[0]
+                const styles = [new gviz.SquareColoringWebGLStyle({
+                    colorCol: layCode,
+                    color: (v, r, s) => v == 0 ? "" : gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                }),
+                new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", zf: 80 })
+                ]
+                lay.setStyles(styles)
+                lay.pixNb = 5;
+                lay.visible = true;
+                lay.setCellInfoHTML((c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined)
+                app.addLegend(
+                    { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                    [styles[0]]
+                )*/
+
+            } else if (layCode === "hgfhf") {
+
+            } else {
+                console.log("Unexpected layer code: " + layCode);
+                return;
+            }
+
+            //redraw
+            app.cg.redraw();
+        }
+
+
+
+
 
         //styles
         const col = gviz.interpolateSpectral
