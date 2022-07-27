@@ -18,10 +18,10 @@ export class Dataset {
      * 
      * @param {Array.<DatasetComponent>} datasetComponents 
      * @param {Array.<number>} resolutions 
-     * @param {object} opts  
+     * @param {{preprocess?:function(Cell):void}} opts  
      * @abstract
      */
-    constructor(datasetComponents, resolutions, opts = undefined) {
+    constructor(datasetComponents, resolutions, opts = {}) {
         opts = opts || {};
 
         /** @type {Array.<DatasetComponent>} */

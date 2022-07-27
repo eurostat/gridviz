@@ -246,7 +246,7 @@ export class App {
         const layer = lays[lays.length - 1]
         if (!layer) return undefined;
         const dsc = layer.get(this.getZoomFactor())
-        if(!dsc) return undefined
+        if (!dsc) return undefined
         //get cell at mouse position
         /** @type {Cell|undefined} */
         const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache());
@@ -377,20 +377,37 @@ export class App {
      * @param {object} opts 
      * @returns {this}
      */
-    /*addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5) {
-        const layers = [];
+    addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5) {
+
+        //make dataset components
+        const dsc = []
         for (const res of resolutions) {
-            layers.push(new Layer(
-                new TiledGrid(
-                    urlBase + resToURLCode(res),
-                    this,
-                    opts)
-                    .loadInfo(() => { this.cg.redraw(); }),
-                styles, 0, 0, opts))
+            dsc.push(new TiledGrid(
+                urlBase + resToURLCode(res),
+                this,
+                opts)
+                .loadInfo(() => { this.cg.redraw(); }))
         }
-        this.layers.push(new MultiScaleLayer(layers, resolutions, pixNb, opts))
+        //make dataset
+        const ds = new Dataset(dsc, resolutions, opts)
+
+        const lay = new Layer(ds, styles, opts.minZoom, opts.maxZoom, pixNb, opts)
+        this.layers.push(lay)
+
+        /*        const layers = [];
+              
+                for (const res of resolutions) {
+                    layers.push(new Layer(
+                        new TiledGrid(
+                            urlBase + resToURLCode(res),
+                            this,
+                            opts)
+                            .loadInfo(() => { this.cg.redraw(); }),
+                        styles, 0, 0, opts))
+                }
+                this.layers.push(new MultiScaleLayer(layers, resolutions, pixNb, opts))*/
         return this;
-    }*/
+    }
 
 
 
