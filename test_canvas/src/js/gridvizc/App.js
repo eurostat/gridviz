@@ -388,29 +388,12 @@ export class App {
                 opts)
                 .loadInfo(() => { this.cg.redraw(); }))
         }
-        //make dataset
+        //make dataset and layer
         const ds = new Dataset(dsc, resolutions, opts)
-
         const lay = new Layer(ds, styles, opts.minZoom, opts.maxZoom, pixNb, opts)
         this.layers.push(lay)
-
-        /*        const layers = [];
-              
-                for (const res of resolutions) {
-                    layers.push(new Layer(
-                        new TiledGrid(
-                            urlBase + resToURLCode(res),
-                            this,
-                            opts)
-                            .loadInfo(() => { this.cg.redraw(); }),
-                        styles, 0, 0, opts))
-                }
-                this.layers.push(new MultiScaleLayer(layers, resolutions, pixNb, opts))*/
         return this;
     }
-
-
-
 
 
 

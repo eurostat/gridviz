@@ -30,7 +30,7 @@ export class Dataset {
         /** @type {Array.<number>} */
         this.resolutions = resolutions;
 
-        if (this.datasetComponents.length >= this.resolutions.length)
+        if (this.datasetComponents.length != this.resolutions.length)
             throw new Error("Uncompatible number of datasets and resolutions: " + this.datasetComponents.length + " " + this.resolutions.length)
 
         //set dataset preprocesses if sepcified
