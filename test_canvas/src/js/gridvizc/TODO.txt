@@ -1,3 +1,5 @@
+restructure
+
 EUR: finalise
 add legends
 simplification
