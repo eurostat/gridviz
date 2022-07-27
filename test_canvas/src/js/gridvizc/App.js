@@ -372,11 +372,21 @@ export class App {
         }
         //make dataset and layer
         const ds = new Dataset(dsc, resolutions, opts)
-        const lay = new Layer(ds, styles, opts)
+        return this.addMultiScaleTiledGridLayer2(ds, styles, opts);
+    }
+
+    /**
+     * 
+     * @param {Dataset} dataset 
+     * @param {Array.<Style>} styles 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:(function(Cell):void}} opts 
+     * @returns {this}
+     */
+     addMultiScaleTiledGridLayer2(dataset, styles, opts) {
+        const lay = new Layer(dataset, styles, opts)
         this.layers.push(lay)
         return this;
     }
-
 
 
 
