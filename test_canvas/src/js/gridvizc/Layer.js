@@ -55,7 +55,7 @@ export class Layer {
      * 
      * @param {number} zf 
      * @returns {DatasetComponent|undefined}  */
-    get(zf) {
+    getDatasetComponent(zf) {
         if (zf < this.minZoom || zf > this.maxZoom) return;
         const rs = this.dataset.resolutions
 

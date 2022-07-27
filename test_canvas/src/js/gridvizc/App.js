@@ -82,7 +82,7 @@ export class App {
                 if (!layer.visible) continue;
 
                 //get layer dataset component
-                const dsc = layer.get(zf)
+                const dsc = layer.getDatasetComponent(zf)
                 if (!dsc) continue
 
                 //launch data download, if necessary
@@ -202,7 +202,7 @@ export class App {
         const zf = this.getZoomFactor();
         for (const lay of this.layers) {
             if (!lay.visible) continue
-            if (!lay.get(zf)) continue;
+            if (!lay.getDatasetComponent(zf)) continue;
             out.push(lay);
         }
         return out;
@@ -244,7 +244,7 @@ export class App {
         /** @type {Layer} */
         const layer = lays[lays.length - 1]
         if (!layer) return undefined;
-        const dsc = layer.get(this.getZoomFactor())
+        const dsc = layer.getDatasetComponent(this.getZoomFactor())
         if (!dsc) return undefined
         //get cell at mouse position
         /** @type {Cell|undefined} */

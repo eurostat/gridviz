@@ -164,7 +164,7 @@ export class TiledGrid extends DatasetComponent {
                             // 1. the dataset belongs to a layer which is visible at the current zoom level
                             let redraw = false;
                             for (const layer of this.app.getActiveLayers()) {
-                                if (layer.get(this.app.getZoomFactor()) != this) continue;
+                                if (layer.getDatasetComponent(this.app.getZoomFactor()) != this) continue;
                                 //found one layer. No need to seek more.
                                 redraw = true;
                                 break;
