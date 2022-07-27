@@ -323,10 +323,10 @@ export class App {
      * @param {object=} opts The parameters of the layer.
      * @returns {this}
      */
-    addLayer(dataset, styles, minZoom, maxZoom, opts) {
+    /*addLayer(dataset, styles, minZoom, maxZoom, opts) {
         this.layers.push(new Layer(dataset, styles, minZoom, maxZoom, opts));
         return this;
-    }
+    }*/
 
     /**
      * Add a layer from a tiled grid dataset.
@@ -338,12 +338,12 @@ export class App {
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
-    addTiledGridLayer(url, styles, minZoom, maxZoom, opts) {
+    /*addTiledGridLayer(url, styles, minZoom, maxZoom, opts) {
         return this.addLayer(
             new TiledGrid(url, this, opts).loadInfo(() => { this.cg.redraw(); }),
             styles, minZoom, maxZoom, opts
         )
-    }
+    }*/
 
 
     /**
@@ -357,12 +357,12 @@ export class App {
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
-    addCSVGridLayer(url, resolution, styles, minZoom, maxZoom, opts) {
+    /*addCSVGridLayer(url, resolution, styles, minZoom, maxZoom, opts) {
         return this.addLayer(
             new CSVGrid(url, resolution, opts).getData(undefined, 9999, () => { this.cg.redraw(); }),
             styles, minZoom, maxZoom, opts
         )
-    }
+    }*/
 
 
     /**
@@ -376,7 +376,7 @@ export class App {
      * @param {object} opts 
      * @returns {this}
      */
-    addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5) {
+    /*addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5) {
         const layers = [];
         for (const res of resolutions) {
             layers.push(new Layer(
@@ -389,11 +389,7 @@ export class App {
         }
         this.layers.push(new MultiScaleLayer(layers, resolutions, pixNb, opts))
         return this;
-    }
-
-
-
-
+    }*/
 
 
 
