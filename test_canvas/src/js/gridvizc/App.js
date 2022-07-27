@@ -81,22 +81,22 @@ export class App {
                 //check if layer is visible
                 if (!layer.visible) continue;
 
-                //get layer dataset
-                const ds = layer.dataset.get(zf)
-                if (!ds) continue
+                //get layer dataset component
+                const dsc = layer.get(zf)
+                if (!dsc) continue
 
                 //launch data download, if necessary
                 if (strong)
-                    ds.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
+                    dsc.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
 
                 //update dataset view cache
                 if (strong)
-                    ds.updateViewCache(this.cg.extGeo);
+                    dsc.updateViewCache(this.cg.extGeo);
 
                 //draw cells, style by style
                 if (strong)
                     for (const style of layer.styles)
-                        style.draw(ds.getViewCache(zf), ds.getResolution(), this.cg)
+                        style.draw(dsc.getViewCache(), dsc.getResolution(), this.cg)
 
                 //add legend element
                 if (this.legend && strong)
@@ -202,8 +202,8 @@ export class App {
         const zf = this.getZoomFactor();
         for (const lay of this.layers) {
             if (!lay.visible) continue
-            const ds = lay.dataset.get(zf)
-            if (!ds) continue;
+            const dsc = lay.get(zf)
+            if (!dsc) continue;
             out.push(lay);
         }
         return out;
@@ -245,10 +245,11 @@ export class App {
         /** @type {Layer} */
         const layer = lays[lays.length - 1]
         if (!layer) return undefined;
+        const dsc = layer.get(this.getZoomFactor())
+        if(!dsc) return undefined
         //get cell at mouse position
         /** @type {Cell|undefined} */
-        const ds = layer.dataset.get(this.getZoomFactor())
-        const cell = ds.getCellFromPosition(posGeo, ds.getViewCache());
+        const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache());
         if (!cell) return undefined;
         return { cell: cell, html: layer.cellInfoHTML(cell) };
     }
