@@ -21,10 +21,31 @@
 
         let containerDiv = document.getElementById("viz-container");
         new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(500).setZoomFactorExtent([15, 3000])
+            .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(50.1).setZoomFactorExtent([10, 2000])
+            .addZoomSlider("zoomSlider")
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20"))
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
+
+            //population
+            .addMultiScaleTiledGridLayer(
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
+                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+                r => r + "m/",
+                [
+                    new gviz.SquareColoringWebGLStyle({
+                        colorCol: "Ind",
+                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                    }), new gviz.StrokeStyle({ zf: 15 })
+                ],
+                {
+                    visible: false,
+                    pixNb: 5,
+                    cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
+                }
+            )
+
+            //income
             .addMultiScaleTiledGridLayer(
                 "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
                 [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
@@ -37,32 +58,33 @@
                     new gviz.StrokeStyle({ zf: 15 })
                 ],
                 {
+                    visible: false,
                     pixNb: 4,
                     cellInfoHTML: c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'",
                     preprocess: c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
                 })
 
 
-            /*
+        /*
 household poverty
-            .addMultiScaleTiledGridLayer(
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
-                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-                r => r + "m/",
-                [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "r",
-                        color: (v, r, s) => {
-                            return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
-                        },
-                    }),
-                    new gviz.StrokeStyle({ zf: 15 })
-                ],
-                {
-                    pixNb: 4,
-                    cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.r) / 10) + "%</b> of poor households.",
-                    preprocess: c => { c.r = c["Men_pauv"] / c["Men"]; }
-                })
+        .addMultiScaleTiledGridLayer(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
+            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+            r => r + "m/",
+            [
+                new gviz.SquareColoringWebGLStyle({
+                    colorCol: "r",
+                    color: (v, r, s) => {
+                        return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
+                    },
+                }),
+                new gviz.StrokeStyle({ zf: 15 })
+            ],
+            {
+                pixNb: 4,
+                cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.r) / 10) + "%</b> of poor households.",
+                preprocess: c => { c.r = c["Men_pauv"] / c["Men"]; }
+            })
 */
     </script>
 

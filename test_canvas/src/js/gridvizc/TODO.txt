@@ -1,15 +1,7 @@
-restructure
-
-EUR: finalise
-add legends
-simplification
-Adopt everywhere else.
+make FR with pop + revenus + pov
 
 legend for discrete color classes - use for accessibility map legend
-
 HR legends
-
-make FR with pop + revenus + pov
 
 new EUR layers:
 https://www.eea.europa.eu/data-and-maps/figures/spatial-pattern-of-land-take
