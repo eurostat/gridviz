@@ -10,11 +10,21 @@
 
     <div
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
-        <span style="font-size: 17pt; font-weight: bold;">Revenus</span><span style="font-size: 10pt;"><br>Revenu
-            disponible par unité de consommation<br>
-            Source: <a href="https://www.insee.fr/fr/statistiques/4176290?sommaire=4176305" target="_blank"
-                rel="noopener noreferrer">INSEE - Filosofi 2015 - grille 200m</a></span>
+        <span style="font-size: 17pt; font-weight: bold;">France grid</span><span style="font-size: 10pt;">
+            <div id="layer">
+
+            </div>
+            <hr>
+            <input type="checkbox" id="label" checked>
+            <label for="label">City names</label>
+            <input type="checkbox" id="boundary" checked>
+            <label for="boundary">Boundaries</label>
+            <hr>Source: <a href="https://www.insee.fr/fr/statistiques/4176290?sommaire=4176305" target="_blank"
+                rel="noopener noreferrer">INSEE - Filosofi 2015 - 200m grid</a>
+        </span>
     </div>
+
+    <div id="zoomSlider" style="display: block; position: absolute; right: 20px; top: 20px;"></div>
 
     <script src="../build/gridvizc.js"></script>
     <script>
@@ -39,7 +49,7 @@
                     }), new gviz.StrokeStyle({ zf: 15 })
                 ],
                 {
-                    visible: false,
+                    visible: true,
                     pixNb: 5,
                     cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
                 }
@@ -86,6 +96,50 @@ household poverty
                 preprocess: c => { c.r = c["Men_pauv"] / c["Men"]; }
             })
 */
+
+
+
+
+        //
+        const update = () => {
+
+            //read GUI selection
+            const layCode = document.querySelector('input[name="layer"]:checked').value
+
+            //hide layers
+            app.hideAllLayers()
+
+            /*/select layer and style
+            if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
+            } else {
+                console.log("Unexpected layer code: " + layCode);
+                return;
+            }*/
+
+            //redraw
+            app.cg.redraw();
+        }
+
+
+
+        //layer selector
+        document.querySelector('#layer').addEventListener('change', update)
+
+        // show/hide labels
+        document.querySelector('#label').addEventListener('change', function () {
+            app.showLabels = this.checked
+            app.cg.redraw();
+        });
+
+        // show/hide boundaries
+        document.querySelector('#boundary').addEventListener('change', function () {
+            app.showBoundaries = this.checked
+            app.cg.redraw();
+        });
+
+        //initialise
+        update()
+
     </script>
 
     <div
