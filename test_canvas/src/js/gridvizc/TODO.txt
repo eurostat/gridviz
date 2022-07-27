@@ -1,3 +1,5 @@
+check pixNb
+
 FR: test with only one dataset
 add population by proportion
 
