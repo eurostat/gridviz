@@ -1,4 +1,3 @@
-pixNb: adapt all
 FR: test with only one dataset ?
 filosofi
 
