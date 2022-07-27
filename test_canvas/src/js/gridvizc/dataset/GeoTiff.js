@@ -1,12 +1,13 @@
 //@ts-check
-import { Dataset, Cell, Envelope } from "../Dataset"
+
+import { DatasetComponent } from "../DatasetComponent"
 
 /**
  * A dataset composed of a single GeoTiff file.
  * 
  * @author Julien Gaffuri
  */
-export class GeoTiff extends Dataset {
+export class GeoTiff extends DatasetComponent {
 
     constructor(url, resolution, opts=undefined) {
         super(url, resolution, opts)

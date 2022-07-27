@@ -2,14 +2,15 @@
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:Envelope }} GridInfo */
 
 import { csv } from "d3-fetch";
-import { Dataset, Cell, Envelope } from "../DatasetComponent"
+import { Cell, Envelope } from "../Dataset"
+import { DatasetComponent } from "../DatasetComponent";
 
 /**
  * A dataset composed of a single CSV file (not tiled).
  * 
  * @author Julien Gaffuri
  */
-export class CSVGrid extends Dataset {
+export class CSVGrid extends DatasetComponent {
 
     /**
      * @param {string} url The URL of the dataset.
@@ -31,10 +32,9 @@ export class CSVGrid extends Dataset {
      * Request data within a geographic envelope.
      * 
      * @param {Envelope|undefined} e 
-     * @param {number} zf
      * @param {function():void} redraw 
      */
-    getData(e, zf, redraw) {
+    getData(e, redraw) {
 
         //check if data already loaded
         if (this.infoLoadingStatus != "notLoaded") return this;

@@ -4,14 +4,15 @@
 import { json, csv } from "d3-fetch";
 import { GridTile } from './GridTile';
 import { App } from '../App';
-import { Dataset, Cell, Envelope } from "../DatasetComponent"
+import { Cell, Envelope } from "../Dataset"
+import { DatasetComponent } from "../DatasetComponent";
 
 /**
  * A tiled dataset, composed of CSV tiles.
  * 
  * @author Julien Gaffuri
  */
-export class TiledGrid extends Dataset {
+export class TiledGrid extends DatasetComponent {
 
     /**
      * @param {string} url The URL of the dataset.
@@ -106,11 +107,10 @@ export class TiledGrid extends Dataset {
      * Request data within a geographic envelope.
      * 
      * @param {Envelope} extGeo 
-     * @param {number} zf
      * @param {function():void} redrawFun
      * @returns {this}
      */
-    getData(extGeo, zf, redrawFun) {
+    getData(extGeo, redrawFun) {
 
         //TODO empty cache when it gets too big ?
 
