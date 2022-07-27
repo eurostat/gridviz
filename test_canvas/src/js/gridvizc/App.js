@@ -3,7 +3,7 @@
 import { GeoCanvas, Envelope } from './GeoCanvas';
 import { Layer } from './Layer';
 import { Style } from './Style';
-import { Dataset, Cell } from './DatasetComponent';
+import { Dataset, Cell } from './Dataset';
 import { Tooltip } from './Tooltip';
 
 import { CSVGrid } from './dataset/CSVGrid';
@@ -202,9 +202,9 @@ export class App {
         const zf = this.getZoomFactor();
         for (const lay of this.layers) {
             if (!lay.visible) continue
-            const layer = lay.getLayer(zf)
-            if (!layer) continue;
-            out.push(layer);
+            const ds = lay.dataset.get(zf)
+            if (!ds) continue;
+            out.push(lay);
         }
         return out;
     }
@@ -247,7 +247,8 @@ export class App {
         if (!layer) return undefined;
         //get cell at mouse position
         /** @type {Cell|undefined} */
-        const cell = layer.dataset.getCellFromPosition(posGeo, layer.dataset.getViewCache(this.getZoomFactor()));
+        const ds = layer.dataset.get(this.getZoomFactor())
+        const cell = ds.getCellFromPosition(posGeo, ds.getViewCache());
         if (!cell) return undefined;
         return { cell: cell, html: layer.cellInfoHTML(cell) };
     }
