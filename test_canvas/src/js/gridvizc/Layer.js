@@ -47,6 +47,27 @@ export class Layer {
         this.cellInfoHTML = opts.cellInfoHTML || defaultCellInfoHTML;
     }
 
+
+
+    /**
+     * Return dataset component for a specified zoom factor.
+     * 
+     * @param {number} zf 
+     * @returns {DatasetComponent|undefined}  */
+    get(zf) {
+        if (zf < this.minZoom || zf > this.maxZoom) return;
+        const rs = this.dataset.resolutions
+
+        let i = 0;
+        let z = rs[i] / this.pixNb
+        while (z < zf && i < rs.length) {
+            i++;
+            z = rs[i] / this.pixNb
+        }
+        if (i == 0) return this.dataset.datasetComponents[0];
+        return this.dataset.datasetComponents[i - 1];
+    }
+
 }
 
 

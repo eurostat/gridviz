@@ -4,7 +4,7 @@
 import { json, csv } from "d3-fetch";
 import { GridTile } from './GridTile';
 import { App } from '../App';
-import { Cell, Envelope } from "../Dataset"
+import { Envelope } from "../Dataset"
 import { DatasetComponent } from "../DatasetComponent";
 
 /**

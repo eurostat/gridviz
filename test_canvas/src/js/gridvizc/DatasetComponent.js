@@ -30,6 +30,11 @@ export class DatasetComponent {
          * @protected @type {number} */
         this.resolution = resolution;
 
+        /**
+         * A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
+         * @type {function(Cell):void} */
+        this.preprocess = opts.preprocess;
+
         /** The cells within the view
          * @protected @type {Array.<Cell>} */
         this.cellsViewCache = []
