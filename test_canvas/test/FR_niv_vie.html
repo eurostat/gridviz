@@ -33,7 +33,8 @@
                     new gviz.SquareColoringWebGLStyle({
                         colorCol: "r",
                         color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
-                    }), new gviz.StrokeStyle({ zf: 15 })
+                    }),
+                    new gviz.StrokeStyle({ zf: 15 })
                 ],
                 {
                     pixNb: 4,

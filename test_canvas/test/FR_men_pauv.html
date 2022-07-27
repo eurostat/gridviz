@@ -26,7 +26,8 @@
                         color: (v, r, s) => {
                             return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
                         },
-                    }), new gviz.StrokeStyle({ zf: 15 })
+                    }),
+                    new gviz.StrokeStyle({ zf: 15 })
                 ],
                 {
                     pixNb: 4,
