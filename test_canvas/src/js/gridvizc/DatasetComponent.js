@@ -3,8 +3,7 @@
 import { Cell, Envelope } from "./Dataset";
 
 /**
- * A dataset of grid cells.
- * 
+ * A dataset component, of grid cells.
  * @abstract
  * 
  * @author Julien Gaffuri
@@ -13,7 +12,7 @@ export class DatasetComponent {
 
     /**
      * @param {string} url The URL of the dataset.
-     * @param {number} resolution The dataset resolution in geographical unit.
+     * @param {number} resolution The dataset resolution, in the CRS geographical unit.
      * @param {{preprocess?:(function(Cell):void)}} opts 
      * @abstract
      */
@@ -55,7 +54,7 @@ export class DatasetComponent {
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      * @abstract
-     * @param {Envelope} extGeo 
+     * @param {Envelope} extGeo The view geographical envelope.
      * @returns {void}
      */
     updateViewCache(extGeo) {
