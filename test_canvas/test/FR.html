@@ -54,7 +54,6 @@
                     }), new gviz.StrokeStyle({ zf: 15 })
                 ],
                 {
-                    visible: true,
                     pixNb: 5,
                     cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
                 }
@@ -73,7 +72,6 @@
                     new gviz.StrokeStyle({ zf: 15 })
                 ],
                 {
-                    visible: false,
                     pixNb: 4,
                     cellInfoHTML: c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'",
                     preprocess: c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
