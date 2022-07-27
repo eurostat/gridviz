@@ -1,6 +1,6 @@
 # Europe
 
-https://eurostat.github.io/gridviz/test_canvas/test/EUR.html
+Population, population change and basic services accessibility: https://eurostat.github.io/gridviz/test_canvas/test/EUR.html
 
 # France - 200m (Filosofi 2015)
 
@@ -12,8 +12,8 @@ Population composition, businesses by sector, tourism: https://eurostat.github.i
 
 # Tests
 
-- Population: https://eurostat.github.io/gridviz/test_canvas/test/FR_population.html
-- Europe population style tests (by color, size, donut, segment, joyplot, tanaka, pillar, dot density, lego, tanaka, text styles): https://eurostat.github.io/gridviz/test_canvas/test/EUR_population.html
-- Population by age: https://eurostat.github.io/gridviz/test_canvas/test/FR_ind_by_age.html
-- Gaussian kernel smoothing: https://eurostat.github.io/gridviz/test_canvas/test/EUR_kernelsmoothing.html
+- FR Population: https://eurostat.github.io/gridviz/test_canvas/test/FR_population.html
+- Europe population: https://eurostat.github.io/gridviz/test_canvas/test/EUR_population.html
+- FR population by age: https://eurostat.github.io/gridviz/test_canvas/test/FR_ind_by_age.html
+- Europe population Gaussian kernel smoothing: https://eurostat.github.io/gridviz/test_canvas/test/EUR_kernelsmoothing.html
 
