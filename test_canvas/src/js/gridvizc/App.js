@@ -202,8 +202,7 @@ export class App {
         const zf = this.getZoomFactor();
         for (const lay of this.layers) {
             if (!lay.visible) continue
-            const dsc = lay.get(zf)
-            if (!dsc) continue;
+            if (!lay.get(zf)) continue;
             out.push(lay);
         }
         return out;
