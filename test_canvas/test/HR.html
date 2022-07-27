@@ -194,7 +194,7 @@
                             return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
                         },
                     })]
-                lay.pixNb = 5;
+                lay.pixNb = 3;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => "<b>" + c.TOTAL + "</b> inhabitants"
                 /*app.addLegend(
@@ -216,7 +216,7 @@
                         size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
                     })
                 ]
-                lay.pixNb = 10;
+                lay.pixNb = 8;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => {
                     return "<b>" + c.TOTAL + "</b> inhabitants<br>"
@@ -238,7 +238,7 @@
                     size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                     agePyramidHeight: (r) => 0.95 * r
                 })]
-                lay.pixNb = 20;
+                lay.pixNb = 15;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => {
                     return "<b>" + c.TOTAL + "</b> inhabitants<br>"
@@ -263,7 +263,7 @@
                         agePyramidHeight: (r) => 0.95 * r
                     })
                 ]
-                lay.pixNb = 20;
+                lay.pixNb = 15;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => {
                     return "<b>" + c.TOTAL + "</b> inhabitants<br>"
@@ -286,7 +286,7 @@
                     size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                     stripesOrientation: () => 90
                 })]
-                lay.pixNb = 20;
+                lay.pixNb = 15;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => {
                     return "<b>" + c.TOTAL + "</b> inhabitants<br>"
@@ -303,7 +303,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
                     }), sStroke
                 ]
-                lay.pixNb = 3;
+                lay.pixNb = 2;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => {
                     return "<b>" + c.TOTAL + "</b> inhabitants<br>"
@@ -324,7 +324,7 @@
                         size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
                     })
                 ]
-                lay.pixNb = 20;
+                lay.pixNb = 15;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => {
                     return "<b>" + c.TOTAL + "</b> businesses<br>"
@@ -341,7 +341,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                     }), sStroke
                 ]
-                lay.pixNb = 3;
+                lay.pixNb = 2;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => "<b>" + c["ESTABLISHMENTS - TOTAL"] + "</b> touristic accomodation establishments"
 
@@ -353,7 +353,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                     }), sStroke
                 ]
-                lay.pixNb = 3;
+                lay.pixNb = 2;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => "<b>" + c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] + "</b> touristic accomodation units (rooms, appartements, camping sites)"
 
@@ -365,7 +365,7 @@
                         color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
                     }), sStroke
                 ]
-                lay.pixNb = 3;
+                lay.pixNb = 2;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => "<b>" + c["NUMBER OF PERMANENT BEDS"] + "</b> touristic accomodation permanent beds"
 
@@ -386,7 +386,7 @@
                         size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
                     })
                 ]
-                lay.pixNb = 20;
+                lay.pixNb = 15;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => {
                     return "<b>" + c["TOTAL ARRIVALS"] + "</b> tourist arrivals<br>"
@@ -415,7 +415,7 @@
                         size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
                     })
                 ]
-                lay.pixNb = 20;
+                lay.pixNb = 15;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => {
                     return "<b>" + c["TOTAL NIGHTS"] + "</b> tourist nights<br>"
