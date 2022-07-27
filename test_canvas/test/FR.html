@@ -112,9 +112,8 @@ household poverty
             //hide layers
             app.hideAllLayers()
 
-            console.log(layCode)
             if (layCode === "pop") app.layers[0].visible = true;
-            if (layCode === "income") app.layers[1].visible = true;
+            else if (layCode === "income") app.layers[1].visible = true;
             else {
                 console.error("Unexpected layer code: " + layCode);
                 return;
