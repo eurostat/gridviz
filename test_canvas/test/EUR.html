@@ -112,10 +112,10 @@
                 ]
                 lay.pixNb = 5;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined)
+                lay.cellInfoHTML = (c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined
                 app.addLegend(
                     { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
-                    [styles[0]]
+                    [lay.styles[0]]
                 )
 
             } else if (layCode === "d06_11" || layCode === "d11_18") {
@@ -133,7 +133,7 @@
                 ]
                 lay.pixNb = 5;
                 lay.visible = true;
-                lay.setCellInfoHTML(
+                lay.cellInfoHTML =
                     (c) => (
                         layCode === "d11_18" ?
                             "2011: " + c["2011"] + "<br>2018: " + c["2018"]
@@ -141,7 +141,6 @@
                     )
                         + "<br>"
                         + "<b>" + (c[layCode] == 0 ? "No change" : (c[layCode] > 0 ? "+" : "") + c[layCode] + " inhabitants") + "</b>"
-                )
                 app.addLegend(
                     {
                         type: "color", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
@@ -150,7 +149,7 @@
                             return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
                         }
                     },
-                    [styles[0]]
+                    [lay.styles[0]]
                 )
 
 
@@ -185,9 +184,9 @@
                 //lay.styles = (gviz.getTanakaStyle("avg_time_nearest_h", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.5) }))
                 lay.pixNb = 17;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => {
+                lay.cellInfoHTML = (c) => {
                     return "<b>" + c.avg_time_nearest_h + "</b> min. to nearest service<br><b>" + c.TOT_P + "</b> inhabitant(s)"
-                })
+                }
                 //TODO replace with classified colors
                 /*app.addLegend(
                     {
@@ -202,7 +201,7 @@
                 )*/
                 app.addLegend(
                     { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" },
-                    [styles[2]]
+                    [lay.styles[2]]
                 )
 
 
@@ -233,12 +232,12 @@
                 ]
                 lay.pixNb = 17;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => {
+                lay.cellInfoHTML = (c) => {
                     return "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>" + c.TOT_P + "</b> inhabitant(s)"
-                })
+                }
                 app.addLegend(
                     { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" },
-                    [styles[2]]
+                    [lay.styles[2]]
                 )
 
 
