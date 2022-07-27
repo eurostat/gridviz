@@ -1,9 +1,7 @@
 //@ts-check
 
-import { ADataset } from "./ADataset";
+import { ADataset, Cell } from "./ADataset";
 
-/** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
-/** @typedef {{x: number, y: number}} Cell */
 
 /**
  * A dataset of grid cells.

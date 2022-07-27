@@ -1,7 +1,6 @@
 //@ts-check
 
 import { GeoCanvas, Envelope } from './GeoCanvas';
-import { ALayer } from './ALayer';
 import { Layer } from './Layer';
 import { MultiScaleLayer } from './MultiScaleLayer';
 import { Style } from './Style';
@@ -37,7 +36,7 @@ export class App {
 
         /**
          * The layers.
-         * @type {Array.<ALayer>}
+         * @type {Array.<Layer>}
          * */
         this.layers = [];
 
@@ -78,28 +77,27 @@ export class App {
 
             //go through the layers
             const zf = this.getZoomFactor();
-            for (const alayer of this.layers) {
+            for (const layer of this.layers) {
 
-                //
-                if (!alayer.visible) continue;
+                //check if layer is visible
+                if (!layer.visible) continue;
 
-                //get layer
-                /** @type {Layer} */
-                const layer = alayer.getLayer(zf)
-                if (!layer) continue;
+                //get layer dataset
+                const ds = layer.dataset.get(zf)
+                if(!ds) continue
 
-                //get data to show
+                //launch data download, if necessary
                 if (strong)
-                    layer.dataset.getData(this.cg.updateExtentGeo(),zf , () => { this.cg.redraw(); });
+                    ds.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
 
                 //update dataset view cache
                 if (strong)
-                    layer.dataset.updateViewCache(this.cg.extGeo, zf);
+                    ds.updateViewCache(this.cg.extGeo);
 
                 //draw cells, style by style
                 if (strong)
                     for (const style of layer.styles)
-                        style.draw(layer.dataset.getViewCache(zf), layer.dataset.getResolution(), this.cg)
+                        style.draw(ds.getViewCache(zf), ds.getResolution(), this.cg)
 
                 //show layer legend
                 if (this.legend && strong)

@@ -31,7 +31,7 @@ export class ADataset {
      * 
      * @abstract
      * @param {Envelope|undefined} extGeo 
-     * @param {number} zf 
+     * @param {number} zf
      * @param {function():void} callback 
      * @returns {this}
      */
