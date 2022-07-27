@@ -2,7 +2,6 @@
 
 import { GeoCanvas, Envelope } from './GeoCanvas';
 import { Layer } from './Layer';
-import { MultiScaleLayer } from './MultiScaleLayer';
 import { Style } from './Style';
 import { Dataset, Cell } from './Dataset';
 import { Tooltip } from './Tooltip';

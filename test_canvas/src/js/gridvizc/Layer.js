@@ -1,6 +1,5 @@
 //@ts-check
 
-import { ALayer } from "./ALayer";
 import { Dataset, Cell } from "./Dataset";
 import { Style } from "./Style";
 

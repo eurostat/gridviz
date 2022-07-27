@@ -3,7 +3,6 @@
 //the application
 export { App } from "./App"
 export { Layer } from "./Layer"
-export { MultiScaleLayer } from "./MultiScaleLayer"
 
 //export color (the entire d3 scale chromatic)
 export * from "d3-scale-chromatic"
