@@ -1,4 +1,5 @@
-make FR with pop + revenus + pov
+FR: test with only one dataset
+add population by proportion
 
 legend for discrete color classes - use for accessibility map legend
 HR legends

@@ -14,6 +14,7 @@
             <div id="layer">
                 <input type="radio" name="layer" id="pop" value="pop" checked>
                 <label for="pop">Population</label>
+                <br>
                 <input type="radio" name="layer" id="income" value="income">
                 <label for="income">Income</label>
                 <input type="radio" name="layer" id="poverty" value="poverty">
@@ -58,6 +59,59 @@
                     cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
                 }
             )
+
+            //population by age
+            //population by age 3
+            /*
+        //style
+        const s = new gviz.CompositionStyle({
+            color: getColorDict(),
+            type: () => "ring",
+            sizeCol: "Ind",
+            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+            agePyramidHeight: (r) => 0.95 * r
+        })
+        s.size_ = (v, r, s, zf) => r - 1.5 * zf
+
+
+            app.addMultiScaleTiledGridLayer(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
+            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+            r => r + "m/",
+            [getStyle()],
+            {
+                pixNb : 25,
+                cellInfoHTML: c => {
+                    let out = "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>"
+                    if (getAggUI()) {
+                        out = out + "  < 18: " + d3.format(".1f")(c["Ind_0_17"]) + "<br>" +
+                            " 18-64: " + d3.format(".1f")(c["Ind_18_64"]) + "<br>" +
+                            "  > 65: " + d3.format(".1f")(c["Ind_65p"]) + "<br>" +
+                            " unk.: " + d3.format(".1f")(c["Ind_inc"]) + "<br>";
+                    } else {
+                        out = out + " < 3 : " + (c["Ind_0_3"]) + "<br>" +
+                            " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
+                            " 6-10: " + (c["Ind_6_10"]) + "<br>" +
+                            "11-17: " + (c["Ind_11_17"]) + "<br>" +
+                            "18-24: " + (c["Ind_18_24"]) + "<br>" +
+                            "25-39: " + (c["Ind_25_39"]) + "<br>" +
+                            "40-54: " + (c["Ind_40_54"]) + "<br>" +
+                            "55-64: " + (c["Ind_55_64"]) + "<br>" +
+                            "65-79: " + (c["Ind_65_79"]) + "<br>" +
+                            " > 80: " + (c["Ind_80p"]) + "<br>" +
+                            " unk.: " + (c["Ind_inc"]) + "<br>";
+                    }
+                    return out
+                },
+                preprocess: c => {
+                    c["Ind_0_17"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"]
+                    c["Ind_18_64"] = +c["Ind_18_24"] + +c["Ind_25_39"] + +c["Ind_40_54"] + +c["Ind_55_64"]
+                    c["Ind_65p"] = +c["Ind_65_79"] + +c["Ind_80p"]
+                    //c["Ind_0_24"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"]
+                    //c["Ind_25_54"] = +c["Ind_25_39"] + +c["Ind_40_54"]
+                    //c["Ind_55p"] = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
+                }
+            })*/
 
             //income
             .addMultiScaleTiledGridLayer(
