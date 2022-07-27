@@ -113,13 +113,12 @@ household poverty
             app.hideAllLayers()
 
             console.log(layCode)
-
-            /*/select layer and style
-            if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
-            } else {
-                console.log("Unexpected layer code: " + layCode);
+            if (layCode === "pop") app.layers[0].visible = true;
+            if (layCode === "income") app.layers[1].visible = true;
+            else {
+                console.error("Unexpected layer code: " + layCode);
                 return;
-            }*/
+            }
 
             //redraw
             app.cg.redraw();
