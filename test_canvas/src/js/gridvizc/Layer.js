@@ -5,11 +5,11 @@ import { Dataset, Cell } from "./Dataset";
 import { Style } from "./Style";
 
 /**
- * A data layer, which specifies a dataset to be shown within a specified zoom range, with a specified style.
+ * A data layer, which specifies a dataset to be shown within a specified zoom range, with specified styles.
  * 
  * @author Julien Gaffuri
  */
-export class Layer extends ALayer {
+export class Layer {
 
     /**
      * @param {Dataset} dataset The dataset to show
@@ -18,8 +18,7 @@ export class Layer extends ALayer {
      * @param {number} maxZoom The maximum zoom level when to show the layer
      * @param {{visible?:boolean,cellInfoHTML?:function(Cell):string}} opts 
      */
-    constructor(dataset, styles, minZoom = 0, maxZoom = 0, opts = {}) {
-        super(opts)
+    constructor(dataset, styles, minZoom = 0, maxZoom = Infinity, opts = {}) {
 
         /** @type {Dataset} */
         this.dataset = dataset;
@@ -30,28 +29,17 @@ export class Layer extends ALayer {
         /** @type {number} */
         this.maxZoom = maxZoom;
 
+        if (this.minZoom >= this.maxZoom)
+            throw ("Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.")
+
+        /** An attribute to specify if a layer should be drawn or not
+         * @type {boolean} */
+        this.visible = opts.visible == false ? false : true;
+
         /**
         * The HTML content providing information on the grid cell.
         * @type {function(Cell):string} */
         this.cellInfoHTML = opts.cellInfoHTML || defaultCellInfoHTML;
-    }
-
-    /**
-     * @param {number} zf 
-     * @returns {Layer|undefined}  */
-    getLayer(zf) {
-        if (this.maxZoom < zf || this.minZoom >= zf)
-            return;
-        return this;
-    }
-
-
-    /**
-    * @param {function(Cell):string} v 
-    * @returns {this}  */
-    setCellInfoHTML(v) {
-        this.cellInfoHTML = v;
-        return this;
     }
 
 }
