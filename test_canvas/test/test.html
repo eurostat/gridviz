@@ -14,7 +14,7 @@
         let containerDiv = document.getElementById("viz-container");
 
         new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(500).setZoomFactorExtent([15, 3000])
+            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(500).setZoomFactorExtent([15, 10000000])
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20"))
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
@@ -27,7 +27,7 @@
                     color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
                 })],
                 {
-                    pixNb: 5,
+                    pixNb: 2,
                     cellInfoHTML: c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'",
                     preprocess: c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
                 })
