@@ -128,6 +128,7 @@
             r => r + "m/",
             [getStyle()],
             {
+                pixNb : 25,
                 cellInfoHTML: c => {
                     let out = "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>"
                     if (getAggUI()) {
@@ -162,8 +163,7 @@
                     //c["Ind_25_54"] = +c["Ind_25_39"] + +c["Ind_40_54"]
                     //c["Ind_55p"] = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
                 }
-            },
-            25)
+            })
 
 
 
