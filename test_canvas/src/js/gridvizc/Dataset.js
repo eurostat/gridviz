@@ -41,6 +41,8 @@ export class Dataset {
     }
 
     /**
+     * Set a preprocess function for all dataset components.
+     * This is a function applied on each cell after it is behing loaded.
      * 
      * @param {function(Cell):void} preprocess 
      * @returns {this}

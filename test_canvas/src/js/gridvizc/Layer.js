@@ -5,14 +5,14 @@ import { DatasetComponent } from "./DatasetComponent";
 import { Style } from "./Style";
 
 /**
- * A data layer, which specifies a dataset to be shown within a specified zoom range, with specified styles.
+ * A layer, which specifies a dataset to be shown within a specified zoom range, with specified styles.
  * 
  * @author Julien Gaffuri
  */
 export class Layer {
 
     /**
-     * @param {Dataset} dataset The dataset to show
+     * @param {Dataset} dataset The multi resolution dataset to show.
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string}} opts 
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
@@ -29,9 +29,12 @@ export class Layer {
          * @type {boolean} */
         this.visible = opts.visible == false ? false : true;
 
-        /** @type {number} */
+        /** The minimum zoom factor: Below this level, the layer is not shown.
+         * @type {number} */
         this.minZoom = opts.minZoom || 0;
-        /** @type {number} */
+
+        /** The maximum zoom factor: Above this level, the layer is not shown.
+         * @type {number} */
         this.maxZoom = opts.minZoom || Infinity;
 
         if (this.minZoom >= this.maxZoom)
@@ -42,15 +45,15 @@ export class Layer {
         this.pixNb = opts.pixNb || 5;
 
         /**
-        * The HTML content providing information on the grid cell.
-        * @type {function(Cell):string} */
+         * The function returning cell information as HTML.
+         * This is typically used for tooltip information.
+         * @type {function(Cell):string} */
         this.cellInfoHTML = opts.cellInfoHTML || defaultCellInfoHTML;
     }
 
 
-
     /**
-     * Return dataset component for a specified zoom factor.
+     * Return the relevant dataset component for a specified zoom factor.
      * 
      * @param {number} zf 
      * @returns {DatasetComponent|undefined}  */
@@ -69,6 +72,7 @@ export class Layer {
     }
 
 }
+
 
 
 
