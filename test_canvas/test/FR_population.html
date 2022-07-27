@@ -83,7 +83,7 @@
                     colorCol: "Ind",
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                 }), new gviz.StrokeStyle({ zf: 15 })
-                ], pixNb: 5
+                ], pixNb: 2
             },
             ccolor: {
                 style: [new gviz.ShapeColorSizeStyle({
@@ -91,7 +91,7 @@
                     color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                     shape: () => "circle",
                 }), new gviz.StrokeStyle({ zf: 15, shape: () => "circle" })
-                ], pixNb: 10
+                ], pixNb: 7
             },
 
             square: {
@@ -105,7 +105,7 @@
                     sizeCol: "Ind",
                     size: (v, r, s, zf) => 1 * r * gviz.s(v / s.max, 0.3),
                 })
-                ], pixNb: 15
+                ], pixNb: 10
             },
             circle: {
                 style: [new gviz.ShapeColorSizeStyle({
@@ -119,7 +119,7 @@
                     size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
                     shape: () => "circle",
                 })
-                ], pixNb: 15
+                ], pixNb: 10
             },
             donut: {
                 style: [new gviz.ShapeColorSizeStyle({
@@ -127,7 +127,7 @@
                     size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.3),
                     color: () => "#c08c59",
                     shape: () => "donut",
-                })], pixNb: 20
+                })], pixNb: 15
             },
 
 
@@ -138,7 +138,7 @@
                     length: (v, r) => r,
                     widthCol: "Ind",
                     width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                })], pixNb: 15
+                })], pixNb: 10
             },
             segmentV: {
                 style: [new gviz.SegmentStyle({
@@ -147,7 +147,7 @@
                     length: (v, r) => r,
                     widthCol: "Ind",
                     width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
-                })], pixNb: 15
+                })], pixNb: 10
             },
             segmentO: {
                 style: [new gviz.SegmentStyle({
@@ -156,7 +156,7 @@
                     length: (v, r) => r * 1.4142,
                     widthCol: "Ind",
                     width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25) / 1.4142,
-                })], pixNb: 15
+                })], pixNb: 10
             },
 
             joyplot: {
@@ -164,7 +164,7 @@
                     heightCol: "Ind",
                     height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
                     fillColor: "#c08c59bb"
-                })], pixNb: 10
+                })], pixNb: 7
             },
             side: {
                 style: [new gviz.SideStyle({
@@ -176,22 +176,22 @@
                         return r * (0.01 + 0.333 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.3))
                     },
                     fillColor: (c) => "#e2c9b2",
-                })], pixNb: 10
+                })], pixNb: 7
             },
             tanaka: {
                 style: gviz.getTanakaStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
                 //style: gviz.getTanakaStyle("Ind", { breaks: [10, 50, 200, 500, 2000] }),
-                pixNb: 10
+                pixNb: 7
             },
             lego: {
                 style: gviz.getLegoStyle("Ind", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
-                pixNb: 20
+                pixNb: 15
             },
             pillar: {
                 style: [new gviz.PillarStyle({
                     heightCol: "Ind",
                     height: (v, r, s, z) => 15 * r * gviz.s(v / s.max, 0.7),
-                })], pixNb: 25
+                })], pixNb: 18
             },
             dot: {
                 style: [new gviz.DotDensityStyle({
@@ -199,7 +199,7 @@
                     nb: (v, r, s, zf) => 1.0 * r * r / (zf * zf) * gviz.s(v / s.max, 0.4),
                     dotSize: (r, zf) => 1.2 * zf,
                     color: () => "#FF5733"
-                })], pixNb: 10
+                })], pixNb: 7
             },
             text: {
                 style: [new gviz.TextStyle({
@@ -210,7 +210,7 @@
                     },
                     color: (v, r, s) => "#c08c59",
                     fontSize: ((v, r, s, z) => 1.2 * r),
-                })], pixNb: 15
+                })], pixNb: 10
             }
         }
 
