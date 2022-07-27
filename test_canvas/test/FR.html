@@ -47,22 +47,22 @@
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
 
-            //population
-            .addMultiScaleTiledGridLayer(
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
-                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-                r => r + "m/",
-                [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "Ind",
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                    }), new gviz.StrokeStyle({ zf: 15 })
-                ],
-                {
-                    pixNb: 5,
-                    cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
-                }
-            )
+        //population
+        app.addMultiScaleTiledGridLayer(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
+            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+            r => r + "m/",
+            [
+                new gviz.SquareColoringWebGLStyle({
+                    colorCol: "Ind",
+                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                }), new gviz.StrokeStyle({ zf: 15 })
+            ],
+            {
+                pixNb: 5,
+                cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
+            }
+        )
 
         //population by age
         const col = gviz.interpolateSpectral
@@ -110,9 +110,7 @@
                 }
             })
 
-
-
-        //population by age 3
+        //population by age (3 age groups)
         app.addMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
@@ -191,9 +189,6 @@
                     cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.r) / 10) + "%</b> of poor households.",
                     preprocess: c => { c.r = c["Men_pauv"] / c["Men"]; }
                 })
-
-
-
 
 
 
