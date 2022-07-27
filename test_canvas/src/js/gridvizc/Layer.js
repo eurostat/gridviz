@@ -16,14 +16,16 @@ export class Layer {
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
      * @param {number} minZoom The minimum zoom level when to show the layer
      * @param {number} maxZoom The maximum zoom level when to show the layer
+     * @param {number} pixNb 
      * @param {{visible?:boolean,cellInfoHTML?:function(Cell):string}} opts 
      */
-    constructor(dataset, styles, minZoom = 0, maxZoom = Infinity, opts = {}) {
+    constructor(dataset, styles, minZoom = 0, maxZoom = Infinity, pixNb = 5, opts = {}) {
 
         /** @type {Dataset} */
         this.dataset = dataset;
         /** @type {Array.<Style>} */
         this.styles = styles;
+
         /** @type {number} */
         this.minZoom = minZoom;
         /** @type {number} */
@@ -31,6 +33,10 @@ export class Layer {
 
         if (this.minZoom >= this.maxZoom)
             throw ("Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.")
+
+        /** Unit: number of pixels
+         * @type {number} */
+        this.pixNb = pixNb || 5;
 
         /** An attribute to specify if a layer should be drawn or not
          * @type {boolean} */
