@@ -1,7 +1,7 @@
 //@ts-check
 
 import { Style } from "../Style"
-import { Cell, Envelope } from "../Dataset"
+import { Cell, Envelope } from "../DatasetComponent"
 import { GeoCanvas } from "../GeoCanvas";
 
 /**

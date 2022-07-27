@@ -1,7 +1,7 @@
 //@ts-check
 
 import { Style, Stat, getStatistics } from "../Style"
-import { Cell } from "../Dataset"
+import { Cell } from "../DatasetComponent"
 import { GeoCanvas } from "../GeoCanvas";
 
 /** @typedef {{x:number,y:number,or:"v"|"h",value:number}} Side */

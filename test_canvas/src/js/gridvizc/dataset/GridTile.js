@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Cell } from "../Dataset"
+import { Cell } from "../DatasetComponent"
 import { GridInfo } from "./TiledGrid"
 
 /**
@@ -28,7 +28,7 @@ export class GridTile {
         const r = gridInfo.resolutionGeo;
         const s = gridInfo.tileSizeCell;
 
-        /** @type {import("../Dataset").Envelope} */
+        /** @type {import("../DatasetComponent").Envelope} */
         this.extGeo = {
             xMin: gridInfo.originPoint.x + r * s * this.x,
             xMax: gridInfo.originPoint.x + r * s * (this.x + 1),

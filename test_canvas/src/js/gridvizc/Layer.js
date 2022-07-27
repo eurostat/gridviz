@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Dataset, Cell } from "./Dataset";
+import { Dataset, Cell } from "./DatasetComponent";
 import { Style } from "./Style";
 
 /**

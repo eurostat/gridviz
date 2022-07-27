@@ -2,7 +2,7 @@
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:Envelope }} GridInfo */
 
 import { csv } from "d3-fetch";
-import { Dataset, Cell, Envelope } from "../Dataset"
+import { Dataset, Cell, Envelope } from "../DatasetComponent"
 
 /**
  * A dataset composed of a single CSV file (not tiled).

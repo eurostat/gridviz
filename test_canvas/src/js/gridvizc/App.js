@@ -3,7 +3,7 @@
 import { GeoCanvas, Envelope } from './GeoCanvas';
 import { Layer } from './Layer';
 import { Style } from './Style';
-import { Dataset, Cell } from './Dataset';
+import { Dataset, Cell } from './DatasetComponent';
 import { Tooltip } from './Tooltip';
 
 import { CSVGrid } from './dataset/CSVGrid';
