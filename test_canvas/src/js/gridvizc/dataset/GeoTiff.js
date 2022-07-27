@@ -1,6 +1,7 @@
 //@ts-check
 
 import { DatasetComponent } from "../DatasetComponent"
+import { Cell } from "../Dataset"
 
 /**
  * A dataset composed of a single GeoTiff file.
@@ -9,7 +10,13 @@ import { DatasetComponent } from "../DatasetComponent"
  */
 export class GeoTiff extends DatasetComponent {
 
-    constructor(url, resolution, opts=undefined) {
+    /**
+     * 
+     * @param {string} url 
+     * @param {number} resolution 
+     * @param {{preprocess?:(function(Cell):void)}} opts 
+     */
+    constructor(url, resolution, opts = {}) {
         super(url, resolution, opts)
     }
 

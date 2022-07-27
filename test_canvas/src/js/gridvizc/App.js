@@ -314,21 +314,6 @@ export class App {
 
 
     /**
-     * Add a layer.
-     * 
-     * @param {Dataset} dataset The dataset to show
-     * @param {Array.<Style>} styles The styles, ordered in drawing order.
-     * @param {number} minZoom The minimum zoom level when to show the layer
-     * @param {number} maxZoom The maximum zoom level when to show the layer
-     * @param {object=} opts The parameters of the layer.
-     * @returns {this}
-     */
-    /*addLayer(dataset, styles, minZoom, maxZoom, opts) {
-        this.layers.push(new Layer(dataset, styles, minZoom, maxZoom, opts));
-        return this;
-    }*/
-
-    /**
      * Add a layer from a tiled grid dataset.
      * 
      * @param {string} url The URL of the dataset.
@@ -371,12 +356,10 @@ export class App {
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURLCode 
      * @param {Array.<Style>} styles 
-     * @param {object} opts 
-     * @param {number} pixNb 
-     * @param {object} opts 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string}} opts 
      * @returns {this}
      */
-    addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts, pixNb = 5) {
+    addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts) {
 
         //make dataset components
         const dsc = []
@@ -389,7 +372,7 @@ export class App {
         }
         //make dataset and layer
         const ds = new Dataset(dsc, resolutions, opts)
-        const lay = new Layer(ds, styles, opts.minZoom, opts.maxZoom, pixNb, opts)
+        const lay = new Layer(ds, styles, opts)
         this.layers.push(lay)
         return this;
     }

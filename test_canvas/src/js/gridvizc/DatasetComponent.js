@@ -14,10 +14,10 @@ export class DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {object} opts 
+     * @param {{preprocess?:(function(Cell):void)}} opts 
      * @abstract
      */
-    constructor(url, resolution, opts = undefined) {
+    constructor(url, resolution, opts = {}) {
         opts = opts || {};
 
         /**
@@ -32,8 +32,8 @@ export class DatasetComponent {
 
         /**
          * A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
-         * @type {function(Cell):void} */
-        this.preprocess = opts.preprocess;
+         * @type {function(Cell):void } */
+        this.preprocess = opts.preprocess || (() => { });
 
         /** The cells within the view
          * @protected @type {Array.<Cell>} */

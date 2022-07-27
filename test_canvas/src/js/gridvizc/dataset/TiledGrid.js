@@ -4,7 +4,7 @@
 import { json, csv } from "d3-fetch";
 import { GridTile } from './GridTile';
 import { App } from '../App';
-import { Envelope } from "../Dataset"
+import { Envelope, Cell } from "../Dataset"
 import { DatasetComponent } from "../DatasetComponent";
 
 /**
@@ -17,9 +17,9 @@ export class TiledGrid extends DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {App} app The application.
-     * @param {object} opts 
+     * @param {{preprocess?:(function(Cell):void)}} opts 
      */
-    constructor(url, app, opts = undefined) {
+    constructor(url, app, opts = {}) {
         super(url, 0, opts)
 
         /**

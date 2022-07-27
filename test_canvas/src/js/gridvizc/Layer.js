@@ -14,33 +14,32 @@ export class Layer {
     /**
      * @param {Dataset} dataset The dataset to show
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
-     * @param {number} minZoom The minimum zoom level when to show the layer
-     * @param {number} maxZoom The maximum zoom level when to show the layer
-     * @param {number} pixNb 
-     * @param {{visible?:boolean,cellInfoHTML?:function(Cell):string}} opts 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string}} opts 
+     *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
-    constructor(dataset, styles, minZoom = 0, maxZoom = Infinity, pixNb = 5, opts = {}) {
+    constructor(dataset, styles, opts = {}) {
+        opts = opts || {}
 
         /** @type {Dataset} */
         this.dataset = dataset;
         /** @type {Array.<Style>} */
         this.styles = styles;
 
+        /** An attribute to specify if a layer should be drawn or not
+         * @type {boolean} */
+        this.visible = opts.visible == false ? false : true;
+
         /** @type {number} */
-        this.minZoom = minZoom;
+        this.minZoom = opts.minZoom || 0;
         /** @type {number} */
-        this.maxZoom = maxZoom;
+        this.maxZoom = opts.minZoom || Infinity;
 
         if (this.minZoom >= this.maxZoom)
             throw new Error("Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.")
 
         /** Unit: number of pixels
          * @type {number} */
-        this.pixNb = pixNb || 5;
-
-        /** An attribute to specify if a layer should be drawn or not
-         * @type {boolean} */
-        this.visible = opts.visible == false ? false : true;
+        this.pixNb = opts.pixNb || 5;
 
         /**
         * The HTML content providing information on the grid cell.
