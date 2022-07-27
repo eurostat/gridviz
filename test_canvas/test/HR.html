@@ -196,7 +196,7 @@
                     })]
                 lay.pixNb = 5;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => "<b>" + c.TOTAL + "</b> inhabitants")
+                lay.cellInfoHTML = (c) => "<b>" + c.TOTAL + "</b> inhabitants"
                 /*app.addLegend(
                     { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                     [styles[0]]*/
@@ -218,12 +218,12 @@
                 ]
                 lay.pixNb = 10;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => {
+                lay.cellInfoHTML = (c) => {
                     return "<b>" + c.TOTAL + "</b> inhabitants<br>"
                         + c.MEN + " men<br>"
                         + c.WOMEN + " women<br>Difference: <b>"
                         + (c.DIFF_MEN_WOMEN > 0 ? "+" : "") + d3.format(".1f")(c.DIFF_MEN_WOMEN) + " % men</b>"
-                })
+                }
 
             } else if (layCode === "popAge") {
                 const lay = app.layers[0]
@@ -240,12 +240,12 @@
                 })]
                 lay.pixNb = 20;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => {
+                lay.cellInfoHTML = (c) => {
                     return "<b>" + c.TOTAL + "</b> inhabitants<br>"
                         + " >65 : " + c.TOTAL_65p + "<br>"
                         + "15-64: " + c.TOTAL_15_64 + "<br>"
                         + " <15 : " + c.TOTAL_0_14
-                })
+                }
 
             } else if (layCode === "popEducation") {
                 const lay = app.layers[0]
@@ -265,13 +265,13 @@
                 ]
                 lay.pixNb = 20;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => {
+                lay.cellInfoHTML = (c) => {
                     return "<b>" + c.TOTAL + "</b> inhabitants<br>"
                         + "Basic or less: " + c.BASIC_EDUCATION_OR_LESS + "<br>"
                         + "Secondary: " + c.UPPER_SECONDARY_EDUCATION + "<br>"
                         + "Tertiary: " + c.TERTIARY_EDUCATION + "<br>"
                         + "Other: " + c.OTHER_EDUC
-                })
+                }
 
             } else if (layCode === "popLabor") {
                 const lay = app.layers[0]
@@ -288,12 +288,12 @@
                 })]
                 lay.pixNb = 20;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => {
+                lay.cellInfoHTML = (c) => {
                     return "<b>" + c.TOTAL + "</b> inhabitants<br>"
                         + "Labour force: " + c.LABOUR_FORCE + "<br>"
                         + "Inactive population: " + c.INACTIVE_POPULATION + "<br>"
                         + "Other: " + c.OTHER_LABOR
-                })
+                }
 
             } else if (layCode === "popInact") {
                 const lay = app.layers[0]
@@ -305,10 +305,10 @@
                 ]
                 lay.pixNb = 3;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => {
+                lay.cellInfoHTML = (c) => {
                     return "<b>" + c.TOTAL + "</b> inhabitants<br>"
                         + "Inactivity rate: " + d3.format(".1f")(c.INACT_RATE) + " %<br>"
-                })
+                }
 
             } else if (layCode === "busSector") {
                 const lay = app.layers[1]
@@ -326,12 +326,12 @@
                 ]
                 lay.pixNb = 20;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => {
+                lay.cellInfoHTML = (c) => {
                     return "<b>" + c.TOTAL + "</b> businesses<br>"
                         + "Primary sector: " + c.s1 + "<br>"
                         + "Secondary sector: " + c.s2 + "<br>"
                         + "Tertiary sector: " + c.s3
-                })
+                }
 
             } else if (layCode === "tourAccNb") {
                 const lay = app.layers[2]
@@ -343,7 +343,7 @@
                 ]
                 lay.pixNb = 3;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => "<b>" + c["ESTABLISHMENTS - TOTAL"] + "</b> touristic accomodation establishments")
+                lay.cellInfoHTML = (c) => "<b>" + c["ESTABLISHMENTS - TOTAL"] + "</b> touristic accomodation establishments"
 
             } else if (layCode === "tourAccUnits") {
                 const lay = app.layers[2]
@@ -355,7 +355,7 @@
                 ]
                 lay.pixNb = 3;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => "<b>" + c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] + "</b> touristic accomodation units (rooms, appartements, camping sites)")
+                lay.cellInfoHTML = (c) => "<b>" + c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] + "</b> touristic accomodation units (rooms, appartements, camping sites)"
 
             } else if (layCode === "tourAccBeds") {
                 const lay = app.layers[2]
@@ -367,7 +367,7 @@
                 ]
                 lay.pixNb = 3;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => "<b>" + c["NUMBER OF PERMANENT BEDS"] + "</b> touristic accomodation permanent beds")
+                lay.cellInfoHTML = (c) => "<b>" + c["NUMBER OF PERMANENT BEDS"] + "</b> touristic accomodation permanent beds"
 
             } else if (layCode === "tourOriginArr") {
                 const lay = app.layers[2]
@@ -388,7 +388,7 @@
                 ]
                 lay.pixNb = 20;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => {
+                lay.cellInfoHTML = (c) => {
                     return "<b>" + c["TOTAL ARRIVALS"] + "</b> tourist arrivals<br>"
                         + c["A_DOMESTIC TOURISTS - TOTAL"] + " croatians<br>" +
                         + c["A_AUSTRIAN TOURISTS"] + " austrians<br>" +
@@ -396,7 +396,7 @@
                         + c["A_ITALIAN TOURISTS"] + " italians<br>" +
                         + c["A_SLOVENIAN TOURISTS"] + " slovenians<br>" +
                         + c["A_OTHER"] + " other countries"
-                })
+                }
 
             } else if (layCode === "tourOriginNights") {
                 const lay = app.layers[2]
@@ -417,7 +417,7 @@
                 ]
                 lay.pixNb = 20;
                 lay.visible = true;
-                lay.setCellInfoHTML((c) => {
+                lay.cellInfoHTML = (c) => {
                     return "<b>" + c["TOTAL NIGHTS"] + "</b> tourist nights<br>"
                         + c["N_DOMESTIC TOURISTS - TOTAL"] + " croatians<br>" +
                         + c["N_AUSTRIAN TOURISTS"] + " austrians<br>" +
@@ -425,7 +425,7 @@
                         + c["N_ITALIAN TOURISTS"] + " italians<br>" +
                         + c["N_SLOVENIAN TOURISTS"] + " slovenians<br>" +
                         + c["N_OTHER"] + " other countries"
-                })
+                }
 
             } else {
                 console.log("Unexpected layer code: " + layCode);
