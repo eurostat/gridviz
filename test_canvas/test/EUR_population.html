@@ -504,8 +504,7 @@
         changeStyle = () => {
 
             //get layer
-            const ml = app.layers[0];
-            //ml.hideLegends()
+            const lay = app.layers[0];
 
             //set new style
             const s = sd[getSelectedMapType()][getSelectedStyle()]
@@ -513,10 +512,10 @@
                 console.error("No style for " + getSelectedMapType() + " " + getSelectedStyle())
                 return
             }
-            for (const lay of ml.layers) lay.styles = s.style
+            lay.styles = s.style
 
             //set new zoom breaks
-            ml.pixNb = s.pixNb
+            lay.pixNb = s.pixNb
         }
 
 

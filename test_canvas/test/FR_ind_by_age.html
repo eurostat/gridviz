@@ -187,8 +187,7 @@
 
         const updateStyle = () => {
             const ssel = getStyle()
-            const ml = app.layers[0];
-            for (const lay of ml.layers) lay.styles = [ssel]
+            app.layers[0].styles = [ssel]
         }
 
         //combo list
