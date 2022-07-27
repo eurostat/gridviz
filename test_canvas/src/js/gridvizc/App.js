@@ -67,7 +67,7 @@ export class App {
             if (monitor) monitorDuration("Start redraw")
             //console.log(this.cg.getZf(), this.cg.getCenter())
 
-            //detach all legend elements
+            //remove legend elements
             if (this.legend && strong)
                 this.legend.selectAll("*").remove();
 
@@ -84,7 +84,7 @@ export class App {
 
                 //get layer dataset
                 const ds = layer.dataset.get(zf)
-                if(!ds) continue
+                if (!ds) continue
 
                 //launch data download, if necessary
                 if (strong)
@@ -99,7 +99,7 @@ export class App {
                     for (const style of layer.styles)
                         style.draw(ds.getViewCache(zf), ds.getResolution(), this.cg)
 
-                //show layer legend
+                //add legend element
                 if (this.legend && strong)
                     for (const s of layer.styles) {
                         for (const lg of s.legends) {
@@ -136,7 +136,6 @@ export class App {
         this.boundaryLayer = undefined;
         /** @type {boolean} */
         this.showBoundaries = true
-
 
 
         //legend div
@@ -187,6 +186,130 @@ export class App {
         this.cg.canvas.addEventListener("mousemove", e => { focusCell(e) });
         this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
     }
+
+
+
+
+    /**
+     * Returns the layers which are within the current viewer zoom extent, that is the ones that are visible.
+     * @returns {Array.<Layer>}
+     */
+    getActiveLayers() {
+
+        /** @type {Array.<Layer>} */
+        const out = []
+
+        //go through the layers
+        const zf = this.getZoomFactor();
+        for (const lay of this.layers) {
+            if (!lay.visible) continue
+            const layer = lay.getLayer(zf)
+            if (!layer) continue;
+            out.push(layer);
+        }
+        return out;
+    }
+
+
+    /**
+     * Hide all layers (set visible attribute to false)
+     * @returns {this}
+     */
+    hideAllLayers() {
+        for (const al of this.layers)
+            al.visible = false
+        return this;
+    }
+
+
+
+
+    /**
+     * @param {number} marginPx 
+     * @returns {Envelope}
+     */
+    updateExtentGeo(marginPx = 20) {
+        return this.cg.updateExtentGeo(marginPx);
+    }
+
+
+    /**
+     * Return the cell HTML info at a given geo position.
+     * This is usefull for user interactions, to show this info where the user clicks for example.
+     * 
+     * @param {{x:number,y:number}} posGeo 
+     * @returns {{cell:Cell,html:string} | undefined}
+     */
+    getCellFocusInfo(posGeo) {
+        //get top layer
+        const lays = this.getActiveLayers();
+        /** @type {Layer} */
+        const layer = lays[lays.length - 1]
+        if (!layer) return undefined;
+        //get cell at mouse position
+        /** @type {Cell|undefined} */
+        const cell = layer.dataset.getCellFromPosition(posGeo, layer.dataset.getViewCache(this.getZoomFactor()));
+        if (!cell) return undefined;
+        return { cell: cell, html: layer.cellInfoHTML(cell) };
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    //getters and setters
+
+    /** @returns {{x:number,y:number}} */
+    getGeoCenter() { return this.cg.getCenter(); }
+    /** @param {{x:number,y:number}} val @returns {this} */
+    setGeoCenter(val) { this.cg.setCenter(val); return this; }
+
+    /** @returns {number} */
+    getZoomFactor() { return this.cg.getZf(); }
+    /** @param {number} val @returns {this} */
+    setZoomFactor(val) { this.cg.setZf(val); return this; }
+
+    /** @returns {Array.<number>} */
+    getZoomFactorExtent() { return this.cg.getZfExtent(); }
+    /** @param {Array.<number>} val @returns {this} */
+    setZoomFactorExtent(val) { this.cg.setZfExtent(val); return this; }
+
+    /** @returns {string} */
+    getBackgroundColor() { return this.cg.backgroundColor; }
+    /** @param {string} val @returns {this} */
+    setBackgroundColor(val) { this.cg.backgroundColor = val; return this; }
+
+    /** @returns {function|undefined} */
+    getProjection() { return this.projection; }
+    /** @param {function} val @returns {this} */
+    setProjection(val) { this.projection = val; return this; }
+
+
+
+    /** @returns {LineLayer | undefined} */
+    getBoundaryLayer() { return this.boundaryLayer; }
+    /** @param {LineLayer} val @returns {this} */
+    setBoundaryLayer(val) { this.boundaryLayer = val; return this; }
+
+    /** @returns {LabelLayer | undefined} */
+    getLabelLayer() { return this.labelLayer; }
+    /** @param {LabelLayer} val @returns {this} */
+    setLabelLayer(val) { this.labelLayer = val; return this; }
+
+
+
+
+
+
+
+
 
 
 
@@ -269,109 +392,11 @@ export class App {
     }
 
 
-    /**
-     * Returns the layers which are within the current viewer zoom extent, that is the ones that are visible.
-     * @returns {Array.<Layer>}
-     */
-    getActiveLayers() {
-
-        /** @type {Array.<Layer>} */
-        const out = []
-
-        //go through the layers
-        const zf = this.getZoomFactor();
-        for (const alayer of this.layers) {
-            if (!alayer.visible) continue
-            const layer = alayer.getLayer(zf)
-            if (!layer) continue;
-            out.push(layer);
-        }
-        return out;
-    }
-
-
-    hideAllLayers() {
-        for (const al of this.layers)
-            al.visible = false
-        return this;
-    }
-
-
-
-    /**
-     * Return the cell HTML info at a given geo position.
-     * This is usefull for user interactions, to show this info where the user clicks for example.
-     * 
-     * @param {{x:number,y:number}} posGeo 
-     * @returns {{cell:Cell,html:string} | undefined}
-     */
-    getCellFocusInfo(posGeo) {
-        //get top layer
-        const lays = this.getActiveLayers();
-        /** @type {Layer} */
-        const layer = lays[lays.length - 1]
-        if (!layer) return undefined;
-        //get cell at mouse position
-        /** @type {Cell|undefined} */
-        const cell = layer.dataset.getCellFromPosition(posGeo, layer.dataset.getViewCache(this.getZoomFactor()));
-        if (!cell) return undefined;
-        return { cell: cell, html: layer.cellInfoHTML(cell) };
-    }
-
-
-
-    /**
-     * @param {number} marginPx 
-     * @returns {Envelope}
-     */
-    updateExtentGeo(marginPx = 20) {
-        return this.cg.updateExtentGeo(marginPx);
-    }
 
 
 
 
 
-
-
-    //getters and setters
-
-    /** @returns {{x:number,y:number}} */
-    getGeoCenter() { return this.cg.getCenter(); }
-    /** @param {{x:number,y:number}} val @returns {this} */
-    setGeoCenter(val) { this.cg.setCenter(val); return this; }
-
-    /** @returns {number} */
-    getZoomFactor() { return this.cg.getZf(); }
-    /** @param {number} val @returns {this} */
-    setZoomFactor(val) { this.cg.setZf(val); return this; }
-
-    /** @returns {Array.<number>} */
-    getZoomFactorExtent() { return this.cg.getZfExtent(); }
-    /** @param {Array.<number>} val @returns {this} */
-    setZoomFactorExtent(val) { this.cg.setZfExtent(val); return this; }
-
-    /** @returns {string} */
-    getBackgroundColor() { return this.cg.backgroundColor; }
-    /** @param {string} val @returns {this} */
-    setBackgroundColor(val) { this.cg.backgroundColor = val; return this; }
-
-    /** @returns {function|undefined} */
-    getProjection() { return this.projection; }
-    /** @param {function} val @returns {this} */
-    setProjection(val) { this.projection = val; return this; }
-
-
-
-    /** @returns {LineLayer | undefined} */
-    getBoundaryLayer() { return this.boundaryLayer; }
-    /** @param {LineLayer} val @returns {this} */
-    setBoundaryLayer(val) { this.boundaryLayer = val; return this; }
-
-    /** @returns {LabelLayer | undefined} */
-    getLabelLayer() { return this.labelLayer; }
-    /** @param {LabelLayer} val @returns {this} */
-    setLabelLayer(val) { this.labelLayer = val; return this; }
 
 
 
