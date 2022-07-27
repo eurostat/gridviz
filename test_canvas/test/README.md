@@ -16,14 +16,3 @@
 # Croatia
 
 Population composition, businesses by sector, tourism: https://eurostat.github.io/gridviz/test_canvas/test/HR.html
-
-# Sweden
-
-- Population by age: https://eurostat.github.io/gridviz/test_canvas/test/SE_pop_by_age.html
-- Population by age 2: https://eurostat.github.io/gridviz/test_canvas/test/SE_pop_by_age_.html
-- Population by sex: https://eurostat.github.io/gridviz/test_canvas/test/SE_pop_by_sex.html
-
-# NL
-
-- Composition: https://eurostat.github.io/gridviz/test_canvas/test/NL_composition.html
-- Combination: https://eurostat.github.io/gridviz/test_canvas/test/NL_combination.html
