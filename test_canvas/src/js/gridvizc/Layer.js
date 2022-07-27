@@ -31,7 +31,7 @@ export class Layer {
         this.maxZoom = maxZoom;
 
         if (this.minZoom >= this.maxZoom)
-            throw ("Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.")
+            throw new Error("Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.")
 
         /** Unit: number of pixels
          * @type {number} */
