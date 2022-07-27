@@ -467,6 +467,7 @@
             r => Math.round(r / 1000) + "km/",
             s.style,
             {
+                pixNb: s.pixNb,
                 cellInfoHTML: c => {
                     const v = document.querySelector('#year').value
                     if (getSelectedMapType() === "pop")
@@ -496,8 +497,7 @@
                     else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
                     else c.d06_11 = c["2011"] - c["2006"]
                 }
-            },
-            s.pixNb)
+            })
 
 
         //change the style to the selected one
