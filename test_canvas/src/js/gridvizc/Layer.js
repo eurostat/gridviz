@@ -37,6 +37,7 @@ export class Layer {
          * @type {number} */
         this.maxZoom = opts.minZoom || Infinity;
 
+        //ensure acceptable values for the zoom limits.
         if (this.minZoom >= this.maxZoom)
             throw new Error("Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.")
 
