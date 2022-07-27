@@ -43,7 +43,7 @@ export class Layer {
 
         /** Unit: number of pixels
          * @type {number} */
-        this.pixNb = opts.pixNb || 5;
+        this.pixNb = opts.pixNb || 3;
 
         /**
          * The function returning cell information as HTML.

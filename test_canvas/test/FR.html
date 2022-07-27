@@ -59,7 +59,7 @@
                 }), new gviz.StrokeStyle({ zf: 15 })
             ],
             {
-                pixNb: 5,
+                pixNb: 2,
                 cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
             }
         )
@@ -92,7 +92,7 @@
                 })
             ],
             {
-                pixNb: 25,
+                pixNb: 15,
                 cellInfoHTML: c => {
                     let out = "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>"
                     out = out + " < 3 : " + (c["Ind_0_3"]) + "<br>" +
@@ -129,7 +129,7 @@
                 })
             ],
             {
-                pixNb: 25,
+                pixNb: 15,
                 cellInfoHTML: c => {
                     let out = "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>"
                     out = out + " < 3 : " + (c["Ind_0_3"]) + "<br>" +
@@ -165,7 +165,7 @@
                     new gviz.StrokeStyle({ zf: 15 })
                 ],
                 {
-                    pixNb: 4,
+                    pixNb: 2,
                     cellInfoHTML: c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'",
                     preprocess: c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
                 })
@@ -185,7 +185,7 @@
                     new gviz.StrokeStyle({ zf: 15 })
                 ],
                 {
-                    pixNb: 4,
+                    pixNb: 2,
                     cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.r) / 10) + "%</b> of poor households.",
                     preprocess: c => { c.r = c["Men_pauv"] / c["Men"]; }
                 })
