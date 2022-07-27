@@ -1,10 +1,10 @@
 check pixNb
+FR: test with only one dataset ?
+filosofi
 
-FR: test with only one dataset
-add population by proportion
-
-legend for discrete color classes - use for accessibility map legend
 HR legends
+FR legends
+legend for discrete color classes - use for accessibility map legend
 
 new EUR layers:
 https://www.eea.europa.eu/data-and-maps/figures/spatial-pattern-of-land-take
@@ -15,11 +15,9 @@ show all of that for LU:
 https://land.copernicus.eu/pan-european/high-resolution-layers
 
 
-Style test: show as hexagonal grid - for circular symbols
+Style test: show as hexagonal grid - for circular symbols (?)
 
 accessiblity grid as tanaka ?
-
-filosofi
 
 improve performance:
    what takes time: color computation + color conversion. Mainly color interpolation
