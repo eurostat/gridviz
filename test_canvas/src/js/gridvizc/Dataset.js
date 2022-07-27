@@ -23,16 +23,19 @@ export class Dataset {
     constructor(datasetComponents, resolutions, opts = {}) {
         opts = opts || {};
 
-        /** @type {Array.<DatasetComponent>} */
+        /** The dataset components.
+         * @type {Array.<DatasetComponent>} */
         this.datasetComponents = datasetComponents;
 
-        /** @type {Array.<number>} */
+        /** The resolutions of the dataset components, in CRS geographical unit.
+         * @type {Array.<number>} */
         this.resolutions = resolutions;
 
+        //there must be as many dataset components as resolutions
         if (this.datasetComponents.length != this.resolutions.length)
             throw new Error("Uncompatible number of datasets and resolutions: " + this.datasetComponents.length + " " + this.resolutions.length)
 
-        //set dataset preprocesses if sepcified
+        //set dataset preprocesses if specified
         if (opts.preprocess)
             this.setPrepocesses(opts.preprocess)
     }
