@@ -14,9 +14,9 @@
             <div id="layer">
                 <input type="radio" name="layer" id="pop" value="pop" checked>
                 <label for="pop">Population</label>
-                <input type="radio" name="layer" id="popAge" value="popAge" checked>
+                <input type="radio" name="layer" id="popAge" value="popAge">
                 <label for="popAge">by age</label>
-                <input type="radio" name="layer" id="popAge3" value="popAge3" checked>
+                <input type="radio" name="layer" id="popAge3" value="popAge3">
                 <label for="popAge3">by age (3)</label>
                 <br>
                 <input type="radio" name="layer" id="income" value="income">
@@ -189,6 +189,9 @@
 
 
 
+
+
+
         //
         const update = () => {
 
@@ -201,16 +204,11 @@
             if (layCode === "pop") app.layers[0].visible = true;
             else if (layCode === "income") app.layers[1].visible = true;
             else if (layCode === "poverty") app.layers[2].visible = true;
-            else {
-                console.error("Unexpected layer code: " + layCode);
-                return;
-            }
+            else console.error("Unexpected layer code: " + layCode);
 
             //redraw
             app.cg.redraw();
         }
-
-
 
         //layer selector
         document.querySelector('#layer').addEventListener('change', update)
