@@ -110,7 +110,7 @@
                 }),
                 new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", zf: 80 })
                 ]
-                lay.pixNb = 5;
+                lay.pixNb = 2;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined
                 app.addLegend(
@@ -131,7 +131,7 @@
                 }),
                 new gviz.StrokeStyle({ zf: 80 })
                 ]
-                lay.pixNb = 5;
+                lay.pixNb = 2;
                 lay.visible = true;
                 lay.cellInfoHTML =
                     (c) => (
@@ -182,7 +182,7 @@
                     })
                 ]
                 //lay.styles = (gviz.getTanakaStyle("avg_time_nearest_h", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.5) }))
-                lay.pixNb = 17;
+                lay.pixNb = 8;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => {
                     return "<b>" + c.avg_time_nearest_h + "</b> min. to nearest service<br><b>" + c.TOT_P + "</b> inhabitant(s)"
@@ -230,7 +230,7 @@
                         shape: () => "circle",
                     })
                 ]
-                lay.pixNb = 17;
+                lay.pixNb = 8;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => {
                     return "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>" + c.TOT_P + "</b> inhabitant(s)"
