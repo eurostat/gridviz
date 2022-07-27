@@ -20,6 +20,7 @@ show all of that for LU:
 https://land.copernicus.eu/pan-european/high-resolution-layers
 
 
+Style test: show as hexagonal grid - for circular symbols
 
 accessiblity grid as tanaka ?
 
