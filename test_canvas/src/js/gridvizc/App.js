@@ -356,7 +356,7 @@ export class App {
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURLCode 
      * @param {Array.<Style>} styles 
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string}} opts 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:(function(Cell):void}} opts 
      * @returns {this}
      */
     addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts) {
