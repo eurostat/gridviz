@@ -1,4 +1,4 @@
-# Europe
+# Europe - 1km
 
 Population, population change and basic services accessibility: https://eurostat.github.io/gridviz/test_canvas/test/EUR.html
 
@@ -6,7 +6,7 @@ Population, population change and basic services accessibility: https://eurostat
 
 https://eurostat.github.io/gridviz/test_canvas/test/FR.html
 
-# Croatia
+# Croatia - 1km
 
 Population composition, businesses by sector, tourism: https://eurostat.github.io/gridviz/test_canvas/test/HR.html
 
@@ -16,4 +16,3 @@ Population composition, businesses by sector, tourism: https://eurostat.github.i
 - Europe population: https://eurostat.github.io/gridviz/test_canvas/test/EUR_population.html
 - FR population by age: https://eurostat.github.io/gridviz/test_canvas/test/FR_ind_by_age.html
 - Europe population Gaussian kernel smoothing: https://eurostat.github.io/gridviz/test_canvas/test/EUR_kernelsmoothing.html
-
