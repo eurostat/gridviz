@@ -63,16 +63,6 @@
             //population by age
             //population by age 3
             /*
-        //style
-        const s = new gviz.CompositionStyle({
-            color: getColorDict(),
-            type: () => "ring",
-            sizeCol: "Ind",
-            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-            agePyramidHeight: (r) => 0.95 * r
-        })
-        s.size_ = (v, r, s, zf) => r - 1.5 * zf
-
 
             app.addMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
@@ -111,7 +101,49 @@
                     //c["Ind_25_54"] = +c["Ind_25_39"] + +c["Ind_40_54"]
                     //c["Ind_55p"] = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
                 }
-            })*/
+            })
+            
+            
+                    const col = gviz.interpolateSpectral
+        //const col = gviz.interpolateRdYlBu
+        //const col = gviz.interpolateTurbo
+        //const col = gviz.interpolateYlOrRd
+        //const col = gviz.interpolateRainbow
+        const getColorDict = () => {
+            if (getAggUI())
+                return {
+                    "Ind_0_17": col(0.2),
+                    "Ind_18_64": col(0.4),
+                    "Ind_65p": col(0.9),
+                };
+            else
+                return {
+                    "Ind_0_3": col(0 / 80),
+                    "Ind_4_5": col(2 / 80),
+                    "Ind_6_10": col(7 / 80),
+                    "Ind_11_17": col(14 / 80),
+                    "Ind_18_24": col(21 / 80),
+                    "Ind_25_39": col(36 / 80),
+                    "Ind_40_54": col(51 / 80),
+                    "Ind_55_64": col(61 / 80),
+                    "Ind_65_79": col(76 / 80),
+                    "Ind_80p": col(1),
+                    //"Ind_inc": "black"
+                }
+        }
+
+
+            //style
+            const s = new gviz.CompositionStyle({
+            color: getColorDict(),
+            type: () => "agepyramid",
+            sizeCol: "Ind",
+            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+            agePyramidHeight: (r) => 0.95 * r
+        })
+        s.size_ = (v, r, s, zf) => r - 1.5 * zf
+
+        */
 
             //income
             .addMultiScaleTiledGridLayer(
