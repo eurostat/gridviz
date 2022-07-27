@@ -3,6 +3,8 @@
 //the application
 export { App } from "./App"
 export { Layer } from "./Layer"
+export { Dataset } from "./Dataset"
+export { DatasetComponent } from "./DatasetComponent"
 
 //export color (the entire d3 scale chromatic)
 export * from "d3-scale-chromatic"

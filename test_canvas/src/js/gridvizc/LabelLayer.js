@@ -48,7 +48,7 @@ export class LabelLayer {
 
         /** The anchor where to draw the text, from label position. See HTML-canvas textAlign property.
          * "left" || "right" || "center" || "start" || "end"
-         * @private @type {string} */
+         * @private @type {CanvasTextAlign} */
         this.textAlign = opts.textAlign || "start"
 
         /**
