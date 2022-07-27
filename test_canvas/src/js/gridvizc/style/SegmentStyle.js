@@ -1,7 +1,7 @@
 //@ts-check
 
 import { Style, Stat, getStatistics } from "../Style"
-import { Cell } from "../DatasetComponent"
+import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
 /**

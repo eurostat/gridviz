@@ -1,5 +1,5 @@
 //@ts-check
-import { Cell } from "./DatasetComponent";
+import { Cell } from "./Dataset";
 import { GeoCanvas } from './GeoCanvas';
 import { Legend } from "./Legend";
 
