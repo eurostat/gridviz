@@ -32,7 +32,7 @@ export class Dataset {
         this.resolutions = resolutions;
 
         //there must be as many dataset components as resolutions
-        if (this.datasetComponents.length != this.resolutions.length)
+        if (this.datasetComponents.length != this.resolutions.length || (this.datasetComponents.length == 1 && !this.resolutions))
             throw new Error("Uncompatible number of datasets and resolutions: " + this.datasetComponents.length + " " + this.resolutions.length)
 
         //set dataset preprocesses if specified

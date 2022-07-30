@@ -342,12 +342,17 @@ export class App {
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
-    /*addCSVGridLayer(url, resolution, styles, minZoom, maxZoom, opts) {
-        return this.addLayer(
-            new CSVGrid(url, resolution, opts).getData(undefined, 9999, () => { this.cg.redraw(); }),
-            styles, minZoom, maxZoom, opts
-        )
-    }*/
+    addCSVGridLayer(url, resolution, styles, minZoom, maxZoom, opts) {
+
+        //make dataset
+        const ds = new CSVGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); });
+        const dataset = new Dataset([ds], resolutions, opts)
+
+        //make layer
+        const lay = new Layer(dataset, styles, opts)
+        this.layers.push(lay)
+        return this;
+    }
 
 
     /**
@@ -382,7 +387,7 @@ export class App {
      * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:(function(Cell):void}} opts 
      * @returns {this}
      */
-     addMultiScaleTiledGridLayer2(dataset, styles, opts) {
+    addMultiScaleTiledGridLayer2(dataset, styles, opts) {
         const lay = new Layer(dataset, styles, opts)
         this.layers.push(lay)
         return this;
