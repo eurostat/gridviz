@@ -309,28 +309,6 @@ export class App {
 
 
 
-
-
-
-
-    /**
-     * Add a layer from a tiled grid dataset.
-     * 
-     * @param {string} url The URL of the dataset.
-     * @param {Array.<Style>} styles The styles, ordered in drawing order.
-     * @param {number} minZoom The minimum zoom level when to show the layer
-     * @param {number} maxZoom The maximum zoom level when to show the layer
-     * @param {object=} opts The parameters of the dataset and layer.
-     * @returns {this}
-     */
-    /*addTiledGridLayer(url, styles, minZoom, maxZoom, opts) {
-        return this.addLayer(
-            new TiledGrid(url, this, opts).loadInfo(() => { this.cg.redraw(); }),
-            styles, minZoom, maxZoom, opts
-        )
-    }*/
-
-
     /**
      * Add a layer from a CSV grid dataset.
      * 
