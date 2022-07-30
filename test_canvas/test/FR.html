@@ -152,7 +152,7 @@
             ],
             {
                 pixNb: 2,
-                cellInfoHTML: c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'",
+                cellInfoHTML: c => "<b>" + Math.floor(c.rIncome) + "€</b>/mois/'personne'",
             })
 
         //poverty
@@ -169,10 +169,11 @@
             ],
             {
                 pixNb: 2,
-                cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.r) / 10) + "%</b> of poor households.",
+                cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rPoverty) / 10) + "%</b> of poor households.",
             })
 
-        //
+
+            //
         const update = () => {
 
             //read GUI selection
