@@ -62,16 +62,23 @@
             ],
             {
                 pixNb: 2,
-                cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)"
+                cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)",
+                preprocess: c => {
+                    c["Ind_0_17"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"]
+                    c["Ind_18_64"] = +c["Ind_18_24"] + +c["Ind_25_39"] + +c["Ind_40_54"] + +c["Ind_55_64"]
+                    c["Ind_65p"] = +c["Ind_65_79"] + +c["Ind_80p"]
+
+                    c.rIncome = c["Men_pauv"] / c["Men"];
+                    c.rPoverty = c["Ind_snv"] / c["Ind"] / 12;
+                }
+
             }
         )
 
         //population by age
         const col = gviz.interpolateSpectral
-        app.addMultiScaleTiledGridLayer(
-            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
-            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-            r => r + "m/",
+        app.addMultiScaleTiledGridLayer2(
+            app.layers[0].dataset,
             [
                 new gviz.CompositionStyle({
                     color: {
@@ -95,28 +102,23 @@
             ],
             {
                 pixNb: 20,
-                cellInfoHTML: c => {
-                    let out = "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>"
-                    out = out + " < 3 : " + (c["Ind_0_3"]) + "<br>" +
-                        " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
-                        " 6-10: " + (c["Ind_6_10"]) + "<br>" +
-                        "11-17: " + (c["Ind_11_17"]) + "<br>" +
-                        "18-24: " + (c["Ind_18_24"]) + "<br>" +
-                        "25-39: " + (c["Ind_25_39"]) + "<br>" +
-                        "40-54: " + (c["Ind_40_54"]) + "<br>" +
-                        "55-64: " + (c["Ind_55_64"]) + "<br>" +
-                        "65-79: " + (c["Ind_65_79"]) + "<br>" +
-                        " > 80: " + (c["Ind_80p"]) + "<br>" +
-                        " unk.: " + (c["Ind_inc"]) + "<br>";
-                    return out
-                }
+                cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
+                    " < 3 : " + (c["Ind_0_3"]) + "<br>" +
+                    " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
+                    " 6-10: " + (c["Ind_6_10"]) + "<br>" +
+                    "11-17: " + (c["Ind_11_17"]) + "<br>" +
+                    "18-24: " + (c["Ind_18_24"]) + "<br>" +
+                    "25-39: " + (c["Ind_25_39"]) + "<br>" +
+                    "40-54: " + (c["Ind_40_54"]) + "<br>" +
+                    "55-64: " + (c["Ind_55_64"]) + "<br>" +
+                    "65-79: " + (c["Ind_65_79"]) + "<br>" +
+                    " > 80: " + (c["Ind_80p"]) + "<br>" +
+                    " unk.: " + (c["Ind_inc"])
             })
 
         //population by age (3 age groups)
-        app.addMultiScaleTiledGridLayer(
-            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
-            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-            r => r + "m/",
+        app.addMultiScaleTiledGridLayer2(
+            app.layers[0].dataset,
             [
                 new gviz.CompositionStyle({
                     color: {
@@ -132,67 +134,43 @@
             ],
             {
                 pixNb: 20,
-                cellInfoHTML: c => {
-                    let out = "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>"
-                    out = out + " < 3 : " + (c["Ind_0_3"]) + "<br>" +
-                        " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
-                        " 6-10: " + (c["Ind_6_10"]) + "<br>" +
-                        "11-17: " + (c["Ind_11_17"]) + "<br>" +
-                        "18-24: " + (c["Ind_18_24"]) + "<br>" +
-                        "25-39: " + (c["Ind_25_39"]) + "<br>" +
-                        "40-54: " + (c["Ind_40_54"]) + "<br>" +
-                        "55-64: " + (c["Ind_55_64"]) + "<br>" +
-                        "65-79: " + (c["Ind_65_79"]) + "<br>" +
-                        " > 80: " + (c["Ind_80p"]) + "<br>" +
-                        " unk.: " + (c["Ind_inc"]) + "<br>";
-                    return out
-                },
-                preprocess: c => {
-                    c["Ind_0_17"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"]
-                    c["Ind_18_64"] = +c["Ind_18_24"] + +c["Ind_25_39"] + +c["Ind_40_54"] + +c["Ind_55_64"]
-                    c["Ind_65p"] = +c["Ind_65_79"] + +c["Ind_80p"]
-                }
+                cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
+                    " < 17 : " + (c["Ind_0_17"]) + "<br>" +
+                    " 18-64 : " + (c["Ind_18_64"]) + "<br>" +
+                    " > 65: " + (c["Ind_65p"])
             })
 
-            //income
-            .addMultiScaleTiledGridLayer(
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
-                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-                r => r + "m/",
-                [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "r",
-                        color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
-                    }),
-                    new gviz.StrokeStyle({ zf: 15 })
-                ],
-                {
-                    pixNb: 2,
-                    cellInfoHTML: c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'",
-                    preprocess: c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
-                })
+        //income
+        app.addMultiScaleTiledGridLayer2(
+            app.layers[0].dataset,
+            [
+                new gviz.SquareColoringWebGLStyle({
+                    colorCol: "rIncome",
+                    color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
+                }),
+                new gviz.StrokeStyle({ zf: 15 })
+            ],
+            {
+                pixNb: 2,
+                cellInfoHTML: c => "<b>" + Math.floor(c.r) + "€</b>/mois/'personne'",
+            })
 
-            //poverty
-            .addMultiScaleTiledGridLayer(
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi_2015/",
-                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-                r => r + "m/",
-                [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "r",
-                        color: (v, r, s) => {
-                            return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
-                        },
-                    }),
-                    new gviz.StrokeStyle({ zf: 15 })
-                ],
-                {
-                    pixNb: 2,
-                    cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.r) / 10) + "%</b> of poor households.",
-                    preprocess: c => { c.r = c["Men_pauv"] / c["Men"]; }
-                })
-
-
+        //poverty
+        app.addMultiScaleTiledGridLayer2(
+            app.layers[0].dataset,
+            [
+                new gviz.SquareColoringWebGLStyle({
+                    colorCol: "rPoverty",
+                    color: (v, r, s) => {
+                        return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
+                    },
+                }),
+                new gviz.StrokeStyle({ zf: 15 })
+            ],
+            {
+                pixNb: 2,
+                cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.r) / 10) + "%</b> of poor households.",
+            })
 
         //
         const update = () => {
