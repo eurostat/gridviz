@@ -1,8 +1,6 @@
 mobile version: https://leafletjs.com/examples/mobile/
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-CSV test
-
 FR: filosofi
 
 HR legends
