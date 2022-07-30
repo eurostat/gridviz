@@ -54,8 +54,6 @@
         </span>
     </div>
 
-    <div id="zoomSlider" style="display: block; position: absolute; right: 20px; top: 20px;"></div>
-
     <script src="../build/gridvizc.js"></script>
     <script>
 
@@ -63,7 +61,6 @@
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
-            .addZoomSlider("zoomSlider")
             .setViewFromURL()
             .addMultiScaleTiledGridLayer(
                 //population layer

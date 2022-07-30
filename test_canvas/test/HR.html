@@ -58,8 +58,6 @@
         </span>
     </div>
 
-    <div id="zoomSlider" style="display: block; position: absolute; right: 20px; top: 20px;"></div>
-
     <script src="../build/gridvizc.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
     <script>
@@ -68,7 +66,6 @@
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 4806935, y: 2446234 }).setZoomFactor(400.1).setZoomFactorExtent([10, 2000])
             .setLabelLayer(gviz.getEuronymeLabelLayer("HR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
-            .addZoomSlider("zoomSlider")
             .setViewFromURL()
 
         //make layers

@@ -64,14 +64,12 @@
         </span>
     </div>
 
-    <div id="zoomSlider" style="display: block; position: absolute; right: 20px; top: 20px;"></div>
-
     <script src="../build/gridvizc.js"></script>
     <script>
 
         let containerDiv = document.getElementById("viz-container");
         const app = new gviz.App(containerDiv)
-            .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(50.1).setZoomFactorExtent([10, 1500]).addZoomSlider("zoomSlider")
+            .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(50.1).setZoomFactorExtent([10, 1500])
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
 
