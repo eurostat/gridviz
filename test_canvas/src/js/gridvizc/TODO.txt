@@ -1,7 +1,6 @@
-mobile version: https://leafletjs.com/examples/mobile/
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
 FR: filosofi
+
+TODO mouse over: Show rectangle. with canvas draw
 
 HR legends
 FR legends
@@ -29,9 +28,11 @@ uniform: min, max, t formula, colors
 https://thebookofshaders.com/glossary/?search=mix
 https://thebookofshaders.com/glossary/
 
-"WARNING: Too many active WebGL contexts. Oldest context will be lost."
-
 TODO BIG DEPLOY ?
+
+TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
+https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
+
 
     //https://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf
     //https://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html
@@ -60,8 +61,6 @@ TODO make tests using offset ?
 TODO aggregation on the fly ??? No. except for csv...
 TODO watercolor style ? Draw random plots around central point of pixel - https://github.com/rolyatmax/watercolor-canvas
 
-TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
-https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
 
 TODO test data NO - 250m. long timeseries
 TODO test data on NL
@@ -88,31 +87,23 @@ TODO map type: composition as donut ring ?
 TODO map type: composition as stripped circles
 TODO map style: joyplot composition
 TODO linesup: Test with changeable width and fixed height ?
-TODO use filosofi 2017 to show evolutions
 TODO background image ? with relief shading.
 TODO window resize
 TODO better shaded characterset for text style
-TODO more efficient multiscale layer creation?
 TODO joyplot: fill color depending on value ? for negative/positive values
 TODO improve halftone: use Halton sequence
 
-check https://blog.scottlogic.com/2020/05/01/rendering-one-million-points-with-d3.html and https://blog.scottlogic.com/2021/10/15/efficiently-loading-massive-d3-datasets-using-apache-arrow.html
-TODO improve efficiency - on zoom/pan, interrupt all existing redraws ? Redraw only on mouse release? Use time and redraw only every X ms ?
 TODO test canvas performance improvements: https://www.html5rocks.com/en/tutorials/canvas/performance/ and https://stackoverflow.com/questions/8205828/html5-canvas-performance-and-optimization-tips-tricks-and-coding-best-practices
 TODO test canvas performance improvements: test image drawing https://github.com/uwdata/fast-kde/blob/main/src/heatmap.js
-TODO debug requests intensity - last check, etc. ! to ensure sent only once. Use promise ?
-TODO mouse over: Show rectangle. Ask SE
 
 TODO on pan/zoom, hide tooltip
 TODO limit pan
 
-TODO tiled datasets: accessibility (merge datasets), NL, etc.
-TODO make nice test with combination - need for client side join?
 TODO empty tile cache: timestamp tiles + count number of redraws. Empty cache and remove inpriority the old-unused tiles.
 
-TODO map type: trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php
+TODO map type: trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/ENACT_POP.php  NO population ?
 TODO map type: contour style. and hypsometric. See https://observablehq.com/@d3/density-contours https://observablehq.com/@sahilchinoy/contour-map?collection=@sahilchinoy/geo-experiments
-TODO background - images ?
+
 
 
 
