@@ -337,12 +337,10 @@ export class App {
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
-     * @param {number} minZoom The minimum zoom level when to show the layer
-     * @param {number} maxZoom The maximum zoom level when to show the layer
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
-    addCSVGridLayer(url, resolution, styles, minZoom, maxZoom, opts) {
+    addCSVGridLayer(url, resolution, styles, opts) {
 
         //make dataset
         const ds = new CSVGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); });

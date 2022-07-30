@@ -61,6 +61,10 @@ export class Layer {
     getDatasetComponent(zf) {
         if (zf < this.minZoom || zf > this.maxZoom) return;
 
+        //special case whith single component dataset
+        if (this.dataset.datasetComponents.length == 1)
+            return this.dataset.datasetComponents[0];
+
         const rs = this.dataset.resolutions
         let i = 0;
         let z = rs[i] / this.pixNb
