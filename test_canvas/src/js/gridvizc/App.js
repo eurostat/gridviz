@@ -344,7 +344,7 @@ export class App {
 
         //make dataset
         const ds = new CSVGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); });
-        const dataset = new Dataset([ds], resolutions, opts)
+        const dataset = new Dataset([ds], [], opts)
 
         //make layer
         const lay = new Layer(dataset, styles, opts)
