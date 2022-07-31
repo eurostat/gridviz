@@ -180,7 +180,11 @@ export class App {
 
                 //draw image saved + draw rectangle
                 this.cg.initCanvasTransform()
-
+                this.cg.ctx.strokeStyle = "red";
+                this.cg.ctx.lineWidth = 2;
+                this.cg.ctx.beginPath();
+                this.cg.ctx.rect(e.clientX, e.clientY, 10, 10);
+                this.cg.ctx.stroke();
             } else {
                 this.tooltip.hide();
             }
