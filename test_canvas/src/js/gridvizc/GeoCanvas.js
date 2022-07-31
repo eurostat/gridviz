@@ -98,11 +98,6 @@ export class GeoCanvas {
          *  @type {Array.<number>} */
         this.zfExtent = [0, Infinity]
 
-
-        this.canvas.addEventListener('mousemove', e => {
-            console.log("aaa")
-        });
-
     }
 
     /** @param {{x:number,y:number}} v Geographical coordinates of the center */
