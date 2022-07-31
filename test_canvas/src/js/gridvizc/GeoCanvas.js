@@ -97,6 +97,12 @@ export class GeoCanvas {
         /** Zoom extent, to limit zoom in and out
          *  @type {Array.<number>} */
         this.zfExtent = [0, Infinity]
+
+
+        this.canvas.addEventListener('mousemove', e => {
+            console.log("aaa")
+        });
+
     }
 
     /** @param {{x:number,y:number}} v Geographical coordinates of the center */
