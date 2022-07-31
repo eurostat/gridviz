@@ -176,7 +176,11 @@ export class App {
                 this.tooltip.setPosition(e);
                 this.tooltip.show();
                 this.tooltip.html(focus.html);
-                //TODO show cell position
+
+                //show cell position
+
+                //if (this.canvasSave)
+                //this.cg.ctx.drawImage(this.canvasSave, 0, 0);
 
                 //draw image saved + draw rectangle
                 this.cg.initCanvasTransform()
@@ -195,16 +199,25 @@ export class App {
             }
         }
         this.cg.canvas.addEventListener("mouseover", e => {
-            //TODO save image
+            //save image
+            this.canvasSave = document.createElement("canvas");
+            this.canvasSave.setAttribute("width", "" + this.w);
+            this.canvasSave.setAttribute("height", "" + this.h);
+            this.canvasSave.getContext("2d").drawImage(this.cg.canvas, 0, 0);
+            //focus
             focusCell(e)
         });
-        this.cg.canvas.addEventListener("mousemove", e => { focusCell(e) });
+        this.cg.canvas.addEventListener("mousemove", e => {
+            focusCell(e)
+        });
         this.cg.canvas.addEventListener("mouseout", () => {
             this.tooltip.hide();
-            //TODO erase image
+            //erase image
+            this.canvasSave = undefined
         });
 
         //for mouse over
+        /** @private @type {HTMLCanvasElement|undefined} */
         this.canvasSave = undefined
     }
 

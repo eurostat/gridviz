@@ -69,7 +69,7 @@ export class SquareColoringWebGLStyle extends Style {
         //add vertice and fragment data
         let col
         const r2 = resolution / 2
-        let c, cc, nb = cells.length
+        let c, nb = cells.length
         for (let i = 0; i < nb; i++) {
             c = cells[i]
 
