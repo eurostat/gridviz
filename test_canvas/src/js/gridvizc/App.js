@@ -183,7 +183,12 @@ export class App {
                 this.cg.ctx.strokeStyle = "red";
                 this.cg.ctx.lineWidth = 2;
                 this.cg.ctx.beginPath();
-                this.cg.ctx.rect(this.cg.geoToPixX(focus.cell.x), this.cg.geoToPixY(focus.cell.y), 10, 10);
+                this.cg.ctx.rect(
+                    this.cg.geoToPixX(focus.cell.x),
+                    this.cg.geoToPixY(focus.cell.y),
+                    focus.resolution / this.getZoomFactor(),
+                    -focus.resolution / this.getZoomFactor()
+                );
                 this.cg.ctx.stroke();
             } else {
                 this.tooltip.hide();
