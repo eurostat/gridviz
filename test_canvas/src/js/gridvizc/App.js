@@ -170,7 +170,7 @@ export class App {
         const focusCell = (e) => {
             //compute mouse geo position
             const mousePositionGeo = { x: this.cg.pixToGeoX(e.clientX), y: this.cg.pixToGeoY(e.clientY) }
-            /** @type {{cell:Cell,html:string} | undefined} */
+            /** @type {{cell:Cell,html:string,resolution:number} | undefined} */
             const focus = this.getCellFocusInfo(mousePositionGeo)
             if (focus) {
                 this.tooltip.setPosition(e);
@@ -183,7 +183,7 @@ export class App {
                 this.cg.ctx.strokeStyle = "red";
                 this.cg.ctx.lineWidth = 2;
                 this.cg.ctx.beginPath();
-                this.cg.ctx.rect(e.clientX, e.clientY, 10, 10);
+                this.cg.ctx.rect(this.cg.geoToPixX(focus.cell.x), this.cg.geoToPixY(focus.cell.y), 10, 10);
                 this.cg.ctx.stroke();
             } else {
                 this.tooltip.hide();
@@ -253,7 +253,7 @@ export class App {
      * This is usefull for user interactions, to show this info where the user clicks for example.
      * 
      * @param {{x:number,y:number}} posGeo 
-     * @returns {{cell:Cell,html:string} | undefined}
+     * @returns {{cell:Cell,html:string,resolution:number} | undefined}
      */
     getCellFocusInfo(posGeo) {
         //get top layer
@@ -267,7 +267,7 @@ export class App {
         /** @type {Cell|undefined} */
         const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache());
         if (!cell) return undefined;
-        return { cell: cell, html: layer.cellInfoHTML(cell) };
+        return { cell: cell, html: layer.cellInfoHTML(cell), resolution: dsc.getResolution() };
     }
 
 
