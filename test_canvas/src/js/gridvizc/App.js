@@ -179,6 +179,7 @@ export class App {
                 //TODO show cell position
 
                 //draw image saved + draw rectangle
+                this.cg.initCanvasTransform()
 
             } else {
                 this.tooltip.hide();
