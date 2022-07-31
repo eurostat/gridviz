@@ -177,13 +177,25 @@ export class App {
                 this.tooltip.show();
                 this.tooltip.html(focus.html);
                 //TODO show cell position
+
+                //draw image saved + draw rectangle
+
             } else {
                 this.tooltip.hide();
             }
         }
-        this.cg.canvas.addEventListener("mouseover", e => { focusCell(e) });
+        this.cg.canvas.addEventListener("mouseover", e => {
+            //TODO save image
+            focusCell(e)
+        });
         this.cg.canvas.addEventListener("mousemove", e => { focusCell(e) });
-        this.cg.canvas.addEventListener("mouseout", () => { this.tooltip.hide(); });
+        this.cg.canvas.addEventListener("mouseout", () => {
+            this.tooltip.hide();
+            //TODO erase image
+        });
+
+        //for mouse over
+        this.canvasSave = undefined
     }
 
 
