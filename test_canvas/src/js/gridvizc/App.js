@@ -182,6 +182,7 @@ export class App {
                 //if (this.canvasSave)
                 //this.cg.ctx.drawImage(this.canvasSave, 0, 0);
 
+                
                 //draw image saved + draw rectangle
                 this.cg.initCanvasTransform()
                 this.cg.ctx.strokeStyle = "red";
