@@ -121,6 +121,9 @@ export class App {
             if (this.showLabels && this.labelLayer)
                 this.labelLayer.draw(this.cg)
 
+            //
+            this.canvasSave = null;
+
             if (monitor) monitorDuration("End redraw")
 
             return this
@@ -207,16 +210,16 @@ export class App {
         }
         container.addEventListener("mouseover", e => { focusCell(e) });
         container.addEventListener("mousemove", e => { focusCell(e) });
-        container.addEventListener("mouseout", () => { this.tooltip.hide(); this.canvasSave = null; });
+        container.addEventListener("mouseout", () => { this.tooltip.hide(); /*this.canvasSave = null;*/ });
         this.cg.onZoomStartFun = () => { this.tooltip.hide(); }
-        this.cg.onZoomEndFun = () => { this.tooltip.hide(); }
+        //this.cg.onZoomEndFun = () => { this.tooltip.hide(); }
 
         //for mouse over
         /** @private @type {HTMLCanvasElement|null} */
         this.canvasSave = null
 
         this.selectionRectangleColor = opts.selectionRectangleColor || "black"
-        this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || 5
+        this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || 3
     }
 
 
