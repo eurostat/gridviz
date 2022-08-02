@@ -199,7 +199,9 @@ export class App {
                 this.tooltip.hide();
             }
         }
-        this.cg.canvas.addEventListener("mouseover", e => {
+        container.addEventListener("mouseover", e => {
+            console.log("mouseover")
+
             /*/save image
             this.canvasSave = document.createElement("canvas");
             this.canvasSave.setAttribute("width", "" + this.w);
@@ -208,19 +210,33 @@ export class App {
             //focus
             focusCell(e)
         });
-        this.cg.canvas.addEventListener("mousemove", e => {
+        container.addEventListener("mousemove", e => {
+            console.log("mousemove")
             focusCell(e)
         });
-        this.cg.canvas.addEventListener("mouseout", () => {
+        container.addEventListener("mouseout", () => {
+            console.log("mouseout")
             this.tooltip.hide();
             //erase image
             this.canvasSave = undefined
         });
-        this.cg.canvas.addEventListener("mousedown", e => {
+        container.addEventListener("mousedown", e => {
             console.log("mousedown")
         });
-        this.cg.canvas.addEventListener("mouseup", e => {
+        container.addEventListener("mouseup", e => {
             console.log("mouseup")
+        });
+        container.addEventListener("mouseup", e => {
+            console.log("mouseup")
+        });
+        container.addEventListener("drag", e => {
+            console.log("drag")
+        });
+        container.addEventListener("dragstart", e => {
+            console.log("dragstart")
+        });
+        container.addEventListener("dragend", e => {
+            console.log("dragend")
         });
 
         //for mouse over
