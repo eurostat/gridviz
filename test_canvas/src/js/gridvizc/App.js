@@ -211,11 +211,9 @@ export class App {
             focusCell(e)
         });
         container.addEventListener("mousemove", e => {
-            //console.log("mousemove")
             focusCell(e)
         });
         container.addEventListener("mouseout", () => {
-            //console.log("mouseout")
             this.tooltip.hide();
             //erase image
             //this.canvasSave = undefined
@@ -224,24 +222,6 @@ export class App {
         this.cg.onZoomStartFun = () => {
             this.tooltip.hide();
         }
-        /*container.addEventListener("mousedown", e => {
-            console.log("mousedown")
-        });
-        container.addEventListener("mouseup", e => {
-            console.log("mouseup")
-        });
-        container.addEventListener("mouseup", e => {
-            console.log("mouseup")
-        });*/
-        /*container.addEventListener("drag", e => {
-            console.log("drag")
-        });
-        container.addEventListener("dragstart", e => {
-            console.log("dragstart")
-        });
-        container.addEventListener("dragend", e => {
-            console.log("dragend")
-        });*/
 
         //for mouse over
         /** @private @type {HTMLCanvasElement|undefined} */

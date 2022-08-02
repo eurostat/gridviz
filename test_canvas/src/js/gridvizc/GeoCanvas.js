@@ -113,6 +113,12 @@ export class GeoCanvas {
         this.canvas.addEventListener("mousemove", e => {
             console.log("mousemove")
         })
+        this.canvas.addEventListener("mousedown", e => {
+            console.log("mousedown")
+        });
+        this.canvas.addEventListener("mouseup", e => {
+            console.log("mouseup")
+        });
 
     }
 
