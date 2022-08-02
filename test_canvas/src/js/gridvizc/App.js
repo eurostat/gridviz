@@ -177,10 +177,15 @@ export class App {
                 this.tooltip.show();
                 this.tooltip.html(focus.html);
 
-                //show cell position
-
-                //if (this.canvasSave)
-                //this.cg.ctx.drawImage(this.canvasSave, 0, 0);
+                //show cell position as a rectangle
+                if (!this.canvasSave) {
+                    this.canvasSave = document.createElement("canvas");
+                    this.canvasSave.setAttribute("width", "" + this.w);
+                    this.canvasSave.setAttribute("height", "" + this.h);
+                    this.canvasSave.getContext("2d").drawImage(this.cg.canvas, 0, 0);
+                } else {
+                    this.cg.ctx.drawImage(this.canvasSave, 0, 0);
+                }
 
                 //draw image saved + draw rectangle
                 this.cg.initCanvasTransform()
@@ -196,29 +201,15 @@ export class App {
                 this.cg.ctx.stroke();
             } else {
                 this.tooltip.hide();
+                if (this.canvasSave)
+                    this.cg.ctx.drawImage(this.canvasSave, 0, 0);
             }
         }
-        container.addEventListener("mouseover", e => {
-            //console.log("mouseover")
-
-            /*/save image
-            this.canvasSave = document.createElement("canvas");
-            this.canvasSave.setAttribute("width", "" + this.w);
-            this.canvasSave.setAttribute("height", "" + this.h);
-            this.canvasSave.getContext("2d").drawImage(this.cg.canvas, 0, 0);*/
-            //focus
-            focusCell(e)
-        });
-        container.addEventListener("mousemove", e => {
-            focusCell(e)
-        });
-        container.addEventListener("mouseout", () => {
-            this.tooltip.hide();
-        });
-
-        this.cg.onZoomStartFun = () => {
-            this.tooltip.hide();
-        }
+        container.addEventListener("mouseover", e => { focusCell(e) });
+        container.addEventListener("mousemove", e => { focusCell(e) });
+        container.addEventListener("mouseout", () => { this.tooltip.hide(); });
+        this.cg.onZoomStartFun = () => { this.tooltip.hide(); }
+        this.cg.onZoomEndFun = () => { this.tooltip.hide(); this.canvasSave = null }
 
         //for mouse over
         /** @private @type {HTMLCanvasElement|null} */

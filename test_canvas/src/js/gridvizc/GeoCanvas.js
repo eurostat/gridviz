@@ -32,9 +32,10 @@ export class GeoCanvas {
         this.canvas.width = this.w;
         this.canvas.height = this.h;
 
-        /**@type {CanvasRenderingContext2D|null} */
-        this.ctx = this.canvas.getContext("2d");
-        if (!this.ctx) throw ("Impossible to create canvas 2D context")
+        const ctx = this.canvas.getContext("2d")
+        if (!ctx) throw ("Impossible to create canvas 2D context")
+        /**@type {CanvasRenderingContext2D} */
+        this.ctx = ctx;
 
         // set geo coordinates of the center
         this.center = center || { x: this.w * 0.5, y: this.h * 0.5 };
@@ -108,7 +109,7 @@ export class GeoCanvas {
         this.zfExtent = [0, Infinity]
 
         /** Canvas state, to be used to avoid unnecessary redraws on zoom/pan
-         *  @type {{c:HTMLCanvasElement,dx:number,dy:number,f:number}} */
+         *  @type {{c:HTMLCanvasElement|null,dx:number,dy:number,f:number}} */
         this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
 
     }
