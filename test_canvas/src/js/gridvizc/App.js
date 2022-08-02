@@ -207,9 +207,9 @@ export class App {
         }
         container.addEventListener("mouseover", e => { focusCell(e) });
         container.addEventListener("mousemove", e => { focusCell(e) });
-        container.addEventListener("mouseout", () => { this.tooltip.hide(); });
+        container.addEventListener("mouseout", () => { this.tooltip.hide(); this.canvasSave = null; });
         this.cg.onZoomStartFun = () => { this.tooltip.hide(); }
-        this.cg.onZoomEndFun = () => { this.tooltip.hide(); this.canvasSave = null }
+        this.cg.onZoomEndFun = () => { this.tooltip.hide(); }
 
         //for mouse over
         /** @private @type {HTMLCanvasElement|null} */
