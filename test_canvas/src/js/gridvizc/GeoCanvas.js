@@ -79,16 +79,16 @@ export class GeoCanvas {
             tP = t
         }).on("start", (e) => {
             /** @type {HTMLCanvasElement} */
-            this.canvasSave = document.createElement("canvas");
-            this.canvasSave.setAttribute("width", "" + this.w);
-            this.canvasSave.setAttribute("height", "" + this.h);
-            this.canvasSave.getContext("2d").drawImage(this.canvas, 0, 0);
+            this.canvasSave.c = document.createElement("canvas");
+            this.canvasSave.c.setAttribute("width", "" + this.w);
+            this.canvasSave.c.setAttribute("height", "" + this.h);
+            this.canvasSave.c.getContext("2d").drawImage(this.canvas, 0, 0);
             this.canvasSave.dx = 0
             this.canvasSave.dy = 0
             this.canvasSave.f = 1
         }).on("end", (e) => {
             this.redraw(true)
-            this.canvasSave = null
+            this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
         });
         z(select(this.canvas))
         //select(this.canvas).call(z);
@@ -97,6 +97,10 @@ export class GeoCanvas {
         /** Zoom extent, to limit zoom in and out
          *  @type {Array.<number>} */
         this.zfExtent = [0, Infinity]
+
+        /** Zoom extent, to limit zoom in and out
+         *  @type {{c:HTMLCanvasElement,dx:number,dy:number,f:number}} */
+        this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
 
     }
 
@@ -156,7 +160,7 @@ export class GeoCanvas {
      * @param {string} color 
      */
     clear(color = "white") {
-        if(this.ctx) this.ctx.fillStyle = color;
+        if (this.ctx) this.ctx.fillStyle = color;
         this.ctx.fillRect(0, 0, this.w, this.h);
     }
 
@@ -170,11 +174,11 @@ export class GeoCanvas {
         this.center.y += dyGeo;
         this.updateExtentGeo()
 
-        if (this.canvasSave) {
+        if (this.canvasSave.c) {
             this.canvasSave.dx -= dxGeo / this.getZf()
             this.canvasSave.dy += dyGeo / this.getZf()
             this.clear(this.backgroundColor);
-            this.ctx.drawImage(this.canvasSave, this.canvasSave.dx, this.canvasSave.dy);
+            this.ctx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy);
         }
     }
 
@@ -206,15 +210,15 @@ export class GeoCanvas {
 
         //TODO
         //this.redraw(false)
-        if (this.canvasSave) {
+        if (this.canvasSave.c) {
             this.clear(this.backgroundColor);
             this.canvasSave.f /= f
             this.canvasSave.dx = this.geoToPixX(xGeo) * (1 - this.canvasSave.f)
             this.canvasSave.dy = this.geoToPixY(yGeo) * (1 - this.canvasSave.f)
             this.clear(this.backgroundColor);
-            this.ctx.drawImage(this.canvasSave,
+            this.ctx.drawImage(this.canvasSave.c,
                 this.canvasSave.dx, this.canvasSave.dy,
-                this.canvasSave.f * this.canvasSave.width, this.canvasSave.f * this.canvasSave.height);
+                this.canvasSave.f * this.canvasSave.c.width, this.canvasSave.f * this.canvasSave.c.height);
         }
     }
 
