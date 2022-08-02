@@ -109,16 +109,13 @@ export class GeoCanvas {
         this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
 
 
-        //over stuff
+        /*/over stuff
         this.canvas.addEventListener("mousemove", e => {
             console.log("mousemove")
-        })
-        this.canvas.addEventListener("mousedown", e => {
-            console.log("mousedown")
-        });
-        this.canvas.addEventListener("mouseup", e => {
-            console.log("mouseup")
-        });
+
+            if (this.onZoomStartFun)
+            this.onZoomStartFun();
+        })*/
 
     }
 

@@ -182,8 +182,7 @@ export class App {
                 //if (this.canvasSave)
                 //this.cg.ctx.drawImage(this.canvasSave, 0, 0);
 
-
-                /*/draw image saved + draw rectangle
+                //draw image saved + draw rectangle
                 this.cg.initCanvasTransform()
                 this.cg.ctx.strokeStyle = "red";
                 this.cg.ctx.lineWidth = 2;
@@ -194,7 +193,7 @@ export class App {
                     focus.resolution / this.getZoomFactor(),
                     -focus.resolution / this.getZoomFactor()
                 );
-                this.cg.ctx.stroke();*/
+                this.cg.ctx.stroke();
             } else {
                 this.tooltip.hide();
             }
@@ -215,8 +214,6 @@ export class App {
         });
         container.addEventListener("mouseout", () => {
             this.tooltip.hide();
-            //erase image
-            //this.canvasSave = undefined
         });
 
         this.cg.onZoomStartFun = () => {
@@ -224,8 +221,8 @@ export class App {
         }
 
         //for mouse over
-        /** @private @type {HTMLCanvasElement|undefined} */
-        //this.canvasSave = undefined
+        /** @private @type {HTMLCanvasElement|null} */
+        this.canvasSave = null
     }
 
 
