@@ -182,7 +182,7 @@ export class App {
                 //if (this.canvasSave)
                 //this.cg.ctx.drawImage(this.canvasSave, 0, 0);
 
-                
+
                 /*/draw image saved + draw rectangle
                 this.cg.initCanvasTransform()
                 this.cg.ctx.strokeStyle = "red";
@@ -211,16 +211,16 @@ export class App {
             focusCell(e)
         });
         container.addEventListener("mousemove", e => {
-            console.log("mousemove")
+            //console.log("mousemove")
             focusCell(e)
         });
         container.addEventListener("mouseout", () => {
-            console.log("mouseout")
+            //console.log("mouseout")
             this.tooltip.hide();
             //erase image
-            this.canvasSave = undefined
+            //this.canvasSave = undefined
         });
-        container.addEventListener("mousedown", e => {
+        /*container.addEventListener("mousedown", e => {
             console.log("mousedown")
         });
         container.addEventListener("mouseup", e => {
@@ -228,8 +228,8 @@ export class App {
         });
         container.addEventListener("mouseup", e => {
             console.log("mouseup")
-        });
-        container.addEventListener("drag", e => {
+        });*/
+        /*container.addEventListener("drag", e => {
             console.log("drag")
         });
         container.addEventListener("dragstart", e => {
@@ -237,11 +237,11 @@ export class App {
         });
         container.addEventListener("dragend", e => {
             console.log("dragend")
-        });
+        });*/
 
         //for mouse over
         /** @private @type {HTMLCanvasElement|undefined} */
-        this.canvasSave = undefined
+        //this.canvasSave = undefined
     }
 
 
