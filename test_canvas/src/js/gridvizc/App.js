@@ -220,6 +220,10 @@ export class App {
             //erase image
             //this.canvasSave = undefined
         });
+
+        this.cg.onZoomStartFun = () => {
+            this.tooltip.hide();
+        }
         /*container.addEventListener("mousedown", e => {
             console.log("mousedown")
         });
