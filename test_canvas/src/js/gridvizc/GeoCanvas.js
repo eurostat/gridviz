@@ -50,6 +50,9 @@ export class GeoCanvas {
         /** @type {function():void} */
         this.onZoomStartFun = opts.onZoomStartFun
 
+        /** @type {function():void} */
+        this.onZoomEndFun = opts.onZoomEndFun
+
         //current extent
         /** @type {Envelope} */
         this.extGeo = { xMin: NaN, xMax: NaN, yMin: NaN, yMax: NaN };
@@ -81,7 +84,6 @@ export class GeoCanvas {
             }
             tP = t
         }).on("start", (e) => {
-            /** @type {HTMLCanvasElement} */
             this.canvasSave.c = document.createElement("canvas");
             this.canvasSave.c.setAttribute("width", "" + this.w);
             this.canvasSave.c.setAttribute("height", "" + this.h);
@@ -90,11 +92,12 @@ export class GeoCanvas {
             this.canvasSave.dy = 0
             this.canvasSave.f = 1
 
-            if (this.onZoomStartFun)
-                this.onZoomStartFun();
+            if (this.onZoomStartFun) this.onZoomStartFun();
         }).on("end", (e) => {
             this.redraw(true)
             this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
+
+            if (this.onZoomEndFun) this.onZoomEndFun();
         });
         z(select(this.canvas))
         //select(this.canvas).call(z);
@@ -104,18 +107,9 @@ export class GeoCanvas {
          *  @type {Array.<number>} */
         this.zfExtent = [0, Infinity]
 
-        /** Zoom extent, to limit zoom in and out
+        /** Canvas state, to be used to avoid unnecessary redraws on zoom/pan
          *  @type {{c:HTMLCanvasElement,dx:number,dy:number,f:number}} */
         this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
-
-
-        /*/over stuff
-        this.canvas.addEventListener("mousemove", e => {
-            console.log("mousemove")
-
-            if (this.onZoomStartFun)
-            this.onZoomStartFun();
-        })*/
 
     }
 
