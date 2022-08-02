@@ -200,7 +200,7 @@ export class App {
             }
         }
         container.addEventListener("mouseover", e => {
-            console.log("mouseover")
+            //console.log("mouseover")
 
             /*/save image
             this.canvasSave = document.createElement("canvas");

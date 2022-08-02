@@ -32,7 +32,7 @@ export class GeoCanvas {
         this.canvas.width = this.w;
         this.canvas.height = this.h;
 
-        /**@type {CanvasRenderingContext2D} */
+        /**@type {CanvasRenderingContext2D|null} */
         this.ctx = this.canvas.getContext("2d");
         if (!this.ctx) throw ("Impossible to create canvas 2D context")
 
