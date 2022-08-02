@@ -183,7 +183,7 @@ export class App {
                 //this.cg.ctx.drawImage(this.canvasSave, 0, 0);
 
                 
-                //draw image saved + draw rectangle
+                /*/draw image saved + draw rectangle
                 this.cg.initCanvasTransform()
                 this.cg.ctx.strokeStyle = "red";
                 this.cg.ctx.lineWidth = 2;
@@ -194,17 +194,17 @@ export class App {
                     focus.resolution / this.getZoomFactor(),
                     -focus.resolution / this.getZoomFactor()
                 );
-                this.cg.ctx.stroke();
+                this.cg.ctx.stroke();*/
             } else {
                 this.tooltip.hide();
             }
         }
         this.cg.canvas.addEventListener("mouseover", e => {
-            //save image
+            /*/save image
             this.canvasSave = document.createElement("canvas");
             this.canvasSave.setAttribute("width", "" + this.w);
             this.canvasSave.setAttribute("height", "" + this.h);
-            this.canvasSave.getContext("2d").drawImage(this.cg.canvas, 0, 0);
+            this.canvasSave.getContext("2d").drawImage(this.cg.canvas, 0, 0);*/
             //focus
             focusCell(e)
         });
