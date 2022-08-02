@@ -122,7 +122,7 @@ export class GeoCanvas {
 
     /** Initialise canvas transform with identity transformation. */
     initCanvasTransform() {
-        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        this.ctx?.setTransform(1, 0, 0, 1, 0, 0);
     }
 
     /** Initialise canvas transform with geo to screen transformation, so that geo objects can be drawn directly in geo coordinates. */
@@ -130,7 +130,7 @@ export class GeoCanvas {
         const k = 1 / this.getZf();
         const tx = -this.center.x / this.getZf() + this.w * 0.5;
         const ty = this.center.y / this.getZf() + this.h * 0.5;
-        this.ctx.setTransform(k, 0, 0, -k, tx, ty);
+        this.ctx?.setTransform(k, 0, 0, -k, tx, ty);
     }
 
     /** Get the transformation matrix to webGL screen coordinates, within [-1,1]*[-1,1] */
@@ -156,8 +156,8 @@ export class GeoCanvas {
      * @param {string} color 
      */
     clear(color = "white") {
-        this.ctx.fillStyle = color;
-        this.ctx.fillRect(0, 0, this.w, this.h);
+        if(this.ctx) this.ctx.fillStyle = color;
+        this.ctx?.fillRect(0, 0, this.w, this.h);
     }
 
     /**
@@ -174,7 +174,7 @@ export class GeoCanvas {
             this.canvasSave.dx -= dxGeo / this.getZf()
             this.canvasSave.dy += dyGeo / this.getZf()
             this.clear(this.backgroundColor);
-            this.ctx.drawImage(this.canvasSave, this.canvasSave.dx, this.canvasSave.dy);
+            this.ctx?.drawImage(this.canvasSave, this.canvasSave.dx, this.canvasSave.dy);
         }
     }
 
@@ -212,7 +212,7 @@ export class GeoCanvas {
             this.canvasSave.dx = this.geoToPixX(xGeo) * (1 - this.canvasSave.f)
             this.canvasSave.dy = this.geoToPixY(yGeo) * (1 - this.canvasSave.f)
             this.clear(this.backgroundColor);
-            this.ctx.drawImage(this.canvasSave,
+            this.ctx?.drawImage(this.canvasSave,
                 this.canvasSave.dx, this.canvasSave.dy,
                 this.canvasSave.f * this.canvasSave.width, this.canvasSave.f * this.canvasSave.height);
         }
