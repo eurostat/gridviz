@@ -216,6 +216,12 @@ export class App {
             //erase image
             this.canvasSave = undefined
         });
+        this.cg.canvas.addEventListener("mousedown", e => {
+            console.log("mousedown")
+        });
+        this.cg.canvas.addEventListener("mouseup", e => {
+            console.log("mouseup")
+        });
 
         //for mouse over
         /** @private @type {HTMLCanvasElement|undefined} */
