@@ -215,8 +215,8 @@ export class App {
         /** @private @type {HTMLCanvasElement|null} */
         this.canvasSave = null
 
-        this.selectionRectangleColor = opts.selectionRectangleColor || "red"
-        this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || 2
+        this.selectionRectangleColor = opts.selectionRectangleColor || "black"
+        this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || 5
     }
 
 
