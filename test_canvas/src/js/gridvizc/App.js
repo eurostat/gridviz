@@ -189,8 +189,8 @@ export class App {
 
                 //draw image saved + draw rectangle
                 this.cg.initCanvasTransform()
-                this.cg.ctx.strokeStyle = "red";
-                this.cg.ctx.lineWidth = 2;
+                this.cg.ctx.strokeStyle = this.selectionRectangleColor;
+                this.cg.ctx.lineWidth = this.selectionRectangleWidthPix;
                 this.cg.ctx.beginPath();
                 this.cg.ctx.rect(
                     this.cg.geoToPixX(focus.cell.x),
@@ -214,6 +214,9 @@ export class App {
         //for mouse over
         /** @private @type {HTMLCanvasElement|null} */
         this.canvasSave = null
+
+        this.selectionRectangleColor = opts.selectionRectangleColor || "red"
+        this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || 2
     }
 
 
