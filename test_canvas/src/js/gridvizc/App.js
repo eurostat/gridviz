@@ -196,10 +196,10 @@ export class App {
                 this.cg.ctx.lineWidth = this.selectionRectangleWidthPix;
                 this.cg.ctx.beginPath();
                 this.cg.ctx.rect(
-                    this.cg.geoToPixX(focus.cell.x),
-                    this.cg.geoToPixY(focus.cell.y),
-                    focus.resolution / this.getZoomFactor(),
-                    -focus.resolution / this.getZoomFactor()
+                    this.cg.geoToPixX(focus.cell.x) - this.selectionRectangleWidthPix/2,
+                    this.cg.geoToPixY(focus.cell.y) - this.selectionRectangleWidthPix/2,
+                    focus.resolution / this.getZoomFactor() +  this.selectionRectangleWidthPix,
+                    -focus.resolution / this.getZoomFactor() - this.selectionRectangleWidthPix
                 );
                 this.cg.ctx.stroke();
             } else {
