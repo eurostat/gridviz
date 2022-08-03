@@ -197,7 +197,7 @@ export class App {
                 this.cg.ctx.beginPath();
                 this.cg.ctx.rect(
                     this.cg.geoToPixX(focus.cell.x) - this.selectionRectangleWidthPix/2,
-                    this.cg.geoToPixY(focus.cell.y) - this.selectionRectangleWidthPix/2,
+                    this.cg.geoToPixY(focus.cell.y) + this.selectionRectangleWidthPix/2,
                     focus.resolution / this.getZoomFactor() +  this.selectionRectangleWidthPix,
                     -focus.resolution / this.getZoomFactor() - this.selectionRectangleWidthPix
                 );
@@ -219,7 +219,7 @@ export class App {
         this.canvasSave = null
 
         this.selectionRectangleColor = opts.selectionRectangleColor || "red"
-        this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || 3
+        this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || 4
     }
 
 
