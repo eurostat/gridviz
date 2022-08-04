@@ -1,18 +1,22 @@
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
 FR: filosofi
-
-HR legends
-FR legends
-legend for discrete color classes - use for accessibility map legend
 
 new EUR layers:
 https://www.eea.europa.eu/data-and-maps/figures/spatial-pattern-of-land-take
 https://www.eea.europa.eu/data-and-maps/figures/fragmentation-increase-in-europe-during
 https://www.eea.europa.eu/data-and-maps/data/copernicus-land-monitoring-service-high
+https://land.copernicus.eu/global/products/
 
 show all of that for LU:
 https://land.copernicus.eu/pan-european/high-resolution-layers
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+HR legends
+FR legends
+legend for discrete color classes - use for accessibility map legend
+
 
 Style test: show as hexagonal grid - for circular symbols (?)
 
