@@ -1,4 +1,9 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+TODO BIG DEPLOY ?
+
 FR: filosofi
+TODO tw size+rate example: Gender balance SE ? population, youth VS old FR ? Income FR ?
 
 new EUR layers:
 https://www.eea.europa.eu/data-and-maps/figures/spatial-pattern-of-land-take
@@ -9,9 +14,6 @@ https://land.copernicus.eu/global/products/
 show all of that for LU:
 https://land.copernicus.eu/pan-european/high-resolution-layers
 
-
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 HR legends
 FR legends
@@ -30,8 +32,6 @@ attribute: pix value
 uniform: min, max, t formula, colors
 https://thebookofshaders.com/glossary/?search=mix
 https://thebookofshaders.com/glossary/
-
-TODO BIG DEPLOY ?
 
 TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
 https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
@@ -64,20 +64,12 @@ TODO make tests using offset ?
 TODO aggregation on the fly ??? No. except for csv...
 TODO watercolor style ? Draw random plots around central point of pixel - https://github.com/rolyatmax/watercolor-canvas
 
-
-TODO test data NO - 250m. long timeseries
-TODO test data on NL
-TODO legend refresh on composition
-
-TODO tw size+rate example: Gender balance SE ? population, youth VS old FR ? Income FR ?
 TODO map style: contours with color
 
-TODO legend - donut + pillar + characters
 TODO legend - handle orientation in segment width legend
 TODO document and improve euronyme
 TODO fix euronym - local names, with accents ?
 
-TODO map type: value by alpha ?
 TODO map type: bi/tri-variate colors ?
 
 TODO check IE, firefox
