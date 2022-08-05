@@ -19,7 +19,7 @@
             .setViewFromURL()
 
             .setBackgroundColor("black")
-            .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20"))
+            .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { dark: true }))
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
             .addMultiScaleTiledGridLayer(
