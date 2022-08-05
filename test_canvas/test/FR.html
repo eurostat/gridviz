@@ -75,7 +75,7 @@
                     c.yyy = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"];
                     //>55
                     c.ooo = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
-                    c.age_ratio = c.yyy / (c.yyy + c.ooo);
+                    c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo);
                 }
 
             }
@@ -169,7 +169,7 @@
             ],
             {
                 pixNb: 10,
-                cellInfoHTML: c => "TODO"
+                cellInfoHTML: c => "ratio: " + c.age_ratio + "<br><24: "+c.yyy + "<br>>55: "+c.ooo
             })
 
 
