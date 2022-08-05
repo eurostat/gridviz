@@ -21,6 +21,9 @@
                 <input type="radio" name="layer" id="popAge3" value="popAge3">
                 <label for="popAge3">by age (3)</label>
                 <br>
+                <input type="radio" name="layer" id="ageR" value="ageR">
+                <label for="ageR">age ratio</label>
+                <br>
                 <input type="radio" name="layer" id="income" value="income">
                 <label for="income">Income</label>
                 <input type="radio" name="layer" id="poverty" value="poverty">
@@ -140,6 +143,34 @@
                     " 18-64 : " + (c["Ind_18_64"]) + "<br>" +
                     " > 65: " + (c["Ind_65p"])
             })
+
+
+        //age ratio
+        app.addMultiScaleTiledGridLayer2(
+            app.layers[0].dataset,
+            [
+                new gviz.ShapeColorSizeStyle({
+                    sizeCol: "Ind",
+                    //size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25),
+                    size: (v, r, s, zf) => r * Math.pow(v / s.max, 0.2),
+                    /*size: (v, r, s, zf) => {
+                        let out = Math.pow(v / s.max, 0.3);
+                        out = Math.ceil(out * 5);
+                        out = out / 5;
+                        return out;
+                    },*/
+                    colorCol: "age_ratio",
+                    //color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5)),
+                    color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
+                    shape: () => "donut",
+                })
+            ],
+            {
+                pixNb: 10,
+                cellInfoHTML: c => "TODO"
+            })
+
+
 
         //income
         app.addMultiScaleTiledGridLayer2(
