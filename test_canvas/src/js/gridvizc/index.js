@@ -65,7 +65,8 @@ export const s = function (t, alpha, type = 0) {
  */
 export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
     opts = opts || {}
-    opts.style = opts.style || ((lb, zf) => { if (lb.rs < zf) return; if (lb.r1 < zf) return "1em Arial"; return "1.5em Arial"; })
+    const ex = opts.ex || 1.2
+    opts.style = opts.style || ((lb, zf) => { if (lb.rs < ex * zf) return; if (lb.r1 < ex * zf) return "1em Arial"; return "1.5em Arial"; })
     //ETRS89-LAEA projection
     opts.proj = opts.proj || geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]);
     opts.preprocess = lb => {
