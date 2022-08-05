@@ -22,7 +22,7 @@
                 <label for="popAge3">by age (3)</label>
                 <br>
                 <input type="radio" name="layer" id="ageR" value="ageR">
-                <label for="ageR">age ratio</label>
+                <label for="ageR">Age balance</label>
                 <br>
                 <input type="radio" name="layer" id="income" value="income">
                 <label for="income">Income</label>
@@ -169,7 +169,7 @@
             ],
             {
                 pixNb: 10,
-                cellInfoHTML: c => "ratio: " + c.age_ratio + "<br><24: "+c.yyy + "<br>>55: "+c.ooo
+                cellInfoHTML: c => "ratio: " + (Math.round(c.age_ratio * 100)) + "<br><24: " + c.yyy + "<br>>55: " + c.ooo
             })
 
 
