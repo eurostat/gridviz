@@ -32,7 +32,7 @@ export class LabelLayer {
 
         /** Specify if and how a label should be drawn, depending on its importance and the zoom level.
          * @private @type {function(Label,number):string} */
-        this.style = opts.style || (() => "bold 15px Arial")
+        this.style = opts.style || (() => "bold 1em Arial")
 
         /** Specify the label color, depending on its importance and the zoom level.
          * @private @type {function(Label,number):string} */
