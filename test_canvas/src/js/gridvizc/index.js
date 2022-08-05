@@ -74,7 +74,8 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
         lb.x = p[0]; lb.y = p[1];
         delete lb.lon; delete lb.lat;
     }
-    return new LabelLayer("https://raw.githubusercontent.com/eurostat/euronym/main/pub/v1/" + res + "/" + cc + ".csv", opts)
+    opts.url = "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v1/" + res + "/" + cc + ".csv";
+    return new LabelLayer(opts)
 }
 
 /**

@@ -17,10 +17,9 @@ import { GeoCanvas } from "./GeoCanvas";
 export class LabelLayer {
 
     /**
-     * @param {string} url 
      * @param {object} opts 
      */
-    constructor(url, opts) {
+    constructor(opts) {
         opts = opts || {};
 
         /** 
@@ -28,7 +27,7 @@ export class LabelLayer {
          * The file should contain the information for each label such as the text, the position and other information for the display of the label according to the zoom level.
          * If necessary, this data can be reformated with the 'preprocess' parameter.
          * @private @type {string} */
-        this.url = url
+        this.url = opts.url
 
         /** Specify if and how a label should be drawn, depending on its importance and the zoom level.
          * @private @type {function(Label,number):string} */
@@ -36,11 +35,11 @@ export class LabelLayer {
 
         /** Specify the label color, depending on its importance and the zoom level.
          * @private @type {function(Label,number):string} */
-        this.color = opts.color || (() => "#222")
+        this.color = opts.color || (opts.dark ? () => "#ddd" : () => "#222")
 
         /** Specify the label halo color, depending on its importance and the zoom level.
          * @private @type {function(Label,number):string} */
-        this.haloColor = opts.haloColor || (() => "#FFFFFFBB")
+        this.haloColor = opts.haloColor || (opts.dark ? () => "#000000BB" : () => "#FFFFFFBB")
 
         /** Specify the label halo width, depending on its importance and the zoom level.
         * @private @type {function(Label,number):number} */
