@@ -67,6 +67,10 @@
 
                     c.rIncome = c["Ind_snv"] / c["Ind"] / 12;
                     c.rPoverty = c["Men_pauv"] / c["Men"];
+
+                    const y = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"];
+                    const o = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
+                    c.age_ratio = y / (y + o);
                 }
 
             }
@@ -170,7 +174,7 @@
             })
 
 
-            //
+        //
         const update = () => {
 
             //read GUI selection
