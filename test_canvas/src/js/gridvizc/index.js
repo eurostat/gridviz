@@ -88,11 +88,11 @@ export const getEurostatBoundariesLayer = function (opts) {
     const crs = opts.crs || "3035"
     const scale = opts.scale || "03M"
     const nutsLevel = opts.nutsLevel || "3"
+    const col = opts.dark ? "#999" : "#999" //TODO
 
     opts.color = opts.color || ((f, zf) => {
         const p = f.properties
-        const col = "#999"
-        if (p.co === "T") return col //"#007577"
+        if (p.co === "T") return col
         if (zf < 400) return col
         else if (zf < 1000) return p.lvl >= 3 ? "" : col
         else if (zf < 2000) return p.lvl >= 2 ? "" : col
