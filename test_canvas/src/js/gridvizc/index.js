@@ -10,8 +10,9 @@ export { DatasetComponent } from "./DatasetComponent"
 export * from "d3-scale-chromatic"
 
 //export dataset types
-export { CSVGrid } from "./dataset/CSVGrid"
 export { TiledGrid } from "./dataset/TiledGrid"
+export { CSVGrid } from "./dataset/CSVGrid"
+export { GeoTIFF } from "./dataset/GeoTIFF"
 
 //export styles
 export { ShapeColorSizeStyle } from "./style/ShapeColorSizeStyle"
