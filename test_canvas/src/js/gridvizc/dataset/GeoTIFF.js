@@ -2,14 +2,14 @@
 
 import { DatasetComponent } from "../DatasetComponent"
 import { Cell, Envelope } from "../Dataset"
-import GeoTIFF, { fromUrl, fromUrls, fromArrayBuffer, fromBlob } from "geotiff"
+import { fromUrl } from "geotiff"
 
 /**
  * A dataset composed of a single GeoTiff file.
  * 
  * @author Julien Gaffuri
  */
-export class GeoTiff extends DatasetComponent {
+export class GeoTIFF extends DatasetComponent {
 
     /**
      * @param {string} url The URL of the dataset.
