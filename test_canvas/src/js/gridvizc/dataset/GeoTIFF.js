@@ -46,20 +46,25 @@ export class GeoTIFF extends DatasetComponent {
             .then(tiff => {
                 console.log(tiff)
 
-                /*
-                                const image = await tiff.getImage();
-                
-                                const width = image.getWidth();
-                                const height = image.getHeight();
-                                const tileWidth = image.getTileWidth();
-                                const tileHeight = image.getTileHeight();
-                                const samplesPerPixel = image.getSamplesPerPixel();
-                
-                                //for geotiff
-                                const origin = image.getOrigin();
-                                const resolution = image.getResolution();
-                                const bbox = image.getBoundingBox();
-                */
+
+                    (async function () {
+                        const image = await tiff.getImage();
+                        const width = image.getWidth();
+                        const height = image.getHeight();
+                        const tileWidth = image.getTileWidth();
+                        const tileHeight = image.getTileHeight();
+                        const samplesPerPixel = image.getSamplesPerPixel();
+
+                        //for geotiff
+                        const origin = image.getOrigin();
+                        const resolution = image.getResolution();
+                        const bbox = image.getBoundingBox();
+
+                        console.log(width, height)
+                        console.log(tileWidth, tileHeight)
+                        console.log(samplesPerPixel)
+                        console.log(origin, resolution, bbox)
+                    })()
 
                 //convert coordinates in numbers
                 //for (const c of data) { c.x = +c.x; c.y = +c.y; }
