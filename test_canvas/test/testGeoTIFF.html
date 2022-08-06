@@ -21,16 +21,18 @@
 
 
             //addCSVGridLayer(url, resolution, styles, minZoom, maxZoom, opts) {
-            .addCSVGridLayer(
+            .addGeoTIFFLayer(
                 "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/1km/building_area.csv",
                 1000,
-                [new gviz.SquareColoringWebGLStyle({
-                    colorCol: "Total_m2",
-                    color: (v, r, s) => {
-                        if (v == 0) return ""
-                        return gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5))
-                    }
-                }), new gviz.StrokeStyle({ zf: 200 })
+                [
+                    new gviz.SquareColoringWebGLStyle({
+                        colorCol: "Total_m2",
+                        color: (v, r, s) => {
+                            if (v == 0) return ""
+                            return gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5))
+                        }
+                    }),
+                    new gviz.StrokeStyle({ zf: 200 })
                 ],
                 { preprocess: c => { c.x *= 1000; c.y *= 1000; } }
             )
