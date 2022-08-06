@@ -47,6 +47,21 @@ export class GeoTIFF extends DatasetComponent {
                 console.log("dfskdjfhkjdshf")
                 console.log(tiff)
 
+                /*
+                                const image = await tiff.getImage();
+                
+                                const width = image.getWidth();
+                                const height = image.getHeight();
+                                const tileWidth = image.getTileWidth();
+                                const tileHeight = image.getTileHeight();
+                                const samplesPerPixel = image.getSamplesPerPixel();
+                
+                                //for geotiff
+                                const origin = image.getOrigin();
+                                const resolution = image.getResolution();
+                                const bbox = image.getBoundingBox();
+                */
+
                 //convert coordinates in numbers
                 //for (const c of data) { c.x = +c.x; c.y = +c.y; }
 
@@ -72,6 +87,28 @@ export class GeoTIFF extends DatasetComponent {
             });
 
         return this;
+    }
+
+
+    /**
+     * Fill the view cache with all cells which are within a geographical envelope.
+     * 
+     * @param {Envelope} extGeo 
+     * @returns {void}
+     */
+    updateViewCache(extGeo) {
+
+        //data not loaded yet
+        if (!this.cells) return;
+
+        this.cellsViewCache = []
+        for (const cell of this.cells) {
+            if (+cell.x + this.resolution < extGeo.xMin) continue;
+            if (+cell.x - this.resolution > extGeo.xMax) continue;
+            if (+cell.y + this.resolution < extGeo.yMin) continue;
+            if (+cell.y - this.resolution > extGeo.yMax) continue;
+            this.cellsViewCache.push(cell)
+        }
     }
 
 }
