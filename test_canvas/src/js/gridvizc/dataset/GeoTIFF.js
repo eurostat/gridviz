@@ -44,7 +44,6 @@ export class GeoTIFF extends DatasetComponent {
 
         fromUrl(this.url)
             .then(tiff => {
-                console.log("dfskdjfhkjdshf")
                 console.log(tiff)
 
                 /*
