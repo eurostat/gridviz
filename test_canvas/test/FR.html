@@ -22,7 +22,7 @@
                 <label for="popAge3">by age (3)</label>
                 <br>
                 <input type="radio" name="layer" id="ageR" value="ageR">
-                <label for="ageR">Age balance</label>
+                <label for="ageR">Young balance</label>
                 <br>
                 <input type="radio" name="layer" id="income" value="income">
                 <label for="income">Income</label>
@@ -73,8 +73,8 @@
 
                     //<24
                     c.yyy = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"];
-                    //>55
-                    c.ooo = +c["Ind_55_64"] + +c["Ind_65_79"] + +c["Ind_80p"]
+                    //>65
+                    c.ooo = +c["Ind_65_79"] + +c["Ind_80p"]
                     c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo);
                     c.age_ratio = c.age_ratio * 0.5 + 0.5
                 }
@@ -162,7 +162,7 @@
             ],
             {
                 pixNb: 10,
-                cellInfoHTML: c => "ratio: " + (Math.round(c.age_ratio * 100)) + "<br><24: " + c.yyy + "<br>>55: " + c.ooo
+                cellInfoHTML: c => "ratio: " + (Math.round(c.age_ratio * 100)) + "<br><24: " + c.yyy + "<br>>65: " + c.ooo
             })
 
 
