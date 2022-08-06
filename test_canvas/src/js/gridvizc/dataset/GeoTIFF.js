@@ -44,27 +44,35 @@ export class GeoTIFF extends DatasetComponent {
 
         fromUrl(this.url)
             .then(tiff => {
-                console.log(tiff)
+                console.log(tiff);
 
+                (async function () {
+                    const image = await tiff.getImage();
+                    const width = image.getWidth();
+                    const height = image.getHeight();
+                    const tileWidth = image.getTileWidth();
+                    const tileHeight = image.getTileHeight();
+                    const samplesPerPixel = image.getSamplesPerPixel();
 
-                    (async function () {
-                        const image = await tiff.getImage();
-                        const width = image.getWidth();
-                        const height = image.getHeight();
-                        const tileWidth = image.getTileWidth();
-                        const tileHeight = image.getTileHeight();
-                        const samplesPerPixel = image.getSamplesPerPixel();
+                    //for geotiff
+                    const origin = image.getOrigin();
+                    const resolution = image.getResolution();
+                    const bbox = image.getBoundingBox();
 
-                        //for geotiff
-                        const origin = image.getOrigin();
-                        const resolution = image.getResolution();
-                        const bbox = image.getBoundingBox();
+                    console.log(image)
+                    console.log(width, height)
+                    console.log(tileWidth, tileHeight)
+                    console.log(samplesPerPixel)
+                    console.log(origin)
+                    console.log(resolution)
+                    console.log(bbox)
 
-                        console.log(width, height)
-                        console.log(tileWidth, tileHeight)
-                        console.log(samplesPerPixel)
-                        console.log(origin, resolution, bbox)
-                    })()
+                    console.log("-------")
+
+                    const data = await image.readRasters();
+                    console.log(data)
+
+                })()
 
                 //convert coordinates in numbers
                 //for (const c of data) { c.x = +c.x; c.y = +c.y; }
