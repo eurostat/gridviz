@@ -2,6 +2,7 @@
 
 import { DatasetComponent } from "../DatasetComponent"
 import { Cell } from "../Dataset"
+import GeoTIFF, { fromUrl, fromUrls, fromArrayBuffer, fromBlob } from "geotiff"
 
 /**
  * A dataset composed of a single GeoTiff file.
@@ -19,7 +20,5 @@ export class GeoTiff extends DatasetComponent {
     constructor(url, resolution, opts = {}) {
         super(url, resolution, opts)
     }
-
-    //TODO Use https://geotiffjs.github.io/
 
 }

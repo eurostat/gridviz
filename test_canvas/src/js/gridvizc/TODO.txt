@@ -1,4 +1,7 @@
-Tiff
+geotiff
+https://geotiffjs.github.io/
+https://github.com/geotiffjs/geotiff.js/
+
 
 TODO tw size+rate example: Gender balance SE ? population, youth VS old FR ? Income FR ?
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
