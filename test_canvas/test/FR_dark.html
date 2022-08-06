@@ -14,6 +14,15 @@
 
         let containerDiv = document.getElementById("viz-container");
 
+        const col = gviz.interpolateMagma
+        //interpolateInferno
+        //interpolateMagma
+        //interpolatePlasma
+        //interpolateCividis
+        //interpolateWarm
+        //interpolateCool
+        //interpolateCubehelixDefault
+
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(50.1).setZoomFactorExtent([7, 2000])
             .setViewFromURL()
@@ -29,7 +38,7 @@
                 [
                     new gviz.SquareColoringWebGLStyle({
                         colorCol: "Ind",
-                        color: (v, r, s) => gviz.interpolateMagma(gviz.s(v / s.max, 0.25)),
+                        color: (v, r, s) => col(gviz.s(v / s.max, 0.25)),
                     }), new gviz.StrokeStyle({ zf: 15 })
 
                 ],
