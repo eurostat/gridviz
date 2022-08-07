@@ -62,10 +62,7 @@ export class GeoCanvas {
         //rely on d3 zoom for pan/zoom
         let tP = zoomIdentity
         const z = zoom()
-            .wheelDelta(
-                (e) =>
-                    -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002)
-            )
+            .wheelDelta((e) => -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002))
             .on("zoom", (e) => {
                 const t = e.transform
                 const f = tP.k / t.k
