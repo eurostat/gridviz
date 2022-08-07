@@ -61,45 +61,50 @@ export class GeoCanvas {
 
         //rely on d3 zoom for pan/zoom
         let tP = zoomIdentity
-        const z = zoom().on("zoom", (e) => {
-            const t = e.transform
-            const f = tP.k / t.k
-            if (f == 1) {
-                //pan
-                const dx = tP.x - t.x
-                const dy = tP.y - t.y
-                this.pan(dx * this.getZf(), -dy * this.getZf())
-            } else {
-                const se = e.sourceEvent;
-                if (se instanceof WheelEvent) {
-                    //zoom at the mouse position
-                    this.zoom(f, this.pixToGeoX(e.sourceEvent.offsetX), this.pixToGeoY(e.sourceEvent.offsetY))
-                } else if (se instanceof TouchEvent) {
-                    //compute average position of the touches
-                    let tx = 0, ty = 0
-                    for (let tt of se.targetTouches) { tx += tt.clientX; ty += tt.clientY }
-                    tx /= se.targetTouches.length; ty /= se.targetTouches.length
-                    //zoom at this average position
-                    this.zoom(f, this.pixToGeoX(tx), this.pixToGeoY(ty))
+        const z = zoom()
+            .wheelDelta(
+                (e) =>
+                    -e.deltaY * (e.deltaMode === 1 ? 0.05 : e.deltaMode ? 1 : 0.002)
+            )
+            .on("zoom", (e) => {
+                const t = e.transform
+                const f = tP.k / t.k
+                if (f == 1) {
+                    //pan
+                    const dx = tP.x - t.x
+                    const dy = tP.y - t.y
+                    this.pan(dx * this.getZf(), -dy * this.getZf())
+                } else {
+                    const se = e.sourceEvent;
+                    if (se instanceof WheelEvent) {
+                        //zoom at the mouse position
+                        this.zoom(f, this.pixToGeoX(e.sourceEvent.offsetX), this.pixToGeoY(e.sourceEvent.offsetY))
+                    } else if (se instanceof TouchEvent) {
+                        //compute average position of the touches
+                        let tx = 0, ty = 0
+                        for (let tt of se.targetTouches) { tx += tt.clientX; ty += tt.clientY }
+                        tx /= se.targetTouches.length; ty /= se.targetTouches.length
+                        //zoom at this average position
+                        this.zoom(f, this.pixToGeoX(tx), this.pixToGeoY(ty))
+                    }
                 }
-            }
-            tP = t
-        }).on("start", (e) => {
-            this.canvasSave.c = document.createElement("canvas");
-            this.canvasSave.c.setAttribute("width", "" + this.w);
-            this.canvasSave.c.setAttribute("height", "" + this.h);
-            this.canvasSave.c.getContext("2d").drawImage(this.canvas, 0, 0);
-            this.canvasSave.dx = 0
-            this.canvasSave.dy = 0
-            this.canvasSave.f = 1
+                tP = t
+            }).on("start", (e) => {
+                this.canvasSave.c = document.createElement("canvas");
+                this.canvasSave.c.setAttribute("width", "" + this.w);
+                this.canvasSave.c.setAttribute("height", "" + this.h);
+                this.canvasSave.c.getContext("2d").drawImage(this.canvas, 0, 0);
+                this.canvasSave.dx = 0
+                this.canvasSave.dy = 0
+                this.canvasSave.f = 1
 
-            if (this.onZoomStartFun) this.onZoomStartFun();
-        }).on("end", (e) => {
-            this.redraw(true)
-            this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
+                if (this.onZoomStartFun) this.onZoomStartFun();
+            }).on("end", (e) => {
+                this.redraw(true)
+                this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
 
-            if (this.onZoomEndFun) this.onZoomEndFun();
-        });
+                if (this.onZoomEndFun) this.onZoomEndFun();
+            });
         z(select(this.canvas))
         //select(this.canvas).call(z);
 

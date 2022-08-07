@@ -1,4 +1,5 @@
 TODO tw size+rate example: Gender balance SE ? population, youth VS old FR ? Income FR ?
+Ind_snv,Men,Men_pauv
 
 geotiff
 https://geotiffjs.github.io/
