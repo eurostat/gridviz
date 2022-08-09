@@ -1,6 +1,8 @@
 TODO tw size+rate example: Gender balance SE ? population, youth VS old FR ? Income FR ?
 Ind_snv,Men,Men_pauv
 
+TODO forest https://www.eea.europa.eu/data-and-maps/data/copernicus-land-monitoring-service-high
+
 geotiff
 https://geotiffjs.github.io/
 https://github.com/geotiffjs/geotiff.js/
