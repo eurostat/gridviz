@@ -29,7 +29,7 @@
                 <input type="radio" name="layer" id="poverty" value="poverty">
                 <label for="poverty">Poverty</label>
                 <br>
-                Households: 
+                Households:
                 <input type="radio" name="layer" id="men_1ind" value="men_1ind">
                 <label for="men_1ind">Single person</label>
                 <input type="radio" name="layer" id="men_5pind" value="men_5pind">
@@ -37,7 +37,7 @@
                 <input type="radio" name="layer" id="men_mono" value="men_mono">
                 <label for="men_mono">Single-parent</label>
                 <br>
-                Housing: 
+                Housing:
                 <input type="radio" name="layer" id="men_owner" value="men_owner">
                 <label for="men_owner">Owners</label>
                 <input type="radio" name="layer" id="men_house_surf" value="men_house_surf">
@@ -47,7 +47,7 @@
                 <input type="radio" name="layer" id="log_age" value="log_age">
                 <label for="log_age">by age</label>
                 <br>
-                Social housing: 
+                Social housing:
                 <input type="radio" name="layer" id="log_soc_nb" value="log_soc_nb">
                 <label for="log_soc_nb">nb</label>
                 <input type="radio" name="layer" id="log_soc_per" value="log_soc_per">
@@ -142,6 +142,7 @@
                 preprocess: c => {
                     c.Log = +c.Log_av45 + +c.Log_45_70 + +c.Log_70_90 + +c.Log_ap90 + +c.Log_inc
                     // Log_soc - Nombre de logements* sociaux
+                    c.Log_nsoc = c.Log - Log_soc
                     c.rLogSoc = c.Log_soc / c.Log;
                 }
             }
@@ -432,6 +433,37 @@
                             "1970-1990: " + (c["Log_70_90"]) + "<br>" +
                             " > 1990: " + (c["Log_ap90"]) + "<br>" +
                             " unk.: " + (c["Log_inc"])
+                    })
+
+            } else if (layCode === "log_soc_nb") {
+                //population
+                app.addMultiScaleTiledGridLayer2(
+                    ds.log[year],
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "Log_soc",
+                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                        }), new gviz.StrokeStyle({ zf: 15 })
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + c.Log_soc + "</b> social housing(s)",
+                    }
+                )
+            } else if (layCode === "log_soc_per") {
+                //poverty
+                app.addMultiScaleTiledGridLayer2(
+                    ds.log[year],
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "rLogSoc",
+                            color: (v, r, s) => gviz.interpolateSpectral(1 - v),
+                        }),
+                        new gviz.StrokeStyle({ zf: 15 })
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rLogSoc) / 10) + "%</b> of social housing.",
                     })
 
             } else console.error("Unexpected layer code: " + layCode);
