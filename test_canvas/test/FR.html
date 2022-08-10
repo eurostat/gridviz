@@ -379,7 +379,7 @@
                         new gviz.SquareColoringWebGLStyle({
                             colorCol: "rMenSurf",
                             color: (v, r, s) => {
-                                return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 1))
+                                return gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1))
                             },
                         }),
                         new gviz.StrokeStyle({ zf: 15 })
