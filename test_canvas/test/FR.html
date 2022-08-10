@@ -123,8 +123,6 @@
                     c.rMenFmp = c["Men_fmp"] / c["Men"];
                     // Men_surf - Somme de la surface des logements* du carreau
                     c.rMenSurf = c["Men_surf"] / c["Men"];
-                    // Men_coll - Nombre de ménages en logement collectif
-                    // Men_mais - Nombre de ménages en maison
                 }
             }
         )
@@ -379,6 +377,28 @@
                     {
                         pixNb: 2,
                         cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenSurf) / 10) + "</b> m² / household ?",
+                    })
+
+            } else if (layCode === "men_house_collective") {
+                //housing type: house/collective
+                app.addMultiScaleTiledGridLayer2(
+                    ds.men[year],
+                    [
+                        new gviz.CompositionStyle({
+                            color: {
+                                "Men_coll": "green",
+                                "Men_mais": "orange",
+                            },
+                            type: () => "flag",
+                            sizeCol: "Men",
+                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                        })
+                    ],
+                    {
+                        pixNb: 20,
+                        cellInfoHTML: c => "<b>" + c["Men"] + "</b> housholds(s)<br>" + "By housing type:<br>" +
+                            " Collective: " + (c["Men_coll"]) + "<br>" +
+                            " House: " + (c["Men_mais"])
                     })
             } else console.error("Unexpected layer code: " + layCode);
 
