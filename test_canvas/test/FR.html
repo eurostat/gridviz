@@ -29,6 +29,10 @@
                 <input type="radio" name="layer" id="poverty" value="poverty">
                 <label for="poverty">Poverty</label>
             </div>
+            Year: <select id="year">
+                <option value="2015" selected>2015</option>
+                <option value="2017">2017</option>
+            </select>
             <hr>
             <input type="checkbox" id="label" checked>
             <label for="label">City names</label>
@@ -50,8 +54,11 @@
             .setViewFromURL()
 
 
-        //make datasets
-        const datasetInd = app.makeMultiScaleTiledGridLayer(
+        //datasets
+        const ds = { ind: {}, men: {}, log: {} }
+
+        //population stats dataset
+        ds.ind["2015"] = app.makeMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/ind/2015/",
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
             r => r + "m/",
@@ -72,7 +79,8 @@
                 }
             }
         )
-        const datasetMen = app.makeMultiScaleTiledGridLayer(
+        //household stats dataset
+        ds.men["2015"] = app.makeMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/men/2015/",
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
             r => r + "m/",
@@ -82,15 +90,17 @@
                 }
             }
         )
-        const datasetLog = app.makeMultiScaleTiledGridLayer(
+        //housing stats dataset
+        ds.log["2015"] = app.makeMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/log/2015/",
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
             r => r + "m/")
 
 
+
         //population
         app.addMultiScaleTiledGridLayer2(
-            datasetInd,
+            ds.ind["2015"],
             [
                 new gviz.SquareColoringWebGLStyle({
                     colorCol: "Ind",
@@ -106,7 +116,7 @@
         //population by age
         const col = gviz.interpolateSpectral
         app.addMultiScaleTiledGridLayer2(
-            datasetInd,
+            ds.ind["2015"],
             [
                 new gviz.CompositionStyle({
                     color: {
@@ -146,7 +156,7 @@
 
         //population by age (3 age groups)
         app.addMultiScaleTiledGridLayer2(
-            datasetInd,
+            ds.ind["2015"],
             [
                 new gviz.CompositionStyle({
                     color: {
@@ -171,7 +181,7 @@
 
         //age ratio
         app.addMultiScaleTiledGridLayer2(
-            datasetInd,
+            ds.ind["2015"],
             [
                 new gviz.ShapeColorSizeStyle({
                     sizeCol: "Ind",
@@ -190,7 +200,7 @@
 
         //income
         app.addMultiScaleTiledGridLayer2(
-            datasetInd,
+            ds.ind["2015"],
             [
                 new gviz.SquareColoringWebGLStyle({
                     colorCol: "rIncome",
@@ -205,7 +215,7 @@
 
         //poverty
         app.addMultiScaleTiledGridLayer2(
-            datasetMen,
+            ds.men["2015"],
             [
                 new gviz.SquareColoringWebGLStyle({
                     colorCol: "rPoverty",
