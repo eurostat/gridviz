@@ -2,7 +2,7 @@
 
 Population, population change and basic services accessibility: https://eurostat.github.io/gridviz/test_canvas/test/EUR.html
 
-# France - 200m (Filosofi 2015)
+# France - 200m
 
 https://eurostat.github.io/gridviz/test_canvas/test/FR.html
 
