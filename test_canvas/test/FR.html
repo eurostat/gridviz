@@ -134,7 +134,6 @@
                     c.rMenFmp = c.Men_fmp / c.Men;
                     // Men_surf - Somme de la surface des logements* du carreau
                     c.rMenSurf = +c.Men_surf / +c.Men;
-                    console.log( c.rMenSurf, c.Men_surf, c.Men_surf )
                 }
             }
         )
@@ -387,9 +386,8 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenSurf) / 10) + "</b> surface par ménage."
-                        + "<br>" + c.Men + " ménage(s)"
-                        + "<br>" + c.Men_surf + " surface"
+                        cellInfoHTML: c => "<b>" + (Math.floor(10 * c.rMenSurf) / 10) + "</b> m² par ménage."
+                            + "<br>" + c.Men + " ménage(s)"
                     })
 
             } else if (layCode === "men_house_collective") {
