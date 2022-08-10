@@ -1,7 +1,6 @@
-TODO tw size+rate example: Gender balance SE ? population, youth VS old FR ? Income FR ?
-Ind_snv,Men,Men_pauv
+FR: filosofi
 
-TODO forest https://www.eea.europa.eu/data-and-maps/data/copernicus-land-monitoring-service-high
+TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
 
 geotiff
 https://geotiffjs.github.io/
@@ -10,8 +9,6 @@ https://github.com/geotiffjs/geotiff.js/
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 TODO BIG DEPLOY ?
-
-FR: filosofi
 
 new EUR layers:
 https://www.eea.europa.eu/data-and-maps/figures/spatial-pattern-of-land-take
