@@ -293,6 +293,75 @@
                         pixNb: 2,
                         cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rPoverty) / 10) + "%</b> of poor households.",
                     })
+            } else if (layCode === "men_1ind") {
+                //rate 1
+                app.addMultiScaleTiledGridLayer2(
+                    ds.men[year],
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "rMen1ind",
+                            color: (v, r, s) => {
+                                return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
+                            },
+                        }),
+                        new gviz.StrokeStyle({ zf: 15 })
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMen1ind) / 10) + "%</b> of housholds with one individual.",
+                    })
+            } else if (layCode === "men_5pind") {
+                //rate 5p
+                app.addMultiScaleTiledGridLayer2(
+                    ds.men[year],
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "rMen5p",
+                            color: (v, r, s) => {
+                                return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
+                            },
+                        }),
+                        new gviz.StrokeStyle({ zf: 15 })
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMen5p) / 10) + "%</b> of housholds with >5 individuals.",
+                    })
+            } else if (layCode === "men_owner") {
+                //rate owners
+                app.addMultiScaleTiledGridLayer2(
+                    ds.men[year],
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "rMenProp",
+                            color: (v, r, s) => {
+                                return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
+                            },
+                        }),
+                        new gviz.StrokeStyle({ zf: 15 })
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenProp) / 10) + "%</b> of owner housholds.",
+                    })
+
+            } else if (layCode === "men_mono") {
+                //rate monoparental
+                app.addMultiScaleTiledGridLayer2(
+                    ds.men[year],
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "rMenFmp",
+                            color: (v, r, s) => {
+                                return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
+                            },
+                        }),
+                        new gviz.StrokeStyle({ zf: 15 })
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenFmp) / 10) + "%</b> of monoparental households.",
+                    })
             } else console.error("Unexpected layer code: " + layCode);
 
             //redraw
