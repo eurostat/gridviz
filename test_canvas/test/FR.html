@@ -136,6 +136,7 @@
             r => r + "m/",
             {
                 preprocess: c => {
+                    c.Log = +c.Log_av45 + +c.Log_45_70 + +c.Log_70_90 + +c.Log_ap90 + +c.Log_inc
                     // Log_soc - Nombre de logements* sociaux
                 }
             }
@@ -413,15 +414,14 @@
                                 "Log_inc": "black"
                             },
                             type: () => "flag",
-                            stripesOrientation: () => 90,
-                            //sizeCol: "Ind",
-                            //size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                            //agePyramidHeight: (r) => 0.95 * r
+                            //stripesOrientation: () => 90,
+                            sizeCol: "Log",
+                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
                         })
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => "<b>" + "XXX" + "</b> housing(s)<br>" + "By construction year:<br>" +
+                        cellInfoHTML: c => "<b>" + c.Log + "</b> housing(s)<br>" + "By construction year:<br>" +
                             " < 1945 : " + (c["Log_av45"]) + "<br>" +
                             "1945-1970: " + (c["Log_45_70"]) + "<br>" +
                             "1970-1990: " + (c["Log_70_90"]) + "<br>" +
