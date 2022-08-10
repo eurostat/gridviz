@@ -362,6 +362,24 @@
                         pixNb: 2,
                         cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenFmp) / 10) + "%</b> of monoparental households.",
                     })
+
+            } else if (layCode === "men_house_surf") {
+                //housing surface per houshold
+                app.addMultiScaleTiledGridLayer2(
+                    ds.men[year],
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "rMenSurf",
+                            color: (v, r, s) => {
+                                return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 1))
+                            },
+                        }),
+                        new gviz.StrokeStyle({ zf: 15 })
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenSurf) / 10) + "</b> m² / household ?",
+                    })
             } else console.error("Unexpected layer code: " + layCode);
 
             //redraw
