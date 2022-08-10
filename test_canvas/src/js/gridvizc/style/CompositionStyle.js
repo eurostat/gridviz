@@ -41,7 +41,7 @@ export class CompositionStyle extends Style {
 
         /** A function returning the size of a cell.
          * @private @type {function(number,number,Stat|undefined,number):number} */
-        this.size = opts.size || ((v) => Math.sqrt(v));
+        this.size = opts.size || ((v,r) => r);
 
 
         /** For style types with stripes (flag, segment), the orientation of the stripes.
