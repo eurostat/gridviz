@@ -26,34 +26,38 @@
                 <br>
                 <input type="radio" name="layer" id="income" value="income">
                 <label for="income">Income</label>
-                <br>
                 <input type="radio" name="layer" id="poverty" value="poverty">
                 <label for="poverty">Poverty</label>
+                <br>
+                Households: 
                 <input type="radio" name="layer" id="men_1ind" value="men_1ind">
-                <label for="men_1ind">Rate 1 ind houshold</label>
+                <label for="men_1ind">Single person</label>
                 <input type="radio" name="layer" id="men_5pind" value="men_5pind">
-                <label for="men_5pind">Rate 5 and more</label>
-                <br>
-                <input type="radio" name="layer" id="men_owner" value="men_owner">
-                <label for="men_owner">Rate owners</label>
+                <label for="men_5pind">5+ persons</label>
                 <input type="radio" name="layer" id="men_mono" value="men_mono">
-                <label for="men_mono">Rate monoparental</label>
+                <label for="men_mono">Single-parent</label>
                 <br>
+                Housing: 
+                <input type="radio" name="layer" id="men_owner" value="men_owner">
+                <label for="men_owner">Owners</label>
                 <input type="radio" name="layer" id="men_house_surf" value="men_house_surf">
-                <label for="men_house_surf">Housing surface per houshold</label>
+                <label for="men_house_surf">Surface</label>
                 <input type="radio" name="layer" id="men_house_collective" value="men_house_collective">
-                <label for="men_house_collective">House/building</label>
-                <br>
+                <label for="men_house_collective">by type</label>
                 <input type="radio" name="layer" id="log_age" value="log_age">
-                <label for="log_age">Housing age</label>
-                <input type="radio" name="layer" id="log_soc" value="log_soc">
-                <label for="log_soc">Social house</label>
+                <label for="log_age">by age</label>
+                <br>
+                Social housing: 
+                <input type="radio" name="layer" id="log_soc_nb" value="log_soc_nb">
+                <label for="log_soc_nb">nb</label>
+                <input type="radio" name="layer" id="log_soc_per" value="log_soc_per">
+                <label for="log_soc_per">%</label>
             </div>
+            <hr>
             Year: <select id="year">
                 <option value="2015" selected>2015</option>
                 <option value="2017">2017</option>
             </select>
-            <hr>
             <input type="checkbox" id="label" checked>
             <label for="label">City names</label>
             <input type="checkbox" id="boundary" checked>
@@ -138,6 +142,7 @@
                 preprocess: c => {
                     c.Log = +c.Log_av45 + +c.Log_45_70 + +c.Log_70_90 + +c.Log_ap90 + +c.Log_inc
                     // Log_soc - Nombre de logements* sociaux
+                    c.rLogSoc = c.Log_soc / c.Log;
                 }
             }
         )
