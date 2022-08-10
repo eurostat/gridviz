@@ -212,7 +212,7 @@
                     ],
                     {
                         pixNb: 20,
-                        cellInfoHTML: c => "<b>" + c["Ind"] + "</b> habitant(s)<br>" + "By age:<br>" +
+                        cellInfoHTML: c => "<b>" + c["Ind"] + "</b> habitant(s)<br>" + "Par âge:<br>" +
                             " < 3 : " + (c["Ind_0_3"]) + "<br>" +
                             " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
                             " 6-10: " + (c["Ind_6_10"]) + "<br>" +
@@ -245,7 +245,7 @@
                     ],
                     {
                         pixNb: 20,
-                        cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
+                        cellInfoHTML: c => "<b>" + c["Ind"] + "</b> habitant(s)<br>" + "Par âge:<br>" +
                             " < 17 : " + (c["Ind_0_17"]) + "<br>" +
                             " 18-64 : " + (c["Ind_18_64"]) + "<br>" +
                             " > 65: " + (c["Ind_65p"])
@@ -265,7 +265,7 @@
                     ],
                     {
                         pixNb: 6,
-                        cellInfoHTML: c => "ratio: " + (Math.round(c.age_ratio * 100)) + "<br><24: " + c.yyy + "<br>>65: " + c.ooo
+                        cellInfoHTML: c => "<24: " + c.yyy + "<br>>65: " + c.ooo
                     })
             } else if (layCode === "income") {
                 //income
@@ -280,7 +280,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + Math.floor(c.rIncome) + "€</b>/mois/'personne'",
+                        cellInfoHTML: c => "<b>" + Math.floor(c.rIncome) + "€</b>/mois/'individu'",
                     })
 
             } else if (layCode === "poverty") {
@@ -298,7 +298,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rPoverty) / 10) + "%</b> of poor households.",
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rPoverty) / 10) + "%</b> de ménages pauvres.",
                     })
             } else if (layCode === "men_1ind") {
                 //rate 1
