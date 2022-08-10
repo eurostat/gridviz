@@ -142,7 +142,7 @@
                 preprocess: c => {
                     c.Log = +c.Log_av45 + +c.Log_45_70 + +c.Log_70_90 + +c.Log_ap90 + +c.Log_inc
                     // Log_soc - Nombre de logements* sociaux
-                    c.Log_nsoc = c.Log - Log_soc
+                    c.Log_nsoc = +c.Log - +c.Log_soc;
                     c.rLogSoc = c.Log_soc / c.Log;
                 }
             }
@@ -436,8 +436,8 @@
                     })
 
             } else if (layCode === "log_soc_nb") {
-                //population
-                app.addMultiScaleTiledGridLayer2(
+                //social housing
+                /*app.addMultiScaleTiledGridLayer2(
                     ds.log[year],
                     [
                         new gviz.SquareColoringWebGLStyle({
@@ -449,9 +449,30 @@
                         pixNb: 2,
                         cellInfoHTML: c => "<b>" + c.Log_soc + "</b> social housing(s)",
                     }
-                )
+                )*/
+                app.addMultiScaleTiledGridLayer2(
+                    ds.log[year],
+                    [
+                        new gviz.CompositionStyle({
+                            color: {
+                                "Log_nsoc": "lightblue",
+                                "Log_soc": "green",
+                            },
+                            type: () => "flag",
+                            stripesOrientation: () => 90,
+                            sizeCol: "Log",
+                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.15, 0),
+                        })
+                    ],
+                    {
+                        pixNb: 8,
+                        cellInfoHTML: c => "<b>" + c.Log + "</b> housing(s)<br>" +
+                            " Social: " + c.Log_soc + "<br>" +
+                            " Other: " + c.Log_nsoc
+                    })
+
             } else if (layCode === "log_soc_per") {
-                //poverty
+                //social housing percentage
                 app.addMultiScaleTiledGridLayer2(
                     ds.log[year],
                     [
