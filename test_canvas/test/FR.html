@@ -39,7 +39,7 @@
             <input type="checkbox" id="boundary" checked>
             <label for="boundary">Boundaries</label>
             <hr>Source: <a href="https://www.insee.fr/fr/statistiques/4176290?sommaire=4176305" target="_blank"
-                rel="noopener noreferrer">INSEE - Filosofi 2015 - 200m grid</a>
+                rel="noopener noreferrer">INSEE - Filosofi 2015/2017 - 200m grid</a>
         </span>
     </div>
 
@@ -270,6 +270,9 @@
 
             //read GUI selection
             const layCode = document.querySelector('input[name="layer"]:checked').value
+            const year = document.querySelector('#year').value
+
+            console.log(year)
 
             //hide layers
             app.hideAllLayers()
@@ -286,8 +289,9 @@
             app.cg.redraw();
         }
 
-        //layer selector
+        //layer and year update
         document.querySelector('#layer').addEventListener('change', update)
+        document.querySelector('#year').addEventListener('change', update)
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
