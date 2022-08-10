@@ -131,140 +131,6 @@
         ds.log["2017"] = logDatasetFun(2017)
 
 
-
-        //population
-        app.addMultiScaleTiledGridLayer2(
-            ds.ind["2015"],
-            [
-                new gviz.SquareColoringWebGLStyle({
-                    colorCol: "Ind",
-                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                }), new gviz.StrokeStyle({ zf: 15 })
-            ],
-            {
-                pixNb: 2,
-                cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)",
-            }
-        )
-
-        //population by age
-        const col = gviz.interpolateSpectral
-        app.addMultiScaleTiledGridLayer2(
-            ds.ind["2015"],
-            [
-                new gviz.CompositionStyle({
-                    color: {
-                        "Ind_0_3": col(0 / 80),
-                        "Ind_4_5": col(2 / 80),
-                        "Ind_6_10": col(7 / 80),
-                        "Ind_11_17": col(14 / 80),
-                        "Ind_18_24": col(21 / 80),
-                        "Ind_25_39": col(36 / 80),
-                        "Ind_40_54": col(51 / 80),
-                        "Ind_55_64": col(61 / 80),
-                        "Ind_65_79": col(76 / 80),
-                        "Ind_80p": col(1),
-                        //"Ind_inc": "black"
-                    },
-                    type: () => "agepyramid",
-                    sizeCol: "Ind",
-                    size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                    agePyramidHeight: (r) => 0.95 * r
-                })
-            ],
-            {
-                pixNb: 20,
-                cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
-                    " < 3 : " + (c["Ind_0_3"]) + "<br>" +
-                    " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
-                    " 6-10: " + (c["Ind_6_10"]) + "<br>" +
-                    "11-17: " + (c["Ind_11_17"]) + "<br>" +
-                    "18-24: " + (c["Ind_18_24"]) + "<br>" +
-                    "25-39: " + (c["Ind_25_39"]) + "<br>" +
-                    "40-54: " + (c["Ind_40_54"]) + "<br>" +
-                    "55-64: " + (c["Ind_55_64"]) + "<br>" +
-                    "65-79: " + (c["Ind_65_79"]) + "<br>" +
-                    " > 80: " + (c["Ind_80p"]) + "<br>" +
-                    " unk.: " + (c["Ind_inc"])
-            })
-
-        //population by age (3 age groups)
-        app.addMultiScaleTiledGridLayer2(
-            ds.ind["2015"],
-            [
-                new gviz.CompositionStyle({
-                    color: {
-                        "Ind_0_17": col(0.2),
-                        "Ind_18_64": col(0.4),
-                        "Ind_65p": col(0.9),
-                    },
-                    type: () => "agepyramid",
-                    sizeCol: "Ind",
-                    size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                    agePyramidHeight: (r) => 0.95 * r
-                })
-            ],
-            {
-                pixNb: 20,
-                cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
-                    " < 17 : " + (c["Ind_0_17"]) + "<br>" +
-                    " 18-64 : " + (c["Ind_18_64"]) + "<br>" +
-                    " > 65: " + (c["Ind_65p"])
-            })
-
-
-        //age ratio
-        app.addMultiScaleTiledGridLayer2(
-            ds.ind["2015"],
-            [
-                new gviz.ShapeColorSizeStyle({
-                    sizeCol: "Ind",
-                    size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
-                    colorCol: "age_ratio",
-                    color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
-                    shape: () => "circle",
-                })
-            ],
-            {
-                pixNb: 6,
-                cellInfoHTML: c => "ratio: " + (Math.round(c.age_ratio * 100)) + "<br><24: " + c.yyy + "<br>>65: " + c.ooo
-            })
-
-
-
-        //income
-        app.addMultiScaleTiledGridLayer2(
-            ds.ind["2015"],
-            [
-                new gviz.SquareColoringWebGLStyle({
-                    colorCol: "rIncome",
-                    color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
-                }),
-                new gviz.StrokeStyle({ zf: 15 })
-            ],
-            {
-                pixNb: 2,
-                cellInfoHTML: c => "<b>" + Math.floor(c.rIncome) + "€</b>/mois/'personne'",
-            })
-
-        //poverty
-        app.addMultiScaleTiledGridLayer2(
-            ds.men["2015"],
-            [
-                new gviz.SquareColoringWebGLStyle({
-                    colorCol: "rPoverty",
-                    color: (v, r, s) => {
-                        return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
-                    },
-                }),
-                new gviz.StrokeStyle({ zf: 15 })
-            ],
-            {
-                pixNb: 2,
-                cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rPoverty) / 10) + "%</b> of poor households.",
-            })
-
-
         //
         const update = () => {
 
@@ -272,18 +138,142 @@
             const layCode = document.querySelector('input[name="layer"]:checked').value
             const year = document.querySelector('#year').value
 
-            console.log(year)
+            //remove layers
+            app.layers = []
 
-            //hide layers
-            app.hideAllLayers()
+            //set layer
+            if (layCode === "pop") {
+                //population
+                app.addMultiScaleTiledGridLayer2(
+                    ds.ind["2015"],
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "Ind",
+                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                        }), new gviz.StrokeStyle({ zf: 15 })
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)",
+                    }
+                )
+            } else if (layCode === "popAge") {
+                //population by age
+                const col = gviz.interpolateSpectral
+                app.addMultiScaleTiledGridLayer2(
+                    ds.ind["2015"],
+                    [
+                        new gviz.CompositionStyle({
+                            color: {
+                                "Ind_0_3": col(0 / 80),
+                                "Ind_4_5": col(2 / 80),
+                                "Ind_6_10": col(7 / 80),
+                                "Ind_11_17": col(14 / 80),
+                                "Ind_18_24": col(21 / 80),
+                                "Ind_25_39": col(36 / 80),
+                                "Ind_40_54": col(51 / 80),
+                                "Ind_55_64": col(61 / 80),
+                                "Ind_65_79": col(76 / 80),
+                                "Ind_80p": col(1),
+                                //"Ind_inc": "black"
+                            },
+                            type: () => "agepyramid",
+                            sizeCol: "Ind",
+                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                            agePyramidHeight: (r) => 0.95 * r
+                        })
+                    ],
+                    {
+                        pixNb: 20,
+                        cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
+                            " < 3 : " + (c["Ind_0_3"]) + "<br>" +
+                            " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
+                            " 6-10: " + (c["Ind_6_10"]) + "<br>" +
+                            "11-17: " + (c["Ind_11_17"]) + "<br>" +
+                            "18-24: " + (c["Ind_18_24"]) + "<br>" +
+                            "25-39: " + (c["Ind_25_39"]) + "<br>" +
+                            "40-54: " + (c["Ind_40_54"]) + "<br>" +
+                            "55-64: " + (c["Ind_55_64"]) + "<br>" +
+                            "65-79: " + (c["Ind_65_79"]) + "<br>" +
+                            " > 80: " + (c["Ind_80p"]) + "<br>" +
+                            " unk.: " + (c["Ind_inc"])
+                    })
+            } else if (layCode === "popAge3") {
+                //population by age (3 age groups)
+                const col = gviz.interpolateSpectral
+                app.addMultiScaleTiledGridLayer2(
+                    ds.ind["2015"],
+                    [
+                        new gviz.CompositionStyle({
+                            color: {
+                                "Ind_0_17": col(0.2),
+                                "Ind_18_64": col(0.4),
+                                "Ind_65p": col(0.9),
+                            },
+                            type: () => "agepyramid",
+                            sizeCol: "Ind",
+                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                            agePyramidHeight: (r) => 0.95 * r
+                        })
+                    ],
+                    {
+                        pixNb: 20,
+                        cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>" +
+                            " < 17 : " + (c["Ind_0_17"]) + "<br>" +
+                            " 18-64 : " + (c["Ind_18_64"]) + "<br>" +
+                            " > 65: " + (c["Ind_65p"])
+                    })
+            } else if (layCode === "ageR") {
+                //young VS elderly
+                app.addMultiScaleTiledGridLayer2(
+                    ds.ind["2015"],
+                    [
+                        new gviz.ShapeColorSizeStyle({
+                            sizeCol: "Ind",
+                            size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
+                            colorCol: "age_ratio",
+                            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
+                            shape: () => "circle",
+                        })
+                    ],
+                    {
+                        pixNb: 6,
+                        cellInfoHTML: c => "ratio: " + (Math.round(c.age_ratio * 100)) + "<br><24: " + c.yyy + "<br>>65: " + c.ooo
+                    })
+            } else if (layCode === "income") {
+                //income
+                app.addMultiScaleTiledGridLayer2(
+                    ds.ind["2015"],
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "rIncome",
+                            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
+                        }),
+                        new gviz.StrokeStyle({ zf: 15 })
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + Math.floor(c.rIncome) + "€</b>/mois/'personne'",
+                    })
 
-            if (layCode === "pop") app.layers[0].visible = true;
-            else if (layCode === "popAge") app.layers[1].visible = true;
-            else if (layCode === "popAge3") app.layers[2].visible = true;
-            else if (layCode === "ageR") app.layers[3].visible = true;
-            else if (layCode === "income") app.layers[4].visible = true;
-            else if (layCode === "poverty") app.layers[5].visible = true;
-            else console.error("Unexpected layer code: " + layCode);
+            } else if (layCode === "poverty") {
+                //poverty
+                app.addMultiScaleTiledGridLayer2(
+                    ds.men["2015"],
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "rPoverty",
+                            color: (v, r, s) => {
+                                return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
+                            },
+                        }),
+                        new gviz.StrokeStyle({ zf: 15 })
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rPoverty) / 10) + "%</b> of poor households.",
+                    })
+            } else console.error("Unexpected layer code: " + layCode);
 
             //redraw
             app.cg.redraw();
