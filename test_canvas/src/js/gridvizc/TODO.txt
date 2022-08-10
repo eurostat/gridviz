@@ -1,4 +1,5 @@
 FR: filosofi
+use d3.format
 
 jsdoc
 TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
