@@ -54,7 +54,7 @@
             .setViewFromURL()
 
 
-        //prepare datasets
+        //prepare datasets, indexed by thematic domain and year
         const ds = { ind: {}, men: {}, log: {} }
 
         //population stats dataset
@@ -89,7 +89,22 @@
             r => r + "m/",
             {
                 preprocess: c => {
+                    //ind per men
+                    c.indPerMEn = c["Ind"] / c["Men"];
+                    //poverty
                     c.rPoverty = c["Men_pauv"] / c["Men"];
+                    // Men_1ind - Nombre de ménages d’un seul individu
+                    c.rMen1ind = c["Men_1ind"] / c["Men"];
+                    // Men_5ind - Nombre de ménages de 5 individus ou plus
+                    c.rMen5p = c["Men_5ind"] / c["Men"];
+                    // Men_prop - Nombre de ménages propriétaires
+                    c.rMenProp = c["Men_prop"] / c["Men"];
+                    // Men_fmp - Nombre de ménages monoparentaux
+                    c.rMenFmp = c["Men_fmp"] / c["Men"];
+                    // Men_surf - Somme de la surface des logements* du carreau
+                    c.rMenSurf = c["Men_surf"] / c["Men"];
+                    // Men_coll - Nombre de ménages en logement collectif
+                    // Men_mais - Nombre de ménages en maison
                 }
             }
         )
@@ -100,7 +115,18 @@
         const logDatasetFun = year => app.makeMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/log/2015/",
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-            r => r + "m/")
+            r => r + "m/",
+            {
+                preprocess: c => {
+                    // Log_av45 - Nombre de logements* construits avant 1945
+                    // Log_45_70 - Nombre de logements*construits entre 1945 et 1969
+                    // Log_70_90 - Nombre de logements* construits entre 1970 et 1989
+                    // Log_ap90 - Nombre de logements* construits depuis 1990
+                    // Log_inc - Nombre de logements* dont la date de construction est inconnue
+                    // Log_soc - Nombre de logements* sociaux
+                }
+            }
+        )
         ds.log["2015"] = logDatasetFun(2015)
         ds.log["2017"] = logDatasetFun(2017)
 
