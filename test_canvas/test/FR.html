@@ -62,7 +62,6 @@
                     c["Ind_65p"] = +c["Ind_65_79"] + +c["Ind_80p"]
 
                     c.rIncome = c["Ind_snv"] / c["Ind"] / 12;
-                    c.rPoverty = c["Men_pauv"] / c["Men"];
 
                     //<24
                     c.yyy = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"] + +c["Ind_18_24"];
@@ -76,7 +75,13 @@
         const datasetMen = app.makeMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/men/2015/",
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-            r => r + "m/")
+            r => r + "m/",
+            {
+                preprocess: c => {
+                    c.rPoverty = c["Men_pauv"] / c["Men"];
+                }
+            }
+        )
         const datasetLog = app.makeMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/log/2015/",
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
@@ -200,7 +205,7 @@
 
         //poverty
         app.addMultiScaleTiledGridLayer2(
-            datasetInd,
+            datasetMen,
             [
                 new gviz.SquareColoringWebGLStyle({
                     colorCol: "rPoverty",
