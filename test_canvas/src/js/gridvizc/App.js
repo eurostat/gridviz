@@ -197,9 +197,9 @@ export class App {
                 this.cg.ctx.lineWidth = this.selectionRectangleWidthPix;
                 this.cg.ctx.beginPath();
                 this.cg.ctx.rect(
-                    this.cg.geoToPixX(focus.cell.x) - this.selectionRectangleWidthPix/2,
-                    this.cg.geoToPixY(focus.cell.y) + this.selectionRectangleWidthPix/2,
-                    focus.resolution / this.getZoomFactor() +  this.selectionRectangleWidthPix,
+                    this.cg.geoToPixX(focus.cell.x) - this.selectionRectangleWidthPix / 2,
+                    this.cg.geoToPixY(focus.cell.y) + this.selectionRectangleWidthPix / 2,
+                    focus.resolution / this.getZoomFactor() + this.selectionRectangleWidthPix,
                     -focus.resolution / this.getZoomFactor() - this.selectionRectangleWidthPix
                 );
                 this.cg.ctx.stroke();
@@ -376,7 +376,7 @@ export class App {
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
-     addGeoTIFFLayer(url, resolution, styles, opts) {
+    addGeoTIFFLayer(url, resolution, styles, opts) {
 
         //make dataset
         const ds = new GeoTIFF(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); });
@@ -393,11 +393,10 @@ export class App {
      * @param {string} urlBase 
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURLCode 
-     * @param {Array.<Style>} styles 
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:(function(Cell):void}} opts 
-     * @returns {this}
+     * @param {{preprocess?:function(Cell):void}} opts 
+     * @returns {Dataset}
      */
-    addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts) {
+    makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, opts) {
 
         //make dataset components
         const dsc = []
@@ -409,7 +408,20 @@ export class App {
                 .loadInfo(() => { this.cg.redraw(); }))
         }
         //make dataset and layer
-        const ds = new Dataset(dsc, resolutions, opts)
+        return new Dataset(dsc, resolutions, opts)
+    }
+
+    /**
+     * 
+     * @param {string} urlBase 
+     * @param {Array.<number>} resolutions 
+     * @param {function(number):string} resToURLCode 
+     * @param {Array.<Style>} styles 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:function(Cell):void}} opts 
+     * @returns {this}
+     */
+    addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts) {
+        const ds = this.makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, opts)
         return this.addMultiScaleTiledGridLayer2(ds, styles, opts);
     }
 
@@ -417,7 +429,7 @@ export class App {
      * 
      * @param {Dataset} dataset 
      * @param {Array.<Style>} styles 
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:(function(Cell):void}} opts 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:function(Cell):void}} opts 
      * @returns {this}
      */
     addMultiScaleTiledGridLayer2(dataset, styles, opts) {
