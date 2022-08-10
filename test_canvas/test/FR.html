@@ -450,7 +450,7 @@
                     [
                         new gviz.CompositionStyle({
                             color: {
-                                "Log_nsoc": "#444",
+                                "Log_nsoc": "#777",
                                 "Log_soc": "#33a02c",
                             },
                             type: () => "ring",
@@ -460,9 +460,9 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => "<b>" + c.Log + "</b> logement(s)<br>" +
-                            " Social: " + c.Log_soc + "<br>" +
-                            " Autres: " + c.Log_nsoc
+                        cellInfoHTML: c => c.Log + " logement(s)<br>" +
+                            "<b>" + c.Log_soc + "</b> logement(s) social(ux)<br>" +
+                            "<b>" + c.Log_nsoc + "</b> Autre(s)"
                     })
 
             } else if (layCode === "log_soc_per") {
