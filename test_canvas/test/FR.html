@@ -136,11 +136,6 @@
             r => r + "m/",
             {
                 preprocess: c => {
-                    // Log_av45 - Nombre de logements* construits avant 1945
-                    // Log_45_70 - Nombre de logements*construits entre 1945 et 1969
-                    // Log_70_90 - Nombre de logements* construits entre 1970 et 1989
-                    // Log_ap90 - Nombre de logements* construits depuis 1990
-                    // Log_inc - Nombre de logements* dont la date de construction est inconnue
                     // Log_soc - Nombre de logements* sociaux
                 }
             }
@@ -401,6 +396,39 @@
                             " Collective: " + (c["Men_coll"]) + "<br>" +
                             " House: " + (c["Men_mais"])
                     })
+
+
+            } else if (layCode === "log_age") {
+                //housing age
+                const col = gviz.interpolateSpectral
+                app.addMultiScaleTiledGridLayer2(
+                    ds.log[year],
+                    [
+                        new gviz.CompositionStyle({
+                            color: {
+                                "Log_av45": col(0 / 80),
+                                "Log_45_70": col(2 / 80),
+                                "Log_70_90": col(7 / 80),
+                                "Log_ap90": col(14 / 80),
+                                "Log_inc": "black"
+                            },
+                            type: () => "flag",
+                            stripesOrientation: () => 90,
+                            //sizeCol: "Ind",
+                            //size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                            //agePyramidHeight: (r) => 0.95 * r
+                        })
+                    ],
+                    {
+                        pixNb: 20,
+                        cellInfoHTML: c => "<b>" + "XXX" + "</b> housing(s)<br>" + "By construction year:<br>" +
+                            " < 1945 : " + (c["Log_av45"]) + "<br>" +
+                            "1945-1970: " + (c["Log_45_70"]) + "<br>" +
+                            "1970-1990: " + (c["Log_70_90"]) + "<br>" +
+                            " > 1990: " + (c["Log_ap90"]) + "<br>" +
+                            " unk.: " + (c["Log_inc"])
+                    })
+
             } else console.error("Unexpected layer code: " + layCode);
 
             //redraw
