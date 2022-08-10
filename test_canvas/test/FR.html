@@ -49,20 +49,13 @@
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
 
-        //population
-        app.addMultiScaleTiledGridLayer(
+
+        //make datasets
+        const datasetInd = app.makeMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/ind/2015/",
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
             r => r + "m/",
-            [
-                new gviz.SquareColoringWebGLStyle({
-                    colorCol: "Ind",
-                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                }), new gviz.StrokeStyle({ zf: 15 })
-            ],
             {
-                pixNb: 2,
-                cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)",
                 preprocess: c => {
                     c["Ind_0_17"] = +c["Ind_0_3"] + +c["Ind_4_5"] + +c["Ind_6_10"] + +c["Ind_11_17"]
                     c["Ind_18_64"] = +c["Ind_18_24"] + +c["Ind_25_39"] + +c["Ind_40_54"] + +c["Ind_55_64"]
@@ -78,14 +71,37 @@
                     c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo);
                     c.age_ratio = c.age_ratio * 0.5 + 0.5
                 }
+            }
+        )
+        const datasetMen = app.makeMultiScaleTiledGridLayer(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/men/2015/",
+            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+            r => r + "m/")
+        const datasetLog = app.makeMultiScaleTiledGridLayer(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/log/2015/",
+            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+            r => r + "m/")
 
+
+        //population
+        app.addMultiScaleTiledGridLayer2(
+            datasetInd,
+            [
+                new gviz.SquareColoringWebGLStyle({
+                    colorCol: "Ind",
+                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                }), new gviz.StrokeStyle({ zf: 15 })
+            ],
+            {
+                pixNb: 2,
+                cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)",
             }
         )
 
         //population by age
         const col = gviz.interpolateSpectral
         app.addMultiScaleTiledGridLayer2(
-            app.layers[0].dataset,
+            datasetInd,
             [
                 new gviz.CompositionStyle({
                     color: {
@@ -125,7 +141,7 @@
 
         //population by age (3 age groups)
         app.addMultiScaleTiledGridLayer2(
-            app.layers[0].dataset,
+            datasetInd,
             [
                 new gviz.CompositionStyle({
                     color: {
@@ -150,7 +166,7 @@
 
         //age ratio
         app.addMultiScaleTiledGridLayer2(
-            app.layers[0].dataset,
+            datasetInd,
             [
                 new gviz.ShapeColorSizeStyle({
                     sizeCol: "Ind",
@@ -169,7 +185,7 @@
 
         //income
         app.addMultiScaleTiledGridLayer2(
-            app.layers[0].dataset,
+            datasetInd,
             [
                 new gviz.SquareColoringWebGLStyle({
                     colorCol: "rIncome",
@@ -184,7 +200,7 @@
 
         //poverty
         app.addMultiScaleTiledGridLayer2(
-            app.layers[0].dataset,
+            datasetInd,
             [
                 new gviz.SquareColoringWebGLStyle({
                     colorCol: "rPoverty",
