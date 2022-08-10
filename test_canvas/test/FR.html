@@ -390,12 +390,13 @@
                                 "Men_mais": "orange",
                             },
                             type: () => "flag",
+                            stripesOrientation: () => 90,
                             sizeCol: "Men",
-                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2, 0),
                         })
                     ],
                     {
-                        pixNb: 20,
+                        pixNb: 10,
                         cellInfoHTML: c => "<b>" + c["Men"] + "</b> housholds(s)<br>" + "By housing type:<br>" +
                             " Collective: " + (c["Men_coll"]) + "<br>" +
                             " House: " + (c["Men_mais"])
