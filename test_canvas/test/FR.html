@@ -265,7 +265,8 @@
                     ],
                     {
                         pixNb: 6,
-                        cellInfoHTML: c => "<24: " + c.yyy + "<br>>65: " + c.ooo
+                        cellInfoHTML: c => "<b>" + c.yyy + "</b> 24 ans et moins<br>" + "<b>" + c.ooo + "</b> 65 ans et plus<br>" +
+                            "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
                     })
             } else if (layCode === "income") {
                 //income
@@ -280,7 +281,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + Math.floor(c.rIncome) + "€</b>/mois/'individu'",
+                        cellInfoHTML: c => "<b>" + Math.floor(c.rIncome) + "€</b> par mois et par 'individu'",
                     })
 
             } else if (layCode === "poverty") {
@@ -315,7 +316,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMen1ind) / 10) + "%</b> of housholds with one individual.",
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMen1ind) / 10) + "%</b> de ménages d'un seul individu.",
                     })
             } else if (layCode === "men_5pind") {
                 //rate 5p
@@ -332,7 +333,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMen5p) / 10) + "%</b> of housholds with >5 individuals.",
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMen5p) / 10) + "%</b> de ménages de 5 individus ou plus.",
                     })
             } else if (layCode === "men_owner") {
                 //rate owners
@@ -349,7 +350,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenProp) / 10) + "%</b> of owner housholds.",
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenProp) / 10) + "%</b> de ménages propriétaires.",
                     })
 
             } else if (layCode === "men_mono") {
@@ -367,7 +368,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenFmp) / 10) + "%</b> of monoparental households.",
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenFmp) / 10) + "%</b> de ménages monoparentaux.",
                     })
 
             } else if (layCode === "men_house_surf") {
@@ -385,7 +386,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenSurf) / 10) + "</b> m² / household ?",
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenSurf) / 10) + "</b> surface par ménage.",
                     })
 
             } else if (layCode === "men_house_collective") {
@@ -406,9 +407,9 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => "<b>" + c["Men"] + "</b> housholds(s)<br>" + "By housing type:<br>" +
-                            " Collective: " + (c["Men_coll"]) + "<br>" +
-                            " House: " + (c["Men_mais"])
+                        cellInfoHTML: c => c["Men"] + " ménage(s)<br>" +
+                            "<b>" + c.Men_coll + "</b> en logement collectif<br>" +
+                            "<b>" + c.Men_mais + "</b> en maison"
                     })
 
 
@@ -434,12 +435,12 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => "<b>" + c.Log + "</b> housing(s)<br>" + "By construction year:<br>" +
-                            " < 1945 : " + (c["Log_av45"]) + "<br>" +
-                            "1945-1970: " + (c["Log_45_70"]) + "<br>" +
-                            "1970-1990: " + (c["Log_70_90"]) + "<br>" +
-                            " > 1990: " + (c["Log_ap90"]) + "<br>" +
-                            " unk.: " + (c["Log_inc"])
+                        cellInfoHTML: c => c.Log + " logements(s)<br>" + "Année de construction:<br>" +
+                            "<b>" + c.Log_av45 + "</b> avant 1945<br>" +
+                            "<b>" + c.Log_45_70 + "</b> entre 1945 et 1969<br>" +
+                            "<b>" + c.Log_70_90 + "</b> entre 1970 et 1989<br>" +
+                            "<b>" + c.Log_ap90 + "</b> depuis 1990<br>" +
+                            "<b>" + c.Log_inc + "</b> inconnue(s)"
                     })
 
             } else if (layCode === "log_soc_nb") {
@@ -459,9 +460,9 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => "<b>" + c.Log + "</b> housing(s)<br>" +
+                        cellInfoHTML: c => "<b>" + c.Log + "</b> logement(s)<br>" +
                             " Social: " + c.Log_soc + "<br>" +
-                            " Other: " + c.Log_nsoc
+                            " Autres: " + c.Log_nsoc
                     })
 
             } else if (layCode === "log_soc_per") {
@@ -477,7 +478,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rLogSoc) / 10) + "%</b> of social housing.",
+                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rLogSoc) / 10) + "%</b> de logements sociaux.",
                     })
 
             } else console.error("Unexpected layer code: " + layCode);
