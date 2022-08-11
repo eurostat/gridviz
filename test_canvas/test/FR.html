@@ -37,11 +37,8 @@
                 <label for="poverty">Pauvreté</label>
                 <br>
                 <span style="font-size: 1.25em; font-weight: bold;">Ménages</span><br>
-                <input type="radio" name="layer" id="men_1ind" value="men_1ind">
-                <label for="men_1ind">Un seul individu</label>
-                <input type="radio" name="layer" id="men_5pind" value="men_5pind">
-                <label for="men_5pind">5 individus ou plus</label>
-                <br>
+                <input type="radio" name="layer" id="men_size" value="men_size">
+                <label for="men_size">Taille</label>
                 <input type="radio" name="layer" id="men_mono" value="men_mono">
                 <label for="men_mono">Monoparental</label>
                 <br>
@@ -126,9 +123,10 @@
                     //poverty
                     c.rPoverty = c.Men_pauv / c.Men;
                     // Men_1ind - Nombre de ménages d’un seul individu
-                    c.rMen1ind = c.Men_1ind / c.Men;
+                    //c.rMen1ind = c.Men_1ind / c.Men;
                     // Men_5ind - Nombre de ménages de 5 individus ou plus
-                    c.rMen5p = c.Men_5ind / c.Men;
+                    //c.rMen5p = c.Men_5ind / c.Men;
+                    c.Men_2_4ind = +c.Men - +c.Men_1ind - +c.Men_5ind;
                     // Men_prop - Nombre de ménages propriétaires
                     c.rMenProp = c.Men_prop / c.Men;
                     // Men_fmp - Nombre de ménages monoparentaux
@@ -157,6 +155,8 @@
         )
         ds.log["2015"] = logDatasetFun(2015)
         ds.log["2017"] = logDatasetFun(2017)
+
+
 
 
         //
@@ -295,52 +295,89 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.men[year],
                     [
-                        new gviz.SquareColoringWebGLStyle({
+                        new gviz.ShapeColorSizeStyle({
+                            sizeCol: "Men",
+                            size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: "rPoverty",
                             color: (v, r, s) => {
-                                return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
+                                if (!v) return "#bbb"
+                                return gviz.interpolateOrRd(Math.pow((v - s.min) / (s.max - s.min), 0.7))
                             },
-                        }),
-                        new gviz.StrokeStyle({ zf: 15 })
+                            shape: () => "circle",
+                        })
+                        /*new gviz.SquareColoringWebGLStyle({
+                                colorCol: "rPoverty",
+                                color: (v, r, s) => {
+                                    if (!v) return "#bbb"
+                                    return gviz.interpolateReds(Math.pow((v - s.min) / (s.max - s.min), 0.7))
+                                },
+                            }),
+                            new gviz.StrokeStyle({ zf: 15 })*/
                     ],
                     {
-                        pixNb: 2,
-                        cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rPoverty) / 10) + "%</b> de ménages pauvres.",
+                        pixNb: 6,
+                        cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rPoverty) / 10) + "%</b> de ménages pauvres<br>"
+                            + "sur " + c.Men + " ménages",
                     })
-            } else if (layCode === "men_1ind") {
-                //rate 1
+                /*} else if (layCode === "men_1ind") {
+                    //rate 1
+                    app.addMultiScaleTiledGridLayer2(
+                        ds.men[year],
+                        [
+                            new gviz.SquareColoringWebGLStyle({
+                                colorCol: "rMen1ind",
+                                color: (v, r, s) => {
+                                    return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
+                                },
+                            }),
+                            new gviz.StrokeStyle({ zf: 15 })
+                        ],
+                        {
+                            pixNb: 2,
+                            cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rMen1ind) / 10) + "%</b> de ménages d'un seul individu.",
+                        })
+                } else if (layCode === "men_5pind") {
+                    //rate 5p
+                    app.addMultiScaleTiledGridLayer2(
+                        ds.men[year],
+                        [
+                            new gviz.SquareColoringWebGLStyle({
+                                colorCol: "rMen5p",
+                                color: (v, r, s) => {
+                                    return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
+                                },
+                            }),
+                            new gviz.StrokeStyle({ zf: 15 })
+                        ],
+                        {
+                            pixNb: 2,
+                            cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rMen5p) / 10) + "%</b> de ménages de 5 individus ou plus.",
+                        })*/
+            } else if (layCode === "men_size") {
+                //houshold size
                 app.addMultiScaleTiledGridLayer2(
                     ds.men[year],
                     [
-                        new gviz.SquareColoringWebGLStyle({
-                            colorCol: "rMen1ind",
-                            color: (v, r, s) => {
-                                return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
+                        new gviz.CompositionStyle({
+                            color: {
+                                "Men_1ind": "green",
+                                "Men_2_4ind": "orange",
+                                "Men_5ind": "blue",
                             },
-                        }),
-                        new gviz.StrokeStyle({ zf: 15 })
+                            type: () => "flag",
+                            stripesOrientation: () => 90,
+                            sizeCol: "Men",
+                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.15, 0),
+                        })
                     ],
                     {
-                        pixNb: 2,
-                        cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rMen1ind) / 10) + "%</b> de ménages d'un seul individu.",
+                        pixNb: 8,
+                        cellInfoHTML: c => c.Men + " ménage(s)"
+                        + "<br><b>" + c.Men_1ind + "</b> d'un seul individu"
+                        + "<br><b>" + f1(c.Men_2_4ind) + "</b> de 2 à 4 individus"
+                         + "<br><b>" + c.Men_5ind + "</b> de plus de 5 individus"
                     })
-            } else if (layCode === "men_5pind") {
-                //rate 5p
-                app.addMultiScaleTiledGridLayer2(
-                    ds.men[year],
-                    [
-                        new gviz.SquareColoringWebGLStyle({
-                            colorCol: "rMen5p",
-                            color: (v, r, s) => {
-                                return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
-                            },
-                        }),
-                        new gviz.StrokeStyle({ zf: 15 })
-                    ],
-                    {
-                        pixNb: 2,
-                        cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rMen5p) / 10) + "%</b> de ménages de 5 individus ou plus.",
-                    })
+
             } else if (layCode === "men_owner") {
                 //rate owners
                 app.addMultiScaleTiledGridLayer2(

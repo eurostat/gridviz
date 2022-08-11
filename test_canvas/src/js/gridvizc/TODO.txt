@@ -1,6 +1,5 @@
-FR: filosofi
-use d3.format
-remove d3.chromatic ?
+FR: filosofi - finalise
+correct color ramps
 
 jsdoc
 TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
