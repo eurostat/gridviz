@@ -217,17 +217,17 @@
                     {
                         pixNb: 16,
                         cellInfoHTML: c => "<b>" + c.Ind + "</b> habitant(s)<br>" + "Par âge:<br>" +
-                            " < 3 : " + (c["Ind_0_3"]) + "<br>" +
-                            " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
-                            " 6-10: " + (c["Ind_6_10"]) + "<br>" +
-                            "11-17: " + (c["Ind_11_17"]) + "<br>" +
-                            "18-24: " + (c["Ind_18_24"]) + "<br>" +
-                            "25-39: " + (c["Ind_25_39"]) + "<br>" +
-                            "40-54: " + (c["Ind_40_54"]) + "<br>" +
-                            "55-64: " + (c["Ind_55_64"]) + "<br>" +
-                            "65-79: " + (c["Ind_65_79"]) + "<br>" +
-                            " > 80: " + (c["Ind_80p"]) + "<br>" +
-                            " inc.: " + (c["Ind_inc"])
+                            " < 3 : " + c.Ind_0_3 + "<br>" +
+                            " 4-5 : " + c.Ind_4_5 + "<br>" +
+                            " 6-10: " + c.Ind_6_10 + "<br>" +
+                            "11-17: " + c.Ind_11_17 + "<br>" +
+                            "18-24: " + c.Ind_18_24 + "<br>" +
+                            "25-39: " + c.Ind_25_39 + "<br>" +
+                            "40-54: " + c.Ind_40_54 + "<br>" +
+                            "55-64: " + c.Ind_55_64 + "<br>" +
+                            "65-79: " + c.Ind_65_79 + "<br>" +
+                            " > 80: " + c.Ind_80p + "<br>" +
+                            " inc.: " + c.Ind_inc
                     })
             } else if (layCode === "popAge3") {
                 //population by age (3 age groups)
@@ -485,7 +485,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rLogSoc) / 10) + "%</b> de logements sociaux.",
+                        cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rLogSoc) / 10) + "%</b> de logements sociaux.",
                     })
 
             } else console.error("Unexpected layer code: " + layCode);
