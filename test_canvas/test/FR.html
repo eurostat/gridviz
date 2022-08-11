@@ -280,7 +280,12 @@
                     [
                         new gviz.SquareColoringWebGLStyle({
                             colorCol: "rIncome",
-                            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5)),
+                            color: (v, r, s) => {
+                                let t = (v - 1200) / (3200 - 1200)
+                                t = t > 1 ? 1 : t < 0 ? 0 : t
+                                return gviz.interpolateSpectral(1 - Math.pow(t, 1.5))
+                                //return gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5))
+                            },
                         }),
                         new gviz.StrokeStyle({ zf: 15 })
                     ],
@@ -305,14 +310,6 @@
                             },
                             shape: () => "circle",
                         })
-                        /*new gviz.SquareColoringWebGLStyle({
-                                colorCol: "rPoverty",
-                                color: (v, r, s) => {
-                                    if (!v) return "#bbb"
-                                    return gviz.interpolateReds(Math.pow((v - s.min) / (s.max - s.min), 0.7))
-                                },
-                            }),
-                            new gviz.StrokeStyle({ zf: 15 })*/
                     ],
                     {
                         pixNb: 6,
