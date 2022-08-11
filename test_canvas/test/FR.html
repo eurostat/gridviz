@@ -417,8 +417,8 @@
                     {
                         pixNb: 8,
                         cellInfoHTML: c => c.Men + " ménage(s)<br>" +
-                            "<b>" + c.Men_coll + "</b> en logement collectif<br>" +
-                            "<b>" + c.Men_mais + "</b> en maison"
+                            "<b>" + (c.Men_coll == 0 ? "Aucun" : c.Men_coll) + "</b> en logement collectif<br>" +
+                            "<b>" + (c.Men_mais == 0 ? "Aucun" : c.Men_mais) + "</b> en maison"
                     })
 
 
@@ -470,8 +470,8 @@
                     {
                         pixNb: 8,
                         cellInfoHTML: c => c.Log + " logement(s)<br>" +
-                            "<b>" + c.Log_soc + "</b> logement(s) social(ux)<br>" +
-                            "<b>" + f1(c.Log_nsoc) + "</b> autre(s)"
+                            "<b>" + (c.Log_soc == 0 ? "Aucun" : c.Log_soc) + "</b> logement(s) social(ux)<br>" +
+                            "<b>" + (c.Log_nsoc == 0 ? "Aucun" : f1(c.Log_nsoc)) + "</b> autre(s)"
                     })
 
             } else if (layCode === "log_soc_per") {
@@ -490,7 +490,9 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rLogSoc) / 10) + "%</b> de logements sociaux.",
+                        cellInfoHTML: c =>
+                            (c.rLogSoc == 0 ? "Pas" : "<b>" + f1(Math.floor(1000 * c.rLogSoc) / 10) + "%</b>")
+                            + " de logements sociaux.",
                     })
 
             } else console.error("Unexpected layer code: " + layCode);
