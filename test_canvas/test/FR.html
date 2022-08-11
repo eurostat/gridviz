@@ -281,7 +281,7 @@
                         new gviz.SquareColoringWebGLStyle({
                             colorCol: "rIncome",
                             color: (v, r, s) => {
-                                let t = (v - 1200) / (3200 - 1200)
+                                let t = (v - 1200) / (3600 - 1200)
                                 t = t > 1 ? 1 : t < 0 ? 0 : t
                                 return gviz.interpolateSpectral(1 - Math.pow(t, 1.5))
                                 //return gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5))
@@ -304,7 +304,7 @@
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: "rPoverty",
                             color: (v, r, s) => {
-                                //if (!v) return "#bbb"
+                                if (!v) return "#bbb"
                                 //return gviz.interpolateYlOrRd(Math.pow((v - s.min) / (s.max - s.min), 0.7))
                                 return gviz.interpolateYlOrRd(gviz.s(v, 0.65))
                             },
@@ -313,7 +313,7 @@
                     ],
                     {
                         pixNb: 6,
-                        cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rPoverty) / 10) + "%</b> de ménages pauvres<br>"
+                        cellInfoHTML: c => (c.rPoverty == 0 ? "Pas" : "<b>" + f1(Math.floor(1000 * c.rPoverty) / 10) + "%</b>") + " de ménages pauvres<br>"
                             + "sur " + c.Men + " ménages",
                     })
             } else if (layCode === "men_size") {
