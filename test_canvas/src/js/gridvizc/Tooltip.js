@@ -18,9 +18,9 @@ export class Tooltip {
 		/** @type {string} */
 		this.div = opts.div || "tooltip_eurostat";
 		/** @type {string} */
-		this.maxWidth = opts.maxWidth || "200px";
+		this.maxWidth = opts.maxWidth || "20em";
 		/** @type {string} */
-		this.fontSize = opts.fontSize || "14px";
+		this.fontSize = opts.fontSize || "1.2em";
 		/** @type {string} */
 		this.background = opts.background || "white";
 		/** @type {string} */
@@ -50,7 +50,7 @@ export class Tooltip {
 		//initialise
 		this.tooltip.style("max-width", this.maxWidth);
 		this.tooltip.style("overflow", "hidden");
-		//this.tooltip.style("font-size", this.fontSize);
+		this.tooltip.style("font-size", this.fontSize);
 		this.tooltip.style("background", this.background);
 		this.tooltip.style("padding", this.padding);
 		this.tooltip.style("border", this.border);
