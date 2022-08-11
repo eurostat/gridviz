@@ -360,18 +360,18 @@
                     [
                         new gviz.CompositionStyle({
                             color: {
-                                "Men_1ind": "green",
-                                "Men_2_4ind": "orange",
-                                "Men_5ind": "blue",
+                                "Men_2_4ind": "#1f78b4",
+                                "Men_1ind": "#ffff99",
+                                "Men_5ind": "#e31a1c",
                             },
-                            type: () => "flag",
+                            type: () => "ring",
                             stripesOrientation: () => 90,
                             sizeCol: "Men",
-                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.15, 0),
+                            size: (v, r, s, zf) => 1.3 * r * gviz.s(v / s.max, 0.15, 0),
                         })
                     ],
                     {
-                        pixNb: 8,
+                        pixNb: 10,
                         cellInfoHTML: c => c.Men + " ménage(s)"
                         + "<br><b>" + c.Men_1ind + "</b> d'un seul individu"
                         + "<br><b>" + f1(c.Men_2_4ind) + "</b> de 2 à 4 individus"
