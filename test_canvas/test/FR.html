@@ -179,7 +179,7 @@
                     [
                         new gviz.SquareColoringWebGLStyle({
                             colorCol: "Ind",
-                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                            color: (v, r, s) => gviz.interpolateYlOrRd(gviz.s(v / s.max, 0.25)),
                         }), new gviz.StrokeStyle({ zf: 15 })
                     ],
                     {
@@ -299,8 +299,9 @@
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: "rPoverty",
                             color: (v, r, s) => {
-                                if (!v) return "#bbb"
-                                return gviz.interpolateOrRd(Math.pow((v - s.min) / (s.max - s.min), 0.7))
+                                //if (!v) return "#bbb"
+                                //return gviz.interpolateYlOrRd(Math.pow((v - s.min) / (s.max - s.min), 0.7))
+                                return gviz.interpolateYlOrRd(gviz.s(v, 0.65))
                             },
                             shape: () => "circle",
                         })
@@ -370,7 +371,7 @@
                             sizeCol: "Men",
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: "rMen_prop",
-                            color: (v, r, s) => gviz.interpolateOrRd(Math.pow((v - s.min) / (s.max - s.min), 1)),
+                            color: (v, r, s) => gviz.interpolateYlOrRd(v),
                             shape: () => "circle",
                         })
                     ],
@@ -378,7 +379,7 @@
                         pixNb: 6,
                         cellInfoHTML: c => c.Men + " ménages(s)<br>" +
                             "<b>" + c.Men_prop + "</b> propriétaires<br>" +
-                            "<b>" + f1(c.rMen_prop) + "</b> %"
+                            "<b>" + f1(100 * c.rMen_prop) + "</b> %"
                     })
 
             } else if (layCode === "men_house_surf") {
@@ -485,7 +486,7 @@
                             colorCol: "rLogSoc",
                             color: (v, r, s) => {
                                 if (!v) return "#ccc"
-                                return gviz.interpolateOrRd(v)
+                                return gviz.interpolateYlOrRd(v)
                             },
                         }),
                         new gviz.StrokeStyle({ zf: 15 })
