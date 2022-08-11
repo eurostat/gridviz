@@ -128,7 +128,8 @@
                     // Men_fmp - Nombre de ménages monoparentaux
                     c.Men_nfmp = +c.Men - +c.Men_fmp;
                     // Men_prop - Nombre de ménages propriétaires
-                    c.Men_nprop = +c.Men - +c.Men_prop;
+                    //c.Men_nprop = +c.Men - +c.Men_prop;
+                    c.rMen_prop = +c.Men_prop / +c.Men;
                     // Men_surf - Somme de la surface des logements* du carreau
                     c.rMenSurf = +c.Men_surf / +c.Men;
                 }
@@ -362,6 +363,34 @@
 
             } else if (layCode === "men_owner") {
                 //owners
+                app.addMultiScaleTiledGridLayer2(
+                    ds.men[year],
+                    [
+                        new gviz.ShapeColorSizeStyle({
+                            sizeCol: "Men",
+                            size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
+                            colorCol: "rMen_prop",
+                            color: (v, r, s) => gviz.interpolateOrRd(Math.pow((v - s.min) / (s.max - s.min), 1)),
+                            shape: () => "circle",
+                        })
+
+                        /*                    new gviz.CompositionStyle({
+                                                    color: {
+                                                        "Men_nprop": "#ff7f00",
+                                                        "Men_prop": "#33a02c",
+                                                    },
+                                                    type: () => "flag",
+                                                    sizeCol: "Men",
+                                                    size: (v, r, s, zf) => 1.15 * r * gviz.s(v / s.max, 0.15, 0),
+                                                })*/
+                    ],
+                    {
+                        pixNb: 6,
+                        cellInfoHTML: c => c.Men + " ménages(s)<br>" +
+                            "<b>" + c.Men_prop + "</b> propriétaires<br>" +
+                            "<b>" + f1(c.rMen_prop) + "</b> %"
+                    })
+
                 /*app.addMultiScaleTiledGridLayer2(
                     ds.men[year],
                     [
@@ -470,7 +499,7 @@
                         pixNb: 8,
                         cellInfoHTML: c => c.Log + " logement(s)<br>" +
                             "<b>" + c.Log_soc + "</b> logement(s) social(ux)<br>" +
-                            "<b>" + f1(c.Log_nsoc) + "</b> Autre(s)"
+                            "<b>" + f1(c.Log_nsoc) + "</b> autre(s)"
                     })
 
             } else if (layCode === "log_soc_per") {
