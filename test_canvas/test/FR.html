@@ -75,6 +75,7 @@
     </div>
 
     <script src="../build/gridvizc.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
     <script>
 
         let containerDiv = document.getElementById("viz-container");
@@ -168,6 +169,9 @@
             //remove layers
             app.layers = []
 
+            //formater
+            const f1 = d3.format(".1f")
+
             //set layer
             if (layCode === "pop") {
                 //population
@@ -211,7 +215,7 @@
                         })
                     ],
                     {
-                        pixNb: 20,
+                        pixNb: 16,
                         cellInfoHTML: c => "<b>" + c["Ind"] + "</b> habitant(s)<br>" + "Par âge:<br>" +
                             " < 3 : " + (c["Ind_0_3"]) + "<br>" +
                             " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
@@ -223,7 +227,7 @@
                             "55-64: " + (c["Ind_55_64"]) + "<br>" +
                             "65-79: " + (c["Ind_65_79"]) + "<br>" +
                             " > 80: " + (c["Ind_80p"]) + "<br>" +
-                            " unk.: " + (c["Ind_inc"])
+                            " inc.: " + (c["Ind_inc"])
                     })
             } else if (layCode === "popAge3") {
                 //population by age (3 age groups)
@@ -244,11 +248,12 @@
                         })
                     ],
                     {
-                        pixNb: 20,
+                        pixNb: 12,
                         cellInfoHTML: c => "<b>" + c["Ind"] + "</b> habitant(s)<br>" + "Par âge:<br>" +
-                            " < 17 : " + (c["Ind_0_17"]) + "<br>" +
-                            " 18-64 : " + (c["Ind_18_64"]) + "<br>" +
-                            " > 65: " + (c["Ind_65p"])
+                            " < 17 : " + f1(c.Ind_0_17) + "<br>" +
+                            " 18-64 : " + f1(c.Ind_18_64) + "<br>" +
+                            " > 65: " + f1(c.Ind_65p) + "<br>" +
+                            " inc.: " + f1(c.Ind_inc)
                     })
             } else if (layCode === "ageR") {
                 //young VS elderly
