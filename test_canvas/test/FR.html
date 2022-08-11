@@ -185,7 +185,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + c["Ind"] + "</b> habitant(s)",
+                        cellInfoHTML: c => "<b>" + c.Ind + "</b> habitant(s)",
                     }
                 )
             } else if (layCode === "popAge") {
@@ -216,7 +216,7 @@
                     ],
                     {
                         pixNb: 16,
-                        cellInfoHTML: c => "<b>" + c["Ind"] + "</b> habitant(s)<br>" + "Par âge:<br>" +
+                        cellInfoHTML: c => "<b>" + c.Ind + "</b> habitant(s)<br>" + "Par âge:<br>" +
                             " < 3 : " + (c["Ind_0_3"]) + "<br>" +
                             " 4-5 : " + (c["Ind_4_5"]) + "<br>" +
                             " 6-10: " + (c["Ind_6_10"]) + "<br>" +
@@ -249,7 +249,7 @@
                     ],
                     {
                         pixNb: 12,
-                        cellInfoHTML: c => "<b>" + c["Ind"] + "</b> habitant(s)<br>" + "Par âge:<br>" +
+                        cellInfoHTML: c => "<b>" + c.Ind + "</b> habitant(s)<br>" + "Par âge:<br>" +
                             " < 17 : " + f1(c.Ind_0_17) + "<br>" +
                             " 18-64 : " + f1(c.Ind_18_64) + "<br>" +
                             " > 65: " + f1(c.Ind_65p) + "<br>" +
@@ -270,8 +270,9 @@
                     ],
                     {
                         pixNb: 6,
-                        cellInfoHTML: c => "<b>" + c.yyy + "</b> 24 ans et moins<br>" + "<b>" + c.ooo + "</b> 65 ans et plus<br>" +
-                            "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
+                        cellInfoHTML: c => "<b>" + f1(c.yyy) + "</b> 24 ans et moins"
+                            + "<br>" + "<b>" + f1(c.ooo) + "</b> 65 ans et plus"
+                            + "<br>" + "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
                     })
             } else if (layCode === "income") {
                 //income
@@ -304,7 +305,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rPoverty) / 10) + "%</b> de ménages pauvres.",
+                        cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rPoverty) / 10) + "%</b> de ménages pauvres.",
                     })
             } else if (layCode === "men_1ind") {
                 //rate 1
@@ -321,7 +322,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMen1ind) / 10) + "%</b> de ménages d'un seul individu.",
+                        cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rMen1ind) / 10) + "%</b> de ménages d'un seul individu.",
                     })
             } else if (layCode === "men_5pind") {
                 //rate 5p
@@ -338,7 +339,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMen5p) / 10) + "%</b> de ménages de 5 individus ou plus.",
+                        cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rMen5p) / 10) + "%</b> de ménages de 5 individus ou plus.",
                     })
             } else if (layCode === "men_owner") {
                 //rate owners
@@ -355,7 +356,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenProp) / 10) + "%</b> de ménages propriétaires.",
+                        cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rMenProp) / 10) + "%</b> de ménages propriétaires.",
                     })
 
             } else if (layCode === "men_mono") {
@@ -373,7 +374,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(1000 * c.rMenFmp) / 10) + "%</b> de ménages monoparentaux.",
+                        cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rMenFmp) / 10) + "%</b> de ménages monoparentaux.",
                     })
 
             } else if (layCode === "men_house_surf") {
@@ -391,7 +392,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + (Math.floor(10 * c.rMenSurf) / 10) + "</b> m² par ménage."
+                        cellInfoHTML: c => "<b>" + f1(Math.floor(10 * c.rMenSurf) / 10) + "</b> m² par ménage."
                             + "<br>" + c.Men + " ménage(s)"
                     })
 
@@ -413,7 +414,7 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => c["Men"] + " ménage(s)<br>" +
+                        cellInfoHTML: c => c.Men + " ménage(s)<br>" +
                             "<b>" + c.Men_coll + "</b> en logement collectif<br>" +
                             "<b>" + c.Men_mais + "</b> en maison"
                     })
