@@ -444,7 +444,7 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => c.Log + " logements(s)<br>" + "Année de construction:<br>" +
+                        cellInfoHTML: c => f1(c.Log) + " logements(s)<br>" + "Année de construction:<br>" +
                             "<b>" + c.Log_av45 + "</b> avant 1945<br>" +
                             "<b>" + c.Log_45_70 + "</b> entre 1945 et 1969<br>" +
                             "<b>" + c.Log_70_90 + "</b> entre 1970 et 1989<br>" +
@@ -469,7 +469,7 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => c.Log + " logement(s)<br>" +
+                        cellInfoHTML: c => f1(c.Log) + " logement(s)<br>" +
                             "<b>" + (c.Log_soc == 0 ? "Aucun" : c.Log_soc) + "</b> logement(s) social(ux)<br>" +
                             "<b>" + (c.Log_nsoc == 0 ? "Aucun" : f1(c.Log_nsoc)) + "</b> autre(s)"
                     })
