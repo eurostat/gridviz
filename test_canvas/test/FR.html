@@ -373,16 +373,6 @@
                             color: (v, r, s) => gviz.interpolateOrRd(Math.pow((v - s.min) / (s.max - s.min), 1)),
                             shape: () => "circle",
                         })
-
-                        /*                    new gviz.CompositionStyle({
-                                                    color: {
-                                                        "Men_nprop": "#ff7f00",
-                                                        "Men_prop": "#33a02c",
-                                                    },
-                                                    type: () => "flag",
-                                                    sizeCol: "Men",
-                                                    size: (v, r, s, zf) => 1.15 * r * gviz.s(v / s.max, 0.15, 0),
-                                                })*/
                     ],
                     {
                         pixNb: 6,
@@ -390,22 +380,6 @@
                             "<b>" + c.Men_prop + "</b> propriétaires<br>" +
                             "<b>" + f1(c.rMen_prop) + "</b> %"
                     })
-
-                /*app.addMultiScaleTiledGridLayer2(
-                    ds.men[year],
-                    [
-                        new gviz.SquareColoringWebGLStyle({
-                            colorCol: "rMenProp",
-                            color: (v, r, s) => {
-                                return gviz.interpolateSpectral(1 - Math.pow(v / s.max, 0.7))
-                            },
-                        }),
-                        new gviz.StrokeStyle({ zf: 15 })
-                    ],
-                    {
-                        pixNb: 2,
-                        cellInfoHTML: c => "<b>" + f1(Math.floor(1000 * c.rMenProp) / 10) + "%</b> de ménages propriétaires.",
-                    })*/
 
             } else if (layCode === "men_house_surf") {
                 //housing surface per houshold
