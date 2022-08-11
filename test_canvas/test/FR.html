@@ -458,7 +458,7 @@
                     [
                         new gviz.CompositionStyle({
                             color: {
-                                "Log_nsoc": "#ddd",
+                                "Log_nsoc": "#ccc",
                                 "Log_soc": "#33a02c",
                             },
                             type: () => "ring",
@@ -481,7 +481,7 @@
                         new gviz.SquareColoringWebGLStyle({
                             colorCol: "rLogSoc",
                             color: (v, r, s) => {
-                                if (!v) return "#ddd"
+                                if (!v) return "#ccc"
                                 return gviz.interpolateOrRd(v)
                             },
                         }),
