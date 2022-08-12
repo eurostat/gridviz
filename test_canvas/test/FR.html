@@ -486,7 +486,7 @@
                             colorCol: "rLogSoc",
                             color: (v, r, s) => {
                                 if (!v) return "#ccc"
-                                return gviz.interpolateYlOrRd(v)
+                                return gviz.interpolatePuBuGn(v)
                             },
                         }),
                         new gviz.StrokeStyle({ zf: 15 })
