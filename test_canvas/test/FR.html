@@ -188,6 +188,10 @@
                         cellInfoHTML: c => "<b>" + c.Ind + "</b> habitant(s)",
                     }
                 )
+                app.addLegend(
+                    { type: "color", title: "Nombre d'individus", ticks: 6, colorRamp: gviz.interpolateYlOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                    [app.layers[0].styles[0]]
+                )
             } else if (layCode === "popAge") {
                 //population by age
                 const col = gviz.interpolateSpectral
@@ -351,7 +355,7 @@
                             sizeCol: "Men",
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: "rMenFmp",
-                            color: (v, r, s) => v==0? "#ccc" : gviz.interpolateYlOrRd(gviz.s(v, 0.4)),
+                            color: (v, r, s) => v == 0 ? "#ccc" : gviz.interpolateYlOrRd(gviz.s(v, 0.4)),
                             shape: () => "circle",
                         })
                     ],

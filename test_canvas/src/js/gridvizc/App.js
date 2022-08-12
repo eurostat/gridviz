@@ -157,8 +157,8 @@ export class App {
                 .style("border-radius", "5px")
                 .style("box-shadow", "5px 5px 5px grey")
                 .style("font-family", "Helvetica, Arial, sans-serif")
-                .style("bottom", "20px")
-                .style("left", "20px")
+                .style("top", "20px")
+                .style("right", "20px")
             //hide
             //.style("visibility", "hidden")
         }
