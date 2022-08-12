@@ -259,6 +259,11 @@
                             " > 65: " + f1(c.Ind_65p) + "<br>" +
                             " inc.: " + f1(c.Ind_inc)
                     })
+                app.addLegend(
+                    { type: "colorCat", title: "Age", colCat: [[col(0.2), "<= 17"], [col(0.4), "18-64"], [col(0.9), " > 65"]].reverse() },
+                    [app.layers[0].styles[0]]
+                )
+
             } else if (layCode === "ageR") {
                 //young VS elderly
                 app.addMultiScaleTiledGridLayer2(
