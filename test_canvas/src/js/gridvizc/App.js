@@ -581,6 +581,10 @@ export class App {
         return this
     }
 
+
+
+    //TODO link that to style directly
+
     /**
      * @param {object} opts 
      * @param {Array.<Style>} styles 
