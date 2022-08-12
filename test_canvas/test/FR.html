@@ -248,7 +248,7 @@
                         })
                     ],
                     {
-                        pixNb: 12,
+                        pixNb: 11,
                         cellInfoHTML: c => "<b>" + c.Ind + "</b> habitant(s)<br>" + "Par âge:<br>" +
                             " < 17 : " + f1(c.Ind_0_17) + "<br>" +
                             " 18-64 : " + f1(c.Ind_18_64) + "<br>" +
@@ -369,9 +369,9 @@
                     [
                         new gviz.ShapeColorSizeStyle({
                             sizeCol: "Men",
-                            size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
+                            size: (v, r, s) => 1.4 * r * gviz.s(v / s.max, 0.2),
                             colorCol: "rMen_prop",
-                            color: (v, r, s) => gviz.interpolateYlOrRd(v),
+                            color: (v) => gviz.interpolatePuBuGn(gviz.s(v, 2)),
                             shape: () => "circle",
                         })
                     ],
