@@ -33,6 +33,10 @@ export { SquareColoringWebGLStyle } from "./style/SquareColoringWebGLStyle"
 export { LabelLayer } from "./LabelLayer"
 export { LineLayer as BoundaryLayer } from "./LineLayer"
 
+export { ColorCategoryLegend } from "./legend/ColorCategoryLegend"
+export { ColorLegend } from "./legend/ColorLegend"
+export { SegmentWidthLegend } from "./legend/SegmentWidthLegend"
+export { SizeLegend } from "./legend/SizeLegend"
 
 
 
