@@ -129,6 +129,7 @@ export const getEurostatBoundariesLayer = function (opts) {
 
 
 /**
+ * @deprecated
  * @param {object} opts 
  * @param {Array.<Style>} styles 
  */
