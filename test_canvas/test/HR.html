@@ -195,7 +195,7 @@
                 lay.pixNb = 3;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => "<b>" + c.TOTAL + "</b> inhabitants"
-                /*app.addLegend(
+                /*gviz.addLegend(
                     { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                     [styles[0]]*/
 
@@ -456,16 +456,15 @@
 
 
         /*/legends
-        app
-            .addLegend(
+            gviz.addLegend(
                 { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                 [styles.pop.style[0]]
             )
-            .addLegend(
+            gviz.addLegend(
                 { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "#ccc" },
                 [styles.popGender.style[0]]
             )
-            .addLegend(
+            gviz.addLegend(
                 {
                     type: "color", title: "Men / women difference (%)", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
                     fun: (t, r, s) => {
@@ -475,71 +474,71 @@
                 },
                 [styles.popGender.style[0]]
             )
-            .addLegend(
+            gviz.addLegend(
                 { type: "colorCat", title: "Age group", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() },
                 [styles.popAge.style[0]]
             )
 
-            .addLegend(
+            gviz.addLegend(
                 { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#ccc" },
                 [styles.popEducation.style[0]]
             )
-            .addLegend(
+            gviz.addLegend(
                 { type: "colorCat", title: "Education level", colCat: [[col(0.2), "basic or less"], [col(0.4), "secondary"], [col(0.9), "tertiary"], ["gray", "other"]] },
                 [styles.popEducation.style[0]]
             )
 
-            .addLegend(
+            gviz.addLegend(
                 { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "#ccc" },
                 [styles.popLabor.style[0]]
             )
-            .addLegend(
+            gviz.addLegend(
                 { type: "colorCat", title: "Labor status", colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]] },
                 [styles.popLabor.style[0]]
             )
-            .addLegend(
+            gviz.addLegend(
                 { type: "color", title: "Inactivity rate (%)", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) },
                 [styles.popInact.style[0]]
             )
 
-            .addLegend(
+            gviz.addLegend(
                 { type: "size", shape: "circle", labelUnitText: "businesses", fillColor: "#ccc" },
                 [styles.busSector.style[0]]
             )
-            .addLegend(
+            gviz.addLegend(
                 { type: "colorCat", title: "Sector", colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse() },
                 [styles.busSector.style[0]]
             )
 
 
-            .addLegend(
+            gviz.addLegend(
                 { type: "color", title: "Tourism - number of establishments", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                 [styles.tourAccNb.style[0]]
             )
-            .addLegend(
+            gviz.addLegend(
                 { type: "color", title: "Tourism - number of units", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                 [styles.tourAccUnits.style[0]]
             )
-            .addLegend(
+            gviz.addLegend(
                 { type: "color", title: "Tourism - number of beds", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                 [styles.tourAccBeds.style[0]]
             )
 
 
-            .addLegend(
+            gviz.addLegend(
                 { type: "size", shape: "circle", labelUnitText: "arrivals", fillColor: "#ccc" },
                 [styles.tourOriginArr.style[0]]
             )
-            .addLegend(
+            gviz.addLegend(
                 { type: "colorCat", title: "Tourist origin", colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], ["#bbb", "Other"]] },
                 [styles.tourOriginArr.style[0]]
             )
 
-            .addLegend(
+            gviz.addLegend(
                 { type: "size", shape: "circle", labelUnitText: "nights", fillColor: "#ccc" },
                 [styles.tourOriginNights.style[0]]
             )
-            .addLegend(
+            gviz.addLegend(
                 { type: "colorCat", title: "Tourist origin", colCat: [[col2[0], "Croatian"], [col2[1], "Austrian"], [col2[2], "German"], [col2[3], "Italian"], [col2[4], "Slovenian"], ["#bbb", "Other"]] },
                 [styles.tourOriginNights.style[0]]
             )

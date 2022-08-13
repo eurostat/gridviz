@@ -111,7 +111,7 @@
                 lay.pixNb = 2;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined
-                app.addLegend(
+                gviz.addLegend(
                     { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                     [lay.styles[0]]
                 )
@@ -139,7 +139,7 @@
                     )
                         + "<br>"
                         + "<b>" + (c[layCode] == 0 ? "No change" : (c[layCode] > 0 ? "+" : "") + c[layCode] + " inhabitants") + "</b>"
-                app.addLegend(
+                gviz.addLegend(
                     {
                         type: "color", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
                         fun: (t, r, s) => {
@@ -186,7 +186,7 @@
                     return "<b>" + c.avg_time_nearest_h + "</b> min. to nearest service<br><b>" + c.TOT_P + "</b> inhabitant(s)"
                 }
                 //TODO replace with classified colors
-                /*app.addLegend(
+                /*gviz.addLegend(
                     {
                         type: "color", title: "Travel time to nearest service", ticks: 7, colorRamp: gviz.interpolateSpectral, //invert: true,
                         fun: (t, r, s) => {
@@ -197,7 +197,7 @@
                     },
                     [styles[0]]
                 )*/
-                app.addLegend(
+                gviz.addLegend(
                     { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" },
                     [lay.styles[2]]
                 )
@@ -233,7 +233,7 @@
                 lay.cellInfoHTML = (c) => {
                     return "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>" + c.TOT_P + "</b> inhabitant(s)"
                 }
-                app.addLegend(
+                gviz.addLegend(
                     { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" },
                     [lay.styles[2]]
                 )

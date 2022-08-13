@@ -183,7 +183,7 @@
                     .reverse()
             return opts
         }
-        app.addLegend(getLegendOpts(), [s])
+        gviz.addLegend(getLegendOpts(), [s])
 
 
 
@@ -215,7 +215,7 @@
 
             //update legend
             s.legends = []
-            app.addLegend(getLegendOpts(), [s])
+            gviz.addLegend(getLegendOpts(), [s])
 
             app.cg.redraw();
         });
