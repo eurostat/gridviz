@@ -188,7 +188,7 @@
                         cellInfoHTML: c => "<b>" + c.Ind + "</b> habitant(s)",
                     }
                 )
-                app.addLegend(
+                gviz.addLegend(
                     { type: "color", title: "Nombre d'individus", ticks: 6, colorRamp: gviz.interpolateYlOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                     app.layers[0].styles[0].legend
                 )
@@ -259,7 +259,7 @@
                             " > 65: " + f1(c.Ind_65p) + "<br>" +
                             " inc.: " + f1(c.Ind_inc)
                     })
-                app.addLegend(
+                gviz.addLegend(
                     { type: "colorCat", title: "Age", colCat: [[col(0.2), "<= 17"], [col(0.4), "18-64"], [col(0.9), " > 65"]].reverse() },
                     [app.layers[0].styles[0]]
                 )
