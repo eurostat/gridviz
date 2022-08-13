@@ -583,36 +583,6 @@ export class App {
 
 
 
-    //TODO link that to style directly
-
-    /**
-     * @param {object} opts 
-     * @param {Array.<Style>} styles 
-     */
-    addLegend(opts, styles) {
-        let lg;
-        switch (opts.type) {
-            case "color":
-                lg = new ColorLegend(opts)
-                break
-            case "colorCat":
-                lg = new ColorCategoryLegend(opts)
-                break
-            case "size":
-                lg = new SizeLegend(opts)
-                break
-            case "segWidth":
-                lg = new SegmentWidthLegend(opts)
-                break
-            default:
-                throw ("Unexpected legend type: " + opts.type)
-        }
-        //link legend to styles
-        styles.forEach((s) => s.legends.push(lg))
-        return this
-    }
-
-
     /** @returns {this} */
     setViewFromURL() {
         this.cg.setViewFromURL()

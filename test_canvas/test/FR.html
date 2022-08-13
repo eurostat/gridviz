@@ -190,7 +190,7 @@
                 )
                 app.addLegend(
                     { type: "color", title: "Nombre d'individus", ticks: 6, colorRamp: gviz.interpolateYlOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
-                    [app.layers[0].styles[0]]
+                    app.layers[0].styles[0].legend
                 )
             } else if (layCode === "popAge") {
                 //population by age
