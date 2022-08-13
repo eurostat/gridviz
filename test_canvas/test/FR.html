@@ -190,7 +190,7 @@
                 )
                 //legend
                 app.layers[0].styles[0].legends.push(
-                    new ColorLegend({ title: "Nombre d'individus", ticks: 6, colorRamp: gviz.interpolateYlOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) })
+                    new gviz.ColorLegend({ title: "Nombre d'individus", ticks: 6, colorRamp: gviz.interpolateYlOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) })
                 )
             } else if (layCode === "popAge") {
                 //population by age
@@ -259,9 +259,9 @@
                             " > 65: " + f1(c.Ind_65p) + "<br>" +
                             " inc.: " + f1(c.Ind_inc)
                     })
-                gviz.addLegend(
-                    { type: "colorCat", title: "Age", colCat: [[col(0.2), "<= 17"], [col(0.4), "18-64"], [col(0.9), " > 65"]].reverse() },
-                    [app.layers[0].styles[0]]
+                //legend
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorCategoryLegend({ title: "Age", colCat: [[col(0.2), "<= 17"], [col(0.4), "18-64"], [col(0.9), " > 65"]].reverse() })
                 )
 
             } else if (layCode === "ageR") {
