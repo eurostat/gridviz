@@ -23,20 +23,20 @@ export function zoomTo(app, zfTarget, factor = 1.01, delayMs = 0, callback, dela
         factor == 1.01
     }
 
-    const zfIni = this.getZoomFactor()
+    const zfIni = app.getZoomFactor()
     if (zfTarget == zfIni) return
     if (zfTarget < zfIni) factor = 1 / factor
     let zf = zfIni
     let timer = setInterval(() => {
 
         //compute new zoom level
-        zf = this.getZoomFactor() * factor
+        zf = app.getZoomFactor() * factor
         if (zfTarget > zfIni && zf > zfTarget) zf = zfTarget
         if (zfTarget < zfIni && zf < zfTarget) zf = zfTarget
 
         //set new zoom level
-        this.setZoomFactor(zf)
-        this.cg.redraw()
+        app.setZoomFactor(zf)
+        app.cg.redraw()
 
         //target reached
         if (zf == zfTarget) {
@@ -67,8 +67,8 @@ export function zoomTo(app, zfTarget, factor = 1.01, delayMs = 0, callback, dela
 export function goToStraight(app, xTarget = NaN, yTarget = NaN, zfTarget = NaN, progressFactorPix = 5, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
 
     //store initial position/zoom
-    const zfIni = this.getZoomFactor();
-    const cIni = this.getGeoCenter();
+    const zfIni = app.getZoomFactor();
+    const cIni = app.getGeoCenter();
 
     //default
     xTarget = isNaN(xTarget) ? cIni.x : xTarget
@@ -92,7 +92,7 @@ export function goToStraight(app, xTarget = NaN, yTarget = NaN, zfTarget = NaN, 
 
         //compute and set new position
         if (d > 0) {
-            const c = this.getGeoCenter();
+            const c = app.getGeoCenter();
             let nx = c.x + ddx
             let ny = c.y + ddy
             //if went too far, stop at target values
@@ -100,23 +100,23 @@ export function goToStraight(app, xTarget = NaN, yTarget = NaN, zfTarget = NaN, 
             if (c.x < xTarget && xTarget < nx) nx = xTarget
             if (ny < yTarget && yTarget < c.y) ny = yTarget
             if (c.y < yTarget && yTarget < ny) ny = yTarget
-            this.setGeoCenter({ x: nx, y: ny })
+            app.setGeoCenter({ x: nx, y: ny })
             if (nx == xTarget && ny == yTarget) d = 0
         }
 
         //compute and set new zoom
         if (r != 1) {
-            const zf = this.getZoomFactor()
+            const zf = app.getZoomFactor()
             let nzf = zoomFactor * zf
             //if went too far, stop at target values
             if (nzf < zfTarget && zfTarget < zf) nzf = zfTarget
             if (zf < zfTarget && zfTarget < nzf) nzf = zfTarget
-            this.setZoomFactor(nzf)
+            app.setZoomFactor(nzf)
             if (nzf == zfTarget) r = 1
         }
 
         //redraw
-        this.cg.redraw()
+        app.cg.redraw()
 
         //if target reached, stop
         if (d == 0 && r == 1) {
