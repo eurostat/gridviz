@@ -1,4 +1,4 @@
-legends: remove app.addLegend. Leave it at style level
+legends: remove gviz.addLegend. Leave it at style level
 move zoomMinMax from layer to style level ?
 move addZoomSlider and zoomChange to utils level
 
