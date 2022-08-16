@@ -111,9 +111,9 @@
                 lay.pixNb = 2;
                 lay.visible = true;
                 lay.cellInfoHTML = (c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined
-                gviz.addLegend(
-                    { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
-                    [lay.styles[0]]
+                //legend
+                lay.styles[0].legends.push(
+                    new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) })
                 )
 
             } else if (layCode === "d06_11" || layCode === "d11_18") {
@@ -139,15 +139,17 @@
                     )
                         + "<br>"
                         + "<b>" + (c[layCode] == 0 ? "No change" : (c[layCode] > 0 ? "+" : "") + c[layCode] + " inhabitants") + "</b>"
-                gviz.addLegend(
-                    {
-                        type: "color", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+
+
+                //legend
+                lay.styles[0].legends.push(
+                    new gviz.ColorLegend({
+                        title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
                         fun: (t, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
                         }
-                    },
-                    [lay.styles[0]]
+                    })
                 )
 
 
