@@ -199,10 +199,9 @@
                     },
                     [styles[0]]
                 )*/
-                gviz.addLegend(
-                    { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" },
-                    [lay.styles[2]]
-                )
+
+                //legend
+                lay.styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
 
 
             } else if (layCode === "accEducPrim") {
@@ -235,19 +234,16 @@
                 lay.cellInfoHTML = (c) => {
                     return "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>" + c.TOT_P + "</b> inhabitant(s)"
                 }
-                gviz.addLegend(
-                    { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" },
-                    [lay.styles[2]]
-                )
-
+                //legend
+                lay.styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
 
             } else {
-                console.log("Unexpected layer code: " + layCode);
-                return;
-            }
+            console.log("Unexpected layer code: " + layCode);
+            return;
+        }
 
-            //redraw
-            app.cg.redraw();
+        //redraw
+        app.cg.redraw();
         }
 
 
