@@ -11,11 +11,6 @@ import { TiledGrid } from './dataset/TiledGrid';
 import { LabelLayer } from './LabelLayer';
 import { LineLayer } from './LineLayer';
 
-import { ColorLegend } from './legend/ColorLegend'
-import { ColorCategoryLegend } from './legend/ColorCategoryLegend'
-import { SizeLegend } from './legend/SizeLegend'
-import { SegmentWidthLegend } from './legend/SegmentWidthLegend'
-
 import { select } from "d3-selection";
 import { monitor, monitorDuration } from "./utils/Utils"
 import { GeoTIFF } from './dataset/GeoTIFF';
