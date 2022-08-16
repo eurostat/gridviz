@@ -233,6 +233,14 @@
                             " > 80: " + c.Ind_80p + "<br>" +
                             " inc.: " + c.Ind_inc
                     })
+                //legend
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorCategoryLegend({
+                        title: "Age",
+                        colCat: [[col(0 / 80), "<= 3"], [col(2 / 80), "4-5"], [col(7 / 80), "6-10"], [col(14 / 80), "11-17"], [col(21 / 80), "18-24"], [col(36 / 80), "25-39"], [col(51 / 80), "40-54"], [col(61 / 80), "55-64"], [col(76 / 80), "65-79"], [col(1), " > 80"]].reverse()
+                    })
+                )
+
             } else if (layCode === "popAge3") {
                 //population by age (3 age groups)
                 const col = gviz.interpolateSpectral
