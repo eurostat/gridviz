@@ -20,7 +20,8 @@ export class Style {
 
     /**
      * @abstract
-     * @param {object} opts 
+     * @param {{offset?:function(Cell,number,number):{{dx:number,dy:number}},minZoom?:number,maxZoom?:number}} opts 
+     *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(opts) {
         opts = opts || {};
@@ -28,6 +29,20 @@ export class Style {
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
          * @protected @type {function(Cell,number,number):{dx:number,dy:number}} */
         this.offset = opts.offset || ((c, r, zf) => ({ dx: 0, dy: 0 }));
+
+
+        /** The minimum zoom factor: Below this level, the layer is not shown.
+         * @type {number} */
+        this.minZoom = opts.minZoom || 0;
+
+        /** The maximum zoom factor: Above this level, the layer is not shown.
+         * @type {number} */
+        this.maxZoom = opts.minZoom || Infinity;
+
+        //ensure acceptable values for the zoom limits.
+        if (this.minZoom >= this.maxZoom)
+            throw new Error("Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.")
+
 
         /** @public @type {Array.<Legend>} */
         this.legends = []
