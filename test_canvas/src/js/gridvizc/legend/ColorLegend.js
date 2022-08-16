@@ -28,11 +28,11 @@ export class ColorLegend extends Legend {
         this.width = opts.width || 300
         this.height = opts.height || 15
         this.margin = opts.margin || 5
-        this.ticks = opts.ticks || Math.floor(this.width / 40)
+        this.ticks = opts.ticks || Math.floor(this.width / 50)
         this.tickFormat = opts.tickFormat || ".0f"
         this.tickUnit = opts.tickUnit
 
-        this.fontSize = opts.fontSize || "0.7em"
+        this.fontSize = opts.fontSize || "0.8em"
         this.invert = opts.invert
 
     }
@@ -55,7 +55,7 @@ export class ColorLegend extends Legend {
         const titleHeight = 12
 
         const svgW = this.width + 2 * this.margin
-        const svgH = this.height + 3 * this.margin + titleHeight + this.tickSize + 8
+        const svgH = this.height + 3 * this.margin + titleHeight + this.tickSize + 9
         const svg = this.div.append("svg").attr("width", svgW).attr("height", svgH)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
 

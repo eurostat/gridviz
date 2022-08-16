@@ -27,11 +27,11 @@ export class ColorCategoryLegend extends Legend {
         this.strokeWidth = opts.strokeWidth || 1
 
         this.title = opts.title;
-        this.titleFontSize = opts.titleFontSize || "10pt";
+        this.titleFontSize = opts.titleFontSize || "0.8em";
         this.titleFontWeight = opts.titleFontWeight || "bold";
 
         //label font
-        this.labelFontSize = opts.labelFontSize || "9pt"
+        this.labelFontSize = opts.labelFontSize || "0.8em"
 
     }
 
