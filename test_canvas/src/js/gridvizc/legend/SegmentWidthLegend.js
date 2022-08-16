@@ -26,7 +26,7 @@ export class SegmentWidthLegend extends Legend {
         this.orientation = opts.orientation || 0
 
         //label
-        this.labelFontSize = opts.labelFontSize || 9
+        this.labelFontSize = opts.labelFontSize || "0.8em"
         this.labelUnitText = opts.labelUnitText || ""
 
         //
@@ -77,7 +77,7 @@ export class SegmentWidthLegend extends Legend {
 
         const valueT = format(",.2r")(value);
         this.div.append("div")
-            .style("font-size", this.labelFontSize + "pt")
+            .style("font-size", this.labelFontSize)
             //.style("font-weight", "bold")
             .style("", "inline-block")
             .text(valueT + (this.labelUnitText ? " " : "") + this.labelUnitText)
