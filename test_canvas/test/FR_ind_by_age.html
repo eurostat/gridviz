@@ -12,8 +12,7 @@
     <div
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
         <span style="font-size: 1.8em; font-weight: bold;">Population of France by age</span><br>
-        <span
-            style="font-size: 1.25em;">
+        <span style="font-size: 1.25em;">
             <input type="checkbox" id="agg">
             <label for="agg">Aggregate to 3 age groups</label>
             <hr>
@@ -130,7 +129,7 @@
             r => r + "m/",
             [getStyle()],
             {
-                pixNb : 12,
+                pixNb: 12,
                 cellInfoHTML: c => {
                     let out = "<b>" + c["Ind"] + "</b> inhabitant(s)<br>" + "By age:<br>"
                     if (getAggUI()) {
@@ -172,7 +171,7 @@
 
         //add legends
         const getLegendOpts = () => {
-            const opts = { type: "colorCat", title: "Age group", shape: "circle" }
+            const opts = { title: "Age group", shape: "circle" }
             if (getAggUI())
                 opts.colCat = [[getColorDict()["Ind_0_17"], "< 17"], [getColorDict()["Ind_18_64"], "18 to 65"], [getColorDict()["Ind_65p"], "> 65"]]
                     .reverse()
@@ -183,7 +182,7 @@
                     .reverse()
             return opts
         }
-        gviz.addLegend(getLegendOpts(), [s])
+        s.legends.push(new gviz.ColorCategoryLegend(getLegendOpts()))
 
 
 
@@ -214,8 +213,7 @@
             s.color = getColorDict()
 
             //update legend
-            s.legends = []
-            gviz.addLegend(getLegendOpts(), [s])
+            s.legends = [new gviz.ColorCategoryLegend(getLegendOpts())]
 
             app.cg.redraw();
         });
