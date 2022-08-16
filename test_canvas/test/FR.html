@@ -185,7 +185,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + c.Ind + "</b> habitant(s)",
+                        cellInfoHTML: c => "<b>" + c.Ind + "</b> individu" + (+c.Ind == 1 ? "" : "s"),
                     }
                 )
                 //legend
@@ -220,7 +220,7 @@
                     ],
                     {
                         pixNb: 16,
-                        cellInfoHTML: c => "<b>" + c.Ind + "</b> habitant(s)<br>" + "Par âge:<br>" +
+                        cellInfoHTML: c => "<b>" + c.Ind + "</b> individu(s)<br>" + "Par âge:<br>" +
                             " < 3 : " + c.Ind_0_3 + "<br>" +
                             " 4-5 : " + c.Ind_4_5 + "<br>" +
                             " 6-10: " + c.Ind_6_10 + "<br>" +
@@ -261,7 +261,7 @@
                     ],
                     {
                         pixNb: 11,
-                        cellInfoHTML: c => "<b>" + c.Ind + "</b> habitant(s)<br>" + "Par âge:<br>" +
+                        cellInfoHTML: c => "<b>" + c.Ind + "</b> individu(s)<br>" + "Par âge:<br>" +
                             " < 17 : " + f1(c.Ind_0_17) + "<br>" +
                             " 18-64 : " + f1(c.Ind_18_64) + "<br>" +
                             " > 65: " + f1(c.Ind_65p) + "<br>" +
@@ -291,6 +291,12 @@
                             + "<br>" + "<b>" + f1(c.ooo) + "</b> 65 ans et plus"
                             + "<br>" + "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
                     })
+                //legend
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "individus", fillColor: "#ccc" }))
+                //app.layers[0].styles[0].legends.push(
+                //    new gviz.SizeLegend({ title: "Age", colCat: [[col(0.2), "<= 17"], [col(0.4), "18-64"], [col(0.9), " > 65"]].reverse() })
+                //)
+
             } else if (layCode === "income") {
                 //income
                 app.addMultiScaleTiledGridLayer2(
