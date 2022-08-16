@@ -28,7 +28,7 @@ export class SizeLegend extends Legend {
         this.strokeWidth = opts.strokeWidth || 1
 
         //label
-        this.labelFontSize = opts.labelFontSize || 9
+        this.labelFontSize = opts.labelFontSize || "0.8em"
         this.labelUnitText = opts.labelUnitText || ""
         this.labelFormat = opts.labelFormat || ",.2r"
 
@@ -92,7 +92,7 @@ export class SizeLegend extends Legend {
         this.div.append("div")
             .style("display", "inline-block")
             .style("left", "4px")
-            .style("font-size", this.labelFontSize + "pt")
+            .style("font-size", this.labelFontSize)
             .text(valueT + (this.labelUnitText ? " " : "") + this.labelUnitText)
     }
 }
