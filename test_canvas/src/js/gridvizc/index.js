@@ -38,17 +38,13 @@ export { ColorCategoryLegend } from "./legend/ColorCategoryLegend"
 export { SizeLegend } from "./legend/SizeLegend"
 export { SegmentWidthLegend } from "./legend/SegmentWidthLegend"
 
+export { goToStraight, zoomTo } from "./utils/zoomUtils"
 
 
 
 import { geoAzimuthalEqualArea } from 'd3-geo'
 import { LabelLayer } from "./LabelLayer"
-import { ColorCategoryLegend } from "./legend/ColorCategoryLegend"
-import { ColorLegend } from "./legend/ColorLegend"
-import { SegmentWidthLegend } from "./legend/SegmentWidthLegend"
-import { SizeLegend } from "./legend/SizeLegend"
 import { LineLayer } from "./LineLayer"
-import { Style } from "./Style"
 
 
 /**
