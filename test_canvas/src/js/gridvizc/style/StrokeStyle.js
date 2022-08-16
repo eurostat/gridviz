@@ -18,6 +18,7 @@ export class StrokeStyle extends Style {
 
 
         /**
+         * @deprecated
          *  @protected @type {number} */
         this.zf = opts.zf;
 

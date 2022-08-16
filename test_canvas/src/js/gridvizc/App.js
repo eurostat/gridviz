@@ -76,6 +76,8 @@ export class App {
 
                 //check if layer is visible
                 if (!layer.visible) continue;
+                if (zf > layer.maxZoom) continue;
+                if (zf < layer.minZoom) continue;
 
                 //get layer dataset component
                 const dsc = layer.getDatasetComponent(zf)
@@ -91,12 +93,17 @@ export class App {
 
                 //draw cells, style by style
                 if (strong)
-                    for (const style of layer.styles)
-                        style.draw(dsc.getViewCache(), dsc.getResolution(), this.cg)
+                    for (const s of layer.styles) {
+                        if (zf > s.maxZoom) continue;
+                        if (zf < s.minZoom) continue;
+                        s.draw(dsc.getViewCache(), dsc.getResolution(), this.cg)
+                    }
 
                 //add legend element
                 if (this.legend && strong)
                     for (const s of layer.styles) {
+                        if (zf > s.maxZoom) continue;
+                        if (zf < s.minZoom) continue;
                         for (const lg of s.legends) {
                             //console.log(s, lg)
                             //this.legend.append(lg.div)

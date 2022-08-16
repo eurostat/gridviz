@@ -35,7 +35,7 @@ export class Layer {
 
         /** The maximum zoom factor: Above this level, the layer is not shown.
          * @type {number} */
-        this.maxZoom = opts.minZoom || Infinity;
+        this.maxZoom = opts.maxZoom || Infinity;
 
         //ensure acceptable values for the zoom limits.
         if (this.minZoom >= this.maxZoom)

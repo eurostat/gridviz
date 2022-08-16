@@ -1,4 +1,9 @@
 move zoomMinMax from layer to style level ?
+        /**
+         * @deprecated
+         *  @protected @type {number} */
+        this.zf = opts.zf;
+
 
 FR: filosofi - finalise
 correct color ramps
