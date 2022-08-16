@@ -399,47 +399,38 @@
 
 
         //popchange
-        gviz.addLegend(
-            {
-                type: "color", title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
-                fun: (t, r, s) => {
-                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                    return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
-                }
-            },
-            [sd.popchange.squareColor.style[0], sd.popchange.circleColor.style[0]]
-        )
-        gviz.addLegend(
-            { type: "colorCat", title: "", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] },
-            [sd.popchange.squareSize.style[0], sd.popchange.circleSize.style[0], sd.popchange.donut.style[0],
-            sd.popchange.segmentH.style[0], sd.popchange.segmentV.style[0], sd.popchange.segmentO.style[0],
-            sd.popchange.side.style[0],
-            sd.popchange.pillar.style[0],
-            sd.popchange.dot.style[0],
-            sd.popchange.text.style[0]]
-        )
-        gviz.addLegend(
-            { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "gray" },
-            [sd.popchange.squareSize.style[0]]
-        )
-        gviz.addLegend(
-            { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "gray" },
-            [sd.popchange.circleSize.style[0]]
-        )
-        gviz.addLegend(
-            { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 },
-            [sd.popchange.segmentH.style[0]]
-        )
-        gviz.addLegend(
-            { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 },
-            [sd.popchange.segmentV.style[0]]
-        )
-        gviz.addLegend(
-            { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 },
-            [sd.popchange.segmentO.style[0]]
-        )
+        sd.popchange.squareColor.style[0].legends.push(new gviz.ColorLegend({
+            title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+            fun: (t, r, s) => {
+                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
+            }
+        }))
+        sd.popchange.circleColor.style[0].legends.push(new gviz.ColorLegend({
+            title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+            fun: (t, r, s) => {
+                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
+            }
+        }))
 
+        const lgCat = new gviz.ColorCategoryLegend({ title: "", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] })
+        sd.popchange.squareSize.style[0].legends.push(lgCat)
+        sd.popchange.circleSize.style[0].legends.push(lgCat)
+        sd.popchange.donut.style[0].legends.push(lgCat)
+        sd.popchange.segmentH.style[0].legends.push(lgCat)
+        sd.popchange.segmentV.style[0].legends.push(lgCat)
+        sd.popchange.segmentO.style[0].legends.push(lgCat)
+        sd.popchange.side.style[0].legends.push(lgCat)
+        sd.popchange.pillar.style[0].legends.push(lgCat)
+        sd.popchange.dot.style[0].legends.push(lgCat)
+        sd.popchange.text.style[0].legends.push(lgCat)
 
+        sd.popchange.squareSize.style[0].legends.push(new gviz.SizeLegend({ shape: "square", labelUnitText: "inhab.", fillColor: "gray" }))
+        sd.popchange.circleSize.style[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }))
+        sd.popchange.segmentH.style[0].legends.push(new gviz.SegmentWidthLegend({ type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }))
+        sd.popchange.segmentV.style[0].legends.push(new gviz.SegmentWidthLegend({ type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 }))
+        sd.popchange.segmentO.style[0].legends.push(new gviz.SegmentWidthLegend({ type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 }))
 
 
         const s = sd[getSelectedMapType()][getSelectedStyle()]
