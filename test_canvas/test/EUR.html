@@ -106,7 +106,7 @@
                     colorCol: layCode,
                     color: (v, r, s) => v == 0 ? "" : gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                 }),
-                new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", zf: 80 })
+                new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
                 ]
                 lay.pixNb = 2;
                 lay.visible = true;
@@ -127,7 +127,7 @@
                     },
                     shape: () => "square",
                 }),
-                new gviz.StrokeStyle({ zf: 80 })
+                new gviz.StrokeStyle({ maxZoom: 80 })
                 ]
                 lay.pixNb = 2;
                 lay.visible = true;
@@ -173,7 +173,7 @@
                             return gviz.interpolateSpectral(t)
                         },
                     }),
-                    new gviz.StrokeStyle({ zf: 80 }),
+                    new gviz.StrokeStyle({ maxZoom: 80 }),
                     new gviz.ShapeColorSizeStyle({
                         color: () => "#000000dd",
                         sizeCol: "TOT_P",
@@ -210,7 +210,7 @@
                             return gviz.interpolateSpectral(t)
                         },
                     }),
-                    new gviz.StrokeStyle({ zf: 80 }),
+                    new gviz.StrokeStyle({ maxZoom: 80 }),
                     new gviz.ShapeColorSizeStyle({
                         color: () => "#000000dd",
                         sizeCol: "TOT_P",

@@ -174,7 +174,7 @@
 
             const col = gviz.interpolateSpectral
             const col2 = gviz.schemeCategory10
-            const sStroke = new gviz.StrokeStyle({ zf: 100 })
+            const sStroke = new gviz.StrokeStyle({ maxZoom: 100 })
 
             if (layCode === "pop") {
                 const lay = app.layers[0]

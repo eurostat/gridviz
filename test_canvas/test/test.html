@@ -30,7 +30,7 @@
                     new gviz.SquareColoringWebGLStyle({
                         colorCol: "Ind",
                         color: (v, r, s) => gviz.interpolateMagma(gviz.s(v / s.max, 0.25)),
-                    }), new gviz.StrokeStyle({ zf: 15 })
+                    }), new gviz.StrokeStyle({ maxZoom: 15 })
 
                 ],
                 {

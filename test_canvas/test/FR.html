@@ -181,7 +181,7 @@
                         new gviz.SquareColoringWebGLStyle({
                             colorCol: "Ind",
                             color: (v, r, s) => gviz.interpolateYlOrRd(gviz.s(v / s.max, 0.25)),
-                        }), new gviz.StrokeStyle({ zf: 15 })
+                        }), new gviz.StrokeStyle({ maxZoom: 15 })
                     ],
                     {
                         pixNb: 2,
@@ -297,7 +297,7 @@
                                 //return gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5))
                             },
                         }),
-                        new gviz.StrokeStyle({ zf: 15 })
+                        new gviz.StrokeStyle({ maxZoom: 15 })
                     ],
                     {
                         pixNb: 2,
@@ -402,7 +402,7 @@
                                 return gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1))
                             },
                         }),
-                        new gviz.StrokeStyle({ zf: 15 })
+                        new gviz.StrokeStyle({ maxZoom: 15 })
                     ],
                     {
                         pixNb: 2,
@@ -498,7 +498,7 @@
                                 return gviz.interpolatePuBuGn(v)
                             },
                         }),
-                        new gviz.StrokeStyle({ zf: 15 })
+                        new gviz.StrokeStyle({ maxZoom: 15 })
                     ],
                     {
                         pixNb: 2,
