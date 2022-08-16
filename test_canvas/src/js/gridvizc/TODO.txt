@@ -1,5 +1,8 @@
+Legend font size
 FR: filosofi - finalise - add legends
 correct color ramps
+PiLa
+
 HR legends
 
 jsdoc

@@ -32,7 +32,7 @@ export class ColorLegend extends Legend {
         this.tickFormat = opts.tickFormat || ".0f"
         this.tickUnit = opts.tickUnit
 
-        this.fontSize = opts.fontSize || 9
+        this.fontSize = opts.fontSize || "0.7em"
         this.invert = opts.invert
 
     }
@@ -55,13 +55,13 @@ export class ColorLegend extends Legend {
         const titleHeight = 12
 
         const svgW = this.width + 2 * this.margin
-        const svgH = this.height + 3 * this.margin + titleHeight + this.tickSize + this.fontSize - 5
+        const svgH = this.height + 3 * this.margin + titleHeight + this.tickSize + 8
         const svg = this.div.append("svg").attr("width", svgW).attr("height", svgH)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
 
         //title
         svg.append("text").attr("x", this.margin).attr("y", this.margin)
-            .style("font-size", "12")
+            .style("font-size", "0.8em")
             .style("font-weight", "bold")
             .style("alignment-baseline", "top")
             .style("dominant-baseline", "hanging")
