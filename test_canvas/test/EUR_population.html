@@ -389,30 +389,14 @@
 
         //legends
         //pop
-        gviz.addLegend(
-            { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
-            [sd.pop.squareColor.style[0], sd.pop.circleColor.style[0]]
-        )
-        gviz.addLegend(
-            { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" },
-            [sd.pop.squareSize.style[0]]
-        )
-        gviz.addLegend(
-            { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" },
-            [sd.pop.circleSize.style[0]]
-        )
-        gviz.addLegend(
-            { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 0 },
-            [sd.pop.segmentH.style[0]]
-        )
-        gviz.addLegend(
-            { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 90 },
-            [sd.pop.segmentV.style[0]]
-        )
-        gviz.addLegend(
-            { type: "segWidth", shape: "square", labelUnitText: "inhab.", color: "#c08c59", orientation: 45 },
-            [sd.pop.segmentO.style[0]]
-        )
+        sd.pop.squareColor.style[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) }))
+        sd.pop.circleColor.style[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) }))
+        sd.pop.squareSize.style[0].legends.push(new gviz.SizeLegend({ shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" }))
+        sd.pop.circleSize.style[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" }))
+        sd.pop.segmentH.style[0].legends.push(new gviz.SegmentWidthLegend({ labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }))
+        sd.pop.segmentV.style[0].legends.push(new gviz.SegmentWidthLegend({ labelUnitText: "inhab.", color: "#c08c59", orientation: 90 }))
+        sd.pop.segmentO.style[0].legends.push(new gviz.SegmentWidthLegend({ labelUnitText: "inhab.", color: "#c08c59", orientation: 45 }))
+
 
         //popchange
         gviz.addLegend(
