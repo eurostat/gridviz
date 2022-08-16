@@ -294,16 +294,8 @@
                     }
                 )
                 //legend
-                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
-
-                /*gviz.addLegend(
-                    { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#ccc" },
-                    [styles.popEducation.style[0]]
-                )
-                gviz.addLegend(
-                    { type: "colorCat", title: "Education level", colCat: [[col(0.2), "basic or less"], [col(0.4), "secondary"], [col(0.9), "tertiary"], ["gray", "other"]] },
-                    [styles.popEducation.style[0]]
-                )*/
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#ccc" }))
+                app.layers[0].styles[0].legends.push(new gviz.ColorCategoryLegend({ title: "Education level", colCat: [[col(0.2), "basic or less"], [col(0.4), "secondary"], [col(0.9), "tertiary"], ["gray", "other"]] }))
 
             } else if (layCode === "popLabor") {
                 app.addMultiScaleTiledGridLayer2(
