@@ -220,7 +220,7 @@
                     ],
                     {
                         pixNb: 16,
-                        cellInfoHTML: c => "<b>" + c.Ind + "</b> individu(s)<br>" + "Par âge:<br>" +
+                        cellInfoHTML: c => "<b>" + c.Ind + "</b> individu" + (+c.Ind == 1 ? "" : "s") + "<br>" + "Par âge:<br>" +
                             " < 3 : " + c.Ind_0_3 + "<br>" +
                             " 4-5 : " + c.Ind_4_5 + "<br>" +
                             " 6-10: " + c.Ind_6_10 + "<br>" +
@@ -261,7 +261,7 @@
                     ],
                     {
                         pixNb: 11,
-                        cellInfoHTML: c => "<b>" + c.Ind + "</b> individu(s)<br>" + "Par âge:<br>" +
+                        cellInfoHTML: c => "<b>" + c.Ind + "</b> individu" + (+c.Ind == 1 ? "" : "s") + "<br>" + "Par âge:<br>" +
                             " < 17 : " + f1(c.Ind_0_17) + "<br>" +
                             " 18-64 : " + f1(c.Ind_18_64) + "<br>" +
                             " > 65: " + f1(c.Ind_65p) + "<br>" +
@@ -359,7 +359,7 @@
                     ],
                     {
                         pixNb: 10,
-                        cellInfoHTML: c => c.Men + " ménage(s)"
+                        cellInfoHTML: c => c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
                             + "<br><b>" + c.Men_1ind + "</b> d'un seul individu"
                             + "<br><b>" + f1(c.Men_2_4ind) + "</b> de 2 à 4 individus"
                             + "<br><b>" + c.Men_5ind + "</b> de 5 individus ou plus"
@@ -380,9 +380,9 @@
                     ],
                     {
                         pixNb: 6,
-                        cellInfoHTML: c => c.Men + " ménages(s)<br>" +
-                            "<b>" + c.Men_fmp + "</b> monoparental(ux)<br>" +
-                            "<b>" + f1(100 * c.rMenFmp) + "</b> %"
+                        cellInfoHTML: c => c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
+                            + "<br><b>" + c.Men_fmp + "</b> monoparental(ux)"
+                            + "<br><b>" + f1(100 * c.rMenFmp) + "</b> %"
                     })
 
             } else if (layCode === "men_owner") {
@@ -421,7 +421,7 @@
                     {
                         pixNb: 2,
                         cellInfoHTML: c => "<b>" + f1(Math.floor(10 * c.rMenSurf) / 10) + "</b> m² par ménage."
-                            + "<br>" + c.Men + " ménage(s)"
+                            + "<br>" + c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
                     })
 
             } else if (layCode === "men_house_collective") {
@@ -442,9 +442,9 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => c.Men + " ménage(s)<br>" +
-                            "<b>" + (c.Men_coll == 0 ? "Aucun" : c.Men_coll) + "</b> en logement collectif<br>" +
-                            "<b>" + (c.Men_mais == 0 ? "Aucun" : c.Men_mais) + "</b> en maison"
+                        cellInfoHTML: c => c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
+                            + "<br><b>" + (c.Men_coll == 0 ? "Aucun" : c.Men_coll) + "</b> en logement collectif"
+                            + "<br><b>" + (c.Men_mais == 0 ? "Aucun" : c.Men_mais) + "</b> en maison"
                     })
 
 
@@ -470,12 +470,13 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => f1(c.Log) + " logements(s)<br>" + "Année de construction:<br>" +
+                        cellInfoHTML: c => f1(c.Log) + " logement" + (+c.Log == 1 ? "" : "s")
+                            + "<br>" + "Année de construction:<br>" +
                             "<b>" + c.Log_av45 + "</b> avant 1945<br>" +
                             "<b>" + c.Log_45_70 + "</b> entre 1945 et 1969<br>" +
                             "<b>" + c.Log_70_90 + "</b> entre 1970 et 1989<br>" +
                             "<b>" + c.Log_ap90 + "</b> depuis 1990<br>" +
-                            "<b>" + c.Log_inc + "</b> inconnue(s)"
+                            "<b>" + c.Log_inc + "</b> inconnue" + (+c.Log_inc == 1 ? "" : "s")
                     })
 
             } else if (layCode === "log_soc_nb") {
@@ -495,9 +496,9 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => f1(c.Log) + " logement(s)<br>" +
-                            "<b>" + (c.Log_soc == 0 ? "Aucun" : c.Log_soc) + "</b> logement(s) social(ux)<br>" +
-                            "<b>" + (c.Log_nsoc == 0 ? "Aucun" : f1(c.Log_nsoc)) + "</b> autre(s)"
+                        cellInfoHTML: c => f1(c.Log) + " logement" + (+c.Log == 1 ? "" : "s") + "<br>" +
+                            "<b>" + (c.Log_soc == 0 ? "Aucun" : c.Log_soc) + "</b> logement" + (+c.Log_soc == 1 ? "" : "s") + " social(ux)<br>" +
+                            "<b>" + (c.Log_nsoc == 0 ? "Aucun" : f1(c.Log_nsoc)) + "</b> autre" + (+c.Log_nsoc == 1 ? "" : "s")
                     })
 
             } else if (layCode === "log_soc_per") {
