@@ -329,180 +329,138 @@
 
             } else if (layCode === "busSector") {
                 app.addMultiScaleTiledGridLayer2(
-                    ds.pop,
+                    ds.bus,
                     [
+                        new gviz.CompositionStyle({
+                            color: {
+                                "s1": "#1b9e77",
+                                "s2": "#d95f02",
+                                "s3": "#7570b3",
+                            },
+                            type: () => "piechart",
+                            sizeCol: "TOTAL",
+                            size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
+                        })
                     ],
                     {
-                        pixNb: 10,
-                        cellInfoHTML: c => ""
+                        pixNb: 15,
+                        cellInfoHTML: c => {
+                            return "<b>" + c.TOTAL + "</b> businesses<br>"
+                                + "Primary sector: " + c.s1 + "<br>"
+                                + "Secondary sector: " + c.s2 + "<br>"
+                                + "Tertiary sector: " + c.s3
+                        }
                     }
                 )
-
-                const lay = app.layers[1]
-                lay.styles = [
-                    new gviz.CompositionStyle({
-                        color: {
-                            "s1": "#1b9e77",
-                            "s2": "#d95f02",
-                            "s3": "#7570b3",
-                        },
-                        type: () => "piechart",
-                        sizeCol: "TOTAL",
-                        size: (v, r, s, zf) => 1.25 * r * gviz.s(v / s.max, 0.1),
-                    })
-                ]
-                lay.pixNb = 15;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => {
-                    return "<b>" + c.TOTAL + "</b> businesses<br>"
-                        + "Primary sector: " + c.s1 + "<br>"
-                        + "Secondary sector: " + c.s2 + "<br>"
-                        + "Tertiary sector: " + c.s3
-                }
 
             } else if (layCode === "tourAccNb") {
                 app.addMultiScaleTiledGridLayer2(
-                    ds.pop,
+                    ds.tou,
                     [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "ESTABLISHMENTS - TOTAL",
+                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                        }), sStroke
                     ],
                     {
-                        pixNb: 10,
-                        cellInfoHTML: c => ""
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + c["ESTABLISHMENTS - TOTAL"] + "</b> touristic accomodation establishments"
                     }
                 )
-
-                const lay = app.layers[2]
-                lay.styles = [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "ESTABLISHMENTS - TOTAL",
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                    }), sStroke
-                ]
-                lay.pixNb = 2;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => "<b>" + c["ESTABLISHMENTS - TOTAL"] + "</b> touristic accomodation establishments"
 
             } else if (layCode === "tourAccUnits") {
                 app.addMultiScaleTiledGridLayer2(
-                    ds.pop,
+                    ds.tou,
                     [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
+                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                        }), sStroke
                     ],
                     {
-                        pixNb: 10,
-                        cellInfoHTML: c => ""
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] + "</b> touristic accomodation units (rooms, appartements, camping sites)"
                     }
                 )
-
-                const lay = app.layers[2]
-                lay.styles = [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                    }), sStroke
-                ]
-                lay.pixNb = 2;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => "<b>" + c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] + "</b> touristic accomodation units (rooms, appartements, camping sites)"
 
             } else if (layCode === "tourAccBeds") {
                 app.addMultiScaleTiledGridLayer2(
-                    ds.pop,
+                    ds.tou,
                     [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "NUMBER OF PERMANENT BEDS",
+                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                        }), sStroke
                     ],
                     {
-                        pixNb: 10,
-                        cellInfoHTML: c => ""
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + c["NUMBER OF PERMANENT BEDS"] + "</b> touristic accomodation permanent beds"
                     }
                 )
-
-                const lay = app.layers[2]
-                lay.styles = [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "NUMBER OF PERMANENT BEDS",
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
-                    }), sStroke
-                ]
-                lay.pixNb = 2;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => "<b>" + c["NUMBER OF PERMANENT BEDS"] + "</b> touristic accomodation permanent beds"
 
             } else if (layCode === "tourOriginArr") {
                 app.addMultiScaleTiledGridLayer2(
-                    ds.pop,
+                    ds.tou,
                     [
+                        new gviz.CompositionStyle({
+                            color: {
+                                "A_DOMESTIC TOURISTS - TOTAL": col2[0],
+                                "A_AUSTRIAN TOURISTS": col2[1],
+                                "A_GERMAN TOURISTS": col2[2],
+                                "A_ITALIAN TOURISTS": col2[3],
+                                "A_SLOVENIAN TOURISTS": col2[4],
+                                "A_OTHER": "#bbb",
+                            },
+                            type: () => "piechart",
+                            sizeCol: "TOTAL ARRIVALS",
+                            size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
+                        })
                     ],
                     {
-                        pixNb: 10,
-                        cellInfoHTML: c => ""
+                        pixNb: 15,
+                        cellInfoHTML: c => {
+                            return "<b>" + c["TOTAL ARRIVALS"] + "</b> tourist arrivals<br>"
+                                + c["A_DOMESTIC TOURISTS - TOTAL"] + " croatians<br>" +
+                                + c["A_AUSTRIAN TOURISTS"] + " austrians<br>" +
+                                + c["A_GERMAN TOURISTS"] + " germans<br>" +
+                                + c["A_ITALIAN TOURISTS"] + " italians<br>" +
+                                + c["A_SLOVENIAN TOURISTS"] + " slovenians<br>" +
+                                + c["A_OTHER"] + " other countries"
+                        }
                     }
                 )
-
-                const lay = app.layers[2]
-                lay.styles = [
-                    new gviz.CompositionStyle({
-                        color: {
-                            "A_DOMESTIC TOURISTS - TOTAL": col2[0],
-                            "A_AUSTRIAN TOURISTS": col2[1],
-                            "A_GERMAN TOURISTS": col2[2],
-                            "A_ITALIAN TOURISTS": col2[3],
-                            "A_SLOVENIAN TOURISTS": col2[4],
-                            "A_OTHER": "#bbb",
-                        },
-                        type: () => "piechart",
-                        sizeCol: "TOTAL ARRIVALS",
-                        size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
-                    })
-                ]
-                lay.pixNb = 15;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => {
-                    return "<b>" + c["TOTAL ARRIVALS"] + "</b> tourist arrivals<br>"
-                        + c["A_DOMESTIC TOURISTS - TOTAL"] + " croatians<br>" +
-                        + c["A_AUSTRIAN TOURISTS"] + " austrians<br>" +
-                        + c["A_GERMAN TOURISTS"] + " germans<br>" +
-                        + c["A_ITALIAN TOURISTS"] + " italians<br>" +
-                        + c["A_SLOVENIAN TOURISTS"] + " slovenians<br>" +
-                        + c["A_OTHER"] + " other countries"
-                }
 
             } else if (layCode === "tourOriginNights") {
                 app.addMultiScaleTiledGridLayer2(
-                    ds.pop,
+                    ds.tou,
                     [
+                        new gviz.CompositionStyle({
+                            color: {
+                                "N_DOMESTIC TOURISTS - TOTAL": col2[0],
+                                "N_AUSTRIAN TOURISTS": col2[1],
+                                "N_GERMAN TOURISTS": col2[2],
+                                "N_ITALIAN TOURISTS": col2[3],
+                                "N_SLOVENIAN TOURISTS": col2[4],
+                                "N_OTHER": "#bbb",
+                            },
+                            type: () => "piechart",
+                            sizeCol: "TOTAL NIGHTS",
+                            size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
+                        })
                     ],
                     {
-                        pixNb: 10,
-                        cellInfoHTML: c => ""
+                        pixNb: 15,
+                        cellInfoHTML: c => {
+                            return "<b>" + c["TOTAL NIGHTS"] + "</b> tourist nights<br>"
+                                + c["N_DOMESTIC TOURISTS - TOTAL"] + " croatians<br>" +
+                                + c["N_AUSTRIAN TOURISTS"] + " austrians<br>" +
+                                + c["N_GERMAN TOURISTS"] + " germans<br>" +
+                                + c["N_ITALIAN TOURISTS"] + " italians<br>" +
+                                + c["N_SLOVENIAN TOURISTS"] + " slovenians<br>" +
+                                + c["N_OTHER"] + " other countries"
+                        }
                     }
                 )
-
-                const lay = app.layers[2]
-                lay.styles = [
-                    new gviz.CompositionStyle({
-                        color: {
-                            "N_DOMESTIC TOURISTS - TOTAL": col2[0],
-                            "N_AUSTRIAN TOURISTS": col2[1],
-                            "N_GERMAN TOURISTS": col2[2],
-                            "N_ITALIAN TOURISTS": col2[3],
-                            "N_SLOVENIAN TOURISTS": col2[4],
-                            "N_OTHER": "#bbb",
-                        },
-                        type: () => "piechart",
-                        sizeCol: "TOTAL NIGHTS",
-                        size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.1),
-                    })
-                ]
-                lay.pixNb = 15;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => {
-                    return "<b>" + c["TOTAL NIGHTS"] + "</b> tourist nights<br>"
-                        + c["N_DOMESTIC TOURISTS - TOTAL"] + " croatians<br>" +
-                        + c["N_AUSTRIAN TOURISTS"] + " austrians<br>" +
-                        + c["N_GERMAN TOURISTS"] + " germans<br>" +
-                        + c["N_ITALIAN TOURISTS"] + " italians<br>" +
-                        + c["N_SLOVENIAN TOURISTS"] + " slovenians<br>" +
-                        + c["N_OTHER"] + " other countries"
-                }
 
             } else {
                 console.log("Unexpected layer code: " + layCode);
