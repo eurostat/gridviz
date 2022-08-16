@@ -159,6 +159,8 @@
         );
 
 
+
+
         //
         const update = () => {
 
@@ -195,8 +197,11 @@
                         cellInfoHTML: c => "<b>" + c.TOTAL + "</b> inhabitants"
                     }
                 )
+                //legend
+                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
+
                 /*gviz.addLegend(
-                    { type: "color", title: "Number of inhabitants", colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
+                    { title: "Number of inhabitants", colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                     [styles[0]]*/
 
             } else if (layCode === "popGender") {
@@ -225,6 +230,9 @@
                         }
                     }
                 )
+                //legend
+                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
+
                 /*gviz.addLegend(
                     { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "#ccc" },
                     [styles.popGender.style[0]]
@@ -266,6 +274,9 @@
                         }
                     }
                 )
+                //legend
+                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
+
                 /*gviz.addLegend(
                     { type: "colorCat", title: "Age group", colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse() },
                     [styles.popAge.style[0]]
@@ -299,6 +310,9 @@
                         }
                     }
                 )
+                //legend
+                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
+
                 /*gviz.addLegend(
                     { type: "size", shape: "circle", labelUnitText: "inhab.", fillColor: "#ccc" },
                     [styles.popEducation.style[0]]
@@ -334,6 +348,9 @@
                         }
                     }
                 )
+                //legend
+                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
+
                 /*
                 gviz.addLegend(
                     { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "#ccc" },
@@ -361,6 +378,9 @@
                         }
                     }
                 )
+                //legend
+                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
+
                 /*gviz.addLegend(
                     { type: "color", title: "Inactivity rate (%)", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) },
                     [styles.popInact.style[0]]
@@ -391,6 +411,9 @@
                         }
                     }
                 )
+                //legend
+                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
+
                 /*gviz.addLegend(
                     { type: "size", shape: "circle", labelUnitText: "businesses", fillColor: "#ccc" },
                     [styles.busSector.style[0]]
@@ -414,6 +437,9 @@
                         cellInfoHTML: c => "<b>" + c["ESTABLISHMENTS - TOTAL"] + "</b> touristic accomodation establishments"
                     }
                 )
+                //legend
+                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
+
                 /*gviz.addLegend(
                     { type: "color", title: "Tourism - number of establishments", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                     [styles.tourAccNb.style[0]]
@@ -433,6 +459,9 @@
                         cellInfoHTML: c => "<b>" + c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] + "</b> touristic accomodation units (rooms, appartements, camping sites)"
                     }
                 )
+                //legend
+                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
+
                 /*gviz.addLegend(
                     { type: "color", title: "Tourism - number of units", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                     [styles.tourAccUnits.style[0]]
@@ -452,6 +481,9 @@
                         cellInfoHTML: c => "<b>" + c["NUMBER OF PERMANENT BEDS"] + "</b> touristic accomodation permanent beds"
                     }
                 )
+                //legend
+                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
+
                 /*gviz.addLegend(
                     { type: "color", title: "Tourism - number of beds", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                     [styles.tourAccBeds.style[0]]
@@ -488,6 +520,9 @@
                         }
                     }
                 )
+                //legend
+                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
+
                 /*   gviz.addLegend(
                                 { type: "size", shape: "circle", labelUnitText: "arrivals", fillColor: "#ccc" },
                                 [styles.tourOriginArr.style[0]]
@@ -528,6 +563,9 @@
                         }
                     }
                 )
+                //legend
+                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
+
                 /*  gviz.addLegend(
                     { type: "size", shape: "circle", labelUnitText: "nights", fillColor: "#ccc" },
                     [styles.tourOriginNights.style[0]]
