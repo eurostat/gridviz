@@ -345,12 +345,7 @@
                     }
                 )
                 //legend
-                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
-
-                /*gviz.addLegend(
-                    { type: "color", title: "Inactivity rate (%)", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) },
-                    [styles.popInact.style[0]]
-                )*/
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Inactivity rate (%)", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 1) }))
 
             } else if (layCode === "busSector") {
                 app.addMultiScaleTiledGridLayer2(
@@ -378,16 +373,8 @@
                     }
                 )
                 //legend
-                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
-
-                /*gviz.addLegend(
-                    { type: "size", shape: "circle", labelUnitText: "businesses", fillColor: "#ccc" },
-                    [styles.busSector.style[0]]
-                )
-                gviz.addLegend(
-                    { type: "colorCat", title: "Sector", colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse() },
-                    [styles.busSector.style[0]]
-                )*/
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "businesses", fillColor: "#ccc" }))
+                app.layers[0].styles[0].legends.push(new gviz.ColorCategoryLegend({ title: "Sector", colCat: [["#1b9e77", "Primary"], ["#d95f02", "Secondary"], ["#7570b3", "Tertiary"]].reverse() }))
 
             } else if (layCode === "tourAccNb") {
                 app.addMultiScaleTiledGridLayer2(
