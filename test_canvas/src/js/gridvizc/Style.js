@@ -74,7 +74,8 @@ export class Style {
      * @param {object} opts
     * @returns {this} */
     updateLegends(opts) {
-        for (const lg of this.legends) lg.update(opts)
+        for (const lg of this.legends)
+            lg.update(opts)
         return this
     }
 
