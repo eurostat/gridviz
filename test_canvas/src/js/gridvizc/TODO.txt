@@ -1,5 +1,4 @@
 move zoomMinMax from layer to style level ?
-move zoomChange to utils level
 
 FR: filosofi - finalise
 correct color ramps
