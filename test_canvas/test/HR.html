@@ -68,17 +68,15 @@
             .setLabelLayer(gviz.getEuronymeLabelLayer("HR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
 
-        //make layers
-        const urlBase = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/";
-        const resolutions = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000]
+        //prepare datasets, indexed by thematic domain
+        const ds = {}
         const override = (c, col) => c[col] = +c[col]
 
-        //population layer
-        app.addMultiScaleTiledGridLayer(
-            urlBase + "Population_2011/",
-            resolutions,
+        //population dataset
+        ds.pop = app.makeMultiScaleTiledGridLayer(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/Population_2011/",
+            [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000],
             r => r + "m/",
-            [],
             {
                 preprocess: c => {
                     override(c, "TOTAL")
@@ -106,12 +104,11 @@
             }
         );
 
-        //business layer
-        app.addMultiScaleTiledGridLayer(
-            urlBase + "Active_business_entities_2016/",
-            resolutions,
+        //business dataset
+        ds.bus = app.makeMultiScaleTiledGridLayer(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/Active_business_entities_2016/",
+            [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000],
             r => r + "m/",
-            [],
             {
                 preprocess: c => {
                     //TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
@@ -134,12 +131,11 @@
             }
         );
 
-        //tourism layer
-        app.addMultiScaleTiledGridLayer(
-            urlBase + "Tourism_2017/",
-            resolutions,
+        //tourism dataset
+        ds.tou = app.makeMultiScaleTiledGridLayer(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/Tourism_2017/",
+            [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000],
             r => r + "m/",
-            [],
             {
                 preprocess: c => {
                     for (let s of ["ESTABLISHMENTS - TOTAL", "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL", "NUMBER OF PERMANENT BEDS"])
@@ -169,146 +165,179 @@
             //read GUI selection
             const layCode = document.querySelector('input[name="layer"]:checked').value
 
-            //hide layers
-            app.hideAllLayers()
+            //remove layers
+            app.layers = []
 
             const col = gviz.interpolateSpectral
             const col2 = gviz.schemeCategory10
             const sStroke = new gviz.StrokeStyle({ maxZoom: 100 })
 
             if (layCode === "pop") {
-                const lay = app.layers[0]
-                lay.styles = [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "TOTAL",
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                    }),
-                    new gviz.SideStyle({
-                        valueCol: "TOTAL",
-                        value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
-                        color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
-                        width: (side, r, s, z) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
-                        },
-                    })]
-                lay.pixNb = 3;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => "<b>" + c.TOTAL + "</b> inhabitants"
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "TOTAL",
+                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                        }),
+                        new gviz.SideStyle({
+                            valueCol: "TOTAL",
+                            value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
+                            color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
+                            width: (side, r, s, z) => {
+                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
+                            },
+                        })
+                    ],
+                    {
+                        pixNb: 3,
+                        cellInfoHTML: c => "<b>" + c.TOTAL + "</b> inhabitants"
+                    }
+                )
                 /*gviz.addLegend(
                     { type: "color", title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) },
                     [styles[0]]*/
 
             } else if (layCode === "popGender") {
-                const lay = app.layers[0]
-                lay.styles = [
-                    new gviz.ShapeColorSizeStyle({
-                        colorCol: "DIFF_MEN_WOMEN",
-                        color: (v, r, s) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
-                            return gviz.interpolateSpectral(1 - t);
-                        },
-                        shape: () => "square",
-                        sizeCol: "TOTAL",
-                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
-                    })
-                ]
-                lay.pixNb = 8;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => {
-                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
-                        + c.MEN + " men<br>"
-                        + c.WOMEN + " women<br>Difference: <b>"
-                        + (c.DIFF_MEN_WOMEN > 0 ? "+" : "") + d3.format(".1f")(c.DIFF_MEN_WOMEN) + " % men</b>"
-                }
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                        new gviz.ShapeColorSizeStyle({
+                            colorCol: "DIFF_MEN_WOMEN",
+                            color: (v, r, s) => {
+                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
+                                return gviz.interpolateSpectral(1 - t);
+                            },
+                            shape: () => "square",
+                            sizeCol: "TOTAL",
+                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.2),
+                        })
+                    ],
+                    {
+                        pixNb: 8,
+                        cellInfoHTML: c => {
+                            return "<b>" + c.TOTAL + "</b> inhabitants<br>"
+                                + c.MEN + " men<br>"
+                                + c.WOMEN + " women<br>Difference: <b>"
+                                + (c.DIFF_MEN_WOMEN > 0 ? "+" : "") + d3.format(".1f")(c.DIFF_MEN_WOMEN) + " % men</b>"
+                        }
+                    }
+                )
 
             } else if (layCode === "popAge") {
-                const lay = app.layers[0]
-                lay.styles = [new gviz.CompositionStyle({
-                    color: {
-                        "TOTAL_0_14": col(0.2),
-                        "TOTAL_15_64": col(0.4),
-                        "TOTAL_65p": col(0.9),
-                    },
-                    type: () => "agepyramid",
-                    sizeCol: "TOTAL",
-                    size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                    agePyramidHeight: (r) => 0.95 * r
-                })]
-                lay.pixNb = 15;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => {
-                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
-                        + " >65 : " + c.TOTAL_65p + "<br>"
-                        + "15-64: " + c.TOTAL_15_64 + "<br>"
-                        + " <15 : " + c.TOTAL_0_14
-                }
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                        new gviz.CompositionStyle({
+                            color: {
+                                "TOTAL_0_14": col(0.2),
+                                "TOTAL_15_64": col(0.4),
+                                "TOTAL_65p": col(0.9),
+                            },
+                            type: () => "agepyramid",
+                            sizeCol: "TOTAL",
+                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                            agePyramidHeight: (r) => 0.95 * r
+                        })
+                    ],
+                    {
+                        pixNb: 15,
+                        cellInfoHTML: c => {
+                            return "<b>" + c.TOTAL + "</b> inhabitants<br>"
+                                + " >65 : " + c.TOTAL_65p + "<br>"
+                                + "15-64: " + c.TOTAL_15_64 + "<br>"
+                                + " <15 : " + c.TOTAL_0_14
+                        }
+                    }
+                )
 
             } else if (layCode === "popEducation") {
-                const lay = app.layers[0]
-                lay.styles = [
-                    new gviz.CompositionStyle({
-                        color: {
-                            "OTHER_EDUC": "gray",
-                            "TERTIARY_EDUCATION": col(0.9),
-                            "UPPER_SECONDARY_EDUCATION": col(0.4),
-                            "BASIC_EDUCATION_OR_LESS": col(0.2),
-                        },
-                        type: () => "ring",
-                        sizeCol: "TOTAL",
-                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                        agePyramidHeight: (r) => 0.95 * r
-                    })
-                ]
-                lay.pixNb = 15;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => {
-                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
-                        + "Basic or less: " + c.BASIC_EDUCATION_OR_LESS + "<br>"
-                        + "Secondary: " + c.UPPER_SECONDARY_EDUCATION + "<br>"
-                        + "Tertiary: " + c.TERTIARY_EDUCATION + "<br>"
-                        + "Other: " + c.OTHER_EDUC
-                }
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                        new gviz.CompositionStyle({
+                            color: {
+                                "OTHER_EDUC": "gray",
+                                "TERTIARY_EDUCATION": col(0.9),
+                                "UPPER_SECONDARY_EDUCATION": col(0.4),
+                                "BASIC_EDUCATION_OR_LESS": col(0.2),
+                            },
+                            type: () => "ring",
+                            sizeCol: "TOTAL",
+                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                            agePyramidHeight: (r) => 0.95 * r
+                        })
+                    ],
+                    {
+                        pixNb: 15,
+                        cellInfoHTML: c => {
+                            return "<b>" + c.TOTAL + "</b> inhabitants<br>"
+                                + "Basic or less: " + c.BASIC_EDUCATION_OR_LESS + "<br>"
+                                + "Secondary: " + c.UPPER_SECONDARY_EDUCATION + "<br>"
+                                + "Tertiary: " + c.TERTIARY_EDUCATION + "<br>"
+                                + "Other: " + c.OTHER_EDUC
+                        }
+                    }
+                )
 
             } else if (layCode === "popLabor") {
-                const lay = app.layers[0]
-                lay.styles = [new gviz.CompositionStyle({
-                    color: {
-                        "OTHER_LABOR": "gray",
-                        "LABOUR_FORCE": col(0.2),
-                        "INACTIVE_POPULATION": col(0.9),
-                    },
-                    type: () => "flag",
-                    sizeCol: "TOTAL",
-                    size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
-                    stripesOrientation: () => 90
-                })]
-                lay.pixNb = 15;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => {
-                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
-                        + "Labour force: " + c.LABOUR_FORCE + "<br>"
-                        + "Inactive population: " + c.INACTIVE_POPULATION + "<br>"
-                        + "Other: " + c.OTHER_LABOR
-                }
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                        new gviz.CompositionStyle({
+                            color: {
+                                "OTHER_LABOR": "gray",
+                                "LABOUR_FORCE": col(0.2),
+                                "INACTIVE_POPULATION": col(0.9),
+                            },
+                            type: () => "flag",
+                            sizeCol: "TOTAL",
+                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                            stripesOrientation: () => 90
+                        })
+                    ],
+                    {
+                        pixNb: 15,
+                        cellInfoHTML: c => {
+                            return "<b>" + c.TOTAL + "</b> inhabitants<br>"
+                                + "Labour force: " + c.LABOUR_FORCE + "<br>"
+                                + "Inactive population: " + c.INACTIVE_POPULATION + "<br>"
+                                + "Other: " + c.OTHER_LABOR
+                        }
+                    }
+                )
 
             } else if (layCode === "popInact") {
-                const lay = app.layers[0]
-                lay.styles = [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "INACT_RATE",
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
-                    }), sStroke
-                ]
-                lay.pixNb = 2;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => {
-                    return "<b>" + c.TOTAL + "</b> inhabitants<br>"
-                        + "Inactivity rate: " + d3.format(".1f")(c.INACT_RATE) + " %<br>"
-                }
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "INACT_RATE",
+                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
+                        }), sStroke
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => {
+                            return "<b>" + c.TOTAL + "</b> inhabitants<br>"
+                                + "Inactivity rate: " + d3.format(".1f")(c.INACT_RATE) + " %<br>"
+                        }
+                    }
+                )
 
             } else if (layCode === "busSector") {
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                    ],
+                    {
+                        pixNb: 10,
+                        cellInfoHTML: c => ""
+                    }
+                )
+
                 const lay = app.layers[1]
                 lay.styles = [
                     new gviz.CompositionStyle({
@@ -332,6 +361,16 @@
                 }
 
             } else if (layCode === "tourAccNb") {
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                    ],
+                    {
+                        pixNb: 10,
+                        cellInfoHTML: c => ""
+                    }
+                )
+
                 const lay = app.layers[2]
                 lay.styles = [
                     new gviz.SquareColoringWebGLStyle({
@@ -344,6 +383,16 @@
                 lay.cellInfoHTML = (c) => "<b>" + c["ESTABLISHMENTS - TOTAL"] + "</b> touristic accomodation establishments"
 
             } else if (layCode === "tourAccUnits") {
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                    ],
+                    {
+                        pixNb: 10,
+                        cellInfoHTML: c => ""
+                    }
+                )
+
                 const lay = app.layers[2]
                 lay.styles = [
                     new gviz.SquareColoringWebGLStyle({
@@ -356,6 +405,16 @@
                 lay.cellInfoHTML = (c) => "<b>" + c["ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL"] + "</b> touristic accomodation units (rooms, appartements, camping sites)"
 
             } else if (layCode === "tourAccBeds") {
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                    ],
+                    {
+                        pixNb: 10,
+                        cellInfoHTML: c => ""
+                    }
+                )
+
                 const lay = app.layers[2]
                 lay.styles = [
                     new gviz.SquareColoringWebGLStyle({
@@ -368,6 +427,16 @@
                 lay.cellInfoHTML = (c) => "<b>" + c["NUMBER OF PERMANENT BEDS"] + "</b> touristic accomodation permanent beds"
 
             } else if (layCode === "tourOriginArr") {
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                    ],
+                    {
+                        pixNb: 10,
+                        cellInfoHTML: c => ""
+                    }
+                )
+
                 const lay = app.layers[2]
                 lay.styles = [
                     new gviz.CompositionStyle({
@@ -397,6 +466,16 @@
                 }
 
             } else if (layCode === "tourOriginNights") {
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                    ],
+                    {
+                        pixNb: 10,
+                        cellInfoHTML: c => ""
+                    }
+                )
+
                 const lay = app.layers[2]
                 lay.styles = [
                     new gviz.CompositionStyle({
@@ -429,7 +508,6 @@
                 console.log("Unexpected layer code: " + layCode);
                 return;
             }
-
 
             //redraw
             app.cg.redraw();
