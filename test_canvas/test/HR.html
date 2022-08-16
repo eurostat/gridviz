@@ -324,17 +324,8 @@
                     }
                 )
                 //legend
-                //app.layers[0].styles[0].legends.push(new gviz.ColorLegend({}))
-
-                /*
-                gviz.addLegend(
-                    { type: "size", shape: "square", labelUnitText: "inhab.", fillColor: "#ccc" },
-                    [styles.popLabor.style[0]]
-                )
-                gviz.addLegend(
-                    { type: "colorCat", title: "Labor status", colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]] },
-                    [styles.popLabor.style[0]]
-                )*/
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "square", labelUnitText: "inhab.", fillColor: "#ccc" }))
+                app.layers[0].styles[0].legends.push(new gviz.ColorCategoryLegend({ title: "Labor status", colCat: [[col(0.9), "labour force"], [col(0.2), "inactive"], ["gray", "other"]] }))
 
             } else if (layCode === "popInact") {
                 app.addMultiScaleTiledGridLayer2(
