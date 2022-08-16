@@ -338,7 +338,7 @@
                     {
                         pixNb: 6,
                         cellInfoHTML: c => (c.rPoverty == 0 ? "Pas" : "<b>" + f1(Math.floor(1000 * c.rPoverty) / 10) + "%</b>") + " de ménages pauvres<br>"
-                            + "sur " + c.Men + " ménages",
+                            + "sur " + c.Men + " ménage" + (+c.Men == 1 ? "" : "s"),
                     })
             } else if (layCode === "men_size") {
                 //houshold size
@@ -400,7 +400,7 @@
                     ],
                     {
                         pixNb: 6,
-                        cellInfoHTML: c => c.Men + " ménages(s)<br>" +
+                        cellInfoHTML: c => c.Men + " ménages" + (+c.Men == 1 ? "" : "s") + "<br>" +
                             "<b>" + c.Men_prop + "</b> propriétaires<br>" +
                             "<b>" + f1(100 * c.rMen_prop) + "</b> %"
                     })
