@@ -131,31 +131,3 @@ export const getEurostatBoundariesLayer = function (opts) {
     return new LineLayer(url, opts)
 }
 
-
-/**
- * @deprecated
- * @param {object} opts 
- * @param {Array.<Style>} styles 
- */
-export const addLegend = function (opts, styles) {
-    let lg;
-    switch (opts.type) {
-        case "color":
-            lg = new ColorLegend(opts)
-            break
-        case "colorCat":
-            lg = new ColorCategoryLegend(opts)
-            break
-        case "size":
-            lg = new SizeLegend(opts)
-            break
-        case "segWidth":
-            lg = new SegmentWidthLegend(opts)
-            break
-        default:
-            throw ("Unexpected legend type: " + opts.type)
-    }
-    //link legend to styles
-    styles.forEach((s) => s.legends.push(lg))
-    return this
-}
