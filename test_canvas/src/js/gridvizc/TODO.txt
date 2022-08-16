@@ -1,5 +1,6 @@
-FR: filosofi - finalise
+FR: filosofi - finalise - add legends
 correct color ramps
+HR legends
 
 jsdoc
 TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
@@ -13,16 +14,10 @@ https://github.com/geotiffjs/geotiff.js/
 TODO BIG DEPLOY ?
 
 new EUR layers:
-https://www.eea.europa.eu/data-and-maps/figures/spatial-pattern-of-land-take
-https://www.eea.europa.eu/data-and-maps/figures/fragmentation-increase-in-europe-during
-https://www.eea.europa.eu/data-and-maps/data/copernicus-land-monitoring-service-high
 https://land.copernicus.eu/global/products/
-
-show all of that for LU:
 https://land.copernicus.eu/pan-european/high-resolution-layers
 
 
-HR legends
 FR legends
 legend for discrete color classes - use for accessibility map legend
 
