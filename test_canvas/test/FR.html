@@ -185,7 +185,8 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + c.Ind + "</b> individu" + (+c.Ind == 1 ? "" : "s"),
+                        cellInfoHTML: c => "<b>" + c.Ind + "</b> individu" + (+c.Ind == 1 ? "" : "s")
+                            + (+c.imputed ? "<br>(valeur imputée)" : "")
                     }
                 )
                 //legend
