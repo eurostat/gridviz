@@ -408,7 +408,7 @@
                             sizeCol: "Men",
                             size: (v, r, s) => 1.4 * r * gviz.s(v / s.max, 0.2),
                             colorCol: "rMen_prop",
-                            color: (v) => gviz.interpolatePuBuGn(gviz.s(v, 2)),
+                            color: (v) => gviz.interpolatePuBuGn(1 - gviz.s((1 - v), 0.6)),
                             shape: () => "circle",
                         })
                     ],
@@ -421,7 +421,7 @@
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
                 app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({ title: "Part des ménages propriétaires (%)", colorRamp: gviz.interpolatePuBuGn, fun: (t) => 100 * Math.pow(t, 1 / 2) })
+                    new gviz.ColorLegend({ title: "Part des ménages propriétaires (%)", colorRamp: gviz.interpolatePuBuGn, fun: (t) => 100 * (1 - Math.pow((1 - t), 1 / 0.6)) })
                 )
 
             } else if (layCode === "men_house_surf") {
