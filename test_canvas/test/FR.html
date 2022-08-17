@@ -241,6 +241,7 @@
                             "65-79: " + c.Ind_65_79 + "<br>" +
                             " > 80: " + c.Ind_80p + "<br>" +
                             " inc.: " + c.Ind_inc
+                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(
@@ -275,6 +276,7 @@
                             " 18-64 : " + f1(c.Ind_18_64) + "<br>" +
                             " > 65: " + f1(c.Ind_65p) + "<br>" +
                             " inc.: " + f1(c.Ind_inc)
+                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(
@@ -298,7 +300,8 @@
                         pixNb: 6,
                         cellInfoHTML: c => "<b>" + f1(c.yyy) + "</b> 24 ans et moins"
                             + "<br>" + "<b>" + f1(c.ooo) + "</b> 65 ans et plus"
-                        //+ "<br>" + "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
+                            //+ "<br>" + "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
+                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "individus", fillColor: "#ccc" }))
@@ -324,7 +327,8 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + Math.floor(c.rIncome) + "€</b> par mois et par 'individu'",
+                        cellInfoHTML: c => "<b>" + Math.floor(c.rIncome) + "€</b> par mois et par 'individu'"
+                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
                 //app.layers[0].styles[0].legends.push(
@@ -351,7 +355,8 @@
                     {
                         pixNb: 6,
                         cellInfoHTML: c => (c.rPoverty == 0 ? "Pas" : "<b>" + f1(Math.floor(1000 * c.rPoverty) / 10) + "%</b>") + " de ménages pauvres<br>"
-                            + "sur " + c.Men + " ménage" + (+c.Men == 1 ? "" : "s"),
+                            + "sur " + c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
+                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
@@ -382,6 +387,7 @@
                             + "<br><b>" + c.Men_1ind + "</b> d'un seul individu"
                             + "<br><b>" + f1(c.Men_2_4ind) + "</b> de 2 à 4 individus"
                             + "<br><b>" + c.Men_5ind + "</b> de 5 individus ou plus"
+                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
@@ -407,6 +413,7 @@
                         cellInfoHTML: c => c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
                             + "<br><b>" + c.Men_fmp + "</b> monoparenta" + (+c.Men_fmp == 1 ? "l" : "ux")
                             + "<br><b>" + f1(100 * c.rMenFmp) + "</b> %"
+                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
@@ -432,6 +439,7 @@
                         cellInfoHTML: c => c.Men + " ménage" + (+c.Men == 1 ? "" : "s") + "<br>" +
                             "<b>" + c.Men_prop + "</b> propriétaires<br>" +
                             "<b>" + f1(100 * c.rMen_prop) + "</b> %"
+                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
@@ -456,6 +464,7 @@
                         pixNb: 2,
                         cellInfoHTML: c => "<b>" + f1(Math.floor(10 * c.rMenSurf) / 10) + "</b> m² par ménage."
                             + "<br>" + c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
+                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(
@@ -486,6 +495,7 @@
                         cellInfoHTML: c => c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
                             + "<br><b>" + (c.Men_coll == 0 ? "Aucun" : c.Men_coll) + "</b> en logement collectif"
                             + "<br><b>" + (c.Men_mais == 0 ? "Aucun" : c.Men_mais) + "</b> en maison"
+                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "square", labelUnitText: "ménages", fillColor: "#ccc" }))
@@ -522,6 +532,7 @@
                             "<b>" + c.Log_70_90 + "</b> entre 1970 et 1989<br>" +
                             "<b>" + c.Log_ap90 + "</b> depuis 1990<br>" +
                             "<b>" + c.Log_inc + "</b> inconnue" + (+c.Log_inc == 1 ? "" : "s")
+                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "square", labelUnitText: "logements", fillColor: "#ccc" }))
@@ -549,6 +560,7 @@
                         cellInfoHTML: c => f1(c.Log) + " logement" + (+c.Log == 1 ? "" : "s") + "<br>" +
                             "<b>" + (c.Log_soc == 0 ? "Aucun" : c.Log_soc) + "</b> logement" + (+c.Log_soc == 1 ? "" : "s") + " social(ux)<br>" +
                             "<b>" + (c.Log_nsoc == 0 ? "Aucun" : f1(c.Log_nsoc)) + "</b> autre" + (+c.Log_nsoc == 1 ? "" : "s")
+                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "logements", fillColor: "#fff" }))
@@ -574,7 +586,8 @@
                         pixNb: 2,
                         cellInfoHTML: c =>
                             (c.rLogSoc == 0 ? "Pas" : "<b>" + f1(Math.floor(1000 * c.rLogSoc) / 10) + "%</b>")
-                            + " de logements sociaux.",
+                            + " de logements sociaux."
+                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(
