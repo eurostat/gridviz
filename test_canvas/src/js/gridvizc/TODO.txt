@@ -1,6 +1,5 @@
 FR: filosofi - finalise - add legends
 correct color ramps
-imputés
 PiLa
 
 HR legends
