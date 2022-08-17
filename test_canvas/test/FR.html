@@ -371,9 +371,9 @@
                     [
                         new gviz.CompositionStyle({
                             color: {
-                                "Men_2_4ind": "#1f78b4",
-                                "Men_1ind": "#ffff99",
-                                "Men_5ind": "#e31a1c",
+                                "Men_1ind": "#e31a1c",
+                                "Men_2_4ind": "#ffff99",
+                                "Men_5ind": "#1f78b4",
                             },
                             type: () => "ring",
                             stripesOrientation: () => 90,
@@ -392,7 +392,7 @@
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
                 app.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({ title: "Taille des ménages", colCat: [["#ffff99", "Un seul individu"], ["#1f78b4", "2 à 4 individus"], ["#e31a1c", "5 individus ou plus"]] })
+                    new gviz.ColorCategoryLegend({ title: "Taille des ménages", colCat: [["#e31a1c", "Un seul individu"], ["#ffff99", "2 à 4 individus"], ["#1f78b4", "5 individus ou plus"]] })
                 )
 
             } else if (layCode === "men_mono") {
