@@ -327,7 +327,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + Math.floor(c.rIncome) + "€</b> par mois et par 'individu'"
+                        cellInfoHTML: c => "<b>" + Math.floor(c.rIncome) + "€</b> par mois et par individu, en moyenne"
                             + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
@@ -462,8 +462,8 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => "<b>" + f1(Math.floor(10 * c.rMenSurf) / 10) + "</b> m² par ménage."
-                            + "<br>" + c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
+                        cellInfoHTML: c => "<b>" + f1(Math.floor(10 * c.rMenSurf) / 10) + "</b> m² par logement."
+                            + "<br>" + c.Men + " logement" + (+c.Men == 1 ? "" : "s")
                             + (+c.imputed ? "<br>(valeurs imputées)" : "")
                     })
                 //legend
