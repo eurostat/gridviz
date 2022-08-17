@@ -181,7 +181,15 @@
                         new gviz.SquareColoringWebGLStyle({
                             colorCol: "Ind",
                             color: (v, r, s) => gviz.interpolateYlOrRd(gviz.s(v / s.max, 0.25)),
-                        }), new gviz.StrokeStyle({ maxZoom: 15 })
+                        }),
+                        new gviz.StrokeStyle({ maxZoom: 15 }),
+                        new gviz.ShapeColorSizeStyle({
+                            colorCol: "imputed",
+                            color: (v, r, s) => +v ? "#666" : "",
+                            shape: () => "circle",
+                            size: (v, r, s) => 0.3 * r,
+                            maxZoom: 30,
+                        })
                     ],
                     {
                         pixNb: 2,
