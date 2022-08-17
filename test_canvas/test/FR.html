@@ -418,6 +418,11 @@
                             "<b>" + c.Men_prop + "</b> propriétaires<br>" +
                             "<b>" + f1(100 * c.rMen_prop) + "</b> %"
                     })
+                //legend
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorLegend({ title: "Part des ménages propriétaires (%)", colorRamp: gviz.interpolatePuBuGn, fun: (t) => 100 * Math.pow(t, 1 / 2) })
+                )
 
             } else if (layCode === "men_house_surf") {
                 //housing surface per houshold
