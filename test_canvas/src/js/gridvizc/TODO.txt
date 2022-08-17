@@ -1,11 +1,12 @@
+EUR: upgrade
+TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
+
 FR: filosofi - finalise - add legends
 correct color ramps
-PiLa
-
-HR legends
 
 jsdoc
-TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
+
+background map, TMS, for small scales
 
 geotiff
 https://geotiffjs.github.io/
