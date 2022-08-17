@@ -294,7 +294,7 @@
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "individus", fillColor: "#ccc" }))
                 app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({ title: "Equilibre jeunes/âgés", ticks: 3, tickFormat: "text", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => t==0?"Plus jeune":t==0.5?"équilibre":"Plus âgés" })
+                    new gviz.ColorLegend({ title: "Equilibre jeunes/âgés", ticks: 2, tickFormat: "text", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => t==0?"Plus jeune":t==0.5?"équilibre":"Plus âgés" })
                 )
 
             } else if (layCode === "income") {
