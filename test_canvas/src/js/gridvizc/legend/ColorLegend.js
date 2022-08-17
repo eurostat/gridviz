@@ -55,7 +55,7 @@ export class ColorLegend extends Legend {
         const titleHeight = 12
 
         const svgW = this.width + 2 * this.margin
-        const svgH = this.height + 3 * this.margin + titleHeight + this.tickSize + 9
+        const svgH = this.height + 3 * this.margin + titleHeight + this.tickSize + 10
         const svg = this.div.append("svg").attr("width", svgW).attr("height", svgH)
         //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
 
@@ -108,13 +108,15 @@ export class ColorLegend extends Legend {
         //update tick labels
 
         //label text format
-        const f = this.tickFormat ? format(this.tickFormat) : (v) => v;
+        const f = this.tickFormat && this.tickFormat != "text" ? format(this.tickFormat) : (v) => v;
         for (let i = 0; i < this.ticks; i++) {
             let t = i / (this.ticks - 1)
+
             const v = this.fun(t, opts.r, opts.sColor)
+            const text = (v ? f(v) : "0") + (this.tickUnit ? this.tickUnit : "")
 
             //tick label
-            this.div.select("#" + "ticklabel_" + i).text((v ? f(v) : "0") + (this.tickUnit ? this.tickUnit : ""))
+            this.div.select("#" + "ticklabel_" + i).text(text)
         }
     }
 

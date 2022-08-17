@@ -281,7 +281,7 @@
                             sizeCol: "Ind",
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: "age_ratio",
-                            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
+                            color: (v, r, s) => gviz.interpolateSpectral(1 - v),
                             shape: () => "circle",
                         })
                     ],
@@ -293,9 +293,9 @@
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "individus", fillColor: "#ccc" }))
-                //app.layers[0].styles[0].legends.push(
-                //    new gviz.SizeLegend({ title: "Age", colCat: [[col(0.2), "<= 17"], [col(0.4), "18-64"], [col(0.9), " > 65"]].reverse() })
-                //)
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorLegend({ title: "Equilibre jeunes/âgés", ticks: 3, tickFormat: "text", colorRamp: gviz.interpolateSpectral, fun: (t, r, s) => t==0?"Plus jeune":t==0.5?"équilibre":"Plus âgés" })
+                )
 
             } else if (layCode === "income") {
                 //income
