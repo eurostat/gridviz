@@ -465,6 +465,11 @@
                             + "<br><b>" + (c.Men_coll == 0 ? "Aucun" : c.Men_coll) + "</b> en logement collectif"
                             + "<br><b>" + (c.Men_mais == 0 ? "Aucun" : c.Men_mais) + "</b> en maison"
                     })
+                //legend
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "square", labelUnitText: "ménages", fillColor: "#ccc" }))
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorCategoryLegend({ title: "Type de logement", colCat: [["green", "Logement collectif"], ["orange", "Maison"]] })
+                )
 
 
             } else if (layCode === "log_age") {
