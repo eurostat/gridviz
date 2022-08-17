@@ -368,6 +368,11 @@
                             + "<br><b>" + f1(c.Men_2_4ind) + "</b> de 2 à 4 individus"
                             + "<br><b>" + c.Men_5ind + "</b> de 5 individus ou plus"
                     })
+                //legend
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorCategoryLegend({ title: "Taille des ménages", colCat: [["#ffff99", "Un seul individu"], ["#1f78b4", "2 à 4 individus"], ["#e31a1c", "5 individus ou plus"]] })
+                )
 
             } else if (layCode === "men_mono") {
                 //single-parent
