@@ -289,7 +289,7 @@
                         pixNb: 6,
                         cellInfoHTML: c => "<b>" + f1(c.yyy) + "</b> 24 ans et moins"
                             + "<br>" + "<b>" + f1(c.ooo) + "</b> 65 ans et plus"
-                            //+ "<br>" + "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
+                        //+ "<br>" + "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "individus", fillColor: "#ccc" }))
@@ -438,7 +438,7 @@
                         new gviz.SquareColoringWebGLStyle({
                             colorCol: "rMenSurf",
                             color: (v, r, s) => {
-                                return gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1))
+                                return gviz.interpolateSpectral(1 - (v - s.min) / (s.max - s.min))
                             },
                         }),
                         new gviz.StrokeStyle({ maxZoom: 15 })
@@ -448,6 +448,13 @@
                         cellInfoHTML: c => "<b>" + f1(Math.floor(10 * c.rMenSurf) / 10) + "</b> m² par ménage."
                             + "<br>" + c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
                     })
+                //legend
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorLegend({
+                        title: "Surface moyenne des logements de ménages (m²)", colorRamp: gviz.interpolateSpectral,
+                        fun: (t, r, s) => s.min + (1 - t) * (s.max - s.min)
+                    })
+                )
 
             } else if (layCode === "men_house_collective") {
                 //housing type: house/collective
