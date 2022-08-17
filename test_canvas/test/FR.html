@@ -528,6 +528,11 @@
                             "<b>" + (c.Log_soc == 0 ? "Aucun" : c.Log_soc) + "</b> logement" + (+c.Log_soc == 1 ? "" : "s") + " social(ux)<br>" +
                             "<b>" + (c.Log_nsoc == 0 ? "Aucun" : f1(c.Log_nsoc)) + "</b> autre" + (+c.Log_nsoc == 1 ? "" : "s")
                     })
+                //legend
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "logements", fillColor: "#ccc" }))
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorCategoryLegend({ title: "Logements sociaux", colCat: [["#33a02c", "logements sociaux"], ["#ccc", "autres logements"]] })
+                )
 
             } else if (layCode === "log_soc_per") {
                 //social housing percentage
