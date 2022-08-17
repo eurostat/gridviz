@@ -289,7 +289,7 @@
                         pixNb: 6,
                         cellInfoHTML: c => "<b>" + f1(c.yyy) + "</b> 24 ans et moins"
                             + "<br>" + "<b>" + f1(c.ooo) + "</b> 65 ans et plus"
-                            + "<br>" + "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
+                            //+ "<br>" + "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "individus", fillColor: "#ccc" }))
@@ -344,6 +344,11 @@
                         cellInfoHTML: c => (c.rPoverty == 0 ? "Pas" : "<b>" + f1(Math.floor(1000 * c.rPoverty) / 10) + "%</b>") + " de ménages pauvres<br>"
                             + "sur " + c.Men + " ménage" + (+c.Men == 1 ? "" : "s"),
                     })
+                //legend
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorLegend({ title: "Part des ménages pauvres (%)", colorRamp: gviz.interpolateYlOrRd, fun: (t) => 100 * Math.pow(t, 1 / 0.65) })
+                )
 
             } else if (layCode === "men_size") {
                 //houshold size
