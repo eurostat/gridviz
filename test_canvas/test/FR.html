@@ -390,13 +390,13 @@
                     {
                         pixNb: 6,
                         cellInfoHTML: c => c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
-                            + "<br><b>" + c.Men_fmp + "</b> monoparental(ux)"
+                            + "<br><b>" + c.Men_fmp + "</b> monoparenta" + (+c.Men_fmp == 1 ? "l" : "ux")
                             + "<br><b>" + f1(100 * c.rMenFmp) + "</b> %"
                     })
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
                 app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({ title: "Part des ménages monoparentaux", colorRamp: gviz.interpolateYlOrRd, fun: (t) => Math.pow(t, 1 / 0.4) })
+                    new gviz.ColorLegend({ title: "Part des ménages monoparentaux (%)", colorRamp: gviz.interpolateYlOrRd, fun: (t) => 100 * Math.pow(t, 1 / 0.4) })
                 )
 
             } else if (layCode === "men_owner") {
