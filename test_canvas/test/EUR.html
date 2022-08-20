@@ -63,31 +63,37 @@
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
-            .addMultiScaleTiledGridLayer(
-                //population layer
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/",
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => Math.round(r / 1000) + "km/", [],
-                {
-                    preprocess: c => {
-                        //prepare 2011 -> 2018 change data
-                        if (!c["2011"] && !c["2018"]) c.d11_18 = 0
-                        else if (!c["2011"] && c["2018"]) c.d11_18 = + c["2018"]
-                        else if (c["2011"] && !c["2018"]) c.d11_18 = - c["2011"]
-                        else c.d11_18 = c["2018"] - c["2011"]
 
-                        //prepare 2006 -> 2011 change data
-                        if (!c["2006"] && !c["2011"]) c.d06_11 = 0
-                        else if (!c["2006"] && c["2011"]) c.d06_11 = +c["2011"]
-                        else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
-                        else c.d06_11 = c["2011"] - c["2006"]
-                    }
+        //prepare datasets
+        const ds = {}
+
+        //population dataset
+        ds.pop = app.makeMultiScaleTiledGridLayer(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/",
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => Math.round(r / 1000) + "km/",
+            {
+                preprocess: c => {
+                    //prepare 2011 -> 2018 change data
+                    if (!c["2011"] && !c["2018"]) c.d11_18 = 0
+                    else if (!c["2011"] && c["2018"]) c.d11_18 = + c["2018"]
+                    else if (c["2011"] && !c["2018"]) c.d11_18 = - c["2011"]
+                    else c.d11_18 = c["2018"] - c["2011"]
+
+                    //prepare 2006 -> 2011 change data
+                    if (!c["2006"] && !c["2011"]) c.d06_11 = 0
+                    else if (!c["2006"] && c["2011"]) c.d06_11 = +c["2011"]
+                    else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
+                    else c.d06_11 = c["2011"] - c["2006"]
                 }
-            )
-            .addMultiScaleTiledGridLayer(
-                //accessibility layer
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/",
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => r + "m/", [], {}
-            )
+            }
+        )
+
+        //accessibility dataset
+        ds.pop = app.makeMultiScaleTiledGridLayer(
+            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/",
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => r + "m/"
+        )
+
 
         //
         const update = () => {
@@ -95,29 +101,28 @@
             //read GUI selection
             const layCode = document.querySelector('input[name="layer"]:checked').value
 
-            //hide layers
-            app.hideAllLayers()
-
+            //remove layers
+            app.layers = []
 
             //select layer and style
             if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
-                const lay = app.layers[0]
-                lay.styles = [new gviz.SquareColoringWebGLStyle({
-                    colorCol: layCode,
-                    color: (v, r, s) => v == 0 ? "" : gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                }),
-                new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
-                ]
-                lay.pixNb = 2;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined
-                //legend
-                lay.styles[0].legends.push(
-                    new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) })
-                )
+                /*                const lay = app.layers[0]
+                                lay.styles = [new gviz.SquareColoringWebGLStyle({
+                                    colorCol: layCode,
+                                    color: (v, r, s) => v == 0 ? "" : gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                                }),
+                                new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
+                                ]
+                                lay.pixNb = 2;
+                                lay.visible = true;
+                                lay.cellInfoHTML = (c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined
+                                //legend
+                                lay.styles[0].legends.push(
+                                    new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) })
+                                )*/
 
             } else if (layCode === "d06_11" || layCode === "d11_18") {
-                const lay = app.layers[0]
+                /*const lay = app.layers[0]
                 lay.styles = [new gviz.ShapeColorSizeStyle({
                     colorCol: layCode,
                     color: (v, r, s) => {
@@ -150,14 +155,14 @@
                             return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
                         }
                     })
-                )
+                )*/
 
 
                 //accessibility
 
 
             } else if (layCode === "accHealth") {
-                const lay = app.layers[1]
+                /*const lay = app.layers[1]
                 const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
                 lay.styles = [
                     new gviz.SquareColoringWebGLStyle({
@@ -191,10 +196,10 @@
                 //TODO add legend with classified colors
                 //lay.styles[0].legends.push(new gviz.ColorLegend({}))
                 lay.styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
-
+*/
 
             } else if (layCode === "accEducPrim") {
-                const lay = app.layers[1]
+                /*const lay = app.layers[1]
                 const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
                 lay.styles = [
                     new gviz.SquareColoringWebGLStyle({
@@ -227,7 +232,7 @@
                 //TODO add legend with classified colors
                 //lay.styles[0].legends.push(new gviz.ColorLegend({}))
                 lay.styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
-
+*/
             } else {
                 console.log("Unexpected layer code: " + layCode);
                 return;
@@ -236,8 +241,6 @@
             //redraw
             app.cg.redraw();
         }
-
-
 
         //layer selector
         document.querySelector('#layer').addEventListener('change', update)
