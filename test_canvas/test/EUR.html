@@ -196,7 +196,7 @@
                 //legend
                 //TODO add legend with classified colors
                 //lay.styles[0].legends.push(new gviz.ColorLegend({}))
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
+                app.layers[0].styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
 
             } else if (layCode === "accEducPrim") {
                 const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
@@ -232,7 +232,7 @@
                 //legend
                 //TODO add legend with classified colors
                 //lay.styles[0].legends.push(new gviz.ColorLegend({}))
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
+                app.layers[0].styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
 
             } else {
                 console.log("Unexpected layer code: " + layCode);
