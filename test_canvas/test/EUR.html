@@ -106,7 +106,6 @@
 
             //select layer and style
             if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
-
                 app.addMultiScaleTiledGridLayer2(
                     ds.pop,
                     [
@@ -125,32 +124,33 @@
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) }))
 
             } else if (layCode === "d06_11" || layCode === "d11_18") {
-                /*const lay = app.layers[0]
-                lay.styles = [new gviz.ShapeColorSizeStyle({
-                    colorCol: layCode,
-                    color: (v, r, s) => {
-                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                        const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
-                        return gviz.interpolateSpectral(1 - t);
-                    },
-                    shape: () => "square",
-                }),
-                new gviz.StrokeStyle({ maxZoom: 80 })
-                ]
-                lay.pixNb = 2;
-                lay.visible = true;
-                lay.cellInfoHTML =
-                    (c) => (
-                        layCode === "d11_18" ?
-                            "2011: " + c["2011"] + "<br>2018: " + c["2018"]
-                            : "2006: " + c["2006"] + "<br>2011: " + c["2011"]
-                    )
-                        + "<br>"
-                        + "<b>" + (c[layCode] == 0 ? "No change" : (c[layCode] > 0 ? "+" : "") + c[layCode] + " inhabitants") + "</b>"
-
-
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                        new gviz.ShapeColorSizeStyle({
+                            colorCol: layCode,
+                            color: (v, r, s) => {
+                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
+                                return gviz.interpolateSpectral(1 - t);
+                            },
+                            shape: () => "square",
+                        }),
+                        new gviz.StrokeStyle({ maxZoom: 80 })
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => (
+                            layCode === "d11_18" ?
+                                "2011: " + c["2011"] + "<br>2018: " + c["2018"]
+                                : "2006: " + c["2006"] + "<br>2011: " + c["2011"]
+                        )
+                            + "<br>"
+                            + "<b>" + (c[layCode] == 0 ? "No change" : (c[layCode] > 0 ? "+" : "") + c[layCode] + " inhabitants") + "</b>"
+                    }
+                )
                 //legend
-                lay.styles[0].legends.push(
+                app.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
                         fun: (t, r, s) => {
@@ -158,11 +158,9 @@
                             return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
                         }
                     })
-                )*/
-
+                )
 
                 //accessibility
-
 
             } else if (layCode === "accHealth") {
                 /*const lay = app.layers[1]
