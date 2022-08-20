@@ -111,41 +111,18 @@
                     ds.pop,
                     [
                         new gviz.SquareColoringWebGLStyle({
-                            colorCol: "TOTAL",
-                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                            colorCol: layCode,
+                            color: (v, r, s) => v == 0 ? "" : gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
                         }),
-                        new gviz.SideStyle({
-                            valueCol: "TOTAL",
-                            value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
-                            color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
-                            width: (side, r, s, z) => {
-                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
-                            },
-                        })
+                        new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
                     ],
                     {
-                        pixNb: 3,
-                        cellInfoHTML: c => "<b>" + c.TOTAL + "</b> inhabitants"
+                        pixNb: 2,
+                        cellInfoHTML: c => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) }))
-
-                /*                const lay = app.layers[0]
-                                lay.styles = [new gviz.SquareColoringWebGLStyle({
-                                    colorCol: layCode,
-                                    color: (v, r, s) => v == 0 ? "" : gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
-                                }),
-                                new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
-                                ]
-                                lay.pixNb = 2;
-                                lay.visible = true;
-                                lay.cellInfoHTML = (c) => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined
-                                //legend
-                                lay.styles[0].legends.push(
-                                    new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) })
-                                )*/
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) }))
 
             } else if (layCode === "d06_11" || layCode === "d11_18") {
                 /*const lay = app.layers[0]
