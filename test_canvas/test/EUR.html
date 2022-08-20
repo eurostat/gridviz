@@ -199,40 +199,41 @@
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
 
             } else if (layCode === "accEducPrim") {
-                /*const lay = app.layers[1]
                 const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
-                lay.styles = [
-                    new gviz.SquareColoringWebGLStyle({
-                        colorCol: "avg_time_nearest_ep",
-                        color: (v, r, s) => {
-                            if (v === "NA") return
-                            let i = 0
-                            for (let b of breaks) {
-                                if (+v <= b) break;
-                                i++
-                            }
-                            const t = gviz.s(1 - (i - 1) / breaks.length, 2)
-                            return gviz.interpolateSpectral(t)
-                        },
-                    }),
-                    new gviz.StrokeStyle({ maxZoom: 80 }),
-                    new gviz.ShapeColorSizeStyle({
-                        color: () => "#000000dd",
-                        sizeCol: "TOT_P",
-                        size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
-                        shape: () => "circle",
-                    })
-                ]
-                lay.pixNb = 8;
-                lay.visible = true;
-                lay.cellInfoHTML = (c) => {
-                    return "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>" + c.TOT_P + "</b> inhabitant(s)"
-                }
-                //legends
+                app.addMultiScaleTiledGridLayer2(
+                    ds.acc,
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "avg_time_nearest_ep",
+                            color: (v, r, s) => {
+                                if (v === "NA") return
+                                let i = 0
+                                for (let b of breaks) {
+                                    if (+v <= b) break;
+                                    i++
+                                }
+                                const t = gviz.s(1 - (i - 1) / breaks.length, 2)
+                                return gviz.interpolateSpectral(t)
+                            },
+                        }),
+                        new gviz.StrokeStyle({ maxZoom: 80 }),
+                        new gviz.ShapeColorSizeStyle({
+                            color: () => "#000000dd",
+                            sizeCol: "TOT_P",
+                            size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
+                            shape: () => "circle",
+                        })
+                    ],
+                    {
+                        pixNb: 8,
+                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>" + c.TOT_P + "</b> inhabitant(s)"
+                    }
+                )
+                //legend
                 //TODO add legend with classified colors
                 //lay.styles[0].legends.push(new gviz.ColorLegend({}))
-                lay.styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
-*/
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
+
             } else {
                 console.log("Unexpected layer code: " + layCode);
                 return;

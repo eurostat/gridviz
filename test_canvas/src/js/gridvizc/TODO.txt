@@ -1,4 +1,4 @@
-EUR: upgrade
+EUR: add missing legend
 TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
 https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
 
