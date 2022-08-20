@@ -89,7 +89,7 @@
         )
 
         //accessibility dataset
-        ds.pop = app.makeMultiScaleTiledGridLayer(
+        ds.acc = app.makeMultiScaleTiledGridLayer(
             "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/",
             [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => r + "m/"
         )
@@ -106,6 +106,32 @@
 
             //select layer and style
             if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
+
+                app.addMultiScaleTiledGridLayer2(
+                    ds.pop,
+                    [
+                        new gviz.SquareColoringWebGLStyle({
+                            colorCol: "TOTAL",
+                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                        }),
+                        new gviz.SideStyle({
+                            valueCol: "TOTAL",
+                            value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
+                            color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
+                            width: (side, r, s, z) => {
+                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                return r * (0.02 + 0.2 * (side.or === "v" ? 0.6 : 1) * gviz.s(Math.abs(side.value) / max, 0.5))
+                            },
+                        })
+                    ],
+                    {
+                        pixNb: 3,
+                        cellInfoHTML: c => "<b>" + c.TOTAL + "</b> inhabitants"
+                    }
+                )
+                //legend
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) }))
+
                 /*                const lay = app.layers[0]
                                 lay.styles = [new gviz.SquareColoringWebGLStyle({
                                     colorCol: layCode,
