@@ -4,7 +4,7 @@ import { initShaderProgram, createShader } from "./webGLUtils";
 
 /**
  */
-export class WebGLSquareColoring {
+export class WebGLSquareColoring2 {
 
     /**
      * 
