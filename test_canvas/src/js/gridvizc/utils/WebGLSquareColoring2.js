@@ -53,7 +53,7 @@ export class WebGLSquareColoring {
     addPointData(xC, yC, t) {
         //vertices
         this.verticesBuffer.push(xC, yC)
-        //color
+        //t value
         this.tBuffer.push(t)
     }
 
@@ -77,10 +77,10 @@ export class WebGLSquareColoring {
 
         //color data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.colorsBuffer), gl.STATIC_DRAW);
-        var color = gl.getAttribLocation(this.program, "color");
-        gl.vertexAttribPointer(color, 4, gl.FLOAT, false, 0, 0);
-        gl.enableVertexAttribArray(color);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.tBuffer), gl.STATIC_DRAW);
+        var t = gl.getAttribLocation(this.program, "t");
+        gl.vertexAttribPointer(t, 1, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(t);
 
         //sizePix
         gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * this.sizePix);
