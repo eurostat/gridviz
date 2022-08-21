@@ -1,11 +1,8 @@
 //@ts-check
 
 import { initShaderProgram, createShader } from "./webGLUtils";
-import { color } from "d3-color";
 
 /**
- * Everything to easily draw colored squares with webGL.
- * All the same size, but different fill color.
  */
 export class WebGLSquareColoring {
 
@@ -34,12 +31,9 @@ export class WebGLSquareColoring {
           `),
             createShader(gl, gl.FRAGMENT_SHADER, `
             precision mediump float;
-            varying vec4 vColor;
+            varying float vt;
             void main(void) {
-                //compute color from t
-                //vec4 vColor_ = vColor / 255.0;
-                //vColor_[3] = 255.0 * vColor_[3];
-                gl_FragColor = vColor_;
+                gl_FragColor = vec4(vt, 0.0, 0.0, 1.0);
             }`)
         );
         gl.useProgram(this.program);
@@ -75,10 +69,10 @@ export class WebGLSquareColoring {
         );
         gl.enableVertexAttribArray(position);
 
-        //color data
+        //t data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.tBuffer), gl.STATIC_DRAW);
-        var t = gl.getAttribLocation(this.program, "t");
+        const t = gl.getAttribLocation(this.program, "t");
         gl.vertexAttribPointer(t, 1, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(t);
 
