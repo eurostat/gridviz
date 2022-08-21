@@ -33,7 +33,7 @@ export class WebGLSquareColoring2 {
             precision mediump float;
             varying float vt;
             void main(void) {
-                float t = pow(vt, 0.25);
+                float t = pow(vt, `+ 0.25 +`);
                 float ri = 0.0;
                 float rf = 1.0;
                 float gi = 0.0;
