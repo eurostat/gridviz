@@ -28,6 +28,7 @@ export { DotDensityStyle } from "./style/DotDensityStyle"
 export { getTanakaStyle } from "./style/TanakaStyle"
 export { getLegoStyle } from "./style/LegoStyle"
 export { SquareColoringWebGLStyle } from "./style/SquareColoringWebGLStyle"
+export { SquareColoringWebGLStyle2 } from "./style/SquareColoringWebGLStyle2"
 
 //export additional layers
 export { LabelLayer } from "./LabelLayer"

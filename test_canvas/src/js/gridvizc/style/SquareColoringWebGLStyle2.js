@@ -14,7 +14,7 @@ import { monitor, monitorDuration } from "../utils/Utils"
  * 
  * @author Julien Gaffuri
  */
-export class SquareColoringWebGLStyle extends Style {
+export class SquareColoringWebGLStyle2 extends Style {
 
     /** @param {object} opts */
     constructor(opts) {
