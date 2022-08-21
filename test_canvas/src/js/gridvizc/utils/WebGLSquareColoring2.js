@@ -33,7 +33,8 @@ export class WebGLSquareColoring2 {
             precision mediump float;
             varying float vt;
             void main(void) {
-                gl_FragColor = vec4(vt, 0.0, 0.0, 1.0);
+                float t = vt;
+                gl_FragColor = vec4(t, 1.0-t, 0.3, 1.0);
             }`)
         );
         gl.useProgram(this.program);

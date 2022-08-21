@@ -36,7 +36,7 @@
                 [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
                 r => r + "m/",
                 [
-                    new gviz.SquareColoringWebGLStyle({
+                    new gviz.SquareColoringWebGLStyle2({
                         colorCol: "Ind",
                         color: (v, r, s) => col(gviz.s(v / s.max, 0.25)),
                     }), new gviz.StrokeStyle({ maxZoom: 15 })
