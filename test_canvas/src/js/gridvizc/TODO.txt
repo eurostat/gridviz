@@ -1,12 +1,15 @@
-fast webGL
 EUR: add missing legend
+test fast webGL - compute value to color in fragment shader
+
 TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
 https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
 
+
+https://observablehq.com/@bmschmidt/arxiv
+https://github.com/CreatingData/deepscatter
+
 FR: filosofi - finalise - add legends
 correct color ramps
-
-jsdoc
 
 background map, TMS, for small scales
 
@@ -14,6 +17,7 @@ geotiff
 https://geotiffjs.github.io/
 https://github.com/geotiffjs/geotiff.js/
 
+jsdoc
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 TODO BIG DEPLOY ?
