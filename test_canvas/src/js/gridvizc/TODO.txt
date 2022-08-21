@@ -1,5 +1,8 @@
+Fast webGL: move more stuff to fragment shader
+- add parameter on colors (interpolation + colors extrema)
+- add parameters for t deformation
+
 EUR: add missing legend
-test fast webGL - compute value to color in fragment shader
 
 TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
 https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
