@@ -30,8 +30,8 @@ export class SquareColoringWebGLStyle2 extends Style {
         this.size = opts.size; // (resolution, zf) => ...
 
         /** 
-         *  @protected @type {number} */
-         this.deformationFactor = opts.deformationFactor || 1
+         *  @protected @type {string} */
+         this.deformationFactor = opts.deformationFactor || "1.0"
     }
 
 

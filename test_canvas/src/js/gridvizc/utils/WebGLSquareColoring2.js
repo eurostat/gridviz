@@ -10,7 +10,7 @@ export class WebGLSquareColoring2 {
      * 
      * @param {WebGLRenderingContext} gl 
      */
-    constructor(gl, sizePix, deformationFactor = 1) {
+    constructor(gl, sizePix, deformationFactor = "1.0") {
 
         this.gl = gl
         this.sizePix = sizePix || 10.0
