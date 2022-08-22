@@ -28,6 +28,10 @@ export class SquareColoringWebGLStyle2 extends Style {
         /** A function returning the size of the cells, in geographical unit.
         * @protected @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
+
+        /** 
+         *  @protected @type {number} */
+         this.deformationFactor = opts.deformationFactor || 1
     }
 
 
@@ -57,7 +61,7 @@ export class SquareColoringWebGLStyle2 extends Style {
         if (monitor) monitorDuration("   web GL canvas creation")
 
         const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
-        const prog = new WebGLSquareColoring2(cvWGL.gl, sizeGeo / zf)
+        const prog = new WebGLSquareColoring2(cvWGL.gl, sizeGeo / zf, this.deformationFactor)
 
         if (monitor) monitorDuration("   preparation")
 

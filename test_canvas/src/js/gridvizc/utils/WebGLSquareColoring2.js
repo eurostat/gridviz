@@ -10,7 +10,7 @@ export class WebGLSquareColoring2 {
      * 
      * @param {WebGLRenderingContext} gl 
      */
-    constructor(gl, sizePix) {
+    constructor(gl, sizePix, deformationFactor = 1) {
 
         this.gl = gl
         this.sizePix = sizePix || 10.0
@@ -33,7 +33,7 @@ export class WebGLSquareColoring2 {
             precision mediump float;
             varying float vt;
             void main(void) {
-                float t = pow(vt, `+ 0.25 +`);
+                float t = pow(vt, `+ deformationFactor +`);
                 float ri = 0.0;
                 float rf = 1.0;
                 float gi = 0.0;
