@@ -1,4 +1,6 @@
+
 Fast webGL: move more stuff to fragment shader
+monitoring - make only one program creation + use uniform ?
 - add parameter on colors (interpolation + colors extrema)
 - add parameters for t deformation
 
