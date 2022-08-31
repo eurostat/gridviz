@@ -6,17 +6,13 @@ import { initShaderProgram, createShader } from "./webGLUtils";
  */
 export class WebGLSquareColoring2 {
 
-    /**
-     * 
-     * @param {WebGLRenderingContext} gl 
-     */
+    /**  */
     constructor(gl, deformationFactor = "1.0") {
 
-        /** @type {WebGLRenderingContext} */
         this.gl = gl
 
-        /** @type {WebGLShader|null} */
-        this.vShader = createShader(gl, gl.VERTEX_SHADER, `
+        /** @type {WebGLShader} */
+        const vShader = createShader(gl, gl.VERTEX_SHADER, `
         attribute vec2 pos;
         uniform float sizePix;
         uniform mat3 mat;
@@ -29,8 +25,8 @@ export class WebGLSquareColoring2 {
         }
       `);
 
-        /** @type {WebGLShader|null} */
-        this.fShader = createShader(gl, gl.FRAGMENT_SHADER, `
+        /** @type {WebGLShader} */
+        const fShader = createShader(gl, gl.FRAGMENT_SHADER, `
       precision mediump float;
       varying float vt;
       void main(void) {
@@ -47,24 +43,19 @@ export class WebGLSquareColoring2 {
       }`);
 
         /** @type {WebGLProgram} */
-        this.program = initShaderProgram(gl, this.vShader, this.fShader);
+        this.program = initShaderProgram(gl, vShader, fShader);
         gl.useProgram(this.program);
-
-        /** @type {number} */
-        this.sizePix = 10
     }
 
-
-
     /**  */
-    draw(verticesBuffer, tBuffer, transfoMat) {
-        /** @type {WebGLRenderingContext} */
+    draw(verticesBuffer, tBuffer, transfoMat, sizePix) {
         const gl = this.gl
+        const program = this.program
 
         //vertice data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesBuffer), gl.STATIC_DRAW);
-        const position = gl.getAttribLocation(this.program, "pos");
+        const position = gl.getAttribLocation(program, "pos");
         gl.vertexAttribPointer(
             position,
             2, //numComponents
@@ -78,12 +69,15 @@ export class WebGLSquareColoring2 {
         //t data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(tBuffer), gl.STATIC_DRAW);
-        const t = gl.getAttribLocation(this.program, "t");
+        const t = gl.getAttribLocation(program, "t");
         gl.vertexAttribPointer(t, 1, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(t);
 
         //transformation
-        gl.uniformMatrix3fv(gl.getUniformLocation(this.program, "mat"), false, new Float32Array(transfoMat));
+        gl.uniformMatrix3fv(gl.getUniformLocation(program, "mat"), false, new Float32Array(transfoMat));
+
+        //sizePix
+        gl.uniform1f(gl.getUniformLocation(program, "sizePix"), 1.0 * sizePix);
 
         // Enable the depth test
         //gl.enable(gl.DEPTH_TEST);
@@ -93,20 +87,6 @@ export class WebGLSquareColoring2 {
         //gl.viewport(0, 0, cg.w, cg.h);
 
         gl.drawArrays(gl.POINTS, 0, verticesBuffer.length / 2)
-    }
-
-
-
-
-    //getters and setters
-
-    /** @returns {number} */
-    getSizePix() { return this.sizePix; }
-    /** @param {number} val @returns {this} */
-    setSizePix(val) {
-        this.sizePix = val;
-        this.gl.uniform1f(this.gl.getUniformLocation(this.program, "sizePix"), 1.0 * this.sizePix);
-        return this;
     }
 
 }

@@ -60,12 +60,6 @@ export class SquareColoringWebGLStyle2 extends Style {
         }
         if (monitor) monitorDuration("   web GL canvas creation")
 
-        const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
-        const prog = new WebGLSquareColoring2(cvWGL.gl, this.deformationFactor)
-        prog.setSizePix(sizeGeo / zf)
-
-        if (monitor) monitorDuration("   preparation")
-
         //add vertice and fragment data
         let col
         const r2 = resolution / 2
@@ -84,7 +78,8 @@ export class SquareColoringWebGLStyle2 extends Style {
         if (monitor) monitorDuration("   webgl drawing data preparation")
 
         //draw
-        prog.draw(verticesBuffer, tBuffer, cg.getWebGLTransform())
+        const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
+        new WebGLSquareColoring2().draw(cvWGL.gl, verticesBuffer, tBuffer, cg.getWebGLTransform(), sizeGeo / zf, this.deformationFactor)
 
         if (monitor) monitorDuration("   webgl drawing")
 
