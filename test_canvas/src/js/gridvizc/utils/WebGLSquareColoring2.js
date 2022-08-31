@@ -7,8 +7,9 @@ import { initShaderProgram, createShader } from "./webGLUtils";
 export class WebGLSquareColoring2 {
 
     /**  */
-    constructor(gl, deformationFactor = "1.0", sizePix = 10) {
+    constructor(gl, deformationFactor = 1, sizePix = 10) {
 
+        /** @type {WebGLRenderingContext} */
         this.gl = gl
 
         /** @type {WebGLShader} */
@@ -16,8 +17,10 @@ export class WebGLSquareColoring2 {
         attribute vec2 pos;
         uniform float sizePix;
         uniform mat3 mat;
+
         attribute float t;
         varying float vt;
+
         void main() {
           gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
           gl_PointSize = sizePix;
@@ -29,8 +32,9 @@ export class WebGLSquareColoring2 {
         const fShader = createShader(gl, gl.FRAGMENT_SHADER, `
       precision mediump float;
       varying float vt;
+      uniform float deformationFactor;
       void main(void) {
-          float t = pow(vt, `+ deformationFactor + `);
+          float t = pow(vt, deformationFactor);
           float ri = 0.0;
           float rf = 1.0;
           float gi = 0.0;
@@ -46,8 +50,9 @@ export class WebGLSquareColoring2 {
         this.program = initShaderProgram(gl, vShader, fShader);
         gl.useProgram(this.program);
 
-        //sizePix
+        //set sizePix
         gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * sizePix);
+        gl.uniform1f(gl.getUniformLocation(this.program, "deformationFactor"), 1.0 * deformationFactor);
     }
 
     /**  */
