@@ -13,7 +13,6 @@ export class WebGLSquareColoring2 {
     constructor(gl, sizePix, deformationFactor = "1.0") {
 
         this.gl = gl
-        this.sizePix = sizePix || 10.0
 
         this.program = initShaderProgram(
             gl,
@@ -33,7 +32,7 @@ export class WebGLSquareColoring2 {
             precision mediump float;
             varying float vt;
             void main(void) {
-                float t = pow(vt, `+ deformationFactor +`);
+                float t = pow(vt, `+ deformationFactor + `);
                 float ri = 0.0;
                 float rf = 1.0;
                 float gi = 0.0;
@@ -47,18 +46,25 @@ export class WebGLSquareColoring2 {
         );
         gl.useProgram(this.program);
 
-        //buffer data
-        //this.verticesBuffer = [];
-        //this.tBuffer = [];
+        //sizePix
+        this.sizePix = sizePix || 10.0
+        this.setSizePix(this.sizePix)
     }
 
-    /** Add data to vertices/size/color buffers for color squares drawing */
-    //addPointData(xC, yC, t) {
-        //vertices
-        //this.verticesBuffer.push(xC, yC)
-        //t value
-        //this.tBuffer.push(t)
-    //}
+
+    //getters and setters
+
+    /** @returns {number} */
+    getSizePix() { return this.sizePix; }
+    /** @param {number} val @returns {this} */
+    setSizePix(val) {
+        this.sizePix = val;
+        this.gl.uniform1f(this.gl.getUniformLocation(this.program, "sizePix"), 1.0 * this.sizePix);
+        return this;
+    }
+
+
+
 
     /**  */
     draw(verticesBuffer, tBuffer, transfoMat) {
@@ -84,9 +90,6 @@ export class WebGLSquareColoring2 {
         const t = gl.getAttribLocation(this.program, "t");
         gl.vertexAttribPointer(t, 1, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(t);
-
-        //sizePix
-        gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * this.sizePix);
 
         //transformation
         gl.uniformMatrix3fv(gl.getUniformLocation(this.program, "mat"), false, new Float32Array(transfoMat));
