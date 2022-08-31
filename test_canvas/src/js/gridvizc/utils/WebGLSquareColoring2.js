@@ -53,12 +53,12 @@ export class WebGLSquareColoring2 {
     }
 
     /** Add data to vertices/size/color buffers for color squares drawing */
-    addPointData(xC, yC, t) {
+    //addPointData(xC, yC, t) {
         //vertices
         //this.verticesBuffer.push(xC, yC)
         //t value
         //this.tBuffer.push(t)
-    }
+    //}
 
     /**  */
     draw(verticesBuffer, tBuffer, transfoMat) {
