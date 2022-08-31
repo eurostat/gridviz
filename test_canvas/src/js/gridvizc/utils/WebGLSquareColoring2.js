@@ -7,7 +7,7 @@ import { initShaderProgram, createShader } from "./webGLUtils";
 export class WebGLSquareColoring2 {
 
     /**  */
-    constructor(gl, deformationFactor = 1, sizePix = 10) {
+    constructor(gl, colI, colF, deformationFactor = 1, sizePix = 10) {
 
         /** @type {WebGLRenderingContext} */
         this.gl = gl
@@ -56,8 +56,8 @@ export class WebGLSquareColoring2 {
         //deformation factor
         gl.uniform1f(gl.getUniformLocation(this.program, "deformationFactor"), 1.0 * deformationFactor);
         //colors
-        gl.uniform4fv(gl.getUniformLocation(this.program, "cI"), [0.5, 0, 0.0, 1.0]);
-        gl.uniform4fv(gl.getUniformLocation(this.program, "cF"), [1.0, 1.0, 1.0, 1.0]);
+        gl.uniform4fv(gl.getUniformLocation(this.program, "cI"), colI);
+        gl.uniform4fv(gl.getUniformLocation(this.program, "cF"), colF);
     }
 
     /**  */
