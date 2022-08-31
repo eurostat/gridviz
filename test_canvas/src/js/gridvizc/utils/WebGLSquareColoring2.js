@@ -15,6 +15,7 @@ export class WebGLSquareColoring2 {
         /** @type {WebGLRenderingContext} */
         this.gl = gl
 
+        /** @type {WebGLShader|null} */
         this.vShader = createShader(gl, gl.VERTEX_SHADER, `
         attribute vec2 pos;
         uniform float sizePix;
@@ -28,6 +29,7 @@ export class WebGLSquareColoring2 {
         }
       `);
 
+        /** @type {WebGLShader|null} */
         this.fShader = createShader(gl, gl.FRAGMENT_SHADER, `
       precision mediump float;
       varying float vt;
@@ -47,7 +49,6 @@ export class WebGLSquareColoring2 {
         /** @type {WebGLProgram} */
         this.program = initShaderProgram(gl, this.vShader, this.fShader);
         gl.useProgram(this.program);
-
 
         /** @type {number} */
         this.sizePix = 10
