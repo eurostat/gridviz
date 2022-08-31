@@ -1,4 +1,4 @@
-read https://benschmidt.org/post/2020-01-15/2020-01-15-webgpu/
+Consider other formats: arrow, HDF5, ORC, protobuffer
 
 webgl: color interpolation - several
 
