@@ -15,37 +15,37 @@ export class WebGLSquareColoring2 {
         /** @type {WebGLRenderingContext} */
         this.gl = gl
 
+        this.vShader = createShader(gl, gl.VERTEX_SHADER, `
+        attribute vec2 pos;
+        uniform float sizePix;
+        uniform mat3 mat;
+        attribute float t;
+        varying float vt;
+        void main() {
+          gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
+          gl_PointSize = sizePix;
+          vt = t;
+        }
+      `);
+
+        this.fShader = createShader(gl, gl.FRAGMENT_SHADER, `
+      precision mediump float;
+      varying float vt;
+      void main(void) {
+          float t = pow(vt, `+ deformationFactor + `);
+          float ri = 0.0;
+          float rf = 1.0;
+          float gi = 0.0;
+          float gf = 0.0;
+          float bi = 0.0;
+          float bf = 1.0;
+          float ai = 1.0;
+          float af = 1.0;
+          gl_FragColor = vec4(ri*(1.0-t)+t*rf, gi*(1.0-t)+t*gf, bi*(1.0-t)+t*bf, ai*(1.0-t)+t*af);
+      }`);
+
         /** @type {WebGLProgram} */
-        this.program = initShaderProgram(
-            gl,
-            createShader(gl, gl.VERTEX_SHADER, `
-            attribute vec2 pos;
-            uniform float sizePix;
-            uniform mat3 mat;
-            attribute float t;
-            varying float vt;
-            void main() {
-              gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
-              gl_PointSize = sizePix;
-              vt = t;
-            }
-          `),
-            createShader(gl, gl.FRAGMENT_SHADER, `
-            precision mediump float;
-            varying float vt;
-            void main(void) {
-                float t = pow(vt, `+ deformationFactor + `);
-                float ri = 0.0;
-                float rf = 1.0;
-                float gi = 0.0;
-                float gf = 0.0;
-                float bi = 0.0;
-                float bf = 1.0;
-                float ai = 1.0;
-                float af = 1.0;
-                gl_FragColor = vec4(ri*(1.0-t)+t*rf, gi*(1.0-t)+t*gf, bi*(1.0-t)+t*bf, ai*(1.0-t)+t*af);
-            }`)
-        );
+        this.program = initShaderProgram(gl, this.vShader, this.fShader);
         gl.useProgram(this.program);
 
 
