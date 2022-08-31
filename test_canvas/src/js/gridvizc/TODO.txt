@@ -1,4 +1,5 @@
 https://thebookofshaders.com/glossary/?search=mix
+https://thebookofshaders.com/06/
 https://thebookofshaders.com/glossary/
 
 consider other formats: arrow, HDF5, ORC, protobuffer
