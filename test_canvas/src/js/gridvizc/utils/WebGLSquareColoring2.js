@@ -48,25 +48,25 @@ export class WebGLSquareColoring2 {
         gl.useProgram(this.program);
 
         //buffer data
-        this.verticesBuffer = [];
-        this.tBuffer = [];
+        //this.verticesBuffer = [];
+        //this.tBuffer = [];
     }
 
     /** Add data to vertices/size/color buffers for color squares drawing */
     addPointData(xC, yC, t) {
         //vertices
-        this.verticesBuffer.push(xC, yC)
+        //this.verticesBuffer.push(xC, yC)
         //t value
-        this.tBuffer.push(t)
+        //this.tBuffer.push(t)
     }
 
     /**  */
-    draw(transfoMat) {
+    draw(verticesBuffer, tBuffer, transfoMat) {
         const gl = this.gl
 
         //vertice data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.verticesBuffer), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesBuffer), gl.STATIC_DRAW);
         const position = gl.getAttribLocation(this.program, "pos");
         gl.vertexAttribPointer(
             position,
@@ -80,7 +80,7 @@ export class WebGLSquareColoring2 {
 
         //t data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.tBuffer), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(tBuffer), gl.STATIC_DRAW);
         const t = gl.getAttribLocation(this.program, "t");
         gl.vertexAttribPointer(t, 1, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(t);
