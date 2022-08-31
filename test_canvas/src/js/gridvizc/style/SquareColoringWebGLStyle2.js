@@ -61,7 +61,8 @@ export class SquareColoringWebGLStyle2 extends Style {
         if (monitor) monitorDuration("   web GL canvas creation")
 
         const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
-        const prog = new WebGLSquareColoring2(cvWGL.gl, sizeGeo / zf, this.deformationFactor)
+        const prog = new WebGLSquareColoring2(cvWGL.gl, this.deformationFactor)
+        prog.setSizePix(sizeGeo / zf)
 
         if (monitor) monitorDuration("   preparation")
 
