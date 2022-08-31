@@ -1,6 +1,7 @@
 //@ts-check
 
 import { initShaderProgram, createShader } from "./webGLUtils";
+import { color } from "d3-color";
 
 /**
  */
@@ -51,13 +52,20 @@ export class WebGLSquareColoring2 {
         gl.useProgram(this.program);
 
         //set uniforms
+
         //sizePix
         gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * sizePix);
+
         //deformation factor
         gl.uniform1f(gl.getUniformLocation(this.program, "deformationFactor"), 1.0 * deformationFactor);
+
         //colors
-        gl.uniform4fv(gl.getUniformLocation(this.program, "cI"), colI);
-        gl.uniform4fv(gl.getUniformLocation(this.program, "cF"), colF);
+        const cI = color(colI)
+        console.log(colI, cI)
+        gl.uniform4fv(gl.getUniformLocation(this.program, "cI"), [cI.r, cI.g, cI.b, cI.opacity]);
+        const cF = color(colF)
+        console.log(colF, cF)
+        gl.uniform4fv(gl.getUniformLocation(this.program, "cF"), [cF.r, cF.g, cF.b, cF.opacity]);
     }
 
     /**  */
