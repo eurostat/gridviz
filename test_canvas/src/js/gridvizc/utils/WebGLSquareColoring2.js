@@ -44,18 +44,20 @@ export class WebGLSquareColoring2 {
             cI[3]*(1.0-t)+t*cF[3]);
       }`);
 
-      //see https://webglfundamentals.org/webgl/lessons/fr/webgl-shaders-and-glsl.html#les-uniforms-dans-les-shaders-de-vertex
+        //see https://webglfundamentals.org/webgl/lessons/fr/webgl-shaders-and-glsl.html#les-uniforms-dans-les-shaders-de-vertex
 
         /** @type {WebGLProgram} */
         this.program = initShaderProgram(gl, vShader, fShader);
         gl.useProgram(this.program);
 
-        //set sizePix
+        //set uniforms
+        //sizePix
         gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * sizePix);
-
+        //deformation factor
         gl.uniform1f(gl.getUniformLocation(this.program, "deformationFactor"), 1.0 * deformationFactor);
-        gl.uniform4f(gl.getUniformLocation(this.program, "cI"), 0.5, 0, 0.0, 1.0);
-        gl.uniform4f(gl.getUniformLocation(this.program, "cF"), 1.0, 1.0, 1.0, 1.0);
+        //colors
+        gl.uniform4fv(gl.getUniformLocation(this.program, "cI"), [0.5, 0, 0.0, 1.0]);
+        gl.uniform4fv(gl.getUniformLocation(this.program, "cF"), [1.0, 1.0, 1.0, 1.0]);
     }
 
     /**  */
