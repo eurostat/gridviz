@@ -52,19 +52,6 @@ export class WebGLSquareColoring2 {
     }
 
 
-    //getters and setters
-
-    /** @returns {number} */
-    getSizePix() { return this.sizePix; }
-    /** @param {number} val @returns {this} */
-    setSizePix(val) {
-        this.sizePix = val;
-        this.gl.uniform1f(this.gl.getUniformLocation(this.program, "sizePix"), 1.0 * this.sizePix);
-        return this;
-    }
-
-
-
 
     /**  */
     draw(verticesBuffer, tBuffer, transfoMat) {
@@ -103,4 +90,19 @@ export class WebGLSquareColoring2 {
 
         gl.drawArrays(gl.POINTS, 0, verticesBuffer.length / 2)
     }
+
+
+
+
+    //getters and setters
+
+    /** @returns {number} */
+    getSizePix() { return this.sizePix; }
+    /** @param {number} val @returns {this} */
+    setSizePix(val) {
+        this.sizePix = val;
+        this.gl.uniform1f(this.gl.getUniformLocation(this.program, "sizePix"), 1.0 * this.sizePix);
+        return this;
+    }
+
 }
