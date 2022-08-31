@@ -39,7 +39,7 @@ export class SquareColoringWebGLStyle2 extends Style {
          *  @protected @type {Array.<string>} */
         this.colors = opts.colors || ["red", "yellow"]
         if (opts.color)
-            this.colors = [opts.color(0), opts.color(1 / 3), opts.color(2 / 3), opts.color(1)]
+            this.colors = [opts.color(0), opts.color(0.25), opts.color(0.5), opts.color(0.75), opts.color(1)]
 
         /** A function returning the size of the cells, in geographical unit.
         * @protected @type {function(number,number):number} */
