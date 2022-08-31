@@ -15,11 +15,11 @@ export function makeWebGLCanvas(cg) {
     return { canvas: canvas, gl: gl }
 }
 
-// Initialize a shader program, so WebGL knows how to draw our data
-
 /**
+ * Initialize a shader program, so WebGL knows how to draw our data
+ * 
  * @param {WebGLRenderingContext} gl 
- * @param  {...any} shaders 
+ * @param  {...WebGLShader} shaders 
  * @returns {WebGLProgram}
  */
 export function initShaderProgram(gl, ...shaders) {
@@ -32,14 +32,22 @@ export function initShaderProgram(gl, ...shaders) {
     throw new Error(gl.getProgramInfoLog(program) || "Cannot create webGL program (2)");
 }
 
-
-// creates a shader of the given type, uploads the source and compiles it.
+/**
+ * Creates a shader of the given type, uploads the source and compiles it.
+ * 
+ * @param {WebGLRenderingContext} gl 
+ * @param {number} type 
+ * @param  {...string} sources 
+ * @returns {WebGLShader}
+ */
 export function createShader(gl, type, ...sources) {
+    /** @type {WebGLShader|null} */
     const shader = gl.createShader(type);
+    if (shader == null) throw new Error("Cannot create webGL shader");
     gl.shaderSource(shader, sources.join("\n"));
     gl.compileShader(shader);
     if (gl.getShaderParameter(shader, gl.COMPILE_STATUS)) return shader;
-    throw new Error(gl.getShaderInfoLog(shader));
+    throw new Error(gl.getShaderInfoLog(shader) || "Cannot create webGL shader (2)");
 }
 
 
