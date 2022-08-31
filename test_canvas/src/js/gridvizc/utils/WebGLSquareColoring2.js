@@ -7,7 +7,7 @@ import { initShaderProgram, createShader } from "./webGLUtils";
 export class WebGLSquareColoring2 {
 
     /**  */
-    constructor(gl, deformationFactor = "1.0") {
+    constructor(gl, deformationFactor = "1.0", sizePix = 10) {
 
         this.gl = gl
 
@@ -45,10 +45,13 @@ export class WebGLSquareColoring2 {
         /** @type {WebGLProgram} */
         this.program = initShaderProgram(gl, vShader, fShader);
         gl.useProgram(this.program);
+
+        //sizePix
+        gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * sizePix);
     }
 
     /**  */
-    draw(verticesBuffer, tBuffer, transfoMat, sizePix) {
+    draw(verticesBuffer, tBuffer, transfoMat) {
         const gl = this.gl
         const program = this.program
 
@@ -75,9 +78,6 @@ export class WebGLSquareColoring2 {
 
         //transformation
         gl.uniformMatrix3fv(gl.getUniformLocation(program, "mat"), false, new Float32Array(transfoMat));
-
-        //sizePix
-        gl.uniform1f(gl.getUniformLocation(program, "sizePix"), 1.0 * sizePix);
 
         // Enable the depth test
         //gl.enable(gl.DEPTH_TEST);

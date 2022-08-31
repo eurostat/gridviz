@@ -77,9 +77,13 @@ export class SquareColoringWebGLStyle2 extends Style {
 
         if (monitor) monitorDuration("   webgl drawing data preparation")
 
-        //draw
         const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
-        new WebGLSquareColoring2().draw(cvWGL.gl, verticesBuffer, tBuffer, cg.getWebGLTransform(), sizeGeo / zf, this.deformationFactor)
+        const wgp = new WebGLSquareColoring2(cvWGL.gl, this.deformationFactor, sizeGeo / zf)
+
+        if (monitor) monitorDuration("   webgl program preparation")
+
+        //draw
+        wgp.draw(verticesBuffer, tBuffer, cg.getWebGLTransform())
 
         if (monitor) monitorDuration("   webgl drawing")
 
