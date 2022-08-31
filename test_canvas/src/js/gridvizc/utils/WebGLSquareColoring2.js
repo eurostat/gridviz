@@ -37,16 +37,11 @@ export class WebGLSquareColoring2 {
       uniform vec4 cF;
       void main(void) {
           float t = pow(vt, deformationFactor);
-          float ri = 0.5;
-          float gi = 0.0;
-          float bi = 0.0;
-          float ai = 1.0;
-
-          float rf = 1.0;
-          float gf = 0.0;
-          float bf = 1.0;
-          float af = 1.0;
-          gl_FragColor = vec4(ri*(1.0-t)+t*rf, gi*(1.0-t)+t*gf, bi*(1.0-t)+t*bf, ai*(1.0-t)+t*af);
+          gl_FragColor = vec4(
+            cI[0]*(1.0-t)+t*cF[0],
+            cI[1]*(1.0-t)+t*cF[1],
+            cI[2]*(1.0-t)+t*cF[2],
+            cI[3]*(1.0-t)+t*cF[3]);
       }`);
 
       //see https://webglfundamentals.org/webgl/lessons/fr/webgl-shaders-and-glsl.html#les-uniforms-dans-les-shaders-de-vertex
@@ -57,9 +52,10 @@ export class WebGLSquareColoring2 {
 
         //set sizePix
         gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * sizePix);
+
         gl.uniform1f(gl.getUniformLocation(this.program, "deformationFactor"), 1.0 * deformationFactor);
-        gl.uniform1f(gl.getUniformLocation(this.program, "cI"), [0.5, 0.0, 0.0, 1.0]);
-        gl.uniform1f(gl.getUniformLocation(this.program, "cF"), [1.0, 0.0, 1.0, 1.0]);
+        gl.uniform4f(gl.getUniformLocation(this.program, "cI"), 0.5, 0, 0.0, 1.0);
+        gl.uniform4f(gl.getUniformLocation(this.program, "cF"), 1.0, 1.0, 1.0, 1.0);
     }
 
     /**  */
