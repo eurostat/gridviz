@@ -1,22 +1,21 @@
-Consider other formats: arrow, HDF5, ORC, protobuffer
+https://thebookofshaders.com/glossary/?search=mix
+https://thebookofshaders.com/glossary/
 
-webgl: color interpolation - several
-
+consider other formats: arrow, HDF5, ORC, protobuffer
 EUR: add missing legend
+
+background map:
+1. check exstence of shaded DTM in 3035
+2. as TMS, for small scales
 
 TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
 https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
-
 
 https://observablehq.com/@bmschmidt/arxiv
 https://github.com/CreatingData/deepscatter
 
 FR: filosofi - finalise - add legends
 correct color ramps
-
-background map:
-1. check exstnce of shaded DTM in 3035
-2. as TMS, for small scales
 
 geotiff
 https://geotiffjs.github.io/
@@ -39,15 +38,6 @@ legend for discrete color classes - use for accessibility map legend
 Style test: show as hexagonal grid - for circular symbols (?)
 
 accessiblity grid as tanaka ?
-
-improve performance:
-   what takes time: color computation + color conversion. Mainly color interpolation
-https://github.com/d3/d3-interpolate/blob/main/src/rgb.js
-
-attribute: pix value
-uniform: min, max, t formula, colors
-https://thebookofshaders.com/glossary/?search=mix
-https://thebookofshaders.com/glossary/
 
 TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
 https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc

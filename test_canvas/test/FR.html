@@ -178,9 +178,10 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.ind[year],
                     [
-                        new gviz.SquareColoringWebGLStyle({
+                        new gviz.SquareColoringWebGLStyle2({
                             colorCol: "Ind",
-                            color: (v, r, s) => gviz.interpolateYlOrRd(gviz.s(v / s.max, 0.25)),
+                            deformationFactor: 0.25,
+                            color: gviz.interpolateYlOrRd,
                         }),
                         new gviz.StrokeStyle({ maxZoom: 15 }),
                         new gviz.ShapeColorSizeStyle({
