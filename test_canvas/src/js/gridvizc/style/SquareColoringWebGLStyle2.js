@@ -31,7 +31,7 @@ export class SquareColoringWebGLStyle2 extends Style {
 
         /** 
          *  @protected @type {string} */
-         this.deformationFactor = opts.deformationFactor || "1.0"
+        this.deformationFactor = opts.deformationFactor || "1.0"
     }
 
 
@@ -50,7 +50,7 @@ export class SquareColoringWebGLStyle2 extends Style {
         const statColor = getStatistics(cells, c => c[this.colorCol], true)
         if (monitor) monitorDuration("   color stats computation")
 
-        if(!statColor) return
+        if (!statColor) return
 
         //create canvas and webgl renderer
         const cvWGL = makeWebGLCanvas(cg)
@@ -69,18 +69,21 @@ export class SquareColoringWebGLStyle2 extends Style {
         let col
         const r2 = resolution / 2
         let c, nb = cells.length
+        const verticesBuffer = []
+        const tBuffer = []
         for (let i = 0; i < nb; i++) {
             c = cells[i]
 
             const t = c[this.colorCol] / statColor.max
 
-            prog.addPointData(c.x + r2, c.y + r2, t)
+            verticesBuffer.push(c.x + r2, c.y + r2)
+            tBuffer.push(t)
         }
 
         if (monitor) monitorDuration("   webgl drawing data preparation")
 
         //draw
-        prog.draw(cg.getWebGLTransform())
+        prog.draw(verticesBuffer, tBuffer, cg.getWebGLTransform())
 
         if (monitor) monitorDuration("   webgl drawing")
 
