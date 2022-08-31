@@ -32,17 +32,22 @@ export class WebGLSquareColoring2 {
         const fshString = `
       precision mediump float;
       varying float vt;
-      uniform float deformationFactor`
+      uniform float deformationFactor;`
             + (() => {
-                return ";uniform vec4 c0;uniform vec4 c1;"
+                const out = []
+                for (let i = 0; i < colors.length; i++)
+                    out.push("uniform vec4 c" + i + ";")
+                return out.join("")
             })()
             + `void main(void) {
           float t = pow(vt, deformationFactor);
+          vec4 cI=c0;
+          vec4 cF=c1;
           gl_FragColor = vec4(
-            c0[0]*(1.0-t)+t*c1[0],
-            c0[1]*(1.0-t)+t*c1[1],
-            c0[2]*(1.0-t)+t*c1[2],
-            c0[3]*(1.0-t)+t*c1[3]);
+            cI[0]*(1.0-t)+t*cF[0],
+            cI[1]*(1.0-t)+t*cF[1],
+            cI[2]*(1.0-t)+t*cF[2],
+            cI[3]*(1.0-t)+t*cF[3]);
       }`
         /** @type {WebGLShader} */
         const fShader = createShader(gl, gl.FRAGMENT_SHADER, fshString);
