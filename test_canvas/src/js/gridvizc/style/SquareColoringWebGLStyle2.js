@@ -29,7 +29,13 @@ export class SquareColoringWebGLStyle2 extends Style {
         * @protected @type {function(number,number,Stat):number} */
         this.tFun = opts.tFun || ((v, r, s) => v / s.max);
 
-        /** The steps of the color ramp.
+        /** A parameter within [0,Inf] to deform the distribution. 1: no deformation. <1: better show small values. >1: better show large values.
+         * The deformation is performed on GPU side (fragment shader).
+         *  @protected @type {number} */
+        this.deformationFactor = opts.deformationFactor || 1.0
+
+        /** The sample of the color ramp.
+         * The color is computed on GPU side (fragment shader) based on those values (linear interpolation).
          *  @protected @type {Array.<string>} */
         this.colors = opts.colors || ["red", "yellow"]
         if (opts.color)
@@ -38,10 +44,6 @@ export class SquareColoringWebGLStyle2 extends Style {
         /** A function returning the size of the cells, in geographical unit.
         * @protected @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
-
-        /** 
-         *  @protected @type {number} */
-        this.deformationFactor = opts.deformationFactor || 1.0
     }
 
 
