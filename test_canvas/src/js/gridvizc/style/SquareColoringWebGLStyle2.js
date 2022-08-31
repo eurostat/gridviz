@@ -27,7 +27,7 @@ export class SquareColoringWebGLStyle2 extends Style {
 
         /** The steps of the color ramp.
          *  @protected @type {Array.<string>} */
-        this.colors = ["red", "white"]
+        this.colors = ["red", "yellow"]
 
         /** A function returning the size of the cells, in geographical unit.
         * @protected @type {function(number,number):number} */

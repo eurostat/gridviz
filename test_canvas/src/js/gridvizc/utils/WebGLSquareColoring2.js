@@ -29,21 +29,23 @@ export class WebGLSquareColoring2 {
         }
       `);
 
-        /** @type {WebGLShader} */
-        const fShader = createShader(gl, gl.FRAGMENT_SHADER, `
+        const fshString = `
       precision mediump float;
       varying float vt;
-      uniform float deformationFactor;
-      uniform vec4 c0;
-      uniform vec4 c1;
-      void main(void) {
+      uniform float deformationFactor`
+            + (() => {
+                return ";uniform vec4 c0;uniform vec4 c1;"
+            })()
+            + `void main(void) {
           float t = pow(vt, deformationFactor);
           gl_FragColor = vec4(
             c0[0]*(1.0-t)+t*c1[0],
             c0[1]*(1.0-t)+t*c1[1],
             c0[2]*(1.0-t)+t*c1[2],
             c0[3]*(1.0-t)+t*c1[3]);
-      }`);
+      }`
+        /** @type {WebGLShader} */
+        const fShader = createShader(gl, gl.FRAGMENT_SHADER, fshString);
 
         //see https://webglfundamentals.org/webgl/lessons/fr/webgl-shaders-and-glsl.html#les-uniforms-dans-les-shaders-de-vertex
 
@@ -60,10 +62,10 @@ export class WebGLSquareColoring2 {
         gl.uniform1f(gl.getUniformLocation(this.program, "deformationFactor"), 1.0 * deformationFactor);
 
         //colors
-        const cI = color(colors[0])
-        gl.uniform4fv(gl.getUniformLocation(this.program, "c0"), [+cI.r / 255.0, +cI.g / 255.0, +cI.b / 255.0, +cI.opacity]);
-        const cF = color(colors[1])
-        gl.uniform4fv(gl.getUniformLocation(this.program, "c1"), [+cF.r / 255.0, +cF.g / 255.0, +cF.b / 255.0, +cF.opacity]);
+        for (let i = 0; i < colors.length; i++) {
+            const c = color(colors[i])
+            gl.uniform4fv(gl.getUniformLocation(this.program, "c" + i), [+c.r / 255.0, +c.g / 255.0, +c.b / 255.0, +c.opacity]);
+        }
     }
 
     /**  */

@@ -1,6 +1,6 @@
-Fast webGL: move more stuff to fragment shader
-- add parameter on colors (interpolation + colors extrema)
-- add parameters for t deformation, as uniform
+read https://benschmidt.org/post/2020-01-15/2020-01-15-webgpu/
+
+webgl: color interpolation - several
 
 EUR: add missing legend
 
@@ -14,7 +14,9 @@ https://github.com/CreatingData/deepscatter
 FR: filosofi - finalise - add legends
 correct color ramps
 
-background map, TMS, for small scales
+background map:
+1. check exstnce of shaded DTM in 3035
+2. as TMS, for small scales
 
 geotiff
 https://geotiffjs.github.io/
