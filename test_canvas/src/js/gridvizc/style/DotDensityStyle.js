@@ -71,7 +71,7 @@ export class DotDensityStyle extends Style {
         if (checkWebGLSupport()) {
 
             //create canvas and webgl renderer
-            const cvWGL = makeWebGLCanvas(cg)
+            const cvWGL = makeWebGLCanvas(cg.w + "", cg.h + "")
             if (!cvWGL) {
                 console.error("No webGL")
                 return

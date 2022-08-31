@@ -53,7 +53,7 @@ export class SquareColoringWebGLStyle2 extends Style {
         if (!statColor) return
 
         //create canvas and webgl renderer
-        const cvWGL = makeWebGLCanvas(cg)
+        const cvWGL = makeWebGLCanvas(cg.w + "", cg.h + "")
         if (!cvWGL) {
             console.error("No webGL")
             return
