@@ -4,7 +4,7 @@
 
 
 
-export let monitor = false
+export let monitor = true
 
 let previousDate
 export function monitorDuration(message) {
