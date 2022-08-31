@@ -25,9 +25,15 @@ export class SquareColoringWebGLStyle2 extends Style {
          *  @protected @type {string} */
         this.colorCol = opts.colorCol;
 
+        /** A function returning the t value (within [0,1]) of the cell.
+        * @protected @type {function(number,number,Stat):number} */
+        this.tFun = opts.tFun || ((v, r, s) => v / s.max);
+
         /** The steps of the color ramp.
          *  @protected @type {Array.<string>} */
         this.colors = opts.colors || ["red", "yellow"]
+        if (opts.color)
+            this.colors = [opts.color(0), opts.color(1 / 3), opts.color(2 / 3), opts.color(1)]
 
         /** A function returning the size of the cells, in geographical unit.
         * @protected @type {function(number,number):number} */
@@ -72,9 +78,7 @@ export class SquareColoringWebGLStyle2 extends Style {
         const tBuffer = []
         for (let i = 0; i < nb; i++) {
             c = cells[i]
-
-            const t = c[this.colorCol] / statColor.max
-
+            const t = this.tFun(c[this.colorCol], resolution, statColor)
             verticesBuffer.push(c.x + r2, c.y + r2)
             tBuffer.push(t)
         }
