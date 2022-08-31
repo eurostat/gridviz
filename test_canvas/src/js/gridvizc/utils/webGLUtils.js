@@ -16,12 +16,20 @@ export function makeWebGLCanvas(cg) {
 }
 
 // Initialize a shader program, so WebGL knows how to draw our data
+
+/**
+ * @param {WebGLRenderingContext} gl 
+ * @param  {...any} shaders 
+ * @returns {WebGLProgram}
+ */
 export function initShaderProgram(gl, ...shaders) {
+    /** @type {WebGLProgram|null} */
     const program = gl.createProgram();
+    if (program == null) throw new Error("Cannot create webGL program");
     for (const shader of shaders) gl.attachShader(program, shader);
     gl.linkProgram(program);
     if (gl.getProgramParameter(program, gl.LINK_STATUS)) return program;
-    throw new Error(gl.getProgramInfoLog(program));
+    throw new Error(gl.getProgramInfoLog(program) || "Cannot create webGL program (2)");
 }
 
 

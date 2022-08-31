@@ -15,6 +15,7 @@ export class WebGLSquareColoring2 {
         /** @type {WebGLRenderingContext} */
         this.gl = gl
 
+        /** @type {WebGLProgram} */
         this.program = initShaderProgram(
             gl,
             createShader(gl, gl.VERTEX_SHADER, `
