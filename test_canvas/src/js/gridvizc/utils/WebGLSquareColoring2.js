@@ -10,8 +10,9 @@ export class WebGLSquareColoring2 {
      * 
      * @param {WebGLRenderingContext} gl 
      */
-    constructor(gl, sizePix, deformationFactor = "1.0") {
+    constructor(gl, deformationFactor = "1.0") {
 
+        /** @type {WebGLRenderingContext} */
         this.gl = gl
 
         this.program = initShaderProgram(
@@ -46,15 +47,16 @@ export class WebGLSquareColoring2 {
         );
         gl.useProgram(this.program);
 
-        //sizePix
-        this.sizePix = sizePix || 10.0
-        this.setSizePix(this.sizePix)
+
+        /** @type {number} */
+        this.sizePix = 10
     }
 
 
 
     /**  */
     draw(verticesBuffer, tBuffer, transfoMat) {
+        /** @type {WebGLRenderingContext} */
         const gl = this.gl
 
         //vertice data
