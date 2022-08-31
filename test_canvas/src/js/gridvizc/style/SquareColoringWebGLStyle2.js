@@ -25,13 +25,9 @@ export class SquareColoringWebGLStyle2 extends Style {
          *  @protected @type {string} */
         this.colorCol = opts.colorCol;
 
-        /** The initial color of the colors ramp.
-         *  @protected @type {string} */
-        this.colorI = "red"
-
-        /** The final color of the colors ramp.
-         *  @protected @type {string} */
-        this.colorF = "white"
+        /** The steps of the color ramp.
+         *  @protected @type {Array.<string>} */
+        this.colors = ["red", "white"]
 
         /** A function returning the size of the cells, in geographical unit.
         * @protected @type {function(number,number):number} */
@@ -86,7 +82,7 @@ export class SquareColoringWebGLStyle2 extends Style {
         if (monitor) monitorDuration("   webgl drawing data preparation")
 
         const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
-        const wgp = new WebGLSquareColoring2(cvWGL.gl, this.colorI, this.colorF, this.deformationFactor, sizeGeo / zf)
+        const wgp = new WebGLSquareColoring2(cvWGL.gl, this.colors, this.deformationFactor, sizeGeo / zf)
 
         if (monitor) monitorDuration("   webgl program preparation")
 
