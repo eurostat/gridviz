@@ -315,14 +315,14 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.ind[year],
                     [
-                        new gviz.SquareColoringWebGLStyle({
+                        new gviz.SquareColoringWebGLStyle2({
                             colorCol: "rIncome",
-                            color: (v, r, s) => {
+                            color: gviz.interpolateSpectral,
+                            tFun: (v, r, s) => {
                                 let t = (v - 1200) / (3600 - 1200)
                                 //t = t > 1 ? 1 : t < 0 ? 0 : t
-                                return gviz.interpolateSpectral(1 - Math.pow(t < 0 ? 0 : t, 1.5))
-                                //return gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5))
-                            },
+                                return 1 - Math.pow(t < 0 ? 0 : t, 1.5)
+                            }
                         }),
                         new gviz.StrokeStyle({ maxZoom: 15 })
                     ],

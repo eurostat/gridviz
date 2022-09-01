@@ -168,17 +168,17 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.acc,
                     [
-                        new gviz.SquareColoringWebGLStyle({
+                        new gviz.SquareColoringWebGLStyle2({
                             colorCol: "avg_time_nearest_h",
-                            color: (v, r, s) => {
+                            color: gviz.interpolateSpectral,
+                            tFun: (v, r, s) => {
                                 if (v === "NA") return
                                 let i = 0
                                 for (let b of breaks) {
                                     if (+v <= b) break;
                                     i++
                                 }
-                                const t = gviz.s(1 - (i - 1) / breaks.length, 2)
-                                return gviz.interpolateSpectral(t)
+                                return gviz.s(1 - (i - 1) / breaks.length, 2)
                             },
                         }),
                         new gviz.StrokeStyle({ maxZoom: 80 }),
@@ -204,17 +204,17 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.acc,
                     [
-                        new gviz.SquareColoringWebGLStyle({
+                        new gviz.SquareColoringWebGLStyle2({
                             colorCol: "avg_time_nearest_ep",
-                            color: (v, r, s) => {
+                            color: gviz.interpolateSpectral,
+                            tFun: (v, r, s) => {
                                 if (v === "NA") return
                                 let i = 0
                                 for (let b of breaks) {
                                     if (+v <= b) break;
                                     i++
                                 }
-                                const t = gviz.s(1 - (i - 1) / breaks.length, 2)
-                                return gviz.interpolateSpectral(t)
+                                return gviz.s(1 - (i - 1) / breaks.length, 2)
                             },
                         }),
                         new gviz.StrokeStyle({ maxZoom: 80 }),
