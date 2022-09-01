@@ -7,6 +7,13 @@ import { color } from "d3-color";
  */
 export class WebGLSquareColoring2 {
 
+    //see:
+    //https://webglfundamentals.org/webgl/lessons/fr/webgl-shaders-and-glsl.html#les-uniforms-dans-les-shaders-de-vertex
+    //https://thebookofshaders.com/glossary/?search=mix
+    //https://thebookofshaders.com/06/
+    //https://thebookofshaders.com/glossary/
+
+
     /**  */
     constructor(gl, colors, deformationFactor = 1, sizePix = 10) {
 
@@ -29,6 +36,7 @@ export class WebGLSquareColoring2 {
         }
       `);
 
+        //prepare fragment shader code
         //declare the uniform and other variables
         let fshString = `
           precision mediump float;
@@ -90,8 +98,6 @@ export class WebGLSquareColoring2 {
 
         /** @type {WebGLShader} */
         const fShader = createShader(gl, gl.FRAGMENT_SHADER, fshString);
-
-        //see https://webglfundamentals.org/webgl/lessons/fr/webgl-shaders-and-glsl.html#les-uniforms-dans-les-shaders-de-vertex
 
         /** @type {WebGLProgram} */
         this.program = initShaderProgram(gl, vShader, fShader);
