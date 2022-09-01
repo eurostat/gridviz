@@ -33,16 +33,19 @@
         const styles = {}
 
         //color style
-        styles.color = [new gviz.SquareColoringWebGLStyle({
-            colorCol: "ksmval",
-            color: (v, r, s) => {
-                const v_ = Math.pow((v) / s.max, 0.2)
-                const nbClass = 10
-                const cl = Math.floor(nbClass * v_) / nbClass
-                if (cl < 1 / nbClass) return "white"
-                return gviz.interpolateRdYlGn(1 - cl)
-            }
-        })]
+        styles.color = [
+            new gviz.SquareColoringWebGLStyle2({
+                colorCol: "ksmval",
+                color: gviz.interpolateRdYlGn,
+                tFun: (v, r, s) => {
+                    const v_ = Math.pow((v) / s.max, 0.2)
+                    const nbClass = 10
+                    const cl = Math.floor(nbClass * v_) / nbClass
+                    if (cl < 1 / nbClass) return "white"
+                    return 1 - cl
+                }
+            })
+        ]
 
         //joyplot style
         styles.joyplot = [new gviz.JoyPlotStyle({

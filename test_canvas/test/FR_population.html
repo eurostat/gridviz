@@ -78,9 +78,10 @@
         //style data
         const sd = {
             scolor: {
-                style: [new gviz.SquareColoringWebGLStyle({
+                style: [new gviz.SquareColoringWebGLStyle2({
                     colorCol: "Ind",
-                    color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                    color: gviz.interpolateOrRd,
+                    deformationFactor: 0.25
                 }), new gviz.StrokeStyle({ maxZoom: 15 })
                 ], pixNb: 2
             },
