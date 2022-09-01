@@ -6,6 +6,7 @@ import { GridTile } from './GridTile';
 import { App } from '../App';
 import { Envelope, Cell } from "../Dataset"
 import { DatasetComponent } from "../DatasetComponent";
+import { monitor, monitorDuration } from "../utils/Utils"
 
 /**
  * A tiled dataset, composed of CSV tiles.
@@ -145,16 +146,21 @@ export class TiledGrid extends DatasetComponent {
                     .then(
                         /** @param {*} data */
                         (data) => {
+                            if (monitor) monitorDuration("*** TiledGrid parse start")
+
                             //store tile in cache
                             if (!this.info) { console.error("Tile info inknown"); return }
                             const tile_ = new GridTile(data, xT, yT, this.info);
                             this.cache[xT][yT] = tile_;
+
+                            if (monitor) monitorDuration("storage")
 
                             //execute preprocess, if any
                             if (this.preprocess)
                                 for (const c of tile_.cells)
                                     this.preprocess(c);
 
+                            if (monitor) monitorDuration("preprocess")
 
                             //if no redraw is specified, then leave
                             if (!redrawFun) return;
@@ -169,6 +175,8 @@ export class TiledGrid extends DatasetComponent {
                                 redraw = true;
                                 break;
                             }
+                            if (monitor) monitorDuration("check redraw 1")
+
                             if (!redraw) return;
 
                             // 2. the tile is within the view, that is its geo envelope intersects the viewer geo envelope.
@@ -178,6 +186,9 @@ export class TiledGrid extends DatasetComponent {
                             if (env.xMin >= envT.xMax) return;
                             if (env.yMax <= envT.yMin) return;
                             if (env.yMin >= envT.yMax) return;
+
+                            if (monitor) monitorDuration("check redraw 2")
+                            if (monitor) monitorDuration("*** TiledGrid parse end")
 
                             //redraw
                             redrawFun()

@@ -1168,16 +1168,16 @@
       }
    },
    "crs": "3035",
-   "tileSizeCell": 128,
+   "tileSizeCell": 256,
    "originPoint": {
       "x": 0,
       "y": 0
    },
    "resolutionGeo": 5000,
    "tilingBounds": {
-      "yMin": 3,
-      "yMax": 4,
-      "xMax": 6,
-      "xMin": 5
+      "yMin": 1,
+      "yMax": 2,
+      "xMax": 3,
+      "xMin": 2
    }
 }

@@ -1,12 +1,11 @@
-monitor - loading/parsing time
 
 jsdoc
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 TODO BIG DEPLOY ?
 
+monitor - loading: time to get server response = 500ms. parsing time = 20ms: solution - faster server OR larger files
 consider other formats: arrow, HDF5, ORC, protobuffer
-EUR: add missing legend
 
 test how to specify easily ease functions, especially in webGL
 (see https://thebookofshaders.com/glossary/ - https://easings.net/ - https://github.com/d3/d3-ease - https://www.shadertoy.com/view/wtcczf - https://github.com/glslify/glsl-easings)
@@ -21,8 +20,7 @@ https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
 https://observablehq.com/@bmschmidt/arxiv
 https://github.com/CreatingData/deepscatter
 
-FR: filosofi - finalise - add legends
-correct color ramps
+EUR, FR: add missing legend, finalise.
 
 geotiff
 https://geotiffjs.github.io/
@@ -31,6 +29,7 @@ https://github.com/geotiffjs/geotiff.js/
 new EUR layers:
 https://land.copernicus.eu/global/products/
 https://land.copernicus.eu/pan-european/high-resolution-layers
+TODO background image ? with relief shading.
 
 imporve performance of dotstyle - map every single individual
 
