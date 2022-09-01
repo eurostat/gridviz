@@ -13,7 +13,7 @@ import { LineLayer } from './LineLayer';
 
 import { select } from "d3-selection";
 import { monitor, monitorDuration } from "./utils/Utils"
-import { GeoTIFF } from './dataset/GeoTIFF';
+//import { GeoTIFF } from './dataset/GeoTIFF';
 
 /**
  * A gridviz on a HTML canvas.
@@ -378,7 +378,7 @@ export class App {
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
-    addGeoTIFFLayer(url, resolution, styles, opts) {
+    /*addGeoTIFFLayer(url, resolution, styles, opts) {
 
         //make dataset
         const ds = new GeoTIFF(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); });
@@ -388,7 +388,7 @@ export class App {
         const lay = new Layer(dataset, styles, opts)
         this.layers.push(lay)
         return this;
-    }
+    }*/
 
     /**
      * 
