@@ -4,7 +4,7 @@ import { Style, Stat, getStatistics, Shape } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
-import { WebGLSquareColoring2 } from "../utils/WebGLSquareColoring2";
+import { WebGLSquareColoringAdvanced } from "../utils/WebGLSquareColoringAdvanced";
 import { monitor, monitorDuration } from "../utils/Utils"
 
 /**
@@ -89,7 +89,7 @@ export class SquareColorWGLStyle extends Style {
         if (monitor) monitorDuration("   webgl drawing data preparation")
 
         const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
-        const wgp = new WebGLSquareColoring2(cvWGL.gl, this.colors, this.deformationFactor, sizeGeo / zf)
+        const wgp = new WebGLSquareColoringAdvanced(cvWGL.gl, this.colors, this.deformationFactor, sizeGeo / zf)
 
         if (monitor) monitorDuration("   webgl program preparation")
 
