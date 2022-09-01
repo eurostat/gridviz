@@ -29,6 +29,7 @@ export class WebGLSquareColoring2 {
         }
       `);
 
+        //declare the uniform and other variables
         let fshString = `
           precision mediump float;
           varying float vt;
@@ -39,9 +40,11 @@ export class WebGLSquareColoring2 {
                     out.push("uniform vec4 c" + i + ";")
                 return out.join("")
             })()
+            //start the main function, apply the deformation of t
             + `void main(void) {
           float t = pow(vt, deformationFactor);`
 
+        //choose initial and final colors, and adjust t value
         if (colors.length == 2)
             fshString += `
                  vec4 cI=c0;
@@ -68,17 +71,20 @@ export class WebGLSquareColoring2 {
                     else if(t<0.75) { cI=c2; cF=c3; t=(t-0.5)*4.0; }
                     else { cI=c3; cF=c4; t=(t-0.75)*4.0; }`
 
+        //one single color
         if (colors.length == 1)
             fshString += `gl_FragColor = vec4(c0[0], c0[1], c0[2], c0[3]);}`
+        //set interpolated color, between initial and final one
         else if (colors.length <= 5)
             fshString += `gl_FragColor = mix(cI, cF, t);}`
-            /*fshString += `
-                gl_FragColor = vec4(
-                   cI[0]*(1.0-t)+t*cF[0],
-                   cI[1]*(1.0-t)+t*cF[1],
-                   cI[2]*(1.0-t)+t*cF[2],
-                   cI[3]*(1.0-t)+t*cF[3]);
-               }`*/
+        /*fshString += `
+            gl_FragColor = vec4(
+               cI[0]*(1.0-t)+t*cF[0],
+               cI[1]*(1.0-t)+t*cF[1],
+               cI[2]*(1.0-t)+t*cF[2],
+               cI[3]*(1.0-t)+t*cF[3]);
+           }`*/
+        //default color
         else
             fshString += `gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);}`
 
