@@ -81,6 +81,7 @@ export class SquareColoringWebGLStyle2 extends Style {
         for (let i = 0; i < nb; i++) {
             c = cells[i]
             const t = this.tFun(c[this.colorCol], resolution, statColor)
+            if (t == null || t == undefined) continue
             verticesBuffer.push(c.x + r2, c.y + r2)
             tBuffer.push(t)
         }
