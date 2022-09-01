@@ -12,7 +12,7 @@ export * from "d3-scale-chromatic"
 //export dataset types
 export { TiledGrid } from "./dataset/TiledGrid"
 export { CSVGrid } from "./dataset/CSVGrid"
-export { GeoTIFF } from "./dataset/GeoTIFF"
+//export { GeoTIFF } from "./dataset/GeoTIFF"
 
 //export styles
 export { ShapeColorSizeStyle } from "./style/ShapeColorSizeStyle"
