@@ -1,9 +1,15 @@
 monitor - loading/parsing time
-test how to pecify easily ease functions, especially in webGL
-(see https://thebookofshaders.com/glossary/ - https://easings.net/ - https://github.com/d3/d3-ease - https://www.shadertoy.com/view/wtcczf - https://github.com/glslify/glsl-easings)
+
+jsdoc
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+TODO BIG DEPLOY ?
 
 consider other formats: arrow, HDF5, ORC, protobuffer
 EUR: add missing legend
+
+test how to specify easily ease functions, especially in webGL
+(see https://thebookofshaders.com/glossary/ - https://easings.net/ - https://github.com/d3/d3-ease - https://www.shadertoy.com/view/wtcczf - https://github.com/glslify/glsl-easings)
 
 background map:
 1. check exstence of shaded DTM in 3035
@@ -22,11 +28,6 @@ geotiff
 https://geotiffjs.github.io/
 https://github.com/geotiffjs/geotiff.js/
 
-jsdoc
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
-TODO BIG DEPLOY ?
-
 new EUR layers:
 https://land.copernicus.eu/global/products/
 https://land.copernicus.eu/pan-european/high-resolution-layers
@@ -35,7 +36,6 @@ imporve performance of dotstyle - map every single individual
 
 FR legends
 legend for discrete color classes - use for accessibility map legend
-
 
 Style test: show as hexagonal grid - for circular symbols (?)
 
@@ -55,8 +55,7 @@ https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
     //https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html
 
 
-TODO webgl: use for all styles where filled rectangles
-sideStyle - new webGL class for line segments ?
+TODO use webgl for sideStyle ?
 
 value by alpha style: implement it for income map + accessibility
 
@@ -90,7 +89,6 @@ TODO map type: composition as donut ring ?
 TODO map type: composition as stripped circles
 TODO map style: joyplot composition
 TODO linesup: Test with changeable width and fixed height ?
-TODO background image ? with relief shading.
 TODO window resize
 TODO better shaded characterset for text style
 TODO joyplot: fill color depending on value ? for negative/positive values
