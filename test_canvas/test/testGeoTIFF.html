@@ -25,7 +25,7 @@
                 "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/tiff/test/IMD_2018_010m_E42N20_03035_v020.tif",
                 1000,
                 [
-                    new gviz.SquareColoringWebGLStyle2({
+                    new gviz.SquareColorWGLStyle({
                         colorCol: "Total_m2",
                         color: gviz.interpolateSpectral,
                         tFun: (v, r, s) => 1 - Math.pow((v - s.min) / (s.max - s.min), 1.5),

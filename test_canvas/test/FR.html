@@ -178,7 +178,7 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.ind[year],
                     [
-                        new gviz.SquareColoringWebGLStyle2({
+                        new gviz.SquareColorWGLStyle({
                             colorCol: "Ind",
                             deformationFactor: 0.25,
                             color: gviz.interpolateYlOrRd,
@@ -315,7 +315,7 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.ind[year],
                     [
-                        new gviz.SquareColoringWebGLStyle2({
+                        new gviz.SquareColorWGLStyle({
                             colorCol: "rIncome",
                             color: gviz.interpolateSpectral,
                             tFun: (v, r, s) => {
@@ -453,7 +453,7 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.men[year],
                     [
-                        new gviz.SquareColoringWebGLStyle2({
+                        new gviz.SquareColorWGLStyle({
                             colorCol: "rMenSurf",
                             color: gviz.interpolateSpectral,
                             tFun: (v, r, s) => 1 - (v - s.min) / (s.max - s.min)
@@ -573,7 +573,7 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.log[year],
                     [
-                        new gviz.SquareColoringWebGLStyle2({
+                        new gviz.SquareColorWGLStyle({
                             colorCol: "rLogSoc",
                             color: gviz.interpolatePuBuGn,
                             tFun: (v, r, s) => +v == 0 ? null : v

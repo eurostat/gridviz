@@ -109,7 +109,7 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.pop,
                     [
-                        new gviz.SquareColoringWebGLStyle2({
+                        new gviz.SquareColorWGLStyle({
                             colorCol: layCode,
                             color: gviz.interpolateOrRd,
                             deformationFactor: 0.25,
@@ -168,7 +168,7 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.acc,
                     [
-                        new gviz.SquareColoringWebGLStyle2({
+                        new gviz.SquareColorWGLStyle({
                             colorCol: "avg_time_nearest_h",
                             color: gviz.interpolateSpectral,
                             tFun: (v, r, s) => {
@@ -204,7 +204,7 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.acc,
                     [
-                        new gviz.SquareColoringWebGLStyle2({
+                        new gviz.SquareColorWGLStyle({
                             colorCol: "avg_time_nearest_ep",
                             color: gviz.interpolateSpectral,
                             tFun: (v, r, s) => {
