@@ -1,4 +1,6 @@
 monitor - loading/parsing time
+test how to pecify easily ease functions, especially in webGL
+(see https://thebookofshaders.com/glossary/ - https://easings.net/ - https://github.com/d3/d3-ease - https://www.shadertoy.com/view/wtcczf - https://github.com/glslify/glsl-easings)
 
 consider other formats: arrow, HDF5, ORC, protobuffer
 EUR: add missing legend
