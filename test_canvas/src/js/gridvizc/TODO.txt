@@ -1,5 +1,6 @@
 replace webgl1 with webgl2: test - rename
-check dotstyle
+
+monitor - loading/parsing time
 
 consider other formats: arrow, HDF5, ORC, protobuffer
 EUR: add missing legend
