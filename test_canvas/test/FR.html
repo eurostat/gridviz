@@ -85,10 +85,12 @@
 
         //prepare datasets, indexed by thematic domain and year
         const ds = { ind: {}, men: {}, log: {} }
+        //const baseURL = "https://gisco-services.ec.europa.eu/pub/gridviztest/filosofi/"
+        const baseURL = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/"
 
         //population stats dataset
         const indDatasetFun = year => app.makeMultiScaleTiledGridLayer(
-            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/ind/" + year + "/",
+            baseURL + "ind/" + year + "/",
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
             r => r + "m/",
             {
@@ -113,7 +115,7 @@
 
         //household stats dataset
         const menDatasetFun = year => app.makeMultiScaleTiledGridLayer(
-            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/men/" + year + "/",
+            baseURL + "men/" + year + "/",
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
             r => r + "m/",
             {
@@ -141,7 +143,7 @@
 
         //housing stats dataset
         const logDatasetFun = year => app.makeMultiScaleTiledGridLayer(
-            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/log/2015/",
+            baseURL + "log/" + year + "/",
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
             r => r + "m/",
             {
