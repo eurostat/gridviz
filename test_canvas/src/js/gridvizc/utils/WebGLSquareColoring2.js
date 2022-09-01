@@ -71,13 +71,14 @@ export class WebGLSquareColoring2 {
         if (colors.length == 1)
             fshString += `gl_FragColor = vec4(c0[0], c0[1], c0[2], c0[3]);}`
         else if (colors.length <= 5)
-            fshString += `
+            fshString += `gl_FragColor = mix(cI, cF, t);}`
+            /*fshString += `
                 gl_FragColor = vec4(
                    cI[0]*(1.0-t)+t*cF[0],
                    cI[1]*(1.0-t)+t*cF[1],
                    cI[2]*(1.0-t)+t*cF[2],
                    cI[3]*(1.0-t)+t*cF[3]);
-               }`
+               }`*/
         else
             fshString += `gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);}`
 
