@@ -9,7 +9,7 @@ import { monitor, monitorDuration } from "../utils/Utils"
 
 /**
  * Style based on webGL
- * To show cells as colored squares
+ * To show cells as colored squares, with computation of the colors on JavaScript side.
  * Alls squares with the same size
  * 
  * @author Julien Gaffuri
