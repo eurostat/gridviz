@@ -30,9 +30,9 @@ export class WebGLSquareColoring2 {
       `);
 
         let fshString = `
-        precision mediump float;
-        varying float vt;
-        uniform float deformationFactor;`
+          precision mediump float;
+          varying float vt;
+          uniform float deformationFactor;`
             + (() => {
                 const out = []
                 for (let i = 0; i < colors.length; i++)
@@ -40,45 +40,25 @@ export class WebGLSquareColoring2 {
                 return out.join("")
             })()
             + `void main(void) {
-        float t = pow(vt, deformationFactor);`
+          float t = pow(vt, deformationFactor);`
 
-        if (colors.length == 1)
-            fshString += `gl_FragColor = vec4(c0[0], c0[1], c0[2], c0[3]);}`
-        else if (colors.length == 2)
+        if (colors.length == 2)
             fshString += `
                  vec4 cI=c0;
-                 vec4 cF=c1;
-                 gl_FragColor = vec4(
-                    cI[0]*(1.0-t)+t*cF[0],
-                    cI[1]*(1.0-t)+t*cF[1],
-                    cI[2]*(1.0-t)+t*cF[2],
-                    cI[3]*(1.0-t)+t*cF[3]);
-            }`
+                 vec4 cF=c1;`
         else if (colors.length == 3)
             fshString += `
                  vec4 cI;
                  vec4 cF;
                  if(t<0.5) { cI=c0; cF=c1; t=t*2.0; }
-                 else { cI=c1; cF=c2; t=(t-0.5)*2.0; }
-                 gl_FragColor = vec4(
-                    cI[0]*(1.0-t)+t*cF[0],
-                    cI[1]*(1.0-t)+t*cF[1],
-                    cI[2]*(1.0-t)+t*cF[2],
-                    cI[3]*(1.0-t)+t*cF[3]);
-                }`
+                 else { cI=c1; cF=c2; t=(t-0.5)*2.0; }`
         else if (colors.length == 4)
             fshString += `
                      vec4 cI;
                      vec4 cF;
                      if(t<1.0/3.0) { cI=c0; cF=c1; t=t*3.0; }
                      else if(t<2.0/3.0) { cI=c1; cF=c2; t=(t-1.0/3.0)*3.0; }
-                     else { cI=c2; cF=c3; t=(t-2.0/3.0)*3.0; }
-                     gl_FragColor = vec4(
-                        cI[0]*(1.0-t)+t*cF[0],
-                        cI[1]*(1.0-t)+t*cF[1],
-                        cI[2]*(1.0-t)+t*cF[2],
-                        cI[3]*(1.0-t)+t*cF[3]);
-                    }`
+                     else { cI=c2; cF=c3; t=(t-2.0/3.0)*3.0; }`
         else if (colors.length == 5)
             fshString += `
                     vec4 cI;
@@ -86,13 +66,18 @@ export class WebGLSquareColoring2 {
                     if(t<0.25) { cI=c0; cF=c1; t=t*4.0; }
                     else if(t<0.5) { cI=c1; cF=c2; t=(t-0.25)*4.0; }
                     else if(t<0.75) { cI=c2; cF=c3; t=(t-0.5)*4.0; }
-                    else { cI=c3; cF=c4; t=(t-0.75)*4.0; }
-                    gl_FragColor = vec4(
-                        cI[0]*(1.0-t)+t*cF[0],
-                        cI[1]*(1.0-t)+t*cF[1],
-                        cI[2]*(1.0-t)+t*cF[2],
-                        cI[3]*(1.0-t)+t*cF[3]);
-                    }`
+                    else { cI=c3; cF=c4; t=(t-0.75)*4.0; }`
+
+        if (colors.length == 1)
+            fshString += `gl_FragColor = vec4(c0[0], c0[1], c0[2], c0[3]);}`
+        else if (colors.length <= 5)
+            fshString += `
+                gl_FragColor = vec4(
+                   cI[0]*(1.0-t)+t*cF[0],
+                   cI[1]*(1.0-t)+t*cF[1],
+                   cI[2]*(1.0-t)+t*cF[2],
+                   cI[3]*(1.0-t)+t*cF[3]);
+               }`
         else
             fshString += `gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);}`
 

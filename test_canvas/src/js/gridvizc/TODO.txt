@@ -2,6 +2,8 @@ https://thebookofshaders.com/glossary/?search=mix
 https://thebookofshaders.com/06/
 https://thebookofshaders.com/glossary/
 
+replace webgl1 with webgl2 ?
+
 consider other formats: arrow, HDF5, ORC, protobuffer
 EUR: add missing legend
 
