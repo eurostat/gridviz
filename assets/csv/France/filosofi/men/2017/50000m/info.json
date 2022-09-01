@@ -1168,7 +1168,7 @@
       }
    },
    "crs": "3035",
-   "tileSizeCell": 256,
+   "tileSizeCell": 128,
    "originPoint": {
       "x": 0,
       "y": 0
