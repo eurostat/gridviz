@@ -109,9 +109,10 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.pop,
                     [
-                        new gviz.SquareColoringWebGLStyle({
+                        new gviz.SquareColoringWebGLStyle2({
                             colorCol: layCode,
-                            color: (v, r, s) => v == 0 ? "" : gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                            color: gviz.interpolateOrRd,
+                            deformationFactor: 0.25,
                         }),
                         new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
                     ],
