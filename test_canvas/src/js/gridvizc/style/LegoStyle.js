@@ -1,6 +1,6 @@
 //@ts-check
 
-import { SquareColoringWebGLStyle } from "./SquareColoringWebGLStyle"
+import { SquareColorWGLStyle2 } from "./SquareColorWGLStyle2"
 import { SideStyle } from "./SideStyle"
 import { Style } from "../Style"
 
@@ -67,7 +67,7 @@ export const getLegoStyle = function (col, opts) {
 
 
     /** The color style */
-    const colStyle = new SquareColoringWebGLStyle({
+    const colStyle = new SquareColorWGLStyle2({
         colorCol: col,
         //the color corresponding to the class
         color: (v, r, s, zf) => {

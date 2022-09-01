@@ -53,7 +53,7 @@ export class SquareColorWGLStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
-        if (monitor) monitorDuration("*** SquareColoringWebGLStyle draw")
+        if (monitor) monitorDuration("*** SquareColorWGLStyle2 draw")
 
         //zoom factor
         const zf = cg.getZf()
@@ -107,7 +107,7 @@ export class SquareColorWGLStyle extends Style {
         //update legends
         this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor });
 
-        if (monitor) monitorDuration("*** SquareColoringWebGLStyle end draw")
+        if (monitor) monitorDuration("*** SquareColorWGLStyle2 end draw")
     }
 
 

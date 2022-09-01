@@ -14,7 +14,7 @@ import { monitor, monitorDuration } from "../utils/Utils"
  * 
  * @author Julien Gaffuri
  */
-export class SquareColoringWebGLStyle extends Style {
+export class SquareColorWGLStyle2 extends Style {
 
     /** @param {object} opts */
     constructor(opts) {
@@ -41,7 +41,7 @@ export class SquareColoringWebGLStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
-        if (monitor) monitorDuration("*** SquareColoringWebGLStyle draw")
+        if (monitor) monitorDuration("*** SquareColorWGLStyle2 draw")
 
         //zoom factor
         const zf = cg.getZf()
@@ -96,7 +96,7 @@ export class SquareColoringWebGLStyle extends Style {
         //update legends
         this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor });
 
-        if (monitor) monitorDuration("*** SquareColoringWebGLStyle end draw")
+        if (monitor) monitorDuration("*** SquareColorWGLStyle2 end draw")
     }
 
 
