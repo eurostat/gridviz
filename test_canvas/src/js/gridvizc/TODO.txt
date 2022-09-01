@@ -30,6 +30,7 @@ new EUR layers:
 https://land.copernicus.eu/global/products/
 https://land.copernicus.eu/pan-european/high-resolution-layers
 
+imporve performance of dotstyle - map every single individual
 
 FR legends
 legend for discrete color classes - use for accessibility map legend
