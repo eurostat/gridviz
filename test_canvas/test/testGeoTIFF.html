@@ -25,12 +25,10 @@
                 "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/tiff/test/IMD_2018_010m_E42N20_03035_v020.tif",
                 1000,
                 [
-                    new gviz.SquareColoringWebGLStyle({
+                    new gviz.SquareColoringWebGLStyle2({
                         colorCol: "Total_m2",
-                        color: (v, r, s) => {
-                            if (v == 0) return ""
-                            return gviz.interpolateSpectral(1 - Math.pow((v - s.min) / (s.max - s.min), 1.5))
-                        }
+                        color: gviz.interpolateSpectral,
+                        tFun: (v, r, s) => 1 - Math.pow((v - s.min) / (s.max - s.min), 1.5),
                     }),
                     new gviz.StrokeStyle({ maxZoom: 200 })
                 ],

@@ -18,9 +18,10 @@
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
         //style data
-        const s = new gviz.SquareColoringWebGLStyle({
+        const s = new gviz.SquareColoringWebGLStyle2({
             colorCol: "2018",
-            color: (v, r, s) => gviz.interpolateOrRd(Math.pow(v / s.max, 0.3)),
+            color: gviz.interpolateOrRd,
+            deformationFactor: 0.3
         })
 
         const resolutions = [1000, 2000, 5000, 10000, 20000, 50000, 100000]
