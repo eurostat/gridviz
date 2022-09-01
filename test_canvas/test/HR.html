@@ -178,9 +178,10 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.pop,
                     [
-                        new gviz.SquareColoringWebGLStyle({
+                        new gviz.SquareColoringWebGLStyle2({
                             colorCol: "TOTAL",
-                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                            color: gviz.interpolateOrRd,
+                            deformationFactor: 0.25,
                         }),
                         new gviz.SideStyle({
                             valueCol: "TOTAL",
@@ -331,9 +332,9 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.pop,
                     [
-                        new gviz.SquareColoringWebGLStyle({
+                        new gviz.SquareColoringWebGLStyle2({
                             colorCol: "INACT_RATE",
-                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 1)),
+                            color: gviz.interpolateOrRd,
                         }), sStroke
                     ],
                     {
@@ -380,9 +381,10 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.tou,
                     [
-                        new gviz.SquareColoringWebGLStyle({
+                        new gviz.SquareColoringWebGLStyle2({
                             colorCol: "ESTABLISHMENTS - TOTAL",
-                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                            color: gviz.interpolateOrRd,
+                            deformationFactor: 0.2,
                         }), sStroke
                     ],
                     {
@@ -397,9 +399,10 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.tou,
                     [
-                        new gviz.SquareColoringWebGLStyle({
+                        new gviz.SquareColoringWebGLStyle2({
                             colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
-                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                            color: gviz.interpolateOrRd,
+                            deformationFactor: 0.2,
                         }), sStroke
                     ],
                     {
@@ -414,9 +417,10 @@
                 app.addMultiScaleTiledGridLayer2(
                     ds.tou,
                     [
-                        new gviz.SquareColoringWebGLStyle({
+                        new gviz.SquareColoringWebGLStyle2({
                             colorCol: "NUMBER OF PERMANENT BEDS",
-                            color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.2)),
+                            color: gviz.interpolateOrRd,
+                            deformationFactor: 0.2,
                         }), sStroke
                     ],
                     {
