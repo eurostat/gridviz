@@ -1,4 +1,6 @@
 jsdoc
+https://eurostat.github.io/gridviz/docs/index.html
+https://jsdoc.app/about-commandline.html
 
 TODO BIG DEPLOY ?
 
