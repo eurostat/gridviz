@@ -1,17 +1,47 @@
+TODO BIG DEPLOY ?
+
+
+    //https://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf
+    //https://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html
+    //2D section
+
+    //https://medium.com/trabe/a-brief-introduction-to-webgl-5b584db3d6d6
+    //https://observablehq.com/d/dfb2674035a1f388
+    //https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Adding_2D_content_to_a_WebGL_context
+    //https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html
+
+
+test how to specify easily ease functions, especially in webGL
+(see https://thebookofshaders.com/glossary/ - https://easings.net/ - https://github.com/d3/d3-ease - https://www.shadertoy.com/view/wtcczf - https://github.com/glslify/glsl-easings)
+
+EUR, FR: add missing legend, finalise.
+
+TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
+https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
+
+improve performance of dotstyle - map every single individual
+
+TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
+https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
+TODO show several elements on size legend
+
+TODO document and improve euronyme
+TODO fix euronym - local names, with accents ?
+
+TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?
+
+
+
+
 jsdoc
 https://eurostat.github.io/gridviz/docs/index.html
 https://jsdoc.app/about-commandline.html
 jsdoc src -r -d=docs
-
-TODO BIG DEPLOY ?
+npm run docs
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-monitor - loading: time to get server response = 500ms. parsing time = 20ms: solution - faster server OR larger files
 consider other formats: arrow, HDF5, ORC, protobuffer
-
-test how to specify easily ease functions, especially in webGL
-(see https://thebookofshaders.com/glossary/ - https://easings.net/ - https://github.com/d3/d3-ease - https://www.shadertoy.com/view/wtcczf - https://github.com/glslify/glsl-easings)
 
 background map:
 1. check exstence of shaded DTM in 3035
@@ -28,14 +58,8 @@ https://gisco-services.ec.europa.eu/maps/wmts/1.0.0/WMTSCapabilities.xml
 https://gisco-services.ec.europa.eu/osm/index.3035.html
 view-source:https://gisco-services.ec.europa.eu/osm/index.3035.html
 
-
-TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
-https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
-
 https://observablehq.com/@bmschmidt/arxiv
 https://github.com/CreatingData/deepscatter
-
-EUR, FR: add missing legend, finalise.
 
 geotiff
 https://geotiffjs.github.io/
@@ -44,38 +68,15 @@ https://github.com/geotiffjs/geotiff.js/
 new EUR layers:
 https://land.copernicus.eu/global/products/
 https://land.copernicus.eu/pan-european/high-resolution-layers
-TODO background image ? with relief shading.
 
-imporve performance of dotstyle - map every single individual
-
-FR legends
 legend for discrete color classes - use for accessibility map legend
 
 Style test: show as hexagonal grid - for circular symbols (?)
 
-accessiblity grid as tanaka ?
-
-TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
-https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
-
-
-    //https://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf
-    //https://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html
-    //2D section
-
-    //https://medium.com/trabe/a-brief-introduction-to-webgl-5b584db3d6d6
-    //https://observablehq.com/d/dfb2674035a1f388
-    //https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Adding_2D_content_to_a_WebGL_context
-    //https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html
-
-
-TODO use webgl for sideStyle ?
+TODO use webgl for sideStyle? Make it possible to build sides on GPU ?
 
 value by alpha style: implement it for income map + accessibility
 
-TODO show several elements on size legend
-
-TODO adapt tanaka and lego to diverging - use on EUR pop change
 TODO kernel smoothing: fix artifact - empty line below from center point toward south
 
 TODO use canvas shadow? https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/shadowBlur
@@ -88,15 +89,12 @@ TODO watercolor style ? Draw random plots around central point of pixel - https:
 TODO map style: contours with color
 
 TODO legend - handle orientation in segment width legend
-TODO document and improve euronyme
-TODO fix euronym - local names, with accents ?
 
 TODO map type: bi/tri-variate colors ?
 
 TODO check IE, firefox
 TODO fix compilation problems + add more typescript types
 TODO map style: cell based on its neighboors. Contour like ?
-TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?
 TODO style with arrows (left, right) (as segment enrichment ?)
 TODO map type: composition as linesup... pile of lines
 TODO map type: composition as donut ring ?

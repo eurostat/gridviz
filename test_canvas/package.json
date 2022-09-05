@@ -21,6 +21,7 @@
     "start": "webpack --config webpack.config.dev.js",
     "server": "webpack-dev-server --open --watch",
     "build-prod": "webpack --config webpack.config.prod.js",
+    "docs": "./node_modules/.bin/jsdoc src/js/gridvizc -d=docs",
     "test": "jest"
   },
   "dependencies": {
