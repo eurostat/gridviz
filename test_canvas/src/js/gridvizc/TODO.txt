@@ -1,15 +1,7 @@
+https://lecrabeinfo.net/mettre-a-jour-ubuntu-20-04-lts-vers-22-04-lts.html
+https://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf
+
 TODO BIG DEPLOY ?
-
-
-    //https://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf
-    //https://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html
-    //2D section
-
-    //https://medium.com/trabe/a-brief-introduction-to-webgl-5b584db3d6d6
-    //https://observablehq.com/d/dfb2674035a1f388
-    //https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Adding_2D_content_to_a_WebGL_context
-    //https://webglfundamentals.org/webgl/lessons/webgl-drawing-multiple-things.html
-
 
 test how to specify easily ease functions, especially in webGL
 (see https://thebookofshaders.com/glossary/ - https://easings.net/ - https://github.com/d3/d3-ease - https://www.shadertoy.com/view/wtcczf - https://github.com/glslify/glsl-easings)
