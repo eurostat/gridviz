@@ -1,6 +1,7 @@
 https://lecrabeinfo.net/mettre-a-jour-ubuntu-20-04-lts-vers-22-04-lts.html
 https://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf
 
+
 TODO BIG DEPLOY ?
 
 test how to specify easily ease functions, especially in webGL
@@ -15,6 +16,9 @@ improve performance of dotstyle - map every single individual
 
 TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
 https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
+https://blog.ivank.net/fastest-gaussian-blur.html
+https://github.com/amilajack/gaussian-blur
+
 TODO show several elements on size legend
 
 TODO document and improve euronyme
