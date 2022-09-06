@@ -3,7 +3,7 @@ const path = require("path");
 const LiveReloadPlugin = require("webpack-livereload-plugin");
 module.exports = {
   mode: "development",
-  entry: "./src/js/gridviz/index.js",
+  entry: "./src/js/index.js",
   output: {
     filename: "gridviz.js",
     publicPath: "build/",

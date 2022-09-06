@@ -30,7 +30,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build-dev",
     "build": "npm run build-prod",
-    "docs": "./node_modules/.bin/jsdoc src/js/gridviz -d=docs",
+    "docs": "./node_modules/.bin/jsdoc src/js -d=docs",
     "build-dev": "webpack --config webpack.config.dev.js",
     "build-prod": "webpack --config webpack.config.prod.js"
   },
