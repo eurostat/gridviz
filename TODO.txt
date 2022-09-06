@@ -1,5 +1,6 @@
+new readme, plus examples
 
-TODO BIG DEPLOY ?
+mosaic style
 
 test how to specify easily ease functions, especially in webGL
 (see https://thebookofshaders.com/glossary/ - https://easings.net/ - https://github.com/d3/d3-ease - https://www.shadertoy.com/view/wtcczf - https://github.com/glslify/glsl-easings)

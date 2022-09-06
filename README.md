@@ -8,12 +8,14 @@
 
 A JavaScript library for visualising gridded data with advanced cartographic techniques.
 
+[//]: # "
 <div>
   <a href="https://eurostat.github.io/gridviz/examples/europe/tiled/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/color.png" alt="preview" width="200px" height="200px"/></a>
   <a href="https://eurostat.github.io/gridviz/examples/europe/joyplot/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/joyplot.png" alt="preview" width="200px" height="200px"/></a>
     <a href="https://eurostat.github.io/gridviz/examples/europe/size/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/size.png" alt="preview" width="200px" height="200px"/></a>
   <a href="https://eurostat.github.io/gridviz/examples/netherlands/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/nl.png" alt="preview" width="200px" height="200px"/></a>
 </div>
+"
 
 <hr>
 
@@ -49,11 +51,7 @@ A JavaScript library for visualising gridded data with advanced cartographic tec
 
 ## Introduction
 
-Gridviz is a JavaScript library which allows you to visualise large gridded datasets (or any csv file with x/y data) in the browser. Unlike traditional raster-based GIS approaches, this tool utilizes WebGL through [three.js](https://github.com/mrdoob/three.js/) in order to render eveything client-side.
-
-From a CSV file with x and y columns, gridviz will build a viewer capable of visualising millions of grid cells on the fly. You can also add GeoJSON files to the viewer using the addGeoJson() method.
-
-For data-driven colouring and sizing, you can use [d3-scale](https://github.com/d3/d3-scale) and [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic), or simply set your own colours and thresholds.
+Gridviz is a JavaScript library to visualise gridded datasets (or any tabular dataset with x/y position) in the browser in a large variety of advanced cartographic styles. Unlike traditional raster-based web mapping tools, this tool renders eveything client-side on the fly.
 
 ## Examples
 
