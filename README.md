@@ -6,7 +6,7 @@
 ![npm](https://img.shields.io/npm/v/gridviz)
 ![license](https://img.shields.io/badge/license-EUPL-success)
 
-A JavaScript library for visualizing large amounts of gridded data client-side, through the power of threejs and WebGL.
+A JavaScript library for visualising gridded data with advanced cartographic techniques.
 
 <div>
   <a href="https://eurostat.github.io/gridviz/examples/europe/tiled/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/color.png" alt="preview" width="200px" height="200px"/></a>
@@ -49,9 +49,9 @@ A JavaScript library for visualizing large amounts of gridded data client-side, 
 
 ## Introduction
 
-Gridviz is a JavaScript library which allows you to visualize large gridded datasets (or any csv file with x/y data) in the browser. Unlike traditional raster-based GIS approaches, this tool utilizes WebGL through [three.js](https://github.com/mrdoob/three.js/) in order to render eveything client-side.
+Gridviz is a JavaScript library which allows you to visualise large gridded datasets (or any csv file with x/y data) in the browser. Unlike traditional raster-based GIS approaches, this tool utilizes WebGL through [three.js](https://github.com/mrdoob/three.js/) in order to render eveything client-side.
 
-From a CSV file with x and y columns, gridviz will build a viewer capable of visualizing millions of grid cells on the fly. You can also add GeoJSON files to the viewer using the addGeoJson() method.
+From a CSV file with x and y columns, gridviz will build a viewer capable of visualising millions of grid cells on the fly. You can also add GeoJSON files to the viewer using the addGeoJson() method.
 
 For data-driven colouring and sizing, you can use [d3-scale](https://github.com/d3/d3-scale) and [d3-scale-chromatic](https://github.com/d3/d3-scale-chromatic), or simply set your own colours and thresholds.
 
@@ -265,7 +265,7 @@ The following properties can be defined in the configuration object passed to ne
 
 #### JoyPlotStyle
 
-JoyPlotStyle allows you to visualize a grid in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
+JoyPlotStyle allows you to visualise a grid in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
 
 ```javascript
 const style = new gridviz.JoyPlotStyle({
