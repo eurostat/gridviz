@@ -1,6 +1,3 @@
-https://lecrabeinfo.net/mettre-a-jour-ubuntu-20-04-lts-vers-22-04-lts.html
-https://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf
-
 
 TODO BIG DEPLOY ?
 
