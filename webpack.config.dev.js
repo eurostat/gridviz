@@ -1,32 +1,20 @@
-// webpack.config.js
+// dev
 const path = require("path");
-var LiveReloadPlugin = require("webpack-livereload-plugin");
+
+const LiveReloadPlugin = require("webpack-livereload-plugin");
+
 module.exports = {
   mode: "development",
-  entry: "./src/js/index.js",
+  entry: "./src/js/gridvizc/index.js",
   output: {
-    filename: "gridviz.js",
-    publicPath: "build",
-    library: "gridviz",
+    filename: "gridvizc.js",
+    publicPath: "build/",
+    library: "gviz",
     libraryTarget: "umd",
     path: path.resolve(__dirname, "build")
   },
-  module: {
-    rules: [
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"]
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        exclude: /node_modules/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: '[hash]-[name].[ext]',
-        },
-      }
-    ]
+  node: {
+    fs: "empty"
   },
   plugins: [new LiveReloadPlugin()],
   watch: true,
