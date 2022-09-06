@@ -1,13 +1,11 @@
 // dev
 const path = require("path");
-
 const LiveReloadPlugin = require("webpack-livereload-plugin");
-
 module.exports = {
   mode: "development",
-  entry: "./src/js/gridvizc/index.js",
+  entry: "./src/js/gridviz/index.js",
   output: {
-    filename: "gridvizc.js",
+    filename: "gridviz.js",
     publicPath: "build/",
     library: "gviz",
     libraryTarget: "umd",

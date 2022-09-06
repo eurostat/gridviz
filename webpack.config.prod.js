@@ -1,10 +1,9 @@
 const path = require("path");
-
 module.exports = {
   mode: "production",
-  entry: ["./src/js/gridvizc/index.js"],
+  entry: ["./src/js/gridviz/index.js"],
   output: {
-    filename: "gridvizc.min.js",
+    filename: "gridviz.min.js",
     publicPath: "build/",
     library: "gviz",
     libraryTarget: "umd",
