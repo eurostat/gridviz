@@ -44,19 +44,46 @@ export class MosaicStyle extends Style {
         const sG = resolution
         const d = resolution * 0.15
 
+        //stroke color
+        cg.ctx.strokeStyle = "darkgray";
+        cg.ctx.lineWidth = 2 * zf;
+
+        const makeRandom = () => { return { dx: Math.random() * d, dy: Math.random() * d } }
+
         //draw with HTML canvas
         //in geo coordinates
         cg.setCanvasTransform()
 
         for (let cell of cells) {
 
-            //color
+            //get offset
+            const offset = this.offset(cell, resolution, zf)
+
+            //compute position perturbations
+
+            //stroke
+            cg.ctx.beginPath();
+            cg.ctx.moveTo(
+                cell.x + offset.dx + Math.random() * d,
+                cell.y + offset.dy + Math.random() * d,
+            );
+            cg.ctx.lineTo(
+                cell.x + offset.dx + sG - Math.random() * d,
+                cell.y + offset.dy + Math.random() * d,
+            );
+            cg.ctx.lineTo(
+                cell.x + offset.dx + sG - Math.random() * d,
+                cell.y + offset.dy + sG - Math.random() * d,
+            );
+            cg.ctx.stroke();
+
+
+            //fill
+
+            //set fill color
             const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined;
             if (!col || col === "none") continue
             cg.ctx.fillStyle = col;
-
-            //get offset
-            const offset = this.offset(cell, resolution, zf)
 
             cg.ctx.beginPath();
             cg.ctx.moveTo(

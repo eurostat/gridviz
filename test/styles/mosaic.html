@@ -24,13 +24,13 @@
                     new gviz.MosaicStyle({
                         colorCol: "Ind",
                         color: (v, r, s) => {
-                            //console.log(Math.floor(12 * Math.random()))
-                            return gviz.schemeCategory10[Math.floor(10 * Math.random())]
+                            //return gviz.schemeCategory10[Math.floor(10 * Math.random())]
+                            return gviz.interpolateSpectral(Math.pow(v/s.max, 0.25))
                         }
                     })
                 ],
                 {
-                    pixNb: 12,
+                    pixNb: 32,
                     cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)",
                 })
 
