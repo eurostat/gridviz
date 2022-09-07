@@ -22,7 +22,7 @@ export class ShapeColorSizeStyle extends Style {
 
         /** A function returning the color of the cell.
         * @protected @type {function(number,number,import("../Style").Stat|undefined):string} */
-        this.color = opts.color || (() => "#EA6BAC");
+        this.color = opts.color || (() => "#EA6BAC"); //(v,r,s) => {}
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for size.
          * @protected @type {string} */
