@@ -46,9 +46,10 @@ export class MosaicStyle extends Style {
 
         //stroke color
         cg.ctx.strokeStyle = "darkgray";
-        cg.ctx.lineWidth = 2 * zf;
+        cg.ctx.lineWidth = 0.15 * resolution;
 
-        const makeRandom = () => { return { dx: Math.random() * d, dy: Math.random() * d } }
+        //function to compute position disturbance
+        const makeRandom = () => { return { x: Math.random() * d, y: Math.random() * d } }
 
         //draw with HTML canvas
         //in geo coordinates
@@ -59,21 +60,22 @@ export class MosaicStyle extends Style {
             //get offset
             const offset = this.offset(cell, resolution, zf)
 
-            //compute position perturbations
+            //compute position disturbance
+            const ll = makeRandom(), ul = makeRandom(), lr = makeRandom(), ur = makeRandom()
 
             //stroke
             cg.ctx.beginPath();
             cg.ctx.moveTo(
-                cell.x + offset.dx + Math.random() * d,
-                cell.y + offset.dy + Math.random() * d,
+                cell.x + offset.dx + ll.x,
+                cell.y + offset.dy + ll.y,
             );
             cg.ctx.lineTo(
-                cell.x + offset.dx + sG - Math.random() * d,
-                cell.y + offset.dy + Math.random() * d,
+                cell.x + offset.dx + sG - lr.x,
+                cell.y + offset.dy + lr.y,
             );
             cg.ctx.lineTo(
-                cell.x + offset.dx + sG - Math.random() * d,
-                cell.y + offset.dy + sG - Math.random() * d,
+                cell.x + offset.dx + sG - ur.x,
+                cell.y + offset.dy + sG - ur.y,
             );
             cg.ctx.stroke();
 
@@ -87,20 +89,20 @@ export class MosaicStyle extends Style {
 
             cg.ctx.beginPath();
             cg.ctx.moveTo(
-                cell.x + offset.dx + Math.random() * d,
-                cell.y + offset.dy + Math.random() * d,
+                cell.x + offset.dx + ll.x,
+                cell.y + offset.dy + ll.y,
             );
             cg.ctx.lineTo(
-                cell.x + offset.dx + sG - Math.random() * d,
-                cell.y + offset.dy + Math.random() * d,
+                cell.x + offset.dx + sG - lr.x,
+                cell.y + offset.dy + lr.y,
             );
             cg.ctx.lineTo(
-                cell.x + offset.dx + sG - Math.random() * d,
-                cell.y + offset.dy + sG - Math.random() * d,
+                cell.x + offset.dx + sG - ur.x,
+                cell.y + offset.dy + sG - ur.y,
             );
             cg.ctx.lineTo(
-                cell.x + offset.dx + Math.random() * d,
-                cell.y + offset.dy + sG - Math.random() * d,
+                cell.x + offset.dx + ul.x,
+                cell.y + offset.dy + sG - ul.y,
             );
             cg.ctx.fill()
 
