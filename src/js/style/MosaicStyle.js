@@ -1,5 +1,4 @@
 //@ts-check
-
 import { Style, getStatistics } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
 
@@ -20,6 +19,14 @@ export class MosaicStyle extends Style {
         /** A function returning the color of the cell.
         * @protected @type {function(number,number,import("../Style").Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
+
+        /** The mosaic factor, within [0,0.5]. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect.
+         *  @protected @type {number} */
+        this.mosaicFactor = opts.mosaicFactor || 0.2;
+
+        /** The mosaic shadow color.
+         *  @protected @type {string} */
+        this.shadowColor = opts.shadowColor || "#555";
 
     }
 
@@ -42,13 +49,13 @@ export class MosaicStyle extends Style {
 
         //size - in geo unit
         const sG = resolution
-        const d = resolution * 0.15
 
-        //stroke color
-        cg.ctx.strokeStyle = "darkgray";
+        //set stroke style, for shadow
+        cg.ctx.strokeStyle = this.shadowColor;
         cg.ctx.lineWidth = 0.15 * resolution;
 
         //function to compute position disturbance
+        const d = resolution * this.mosaicFactor
         const makeRandom = () => { return { x: Math.random() * d, y: Math.random() * d } }
 
         //draw with HTML canvas
