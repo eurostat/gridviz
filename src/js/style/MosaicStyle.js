@@ -47,16 +47,13 @@ export class MosaicStyle extends Style {
             statColor = getStatistics(cells, c => c[this.colorCol], true)
         }
 
-        //size - in geo unit
-        const sG = resolution
-
         //set stroke style, for shadow
         cg.ctx.strokeStyle = this.shadowColor;
         cg.ctx.lineWidth = 0.15 * resolution;
 
-        //function to compute position disturbance
+        //function to compute position mosaic effect
         const d = resolution * this.mosaicFactor
-        const makeRandom = () => { return { x: Math.random() * d, y: Math.random() * d } }
+        const mosaic = () => { return { x: Math.random() * d, y: Math.random() * d } }
 
         //draw with HTML canvas
         //in geo coordinates
@@ -67,8 +64,8 @@ export class MosaicStyle extends Style {
             //get offset
             const offset = this.offset(cell, resolution, zf)
 
-            //compute position disturbance
-            const ll = makeRandom(), ul = makeRandom(), lr = makeRandom(), ur = makeRandom()
+            //compute position mosaic effect
+            const ll = mosaic(), ul = mosaic(), lr = mosaic(), ur = mosaic()
 
             //stroke
             cg.ctx.beginPath();
@@ -77,12 +74,12 @@ export class MosaicStyle extends Style {
                 cell.y + offset.dy + ll.y,
             );
             cg.ctx.lineTo(
-                cell.x + offset.dx + sG - lr.x,
+                cell.x + offset.dx + resolution - lr.x,
                 cell.y + offset.dy + lr.y,
             );
             cg.ctx.lineTo(
-                cell.x + offset.dx + sG - ur.x,
-                cell.y + offset.dy + sG - ur.y,
+                cell.x + offset.dx + resolution - ur.x,
+                cell.y + offset.dy + resolution - ur.y,
             );
             cg.ctx.stroke();
 
@@ -100,16 +97,16 @@ export class MosaicStyle extends Style {
                 cell.y + offset.dy + ll.y,
             );
             cg.ctx.lineTo(
-                cell.x + offset.dx + sG - lr.x,
+                cell.x + offset.dx + resolution - lr.x,
                 cell.y + offset.dy + lr.y,
             );
             cg.ctx.lineTo(
-                cell.x + offset.dx + sG - ur.x,
-                cell.y + offset.dy + sG - ur.y,
+                cell.x + offset.dx + resolution - ur.x,
+                cell.y + offset.dy + resolution - ur.y,
             );
             cg.ctx.lineTo(
                 cell.x + offset.dx + ul.x,
-                cell.y + offset.dy + sG - ul.y,
+                cell.y + offset.dy + resolution - ul.y,
             );
             cg.ctx.fill()
 
