@@ -68,6 +68,11 @@ export class MosaicStyle extends Style {
 
         for (let cell of cells) {
 
+            //set fill color
+            const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined;
+            if (!col || col === "none") continue
+            cg.ctx.fillStyle = col;
+
             //get offset
             const offset = this.offset(cell, resolution, zf)
 
@@ -92,11 +97,6 @@ export class MosaicStyle extends Style {
 
 
             //fill
-
-            //set fill color
-            const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined;
-            if (!col || col === "none") continue
-            cg.ctx.fillStyle = col;
 
             cg.ctx.beginPath();
             cg.ctx.moveTo(
