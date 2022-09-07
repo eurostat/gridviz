@@ -23,10 +23,7 @@
                 [
                     new gviz.MosaicStyle({
                         colorCol: "2018",
-                        color: (v, r, s) => {
-                            //return gviz.schemeCategory10[Math.floor(10 * Math.random())]
-                            return gviz.interpolateSpectral(Math.pow(1 - v / s.max, 30))
-                        }
+                        color: (v, r, s) => gviz.interpolateSpectral(Math.pow(1 - v / s.max, 30))
                     })
                 ],
                 {

@@ -28,7 +28,7 @@ export class MosaicStyle extends Style {
 
         /** The mosaic shadow factor, within [0,0.5]. Set to 0 for no mosaic shadow. Set to 0.5 for strong mosaic shadow.
          *  @protected @type {number} */
-         this.shadowFactor = opts.shadowFactor || 0.2;
+        this.shadowFactor = opts.shadowFactor || 0.2;
 
         /** The mosaic shadow color.
          *  @protected @type {string} */
@@ -54,7 +54,9 @@ export class MosaicStyle extends Style {
 
         //set stroke style, for shadow
         cg.ctx.strokeStyle = this.shadowColor;
-        cg.ctx.lineWidth = 0.15 * resolution;
+        cg.ctx.lineWidth = this.shadowFactor * resolution;
+        cg.ctx.lineJoin = "round"
+        cg.ctx.lineCap = "butt"
 
         //function to compute position mosaic effect
         const d = resolution * this.mosaicFactor
