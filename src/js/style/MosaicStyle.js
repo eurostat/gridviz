@@ -1,7 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics, Shape } from "../Style"
-import { Cell } from "../Dataset"
+import { Style, getStatistics } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
 
 /**
@@ -19,7 +18,7 @@ export class MosaicStyle extends Style {
         this.colorCol = opts.colorCol;
 
         /** A function returning the color of the cell.
-        * @protected @type {function(number,number,Stat|undefined):string} */
+        * @protected @type {function(number,number,import("../Style").Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
     }
@@ -27,7 +26,7 @@ export class MosaicStyle extends Style {
 
     /**
      * 
-     * @param {Array.<Cell>} cells 
+     * @param {Array.<import("../Dataset").Cell>} cells 
      * @param {number} resolution 
      * @param {GeoCanvas} cg 
      */
@@ -73,9 +72,9 @@ export class MosaicStyle extends Style {
 
     //getters and setters
 
-    /** @returns {function(number,number,Stat):string} */
+    /** @returns {function(number,number,import("../Style").Stat):string} */
     getColor() { return this.color; }
-    /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
+    /** @param {function(number,number,import("../Style").Stat|undefined):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
 }

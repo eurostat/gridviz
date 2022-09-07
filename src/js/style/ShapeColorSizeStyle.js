@@ -1,7 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics, Shape } from "../Style"
-import { Cell } from "../Dataset"
+import { Style, getStatistics } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
 
 /**
@@ -22,7 +21,7 @@ export class ShapeColorSizeStyle extends Style {
         this.colorCol = opts.colorCol;
 
         /** A function returning the color of the cell.
-        * @protected @type {function(number,number,Stat|undefined):string} */
+        * @protected @type {function(number,number,import("../Style").Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for size.
@@ -30,11 +29,11 @@ export class ShapeColorSizeStyle extends Style {
         this.sizeCol = opts.sizeCol;
 
         /** A function returning the size of a cell in geographical unit.
-        * @protected @type {function(number,number,Stat|undefined,number):number} */
+        * @protected @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.size = opts.size;
 
         /** A function returning the shape of a cell.
-         * @private @type {function(Cell):Shape} */
+         * @private @type {function(import("../Dataset").Cell):import("../Style").Shape} */
         this.shape = opts.shape || (() => "square");
     }
 
@@ -42,7 +41,7 @@ export class ShapeColorSizeStyle extends Style {
     /**
      * Draw cells as squares, with various colors and size.
      * 
-     * @param {Array.<Cell>} cells 
+     * @param {Array.<import("../Dataset").Cell>} cells 
      * @param {number} resolution 
      * @param {GeoCanvas} cg 
      */
@@ -80,7 +79,7 @@ export class ShapeColorSizeStyle extends Style {
             if (shape === "none") continue
 
             //size
-            /** @type {function(number,number,Stat|undefined,number):number} */
+            /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
             let s_ = this.size || (() => resolution);
             //size - in geo unit
             const sG = s_(cell[this.sizeCol], resolution, statSize, zf)
@@ -125,19 +124,19 @@ export class ShapeColorSizeStyle extends Style {
 
     //getters and setters
 
-    /** @returns {function(number,number,Stat):string} */
+    /** @returns {function(number,number,import("../Style").Stat):string} */
     getColor() { return this.color; }
-    /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
+    /** @param {function(number,number,import("../Style").Stat|undefined):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
-    /** @returns {function(number,number,Stat,number):number} */
+    /** @returns {function(number,number,import("../Style").Stat,number):number} */
     getSize() { return this.size; }
-    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
+    /** @param {function(number,number,import("../Style").Stat|undefined,number):number} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
-    /** @returns {function(Cell):Shape} */
+    /** @returns {function(import("../Dataset").Cell):import("../Style").Shape} */
     getShape() { return this.shape; }
-    /** @param {function(Cell):Shape} val @returns {this} */
+    /** @param {function(import("../Dataset").Cell):import("../Style").Shape} val @returns {this} */
     setShape(val) { this.shape = val; return this; }
 
 }
