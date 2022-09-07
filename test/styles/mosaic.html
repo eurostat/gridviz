@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+    <title>Gridviz - Mosaic style</title>
+</head>
+
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
+    <div id="viz-container" style="height:100%; width:100%;"></div>
+
+    <script src="../../build/gridviz.js"></script>
+    <script>
+
+        let containerDiv = document.getElementById("viz-container");
+
+        new gviz.App(containerDiv)
+            .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(100)
+            .addMultiScaleTiledGridLayer(
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/ind/2015/",
+                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+                r => r + "m/",
+                [
+                    new gviz.MosaicStyle({
+                        colorCol: "Ind",
+                        color: (v, r, s) => {
+                            //console.log(Math.floor(12 * Math.random()))
+                            return gviz.schemeCategory10[Math.floor(10 * Math.random())]
+                        }
+                    })
+                ],
+                {
+                    pixNb: 12,
+                    cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)",
+                })
+
+    </script>
+
+</body>
+
+</html>
