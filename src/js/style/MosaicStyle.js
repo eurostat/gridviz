@@ -42,6 +42,7 @@ export class MosaicStyle extends Style {
 
         //size - in geo unit
         const sG = resolution
+        const d = resolution * 0.15
 
         //draw with HTML canvas
         //in geo coordinates
@@ -57,12 +58,26 @@ export class MosaicStyle extends Style {
             //get offset
             const offset = this.offset(cell, resolution, zf)
 
-            //draw square
-            const d = resolution * (1 - sG / resolution) * 0.5
-            cg.ctx.fillRect(
-                cell.x + d + offset.dx,
-                cell.y + d + offset.dy,
-                sG, sG);
+            cg.ctx.beginPath();
+            cg.ctx.moveTo(
+                cell.x + offset.dx + Math.random() * d,
+                cell.y + offset.dy + Math.random() * d,
+            );
+            cg.ctx.lineTo(
+                cell.x + offset.dx + sG - Math.random() * d,
+                cell.y + offset.dy + Math.random() * d,
+            );
+            cg.ctx.lineTo(
+                cell.x + offset.dx + sG - Math.random() * d,
+                cell.y + offset.dy + sG - Math.random() * d,
+            );
+            cg.ctx.lineTo(
+                cell.x + offset.dx + Math.random() * d,
+                cell.y + offset.dy + sG - Math.random() * d,
+            );
+            cg.ctx.fill()
+
+
         }
 
         //update legends
