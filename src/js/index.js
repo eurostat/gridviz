@@ -29,6 +29,7 @@ export { getTanakaStyle } from "./style/TanakaStyle"
 export { getLegoStyle } from "./style/LegoStyle"
 export { SquareColorWGLStyle2 } from "./style/SquareColorWGLStyle2"
 export { SquareColorWGLStyle } from "./style/SquareColorWGLStyle"
+export { MosaicStyle } from "./style/MosaicStyle"
 
 //export additional layers
 export { LabelLayer } from "./LabelLayer"
