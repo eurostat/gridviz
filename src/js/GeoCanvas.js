@@ -306,7 +306,7 @@ export class GeoCanvas {
      * 
      * @param {string} id 
      * @param {object} opts 
-     * @returns 
+     * @returns {this}
      */
     addZoomSlider(id, opts) {
         opts = opts || {}
@@ -318,7 +318,7 @@ export class GeoCanvas {
         const div = select("#" + id);
         if (div.empty()) {
             console.error("Could not find div element to build zoom slider. Id: " + id)
-            return;
+            return this;
         }
 
         const th = this

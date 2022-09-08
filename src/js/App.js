@@ -57,7 +57,8 @@ export class App {
         container.appendChild(canvas);
 
         /** Make geo canvas
-         * @type {GeoCanvas} @private */
+         * @type {GeoCanvas}
+         * @private */
         this.cg = new GeoCanvas(canvas);
         this.cg.redraw = (strong = true) => {
             if (monitor) monitorDuration("Start redraw")
@@ -507,7 +508,7 @@ export class App {
      * 
      * @param {string} id 
      * @param {object} opts 
-     * @returns 
+     * @returns {this}
      */
     addZoomSlider(id, opts) {
         this.cg.addZoomSlider(id, opts)

@@ -47,7 +47,9 @@ export class Style {
             throw new Error("Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.")
 
 
-        /** @public @type {Array.<Legend>} */
+        /** 
+         * @public
+         * @type {Array.<Legend>} */
         this.legends = []
     }
 
