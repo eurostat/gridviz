@@ -61,7 +61,7 @@
             shape: () => "circle",
         })]
 
-        styles.tanaka = gviz.getTanakaStyle("ksmval", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.3) })
+        styles.tanaka = gviz.TanakaStyle.get("ksmval", { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.3) })
 
 
 

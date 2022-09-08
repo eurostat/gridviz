@@ -183,11 +183,11 @@
                     })], pixNb: 5
                 },
                 tanaka: {
-                    style: gviz.getTanakaStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                    style: gviz.TanakaStyle.get(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
                     pixNb: 5
                 },
                 lego: {
-                    style: gviz.getLegoStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                    style: gviz.LegoStyle.get(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
                     pixNb: 10
                 },
                 pillar: {
@@ -342,12 +342,12 @@
                 },
                 tanaka: {
                     //TODO adapt to pop change
-                    style: gviz.getTanakaStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                    style: gviz.TanakaStyle.get(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
                     pixNb: 5
                 },
                 lego: {
                     //TODO adapt to pop change
-                    style: gviz.getLegoStyle(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                    style: gviz.LegoStyle.get(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
                     pixNb: 10
                 },
                 pillar: {
