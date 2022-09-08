@@ -49,7 +49,7 @@ export class Layer {
          * The function returning cell information as HTML.
          * This is typically used for tooltip information.
          * @type {function(Cell):string} */
-        this.cellInfoHTML = opts.cellInfoHTML || defaultCellInfoHTML;
+        this.cellInfoHTML = opts.cellInfoHTML || Layer.defaultCellInfoHTML;
     }
 
 
@@ -80,24 +80,21 @@ export class Layer {
         return this.dataset.datasetComponents[i];
     }
 
-}
-
-
-
-
-/**
- * The default function returning cell information as HTML.
- * This is typically used for tooltip information.
- * 
- * @param {Cell} cell 
- * @returns {string}
- */
-const defaultCellInfoHTML = function (cell) {
-    const buf = []
-    for (const key of Object.keys(cell)) {
-        if (key === "x") continue;
-        if (key === "y") continue;
-        buf.push("<b>", key, "</b>", " : ", cell[key], "<br>")
+    /**
+     * The default function returning cell information as HTML.
+     * This is typically used for tooltip information.
+     * 
+     * @param {Cell} cell 
+     * @returns {string}
+     */
+    static defaultCellInfoHTML(cell) {
+        const buf = []
+        for (const key of Object.keys(cell)) {
+            if (key === "x") continue;
+            if (key === "y") continue;
+            buf.push("<b>", key, "</b>", " : ", cell[key], "<br>")
+        }
+        return buf.join("");
     }
-    return buf.join("");
+
 }
