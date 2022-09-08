@@ -13,7 +13,7 @@ export class DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution, in the CRS geographical unit.
-     * @param {{preprocess?:(function(Cell):void)}} opts 
+     * @param {{preprocess:(function(Cell):void)}} opts 
      * @abstract
      */
     constructor(url, resolution, opts = {}) {
@@ -21,12 +21,14 @@ export class DatasetComponent {
 
         /**
          * The url of the dataset.
-         * @protected @type {string} */
+         * @protected
+         * @type {string} */
         this.url = url;
 
         /**
          * The dataset resolution in geographical unit.
-         * @protected @type {number} */
+         * @protected
+         * @type {number} */
         this.resolution = resolution;
 
         /**
@@ -35,7 +37,8 @@ export class DatasetComponent {
         this.preprocess = opts.preprocess || (() => { });
 
         /** The cells within the view
-         * @protected @type {Array.<Cell>} */
+         * @protected
+         * @type {Array.<Cell>} */
         this.cellsViewCache = []
     }
 

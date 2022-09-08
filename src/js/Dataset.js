@@ -2,12 +2,16 @@
 
 import { DatasetComponent } from "./DatasetComponent";
 
-/** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
-/** @typedef {{x: number, y: number}} Cell */
+/** 
+ * A grid cell.
+ * @typedef {{x: number, y: number}} Cell */
+/**
+ * An envelope.
+ * @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
 /**
  * A multi resolution dataset of grid cells.
- * It consists of different dataset components for each resolution.
+ * It consists of different {@link DatasetComponent}s for each resolution.
  * 
  * @abstract
  * 
@@ -16,9 +20,9 @@ import { DatasetComponent } from "./DatasetComponent";
 export class Dataset {
 
     /**
-     * @param {Array.<DatasetComponent>} datasetComponents The dataset components.
-     * @param {Array.<number>} resolutions The resolutions of the dataset components, in CRS geographical unit.
-     * @param {{preprocess?:function(Cell):void}} opts preprocess: A function to apply on each dataset cell to prepare its values.
+     * @param {Array.<DatasetComponent>} datasetComponents The dataset components
+     * @param {Array.<number>} resolutions The resolutions of the dataset components, in CRS geographical unit
+     * @param { {preprocess:function(Cell):void} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values
      */
     constructor(datasetComponents, resolutions, opts = {}) {
         opts = opts || {};
