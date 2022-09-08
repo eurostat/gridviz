@@ -24,15 +24,17 @@ export class KernelSmoothingStyle extends Style {
 
         /** A function specifying the value to consider for each cell. This is the value to smooth.
          * @private
-         * @type {function(Cell):number} @private */
+         * @type {function(Cell):number} */
         this.value = opts.value
 
         /** The smoothing parameter, in geo unit. The larger, the more smoothed.
-         * @type {function(number|number):number} @private */
+         * @type {function(number|number):number}
+         * @private */
         this.sigma = opts.sigma // (r, zf)=>...
 
         /** The styles to represent the smoothed cells.
-         * @type {Array.<Style>} @private */
+         * @type {Array.<Style>}
+         * @private */
         this.styles = opts.styles
     }
 

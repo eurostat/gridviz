@@ -66,7 +66,7 @@ export class Dataset {
      * @param {Array.<number>} resolutions The resolutions of the dataset components, in CRS geographical unit
      * @param {function(number):DatasetComponent} resToDatasetComponent Function returning a dataset component from a resolution
      * @param { {preprocess?:function(Cell):void} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values
-     * @returns 
+     * @returns {Dataset}
      */
     static make(resolutions, resToDatasetComponent, opts) {
 

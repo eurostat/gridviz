@@ -17,12 +17,14 @@ export class StrokeStyle extends Style {
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
          *  @protected
-         * @type {string} */
+         * @type {string}
+         * */
         this.strokeColorCol = opts.strokeColorCol;
 
         /** A function returning the color of the stroke.
         * @protected
-        * @type {function(number,number,Stat|undefined):string} */
+        * @type {function(number,number,Stat|undefined):string}
+        * */
         this.strokeColor = opts.strokeColor || (() => "#666");
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for size.
@@ -32,7 +34,8 @@ export class StrokeStyle extends Style {
 
         /** A function returning the size of a cell in geographical unit.
         * @protected
-        * @type {function(number,number,Stat|undefined,number):number} */
+        * @type {function(number,number,Stat|undefined,number):number}
+        * */
         this.size = opts.size;
 
         /** The stroke line width, in pixels.
@@ -42,7 +45,8 @@ export class StrokeStyle extends Style {
 
         /** The stroke line width in geographical unit.
        * @protected
-       * @type {function(number,number,Stat|undefined,number):number} */
+       * @type {function(number,number,Stat|undefined,number):number}
+       * */
         this.strokeWidth = opts.strokeWidth;
 
         /** A function returning the shape of a cell.
@@ -138,25 +142,5 @@ export class StrokeStyle extends Style {
 
     //getters and setters
 
-    /** @returns {function(number,number,Stat):string} */
-    //getColor() { return this.strokeColor; }
-    /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
-    //setColor(val) { this.strokeColor = val; return this; }
-
-    /** @returns {function(number,number,Stat,number):number} */
-    //getSize() { return this.size; }
-    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
-    //setSize(val) { this.size = val; return this; }
-
-
-    /** @returns {number} */
-    //getStrokeWidth() { return this.strokeWidth; }
-    /** @param {number} val @returns {this} */
-    //setStrokeWidth(val) { this.strokeWidth = val; return this; }
-
-    /** @returns {function(Cell):Shape} */
-    //getShape() { return this.shape; }
-    /** @param {function(Cell):Shape} val @returns {this} */
-    //setShape(val) { this.shape = val; return this; }
-
+    //TODO
 }

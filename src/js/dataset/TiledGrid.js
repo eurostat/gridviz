@@ -36,7 +36,9 @@ export class TiledGrid extends DatasetComponent {
          *  */
         this.info = undefined;
 
-        /**  @type {string} @private  */
+        /** 
+         * @type {string}
+         * @private  */
         this.infoLoadingStatus = "notLoaded";
 
         /** 

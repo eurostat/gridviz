@@ -25,7 +25,9 @@ export class CSVGrid extends DatasetComponent {
          * @type {Array.<Cell>} */
         this.cells = [];
 
-        /**  @type {string} @private  */
+        /**  
+         * @type {string}
+         * @private  */
         this.infoLoadingStatus = "notLoaded";
     }
 
