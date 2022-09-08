@@ -13,6 +13,7 @@ import { LineLayer } from './LineLayer';
 
 import { select } from "d3-selection";
 import { monitor, monitorDuration } from "./utils/Utils"
+import { DatasetComponent } from './DatasetComponent';
 //import { GeoTIFF } from './dataset/GeoTIFF';
 
 /**
@@ -362,7 +363,7 @@ export class App {
      * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string}} opts The layer options.
      * @returns {this}
      */
-     addLayerFromDataset(dataset, styles, opts) {
+    addLayerFromDataset(dataset, styles, opts) {
         const lay = new Layer(dataset, styles, opts)
         this.layers.push(lay)
         return this;
@@ -406,6 +407,7 @@ export class App {
 
     //multi scale dataset creation
 
+
     /**
      * Make a multi scale CSV grid dataset.
      * 
@@ -415,14 +417,11 @@ export class App {
      * @returns {Dataset}
      */
     makeMultiScaleCSVGridDataset(resolutions, resToURL, opts) {
-
-        //make dataset components
-        const dsc = []
-        for (const res of resolutions) {
-            dsc.push(new CSVGrid(resToURL(res), res, opts).getData(undefined, () => { this.cg.redraw(); }),)
-        }
-        //make dataset
-        return new Dataset(dsc, resolutions, opts)
+        return Dataset.make(
+            resolutions,
+            (res) => new CSVGrid(resToURL(res), res, opts).getData(undefined, () => { this.cg.redraw(); }),
+            opts
+        )
     }
 
     /**
@@ -434,18 +433,11 @@ export class App {
      * @returns {Dataset}
      */
     makeMultiScaleTiledCSVGridDataset(resolutions, resToURL, opts) {
-
-        //make dataset components
-        const dsc = []
-        for (const res of resolutions) {
-            dsc.push(new TiledGrid(
-                resToURL(res),
-                this,
-                opts)
-                .loadInfo(() => { this.cg.redraw(); }))
-        }
-        //make dataset
-        return new Dataset(dsc, resolutions, opts)
+        return Dataset.make(
+            resolutions,
+            (res) => new TiledGrid(resToURL(res), this, opts).loadInfo(() => { this.cg.redraw(); }),
+            opts
+        )
     }
 
 
