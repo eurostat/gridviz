@@ -1,4 +1,4 @@
-JSDOC ?
+JSDOC - see d3 ?
 new readme: Go through code and make documentation skeleton
 publish v2 - then improve doc
 restructure examples: create style examples. make separate test folder ?
