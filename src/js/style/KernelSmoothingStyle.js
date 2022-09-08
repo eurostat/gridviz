@@ -23,7 +23,8 @@ export class KernelSmoothingStyle extends Style {
         opts = opts || {}
 
         /** A function specifying the value to consider for each cell. This is the value to smooth.
-         * @private @type {function(Cell):number} @private */
+         * @private
+         * @type {function(Cell):number} @private */
         this.value = opts.value
 
         /** The smoothing parameter, in geo unit. The larger, the more smoothed.

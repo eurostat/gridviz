@@ -21,7 +21,8 @@ export class TextStyle extends Style {
         this.textCol = opts.textCol;
 
         /** A function returning the text of a cell.
-         * @private @type {function(number,number,Stat|undefined):string} */
+         * @private
+         * @type {function(number,number,Stat|undefined):string} */
         this.text = opts.text || ((v, r, s, z) => "X")
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
@@ -49,11 +50,13 @@ export class TextStyle extends Style {
 
 
         /** A function returning the font family.
-        * @private @type {string} */
+        * @private
+        * @type {string} */
         this.fontFamily = opts.fontFamily || "Arial"
 
         /** A function returning the font weight.
-         * @private @type {string} */
+         * @private
+         * @type {string} */
         this.fontWeight = opts.fontWeight || "bold"
     }
 

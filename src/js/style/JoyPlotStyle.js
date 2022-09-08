@@ -16,18 +16,26 @@ export class JoyPlotStyle extends Style {
         opts = opts || {};
 
         /** The cell column where to get the value to represent.
-         * @private @type {string} */
+         * @private
+         * @type {string} */
         this.heightCol = opts.heightCol
 
         /** A function returning the height of a cell.
-         * @private @type {function(number,number,Stat|undefined,number):number} */
+         * @private
+         * @type {function(number,number,Stat|undefined,number):number} */
         this.height = opts.height || ((v) => Math.sqrt(v));
 
-        /** @private @type {string} */
+        /** 
+         * @private
+         * @type {string} */
         this.lineColor = opts.lineColor || "#BBB"
-        /** @private @type {number} */
+        /** 
+         * @private
+         * @type {number} */
         this.lineWidth = opts.lineWidth || 1;
-        /** @private @type {string} */
+        /** 
+         * @private
+         * @type {string} */
         this.fillColor = opts.fillColor || "#c08c5968"
     }
 

@@ -14,22 +14,31 @@ export class PillarStyle extends Style {
         super(opts)
         opts = opts || {};
 
-        /** @private @type {string} */
+        /** 
+         * @private
+         * @type {string} */
         this.heightCol = opts.heightCol;
         /** A function returning the height of the line representing a cell, in geo unit
-         * @private @type {function(number,number,Stat|undefined,number):number} */
+         * @private
+         * @type {function(number,number,Stat|undefined,number):number} */
         this.height = opts.height;
 
-        /** @private @type {string} */
+        /** 
+         * @private
+         * @type {string} */
         this.colorCol = opts.colorCol;
         /** A function returning the color of the line representing a cell.
-        * @private @type {function(number,number,Stat|undefined):string} */
+        * @private
+        * @type {function(number,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#c08c59"); //bb
 
-        /** @private @type {string} */
+        /** 
+         * @private
+         * @type {string} */
         this.widthCol = opts.widthCol;
         /** A function returning the width of the line representing a cell, in geo unit
-         * @private @type {function(number,number,Stat|undefined,number):number} */
+         * @private
+         * @type {function(number,number,Stat|undefined,number):number} */
         this.width = opts.width || ((v, r) => 0.5 * r);
 
         this.viewHeightFactor = 5

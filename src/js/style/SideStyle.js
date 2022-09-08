@@ -26,23 +26,28 @@ export class SideStyle extends Style {
         /** A function returning the value of a cell side. This value is computed from the two adjacent cell values.
          * For horizontal sides, v1 is the value of the cell below and v2 the value of the cell above.
          * For vertical sides, v1 is the value of the cell left and v2 the value of the cell right.
-         * @private @type {function(number|undefined,number|undefined,number,Stat|undefined,number):number} */
+         * @private
+         * @type {function(number|undefined,number|undefined,number,Stat|undefined,number):number} */
         this.value = opts.value || ((v1, v2, r, s, zf) => 1);
 
         /** A function returning the color of a cell side.
-        * @private @type {function(Side,number,Stat|undefined):string} */
+        * @private
+        * @type {function(Side,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
         /** A function returning the width of a cell side, in geo unit
-         * @private @type {function(Side,number,Stat|undefined,number):number} */
+         * @private
+         * @type {function(Side,number,Stat|undefined,number):number} */
         this.width = opts.width || ((side, r, s, z) => r * side.value / 5);
 
         /** orientation. Set to 90 to show sides as slope lines for example.
-        * @private @type {number} */
+        * @private
+        * @type {number} */
         this.orientation = opts.orientation
 
         /** A fill color for the cells.
-        * @private @type {function(Cell):string} */
+        * @private
+        * @type {function(Cell):string} */
         this.fillColor = opts.fillColor
     }
 
