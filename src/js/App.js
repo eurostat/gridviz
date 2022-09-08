@@ -402,7 +402,7 @@ export class App {
      * @param {{preprocess?:function(Cell):void}} opts 
      * @returns {Dataset}
      */
-    makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, opts) {
+    makeMultiScaleTiledGridDataset(urlBase, resolutions, resToURLCode, opts) {
 
         //make dataset components
         const dsc = []
@@ -427,7 +427,7 @@ export class App {
      * @returns {this}
      */
     addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts) {
-        const ds = this.makeMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, opts)
+        const ds = this.makeMultiScaleTiledGridDataset(urlBase, resolutions, resToURLCode, opts)
         return this.addMultiScaleTiledGridLayer2(ds, styles, opts);
     }
 
