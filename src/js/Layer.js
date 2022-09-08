@@ -5,7 +5,7 @@ import { DatasetComponent } from "./DatasetComponent";
 import { Style } from "./Style";
 
 /**
- * A layer, which specifies a dataset to be shown within a specified zoom range, with specified styles.
+ * A layer, which specifies a dataset to be shown with specified styles.
  * 
  * @author Joseph Davies, Julien Gaffuri
  */
@@ -57,7 +57,9 @@ export class Layer {
      * Return the relevant dataset component for a specified zoom factor.
      * 
      * @param {number} zf 
-     * @returns {DatasetComponent|undefined}  */
+     * @returns {DatasetComponent|undefined}
+     * @protected
+     * */
     getDatasetComponent(zf) {
         if (zf < this.minZoom || zf > this.maxZoom) return;
 
@@ -95,12 +97,7 @@ const defaultCellInfoHTML = function (cell) {
     for (const key of Object.keys(cell)) {
         if (key === "x") continue;
         if (key === "y") continue;
-        buf.push("<b>")
-        buf.push(key)
-        buf.push("</b>")
-        buf.push(" : ")
-        buf.push(cell[key])
-        buf.push("<br>")
+        buf.push("<b>", key, "</b>", " : ", cell[key], "<br>")
     }
     return buf.join("");
 }

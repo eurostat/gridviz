@@ -235,6 +235,7 @@ export class App {
     /**
      * Returns the layers which are within the current viewer zoom extent, that is the ones that are visible.
      * @returns {Array.<Layer>}
+     * @protected
      */
     getActiveLayers() {
 
@@ -268,6 +269,7 @@ export class App {
     /**
      * @param {number} marginPx 
      * @returns {Envelope}
+     * @protected
      */
     updateExtentGeo(marginPx = 20) {
         return this.cg.updateExtentGeo(marginPx);
@@ -280,6 +282,7 @@ export class App {
      * 
      * @param {{x:number,y:number}} posGeo 
      * @returns {{cell:Cell,html:string,resolution:number} | undefined}
+     * @protected
      */
     getCellFocusInfo(posGeo) {
         //get top layer
