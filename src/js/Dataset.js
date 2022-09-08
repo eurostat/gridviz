@@ -61,6 +61,7 @@ export class Dataset {
 
 
     /**
+     * A function to ease the creation of datasets from their components.
      * 
      * @param {Array.<number>} resolutions The resolutions of the dataset components, in CRS geographical unit
      * @param {function(number):DatasetComponent} resToDatasetComponent Function returning a dataset component from a resolution
