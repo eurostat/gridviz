@@ -7,7 +7,7 @@ import { GeoCanvas } from "../GeoCanvas";
 /**
  * A style where each cell is represented by a segment whose length, width, color and orientation can vary according to statistical values.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class SegmentStyle extends Style {
 

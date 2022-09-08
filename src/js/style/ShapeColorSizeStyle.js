@@ -7,7 +7,7 @@ import { GeoCanvas } from "../GeoCanvas";
  * A very generic style that shows grid cells with specific color, size and shape.
  * It can be used to show variables as cell colors, cell size, cell shape, or any combination of the three visual variables.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class ShapeColorSizeStyle extends Style {
 

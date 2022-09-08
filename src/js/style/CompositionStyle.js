@@ -15,7 +15,7 @@ import { GeoCanvas } from "../GeoCanvas";
  * - Ring (circular symbol, with decomposition into concentric rings)
  * The symbol can be scaled depending on the cell importance.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class CompositionStyle extends Style {
 

@@ -8,7 +8,7 @@ import { DatasetComponent } from "../DatasetComponent";
 /**
  * A dataset composed of a single CSV file (not tiled).
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class CSVGrid extends DatasetComponent {
 

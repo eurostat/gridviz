@@ -12,7 +12,7 @@ import { GeoCanvas } from "./GeoCanvas";
  * If the label data is not in the expected format or in the same CRS as the grid, it can be corrected with the "preprocess" function.
  * The selection of the label, their style (font, weight, etc.) and color can be specified depending on their importance and the zoom level.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class LabelLayer {
 

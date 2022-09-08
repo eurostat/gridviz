@@ -7,7 +7,7 @@ import { Stat, Shape, Style } from "../Style"
 /**
  * A legend element for color categrories.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class ColorCategoryLegend extends Legend {
 

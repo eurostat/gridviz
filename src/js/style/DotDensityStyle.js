@@ -11,7 +11,7 @@ import { monitor, monitorDuration } from "../utils/Utils";
 
 /**
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class DotDensityStyle extends Style {
 

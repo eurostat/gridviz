@@ -16,9 +16,9 @@ import { monitor, monitorDuration } from "./utils/Utils"
 //import { GeoTIFF } from './dataset/GeoTIFF';
 
 /**
- * A gridviz on a HTML canvas.
+ * A gridviz application.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class App {
 

@@ -8,7 +8,7 @@ import { ShapeColorSizeStyle } from "../style/ShapeColorSizeStyle"
 /**
  * A legend element for proportional symbols.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class SizeLegend extends Legend {
 

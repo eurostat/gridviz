@@ -12,7 +12,7 @@ import { monitor, monitorDuration } from "../utils/Utils"
  * To show cells as colored squares, with computation of the colors on JavaScript side.
  * Alls squares with the same size
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class SquareColorWGLStyle2 extends Style {
 

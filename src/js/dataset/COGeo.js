@@ -6,7 +6,7 @@ import { DatasetComponent } from "../DatasetComponent"
  * A dataset composed of a COGeo file.
  * @see https://www.cogeo.org/
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class COGeo extends DatasetComponent {
 

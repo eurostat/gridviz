@@ -7,7 +7,7 @@ import { ColorSizeShapeStyle } from "../core/style/ColorSizeShapeStyle"
 /**
  * A data layer, which specifies a dataset to be shown within a specified zoom range, with a specified style.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class Layer {
 

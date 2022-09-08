@@ -7,7 +7,7 @@ import { zoom, zoomIdentity } from "d3-zoom";
 /**
  * A HTML canvas for geo data display, enhanced with zoom and pan capabilities.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class GeoCanvas {
 

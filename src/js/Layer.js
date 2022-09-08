@@ -7,7 +7,7 @@ import { Style } from "./Style";
 /**
  * A layer, which specifies a dataset to be shown within a specified zoom range, with specified styles.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class Layer {
 

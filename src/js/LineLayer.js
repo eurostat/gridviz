@@ -4,7 +4,7 @@ import { GeoCanvas } from "./GeoCanvas";
 import { json } from "d3-fetch";
 
 /**
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class LineLayer {
 

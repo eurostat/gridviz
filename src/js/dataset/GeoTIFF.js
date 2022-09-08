@@ -7,7 +7,7 @@ import { fromUrl } from "geotiff"
 /**
  * A dataset composed of a single GeoTiff file.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class GeoTIFF extends DatasetComponent {
 

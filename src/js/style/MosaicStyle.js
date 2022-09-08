@@ -3,7 +3,7 @@ import { Style, getStatistics } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
 
 /**
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class MosaicStyle extends Style {
 

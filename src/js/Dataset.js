@@ -15,7 +15,7 @@ import { DatasetComponent } from "./DatasetComponent";
  * 
  * @abstract
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class Dataset {
 

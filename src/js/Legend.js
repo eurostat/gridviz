@@ -4,7 +4,7 @@ import { select } from "d3-selection";
 
 /**
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class Legend {
 

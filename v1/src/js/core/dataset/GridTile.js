@@ -6,7 +6,7 @@ import { GridInfo } from "./TiledGrid"
 /**
  * A grid tile.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class GridTile {
 

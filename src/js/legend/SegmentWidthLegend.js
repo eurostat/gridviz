@@ -8,7 +8,7 @@ import { SegmentStyle } from "../style/SegmentStyle"
 /**
  * A legend element for segment width.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class SegmentWidthLegend extends Legend {
 

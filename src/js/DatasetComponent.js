@@ -6,7 +6,7 @@ import { Cell, Envelope } from "./Dataset";
  * A dataset component, of grid cells.
  * @abstract
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class DatasetComponent {
 

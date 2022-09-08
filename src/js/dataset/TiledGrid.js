@@ -11,7 +11,7 @@ import { monitor, monitorDuration } from "../utils/Utils"
 /**
  * A tiled dataset, composed of CSV tiles.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class TiledGrid extends DatasetComponent {
 

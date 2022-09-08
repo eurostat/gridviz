@@ -9,7 +9,7 @@ import { Style, Stat } from "../Style"
  * A legend element for continuous color style.
  * Inspiration: https://observablehq.com/@d3/color-legend
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class ColorLegend extends Legend {
 

@@ -13,7 +13,7 @@ import { LineGeometry } from "../../lib/threejs/lines/LineGeometry";
 
 /**
  * 
- * @author Julien Gaffuri, Joseph Davies
+ * @author Joseph Davies, Julien Gaffuri, Joseph Davies
  */
 export class JoyPlotStyle extends Style {
 

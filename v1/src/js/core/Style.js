@@ -7,7 +7,7 @@ import { Viewer } from './viewer/viewer';
  * 
  * @abstract
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class Style {
 

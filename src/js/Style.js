@@ -14,7 +14,7 @@ import { Legend } from "./Legend";
  * 
  * @abstract
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class Style {
 

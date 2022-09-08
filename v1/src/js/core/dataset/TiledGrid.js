@@ -10,7 +10,7 @@ import { Style } from '../Style';
 /**
  * A tiled dataset, composed of CSV tiles.
  * 
- * @author Julien Gaffuri
+ * @author Joseph Davies, Julien Gaffuri
  */
 export class TiledGrid extends Dataset {
 
