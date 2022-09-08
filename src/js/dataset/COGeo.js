@@ -3,6 +3,7 @@
 import { DatasetComponent } from "../DatasetComponent"
 
 /**
+ * @todo
  * A dataset composed of a COGeo file.
  * @see https://www.cogeo.org/
  * 

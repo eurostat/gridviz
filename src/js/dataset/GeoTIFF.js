@@ -5,6 +5,7 @@ import { Cell, Envelope } from "../Dataset"
 import { fromUrl } from "geotiff"
 
 /**
+ * @todo
  * A dataset composed of a single GeoTiff file.
  * 
  * @author Joseph Davies, Julien Gaffuri
