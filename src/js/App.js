@@ -348,9 +348,24 @@ export class App {
 
 
 
+    /**
+     * Add a layer to the app.
+     * 
+     * @param {Dataset} dataset 
+     * @param {Array.<Style>} styles 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string}} opts 
+     * @returns {this}
+     */
+     addLayerFromDataset(dataset, styles, opts) {
+        const lay = new Layer(dataset, styles, opts)
+        this.layers.push(lay)
+        return this;
+    }
+
+
+
 
     //dataset creation
-
 
     /**
      * Make a CSV grid dataset.
@@ -383,15 +398,36 @@ export class App {
         )
     }
 
+    //multi scale dataset creation
+
     /**
-     * Make a multi scale dataset from tiled CSV grid datasets.
+     * Make a multi scale CSV grid dataset.
      * 
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURL
      * @param {{preprocess?:function(Cell):void}} opts 
      * @returns {Dataset}
      */
-    makeMultiScaleTiledGridDataset(resolutions, resToURL, opts) {
+    makeMultiScaleCSVGridDataset(resolutions, resToURL, opts) {
+
+        //make dataset components
+        const dsc = []
+        for (const res of resolutions) {
+            dsc.push(new CSVGrid(resToURL(res), res, opts).getData(undefined, () => { this.cg.redraw(); }),)
+        }
+        //make dataset
+        return new Dataset(dsc, resolutions, opts)
+    }
+
+    /**
+     * Make a multi scale tiled CSV grid dataset.
+     * 
+     * @param {Array.<number>} resolutions 
+     * @param {function(number):string} resToURL
+     * @param {{preprocess?:function(Cell):void}} opts 
+     * @returns {Dataset}
+     */
+    makeMultiScaleTiledCSVGridDataset(resolutions, resToURL, opts) {
 
         //make dataset components
         const dsc = []
@@ -402,11 +438,12 @@ export class App {
                 opts)
                 .loadInfo(() => { this.cg.redraw(); }))
         }
-        //make dataset and layer
+        //make dataset
         return new Dataset(dsc, resolutions, opts)
     }
 
 
+    // direct layer creation
 
 
     /**
@@ -430,6 +467,22 @@ export class App {
         return this;
     }
 
+    /**
+     * 
+     * @param {string} urlBase 
+     * @param {Array.<number>} resolutions 
+     * @param {function(number):string} resToURLCode 
+     * @param {Array.<Style>} styles 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:function(Cell):void}} opts 
+     * @returns {this}
+     */
+    addMultiScaleTiledCSVGridLayer(urlBase, resolutions, resToURLCode, styles, opts) {
+        const ds = this.makeMultiScaleTiledCSVGridDataset(urlBase, resolutions, resToURLCode, opts)
+        return this.addLayerFromDataset(ds, styles, opts);
+    }
+
+
+
 
     /**
      * Add a layer from a GeoTIFF dataset.
@@ -452,32 +505,11 @@ export class App {
         return this;
     }*/
 
-    /**
-     * 
-     * @param {string} urlBase 
-     * @param {Array.<number>} resolutions 
-     * @param {function(number):string} resToURLCode 
-     * @param {Array.<Style>} styles 
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:function(Cell):void}} opts 
-     * @returns {this}
-     */
-    addMultiScaleTiledGridLayer(urlBase, resolutions, resToURLCode, styles, opts) {
-        const ds = this.makeMultiScaleTiledGridDataset(urlBase, resolutions, resToURLCode, opts)
-        return this.addMultiScaleTiledGridLayer2(ds, styles, opts);
-    }
 
-    /**
-     * 
-     * @param {Dataset} dataset 
-     * @param {Array.<Style>} styles 
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:function(Cell):void}} opts 
-     * @returns {this}
-     */
-    addMultiScaleTiledGridLayer2(dataset, styles, opts) {
-        const lay = new Layer(dataset, styles, opts)
-        this.layers.push(lay)
-        return this;
-    }
+
+
+
+
 
 
     /**

@@ -89,7 +89,7 @@
         const baseURL = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/"
 
         //population stats dataset
-        const indDatasetFun = year => app.makeMultiScaleTiledGridDataset(
+        const indDatasetFun = year => app.makeMultiScaleTiledCSVGridDataset(
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
             r => baseURL + "ind/" + year + "/" + r + "m/",
             {
@@ -113,7 +113,7 @@
         ds.ind["2017"] = indDatasetFun(2017)
 
         //household stats dataset
-        const menDatasetFun = year => app.makeMultiScaleTiledGridDataset(
+        const menDatasetFun = year => app.makeMultiScaleTiledCSVGridDataset(
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
             r => baseURL + "men/" + year + "/" + r + "m/",
             {
@@ -140,7 +140,7 @@
         ds.men["2017"] = menDatasetFun(2017)
 
         //housing stats dataset
-        const logDatasetFun = year => app.makeMultiScaleTiledGridDataset(
+        const logDatasetFun = year => app.makeMultiScaleTiledCSVGridDataset(
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
             r => baseURL + "log/" + year + "/" + r + "m/",
             {
@@ -174,7 +174,7 @@
             //set layer
             if (layCode === "pop") {
                 //population
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.ind[year],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -204,7 +204,7 @@
             } else if (layCode === "popAge") {
                 //population by age
                 const col = gviz.interpolateSpectral
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.ind[year],
                     [
                         new gviz.CompositionStyle({
@@ -254,7 +254,7 @@
             } else if (layCode === "popAge3") {
                 //population by age (3 age groups)
                 const col = gviz.interpolateSpectral
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.ind[year],
                     [
                         new gviz.CompositionStyle({
@@ -285,7 +285,7 @@
 
             } else if (layCode === "ageR") {
                 //young VS elderly
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.ind[year],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -311,7 +311,7 @@
 
             } else if (layCode === "income") {
                 //income
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.ind[year],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -337,7 +337,7 @@
 
             } else if (layCode === "poverty") {
                 //poverty
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -366,7 +366,7 @@
 
             } else if (layCode === "men_size") {
                 //houshold size
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.men[year],
                     [
                         new gviz.CompositionStyle({
@@ -397,7 +397,7 @@
 
             } else if (layCode === "men_mono") {
                 //single-parent
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -423,7 +423,7 @@
 
             } else if (layCode === "men_owner") {
                 //owners
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -449,7 +449,7 @@
 
             } else if (layCode === "men_house_surf") {
                 //housing surface per houshold
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.men[year],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -475,7 +475,7 @@
 
             } else if (layCode === "men_house_collective") {
                 //housing type: house/collective
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.men[year],
                     [
                         new gviz.CompositionStyle({
@@ -505,7 +505,7 @@
             } else if (layCode === "log_age") {
                 //housing age
                 const col = gviz.interpolateViridis
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.log[year],
                     [
                         new gviz.CompositionStyle({
@@ -541,7 +541,7 @@
 
             } else if (layCode === "log_soc_nb") {
                 //social housing
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.log[year],
                     [
                         new gviz.CompositionStyle({
@@ -569,7 +569,7 @@
 
             } else if (layCode === "log_soc_per") {
                 //social housing percentage
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.log[year],
                     [
                         new gviz.SquareColorWGLStyle({

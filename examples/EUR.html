@@ -68,7 +68,7 @@
         const ds = {}
 
         //population dataset
-        ds.pop = app.makeMultiScaleTiledGridDataset(
+        ds.pop = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
             {
@@ -89,7 +89,7 @@
         )
 
         //accessibility dataset
-        ds.acc = app.makeMultiScaleTiledGridDataset(
+        ds.acc = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/" + r + "m/",
         )
@@ -106,7 +106,7 @@
 
             //select layer and style
             if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.pop,
                     [
                         new gviz.SquareColorWGLStyle({
@@ -125,7 +125,7 @@
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 5, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) }))
 
             } else if (layCode === "d06_11" || layCode === "d11_18") {
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.pop,
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -165,7 +165,7 @@
 
             } else if (layCode === "accHealth") {
                 const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.acc,
                     [
                         new gviz.SquareColorWGLStyle({
@@ -201,7 +201,7 @@
 
             } else if (layCode === "accEducPrim") {
                 const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
-                app.addMultiScaleTiledGridLayer2(
+                app.addLayerFromDataset(
                     ds.acc,
                     [
                         new gviz.SquareColorWGLStyle({
