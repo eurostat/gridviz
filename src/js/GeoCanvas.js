@@ -289,9 +289,9 @@ export class GeoCanvas {
 
     /** Get x,y,z elements from URL and assign them to the view center and zoom level. */
     setViewFromURL() {
-        const x = getParameterByName("x"),
-            y = getParameterByName("y"),
-            z = getParameterByName("z")
+        const x = GeoCanvas.getParameterByName("x"),
+            y = GeoCanvas.getParameterByName("y"),
+            z = GeoCanvas.getParameterByName("z")
         const c = this.getCenter();
         if (x != null && x != undefined && !isNaN(+x)) c.x = +x;
         if (y != null && y != undefined && !isNaN(+y)) c.y = +y;
@@ -376,15 +376,18 @@ export class GeoCanvas {
         return this
     }
 
-}
 
-/**
- * @param {string} name
- * @returns {string | null}
- */
-const getParameterByName = function (name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return !results ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
-};
+    /**
+     * Get a URL parameter by name.
+     * 
+     * @param {string} name
+     * @returns {string | null}
+     */
+    static getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return !results ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
+    };
+
+}
