@@ -1,5 +1,5 @@
 new readme: minimum version. skeleton, with link to V1 documentation
-create style examples
+restructure examples: create style examples. make test folder ?
 
 
 check:

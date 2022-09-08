@@ -6,61 +6,24 @@
 ![npm](https://img.shields.io/npm/v/gridviz)
 ![license](https://img.shields.io/badge/license-EUPL-success)
 
-A JavaScript library for visualising gridded data with advanced cartographic techniques.
+Gridviz is a JavaScript library to visualise gridded data (or any tabular dataset with x/y position) in the browser in a large variety of advanced cartographic styles. Unlike traditional raster-based web mapping tools, this tool renders eveything client-side on the fly.
 
-[//]: # "
 <div>
-  <a href="https://eurostat.github.io/gridviz/examples/europe/tiled/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/color.png" alt="preview" width="200px" height="200px"/></a>
-  <a href="https://eurostat.github.io/gridviz/examples/europe/joyplot/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/joyplot.png" alt="preview" width="200px" height="200px"/></a>
-    <a href="https://eurostat.github.io/gridviz/examples/europe/size/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/size.png" alt="preview" width="200px" height="200px"/></a>
-  <a href="https://eurostat.github.io/gridviz/examples/netherlands/index.html" target="_blank"><img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/nl.png" alt="preview" width="200px" height="200px"/></a>
+  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/color.png" alt="preview" width="200px" height="200px"/>
+  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/joyplot.png" alt="preview" width="200px" height="200px"/>
+  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/size.png" alt="preview" width="200px" height="200px"/>
+  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/nl.png" alt="preview" width="200px" height="200px"/>
 </div>
-"
 
-<hr>
+## Documentation of version 1
 
-## Table of contents
-
-- [gridviz](#gridviz)
-  - [Table of contents](#table-of-contents)
-  - [Introduction](#introduction)
-  - [Examples](#examples)
-  - [Installation](#installation)
-    - [Node.js](#nodejs)
-    - [standalone](#standalone)
-  - [Usage](#usage)
-  - [Preparing csv data](#preparing-csv-data)
-  - [API reference](#api-reference)
-    - [Contents](#contents)
-    - [App Configuration](#app-configuration)
-    - [Adding data](#adding-data)
-      - [NUTS](#nuts)
-      - [Placenames](#placenames)
-      - [Projection](#projection)
-    - [Styles](#styles)
-      - [ColorSizeShapeStyle](#colorsizeshapestyle)
-      - [JoyPlotStyle](#joyplotstyle)
-    - [Tooltip](#tooltip)
-    - [Legend](#legend)
-  - [About](#about)
-  - [Support and contribution](#support-and-contribution)
-  - [Copyright](#copyright)
-  - [Disclaimer](#disclaimer)
-
-<hr>
-
-## Introduction
-
-Gridviz is a JavaScript library to visualise gridded datasets (or any tabular dataset with x/y position) in the browser in a large variety of advanced cartographic styles. Unlike traditional raster-based web mapping tools, this tool renders eveything client-side on the fly.
+See [there](v1/readme.md).
 
 ## Examples
 
-| Link to example                                                                                                                     | Data source                                                                                                                              | Link to code                                                                                 |
-| :---------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| [Multi-resolution population density of Europe](https://eurostat.github.io/gridviz/examples/europe/tiled/index.html)                                   | [data source](https://ec.europa.eu/eurostat/web/gisco)                                                                                   | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/tiled/index.html) |
-| [Netherlands - 100x100m census data](https://eurostat.github.io/gridviz/examples/netherlands/index.html)                            | [data source](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken) | [See code](https://github.com/eurostat/gridviz/blob/master/examples/netherlands/index.html)  |
-| [France - 1x1km population grid](https://eurostat.github.io/gridviz/examples/france/index.html)                                     | [data source](https://insee.fr/fr/statistiques/4176290?sommaire=4176305)                                                                 | [See code](https://github.com/eurostat/gridviz/blob/master/examples/france/1km/index.html)   |
-| [Average internet speed 2020 (ookla open data, 400x400m grid)](https://eurostat.github.io/gridviz/examples/europe/ookla/index.html) | [data source](https://github.com/teamookla/ookla-open-data)                                                                              | [See code](https://github.com/eurostat/gridviz/blob/master/examples/europe/ookla/index.html) |
+See [there](examples/README.md).
+
+TODO
 
 ## Installation
 
