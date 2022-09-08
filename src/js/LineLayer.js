@@ -16,27 +16,36 @@ export class LineLayer {
         opts = opts || {};
 
         /** 
-         * @private @type {string} */
+         * @private
+         * @type {string} */
         this.url = url
 
         /** 
-         * @private @type {function(object):void} */
+         * @private
+         * @type {function(object):void} */
         this.preprocess = opts.preprocess
 
         /** 
-         * @private @type {function(object,number):string} */
+         * @private
+         * @type {function(object,number):string} */
         this.color = opts.color || ((f, zf) => "gray")
         /** 
-         * @private @type {function(object,number):number} */
+         * @private
+         * @type {function(object,number):number} */
         this.width = opts.width || ((f, zf) => 2)
         /** 
-         * @private @type {function(object,number):Array.<number>|undefined} */
+         * @private
+         * @type {function(object,number):Array.<number>|undefined} */
         this.lineDash = opts.lineDash || ((f, zf) => undefined)
 
-        /** @private @type {Array.<object> | undefined} */
+        /** 
+         * @private
+         * @type {Array.<object> | undefined} */
         this.fs
 
-        /** @private @type {string} */
+        /** 
+         * @private
+         * @type {string} */
         this.loadingStatus = "notLoaded"
     }
 

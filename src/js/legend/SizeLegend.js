@@ -21,7 +21,9 @@ export class SizeLegend extends Legend {
         this.exaggerationFactor = opts.exaggerationFactor || 0.8
 
         //symbol
-        /** @private @type {Shape} */
+        /** 
+         * @private
+         * @type {Shape} */
         this.shape = opts.shape || "circle"
         this.fillColor = opts.fillColor || "none"
         this.strokeColor = opts.strokeColor || "gray"

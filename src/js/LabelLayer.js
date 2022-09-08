@@ -26,44 +26,56 @@ export class LabelLayer {
          * The URL of the label data, as CSV file.
          * The file should contain the information for each label such as the text, the position and other information for the display of the label according to the zoom level.
          * If necessary, this data can be reformated with the 'preprocess' parameter.
-         * @private @type {string} */
+         * @private
+         * @type {string} */
         this.url = opts.url
 
         /** Specify if and how a label should be drawn, depending on its importance and the zoom level.
-         * @private @type {function(Label,number):string} */
+         * @private
+         * @type {function(Label,number):string} */
         this.style = opts.style || (() => "bold 1em Arial")
 
         /** Specify the label color, depending on its importance and the zoom level.
-         * @private @type {function(Label,number):string} */
+         * @private
+         * @type {function(Label,number):string} */
         this.color = opts.color || (opts.dark ? () => "#ddd" : () => "#222")
 
         /** Specify the label halo color, depending on its importance and the zoom level.
-         * @private @type {function(Label,number):string} */
+         * @private
+         * @type {function(Label,number):string} */
         this.haloColor = opts.haloColor || (opts.dark ? () => "#000000BB" : () => "#FFFFFFBB")
 
         /** Specify the label halo width, depending on its importance and the zoom level.
-        * @private @type {function(Label,number):number} */
+        * @private
+        * @type {function(Label,number):number} */
         this.haloWidth = opts.haloWidth || (() => 4)
 
         /** The anchor where to draw the text, from label position. See HTML-canvas textAlign property.
          * "left" || "right" || "center" || "start" || "end"
-         * @private @type {CanvasTextAlign} */
+         * @private
+         * @type {CanvasTextAlign} */
         this.textAlign = opts.textAlign || "start"
 
         /**
-        * @private @type {Array.<number>} */
+        * @private
+        * @type {Array.<number>} */
         this.offsetPix = opts.offsetPix || [5, 5]
 
         /** 
          * A preprocess to run on each label after loading.
          * It can be used to apply some specific treatment before, format the label data, project coordinates, etc.
-         * @private @type {function(object):void} */
+         * @private
+         * @type {function(object):void} */
         this.preprocess = opts.preprocess
 
-        /** @private @type {Array.<Label> | undefined} */
+        /** 
+         * @private
+         * @type {Array.<Label> | undefined} */
         this.labels
 
-        /** @private @type {string} */
+        /** 
+         * @private
+         * @type {string} */
         this.loadingStatus = "notLoaded"
     }
 

@@ -19,7 +19,9 @@ export class GeoTIFF extends DatasetComponent {
     constructor(url, resolution, opts = {}) {
         super(url, resolution, opts)
 
-        /** @private @type {Array.<Cell>} */
+        /**
+         * @private
+         * @type {Array.<Cell>} */
         this.cells = [];
 
         /**  @type {string} @private  */

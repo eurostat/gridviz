@@ -17,10 +17,14 @@ export class ColorCategoryLegend extends Legend {
         opts = opts || {};
 
         //col/categories array, in display order
-        /** @private @type {Array.<Array.<string>>} */
+        /** 
+         * @private
+         * @type {Array.<Array.<string>>} */
         this.colCat = opts.colCat || [["gray", "-"]]
 
-        /** @private @type {Shape} */
+        /** 
+         * @private
+         * @type {Shape} */
         this.shape = opts.shape || "circle"
         this.dimension = opts.dimension || { r: 8 }
         this.strokeColor = opts.strokeColor || "gray"

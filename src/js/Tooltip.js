@@ -42,7 +42,9 @@ export class Tooltip {
 		this.yOffset = opts.yOffset || 20;
 
 
-		/** @private @type {Selection} */
+		/** 
+		 * @private
+		 * @type {Selection} */
 		this.tooltip = select("#" + this.div);
 		if (this.tooltip.empty())
 			this.tooltip = select("body").append("div").attr("id", this.div);
