@@ -500,35 +500,6 @@ export class App {
 
 
 
-
-    /**
-     * Add a layer from a GeoTIFF dataset.
-     * 
-     * @param {string} url The URL of the dataset.
-     * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {Array.<Style>} styles The styles, ordered in drawing order.
-     * @param {object=} opts The parameters of the dataset and layer.
-     * @returns {this}
-     */
-    /*addGeoTIFFLayer(url, resolution, styles, opts) {
-
-        //make dataset
-        const ds = new GeoTIFF(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); });
-        const dataset = new Dataset([ds], [], opts)
-
-        //make layer
-        const lay = new Layer(dataset, styles, opts)
-        this.layers.push(lay)
-        return this;
-    }*/
-
-
-
-
-
-
-
-
     /**
      * 
      * @param {string} id 
