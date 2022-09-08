@@ -349,6 +349,64 @@ export class App {
 
 
 
+    //dataset creation
+
+
+    /**
+     * Make a CSV grid dataset.
+     * 
+     * @param {string} url The URL of the dataset.
+     * @param {number} resolution The dataset resolution in geographical unit.
+     * @param {object=} opts The parameters of the dataset.
+     * @returns {Dataset}
+     */
+    makeCSVGridDataset(url, resolution, opts) {
+        return new Dataset(
+            [new CSVGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); })],
+            [],
+            opts
+        )
+    }
+
+    /**
+     * Make a tiled CSV grid dataset.
+     * 
+     * @param {string} url 
+     * @param {{preprocess?:function(Cell):void}} opts 
+     * @returns {Dataset}
+     */
+    makeTiledGridDataset(url, opts) {
+        return new Dataset(
+            [new TiledGrid(url, this, opts)],
+            [],
+            opts
+        )
+    }
+
+    /**
+     * Make a multi scale dataset from tiled CSV grid datasets.
+     * 
+     * @param {Array.<number>} resolutions 
+     * @param {function(number):string} resToURL
+     * @param {{preprocess?:function(Cell):void}} opts 
+     * @returns {Dataset}
+     */
+    makeMultiScaleTiledGridDataset(resolutions, resToURL, opts) {
+
+        //make dataset components
+        const dsc = []
+        for (const res of resolutions) {
+            dsc.push(new TiledGrid(
+                resToURL(res),
+                this,
+                opts)
+                .loadInfo(() => { this.cg.redraw(); }))
+        }
+        //make dataset and layer
+        return new Dataset(dsc, resolutions, opts)
+    }
+
+
 
 
     /**
@@ -393,29 +451,6 @@ export class App {
         this.layers.push(lay)
         return this;
     }*/
-
-    /**
-     * 
-     * @param {string} urlBase 
-     * @param {Array.<number>} resolutions 
-     * @param {function(number):string} resToURLCode 
-     * @param {{preprocess?:function(Cell):void}} opts 
-     * @returns {Dataset}
-     */
-    makeMultiScaleTiledGridDataset(urlBase, resolutions, resToURLCode, opts) {
-
-        //make dataset components
-        const dsc = []
-        for (const res of resolutions) {
-            dsc.push(new TiledGrid(
-                urlBase + resToURLCode(res),
-                this,
-                opts)
-                .loadInfo(() => { this.cg.redraw(); }))
-        }
-        //make dataset and layer
-        return new Dataset(dsc, resolutions, opts)
-    }
 
     /**
      * 

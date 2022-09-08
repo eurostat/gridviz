@@ -69,9 +69,8 @@
 
         //population dataset
         ds.pop = app.makeMultiScaleTiledGridDataset(
-            //"https://gisco-services.ec.europa.eu/pub/gridviztest/grid_pop_tiled/",
-            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/",
-            [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => Math.round(r / 1000) + "km/",
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
             {
                 preprocess: c => {
                     //prepare 2011 -> 2018 change data
@@ -91,9 +90,8 @@
 
         //accessibility dataset
         ds.acc = app.makeMultiScaleTiledGridDataset(
-            //"https://gisco-services.ec.europa.eu/pub/gridviztest/accessibility/tiled/",
-            "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/",
-            [1000, 2000, 5000, 10000, 20000, 50000, 100000], r => r + "m/"
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/" + r + "m/",
         )
 
 
