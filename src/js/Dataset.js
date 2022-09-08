@@ -22,7 +22,7 @@ export class Dataset {
     /**
      * @param {Array.<DatasetComponent>} datasetComponents The dataset components
      * @param {Array.<number>} resolutions The resolutions of the dataset components, in CRS geographical unit
-     * @param { {preprocess:function(Cell):void} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values
+     * @param { {preprocess?:function(Cell):void} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values
      */
     constructor(datasetComponents, resolutions, opts = {}) {
         opts = opts || {};

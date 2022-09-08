@@ -13,7 +13,7 @@ export class DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution, in the CRS geographical unit.
-     * @param {{preprocess:(function(Cell):void)}} opts 
+     * @param {{preprocess:function(Cell):void}} opts 
      * @abstract
      */
     constructor(url, resolution, opts = {}) {
