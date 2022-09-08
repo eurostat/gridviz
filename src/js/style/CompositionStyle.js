@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics } from "../Style"
+import { Style, Stat } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
@@ -86,7 +86,7 @@ export class CompositionStyle extends Style {
             //if size is used, sort cells by size so that the biggest are drawn first
             cells.sort((c1, c2) => c2[this.sizeCol] - c1[this.sizeCol]);
             //and compute statistics
-            stat = getStatistics(cells, c => c[this.sizeCol], true)
+            stat = Style.getStatistics(cells, c => c[this.sizeCol], true)
         }
 
         //nb categories - used for radar and agepyramid

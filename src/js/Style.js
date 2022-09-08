@@ -84,33 +84,33 @@ export class Style {
         return this
     }
 
-}
 
 
-
-/**
- * Compute some statistics on a value of some cells.
- * This is used to define how to draw specifically the cells within the view.
- * TODO: compute median ?
- * 
- * @param {Array.<Cell>} cells 
- * @param {function(Cell):number} valFun 
- * @param {boolean} ignoreZeros 
- * @returns {Stat | undefined}
- */
-export const getStatistics = function (cells, valFun, ignoreZeros) {
-    if (!cells || cells.length == 0) return undefined
-    let min = Infinity
-    let max = -Infinity
-    //let sum = 0
-    //let nb = 0
-    for (const cell of cells) {
-        const v = +valFun(cell);
-        if (ignoreZeros && !v) continue
-        if (v < min) min = v
-        if (v > max) max = v
-        //sum += v
-        //nb++
+    /**
+     * Compute some statistics on a value of some cells.
+     * This is used to define how to draw specifically the cells within the view.
+     * TODO: compute median ?
+     * 
+     * @param {Array.<Cell>} cells 
+     * @param {function(Cell):number} valFun 
+     * @param {boolean} ignoreZeros 
+     * @returns {Stat | undefined}
+     */
+    static getStatistics(cells, valFun, ignoreZeros) {
+        if (!cells || cells.length == 0) return undefined
+        let min = Infinity
+        let max = -Infinity
+        //let sum = 0
+        //let nb = 0
+        for (const cell of cells) {
+            const v = +valFun(cell);
+            if (ignoreZeros && !v) continue
+            if (v < min) min = v
+            if (v > max) max = v
+            //sum += v
+            //nb++
+        }
+        return { min: min, max: max, }
     }
-    return { min: min, max: max, }
+
 }

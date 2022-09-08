@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics } from "../Style"
+import { Style, Stat } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
@@ -75,13 +75,13 @@ export class TextStyle extends Style {
         let statText
         if (this.textCol) {
             //compute text variable statistics
-            statText = getStatistics(cells, c => c[this.textCol], true)
+            statText = Style.getStatistics(cells, c => c[this.textCol], true)
         }
 
         let statColor
         if (this.colorCol) {
             //compute color variable statistics
-            statColor = getStatistics(cells, c => c[this.colorCol], true)
+            statColor = Style.getStatistics(cells, c => c[this.colorCol], true)
         }
 
         let statFontSize
@@ -89,7 +89,7 @@ export class TextStyle extends Style {
             //if size is used, sort cells by size so that the biggest are drawn first
             cells.sort((c1, c2) => c2[this.fontSizeCol] - c1[this.fontSizeCol]);
             //and compute size variable statistics
-            statFontSize = getStatistics(cells, c => c[this.fontSizeCol], true)
+            statFontSize = Style.getStatistics(cells, c => c[this.fontSizeCol], true)
         }
 
         for (let cell of cells) {

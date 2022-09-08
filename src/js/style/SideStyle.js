@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics } from "../Style"
+import { Style, Stat } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
@@ -68,7 +68,7 @@ export class SideStyle extends Style {
         let statValue
         if (this.valueCol) {
             //compute color variable statistics
-            statValue = getStatistics(cells, c => c[this.valueCol], true)
+            statValue = Style.getStatistics(cells, c => c[this.valueCol], true)
         }
 
         /**  @type {Array.<Side>} */

@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics } from "../Style"
+import { Style, Stat } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
@@ -52,7 +52,7 @@ export class JoyPlotStyle extends Style {
         const zf = cg.getZf()
 
         //compute statistics
-        const stat = getStatistics(cells, c => c[this.heightCol], true)
+        const stat = Style.getStatistics(cells, c => c[this.heightCol], true)
 
         //index cells by y and x
         /**  @type {object} */

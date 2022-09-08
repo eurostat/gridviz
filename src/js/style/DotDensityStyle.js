@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics } from "../Style"
+import { Style, Stat } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 import { randomNormal } from "d3-random"
@@ -61,7 +61,7 @@ export class DotDensityStyle extends Style {
         const zf = cg.getZf()
 
         let stat
-        if (this.col) stat = getStatistics(cells, c => c[this.col], true)
+        if (this.col) stat = Style.getStatistics(cells, c => c[this.col], true)
         if (!stat) return
 
         //size of the dots

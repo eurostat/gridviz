@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics, Shape } from "../Style"
+import { Style, Stat, Shape } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
 import { Cell } from "../Dataset";
 
@@ -60,13 +60,13 @@ export class ShapeColorSizeStyle extends Style {
             //if size is used, sort cells by size so that the biggest are drawn first
             cells.sort((c1, c2) => c2[this.sizeCol] - c1[this.sizeCol]);
             //and compute size variable statistics
-            statSize = getStatistics(cells, c => c[this.sizeCol], true)
+            statSize = Style.getStatistics(cells, c => c[this.sizeCol], true)
         }
 
         let statColor
         if (this.colorCol) {
             //compute color variable statistics
-            statColor = getStatistics(cells, c => c[this.colorCol], true)
+            statColor = Style.getStatistics(cells, c => c[this.colorCol], true)
         }
 
         //draw with HTML canvas

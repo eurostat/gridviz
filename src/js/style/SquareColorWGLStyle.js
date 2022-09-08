@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics, Shape } from "../Style"
+import { Style, Stat, Shape } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
@@ -64,7 +64,7 @@ export class SquareColorWGLStyle extends Style {
         const zf = cg.getZf()
 
         //compute color variable statistics
-        const statColor = getStatistics(cells, c => c[this.colorCol], true)
+        const statColor = Style.getStatistics(cells, c => c[this.colorCol], true)
         if (monitor) monitorDuration("   color stats computation")
 
         if (!statColor) return

@@ -1,5 +1,5 @@
 //@ts-check
-import { Style, Stat, getStatistics } from "../Style"
+import { Style, Stat } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
 import { Cell } from "../Dataset";
 
@@ -55,7 +55,7 @@ export class MosaicStyle extends Style {
         let statColor
         if (this.colorCol) {
             //compute color variable statistics
-            statColor = getStatistics(cells, c => c[this.colorCol], true)
+            statColor = Style.getStatistics(cells, c => c[this.colorCol], true)
         }
 
         //set stroke style, for shadow

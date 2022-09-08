@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics } from "../Style"
+import { Style, Stat } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
@@ -64,7 +64,7 @@ export class SegmentStyle extends Style {
         let statColor
         if (this.colorCol) {
             //compute color variable statistics
-            statColor = getStatistics(cells, c => c[this.colorCol], true)
+            statColor = Style.getStatistics(cells, c => c[this.colorCol], true)
         }
 
         let statLength
@@ -72,13 +72,13 @@ export class SegmentStyle extends Style {
             //if length is used, sort cells by length so that the longests are drawn first
             cells.sort((c1, c2) => c2[this.lengthCol] - c1[this.lengthCol]);
             //and compute size variable statistics
-            statLength = getStatistics(cells, c => c[this.lengthCol], true)
+            statLength = Style.getStatistics(cells, c => c[this.lengthCol], true)
         }
 
         let statWidth
         if (this.widthCol) {
             //and compute size variable statistics
-            statWidth = getStatistics(cells, c => c[this.widthCol], true)
+            statWidth = Style.getStatistics(cells, c => c[this.widthCol], true)
         }
 
         //

@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics } from "../Style"
+import { Style, Stat } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
@@ -70,19 +70,19 @@ export class PillarStyle extends Style {
         let statHeight
         if (this.heightCol) {
             //compute size variable statistics
-            statHeight = getStatistics(cells, c => c[this.heightCol], true)
+            statHeight = Style.getStatistics(cells, c => c[this.heightCol], true)
         }
 
         let statColor
         if (this.colorCol) {
             //compute color variable statistics
-            statColor = getStatistics(cells, c => c[this.colorCol], true)
+            statColor = Style.getStatistics(cells, c => c[this.colorCol], true)
         }
 
         let statWidth
         if (this.widthCol) {
             //and compute size variable statistics
-            statWidth = getStatistics(cells, c => c[this.widthCol], true)
+            statWidth = Style.getStatistics(cells, c => c[this.widthCol], true)
         }
 
         //get view center geo position

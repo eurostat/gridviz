@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics, Shape } from "../Style"
+import { Style, Stat, Shape } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
@@ -70,15 +70,15 @@ export class StrokeStyle extends Style {
 
         let statColor
         if (this.strokeColorCol)
-            statColor = getStatistics(cells, c => c[this.strokeColorCol], true)
+            statColor = Style.getStatistics(cells, c => c[this.strokeColorCol], true)
 
         let statSize
         if (this.sizeCol)
-            statSize = getStatistics(cells, c => c[this.sizeCol], true)
+            statSize = Style.getStatistics(cells, c => c[this.sizeCol], true)
 
         let statWidth
         if (this.strokeWidthCol)
-            statWidth = getStatistics(cells, c => c[this.strokeWidthCol], true)
+            statWidth = Style.getStatistics(cells, c => c[this.strokeWidthCol], true)
 
         //draw with HTML canvas
         //in geo coordinates
