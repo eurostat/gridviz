@@ -1,7 +1,6 @@
 //@ts-check
 
 import { DatasetComponent } from "../DatasetComponent"
-import { Cell } from "../Dataset"
 
 /**
  * A dataset composed of a COGeo file.
@@ -9,12 +8,12 @@ import { Cell } from "../Dataset"
  * 
  * @author Julien Gaffuri
  */
-export class GeoTiff extends DatasetComponent {
+export class COGeo extends DatasetComponent {
 
     /**
      * 
      * @param {String} url 
-     * @param {{preprocess?:(function(Cell):void)}} opts 
+     * @param {{preprocess?:(function(import("../Dataset").Cell):void)}} opts 
      */
     constructor(url, opts = {}) {
         super(url, 0, opts)
