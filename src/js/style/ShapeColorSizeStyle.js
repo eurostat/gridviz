@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat, getStatistics } from "../Style"
+import { Style, Stat, getStatistics, Shape } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
 import { Cell } from "../Dataset";
 
@@ -130,14 +130,14 @@ export class ShapeColorSizeStyle extends Style {
 
     //getters and setters
 
-    /** @returns {function(number,number,.Stat):string} */
+    /** @returns {function(number,number,Stat):string} */
     getColor() { return this.color; }
-    /** @param {function(number,number,.Stat|undefined):string} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
-    /** @returns {function(number,number,.Stat,number):number} */
+    /** @returns {function(number,number,Stat,number):number} */
     getSize() { return this.size; }
-    /** @param {function(number,number,.Stat|undefined,number):number} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
     /** @returns {function(Cell):Shape} */

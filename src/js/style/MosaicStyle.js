@@ -132,9 +132,9 @@ export class MosaicStyle extends Style {
 
     //getters and setters
 
-    /** @returns {function(number,number,.Stat):string} */
+    /** @returns {function(number,number,Stat):string} */
     getColor() { return this.color; }
-    /** @param {function(number,number,.Stat|undefined):string} val @returns {this} */
+    /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
 }
