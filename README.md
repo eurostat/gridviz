@@ -47,26 +47,19 @@ gridviz = require("gridviz");
 
 ## Usage
 
-Create a gridviz App using `let viewer = new gridviz.App();` and customise it with the methods described in the [API reference](#api-reference) below.
-
-Most of these methods follow the pattern app.myMethod([value]): If a value is specified, the method sets the parameter value and returns the viewer object itself. If no value is specified, then the method returns the current value of the parameter.
+Create a gridviz App using `let app = new gviz.App();` and customise it with the methods described in the documentation below.
 
 Here's a barebones example that loads a CSV file containing population data for a 5x5 km grid of europe:
 
 ```javascript
-let app = new gridviz.App().container(containerDiv).geoCenter([4500, 3000]).zoom(4000).build();
-
-app.addCSVGrid({
-  url: "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_5km_zeros_removed.csv",
-  resolution: 5,
-  minZoom: 500,
-  maxZoom: 999999999,
-});
+let app = new gviz.App(containerDiv);
+//...
+//TODO
 ```
 
-For an explanation of all the available functionality, see the developer docs below.
-
 ## Preparing csv data
+
+TODO: move somewhere else
 
 If you have exported your grid data as points to a csv file, then it is likely that you can reduce the file size significantly by removing redundant data. We have prepared a small node.js package exactly for this, which you will find in the [csv-prep folder](https://github.com/eurostat/gridviz/tree/master/csv-prep) of this repository.
 
@@ -88,76 +81,33 @@ x,y,time
 
 ## API reference
 
-Here you will find information on how to use the functions available for configuring a gridviz app. Like D3, gridviz uses a method chaining syntax (as shown in the barebones example above).
-
-First create a viewer with `let viewer = new gridviz.App() `.
-
-Then configure it using the methods in the table below. The methods follow the pattern: `App.method([value])`.
-
-Once you have configured the viewer, you can build it using `App.build()`.
-
 ### Contents
 
 - [App configuration](#app-configuration)
 - [Adding data](#adding-data)
 - [Styles](#styles)
-- [Tooltip](#tooltip)
+
+TODO: add sections for foreground: boundaries and placenames.
 
 ### App Configuration
 
-The following methods can be used to set the position of the viewer's [camera](https://threejs.org/docs/#api/en/cameras/PerspectiveCamera).
+TODO
 
 | Method                          | Type   | Default              | Description                                                     |
 | ------------------------------- | ------ | -------------------- | --------------------------------------------------------------- |
-| _app_.**geoCenter**([value]) | Array  | null                 | [x,y] coordinates with which the viewer will center the camera. |
-| _app_.**zoom**([value])      | Number | uses grid resolution | The Z position of the viewer's camera.                          |
+| _app_.**methodName**([value]) | Array  | null                 |  |
 
-
-These are the methods available for styling the app.
-
-| Method                                | Type        | Default            | Description                                                                                       |
-| ------------------------------------- | ----------- | ------------------ | ------------------------------------------------------------------------------------------------- |
-| _app_.**container**([value])       | HTMLElement | document.body      | The DOM element passed to the THREE.js renderer that will act as the viewer's container.          |
-| _app_.**height**([value])          | int         | window.innerHeight | The height value used for the threejs scene, camera, zoom, labels.                                |
-| _app_.**width**([value])           | int         | window.innerWidth  | The width value used for the threejs scene, camera, zoom, labels.                                 |
-| _app_.**backgroundColor**([value]) | String      | "#b7b7b7"          | Viewer background colour.                                                                         |
-| _app_.**highlightColor**([value])  | String      | "#37f2d6"          | Colour used when highlighting a cell.                                                             |
-| _app_.**loadingIcon**([value])     | String      | "ring"             | CSS animation used for the loading icon, options are: ripple \| ring \| ellipsis \|roller.        |
-| _app_.**homeButton**([value])      | Boolean     | false              | Whether or not to show a 'home' button which, when clicked will show the initial viewer position. |
-| _app_.**zoomButtons**([value])     | Boolean     | false              | Whether or not to show 'zoom' buttons which, when clicked will zoom in or out.                    |
-| _app_.**title**([value])           | String      | null               | The viewer's title.                                                                               |
-| _app_.**subtitle**([value])        | String      | null               | The viewer's subtitle.                                                                            |
-| _app_.**cellCount**([value])       | Boolean     | false              | Shows a count below the title of the total number of cells displayed in the app.                  |
-| _app_.**sourceHTML**([value])      | HTML        | null               | Defines the innerHTML of the link to the data source shown in the bottom-right corner.            |
-
-<br>
 
 ### Adding data
 
-These methods allow you to define the data that is added to the viewer and how it is presented.
 
-| Method                             | Type                                                                                                                               | Default | Description                                                                                                                                    |
-| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| _app_.**addCSVGrid**([value])   | Object {url:string, resolution: Number, minZoom: Number, maxZoom: Number, styles?: Array[\<Style\>](#styles), preprocess: Function | null    | Object containing the configuration for the CSV gri.                                                                                           |
-| _app_.**addTiledGrid**([value]) | Object {url:string, minZoom: Number, maxZoom: Number, styles?: Array[\<Style\>](#styles), preprocess: Function                     | null    | Object containing the configuration for the Tiled grid.                                                                                        |
-| _app_.**addGeoJson**([value])   | String                                                                                                                             | null    | Loads a geojson file from the specified URL and adds it's geometries to the app. Currently only accepts "polygon" or "multipolygon" geometries |
+TODO
 
-#### NUTS
+| Method                          | Type   | Default              | Description                                                     |
+| ------------------------------- | ------ | -------------------- | --------------------------------------------------------------- |
+| _app_.**methodName**([value]) | Array  | null                 |  |
 
-| Method                                   | Type    | Default | Description                                                                                               |
-| ---------------------------------------- | ------- | ------- | --------------------------------------------------------------------------------------------------------- |
-| _app_.**nuts**([value])               | Boolean | false   | Show NUTS boundaries using [nuts2json](https://github.com/eurostat/nuts2json)                             |
-| _app_.**nutsLevel**([value])          | int     | 0       | Nuts2json NUTS level                                                                                      |
-| _app_.**nutsSimplification**([value]) | String  | "20M"   | The level of generalisation applied to the Nuts2json geometries                                           |
-| _app_.**nutsCountry**([value])        | String  | null    | Filters nuts2json geometries by country code. Used in order to only load boundaries for a single country. |
 
-#### Placenames
-
-| Method                                     | Type    | Default | Description                                                                                                                                                                       |
-| ------------------------------------------ | ------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| _app_.**showPlacenames**([value])       | Boolean | false   | Adds placenames to the app. Placename-scale thresholds currently defined by the user.                                                                                             |
-| _app_.**placenamesCountry**([value])    | String  | null    | Filters placenames by country code                                                                                                                                                |
-| _app_.**placenamesThresholds**([value]) | Object  | null    | Defines population query parameter at certain scale thresholds e.g. {"10000":500} will show names of places with populations of over 5000 inhabitants at zoom levels up to 10 000 |
 
 #### Projection
 
