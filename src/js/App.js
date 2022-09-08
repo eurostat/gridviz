@@ -215,9 +215,8 @@ export class App {
         }
         container.addEventListener("mouseover", e => { focusCell(e) });
         container.addEventListener("mousemove", e => { focusCell(e) });
-        container.addEventListener("mouseout", () => { this.tooltip.hide(); /*this.canvasSave = null;*/ });
+        container.addEventListener("mouseout", () => { this.tooltip.hide(); });
         this.cg.onZoomStartFun = () => { this.tooltip.hide(); }
-        //this.cg.onZoomEndFun = () => { this.tooltip.hide(); }
 
         //for mouse over
         /**
@@ -372,6 +371,7 @@ export class App {
         this.layers.push(lay)
         return this;
     }
+
 
     /**
      * Add a layer from a GeoTIFF dataset.
