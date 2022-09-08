@@ -28,7 +28,7 @@ export class KernelSmoothingStyle extends Style {
         this.value = opts.value
 
         /** The smoothing parameter, in geo unit. The larger, the more smoothed.
-         * @type {function(number|number):number}
+         * @type {function(number,number):number}
          * @private */
         this.sigma = opts.sigma // (r, zf)=>...
 

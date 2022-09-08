@@ -1,5 +1,5 @@
 //@ts-check
-import { Style, getStatistics } from "../Style"
+import { Style, Stat, getStatistics } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
 
 /**
@@ -19,7 +19,7 @@ export class MosaicStyle extends Style {
 
         /** A function returning the color of the cell.
         * @protected
-        * @type {function(number,number,import("../Style").Stat|undefined):string} */
+        * @type {function(number,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
 

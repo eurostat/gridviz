@@ -1,7 +1,8 @@
 //@ts-check
 
-import { Style, getStatistics } from "../Style"
+import { Style, Stat, getStatistics } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
+import { Cell } from "../Dataset";
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -23,7 +24,7 @@ export class ShapeColorSizeStyle extends Style {
 
         /** A function returning the color of the cell.
         * @protected
-        * @type {function(number,number,import("../Style").Stat|undefined):string} */
+        * @type {function(number,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC"); //(v,r,s) => {}
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for size.
@@ -33,12 +34,12 @@ export class ShapeColorSizeStyle extends Style {
 
         /** A function returning the size of a cell in geographical unit.
         * @protected
-        * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
+        * @type {function(number,number,Stat|undefined,number):number} */
         this.size = opts.size;
 
         /** A function returning the shape of a cell.
          * @private
-         * @type {function(import("../Dataset").Cell):import("../Style").Shape} */
+         * @type {function(Cell):import("../Style").Shape} */
         this.shape = opts.shape || (() => "square");
     }
 
