@@ -475,9 +475,8 @@ export class App {
 
     /**
      * 
-     * @param {string} urlBase 
      * @param {Array.<number>} resolutions 
-     * @param {function(number):string} resToURLCode 
+     * @param {function(number):string} resToURL 
      * @param {Array.<Style>} styles 
      * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:function(Cell):void}} opts 
      * @returns {this}
