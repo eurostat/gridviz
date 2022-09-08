@@ -53,6 +53,8 @@ let app = new gviz.App(containerDiv);
 //TODO
 ```
 
+TODO explain model: 1 app. Datasets. Layers, with several styles.
+
 ## API reference
 
 TODO: use only jsdoc ?
