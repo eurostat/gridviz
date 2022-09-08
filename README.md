@@ -15,13 +15,11 @@ Gridviz is a JavaScript library to visualise gridded data (or any tabular datase
 
 ## Documentation of version 1
 
-See [there](v1/readme.md).
+This page present the documentation of the version 2. The version 1 documentation is still available [there](v1/readme.md).
 
 ## Examples
 
-See [there](examples/README.md).
-
-TODO
+Few examples are listed on [this page](examples/README.md).
 
 ## Installation
 
@@ -47,7 +45,7 @@ gridviz = require("gridviz");
 
 Create a gridviz App using `let app = new gviz.App();` and customise it with the methods described in the documentation below.
 
-Here's a barebones example that loads a CSV file containing population data for a 5x5 km grid of europe:
+Here's a barebones example that loads a CSV file containing population data for a 5x5 km population grid of europe:
 
 ```javascript
 let app = new gviz.App(containerDiv);
@@ -55,32 +53,10 @@ let app = new gviz.App(containerDiv);
 //TODO
 ```
 
-## Preparing csv data
-
-TODO: move somewhere else
-
-If you have exported your grid data as points to a csv file, then it is likely that you can reduce the file size significantly by removing redundant data. We have prepared a small node.js package exactly for this, which you will find in the [csv-prep folder](https://github.com/eurostat/gridviz/tree/master/csv-prep) of this repository.
-
-Here is an example of removing unnecessary information:
-
-Turning each row from this...
-
-```
-OBJECTID;ID;Cnt_ID;Ave_Total_Trav
-1;CRS3035RES1000mN1000000E1967000;3;49,121209420200000
-```
-
-into this...
-
-```
-x,y,time
-1967,1000,49
-```
-
 ## API reference
 
-TODO: add sections for foreground: boundaries and placenames.
 TODO: use only jsdoc ?
+
 
 ### App Configuration
 
@@ -150,9 +126,23 @@ const style = new gridviz.JoyPlotStyle({
 
 TODO
 
-### Legend
+### Legends
 
 TODO
+
+
+## Foreground information
+
+
+### Placenames
+
+TODO
+From https://github.com/eurostat/euronym
+
+### Boundaries
+
+TODO
+From https://github.com/eurostat/Nuts2json
 
 ## About
 
