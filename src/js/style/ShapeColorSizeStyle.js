@@ -39,7 +39,7 @@ export class ShapeColorSizeStyle extends Style {
 
         /** A function returning the shape of a cell.
          * @private
-         * @type {function(Cell):.Shape} */
+         * @type {function(Cell):Shape} */
         this.shape = opts.shape || (() => "square");
     }
 
@@ -140,9 +140,9 @@ export class ShapeColorSizeStyle extends Style {
     /** @param {function(number,number,.Stat|undefined,number):number} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
-    /** @returns {function(Cell):.Shape} */
+    /** @returns {function(Cell):Shape} */
     getShape() { return this.shape; }
-    /** @param {function(Cell):.Shape} val @returns {this} */
+    /** @param {function(Cell):Shape} val @returns {this} */
     setShape(val) { this.shape = val; return this; }
 
 }
