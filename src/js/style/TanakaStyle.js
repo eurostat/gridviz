@@ -4,6 +4,16 @@ import { SquareColorWGLStyle2 } from "./SquareColorWGLStyle2"
 import { SideStyle } from "./SideStyle"
 import { Style } from "../Style"
 
+
+
+export class TanakaStyle {
+
+    static get() {
+        
+    }
+}
+
+
 /**
  * https://manifold.net/doc/mfd9/example__tanaka_contours.htm
  * 
