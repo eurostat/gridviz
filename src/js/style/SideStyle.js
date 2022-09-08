@@ -117,7 +117,7 @@ export class SideStyle extends Style {
         }
 
         //compute stats on sides
-        const statSides = getSideStatistics(sides, true)
+        const statSides = SideStyle.getSideStatistics(sides, true)
 
         //draw sides
 
