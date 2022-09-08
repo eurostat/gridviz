@@ -26,7 +26,7 @@ export class MosaicStyle extends Style {
         /** The mosaic factor, within [0,0.5]. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect.
          *  @protected
          * @type {number} */
-        this.mosaicFactor = opts.mosaicFactor || 0.2;
+        this.mosaicFactor = opts.mosaicFactor || 0.15;
 
 
         /** The mosaic shadow factor, within [0,0.5]. Set to 0 for no mosaic shadow. Set to 0.5 for strong mosaic shadow.
