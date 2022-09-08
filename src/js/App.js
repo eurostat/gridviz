@@ -397,7 +397,7 @@ export class App {
      * @param {{preprocess?:function(Cell):void}} opts 
      * @returns {Dataset}
      */
-    makeTiledGridDataset(url, opts) {
+    makeTiledCSVGridDataset(url, opts) {
         return new Dataset(
             [new TiledGrid(url, this, opts)],
             [],
@@ -454,15 +454,35 @@ export class App {
      * @returns {this}
      */
     addCSVGridLayer(url, resolution, styles, opts) {
+        const ds = this.makeCSVGridDataset(url, resolution, opts)
+        return this.addLayerFromDataset(ds, styles, opts);
+    }
 
-        //make dataset
-        const ds = new CSVGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); });
-        const dataset = new Dataset([ds], [], opts)
+    /**
+    * 
+    * @param {string} url 
+     * @param {Array.<Style>} styles 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:function(Cell):void}} opts 
+     * @returns {this}
+     */
+    addTiledCSVGridLayer(url, styles, opts) {
+        const ds = this.makeTiledCSVGridDataset(url, opts)
+        return this.addLayerFromDataset(ds, styles, opts);
+    }
 
-        //make layer
-        const lay = new Layer(dataset, styles, opts)
-        this.layers.push(lay)
-        return this;
+
+    /**
+     * Add a layer from a CSV grid dataset.
+     * 
+     * @param {Array.<number>} resolutions 
+     * @param {function(number):string} resToURL
+     * @param {Array.<Style>} styles The styles, ordered in drawing order.
+     * @param {object=} opts The parameters of the dataset and layer.
+     * @returns {this}
+     */
+    addMultiScaleCSVGridLayer(resolutions, resToURL, styles, opts) {
+        const ds = this.makeMultiScaleCSVGridDataset(resolutions, resToURL, opts)
+        return this.addLayerFromDataset(ds, styles, opts);
     }
 
     /**
