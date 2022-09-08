@@ -178,31 +178,31 @@ export class SideStyle extends Style {
     //TODO
 
 
-}
 
 
-
-/**
- * Compute some statistics on a value of some sides.
- * This is used to define how to draw specifically the sides within the view.
- * 
- * @param {Array.<Side>} sides 
- * @param {boolean} ignoreZeros
- * @returns {Stat | undefined}
- */
-const getSideStatistics = function (sides, ignoreZeros) {
-    if (!sides || sides.length == 0) return undefined
-    let min = Infinity
-    let max = -Infinity
-    //let sum = 0
-    //let nb = 0
-    for (const s of sides) {
-        const v = s.value
-        if (ignoreZeros && !v) continue
-        if (v < min) min = v
-        if (v > max) max = v
-        //sum += v
-        //nb++
+    /**
+     * Compute some statistics on a value of some sides.
+     * This is used to define how to draw specifically the sides within the view.
+     * 
+     * @param {Array.<Side>} sides 
+     * @param {boolean} ignoreZeros
+     * @returns {Stat | undefined}
+     */
+    static getSideStatistics(sides, ignoreZeros) {
+        if (!sides || sides.length == 0) return undefined
+        let min = Infinity
+        let max = -Infinity
+        //let sum = 0
+        //let nb = 0
+        for (const s of sides) {
+            const v = s.value
+            if (ignoreZeros && !v) continue
+            if (v < min) min = v
+            if (v > max) max = v
+            //sum += v
+            //nb++
+        }
+        return { min: min, max: max, }
     }
-    return { min: min, max: max, }
+
 }
