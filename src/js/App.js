@@ -348,12 +348,18 @@ export class App {
 
 
 
+
+
+
+
+
+
     /**
      * Add a layer to the app.
      * 
-     * @param {Dataset} dataset 
-     * @param {Array.<Style>} styles 
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string}} opts 
+     * @param {Dataset} dataset The dataset of the layer
+     * @param {Array.<Style>} styles The styles of the layer
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string}} opts The layer options.
      * @returns {this}
      */
      addLayerFromDataset(dataset, styles, opts) {
@@ -476,8 +482,8 @@ export class App {
      * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:function(Cell):void}} opts 
      * @returns {this}
      */
-    addMultiScaleTiledCSVGridLayer(urlBase, resolutions, resToURLCode, styles, opts) {
-        const ds = this.makeMultiScaleTiledCSVGridDataset(urlBase, resolutions, resToURLCode, opts)
+    addMultiScaleTiledCSVGridLayer(resolutions, resToURL, styles, opts) {
+        const ds = this.makeMultiScaleTiledCSVGridDataset(resolutions, resToURL, opts)
         return this.addLayerFromDataset(ds, styles, opts);
     }
 
