@@ -74,6 +74,7 @@
             .setViewFromURL()
 
 
+        const tsFun = gviz.TextStyle.getCharLegendFun([".", "-", "~", "+", "=", "#", "€", "@"])
 
         //style data
         const sd = {
@@ -206,14 +207,13 @@
                     textCol: "Ind",
                     text: (v, r, s, z) => {
                         const t = gviz.s(v / s.max, 0.25);
-                        return gviz.charLegendFun(t);
+                        return tsFun(t);
                     },
                     color: (v, r, s) => "#c08c59",
                     fontSize: ((v, r, s, z) => 1.2 * r),
                 })], pixNb: 10
             }
         }
-
 
 
         app.addMultiScaleTiledCSVGridLayer(

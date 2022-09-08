@@ -138,26 +138,18 @@ export class TextStyle extends Style {
 
     //TODO
 
+
+
+
+    /** 
+     * Build a function [0,1]->string for characters legend
+     * 
+     * @param {Array.<string>} chars 
+     * @returns {function(number):string}
+     */
+    static getCharLegendFun(chars) {
+        const nb = chars.length
+        return (t) => t == 0 ? "" : t == 1 ? chars[nb - 1] : chars[Math.floor(t * nb)]
+    }
+
 }
-
-
-/** 
- * Build a function [0,1]->string for characters legend
- * 
- * @param {Array.<string>} chars 
- * @returns {function(number):string}
- */
-export const getCharLegendFun = (chars) => {
-    const nb = chars.length
-    return (t) => t == 0 ? "" : t == 1 ? chars[nb - 1] : chars[Math.floor(t * nb)]
-}
-
-/** 
- * A default function for characters legend
- * 
- * @param {number} t within [0,1]
- * @returns {string}
- */
-export const charLegendFun = getCharLegendFun([".", "-", "~", "+", "=", "#", "€", "@"]);
-//&IOSHXV?/§!*$€0O      .  - ~ + =  €%#@
-//for (let t = 0; t <= 1; t += 0.05) console.log(t, charFun(t))

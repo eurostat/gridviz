@@ -90,6 +90,7 @@
         const getSelectedStyle = () => document.querySelector('input[name="style"]:checked').value
 
         //style data
+        const tsFun = gviz.TextStyle.getCharLegendFun([".", "-", "~", "+", "=", "#", "€", "@"])
         const sd = {
             pop: {
                 squareColor: {
@@ -208,7 +209,7 @@
                         textCol: getSelectedYear(),
                         text: (v, r, s, z) => {
                             const t = gviz.s(v / s.max, 0.25);
-                            return gviz.charLegendFun(t);
+                            return tsFun(t);
                         },
                         color: (v, r, s) => "#c08c59",
                         fontSize: ((v, r, s, z) => 1.2 * r),
@@ -377,7 +378,7 @@
                         text: (v, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             const t = gviz.s(Math.abs(v) / max, 0.25);
-                            return gviz.charLegendFun(t);
+                            return tsFun(t);
                         },
                         colorCol: getSelectedYear(),
                         color: (v) => v > 0 ? "#d13c4b" : "#4288b5",
