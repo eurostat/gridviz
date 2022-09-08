@@ -4,8 +4,10 @@ import { SquareColorWGLStyle2 } from "./SquareColorWGLStyle2"
 import { SideStyle } from "./SideStyle"
 import { Style } from "../Style"
 
-
-
+/**
+ * 
+ * @author Julien Gaffuri
+ */
 export class LegoStyle {
 
     /**
