@@ -31,7 +31,6 @@
     "start": "npm run build-dev",
     "build": "npm run build-prod",
     "doc": "./node_modules/.bin/jsdoc src/js/ src/js/dataset src/js/legend src/js/style -d docs/jsdoc",
-    "doctest": "./node_modules/.bin/jsdoc src/js/Dataset.js src/js/DatasetComponent.js -d docs/jsdoc",
     "build-dev": "webpack --config webpack.config.dev.js",
     "build-prod": "webpack --config webpack.config.prod.js"
   },
