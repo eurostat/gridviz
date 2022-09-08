@@ -33,11 +33,13 @@ export class Style {
 
 
         /** The minimum zoom factor: Below this level, the layer is not shown.
-         * @type {number} */
+         * @type {number}
+         * */
         this.minZoom = opts.minZoom || 0;
 
         /** The maximum zoom factor: Above this level, the layer is not shown.
-         * @type {number} */
+         * @type {number}
+         * */
         this.maxZoom = opts.maxZoom || Infinity;
 
         //ensure acceptable values for the zoom limits.
