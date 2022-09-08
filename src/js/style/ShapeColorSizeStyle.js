@@ -39,7 +39,7 @@ export class ShapeColorSizeStyle extends Style {
 
         /** A function returning the shape of a cell.
          * @private
-         * @type {function(Cell):import("../Style").Shape} */
+         * @type {function(Cell):.Shape} */
         this.shape = opts.shape || (() => "square");
     }
 
@@ -85,7 +85,7 @@ export class ShapeColorSizeStyle extends Style {
             if (shape === "none") continue
 
             //size
-            /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
+            /** @type {function(number,number,Stat|undefined,number):number} */
             let s_ = this.size || (() => resolution);
             //size - in geo unit
             const sG = s_(cell[this.sizeCol], resolution, statSize, zf)
@@ -130,19 +130,19 @@ export class ShapeColorSizeStyle extends Style {
 
     //getters and setters
 
-    /** @returns {function(number,number,import("../Style").Stat):string} */
+    /** @returns {function(number,number,.Stat):string} */
     getColor() { return this.color; }
-    /** @param {function(number,number,import("../Style").Stat|undefined):string} val @returns {this} */
+    /** @param {function(number,number,.Stat|undefined):string} val @returns {this} */
     setColor(val) { this.color = val; return this; }
 
-    /** @returns {function(number,number,import("../Style").Stat,number):number} */
+    /** @returns {function(number,number,.Stat,number):number} */
     getSize() { return this.size; }
-    /** @param {function(number,number,import("../Style").Stat|undefined,number):number} val @returns {this} */
+    /** @param {function(number,number,.Stat|undefined,number):number} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
-    /** @returns {function(import("../Dataset").Cell):import("../Style").Shape} */
+    /** @returns {function(import("../Dataset").Cell):.Shape} */
     getShape() { return this.shape; }
-    /** @param {function(import("../Dataset").Cell):import("../Style").Shape} val @returns {this} */
+    /** @param {function(import("../Dataset").Cell):.Shape} val @returns {this} */
     setShape(val) { this.shape = val; return this; }
 
 }
