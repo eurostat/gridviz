@@ -19,7 +19,8 @@ export class SideStyle extends Style {
         opts = opts || {};
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for the cell values.
-         *  @protected @type {string} */
+         *  @protected
+         * @type {string} */
         this.valueCol = opts.valueCol;
 
         /** A function returning the value of a cell side. This value is computed from the two adjacent cell values.

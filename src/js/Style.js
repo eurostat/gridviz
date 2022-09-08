@@ -27,7 +27,8 @@ export class Style {
         opts = opts || {};
 
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
-         * @protected @type {function(Cell,number,number):{dx:number,dy:number}} */
+         * @protected
+         * @type {function(Cell,number,number):{dx:number,dy:number}} */
         this.offset = opts.offset || ((c, r, zf) => ({ dx: 0, dy: 0 }));
 
 

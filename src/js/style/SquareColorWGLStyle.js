@@ -22,27 +22,32 @@ export class SquareColorWGLStyle extends Style {
         opts = opts || {};
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         *  @protected @type {string} */
+         *  @protected
+         * @type {string} */
         this.colorCol = opts.colorCol;
 
         /** A function returning the t value (within [0,1]) of the cell.
-        * @protected @type {function(number,number,Stat):number} */
+        * @protected
+        * @type {function(number,number,Stat):number} */
         this.tFun = opts.tFun || ((v, r, s) => v / s.max);
 
         /** A parameter within [0,Inf] to deform the distribution. 1: no deformation. <1: better show small values. >1: better show large values.
          * The deformation is performed on GPU side (fragment shader).
-         *  @protected @type {number} */
+         *  @protected
+         * @type {number} */
         this.deformationFactor = opts.deformationFactor || 1.0
 
         /** The sample of the color ramp.
          * The color is computed on GPU side (fragment shader) based on those values (linear interpolation).
-         *  @protected @type {Array.<string>} */
+         *  @protected
+         * @type {Array.<string>} */
         this.colors = opts.colors || ["red", "yellow"]
         if (opts.color)
             this.colors = [opts.color(0), opts.color(0.25), opts.color(0.5), opts.color(0.75), opts.color(1)]
 
         /** A function returning the size of the cells, in geographical unit.
-        * @protected @type {function(number,number):number} */
+        * @protected
+        * @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
     }
 

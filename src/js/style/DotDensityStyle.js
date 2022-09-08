@@ -21,23 +21,28 @@ export class DotDensityStyle extends Style {
         opts = opts || {};
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for dot density.
-         *  @protected @type {string} */
+         *  @protected
+         * @type {string} */
         this.col = opts.col;
 
         /** A function returning the number of dots for a cell value.
-        * @protected @type {function(number,number,Stat,number):number} */
+        * @protected
+        * @type {function(number,number,Stat,number):number} */
         this.nb = opts.nb || ((v, r, s, zf) => 0.3 * r * r / (zf * zf) * v / s.max)
 
         /** The color of the dots
-        * @protected @type {function(Cell):string} */
+        * @protected
+        * @type {function(Cell):string} */
         this.color = opts.color || (() => "#FF5733");
 
         /** A function returning the size of the dots, in geo unit.
-        * @protected @type {function(number,number):number} */
+        * @protected
+        * @type {function(number,number):number} */
         this.dotSize = opts.dotSize //|| ((r, zf) => ...
 
         /** A function returning the sigma of the distribution from the resolution, in geo unit.
-        * @protected @type {function(number):number} */
+        * @protected
+        * @type {function(number):number} */
         this.sigma = opts.sigma //|| ((r) => ...
     }
 

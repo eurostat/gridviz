@@ -16,7 +16,8 @@ export class TextStyle extends Style {
         opts = opts || {};
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for text.
-         *  @protected @type {string} */
+         *  @protected
+         * @type {string} */
         this.textCol = opts.textCol;
 
         /** A function returning the text of a cell.
@@ -24,21 +25,25 @@ export class TextStyle extends Style {
         this.text = opts.text || ((v, r, s, z) => "X")
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         *  @protected @type {string} */
+         *  @protected
+         * @type {string} */
         this.colorCol = opts.colorCol;
 
         /** A function returning the color of the cell.
-        * @protected @type {function(number,number,Stat|undefined):string} */
+        * @protected
+        * @type {function(number,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
 
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for font size.
-         * @protected @type {string} */
+         * @protected
+         * @type {string} */
         this.fontSizeCol = opts.fontSizeCol;
 
         /** A function returning the font size of a cell in geo unit.
-        * @protected @type {function(number,number,Stat|undefined,number):number} */
+        * @protected
+        * @type {function(number,number,Stat|undefined,number):number} */
         this.fontSize = opts.fontSize || ((v, r, s, z) => r - 2);
 
 

@@ -169,7 +169,9 @@ export class App {
 
         //tooltip
 
-        /** @private @type {Tooltip} */
+        /**
+         * @private
+         * @type {Tooltip} */
         this.tooltip = new Tooltip()
 
         /** @param {MouseEvent} e */
@@ -218,7 +220,9 @@ export class App {
         //this.cg.onZoomEndFun = () => { this.tooltip.hide(); }
 
         //for mouse over
-        /** @private @type {HTMLCanvasElement|null} */
+        /**
+         * @private
+         * @type {HTMLCanvasElement|null} */
         this.canvasSave = null
 
         this.selectionRectangleColor = opts.selectionRectangleColor || "red"
