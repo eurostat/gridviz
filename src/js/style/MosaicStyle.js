@@ -1,6 +1,7 @@
 //@ts-check
 import { Style, Stat, getStatistics } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
+import { Cell } from "../Dataset";
 
 /**
  * @author Joseph Davies, Julien Gaffuri
@@ -43,7 +44,7 @@ export class MosaicStyle extends Style {
 
     /**
      * 
-     * @param {Array.<import("../Dataset").Cell>} cells 
+     * @param {Array.<Cell>} cells 
      * @param {number} resolution 
      * @param {GeoCanvas} cg 
      */

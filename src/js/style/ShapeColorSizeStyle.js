@@ -47,7 +47,7 @@ export class ShapeColorSizeStyle extends Style {
     /**
      * Draw cells as squares, with various colors and size.
      * 
-     * @param {Array.<import("../Dataset").Cell>} cells 
+     * @param {Array.<Cell>} cells 
      * @param {number} resolution 
      * @param {GeoCanvas} cg 
      */
@@ -140,9 +140,9 @@ export class ShapeColorSizeStyle extends Style {
     /** @param {function(number,number,.Stat|undefined,number):number} val @returns {this} */
     setSize(val) { this.size = val; return this; }
 
-    /** @returns {function(import("../Dataset").Cell):.Shape} */
+    /** @returns {function(Cell):.Shape} */
     getShape() { return this.shape; }
-    /** @param {function(import("../Dataset").Cell):.Shape} val @returns {this} */
+    /** @param {function(Cell):.Shape} val @returns {this} */
     setShape(val) { this.shape = val; return this; }
 
 }
