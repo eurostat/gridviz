@@ -175,71 +175,91 @@ TODO explain preprocess.
 
 ### Shape/Color/Size Style
 
-ColorSizeShapeStyle allows you to define the **color**, **size** and **shape** of each grid cell individually.
+This style allows to define the **shape**, **color** and **size** of each grid cell individually.
 
-```javascript
-//TODO
-
-```
-
-| Property              | Type   | Default | Description |
-| --------------------- | ------ | ------- | ----------- |
-| **propName**([value]) | String | 'grey'  | bla         |
-
-
+See [this example](examples/styles/shapecolorsize.html).
 
 ### Square color WebGL Style
 
+TODO
+
+See [this example](examples/styles/squarecolorwgl.html).
 
 ### Composition style
 
+TODO
+
+See [this example](examples/styles/composition.html).
+
 ### Segment style
 
+TODO
+
+See [this example](examples/styles/segment.html).
 
 ### Stroke style
 
+TODO
+
+See [this example](examples/styles/stroke.html).
 
 ### JoyPlot Style
 
 JoyPlotStyle allows you to visualise a grid in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
 
-
-<br>
-
+See [this example](examples/styles/joyplot.html).
 
 ### Dot density style
 
 TODO
 
+See [this example](examples/styles/dotdensity.html).
+
 ### Side style
 
 TODO
+
+See [this example](examples/styles/side.html).
 
 ### Mosaic style
 
 This style is a usual cell coloring style with a slight random deformation of the squares giving a 'mosaic' like effect.
 
-See [example](examples/styles/mosaic.html).
+See [this example](examples/styles/mosaic.html).
+
 
 ### Tanaka style
 
 TODO
 
+See [this example](examples/styles/tanaka.html).
+
 ### Lego style
 
 TODO
+
+See [this example](examples/styles/lego.html).
 
 ### Pillars style
 
 TODO
 
+See [this example](examples/styles/pillar.html).
+
 ### Text style
 
 TODO
 
+See [this example](examples/styles/text.html).
+
 ### Kernel smoothing style
 
 TODO
+
+See [this example](examples/styles/kernelsmoothing.html).
+
+
+
 
 ## Tooltip
 
