@@ -17,14 +17,15 @@
         new gviz.App(containerDiv)
             //set position and zoom
             .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-            //add CSV layer
-            .addCSVGridLayer(
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_2011_3035_5km.csv",
-                5000,
+            //add multi scale tiled CSV layer
+            .addTiledCSVGridLayer(
+                //data URL
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/",
+                //the styles
                 [
                     new gviz.SquareColorWGLStyle({
-                        colorCol: "Population",
-                        tFun: (v) => Math.min(v / 50000, 1)
+                        colorCol: "2018",
+                        tFun: (value) => Math.min(value / 50000, 1)
                     })
                 ]
             )
