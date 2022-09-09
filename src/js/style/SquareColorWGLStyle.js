@@ -21,33 +21,38 @@ export class SquareColorWGLStyle extends Style {
         super(opts)
         opts = opts || {};
 
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         *  @protected
+        /**
+         * The name of the column/attribute of the tabular data where to retrieve the variable for color.
+         * @protected
          * @type {string} */
         this.colorCol = opts.colorCol;
 
-        /** A function returning the t value (within [0,1]) of the cell.
+        /**
+         * A function returning the t value (within [0,1]) of the cell.
         * @protected
         * @type {function(number,number,Stat):number} */
         this.tFun = opts.tFun || ((v, r, s) => v / s.max);
 
-        /** A parameter within [0,Inf] to deform the distribution. 1: no deformation. <1: better show small values. >1: better show large values.
+        /**
+         * A parameter within [0,Inf] to deform the distribution. 1: no deformation. <1: better show small values. >1: better show large values.
          * The deformation is performed on GPU side (fragment shader).
-         *  @protected
+         * @protected
          * @type {number} */
         this.deformationFactor = opts.deformationFactor || 1.0
 
-        /** The sample of the color ramp.
+        /**
+         * The sample of the color ramp.
          * The color is computed on GPU side (fragment shader) based on those values (linear interpolation).
-         *  @protected
+         * @protected
          * @type {Array.<string>} */
-        this.colors = opts.colors || ["blue", "yellow", "orange", "red"]
+        this.colors = opts.colors || ["lightblue", "green", "yellow", "orange", "red"]
         if (opts.color)
             this.colors = [opts.color(0), opts.color(0.25), opts.color(0.5), opts.color(0.75), opts.color(1)]
 
-        /** A function returning the size of the cells, in geographical unit.
-        * @protected
-        * @type {function(number,number):number} */
+        /**
+         * A function returning the size of the cells, in geographical unit.
+         * @protected
+         * @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
     }
 
