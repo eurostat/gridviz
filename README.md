@@ -194,8 +194,6 @@ This style shows a composition at cell level in various different ways: Flags, p
 
 See [this example](examples/styles/composition.html).
 
-FR population by age: https://eurostat.github.io/gridviz/test_canvas/test/FR_ind_by_age.html
-
 
 ### Segment style
 
