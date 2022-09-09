@@ -381,11 +381,7 @@ export class App {
      * @returns {Dataset}
      */
     makeCSVGridDataset(url, resolution, opts) {
-        return new Dataset(
-            [new CSVGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); })],
-            [],
-            opts
-        )
+        return new Dataset([new CSVGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); })], [], opts)
     }
 
     /**
@@ -396,11 +392,7 @@ export class App {
      * @returns {Dataset}
      */
     makeTiledCSVGridDataset(url, opts) {
-        return new Dataset(
-            [new TiledGrid(url, this, opts)],
-            [],
-            opts
-        )
+        return new Dataset([new TiledGrid(url, this, opts).loadInfo(() => { this.cg.redraw(); })], [], opts)
     }
 
     //multi scale dataset creation
