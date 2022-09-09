@@ -56,7 +56,7 @@ gridviz = require("gridviz");
 
 Create a [Gridviz](https://github.com/eurostat/gridviz/) application using `let app = new gviz.App();` and customise it with the methods described in the documentation below.
 
-Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
+Here's a basic example that loads a CSV file on Europe population (5km resolution):
 
 ```javascript
         new gviz.App(containerDiv)
@@ -66,12 +66,14 @@ Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
             .addCSVGridLayer(
                 //data URL
                 "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2011_5km.csv",
-                //resolution, in CRS unit
+                //resolution, in CRS unit (m)
                 5000,
-                //the styles
+                //the style
                 [
                     new gviz.SquareColorWGLStyle({
+                        //the CSV column to show
                         colorCol: "Population",
+                        //value to [0,1] mapping function
                         tFun: (value) => Math.min(value / 50000, 1)
                     })
                 ]
@@ -79,7 +81,7 @@ Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/basic_CSV.html), see [code](examples/basic_CSV.html))
 
-[Gridviz](https://github.com/eurostat/gridviz/) can display several layers on top of each others. Each layer is based on a single multi-resolution dataset, which can be displayed several times based on several cartographic styles. For more information, see the [examples](#examples).
+[Gridviz](https://github.com/eurostat/gridviz/) can display several layers on top of each others. Each layer is based on a single multi-resolution dataset, which can be displayed with several cartographic styles. For more information, see the [examples](#examples).
 
 
 ## App Configuration
