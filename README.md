@@ -4,7 +4,7 @@
 ![npm](https://img.shields.io/npm/v/gridviz)
 ![license](https://img.shields.io/badge/license-EUPL-success)
 
-[Gridviz](README.md) is a JavaScript library to visualise gridded data (or any tabular dataset with x/y position) in the browser in a large variety of advanced cartographic styles. Unlike traditional raster-based web mapping tools, [Gridviz](README.md) renders everything client-side, on the fly.
+[Gridviz](https://github.com/eurostat/gridviz/) is a JavaScript library to visualise gridded data (or any tabular dataset with x/y position) in the browser in a large variety of advanced cartographic styles. Unlike traditional raster-based web mapping tools, [Gridviz](https://github.com/eurostat/gridviz/) renders everything client-side, on the fly.
 
 <div>
   <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/color.png" alt="preview" width="200px" height="200px"/>
@@ -17,10 +17,10 @@ Note: This page presents the documentation of the version 2. The version 1 docum
 
 ## Examples
 
-- [Europe](examples/EUR.html)
-- [France](examples/FR.html)
-- [Croatia](examples/HR.html)
-- [Dark](examples/FR_dark.html)
+- [Europe](https://eurostat.github.io/gridviz/examples/EUR.html)
+- [France](https://eurostat.github.io/gridviz/examples/FR.html)
+- [Croatia](https://eurostat.github.io/gridviz/examples/HR.html)
+- [Dark](https://eurostat.github.io/gridviz/examples/FR_dark.html)
 
 ## Installation
 
@@ -44,7 +44,7 @@ gridviz = require("gridviz");
 
 ## Usage
 
-Create a [Gridviz](README.md) application using `let app = new gviz.App();` and customise it with the methods described in the documentation below.
+Create a [Gridviz](https://github.com/eurostat/gridviz/) application using `let app = new gviz.App();` and customise it with the methods described in the documentation below.
 
 Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
 
@@ -67,9 +67,9 @@ Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
                 ]
             )
 ```
-(see [online](examples/basic_CSV.html))
+(see [online](https://eurostat.github.io/gridviz/examples/basic_CSV.html), see [code](examples/basic_CSV.html))
 
-[Gridviz](README.md) can display several layers on top of each others. Each layer is based on a single multi-resolution dataset, which can be displayed several times based on several cartographic styles. For more information, see the [examples](#examples).
+[Gridviz](https://github.com/eurostat/gridviz/) can display several layers on top of each others. Each layer is based on a single multi-resolution dataset, which can be displayed several times based on several cartographic styles. For more information, see the [examples](#examples).
 
 
 ## App Configuration
