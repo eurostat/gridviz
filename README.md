@@ -67,36 +67,16 @@ Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
 
 TODO
 
-| Method                        | Type  | Default | Description |
-| ----------------------------- | ----- | ------- | ----------- |
-| _app_.**methodName**([value]) | Array | null    |             |
+| Method                                                                      | Type                   | Default      | Description                                              |
+| --------------------------------------------------------------------------- | ---------------------- | ------------ | -------------------------------------------------------- |
+| _app_.**getGeoCenter**()<br />_app_.**setGeoCenter**([value])               | { x:number, y:number } | { x:0, y:0 } | Get/set the geographical coordinates of the view center. |
+| _app_.**getZoomFactor**()<br />_app_.**setZoomFactor**([value])             | number                  | 1         | Get/set the view zoom. This zoom factor is expressed as the size of a pixel in ground distance.           |
+| _app_.**getZoomFactorExtent**()<br />_app_.**setZoomFactorExtent**([value]) | Array.<number>                  | [0, Infinity]         | Get/set the view zoom extent, in order to prevent the user to zoom in/out beyond some zoom levels.        |
+| _app_.**getBackgroundColor**()<br />_app_.**setBackgroundColor**([value])   | string                  | "white"         | Get/set the map background color.                                                         |
+| _app_.**getBoundaryLayer**()<br />_app_.**setBoundaryLayer**([value])       | Array                  | null         |                                                          |
+| _app_.**getLabelLayer**()<br />_app_.**setLabelLayer**([value])             | Array                  | null         |                                                          |
+| _app_.**setViewFromURL**()                                                  | Array                  | null         |                                                          |
 
-
-
-    getGeoCenter() { return this.cg.getCenter(); }
-    setGeoCenter(val) { this.cg.setCenter(val); return this; }
-
-    getZoomFactor() { return this.cg.getZf(); }
-    setZoomFactor(val) { this.cg.setZf(val); return this; }
-
-    getZoomFactorExtent() { return this.cg.getZfExtent(); }
-    setZoomFactorExtent(val) { this.cg.setZfExtent(val); return this; }
-
-    getBackgroundColor() { return this.cg.backgroundColor; }
-    setBackgroundColor(val) { this.cg.backgroundColor = val; return this; }
-
-    getProjection() { return this.projection; }
-    setProjection(val) { this.projection = val; return this; }
-
-
-
-    getBoundaryLayer() { return this.boundaryLayer; }
-    setBoundaryLayer(val) { this.boundaryLayer = val; return this; }
-    getLabelLayer() { return this.labelLayer; }
-    setLabelLayer(val) { this.labelLayer = val; return this; }
-
-
-setViewFromURL
 
 
 ## Adding data

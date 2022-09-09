@@ -333,12 +333,6 @@ export class App {
     /** @param {string} val @returns {this} */
     setBackgroundColor(val) { this.cg.backgroundColor = val; return this; }
 
-    /** @returns {function|undefined} */
-    getProjection() { return this.projection; }
-    /** @param {function} val @returns {this} */
-    setProjection(val) { this.projection = val; return this; }
-
-
 
     /** @returns {LineLayer | undefined} */
     getBoundaryLayer() { return this.boundaryLayer; }
