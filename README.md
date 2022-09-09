@@ -181,45 +181,48 @@ See [this example](examples/styles/shapecolorsize.html).
 
 ### Square color WebGL Style
 
-TODO
+This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display at detailled resolutions.
 
 See [this example](examples/styles/squarecolorwgl.html).
 
 ### Composition style
 
-TODO
+This style shows a composition at cell level in various different ways: Flags, pie charts, rings, segments, radar, age pyramid and halftone.
 
 See [this example](examples/styles/composition.html).
 
 ### Segment style
 
-TODO
+This style displays each cell as a segment with a changeable color, length, width and orientation.
 
 See [this example](examples/styles/segment.html).
 
-### Stroke style
-
-TODO
-
-See [this example](examples/styles/stroke.html).
-
-### JoyPlot Style
-
-JoyPlotStyle allows you to visualise a grid in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
-
-See [this example](examples/styles/joyplot.html).
 
 ### Dot density style
 
-TODO
+This style displays each cell as randomly located points, with changeable density and color.
 
 See [this example](examples/styles/dotdensity.html).
 
+### Stroke style
+
+This style shows the stroke of each cell with different colors, widths, shapes and sizes.
+
+See [this example](examples/styles/stroke.html).
+
+
 ### Side style
 
-TODO
+This style extract the sides of the cells and show each of them depending on the values of the 2 cells around.
 
 See [this example](examples/styles/side.html).
+
+
+### JoyPlot Style
+
+This style shows cell rows in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
+
+See [this example](examples/styles/joyplot.html).
 
 ### Mosaic style
 
@@ -230,35 +233,33 @@ See [this example](examples/styles/mosaic.html).
 
 ### Tanaka style
 
-TODO
+This style shows the grid cells in a Tanaka-like style, that is with discrete colors and shadow effect.
 
 See [this example](examples/styles/tanaka.html).
 
 ### Lego style
 
-TODO
+This style shows the grid cells as lego bricks with changeable colors and height.
 
 See [this example](examples/styles/lego.html).
 
 ### Pillars style
 
-TODO
+This style shows the grid cells as 3D pillars, with changeable heigths and colors.
 
 See [this example](examples/styles/pillar.html).
 
 ### Text style
 
-TODO
+This style shows the grid cells as text characters with different colors.
 
 See [this example](examples/styles/text.html).
 
 ### Kernel smoothing style
 
-TODO
+This style allows applying gaussian kernel smoothing to the grid.
 
 See [this example](examples/styles/kernelsmoothing.html).
-
-
 
 
 ## Tooltip
