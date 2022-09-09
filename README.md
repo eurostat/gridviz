@@ -59,6 +59,7 @@ Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
                 ]
             )
 ```
+(see [online](examples/basic.html))
 
 [Gridviz](README.md) can display several layers on top of each others. Each layer is based on a single multi-resolution dataset, which can be displayed several times based on several cartographic styles. For more information, see the [examples](#examples).
 
@@ -85,18 +86,54 @@ Input data are tabular data, in CSV format. It is possible to specify different 
 
 Are are several examples:
 
-TODO add single CSV file
+### Single CSV file
 
-TODO add multi scale CSV
+```javascript
+        new gviz.App(containerDiv)
+            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+            .addCSVGridLayer(
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_2011_3035_5km.csv",
+                5000,
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "Population",
+                        tFun: (v) => Math.min(v / 50000, 1)
+                    })
+                ]
+            )
+```
+(see [online](examples/basic.html))
 
-TODO add multi scale tiled CSV
+
+### Multi scale CSV data
+
+TODO add example
+
+### Tiled CSV data
+
+TODO add example
+
+### Multi scale tiled CSV data
+
+TODO add example
 
 
-TODO List all data loading methods here:
+| Method                        | Arguments  | Description |
+| ----------------------------- | ----- | ------ |
+| _app_.**addCSVGridLayer**([args]) | See [example](#single-csv-file) | Add a layer from a CSV grid dataset. |
+| _app_.**addMultiScaleCSVGridLayer**([args]) | See [example](#multi-scale-csv-data) | Add a layer from a multi scale CSV grid dataset. |
+| _app_.**addTiledCSVGridLayer**([args]) | See [example](#tiled-csv-data) | Add a layer from a tiled CSV grid dataset. |
+| _app_.**addMultiScaleTiledCSVGridLayer**([args]) | See [example](#multi-scale-tiled-csv-data) | Add a layer from a multi scale tiled CSV grid dataset. |
 
-| Method                        | Type  | Default | Description |
-| ----------------------------- | ----- | ------- | ----------- |
-| _app_.**methodName**([value]) | Array | null    |             |
+To manage creation of datasets and their possible reuse accross different layers (so that the data is loaded and stored once), the following methods are also available:
+
+| Method                        | Arguments  | Description |
+| ----------------------------- | ----- | ------ |
+| _app_.**addLayerFromDataset**([args]) | - | Add a layer to the app. |
+| _app_.**makeCSVGridDataset**([args]) | - | Make a CSV grid dataset. |
+| _app_.**makeTiledCSVGridDataset**([args]) | - | Make a tiled CSV grid dataset. |
+| _app_.**makeMultiScaleCSVGridDataset**([args]) | - | Make a multi scale CSV grid dataset. |
+| _app_.**makeMultiScaleTiledCSVGridDataset**([args]) | - | Make a multi scale tiled CSV grid dataset. |
 
 
 ## Styles
@@ -106,18 +143,9 @@ TODO List all data loading methods here:
 
 ColorSizeShapeStyle allows you to define the **color**, **size** and **shape** of each grid cell individually.
 
-In the following example, we define an interpolation function that will determine the colour of the grid cell using its "Population" attribute, and set each grid cell size to 1 and its shape to a circle.
-
 ```javascript
-//TODO upgrade
-const style = new gridviz.ColorSizeShapeStyle({
-  colorFunction: (c) => gridviz.color().interpolateOrRd(Math.pow(c["Population"], 0.6) / 100),
-  sizeFunction: (c) => 1,
-  shapeFunction: (c) => "circle",
-  opacity: 1,
-  strokeWidth: 0.2,
-  strokeColor: "grey",
-});
+//TODO
+
 ```
 
 | Property              | Type   | Default | Description |
@@ -130,11 +158,7 @@ const style = new gridviz.ColorSizeShapeStyle({
 JoyPlotStyle allows you to visualise a grid in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
 
 ```javascript
-//TODO upgrade
-const style = new gridviz.JoyPlotStyle({
-  heightFunction: (c) => 30 * Math.sqrt(c["2011"]),
-  lineColor: "black",
-});
+//TODO
 ```
 
 | Property              | Type   | Default | Description |
@@ -168,7 +192,7 @@ From https://github.com/eurostat/Nuts2json
 ## About
 
 |                |                                                                                                                                                                                       |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| -------------- | ------------------------------------------------------- |
 | _contributors_ | [<img src="https://github.com/JoeWDavies.png" height="40" />](https://github.com/JoeWDavies) [<img src="https://github.com/jgaffuri.png" height="40" />](https://github.com/jgaffuri) |
 | _version_      | See [npm](https://www.npmjs.com/package/gridviz?activeTab=versions)                                                                                                                   |
 | _status_       | Since 2020                                                                                                                                                                            |
