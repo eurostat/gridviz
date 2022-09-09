@@ -65,7 +65,7 @@ Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
 
 ## App Configuration
 
-TODO
+
 
 | Method                                                                      | Type                   | Default      | Description                                              |
 | --------------------------------------------------------------------------- | ---------------------- | ------------ | -------------------------------------------------------- |
@@ -73,9 +73,9 @@ TODO
 | _app_.**getZoomFactor**()<br />_app_.**setZoomFactor**([value])             | number                  | 1         | Get/set the view zoom. This zoom factor is expressed as the size of a pixel in ground distance.           |
 | _app_.**getZoomFactorExtent**()<br />_app_.**setZoomFactorExtent**([value]) | Array.<number>                  | [0, Infinity]         | Get/set the view zoom extent, in order to prevent the user to zoom in/out beyond some zoom levels.        |
 | _app_.**getBackgroundColor**()<br />_app_.**setBackgroundColor**([value])   | string                  | "white"         | Get/set the map background color.                                                         |
-| _app_.**getBoundaryLayer**()<br />_app_.**setBoundaryLayer**([value])       | Array                  | null         |                                                          |
-| _app_.**getLabelLayer**()<br />_app_.**setLabelLayer**([value])             | Array                  | null         |                                                          |
-| _app_.**setViewFromURL**()                                                  | Array                  | null         |                                                          |
+| _app_.**getBoundaryLayer**()<br />_app_.**setBoundaryLayer**([value])       | LineLayer       | undefined         | A layer for boundary lines, see [here](#showing-boundaries).                                                         |
+| _app_.**getLabelLayer**()<br />_app_.**setLabelLayer**([value])             | LabelLayer     | A layer for labels (such as placenames), see [here](#showing-labels)undefined         |                                                          |
+| _app_.**setViewFromURL**()                 |               |       | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_.    |
 
 
 
@@ -145,12 +145,12 @@ TODO
 ## Foreground information
 
 
-### Placenames
+### Showing labels
 
 TODO
 From https://github.com/eurostat/euronym
 
-### Boundaries
+### Showing boundaries
 
 TODO
 From https://github.com/eurostat/Nuts2json

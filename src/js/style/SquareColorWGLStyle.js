@@ -41,7 +41,7 @@ export class SquareColorWGLStyle extends Style {
          * The color is computed on GPU side (fragment shader) based on those values (linear interpolation).
          *  @protected
          * @type {Array.<string>} */
-        this.colors = opts.colors || ["red", "yellow"]
+        this.colors = opts.colors || ["blue", "yellow", "orange", "red"]
         if (opts.color)
             this.colors = [opts.color(0), opts.color(0.25), opts.color(0.5), opts.color(0.75), opts.color(1)]
 
