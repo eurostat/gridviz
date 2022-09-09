@@ -139,7 +139,7 @@ To manage creation of datasets and their possible reuse accross different layers
 ## Styles
 
 
-### ColorSizeShapeStyle
+### Shape/Color/Size Style
 
 ColorSizeShapeStyle allows you to define the **color**, **size** and **shape** of each grid cell individually.
 
@@ -153,7 +153,19 @@ ColorSizeShapeStyle allows you to define the **color**, **size** and **shape** o
 | **propName**([value]) | String | 'grey'  | bla         |
 
 
-### JoyPlotStyle
+
+### Square color WebGL Style
+
+
+### Composition style
+
+### Segment style
+
+
+### Stroke style
+
+
+### JoyPlot Style
 
 JoyPlotStyle allows you to visualise a grid in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
 
@@ -166,6 +178,25 @@ JoyPlotStyle allows you to visualise a grid in the form of a 'joyplot' - named a
 | **propName**([value]) | String | 'grey'  | bla         |
 
 <br>
+
+
+### Dot density style
+
+
+### Side style
+
+
+### Mosaic style
+
+
+### Tanaka style
+
+### Lego style
+
+### Pillars style
+
+### Text style
+
 
 ## Tooltip
 
