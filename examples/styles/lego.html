@@ -19,10 +19,14 @@
             .addMultiScaleTiledCSVGridLayer(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
-                [
-                ],
+                gviz.LegoStyle.get(
+                    "2018",
+                    {
+                        valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2)
+                    }
+                ),
                 {
-                    pixNb: 12,
+                    pixNb: 10,
                     cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)",
                 })
 
