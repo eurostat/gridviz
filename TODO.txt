@@ -2,7 +2,10 @@ new readme: Go through code and make documentation skeleton
 publish v2 - then improve doc
 restructure examples: create style examples. make separate test folder ?
 
-https://stackoverflow.com/questions/25773222/
+after publication: base examples on built minified version
+
+
+JSDOC bug: https://stackoverflow.com/questions/25773222/
 
 
 check:

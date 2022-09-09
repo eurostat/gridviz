@@ -4,7 +4,7 @@
 ![npm](https://img.shields.io/npm/v/gridviz)
 ![license](https://img.shields.io/badge/license-EUPL-success)
 
-Gridviz is a JavaScript library to visualise gridded data (or any tabular dataset with x/y position) in the browser in a large variety of advanced cartographic styles. Unlike traditional raster-based web mapping tools, this tool renders eveything client-side on the fly.
+[Gridviz](README.md) is a JavaScript library to visualise gridded data (or any tabular dataset with x/y position) in the browser in a large variety of advanced cartographic styles. Unlike traditional raster-based web mapping tools, [Gridviz](README.md) renders everything client-side, on the fly.
 
 <div>
   <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/color.png" alt="preview" width="200px" height="200px"/>
@@ -13,9 +13,7 @@ Gridviz is a JavaScript library to visualise gridded data (or any tabular datase
   <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/nl.png" alt="preview" width="200px" height="200px"/>
 </div>
 
-## Documentation of version 1
-
-This page present the documentation of the version 2. The version 1 documentation is still available [there](v1/readme.md).
+Note: This page presents the documentation of the version 2. The version 1 documentation remains available [there](v1/readme.md).
 
 ## Examples
 
@@ -43,47 +41,78 @@ gridviz = require("gridviz");
 
 ## Usage
 
-Create a gridviz App using `let app = new gviz.App();` and customise it with the methods described in the documentation below.
+Create a [Gridviz](README.md) application using `let app = new gviz.App();` and customise it with the methods described in the documentation below.
 
-Here's a barebones example that loads a CSV file containing population data for a 5x5 km population grid of europe:
+Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
 
 ```javascript
-let app = new gviz.App(containerDiv);
-//...
-//TODO
+        new gviz.App(containerDiv)
+            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+            .addCSVGridLayer(
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_2011_3035_5km.csv",
+                5000,
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "Population",
+                        tFun: (v) => +v == 0 ? null : 1 - Math.pow(Math.min(v / 50000, 1), 0.5)
+                    })
+                ]
+            )
 ```
 
-TODO explain model: 1 app. Datasets. Layers, with several styles.
-
-## API reference
-
-TODO: use only jsdoc ?
+[Gridviz](README.md) can display several layers on top of each others. Each layer is based on a single multi-resolution dataset, which can be displayed several times based on several cartographic styles. For more information, see the [examples](#examples).
 
 
-### App Configuration
+## App Configuration
 
 TODO
 
-| Method                          | Type   | Default              | Description                                                     |
-| ------------------------------- | ------ | -------------------- | --------------------------------------------------------------- |
-| _app_.**methodName**([value]) | Array  | null                 |  |
+| Method                        | Type  | Default | Description |
+| ----------------------------- | ----- | ------- | ----------- |
+| _app_.**methodName**([value]) | Array | null    |             |
 
 
-### Adding data
+
+    getGeoCenter() { return this.cg.getCenter(); }
+    setGeoCenter(val) { this.cg.setCenter(val); return this; }
+
+    getZoomFactor() { return this.cg.getZf(); }
+    setZoomFactor(val) { this.cg.setZf(val); return this; }
+
+    getZoomFactorExtent() { return this.cg.getZfExtent(); }
+    setZoomFactorExtent(val) { this.cg.setZfExtent(val); return this; }
+
+    getBackgroundColor() { return this.cg.backgroundColor; }
+    setBackgroundColor(val) { this.cg.backgroundColor = val; return this; }
+
+    getProjection() { return this.projection; }
+    setProjection(val) { this.projection = val; return this; }
+
+
+
+    getBoundaryLayer() { return this.boundaryLayer; }
+    setBoundaryLayer(val) { this.boundaryLayer = val; return this; }
+    getLabelLayer() { return this.labelLayer; }
+    setLabelLayer(val) { this.labelLayer = val; return this; }
+
+
+setViewFromURL
+
+
+## Adding data
 
 TODO
 4 examples: CSV/tiled + ms tiled
 
-| Method                          | Type   | Default              | Description                                                     |
-| ------------------------------- | ------ | -------------------- | --------------------------------------------------------------- |
-| _app_.**methodName**([value]) | Array  | null                 |  |
+| Method                        | Type  | Default | Description |
+| ----------------------------- | ----- | ------- | ----------- |
+| _app_.**methodName**([value]) | Array | null    |             |
 
 
-### Styles
+## Styles
 
 
-
-#### ColorSizeShapeStyle
+### ColorSizeShapeStyle
 
 ColorSizeShapeStyle allows you to define the **color**, **size** and **shape** of each grid cell individually.
 
@@ -101,12 +130,12 @@ const style = new gridviz.ColorSizeShapeStyle({
 });
 ```
 
-| Property              | Type     | Default |Description            |
-| --------------------------- | -------- | ------- | --------------------- |
-| **propName**([value])      | String   | 'grey'  | bla      |
+| Property              | Type   | Default | Description |
+| --------------------- | ------ | ------- | ----------- |
+| **propName**([value]) | String | 'grey'  | bla         |
 
 
-#### JoyPlotStyle
+### JoyPlotStyle
 
 JoyPlotStyle allows you to visualise a grid in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
 
@@ -118,17 +147,17 @@ const style = new gridviz.JoyPlotStyle({
 });
 ```
 
-| Property              | Type     | Default |Description            |
-| --------------------------- | -------- | ------- | --------------------- |
-| **propName**([value])      | String   | 'grey'  | bla      |
+| Property              | Type   | Default | Description |
+| --------------------- | ------ | ------- | ----------- |
+| **propName**([value]) | String | 'grey'  | bla         |
 
 <br>
 
-### Tooltip
+## Tooltip
 
 TODO
 
-### Legends
+## Legends
 
 TODO
 
@@ -148,8 +177,8 @@ From https://github.com/eurostat/Nuts2json
 
 ## About
 
-|                |                 |
-| -------------- | ---------------------------------- |
+|                |                                                                                                                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | _contributors_ | [<img src="https://github.com/JoeWDavies.png" height="40" />](https://github.com/JoeWDavies) [<img src="https://github.com/jgaffuri.png" height="40" />](https://github.com/jgaffuri) |
 | _version_      | See [npm](https://www.npmjs.com/package/gridviz?activeTab=versions)                                                                                                                   |
 | _status_       | Since 2020                                                                                                                                                                            |
