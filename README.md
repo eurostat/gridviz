@@ -17,7 +17,10 @@ Note: This page presents the documentation of the version 2. The version 1 docum
 
 ## Examples
 
-Few examples are listed on [this page](examples/README.md).
+- [Europe](examples/EUR.html)
+- [France](examples/FR.html)
+- [Croatia](examples/HR.html)
+- [Dark](examples/FR_dark.html)
 
 ## Installation
 
@@ -191,6 +194,9 @@ This style shows a composition at cell level in various different ways: Flags, p
 
 See [this example](examples/styles/composition.html).
 
+FR population by age: https://eurostat.github.io/gridviz/test_canvas/test/FR_ind_by_age.html
+
+
 ### Segment style
 
 This style displays each cell as a segment with a changeable color, length, width and orientation.
@@ -260,6 +266,8 @@ See [this example](examples/styles/text.html).
 This style allows applying gaussian kernel smoothing to the grid.
 
 See [this example](examples/styles/kernelsmoothing.html).
+
+Europe population Gaussian kernel smoothing: https://eurostat.github.io/gridviz/test_canvas/test/EUR_kernelsmoothing.html
 
 
 ## Tooltip
