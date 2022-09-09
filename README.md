@@ -27,10 +27,10 @@ Note: This page presents the documentation of the version 2. The version 1 docum
 
 ## Examples
 
-- [Europe](https://eurostat.github.io/gridviz/examples/EUR.html)
-- [France](https://eurostat.github.io/gridviz/examples/FR.html)
-- [Croatia](https://eurostat.github.io/gridviz/examples/HR.html)
-- [Dark](https://eurostat.github.io/gridviz/examples/FR_dark.html)
+- [Europe - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/EUR.html)
+- [France - 200m resolution - INSEE Filosofi](https://eurostat.github.io/gridviz/examples/FR.html)
+- [Croatia - 1km resolution - DZS 2015 grid](https://eurostat.github.io/gridviz/examples/HR.html)
+- [Dark style](https://eurostat.github.io/gridviz/examples/FR_dark.html)
 
 ## Installation
 
