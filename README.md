@@ -59,7 +59,7 @@ Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
                 ]
             )
 ```
-(see [online](examples/basic.html))
+(see [online](examples/basic_CSV.html))
 
 [Gridviz](README.md) can display several layers on top of each others. Each layer is based on a single multi-resolution dataset, which can be displayed several times based on several cartographic styles. For more information, see the [examples](#examples).
 
@@ -102,7 +102,7 @@ Are are several examples:
                 ]
             )
 ```
-(see [online](examples/basic.html))
+(see [online](examples/basic_CSV.html))
 
 
 ### Multi scale CSV data
