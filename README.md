@@ -166,6 +166,10 @@ To manage creation of datasets and their possible reuse accross different layers
 | _app_.**makeMultiScaleTiledCSVGridDataset**([args]) | -         | Make a multi scale tiled CSV grid dataset. |
 
 
+## Data pre-processing
+
+TODO explain preprocess.
+
 ## Styles
 
 
@@ -199,13 +203,6 @@ ColorSizeShapeStyle allows you to define the **color**, **size** and **shape** o
 
 JoyPlotStyle allows you to visualise a grid in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
 
-```javascript
-//TODO
-```
-
-| Property              | Type   | Default | Description |
-| --------------------- | ------ | ------- | ----------- |
-| **propName**([value]) | String | 'grey'  | bla         |
 
 <br>
 
@@ -220,7 +217,9 @@ TODO
 
 ### Mosaic style
 
-TODO
+This style is a usual cell coloring style with a slight random deformation of the squares giving a 'mosaic' like effect.
+
+See [example](examples/styles/mosaic.html).
 
 ### Tanaka style
 
