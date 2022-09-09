@@ -71,8 +71,8 @@ TODO
 
 ### Adding data
 
-
 TODO
+4 examples: CSV/tiled + ms tiled
 
 | Method                          | Type   | Default              | Description                                                     |
 | ------------------------------- | ------ | -------------------- | --------------------------------------------------------------- |
