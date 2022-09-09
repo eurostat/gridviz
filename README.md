@@ -182,21 +182,31 @@ JoyPlotStyle allows you to visualise a grid in the form of a 'joyplot' - named a
 
 ### Dot density style
 
+TODO
 
 ### Side style
 
+TODO
 
 ### Mosaic style
 
+TODO
 
 ### Tanaka style
 
+TODO
+
 ### Lego style
+
+TODO
 
 ### Pillars style
 
+TODO
+
 ### Text style
 
+TODO
 
 ## Tooltip
 
