@@ -267,9 +267,6 @@ This style allows applying gaussian kernel smoothing to the grid.
 
 See [this example](examples/styles/kernelsmoothing.html).
 
-Europe population Gaussian kernel smoothing: https://eurostat.github.io/gridviz/test_canvas/test/EUR_kernelsmoothing.html
-
-
 ## Tooltip
 
 TODO
