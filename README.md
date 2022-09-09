@@ -54,7 +54,7 @@ Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "Population",
-                        tFun: (v) => +v == 0 ? null : 1 - Math.pow(Math.min(v / 50000, 1), 0.5)
+                        tFun: (v) => Math.min(v / 50000, 1)
                     })
                 ]
             )
@@ -81,8 +81,18 @@ Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
 
 ## Adding data
 
-TODO
-4 examples: CSV/tiled + ms tiled
+Input data are tabular data, in CSV format. It is possible to specify different data sources for different zoom levels, so that the level of detail of the data can adapt to the zoom level. Tiled CSV data can also be specified following the [tiledCSV format](docs/tiledCSVformat.md).
+
+Are are several examples:
+
+TODO add single CSV file
+
+TODO add multi scale CSV
+
+TODO add multi scale tiled CSV
+
+
+TODO List all data loading methods here:
 
 | Method                        | Type  | Default | Description |
 | ----------------------------- | ----- | ------- | ----------- |
