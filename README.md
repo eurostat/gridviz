@@ -22,9 +22,6 @@
 ![](/docs/img/overviews/ov_segment.png)
 ![](/docs/img/overviews/ov_tanaka.png)
 
-
-Note: This page presents the documentation of the version 2. The version 1 documentation remains available [there](v1/readme.md).
-
 ## Examples
 
 - [Europe - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/EUR.html)
