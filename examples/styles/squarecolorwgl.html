@@ -20,9 +20,13 @@
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
                 [
+                new gviz.SquareColorWGLStyle({
+                        colorCol: "2018",
+                        tFun: (value, resolution, stats) => Math.pow(value / stats.max, 0.3)
+                    })
                 ],
                 {
-                    pixNb: 12,
+                    pixNb: 1.5,
                     cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)",
                 })
 
