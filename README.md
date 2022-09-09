@@ -90,7 +90,7 @@ Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
 
 ## Adding data
 
-Input data are tabular data, in CSV format. It is possible to specify different data sources for different zoom levels, so that the level of detail of the data can adapt to the zoom level. Tiled CSV data can also be specified following the [tiledCSV format](docs/tiledCSVformat.md).
+Input data are tabular data, in CSV format. It is possible to specify different data sources for different zoom levels, so that the level of detail of the data can adapt to the zoom level. Tiled CSV data can also be specified following the [tiled CSV format](docs/tiledCSVformat.md).
 
 Are are several examples:
 
