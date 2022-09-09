@@ -47,14 +47,19 @@ Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
 
 ```javascript
         new gviz.App(containerDiv)
+            //set position and zoom
             .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+            //add CSV layer
             .addCSVGridLayer(
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_2011_3035_5km.csv",
+                //data URL
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2011_5km.csv",
+                //resolution, in CRS unit
                 5000,
+                //the styles
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "Population",
-                        tFun: (v) => Math.min(v / 50000, 1)
+                        tFun: (value) => Math.min(value / 50000, 1)
                     })
                 ]
             )
@@ -88,27 +93,7 @@ Are are several examples:
 
 ### Single CSV file
 
-```javascript
-        new gviz.App(containerDiv)
-            //set position and zoom
-            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-            //add CSV layer
-            .addCSVGridLayer(
-                //data URL
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_2011_3035_5km.csv",
-                //resolution, in CRS unit
-                5000,
-                //the styles
-                [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: "Population",
-                        tFun: (value) => Math.min(value / 50000, 1)
-                    })
-                ]
-            )
-```
-(see [online](examples/basic_CSV.html))
-
+See the [basic example above](#usage).
 
 ### Multi scale CSV data
 
