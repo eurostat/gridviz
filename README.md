@@ -208,6 +208,10 @@ TODO
 
 TODO
 
+### Kernel smoothing style
+
+TODO
+
 ## Tooltip
 
 TODO
