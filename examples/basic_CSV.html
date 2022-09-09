@@ -19,12 +19,15 @@
             .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
             //add CSV layer
             .addCSVGridLayer(
+                //data URL
                 "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_2011_3035_5km.csv",
+                //resolution, in CRS unit
                 5000,
+                //the styles
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "Population",
-                        tFun: (v) => Math.min(v / 50000, 1)
+                        tFun: (value) => Math.min(value / 50000, 1)
                     })
                 ]
             )

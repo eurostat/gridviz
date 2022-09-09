@@ -68,15 +68,15 @@ Here's a basic example that loads a CSV file on Europe population, 5x5 km grid:
 
 
 
-| Method                                                                      | Type                   | Default      | Description                                              |
-| --------------------------------------------------------------------------- | ---------------------- | ------------ | -------------------------------------------------------- |
-| _app_.**getGeoCenter**()<br />_app_.**setGeoCenter**([value])               | { x:number, y:number } | { x:0, y:0 } | Get/set the geographical coordinates of the view center. |
-| _app_.**getZoomFactor**()<br />_app_.**setZoomFactor**([value])             | number                  | 1         | Get/set the view zoom. This zoom factor is expressed as the size of a pixel in ground distance.           |
-| _app_.**getZoomFactorExtent**()<br />_app_.**setZoomFactorExtent**([value]) | Array.<number>                  | [0, Infinity]         | Get/set the view zoom extent, in order to prevent the user to zoom in/out beyond some zoom levels.        |
-| _app_.**getBackgroundColor**()<br />_app_.**setBackgroundColor**([value])   | string                  | "white"         | Get/set the map background color.                                                         |
-| _app_.**getBoundaryLayer**()<br />_app_.**setBoundaryLayer**([value])       | LineLayer       | undefined         | A layer for boundary lines, see [here](#showing-boundaries).                                                         |
-| _app_.**getLabelLayer**()<br />_app_.**setLabelLayer**([value])             | LabelLayer     | A layer for labels (such as placenames), see [here](#showing-labels)undefined         |                                                          |
-| _app_.**setViewFromURL**()                 |               |       | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_.    |
+| Method                                                                      | Type                   | Default                                                                       | Description                                                                                                                                                                                                            |
+| --------------------------------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _app_.**getGeoCenter**()<br />_app_.**setGeoCenter**([value])               | { x:number, y:number } | { x:0, y:0 }                                                                  | Get/set the geographical coordinates of the view center.                                                                                                                                                               |
+| _app_.**getZoomFactor**()<br />_app_.**setZoomFactor**([value])             | number                 | 1                                                                             | Get/set the view zoom. This zoom factor is expressed as the size of a pixel in ground distance.                                                                                                                        |
+| _app_.**getZoomFactorExtent**()<br />_app_.**setZoomFactorExtent**([value]) | Array.<number>         | [0, Infinity]                                                                 | Get/set the view zoom extent, in order to prevent the user to zoom in/out beyond some zoom levels.                                                                                                                     |
+| _app_.**getBackgroundColor**()<br />_app_.**setBackgroundColor**([value])   | string                 | "white"                                                                       | Get/set the map background color.                                                                                                                                                                                      |
+| _app_.**getBoundaryLayer**()<br />_app_.**setBoundaryLayer**([value])       | LineLayer              | undefined                                                                     | A layer for boundary lines, see [here](#showing-boundaries).                                                                                                                                                           |
+| _app_.**getLabelLayer**()<br />_app_.**setLabelLayer**([value])             | LabelLayer             | A layer for labels (such as placenames), see [here](#showing-labels)undefined |                                                                                                                                                                                                                        |
+| _app_.**setViewFromURL**()                                                  |                        |                                                                               | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_. |
 
 
 
@@ -90,14 +90,19 @@ Are are several examples:
 
 ```javascript
         new gviz.App(containerDiv)
+            //set position and zoom
             .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+            //add CSV layer
             .addCSVGridLayer(
+                //data URL
                 "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/5km/3035/pop_2011_3035_5km.csv",
+                //resolution, in CRS unit
                 5000,
+                //the styles
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "Population",
-                        tFun: (v) => Math.min(v / 50000, 1)
+                        tFun: (value) => Math.min(value / 50000, 1)
                     })
                 ]
             )
@@ -115,25 +120,47 @@ TODO add example
 
 ### Multi scale tiled CSV data
 
-TODO add example
+```javascript
+        new gviz.App(containerDiv)
+            //set position and zoom
+            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+            //add multi scale tiled CSV layer
+            .addMultiScaleTiledCSVGridLayer(
+                //the resolution values, ordered
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                //the URL, from the resolution
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+                //the styles
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "2018",
+                        tFun: (value, resolution, stats) => Math.pow(value / stats.max, 0.3)
+                    })
+                ],
+                {
+                    //the maximum pixel size
+                    pixNb: 3
+                })
+```
+(see [online](examples/basic_multiscale_tiled_CSV.html))
 
 
-| Method                        | Arguments  | Description |
-| ----------------------------- | ----- | ------ |
-| _app_.**addCSVGridLayer**([args]) | See [example](#single-csv-file) | Add a layer from a CSV grid dataset. |
-| _app_.**addMultiScaleCSVGridLayer**([args]) | See [example](#multi-scale-csv-data) | Add a layer from a multi scale CSV grid dataset. |
-| _app_.**addTiledCSVGridLayer**([args]) | See [example](#tiled-csv-data) | Add a layer from a tiled CSV grid dataset. |
+| Method                                           | Arguments                                  | Description                                            |
+| ------------------------------------------------ | ------------------------------------------ | ------------------------------------------------------ |
+| _app_.**addCSVGridLayer**([args])                | See [example](#single-csv-file)            | Add a layer from a CSV grid dataset.                   |
+| _app_.**addMultiScaleCSVGridLayer**([args])      | See [example](#multi-scale-csv-data)       | Add a layer from a multi scale CSV grid dataset.       |
+| _app_.**addTiledCSVGridLayer**([args])           | See [example](#tiled-csv-data)             | Add a layer from a tiled CSV grid dataset.             |
 | _app_.**addMultiScaleTiledCSVGridLayer**([args]) | See [example](#multi-scale-tiled-csv-data) | Add a layer from a multi scale tiled CSV grid dataset. |
 
 To manage creation of datasets and their possible reuse accross different layers (so that the data is loaded and stored once), the following methods are also available:
 
-| Method                        | Arguments  | Description |
-| ----------------------------- | ----- | ------ |
-| _app_.**addLayerFromDataset**([args]) | - | Add a layer to the app. |
-| _app_.**makeCSVGridDataset**([args]) | - | Make a CSV grid dataset. |
-| _app_.**makeTiledCSVGridDataset**([args]) | - | Make a tiled CSV grid dataset. |
-| _app_.**makeMultiScaleCSVGridDataset**([args]) | - | Make a multi scale CSV grid dataset. |
-| _app_.**makeMultiScaleTiledCSVGridDataset**([args]) | - | Make a multi scale tiled CSV grid dataset. |
+| Method                                              | Arguments | Description                                |
+| --------------------------------------------------- | --------- | ------------------------------------------ |
+| _app_.**addLayerFromDataset**([args])               | -         | Add a layer to the app.                    |
+| _app_.**makeCSVGridDataset**([args])                | -         | Make a CSV grid dataset.                   |
+| _app_.**makeTiledCSVGridDataset**([args])           | -         | Make a tiled CSV grid dataset.             |
+| _app_.**makeMultiScaleCSVGridDataset**([args])      | -         | Make a multi scale CSV grid dataset.       |
+| _app_.**makeMultiScaleTiledCSVGridDataset**([args]) | -         | Make a multi scale tiled CSV grid dataset. |
 
 
 ## Styles
@@ -237,7 +264,7 @@ From https://github.com/eurostat/Nuts2json
 ## About
 
 |                |                                                                                                                                                                                       |
-| -------------- | ------------------------------------------------------- |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | _contributors_ | [<img src="https://github.com/JoeWDavies.png" height="40" />](https://github.com/JoeWDavies) [<img src="https://github.com/jgaffuri.png" height="40" />](https://github.com/jgaffuri) |
 | _version_      | See [npm](https://www.npmjs.com/package/gridviz?activeTab=versions)                                                                                                                   |
 | _status_       | Since 2020                                                                                                                                                                            |
