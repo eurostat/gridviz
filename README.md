@@ -122,7 +122,7 @@ TODO add example
                 ]
             )
 ```
-(see [online](examples/basic_tiled_CSV.html))
+(see [online](https://eurostat.github.io/gridviz/examples/basic_tiled_CSV.html), see [code](examples/basic_tiled_CSV.html))
 
 ### Multi scale tiled CSV data
 
@@ -148,7 +148,7 @@ TODO add example
                     pixNb: 3
                 })
 ```
-(see [online](examples/basic_multiscale_tiled_CSV.html))
+(see [online](https://eurostat.github.io/gridviz/examples/basic_multiscale_tiled_CSV.html), see [code](examples/basic_multiscale_tiled_CSV.html))
 
 
 | Method                                           | Arguments                                  | Description                                            |
@@ -180,90 +180,90 @@ TODO explain preprocess.
 
 This style allows to define the **shape**, **color** and **size** of each grid cell individually.
 
-See [this example](examples/styles/shapecolorsize.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize.html).
 
 ### Square color WebGL Style
 
 This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display at detailled resolutions.
 
-See [this example](examples/styles/squarecolorwgl.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html).
 
 ### Composition style
 
 This style shows a composition at cell level in various different ways: Flags, pie charts, rings, segments, radar, age pyramid and halftone.
 
-See [this example](examples/styles/composition.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/composition.html).
 
 
 ### Segment style
 
 This style displays each cell as a segment with a changeable color, length, width and orientation.
 
-See [this example](examples/styles/segment.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/segment.html).
 
 
 ### Dot density style
 
 This style displays each cell as randomly located points, with changeable density and color.
 
-See [this example](examples/styles/dotdensity.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html).
 
 ### Stroke style
 
 This style shows the stroke of each cell with different colors, widths, shapes and sizes.
 
-See [this example](examples/styles/stroke.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/stroke.html).
 
 
 ### Side style
 
 This style extract the sides of the cells and show each of them depending on the values of the 2 cells around.
 
-See [this example](examples/styles/side.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html).
 
 
 ### JoyPlot Style
 
 This style shows cell rows in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
 
-See [this example](examples/styles/joyplot.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/joyplot.html).
 
 ### Mosaic style
 
 This style is a usual cell coloring style with a slight random deformation of the squares giving a 'mosaic' like effect.
 
-See [this example](examples/styles/mosaic.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/mosaic.html).
 
 
 ### Tanaka style
 
 This style shows the grid cells in a Tanaka-like style, that is with discrete colors and shadow effect.
 
-See [this example](examples/styles/tanaka.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html).
 
 ### Lego style
 
 This style shows the grid cells as lego bricks with changeable colors and height.
 
-See [this example](examples/styles/lego.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/lego.html).
 
 ### Pillars style
 
 This style shows the grid cells as 3D pillars, with changeable heigths and colors.
 
-See [this example](examples/styles/pillar.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/pillar.html).
 
 ### Text style
 
 This style shows the grid cells as text characters with different colors.
 
-See [this example](examples/styles/text.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/text.html).
 
 ### Kernel smoothing style
 
 This style allows applying gaussian kernel smoothing to the grid.
 
-See [this example](examples/styles/kernelsmoothing.html).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html).
 
 ## Tooltip
 
@@ -280,12 +280,14 @@ TODO
 ### Showing labels
 
 TODO
-From https://github.com/eurostat/euronym
+
+Example based on https://github.com/eurostat/euronym
 
 ### Showing boundaries
 
 TODO
-From https://github.com/eurostat/Nuts2json
+
+Example based on https://github.com/eurostat/Nuts2json
 
 ## About
 
@@ -294,7 +296,7 @@ From https://github.com/eurostat/Nuts2json
 | _contributors_ | [<img src="https://github.com/JoeWDavies.png" height="40" />](https://github.com/JoeWDavies) [<img src="https://github.com/jgaffuri.png" height="40" />](https://github.com/jgaffuri) |
 | _version_      | See [npm](https://www.npmjs.com/package/gridviz?activeTab=versions)                                                                                                                   |
 | _status_       | Since 2020                                                                                                                                                                            |
-| _license_      | [EUPL 1.2](https://github.com/eurostat/Nuts2json/blob/master/LICENSE)                                                                                                                 |
+| _license_      | [EUPL 1.2](LICENSE)                                                                                                                 |
 
 ## Support and contribution
 
