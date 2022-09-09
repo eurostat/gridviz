@@ -1,6 +1,5 @@
 //@ts-check
-
-import { Dataset, Cell } from "./Dataset";
+import { Dataset } from "./Dataset";
 import { DatasetComponent } from "./DatasetComponent";
 import { Style } from "./Style";
 
@@ -14,7 +13,7 @@ export class Layer {
     /**
      * @param {Dataset} dataset The multi resolution dataset to show.
      * @param {Array.<Style>} styles The styles, ordered in drawing order.
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string}} opts 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import("./Dataset").Cell):string}} opts 
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(dataset, styles, opts = {}) {
@@ -48,7 +47,7 @@ export class Layer {
         /**
          * The function returning cell information as HTML.
          * This is typically used for tooltip information.
-         * @type {function(Cell):string} */
+         * @type {function(import("./Dataset").Cell):string} */
         this.cellInfoHTML = opts.cellInfoHTML || Layer.defaultCellInfoHTML;
     }
 
@@ -58,7 +57,6 @@ export class Layer {
      * 
      * @param {number} zf 
      * @returns {DatasetComponent|undefined}
-     * @protected
      * */
     getDatasetComponent(zf) {
         if (zf < this.minZoom || zf > this.maxZoom) return;
@@ -84,7 +82,7 @@ export class Layer {
      * The default function returning cell information as HTML.
      * This is typically used for tooltip information.
      * 
-     * @param {Cell} cell 
+     * @param {import("./Dataset").Cell} cell 
      * @returns {string}
      */
     static defaultCellInfoHTML(cell) {
