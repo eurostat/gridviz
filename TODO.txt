@@ -1,4 +1,6 @@
 Improve doc
+improve style examples and add screenshots
+complete
 
 
 JSDOC bug: https://stackoverflow.com/questions/25773222/

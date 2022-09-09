@@ -6,12 +6,22 @@
 
 [Gridviz](https://github.com/eurostat/gridviz/) is a JavaScript library to visualise gridded data (or any tabular dataset with x/y position) in the browser in a large variety of advanced cartographic styles. Unlike traditional raster-based web mapping tools, [Gridviz](https://github.com/eurostat/gridviz/) renders everything client-side, on the fly.
 
-<div>
-  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/color.png" alt="preview" width="200px" height="200px"/>
-  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/joyplot.png" alt="preview" width="200px" height="200px"/>
-  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/size.png" alt="preview" width="200px" height="200px"/>
-  <img src="https://raw.githubusercontent.com/eurostat/gridviz/master/docs/screenshots/cropped/nl.png" alt="preview" width="200px" height="200px"/>
-</div>
+![](/docs/img/overviews/ov_accessibility.png)
+![](/docs/img/overviews/ov_age_balance.png)
+![](/docs/img/overviews/ov_choco.png)
+![](/docs/img/overviews/ov_dark.png)
+![](/docs/img/overviews/ov_donut.png)
+![](/docs/img/overviews/ov_flag.png)
+![](/docs/img/overviews/ov_joyplot.png)
+![](/docs/img/overviews/ov_lego.png)
+![](/docs/img/overviews/ov_mosaic.png)
+![](/docs/img/overviews/ov_piechart.png)
+![](/docs/img/overviews/ov_pillar.png)
+![](/docs/img/overviews/ov_popchange.png)
+![](/docs/img/overviews/ov_ring.png)
+![](/docs/img/overviews/ov_segment.png)
+![](/docs/img/overviews/ov_tanaka.png)
+
 
 Note: This page presents the documentation of the version 2. The version 1 documentation remains available [there](v1/readme.md).
 
