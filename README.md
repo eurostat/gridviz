@@ -300,7 +300,7 @@ Example based on https://github.com/eurostat/Nuts2json
 
 ## Support and contribution
 
-Feel free to [ask support](https://github.com/eurostat/eurostat.js/issues/new), fork the project or simply star it (it's always a pleasure).
+Feel free to [ask support](https://github.com/eurostat/gridviz/issues/new), fork the project or simply star it (it's always a pleasure).
 
 ## Copyright
 
