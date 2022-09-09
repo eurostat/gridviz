@@ -15,14 +15,20 @@
         let containerDiv = document.getElementById("viz-container");
 
         new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600)
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(2000)
             .addMultiScaleTiledCSVGridLayer(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
                 [
+                    new gviz.DotDensityStyle({
+                        col: "2018",
+                        nb: (v, r, s, zf) => 1 * r * r / (zf * zf) * gviz.s(v / s.max, 0.4),
+                        dotSize: (r, zf) => 1.2 * zf,
+                        color: () => "#FF5733"
+                    })
                 ],
                 {
-                    pixNb: 12,
+                    pixNb: 5,
                     cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)",
                 })
 
