@@ -116,7 +116,25 @@ TODO add example
 
 ### Tiled CSV data
 
-TODO add example
+```javascript
+        new gviz.App(containerDiv)
+        new gviz.App(containerDiv)
+            //set position and zoom
+            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+            //add multi scale tiled CSV layer
+            .addTiledCSVGridLayer(
+                //data URL
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/",
+                //the styles
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "2018",
+                        tFun: (value) => Math.min(value / 50000, 1)
+                    })
+                ]
+            )
+```
+(see [online](examples/basic_tiled_CSV.html))
 
 ### Multi scale tiled CSV data
 
