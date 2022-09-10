@@ -184,7 +184,7 @@ TODO explain preprocess.
 
 ## Styles
 
-TODO: explain general principles, with (v,r,zf,s) functions.
+TODO: explain general principles, with (v,r,zf,s) functions. + use several styles by layer + define zoom extent for each style
 
 ### Shape/Color/Size Style
 
