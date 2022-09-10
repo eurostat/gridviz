@@ -184,6 +184,7 @@ TODO explain preprocess.
 
 ## Styles
 
+TODO: explain general principles, with (v,r,zf,s) functions.
 
 ### Shape/Color/Size Style
 
