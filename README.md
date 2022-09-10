@@ -187,9 +187,9 @@ TODO explain preprocess.
 
 ### Shape/Color/Size Style
 
-This style allows to define the **shape**, **color** and **size** of each grid cell individually.
+This style is a generic type which allows to define the **shape**, **color** and **size** of each grid cell. These three caracteristics 
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize.html) ([code](examples/styles/shapecolorsize.html)).
+See [this example on the size only](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize.html) ([code](examples/styles/shapecolorsize.html)).
 
 ### Square color WebGL Style
 
