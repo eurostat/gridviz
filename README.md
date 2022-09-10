@@ -187,7 +187,7 @@ TODO explain preprocess.
 
 ### Shape/Color/Size Style
 
-This style is a generic type which allows to define the **shape**, **color** and **size** of each grid cell. These three caracteristics 
+This style is a generic type which allows to define the **shape**, **color** and **size** of each grid cell, independantly according to 3 different variables. Three shapes are currently available: square, circle and donut (a disk with a hole of changing size).
 
 See [this example on the size only](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize.html) ([code](examples/styles/shapecolorsize.html)).
 

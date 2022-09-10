@@ -21,16 +21,16 @@
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
                 [
                     new gviz.ShapeColorSizeStyle({
-                        colorCol: "2018",
-                        color: () => "rgb(" + (255 * Math.random()) + "," + (255 * Math.random()) + "," + (255 * Math.random()) + ")",
+                        //colorCol: "2018",
+                        //color: () => "rgb(" + (255 * Math.random()) + "," + (255 * Math.random()) + "," + (255 * Math.random()) + ")",
                         sizeCol: "2018",
-                        size: (v, r, s, zf) => 1.5 * r * Math.random(),
-                        shapeCol: "2018",
-                        shape: () => "circle",
+                        size: () => 1.5 * r * Math.random(),
+                        //shapeCol: "2018",
+                        //shape: () => { const r = Math.random(); return r < 1 / 3 ? "circle" : r < 2 / 3 ? "square" : "donut" },
                     })
                 ],
                 {
-                    pixNb: 7,
+                    pixNb: 15,
                     cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)",
                 })
 
