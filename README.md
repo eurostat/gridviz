@@ -78,7 +78,7 @@ Here's a basic example that loads a CSV file on Europe population (5km resolutio
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/basic_CSV.html), see [code](examples/basic_CSV.html))
 
-[Gridviz](https://github.com/eurostat/gridviz/) can display several layers on top of each others. Each layer is based on a single multi-resolution dataset, which can be displayed with several cartographic styles. For more information, see the [examples](#examples).
+[Gridviz](https://github.com/eurostat/gridviz/) can display several layers on top of each others. Each layer is based on a single [multi-resolution dataset](#adding-data), which can be displayed with several [cartographic styles](#styles). For more information, see the [examples](#examples).
 
 
 ## App Configuration
