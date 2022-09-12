@@ -242,6 +242,8 @@ Here is an example showing how to compute a new column showing the population ch
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/preprocess.html), see [code](examples/preprocess.html))
 
+Note that it is unfortunatelly currently not possible to compute new columns from the combination of two different datasets.
+
 ## Styles
 
 TODO: explain general principles, with (v,r,zf,s) functions. + use several styles by layer + define zoom extent for each style
