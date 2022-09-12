@@ -231,7 +231,7 @@ Loaded data can be processed/transformed before it is being used by the [Gridviz
 
 This process is run on each cell individually, only once, after the data has been downloaded.
 
-Here is an example showing how to compute a new column showing the population change from 2011 to 2018:
+Here is an example showing how to compute a new column on population change, as the difference between two columns _2011_ and _2018_. This new column is then used directly to be represented:
 
 
 ```javascript
