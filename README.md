@@ -22,8 +22,6 @@
 ![](/docs/img/overviews/ov_segment.png)
 ![](/docs/img/overviews/ov_tanaka.png)
 
-<hr>
-
 ## Examples
 
 - [Europe - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/EUR.html)
