@@ -6,21 +6,21 @@
 
 [Gridviz](https://github.com/eurostat/gridviz/) is a JavaScript library to visualise gridded data (or any tabular dataset with x/y position) in the browser in a large variety of advanced cartographic styles. Unlike traditional raster-based web mapping tools, [Gridviz](https://github.com/eurostat/gridviz/) renders everything client-side, on the fly.
 
-![](/docs/img/overviews/ov_accessibility.png)
-![](/docs/img/overviews/ov_age_balance.png)
-![](/docs/img/overviews/ov_choco.png)
-![](/docs/img/overviews/ov_dark.png)
-![](/docs/img/overviews/ov_donut.png)
-![](/docs/img/overviews/ov_flag.png)
-![](/docs/img/overviews/ov_joyplot.png)
-![](/docs/img/overviews/ov_lego.png)
-![](/docs/img/overviews/ov_mosaic.png)
-![](/docs/img/overviews/ov_piechart.png)
-![](/docs/img/overviews/ov_pillar.png)
-![](/docs/img/overviews/ov_popchange.png)
-![](/docs/img/overviews/ov_ring.png)
-![](/docs/img/overviews/ov_segment.png)
-![](/docs/img/overviews/ov_tanaka.png)
+[![](/docs/img/overviews/ov_accessibility.png)](#shapecolorsize-style)
+[![](/docs/img/overviews/ov_age_balance.png)](#shapecolorsize-style)
+[![](/docs/img/overviews/ov_choco.png)](#side-style)
+[![](/docs/img/overviews/ov_dark.png)](#square-color-webgl-style)
+[![](/docs/img/overviews/ov_donut.png)](#shapecolorsize-style)
+[![](/docs/img/overviews/ov_flag.png)](#composition-style)
+[![](/docs/img/overviews/ov_joyplot.png)](#joyplot-style)
+[![](/docs/img/overviews/ov_lego.png)](#lego-style)
+[![](/docs/img/overviews/ov_mosaic.png)](#mosaic-style)
+[![](/docs/img/overviews/ov_piechart.png)](#composition-style)
+[![](/docs/img/overviews/ov_pillar.png)](#pillars-style)
+[![](/docs/img/overviews/ov_popchange.png)](#shapecolorsize-style)
+[![](/docs/img/overviews/ov_ring.png)](#composition-style)
+[![](/docs/img/overviews/ov_segment.png)](#segment-style)
+[![](/docs/img/overviews/ov_tanaka.png)](#tanaka-style)
 
 ## Examples
 
