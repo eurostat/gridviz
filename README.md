@@ -141,30 +141,31 @@ The following methods allow further configuration of a [Gridviz](https://github.
 
 ## Adding data
 
-Input data are tabular data, in CSV format. It is possible to specify different data sources for different zoom levels, so that the level of detail of the data can adapt to the zoom level. Tiled CSV data can also be specified following the [tiled CSV format](docs/tiledCSVformat.md).
+Input data are tabular data, in CSV format. For the position of the cell, two columns **x** and **y** must be specified, with the geographical coordinates of the lower left corner of the cell, expressed in the grid Coordinate Reference System. If this information is not explicitelly provided in the input data, it is however possible to compute it on-the-fly as explained [here](#data-pre-processing).
+
+It is possible to specify different data sources for different zoom levels, so that the level of detail of the data can adapt to the zoom level. Tiled CSV data can also be specified following the [tiled CSV format](docs/tiledCSVformat.md).
 
 Are are several examples:
 
 ### Single CSV file
 
-See the [basic example above](#usage).
+This is the simplest case, when a unique CSV file is loaded. See the [basic example above](#usage).
 
 ### Multi scale CSV data
+
+When several CSV files contain the data with different resolutions, it is possible to define a multi-scale dataset from those files. The change of dataset depending on the zoom level is controled with the **pixNb** parameter:
 
 ```javascript
         new gviz.App(containerDiv)
             //set position and zoom
             .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-            //add multi scale tiled CSV layer
-            .addMultiScaleTiledCSVGridLayer(
-                //the resolution values, ordered
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                //the URL, from the resolution
-                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
-                //the styles
+            //add multiscale CSV layer
+            .addMultiScaleCSVGridLayer(
+                [5000, 10000, 20000, 50000, 100000],
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_" + Math.round(r / 1000) + "km.csv",
                 [
                     new gviz.SquareColorWGLStyle({
-                        colorCol: "2018",
+                        colorCol: "population",
                         tFun: (value, resolution, stats) => Math.pow(value / stats.max, 0.3)
                     })
                 ],
@@ -175,8 +176,9 @@ See the [basic example above](#usage).
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/basic_multiscale_CSV.html), see [code](examples/basic_multiscale_CSV.html))
 
-
 ### Tiled CSV data
+
+For large dataset, it is adviced to decompose them into different data chunks and index those by geographical location, as specified in the [tiled CSV format](docs/tiledCSVformat.md). The [Gridviz](https://github.com/eurostat/gridviz/) application can then automatically retrieve only the usefull data that fall into the view geographical extent. This is an example of how to load such data:
 
 ```javascript
         new gviz.App(containerDiv)
@@ -199,6 +201,8 @@ See the [basic example above](#usage).
 (see [online](https://eurostat.github.io/gridviz/examples/basic_tiled_CSV.html), see [code](examples/basic_tiled_CSV.html))
 
 ### Multi scale tiled CSV data
+
+Multi scale tiled CSV data based on the [tiled CSV format](docs/tiledCSVformat.md) can also be simply loaded with the example below. Here again, the change of dataset depending on the zoom level is controled with the **pixNb** parameter:
 
 ```javascript
         new gviz.App(containerDiv)
