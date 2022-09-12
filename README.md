@@ -296,11 +296,19 @@ This style is a generic type which allows to define the **shape**, **color** and
 
 TODO: screenshots
 
-TODO list/describe properties ?
-
 See [this example with changing size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize.html) ([code](examples/styles/shapecolorsize.html)).
 
 See [this example with random shape, color and size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html) ([code](examples/styles/shapecolorsize_random.html)).
+
+
+| Property | Type     | Default | Description  |
+| -------------- | -------- | ------- | -------------- |
+| **colorCol** | string |  undefined   | The name of the column used for the color. |
+| **color** | function(v,r,s):string |  (() => "#EA6BAC")   | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. |
+| **sizeCol** | string |  undefined   | The name of the column used for the size. |
+| **size** | function(v,r,s,zf) |  ((v,r,s,zf) => r)   | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, and statistics **s**. |
+| **shape** | function(c):string |  (() => "square")   | A function computing the shape of cell **c**. Expected values are within __{"square", "circle", "donut", "none"}__ |
+
 
 ### Square color WebGL Style
 
