@@ -141,7 +141,9 @@ The following methods allow further configuration of a [Gridviz](https://github.
 
 ## Adding data
 
-Input data are tabular data, in CSV format. For the position of the cell, two columns **x** and **y** must be specified, with the geographical coordinates of the lower left corner of the cell, expressed in the grid Coordinate Reference System. If this information is not explicitelly provided in the input data, it is however possible to compute it on-the-fly as explained [here](#data-pre-processing).
+Input data are tabular data, in CSV format.
+
+For the position of the cell, two columns **x** and **y** must be specified, with the geographical coordinates of the lower left corner of the cell, expressed in the grid Coordinate Reference System. If this information is not explicitelly provided in the input data, it is however possible to compute it on-the-fly as explained [here](#data-pre-processing).
 
 It is possible to specify different data sources for different zoom levels, so that the level of detail of the data can adapt to the zoom level. Tiled CSV data can also be specified following the [tiled CSV format](docs/tiledCSVformat.md).
 
