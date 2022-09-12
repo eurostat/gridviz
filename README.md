@@ -22,6 +22,64 @@
 ![](/docs/img/overviews/ov_segment.png)
 ![](/docs/img/overviews/ov_tanaka.png)
 
+<hr>
+
+## Table of contents
+
+- [Examples](#examples)
+- [Installation](#installation)
+- [Usage]()
+- [App configuration]()
+- [Adding data]()
+- [Styles]()
+- [Legends]()
+- [Foreground information]()
+- [Tooltip]()
+- [About]()
+
+
+
+
+- [gridviz](#gridviz)
+  - [Table of contents](#table-of-contents)
+  - [Examples](#examples)
+  - [Installation](#installation)
+    - [Node.js](#nodejs)
+    - [standalone](#standalone)
+  - [Usage](#usage)
+  - [App Configuration](#app-configuration)
+  - [Adding data](#adding-data)
+    - [Single CSV file](#single-csv-file)
+    - [Multi scale CSV data](#multi-scale-csv-data)
+    - [Tiled CSV data](#tiled-csv-data)
+    - [Multi scale tiled CSV data](#multi-scale-tiled-csv-data)
+    - [Data pre-processing](#data-pre-processing)
+  - [Styles](#styles)
+    - [Shape/Color/Size Style](#shapecolorsize-style)
+    - [Square color WebGL Style](#square-color-webgl-style)
+    - [Composition style](#composition-style)
+    - [Segment style](#segment-style)
+    - [Dot density style](#dot-density-style)
+    - [Stroke style](#stroke-style)
+    - [Side style](#side-style)
+    - [JoyPlot Style](#joyplot-style)
+    - [Mosaic style](#mosaic-style)
+    - [Tanaka style](#tanaka-style)
+    - [Lego style](#lego-style)
+    - [Pillars style](#pillars-style)
+    - [Text style](#text-style)
+    - [Kernel smoothing style](#kernel-smoothing-style)
+  - [Legends](#legends)
+  - [Foreground information](#foreground-information)
+    - [Showing labels](#showing-labels)
+    - [Showing boundaries](#showing-boundaries)
+  - [Tooltip](#tooltip)
+  - [About](#about)
+    - [Support and contribution](#support-and-contribution)
+    - [Copyright](#copyright)
+    - [Disclaimer](#disclaimer)
+
+
 ## Examples
 
 - [Europe - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/EUR.html)
@@ -178,7 +236,7 @@ To manage creation of datasets and their possible reuse accross different layers
 | _app_.**makeMultiScaleTiledCSVGridDataset**([args]) | -         | Make a multi scale tiled CSV grid dataset. |
 
 
-## Data pre-processing
+### Data pre-processing
 
 TODO explain preprocess.
 
@@ -281,9 +339,6 @@ This style allows applying gaussian kernel smoothing to the grid.
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html) ([code](examples/styles/kernelsmoothing.html)).
 
-## Tooltip
-
-TODO
 
 ## Legends
 
@@ -305,6 +360,13 @@ TODO
 
 Example based on https://github.com/eurostat/Nuts2json
 
+
+
+## Tooltip
+
+TODO
+
+
 ## About
 
 |                |                                                                                                                                                                                       |
@@ -314,14 +376,14 @@ Example based on https://github.com/eurostat/Nuts2json
 | _status_       | Since 2020                                                                                                                                                                            |
 | _license_      | [EUPL 1.2](LICENSE)                                                                                                                 |
 
-## Support and contribution
+### Support and contribution
 
 Feel free to [ask support](https://github.com/eurostat/gridviz/issues/new), fork the project or simply star it (it's always a pleasure).
 
-## Copyright
+### Copyright
 
 The [Eurostat NUTS dataset](http://ec.europa.eu/eurostat/web/nuts/overview) is copyrighted. There are [specific provisions](https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units) for the usage of this dataset which must be respected. The usage of these data is subject to their acceptance. See the [Eurostat-GISCO website](http://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts) for more information.
 
-## Disclaimer
+### Disclaimer
 
 The designations employed and the presentation of material on these maps do not imply the expression of any opinion whatsoever on the part of the European Union concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. Kosovo*: This designation is without prejudice to positions on status, and is in line with UNSCR 1244/1999 and the ICJ Opinion on the Kosovo declaration of independence. Palestine*: This designation shall not be construed as recognition of a State of Palestine and is without prejudice to the individual positions of the Member States on this issue.
