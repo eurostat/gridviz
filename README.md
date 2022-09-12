@@ -104,7 +104,7 @@ Here's a basic example that loads a CSV file on Europe population (5km resolutio
             //add CSV layer
             .addCSVGridLayer(
                 //data URL
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2011_5km.csv",
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv",
                 //resolution, in CRS unit (m)
                 5000,
                 //the style
@@ -389,7 +389,7 @@ A 'tooltip' shows information related to the selected grid cell. The information
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(500)
             .addCSVGridLayer(
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2011_5km.csv",
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv",
                 5000,
                 [new gviz.SquareColorWGLStyle({ colorCol: "population", tFun: (value) => Math.min(value / 50000, 1) })],
                 {
