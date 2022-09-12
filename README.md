@@ -125,17 +125,17 @@ Here's a basic example that loads a CSV file on Europe population (5km resolutio
 
 ## App Configuration
 
-The following methods allow further configuration of a [Gridviz](https://github.com/eurostat/gridviz/) Application:
+The following methods allow further configuration of a [Gridviz](https://github.com/eurostat/gridviz/) application:
 
-| Method                                                                      | Type                   | Default                                                                       | Description                                                                                                                                                                                                            |
-| --------------------------------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| _app_.**getGeoCenter**()<br />_app_.**setGeoCenter**([value])               | { x:number, y:number } | { x:0, y:0 }                                                                  | Get/set the geographical coordinates of the view center.                                                                                                                                                               |
-| _app_.**getZoomFactor**()<br />_app_.**setZoomFactor**([value])             | number                 | 1                                                                             | Get/set the view zoom. This zoom factor is expressed as the size of a pixel in ground distance.                                                                                                                        |
-| _app_.**getZoomFactorExtent**()<br />_app_.**setZoomFactorExtent**([value]) | Array.<number>         | [0, Infinity]                                                                 | Get/set the view zoom extent, in order to prevent the user to zoom in/out beyond some zoom levels.                                                                                                                     |
-| _app_.**getBackgroundColor**()<br />_app_.**setBackgroundColor**([value])   | string                 | "white"                                                                       | Get/set the map background color.                                                                                                                                                                                      |
-| _app_.**getBoundaryLayer**()<br />_app_.**setBoundaryLayer**([value])       | LineLayer              | undefined                                                                     | A layer for boundary lines, see [here](#showing-boundaries).                                                                                                                                                           |
-| _app_.**getLabelLayer**()<br />_app_.**setLabelLayer**([value])             | LabelLayer             | undefined | A layer for labels (such as placenames), see [here](#showing-labels).                                                                                                                                                                                                                       |
-| _app_.**setViewFromURL**()                                                  |                        |                                                                               | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_. |
+| Method                                                                      | Type                   | Default       | Description                                                                                                                                                                                                            |
+| --------------------------------------------------------------------------- | ---------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _app_.**getGeoCenter**()<br />_app_.**setGeoCenter**([value])               | { x:number, y:number } | { x:0, y:0 }  | Get/set the geographical coordinates of the view center.                                                                                                                                                               |
+| _app_.**getZoomFactor**()<br />_app_.**setZoomFactor**([value])             | number                 | 1             | Get/set the view zoom. This zoom factor is expressed as the size of a pixel in ground distance.                                                                                                                        |
+| _app_.**getZoomFactorExtent**()<br />_app_.**setZoomFactorExtent**([value]) | Array.<number>         | [0, Infinity] | Get/set the view zoom extent, in order to prevent the user to zoom in/out beyond some zoom levels.                                                                                                                     |
+| _app_.**getBackgroundColor**()<br />_app_.**setBackgroundColor**([value])   | string                 | "white"       | Get/set the map background color.                                                                                                                                                                                      |
+| _app_.**getBoundaryLayer**()<br />_app_.**setBoundaryLayer**([value])       | LineLayer              | undefined     | A layer for boundary lines, see [here](#showing-boundaries).                                                                                                                                                           |
+| _app_.**getLabelLayer**()<br />_app_.**setLabelLayer**([value])             | LabelLayer             | undefined     | A layer for labels (such as placenames), see [here](#showing-labels).                                                                                                                                                  |
+| _app_.**setViewFromURL**()                                                  |                        |               | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_. |
 
 
 
@@ -222,7 +222,25 @@ To manage creation of datasets and their possible reuse accross different layers
 
 ### Data pre-processing
 
-TODO explain preprocess.
+Loaded data can be processed/transformed before it is being used by the [Gridviz](https://github.com/eurostat/gridviz/) application in order to, for example:
+- Filter/simplify the data to keep only the necessary one. This can save client memory,
+- Extract/compute each cell coordinates into the **x** and **y** columns, in case the input data does not contain such columns explicitelly,
+- Compute a new column from the combination of existing ones, such as the ratio between two columns, or the aggregation of several columns,
+- Run some data conversions,
+- Etc.
+
+This process is run on each cell individually, only once, after the data has been downloaded.
+
+Here is an example showing how to compute a new column showing the population change from 2011 to 2018:
+
+
+```javascript
+        new gviz.App(containerDiv)
+            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(500)
+            .addCSVGridLayer(
+            )
+```
+(see [online](https://eurostat.github.io/gridviz/examples/preprocess.html), see [code](examples/preprocess.html))
 
 ## Styles
 
@@ -372,11 +390,11 @@ TODO: change tooltip style
 ## About
 
 |                |                                                                                                                                                                                       |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| -------------- | ------------------------------------------------------------ |
 | _contributors_ | [<img src="https://github.com/JoeWDavies.png" height="40" />](https://github.com/JoeWDavies) [<img src="https://github.com/jgaffuri.png" height="40" />](https://github.com/jgaffuri) |
 | _version_      | See [npm](https://www.npmjs.com/package/gridviz?activeTab=versions)                                                                                                                   |
 | _status_       | Since 2020                                                                                                                                                                            |
-| _license_      | [EUPL 1.2](LICENSE)                                                                                                                 |
+| _license_      | [EUPL 1.2](LICENSE)                                                                                                                                                                   |
 
 ### Support and contribution
 
