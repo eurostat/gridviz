@@ -24,11 +24,18 @@
 
 <hr>
 
+## Examples
+
+- [Europe - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/EUR.html)
+- [France - 200m resolution - INSEE Filosofi](https://eurostat.github.io/gridviz/examples/FR.html)
+- [Croatia - 1km resolution - DZS 2015 grid](https://eurostat.github.io/gridviz/examples/HR.html)
+- [Dark style](https://eurostat.github.io/gridviz/examples/FR_dark.html)
+
 ## Table of contents
 
 - [gridviz](#gridviz)
-  - [Table of contents](#table-of-contents)
   - [Examples](#examples)
+  - [Table of contents](#table-of-contents)
   - [Installation](#installation)
     - [Node.js](#nodejs)
     - [standalone](#standalone)
@@ -65,13 +72,6 @@
     - [Copyright](#copyright)
     - [Disclaimer](#disclaimer)
 
-
-## Examples
-
-- [Europe - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/EUR.html)
-- [France - 200m resolution - INSEE Filosofi](https://eurostat.github.io/gridviz/examples/FR.html)
-- [Croatia - 1km resolution - DZS 2015 grid](https://eurostat.github.io/gridviz/examples/HR.html)
-- [Dark style](https://eurostat.github.io/gridviz/examples/FR_dark.html)
 
 ## Installation
 
