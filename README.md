@@ -348,31 +348,26 @@ Example based on https://github.com/eurostat/Nuts2json
 
 ## Tooltip
 
+![gridviz tooltip](/docs/img/tooltip.png)
+
+A 'tooltip' shows information related to the selected grid cell. The information shown for each selected cell can be specified at dataset level using the **cellInfoHTML** parameter. See for example:
+
 ```javascript
         new gviz.App(containerDiv)
-            //set position and zoom
-            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-            //add multi scale tiled CSV layer
-            .addMultiScaleTiledCSVGridLayer(
-                //the resolution values, ordered
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                //the URL, from the resolution
-                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
-                //the styles
-                [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: "2018",
-                        tFun: (value, resolution, stats) => Math.pow(value / stats.max, 0.3)
-                    })
-                ],
+            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(500)
+            .addCSVGridLayer(
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2011_5km.csv",
+                5000,
+                [new gviz.SquareColorWGLStyle({ colorCol: "population", tFun: (value) => Math.min(value / 50000, 1) })],
                 {
-                    //the maximum pixel size
-                    pixNb: 3
-                })
+                    //tooltip content configuration
+                    cellInfoHTML: c => "The population of this cell is: <b>" + c.population + "</b> !",
+                }
+            )
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/tooltip.html), see [code](examples/tooltip.html))
 
-
+TODO: change tooltip style
 
 ## About
 
