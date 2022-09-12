@@ -26,20 +26,6 @@
 
 ## Table of contents
 
-- [Examples](#examples)
-- [Installation](#installation)
-- [Usage]()
-- [App configuration]()
-- [Adding data]()
-- [Styles]()
-- [Legends]()
-- [Foreground information]()
-- [Tooltip]()
-- [About]()
-
-
-
-
 - [gridviz](#gridviz)
   - [Table of contents](#table-of-contents)
   - [Examples](#examples)
