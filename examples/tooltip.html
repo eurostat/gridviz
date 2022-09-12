@@ -15,21 +15,15 @@
         let containerDiv = document.getElementById("viz-container");
 
         new gviz.App(containerDiv)
-            //set position and zoom
             .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-            //add CSV layer
             .addCSVGridLayer(
-                //data URL
                 "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2011_5km.csv",
-                //resolution, in CRS unit
                 5000,
-                //the styles
-                [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: "Population",
-                        tFun: (value) => Math.min(value / 50000, 1)
-                    })
-                ]
+                [new gviz.SquareColorWGLStyle({ colorCol: "Population", tFun: (value) => Math.min(value / 50000, 1) })],
+                {
+                    //tooltip content configuration
+                    cellInfoHTML: c => "The population of this cell is: <b>" + c.Population + "</b> !",
+                }
             )
 
     </script>

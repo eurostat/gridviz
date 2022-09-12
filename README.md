@@ -348,7 +348,30 @@ Example based on https://github.com/eurostat/Nuts2json
 
 ## Tooltip
 
-TODO
+```javascript
+        new gviz.App(containerDiv)
+            //set position and zoom
+            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+            //add multi scale tiled CSV layer
+            .addMultiScaleTiledCSVGridLayer(
+                //the resolution values, ordered
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                //the URL, from the resolution
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+                //the styles
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "2018",
+                        tFun: (value, resolution, stats) => Math.pow(value / stats.max, 0.3)
+                    })
+                ],
+                {
+                    //the maximum pixel size
+                    pixNb: 3
+                })
+```
+(see [online](https://eurostat.github.io/gridviz/examples/tooltip.html), see [code](examples/tooltip.html))
+
 
 
 ## About
