@@ -236,8 +236,21 @@ Here is an example showing how to compute a new column showing the population ch
 
 ```javascript
         new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(500)
-            .addCSVGridLayer(
+            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+            .addMultiScaleTiledCSVGridLayer(
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+                [ new gviz.ShapeColorSizeStyle({ /* style construction */}) ],
+                {
+                    //for each cell, compute 2011 -> 2018 change and store it in a new "change" column
+                    preprocess: c => {
+                        if (!c["2011"] && !c["2018"]) c.change = 0
+                        else if (!c["2011"] && c["2018"]) c.change = + c["2018"]
+                        else if (c["2011"] && !c["2018"]) c.change = - c["2011"]
+                        else c.change = c["2018"] - c["2011"]
+                    },
+                    pixNb: 3,
+                }
             )
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/preprocess.html), see [code](examples/preprocess.html))
@@ -392,7 +405,7 @@ TODO: change tooltip style
 ## About
 
 |                |                                                                                                                                                                                       |
-| -------------- | ------------------------------------------------------------ |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | _contributors_ | [<img src="https://github.com/JoeWDavies.png" height="40" />](https://github.com/JoeWDavies) [<img src="https://github.com/jgaffuri.png" height="40" />](https://github.com/jgaffuri) |
 | _version_      | See [npm](https://www.npmjs.com/package/gridviz?activeTab=versions)                                                                                                                   |
 | _status_       | Since 2020                                                                                                                                                                            |
