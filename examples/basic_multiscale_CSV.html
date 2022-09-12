@@ -16,7 +16,7 @@
 
         new gviz.App(containerDiv)
             //set position and zoom
-            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(5000)
             //add multiscale CSV layer
             .addMultiScaleCSVGridLayer(
                 [5000, 10000, 20000, 50000, 100000],
@@ -26,7 +26,11 @@
                         colorCol: "population",
                         tFun: (value, resolution, stats) => Math.pow(value / stats.max, 0.3)
                     })
-                ]
+                ],
+                {
+                    //the maximum pixel size before jumping to a lower resolution
+                    pixNb: 3
+                }
             )
 
 
