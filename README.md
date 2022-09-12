@@ -1,4 +1,4 @@
-*# gridviz
+# gridviz
 
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/gridviz)
 ![npm](https://img.shields.io/npm/v/gridviz)
