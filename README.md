@@ -125,7 +125,7 @@ Here's a basic example that loads a CSV file on Europe population (5km resolutio
 
 ## App Configuration
 
-
+The following methods allow further configuration of a [Gridviz](https://github.com/eurostat/gridviz/) Application:
 
 | Method                                                                      | Type                   | Default                                                                       | Description                                                                                                                                                                                                            |
 | --------------------------------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
