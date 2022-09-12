@@ -19,11 +19,11 @@
             .addCSVGridLayer(
                 "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2011_5km.csv",
                 5000,
-                [new gviz.SquareColorWGLStyle({ colorCol: "Population", tFun: (value) => Math.min(value / 50000, 1) })],
-                //{
+                [new gviz.SquareColorWGLStyle({ colorCol: "population", tFun: (value) => Math.min(value / 50000, 1) })],
+                {
                     //tooltip content configuration
-                    //cellInfoHTML: c => "The population of this cell is: <b>" + c.Population + "</b> !",
-                //}
+                    cellInfoHTML: c => "The population of this cell is: <b>" + c.Population + "</b> !",
+                }
             )
 
     </script>
