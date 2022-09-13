@@ -295,7 +295,7 @@ TODO: explain general principles, with (v,r,zf,s) functions. + use several style
 
 ### Shape/Color/Size Style
 
-This style is a generic style which allows to define the **shape**, **color** and **size** of each grid cell, independantly according to 3 different variables. Three shapes are currently available: square, circle and donut (a disk with a hole of changing size).
+This style is a generic style which allows to define the **shape**, **color** and **size** of each grid cell, independantly according to 3 different variables. Three shapes are currently available: square, circle and donut (a disk with a hole of changing size). To show grid cells as small squares with only changing color, the style based on web GL [here](#square-color-webgl-style) should rather be used, for efficiency reasons.
 
 TODO: screenshots
 
@@ -315,18 +315,17 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 
 ### Square color WebGL Style
 
-This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display at detailled resolutions.
+This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display grid cells at detailled resolutions.
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html) ([code](examples/styles/squarecolorwgl.html)).
-
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
 | **colorCol** | string |  undefined   | The name of the column used for the color. |
-| **tFun** | function(number,number,Stat):number | (v, r, s) => v / s.max |  A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sample. |
-| **deformationFactor** | number |  1   |  |
-| **colors** | Array.<string> |  ["lightblue", "green", "yellow", "orange", "red"]   |  |
-| **size** | function(number,number):number |     |  |
+| **tFun** | function(number,number,Stat):number | (v, r, s) => v / s.max |  A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling. |
+| **deformationFactor** | number |  1   | A parameter within [0,Inf] to deform the distribution. 1: no deformation. <1: better show small values. >1: better show large values. |
+| **colors** | Array.<string> |  ["lightblue", "green", "yellow", "orange", "red"]   | The sample of the color ramp. |
+| **size** | function(r,zf):number |  (r,zf) => r + 0.2 * zf   | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size. |
 
 ### Composition style
 

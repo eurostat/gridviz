@@ -50,7 +50,7 @@ export class SquareColorWGLStyle extends Style {
             this.colors = [opts.color(0), opts.color(0.25), opts.color(0.5), opts.color(0.75), opts.color(1)]
 
         /**
-         * A function returning the size of the cells, in geographical unit.
+         * A function returning the size of the cells, in geographical unit. All cells have the same size.
          * @protected
          * @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
