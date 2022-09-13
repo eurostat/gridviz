@@ -278,7 +278,7 @@ new gviz.App(containerDiv)
                 else if (!c["2011"] && c["2018"]) c.change = + c["2018"]
                 else if (c["2011"] && !c["2018"]) c.change = - c["2011"]
                 else c.change = c["2018"] - c["2011"]
-                //remove unused column
+                //remove unused information
                 delete c["2006"]; delete c["2011"]; delete c["2018"]
             },
             pixNb: 3,
