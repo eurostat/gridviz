@@ -53,7 +53,7 @@ import { LineLayer } from "./LineLayer"
  * Function [0,1]->[0,1] to stretch range of values.
  * @param {number} t The value to stretch, within [0,1]
  * @param {number} alpha The stretching factor: 1=no stretching. >1 stretch to show high values. <1 stretch to show low values.
- * @param {number} type Test 0, 1 or 1... show different result.
+ * @param {number} type Test 0, 1 or 2... show different result.
  * @returns The stretched value, within [0,1]
  */
 export const s = function (t, alpha, type = 0) {
