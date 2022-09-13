@@ -98,25 +98,25 @@ Create a [Gridviz](https://github.com/eurostat/gridviz/) application using `let 
 Here's a basic example that loads a CSV file on Europe population (5km resolution):
 
 ```javascript
-        new gviz.App(containerDiv)
-            //set position and zoom
-            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-            //add CSV layer
-            .addCSVGridLayer(
-                //data URL
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv",
-                //resolution, in CRS unit (m)
-                5000,
-                //the style
-                [
-                    new gviz.SquareColorWGLStyle({
-                        //the CSV column to show
-                        colorCol: "Population",
-                        //value to [0,1] mapping function
-                        tFun: (value) => Math.min(value / 50000, 1)
-                    })
-                ]
-            )
+new gviz.App(containerDiv)
+    //set position and zoom
+    .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+    //add CSV layer
+    .addCSVGridLayer(
+        //data URL
+        "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv",
+        //resolution, in CRS unit (m)
+        5000,
+        //the style
+        [
+            new gviz.SquareColorWGLStyle({
+                //the CSV column to show
+                colorCol: "Population",
+                //value to [0,1] mapping function
+                tFun: (value) => Math.min(value / 50000, 1)
+            })
+        ]
+    )
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/basic_CSV.html), see [code](examples/basic_CSV.html))
 
@@ -158,23 +158,24 @@ This is the simplest case, when a unique CSV file is loaded. See the [basic exam
 When several CSV files contain the data with different resolutions, it is possible to define a multi-scale dataset from those files. The change of dataset depending on the zoom level is controled with the **pixNb** parameter:
 
 ```javascript
-        new gviz.App(containerDiv)
-            //set position and zoom
-            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-            //add multiscale CSV layer
-            .addMultiScaleCSVGridLayer(
-                [5000, 10000, 20000, 50000, 100000],
-                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_" + Math.round(r / 1000) + "km.csv",
-                [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: "population",
-                        tFun: (value, resolution, stats) => Math.pow(value / stats.max, 0.3)
-                    })
-                ],
-                {
-                    //the maximum pixel size before jumping to a lower resolution
-                    pixNb: 3
-                })
+new gviz.App(containerDiv)
+    //set position and zoom
+    .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+    //add multiscale CSV layer
+    .addMultiScaleCSVGridLayer(
+        [5000, 10000, 20000, 50000, 100000],
+        r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_" + Math.round(r / 1000) + "km.csv",
+        [
+            new gviz.SquareColorWGLStyle({
+                colorCol: "population",
+                tFun: (value, resolution, stats) => Math.pow(value / stats.max, 0.3)
+            })
+        ],
+        {
+            //the maximum pixel size before jumping to a lower resolution
+            pixNb: 3
+        }
+    )
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/basic_multiscale_CSV.html), see [code](examples/basic_multiscale_CSV.html))
 
@@ -183,22 +184,21 @@ When several CSV files contain the data with different resolutions, it is possib
 For large dataset, it is adviced to decompose them into different data chunks and index those by geographical location, as specified in the [tiled CSV format](docs/tiledCSVformat.md). The [Gridviz](https://github.com/eurostat/gridviz/) application can then automatically retrieve only the usefull data that fall into the view geographical extent. This is an example of how to load such data:
 
 ```javascript
-        new gviz.App(containerDiv)
-        new gviz.App(containerDiv)
-            //set position and zoom
-            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-            //add multi scale tiled CSV layer
-            .addTiledCSVGridLayer(
-                //data URL
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/",
-                //the styles
-                [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: "2018",
-                        tFun: (value) => Math.min(value / 50000, 1)
-                    })
-                ]
-            )
+new gviz.App(containerDiv)
+    //set position and zoom
+    .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+    //add multi scale tiled CSV layer
+    .addTiledCSVGridLayer(
+        //data URL
+        "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/",
+        //the styles
+        [
+            new gviz.SquareColorWGLStyle({
+                colorCol: "2018",
+                tFun: (value) => Math.min(value / 50000, 1)
+            })
+        ]
+    )
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/basic_tiled_CSV.html), see [code](examples/basic_tiled_CSV.html))
 
@@ -207,26 +207,27 @@ For large dataset, it is adviced to decompose them into different data chunks an
 Multi scale tiled CSV data based on the [tiled CSV format](docs/tiledCSVformat.md) can also be simply loaded with the example below. Here again, the change of dataset depending on the zoom level is controled with the **pixNb** parameter:
 
 ```javascript
-        new gviz.App(containerDiv)
-            //set position and zoom
-            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-            //add multi scale tiled CSV layer
-            .addMultiScaleTiledCSVGridLayer(
-                //the resolution values, ordered
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                //the URL, from the resolution
-                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
-                //the styles
-                [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: "2018",
-                        tFun: (value, resolution, stats) => Math.pow(value / stats.max, 0.3)
-                    })
-                ],
-                {
-                    //the maximum pixel size before jumping to a lower resolution
-                    pixNb: 3
-                })
+new gviz.App(containerDiv)
+    //set position and zoom
+    .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+    //add multi scale tiled CSV layer
+    .addMultiScaleTiledCSVGridLayer(
+        //the resolution values, ordered
+        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+        //the URL, from the resolution
+        r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+        //the styles
+        [
+            new gviz.SquareColorWGLStyle({
+                colorCol: "2018",
+                tFun: (value, resolution, stats) => Math.pow(value / stats.max, 0.3)
+            })
+        ],
+        {
+            //the maximum pixel size before jumping to a lower resolution
+            pixNb: 3
+        }
+    )
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/basic_multiscale_tiled_CSV.html), see [code](examples/basic_multiscale_tiled_CSV.html))
 
@@ -264,23 +265,23 @@ Here is an example showing how to compute a new column on population change, as 
 
 
 ```javascript
-        new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-            .addMultiScaleTiledCSVGridLayer(
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
-                [ new gviz.ShapeColorSizeStyle({ /* style construction */}) ],
-                {
-                    //for each cell, compute 2011 -> 2018 change and store it in a new "change" column
-                    preprocess: c => {
-                        if (!c["2011"] && !c["2018"]) c.change = 0
-                        else if (!c["2011"] && c["2018"]) c.change = + c["2018"]
-                        else if (c["2011"] && !c["2018"]) c.change = - c["2011"]
-                        else c.change = c["2018"] - c["2011"]
-                    },
-                    pixNb: 3,
-                }
-            )
+new gviz.App(containerDiv)
+    .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+    .addMultiScaleTiledCSVGridLayer(
+        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+        r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+        [ new gviz.ShapeColorSizeStyle({ /* style construction */}) ],
+        {
+            //for each cell, compute 2011 -> 2018 change and store it in a new "change" column
+            preprocess: c => {
+                if (!c["2011"] && !c["2018"]) c.change = 0
+                else if (!c["2011"] && c["2018"]) c.change = + c["2018"]
+                else if (c["2011"] && !c["2018"]) c.change = - c["2011"]
+                else c.change = c["2018"] - c["2011"]
+            },
+            pixNb: 3,
+        }
+    )
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/preprocess.html), see [code](examples/preprocess.html))
 
@@ -478,17 +479,17 @@ Example based on https://github.com/eurostat/Nuts2json
 A 'tooltip' shows information related to the selected grid cell. The information shown for each selected cell can be specified at dataset level using the **cellInfoHTML** parameter. See for example:
 
 ```javascript
-        new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(500)
-            .addCSVGridLayer(
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv",
-                5000,
-                [new gviz.SquareColorWGLStyle({ colorCol: "population", tFun: (value) => Math.min(value / 50000, 1) })],
-                {
-                    //tooltip content configuration
-                    cellInfoHTML: c => "The population of this cell is: <b>" + c.population + "</b> !",
-                }
-            )
+new gviz.App(containerDiv)
+    .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(500)
+    .addCSVGridLayer(
+        "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv",
+        5000,
+        [new gviz.SquareColorWGLStyle({ colorCol: "population", tFun: (value) => Math.min(value / 50000, 1) })],
+        {
+            //tooltip content configuration
+            cellInfoHTML: c => "The population of this cell is: <b>" + c.population + "</b> !",
+        }
+    )
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/tooltip.html), see [code](examples/tooltip.html))
 
