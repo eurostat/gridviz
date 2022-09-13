@@ -16,6 +16,10 @@ https://www.comeetie.fr/galerie/francepixelsbati/#11.36/43.5745/5.3786
 
 test how to specify easily ease functions, especially in webGL
 (see https://thebookofshaders.com/glossary/ - https://easings.net/ - https://github.com/d3/d3-ease - https://www.shadertoy.com/view/wtcczf - https://github.com/glslify/glsl-easings)
+stretchLow
+stretchHigh
+stretchLowHigh
++ exp
 
 EUR, FR: add missing legend, finalise.
 
