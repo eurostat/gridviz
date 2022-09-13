@@ -272,12 +272,14 @@ new gviz.App(containerDiv)
         r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
         [ new gviz.ShapeColorSizeStyle({ /* style construction */}) ],
         {
-            //for each cell, compute 2011 -> 2018 change and store it in a new "change" column
             preprocess: c => {
+                //for each cell, compute 2011 -> 2018 change and store it in a new "change" column
                 if (!c["2011"] && !c["2018"]) c.change = 0
                 else if (!c["2011"] && c["2018"]) c.change = + c["2018"]
                 else if (c["2011"] && !c["2018"]) c.change = - c["2011"]
                 else c.change = c["2018"] - c["2011"]
+                //remove unused column
+                delete c["2006"]; delete c["2011"]; delete c["2018"]
             },
             pixNb: 3,
         }
