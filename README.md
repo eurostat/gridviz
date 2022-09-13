@@ -292,7 +292,7 @@ TODO: explain general principles, with (v,r,zf,s) functions. + use several style
 
 ### Shape/Color/Size Style
 
-This style is a generic type which allows to define the **shape**, **color** and **size** of each grid cell, independantly according to 3 different variables. Three shapes are currently available: square, circle and donut (a disk with a hole of changing size).
+This style is a generic style which allows to define the **shape**, **color** and **size** of each grid cell, independantly according to 3 different variables. Three shapes are currently available: square, circle and donut (a disk with a hole of changing size).
 
 TODO: screenshots
 
@@ -316,11 +316,20 @@ This style displays each cell as a square, with a changing color. This style use
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html) ([code](examples/styles/squarecolorwgl.html)).
 
+
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **a** |  |     |  |
+
 ### Composition style
 
 This style shows a composition at cell level in various different ways: Flags, pie charts, rings, segments, radar, age pyramid and halftone.
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/composition.html) ([code](examples/styles/composition.html)).
+
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **a** |  |     |  |
 
 
 ### Segment style
@@ -331,6 +340,10 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/segment.ht
 
 See [this example with random orientation, color, length and width](https://eurostat.github.io/gridviz/examples/styles/segment_random.html) ([code](examples/styles/segment_random.html)).
 
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **a** |  |     |  |
+
 
 ### Dot density style
 
@@ -338,11 +351,19 @@ This style displays each cell as randomly located points, with changeable densit
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html) ([code](examples/styles/dotdensity.html)).
 
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **a** |  |     |  |
+
 ### Stroke style
 
 This style shows the stroke of each cell with different colors, widths, shapes and sizes.
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/stroke.html) ([code](examples/styles/stroke.html)).
+
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **a** |  |     |  |
 
 
 ### Side style
@@ -351,6 +372,10 @@ This style extract the sides of the cells and show each of them depending on the
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](examples/styles/side.html)).
 
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **a** |  |     |  |
+
 
 ### JoyPlot Style
 
@@ -358,11 +383,19 @@ This style shows cell rows in the form of a 'joyplot' - named after Joy Division
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/joyplot.html) ([code](examples/styles/joyplot.html)).
 
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **a** |  |     |  |
+
 ### Mosaic style
 
 This style is a usual cell coloring style with a slight random deformation of the squares giving a 'mosaic' like effect.
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/mosaic.html) ([code](examples/styles/mosaic.html)).
+
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **a** |  |     |  |
 
 
 ### Tanaka style
@@ -371,11 +404,19 @@ This style shows the grid cells in a Tanaka-like style, that is with discrete co
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](examples/styles/tanaka.html)).
 
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **a** |  |     |  |
+
 ### Lego style
 
 This style shows the grid cells as lego bricks with changeable colors and height.
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](examples/styles/lego.html)).
+
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **a** |  |     |  |
 
 ### Pillars style
 
@@ -383,17 +424,29 @@ This style shows the grid cells as 3D pillars, with changeable heigths and color
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](examples/styles/pillar.html)).
 
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **a** |  |     |  |
+
 ### Text style
 
 This style shows the grid cells as text characters with different colors.
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/text.html) ([code](examples/styles/text.html)).
 
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **a** |  |     |  |
+
 ### Kernel smoothing style
 
 This style allows applying gaussian kernel smoothing to the grid.
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html) ([code](examples/styles/kernelsmoothing.html)).
+
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **a** |  |     |  |
 
 
 ## Legends
