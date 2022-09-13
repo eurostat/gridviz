@@ -322,7 +322,11 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/squarecolo
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **a** |  |     |  |
+| **colorCol** | string |  undefined   | The name of the column used for the color. |
+| **tFun** | function(number,number,Stat):number | (v, r, s) => v / s.max |  A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sample. |
+| **deformationFactor** | number |  1   |  |
+| **colors** | Array.<string> |  ["lightblue", "green", "yellow", "orange", "red"]   |  |
+| **size** | function(number,number):number |     |  |
 
 ### Composition style
 
