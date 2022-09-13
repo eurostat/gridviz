@@ -25,11 +25,10 @@
                         orientation: () => Math.random() * 180,
                         //random color
                         color: () => "rgb(" + (255 * Math.random()) + "," + (255 * Math.random()) + "," + (255 * Math.random()) + ")",
-                        //random color
-                        length: (v, r) => r * (0.3 + Math.random()),
-                        //random width
-                        widthCol: "2018",
-                        width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25) / 1.4142,
+                        //random length, whithin [r*0.5, r*1.5]
+                        length: (v, r) => r * (0.5 + Math.random()),
+                        //random width, whithin [r*0.1, r*0.5]
+                        width: (v, r) => r * (0.1 + 0.5 * Math.random()),
                     })
                 ],
                 {
