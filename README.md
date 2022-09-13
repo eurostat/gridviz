@@ -304,10 +304,10 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 | Property | Type     | Default | Description  |
 | -------------- | -------- | ------- | -------------- |
 | **colorCol** | string |  undefined   | The name of the column used for the color. |
-| **color** | function(v,r,s):string |  (() => "#EA6BAC")   | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. |
+| **color** | function(v,r,s):string |  () => "#EA6BAC"   | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. |
 | **sizeCol** | string |  undefined   | The name of the column used for the size. |
-| **size** | function(v,r,s,zf) |  ((v,r,s,zf) => r)   | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, and statistics **s**. |
-| **shape** | function(c):string |  (() => "square")   | A function computing the shape of cell **c**. Expected values are within __{"square", "circle", "donut", "none"}__ |
+| **size** | function(v,r,s,zf) |  (v,r,s,zf) => r   | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, and statistics **s**. |
+| **shape** | function(c):string |  () => "square"   | A function computing the shape of cell **c**. Expected values are within __{"square", "circle", "donut", "none"}__ |
 
 
 ### Square color WebGL Style
