@@ -49,7 +49,7 @@ import { LineLayer } from "./LineLayer"
 
 
 /**
- * Function [0,1]->[0,1] to stretch range of values.
+ * 
  * @param {number} t The value to stretch, within [0,1]
  * @param {number} alpha The stretching factor: 1=no stretching. >1 stretch to show high values. <1 stretch to show low values.
  * @param {number} type Test 0, 1 or 2... show different result.
@@ -63,27 +63,31 @@ export const s = function (t, alpha, type = 0) {
 }
 
 /**
- * @param {number} t 
- * @param {number} alpha 
- * @returns {number}
+ * Function [0,1]->[0,1] to stretch range of values.
+ * 
+ * @param {number} t The value to stretch, within [0,1]
+ * @param {number} alpha >1: differenciate better the high values
+ * @returns {number} The stretched value, within [0,1]
  */
-export const sLow = (t, alpha) => Math.pow(t, alpha)
+export const sHigh = (t, alpha) => Math.pow(t, alpha)
 
 /**
+ * Function [0,1]->[0,1] to stretch range of values.
  * 
- * @param {number} t 
- * @param {number} alpha 
- * @returns {number}
+ * @param {number} t The value to stretch, within [0,1]
+ * @param {number} alpha >1: differenciate better the low values
+ * @returns {number} The stretched value, within [0,1]
  */
-export const sHigh = (t, alpha) => 1 - Math.pow(1 - t, 1 / alpha)
+export const sLow = (t, alpha) => 1 - Math.pow(1 - t, 1 / alpha)
 
 /**
+ * Function [0,1]->[0,1] to stretch range of values.
  * 
- * @param {number} t 
- * @param {number} alpha 
- * @returns {number}
+ * @param {number} t The value to stretch, within [0,1]
+ * @param {number} alpha >1: differenciate better the middle values
+ * @returns {number} The stretched value, within [0,1]
  */
- export const sLowHigh = (t, alpha) => (t *= 2) >= 1 ? 1 - 0.5 * Math.pow(2 - t, alpha) : 0.5 * Math.pow(t, alpha);
+ export const sMiddle = (t, alpha) => (t *= 2) >= 1 ? 1 - 0.5 * Math.pow(2 - t, alpha) : 0.5 * Math.pow(t, alpha);
 
 
 
