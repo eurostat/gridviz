@@ -1,3 +1,5 @@
+remove gviz.s() utilisation
+
 Improve doc
 improve style examples and add screenshots
 complete
