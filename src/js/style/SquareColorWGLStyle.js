@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat, Shape } from "../Style"
+import { Style, Stat } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
@@ -45,7 +45,8 @@ export class SquareColorWGLStyle extends Style {
          * The color is computed on GPU side (fragment shader) based on those values (linear interpolation).
          * @protected
          * @type {Array.<string>} */
-        this.colors = opts.colors || ["lightblue", "green", "yellow", "orange", "red"]
+        this.colors = opts.colors || ["rgb(158, 1, 66)", "rgb(248, 142, 83)", "rgb(251, 248, 176)", "rgb(137, 207, 165)", "rgb(94, 79, 162)"].reverse()
+        //["lightblue", "green", "yellow", "orange", "red"]
         if (opts.color)
             this.colors = [opts.color(0), opts.color(0.25), opts.color(0.5), opts.color(0.75), opts.color(1)]
 

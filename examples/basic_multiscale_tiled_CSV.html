@@ -27,7 +27,7 @@
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "2018",
-                        tFun: (value, resolution, stats) => Math.pow(value / stats.max, 0.3)
+                        tFun: (value, resolution, stats) => gviz.sLow(value / stats.max, 20)
                     })
                 ],
                 {

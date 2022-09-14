@@ -324,7 +324,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/squarecolo
 | **colorCol** | string |  undefined   | The name of the column used for the color. |
 | **tFun** | function(number,number,Stat):number | (v, r, s) => v / s.max |  A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling. |
 | **deformationFactor** | number |  1   | A parameter within [0,Inf] to deform the distribution. 1: no deformation. <1: better show small values. >1: better show large values. |
-| **colors** | Array.<string> |  ["lightblue", "green", "yellow", "orange", "red"]   | The sample of the color ramp. |
+| **colors** | Array.<string> |  Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral)   | The sample of the color ramp. |
 | **size** | function(r,zf):number |  (r,zf) => r + 0.2 * zf   | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size. |
 
 ### Composition style
