@@ -47,7 +47,6 @@
     "d3-scale-chromatic": "^3.0.0",
     "d3-selection": "^3.0.0",
     "d3-zoom": "^3.0.0",
-    "d3-ease": "^3.0.0",
     "geotiff": "^2.0.5",
     "publish": "^0.6.0",
     "puppeteer": "^1.13.0",

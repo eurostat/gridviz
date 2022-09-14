@@ -8,7 +8,6 @@ export { DatasetComponent } from "./DatasetComponent"
 
 //export color (the entire d3 scale chromatic)
 export * from "d3-scale-chromatic"
-export { easePolyIn as stretchLow, easePolyOut as stretchHigh, easePolyInOut as stretchLowHigh } from "d3-ease"
 
 //export dataset types
 export { TiledGrid } from "./dataset/TiledGrid"
@@ -44,7 +43,6 @@ export { SegmentWidthLegend } from "./legend/SegmentWidthLegend"
 export { goToStraight, zoomTo } from "./utils/zoomUtils"
 
 
-
 import { geoAzimuthalEqualArea } from 'd3-geo'
 import { LabelLayer } from "./LabelLayer"
 import { LineLayer } from "./LineLayer"
@@ -56,13 +54,19 @@ import { LineLayer } from "./LineLayer"
  * @param {number} alpha The stretching factor: 1=no stretching. >1 stretch to show high values. <1 stretch to show low values.
  * @param {number} type Test 0, 1 or 2... show different result.
  * @returns The stretched value, within [0,1]
- * @deprecated use d3-easePolyIn/Out instead
+ * @deprecated use new functions instead
  */
 export const s = function (t, alpha, type = 0) {
     if (!type) return Math.pow(t, alpha)
     else if (type == 1) return 0.5 * (Math.pow(t, alpha) + 1 - Math.pow(1 - t, 1 / alpha))
     return 1 - Math.pow(1 - t, 1 / alpha)
 }
+
+export const stretchLow = (t, alpha) => Math.pow(t, alpha)
+export const stretchHigh = (t, alpha) => 1 - Math.pow(1 - t, 1 / alpha)
+export const stretchLowHigh = (t, alpha) => (t *= 2) >= 1 ? 1 - 0.5 * Math.pow(2 - t, alpha) : 0.5 * Math.pow(t, alpha);
+
+
 
 
 /**
