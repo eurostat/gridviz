@@ -69,7 +69,7 @@ export const s = function (t, alpha, type = 0) {
  * @param {number} alpha >1: differenciate better the high values
  * @returns {number} The stretched value, within [0,1]
  */
-export const sHigh = (t, alpha = 3) => Math.pow(t, alpha)
+export const sLow = (t, alpha = 3) => Math.pow(t, 1 / alpha)
 
 /**
  * Function [0,1]->[0,1] to stretch range of values.
@@ -78,7 +78,7 @@ export const sHigh = (t, alpha = 3) => Math.pow(t, alpha)
  * @param {number} alpha >1: differenciate better the low values
  * @returns {number} The stretched value, within [0,1]
  */
-export const sLow = (t, alpha = 3) => 1 - Math.pow(1 - t, alpha)
+export const sHigh = (t, alpha = 3) => 1 - Math.pow(1 - t, 1 / alpha)
 
 /**
  * Function [0,1]->[0,1] to stretch range of values.
@@ -87,7 +87,7 @@ export const sLow = (t, alpha = 3) => 1 - Math.pow(1 - t, alpha)
  * @param {number} alpha >1: differenciate better the middle values
  * @returns {number} The stretched value, within [0,1]
  */
- export const sMiddle = (t, alpha = 3) => (t *= 2) >= 1 ? 1 - 0.5 * Math.pow(2 - t, alpha) : 0.5 * Math.pow(t, alpha);
+export const sMiddle = (t, alpha = 3) => (t *= 2) >= 1 ? 1 - 0.5 * Math.pow(2 - t, alpha) : 0.5 * Math.pow(t, alpha);
 
 
 
