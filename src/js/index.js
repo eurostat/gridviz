@@ -8,6 +8,7 @@ export { DatasetComponent } from "./DatasetComponent"
 
 //export color (the entire d3 scale chromatic)
 export * from "d3-scale-chromatic"
+export { easePolyIn as stretchLow, easePolyOut as stretchHigh, easePolyInOut as stretchLowHigh } from "d3-ease"
 
 //export dataset types
 export { TiledGrid } from "./dataset/TiledGrid"
@@ -55,14 +56,13 @@ import { LineLayer } from "./LineLayer"
  * @param {number} alpha The stretching factor: 1=no stretching. >1 stretch to show high values. <1 stretch to show low values.
  * @param {number} type Test 0, 1 or 2... show different result.
  * @returns The stretched value, within [0,1]
+ * @deprecated use d3-easePolyIn/Out instead
  */
 export const s = function (t, alpha, type = 0) {
     if (!type) return Math.pow(t, alpha)
     else if (type == 1) return 0.5 * (Math.pow(t, alpha) + 1 - Math.pow(1 - t, 1 / alpha))
     return 1 - Math.pow(1 - t, 1 / alpha)
 }
-
-
 
 
 /**
