@@ -62,9 +62,28 @@ export const s = function (t, alpha, type = 0) {
     return 1 - Math.pow(1 - t, 1 / alpha)
 }
 
-export const stretchLow = (t, alpha) => Math.pow(t, alpha)
-export const stretchHigh = (t, alpha) => 1 - Math.pow(1 - t, 1 / alpha)
-export const stretchLowHigh = (t, alpha) => (t *= 2) >= 1 ? 1 - 0.5 * Math.pow(2 - t, alpha) : 0.5 * Math.pow(t, alpha);
+/**
+ * @param {number} t 
+ * @param {number} alpha 
+ * @returns {number}
+ */
+export const sLow = (t, alpha) => Math.pow(t, alpha)
+
+/**
+ * 
+ * @param {number} t 
+ * @param {number} alpha 
+ * @returns {number}
+ */
+export const sHigh = (t, alpha) => 1 - Math.pow(1 - t, 1 / alpha)
+
+/**
+ * 
+ * @param {number} t 
+ * @param {number} alpha 
+ * @returns {number}
+ */
+ export const sLowHigh = (t, alpha) => (t *= 2) >= 1 ? 1 - 0.5 * Math.pow(2 - t, alpha) : 0.5 * Math.pow(t, alpha);
 
 
 
