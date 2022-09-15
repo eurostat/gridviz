@@ -16,14 +16,7 @@ check:
 https://www.comeetie.fr/galerie/francepixels2019/#5.7/47/2.3
 https://www.comeetie.fr/galerie/francepixelsbati/#11.36/43.5745/5.3786
 
-test how to specify easily ease functions, especially in webGL
-(see https://thebookofshaders.com/glossary/ - https://easings.net/ - https://github.com/d3/d3-ease - https://www.shadertoy.com/view/wtcczf)
-https://github.com/d3/d3-ease#easePolyIn
-https://github.com/d3/d3-ease#easePolyOut
-.exponent(e)
-d3.easeExp(t)
-https://observablehq.com/@d3/easing
-
+improve webGL stretching: (see https://thebookofshaders.com/glossary/ - https://www.shadertoy.com/view/wtcczf)
 
 EUR, FR: add missing legend, finalise.
 
