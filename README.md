@@ -335,7 +335,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/compositio
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **a** |  |     |  |
+| **.** |  |     |  |
 
 
 ### Segment style
@@ -348,7 +348,7 @@ See [this example with random orientation, color, length and width](https://euro
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **a** |  |     |  |
+| **.** |  |     |  |
 
 
 ### Dot density style
@@ -359,7 +359,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/dotdensity
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **a** |  |     |  |
+| **.** |  |     |  |
 
 ### Stroke style
 
@@ -369,7 +369,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/stroke.htm
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **a** |  |     |  |
+| **.** |  |     |  |
 
 
 ### Side style
@@ -380,7 +380,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html)
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **a** |  |     |  |
+| **.** |  |     |  |
 
 
 ### JoyPlot Style
@@ -391,7 +391,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/joyplot.ht
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **a** |  |     |  |
+| **.** |  |     |  |
 
 ### Mosaic style
 
@@ -401,7 +401,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/mosaic.htm
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **a** |  |     |  |
+| **.** |  |     |  |
 
 
 ### Tanaka style
@@ -412,7 +412,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/tanaka.htm
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **a** |  |     |  |
+| **.** |  |     |  |
 
 ### Lego style
 
@@ -422,7 +422,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/lego.html)
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **a** |  |     |  |
+| **.** |  |     |  |
 
 ### Pillars style
 
@@ -432,7 +432,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/pillar.htm
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **a** |  |     |  |
+| **.** |  |     |  |
 
 ### Text style
 
@@ -442,7 +442,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/text.html)
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **a** |  |     |  |
+| **.** |  |     |  |
 
 ### Kernel smoothing style
 
@@ -452,7 +452,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoo
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **a** |  |     |  |
+| **.** |  |     |  |
 
 
 ## Legends
