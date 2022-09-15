@@ -90,7 +90,7 @@ export const sHigh = (t, alpha = 3) => 1 - Math.pow(1 - t, 1 / alpha)
 export const sMiddle = (t, alpha = 3) => (t *= 2) >= 1 ? 1 - 0.5 * Math.pow(2 - t, alpha) : 0.5 * Math.pow(t, alpha);
 
 export const sCircleUp = (t, alpha = 3) => {
-    alpha = alpha <= 0 ? 0.0001 : 1 / alpha;
+    alpha = alpha <= 0 ? 1e-20 : 1 / alpha;
     return Math.sqrt(alpha * alpha + 2 * alpha * t + 2 * t - t * t) - alpha
 }
 export const sCircleDown = (t, alpha = 3) => 1 - sCircleUp(1 - t, alpha);
