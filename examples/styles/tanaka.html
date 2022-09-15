@@ -22,11 +22,12 @@
                 gviz.TanakaStyle.get(
                     "2018",
                     {
-                        valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2)
+                        //valueStretch: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2)
+                        valueStretch: (v, r, s, zf) => gviz.sExp((v - s.min) / (s.max - s.min), -60)
                     }
                 ),
                 {
-                    pixNb: 5,
+                    pixNb: 6,
                     cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)",
                 })
 
