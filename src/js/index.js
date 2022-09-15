@@ -62,41 +62,42 @@ export const s = function (t, alpha, type = 0) {
     return 1 - Math.pow(1 - t, 1 / alpha)
 }
 
-/**
- * Function [0,1]->[0,1] to stretch range of values.
- * 
- * @param {number} t The value to stretch, within [0,1]
- * @param {number} alpha >1: differenciate better the high values
- * @returns {number} The stretched value, within [0,1]
- */
-export const sLow = (t, alpha = 3) => Math.pow(t, 1 / alpha)
 
 /**
  * Function [0,1]->[0,1] to stretch range of values.
  * 
  * @param {number} t The value to stretch, within [0,1]
- * @param {number} alpha >1: differenciate better the low values
+ * @param {number} alpha -Inf,0,Inf
  * @returns {number} The stretched value, within [0,1]
  */
-export const sHigh = (t, alpha = 3) => 1 - Math.pow(1 - t, 1 / alpha)
+export const sExp = (t, alpha = 3) => alpha == 0 ? t : (Math.exp(t * alpha) - 1) / (Math.exp(alpha) - 1);
 
 /**
  * Function [0,1]->[0,1] to stretch range of values.
  * 
  * @param {number} t The value to stretch, within [0,1]
- * @param {number} alpha >1: differenciate better the middle values
+ * @param {number} alpha -Inf,0,Inf
  * @returns {number} The stretched value, within [0,1]
  */
-export const sMiddle = (t, alpha = 3) => (t *= 2) >= 1 ? 1 - 0.5 * Math.pow(2 - t, alpha) : 0.5 * Math.pow(t, alpha);
+export const sExp2 = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t);;
 
-export const sCircleUp = (t, alpha = 3) => {
-    alpha = alpha <= 0 ? 1e-20 : 1 / alpha;
-    return Math.sqrt(alpha * alpha + 2 * alpha * t + 2 * t - t * t) - alpha
-}
-export const sCircleDown = (t, alpha = 3) => 1 - sCircleUp(1 - t, alpha);
+/**
+ * Function [0,1]->[0,1] to stretch range of values.
+ * 
+ * @param {number} t The value to stretch, within [0,1]
+ * @param {number} alpha 0,1,Inf
+ * @returns {number} The stretched value, within [0,1]
+ */
+export const sPow = (t, alpha = 3) => Math.pow(t, alpha);
 
-export const sExpUp = (t, alpha = 3) => 1 - sExpDown(1 - t, alpha);
-export const sExpDown = (t, alpha = 3) => (Math.exp(t * alpha) - 1) / (Math.exp(alpha) - 1);
+/**
+ * Function [0,1]->[0,1] to stretch range of values.
+ * 
+ * @param {number} t The value to stretch, within [0,1]
+ * @param {number} alpha 0,1,Inf
+ * @returns {number} The stretched value, within [0,1]
+ */
+export const sPow2 = (t, alpha = 3) => 1 - Math.pow(1 - t, 1 / alpha);
 
 
 
