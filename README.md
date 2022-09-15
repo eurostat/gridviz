@@ -113,7 +113,7 @@ new gviz.App(containerDiv)
                 //the CSV column to show
                 colorCol: "Population",
                 //value to [0,1] mapping function
-                tFun: (value) => Math.min(value / 50000, 1)
+                tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15)
             })
         ]
     )
@@ -168,7 +168,7 @@ new gviz.App(containerDiv)
         [
             new gviz.SquareColorWGLStyle({
                 colorCol: "population",
-                tFun: (value, resolution, stats) => Math.pow(value / stats.max, 0.3)
+                tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50)
             })
         ],
         {
@@ -195,7 +195,7 @@ new gviz.App(containerDiv)
         [
             new gviz.SquareColorWGLStyle({
                 colorCol: "2018",
-                tFun: (value) => Math.min(value / 50000, 1)
+                tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15)
             })
         ]
     )
@@ -220,7 +220,7 @@ new gviz.App(containerDiv)
         [
             new gviz.SquareColorWGLStyle({
                 colorCol: "2018",
-                tFun: (value, resolution, stats) => Math.pow(value / stats.max, 0.3)
+                tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50)
             })
         ],
         {
