@@ -22,7 +22,7 @@
                 [
                     new gviz.JoyPlotStyle({
                         heightCol: "2018",
-                        height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
+                        height: (v, r, s, zf) => 5 * r * gviz.sPow(v / s.max, 0.5),
                         fillColor: "#c08c59bb"
                     })
                 ],
