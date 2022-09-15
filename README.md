@@ -61,6 +61,7 @@
     - [Text style](#text-style)
     - [Kernel smoothing style](#kernel-smoothing-style)
   - [Legends](#legends)
+  - [Stretching](#stretching)
   - [Foreground information](#foreground-information)
     - [Showing labels](#showing-labels)
     - [Showing boundaries](#showing-boundaries)
@@ -460,6 +461,11 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoo
 TODO
 
 
+## Stretching
+
+TODO - link to observable page
+
+
 ## Foreground information
 
 
@@ -474,7 +480,6 @@ Example based on https://github.com/eurostat/euronym
 TODO
 
 Example based on https://github.com/eurostat/Nuts2json
-
 
 
 ## Tooltip
