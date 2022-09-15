@@ -132,7 +132,7 @@
                             colorCol: layCode,
                             color: (v, r, s) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
+                                const t = Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2) / 2 + 0.5
                                 return gviz.interpolateSpectral(1 - t);
                             },
                             shape: () => "square",
@@ -156,7 +156,7 @@
                         title: "Population change", ticks: 5, colorRamp: gviz.interpolateSpectral, invert: true,
                         fun: (t, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
+                            return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
                         }
                     })
                 )
@@ -178,14 +178,14 @@
                                     if (+v <= b) break;
                                     i++
                                 }
-                                return gviz.s(1 - (i - 1) / breaks.length, 2)
+                                return gviz.sPow(1 - (i - 1) / breaks.length, 2)
                             },
                         }),
                         new gviz.StrokeStyle({ maxZoom: 80 }),
                         new gviz.ShapeColorSizeStyle({
                             color: () => "#000000dd",
                             sizeCol: "TOT_P",
-                            size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
+                            size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
                             shape: () => "circle",
                         })
                     ],
@@ -214,14 +214,14 @@
                                     if (+v <= b) break;
                                     i++
                                 }
-                                return gviz.s(1 - (i - 1) / breaks.length, 2)
+                                return gviz.sPow(1 - (i - 1) / breaks.length, 2)
                             },
                         }),
                         new gviz.StrokeStyle({ maxZoom: 80 }),
                         new gviz.ShapeColorSizeStyle({
                             color: () => "#000000dd",
                             sizeCol: "TOT_P",
-                            size: (v, r, s, zf) => 1.2 * r * gviz.s(v / s.max, 0.3),
+                            size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
                             shape: () => "circle",
                         })
                     ],

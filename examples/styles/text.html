@@ -25,7 +25,7 @@
                     new gviz.TextStyle({
                         textCol: "2018",
                         text: (v, r, s, z) => {
-                            const t = gviz.s(v / s.max, 0.25);
+                            const t = gviz.sPow(v / s.max, 0.25);
                             return tsFun(t);
                         },
                         color: (v, r, s) => "#c08c59",

@@ -48,20 +48,6 @@ import { LabelLayer } from "./LabelLayer"
 import { LineLayer } from "./LineLayer"
 
 
-/**
- * 
- * @param {number} t The value to stretch, within [0,1]
- * @param {number} alpha The stretching factor: 1=no stretching. >1 stretch to show high values. <1 stretch to show low values.
- * @param {number} type Test 0, 1 or 2... show different result.
- * @returns The stretched value, within [0,1]
- * @deprecated use new functions instead
- */
-export const s = function (t, alpha, type = 0) {
-    if (!type) return Math.pow(t, alpha)
-    else if (type == 1) return 0.5 * (Math.pow(t, alpha) + 1 - Math.pow(1 - t, 1 / alpha))
-    return 1 - Math.pow(1 - t, 1 / alpha)
-}
-
 
 /**
  * Function [0,1]->[0,1] to stretch range of values.

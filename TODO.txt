@@ -1,4 +1,4 @@
-remove gviz.s() utilisation
+remove gviz.sPow() utilisation
 tanaka bug: no shadow for lower level
 
 Improve doc

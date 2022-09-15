@@ -104,7 +104,7 @@
                 circleColor: {
                     style: [new gviz.ShapeColorSizeStyle({
                         colorCol: getSelectedYear(),
-                        color: (v, r, s) => gviz.interpolateOrRd(gviz.s(v / s.max, 0.25)),
+                        color: (v, r, s) => gviz.interpolateOrRd(gviz.sPow(v / s.max, 0.25)),
                         shape: () => "circle",
                     }), new gviz.StrokeStyle({ maxZoom: 80, shape: () => "circle" })
                     ], pixNb: 5
@@ -114,7 +114,7 @@
                     style: [new gviz.ShapeColorSizeStyle({
                         color: () => "#c08c59cc",
                         sizeCol: getSelectedYear(),
-                        size: (v, r, s, zf) => 1 * r * gviz.s(v / s.max, 0.3),
+                        size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.3),
                         shape: () => "square",
                     })], pixNb: 7
                 },
@@ -122,14 +122,14 @@
                     style: [new gviz.ShapeColorSizeStyle({
                         color: () => "#c08c59cc",
                         sizeCol: getSelectedYear(),
-                        size: (v, r, s, zf) => 1.5 * r * gviz.s(v / s.max, 0.3),
+                        size: (v, r, s, zf) => 1.5 * r * gviz.sPow(v / s.max, 0.3),
                         shape: () => "circle",
                     })], pixNb: 7
                 },
                 donut: {
                     style: [new gviz.ShapeColorSizeStyle({
                         sizeCol: getSelectedYear(),
-                        size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.3),
+                        size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.3),
                         color: () => "#c08c59",
                         shape: () => "donut",
                     })], pixNb: 10
@@ -141,7 +141,7 @@
                         color: (v, r, s) => "#c08c59",
                         length: (v, r) => r,
                         widthCol: getSelectedYear(),
-                        width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
+                        width: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25)
                     })], pixNb: 7
                 },
                 segmentV: {
@@ -150,7 +150,7 @@
                         color: (v, r, s) => "#c08c59",
                         length: (v, r) => r,
                         widthCol: getSelectedYear(),
-                        width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25)
+                        width: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25)
                     })], pixNb: 7
                 },
                 segmentO: {
@@ -159,7 +159,7 @@
                         color: (v, r, s) => "#c08c59",
                         length: (v, r) => r * 1.4142,
                         widthCol: getSelectedYear(),
-                        width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25) / 1.4142,
+                        width: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25) / 1.4142,
                     })], pixNb: 7
                 },
 
@@ -177,29 +177,29 @@
                         color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                         width: (side, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.s(Math.abs(side.value) / max, 0.3))
+                            return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.sPow(Math.abs(side.value) / max, 0.3))
                         },
                         fillColor: (c) => "#e2c9b2",
                     })], pixNb: 5
                 },
                 tanaka: {
-                    style: gviz.TanakaStyle.get(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                    style: gviz.TanakaStyle.get(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2) }),
                     pixNb: 5
                 },
                 lego: {
-                    style: gviz.LegoStyle.get(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                    style: gviz.LegoStyle.get(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2) }),
                     pixNb: 10
                 },
                 pillar: {
                     style: [new gviz.PillarStyle({
                         heightCol: getSelectedYear(),
-                        height: (v, r, s, z) => 15 * r * gviz.s(v / s.max, 0.7),
+                        height: (v, r, s, z) => 15 * r * gviz.sPow(v / s.max, 0.7),
                     })], pixNb: 12
                 },
                 dot: {
                     style: [new gviz.DotDensityStyle({
                         col: getSelectedYear(),
-                        nb: (v, r, s, zf) => 1 * r * r / (zf * zf) * gviz.s(v / s.max, 0.4),
+                        nb: (v, r, s, zf) => 1 * r * r / (zf * zf) * gviz.sPow(v / s.max, 0.4),
                         dotSize: (r, zf) => 1.2 * zf,
                         color: () => "#FF5733"
                     })], pixNb: 5
@@ -208,7 +208,7 @@
                     style: [new gviz.TextStyle({
                         textCol: getSelectedYear(),
                         text: (v, r, s, z) => {
-                            const t = gviz.s(v / s.max, 0.25);
+                            const t = gviz.sPow(v / s.max, 0.25);
                             return tsFun(t);
                         },
                         color: (v, r, s) => "#c08c59",
@@ -222,7 +222,7 @@
                         colorCol: getSelectedYear(),
                         color: (v, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
+                            const t = Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2) / 2 + 0.5
                             return gviz.interpolateSpectral(1 - t);
                         },
                         shape: () => "square",
@@ -233,7 +233,7 @@
                         colorCol: getSelectedYear(),
                         color: (v, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
+                            const t = Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2) / 2 + 0.5
                             return gviz.interpolateSpectral(1 - t);
                         },
                         shape: () => "circle",
@@ -247,7 +247,7 @@
                         sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return 1 * r * gviz.s(Math.abs(v) / max, 0.2)
+                            return 1 * r * gviz.sPow(Math.abs(v) / max, 0.2)
                         },
                         shape: () => "square",
                     })], pixNb: 7
@@ -259,7 +259,7 @@
                         sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return 1.5 * r * gviz.s(Math.abs(v) / max, 0.2)
+                            return 1.5 * r * gviz.sPow(Math.abs(v) / max, 0.2)
                         },
                         shape: () => "circle",
                     })], pixNb: 7
@@ -271,7 +271,7 @@
                         sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return r * gviz.s(Math.abs(v) / max, 0.3)
+                            return r * gviz.sPow(Math.abs(v) / max, 0.3)
                         },
                         shape: () => "donut",
                     })], pixNb: 10
@@ -286,7 +286,7 @@
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            return r * gviz.s(Math.abs(v) / max, 0.25)
+                            return r * gviz.sPow(Math.abs(v) / max, 0.25)
                         }
                     })], pixNb: 7
                 },
@@ -299,7 +299,7 @@
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            return r * gviz.s(Math.abs(v) / max, 0.25)
+                            return r * gviz.sPow(Math.abs(v) / max, 0.25)
                         }
                     })], pixNb: 7
                 },
@@ -312,7 +312,7 @@
                         widthCol: getSelectedYear(),
                         width: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            return r * gviz.s(Math.abs(v) / max, 0.25) / 1.4142
+                            return r * gviz.sPow(Math.abs(v) / max, 0.25) / 1.4142
                         }
                     })], pixNb: 7
                 },
@@ -335,19 +335,19 @@
                             color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                             width: (side, r, s, z) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.s(Math.abs(side.value) / max, 0.3))
+                                return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.sPow(Math.abs(side.value) / max, 0.3))
                             },
                             fillColor: (c) => c[getSelectedYear()] < 0 ? "#d13c4b" : "#4288b5",
                         })], pixNb: 5
                 },
                 tanaka: {
                     //TODO adapt to pop change
-                    style: gviz.TanakaStyle.get(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                    style: gviz.TanakaStyle.get(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2) }),
                     pixNb: 5
                 },
                 lego: {
                     //TODO adapt to pop change
-                    style: gviz.LegoStyle.get(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.s((v - s.min) / (s.max - s.min), 0.2) }),
+                    style: gviz.LegoStyle.get(getSelectedYear(), { valueStretch: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2) }),
                     pixNb: 10
                 },
                 pillar: {
@@ -357,7 +357,7 @@
                         heightCol: getSelectedYear(),
                         height: (v, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            return 15 * r * gviz.s(Math.abs(v) / max, 0.7)
+                            return 15 * r * gviz.sPow(Math.abs(v) / max, 0.7)
                         },
                     })], pixNb: 12
                 },
@@ -366,7 +366,7 @@
                         col: getSelectedYear(),
                         nb: (v, r, s, zf) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            return 1 * r * r / (zf * zf) * gviz.s(Math.abs(v) / max, 0.4)
+                            return 1 * r * r / (zf * zf) * gviz.sPow(Math.abs(v) / max, 0.4)
                         },
                         dotSize: (r, zf) => 1.2 * zf,
                         color: (c) => c[getSelectedYear()] > 0 ? "#d13c4b" : "#4288b5",
@@ -377,7 +377,7 @@
                         textCol: getSelectedYear(),
                         text: (v, r, s, z) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
-                            const t = gviz.s(Math.abs(v) / max, 0.25);
+                            const t = gviz.sPow(Math.abs(v) / max, 0.25);
                             return tsFun(t);
                         },
                         colorCol: getSelectedYear(),
@@ -405,14 +405,14 @@
             title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
             fun: (t, r, s) => {
                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
+                return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
             }
         }))
         sd.popchange.circleColor.style[0].legends.push(new gviz.ColorLegend({
             title: "Population change", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
             fun: (t, r, s) => {
                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                return (t < 0.5 ? -1 : 1) * max * gviz.s(Math.abs(2 * t - 1), 1 / 0.2)
+                return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
             }
         }))
 

@@ -22,7 +22,7 @@
                 [
                     new gviz.PillarStyle({
                         heightCol: "2018",
-                        height: (v, r, s, z) => 15 * r * gviz.s(v / s.max, 0.7),
+                        height: (v, r, s, z) => 15 * r * gviz.sPow(v / s.max, 0.7),
                     })
                 ],
                 {

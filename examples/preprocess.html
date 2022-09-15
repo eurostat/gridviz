@@ -24,7 +24,7 @@
                         colorCol: "change",
                         color: (v, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            const t = Math.sign(v) * gviz.s(Math.abs(v) / max, 0.2) / 2 + 0.5
+                            const t = Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2) / 2 + 0.5
                             return gviz.interpolateSpectral(1 - t);
                         },
                         shape: () => "square",

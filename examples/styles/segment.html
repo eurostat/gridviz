@@ -25,7 +25,7 @@
                         color: (v, r, s) => "#c08c59",
                         length: (v, r) => r * 1.4142,
                         widthCol: "2018",
-                        width: (v, r, s, zf) => r * gviz.s(v / s.max, 0.25) / 1.4142,
+                        width: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25) / 1.4142,
                     })
                 ],
                 {

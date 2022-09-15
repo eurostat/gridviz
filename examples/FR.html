@@ -223,7 +223,7 @@
                             },
                             type: () => "agepyramid",
                             sizeCol: "Ind",
-                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
                             agePyramidHeight: (r) => 0.95 * r
                         })
                     ],
@@ -265,7 +265,7 @@
                             },
                             type: () => "agepyramid",
                             sizeCol: "Ind",
-                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
                             agePyramidHeight: (r) => 0.95 * r
                         })
                     ],
@@ -347,7 +347,7 @@
                             color: (v, r, s) => {
                                 if (!v) return "#bbb"
                                 //return gviz.interpolateYlOrRd(Math.pow((v - s.min) / (s.max - s.min), 0.7))
-                                return gviz.interpolateYlOrRd(gviz.s(v, 0.65))
+                                return gviz.interpolateYlOrRd(gviz.sPow(v, 0.65))
                             },
                             shape: () => "circle",
                         })
@@ -378,7 +378,7 @@
                             type: () => "ring",
                             stripesOrientation: () => 90,
                             sizeCol: "Men",
-                            size: (v, r, s, zf) => 1.3 * r * gviz.s(v / s.max, 0.15, 0),
+                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.15, 0),
                         })
                     ],
                     {
@@ -404,7 +404,7 @@
                             sizeCol: "Men",
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: "rMenFmp",
-                            color: (v, r, s) => v == 0 ? "#ccc" : gviz.interpolateYlOrRd(gviz.s(v, 0.4)),
+                            color: (v, r, s) => v == 0 ? "#ccc" : gviz.interpolateYlOrRd(gviz.sPow(v, 0.4)),
                             shape: () => "circle",
                         })
                     ],
@@ -428,9 +428,9 @@
                     [
                         new gviz.ShapeColorSizeStyle({
                             sizeCol: "Men",
-                            size: (v, r, s) => 1.4 * r * gviz.s(v / s.max, 0.2),
+                            size: (v, r, s) => 1.4 * r * gviz.sPow(v / s.max, 0.2),
                             colorCol: "rMen_prop",
-                            color: (v) => gviz.interpolatePuBuGn(1 - gviz.s((1 - v), 0.6)),
+                            color: (v) => gviz.interpolatePuBuGn(1 - gviz.sPow((1 - v), 0.6)),
                             shape: () => "circle",
                         })
                     ],
@@ -486,7 +486,7 @@
                             type: () => "flag",
                             stripesOrientation: () => 90,
                             sizeCol: "Men",
-                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.15, 0),
+                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.15, 0),
                         })
                     ],
                     {
@@ -519,7 +519,7 @@
                             type: () => "flag",
                             //stripesOrientation: () => 90,
                             sizeCol: "Log",
-                            size: (v, r, s, zf) => r * gviz.s(v / s.max, 0.1, 0),
+                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
                         })
                     ],
                     {
@@ -551,7 +551,7 @@
                             },
                             type: () => "ring",
                             sizeCol: "Log",
-                            size: (v, r, s, zf) => 1.3 * r * gviz.s(v / s.max, 0.15, 0),
+                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.15, 0),
                         })
                     ],
                     {
