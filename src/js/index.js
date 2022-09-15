@@ -49,6 +49,7 @@ import { LineLayer } from "./LineLayer"
 
 
 
+
 /**
  * Function [0,1]->[0,1] to stretch range of values.
  * 
