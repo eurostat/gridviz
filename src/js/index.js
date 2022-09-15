@@ -96,7 +96,7 @@ export const sCircleUp = (t, alpha = 3) => {
 export const sCircleDown = (t, alpha = 3) => 1 - sCircleUp(1 - t, alpha);
 
 export const sExpUp = (t, alpha = 3) => 1 - sExpDown(1 - t, alpha);
-export const sExpDown = (t, alpha = 3) => (Math.exp(t * alpha)-1) / (Math.exp(alpha)-1);
+export const sExpDown = (t, alpha = 3) => (Math.exp(t * alpha) - 1) / (Math.exp(alpha) - 1);
 
 
 
