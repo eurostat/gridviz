@@ -25,7 +25,7 @@
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "2018",
-                        tFun: (value) => Math.min(value / 50000, 1)
+                        tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15)
                     })
                 ]
             )
