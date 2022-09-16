@@ -62,7 +62,12 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
     opts = opts || {}
     const ex = opts.ex || 1.2
     const fontFamily = opts.fontFamily || "Arial"
-    opts.style = opts.style || ((lb, zf) => { if (lb.rs < ex * zf) return; if (lb.r1 < ex * zf) return "1em " + fontFamily; return "1.5em " + fontFamily; })
+    const exSize = opts.exSize || 1
+    opts.style = opts.style || ((lb, zf) => {
+        if (lb.rs < ex * zf) return;
+        if (lb.r1 < ex * zf) return exSize + "em " + fontFamily;
+        return (exSize * 1.5) + "em " + fontFamily;
+    })
     //ETRS89-LAEA projection
     opts.proj = opts.proj || geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]);
     opts.preprocess = lb => {
