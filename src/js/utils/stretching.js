@@ -50,6 +50,29 @@ export const sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math
 
 
 
-export const sCircleUp = (t, alpha = 3) => Math.sqrt(1 / (alpha * alpha) + (2 * t) / alpha + 2 * t - t * t) - 1 / alpha
-export const sCircleDown = (t, alpha = 3) => sCircleUp(1 - t, alpha)
 
+/**
+ * Function [0,1]->[0,1] to stretch range of values.
+ * Circle, show low values
+ * 
+ * @param {number} t The value to stretch, within [0,1]
+ * @param {number} alpha 0: no deformation. 1: perfect circle section
+ * @returns {number} The stretched value, within [0,1]
+ */
+ export const sCircleLow = (t, alpha = 0.3) => {
+    if (alpha == 0) return t;
+    if (alpha == 1) return Math.sqrt(2 * t - t * t);
+    const a = alpha / (1 - alpha);
+    return Math.sqrt(1 / (a * a) + (2 * t) / a + 2 * t - t * t) - 1 / a;
+
+}
+
+/**
+ * Function [0,1]->[0,1] to stretch range of values.
+ * Circle, show high values
+ * 
+ * @param {number} t The value to stretch, within [0,1]
+ * @param {number} alpha 0: no deformation. 1: perfect circle section
+ * @returns {number} The stretched value, within [0,1]
+ */
+ export const sCircleHigh = (t, alpha = 0.3) => sCircleHigh(1 - t, alpha)
