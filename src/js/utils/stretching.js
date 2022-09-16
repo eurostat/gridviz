@@ -60,10 +60,10 @@ export const sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math
  * @returns {number} The stretched value, within [0,1]
  */
 export const sCircleLow = (t, alpha = 0.8) => {
-    if (alpha == 0) return t;
-    if (alpha == 1) return Math.sqrt(2 * t - t * t);
-    const a = alpha / (1 - alpha);
-    return Math.sqrt(1 / (a * a) + (2 * t) / a + 2 * t - t * t) - 1 / a;
+  if (alpha == 0) return t;
+  if (alpha == 1) return Math.sqrt(2 * t - t * t);
+  const a = alpha / (1 - alpha);
+  return Math.sqrt(1 / (a * a) + (2 * t) / a + 2 * t - t * t) - 1 / a;
 
 }
 
@@ -75,4 +75,4 @@ export const sCircleLow = (t, alpha = 0.8) => {
  * @param {number} alpha 0: no deformation. 1: perfect circle section
  * @returns {number} The stretched value, within [0,1]
  */
-export const sCircleHigh = (t, alpha = 0.8) => sCircleLow(1 - t, alpha)
+export const sCircleHigh = (t, alpha = 0.8) => 1 - sCircleLow(1 - t, alpha)
