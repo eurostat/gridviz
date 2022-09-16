@@ -23,7 +23,8 @@
         let containerDiv = document.getElementById("viz-container");
 
         const app = new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(1000)
+            .setGeoCenter({ x: 4000000, y: 2960000 })
+            .setZoomFactor(1000).setZoomFactorExtent([40, 7500])
             .setLabelLayer(
                 gviz.getEuronymeLabelLayer("EUR", 50, {
                     ex: 2.5,
@@ -48,7 +49,7 @@
                 [
                     new gviz.MosaicStyle({
                         colorCol: "2018",
-                        color: (v, r, s) => gviz.interpolateYlOrBr(gviz.sExp(v / s.max, -50))
+                        color: (v, r, s) => !+v ? undefined : gviz.interpolateYlOrBr(gviz.sExp(v / s.max, -50))
                     })
                 ],
                 {
@@ -57,6 +58,13 @@
                 })
 
     </script>
+
+    <div
+        style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
+        <span style="font-size: 0.8em;"><a href="https://github.com/eurostat/gridviz"
+                style="text-decoration:none">GridViz</a> |
+            © <a href="https://eurogeographics.org" style="text-decoration:none">EuroGeographics</a></span>
+    </div>
 
 </body>
 
