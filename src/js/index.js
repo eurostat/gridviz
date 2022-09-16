@@ -89,7 +89,7 @@ export const getEurostatBoundariesLayer = function (opts) {
     const crs = opts.crs || "3035"
     const scale = opts.scale || "03M"
     const nutsLevel = opts.nutsLevel || "3"
-    const col = "#888"
+    const col = opts.col || "#888"
 
     opts.color = opts.color || ((f, zf) => {
         const p = f.properties

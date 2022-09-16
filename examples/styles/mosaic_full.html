@@ -29,12 +29,18 @@
                     ex: 2.5,
                     fontFamily: "mf",
                     exSize: 2,
-                     color: () => "black",
-                    haloColor: () => "white",
-                    haloWidth: () => 3
+                    color: () => "black",
+                    haloColor: () => "#ffffff77",
+                    haloWidth: () => 5
                 })
             )
-            //.setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+            .setBoundaryLayer(
+                gviz.getEurostatBoundariesLayer({
+                    scale: "10M",
+                    col: "#00000077",
+                    lineDash: () => []
+                })
+            )
             .setBackgroundColor("#ECE6D3")
             .addMultiScaleTiledCSVGridLayer(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
