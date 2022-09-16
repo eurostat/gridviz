@@ -24,8 +24,8 @@ export class LegoStyle {
         //http://www.jennyscrayoncollection.com/2021/06/all-current-lego-colors.html
         //https://leonawicz.github.io/legocolors/reference/figures/README-plot-1.png
         opts.colors = opts.colors || [
-            "#afd246", //light green
             "#00852b", //darker green
+            "#afd246", //light green
             "#fac80a", //dark yellow
             "#d67923", //mostard
             "#bb805a", //brown
