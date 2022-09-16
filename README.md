@@ -400,6 +400,8 @@ This style is a usual cell coloring style with a slight random deformation of th
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/mosaic.html) ([code](examples/styles/mosaic.html)).
 
+See [this other example](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html) ([code](examples/styles/mosaic_full.html)).
+
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
 | **.** |  |     |  |
