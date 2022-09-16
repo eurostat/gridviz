@@ -26,10 +26,12 @@
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(1000)
             .setLabelLayer(
                 gviz.getEuronymeLabelLayer("EUR", 50, {
+                    ex: 2.5,
                     fontFamily: "mf",
-                    exSize: 1.5, color: () => "white",
-                    haloColor: () => "#000",
-                    haloWidth: () => 2
+                    exSize: 2,
+                     color: () => "black",
+                    haloColor: () => "white",
+                    haloWidth: () => 3
                 })
             )
             //.setBoundaryLayer(gviz.getEurostatBoundariesLayer())
