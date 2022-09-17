@@ -1,4 +1,3 @@
-mosaic style doc
 mosaic legend: fix style setting mechanism - make it more open
 TW
 

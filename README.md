@@ -395,8 +395,8 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyp
 
 ### Mosaic style
 
-[![](/docs/img/styles/mosaic_basic.png)]([#tanaka-style](https://eurostat.github.io/gridviz/examples/styles/mosaic.html))
-[![](/docs/img/styles/mosaic_roman.png)]([#tanaka-style](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html))
+[![mosaic style](/docs/img/styles/mosaic_basic.png)](https://eurostat.github.io/gridviz/examples/styles/mosaic.html)
+[![mosaic style](/docs/img/styles/mosaic_roman.png)](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html)
 
 This style shows the cell as pseudo-irregular square shapes giving a [mosaic](https://en.wikipedia.org/wiki/Mosaic) effect. The cells are colored depending on a variable.
 
