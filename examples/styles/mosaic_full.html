@@ -70,7 +70,9 @@
                 [
                     new gviz.MosaicStyle({
                         colorCol: "2018",
-                        color: (v, r, s) => !+v ? undefined : gviz.interpolateYlOrBr(gviz.sExp(v / s.max, -50))
+                        color: (v, r, s) => !+v ? undefined : gviz.interpolateYlOrBr(gviz.sExp(v / s.max, -50)),
+                        shadowFactor:0.2,
+                        shadowColor: "black"
                     })
                 ],
                 {
