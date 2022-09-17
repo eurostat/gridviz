@@ -27,7 +27,7 @@
 
     <div
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; background: #e2ddc8cc; line-height: 1.6; box-shadow: 5px 5px 5px grey">
-        <span style="font-size: 1.5em; font-weight: bold;">Europe population mosaic, 2018 A.D.</span><br>
+        <span style="font-size: 1.5em; font-weight: bold;">Population mosaic of Europe, 2018 A.D.</span><br>
         <span style="font-size: 1em;">
             Source: <a href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/grids" target="_blank"
                 rel="noopener noreferrer">European Commission</a>
@@ -74,6 +74,14 @@
                     pixNb: 12,
                     cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)",
                 })
+
+        //legend
+        app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
+            title: "Number of inhabitants",
+            ticks: 3,
+            colorRamp: gviz.interpolateYlOrBr,
+            fun: (t, r, s) => s.max * gviz.sExpInverse(t, -50)
+        }))
 
     </script>
 

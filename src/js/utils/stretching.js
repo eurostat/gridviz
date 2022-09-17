@@ -76,3 +76,16 @@ export const sCircleLow = (t, alpha = 0.8) => {
  * @returns {number} The stretched value, within [0,1]
  */
 export const sCircleHigh = (t, alpha = 0.8) => 1 - sCircleLow(1 - t, alpha)
+
+
+
+/**
+ * Inverse function of sExp
+ * 
+ * @param {number} y 
+ * @param {number} alpha 
+ * @returns {number}
+ */
+export const sExpInverse = (y, alpha = 3) => alpha == 0 ? y : Math.log(1 + (Math.exp(alpha) - 1) * y) / alpha;
+
+// @todo: other inverse functions
