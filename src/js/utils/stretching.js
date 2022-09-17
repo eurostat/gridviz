@@ -46,7 +46,7 @@ export const sExp = (t, alpha = 3) => alpha == 0 ? t : (Math.exp(t * alpha) - 1)
  * @param {number} alpha 0: no deformation. -Inf: show low values. Inf: show high values.
  * @returns {number} The stretched value, within [0,1]
  */
-export const sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t);;
+export const sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t);
 
 
 
@@ -86,6 +86,6 @@ export const sCircleHigh = (t, alpha = 0.8) => 1 - sCircleLow(1 - t, alpha)
  * @param {number} alpha 
  * @returns {number}
  */
-export const sExpInverse = (y, alpha = 3) => alpha == 0 ? y : Math.log(1 + (Math.exp(alpha) - 1) * y) / alpha;
+export const sExpInverse = (y, alpha = 3) => alpha == 0 ? y : 1 / alpha * Math.log(1 - y + y * Math.exp(alpha));
 
 // @todo: other inverse functions
