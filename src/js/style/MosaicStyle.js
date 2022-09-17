@@ -68,8 +68,7 @@ export class MosaicStyle extends Style {
         const d = resolution * this.mosaicFactor
         const mosaic = () => { return { x: Math.random() * d, y: Math.random() * d } }
 
-        //draw with HTML canvas
-        //in geo coordinates
+        //draw with HTML canvas in geo coordinates
         cg.setCanvasTransform()
 
         for (let cell of cells) {
@@ -128,13 +127,5 @@ export class MosaicStyle extends Style {
         //update legends
         this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor });
     }
-
-
-    //getters and setters
-
-    /** @returns {function(number,number,Stat):string} */
-    getColor() { return this.color; }
-    /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
-    setColor(val) { this.color = val; return this; }
 
 }
