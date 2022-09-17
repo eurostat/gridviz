@@ -40,6 +40,7 @@ export class Legend {
 		//the div element
 		if (this.id)
 			this.div = select("#" + this.id);
+
 		if (!this.div || this.div.empty()) {
 			this.div = select(document.createElement("div"))
 			if (this.id)
