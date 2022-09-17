@@ -7,7 +7,7 @@ stretching: add missing inverse functions - use in legends
 tanaka bug: no shadow for lower level
 
 Improve doc
-improve style examples and add screenshots
+improve style examples and add screenshots 400*80
 complete
 
 GSGF
