@@ -48,9 +48,9 @@
             .setZoomFactor(1500).setZoomFactorExtent([40, 7500])
             .setLabelLayer(
                 gviz.getEuronymeLabelLayer("EUR", 50, {
-                    ex: 2.5,
+                    ex: 1.6,
                     fontFamily: "mf",
-                    exSize: 1.6,
+                    exSize: 1.2,
                     color: () => "black",
                     haloColor: () => "#ffffff",
                     haloWidth: () => 3
@@ -70,7 +70,7 @@
                 [
                     new gviz.MosaicStyle({
                         colorCol: "2018",
-                        color: (v, r, s) => !+v ? undefined : gviz.interpolateYlOrBr(gviz.sExp(v / s.max, -50)),
+                        color: (v, r, s) => !+v ? undefined : gviz.interpolateYlOrBr(gviz.sExp(v / s.max, -50)*0.75),
                         mosaicFactor: 0.2,
                         shadowFactor: 0.25,
                         shadowColor: "#aaa"
@@ -87,7 +87,7 @@
             width: 450,
             ticks: 6,
             colorRamp: gviz.interpolateYlOrBr,
-            fun: (t, r, s) => s.max * gviz.sExpInverse(t, -50)
+            fun: (t, r, s) => s.max * gviz.sExpInverse(t, -50)/0.75
         }))
 
     </script>
