@@ -80,21 +80,22 @@ export class MosaicStyle extends Style {
             const ll = mosaic(), ul = mosaic(), lr = mosaic(), ur = mosaic()
 
             //stroke
-            cg.ctx.beginPath();
-            cg.ctx.moveTo(
-                cell.x + offset.dx + ll.x,
-                cell.y + offset.dy + ll.y,
-            );
-            cg.ctx.lineTo(
-                cell.x + offset.dx + resolution - lr.x,
-                cell.y + offset.dy + lr.y,
-            );
-            cg.ctx.lineTo(
-                cell.x + offset.dx + resolution - ur.x,
-                cell.y + offset.dy + resolution - ur.y,
-            );
-            cg.ctx.stroke();
-
+            if (this.shadowFactor > 0) {
+                cg.ctx.beginPath();
+                cg.ctx.moveTo(
+                    cell.x + offset.dx + ll.x,
+                    cell.y + offset.dy + ll.y,
+                );
+                cg.ctx.lineTo(
+                    cell.x + offset.dx + resolution - lr.x,
+                    cell.y + offset.dy + lr.y,
+                );
+                cg.ctx.lineTo(
+                    cell.x + offset.dx + resolution - ur.x,
+                    cell.y + offset.dy + resolution - ur.y,
+                );
+                cg.ctx.stroke();
+            }
 
             //fill
 
