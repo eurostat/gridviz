@@ -339,8 +339,8 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyp
 
 ### Mosaic style
 
-[![mosaic style](/img/styles/mosaic_basic.png)](https://eurostat.github.io/gridviz/examples/styles/mosaic.html)
-[![mosaic style](/img/styles/mosaic_roman.png)](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html)
+[![mosaic style](img/styles/mosaic_basic.png)](https://eurostat.github.io/gridviz/examples/styles/mosaic.html)
+[![mosaic style](img/styles/mosaic_roman.png)](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html)
 
 This style shows the cell as pseudo-irregular square shapes giving a [mosaic](https://en.wikipedia.org/wiki/Mosaic) effect. The cells are colored depending on a variable.
 
@@ -437,7 +437,7 @@ Example based on https://github.com/eurostat/Nuts2json
 
 ## Tooltip
 
-![gridviz tooltip](/img/tooltip.png)
+![gridviz tooltip](img/tooltip.png)
 
 A 'tooltip' shows information related to the selected grid cell. The information shown for each selected cell can be specified at dataset level using the **cellInfoHTML** parameter. See for example:
 
