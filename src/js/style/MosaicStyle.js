@@ -14,29 +14,24 @@ export class MosaicStyle extends Style {
         opts = opts || {};
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         *  @protected
          * @type {string} */
         this.colorCol = opts.colorCol;
 
         /** A function returning the color of the cell.
-        * @protected
         * @type {function(number,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
 
         /** The mosaic factor, within [0,0.5]. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect.
-         *  @protected
          * @type {number} */
         this.mosaicFactor = opts.mosaicFactor || 0.15;
 
 
         /** The mosaic shadow factor, within [0,0.5]. Set to 0 for no mosaic shadow. Set to 0.5 for strong mosaic shadow.
-         *  @protected
          * @type {number} */
         this.shadowFactor = opts.shadowFactor || 0.2;
 
         /** The mosaic shadow color.
-         *  @protected
          * @type {string} */
         this.shadowColor = opts.shadowColor || "#555";
     }

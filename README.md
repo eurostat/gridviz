@@ -300,10 +300,9 @@ This style is a generic style which allows to define the **shape**, **color** an
 
 TODO: screenshots
 
-See [this example with changing size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize.html) ([code](examples/styles/shapecolorsize.html)).
+See [this basic example with changing size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize.html) ([code](examples/styles/shapecolorsize.html)).
 
 See [this example with random shape, color and size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html) ([code](examples/styles/shapecolorsize_random.html)).
-
 
 | Property | Type     | Default | Description  |
 | -------------- | -------- | ------- | -------------- |
@@ -318,7 +317,7 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 
 This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display grid cells at detailled resolutions.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html) ([code](examples/styles/squarecolorwgl.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html) ([code](examples/styles/squarecolorwgl.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -343,7 +342,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/compositio
 
 This style displays each cell as a segment with a changeable color, length, width and orientation.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/segment.html) ([code](examples/styles/segment.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/segment.html) ([code](examples/styles/segment.html)).
 
 See [this example with random orientation, color, length and width](https://eurostat.github.io/gridviz/examples/styles/segment_random.html) ([code](examples/styles/segment_random.html)).
 
@@ -356,7 +355,7 @@ See [this example with random orientation, color, length and width](https://euro
 
 This style displays each cell as randomly located points, with changeable density and color.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html) ([code](examples/styles/dotdensity.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html) ([code](examples/styles/dotdensity.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -366,7 +365,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/dotdensity
 
 This style shows the stroke of each cell with different colors, widths, shapes and sizes.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/stroke.html) ([code](examples/styles/stroke.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/stroke.html) ([code](examples/styles/stroke.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -377,7 +376,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/stroke.htm
 
 This style extract the sides of the cells and show each of them depending on the values of the 2 cells around.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](examples/styles/side.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](examples/styles/side.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -388,7 +387,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html)
 
 This style shows cell rows in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/joyplot.html) ([code](examples/styles/joyplot.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyplot.html) ([code](examples/styles/joyplot.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -398,20 +397,23 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/joyplot.ht
 
 This style is a usual cell coloring style with a slight random deformation of the squares giving a 'mosaic' like effect.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/mosaic.html) ([code](examples/styles/mosaic.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/mosaic.html) ([code](examples/styles/mosaic.html)).
 
-See [this other example](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html) ([code](examples/styles/mosaic_full.html)).
+See [this roman style example](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html) ([code](examples/styles/mosaic_full.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **.** |  |     |  |
-
+| **colorCol** | string |  undefined   | The name of the column used for the color. |
+| **color** | function(v,r,s):string |  () => "#EA6BAC"   | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. |
+| **mosaicFactor** | number |  0.15   | The mosaic factor, within [0,0.5]. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect. |
+| **shadowFactor** | number |  0.2   | The mosaic shadow factor, within [0,0.5]. Set to 0 for no mosaic shadow. Set to 0.5 for strong mosaic shadow. |
+| **shadowColor** | string |   "#555"  | The mosaic shadow color. |
 
 ### Tanaka style
 
 This style shows the grid cells in a Tanaka-like style, that is with discrete colors and shadow effect.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](examples/styles/tanaka.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](examples/styles/tanaka.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -421,7 +423,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/tanaka.htm
 
 This style shows the grid cells as lego bricks with changeable colors and height.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](examples/styles/lego.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](examples/styles/lego.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -431,7 +433,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/lego.html)
 
 This style shows the grid cells as 3D pillars, with changeable heigths and colors.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](examples/styles/pillar.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](examples/styles/pillar.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -441,7 +443,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/pillar.htm
 
 This style shows the grid cells as text characters with different colors.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/text.html) ([code](examples/styles/text.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text.html) ([code](examples/styles/text.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
