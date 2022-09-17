@@ -1,4 +1,9 @@
+improve/extend mosaic style API and doc
+mosaic legend: fix style setting mechanism - make it more open
+TW
+
 stretching: add missing inverse functions - use in legends
+
 tanaka bug: no shadow for lower level
 
 Improve doc
