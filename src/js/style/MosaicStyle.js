@@ -21,11 +21,9 @@ export class MosaicStyle extends Style {
         * @type {function(number,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
-
         /** The mosaic factor, within [0,0.5]. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect.
          * @type {number} */
         this.mosaicFactor = opts.mosaicFactor || 0.15;
-
 
         /** The mosaic shadow factor, within [0,0.5]. Set to 0 for no mosaic shadow. Set to 0.5 for strong mosaic shadow.
          * @type {number} */
