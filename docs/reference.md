@@ -4,9 +4,6 @@
 
 - [Gridviz API reference](#gridviz-api-reference)
   - [Table of contents](#table-of-contents)
-  - [Installation](#installation)
-    - [Node.js](#nodejs)
-    - [standalone](#standalone)
   - [Usage](#usage)
   - [App Configuration](#app-configuration)
   - [Adding data](#adding-data)
@@ -38,26 +35,6 @@
   - [Tooltip](#tooltip)
 
 Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
-
-## Installation
-
-### Node.js
-
-```Shell
-npm install gridviz
-```
-
-then
-
-```javascript
-gridviz = require("gridviz");
-```
-
-### standalone
-
-```javascript
-<script src="https://unpkg.com/gridviz/build/gridviz.min.js"></script>
-```
 
 ## Usage
 

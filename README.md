@@ -29,6 +29,27 @@
 - [Croatia - 1km resolution - DZS 2015 grid](https://eurostat.github.io/gridviz/examples/HR.html)
 - [Dark style](https://eurostat.github.io/gridviz/examples/FR_dark.html)
 
+
+## Installation
+
+### Node.js
+
+```Shell
+npm install gridviz
+```
+
+then
+
+```javascript
+gridviz = require("gridviz");
+```
+
+### standalone
+
+```javascript
+<script src="https://unpkg.com/gridviz/build/gridviz.min.js"></script>
+```
+
 ## Documentation
 
 See the **[API reference](docs/reference.md)**.
