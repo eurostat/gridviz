@@ -395,7 +395,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyp
 
 ### Mosaic style
 
-This style is a usual cell coloring style with a slight random deformation of the squares giving a 'mosaic' like effect.
+This style shows the cell as pseudo-irregular square shapes giving a [mosaic](https://en.wikipedia.org/wiki/Mosaic) effect. The cells are colored depending on a variable.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/mosaic.html) ([code](examples/styles/mosaic.html)).
 
@@ -405,7 +405,7 @@ See [this roman style example](https://eurostat.github.io/gridviz/examples/style
 | ----------- | -------- | ------- | ------------ |
 | **colorCol** | string |  undefined   | The name of the column used for the color. |
 | **color** | function(v,r,s):string |  () => "#EA6BAC"   | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. |
-| **mosaicFactor** | number |  0.15   | The mosaic factor, within [0,0.5]. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect. |
+| **mosaicFactor** | number |  0.15   | The mosaic factor, within [0,0.5], to control the shape irregularities. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect. |
 | **shadowFactor** | number |  0.2   | The mosaic shadow factor, within [0,0.5]. Set to 0 for no mosaic shadow. Set to 0.5 for strong mosaic shadow. |
 | **shadowColor** | string |   "#555"  | The mosaic shadow color. |
 
