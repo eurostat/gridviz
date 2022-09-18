@@ -62,7 +62,7 @@ export class App {
         this.cg = new GeoCanvas(canvas);
         this.cg.redraw = (strong = true) => {
             if (monitor) monitorDuration("Start redraw")
-            console.log("?x=" + this.cg.getCenter().x + "&y=" + this.cg.getCenter().y + "&z=" + this.cg.getZf())
+            //console.log("?x=" + this.cg.getCenter().x + "&y=" + this.cg.getCenter().y + "&z=" + this.cg.getZf())
 
             //remove legend elements
             if (this.legend && strong)
