@@ -1,4 +1,5 @@
 mosaic legend: fix style setting mechanism - make it more open
+check all
 TW
 
 stretching: add missing inverse functions - use in legends
