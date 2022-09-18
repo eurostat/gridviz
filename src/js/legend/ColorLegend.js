@@ -49,9 +49,6 @@ export class ColorLegend extends Legend {
         //clear
         this.div.selectAll("*").remove();
 
-
-
-
         const titleHeight = 12
 
         const svgW = this.width + 2 * this.margin

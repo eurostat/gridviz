@@ -1,4 +1,3 @@
-mosaic legend: fix style setting mechanism - make it more open
 check all
 TW
 
