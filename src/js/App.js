@@ -62,7 +62,7 @@ export class App {
         this.cg = new GeoCanvas(canvas);
         this.cg.redraw = (strong = true) => {
             if (monitor) monitorDuration("Start redraw")
-            //console.log(this.cg.getZf(), this.cg.getCenter())
+            console.log("?x=" + this.cg.getCenter().x + "&y=" + this.cg.getCenter().y + "?z=" + this.cg.getZf())
 
             //remove legend elements
             if (this.legend && strong)
@@ -228,6 +228,9 @@ export class App {
 
         this.selectionRectangleColor = opts.selectionRectangleColor || "red"
         this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || 4
+
+        //
+        //canvas.addEventListener("keydown", e => { console.log(arguments) });
     }
 
 
