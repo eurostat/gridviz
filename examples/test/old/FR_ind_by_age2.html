@@ -134,13 +134,13 @@
             const value = document.querySelector('input[name="style"]:checked').value
             let st;
             if (value === "donut") {
-                s.setShape(() => "donut")
+                s.shape = (() => "donut")
                 st = s
             } else if (value === "square") {
-                s.setShape(() => "square")
+                s.shape = (() => "square")
                 st = s
             } else if (value === "circle") {
-                s.setShape(() => "circle")
+                s.shape = (() => "circle")
                 st = s
             } else if (value === "hseg") {
                 sSegment.setOrientation(() => 0)

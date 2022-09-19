@@ -127,22 +127,4 @@ export class ShapeColorSizeStyle extends Style {
         this.updateLegends({ style: this, r: resolution, zf: zf, sSize: statSize, sColor: statColor });
     }
 
-
-    //getters and setters
-
-    /** @returns {function(number,number,Stat):string} */
-    getColor() { return this.color; }
-    /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
-    setColor(val) { this.color = val; return this; }
-
-    /** @returns {function(number,number,Stat,number):number} */
-    getSize() { return this.size; }
-    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
-    setSize(val) { this.size = val; return this; }
-
-    /** @returns {function(Cell):Shape} */
-    getShape() { return this.shape; }
-    /** @param {function(Cell):Shape} val @returns {this} */
-    setShape(val) { this.shape = val; return this; }
-
 }
