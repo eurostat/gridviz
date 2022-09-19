@@ -105,6 +105,7 @@ export class ShapeColorSizeStyle extends Style {
                     0, 2 * Math.PI, false);
                 cg.ctx.fill();
             } else if (shape === "donut") {
+                //draw donut
                 const xc = cell.x + resolution * 0.5 + offset.dx, yc = cell.y + resolution * 0.5 + offset.dy
                 cg.ctx.beginPath();
                 cg.ctx.moveTo(xc, yc);
