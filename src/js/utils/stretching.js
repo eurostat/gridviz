@@ -79,15 +79,58 @@ export const sCircleHigh = (t, alpha = 0.8) => 1 - sCircleLow(1 - t, alpha)
 
 
 
+
+
+/**
+ * Inverse functions
+ */
+
 /**
  * Inverse function of sExp
- * 
  * @param {number} y 
  * @param {number} alpha 
  * @returns {number}
  */
 export const sExpInverse = (y, alpha = 3) => alpha == 0 ? y : 1 / alpha * Math.log(1 - y + y * Math.exp(alpha));
+
+/**
+ * Inverse function of sExpRev
+ * @param {number} y 
+ * @param {number} alpha 
+ * @returns {number}
+ */
 export const sExpRevInverse = (y, alpha = 3) => (Math.exp(-alpha * y) - 1) / (Math.exp(-alpha) - 1)
 
+/**
+ * Inverse function of sPow
+ * @param {number} y 
+ * @param {number} alpha 
+ * @returns {number}
+ */
+
 export const sPowInverse = (y, alpha = 3) => Math.pow(y, 1 / alpha);
-export const sPowRevInverse = (y, alpha = 3) => 1 - Math.pow(y - 1, alpha);
+
+/**
+ * Inverse function of sPowRev
+ * @param {number} y 
+ * @param {number} alpha 
+ * @returns {number}
+ */
+export const sPowRevInverse = (y, alpha = 3) => 1 - Math.pow(1 - y, alpha);
+
+
+
+//test code
+/*
+for (let i = 0; i <= 1; i += 0.001) {
+  //const v = gviz.sExp(gviz.sExpInverse(i));
+  //const v = gviz.sExpInverse(gviz.sExp(i));
+  //const v = gviz.sExpRev(gviz.sExpRevInverse(i));
+  //const v = gviz.sExpRevInverse(gviz.sExpRev(i));
+  //const v = gviz.sPow(gviz.sPowInverse(i));
+  //const v = gviz.sPowInverse(gviz.sPow(i));
+  //const v = gviz.sPowRev(gviz.sPowRevInverse(i));
+  const v = gviz.sPowRevInverse(gviz.sPowRev(i));
+  console.log(i - v)
+}
+*/
