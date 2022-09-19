@@ -318,6 +318,10 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotd
 
 ### Stroke style
 
+[![stroke style](img/styles/stroke.png)](https://eurostat.github.io/gridviz/examples/styles/stroke.html)
+
+[![stroke style](img/styles/stroke_random.png)](https://eurostat.github.io/gridviz/examples/styles/stroke_random.html)
+
 This style shows the stroke of each cell with different colors, widths, shapes and sizes. This style can be used in addition to others to show the cell strokes on top of those other styles.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/stroke.html) ([code](../examples/styles/stroke.html)).
