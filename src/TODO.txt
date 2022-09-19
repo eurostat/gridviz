@@ -1,3 +1,5 @@
+ssc: example with dropdown for shape selection
+
 tanaka bug: no shadow for lower level
 
 Improve doc
