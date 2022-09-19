@@ -22,7 +22,7 @@
                 [
                     new gviz.ShapeColorSizeStyle({
                         sizeCol: "Ind",
-                        size: (v, r, s, zf) => 1.4 * r * gviz.sExpRev(v / s.max, -10),
+                        size: (v, r, s, zf) => 1.4 * r * gviz.sPow(v / s.max, 0.13),
                         colorCol: "age_ratio",
                         color: (v, r, s) => gviz.interpolateSpectral(1 - v),
                         shape: () => "circle",
@@ -30,16 +30,16 @@
                 ],
                 {
                     pixNb: 6,
-                    cellInfoHTML: c => "<b>" + (+c.yyy) + "</b> 24 ans et moins"
+                    /*cellInfoHTML: c => null,"<b>" + (+c.yyy) + "</b> 24 ans et moins"
                         + "<br>" + "<b>" + (+c.ooo) + "</b> 65 ans et plus"
                         //+ "<br>" + "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
-                        + (+c.imputed ? "<br>(valeurs imputées)" : ""),
+                        + (+c.imputed ? "<br>(valeurs imputées)" : ""),*/
                     preprocess: c => {
                         //<24
-                        c.yyy = +c.Ind_0_3 + +c.Ind_4_5 + +c.Ind_6_10 + +c.Ind_11_17 + +c.Ind_18_24;
+                        const yyy = +c.Ind_0_3 + +c.Ind_4_5 + +c.Ind_6_10 + +c.Ind_11_17 + +c.Ind_18_24;
                         //>65
-                        c.ooo = +c.Ind_65_79 + +c.Ind_80p
-                        c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo);
+                        const ooo = +c.Ind_65_79 + +c.Ind_80p
+                        c.age_ratio = yyy + ooo == 0 ? 0 : (yyy - ooo) / (yyy + ooo);
                         c.age_ratio = c.age_ratio * 0.5 + 0.5
                     }
 
