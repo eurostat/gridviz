@@ -13,8 +13,8 @@
     - [Multi scale tiled CSV data](#multi-scale-tiled-csv-data)
     - [Data pre-processing](#data-pre-processing)
   - [Styles](#styles)
-    - [Shape/Color/Size Style](#shapecolorsize-style)
     - [Square color WebGL Style](#square-color-webgl-style)
+    - [Shape/Color/Size Style](#shapecolorsize-style)
     - [Composition style](#composition-style)
     - [Segment style](#segment-style)
     - [Dot density style](#dot-density-style)
@@ -238,10 +238,28 @@ Note that it is unfortunatelly currently not possible to compute new columns fro
 
 TODO: explain general principles, with (v,r,zf,s) functions. + use several styles by layer + define zoom extent for each style
 
+
+### Square color WebGL Style
+
+This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display grid cells at detailled resolutions.
+
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html) ([code](examples/styles/squarecolorwgl.html)).
+
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **colorCol** | string |  undefined   | The name of the column used for the color. |
+| **tFun** | function(number,number,Stat):number | (v, r, s) => v / s.max |  A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling. |
+| **deformationFactor** | number |  1   | A parameter within [0,Inf] to deform the distribution. 1: no deformation. <1: better show small values. >1: better show large values. |
+| **colors** | Array.<string> |  Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral)   | The sample of the color ramp. |
+| **size** | function(r,zf):number |  (r,zf) => r + 0.2 * zf   | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size. |
+
+
 ### Shape/Color/Size Style
 
-[![shape color size style](img/styles/shapesizecolor_s.png)](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size.html)
 [![shape color size style](img/styles/shapesizecolor_sc.png)](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size_color.html)
+
+[![shape color size style](img/styles/shapesizecolor_s.png)](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size.html)
+
 [![shape color size style](img/styles/shapesizecolor_random.png)](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html)
 
 This style is a generic style which allows to define the **shape**, **color** and **size** of each grid cell, independantly according to 3 different variables. Three shapes are currently available: square, circle and donut (a disk with a hole of changing size). To show grid cells as small squares with only changing color, the style based on web GL [here](#square-color-webgl-style) should rather be used, for efficiency reasons.
@@ -260,20 +278,6 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 | **size** | function(v,r,s,zf) |  (v,r,s,zf) => r   | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, and statistics **s**. |
 | **shape** | function(c):string |  () => "square"   | A function computing the shape of cell **c**. Expected values are within __{"square", "circle", "donut", "none"}__ |
 
-
-### Square color WebGL Style
-
-This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display grid cells at detailled resolutions.
-
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html) ([code](examples/styles/squarecolorwgl.html)).
-
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **colorCol** | string |  undefined   | The name of the column used for the color. |
-| **tFun** | function(number,number,Stat):number | (v, r, s) => v / s.max |  A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling. |
-| **deformationFactor** | number |  1   | A parameter within [0,Inf] to deform the distribution. 1: no deformation. <1: better show small values. >1: better show large values. |
-| **colors** | Array.<string> |  Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral)   | The sample of the color ramp. |
-| **size** | function(r,zf):number |  (r,zf) => r + 0.2 * zf   | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size. |
 
 ### Composition style
 
@@ -344,6 +348,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyp
 ### Mosaic style
 
 [![mosaic style](img/styles/mosaic_basic.png)](https://eurostat.github.io/gridviz/examples/styles/mosaic.html)
+
 [![mosaic style](img/styles/mosaic_roman.png)](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html)
 
 This style shows the cell as pseudo-irregular square shapes giving a [mosaic](https://en.wikipedia.org/wiki/Mosaic) effect. The cells are colored depending on a variable.

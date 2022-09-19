@@ -7,7 +7,7 @@ import { GeoCanvas } from "../GeoCanvas";
 /**
  * A style representing the cell as a smoothed layer, to smoothing local variations and show main trends across space.
  * 
- * @author Joseph Davies, Julien Gaffuri
+ * @author Julien Gaffuri
  */
 export class KernelSmoothingStyle extends Style {
 

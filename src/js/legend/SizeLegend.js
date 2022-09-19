@@ -64,7 +64,7 @@ export class SizeLegend extends Legend {
         else if (value * 2 <= value_) value *= 2
 
         //compute size of symbol, in pix
-        const size = opts.style.getSize()(value, opts.r, opts.sSize, opts.zf) / opts.zf;
+        const size = opts.style.size(value, opts.r, opts.sSize, opts.zf) / opts.zf;
 
         const svg = this.div.append("svg").attr("width", size + this.strokeWidth + 2).attr("height", size + this.strokeWidth + 2)
             .style("", "inline-block")

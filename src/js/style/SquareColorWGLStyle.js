@@ -12,7 +12,7 @@ import { monitor, monitorDuration } from "../utils/Utils"
  * To show cells as colored squares, with computation of the colors on GPU side (faster than JavaScript side).
  * Alls squares with the same size
  * 
- * @author Joseph Davies, Julien Gaffuri
+ * @author Julien Gaffuri
  */
 export class SquareColorWGLStyle extends Style {
 
@@ -23,27 +23,23 @@ export class SquareColorWGLStyle extends Style {
 
         /**
          * The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         * @protected
          * @type {string} */
         this.colorCol = opts.colorCol;
 
         /**
          * A function returning the t value (within [0,1]) of the cell.
-        * @protected
         * @type {function(number,number,Stat):number} */
         this.tFun = opts.tFun || ((v, r, s) => v / s.max);
 
         /**
          * A parameter within [0,Inf] to deform the distribution. 1: no deformation. <1: better show small values. >1: better show large values.
          * The deformation is performed on GPU side (fragment shader).
-         * @protected
          * @type {number} */
         this.deformationFactor = opts.deformationFactor || 1.0
 
         /**
          * The sample of the color ramp.
          * The color is computed on GPU side (fragment shader) based on those values (linear interpolation).
-         * @protected
          * @type {Array.<string>} */
         this.colors = opts.colors || ["rgb(158, 1, 66)", "rgb(248, 142, 83)", "rgb(251, 248, 176)", "rgb(137, 207, 165)", "rgb(94, 79, 162)"].reverse()
         //["lightblue", "green", "yellow", "orange", "red"]
@@ -52,7 +48,6 @@ export class SquareColorWGLStyle extends Style {
 
         /**
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
-         * @protected
          * @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
     }
@@ -120,10 +115,5 @@ export class SquareColorWGLStyle extends Style {
 
         if (monitor) monitorDuration("*** SquareColorWGLStyle end draw")
     }
-
-
-    //getters and setters
-
-    //TODO
 
 }

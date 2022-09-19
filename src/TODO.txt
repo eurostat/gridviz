@@ -1,5 +1,4 @@
 ssc: example with dropdown for shape selection
-remove set/get for styles + @protected
 
 tanaka bug: no shadow for lower level
 

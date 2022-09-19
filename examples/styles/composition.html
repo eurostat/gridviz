@@ -75,7 +75,7 @@
         //get style from UI
         const getStyle = () => {
             const v = document.querySelector('input[name="style"]:checked').value
-            s.setType(() => v)
+            s.type = (() => v)
             return s
         }
 

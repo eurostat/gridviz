@@ -12,7 +12,7 @@ import { monitor, monitorDuration } from "../utils/Utils"
  * To show cells as colored squares, with computation of the colors on JavaScript side.
  * Alls squares with the same size
  * 
- * @author Joseph Davies, Julien Gaffuri
+ * @author Julien Gaffuri
  */
 export class SquareColorWGLStyle2 extends Style {
 
@@ -22,17 +22,14 @@ export class SquareColorWGLStyle2 extends Style {
         opts = opts || {};
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         *  @protected
          * @type {string} */
         this.colorCol = opts.colorCol;
 
         /** A function returning the color of the cell.
-        * @protected
         * @type {function(number,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
         /** A function returning the size of the cells, in geographical unit.
-        * @protected
         * @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
     }

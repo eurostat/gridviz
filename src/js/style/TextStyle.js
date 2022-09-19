@@ -6,7 +6,7 @@ import { GeoCanvas } from "../GeoCanvas";
 
 /**
  * 
- * @author Joseph Davies, Julien Gaffuri
+ * @author Julien Gaffuri
  */
 export class TextStyle extends Style {
 
@@ -16,46 +16,38 @@ export class TextStyle extends Style {
         opts = opts || {};
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for text.
-         *  @protected
          * @type {string} */
         this.textCol = opts.textCol;
 
         /** A function returning the text of a cell.
-         * @private
          * @type {function(number,number,Stat|undefined):string} */
         this.text = opts.text || ((v, r, s, z) => "X")
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         *  @protected
          * @type {string} */
         this.colorCol = opts.colorCol;
 
         /** A function returning the color of the cell.
-        * @protected
         * @type {function(number,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
 
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for font size.
-         * @protected
          * @type {string} */
         this.fontSizeCol = opts.fontSizeCol;
 
         /** A function returning the font size of a cell in geo unit.
-        * @protected
         * @type {function(number,number,Stat|undefined,number):number} */
         this.fontSize = opts.fontSize || ((v, r, s, z) => r - 2);
 
 
 
         /** A function returning the font family.
-        * @private
         * @type {string} */
         this.fontFamily = opts.fontFamily || "Arial"
 
         /** A function returning the font weight.
-         * @private
          * @type {string} */
         this.fontWeight = opts.fontWeight || "bold"
     }
@@ -132,13 +124,6 @@ export class TextStyle extends Style {
         //update legends
         this.updateLegends({ style: this, r: r, zf: zf, sColor: statColor });
     }
-
-
-    //getters and setters
-
-    //TODO
-
-
 
 
     /** 

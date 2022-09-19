@@ -82,7 +82,7 @@
         const select = document.querySelector('#type');
         select.addEventListener('change', function () {
             //set style
-            s.setType(() => select.value)
+            s.type = (() => select.value)
             for (let lay of app.layers) lay.styles = [s]
             //redraw
             app.cg.redraw();

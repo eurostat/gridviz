@@ -6,7 +6,7 @@ import { GeoCanvas } from "../GeoCanvas";
 
 /**
  * 
- * @author Joseph Davies, Julien Gaffuri
+ * @author Julien Gaffuri
  */
 export class StrokeStyle extends Style {
 
@@ -16,41 +16,34 @@ export class StrokeStyle extends Style {
         opts = opts || {};
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         *  @protected
          * @type {string}
          * */
         this.strokeColorCol = opts.strokeColorCol;
 
         /** A function returning the color of the stroke.
-        * @protected
         * @type {function(number,number,Stat|undefined):string}
         * */
         this.strokeColor = opts.strokeColor || (() => "#666");
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for size.
-         * @protected
          * @type {string} */
         this.sizeCol = opts.sizeCol;
 
         /** A function returning the size of a cell in geographical unit.
-        * @protected
         * @type {function(number,number,Stat|undefined,number):number}
         * */
         this.size = opts.size;
 
         /** The stroke line width, in pixels.
-        * @protected
         * @type {string} */
         this.strokeWidthCol = opts.strokeWidthCol;
 
         /** The stroke line width in geographical unit.
-       * @protected
        * @type {function(number,number,Stat|undefined,number):number}
        * */
         this.strokeWidth = opts.strokeWidth;
 
         /** A function returning the shape of a cell.
-         * @private
          * @type {function(Cell):Shape} */
         this.shape = opts.shape || (() => "square");
 
@@ -139,8 +132,4 @@ export class StrokeStyle extends Style {
 
     }
 
-
-    //getters and setters
-
-    //TODO
 }

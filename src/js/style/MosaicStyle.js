@@ -4,7 +4,7 @@ import { GeoCanvas } from "../GeoCanvas";
 import { Cell } from "../Dataset";
 
 /**
- * @author Joseph Davies, Julien Gaffuri
+ * @author Julien Gaffuri
  */
 export class MosaicStyle extends Style {
 

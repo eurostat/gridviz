@@ -7,7 +7,7 @@ import { GeoCanvas } from "../GeoCanvas";
 /**
  * A style where each cell is represented by a segment whose length, width, color and orientation can vary according to statistical values.
  * 
- * @author Joseph Davies, Julien Gaffuri
+ * @author Julien Gaffuri
  */
 export class SegmentStyle extends Style {
 
@@ -17,34 +17,30 @@ export class SegmentStyle extends Style {
         opts = opts || {};
 
         /** A function returning the orientation (in degrees) of the segment representing a cell.
-         * @private
          * @type {function(Cell):number} */
         this.orientation = opts.orientation;
 
         /** 
-         * @private
          * @type {string} */
         this.colorCol = opts.colorCol;
+
         /** A function returning the color of the cell segment.
-        * @private
         * @type {function(number,number,Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
         /** 
-         * @private
          * @type {string} */
         this.lengthCol = opts.lengthCol;
+
         /** A function returning the length of the segment representing a cell, in geo unit
-         * @private
          * @type {function(number,number,Stat|undefined,number):number} */
         this.length = opts.length;
 
         /** 
-         * @private
          * @type {string} */
         this.widthCol = opts.widthCol;
+
         /** A function returning the width of the segment representing a cell, in geo unit
-         * @private
          * @type {function(number,number,Stat|undefined,number):number} */
         this.width = opts.width;
     }

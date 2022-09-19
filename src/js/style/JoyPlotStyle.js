@@ -6,7 +6,7 @@ import { GeoCanvas } from "../GeoCanvas";
 
 /**
  * 
- * @author Joseph Davies, Julien Gaffuri
+ * @author Julien Gaffuri
  */
 export class JoyPlotStyle extends Style {
 
