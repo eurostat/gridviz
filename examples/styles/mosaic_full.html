@@ -39,21 +39,6 @@
     <script src="../../build/gridviz.js"></script>
     <script>
 
-        //convert to roman numbers - source: https://stackoverflow.com/a/9083076/413912
-        function romanize(num) {
-            if (isNaN(num))
-                return NaN;
-            var digits = String(+num).split(""),
-                key = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM",
-                    "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC",
-                    "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"],
-                roman = "",
-                i = 3;
-            while (i--)
-                roman = (key[+digits.pop() + (i * 10)] || "") + roman;
-            return Array(+digits.join("") + 1).join("M") + roman;
-        }
-
         let containerDiv = document.getElementById("viz-container");
 
         const app = new gviz.App(containerDiv)
@@ -104,6 +89,23 @@
             colorRamp: gviz.interpolateYlOrBr,
             fun: (t, r, s) => s.max * gviz.sExpInverse(t, -15)
         }))
+
+
+        /*/convert to roman numbers - source: https://stackoverflow.com/a/9083076/413912
+        function romanize(num) {
+            if (isNaN(num))
+                return NaN;
+            var digits = String(+num).split(""),
+                key = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM",
+                    "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC",
+                    "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"],
+                roman = "",
+                i = 3;
+            while (i--)
+                roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+            return Array(+digits.join("") + 1).join("M") + roman;
+        }*/
+
 
     </script>
 
