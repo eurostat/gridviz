@@ -295,11 +295,15 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/compositio
 
 ### Segment style
 
+[![segment style](img/styles/segment_width.png)](https://eurostat.github.io/gridviz/examples/styles/segment_width.html)
+
+[![segment style](img/styles/segment_random.png)](https://eurostat.github.io/gridviz/examples/styles/segment_random.html)
+
 This style displays each cell as a segment with a changeable color, length, width and orientation.
 
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/segment.html) ([code](../examples/styles/segment.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/segment_width.html) ([code](../examples/styles/segment_width.html)).
 
-See [this example with random orientation, color, length and width](https://eurostat.github.io/gridviz/examples/styles/segment_random.html) ([code](../examples/styles/segment_random.html)).
+See [this example with random segment orientation, color, length and width](https://eurostat.github.io/gridviz/examples/styles/segment_random.html) ([code](../examples/styles/segment_random.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
