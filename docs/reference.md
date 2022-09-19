@@ -246,6 +246,8 @@ TODO: screenshots
 
 See [this basic example with changing size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size.html) ([code](examples/styles/shapecolorsize_size.html)).
 
+See [this basic example with changing size and color](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size_color.html) ([code](examples/styles/shapecolorsize_size_color.html)).
+
 See [this example with random shape, color and size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html) ([code](examples/styles/shapecolorsize_random.html)).
 
 | Property | Type     | Default | Description  |
