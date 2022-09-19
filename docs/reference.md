@@ -246,9 +246,9 @@ TODO: explain general principles, with (v,r,zf,s) functions. + use several style
 
 This style is a generic style which allows to define the **shape**, **color** and **size** of each grid cell, independantly according to 3 different variables. Three shapes are currently available: square, circle and donut (a disk with a hole of changing size). To show grid cells as small squares with only changing color, the style based on web GL [here](#square-color-webgl-style) should rather be used, for efficiency reasons.
 
-See [this basic example with changing size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size.html) ([code](examples/styles/shapecolorsize_size.html)).
+See [this example with changing size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size.html) ([code](examples/styles/shapecolorsize_size.html)).
 
-See [this basic example with changing size and color](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size_color.html) ([code](examples/styles/shapecolorsize_size_color.html)).
+See [this example with changing size and color](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size_color.html) ([code](examples/styles/shapecolorsize_size_color.html)).
 
 See [this example with random shape, color and size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html) ([code](examples/styles/shapecolorsize_random.html)).
 
