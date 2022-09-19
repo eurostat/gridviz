@@ -87,5 +87,7 @@ export const sCircleHigh = (t, alpha = 0.8) => 1 - sCircleLow(1 - t, alpha)
  * @returns {number}
  */
 export const sExpInverse = (y, alpha = 3) => alpha == 0 ? y : 1 / alpha * Math.log(1 - y + y * Math.exp(alpha));
+export const sExpRevInverse = (y, alpha = 3) => (Math.exp(-alpha * y) - 1) / (Math.exp(-alpha) - 1)
 
-// @todo: other inverse functions
+export const sPowInverse = (y, alpha = 3) => Math.pow(y, 1 / alpha);
+export const sPowRevInverse = (y, alpha = 3) => 1 - Math.pow(y - 1, alpha);
