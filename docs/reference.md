@@ -278,7 +278,7 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 | **colorCol** | string |  undefined   | The name of the column used for the color. |
 | **color** | function(v,r,s):string |  () => "#EA6BAC"   | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. |
 | **sizeCol** | string |  undefined   | The name of the column used for the size. |
-| **size** | function(v,r,s,zf) |  (v,r,s,zf) => r   | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, and statistics **s**. |
+| **size** | function(v,r,s,zf) |  (v,r,s,zf) => r   | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
 | **shape** | function(c):string |  () => "square"   | A function computing the shape of cell **c**. Expected values are within __{"square", "circle", "donut", "none"}__ |
 
 
@@ -318,14 +318,19 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotd
 
 ### Stroke style
 
-This style shows the stroke of each cell with different colors, widths, shapes and sizes.
+This style shows the stroke of each cell with different colors, widths, shapes and sizes. This style can be used in addition to others to show the cell strokes on top of those other styles.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/stroke.html) ([code](../examples/styles/stroke.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **.** |  |     |  |
-
+| **strokeColorCol** | string |  undefined   | The name of the column used for the stroke color. |
+| **strokeColor** | function(v,r,s):string |  () => "#666"   | A function computing the cell stroke color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. |
+| **sizeCol** | string |  undefined   | The name of the column used for the size. |
+| **size** | function(v,r,s,zf) | (v,r,s,zf) => r   | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
+| **strokeWidthCol** | string |  undefined   | The name of the column used for the stroke width. |
+| **strokeWidth** | function(v,r,s,zf) | (v,r,s,zf) => zf   | A function computing the cell stroke width from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
+| **shape** | function(c):string |  () => "square"   | A function computing the shape of cell **c**. Expected values are within __{"square", "circle", "none"}__ |
 
 ### Side style
 
