@@ -63,7 +63,7 @@ new gviz.App(containerDiv)
         ]
     )
 ```
-(see [online](https://eurostat.github.io/gridviz/examples/basic_CSV.html), see [code](examples/basic_CSV.html))
+(see [online](https://eurostat.github.io/gridviz/examples/basic_CSV.html), see [code](../examples/basic_CSV.html))
 
 [Gridviz](https://github.com/eurostat/gridviz/) can display several layers on top of each others. Each layer is based on a single [multi-resolution dataset](#adding-data), which can be displayed with several [cartographic styles](#styles). For more information, see the [examples](#examples).
 
@@ -122,7 +122,7 @@ new gviz.App(containerDiv)
         }
     )
 ```
-(see [online](https://eurostat.github.io/gridviz/examples/basic_multiscale_CSV.html), see [code](examples/basic_multiscale_CSV.html))
+(see [online](https://eurostat.github.io/gridviz/examples/basic_multiscale_CSV.html), see [code](../examples/basic_multiscale_CSV.html))
 
 ### Tiled CSV data
 
@@ -145,7 +145,7 @@ new gviz.App(containerDiv)
         ]
     )
 ```
-(see [online](https://eurostat.github.io/gridviz/examples/basic_tiled_CSV.html), see [code](examples/basic_tiled_CSV.html))
+(see [online](https://eurostat.github.io/gridviz/examples/basic_tiled_CSV.html), see [code](../examples/basic_tiled_CSV.html))
 
 ### Multi scale tiled CSV data
 
@@ -174,7 +174,7 @@ new gviz.App(containerDiv)
         }
     )
 ```
-(see [online](https://eurostat.github.io/gridviz/examples/basic_multiscale_tiled_CSV.html), see [code](examples/basic_multiscale_tiled_CSV.html))
+(see [online](https://eurostat.github.io/gridviz/examples/basic_multiscale_tiled_CSV.html), see [code](../examples/basic_multiscale_tiled_CSV.html))
 
 
 | Method                                           | Arguments                                  | Description                                            |
@@ -230,7 +230,7 @@ new gviz.App(containerDiv)
         }
     )
 ```
-(see [online](https://eurostat.github.io/gridviz/examples/preprocess.html), see [code](examples/preprocess.html))
+(see [online](https://eurostat.github.io/gridviz/examples/preprocess.html), see [code](../examples/preprocess.html))
 
 Note that it is unfortunatelly currently not possible to compute new columns from the combination of two different datasets.
 
@@ -243,7 +243,10 @@ TODO: explain general principles, with (v,r,zf,s) functions. + use several style
 
 This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display grid cells at detailled resolutions.
 
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html) ([code](examples/styles/squarecolorwgl.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html) ([code](../examples/styles/squarecolorwgl.html)).
+
+See [this example with dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html) ([code](../examples/styles/squarecolorwgl_dark.html)).
+
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -264,11 +267,11 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squa
 
 This style is a generic style which allows to define the **shape**, **color** and **size** of each grid cell, independantly according to 3 different variables. Three shapes are currently available: square, circle and donut (a disk with a hole of changing size). To show grid cells as small squares with only changing color, the style based on web GL [here](#square-color-webgl-style) should rather be used, for efficiency reasons.
 
-See [this example with changing size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size.html) ([code](examples/styles/shapecolorsize_size.html)).
+See [this example with changing size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size.html) ([code](../examples/styles/shapecolorsize_size.html)).
 
-See [this example with changing size and color](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size_color.html) ([code](examples/styles/shapecolorsize_size_color.html)).
+See [this example with changing size and color](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size_color.html) ([code](../examples/styles/shapecolorsize_size_color.html)).
 
-See [this example with random shape, color and size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html) ([code](examples/styles/shapecolorsize_random.html)).
+See [this example with random shape, color and size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html) ([code](../examples/styles/shapecolorsize_random.html)).
 
 | Property | Type     | Default | Description  |
 | -------------- | -------- | ------- | -------------- |
@@ -283,7 +286,7 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 
 This style shows a composition at cell level in various different ways: Flags, pie charts, rings, segments, radar, age pyramid and halftone.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/composition.html) ([code](examples/styles/composition.html)).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/composition.html) ([code](../examples/styles/composition.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -294,9 +297,9 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/compositio
 
 This style displays each cell as a segment with a changeable color, length, width and orientation.
 
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/segment.html) ([code](examples/styles/segment.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/segment.html) ([code](../examples/styles/segment.html)).
 
-See [this example with random orientation, color, length and width](https://eurostat.github.io/gridviz/examples/styles/segment_random.html) ([code](examples/styles/segment_random.html)).
+See [this example with random orientation, color, length and width](https://eurostat.github.io/gridviz/examples/styles/segment_random.html) ([code](../examples/styles/segment_random.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -307,7 +310,7 @@ See [this example with random orientation, color, length and width](https://euro
 
 This style displays each cell as randomly located points, with changeable density and color.
 
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html) ([code](examples/styles/dotdensity.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html) ([code](../examples/styles/dotdensity.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -317,7 +320,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotd
 
 This style shows the stroke of each cell with different colors, widths, shapes and sizes.
 
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/stroke.html) ([code](examples/styles/stroke.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/stroke.html) ([code](../examples/styles/stroke.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -328,7 +331,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/stro
 
 This style extract the sides of the cells and show each of them depending on the values of the 2 cells around.
 
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](examples/styles/side.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](../examples/styles/side.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -339,7 +342,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/side
 
 This style shows cell rows in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
 
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyplot.html) ([code](examples/styles/joyplot.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyplot.html) ([code](../examples/styles/joyplot.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -353,9 +356,9 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyp
 
 This style shows the cell as pseudo-irregular square shapes giving a [mosaic](https://en.wikipedia.org/wiki/Mosaic) effect. The cells are colored depending on a variable.
 
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/mosaic.html) ([code](examples/styles/mosaic.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/mosaic.html) ([code](../examples/styles/mosaic.html)).
 
-See [this roman style example](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html) ([code](examples/styles/mosaic_full.html)).
+See [this roman style example](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html) ([code](../examples/styles/mosaic_full.html)).
 
 
 
@@ -371,7 +374,7 @@ See [this roman style example](https://eurostat.github.io/gridviz/examples/style
 
 This style shows the grid cells in a Tanaka-like style, that is with discrete colors and shadow effect.
 
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](examples/styles/tanaka.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](../examples/styles/tanaka.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -381,7 +384,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/tana
 
 This style shows the grid cells as lego bricks with changeable colors and height.
 
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](examples/styles/lego.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](../examples/styles/lego.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -391,7 +394,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego
 
 This style shows the grid cells as 3D pillars, with changeable heigths and colors.
 
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](examples/styles/pillar.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](../examples/styles/pillar.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -401,7 +404,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pill
 
 This style shows the grid cells as text characters with different colors.
 
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text.html) ([code](examples/styles/text.html)).
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text.html) ([code](../examples/styles/text.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -411,7 +414,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text
 
 This style allows applying gaussian kernel smoothing to the grid.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html) ([code](examples/styles/kernelsmoothing.html)).
+See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html) ([code](../examples/styles/kernelsmoothing.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -463,7 +466,7 @@ new gviz.App(containerDiv)
         }
     )
 ```
-(see [online](https://eurostat.github.io/gridviz/examples/tooltip.html), see [code](examples/tooltip.html))
+(see [online](https://eurostat.github.io/gridviz/examples/tooltip.html), see [code](../examples/tooltip.html))
 
 TODO: change tooltip style
 
