@@ -23,18 +23,17 @@ export class KernelSmoothingStyle extends Style {
         opts = opts || {}
 
         /** A function specifying the value to consider for each cell. This is the value to smooth.
-         * @private
          * @type {function(Cell):number} */
         this.value = opts.value
 
         /** The smoothing parameter, in geo unit. The larger, the more smoothed.
          * @type {function(number,number):number}
-         * @private */
+         */
         this.sigma = opts.sigma // (r, zf)=>...
 
         /** The styles to represent the smoothed cells.
          * @type {Array.<Style>}
-         * @private */
+         */
         this.styles = opts.styles
     }
 
@@ -239,23 +238,5 @@ export class KernelSmoothingStyle extends Style {
         for (let s of this.styles)
             s.draw(cells, r, cg);
     }
-
-
-    //getters and setters
-
-    /** @returns {function(Cell):number} */
-    getValue() { return this.value; }
-    /** @param {function(Cell):number} val @returns {this} */
-    setValue(val) { this.value = val; return this; }
-
-    /** @returns {function(number|number):number} */
-    getSigma() { return this.sigma; }
-    /** @param {function(number|number):number} val @returns {this} */
-    setSigma(val) { this.sigma = val; return this; }
-
-    /** @returns {Array.<Style>} */
-    getStyles() { return this.styles; }
-    /** @param {Array.<Style>} val @returns {this} */
-    setStyles(val) { this.styles = val; return this; }
 
 }

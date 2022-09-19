@@ -16,25 +16,20 @@ export class JoyPlotStyle extends Style {
         opts = opts || {};
 
         /** The cell column where to get the value to represent.
-         * @private
          * @type {string} */
         this.heightCol = opts.heightCol
 
         /** A function returning the height of a cell.
-         * @private
          * @type {function(number,number,Stat|undefined,number):number} */
         this.height = opts.height || ((v) => Math.sqrt(v));
 
         /** 
-         * @private
          * @type {string} */
         this.lineColor = opts.lineColor || "#BBB"
         /** 
-         * @private
          * @type {number} */
         this.lineWidth = opts.lineWidth || 1;
         /** 
-         * @private
          * @type {string} */
         this.fillColor = opts.fillColor || "#c08c5968"
     }
@@ -130,33 +125,5 @@ export class JoyPlotStyle extends Style {
 
         }
     }
-
-
-    //getters and setters
-
-    /** @returns {string} */
-    getHeightCol() { return this.heightCol; }
-    /** @param {string} val @returns {this} */
-    setHeightCol(val) { this.heightCol = val; return this; }
-
-    /** @returns {function(number,number,Stat|undefined,number):number} */
-    getHeight() { return this.height; }
-    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
-    setHeight(val) { this.height = val; return this; }
-
-    /** @returns {string} */
-    getLineColor() { return this.lineColor; }
-    /** @param {string} val @returns {this} */
-    setLineColor(val) { this.lineColor = val; return this; }
-
-    /** @returns {number} */
-    getLineWidth() { return this.lineWidth; }
-    /** @param {number} val @returns {this} */
-    setLineWidth(val) { this.lineWidth = val; return this; }
-
-    /** @returns {string} */
-    getFillColor() { return this.fillColor; }
-    /** @param {string} val @returns {this} */
-    setFillColor(val) { this.fillColor = val; return this; }
 
 }
