@@ -21,6 +21,10 @@
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
                 [
                     new gviz.StrokeStyle({
+                        //random color
+                        strokeColor: () => "rgb(" + (255 * Math.random()) + "," + (255 * Math.random()) + "," + (255 * Math.random()) + ")",
+                        //random size
+                        size: (v, r) => r * (Math.random() * 0.6 + 0.3)
                     })
                 ],
                 {

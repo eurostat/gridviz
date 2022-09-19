@@ -322,6 +322,8 @@ This style shows the stroke of each cell with different colors, widths, shapes a
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/stroke.html) ([code](../examples/styles/stroke.html)).
 
+See [this an example with random color, size, width and shape](https://eurostat.github.io/gridviz/examples/styles/stroke_random.html) ([code](../examples/styles/stroke_random.html)).
+
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
 | **strokeColorCol** | string |  undefined   | The name of the column used for the stroke color. |
