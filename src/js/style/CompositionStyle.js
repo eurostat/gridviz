@@ -9,10 +9,6 @@ import { GeoCanvas } from "../GeoCanvas";
 /**
  * A style showing the composition of a total in different categories, with different color hues.
  * It consists of a symbol with different parts, whose size reflect the proportion of the corresponding category.
- * 3 types of symbols are possible:
- * - Flag (square symbol, with decomposition into vertical stripes)
- * - Pie chart (circular symbol, with decomposition into angular sectors)
- * - Ring (circular symbol, with decomposition into concentric rings)
  * The symbol can be scaled depending on the cell importance.
  * 
  * @author Julien Gaffuri
@@ -49,7 +45,8 @@ export class CompositionStyle extends Style {
         this.stripesOrientation = opts.stripesOrientation || (() => 0);
 
         /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
-         * 0 for normal pie charts, 0.5 to empty half of the radius. */
+         * 0 for normal pie charts, 0.5 to empty half of the radius. 
+         * @type {number} */
         this.pieChartInternalRadiusFactor = opts.pieChartInternalRadiusFactor || 0
 
         /** The function specifying an offset angle for a radar or halftone style.
