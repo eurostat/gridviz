@@ -244,7 +244,7 @@ This style is a generic style which allows to define the **shape**, **color** an
 
 TODO: screenshots
 
-See [this basic example with changing size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize.html) ([code](examples/styles/shapecolorsize.html)).
+See [this basic example with changing size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size.html) ([code](examples/styles/shapecolorsize_size.html)).
 
 See [this example with random shape, color and size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html) ([code](examples/styles/shapecolorsize_random.html)).
 

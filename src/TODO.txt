@@ -1,5 +1,3 @@
-stretching: add missing inverse functions - use in legends
-
 tanaka bug: no shadow for lower level
 
 Improve doc
