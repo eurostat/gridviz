@@ -14,22 +14,13 @@
 
         let containerDiv = document.getElementById("viz-container");
 
-        const col = gviz.interpolateMagma
-        //interpolateInferno
-        //interpolateMagma
-        //interpolatePlasma
-        //interpolateCividis
-        //interpolateWarm
-        //interpolateCool
-        //interpolateCubehelixDefault
-
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(50.1).setZoomFactorExtent([7, 2000])
-            .setViewFromURL()
 
             .setBackgroundColor("black")
             .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20", { dark: true }))
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+            .setViewFromURL()
 
             .addMultiScaleTiledCSVGridLayer(
                 [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
@@ -37,14 +28,13 @@
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "Ind",
-                        //colors: [col(0), col(1 / 3), col(2 / 3), col(1)],
-                        color: col,
+                        color: gviz.interpolateMagma,
                         deformationFactor: 0.25,
                     }), new gviz.StrokeStyle({ maxZoom: 15 })
                 ],
                 {
                     pixNb: 1.5,
-                    cellInfoHTML: c => "<b>" + c["Ind"] + "</b> inhabitant(s)",
+                    cellInfoHTML: c => "<b>" + c.Ind + "</b> inhabitant" + (c.Ind == 1 ? "" : "s"),
                 })
 
     </script>
