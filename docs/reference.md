@@ -17,9 +17,9 @@
     - [Shape/Color/Size Style](#shapecolorsize-style)
     - [Composition style](#composition-style)
     - [Segment style](#segment-style)
-    - [Dot density style](#dot-density-style)
     - [Stroke style](#stroke-style)
     - [Side style](#side-style)
+    - [Dot density style](#dot-density-style)
     - [JoyPlot Style](#joyplot-style)
     - [Mosaic style](#mosaic-style)
     - [Tanaka style](#tanaka-style)
@@ -303,18 +303,13 @@ See [this example with random orientation, color, length and width](https://euro
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **.** |  |     |  |
-
-
-### Dot density style
-
-This style displays each cell as randomly located points, with changeable density and color.
-
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html) ([code](../examples/styles/dotdensity.html)).
-
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **.** |  |     |  |
+| **orientation** | function(c):number |   () => 0  | A function computing the orientation (in degrees) of the segment representing a cell **c**. |
+| **colorCol** | string |  undefined   | The name of the column used for the color. |
+| **color** | function(v,r,s):string |  () => "#EA6BAC"   | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. |
+| **lengthCol** | string |  undefined   | The name of the column used for the segment length. |
+| **length** | function(v,r,s,zf) |  (v,r,s,zf) => r   | A function computing the segment length from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom |
+| **widthCol** | string |  undefined   | The name of the column used for the segment width. |
+| **width** | function(v,r,s,zf) |  (v,r,s,zf) => r   | A function computing the segment width from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom |
 
 ### Stroke style
 
@@ -343,6 +338,18 @@ See [this an example with random color, size, width and shape](https://eurostat.
 This style extract the sides of the cells and show each of them depending on the values of the 2 cells around.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](../examples/styles/side.html)).
+
+| Property | Type     | Default | Description  |
+| ----------- | -------- | ------- | ------------ |
+| **.** |  |     |  |
+
+
+
+### Dot density style
+
+This style displays each cell as randomly located points, with changeable density and color.
+
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html) ([code](../examples/styles/dotdensity.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |

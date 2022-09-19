@@ -1,3 +1,5 @@
+doc: segments
+
 revamp square color webGL style + doc
 ssc: example with dropdown for shape selection
 

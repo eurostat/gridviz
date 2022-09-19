@@ -18,7 +18,7 @@ export class SegmentStyle extends Style {
 
         /** A function returning the orientation (in degrees) of the segment representing a cell.
          * @type {function(Cell):number} */
-        this.orientation = opts.orientation;
+        this.orientation = opts.orientation || (() => 0);
 
         /** 
          * @type {string} */
