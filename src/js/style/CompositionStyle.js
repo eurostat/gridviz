@@ -26,30 +26,25 @@ export class CompositionStyle extends Style {
 
         /**
          * The dictionary which give the color of each category.
-         * @private
          * @type {object} */
         this.color = opts.color;
 
         /**
          * A function returning the type of decomposition symbol of a cell, @see CompositionType
-         * @private
          * @type {function(Cell):CompositionType} */
         this.type = opts.type;
 
 
         /** The column where to get the size values.
-         * @private
          * @type {string} */
         this.sizeCol = opts.sizeCol
 
         /** A function returning the size of a cell.
-         * @private
          * @type {function(number,number,Stat|undefined,number):number} */
         this.size = opts.size || ((v, r) => r);
 
 
         /** For style types with stripes (flag, segment), the orientation of the stripes.
-         * @private
          * @type {function(number,number,number):number} */
         this.stripesOrientation = opts.stripesOrientation || (() => 0);
 
@@ -58,12 +53,10 @@ export class CompositionStyle extends Style {
         this.pieChartInternalRadiusFactor = opts.pieChartInternalRadiusFactor || 0
 
         /** The function specifying an offset angle for a radar or halftone style.
-         * @private
          * @type {function(Cell,number,number):number} */
         this.offsetAngle = opts.offsetAngle;
 
         /** The function specifying the height of the age pyramid, in geo unit.
-        * @private
         * @type {function(number):number} */
         this.agePyramidHeight = opts.agePyramidHeight;
     }
@@ -72,7 +65,7 @@ export class CompositionStyle extends Style {
     /**
      * Draw cells as squares depending on their value.
      * 
-     * @param {Array.<Cell>} cells 
+     * @param {Array.<Cell>} cells getWidth()
      * @param {number} r 
      * @param {GeoCanvas} cg 
      */
