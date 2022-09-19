@@ -60,7 +60,7 @@ export class SegmentWidthLegend extends Legend {
         else if (value * 2 <= value_) value *= 2
 
         //compute segment width and length, in pix
-        const sWidth = opts.style.getWidth()(value, opts.r, opts.sWidth, opts.zf) / opts.zf;
+        const sWidth = opts.style.width(value, opts.r, opts.sWidth, opts.zf) / opts.zf;
         const sLength = 1 * opts.r / opts.zf
 
         //TODO use orientation

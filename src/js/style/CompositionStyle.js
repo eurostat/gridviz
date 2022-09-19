@@ -312,49 +312,4 @@ export class CompositionStyle extends Style {
         this.updateLegends({ style: this, r: r, zf: zf, sSize: stat });
     }
 
-
-    //getters and setters
-
-    /** @returns {function(Cell):string} */
-    getColor() { return this.color; }
-    /** @param {function(Cell):string} val @returns {this} */
-    setColor(val) { this.color = val; return this; }
-
-    /** @returns {function(Cell):CompositionType} */
-    getType() { return this.type; }
-    /** @param {function(Cell):CompositionType} val @returns {this} */
-    setType(val) { this.type = val; return this; }
-
-    /** @returns {string} */
-    getColSize() { return this.sizeCol; }
-    /** @param {string} val @returns {this} */
-    setColSize(val) { this.sizeCol = val; return this; }
-
-    /** @returns {function(number,number,Stat|undefined,number):number} */
-    getSize() { return this.size; }
-    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
-    setSize(val) { this.size = val; return this; }
-
-
-
-    /** @returns {function(number,number,number):number} */
-    getStripesOrientation() { return this.stripesOrientation; }
-    /** @param {function(number,number,number):number} val @returns {this} */
-    setStripesOrientation(val) { this.stripesOrientation = val; return this; }
-
-    /** @returns {function(number,number,Stat,number):number} */
-    getPieChartInternalRadiusFactor() { return this.pieChartInternalRadiusFactor; }
-    /** @param {function(number,number,Stat,number):number} val @returns {this} */
-    setPieChartInternalRadiusFactor(val) { this.pieChartInternalRadiusFactor = val; return this; }
-
-    /** @returns {function(Cell,number,number):number} */
-    getOffsetAngle() { return this.offsetAngle; }
-    /** @param {function(Cell,number,number):number} val @returns {this} */
-    setOffsetAngle(val) { this.offsetAngle = val; return this; }
-
-    /** @returns {function(number):number} */
-    getAgePyramidHeight() { return this.agePyramidHeight; }
-    /** @param {function(number):number} val @returns {this} */
-    sethAgePyramidHeight(val) { this.agePyramidHeight = val; return this; }
-
 }

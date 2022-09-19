@@ -218,29 +218,4 @@ export class PillarStyle extends Style {
         this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor });
     }
 
-
-
-    //getters and setters
-
-    //TODO colorCol
-
-    /** @returns {function(number,number,Stat|undefined):string} */
-    getColor() { return this.color; }
-    /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
-    setColor(val) { this.color = val; return this; }
-
-    //TODO heightCol
-
-    /** @returns {function(number,number,Stat|undefined,number):number} */
-    getHeight() { return this.height; }
-    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
-    setHeight(val) { this.height = val; return this; }
-
-    //TODO widthCol
-
-    /** @returns {function(number,number,Stat|undefined,number):number} */
-    getWidth() { return this.width; }
-    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
-    setWidth(val) { this.width = val; return this; }
-
 }

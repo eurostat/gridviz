@@ -102,14 +102,4 @@ export class SquareColorWGLStyle2 extends Style {
         if (monitor) monitorDuration("*** SquareColorWGLStyle2 end draw")
     }
 
-
-    //getters and setters
-
-    /** @returns {function(number,number,Stat):string} */
-    getColor() { return this.color; }
-    /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
-    setColor(val) { this.color = val; return this; }
-
-    //TODO for size
-
 }

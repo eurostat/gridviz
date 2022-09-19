@@ -138,34 +138,4 @@ export class SegmentStyle extends Style {
         this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor, sLength: statLength, sWidth: statWidth });
     }
 
-
-
-    //getters and setters
-
-    /** @returns {function(Cell):number} */
-    getOrientation() { return this.orientation; }
-    /** @param {function(Cell):number} val @returns {this} */
-    setOrientation(val) { this.orientation = val; return this; }
-
-    //TODO colorCol
-
-    /** @returns {function(number,number,Stat):string} */
-    getColor() { return this.color; }
-    /** @param {function(number,number,Stat|undefined):string} val @returns {this} */
-    setColor(val) { this.color = val; return this; }
-
-    //TODO lengthCol
-
-    /** @returns {function(number,number,Stat,number):number} */
-    getLength() { return this.length; }
-    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
-    setLength(val) { this.length = val; return this; }
-
-    //TODO widthCol
-
-    /** @returns {function(number,number,Stat|undefined,number):number} */
-    getWidth() { return this.width; }
-    /** @param {function(number,number,Stat|undefined,number):number} val @returns {this} */
-    setWidth(val) { this.width = val; return this; }
-
 }
