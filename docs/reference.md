@@ -466,7 +466,11 @@ TODO
 
 ## Stretching
 
-TODO - link to observable page
+TODO document
+
+See [this example](https://eurostat.github.io/gridviz/examples/stretching.html) ([code](../examples/stretching.html)).
+
+See [here](https://observablehq.com/@jgaffuri/stretching)
 
 
 ## Foreground information

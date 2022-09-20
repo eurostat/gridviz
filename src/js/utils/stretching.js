@@ -2,7 +2,8 @@
 
 /**
  * Some function [0,1]->[0,1] to stretch range of values.
- * @todo: include link to observable page.
+ * @see https://github.com/eurostat/gridviz/blob/master/docs/reference.md#stretching
+ * @see https://observablehq.com/@jgaffuri/stretching
  */
 
 
