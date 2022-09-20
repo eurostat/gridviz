@@ -1,9 +1,8 @@
-revamp square color webGL style + doc
 check all "SquareColorWGLStyle"
-check all legends
-
+check all legends related to SquareColorWGLStyle and others - use inverse functions
 see if old webGL stuff can be removed
-ssc: example with dropdown for shape selection
+
+shape size color style: example with dropdown for shape selection
 
 tanaka bug: no shadow for lower level
 
