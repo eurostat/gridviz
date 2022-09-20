@@ -1,3 +1,3 @@
 # Tiled CSV format
 
-TODO
+Documentation coming soon.
