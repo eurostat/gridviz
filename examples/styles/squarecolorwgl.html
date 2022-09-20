@@ -22,8 +22,8 @@
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "2018",
-                        tFun: (value, resolution, stats) => value / stats.max, //gviz.sExp(value / stats.max, -50)
-                        stretching: { fun: "exp", alpha: -50 }
+                        tFun: (value, resolution, stats) => value / stats.max,
+                        stretching: { fun: "expRev", alpha: -8 }
                     })
                 ],
                 {
