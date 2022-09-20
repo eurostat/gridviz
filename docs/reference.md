@@ -362,6 +362,8 @@ This style extract the sides of the cells and show each of them depending on the
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](../examples/styles/side.html)).
 
+Documentation coming soon.
+
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
 | **.** |  |     |  |
@@ -374,6 +376,8 @@ This style displays each cell as randomly located points, with changeable densit
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html) ([code](../examples/styles/dotdensity.html)).
 
+Documentation coming soon.
+
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
 | **.** |  |     |  |
@@ -384,6 +388,8 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotd
 This style shows cell rows in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyplot.html) ([code](../examples/styles/joyplot.html)).
+
+Documentation coming soon.
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -414,6 +420,8 @@ This style shows the grid cells in a Tanaka-like style, that is with discrete co
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](../examples/styles/tanaka.html)).
 
+Documentation coming soon.
+
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
 | **.** |  |     |  |
@@ -423,6 +431,8 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/tana
 This style shows the grid cells as lego bricks with changeable colors and height.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](../examples/styles/lego.html)).
+
+Documentation coming soon.
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -434,6 +444,8 @@ This style shows the grid cells as 3D pillars, with changeable heigths and color
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](../examples/styles/pillar.html)).
 
+Documentation coming soon.
+
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
 | **.** |  |     |  |
@@ -444,15 +456,19 @@ This style shows the grid cells as text characters with different colors.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text.html) ([code](../examples/styles/text.html)).
 
+Documentation coming soon.
+
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
 | **.** |  |     |  |
 
 ### Kernel smoothing style
 
-This style allows applying gaussian kernel smoothing to the grid.
+This style is experimental. It allows applying gaussian kernel smoothing to the grid.
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html) ([code](../examples/styles/kernelsmoothing.html)).
+
+Documentation coming soon.
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
@@ -461,12 +477,12 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoo
 
 ## Legends
 
-TODO
+Documentation coming soon.
 
 
 ## Stretching
 
-TODO document
+Documentation coming soon.
 
 See [this example](https://eurostat.github.io/gridviz/examples/stretching.html) ([code](../examples/stretching.html)).
 
@@ -478,13 +494,13 @@ See [here](https://observablehq.com/@jgaffuri/stretching)
 
 ### Showing labels
 
-TODO
+Documentation coming soon.
 
 Example based on https://github.com/eurostat/euronym
 
 ### Showing boundaries
 
-TODO
+Documentation coming soon.
 
 Example based on https://github.com/eurostat/Nuts2json
 
@@ -510,6 +526,8 @@ new gviz.App(containerDiv)
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/tooltip.html), see [code](../examples/tooltip.html))
 
-TODO: change tooltip style
+
+Changing tooltip style: Documentation coming soon.
+
 
 
