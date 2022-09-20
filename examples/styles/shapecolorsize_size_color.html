@@ -60,7 +60,9 @@
             s.shape = () => v_;
 
             //set size
-            s.size = (v, r, s, zf) => (v_ === "circle" ? 1.4 : 1) * r * gviz.sPow(v / s.max, 0.13)
+            s.size = (v, r, s, zf) => v_ === "circle" ? 1.4 * r * gviz.sPow(v / s.max, 0.13)
+            : v_ === "square" ? r * gviz.sPow(v / s.max, 0.1)
+            : r * gviz.sPow(v / s.max, 0.2)
 
             //redraw
             app.cg.redraw()
