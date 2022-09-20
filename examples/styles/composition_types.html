@@ -20,6 +20,7 @@
             <option value="radar">Radar</option>
             <option value="halftone">Halftone</option>
             <option value="agepyramid">Age pyramid</option>
+            <option value="random">Random</option>
         </select>
         <br>
         <input type="checkbox" id="size" checked>
@@ -50,7 +51,7 @@
                     })
                 ],
                 {
-                    pixNb: 15,
+                    pixNb: 18,
                     preprocess: c => {
                         c.Men_2_4ind = +c.Men - +c.Men_1ind - +c.Men_5ind;
                     }
@@ -62,12 +63,21 @@
         const s = app.layers[0].styles[0];
         document.getElementById("type").addEventListener('change', function () {
             const v = this.value
+
             //set type
             const type = v.includes("flag") ? "flag" : v.includes("segment") ? "segment" : v
-            s.type = () => type
+            if (type === "random")
+                s.type = () => { const r = Math.random(); return r < 1 / 7 ? "flag" : r < 2 / 7 ? "piechart" : r < 3 / 7 ? "ring" : r < 4 / 7 ? "segment" : r < 5 / 7 ? "radar" : r < 6 / 7 ? "halftone" : "agepyramid" }
+            else
+                s.type = () => type
+
             //set orientation
             const or = v.includes("h") ? 0 : v.includes("v") ? 90 : 90
-            s.stripesOrientation = () => or
+            if (type === "random")
+                s.stripesOrientation = () => Math.random < 0.5 ? 0 : 90
+            else
+                s.stripesOrientation = () => or
+
             //redraw
             app.cg.redraw()
         });
