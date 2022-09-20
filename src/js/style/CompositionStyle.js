@@ -9,6 +9,7 @@ import { GeoCanvas } from "../GeoCanvas";
 /**
  * A style showing the composition of a total in different categories, with different color hues.
  * It consists of a symbol with different parts, whose size reflect the proportion of the corresponding category.
+ * For a list of supported symbols, @see CompositionType
  * The symbol can be scaled depending on the cell importance.
  * 
  * @author Julien Gaffuri
@@ -21,7 +22,7 @@ export class CompositionStyle extends Style {
         opts = opts || {};
 
         /**
-         * The dictionary which give the color of each category.
+         * The dictionary (string -> color) which give the color of each category.
          * @type {object} */
         this.color = opts.color;
 
@@ -40,9 +41,9 @@ export class CompositionStyle extends Style {
         this.size = opts.size || ((v, r) => r);
 
 
-        /** For style types with stripes (flag, segment), the orientation of the stripes.
+        /** For style types with stripes (flag, segment), the orientation of the stripes (0 for horizontal, other for vertical).
          * @type {function(number,number,number):number} */
-        this.stripesOrientation = opts.stripesOrientation || (() => 0);
+        this.stripesOrientation = opts.stripesOrientation || (() => 0); //(v,r,zf) => ...
 
         /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
          * 0 for normal pie charts, 0.5 to empty half of the radius. 
@@ -51,11 +52,11 @@ export class CompositionStyle extends Style {
 
         /** The function specifying an offset angle for a radar or halftone style.
          * @type {function(Cell,number,number):number} */
-        this.offsetAngle = opts.offsetAngle;
+        this.offsetAngle = opts.offsetAngle;  //(cell,r,zf) => ...
 
         /** The function specifying the height of the age pyramid, in geo unit.
-        * @type {function(number):number} */
-        this.agePyramidHeight = opts.agePyramidHeight;
+        * @type {function(Cell,number,number):number} */
+        this.agePyramidHeight = opts.agePyramidHeight;  //(cell,r,zf) => ...
     }
 
 
@@ -117,12 +118,12 @@ export class CompositionStyle extends Style {
 
                 //cumul
                 let cumul = 0;
-                if (type_ === "agepyramid" && this.agePyramidHeight) cumul = (r - this.agePyramidHeight(r)) / 2
+                if (type_ === "agepyramid" && this.agePyramidHeight) cumul = (r - this.agePyramidHeight(cell, r, zf)) / 2
                 if (type_ === "radar" || type_ === "halftone") cumul = Math.PI / 2 + (this.offsetAngle ? this.offsetAngle(cell, r, zf) * Math.PI / 180 : 0)
 
                 //compute the increment, which is the value to increment the cumul for each category
                 const incr = (type_ === "agepyramid") ?
-                    (this.agePyramidHeight ? this.agePyramidHeight(r) : r) / nbCat
+                    (this.agePyramidHeight ? this.agePyramidHeight(cell, r, zf) : r) / nbCat
                     : (type_ === "radar" || type_ === "halftone") ?
                         2 * Math.PI / nbCat : undefined
                 if (incr === undefined) throw new Error('Unexpected symbol type:' + type_);
@@ -290,12 +291,6 @@ export class CompositionStyle extends Style {
                     cumul += share;
                 }
             }
-
-            /*/draw stroke
-            this.drawStroke(cell, resolution, cg, (c) => {
-                return (type_ === "flag") ? "square" : "circle"
-            }, this.size)*/
-            //TODO
         }
 
         //update legends

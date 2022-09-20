@@ -224,7 +224,7 @@
                             type: () => "agepyramid",
                             sizeCol: "Ind",
                             size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
-                            agePyramidHeight: (r) => 0.95 * r
+                            agePyramidHeight: (c, r) => 0.95 * r
                         })
                     ],
                     {
@@ -266,7 +266,7 @@
                             type: () => "agepyramid",
                             sizeCol: "Ind",
                             size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
-                            agePyramidHeight: (r) => 0.95 * r
+                            agePyramidHeight: (c, r) => 0.95 * r
                         })
                     ],
                     {
