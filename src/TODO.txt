@@ -1,11 +1,11 @@
-stretching doc
+stretching:
+add circular to wgl style + to stretching example
+doc
+
 stop using SquareColorWGLStyle2 in lego and tanaka and remove it
 
 tanaka bug: no shadow for lower level
 
-Improve doc
-improve style examples and add screenshots 400*80
-complete
 
 GSGF
 
@@ -14,12 +14,10 @@ Pollock style: https://www.arcgis.com/apps/webappviewer/index.html?id=661d96be9f
 
 JSDOC bug: https://stackoverflow.com/questions/25773222/
 
-
 check:
 https://www.comeetie.fr/galerie/francepixels2019/#5.7/47/2.3
 https://www.comeetie.fr/galerie/francepixelsbati/#11.36/43.5745/5.3786
 
-improve webGL stretching: (see https://thebookofshaders.com/glossary/ - https://www.shadertoy.com/view/wtcczf)
 
 EUR, FR: add missing legend, finalise.
 

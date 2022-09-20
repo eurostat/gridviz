@@ -69,7 +69,7 @@
                 [
                     new gviz.MosaicStyle({
                         colorCol: "2018",
-                        color: (v, r, s) => !+v ? undefined : gviz.interpolateYlOrBr(gviz.sExp(v / s.max, -15)),
+                        color: (v, r, s) => !+v ? undefined : gviz.interpolateYlOrBr(gviz.sExpRev(v / s.max, -7)),
                         mosaicFactor: 0.2,
                         shadowFactor: 0.25,
                         shadowColor: "#aaa"
@@ -87,7 +87,7 @@
             width: 450,
             ticks: 6,
             colorRamp: gviz.interpolateYlOrBr,
-            fun: (t, r, s) => s.max * gviz.sExpInverse(t, -15)
+            fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7)
         }))
 
 
