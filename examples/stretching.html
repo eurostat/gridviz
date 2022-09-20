@@ -56,16 +56,15 @@
             const aExp = +document.querySelector('#alphaExp').value;
             const aPow = +document.querySelector('#alphaPow').value;
 
-            console.log(aExp, aPow)
-
-            if (fun == "exp")
+            if (fun == "exp") {
                 s.stretching = { fun: fun, alpha: aExp }
-            else if (fun == "expRev")
+            } else if (fun == "expRev") {
                 s.stretching = { fun: fun, alpha: aExp }
-            else if (fun == "pow")
+            } else if (fun == "pow") {
                 s.stretching = { fun: fun, alpha: aPow }
-            else if (fun == "powRev")
+            } else if (fun == "powRev") {
                 s.stretching = { fun: fun, alpha: aPow }
+            }
 
             //redraw
             app.cg.redraw();
