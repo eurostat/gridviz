@@ -286,7 +286,7 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 
 This style shows a composition at cell level in various different ways: Flags, pie charts, rings, segments, radar, age pyramid and halftone.
 
-See [this example](https://eurostat.github.io/gridviz/examples/styles/composition.html) ([code](../examples/styles/composition.html)).
+See [this example showing population of France by age group](https://eurostat.github.io/gridviz/examples/styles/composition_pop_FR.html) ([code](../examples/styles/composition_pop_FR.html)).
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
