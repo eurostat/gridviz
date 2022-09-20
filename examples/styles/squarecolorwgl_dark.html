@@ -29,7 +29,7 @@
                     new gviz.SquareColorWGLStyle({
                         colorCol: "Ind",
                         color: gviz.interpolateMagma,
-                        deformationFactor: 0.25,
+                        stretching: { fun: "expRev", alpha: -6 }
                     }), new gviz.StrokeStyle({ maxZoom: 15 })
                 ],
                 {

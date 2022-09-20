@@ -179,8 +179,8 @@
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: "Ind",
-                            deformationFactor: 0.25,
                             color: gviz.interpolateYlOrRd,
+                            stretching: { fun: "pow", alpha: 0.25 }
                         }),
                         new gviz.StrokeStyle({ maxZoom: 15 }),
                         new gviz.ShapeColorSizeStyle({

@@ -97,7 +97,7 @@
                     style: [new gviz.SquareColorWGLStyle({
                         colorCol: getSelectedYear(),
                         color: gviz.interpolateOrRd,
-                        deformationFactor: 0.25
+                        stretching: { fun: "expRev", alpha: -6 }
                     }), new gviz.StrokeStyle({ maxZoom: 80 })
                     ], pixNb: 2
                 },

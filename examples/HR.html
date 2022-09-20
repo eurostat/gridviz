@@ -178,7 +178,7 @@
                         new gviz.SquareColorWGLStyle({
                             colorCol: "TOTAL",
                             color: gviz.interpolateOrRd,
-                            deformationFactor: 0.25,
+                            stretching: { fun: "expRev", alpha: -6 },
                         }),
                         new gviz.SideStyle({
                             valueCol: "TOTAL",
@@ -196,7 +196,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) }))
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -6) }))
 
             } else if (layCode === "popGender") {
                 app.addLayerFromDataset(
@@ -381,7 +381,7 @@
                         new gviz.SquareColorWGLStyle({
                             colorCol: "ESTABLISHMENTS - TOTAL",
                             color: gviz.interpolateOrRd,
-                            deformationFactor: 0.2,
+                            stretching: { fun: "pow", alpha: 0.2 },
                         }), sStroke
                     ],
                     {
@@ -399,7 +399,7 @@
                         new gviz.SquareColorWGLStyle({
                             colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
                             color: gviz.interpolateOrRd,
-                            deformationFactor: 0.2,
+                            stretching: { fun: "pow", alpha: 0.2 },
                         }), sStroke
                     ],
                     {
@@ -417,7 +417,7 @@
                         new gviz.SquareColorWGLStyle({
                             colorCol: "NUMBER OF PERMANENT BEDS",
                             color: gviz.interpolateOrRd,
-                            deformationFactor: 0.2,
+                            stretching: { fun: "pow", alpha: 0.2 }
                         }), sStroke
                     ],
                     {

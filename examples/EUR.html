@@ -112,7 +112,7 @@
                         new gviz.SquareColorWGLStyle({
                             colorCol: layCode,
                             color: gviz.interpolateOrRd,
-                            deformationFactor: 0.25,
+                            stretching: { fun: "expRev", alpha: -6 }
                         }),
                         new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
                     ],

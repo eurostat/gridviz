@@ -259,7 +259,7 @@ See [this example with dark style](https://eurostat.github.io/gridviz/examples/s
 | ----------- | -------- | ------- | ------------ |
 | **colorCol** | string |  undefined   | The name of the column used for the color. |
 | **tFun** | function(v,r,s):number | (v, r, s) => v / s.max |  A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling. |
-| **stretching** | {fun:string, alpha:number} | undefined | Necessary information to apply a stretching [0,1] -> [0,1] to the **t** value. See [stretching section](#stretching). This stretching is performed on GPU side (fragment shader). |
+| **stretching** | {fun:string, alpha:number} | undefined | Necessary information to apply a stretching [0,1] -> [0,1] to the **t** value. Property **fun** is the type of function, among __{"pow", "powRev", "exp", "expRev"}__ - see [stretching section](#stretching) for more information on those functions. This stretching is performed on GPU side (fragment shader). |
 | **colors** | Array.<string> |  Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral)   | The sample of the color ramp. |
 | **color** | function(t):number |  undefined   | Instead of specifying **colors**, this property can be defined. It is a function which returns a color from a **t** value within [0,1]. |
 | **size** | function(r,zf):number |  (r,zf) => r + 0.2 * zf   | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size. |
