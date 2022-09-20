@@ -213,6 +213,8 @@ export class CompositionStyle extends Style {
                 //draw decomposition symbol
                 let cumul = 0;
                 const d = r * (1 - sG / r) * 0.5
+                const ori = this.stripesOrientation(cell, r, zf)
+
                 for (let [column, color] of Object.entries(this.color)) {
 
                     //get share
@@ -226,7 +228,7 @@ export class CompositionStyle extends Style {
                     if (type_ === "flag") {
 
                         //draw flag stripe
-                        if (this.stripesOrientation(cell, r, zf) == 0) {
+                        if (ori == 0) {
                             //horizontal
                             cg.ctx.fillRect(
                                 cell.x + d + offset.dx,
@@ -270,7 +272,7 @@ export class CompositionStyle extends Style {
 
                         //draw segment sections
                         const wG = sG * sG / r
-                        if (this.stripesOrientation(cell[this.sizeCol], r, zf) == 0) {
+                        if (ori == 0) {
                             //horizontal
                             cg.ctx.fillRect(
                                 cell.x + offset.dx,
