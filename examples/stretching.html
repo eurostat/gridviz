@@ -46,9 +46,21 @@
                 })
 
         //update
+        const s = app.layers[0].styles[0];
         const update = () => {
+            const fun = document.querySelector('#fun').value;
 
+            if (fun == "exp")
+                s.stretching = { fun: fun, alpha: -6 }
+            else if (fun == "expRev")
+                s.stretching = { fun: fun, alpha: -6 }
+            else if (fun == "pow")
+                s.stretching = { fun: fun, alpha: 0.3 }
+            else if (fun == "powRev")
+                s.stretching = { fun: fun, alpha: 0.3 }
 
+            //redraw
+            app.cg.redraw();
         }
 
         //
