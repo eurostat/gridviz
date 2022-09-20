@@ -7,6 +7,15 @@
 </head>
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
+
+    <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
+        <select id="shape">
+            <option value="circle" selected>Circle</option>
+            <option value="square">Square</option>
+            <option value="donut">Donut</option>
+        </select>
+    </div>
+
     <div id="viz-container" style="height:100%; width:100%;"></div>
 
     <script src="../../build/gridviz.js"></script>
@@ -14,7 +23,7 @@
 
         let containerDiv = document.getElementById("viz-container");
 
-        new gviz.App(containerDiv)
+        const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(50.1).setZoomFactorExtent([7, 2000])
             .addMultiScaleTiledCSVGridLayer(
                 [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
@@ -30,10 +39,6 @@
                 ],
                 {
                     pixNb: 6,
-                    /*cellInfoHTML: c => null,"<b>" + (+c.yyy) + "</b> 24 ans et moins"
-                        + "<br>" + "<b>" + (+c.ooo) + "</b> 65 ans et plus"
-                        //+ "<br>" + "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
-                        + (+c.imputed ? "<br>(valeurs imputées)" : ""),*/
                     preprocess: c => {
                         //<24
                         const yyy = +c.Ind_0_3 + +c.Ind_4_5 + +c.Ind_6_10 + +c.Ind_11_17 + +c.Ind_18_24;
@@ -44,6 +49,23 @@
                     }
 
                 })
+
+
+        //type selection
+        const s = app.layers[0].styles[0];
+        document.getElementById("shape").addEventListener('change', function () {
+            const v_ = this.value
+
+            //set shape
+            s.shape = () => v_;
+
+            //set size
+            s.size = (v, r, s, zf) => (v_ === "circle" ? 1.4 : 1) * r * gviz.sPow(v / s.max, 0.13)
+
+            //redraw
+            app.cg.redraw()
+        });
+
 
     </script>
 
