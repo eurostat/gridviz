@@ -180,7 +180,7 @@
                         new gviz.SquareColorWGLStyle({
                             colorCol: "Ind",
                             color: gviz.interpolateYlOrRd,
-                            stretching: { fun: "pow", alpha: 0.25 }
+                            stretching: { fun: "expRev", alpha: -7 }
                         }),
                         new gviz.StrokeStyle({ maxZoom: 15 }),
                         new gviz.ShapeColorSizeStyle({
@@ -199,7 +199,7 @@
                 )
                 //legend
                 app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({ title: "Nombre d'individus", colorRamp: gviz.interpolateYlOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) })
+                    new gviz.ColorLegend({ title: "Nombre d'individus", colorRamp: gviz.interpolateYlOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7) })
                 )
             } else if (layCode === "popAge") {
                 //population by age

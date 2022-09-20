@@ -82,7 +82,7 @@
                 style: [new gviz.SquareColorWGLStyle({
                     colorCol: "Ind",
                     color: gviz.interpolateOrRd,
-                    stretching: { fun: "expRev", alpha: -6 }
+                    stretching: { fun: "expRev", alpha: -7 }
                 }), new gviz.StrokeStyle({ maxZoom: 15 })
                 ], pixNb: 2
             },
@@ -230,7 +230,7 @@
 
 
         //legends
-        sd.scolor.style[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -6) }))
+        sd.scolor.style[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7) }))
         sd.ccolor.style[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) }))
         sd.square.style[0].legends.push(new gviz.SizeLegend({ shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" }))
         sd.circle.style[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" }))
