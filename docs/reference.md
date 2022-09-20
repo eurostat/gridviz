@@ -6,6 +6,7 @@
   - [Table of contents](#table-of-contents)
   - [Usage](#usage)
   - [App Configuration](#app-configuration)
+  - [Multi scale](#multi-scale)
   - [Adding data](#adding-data)
     - [Single CSV file](#single-csv-file)
     - [Multi scale CSV data](#multi-scale-csv-data)
@@ -82,6 +83,10 @@ The following methods allow further configuration of a [Gridviz](https://github.
 | _app_.**getLabelLayer**()<br />_app_.**setLabelLayer**([value])             | LabelLayer             | undefined     | A layer for labels (such as placenames), see [here](#showing-labels).                                                                                                                                                  |
 | _app_.**setViewFromURL**()                                                  |                        |               | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_. |
 
+
+## Multi scale 
+
+TODO: explain: layer stack, styles stack, with zoom ranges.
 
 
 ## Adding data
