@@ -54,15 +54,16 @@
         const update = () => {
             const fun = document.querySelector('#fun').value;
             const aExp = +document.querySelector('#alphaExp').value;
+            const aPow = +document.querySelector('#alphaPow').value;
 
             if (fun == "exp")
                 s.stretching = { fun: fun, alpha: aExp }
             else if (fun == "expRev")
                 s.stretching = { fun: fun, alpha: aExp }
             else if (fun == "pow")
-                s.stretching = { fun: fun, alpha: 0.3 }
+                s.stretching = { fun: fun, alpha: aPow }
             else if (fun == "powRev")
-                s.stretching = { fun: fun, alpha: 0.3 }
+                s.stretching = { fun: fun, alpha: aPow }
 
             //redraw
             app.cg.redraw();
