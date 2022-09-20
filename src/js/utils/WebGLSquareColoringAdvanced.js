@@ -50,7 +50,7 @@ export class WebGLSquareColoringAdvanced {
         let fshString = `
           precision mediump float;
           varying float vt;
-          uniform float deformationFactor;`
+          uniform float alpha;`
             + (() => {
                 const out = []
                 for (let i = 0; i < colors.length; i++)
@@ -59,7 +59,13 @@ export class WebGLSquareColoringAdvanced {
             })()
             //start the main function, apply the deformation of t
             + `void main(void) {
-          float t = pow(vt, deformationFactor);`
+          float t = `
+
+        if(stretching) {
+            fshString += `pow(vt, alpha);`
+        } else {
+            fshString += `vt`
+        }
 
         //choose initial and final colors, and adjust t value
         if (colors.length == 2)
@@ -110,8 +116,8 @@ export class WebGLSquareColoringAdvanced {
         //sizePix
         gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * sizePix);
 
-        //deformation factor
-        gl.uniform1f(gl.getUniformLocation(this.program, "deformationFactor"), 1.0 * deformationFactor);
+        //stretching alpha factor
+        gl.uniform1f(gl.getUniformLocation(this.program, "alpha"), stretching ? stretching.alpha : 0);
 
         //colors
         for (let i = 0; i < colors.length; i++) {
