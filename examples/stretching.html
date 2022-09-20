@@ -7,11 +7,20 @@
 </head>
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
+
+    <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
+        <select id="fun" style="font-size: 1.5em">
+            <option value="exp" selected>Exponential</option>
+            <option value="expRev">Exponential (reverse)</option>
+            <option value="pow">Polynomial</option>
+            <option value="powRev">Polynomial (reverse)</option>
+        </select>
+    </div>
+
     <div id="viz-container" style="height:100%; width:100%;"></div>
 
     <script src="../build/gridviz.js"></script>
     <script>
-
         let containerDiv = document.getElementById("viz-container");
 
         const app = new gviz.App(containerDiv)
@@ -32,9 +41,15 @@
                     }), new gviz.StrokeStyle({ maxZoom: 15 })
                 ],
                 {
-                    pixNb: 1.5,
+                    pixNb: 2,
                     cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant" + (c.Ind == 1 ? "" : "s"),
                 })
+
+        //update
+        const update = () => {
+
+
+        }
 
     </script>
 
