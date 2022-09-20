@@ -262,9 +262,7 @@ See [this example with dark style](https://eurostat.github.io/gridviz/examples/s
 ### Shape/Color/Size Style
 
 [![shape color size style](img/styles/shapesizecolor_sc.png)](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size_color.html)
-
 [![shape color size style](img/styles/shapesizecolor_s.png)](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size.html)
-
 [![shape color size style](img/styles/shapesizecolor_random.png)](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html)
 
 This style is a generic style which allows to define the **shape**, **color** and **size** of each grid cell, independantly according to 3 different variables. Three shapes are currently available: square, circle and donut (a disk with a hole of changing size). To show grid cells as small squares with only changing color, the style based on web GL [here](#square-color-webgl-style) should rather be used, for efficiency reasons.
@@ -287,11 +285,8 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 ### Composition style
 
 [![composition style](img/styles/composition_flag.png)](https://eurostat.github.io/gridviz/examples/styles/composition_pop_FR.html)
-
 [![composition style](img/styles/composition_piechart.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
-
 [![composition style](img/styles/composition_ring.png)](https://eurostat.github.io/gridviz/examples/styles/composition_pop_FR.html)
-
 [![composition style](img/styles/composition_halftone.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 
 
@@ -315,7 +310,6 @@ See [this example showing population of France by age group](https://eurostat.gi
 ### Segment style
 
 [![segment style](img/styles/segment_width.png)](https://eurostat.github.io/gridviz/examples/styles/segment_width.html)
-
 [![segment style](img/styles/segment_random.png)](https://eurostat.github.io/gridviz/examples/styles/segment_random.html)
 
 This style displays each cell as a segment with a changeable color, length, width and orientation.
@@ -337,7 +331,6 @@ See [this example with random segment orientation, color, length and width](http
 ### Stroke style
 
 [![stroke style](img/styles/stroke.png)](https://eurostat.github.io/gridviz/examples/styles/stroke.html)
-
 [![stroke style](img/styles/stroke_random.png)](https://eurostat.github.io/gridviz/examples/styles/stroke_random.html)
 
 This style shows the stroke of each cell with different colors, widths, shapes and sizes. This style can be used in addition to others to show the cell strokes on top of those other styles.
@@ -392,7 +385,6 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyp
 ### Mosaic style
 
 [![mosaic style](img/styles/mosaic_basic.png)](https://eurostat.github.io/gridviz/examples/styles/mosaic.html)
-
 [![mosaic style](img/styles/mosaic_roman.png)](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html)
 
 This style shows the cell as pseudo-irregular square shapes giving a [mosaic](https://en.wikipedia.org/wiki/Mosaic) effect. The cells are colored depending on a variable.
@@ -400,8 +392,6 @@ This style shows the cell as pseudo-irregular square shapes giving a [mosaic](ht
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/mosaic.html) ([code](../examples/styles/mosaic.html)).
 
 See [this roman style example](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html) ([code](../examples/styles/mosaic_full.html)).
-
-
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
