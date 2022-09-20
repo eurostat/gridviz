@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+</head>
+
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
+    <div id="viz-container" style="height:100%; width:100%;"></div>
+
+    <div style="display: block; float: right; z-index: 3; position: absolute; left: 20px; top: 20px;">
+        <select id="type">
+            <option value="flag_v">Flag vertical</option>
+            <option value="flag_h">Flag horizontal</option>
+            <option value="piechart">Pie chart</option>
+            <option value="ring" selected>Ring</option>
+            <option value="segment_v">Segment vertical</option>
+            <option value="segment_h">Segment horizontal</option>
+            <option value="radar">Radar</option>
+            <option value="halftone">Halftone</option>
+            <option value="agepyramid">Age pyramid</option>
+        </select>
+        <br>
+        <input type="checkbox" id="size" checked>
+        <label for="size">size</label>
+</div>
+
+    <script src="../../build/gridviz.js"></script>
+    <script>
+
+        let containerDiv = document.getElementById("viz-container");
+        const app = new gviz.App(containerDiv)
+            .setGeoCenter({ x: 3951000, y: 2255603 }).setZoomFactor(10).setZoomFactorExtent([4, 2000])
+            //.setBackgroundColor("black")
+            .addMultiScaleTiledCSVGridLayer(
+                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/men/2017/" + r + "m/",
+                [
+                    new gviz.CompositionStyle({
+                        color: {
+                            "Men_1ind": "#7570b3",
+                            "Men_2_4ind": "#1b9e77",
+                            "Men_5ind": "#d95f02",
+                        },
+                        type: () => "ring",
+                        stripesOrientation: () => 0,
+                        sizeCol: "Men",
+                        size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.13, 0),
+                    })
+                ],
+                {
+                    pixNb: 15,
+                    preprocess: c => {
+                        c.Men_2_4ind = +c.Men - +c.Men_1ind - +c.Men_5ind;
+                    }
+                }
+            )
+
+
+        //type selection
+        const s = app.layers[0].styles[0];
+        document.getElementById("type").addEventListener('change', function () {
+            const v = this.value
+            //set type
+            const type = v.includes("flag") ? "flag" : v.includes("segment") ? "segment" : v
+            s.type = () => type
+            //set orientation
+            const or = v.includes("h") ? 0 : v.includes("v") ? 90 : 90
+            s.stripesOrientation = () => or
+            //redraw
+            app.cg.redraw()
+        });
+
+    </script>
+</body>
+
+</html>
