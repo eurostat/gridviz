@@ -74,7 +74,7 @@ export class WebGLSquareColoringAdvanced {
                     : `(exp(vt * alpha) - 1.0) / (exp(alpha) - 1.0);`
             else if (stretching.fun == "expRev")
                 //sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t);
-                fshString += `pow(vt, alpha);`
+                fshString += `1.0 - (1.0 / alpha) * log(exp(alpha) * (1.0 - vt) + vt);`
             else {
                 console.error("Unexpected stretching function code: " + stretching.fun)
                 fshString += `vt;`
