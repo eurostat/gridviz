@@ -17,8 +17,14 @@ export class WebGLSquareColoringAdvanced {
     //https://thebookofshaders.com/glossary/
 
 
-    /**  */
-    constructor(gl, colors, deformationFactor = 1, sizePix = 10) {
+    /**
+     * 
+     * @param {*} gl 
+     * @param {Array.<String>} colors 
+     * @param {{fun:string,alpha:number}} stretching 
+     * @param {number} sizePix 
+     */
+    constructor(gl, colors, stretching, sizePix = 10) {
 
         /** @type {WebGLRenderingContext} */
         this.gl = gl

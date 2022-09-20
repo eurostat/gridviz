@@ -32,17 +32,16 @@ export class SquareColorWGLStyle extends Style {
         this.tFun = opts.tFun || ((v, r, s) => v / s.max);
 
         /**
-         * A parameter within [0,Inf] to deform the distribution. 1: no deformation. <1: better show small values. >1: better show large values.
-         * The deformation is performed on GPU side (fragment shader).
-         * @type {number} */
-        this.deformationFactor = opts.deformationFactor || 1.0
+         * Distribution stretching method.
+         * The stretching is performed on GPU side (fragment shader).
+         * @type {{ fun:string, alpha:number }} */
+        this.stretching = opts.stretching
 
         /**
          * The sample of the color ramp.
          * The color is computed on GPU side (fragment shader) based on those values (linear interpolation).
          * @type {Array.<string>} */
         this.colors = opts.colors || ["rgb(158, 1, 66)", "rgb(248, 142, 83)", "rgb(251, 248, 176)", "rgb(137, 207, 165)", "rgb(94, 79, 162)"].reverse()
-        //["lightblue", "green", "yellow", "orange", "red"]
         if (opts.color)
             this.colors = [opts.color(0), opts.color(0.25), opts.color(0.5), opts.color(0.75), opts.color(1)]
 
@@ -95,7 +94,7 @@ export class SquareColorWGLStyle extends Style {
         if (monitor) monitorDuration("   webgl drawing data preparation")
 
         const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
-        const wgp = new WebGLSquareColoringAdvanced(cvWGL.gl, this.colors, this.deformationFactor, sizeGeo / zf)
+        const wgp = new WebGLSquareColoringAdvanced(cvWGL.gl, this.colors, this.stretching, sizeGeo / zf)
 
         if (monitor) monitorDuration("   webgl program preparation")
 
