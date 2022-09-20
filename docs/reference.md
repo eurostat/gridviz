@@ -6,7 +6,7 @@
   - [Table of contents](#table-of-contents)
   - [Usage](#usage)
   - [App Configuration](#app-configuration)
-  - [Multi layer, multi style and muli scale mapping](#multi-layer-multi-style-and-muli-scale-mapping)
+  - [Multi layer, multi style and multi scale mapping](#multi-layer-multi-style-and-multi-scale-mapping)
   - [Adding data](#adding-data)
     - [Single CSV file](#single-csv-file)
     - [Multi scale CSV data](#multi-scale-csv-data)
@@ -83,11 +83,10 @@ The following methods allow further configuration of a [Gridviz](https://github.
 | _app_.**getLabelLayer**()<br />_app_.**setLabelLayer**([value])             | LabelLayer             | undefined     | A layer for labels (such as placenames), see [here](#showing-labels).                                                                                                                                                  |
 | _app_.**setViewFromURL**()                                                  |                        |               | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_. |
 
-
-## Multi layer, multi style and muli scale mapping
+## Multi layer, multi style and multi scale mapping
 
 A [Gridviz](https://github.com/eurostat/gridviz/) map is organised as a stack of layers accessible through **myApp.layer** field. Each layer shows data from on single dataset **myLayer.dataset** following an list of styles **myLayer.styles** - the styles available are listed [here](#styles). The map can adapt to the visualisation scale/zoom level with the following mechanisms:
-- Multi-resolution datasets can be defined, so that different grid resolutions can be shown depending to the zoom level, see [the next section](#adding-data).
+- Multi-resolution datasets can be defined, so that different grid resolutions can be shown depending to the zoom level, see [the multi-scale datasets in the next section](#adding-data).
 - The layers and styles can be restricted to some scale, using their **minZoom** and **maxZoom** properties to define the zoom ranges for which they will be shown.
 
 For further information, see the [examples](../examples/).
