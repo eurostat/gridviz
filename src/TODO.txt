@@ -1,5 +1,4 @@
-shape size color style: example with dropdown for shape selection - add image
-
+stretching test example - no observable ?
 stop using SquareColorWGLStyle2 in lego and tanaka and remove it
 
 tanaka bug: no shadow for lower level
