@@ -1,4 +1,5 @@
 revamp square color webGL style + doc
+see if old webGL stuff can be removed
 ssc: example with dropdown for shape selection
 
 tanaka bug: no shadow for lower level
