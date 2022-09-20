@@ -38,25 +38,25 @@ export class CompositionStyle extends Style {
 
         /** A function returning the size of a cell.
          * @type {function(number,number,Stat|undefined,number):number} */
-        this.size = opts.size || ((v, r) => r);
+        this.size = opts.size || ((v, r, s, zf) => r);
 
 
         /** For style types with stripes (flag, segment), the orientation of the stripes (0 for horizontal, other for vertical).
-         * @type {function(number,number,number):number} */
-        this.stripesOrientation = opts.stripesOrientation || (() => 0); //(v,r,zf) => ...
+         * @type {function(Cell,number,number):number} */
+        this.stripesOrientation = opts.stripesOrientation || (() => 0); //(c,r,zf) => ...
+
+        /** The function specifying an offset angle for a radar or halftone style.
+         * @type {function(Cell,number,number):number} */
+        this.offsetAngle = opts.offsetAngle || (() => 0);  //(cell,r,zf) => ...
+
+        /** The function specifying the height of the age pyramid, in geo unit.
+        * @type {function(Cell,number,number):number} */
+        this.agePyramidHeight = opts.agePyramidHeight || ((c, r, zf) => r);  //(cell,r,zf) => ...
 
         /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
          * 0 for normal pie charts, 0.5 to empty half of the radius. 
          * @type {number} */
         this.pieChartInternalRadiusFactor = opts.pieChartInternalRadiusFactor || 0
-
-        /** The function specifying an offset angle for a radar or halftone style.
-         * @type {function(Cell,number,number):number} */
-        this.offsetAngle = opts.offsetAngle;  //(cell,r,zf) => ...
-
-        /** The function specifying the height of the age pyramid, in geo unit.
-        * @type {function(Cell,number,number):number} */
-        this.agePyramidHeight = opts.agePyramidHeight;  //(cell,r,zf) => ...
     }
 
 
@@ -226,7 +226,7 @@ export class CompositionStyle extends Style {
                     if (type_ === "flag") {
 
                         //draw flag stripe
-                        if (this.stripesOrientation(cell[this.sizeCol], r, zf) == 0) {
+                        if (this.stripesOrientation(cell, r, zf) == 0) {
                             //horizontal
                             cg.ctx.fillRect(
                                 cell.x + d + offset.dx,

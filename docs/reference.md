@@ -290,7 +290,31 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/compositio
 
 | Property | Type     | Default | Description  |
 | ----------- | -------- | ------- | ------------ |
-| **.** |  |     |  |
+| **color** | Object, string -> color | undefined    | The dictionary (string -> color) which give the color of each category. |
+| **type** | function(c):CompositionType |  () => "flag   | A function returning the symbol type of a cell **c**. CompositionType are among __"flag", "piechart", "ring", "segment", "radar", "agepyramid", "halftone"__ |
+| **sizeCol** | string |  undefined   | The name of the column used for the size. |
+| **size** | function(v,r,s,zf) |  (v,r,s,zf) => r   | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom 
+| **stripesOrientation** | function(c,r,zf) | () => 0 | For style types with stripes (flag, segment), a function returning the symbol stripes orientation (0 for horizontal, other for vertical) from the cell **c**, the resolution **r** and zoom factor **zf**. |
+| **offsetAngle** | function(c,r,zf) |  () => 0   |  |
+| **** | function(c,r,zf) |  (c,r,zf) => r   |  |
+| **** |  |     |  |
+
+
+
+        /** The function specifying an offset angle for a radar or halftone style.
+         * @type {function(Cell,number,number):number} */
+        this. = opts.offsetAngle;  //(cell,r,zf) => ...
+
+        /** The function specifying the height of the age pyramid, in geo unit.
+        * @type {function(Cell,number,number):number} */
+        this.agePyramidHeight = opts.agePyramidHeight;  //(cell,r,zf) => ...
+
+        /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
+         * 0 for normal pie charts, 0.5 to empty half of the radius. 
+         * @type {number} */
+        this.pieChartInternalRadiusFactor = opts.pieChartInternalRadiusFactor || 0
+
+
 
 
 ### Segment style
