@@ -67,7 +67,7 @@
             //set type
             const type = v.includes("flag") ? "flag" : v.includes("segment") ? "segment" : v
             if (type === "random")
-                s.type = () => { const r = Math.random(); return r < 1 / 7 ? "flag" : r < 2 / 7 ? "piechart" : r < 3 / 7 ? "ring" : r < 4 / 7 ? "segment" : r < 5 / 7 ? "radar" : r < 6 / 7 ? "halftone" : "agepyramid" }
+                s.type = () => { const r = Math.random(); return r < 2 / 9 ? "flag" : r < 3 / 9 ? "piechart" : r < 4 / 9 ? "ring" : r < 6 / 9 ? "segment" : r < 7 / 9 ? "radar" : r < 8 / 9 ? "halftone" : "agepyramid" }
             else
                 s.type = () => type
 
