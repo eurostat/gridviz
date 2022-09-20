@@ -15,6 +15,10 @@
             <option value="pow">Polynomial</option>
             <option value="powRev">Polynomial (reverse)</option>
         </select>
+        <br>
+        <input type="range" min="-30" max="0" step="1" value="-6" id="alphaExp" style="width: 300px;">
+        <br>
+        <input type="range" min="0" max="1" step="0.02" value="0.3" id="alphaPow" style="width: 300px;">
     </div>
 
     <div id="viz-container" style="height:100%; width:100%;"></div>
@@ -49,11 +53,12 @@
         const s = app.layers[0].styles[0];
         const update = () => {
             const fun = document.querySelector('#fun').value;
+            const aExp = +document.querySelector('#alphaExp').value;
 
             if (fun == "exp")
-                s.stretching = { fun: fun, alpha: -6 }
+                s.stretching = { fun: fun, alpha: aExp }
             else if (fun == "expRev")
-                s.stretching = { fun: fun, alpha: -6 }
+                s.stretching = { fun: fun, alpha: aExp }
             else if (fun == "pow")
                 s.stretching = { fun: fun, alpha: 0.3 }
             else if (fun == "powRev")
@@ -65,6 +70,7 @@
 
         //
         document.getElementById("fun").addEventListener('change', update)
+        document.getElementById("alphaExp").addEventListener('input', update)
 
     </script>
 
