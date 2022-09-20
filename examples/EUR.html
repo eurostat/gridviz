@@ -122,7 +122,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 5, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) }))
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 5, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -6) }))
 
             } else if (layCode === "d06_11" || layCode === "d11_18") {
                 app.addLayerFromDataset(

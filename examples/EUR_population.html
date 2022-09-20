@@ -391,7 +391,7 @@
 
         //legends
         //pop
-        sd.pop.squareColor.style[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) }))
+        sd.pop.squareColor.style[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -6) }))
         sd.pop.circleColor.style[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) }))
         sd.pop.squareSize.style[0].legends.push(new gviz.SizeLegend({ shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" }))
         sd.pop.circleSize.style[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" }))
