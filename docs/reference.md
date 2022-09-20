@@ -293,7 +293,7 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 [![composition style](img/styles/composition_piechart.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 [![composition style](img/styles/composition_ring.png)](https://eurostat.github.io/gridviz/examples/styles/composition_pop_FR.html)
 [![composition style](img/styles/composition_halftone.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
-
+[![composition style](img/styles/composition_random.png)](https://eurostat.github.io/gridviz/examples/styles/composition_random.html)
 
 This style shows a composition at cell level in various different ways: Flags, pie charts, rings, segments, radar, age pyramid and halftone.
 
