@@ -241,9 +241,6 @@ Note that it is unfortunatelly currently not possible to compute new columns fro
 
 ## Styles
 
-TODO: explain general principles, with (v,r,zf,s) functions. + use several styles by layer + define zoom extent for each style
-
-
 ### Square color WebGL Style
 
 This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display grid cells at detailled resolutions.
