@@ -57,7 +57,7 @@ export class WebGLSquareColoringAdvanced {
                     out.push("uniform vec4 c" + i + ";")
                 return out.join("")
             })()
-            //start the main function, apply the deformation of t
+            //start the main function, apply the stretching of t
             + `void main(void) {
           float t = `
 
@@ -79,7 +79,7 @@ export class WebGLSquareColoringAdvanced {
                 fshString += `vt`
             }
         } else {
-            fshString += `vt`
+            fshString += `pow(vt, alpha);`
         }
 
         //choose initial and final colors, and adjust t value
@@ -132,7 +132,7 @@ export class WebGLSquareColoringAdvanced {
         gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * sizePix);
 
         //stretching alpha factor
-        gl.uniform1f(gl.getUniformLocation(this.program, "alpha"), stretching ? stretching.alpha : 0);
+        gl.uniform1f(gl.getUniformLocation(this.program, "alpha"), stretching ? stretching.alpha * 1.0 : 0.0);
 
         //colors
         for (let i = 0; i < colors.length; i++) {
