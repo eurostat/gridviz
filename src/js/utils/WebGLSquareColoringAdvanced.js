@@ -67,19 +67,20 @@ export class WebGLSquareColoringAdvanced {
                 fshString += `pow(vt, alpha);`
             else if (stretching.fun == "powRev")
                 //sPowRev = (t, alpha = 3) => 1 - Math.pow(1 - t, 1 / alpha);
-                fshString += `pow(vt, alpha);`
+                fshString += `1.0-pow(1.0-vt, 1.0/alpha);`
             else if (stretching.fun == "exp")
                 //sExp = (t, alpha = 3) => alpha == 0 ? t : (Math.exp(t * alpha) - 1) / (Math.exp(alpha) - 1);
-                fshString += `pow(vt, alpha);`
+                fshString += stretching.alpha == 0 ? `vt;`
+                    : `(exp(vt * alpha) - 1.0) / (exp(alpha) - 1.0);`
             else if (stretching.fun == "expRev")
                 //sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t);
                 fshString += `pow(vt, alpha);`
             else {
                 console.error("Unexpected stretching function code: " + stretching.fun)
-                fshString += `vt`
+                fshString += `vt;`
             }
         } else {
-            fshString += `pow(vt, alpha);`
+            fshString += `vt;`
         }
 
         //choose initial and final colors, and adjust t value
@@ -132,7 +133,7 @@ export class WebGLSquareColoringAdvanced {
         gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * sizePix);
 
         //stretching alpha factor
-        gl.uniform1f(gl.getUniformLocation(this.program, "alpha"), stretching ? stretching.alpha * 1.0 : 0.0);
+        gl.uniform1f(gl.getUniformLocation(this.program, "alpha"), stretching ? 1.0 * stretching.alpha : 0.0);
 
         //colors
         for (let i = 0; i < colors.length; i++) {
