@@ -61,8 +61,23 @@ export class WebGLSquareColoringAdvanced {
             + `void main(void) {
           float t = `
 
-        if(stretching) {
-            fshString += `pow(vt, alpha);`
+        if (stretching) {
+            if (stretching.fun == "pow")
+                //sPow = (t, alpha = 3) => Math.pow(t, alpha);
+                fshString += `pow(vt, alpha);`
+            else if (stretching.fun == "powRev")
+                //sPowRev = (t, alpha = 3) => 1 - Math.pow(1 - t, 1 / alpha);
+                fshString += `pow(vt, alpha);`
+            else if (stretching.fun == "exp")
+                //sExp = (t, alpha = 3) => alpha == 0 ? t : (Math.exp(t * alpha) - 1) / (Math.exp(alpha) - 1);
+                fshString += `pow(vt, alpha);`
+            else if (stretching.fun == "expRev")
+                //sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t);
+                fshString += `pow(vt, alpha);`
+            else {
+                console.error("Unexpected stretching function code: " + stretching.fun)
+                fshString += `vt`
+            }
         } else {
             fshString += `vt`
         }

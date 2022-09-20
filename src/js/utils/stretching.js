@@ -27,7 +27,6 @@ export const sPow = (t, alpha = 3) => Math.pow(t, alpha);
 export const sPowRev = (t, alpha = 3) => 1 - Math.pow(1 - t, 1 / alpha);
 
 
-
 /**
  * Function [0,1]->[0,1] to stretch range of values.
  * Exponential
@@ -47,7 +46,6 @@ export const sExp = (t, alpha = 3) => alpha == 0 ? t : (Math.exp(t * alpha) - 1)
  * @returns {number} The stretched value, within [0,1]
  */
 export const sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t);
-
 
 
 
