@@ -1,4 +1,4 @@
-doc dot density and joyplot
+doc joyplot and side ?
 
 stop using SquareColorWGLStyle2 in lego and tanaka and remove it
 
