@@ -12,7 +12,7 @@
 [![](/docs/img/overviews/ov_dark.png)](docs/reference.md#square-color-webgl-style)
 [![](/docs/img/overviews/ov_donut.png)](docs/reference.md#shapecolorsize-style)
 [![](/docs/img/overviews/ov_flag.png)](docs/reference.md#composition-style)
-[![](/docs/img/overviews/ov_joyplot.png)](docs/reference.md#joyplot-style)
+[![joyplot map](/docs/img/overviews/ov_joyplot_shade.png)](docs/reference.md#joyplot-style)
 [![lego map](/docs/img/overviews/ov_lego.png)](docs/reference.md#lego-style)
 [![mosaic map](/docs/img/overviews/ov_mosaic.png)](docs/reference.md#mosaic-style)
 [![](/docs/img/overviews/ov_piechart.png)](docs/reference.md#composition-style)
@@ -22,6 +22,7 @@
 [![](/docs/img/overviews/ov_segment.png)](docs/reference.md#segment-style)
 [![tanaka style map](/docs/img/overviews/ov_tanaka.png)](docs/reference.md#tanaka-style)
 [![dot density map](/docs/img/overviews/ov_dotdensity.png)](docs/reference.md#dot-density-style)
+[![joyplot map](/docs/img/overviews/ov_joyplot.png)](docs/reference.md#joyplot-style)
 
 ## Examples
 
