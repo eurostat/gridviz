@@ -1,5 +1,3 @@
-stretching: documentation
-
 stop using SquareColorWGLStyle2 in lego and tanaka and remove it
 
 tanaka bug: no shadow for lower level

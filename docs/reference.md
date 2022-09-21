@@ -482,16 +482,16 @@ Documentation coming soon.
 
 ## Stretching
 
-Most of the [Gridviz](https://github.com/eurostat/gridviz/) styling rely on a **t** parameter within [0,1] interval, which is then mapped to a visual variable such as color or size. In order to better adjust the variation of this **t** parameter to the input data distribution, some __stretching functions__ can be used. The amplitude of the stretching can be adjusted with a **alpha** parameter.
+Most of the [Gridviz](https://github.com/eurostat/gridviz/) styling rely on a **t** parameter within [0,1] interval, which is then mapped to a visual variable such as color or size. In order to better adjust the variation of this **t** parameter to the input data distribution, the __stretching functions__ listed below can be used. They have different properties and should be chosen according to the data. The amplitude of the stretching can be adjusted with a **alpha** parameter.
 
-| Function          | Alpha interval | Description           | Inverse function   |
-| ----------------- | -------------- | --------------------- | ------------------ |
-| **sPow**          |                | Polynomial            | **sPowInverse**    |
-| **sPowRev**       |                | Polynomial reverse  | **sPowRevInverse** |
-| **sExp**          |                | Exponential           | **sExpInverse**    |
-| **sExpRev**       |                | Exponential reverse  | **sExpRevInverse** |
-| **sCircularLow**  |                | Circular, low values  | **sCircularHigh**  |
-| **sCircularHigh** |                | Circular, high values | **sCircularLow**   |
+| Stretching function | Alpha                                    | Description           | Inverse function   |
+| ------------------- | ---------------------------------------- | --------------------- | ------------------ |
+| **sPow**            | From 0 to Infinity. No change: 1         | Polynomial            | **sPowInverse**    |
+| **sPowRev**         | From 0 to Infinity. No change: 1         | Polynomial reverse    | **sPowRevInverse** |
+| **sExp**            | From -Infinity to Infinity. No change: 0 | Exponential           | **sExpInverse**    |
+| **sExpRev**         | From -Infinity to Infinity. No change: 0 | Exponential reverse   | **sExpRevInverse** |
+| **sCircularLow**    | From 0 (no change) to 1 (circle)         | Circular, low values  | **sCircularHigh**  |
+| **sCircularHigh**   | From 0 (no change) to 1 (circle)         | Circular, high values | **sCircularLow**   |
 
 For more information on these functions and how they differ, see:
 - [this example](https://eurostat.github.io/gridviz/examples/stretching.html) ([code](../examples/stretching.html)).
