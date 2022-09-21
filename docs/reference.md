@@ -392,6 +392,8 @@ This style shows cell rows in the form of a 'joyplot' - named after Joy Division
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyplot.html) ([code](../examples/styles/joyplot.html)).
 
+See [this an example of shaded joyplot](https://eurostat.github.io/gridviz/examples/styles/joyplot_shading.html) ([code](../examples/styles/joyplot_shading.html)).
+
 Documentation coming soon.
 
 | Property | Type | Default | Description |
