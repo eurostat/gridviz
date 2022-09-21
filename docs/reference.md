@@ -391,12 +391,15 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotd
 
 [![joyplot style](img/styles/joyplot.png)](https://eurostat.github.io/gridviz/examples/styles/joyplot.html)
 [![joyplot style](img/styles/joyplot_full.png)](https://eurostat.github.io/gridviz/examples/styles/joyplot_shading.html)
+[![joyplot style](img/styles/joyplot_random.png)](https://eurostat.github.io/gridviz/examples/styles/joyplot_random.html)
 
 This style shows cell rows in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyplot.html) ([code](../examples/styles/joyplot.html)).
 
 See [this an example of shaded joyplot](https://eurostat.github.io/gridviz/examples/styles/joyplot_shading.html) ([code](../examples/styles/joyplot_shading.html)).
+
+See [this an example with random colors](https://eurostat.github.io/gridviz/examples/styles/joyplot_random.html) ([code](../examples/styles/joyplot_random.html)).
 
 Documentation coming soon.
 
