@@ -21,6 +21,7 @@
 [![](/docs/img/overviews/ov_ring.png)](docs/reference.md#composition-style)
 [![](/docs/img/overviews/ov_segment.png)](docs/reference.md#segment-style)
 [![](/docs/img/overviews/ov_tanaka.png)](docs/reference.md#tanaka-style)
+[![](/docs/img/overviews/ov_dotdensity.png)](docs/reference.md#dot-density-style)
 
 ## Examples
 
@@ -56,9 +57,9 @@ See the **[API reference](docs/reference.md)**.
 
 ## About
 
-|                |                                                                                                                                                                                       |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| _contributors_ | [<img src="https://github.com/JoeWDavies.png" height="40" />](https://github.com/JoeWDavies) [<img src="https://github.com/jgaffuri.png" height="40" />](https://github.com/jgaffuri) |
+|                |                   |
+| -------------- | ---------------------------------- |
+| _contributors_ | [<img src="https://github.com/jgaffuri.png" height="40" />](https://github.com/jgaffuri) [<img src="https://github.com/JoeWDavies.png" height="40" />](https://github.com/JoeWDavies) |
 | _version_      | See [npm](https://www.npmjs.com/package/gridviz?activeTab=versions)                                                                                                                   |
 | _status_       | Since 2020                                                                                                                                                                            |
 | _license_      | [EUPL 1.2](LICENSE)                                                                                                                                                                   |
