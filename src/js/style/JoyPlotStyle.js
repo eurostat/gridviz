@@ -24,14 +24,14 @@ export class JoyPlotStyle extends Style {
         this.height = opts.height || ((v) => Math.sqrt(v));
 
         /** 
-         * @type {function(number,number,number):string} */
-        this.lineColor = opts.lineColor || ((i, r, zf) => "#BBB")
+         * @type {function(number,{min:number, max:number},number,number):string} */
+        this.lineColor = opts.lineColor || ((y, ys, r, zf) => "#BBB")
         /** 
-         * @type {function(number,number,number):number} */
-        this.lineWidth = opts.lineWidth || ((i, r, zf) => zf);
+         * @type {function(number,{min:number, max:number},number,number):number} */
+        this.lineWidth = opts.lineWidth || ((y, ys, r, zf) => zf);
         /** 
-         * @type {function(number,number,number):string} */
-        this.fillColor = opts.fillColor || ((i, r, zf) => "#c08c5968")
+         * @type {function(number,{min:number, max:number},number,number):string} */
+        this.fillColor = opts.fillColor || ((y, ys, r, zf) => "#c08c5968")
     }
 
 
@@ -69,12 +69,15 @@ export class JoyPlotStyle extends Style {
         const yMin = Math.floor(e.yMin / r) * r;
         const yMax = Math.floor(e.yMax / r) * r;
 
+
+        /**  @type {{min:number, max:number}} */
+        const ys = { min: yMin, max: yMax }
+
         //draw in geo coordinates
         cg.setCanvasTransform()
 
         //draw lines, row by row, stating from the top
         for (let y = yMax; y >= yMin; y -= r) {
-            const i = y - yMin
 
             //get row
             const row = ind[y]
@@ -117,15 +120,15 @@ export class JoyPlotStyle extends Style {
 
 
             //draw fill
-            const fc = this.fillColor(i, r, zf);
+            const fc = this.fillColor(y, ys, r, zf);
             if (fc && fc != "none") {
                 cg.ctx.fillStyle = fc
                 cg.ctx.fill()
             }
 
             //draw line
-            const lc = this.lineColor(i, r, zf);
-            const lw = this.lineWidth(i, r, zf);
+            const lc = this.lineColor(y, ys, r, zf);
+            const lw = this.lineWidth(y, ys, r, zf);
             if (lc && lc != "none" && lw > 0) {
                 cg.ctx.strokeStyle = lc;
                 cg.ctx.lineWidth = lw;
