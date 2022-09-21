@@ -86,7 +86,7 @@ The following methods allow further configuration of a [Gridviz](https://github.
 
 ## Multi layer, multi style and multi scale mapping
 
-A [Gridviz](https://github.com/eurostat/gridviz/) map is organised as a stack of layers accessible through **myApp.layer** field. Each layer shows data from on single dataset **myLayer.dataset** following an list of styles **myLayer.styles** - the styles available are listed [here](#styles). The map can adapt to the visualisation scale/zoom level with the following mechanisms:
+A [Gridviz](https://github.com/eurostat/gridviz/) map is organised as a stack of layers accessible through **myApp.layer** field. Each layer shows data from one single dataset **myLayer.dataset**, following a list of styles **myLayer.styles**. The styles available are listed [here](#styles). The map can adapt to the visualisation scale/zoom level with the following mechanisms:
 - Multi-resolution datasets can be defined, so that different grid resolutions can be shown depending to the zoom level, see [the multi-scale datasets in the next section](#adding-data).
 - The layers and styles can be restricted to some scale, using their **minZoom** and **maxZoom** properties to define the zoom ranges for which they will be shown.
 
