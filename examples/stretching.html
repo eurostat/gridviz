@@ -15,10 +15,12 @@
             <option value="expRev" selected>Exponential (reverse)</option>
             <option value="pow">Polynomial</option>
             <option value="powRev">Polynomial (reverse)</option>
+            <option value="circleLow">Circle low</option>
+            <option value="circleHigh">Circle high</option>
         </select>
         <div id="alphaText">Alpha: -7</div>
         <input type="range" min="-30" max="0" step="1" value="-7" id="alphaExp" style="width: 300px; display: initial;">
-        <input type="range" min="0" max="1" step="0.02" value="0.3" id="alphaPow" style="width: 300px; display: none;">
+        <input type="range" min="0" max="1" step="0.02" value="0.3" id="alphaPowCir" style="width: 300px; display: none;">
     </div>
 
     <div id="viz-container" style="height:100%; width:100%;"></div>
@@ -54,28 +56,38 @@
         const update = () => {
             const fun = document.querySelector('#fun').value;
             const aExp = +document.querySelector('#alphaExp').value;
-            const aPow = +document.querySelector('#alphaPow').value;
+            const aPow = +document.querySelector('#alphaPowCir').value;
             let a;
 
             if (fun == "exp") {
                 s.stretching = { fun: fun, alpha: aExp }
                 document.getElementById("alphaExp").style.display = "initial";
-                document.getElementById("alphaPow").style.display = "none";
+                document.getElementById("alphaPowCir").style.display = "none";
                 a = aExp
             } else if (fun == "expRev") {
                 s.stretching = { fun: fun, alpha: aExp }
                 document.getElementById("alphaExp").style.display = "initial";
-                document.getElementById("alphaPow").style.display = "none";
+                document.getElementById("alphaPowCir").style.display = "none";
                 a = aExp
             } else if (fun == "pow") {
                 s.stretching = { fun: fun, alpha: aPow }
                 document.getElementById("alphaExp").style.display = "none";
-                document.getElementById("alphaPow").style.display = "initial";
+                document.getElementById("alphaPowCir").style.display = "initial";
                 a = aPow
             } else if (fun == "powRev") {
                 s.stretching = { fun: fun, alpha: aPow }
                 document.getElementById("alphaExp").style.display = "none";
-                document.getElementById("alphaPow").style.display = "initial";
+                document.getElementById("alphaPowCir").style.display = "initial";
+                a = aPow
+            } else if (fun == "circleLow") {
+                s.stretching = { fun: fun, alpha: aPow }
+                document.getElementById("alphaExp").style.display = "none";
+                document.getElementById("alphaPowCir").style.display = "initial";
+                a = aPow
+            } else if (fun == "circleHigh") {
+                s.stretching = { fun: fun, alpha: aPow }
+                document.getElementById("alphaExp").style.display = "none";
+                document.getElementById("alphaPowCir").style.display = "initial";
                 a = aPow
             }
 
@@ -88,7 +100,7 @@
         //
         document.getElementById("fun").addEventListener('change', update)
         document.getElementById("alphaExp").addEventListener('input', update)
-        document.getElementById("alphaPow").addEventListener('input', update)
+        document.getElementById("alphaPowCir").addEventListener('input', update)
 
     </script>
 

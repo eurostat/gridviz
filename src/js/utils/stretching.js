@@ -61,10 +61,9 @@ export const sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math
  */
 export const sCircleLow = (t, alpha = 0.8) => {
   if (alpha == 0) return t;
-  if (alpha == 1) return Math.sqrt(2 * t - t * t);
+  if (alpha == 1) return Math.sqrt(t * (2 - t));
   const a = alpha / (1 - alpha);
-  return Math.sqrt(1 / (a * a) + (2 * t) / a + 2 * t - t * t) - 1 / a;
-
+  return Math.sqrt(1 / (a * a) + t * (2 / a + 2 - t)) - 1 / a;
 }
 
 /**
