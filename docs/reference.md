@@ -40,7 +40,7 @@ Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/grid
 
 ## Usage
 
-Create a [Gridviz](https://github.com/eurostat/gridviz/) application using `let app = new gviz.App();` and customise it with the methods described in the documentation below.
+Create a [Gridviz](https://github.com/eurostat/gridviz/) application using `const app = new gviz.App();` and customise it with the methods described in the documentation below.
 
 Here's a basic example that loads a CSV file on Europe population (5km resolution):
 
@@ -59,7 +59,7 @@ new gviz.App(containerDiv)
             new gviz.SquareColorWGLStyle({
                 //the CSV column to show
                 colorCol: "Population",
-                //value to [0,1] mapping function
+                //value to [0,1] mapping function, see [below](#stretching)
                 tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15)
             })
         ]
@@ -116,8 +116,11 @@ new gviz.App(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
     //add multiscale CSV layer
     .addMultiScaleCSVGridLayer(
+        //array of resolutions, in CRS unit (m)
         [5000, 10000, 20000, 50000, 100000],
+        //function which returns the URL for each resolution value
         r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_" + Math.round(r / 1000) + "km.csv",
+        //the styles
         [
             new gviz.SquareColorWGLStyle({
                 colorCol: "population",
@@ -165,9 +168,9 @@ new gviz.App(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
     //add multi scale tiled CSV layer
     .addMultiScaleTiledCSVGridLayer(
-        //the resolution values, ordered
-        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        //the URL, from the resolution
+        //array of resolutions, in CRS unit (m)
+        [5000, 10000, 20000, 50000, 100000],
+        //function which returns the URL for each resolution value
         r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
         //the styles
         [
