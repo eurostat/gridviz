@@ -164,7 +164,7 @@
                 style: [new gviz.JoyPlotStyle({
                     heightCol: "Ind",
                     height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
-                    fillColor: "#c08c59bb"
+                    fillColor: () => "#c08c59bb"
                 })], pixNb: 7
             },
             side: {

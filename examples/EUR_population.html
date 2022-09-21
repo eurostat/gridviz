@@ -167,7 +167,7 @@
                     style: [new gviz.JoyPlotStyle({
                         heightCol: getSelectedYear(),
                         height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
-                        fillColor: "#c08c59bb"
+                        fillColor: () => "#c08c59bb"
                     })], pixNb: 5
                 },
                 side: {
@@ -324,7 +324,7 @@
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max));
                             return Math.sign(v) * 5 * r * Math.sqrt(Math.abs(v) / max)
                         },
-                        fillColor: "#c08c59bb"
+                        fillColor: () => "#c08c59bb"
                     })], pixNb: 5
                 },
                 side: {
