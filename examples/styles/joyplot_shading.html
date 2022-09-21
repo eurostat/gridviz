@@ -8,7 +8,9 @@
     <style>
         @font-face {
             font-family: mf;
-            src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/Constantine.woff);
+            src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/RoSpritendoSemiboldBeta.woff);
+            /*src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/TreasureMapDeadhand.woff);*/
+            /*src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/VeritasSans.woff);*/
         }
 
         html,
@@ -29,13 +31,14 @@
         let containerDiv = document.getElementById("viz-container");
 
         new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(2000)
+            .setGeoCenter({ x: 4000000, y: 2960000 })
+            .setZoomFactor(2000).setZoomFactorExtent([30, 7000])
             .setViewFromURL()
             .setLabelLayer(
                 gviz.getEuronymeLabelLayer("EUR", 50, {
-                    ex: 1.6,
+                    ex: 2.5,
                     fontFamily: "mf",
-                    exSize: 1.2,
+                    exSize: 0.7,
                     color: () => "black",
                     haloColor: () => "#ffffff",
                     haloWidth: () => 3
@@ -44,7 +47,7 @@
             .setBoundaryLayer(
                 gviz.getEurostatBoundariesLayer({
                     scale: "10M",
-                    col: "#00000077",
+                    col: "#00000044",
                     lineDash: () => []
                 })
             )
