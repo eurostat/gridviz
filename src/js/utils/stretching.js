@@ -53,6 +53,7 @@ export const sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math
 /**
  * Function [0,1]->[0,1] to stretch range of values.
  * Circle, show low values
+ * NB: sCircleHigh and sCircleLow are inverse functions of each other.
  * 
  * @param {number} t The value to stretch, within [0,1]
  * @param {number} alpha 0: no stretching. 1: perfect circle section
@@ -69,6 +70,7 @@ export const sCircleLow = (t, alpha = 0.8) => {
 /**
  * Function [0,1]->[0,1] to stretch range of values.
  * Circle, show high values
+ * NB: sCircleHigh and sCircleLow are inverse functions of each other.
  * 
  * @param {number} t The value to stretch, within [0,1]
  * @param {number} alpha 0: no stretching. 1: perfect circle section
@@ -129,7 +131,9 @@ for (let i = 0; i <= 1; i += 0.001) {
   //const v = gviz.sPow(gviz.sPowInverse(i));
   //const v = gviz.sPowInverse(gviz.sPow(i));
   //const v = gviz.sPowRev(gviz.sPowRevInverse(i));
-  const v = gviz.sPowRevInverse(gviz.sPowRev(i));
+  //const v = gviz.sPowRevInverse(gviz.sPowRev(i));
+  //const v = gviz.sCircleLow(gviz.sCircleHigh(i));
+  //const v = gviz.sCircleHigh(gviz.sCircleLow(i));
   console.log(i - v)
 }
 */

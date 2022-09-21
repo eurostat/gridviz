@@ -1,6 +1,6 @@
 stretching:
 add circular to wgl style + to stretching example
-doc
+documentation
 
 stop using SquareColorWGLStyle2 in lego and tanaka and remove it
 
