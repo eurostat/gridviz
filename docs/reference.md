@@ -28,6 +28,7 @@
     - [Pillars style](#pillars-style)
     - [Text style](#text-style)
     - [Kernel smoothing style](#kernel-smoothing-style)
+    - [Others...](#others)
   - [Legends](#legends)
   - [Stretching](#stretching)
   - [Foreground information](#foreground-information)
@@ -486,6 +487,12 @@ Documentation coming soon.
 | -------- | ---- | ------- | ----------- |
 | **.**    |      |         |             |
 
+### Others...
+
+[Gridviz](https://github.com/eurostat/gridviz/) style library can be enriched with new styles by extending the [style class](../src/js/Style.js).
+
+Any need or idea for new style ? feel free to [ask](https://github.com/eurostat/gridviz/issues/new) or [contribute](../README.md#support-and-contribution) !
+
 
 ## Legends
 
@@ -552,3 +559,5 @@ Changing tooltip style: Documentation coming soon.
 
 
 
+
+Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
