@@ -482,7 +482,7 @@ Documentation coming soon.
 
 ## Stretching
 
-Most of the [Gridviz](https://github.com/eurostat/gridviz/) styling rely on a **t** parameter within [0,1] interval, which is then mapped to a visual variable such as color or size. In order to better adjust the variation of this **t** parameter to the input data distribution, the __stretching functions__ listed below can be used. They have different properties and should be chosen according to the data. The amplitude of the stretching can be adjusted with a **alpha** parameter.
+Most of the [Gridviz](https://github.com/eurostat/gridviz/) styling rely on a **t** parameter within [0,1], which is mapped to a visual variable such as color or size. In order to better adjust the variation of this **t** parameter to the input data distribution, one of the __stretching functions__ listed below can be used. These functions have different properties and should be chosen according to the data. The amplitude of the stretching can be adjusted with a **alpha** parameter.
 
 | Stretching function | Alpha                                    | Description           | Inverse function   |
 | ------------------- | ---------------------------------------- | --------------------- | ------------------ |
@@ -493,12 +493,10 @@ Most of the [Gridviz](https://github.com/eurostat/gridviz/) styling rely on a **
 | **sCircularLow**    | From 0 (no change) to 1 (circle)         | Circular, low values  | **sCircularHigh**  |
 | **sCircularHigh**   | From 0 (no change) to 1 (circle)         | Circular, high values | **sCircularLow**   |
 
-For more information on these functions and how they differ, see:
+For more information on these functions and an overview of how they differ, see:
 - [this example](https://eurostat.github.io/gridviz/examples/stretching.html) ([code](../examples/stretching.html)).
 - the [code](../src/js/utils/stretching.js)
 - those [graphs](https://observablehq.com/@jgaffuri/stretching)
-
-
 
 ## Foreground information
 
