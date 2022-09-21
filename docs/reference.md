@@ -398,7 +398,11 @@ Documentation coming soon.
 
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
-| **.**    |      |         |             |
+| **heightCol**  | string       | undefined       | The name of the column used for the line height.           |
+| **height**     | function(v,r,s,zf):number     | (v) => Math.sqrt(v) | A function computing the height of a cell, from its __heightCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
+| **lineColor**    | function(y,ys,r,zf):string     | (y, ys, r, zf) => "#BBB" | A function computing the line color from its **y** coordinate, statistics **ys**, the resolution **r** and zoom factor **zf**. |
+| **lineWidth**    | function(y,ys,r,zf):number     | (y, ys, r, zf) => zf | A function computing the line width from its **y** coordinate, statistics **ys**, the resolution **r** and zoom factor **zf**. |
+| **fillColor**    | function(y,ys,r,zf):string     | (y, ys, r, zf) => "#c08c5968" | A function computing the line fill color from its **y** coordinate, statistics **ys**, the resolution **r** and zoom factor **zf**. |
 
 ### Mosaic style
 

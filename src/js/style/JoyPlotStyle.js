@@ -32,6 +32,7 @@ export class JoyPlotStyle extends Style {
         /** 
          * @type {function(number,{min:number, max:number},number,number):string} */
         this.fillColor = opts.fillColor || ((y, ys, r, zf) => "#c08c5968")
+
     }
 
 
