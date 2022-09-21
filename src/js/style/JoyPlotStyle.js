@@ -24,14 +24,14 @@ export class JoyPlotStyle extends Style {
         this.height = opts.height || ((v) => Math.sqrt(v));
 
         /** 
-         * @type {string} */
-        this.lineColor = opts.lineColor || "#BBB"
+         * @type {function(number,{min:number,max:number},number,number):string} */
+        this.lineColor = opts.lineColor || ((i, ys, r, zf) => "#BBB")
         /** 
-         * @type {number} */
-        this.lineWidth = opts.lineWidth || 1;
+         * @type {function(number,{min:number,max:number},number,number):number} */
+        this.lineWidth = opts.lineWidth || ((i, ys, r, zf) => zf);
         /** 
-         * @type {string} */
-        this.fillColor = opts.fillColor || "#c08c5968"
+         * @type {function(number,{min:number,max:number},number,number):string} */
+        this.fillColor = opts.fillColor || ((i, ys, r, zf) => "#c08c5968")
     }
 
 
@@ -67,10 +67,8 @@ export class JoyPlotStyle extends Style {
         const yMin = Math.floor(e.yMin / r) * r;
         const yMax = Math.floor(e.yMax / r) * r;
 
-        //set color and width
-        cg.ctx.strokeStyle = this.lineColor;
-        cg.ctx.lineWidth = this.lineWidth * zf;
-        cg.ctx.fillStyle = this.fillColor;
+        /**  @type {{min:number,max:number}} */
+        const yStat = { min: yMin, max: yMax }
 
         //draw in geo coordinates
         cg.setCanvasTransform()
@@ -83,6 +81,12 @@ export class JoyPlotStyle extends Style {
 
             //no row
             if (!row) continue;
+
+            //set color and width
+            const i = y - yMin
+            cg.ctx.strokeStyle = this.lineColor(i, yStat, r, zf);
+            cg.ctx.lineWidth = this.lineWidth(i, yStat, r, zf);
+            cg.ctx.fillStyle = this.fillColor(i, yStat, r, zf);
 
             //place first point
             cg.ctx.beginPath();
