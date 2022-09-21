@@ -4,22 +4,6 @@
 <head>
     <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
     <title>Gridviz - Joyplot style</title>
-
-    <style>
-        @font-face {
-            font-family: mf;
-            src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/RoSpritendoSemiboldBeta.woff);
-            /*src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/TreasureMapDeadhand.woff);*/
-            /*src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/VeritasSans.woff);*/
-        }
-
-        html,
-        body,
-        div {
-            font-family: mf;
-        }
-    </style>
-
 </head>
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
@@ -36,9 +20,8 @@
             .setViewFromURL()
             .setLabelLayer(
                 gviz.getEuronymeLabelLayer("EUR", 50, {
-                    ex: 2.5,
-                    fontFamily: "mf",
-                    exSize: 0.7,
+                    ex: 1.8,
+                    exSize: 1,
                     color: () => "black",
                     haloColor: () => "#ffffff",
                     haloWidth: () => 3
