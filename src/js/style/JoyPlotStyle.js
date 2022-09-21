@@ -24,14 +24,14 @@ export class JoyPlotStyle extends Style {
         this.height = opts.height || ((v) => Math.sqrt(v));
 
         /** 
-         * @type {function(number,{min:number,max:number},number,number):string} */
-        this.lineColor = opts.lineColor || ((i, ys, r, zf) => "#BBB")
+         * @type {function(number,number,number):string} */
+        this.lineColor = opts.lineColor || ((i, r, zf) => "#BBB")
         /** 
-         * @type {function(number,{min:number,max:number},number,number):number} */
-        this.lineWidth = opts.lineWidth || ((i, ys, r, zf) => zf);
+         * @type {function(number,number,number):number} */
+        this.lineWidth = opts.lineWidth || ((i, r, zf) => zf);
         /** 
-         * @type {function(number,{min:number,max:number},number,number):string} */
-        this.fillColor = opts.fillColor || ((i, ys, r, zf) => "#c08c5968")
+         * @type {function(number,number,number):string} */
+        this.fillColor = opts.fillColor || ((i, r, zf) => "#c08c5968")
     }
 
 
@@ -43,6 +43,8 @@ export class JoyPlotStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
+        cg.ctx.lineJoin = "round"
+
         //zoom factor
         const zf = cg.getZf()
 
@@ -67,26 +69,18 @@ export class JoyPlotStyle extends Style {
         const yMin = Math.floor(e.yMin / r) * r;
         const yMax = Math.floor(e.yMax / r) * r;
 
-        /**  @type {{min:number,max:number}} */
-        const yStat = { min: yMin, max: yMax }
-
         //draw in geo coordinates
         cg.setCanvasTransform()
 
         //draw lines, row by row, stating from the top
         for (let y = yMax; y >= yMin; y -= r) {
+            const i = y - yMin
 
             //get row
             const row = ind[y]
 
             //no row
             if (!row) continue;
-
-            //set color and width
-            const i = y - yMin
-            cg.ctx.strokeStyle = this.lineColor(i, yStat, r, zf);
-            cg.ctx.lineWidth = this.lineWidth(i, yStat, r, zf);
-            cg.ctx.fillStyle = this.fillColor(i, yStat, r, zf);
 
             //place first point
             cg.ctx.beginPath();
@@ -120,12 +114,23 @@ export class JoyPlotStyle extends Style {
             if (hG_)
                 cg.ctx.lineTo(xMax + r / 2, y);
 
+
+
             //draw fill
-            if (this.fillColor)
+            const fc = this.fillColor(i, r, zf);
+            if (fc && fc != "none") {
+                cg.ctx.fillStyle = fc
                 cg.ctx.fill()
+            }
+
             //draw line
-            if (this.lineColor && this.lineWidth > 0)
+            const lc = this.lineColor(i, r, zf);
+            const lw = this.lineWidth(i, r, zf);
+            if (lc && lc != "none" && lw > 0) {
+                cg.ctx.strokeStyle = lc;
+                cg.ctx.lineWidth = lw;
                 cg.ctx.stroke();
+            }
 
         }
     }

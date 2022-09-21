@@ -24,11 +24,13 @@
                     new gviz.JoyPlotStyle({
                         heightCol: "2018",
                         height: (v, r, s, zf) => 5 * r * gviz.sPow(v / s.max, 0.5),
-                        fillColor: () => "#c08c59bb",
+                        lineColor: () => "white",
+                        lineWidth: (i, r, zf) => 0.2 * r,
+                        fillColor: () => null,
                     })
                 ],
                 {
-                    pixNb: 5,
+                    pixNb: 7,
                     cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)",
                 })
 
