@@ -208,17 +208,16 @@ To manage creation of datasets and their possible reuse accross different layers
 
 ### Data pre-processing
 
-Loaded data can be processed/transformed before it is being used by the [Gridviz](https://github.com/eurostat/gridviz/) application in order to, for example:
-- Filter/simplify the data to keep only the necessary one. This can save client memory,
+Input data can be processed/transformed before it is being used by the [Gridviz](https://github.com/eurostat/gridviz/) application in order to, for example:
+- Filter/simplify the data to keep only the necessary one. This allows saving client memory,
 - Extract/compute each cell coordinates into the **x** and **y** columns, in case the input data does not contain such columns explicitelly,
 - Compute a new column from the combination of existing ones, such as the ratio between two columns, or the aggregation of several columns,
-- Run some data conversions,
+- Run some data conversions, simplifications, aggregations, etc.
 - Etc.
 
 This process is run on each cell individually, only once, after the data has been downloaded.
 
-Here is an example showing how to compute a new column on population change, as the difference between two columns _2011_ and _2018_. This new column is then used directly to be represented:
-
+Here is an example showing how to compute a new column on population change, as the difference between two columns _2011_ and _2018_. This new column is then used directly to be shown on the map:
 
 ```javascript
 new gviz.App(containerDiv)
@@ -226,7 +225,7 @@ new gviz.App(containerDiv)
     .addMultiScaleTiledCSVGridLayer(
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
         r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
-        [ new gviz.ShapeColorSizeStyle({ /* style construction */}) ],
+        [ new gviz.ShapeColorSizeStyle({ /* style construction ... */}) ],
         {
             preprocess: c => {
                 //for each cell, compute 2011 -> 2018 change and store it in a new "change" column
