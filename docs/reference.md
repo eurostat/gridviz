@@ -389,9 +389,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotd
 ### JoyPlot Style
 
 [![joyplot style](img/styles/joyplot.png)](https://eurostat.github.io/gridviz/examples/styles/joyplot.html)
-
 [![joyplot style](img/styles/joyplot_full.png)](https://eurostat.github.io/gridviz/examples/styles/joyplot_shading.html)
-
 
 This style shows cell rows in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover.
 
