@@ -255,14 +255,14 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squa
 See [this example with dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html) ([code](../examples/styles/squarecolorwgl_dark.html)).
 
 
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **colorCol** | string |  undefined   | The name of the column used for the color. |
-| **tFun** | function(v,r,s):number | (v, r, s) => v / s.max |  A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling. |
-| **stretching** | {fun:string, alpha:number} | undefined | Necessary information to apply a stretching [0,1] -> [0,1] to the **t** value. Property **fun** is the type of function, among __{"pow", "powRev", "exp", "expRev"}__ - see [stretching section](#stretching) for more information on those functions. This stretching is performed on GPU side (fragment shader). |
-| **colors** | Array.<string> |  Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral)   | The sample of the color ramp. |
-| **color** | function(t):number |  undefined   | Instead of specifying **colors**, this property can be defined. It is a function which returns a color from a **t** value within [0,1]. |
-| **size** | function(r,zf):number |  (r,zf) => r + 0.2 * zf   | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size. |
+| Property       | Type                       | Default                                                                                             | Description                                                                                                                                                                                                                                                                                                        |
+| -------------- | -------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **colorCol**   | string                     | undefined                                                                                           | The name of the column used for the color.                                                                                                                                                                                                                                                                         |
+| **tFun**       | function(v,r,s):number     | (v, r, s) => v / s.max                                                                              | A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling.                                                                              |
+| **stretching** | {fun:string, alpha:number} | undefined                                                                                           | Necessary information to apply a stretching [0,1] -> [0,1] to the **t** value. Property **fun** is the type of function, among __{"pow", "powRev", "exp", "expRev"}__ - see [stretching section](#stretching) for more information on those functions. This stretching is performed on GPU side (fragment shader). |
+| **colors**     | Array.<string>             | Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral) | The sample of the color ramp.                                                                                                                                                                                                                                                                                      |
+| **color**      | function(t):number         | undefined                                                                                           | Instead of specifying **colors**, this property can be defined. It is a function which returns a color from a **t** value within [0,1].                                                                                                                                                                            |
+| **size**       | function(r,zf):number      | (r,zf) => r + 0.2 * zf                                                                              | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size.                                                                                                                                                                   |
 
 
 ### Shape/Color/Size Style
@@ -280,13 +280,13 @@ See [this example with changing size and color](https://eurostat.github.io/gridv
 
 See [this example with random shape, color and size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html) ([code](../examples/styles/shapecolorsize_random.html)).
 
-| Property | Type     | Default | Description  |
-| -------------- | -------- | ------- | -------------- |
-| **colorCol** | string |  undefined   | The name of the column used for the color. |
-| **color** | function(v,r,s):string |  () => "#EA6BAC"   | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. |
-| **sizeCol** | string |  undefined   | The name of the column used for the size. |
-| **size** | function(v,r,s,zf) |  (v,r,s,zf) => r   | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
-| **shape** | function(c):string |  () => "square"   | A function computing the shape of cell **c**. Expected values are within __{"square", "circle", "donut", "none"}__ |
+| Property     | Type                   | Default         | Description                                                                                                                         |
+| ------------ | ---------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **colorCol** | string                 | undefined       | The name of the column used for the color.                                                                                          |
+| **color**    | function(v,r,s):string | () => "#EA6BAC" | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**.                  |
+| **sizeCol**  | string                 | undefined       | The name of the column used for the size.                                                                                           |
+| **size**     | function(v,r,s,zf)     | (v,r,s,zf) => r | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
+| **shape**    | function(c):string     | () => "square"  | A function computing the shape of cell **c**. Expected values are within __{"square", "circle", "donut", "none"}__                  |
 
 
 ### Composition style
@@ -303,16 +303,16 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/comp
 
 See [this example showing population of France by age group](https://eurostat.github.io/gridviz/examples/styles/composition_pop_FR.html) ([code](../examples/styles/composition_pop_FR.html)).
 
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **color** | Object, string -> color | undefined    | The dictionary (string -> color) which give the color of each category. |
-| **type** | function(c):CompositionType |  () => "flag   | A function returning the symbol type of a cell **c**. CompositionType are among __"flag", "piechart", "ring", "segment", "radar", "agepyramid", "halftone"__ |
-| **sizeCol** | string |  undefined   | The name of the column used for the size. |
-| **size** | function(v,r,s,zf) |  (v,r,s,zf) => r   | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom 
-| **stripesOrientation** | function(c,r,zf) | () => 0 | For style types with stripes (flag, segment), a function returning the symbol stripes orientation (0 for horizontal, other for vertical) from the cell **c**, the resolution **r** and zoom factor **zf**. |
-| **offsetAngle** | function(c,r,zf) |  () => 0   | For radar or halftone style, a function returning the offset angle from the cell **c**, the resolution **r** and zoom factor **zf**. |
-| **agePyramidHeight** | function(c,r,zf) |  (c,r,zf) => r   | The function specifying the height of the age pyramid. |
-| **pieChartInternalRadiusFactor** | number | 0 | For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut. 0 for normal pie charts, 0.5 to empty half of the radius. |
+| Property                         | Type                        | Default         | Description                                                                                                                                                                                                |
+| -------------------------------- | --------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **color**                        | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.                                                                                                                                    |
+| **type**                         | function(c):CompositionType | () => "flag     | A function returning the symbol type of a cell **c**. CompositionType are among __"flag", "piechart", "ring", "segment", "radar", "agepyramid", "halftone"__                                               |
+| **sizeCol**                      | string                      | undefined       | The name of the column used for the size.                                                                                                                                                                  |
+| **size**                         | function(v,r,s,zf)          | (v,r,s,zf) => r | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom                                                                                       |
+| **stripesOrientation**           | function(c,r,zf)            | () => 0         | For style types with stripes (flag, segment), a function returning the symbol stripes orientation (0 for horizontal, other for vertical) from the cell **c**, the resolution **r** and zoom factor **zf**. |
+| **offsetAngle**                  | function(c,r,zf)            | () => 0         | For radar or halftone style, a function returning the offset angle from the cell **c**, the resolution **r** and zoom factor **zf**.                                                                       |
+| **agePyramidHeight**             | function(c,r,zf)            | (c,r,zf) => r   | The function specifying the height of the age pyramid.                                                                                                                                                     |
+| **pieChartInternalRadiusFactor** | number                      | 0               | For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut. 0 for normal pie charts, 0.5 to empty half of the radius.                                                  |
 
 ### Segment style
 
@@ -325,15 +325,15 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/segm
 
 See [this example with random segment orientation, color, length and width](https://eurostat.github.io/gridviz/examples/styles/segment_random.html) ([code](../examples/styles/segment_random.html)).
 
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **orientation** | function(c):number |   () => 0  | A function computing the orientation (in degrees) of the segment representing a cell **c**. |
-| **colorCol** | string |  undefined   | The name of the column used for the color. |
-| **color** | function(v,r,s):string |  () => "#EA6BAC"   | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. |
-| **lengthCol** | string |  undefined   | The name of the column used for the segment length. |
-| **length** | function(v,r,s,zf) |  (v,r,s,zf) => r   | A function computing the segment length from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom |
-| **widthCol** | string |  undefined   | The name of the column used for the segment width. |
-| **width** | function(v,r,s,zf) |  (v,r,s,zf) => r   | A function computing the segment width from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom |
+| Property        | Type                   | Default         | Description                                                                                                               |
+| --------------- | ---------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **orientation** | function(c):number     | () => 0         | A function computing the orientation (in degrees) of the segment representing a cell **c**.                               |
+| **colorCol**    | string                 | undefined       | The name of the column used for the color.                                                                                |
+| **color**       | function(v,r,s):string | () => "#EA6BAC" | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**.        |
+| **lengthCol**   | string                 | undefined       | The name of the column used for the segment length.                                                                       |
+| **length**      | function(v,r,s,zf)     | (v,r,s,zf) => r | A function computing the segment length from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom |
+| **widthCol**    | string                 | undefined       | The name of the column used for the segment width.                                                                        |
+| **width**       | function(v,r,s,zf)     | (v,r,s,zf) => r | A function computing the segment width from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom  |
 
 ### Stroke style
 
@@ -346,15 +346,15 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/stro
 
 See [this an example with random color, size, width and shape](https://eurostat.github.io/gridviz/examples/styles/stroke_random.html) ([code](../examples/styles/stroke_random.html)).
 
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **strokeColorCol** | string |  undefined   | The name of the column used for the stroke color. |
-| **strokeColor** | function(v,r,s):string |  () => "#666"   | A function computing the cell stroke color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. |
-| **sizeCol** | string |  undefined   | The name of the column used for the size. |
-| **size** | function(v,r,s,zf) | (v,r,s,zf) => r   | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
-| **strokeWidthCol** | string |  undefined   | The name of the column used for the stroke width. |
-| **strokeWidth** | function(v,r,s,zf) | (v,r,s,zf) => zf   | A function computing the cell stroke width from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
-| **shape** | function(c):string |  () => "square"   | A function computing the shape of cell **c**. Expected values are within __{"square", "circle", "none"}__ |
+| Property           | Type                   | Default          | Description                                                                                                                                 |
+| ------------------ | ---------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **strokeColorCol** | string                 | undefined        | The name of the column used for the stroke color.                                                                                           |
+| **strokeColor**    | function(v,r,s):string | () => "#666"     | A function computing the cell stroke color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**.                   |
+| **sizeCol**        | string                 | undefined        | The name of the column used for the size.                                                                                                   |
+| **size**           | function(v,r,s,zf)     | (v,r,s,zf) => r  | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.         |
+| **strokeWidthCol** | string                 | undefined        | The name of the column used for the stroke width.                                                                                           |
+| **strokeWidth**    | function(v,r,s,zf)     | (v,r,s,zf) => zf | A function computing the cell stroke width from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
+| **shape**          | function(c):string     | () => "square"   | A function computing the shape of cell **c**. Expected values are within __{"square", "circle", "none"}__                                   |
 
 ### Side style
 
@@ -364,9 +364,9 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/side
 
 Documentation coming soon.
 
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **.** |  |     |  |
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
+| **.**    |      |         |             |
 
 
 
@@ -378,9 +378,9 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotd
 
 Documentation coming soon.
 
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **.** |  |     |  |
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
+| **.**    |      |         |             |
 
 
 ### JoyPlot Style
@@ -391,9 +391,9 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyp
 
 Documentation coming soon.
 
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **.** |  |     |  |
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
+| **.**    |      |         |             |
 
 ### Mosaic style
 
@@ -406,13 +406,13 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/mosa
 
 See [this roman style example](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html) ([code](../examples/styles/mosaic_full.html)).
 
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **colorCol** | string |  undefined   | The name of the column used for the color. |
-| **color** | function(v,r,s):string |  () => "#EA6BAC"   | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. |
-| **mosaicFactor** | number |  0.15   | The mosaic factor, within [0,0.5], to control the shape irregularities. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect. |
-| **shadowFactor** | number |  0.2   | The mosaic shadow factor, within [0,0.5]. Set to 0 for no mosaic shadow. Set to 0.5 for strong mosaic shadow. |
-| **shadowColor** | string |   "#555"  | The mosaic shadow color. |
+| Property         | Type                   | Default         | Description                                                                                                                                 |
+| ---------------- | ---------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **colorCol**     | string                 | undefined       | The name of the column used for the color.                                                                                                  |
+| **color**        | function(v,r,s):string | () => "#EA6BAC" | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**.                          |
+| **mosaicFactor** | number                 | 0.15            | The mosaic factor, within [0,0.5], to control the shape irregularities. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect. |
+| **shadowFactor** | number                 | 0.2             | The mosaic shadow factor, within [0,0.5]. Set to 0 for no mosaic shadow. Set to 0.5 for strong mosaic shadow.                               |
+| **shadowColor**  | string                 | "#555"          | The mosaic shadow color.                                                                                                                    |
 
 ### Tanaka style
 
@@ -422,9 +422,9 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/tana
 
 Documentation coming soon.
 
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **.** |  |     |  |
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
+| **.**    |      |         |             |
 
 ### Lego style
 
@@ -434,9 +434,9 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego
 
 Documentation coming soon.
 
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **.** |  |     |  |
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
+| **.**    |      |         |             |
 
 ### Pillars style
 
@@ -446,9 +446,9 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pill
 
 Documentation coming soon.
 
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **.** |  |     |  |
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
+| **.**    |      |         |             |
 
 ### Text style
 
@@ -458,9 +458,9 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text
 
 Documentation coming soon.
 
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **.** |  |     |  |
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
+| **.**    |      |         |             |
 
 ### Kernel smoothing style
 
@@ -470,9 +470,9 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoo
 
 Documentation coming soon.
 
-| Property | Type     | Default | Description  |
-| ----------- | -------- | ------- | ------------ |
-| **.** |  |     |  |
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
+| **.**    |      |         |             |
 
 
 ## Legends
@@ -484,19 +484,21 @@ Documentation coming soon.
 
 Most of the [Gridviz](https://github.com/eurostat/gridviz/) styling rely on a **t** parameter within [0,1] interval, which is then mapped to a visual variable such as color or size. In order to better adjust the variation of this **t** parameter to the input data distribution, some __stretching functions__ can be used. The amplitude of the stretching can be adjusted with a **alpha** parameter.
 
-| Function |  Alpha interval | Description |
-| ----------- | -------- | -------- |
-| **sPow** |  |  |
-| **sPowRev** |  |  |
-| **sExp** |  |  |
-| **sExpRev** |  |  |
-| **sCircularLow** |  |  |
-| **sCircularHigh** |  |  |
+| Function          | Alpha interval | Description           | Inverse function   |
+| ----------------- | -------------- | --------------------- | ------------------ |
+| **sPow**          |                | Polynomial            | **sPowInverse**    |
+| **sPowRev**       |                | Polynomial reverse  | **sPowRevInverse** |
+| **sExp**          |                | Exponential           | **sExpInverse**    |
+| **sExpRev**       |                | Exponential reverse  | **sExpRevInverse** |
+| **sCircularLow**  |                | Circular, low values  | **sCircularHigh**  |
+| **sCircularHigh** |                | Circular, high values | **sCircularLow**   |
 
 For more information on these functions and how they differ, see:
 - [this example](https://eurostat.github.io/gridviz/examples/stretching.html) ([code](../examples/stretching.html)).
 - the [code](../src/js/utils/stretching.js)
 - those [graphs](https://observablehq.com/@jgaffuri/stretching)
+
+
 
 ## Foreground information
 
