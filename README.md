@@ -8,20 +8,20 @@
 
 [![](/docs/img/overviews/ov_accessibility.png)](docs/reference.md#shapecolorsize-style)
 [![](/docs/img/overviews/ov_age_balance.png)](docs/reference.md#shapecolorsize-style)
-[![](/docs/img/overviews/ov_choco.png)](docs/reference.md#side-style)
+[![shadow effect map](/docs/img/overviews/ov_choco.png)](docs/reference.md#side-style)
 [![](/docs/img/overviews/ov_dark.png)](docs/reference.md#square-color-webgl-style)
 [![](/docs/img/overviews/ov_donut.png)](docs/reference.md#shapecolorsize-style)
 [![](/docs/img/overviews/ov_flag.png)](docs/reference.md#composition-style)
 [![](/docs/img/overviews/ov_joyplot.png)](docs/reference.md#joyplot-style)
-[![](/docs/img/overviews/ov_lego.png)](docs/reference.md#lego-style)
-[![](/docs/img/overviews/ov_mosaic.png)](docs/reference.md#mosaic-style)
+[![lego map](/docs/img/overviews/ov_lego.png)](docs/reference.md#lego-style)
+[![mosaic map](/docs/img/overviews/ov_mosaic.png)](docs/reference.md#mosaic-style)
 [![](/docs/img/overviews/ov_piechart.png)](docs/reference.md#composition-style)
 [![](/docs/img/overviews/ov_pillar.png)](docs/reference.md#pillars-style)
 [![](/docs/img/overviews/ov_popchange.png)](docs/reference.md#shapecolorsize-style)
 [![](/docs/img/overviews/ov_ring.png)](docs/reference.md#composition-style)
 [![](/docs/img/overviews/ov_segment.png)](docs/reference.md#segment-style)
-[![](/docs/img/overviews/ov_tanaka.png)](docs/reference.md#tanaka-style)
-[![](/docs/img/overviews/ov_dotdensity.png)](docs/reference.md#dot-density-style)
+[![tanaka style map](/docs/img/overviews/ov_tanaka.png)](docs/reference.md#tanaka-style)
+[![dot density map](/docs/img/overviews/ov_dotdensity.png)](docs/reference.md#dot-density-style)
 
 ## Examples
 
