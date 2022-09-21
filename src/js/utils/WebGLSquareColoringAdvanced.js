@@ -76,10 +76,10 @@ export class WebGLSquareColoringAdvanced {
                 //sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t);
                 fshString += `float t = 1.0 - (1.0 / alpha) * log(exp(alpha) * (1.0 - vt) + vt);`
             else if (stretching.fun == "circleLow")
-                //sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t);
+            //TODO
                 fshString += `float t = vt;`
             else if (stretching.fun == "circleHigh")
-                //sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t);
+            //TODO
                 fshString += `float t = vt;`
             else {
                 console.error("Unexpected stretching function code: " + stretching.fun)
