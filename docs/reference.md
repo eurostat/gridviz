@@ -376,12 +376,13 @@ This style displays each cell as randomly located points, with changeable densit
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html) ([code](../examples/styles/dotdensity.html)).
 
-Documentation coming soon.
-
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
-| **.**    |      |         |             |
-
+| **nbCol**  | string       | undefined       | The name of the column used for the dot number.              |
+| **nb**     | function(v,r,s,zf)     | (v, r, s, zf) => 0.3 * r * r / (zf * zf) * v / s.max | A function computing the number of dots for a cell, from its __nbCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
+| **color**    |   function(c):string   |    () => "#FF5733"     |   A function returning the color of the dots of a cell. Note that it is the same color for all dots within a cell.      |
+| **dotSize**    |  function(r,zf):number    |   (r,zf) => 2 * zf      |   A function computing the dot size from the resolution **r** and zoom factor **zf**. It is the same size for all dots.    |
+| **sigma**    |   function(r,zf):number   |         |   A function computing the sigma parameter of the dispertion (gaussian) of the dots around the cell centre, from from the resolution **r** and zoom factor **zf**. It is the same sigma for all dots.     |
 
 ### JoyPlot Style
 

@@ -26,19 +26,19 @@ export class DotDensityStyle extends Style {
 
         /** A function returning the number of dots for a cell value.
         * @type {function(number,number,Stat,number):number} */
-         this.nb = opts.nb || ((v, r, s, zf) => 0.3 * r * r / (zf * zf) * v / s.max)
+        this.nb = opts.nb || ((v, r, s, zf) => 0.3 * r * r / (zf * zf) * v / s.max)
 
         /** The color of the dots. Same color for all dots within a cell.
         * @type {function(Cell):string} */
-         this.color = opts.color || (() => "#FF5733");
+        this.color = opts.color || (() => "#FF5733");
 
         /** A function returning the size of the dots, in geo unit.
         * @type {function(number,number):number} */
         this.dotSize = opts.dotSize //|| ((r, zf) => ...
 
         /** A function returning the sigma of the distribution from the resolution, in geo unit.
-        * @type {function(number):number} */
-        this.sigma = opts.sigma //|| ((r) => ...
+        * @type {function(number,number):number} */
+        this.sigma = opts.sigma //|| ((r,zf) => ...
     }
 
 
@@ -63,7 +63,7 @@ export class DotDensityStyle extends Style {
         const sGeo = this.dotSize ? this.dotSize(r, zf) : 2 * zf
 
         //make random function
-        const sig = this.sigma ? this.sigma(r) : r * 0.4
+        const sig = this.sigma ? this.sigma(r, zf) : r * 0.4
         const rand = randomNormal(0, sig);
 
         if (monitor) monitorDuration(" preparation")
