@@ -197,7 +197,7 @@
             dot: {
                 style: [new gviz.DotDensityStyle({
                     col: "Ind",
-                    nb: (v, r, s, zf) => 1.0 * r * r / (zf * zf) * gviz.sPow(v / s.max, 0.4),
+                    nbCol: (v, r, s, zf) => 1.0 * r * r / (zf * zf) * gviz.sPow(v / s.max, 0.4),
                     dotSize: (r, zf) => 1.2 * zf,
                     color: () => "#FF5733"
                 })], pixNb: 7

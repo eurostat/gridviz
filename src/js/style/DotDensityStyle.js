@@ -20,17 +20,17 @@ export class DotDensityStyle extends Style {
         super(opts)
         opts = opts || {};
 
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for dot density.
+        /** The name of the column/attribute of the tabular data where to retrieve the variable for dot number.
          * @type {string} */
-        this.col = opts.col;
+        this.nbCol = opts.nbCol;
 
         /** A function returning the number of dots for a cell value.
         * @type {function(number,number,Stat,number):number} */
-        this.nb = opts.nb || ((v, r, s, zf) => 0.3 * r * r / (zf * zf) * v / s.max)
+         this.nb = opts.nb || ((v, r, s, zf) => 0.3 * r * r / (zf * zf) * v / s.max)
 
-        /** The color of the dots
+        /** The color of the dots. Same color for all dots within a cell.
         * @type {function(Cell):string} */
-        this.color = opts.color || (() => "#FF5733");
+         this.color = opts.color || (() => "#FF5733");
 
         /** A function returning the size of the dots, in geo unit.
         * @type {function(number,number):number} */
@@ -56,7 +56,7 @@ export class DotDensityStyle extends Style {
         const zf = cg.getZf()
 
         let stat
-        if (this.col) stat = Style.getStatistics(cells, c => c[this.col], true)
+        if (this.nbCol) stat = Style.getStatistics(cells, c => c[this.nbCol], true)
         if (!stat) return
 
         //size of the dots
@@ -95,7 +95,7 @@ export class DotDensityStyle extends Style {
                 offset = this.offset(c, r, zf)
 
                 //number of dots
-                nb = this.nb(c[this.col], r, stat, zf)
+                nb = this.nb(c[this.nbCol], r, stat, zf)
 
                 //cell center
                 cx = c.x + offset.dx + r2
@@ -142,7 +142,7 @@ export class DotDensityStyle extends Style {
                 const offset = this.offset(c, r, zf)
 
                 //number of dots
-                const nb = this.nb(c[this.col], r, stat, zf)
+                const nb = this.nb(c[this.nbCol], r, stat, zf)
 
                 //draw random dots
                 const cx = c.x + offset.dx + r / 2,

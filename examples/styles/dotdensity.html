@@ -21,7 +21,7 @@
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
                 [
                     new gviz.DotDensityStyle({
-                        col: "2018",
+                        nbCol: "2018",
                         nb: (v, r, s, zf) => 10 * r * r / (zf * zf) * v / s.max,
                         dotSize: (r, zf) => 1.2 * zf,
                         color: () => "#FF5733"
