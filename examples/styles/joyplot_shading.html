@@ -4,6 +4,20 @@
 <head>
     <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
     <title>Gridviz - Joyplot style</title>
+
+    <style>
+        @font-face {
+            font-family: mf;
+            src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/Constantine.woff);
+        }
+
+        html,
+        body,
+        div {
+            font-family: mf;
+        }
+    </style>
+
 </head>
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
@@ -16,6 +30,24 @@
 
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(2000)
+            .setViewFromURL()
+            .setLabelLayer(
+                gviz.getEuronymeLabelLayer("EUR", 50, {
+                    ex: 1.6,
+                    fontFamily: "mf",
+                    exSize: 1.2,
+                    color: () => "black",
+                    haloColor: () => "#ffffff",
+                    haloWidth: () => 3
+                })
+            )
+            .setBoundaryLayer(
+                gviz.getEurostatBoundariesLayer({
+                    scale: "10M",
+                    col: "#00000077",
+                    lineDash: () => []
+                })
+            )
             .addMultiScaleTiledCSVGridLayer(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
