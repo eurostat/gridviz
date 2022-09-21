@@ -482,12 +482,21 @@ Documentation coming soon.
 
 ## Stretching
 
-Documentation coming soon.
+Most of the [Gridviz](https://github.com/eurostat/gridviz/) styling rely on a **t** parameter within [0,1] interval, which is then mapped to a visual variable such as color or size. In order to better adjust the variation of this **t** parameter to the input data distribution, some __stretching functions__ can be used. The amplitude of the stretching can be adjusted with a **alpha** parameter.
 
-See [this example](https://eurostat.github.io/gridviz/examples/stretching.html) ([code](../examples/stretching.html)).
+| Function |  Alpha interval | Description |
+| ----------- | -------- | -------- |
+| **sPow** |  |  |
+| **sPowRev** |  |  |
+| **sExp** |  |  |
+| **sExpRev** |  |  |
+| **sCircularLow** |  |  |
+| **sCircularHigh** |  |  |
 
-See [here](https://observablehq.com/@jgaffuri/stretching)
-
+For more information on these functions and how they differ, see:
+- [this example](https://eurostat.github.io/gridviz/examples/stretching.html) ([code](../examples/stretching.html)).
+- the [code](../src/js/utils/stretching.js)
+- those [graphs](https://observablehq.com/@jgaffuri/stretching)
 
 ## Foreground information
 
