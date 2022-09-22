@@ -22,7 +22,7 @@
                 gviz.TanakaStyle.get(
                     "2018",
                     {
-                        valueStretch: (v, r, s, zf) => gviz.sExp((v - s.min) / (s.max - s.min), -50)
+                        valueStretch: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7)
                     }
                 ),
                 {
