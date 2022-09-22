@@ -1,8 +1,7 @@
-tanaka:
-use SquareColorWGLStyle2 - decompose tFun and stretching
+doc tanaka
 
-doc
-stop using SquareColorWGLStyle2 in lego and tanaka and remove it
+lego: derive from tanaka ?
+stop using SquareColorWGLStyle2 in lego and remove it
 tanaka/lego bug: no shadow for lower level
 
 GSGF
