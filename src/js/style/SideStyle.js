@@ -29,7 +29,7 @@ export class SideStyle extends Style {
         this.value = opts.value || ((v1, v2, r, s, zf) => 1);
 
         /** A function returning the color of a cell side.
-        * @type {function(Side,number,Stat|undefined):string} */
+        * @type {function(Side,number,Stat|undefined,number):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
         /** A function returning the width of a cell side, in geo unit
@@ -38,7 +38,7 @@ export class SideStyle extends Style {
 
         /** orientation. Set to 90 to show sides as slope lines for example.
         * @type {number} */
-        this.orientation = opts.orientation
+        this.orientation = opts.orientation || 0
 
         /** A fill color for the cells.
         * @type {function(Cell):string} */
@@ -133,7 +133,7 @@ export class SideStyle extends Style {
 
             //color
             /** @type {string|undefined} */
-            const col = this.color ? this.color(s, r, statSides) : undefined
+            const col = this.color ? this.color(s, r, statSides, zf) : undefined
             if (!col || col == "none") continue
 
             //width

@@ -351,7 +351,7 @@ See [this an example with random color, size, width and shape](https://eurostat.
 
 | Property           | Type                   | Default          | Description                                                                                                                                 |
 | ------------------ | ---------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| **strokeColorCol** | string                 | undefined        | The name of the column used for the stroke color.                                                                                           |
+| **strokeColorCol** | string                 | undefined        | The name of the column used for the stroke color.        |
 | **strokeColor**    | function(v,r,s):string | () => "#666"     | A function computing the cell stroke color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**.                   |
 | **sizeCol**        | string                 | undefined        | The name of the column used for the size.                                                                                                   |
 | **size**           | function(v,r,s,zf):number     | (v,r,s,zf) => r  | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.         |
@@ -371,9 +371,12 @@ Documentation coming soon.
 
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
-| **.**    |      |         |             |
-
-
+| **valueCol** | string | undefined | The name of the column used to retrieve the cell values. |
+| **value** | function(v1|undefined,v2|undefined,r,s,zf):number | (v1, v2, r, s, zf) => 1 | A function computing the value of a cell side. This value is computed from the two adjacent cell values **v1** and **v2**. For horizontal sides, **v1** is the value of the cell below and **v2** the value of the cell above. For vertical sides, **v1** is the value of the left cell and **v2** the value of the right cell. |
+| **color** | function(side,r,s,zf):string | () => "#EA6BAC" |  A function returning the color of a cell side **side** from the resolution **r**, statistics **s** and zoom factor **zf**. A side is represented as an object __{x:number,y:number,or:"v"|"h",value:number}__. |
+| **width** | function(side,r,s,zf):number | (side, r, s, z) => r * side.value / 5 | A function returning the width of a cell side **side**, in geo unit, from the resolution **r**, statistics **s** and zoom factor **zf**. A side is represented as an object __{x:number,y:number,or:"v"|"h",value:number}__. |
+| **orientation** | number | 0 | Orientation of the sides. Set to 90 to show sides as slope lines for example. |
+| **fillColor** | function(c):string | undefined | A function returning a fill color for a cell **c**. |
 
 ### Dot density style
 
