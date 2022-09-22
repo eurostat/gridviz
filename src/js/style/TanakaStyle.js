@@ -26,8 +26,6 @@ export class TanakaStyle {
         //the colors
         opts.colors = opts.colors || ["#a9bb9e", "#c9dcaa", "#f0f1af", "#fde89f", "#f9a579", "#eb444b"]
 
-        //for fixed classification
-        opts.breaks = opts.breaks
         //for dynamic classification
         opts.valueStretch = opts.valueStretch
 
@@ -39,26 +37,14 @@ export class TanakaStyle {
         opts.widthFactor = opts.widthFactor || 0.1
 
         /**
-         * @param {number} v A cell value (within [0,1] for a dynamic classification).
+         * @param {number} t A cell t value, within [0,1].
          * @returns the class number of the value
          */
-        const getClass = (v) => {
-
-            //fixed classification
-            if (opts.breaks) {
-                for (let i = 0; i < opts.breaks.length; i++)
-                    if (v < opts.breaks[i]) return i
-                return opts.breaks.length
-
-            //dynamic classification
-            } else if (opts.valueStretch) {
-                const t = v //within [0,1] !
-                const nb = opts.colors.length
-                for (let i = 0; i < nb - 1; i++)
-                    if (t <= (i + 1) / nb) return i
-                return nb - 1
-            }
-            return NaN
+        const getClass = (t) => {
+            const nb = opts.colors.length
+            for (let i = 0; i < nb - 1; i++)
+                if (t <= (i + 1) / nb) return i
+            return nb - 1
         }
 
         /** The color style */
