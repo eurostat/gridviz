@@ -381,6 +381,8 @@ This style displays each cell as randomly located points, with changeable densit
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html) ([code](../examples/styles/dotdensity.html)).
 
+See [this example with random colors](https://eurostat.github.io/gridviz/examples/styles/dotdensity_random.html) ([code](../examples/styles/dotdensity_random.html)).
+
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
 | **nbCol**  | string       | undefined       | The name of the column used for the dot number.              |
