@@ -113,11 +113,8 @@ export class SideStyle extends Style {
         //compute stats on sides
         const statSides = SideStyle.getSideStatistics(sides, true)
 
-        //draw sides
-
         //draw in geo coordinates
         cg.setCanvasTransform()
-
 
         //draw cells, if fillColor specified
         if (this.fillColor)
@@ -129,6 +126,7 @@ export class SideStyle extends Style {
             }
 
 
+        //draw sides
         cg.ctx.lineCap = "butt";
         const r2 = r / 2
         for (let s of sides) {
@@ -136,12 +134,12 @@ export class SideStyle extends Style {
             //color
             /** @type {string|undefined} */
             const col = this.color ? this.color(s, r, statSides) : undefined
-            if (!col) continue
+            if (!col || col == "none") continue
 
             //width
             /** @type {number|undefined} */
             const wG = this.width ? this.width(s, r, statSides, zf) : undefined
-            if (!wG || wG < 0) continue
+            if (!wG || wG <= 0) continue
 
             //set color and width
             cg.ctx.strokeStyle = col

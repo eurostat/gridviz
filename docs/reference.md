@@ -361,7 +361,7 @@ See [this an example with random color, size, width and shape](https://eurostat.
 
 ### Side style
 
-This style extract the sides of the cells and show each of them depending on the values of the 2 cells around.
+This style displays the sides of the cells as segments with different colors and width, on the values of the 2 adjacent cells. It is a bit special because it does not display the cells, but their sides. This style can be used to show discontinuities between cell values with, for example, some shadow effect.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](../examples/styles/side.html)).
 
