@@ -52,6 +52,7 @@ export class TanakaStyle {
             //the color corresponding to the class
             color: (v, r, s, zf) => {
                 const t = opts.tFun(v, r, s, zf);
+                if(t==undefined || isNaN(t)) throw new Error("Unexpected value: " + v + " - " + t);
                 const ci = getClass(t < 0 ? 0 : (t > 1) ? 1 : t);
                 return opts.colors[ci]
             },
@@ -87,15 +88,19 @@ export class TanakaStyle {
                     return 0
                 else if (v2 === undefined) {
                     const t = opts.tFun(v1, r, s, zf)
+                    if(t==undefined || isNaN(t)) throw new Error("Unexpected value: " + v1 + " - " + t);
                     const c = getClass(t)
                     return c + 1
                 } else if (v1 === undefined) {
                     const t = opts.tFun(v2, r, s, zf)
+                    if(t==undefined || isNaN(t)) throw new Error("Unexpected value: " + v2 + " - " + t);
                     const c = getClass(t)
                     return -c - 1
                 }
                 const t1 = opts.tFun(v1, r, s, zf)
+                if(t1==undefined || isNaN(t1)) throw new Error("Unexpected value: " + v1 + " - " + t1);
                 const t2 = opts.tFun(v2, r, s, zf)
+                if(t2==undefined || isNaN(t2)) throw new Error("Unexpected value: " + v2 + " - " + t2);
                 const c1 = getClass(t1)
                 const c2 = getClass(t2)
                 return -c2 + c1;
