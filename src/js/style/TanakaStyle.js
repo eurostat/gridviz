@@ -2,7 +2,7 @@
 
 import { SquareColorWGLStyle2 } from "./SquareColorWGLStyle2"
 import { SideStyle } from "./SideStyle"
-import { Style } from "../Style"
+import { Style, Stat } from "../Style"
 
 /**
  * 
@@ -20,14 +20,12 @@ export class TanakaStyle {
     static get(col, opts) {
         opts = opts || {}
 
-
-        //TODO: define colors + stretch only - to be used in webgl function (possible ?)
-
         //the colors
         opts.colors = opts.colors || ["#a9bb9e", "#c9dcaa", "#f0f1af", "#fde89f", "#f9a579", "#eb444b"]
 
-        //for dynamic classification
-        opts.valueStretch = opts.valueStretch
+        /** A function to compute 't' from the value v
+         * @type {function(number,number,Stat,number):number} */
+        opts.valueStretch = opts.valueStretch || ((v, r, s, zf) => (v - s.min) / (s.max - s.min))
 
         //shadow colors
         opts.colDark = opts.colDark || "#111"
@@ -38,7 +36,7 @@ export class TanakaStyle {
 
         /**
          * @param {number} t A cell t value, within [0,1].
-         * @returns the class number of the value
+         * @returns the class number for the value
          */
         const getClass = (t) => {
             const nb = opts.colors.length
@@ -53,9 +51,10 @@ export class TanakaStyle {
             colorCol: col,
             //the color corresponding to the class
             color: (v, r, s, zf) => {
-                if (v == 0 && opts.valueStretch && isNaN(opts.valueStretch(v, r, s, zf)))
+                const t = opts.valueStretch(v, r, s, zf);
+                if (v == 0 && isNaN())
                     return undefined
-                return opts.colors[getClass(opts.valueStretch ? opts.valueStretch(v, r, s, zf) : v)]
+                return opts.colors[getClass(opts.valueStretch(v, r, s, zf))]
             },
             size: (r, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
         })
