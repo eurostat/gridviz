@@ -9,10 +9,7 @@ Pollock style: https://www.arcgis.com/apps/webappviewer/index.html?id=661d96be9f
 
 JSDOC bug: https://stackoverflow.com/questions/25773222/
 
-check:
-https://www.comeetie.fr/galerie/francepixels2019/#5.7/47/2.3
-https://www.comeetie.fr/galerie/francepixelsbati/#11.36/43.5745/5.3786
-
+dot density composition style
 
 EUR, FR: add missing legend, finalise.
 

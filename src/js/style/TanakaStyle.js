@@ -20,6 +20,9 @@ export class TanakaStyle {
     static get(col, opts) {
         opts = opts || {}
 
+
+        //TODO: define colors + stretch only - to be used in webgl function (possible ?)
+
         //the colors
         opts.colors = opts.colors || ["#a9bb9e", "#c9dcaa", "#f0f1af", "#fde89f", "#f9a579", "#eb444b"]
 
@@ -47,7 +50,7 @@ export class TanakaStyle {
                     if (v < opts.breaks[i]) return i
                 return opts.breaks.length
 
-                //dynamic classification
+            //dynamic classification
             } else if (opts.valueStretch) {
                 const t = v //within [0,1] !
                 const nb = opts.colors.length
@@ -56,7 +59,6 @@ export class TanakaStyle {
                 return nb - 1
             }
             return NaN
-
         }
 
         /** The color style */
