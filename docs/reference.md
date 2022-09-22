@@ -376,6 +376,7 @@ Documentation coming soon.
 ### Dot density style
 
 [![dot density style](img/styles/dotdensity.png)](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html)
+[![dot density style](img/styles/dotdensity_random.png)](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html)
 
 This style displays each cell as randomly located points, with changeable density and color.
 
