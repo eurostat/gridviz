@@ -342,7 +342,9 @@
                 },
                 tanaka: {
                     //TODO adapt to pop change
-                    style: gviz.TanakaStyle.get(getSelectedYear(), { tFun: (v, r, s, zf) => !v || +v <= 0 ? 0 : gviz.sExpRev((+v - s.min) / (s.max - s.min), -7) }),
+                    style: gviz.TanakaStyle.get(getSelectedYear(), {
+                        tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7)
+                    }),
                     pixNb: 5
                 },
                 lego: {

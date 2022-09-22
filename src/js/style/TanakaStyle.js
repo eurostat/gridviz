@@ -1,6 +1,7 @@
 //@ts-check
 
 import { SquareColorWGLStyle2 } from "./SquareColorWGLStyle2"
+import { SquareColorWGLStyle } from "./SquareColorWGLStyle"
 import { SideStyle } from "./SideStyle"
 import { Style, Stat } from "../Style"
 
@@ -40,10 +41,14 @@ export class TanakaStyle {
          * @returns the class number for the value
          */
         const getClass = (t) => {
-            if (isNaN(t) || t == undefined) throw new Error("Unexpected t value 1: " + t);
+            if (isNaN(t) || t == undefined) {
+                console.error("Unexpected t value 1: " + t);
+                return -9
+            }
             for (let i = 0; i < nb; i++)
                 if (t <= (i + 1) / nb) return i
-            throw new Error("Unexpected t value 2: " + t);
+            console.error("Unexpected t value 2: " + t);
+            return -9
         }
 
         /** The color style */
@@ -52,7 +57,10 @@ export class TanakaStyle {
             //the color corresponding to the class
             color: (v, r, s, zf) => {
                 const t = opts.tFun(v, r, s, zf);
-                if (t == undefined || isNaN(t)) throw new Error("Unexpected value: " + v + " - " + t);
+                if (t == undefined || isNaN(t)) {
+                    console.error("Unexpected value: " + v + " - " + t);
+                    return
+                }
                 const ci = getClass(t < 0 ? 0 : (t > 1) ? 1 : t);
                 return opts.colors[ci]
             },
@@ -60,7 +68,13 @@ export class TanakaStyle {
         })
 
 
-
+        const colStyle2 = new SquareColorWGLStyle({
+            colorCol: col,
+            colors: opts.colors,
+            tFun: (v, r, s) => opts.tFun(v, r, s),
+            //stretching: { fun: "expRev", alpha: -7 },
+            size: (r, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
+        })
 
 
         /*
