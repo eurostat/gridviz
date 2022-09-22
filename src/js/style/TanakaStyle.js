@@ -56,7 +56,7 @@ export class TanakaStyle {
             colorCol: col,
             //the color corresponding to the class
             color: (v, r, s, zf) => {
-                const t = opts.tFun(v, r, s, zf);
+                const t = opts.tFun(v, r, s);
                 if (t == undefined || isNaN(t)) {
                     console.error("Unexpected value: " + v + " - " + t);
                     return
@@ -83,9 +83,9 @@ export class TanakaStyle {
                 colorCol: col,
                 //the color corresponding to the class
                 color: (v, r, s, zf) => {
-                    if (v == 0 && opts.tFun && isNaN(opts.tFun(v, r, s, zf)))
+                    if (v == 0 && opts.tFun && isNaN(opts.tFun(v, r, s)))
                         return undefined
-                    return opts.colors[getClass(opts.tFun ? opts.tFun(v, r, s, zf) : v)]
+                    return opts.colors[getClass(opts.tFun ? opts.tFun(v, r, s) : v)]
                 },
                 shape: () => "square",
                 size: (v, r, s, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
@@ -101,19 +101,19 @@ export class TanakaStyle {
                 if (v1 === undefined && v2 === undefined)
                     return 0
                 else if (v2 === undefined) {
-                    const t = opts.tFun(v1, r, s, zf)
+                    const t = opts.tFun(v1, r, s)
                     if (t == undefined || isNaN(t)) throw new Error("Unexpected value: " + v1 + " - " + t);
                     const c = getClass(t)
                     return c + 1
                 } else if (v1 === undefined) {
-                    const t = opts.tFun(v2, r, s, zf)
+                    const t = opts.tFun(v2, r, s)
                     if (t == undefined || isNaN(t)) throw new Error("Unexpected value: " + v2 + " - " + t);
                     const c = getClass(t)
                     return -c - 1
                 }
-                const t1 = opts.tFun(v1, r, s, zf)
+                const t1 = opts.tFun(v1, r, s)
                 if (t1 == undefined || isNaN(t1)) throw new Error("Unexpected value: " + v1 + " - " + t1);
-                const t2 = opts.tFun(v2, r, s, zf)
+                const t2 = opts.tFun(v2, r, s)
                 if (t2 == undefined || isNaN(t2)) throw new Error("Unexpected value: " + v2 + " - " + t2);
                 const c1 = getClass(t1)
                 const c2 = getClass(t2)

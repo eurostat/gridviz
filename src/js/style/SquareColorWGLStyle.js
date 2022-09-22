@@ -78,7 +78,6 @@ export class SquareColorWGLStyle extends Style {
         if (monitor) monitorDuration("   web GL canvas creation")
 
         //add vertice and fragment data
-        let col
         const r2 = resolution / 2
         let c, nb = cells.length
         const verticesBuffer = []
