@@ -22,10 +22,11 @@ export class TanakaStyle {
 
         //the colors
         opts.colors = opts.colors || ["#a9bb9e", "#c9dcaa", "#f0f1af", "#fde89f", "#f9a579", "#eb444b"]
+        const nb = opts.colors.length
 
         /** A function to compute 't' from the value v
          * @type {function(number,number,Stat,number):number} */
-        opts.valueStretch = opts.valueStretch || ((v, r, s, zf) => (v - s.min) / (s.max - s.min))
+        opts.tFun = opts.tFun || ((v, r, s, zf) => (v - s.min) / (s.max - s.min))
 
         //shadow colors
         opts.colDark = opts.colDark || "#111"
@@ -39,22 +40,20 @@ export class TanakaStyle {
          * @returns the class number for the value
          */
         const getClass = (t) => {
-            const nb = opts.colors.length
-            for (let i = 0; i < nb - 1; i++)
+            if (isNaN(t) || t == undefined) throw new Error("Unexpected t value 1: " + t);
+            for (let i = 0; i < nb; i++)
                 if (t <= (i + 1) / nb) return i
-            return nb - 1
+            throw new Error("Unexpected t value 2: " + t);
         }
 
         /** The color style */
-
         const colStyle = new SquareColorWGLStyle2({
             colorCol: col,
             //the color corresponding to the class
             color: (v, r, s, zf) => {
-                const t = opts.valueStretch(v, r, s, zf);
-                if (v == 0 && isNaN())
-                    return undefined
-                return opts.colors[getClass(opts.valueStretch(v, r, s, zf))]
+                const t = opts.tFun(v, r, s, zf);
+                const ci = getClass(t < 0 ? 0 : (t > 1) ? 1 : t);
+                return opts.colors[ci]
             },
             size: (r, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
         })
@@ -79,29 +78,34 @@ export class TanakaStyle {
         const sideStyle = new SideStyle({
             valueCol: col,
             value: (v1, v2, r, s, zf) => {
-                //the number of classes of difference
-
-                //Stretch values, if necessary
-                const v1_ = opts.valueStretch ? opts.valueStretch(v1, r, s, zf) : v1
-                const v2_ = opts.valueStretch ? opts.valueStretch(v2, r, s, zf) : v2
-                //if no v1, no v2
-                if (((!v1_ || isNaN(v1_)) && (!v2_ || isNaN(v2_)))) return 0;
-                //if no v1
-                else if (!v1_ || isNaN(v1_)) return getClass(v2_) //+1
-                //if no v2
-                else if (!v2_ || isNaN(v2_)) return -getClass(v1_) //-1
-                //else, difference between two class numbers
-                return getClass(v2_) - getClass(v1_);
+                //compute the number of classes of difference
+                if (v1 === undefined && v2 === undefined)
+                    return 0
+                else if (v2 === undefined) {
+                    const t = opts.tFun(v1, r, s, zf)
+                    const c = getClass(t)
+                    return c + 1
+                } else if (v1 === undefined) {
+                    const t = opts.tFun(v2, r, s, zf)
+                    const c = getClass(t)
+                    return c + 1
+                }
+                const t1 = opts.tFun(v1, r, s, zf)
+                const t2 = opts.tFun(v2, r, s, zf)
+                const c1 = getClass(t1)
+                const c2 = getClass(t2)
+                return Math.abs(c2 - c1);
             },
             //white or black, depending on orientation and value
             color: (side, r, s, z) => {
                 if (side.value === 0) return
-                if (side.or === "v")
-                    return side.value > 0 ? opts.colBright : opts.colDark
-                return side.value > 0 ? opts.colDark : opts.colBright
+                return "gray"
+                /*if (side.or === "v")
+                    return side.value < 0 ? opts.colBright : opts.colDark
+                return side.value < 0 ? opts.colDark : opts.colBright*/
             },
             //width depends on the value, that is the number of classes of difference
-            width: (side, r, s, z) => opts.widthFactor * r * Math.abs(side.value) * (side.or === "v" ? 0.5 : 1),
+            width: (side, r, s, z) => opts.widthFactor * r * Math.abs(side.value) /** (side.or === "v" ? 0.5 : 1)*/,
         })
 
         return [colStyle, sideStyle]
