@@ -180,12 +180,11 @@
                 })], pixNb: 7
             },
             tanaka: {
-                style: gviz.TanakaStyle.get("Ind", { valueStretch: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2) }),
-                //style: gviz.TanakaStyle.get("Ind", { breaks: [10, 50, 200, 500, 2000] }),
+                style: gviz.TanakaStyle.get("Ind", { tFun: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2) }),
                 pixNb: 7
             },
             lego: {
-                style: gviz.LegoStyle.get("Ind", { valueStretch: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2) }),
+                style: gviz.LegoStyle.get("Ind", { tFun: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2) }),
                 pixNb: 15
             },
             pillar: {

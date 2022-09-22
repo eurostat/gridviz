@@ -68,9 +68,9 @@ export class TanakaStyle {
                 colorCol: col,
                 //the color corresponding to the class
                 color: (v, r, s, zf) => {
-                    if (v == 0 && opts.valueStretch && isNaN(opts.valueStretch(v, r, s, zf)))
+                    if (v == 0 && opts.tFun && isNaN(opts.tFun(v, r, s, zf)))
                         return undefined
-                    return opts.colors[getClass(opts.valueStretch ? opts.valueStretch(v, r, s, zf) : v)]
+                    return opts.colors[getClass(opts.tFun ? opts.tFun(v, r, s, zf) : v)]
                 },
                 shape: () => "square",
                 size: (v, r, s, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible

@@ -37,7 +37,7 @@ export class LegoStyle {
         //for fixed classification
         opts.breaks = opts.breaks
         //for dynamic classification
-        opts.valueStretch = opts.valueStretch
+        opts.tFun = opts.tFun
 
         //shadow colors
         opts.colDark = opts.colDark || "#333"
@@ -59,7 +59,7 @@ export class LegoStyle {
                 return opts.breaks.length
 
                 //dynamic classification
-            } else if (opts.valueStretch) {
+            } else if (opts.tFun) {
                 const t = v //within [0,1] !
                 const nb = opts.colors.length
                 for (let i = 0; i < nb - 1; i++)
@@ -78,9 +78,9 @@ export class LegoStyle {
             colorCol: col,
             //the color corresponding to the class
             color: (v, r, s, zf) => {
-                if (v == 0 && opts.valueStretch && isNaN(opts.valueStretch(v, r, s, zf)))
+                if (v == 0 && opts.tFun && isNaN(opts.tFun(v, r, s, zf)))
                     return undefined
-                return opts.colors[getClass(opts.valueStretch ? opts.valueStretch(v, r, s, zf) : v)]
+                return opts.colors[getClass(opts.tFun ? opts.tFun(v, r, s, zf) : v)]
             },
         })
 
@@ -90,9 +90,9 @@ export class LegoStyle {
             colorCol: col,
             //the color corresponding to the class
             color: (v, r, s, zf) => {
-                if (v == 0 && opts.valueStretch && isNaN(opts.valueStretch(v, r, s, zf)))
+                if (v == 0 && opts.tFun && isNaN(opts.tFun(v, r, s, zf)))
                     return undefined
-                return opts.colors[getClass(opts.valueStretch ? opts.valueStretch(v, r, s, zf) : v)]
+                return opts.colors[getClass(opts.tFun ? opts.tFun(v, r, s, zf) : v)]
             },
             shape: () => "square",
         })
@@ -105,8 +105,8 @@ export class LegoStyle {
                 //the number of classes of difference
 
                 //Stretch values, if necessary
-                const v1_ = opts.valueStretch ? opts.valueStretch(v1, r, s, zf) : v1
-                const v2_ = opts.valueStretch ? opts.valueStretch(v2, r, s, zf) : v2
+                const v1_ = opts.tFun ? opts.tFun(v1, r, s, zf) : v1
+                const v2_ = opts.tFun ? opts.tFun(v2, r, s, zf) : v2
                 //if no v1, no v2
                 if (((!v1_ || isNaN(v1_)) && (!v2_ || isNaN(v2_)))) return 0;
                 //if no v1
