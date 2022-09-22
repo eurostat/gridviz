@@ -180,7 +180,7 @@
                 })], pixNb: 7
             },
             tanaka: {
-                style: gviz.TanakaStyle.get("Ind", { tFun: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2) }),
+                style: gviz.TanakaStyle.get("Ind", { tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7) }),
                 pixNb: 7
             },
             lego: {
