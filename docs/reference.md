@@ -440,7 +440,9 @@ See [this roman style example](https://eurostat.github.io/gridviz/examples/style
 
 ### Tanaka style
 
-This style shows the grid cells in a Tanaka-like style, that is with discrete colors and shadow effect.
+[![tanaka style](img/styles/tanaka.png)](https://eurostat.github.io/gridviz/examples/styles/tanaka.html)
+
+This style shows the grid cells in a Tanaka style, that is with discrete colors and a shadow effect.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](../examples/styles/tanaka.html)).
 
