@@ -1,5 +1,7 @@
 doc tanaka
 
+https://observablehq.com/d/5ae3b3a8eb8d2218
+
 lego: derive from tanaka ?
 stop using SquareColorWGLStyle2 in lego and remove it
 lego bug: no shadow for lower level
