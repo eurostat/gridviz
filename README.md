@@ -17,6 +17,7 @@
 [![mosaic map](/docs/img/overviews/ov_mosaic.png)](docs/reference.md#mosaic-style)
 [![](/docs/img/overviews/ov_piechart.png)](docs/reference.md#composition-style)
 [![](/docs/img/overviews/ov_pillar.png)](docs/reference.md#pillars-style)
+[![dot density map](/docs/img/overviews/ov_dotdensity_random.png)](docs/reference.md#dot-density-style)
 [![](/docs/img/overviews/ov_popchange.png)](docs/reference.md#shapecolorsize-style)
 [![](/docs/img/overviews/ov_ring.png)](docs/reference.md#composition-style)
 [![](/docs/img/overviews/ov_segment.png)](docs/reference.md#segment-style)
