@@ -1,6 +1,5 @@
 //@ts-check
 
-import { SquareColorWGLStyle2 } from "./SquareColorWGLStyle2"
 import { SquareColorWGLStyle } from "./SquareColorWGLStyle"
 import { SideStyle } from "./SideStyle"
 import { Style, Stat } from "../Style"
@@ -22,7 +21,7 @@ export class TanakaStyle {
         opts = opts || {}
 
         //the colors
-        opts.colors = opts.colors || ["#a9bb9e", "#c9dcaa", "#f0f1af", "#fde89f", "#f9a579", "#eb444b"]
+        opts.colors = opts.colors || ["#a9bb9e", "#c9dcaa", "#fde89f", "#f9a579", "#eb444b"]
         const nb = opts.colors.length
 
         /** A function to compute 't' from the value v
@@ -51,27 +50,14 @@ export class TanakaStyle {
             return -9
         }
 
-        /** The color style */
-        const colStyle = new SquareColorWGLStyle2({
-            colorCol: col,
-            //the color corresponding to the class
-            color: (v, r, s, zf) => {
-                const t = opts.tFun(v, r, s);
-                if (t == undefined || isNaN(t)) {
-                    console.error("Unexpected value: " + v + " - " + t);
-                    return
-                }
-                const ci = getClass(t < 0 ? 0 : (t > 1) ? 1 : t);
-                return opts.colors[ci]
-            },
-            size: (r, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
-        })
-
-
-        const colStyle2 = new SquareColorWGLStyle({
+        const colStyle = new SquareColorWGLStyle({
             colorCol: col,
             colors: opts.colors,
-            tFun: (v, r, s) => opts.tFun(v, r, s),
+            tFun: (v, r, s) => {
+                const t = opts.tFun(v, r, s);
+                const c = getClass(t)
+                return c / (nb - 1);
+            },
             //stretching: { fun: "expRev", alpha: -7 },
             size: (r, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
         })
@@ -131,6 +117,6 @@ export class TanakaStyle {
             width: (side, r, s, z) => opts.widthFactor * r * Math.abs(side.value) * (side.or === "v" ? 0.5 : 1),
         })
 
-        return [colStyle2, sideStyle]
+        return [colStyle, sideStyle]
     }
 }

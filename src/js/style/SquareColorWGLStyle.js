@@ -87,7 +87,7 @@ export class SquareColorWGLStyle extends Style {
             const t = this.tFun(c[this.colorCol], resolution, statColor)
             if (t == null || t == undefined) continue
             verticesBuffer.push(c.x + r2, c.y + r2)
-            tBuffer.push(t)
+            tBuffer.push(t > 1 ? 1 : t < 0 ? 0 : t)
         }
 
         if (monitor) monitorDuration("   webgl drawing data preparation")
