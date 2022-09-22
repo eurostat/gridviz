@@ -169,10 +169,13 @@ export class WebGLSquareColoringAdvanced {
             const c = color(colors[i])
             gl.uniform4fv(gl.getUniformLocation(this.program, "c" + i), [+c.r / 255.0, +c.g / 255.0, +c.b / 255.0, +c.opacity]);
         }
+
+        console.log(colors)
     }
 
     /**  */
     draw(verticesBuffer, tBuffer, transfoMat) {
+
         const gl = this.gl
         const program = this.program
 

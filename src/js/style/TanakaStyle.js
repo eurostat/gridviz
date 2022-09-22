@@ -26,8 +26,8 @@ export class TanakaStyle {
         const nb = opts.colors.length
 
         /** A function to compute 't' from the value v
-         * @type {function(number,number,Stat,number):number} */
-        opts.tFun = opts.tFun || ((v, r, s, zf) => (v - s.min) / (s.max - s.min))
+         * @type {function(number,number,Stat):number} */
+        opts.tFun = opts.tFun || ((v, r, s) => (v - s.min) / (s.max - s.min))
 
         //shadow colors
         opts.colDark = opts.colDark || "#111"
@@ -131,6 +131,6 @@ export class TanakaStyle {
             width: (side, r, s, z) => opts.widthFactor * r * Math.abs(side.value) * (side.or === "v" ? 0.5 : 1),
         })
 
-        return [colStyle, sideStyle]
+        return [colStyle2, sideStyle]
     }
 }
