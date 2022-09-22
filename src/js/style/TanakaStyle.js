@@ -58,6 +58,10 @@ export class TanakaStyle {
             size: (r, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
         })
 
+
+
+
+        
         /*
         if no web gl:    
             const colStyle = new ShapeColorSizeStyle({
@@ -88,24 +92,24 @@ export class TanakaStyle {
                 } else if (v1 === undefined) {
                     const t = opts.tFun(v2, r, s, zf)
                     const c = getClass(t)
-                    return c + 1
+                    return -c - 1
                 }
                 const t1 = opts.tFun(v1, r, s, zf)
                 const t2 = opts.tFun(v2, r, s, zf)
                 const c1 = getClass(t1)
                 const c2 = getClass(t2)
-                return Math.abs(c2 - c1);
+                return -c2 + c1;
             },
             //white or black, depending on orientation and value
             color: (side, r, s, z) => {
                 if (side.value === 0) return
-                return "gray"
-                /*if (side.or === "v")
+                //return "gray"
+                if (side.or === "v")
                     return side.value < 0 ? opts.colBright : opts.colDark
-                return side.value < 0 ? opts.colDark : opts.colBright*/
+                return side.value < 0 ? opts.colDark : opts.colBright
             },
             //width depends on the value, that is the number of classes of difference
-            width: (side, r, s, z) => opts.widthFactor * r * Math.abs(side.value) /** (side.or === "v" ? 0.5 : 1)*/,
+            width: (side, r, s, z) => opts.widthFactor * r * Math.abs(side.value) * (side.or === "v" ? 0.5 : 1),
         })
 
         return [colStyle, sideStyle]
