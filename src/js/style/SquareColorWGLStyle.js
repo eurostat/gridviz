@@ -43,7 +43,7 @@ export class SquareColorWGLStyle extends Style {
          * @type {Array.<string>} */
         this.colors = opts.colors || ["rgb(158, 1, 66)", "rgb(248, 142, 83)", "rgb(251, 248, 176)", "rgb(137, 207, 165)", "rgb(94, 79, 162)"].reverse()
         if (opts.color)
-            this.colors = [opts.color(0), opts.color(0.25), opts.color(0.5), opts.color(0.75), opts.color(1)]
+            this.colors = [opts.color(0), opts.color(0.2), opts.color(0.4), opts.color(0.6), opts.color(0.8), opts.color(1)]
 
         /**
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
