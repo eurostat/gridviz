@@ -122,14 +122,14 @@ export class WebGLSquareColoringAdvanced {
                  vec4 cI;
                  vec4 cF;
                  if(t<0.5) { cI=c0; cF=c1; t=t*2.0; }
-                 else { cI=c1; cF=c2; t=(t-0.5)*2.0; }`
+                 else { cI=c1; cF=c2; t=2.0*t-1.0; }`
         else if (colors.length == 4)
             fshString += `
                      vec4 cI;
                      vec4 cF;
                      if(t<1.0/3.0) { cI=c0; cF=c1; t=t*3.0; }
                      else if(t<2.0/3.0) { cI=c1; cF=c2; t=(t-1.0/3.0)*3.0; }
-                     else { cI=c2; cF=c3; t=(t-2.0/3.0)*3.0; }`
+                     else { cI=c2; cF=c3; t=3.0*t-2.0; }`
         else if (colors.length == 5)
             fshString += `
                     vec4 cI;
@@ -137,7 +137,18 @@ export class WebGLSquareColoringAdvanced {
                     if(t<0.25) { cI=c0; cF=c1; t=t*4.0; }
                     else if(t<0.5) { cI=c1; cF=c2; t=(t-0.25)*4.0; }
                     else if(t<0.75) { cI=c2; cF=c3; t=(t-0.5)*4.0; }
-                    else { cI=c3; cF=c4; t=(t-0.75)*4.0; }`
+                    else { cI=c3; cF=c4; t=4.0*t-3.0; }`
+        else if (colors.length > 5) {
+            const nb = colors.length-1
+            const nbs = nb+".0";
+            fshString += `
+                vec4 cI;
+                vec4 cF;
+                if(t<1.0/`+nbs+`) { cI=c0; cF=c1; t=t*`+nbs+`; }
+                else if(t<0.5) { cI=c1; cF=c2; t=(t-0.25)*4.0; }
+                else if(t<0.75) { cI=c2; cF=c3; t=(t-0.5)*4.0; }
+                else { cI=c3; cF=c4; t=`+nbs+`*t-`+nb+`.0; }`
+        }
 
         //one single color
         if (colors.length == 1)
