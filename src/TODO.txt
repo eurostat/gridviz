@@ -1,9 +1,3 @@
-https://observablehq.com/d/5ae3b3a8eb8d2218
-this.tooltip.style("left", (event.pageX + this.xOffset) + "px").style("top", (event.pageY - this.yOffset) + "px")
-            console.log(e.pageX, e.pageY)
-            console.log(e.clientX, e.clientY)
-
-
 tanaka: inlimited number of colors - with proper webgl drawing method, for discrete colors.
 
 lego: derive from tanaka ?
