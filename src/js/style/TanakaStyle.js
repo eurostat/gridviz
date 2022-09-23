@@ -23,14 +23,11 @@ export class TanakaStyle {
 
         //get colors from d3 ramps, if 'nb' is specified
         if (opts.nb != undefined) {
-            if (opts.nb <= 1) {
-                console.error("unexpected number of colors in tanaka (<1): " + opts.nb)
+            if (opts.nb < 2) {
+                console.error("unexpected number of colors in tanaka (<2): " + opts.nb)
                 opts.nb = 2
-            } /*else if (opts.nb > 5) {
-                console.error("unexpected number of colors in tanaka (>5): " + opts.nb)
-                opts.nb = 5
-            }*/
-            opts.color = opts.color || ((t) => interpolateSpectral(1-t))
+            }
+            opts.color = opts.color || ((t) => interpolateSpectral(1 - t))
             opts.colors = []
             for (let i = 0; i < opts.nb; i++)
                 opts.colors.push(opts.color(i / (opts.nb - 1)))
@@ -39,7 +36,7 @@ export class TanakaStyle {
         /**
          * The colors.
          * @type {Array.<string>} */
-         opts.colors = opts.colors || ["#a9bb9e", "#c9dcaa", "#fde89f", "#f9a579", "#eb444b"]
+        opts.colors = opts.colors || ["#a9bb9e", "#c9dcaa", "#fde89f", "#f9a579", "#eb444b"]
         const nb = opts.colors.length
 
 
