@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+    <title>Gridviz - example</title>
+</head>
+
+<body>
+    <h1>Test of HTML inclusion</h1>
+    <div id="viz-container" style="height:200px; width:300px;"></div>
+
+    <script src="../../build/gridviz.js"></script>
+    <script>
+
+        let containerDiv = document.getElementById("viz-container");
+
+        new gviz.App(containerDiv)
+            //set position and zoom
+            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+            //add multi scale tiled CSV layer
+            .addMultiScaleTiledCSVGridLayer(
+                //the resolution values, ordered
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                //the URL, from the resolution
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+                //the styles
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "2018",
+                        tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50)
+                    })
+                ],
+                {
+                    //the maximum pixel size before jumping to a lower resolution
+                    pixNb: 3
+                })
+
+    </script>
+
+</body>
+
+</html>
