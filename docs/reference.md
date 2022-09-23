@@ -258,12 +258,12 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squa
 See [this example with dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html) ([code](../examples/styles/squarecolorwgl_dark.html)).
 
 
-| Property       | Type                       | Default                                                                                             | Description                                                                                                                                                                                                                                                                                                        |
-| -------------- | -------------------------- | ----------------------------- | ------------------------- |
-| **colorCol**   | string                     | undefined         | The name of the column used for the color.                                                                                                                                                                                                                                                                         |
-| **tFun**       | function(v,r,s):number     | (v, r, s) => v / s.max                                                                              | A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling.                                                                              |
-| **stretching** | {fun:string, alpha:number} | undefined                                                                                           | Necessary information to apply a stretching [0,1] -> [0,1] to the **t** value. Property **fun** is the type of function, among __{"pow", "powRev", "exp", "expRev"}__ - see [stretching section](#stretching) for more information on those functions. This stretching is performed on GPU side (fragment shader). |
-| **colors**     | Array.<string>             | Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral) | The sample of the color ramp.                                                                                                                                                                                                                                                                                      |
+| Property       | Type                       | Default         | Description            |
+| -------------- | ----------------- | ------------ | ----------- |
+| **colorCol**   | string                     | undefined         | The name of the column used for the color.       |
+| **tFun**       | function(v,r,s):number     | (v, r, s) => v / s.max          | A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling.              |
+| **stretching** | {fun:string, alpha:number} | undefined       | Necessary information to apply a stretching [0,1] -> [0,1] to the **t** value. Property **fun** is the type of function, among __{"pow", "powRev", "exp", "expRev"}__ - see [stretching section](#stretching) for more information on those functions. This stretching is performed on GPU side (fragment shader). |
+| **colors**   | Array.<string>    | Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral) | The sample of the color ramp.                                                                                                                                                                                                                                                                                      |
 | **color**      | function(t):number         | undefined                                                                                           | Instead of specifying **colors**, this property can be defined. It is a function which returns a color from a **t** value within [0,1].                                                                                                                                                                            |
 | **size**       | function(r,zf):number      | (r,zf) => r + 0.2 * zf                                                                              | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size.                                                                                                                                                                   |
 
@@ -432,7 +432,7 @@ See [this roman style example](https://eurostat.github.io/gridviz/examples/style
 
 | Property         | Type                   | Default         | Description                                                                                                                                 |
 | ---------------- | ---------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| **colorCol**     | string                 | undefined       | The name of the column used for the color.                                                                                                  |
+| **colorCol**     | string                 | undefined       | The name of the column used for the color.                |
 | **color**        | function(v,r,s):string | () => "#EA6BAC" | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**.                          |
 | **mosaicFactor** | number                 | 0.15            | The mosaic factor, within [0,0.5], to control the shape irregularities. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect. |
 | **shadowFactor** | number                 | 0.2             | The mosaic shadow factor, within [0,0.5]. Set to 0 for no mosaic shadow. Set to 0.5 for strong mosaic shadow.                               |
@@ -442,15 +442,21 @@ See [this roman style example](https://eurostat.github.io/gridviz/examples/style
 
 [![tanaka style](img/styles/tanaka.png)](https://eurostat.github.io/gridviz/examples/styles/tanaka.html)
 
-This style shows the grid cells in a Tanaka style, that is with discrete colors and a shadow effect.
+This style shows the grid cells in a [Tanaka style](http://wiki.gis.com/wiki/index.php/Tanaka_contours), that is with discrete colors and a shadow effect.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](../examples/styles/tanaka.html)).
 
-Documentation coming soon.
-
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
-| **.**    |      |         |             |
+| **col**     | string                 | undefined       | The name of the column used for the color.                |
+| **tFun**    | function(v,r,s):number |  (v, r, s) => (v - s.min) / (s.max - s.min) | A function computing the **t** parameter (whithin [0,1]) from the value **v** of __col__ column, the resolution **r** and statistics **s**.   |
+| **colors**    |  Array.<string>   | ["#a9bb9e", "#c9dcaa", "#fde89f", "#f9a579", "#eb444b"]   |  The colors. NB: number limited to **5** currently !    |
+| **color**    |  function(t):string    |   gviz.interpolateSpectral  |  If **colors** is not specified, the color ramp function. |
+| **nb**    |  number  |  undefined  |  If **colors** is not specified, the number of colors. NB: number limited to **5** currently !      |
+| **colDark**    |  string    |  "#111" |  Shadow color: South East side. This should be a dark color.  |
+| **colBright**    |   string   |   "#ddd"  |  Shadow color: North West side. This should be a bright color. |
+| **widthFactor**    |  number    |   0.08   | Size of the shadow, as a portion of the resolution.  |
+
 
 ### Lego style
 

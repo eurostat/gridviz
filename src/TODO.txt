@@ -6,6 +6,7 @@ make full example with dark background and:
  nb: 5,
  color: gviz.interpolateInferno
 
+tanaka: inlimited number of colors - with proper webgl drawing method, for discrete colors.
 
 
 https://observablehq.com/d/5ae3b3a8eb8d2218
