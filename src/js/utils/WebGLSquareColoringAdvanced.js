@@ -113,32 +113,15 @@ export class WebGLSquareColoringAdvanced {
         }
 
         //choose initial and final colors, and adjust t value
-        if (colors.length == 2)
+        if (colors.length == 1)
+            fshString += `
+                 vec4 cI=c0;
+                 vec4 cF=c0;`
+        else if (colors.length == 2)
             fshString += `
                  vec4 cI=c0;
                  vec4 cF=c1;`
-        /*else if (colors.length == 3)
-            fshString += `
-                 vec4 cI;
-                 vec4 cF;
-                 if(t<0.5) { cI=c0; cF=c1; t=t*2.0; }
-                 else { cI=c1; cF=c2; t=2.0*t-1.0; }`
-        else if (colors.length == 4)
-            fshString += `
-                     vec4 cI;
-                     vec4 cF;
-                     if(t<1.0/3.0) { cI=c0; cF=c1; t=t*3.0; }
-                     else if(t<2.0/3.0) { cI=c1; cF=c2; t=(t-1.0/3.0)*3.0; }
-                     else { cI=c2; cF=c3; t=3.0*t-2.0; }`*/
-        /*else if (colors.length == 5)
-            fshString += `
-                    vec4 cI;
-                    vec4 cF;
-                    if(t<0.25) { cI=c0; cF=c1; t=t*4.0; }
-                    else if(t<0.5) { cI=c1; cF=c2; t=(t-0.25)*4.0; }
-                    else if(t<0.75) { cI=c2; cF=c3; t=(t-0.5)*4.0; }
-                    else { cI=c3; cF=c4; t=4.0*t-3.0; }`*/
-        else if (colors.length > 2) {
+        else {
             const nb = colors.length - 1
             const nbs = nb + ".0"
             fshString += `
@@ -154,11 +137,8 @@ export class WebGLSquareColoringAdvanced {
         if (colors.length == 1)
             fshString += `gl_FragColor = vec4(c0[0], c0[1], c0[2], c0[3]);}`
         //set interpolated color, between initial and final one
-        else if (colors.length <= 5 && colors.length > 1)
-            fshString += `gl_FragColor = mix(cI, cF, t);}`
-        //default color
         else
-            fshString += `gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);}`
+            fshString += `gl_FragColor = mix(cI, cF, t);}`
 
         /** @type {WebGLShader} */
         const fShader = createShader(gl, gl.FRAGMENT_SHADER, fshString);
