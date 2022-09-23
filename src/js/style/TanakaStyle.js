@@ -52,7 +52,7 @@ export class TanakaStyle {
         opts.colBright = opts.colBright || "#ddd"
 
         //width of the segment (share of the resolution)
-        opts.widthFactor = opts.widthFactor || 0.1
+        opts.widthFactor = opts.widthFactor || 0.08
 
         /**
          * @param {number} t A cell t value, within [0,1].
