@@ -463,6 +463,8 @@ See [this other example](https://eurostat.github.io/gridviz/examples/styles/tana
 
 ### Lego style
 
+[![lego style](img/styles/lego.png)](https://eurostat.github.io/gridviz/examples/styles/lego.html)
+
 This style shows the grid cells as lego bricks with changeable colors and height.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](../examples/styles/lego.html)).
