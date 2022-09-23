@@ -1,7 +1,5 @@
 //@ts-check
 
-import { SquareColorWGLStyle2 } from "./SquareColorWGLStyle2"
-import { SideStyle } from "./SideStyle"
 import { TanakaStyle } from "./TanakaStyle"
 import { Style } from "../Style"
 

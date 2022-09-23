@@ -27,7 +27,6 @@ export { SideStyle } from "./style/SideStyle"
 export { DotDensityStyle } from "./style/DotDensityStyle"
 export { TanakaStyle } from "./style/TanakaStyle"
 export { LegoStyle } from "./style/LegoStyle"
-export { SquareColorWGLStyle2 } from "./style/SquareColorWGLStyle2"
 export { SquareColorWGLStyle } from "./style/SquareColorWGLStyle"
 export { MosaicStyle } from "./style/MosaicStyle"
 
