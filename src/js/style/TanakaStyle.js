@@ -30,7 +30,7 @@ export class TanakaStyle {
                 console.error("unexpected number of colors in tanaka (>5): " + opts.nb)
                 opts.nb = 5
             }
-            opts.color = opts.color || interpolateSpectral
+            opts.color = opts.color || ((t) => interpolateSpectral(1-t))
             opts.colors = []
             for (let i = 0; i < opts.nb; i++)
                 opts.colors.push(opts.color(i / (opts.nb - 1)))

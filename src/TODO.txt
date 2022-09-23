@@ -1,6 +1,13 @@
 tanaka color: like col wgl
 doc tanaka
 
+tanaka
+make full example with dark background and:
+ nb: 5,
+ color: gviz.interpolateInferno
+
+
+
 https://observablehq.com/d/5ae3b3a8eb8d2218
 
 lego: derive from tanaka ?
