@@ -441,10 +441,13 @@ See [this roman style example](https://eurostat.github.io/gridviz/examples/style
 ### Tanaka style
 
 [![tanaka style](img/styles/tanaka.png)](https://eurostat.github.io/gridviz/examples/styles/tanaka.html)
+[![tanaka style](img/styles/tanaka_full.png)](https://eurostat.github.io/gridviz/examples/styles/tanaka_full.html)
 
 This style shows the grid cells in a [Tanaka style](http://wiki.gis.com/wiki/index.php/Tanaka_contours), that is with discrete colors and a shadow effect.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](../examples/styles/tanaka.html)).
+
+See [this other example](https://eurostat.github.io/gridviz/examples/styles/tanaka_full.html) ([code](../examples/styles/tanaka_full.html)).
 
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
