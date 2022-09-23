@@ -32,7 +32,7 @@ TODO document and improve euronyme
 TODO fix euronym - local names, with accents ?
 
 TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?
-
+https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/chernoff-faces/
 
 
 
