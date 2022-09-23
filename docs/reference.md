@@ -478,6 +478,8 @@ Other properties: See [Tanaka style](#tanaka-style).
 
 ### Pillars style
 
+[![pillars style](img/styles/pillar.png)](https://eurostat.github.io/gridviz/examples/styles/pillar.html)
+
 This style shows the grid cells as 3D pillars, with changeable heigths and colors.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](../examples/styles/pillar.html)).
