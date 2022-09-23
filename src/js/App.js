@@ -179,7 +179,7 @@ export class App {
         /** @param {MouseEvent} e */
         const focusCell = (e) => {
             //compute mouse geo position
-            const mousePositionGeo = { x: this.cg.pixToGeoX(e.clientX), y: this.cg.pixToGeoY(e.clientY) }
+            const mousePositionGeo = { x: this.cg.pixToGeoX(e.pageX), y: this.cg.pixToGeoY(e.pageY) }
             /** @type {{cell:Cell,html:string,resolution:number} | undefined} */
             const focus = this.getCellFocusInfo(mousePositionGeo)
             if (focus) {

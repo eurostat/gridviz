@@ -1,4 +1,6 @@
 https://observablehq.com/d/5ae3b3a8eb8d2218
+this.tooltip.style("left", (event.pageX + this.xOffset) + "px").style("top", (event.pageY - this.yOffset) + "px")
+
 
 tanaka: inlimited number of colors - with proper webgl drawing method, for discrete colors.
 
