@@ -1,5 +1,3 @@
-tanaka: inlimited number of colors - with proper webgl drawing method, for discrete colors.
-
 lego: derive from tanaka ?
 stop using SquareColorWGLStyle2 in lego and remove it
 lego bug: no shadow for lower level
