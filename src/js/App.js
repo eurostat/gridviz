@@ -73,8 +73,20 @@ export class App {
             this.cg.initCanvasTransform()
             this.cg.clear(this.cg.backgroundColor);
 
-            //go through the layers
             const zf = this.getZoomFactor();
+
+            //go through the background layers
+            for (const layer of this.bgLayers) {
+                //check if layer is visible
+                if (!layer.visible) continue;
+                if (zf > layer.maxZoom) continue;
+                if (zf < layer.minZoom) continue;
+
+                //draw layer
+                layer.draw(this.cg)
+            }
+
+            //go through the layers
             for (const layer of this.layers) {
 
                 //check if layer is visible
@@ -136,7 +148,7 @@ export class App {
         };
 
         /** @type {Array.<TMSBackgroundLayer>} */
-         this.bgLayers = [];
+        this.bgLayers = [];
         /** @type {boolean} */
         this.showBgLayers = true
 
