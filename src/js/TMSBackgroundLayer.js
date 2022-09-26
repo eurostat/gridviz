@@ -77,18 +77,28 @@ export class TMSBackgroundLayer {
      */
     draw(cg) {
 
+        const zToRes = (z) => {
+            if (z == 0) return 66145.9656252646
+            if (z == 1) return 26458.386250105836
+            if (z == 2) return 13229.193125052918
+            if (z == 3) return 6614.596562526459
+            if (z == 4) return 2645.8386250105837
+            if (z == 5) return 1322.9193125052918
+            return undefined
+        }
+
         //get image coordinate
-        const z = 3, x = 8, y = 7
+        const z = 4, x = 17, y = 20
 
-        const res = 6614.596562526459;
-        const size = 256 * res / cg.getZf();
+        const res = zToRes(z)
+        const size = 256 * res / cg.getZf()
 
-        //const x0 = -8426600.0, y0 = 1.59685E7;
+        const x0 = -8426600.0, yMax = 1.59685E7
         //const x0 = -1.3581510484347418E7, y0 = -4.696133627367433E7;
-        const x0 = -8426403.9, y0 = -9526565.47;
+        //const x0 = -8426403.908319328, y0 = -9526565.472562958, yMax = 1.5946565472562958E7
 
-        const xGeo = x0 + (x-1) * 256 * res
-        const yGeo = y0 + y * 256 * res
+        const xGeo = x0 + x * 256 * res
+        const yGeo = yMax - y * 256 * res
 
         //cg.setCanvasTransform()
 
@@ -101,7 +111,7 @@ export class TMSBackgroundLayer {
             //load image
             if (!d) {
                 const img = new Image()
-                img.src = this.url + z + "/" + x + "/" + y
+                img.src = this.url + z + "/" + y + "/" + x
                 img.onload = () => {
                     this.put(img, z, x, y)
                     cg.redraw()
