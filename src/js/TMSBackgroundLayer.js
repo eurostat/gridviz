@@ -93,7 +93,7 @@ export class TMSBackgroundLayer {
 
         //get image coordinate
         //TODO adapt to zf !
-        const z = 5 //, x = 17, y = 20
+        const z = 2
 
         const res = zToRes(z)
         const sizeG = nbPix * res
@@ -142,6 +142,7 @@ export class TMSBackgroundLayer {
                 const xGeo = x0 + x * sizeG
                 const yGeo = y0 - y * sizeG
                 cg.ctx.drawImage(img, cg.geoToPixX(xGeo), cg.geoToPixY(yGeo), size, size)
+                //cg.ctx.drawImage(img, xGeo, yGeo, sizeG, -sizeG)
             }
         }
 
