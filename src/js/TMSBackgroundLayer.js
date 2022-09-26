@@ -83,10 +83,14 @@ export class TMSBackgroundLayer {
         const res = 6614.596562526459;
         const size = 256 * res / cg.getZf();
 
-        console.log(size)
+        //const x0 = -8426600.0, y0 = 1.59685E7;
+        //const x0 = -1.3581510484347418E7, y0 = -4.696133627367433E7;
+        const x0 = -8426403.9, y0 = -9526565.47;
 
-        console.log(cg.extGeo)
+        const xGeo = x0 + (x-1) * 256 * res
+        const yGeo = y0 + y * 256 * res
 
+        //cg.setCanvasTransform()
 
         //handle images
         for (let i = 0; i < 1; i++) {
@@ -106,7 +110,7 @@ export class TMSBackgroundLayer {
             }
 
             //draw image
-            cg.ctx.drawImage(d, 0, 0, size, size)
+            cg.ctx.drawImage(d, cg.geoToPixX(xGeo), cg.geoToPixY(yGeo), size, size)
         }
 
         /*
