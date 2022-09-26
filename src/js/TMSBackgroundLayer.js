@@ -92,6 +92,7 @@ export class TMSBackgroundLayer {
 
 
         //get image coordinate
+        //TODO adapt to zf !
         const z = 5 //, x = 17, y = 20
 
         const res = zToRes(z)
@@ -108,6 +109,7 @@ export class TMSBackgroundLayer {
         const yMax = yGeoToTMS(cg.extGeo.yMin)
         const yMin = yGeoToTMS(cg.extGeo.yMax) - 1
 
+        //TODO use !
         //cg.setCanvasTransform()
 
         //handle images
