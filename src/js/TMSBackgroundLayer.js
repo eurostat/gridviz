@@ -93,12 +93,12 @@ export class TMSBackgroundLayer {
         }
 
         const zfToZ = (zf) => {
-            let z = 5000 / zf;
-            z = Math.ceil(z)
+            let z = 3000 / zf;
+            z = Math.floor(z)
             z = Math.max(0, z)
             z = Math.min(5, z)
             console.log(z)
-            return 2
+            return z
         }
 
         //TODO adapt to zf !
