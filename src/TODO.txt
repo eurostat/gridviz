@@ -1,9 +1,32 @@
+stats: elevation
+
 pillar: random example
 
 GSGF
 
-stats: elevation
-map background
+map background - https://webgate.ec.europa.eu/inspireec/rest/services/Basemaps
+https://webgate.ec.europa.eu/inspireec/rest/services/Basemaps/Gray_Earth_3035/MapServer
+https://webgate.ec.europa.eu/inspireec/arcgis/rest/services/Basemaps/Gray_Earth_3035/MapServer/tile/3/8/7
+
+https://webgate.ec.europa.eu/inspireec/rest/services/Basemaps/Blue_marble_3035/MapServer
+
+background map:
+1. check exstence of shaded DTM in 3035
+2. as TMS, for small scales
+https://gisco-services.ec.europa.eu/maps/tiles/OSMCartoV4Composite/EPSG3035/10/100/95.png
+https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/10/100/95.png
+https://gisco-services.ec.europa.eu/maps/tiles/NaturalEarth/EPSG3035/10/100/95.png
+https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/8/22/23.png
+https://gisco-services.ec.europa.eu/maps/tiles/NaturalEarth/EPSG3035/8/22/23.png
+https://gisco-services.ec.europa.eu/maps/tms/1.0.0/{theme}/EPSG(4326|3857|3035)/{z}/{x}/{y}.png
+The bounding box for the ETRS:3035 is (0.0, 0.0, 8000000.0, 6000000.0)
+https://gisco-services.ec.europa.eu/maps/wmts/1.0.0/WMTSCapabilities.xml
+https://gisco-services.ec.europa.eu/osm/index.3035.html
+view-source:https://gisco-services.ec.europa.eu/osm/index.3035.html
+
+
+
+
 
 Pollock style: https://www.arcgis.com/apps/webappviewer/index.html?id=661d96be9fe64b3db4124546b67b2f39
 + others
@@ -46,21 +69,6 @@ npm run docs
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 consider other formats: arrow, HDF5, ORC, protobuffer
-
-background map:
-1. check exstence of shaded DTM in 3035
-2. as TMS, for small scales
-https://webgate.ec.europa.eu/inspireec/arcgis/rest/services/Basemaps/Gray_Earth_3035/MapServer/tile/3/8/7
-https://gisco-services.ec.europa.eu/maps/tiles/OSMCartoV4Composite/EPSG3035/10/100/95.png
-https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/10/100/95.png
-https://gisco-services.ec.europa.eu/maps/tiles/NaturalEarth/EPSG3035/10/100/95.png
-https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/8/22/23.png
-https://gisco-services.ec.europa.eu/maps/tiles/NaturalEarth/EPSG3035/8/22/23.png
-https://gisco-services.ec.europa.eu/maps/tms/1.0.0/{theme}/EPSG(4326|3857|3035)/{z}/{x}/{y}.png
-The bounding box for the ETRS:3035 is (0.0, 0.0, 8000000.0, 6000000.0)
-https://gisco-services.ec.europa.eu/maps/wmts/1.0.0/WMTSCapabilities.xml
-https://gisco-services.ec.europa.eu/osm/index.3035.html
-view-source:https://gisco-services.ec.europa.eu/osm/index.3035.html
 
 https://observablehq.com/@bmschmidt/arxiv
 https://github.com/CreatingData/deepscatter
