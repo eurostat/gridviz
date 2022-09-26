@@ -35,9 +35,40 @@ export class TMSBackgroundLayer {
         if (this.minZoom >= this.maxZoom)
             throw new Error("Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.")
 
-        this.img = undefined
+        /** The data cache, indexed by z/y/x */
+        this.cache = {}
     }
 
+    /**
+     * Get z/x/y cache data.
+     * @param {number} z 
+     * @param {number} x 
+     * @param {number} y 
+     * @returns {Image|undefined}
+     * @private
+     */
+    get(z, x, y) {
+        let d = this.cache[z];
+        if (!d) return;
+        d = d[x];
+        if (!d) return;
+        return d[y];
+    }
+
+    /**
+     * Get z/x/y cache data.
+     * @param {d|string} z 
+     * @param {number} z 
+     * @param {number} x 
+     * @param {number} y 
+     * @returns
+     * @private
+     */
+    put(d, z, x, y) {
+        if (!this.cache[z]) this.cache[z] = {}
+        if (!this.cache[z][x]) this.cache[z][x] = {}
+        this.cache[z][x][y] = d
+    }
 
     /**
      * @param {GeoCanvas} cg The canvas where to draw the layer.
@@ -45,14 +76,9 @@ export class TMSBackgroundLayer {
      */
     draw(cg) {
 
-        const url = this.url + "3/8/7";
-        console.log(url)
-
-        //TODO
-
-        if(!this.img) {
+        if (!this.img) {
             this.img = new Image()
-            this.img.src = url
+            this.img.src = this.url + "3/8/7"
             this.img.onload = function () {
                 cg.redraw()
             }
@@ -61,6 +87,7 @@ export class TMSBackgroundLayer {
 
         cg.ctx.drawImage(this.img, 100, 100)
 
+        ///Z/X/Y.png
 
         /*
         async function drawImage(url, ctx) {
