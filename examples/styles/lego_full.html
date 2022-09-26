@@ -8,7 +8,7 @@
     <style>
         @font-face {
             font-family: mfLego;
-            src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/MilkyCoffee.woff);
+            src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/DeamusNormal.woff);
         }
     </style>
 
@@ -24,6 +24,18 @@
 
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(2000)
+
+            .setLabelLayer(
+                gviz.getEuronymeLabelLayer("EUR", 50, {
+                    ex: 2,
+                    fontFamily: "mfLego",
+                    exSize: 2,
+                    //color: () => gviz.schemeCategory10[Math.floor(10 * Math.random())],
+                    //haloColor: () => "#ffffff",
+                    //haloWidth: () => 3
+                })
+            )
+
             .addMultiScaleTiledCSVGridLayer(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",

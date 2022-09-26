@@ -1,5 +1,7 @@
 pillar: random example
 
+elevation
+
 GSGF
 
 Pollock style: https://www.arcgis.com/apps/webappviewer/index.html?id=661d96be9fe64b3db4124546b67b2f39
