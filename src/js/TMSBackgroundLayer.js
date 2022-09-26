@@ -1,5 +1,6 @@
 //@ts-check
 
+import { PUREISH_TYPES } from "@babel/types";
 import { GeoCanvas } from "./GeoCanvas";
 
 /**
@@ -44,7 +45,7 @@ export class TMSBackgroundLayer {
      * @param {number} z 
      * @param {number} x 
      * @param {number} y 
-     * @returns {Image|undefined}
+     * @returns {HTMLImageElement|undefined}
      * @private
      */
     get(z, x, y) {
@@ -57,17 +58,17 @@ export class TMSBackgroundLayer {
 
     /**
      * Get z/x/y cache data.
-     * @param {d|string} z 
+     * @param {HTMLImageElement} img
      * @param {number} z 
      * @param {number} x 
      * @param {number} y 
      * @returns
      * @private
      */
-    put(d, z, x, y) {
+    put(img, z, x, y) {
         if (!this.cache[z]) this.cache[z] = {}
         if (!this.cache[z][x]) this.cache[z][x] = {}
-        this.cache[z][x][y] = d
+        this.cache[z][x][y] = img
     }
 
     /**
@@ -76,18 +77,37 @@ export class TMSBackgroundLayer {
      */
     draw(cg) {
 
-        if (!this.img) {
-            this.img = new Image()
-            this.img.src = this.url + "3/8/7"
-            this.img.onload = function () {
-                cg.redraw()
+        //get image coordinate
+        const z = 3, x = 8, y = 7
+
+        const res = 6614.596562526459;
+        const size = 256 * res / cg.getZf();
+
+        console.log(size)
+
+        console.log(cg.extGeo)
+
+
+        //handle images
+        for (let i = 0; i < 1; i++) {
+
+            //get image
+            let d = this.get(z, x, y)
+
+            //load image
+            if (!d) {
+                const img = new Image()
+                img.src = this.url + z + "/" + x + "/" + y
+                img.onload = () => {
+                    this.put(img, z, x, y)
+                    cg.redraw()
+                }
+                continue;
             }
-            return;
+
+            //draw image
+            cg.ctx.drawImage(d, 0, 0, size, size)
         }
-
-        cg.ctx.drawImage(this.img, 100, 100)
-
-        ///Z/X/Y.png
 
         /*
         async function drawImage(url, ctx) {
