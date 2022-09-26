@@ -77,6 +77,11 @@ export class TMSBackgroundLayer {
      */
     draw(cg) {
 
+        const zf = cg.getZf()
+
+        const x0 = -8426600.0, y0 = 1.59685E7
+        const nbPix = 256
+
         const zToRes = (z) => {
             if (z == 0) return 66145.9656252646
             if (z == 1) return 26458.386250105836
@@ -87,20 +92,21 @@ export class TMSBackgroundLayer {
             return -1
         }
 
-        const x0 = -8426600.0, y0 = 1.59685E7
-        const nbPix = 256
+        const zfToZ = (zf) => {
+            let z = 5000 / zf;
+            z = Math.ceil(z)
+            z = Math.max(0, z)
+            z = Math.min(5, z)
+            console.log(z)
+            return 2
+        }
 
-
-        //get image coordinate
         //TODO adapt to zf !
-        const z = 2
+        const z = zfToZ(zf)
 
         const res = zToRes(z)
         const sizeG = nbPix * res
-        const size = sizeG / cg.getZf()
-        //const xGeo = x0 + x * nbPix * res
-        //const yGeo = y0 - y * nbPix * res
-
+        const size = sizeG / zf
         const xGeoToTMS = (x) => Math.ceil((x - x0) / sizeG)
         const yGeoToTMS = (y) => Math.ceil(-(y - y0) / sizeG)
 
