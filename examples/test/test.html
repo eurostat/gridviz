@@ -27,12 +27,13 @@
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "2018",
-                        tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50)
+                        tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
+                        color: gviz.interpolateYlOrRd
                     })
                 ],
                 {
                     //the maximum pixel size before jumping to a lower resolution
-                    pixNb: 3
+                    pixNb: 2
                 })
 
 

@@ -82,6 +82,8 @@ export class TMSBackgroundLayer {
         const x0 = -8426600.0, y0 = 1.59685E7
         const nbPix = 256
 
+        const zMax = 5, zMin = 0;
+
         const zToRes = (z) => {
             if (z == 0) return 66145.9656252646
             if (z == 1) return 26458.386250105836
@@ -95,9 +97,8 @@ export class TMSBackgroundLayer {
         const zfToZ = (zf) => {
             let z = 3000 / zf;
             z = Math.floor(z)
-            z = Math.max(0, z)
-            z = Math.min(5, z)
-            console.log(z)
+            z = Math.max(zMin, z)
+            z = Math.min(zMax, z)
             return z
         }
 
