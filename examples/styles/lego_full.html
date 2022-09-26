@@ -8,7 +8,7 @@
     <style>
         @font-face {
             font-family: mfLego;
-            src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/DeamusNormal.woff);
+            src: url(https://raw.githubusercontent.com/eurostat/gridviz/master/assets/font/MicroSix.woff);
         }
     </style>
 
@@ -23,18 +23,28 @@
         let containerDiv = document.getElementById("viz-container");
 
         new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(2000)
+            .setGeoCenter({ x: 4500000, y: 2960000 })
+            .setZoomFactor(1500).setZoomFactorExtent([30, 7000])
+            .setViewFromURL()
 
             .setLabelLayer(
                 gviz.getEuronymeLabelLayer("EUR", 50, {
-                    ex: 2,
+                    ex: 1.6,
                     fontFamily: "mfLego",
-                    exSize: 2,
-                    //color: () => gviz.schemeCategory10[Math.floor(10 * Math.random())],
-                    //haloColor: () => "#ffffff",
-                    //haloWidth: () => 3
+                    exSize: 1,
+                    color: () => "black",
+                    haloColor: () => "white",
+                    haloWidth: () => 2
                 })
             )
+            .setBoundaryLayer(
+                gviz.getEurostatBoundariesLayer({
+                    scale: "10M",
+                    col: "#00000055",
+                    lineDash: () => []
+                })
+            )
+            .setBackgroundColor("#EAECEE")
 
             .addMultiScaleTiledCSVGridLayer(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
