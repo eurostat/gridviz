@@ -79,6 +79,8 @@ export class TMSBackgroundLayer {
 
         const zf = cg.getZf()
 
+
+
         const x0 = -8426600.0, y0 = 1.59685E7
         const nbPix = 256
 
@@ -95,28 +97,29 @@ export class TMSBackgroundLayer {
         }
 
         const zfToZ = (zf) => {
-            let z = 3000 / zf;
+            let z = 5000 / zf;
             z = Math.floor(z)
             z = Math.max(zMin, z)
             z = Math.min(zMax, z)
             return z
         }
 
-        //TODO adapt to zf !
-        const z = zfToZ(zf)
+        const xGeoToTMS = (x) => Math.ceil((x - x0) / sizeG)
+        const yGeoToTMS = (y) => Math.ceil(-(y - y0) / sizeG)
 
+
+
+        const z = zfToZ(zf)
         const res = zToRes(z)
         const sizeG = nbPix * res
         const size = sizeG / zf
-        const xGeoToTMS = (x) => Math.ceil((x - x0) / sizeG)
-        const yGeoToTMS = (y) => Math.ceil(-(y - y0) / sizeG)
 
         const xMin = xGeoToTMS(cg.extGeo.xMin) - 1
         const xMax = xGeoToTMS(cg.extGeo.xMax)
         const yMax = yGeoToTMS(cg.extGeo.yMin)
         const yMin = yGeoToTMS(cg.extGeo.yMax) - 1
 
-        //TODO use !
+        //TODO
         //cg.setCanvasTransform()
 
         //handle images
@@ -137,13 +140,15 @@ export class TMSBackgroundLayer {
                     img.onerror = () => {
                         //case when no images
                         this.put("failed", z, x, y)
-                        console.log("aaa")
                     }
                     continue;
                 }
 
-                //case when no images
-                if (img === "failed") continue;
+                //case when no image
+                if (img === "failed") {
+                    console.log("jdknfgngjgk")
+                    continue;
+                }
 
                 //draw image
                 const xGeo = x0 + x * sizeG
@@ -152,6 +157,9 @@ export class TMSBackgroundLayer {
                 //cg.ctx.drawImage(img, xGeo, yGeo, sizeG, -sizeG)
             }
         }
+
+        cg.ctx.fillStyle = "#fff9"
+        cg.ctx.fillRect(0, 0, cg.w, cg.h)
 
         /*
         async function drawImage(url, ctx) {
