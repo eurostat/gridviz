@@ -15,7 +15,7 @@
 
         const app = new gviz.App(containerDiv)
             //set position and zoom
-            .setGeoCenter({ x: 3426953, y: 2326791 }).setZoomFactor(10000)
+            .setGeoCenter({ x: 3426953, y: 2326791 }).setZoomFactor(1000)
             //.setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(4000)
             //add multi scale tiled CSV layer
             .addMultiScaleTiledCSVGridLayer(
@@ -38,6 +38,7 @@
 
 
         app.bgLayers = [new gviz.TMSBackgroundLayer({ url: "https://webgate.ec.europa.eu/inspireec/arcgis/rest/services/Basemaps/Gray_Earth_3035/MapServer/tile/" })]
+        //app.bgLayers = [new gviz.TMSBackgroundLayer({ url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/" })]
 
     </script>
 

@@ -80,11 +80,15 @@ export class TMSBackgroundLayer {
         const zf = cg.getZf()
 
 
+        const filterColor = "#fffb"
 
         const x0 = -8426600.0, y0 = 1.59685E7
         const nbPix = 256
 
         const zMax = 5, zMin = 0;
+
+        const xyzToURL = (x,y,z) => this.url + z + "/" + y + "/" + x
+        //const xyzToURL = (x,y,z) => this.url + z + "/" + x + "/" + y + ".png"
 
         const zToRes = (z) => {
             if (z == 0) return 66145.9656252646
@@ -97,7 +101,7 @@ export class TMSBackgroundLayer {
         }
 
         const zfToZ = (zf) => {
-            let z = 5000 / zf;
+            let z = 20000 / zf;
             z = Math.floor(z)
             z = Math.max(zMin, z)
             z = Math.min(zMax, z)
@@ -132,22 +136,19 @@ export class TMSBackgroundLayer {
                 //load image
                 if (!img) {
                     const img = new Image()
-                    img.onload = () => {
-                        this.put(img, z, x, y)
-                        cg.redraw()
-                    }
+                    this.put(img, z, x, y)
+                    img.onload = () => cg.redraw
                     img.onerror = () => {
-                        //case when no images
+                        //case when no image
                         this.put("failed", z, x, y)
                     }
-                    img.src = this.url + z + "/" + y + "/" + x
+                    img.src = xyzToURL(x,y,z)
                     continue;
                 }
 
                 //case when no image
-                if (img === "failed") 
+                if (img === "failed")
                     continue;
-                
 
                 //draw image
                 const xGeo = x0 + x * sizeG
@@ -157,21 +158,11 @@ export class TMSBackgroundLayer {
             }
         }
 
-
-        cg.ctx.fillStyle = "#fff9"
-        cg.ctx.fillRect(0, 0, cg.w, cg.h)
-
-        /*
-        async function drawImage(url, ctx) {
-          let img = new Image();
-          await new Promise(r => img.onload=r, img.src=url);
-          ctx.drawImage(img, 0, 0);
+        //draw filter
+        if (filterColor) {
+            cg.ctx.fillStyle = filterColor
+            cg.ctx.fillRect(0, 0, cg.w, cg.h)
         }
-        
-        let ctx = document.querySelector("#myCanvas").getContext("2d");
-        await drawImage("https://example.com/image.png", ctx);
-        */
-
 
     }
 
