@@ -13,7 +13,7 @@
 
         let containerDiv = document.getElementById("viz-container");
 
-        new gviz.App(containerDiv)
+        const app = new gviz.App(containerDiv)
             //set position and zoom
             .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(40)
             //add multi scale tiled CSV layer
@@ -33,6 +33,9 @@
                     //the maximum pixel size before jumping to a lower resolution
                     pixNb: 3
                 })
+
+
+        app.bgLayers = [new gviz.TMSBackgroundLayer({ url: "https://webgate.ec.europa.eu/inspireec/arcgis/rest/services/Basemaps/Gray_Earth_3035/MapServer/tile/" })]
 
     </script>
 
