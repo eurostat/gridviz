@@ -469,6 +469,8 @@ This style shows the grid cells as lego bricks with changeable colors and height
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](../examples/styles/lego.html)).
 
+See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego_full.html) ([code](../examples/styles/lego_full.html)).
+
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
 | **colors**    |  Array(string)   | [ "#00852b", //darker green "#afd246", //light green "#fac80a", //dark yellow "#d67923", //mostard "#bb805a", //brown "#cb4e29", //redish "#b40000", //red "#720012", //dark red ]   |  The colors. |
