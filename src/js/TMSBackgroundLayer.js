@@ -132,7 +132,6 @@ export class TMSBackgroundLayer {
                 //load image
                 if (!img) {
                     const img = new Image()
-                    img.src = this.url + z + "/" + y + "/" + x
                     img.onload = () => {
                         this.put(img, z, x, y)
                         cg.redraw()
@@ -141,14 +140,14 @@ export class TMSBackgroundLayer {
                         //case when no images
                         this.put("failed", z, x, y)
                     }
+                    img.src = this.url + z + "/" + y + "/" + x
                     continue;
                 }
 
                 //case when no image
-                if (img === "failed") {
-                    console.log("jdknfgngjgk")
+                if (img === "failed") 
                     continue;
-                }
+                
 
                 //draw image
                 const xGeo = x0 + x * sizeG
@@ -157,6 +156,7 @@ export class TMSBackgroundLayer {
                 //cg.ctx.drawImage(img, xGeo, yGeo, sizeG, -sizeG)
             }
         }
+
 
         cg.ctx.fillStyle = "#fff9"
         cg.ctx.fillRect(0, 0, cg.w, cg.h)
