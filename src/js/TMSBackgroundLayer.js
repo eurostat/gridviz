@@ -84,43 +84,63 @@ export class TMSBackgroundLayer {
             if (z == 3) return 6614.596562526459
             if (z == 4) return 2645.8386250105837
             if (z == 5) return 1322.9193125052918
-            return undefined
+            return -1
         }
 
+        const x0 = -8426600.0, y0 = 1.59685E7
+        const nbPix = 256
+
+
         //get image coordinate
-        const z = 4, x = 17, y = 20
+        const z = 5 //, x = 17, y = 20
 
         const res = zToRes(z)
-        const size = 256 * res / cg.getZf()
+        const sizeG = nbPix * res
+        const size = sizeG / cg.getZf()
+        //const xGeo = x0 + x * nbPix * res
+        //const yGeo = y0 - y * nbPix * res
 
-        const x0 = -8426600.0, yMax = 1.59685E7
-        //const x0 = -1.3581510484347418E7, y0 = -4.696133627367433E7;
-        //const x0 = -8426403.908319328, y0 = -9526565.472562958, yMax = 1.5946565472562958E7
+        const xGeoToTMS = (x) => Math.ceil((x - x0) / sizeG)
+        const yGeoToTMS = (y) => Math.ceil(-(y - y0) / sizeG)
 
-        const xGeo = x0 + x * 256 * res
-        const yGeo = yMax - y * 256 * res
+        const xMin = xGeoToTMS(cg.extGeo.xMin) - 1
+        const xMax = xGeoToTMS(cg.extGeo.xMax)
+        const yMax = yGeoToTMS(cg.extGeo.yMin)
+        const yMin = yGeoToTMS(cg.extGeo.yMax) - 1
 
         //cg.setCanvasTransform()
 
         //handle images
-        for (let i = 0; i < 1; i++) {
+        for (let x = xMin; x < xMax; x++) {
+            for (let y = yMin; y < yMax; y++) {
 
-            //get image
-            let d = this.get(z, x, y)
+                //get image
+                let img = this.get(z, x, y)
 
-            //load image
-            if (!d) {
-                const img = new Image()
-                img.src = this.url + z + "/" + y + "/" + x
-                img.onload = () => {
-                    this.put(img, z, x, y)
-                    cg.redraw()
+                //load image
+                if (!img) {
+                    const img = new Image()
+                    img.src = this.url + z + "/" + y + "/" + x
+                    img.onload = () => {
+                        this.put(img, z, x, y)
+                        cg.redraw()
+                    }
+                    img.onerror = () => {
+                        //case when no images
+                        this.put("failed", z, x, y)
+                        console.log("aaa")
+                    }
+                    continue;
                 }
-                continue;
-            }
 
-            //draw image
-            cg.ctx.drawImage(d, cg.geoToPixX(xGeo), cg.geoToPixY(yGeo), size, size)
+                //case when no images
+                if (img === "failed") continue;
+
+                //draw image
+                const xGeo = x0 + x * sizeG
+                const yGeo = y0 - y * sizeG
+                cg.ctx.drawImage(img, cg.geoToPixX(xGeo), cg.geoToPixY(yGeo), size, size)
+            }
         }
 
         /*
