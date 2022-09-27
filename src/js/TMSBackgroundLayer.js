@@ -1,6 +1,5 @@
 //@ts-check
 
-import { PUREISH_TYPES } from "@babel/types";
 import { GeoCanvas } from "./GeoCanvas";
 
 /**
@@ -80,7 +79,7 @@ export class TMSBackgroundLayer {
         const zf = cg.getZf()
 
 
-        const filterColor = "#fffb"
+        const filterColor = "#fffd"
 
         const x0 = -8426600.0, y0 = 1.59685E7
         const nbPix = 256
