@@ -14,9 +14,6 @@ export class TMSBackgroundLayer {
     constructor(opts) {
         opts = opts || {};
 
-        /** @type {string} */
-        this.url = opts.url
-
         /** An attribute to specify if a layer should be drawn or not
          * @type {boolean} */
         this.visible = opts.visible == false ? false : true;
@@ -37,6 +34,12 @@ export class TMSBackgroundLayer {
         this.cache = {}
 
 
+
+        /** @type {string} */
+        this.url = opts.url
+
+        /** @type {function(number,number,number):string} */
+        this.urlFun = opts.urlFun || ((x, y, z) => this.url + z + "/" + x + "/" + y + ".png")
 
         /** @type {number} */
         this.nbPix = opts.nbPix || 256
@@ -90,9 +93,6 @@ export class TMSBackgroundLayer {
         const x0 = this.origin[0], y0 = this.origin[1]
         const zMax = 15, zMin = 0;
 
-        //const xyzToURL = (x,y,z) => this.url + z + "/" + y + "/" + x
-        const xyzToURL = (x, y, z) => this.url + z + "/" + x + "/" + y + ".png"
-
         /*const zToRes = (z) => {
             if (z == 0) return 66145.9656252646
             if (z == 1) return 26458.386250105836
@@ -110,15 +110,13 @@ export class TMSBackgroundLayer {
 
         const zfToZ = (zf) => {
             //let z = 50000 / zf;
-            let z = Math.log2(res0/zf);
+            let z = Math.log2(res0 / zf);
             z = Math.floor(z)
             z = Math.max(zMin, z)
             z = Math.min(zMax, z)
             return z
         }
 
-        const xGeoToTMS = (x) => Math.ceil((x - x0) / sizeG)
-        const yGeoToTMS = (y) => Math.ceil(-(y - y0) / sizeG)
 
 
 
@@ -127,6 +125,9 @@ export class TMSBackgroundLayer {
         const sizeG = this.nbPix * res
         const size = sizeG / zf
 
+        //get tile numbers
+        const xGeoToTMS = (x) => Math.ceil((x - x0) / sizeG)
+        const yGeoToTMS = (y) => Math.ceil(-(y - y0) / sizeG)
         const xMin = xGeoToTMS(cg.extGeo.xMin) - 1
         const xMax = xGeoToTMS(cg.extGeo.xMax)
         const yMax = yGeoToTMS(cg.extGeo.yMin)
@@ -151,7 +152,7 @@ export class TMSBackgroundLayer {
                         //case when no image
                         this.put("failed", z, x, y)
                     }
-                    img.src = xyzToURL(x, y, z)
+                    img.src = this.url(x, y, z)
                     continue;
                 }
 
