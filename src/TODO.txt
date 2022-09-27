@@ -1,3 +1,7 @@
+start using background
+make own background - low resolution
+make atlas url parameter for layer selection
+
 stats: elevation + deg urba
 
 pillar: random example
