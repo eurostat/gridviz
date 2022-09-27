@@ -37,6 +37,13 @@ export class TMSBackgroundLayer {
         this.cache = {}
 
 
+
+        /** @type {number} */
+        this.nbPix = opts.nbPix || 256
+
+        /** @type {Array.<number>} */
+        this.origin = opts.origin || [0, 0]
+
         /** @type {string} */
         this.filterColor = opts.filterColor || "#fff0"
 
@@ -82,10 +89,9 @@ export class TMSBackgroundLayer {
         const zf = cg.getZf()
 
         //const x0 = -8426600.0, y0 = 1.59685E7
-        const x0 = 0, yM = 6000000
-        const nbPix = 256
 
-        const zMax = 10, zMin = 0;
+        const x0 = 0, y0 = 6000000
+        const zMax = 6, zMin = 0;
 
         //const xyzToURL = (x,y,z) => this.url + z + "/" + y + "/" + x
         const xyzToURL = (x, y, z) => this.url + z + "/" + x + "/" + y + ".png"
@@ -112,13 +118,13 @@ export class TMSBackgroundLayer {
         }
 
         const xGeoToTMS = (x) => Math.ceil((x - x0) / sizeG)
-        const yGeoToTMS = (y) => Math.ceil(-(y - yM) / sizeG)
+        const yGeoToTMS = (y) => Math.ceil(-(y - y0) / sizeG)
 
 
 
         const z = zfToZ(zf)
         const res = zToRes(z)
-        const sizeG = nbPix * res
+        const sizeG = this.nbPix * res
         const size = sizeG / zf
 
         const xMin = xGeoToTMS(cg.extGeo.xMin) - 1
@@ -154,7 +160,7 @@ export class TMSBackgroundLayer {
 
                 //draw image
                 const xGeo = x0 + x * sizeG
-                const yGeo = yM - y * sizeG
+                const yGeo = y0 - y * sizeG
                 cg.ctx.drawImage(img, cg.geoToPixX(xGeo), cg.geoToPixY(yGeo), size, size)
                 //cg.ctx.drawImage(img, xGeo, yGeo, sizeG, -sizeG)
             }
