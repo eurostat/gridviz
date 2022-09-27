@@ -94,6 +94,11 @@ export class BackgroundLayer {
      */
     draw(cg) {
 
+        if (!this.resolutions || this.resolutions.length == 0) {
+            console.error("No resolutions provided for background layer")
+            return
+        }
+
         const zf = cg.getZf()
         const x0 = this.origin[0], y0 = this.origin[1]
         const zMax = this.zLimits[1], zMin = this.zLimits[0];
@@ -108,12 +113,8 @@ export class BackgroundLayer {
             return -1
         }*/
 
-        if (!this.resolutions || this.resolutions.length == 0) {
-            console.error("No resolutions provided for background layer")
-            return
-        }
 
-
+        /*
 
         const zToRes = (z) => {
             return res0 / Math.pow(2, z)
@@ -126,14 +127,18 @@ export class BackgroundLayer {
             z = Math.max(zMin, z)
             z = Math.min(zMax, z)
             return z
-        }
+        }*/
 
 
+        //get zoom level and resolution
+        let z = 0
+        for (z = 0; z < this.resolutions.length; z++)
+            if (this.resolutions[z] < zf) break
+        z = Math.max(0, z - 1)
+        const res = this.resolutions[z]
+        z += zMin
+        console.log(z)
 
-
-
-        const z = zfToZ(zf)
-        const res = zToRes(z)
         const sizeG = this.nbPix * res
         const size = sizeG / zf
 
