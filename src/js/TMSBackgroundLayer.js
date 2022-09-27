@@ -150,7 +150,7 @@ export class TMSBackgroundLayer {
                         //case when no image
                         this.put("failed", z, x, y)
                     }
-                    img.src = this.url(x, y, z)
+                    img.src = this.urlFun(x, y, z)
                     continue;
                 }
 
