@@ -51,8 +51,8 @@ export class BackgroundLayer {
         /** CRS coordinates of top left corner
          * @type {Array.<number>} */
         this.origin = opts.origin || [0, 0]
-        /** @type {Array.<number>} */
-        this.zLimits = opts.zLimits || [0, 18]
+        /** @type {number} */
+        this.z0 = opts.z0 || 0
 
         /** @type {function(number):string} */
         this.filterColor = opts.filterColor
@@ -103,7 +103,6 @@ export class BackgroundLayer {
         //
         const zf = cg.getZf()
         const x0 = this.origin[0], y0 = this.origin[1]
-        const zMax = this.zLimits[1], zMin = this.zLimits[0];
 
         //get zoom level and resolution
         let z = 0
@@ -112,8 +111,7 @@ export class BackgroundLayer {
         z = Math.max(0, z - 1)
         const res = this.resolutions[z]
 
-        z += zMin
-        z = Math.min(zMax, z)
+        z += this.z0
 
         const sizeG = this.nbPix * res
         const size = sizeG / zf
@@ -135,7 +133,6 @@ export class BackgroundLayer {
 
                 //get image
                 let img = this.get(z, x, y)
-                console.log(img)
 
                 //load image
                 if (!img) {
