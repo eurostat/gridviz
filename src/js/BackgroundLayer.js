@@ -135,6 +135,7 @@ export class BackgroundLayer {
 
                 //get image
                 let img = this.get(z, x, y)
+                console.log(img)
 
                 //load image
                 if (!img) {
