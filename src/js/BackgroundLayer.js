@@ -111,7 +111,7 @@ export class BackgroundLayer {
         z -= 1
         z = Math.max(0, z)
         z = Math.min(z, this.resolutions.length - 1)
-        console.log(this.resolutions.length, z)
+        //console.log(this.resolutions.length, z)
         const res = this.resolutions[z]
 
         z += this.z0
