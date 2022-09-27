@@ -38,7 +38,7 @@ export class TMSBackgroundLayer {
 
 
         /** @type {string} */
-         this.filterColor = opts.filterColor || "#fff0"
+        this.filterColor = opts.filterColor || "#fff0"
 
     }
 
@@ -47,7 +47,7 @@ export class TMSBackgroundLayer {
      * @param {number} z 
      * @param {number} x 
      * @param {number} y 
-     * @returns {HTMLImageElement|undefined}
+     * @returns {HTMLImageElement|string|undefined}
      * @private
      */
     get(z, x, y) {
@@ -60,7 +60,7 @@ export class TMSBackgroundLayer {
 
     /**
      * Get z/x/y cache data.
-     * @param {HTMLImageElement} img
+     * @param {HTMLImageElement|string} img
      * @param {number} z 
      * @param {number} x 
      * @param {number} y 
