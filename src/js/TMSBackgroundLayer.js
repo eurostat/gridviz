@@ -37,13 +37,11 @@ export class TMSBackgroundLayer {
 
         /** @type {string} */
         this.url = opts.url
-
         /** @type {function(number,number,number):string} */
         this.urlFun = opts.urlFun || ((x, y, z) => this.url + z + "/" + x + "/" + y + ".png")
 
         /** @type {number} */
         this.nbPix = opts.nbPix || 256
-
         /** @type {Array.<number>} */
         this.origin = opts.origin || [0, 0]
 

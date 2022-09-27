@@ -38,7 +38,7 @@
 
 
         /*app.bgLayers = [new gviz.TMSBackgroundLayer({
-            url: "https://webgate.ec.europa.eu/inspireec/arcgis/rest/services/Basemaps/Gray_Earth_3035/MapServer/tile/",
+            urlFun : (x,y,z) => "https://webgate.ec.europa.eu/inspireec/arcgis/rest/services/Basemaps/Gray_Earth_3035/MapServer/tile/" + z + "/" + y + "/" + x,
             origin: [-8426600.0, 1.59685E7],
         })]*/
 
