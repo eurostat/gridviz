@@ -109,6 +109,7 @@ export class BackgroundLayer {
         for (z = 0; z < this.resolutions.length; z++)
             if (this.resolutions[z] < zf) break
         z = Math.max(0, z - 1)
+        console.log(z)
         const res = this.resolutions[z]
 
         z += this.z0
