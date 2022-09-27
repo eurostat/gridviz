@@ -78,8 +78,8 @@ export class TMSBackgroundLayer {
 
         const zf = cg.getZf()
 
-
         const filterColor = "#fffd"
+
 
         const x0 = -8426600.0, y0 = 1.59685E7
         const nbPix = 256
@@ -137,17 +137,16 @@ export class TMSBackgroundLayer {
                     const img = new Image()
                     this.put(img, z, x, y)
                     img.onload = () => cg.redraw
-                    img.onerror = () => {
+                    /*img.onerror = () => {
                         //case when no image
                         this.put("failed", z, x, y)
-                    }
+                    }*/
                     img.src = xyzToURL(x,y,z)
                     continue;
                 }
 
                 //case when no image
-                if (img === "failed")
-                    continue;
+                //if (img === "failed") continue;
 
                 //draw image
                 const xGeo = x0 + x * sizeG
