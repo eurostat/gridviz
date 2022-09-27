@@ -99,36 +99,10 @@ export class BackgroundLayer {
             return
         }
 
+        //
         const zf = cg.getZf()
         const x0 = this.origin[0], y0 = this.origin[1]
         const zMax = this.zLimits[1], zMin = this.zLimits[0];
-
-        /*const zToRes = (z) => {
-            if (z == 0) return 66145.9656252646
-            if (z == 1) return 26458.386250105836
-            if (z == 2) return 13229.193125052918
-            if (z == 3) return 6614.596562526459
-            if (z == 4) return 2645.8386250105837
-            if (z == 5) return 1322.9193125052918
-            return -1
-        }*/
-
-
-        /*
-
-        const zToRes = (z) => {
-            return res0 / Math.pow(2, z)
-        }
-
-        const zfToZ = (zf) => {
-            //let z = 50000 / zf;
-            let z = Math.log2(res0 / zf);
-            z = Math.floor(z)
-            z = Math.max(zMin, z)
-            z = Math.min(zMax, z)
-            return z
-        }*/
-
 
         //get zoom level and resolution
         let z = 0
@@ -136,8 +110,9 @@ export class BackgroundLayer {
             if (this.resolutions[z] < zf) break
         z = Math.max(0, z - 1)
         const res = this.resolutions[z]
+
         z += zMin
-        console.log(z)
+        z = Math.min(zMax, z)
 
         const sizeG = this.nbPix * res
         const size = sizeG / zf
