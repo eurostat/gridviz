@@ -31,7 +31,7 @@ export { SquareColorWGLStyle } from "./style/SquareColorWGLStyle"
 export { MosaicStyle } from "./style/MosaicStyle"
 
 //export additional layers
-export { TMSBackgroundLayer } from "./TMSBackgroundLayer"
+export { BackgroundLayer } from "./BackgroundLayer"
 export { LabelLayer } from "./LabelLayer"
 export { LineLayer as BoundaryLayer } from "./LineLayer"
 

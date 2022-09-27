@@ -37,12 +37,12 @@
                 })
 
 
-        /*app.bgLayers = [new gviz.TMSBackgroundLayer({
+        /*app.bgLayers = [new gviz.BackgroundLayer({
             urlFun : (x,y,z) => "https://webgate.ec.europa.eu/inspireec/arcgis/rest/services/Basemaps/Gray_Earth_3035/MapServer/tile/" + z + "/" + y + "/" + x,
             origin: [-8426600.0, 1.59685E7],
         })]*/
 
-        app.bgLayers = [new gviz.TMSBackgroundLayer({
+        app.bgLayers = [new gviz.BackgroundLayer({
             url: "https://gisco-services.ec.europa.eu/maps/tiles/OSMCartoV4Composite/EPSG3035/",
             origin: [0, 6000000],
         })]

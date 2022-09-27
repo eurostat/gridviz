@@ -8,7 +8,7 @@ import { Tooltip } from './Tooltip';
 
 import { CSVGrid } from './dataset/CSVGrid';
 import { TiledGrid } from './dataset/TiledGrid';
-import { TMSBackgroundLayer } from './TMSBackgroundLayer';
+import { BackgroundLayer } from './BackgroundLayer';
 import { LabelLayer } from './LabelLayer';
 import { LineLayer } from './LineLayer';
 
@@ -147,7 +147,7 @@ export class App {
             return this
         };
 
-        /** @type {Array.<TMSBackgroundLayer>} */
+        /** @type {Array.<BackgroundLayer>} */
         this.bgLayers = [];
         /** @type {boolean} */
         this.showBgLayers = true

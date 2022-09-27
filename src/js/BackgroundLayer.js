@@ -6,7 +6,7 @@ import { GeoCanvas } from "./GeoCanvas";
  * 
  * @author Julien Gaffuri
  */
-export class TMSBackgroundLayer {
+export class BackgroundLayer {
 
     /**
      * @param {object} opts 
