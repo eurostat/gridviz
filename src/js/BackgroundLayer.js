@@ -108,8 +108,10 @@ export class BackgroundLayer {
         let z = 0
         for (z = 0; z < this.resolutions.length; z++)
             if (this.resolutions[z] < zf) break
-        z = Math.max(0, z - 1)
-        console.log(z)
+        z -= 1
+        z = Math.max(0, z)
+        z = Math.min(z, this.resolutions.length - 1)
+        console.log(this.resolutions.length, z)
         const res = this.resolutions[z]
 
         z += this.z0
