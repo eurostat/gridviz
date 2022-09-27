@@ -142,6 +142,7 @@ export class BackgroundLayer {
                     img.onerror = () => {
                         //case when no image
                         this.put("failed", z, x, y)
+                        //?
                         cg.redraw()
                     }
                     img.src = this.urlFun(x, y, z)
@@ -159,7 +160,7 @@ export class BackgroundLayer {
             }
         }
 
-        //draw filter
+        //apply filter
         if (this.filterColor) {
             const fc = this.filterColor(zf)
             if (fc && fc != "none") {
