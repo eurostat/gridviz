@@ -45,8 +45,8 @@ export class BackgroundLayer {
         /** @type {Array.<number>} */
         this.origin = opts.origin || [0, 0]
 
-        /** @type {string} */
-        this.filterColor = opts.filterColor || "#fff0"
+        /** @type {function(number):string} */
+        this.filterColor = opts.filterColor || ((zf) => "#fff0")
 
     }
 
