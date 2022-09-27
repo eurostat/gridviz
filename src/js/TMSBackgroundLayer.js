@@ -81,13 +81,14 @@ export class TMSBackgroundLayer {
         const filterColor = "#fffd"
 
 
-        const x0 = -8426600.0, y0 = 1.59685E7
+        //const x0 = -8426600.0, y0 = 1.59685E7
+        const x0 = 0, y0 = 6000000
         const nbPix = 256
 
         const zMax = 5, zMin = 0;
 
-        const xyzToURL = (x,y,z) => this.url + z + "/" + y + "/" + x
-        //const xyzToURL = (x,y,z) => this.url + z + "/" + x + "/" + y + ".png"
+        //const xyzToURL = (x,y,z) => this.url + z + "/" + y + "/" + x
+        const xyzToURL = (x,y,z) => this.url + z + "/" + x + "/" + y + ".png"
 
         const zToRes = (z) => {
             if (z == 0) return 66145.9656252646
@@ -137,16 +138,19 @@ export class TMSBackgroundLayer {
                     const img = new Image()
                     this.put(img, z, x, y)
                     img.onload = () => cg.redraw
-                    /*img.onerror = () => {
+                    img.onerror = () => {
                         //case when no image
                         this.put("failed", z, x, y)
-                    }*/
+                    }
                     img.src = xyzToURL(x,y,z)
                     continue;
                 }
 
                 //case when no image
-                //if (img === "failed") continue;
+                if (img === "failed") continue;
+
+                //console.log(img.state)
+                //console.log(img)
 
                 //draw image
                 const xGeo = x0 + x * sizeG
