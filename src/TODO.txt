@@ -6,7 +6,6 @@ stats: elevation + deg urba
 pillar: random example
 
 map background -
-test zMin
 https://webgate.ec.europa.eu/inspireec/rest/services/Basemaps
 Blue_marble_3035  Gray_Earth_3035  CitiesRoadsRiversLakes_3035  Hypsometric_3035  Natural_Earth_3035
 background map: OSMCartoV4Composite GreyEarth CitiesRoadsRiversLakes Hypsometric BlueMarble NaturalEarth
