@@ -87,11 +87,8 @@ export class TMSBackgroundLayer {
     draw(cg) {
 
         const zf = cg.getZf()
-
-        //const x0 = -8426600.0, y0 = 1.59685E7
-
-        const x0 = 0, y0 = 6000000
-        const zMax = 6, zMin = 0;
+        const x0 = this.origin[0], y0 = this.origin[1]
+        const zMax = 15, zMin = 0;
 
         //const xyzToURL = (x,y,z) => this.url + z + "/" + y + "/" + x
         const xyzToURL = (x, y, z) => this.url + z + "/" + x + "/" + y + ".png"
@@ -105,12 +102,15 @@ export class TMSBackgroundLayer {
             if (z == 5) return 1322.9193125052918
             return -1
         }*/
+
+        const res0 = 156543.03392804097
         const zToRes = (z) => {
-            return 156543.03392804097 / Math.pow(2, z)
+            return res0 / Math.pow(2, z)
         }
 
         const zfToZ = (zf) => {
-            let z = 50000 / zf;
+            //let z = 50000 / zf;
+            let z = Math.log2(res0/zf);
             z = Math.floor(z)
             z = Math.max(zMin, z)
             z = Math.min(zMax, z)

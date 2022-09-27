@@ -37,8 +37,15 @@
                 })
 
 
-        //app.bgLayers = [new gviz.TMSBackgroundLayer({ url: "https://webgate.ec.europa.eu/inspireec/arcgis/rest/services/Basemaps/Gray_Earth_3035/MapServer/tile/" })]
-        app.bgLayers = [new gviz.TMSBackgroundLayer({ url: "https://gisco-services.ec.europa.eu/maps/tiles/OSMCartoV4Composite/EPSG3035/" })]
+        /*app.bgLayers = [new gviz.TMSBackgroundLayer({
+            url: "https://webgate.ec.europa.eu/inspireec/arcgis/rest/services/Basemaps/Gray_Earth_3035/MapServer/tile/",
+            origin: [-8426600.0, 1.59685E7],
+        })]*/
+
+        app.bgLayers = [new gviz.TMSBackgroundLayer({
+            url: "https://gisco-services.ec.europa.eu/maps/tiles/OSMCartoV4Composite/EPSG3035/",
+            origin: [0, 6000000],
+        })]
 
     </script>
 
