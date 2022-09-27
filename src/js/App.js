@@ -367,13 +367,6 @@ export class App {
 
 
 
-
-
-
-
-
-
-
     /**
      * Add a layer to the app.
      * 
@@ -510,6 +503,19 @@ export class App {
     }
 
 
+
+    /**
+     * Add a background layer to the app.
+     * 
+     * @param {object} opts
+     * @returns {this}
+     */
+     addBackgroundLayer(opts) {
+        this.bgLayers.push(
+            new BackgroundLayer(opts)
+        )
+        return this;
+    }
 
     /**
      * 
