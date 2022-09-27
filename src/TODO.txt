@@ -2,21 +2,10 @@ stats: elevation + deg urba
 
 pillar: random example
 
-map background - https://webgate.ec.europa.eu/inspireec/rest/services/Basemaps
-https://webgate.ec.europa.eu/inspireec/rest/services/Basemaps/Gray_Earth_3035/MapServer
-https://webgate.ec.europa.eu/inspireec/arcgis/rest/services/Basemaps/Gray_Earth_3035/MapServer/tile/3/8/7
-https://webgate.ec.europa.eu/inspireec/rest/services/Basemaps/Blue_marble_3035/MapServer
-
-background map:
-OSMCartoV4Composite
-GreyEarth
-CitiesRoadsRiversLakes
-Hypsometric
-BlueMarble
-NaturalEarth
-https://gisco-services.ec.europa.eu/maps/wmts/1.0.0/WMTSCapabilities.xml
-https://gisco-services.ec.europa.eu/osm/index.3035.html
-view-source:https://gisco-services.ec.europa.eu/osm/index.3035.html
+map background -
+https://webgate.ec.europa.eu/inspireec/rest/services/Basemaps
+Blue_marble_3035  Gray_Earth_3035   CitiesRoadsRiversLakes_3035 
+background map: OSMCartoV4Composite GreyEarth CitiesRoadsRiversLakes Hypsometric BlueMarble NaturalEarth
 
 
 
