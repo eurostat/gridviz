@@ -40,10 +40,18 @@ export class BackgroundLayer {
         /** @type {function(number,number,number):string} */
         this.urlFun = opts.urlFun || ((x, y, z) => this.url + z + "/" + x + "/" + y + ".png")
 
+        /** @type {Array.<number>} */
+        this.resolutions = opts.resolutions
+        if (!this.resolutions || this.resolutions.length == 0)
+            throw new Error("No resolutions provided for background layer")
+
         /** @type {number} */
         this.nbPix = opts.nbPix || 256
-        /** @type {Array.<number>} */
+        /** CRS coordinates of top left corner
+         * @type {Array.<number>} */
         this.origin = opts.origin || [0, 0]
+        /** @type {Array.<number>} */
+        this.zLimits = opts.zLimits || [0, 18]
 
         /** @type {function(number):string} */
         this.filterColor = opts.filterColor
@@ -88,7 +96,7 @@ export class BackgroundLayer {
 
         const zf = cg.getZf()
         const x0 = this.origin[0], y0 = this.origin[1]
-        const zMax = 15, zMin = 0;
+        const zMax = this.zLimits[1], zMin = this.zLimits[0];
 
         /*const zToRes = (z) => {
             if (z == 0) return 66145.9656252646
@@ -100,7 +108,13 @@ export class BackgroundLayer {
             return -1
         }*/
 
-        const res0 = 156543.03392804097
+        if (!this.resolutions || this.resolutions.length == 0) {
+            console.error("No resolutions provided for background layer")
+            return
+        }
+
+
+
         const zToRes = (z) => {
             return res0 / Math.pow(2, z)
         }
@@ -113,6 +127,7 @@ export class BackgroundLayer {
             z = Math.min(zMax, z)
             return z
         }
+
 
 
 
@@ -130,7 +145,7 @@ export class BackgroundLayer {
         const yMax = yGeoToTMS(cg.extGeo.yMin)
         const yMin = yGeoToTMS(cg.extGeo.yMax) - 1
 
-        //TODO
+        //TODO ?
         //cg.setCanvasTransform()
 
         //handle images
