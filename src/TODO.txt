@@ -1,4 +1,7 @@
 make own background - with low resolution
+https://land.copernicus.eu/imagery-in-situ/eu-dem/eu-dem-v1-0-and-derived-products/hillshade?tab=download
+or... https://sdi.eea.europa.eu/data/e2cac092-4cbf-4765-a06e-0271f382d4a4?path=%2Ftiles
+
 make atlas url parameter for layer selection
 
 stats: elevation + deg urba
