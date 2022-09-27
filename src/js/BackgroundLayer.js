@@ -167,8 +167,11 @@ export class BackgroundLayer {
 
         //draw filter
         if (this.filterColor) {
-            cg.ctx.fillStyle = this.filterColor
-            cg.ctx.fillRect(0, 0, cg.w, cg.h)
+            const fc = this.filterColor(zf)
+            if (fc && fc != "none") {
+                cg.ctx.fillStyle = fc
+                cg.ctx.fillRect(0, 0, cg.w, cg.h)
+            }
         }
 
     }
