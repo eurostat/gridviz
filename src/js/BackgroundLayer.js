@@ -30,12 +30,13 @@ export class BackgroundLayer {
         if (this.minZoom >= this.maxZoom)
             throw new Error("Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.")
 
-        /** The data cache, indexed by z/y/x */
+        /** The image cache, indexed by z/y/x */
         this.cache = {}
 
 
 
-        /** @type {string} */
+        /**
+         * @type {string} */
         this.url = opts.url
         /** @type {function(number,number,number):string} */
         this.urlFun = opts.urlFun || ((x, y, z) => this.url + z + "/" + x + "/" + y + ".png")
