@@ -142,6 +142,7 @@ export class BackgroundLayer {
                     img.onerror = () => {
                         //case when no image
                         this.put("failed", z, x, y)
+                        cg.redraw()
                     }
                     img.src = this.urlFun(x, y, z)
                     continue;
