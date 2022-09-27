@@ -64,9 +64,15 @@
 
         let containerDiv = document.getElementById("viz-container");
         const app = new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4806935, y: 2446234 }).setZoomFactor(400.1).setZoomFactorExtent([10, 2000])
+            .setGeoCenter({ x: 4806935, y: 2446234 }).setZoomFactor(400.1).setZoomFactorExtent([20, 2000])
             .setLabelLayer(gviz.getEuronymeLabelLayer("HR", "20")).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
+            .addBackgroundLayer({
+                url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
+                resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
+                origin: [0, 6000000],
+                filterColor: zf => "#ffffffd3",
+            })
 
         //prepare datasets, indexed by thematic domain
         const ds = {}
