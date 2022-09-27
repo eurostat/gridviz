@@ -14,9 +14,7 @@ export class TMSBackgroundLayer {
     constructor(opts) {
         opts = opts || {};
 
-        /** 
-         * @private
-         * @type {string} */
+        /** @type {string} */
         this.url = opts.url
 
         /** An attribute to specify if a layer should be drawn or not
@@ -37,6 +35,11 @@ export class TMSBackgroundLayer {
 
         /** The data cache, indexed by z/y/x */
         this.cache = {}
+
+
+        /** @type {string} */
+         this.filterColor = opts.filterColor || "#fff0"
+
     }
 
     /**
@@ -78,19 +81,16 @@ export class TMSBackgroundLayer {
 
         const zf = cg.getZf()
 
-        const filterColor = "#fffd"
-
-
         //const x0 = -8426600.0, y0 = 1.59685E7
-        const x0 = 0, y0 = 6000000
+        const x0 = 0, yM = 6000000
         const nbPix = 256
 
-        const zMax = 5, zMin = 0;
+        const zMax = 10, zMin = 0;
 
         //const xyzToURL = (x,y,z) => this.url + z + "/" + y + "/" + x
-        const xyzToURL = (x,y,z) => this.url + z + "/" + x + "/" + y + ".png"
+        const xyzToURL = (x, y, z) => this.url + z + "/" + x + "/" + y + ".png"
 
-        const zToRes = (z) => {
+        /*const zToRes = (z) => {
             if (z == 0) return 66145.9656252646
             if (z == 1) return 26458.386250105836
             if (z == 2) return 13229.193125052918
@@ -98,10 +98,13 @@ export class TMSBackgroundLayer {
             if (z == 4) return 2645.8386250105837
             if (z == 5) return 1322.9193125052918
             return -1
+        }*/
+        const zToRes = (z) => {
+            return 156543.03392804097 / Math.pow(2, z)
         }
 
         const zfToZ = (zf) => {
-            let z = 20000 / zf;
+            let z = 50000 / zf;
             z = Math.floor(z)
             z = Math.max(zMin, z)
             z = Math.min(zMax, z)
@@ -109,7 +112,7 @@ export class TMSBackgroundLayer {
         }
 
         const xGeoToTMS = (x) => Math.ceil((x - x0) / sizeG)
-        const yGeoToTMS = (y) => Math.ceil(-(y - y0) / sizeG)
+        const yGeoToTMS = (y) => Math.ceil(-(y - yM) / sizeG)
 
 
 
@@ -142,27 +145,24 @@ export class TMSBackgroundLayer {
                         //case when no image
                         this.put("failed", z, x, y)
                     }
-                    img.src = xyzToURL(x,y,z)
+                    img.src = xyzToURL(x, y, z)
                     continue;
                 }
 
                 //case when no image
                 if (img === "failed") continue;
 
-                //console.log(img.state)
-                //console.log(img)
-
                 //draw image
                 const xGeo = x0 + x * sizeG
-                const yGeo = y0 - y * sizeG
+                const yGeo = yM - y * sizeG
                 cg.ctx.drawImage(img, cg.geoToPixX(xGeo), cg.geoToPixY(yGeo), size, size)
                 //cg.ctx.drawImage(img, xGeo, yGeo, sizeG, -sizeG)
             }
         }
 
         //draw filter
-        if (filterColor) {
-            cg.ctx.fillStyle = filterColor
+        if (this.filterColor) {
+            cg.ctx.fillStyle = this.filterColor
             cg.ctx.fillRect(0, 0, cg.w, cg.h)
         }
 
