@@ -75,8 +75,8 @@ new gviz.App(containerDiv)
 
 The following methods allow further configuration of a [Gridviz](https://github.com/eurostat/gridviz/) application:
 
-| Method                                                                      | Type                   | Default       | Description                                                                                                                                                                                                            |
-| --------------------------------------------------------------------------- | ---------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Method     | Type        | Default       | Description                      |
+| ------------------- | -------------- | ------------- | ------------------ |
 | _app_.**getGeoCenter**()<br />_app_.**setGeoCenter**([value])               | { x:number, y:number } | { x:0, y:0 }  | Get/set the geographical coordinates of the view center.                                                                                                                                                               |
 | _app_.**getZoomFactor**()<br />_app_.**setZoomFactor**([value])             | number                 | 1             | Get/set the view zoom. This zoom factor is expressed as the size of a pixel in ground distance.                                                                                                                        |
 | _app_.**getZoomFactorExtent**()<br />_app_.**setZoomFactorExtent**([value]) | Array(number)         | [0, Infinity] | Get/set the view zoom extent, in order to prevent the user to zoom in/out beyond some zoom levels.                                                                                                                     |
@@ -85,6 +85,7 @@ The following methods allow further configuration of a [Gridviz](https://github.
 | _app_.**getLabelLayer**()<br />_app_.**setLabelLayer**([value])             | LabelLayer             | undefined     | A layer for labels (such as placenames), see [here](#showing-labels).                                                                                                                                                  |
 | _app_.**addBackgroundLayer**([options])   | object   |    | Add a background image layer, see [here](#background-layer).               |
 | _app_.**setViewFromURL**()                                                  |                        |               | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_. |
+| _app_.**redraw**()   |      |      | Force the map to redraw. |
 
 ## Multi layer, multi style and multi scale mapping
 
@@ -566,10 +567,21 @@ new gviz.App(containerDiv)
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/background.html), see [code](../examples/background.html))
 
-A background layer must be based on an external [tiled web map](https://en.wikipedia.org/wiki/Tiled_web_map) to specify with the following information:
+A background layer must be based on an external [tiled web map](https://en.wikipedia.org/wiki/Tiled_web_map) specified with the properties listed in the table below.
 
-
-
+| Property       | Type       | Default         | Description            |
+| -------------- | ------------- | ------------ | ----------- |
+| **url**   | string   |  undefined |  |
+| **urlFun**   |  function(x,y,z):string  |  (x, y, z) => this.url + z + "/" + x + "/" + y + ".png"  |  |
+| **resolutions**   |  Array(number)  |  undefined |  |
+| **nbPix**   |  number  | 256  |  |
+| **origin**   |  Array(number)  |  [0, 0] | CRS coordinates of top left corner |
+| **z0**   | number   | 0  |  |
+| **filterColor**   |  function(zf):string  |  undefined |  |
+| **.**   |    |   |  |
+| **visible**   |  boolean  | true  |  |
+| **minZoom**   |  number  | 0  |  |
+| **maxZoom**   |  number  | Infinity  |  |
 
 ## Foreground information
 
