@@ -587,6 +587,13 @@ For more information, [see the code](../src/js/BackgroundLayer.js).
 
 ### Showing labels
 
+To show labels on top of a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **setLabelLayer** method:
+
+```javascript
+new gviz.App(containerDiv)
+    (...)
+```
+
 Documentation coming soon.
 
 Example based on https://github.com/eurostat/euronym
@@ -594,6 +601,15 @@ Example based on https://github.com/eurostat/euronym
 For more information, [see the code](../src/js/LabelLayer.js).
 
 ### Showing boundaries
+
+To show boundaries on top of a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **setBoundaryLayer** method:
+
+```javascript
+new gviz.App(containerDiv)
+    (...)
+```
+
+
 
 Documentation coming soon.
 
