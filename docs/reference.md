@@ -680,7 +680,7 @@ new gviz.App(containerDiv)
 
 Input data are structured as a _GeoJSON FeatureCollection_ of linear features.
 
-For European grids based on ETRS89-LAEA CRS, the **gviz.getEurostatBoundariesLayer()** function returns ready-to-use boundary layer settings based on [Nuts2json](https://github.com/eurostat/Nuts2json) datasets.
+The **gviz.getEurostatBoundariesLayer()** function returns ready-to-use boundary layer settings based on [Nuts2json](https://github.com/eurostat/Nuts2json) datasets.
 
 The **setBoundaryLayer** method has the following parameters:
 
