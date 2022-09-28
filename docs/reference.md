@@ -571,17 +571,15 @@ A background layer must be based on an external [tiled web map](https://en.wikip
 
 | Property       | Type       | Default         | Description            |
 | -------------- | ------------- | ------------ | ----------- |
-| **url**   | string   |  undefined |  |
-| **urlFun**   |  function(x,y,z):string  |  (x, y, z) => this.url + z + "/" + x + "/" + y + ".png"  |  |
-| **resolutions**   |  Array(number)  |  undefined |  |
-| **nbPix**   |  number  | 256  |  |
-| **origin**   |  Array(number)  |  [0, 0] | CRS coordinates of top left corner |
-| **z0**   | number   | 0  |  |
+| **url**   | string   |  undefined | The base URL of the tiled web map. |
+| **urlFun**   |  function(x,y,z):string  |  (x, y, z) => this.url + z + "/" + x + "/" + y + ".png"  | The function returning a specific image URL from its **(x,y,z)** coordinates in the tiling scheme. |
+| **resolutions**   |  Array(number)  |  undefined | The list of resolutions by zoom **z** level, starting with the zoom level with larger resolution to lower resolutions. |
+| **z0**   | number   | 0  | If number of the first zoom level (larger resolution), usually 0. |
+| **nbPix**   |  number  | 256  | The size of each tile image, in pixel number, usually 256. |
+| **origin**   |  Array(number)  |  [0, 0] | The geographical coordinates of top left corner of the tiling scheme. |
 | **filterColor**   |  function(zf):string  |  undefined |  |
-| **.**   |    |   |  |
-| **visible**   |  boolean  | true  |  |
-| **minZoom**   |  number  | 0  |  |
-| **maxZoom**   |  number  | Infinity  |  |
+| **visible**   |  boolean  | true  | The visibility of the layer. When __false__, the layer is not drawn. |
+| **minZoom** and **maxZoom**    |  number  | 0  | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn. |
 
 ## Foreground information
 
