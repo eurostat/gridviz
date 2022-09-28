@@ -65,7 +65,7 @@ export class LabelLayer {
          * A preprocess to run on each label after loading.
          * It can be used to apply some specific treatment before, format the label data, project coordinates, etc.
          * @private
-         * @type {function(object):void} */
+         * @type {function(Label):void} */
         this.preprocess = opts.preprocess
 
         /** 

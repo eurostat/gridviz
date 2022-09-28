@@ -624,7 +624,15 @@ The **setLabelLayer** method has the following parameters:
 
 | Parameter       | Type       | Default         | Description   |
 | -------------- | ------------- | ------------ | ----------- |
-| **url**   | string   |  undefined | The base URL. |
+| **url**   | string   |  undefined |The URL of the label CSV file. The file should contain the information for each label such as the text, the position and other information for the display of the label according to the zoom level. If necessary, this data can be reformated with the **preprocess** function. |
+| **style**   |  function(lb,zf):string  |  () => "bold 1em Arial" | A function returning the style of the label **lb** for zoom factor **zf**. |
+| **dark**   |  boolean  | undefined  | Set to true if the map is dark, so that the label default colors are suitable. |
+| **color**   |  function(lb,zf):string  | opts.dark ? () => "#ddd" : () => "#222"  | A function returning the color of the label **lb** for zoom factor **zf**. |
+| **haloColor**   | function(lb,zf):string   | opts.dark ? () => "#000000BB" : () => "#FFFFFFBB"  | A function returning the halo color of the label **lb** for zoom factor **zf**. |
+| **haloWidth**   | function(lb,zf):string   |  () => 4 | A function returning the halo width of the label **lb** for zoom factor **zf**. |
+| **textAlign**   |  CanvasTextAlign  | "start"  | The anchor where to write the label, from its _(x,y)_ position. See HTML-canvas textAlign property. |
+| **offsetPix**   |  Array(number)  |  [5, 5] | Offset displacement for each label position, in pixel. |
+| **preprocess**   |  function(lb):void  | undefined  | A preprocess to run on each label after loading. It can be used to apply some specific treatment before, format the label data, project coordinates, etc. |
 
 For more information, [see the code](../src/js/LabelLayer.js).
 
