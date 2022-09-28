@@ -607,7 +607,7 @@ new gviz.App(containerDiv)
             if (lb.r1 < zf) return "1em Arial";
             return "1.5em Arial";
         },
-        haloColor: ()=> "cyan"
+        haloColor: () => "cyan"
     })
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/labels.html), see [code](../examples/labels.html))
