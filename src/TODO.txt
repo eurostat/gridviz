@@ -6,6 +6,8 @@ make atlas url parameter for layer selection
 
 stats: elevation + deg urba
 
+d3 scalechromatic: remove dependency ?
+
 map background
 https://webgate.ec.europa.eu/inspireec/rest/services/Basemaps
 Blue_marble_3035  Gray_Earth_3035  CitiesRoadsRiversLakes_3035  Hypsometric_3035  Natural_Earth_3035
