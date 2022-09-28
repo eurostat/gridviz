@@ -15,7 +15,21 @@
         let containerDiv = document.getElementById("viz-container");
 
         new gviz.App(containerDiv)
-            .setGeoCenter({ x: 3426953, y: 2326791 }).setZoomFactor(1500)
+            .setGeoCenter({ x: 3426953, y: 2326791 }).setZoomFactor(700)
+
+            .addMultiScaleTiledCSVGridLayer(
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "2018",
+                        tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
+                        color: gviz.interpolateYlOrRd
+                    })
+                ],
+                {
+                    pixNb: 1.5
+                })
 
             .addBackgroundLayer({
                 url: "https://gisco-services.ec.europa.eu/maps/tiles/NaturalEarth/EPSG3035/",
