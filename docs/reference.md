@@ -551,7 +551,7 @@ For more information on these functions and an overview of how they differ, see:
 
 ## Background layer
 
-![gridviz background layer TMS](img/background.png)
+[![gridviz background layer TMS](img/background.png)](https://eurostat.github.io/gridviz/examples/background.html)
 
 To add a background layer to a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **addBackgroundLayer** method:
 
@@ -586,6 +586,8 @@ For more information, [see the code](../src/js/BackgroundLayer.js).
 ## Foreground information
 
 ### Showing labels
+
+[![labels](img/labels.png)](https://eurostat.github.io/gridviz/examples/labels.html)
 
 To show labels on top of a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **setLabelLayer** method:
 
