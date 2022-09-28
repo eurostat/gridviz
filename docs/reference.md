@@ -638,24 +638,57 @@ For more information, [see the code](../src/js/LabelLayer.js).
 
 ### Showing boundaries
 
+[![boundaries](img/boundaries.png)](https://eurostat.github.io/gridviz/examples/boundaries.html)
+
 To show boundaries on top of a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **setBoundaryLayer** method:
 
 ```javascript
 new gviz.App(containerDiv)
     (...)
+    .setBoundaryLayer({
+        url: "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2021/3035/03M/nutsbn_3.json",
+        color: (f, zf) => {
+            const p = f.properties
+            if (p.co === "T") return "#888"
+            if (zf < 400) return "#888"
+            else if (zf < 1000) return p.lvl >= 3 ? "" : "#888"
+            else if (zf < 2000) return p.lvl >= 2 ? "" : "#888"
+            else return p.lvl >= 1 ? "" : "#888"
+        },
+        width: (f, zf) => {
+            const p = f.properties
+            if (p.co === "T") return 0.5
+            if (zf < 400) return p.lvl == 3 ? 2.2 : p.lvl == 2 ? 2.2 : p.lvl == 1 ? 2.2 : 4
+            else if (zf < 1000) return p.lvl == 2 ? 1.8 : p.lvl == 1 ? 1.8 : 2.5
+            else if (zf < 2000) return p.lvl == 1 ? 1.8 : 2.5
+            else return 1.2
+        },
+        lineDash: (f, zf) => {
+            const p = f.properties
+            if (p.co === "T") return []
+            if (zf < 400) return p.lvl == 3 ? [2 * zf, 2 * zf] : p.lvl == 2 ? [5 * zf, 2 * zf] : p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
+            else if (zf < 1000) return p.lvl == 2 ? [5 * zf, 2 * zf] : p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
+            else if (zf < 2000) return p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
+            else return [10 * zf, 3 * zf]
+        }
+    })
 ```
 
 (see [online](https://eurostat.github.io/gridviz/examples/boundaries.html), see [code](../examples/boundaries.html))
 
-Example based on https://github.com/eurostat/Nuts2json
 
-Documentation coming soon.
+
+Input data are structured as a _GeoJSON FeatureCollection_ of linear features.
+
+For European grids based on ETRS89-LAEA CRS, the **gviz.getEurostatBoundariesLayer()** function returns ready-to-use boundary layer settings based on [Nuts2json](https://github.com/eurostat/Nuts2json) datasets.
 
 The **setBoundaryLayer** method has the following parameters:
 
 | Parameter       | Type       | Default         | Description   |
 | -------------- | ------------- | ------------ | ----------- |
-| **url**   | string   |  undefined | The base URL. |
+| **.**   |    |   |  |
+
+(Documentation coming soon).
 
 For more information, [see the code](../src/js/LineLayer.js).
 
