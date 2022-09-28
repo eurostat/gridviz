@@ -550,6 +550,8 @@ For more information on these functions and an overview of how they differ, see:
 
 ## Background layer
 
+![gridviz background layer TMS](img/background.png)
+
 To add a background layer to a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **addBackgroundLayer** method:
 
 ```javascript
@@ -565,7 +567,6 @@ new gviz.App(containerDiv)
 (see [online](https://eurostat.github.io/gridviz/examples/background.html), see [code](../examples/background.html))
 
 A background layer must be based on an external [tiled web map](https://en.wikipedia.org/wiki/Tiled_web_map) to specify with the following information:
-
 
 
 
