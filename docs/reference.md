@@ -589,12 +589,32 @@ For more information, [see the code](../src/js/BackgroundLayer.js).
 
 To show labels on top of a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **setLabelLayer** method:
 
-
 ```javascript
 new gviz.App(containerDiv)
     (...)
+    .setLabelLayer({
+        url: "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v1/50/EUR.csv",
+         preprocess: lb => {
+            //project from geo coordinates to ETRS89-LAEA
+            const p = proj([lb.lon, lb.lat])
+            lb.x = p[0]; lb.y = p[1];
+            delete lb.lon; delete lb.lat;
+        },
+        style: (lb, zf) => {
+            //select label based on zoom factor
+            if (lb.rs < zf) return;
+            //set style based on zoom factor
+            if (lb.r1 < zf) return "1em Arial";
+            return "1.5em Arial";
+        },
+        haloColor: ()=> "cyan"
+    })
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/labels.html), see [code](../examples/labels.html))
+
+Input data need to be as a CSV table.
+x,y,name
+
 
 gviz.getEuronymeLabelLayer()
 Example based on https://github.com/eurostat/euronym

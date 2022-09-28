@@ -8,7 +8,7 @@ import { GeoCanvas } from "./GeoCanvas";
 
 /**
  * A (generic) layer for placename labels, to be shown on top of the grid layers.
- * The input is a CSV file with the position (lon, lat) of the labels and name + some other info on the label importance.
+ * The input is a CSV file with the position (x, y) of the labels and name + some other info on the label importance.
  * If the label data is not in the expected format or in the same CRS as the grid, it can be corrected with the "preprocess" function.
  * The selection of the label, their style (font, weight, etc.) and color can be specified depending on their importance and the zoom level.
  * 
