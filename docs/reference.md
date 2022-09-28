@@ -360,7 +360,7 @@ See [this an example with random color, size, width and shape](https://eurostat.
 | **size**           | function(v,r,s,zf):number     | (v,r,s,zf) => r  | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.         |
 | **strokeWidthCol** | string                 | undefined        | The name of the column used for the stroke width.                                                                                           |
 | **strokeWidth**    | function(v,r,s,zf):number     | (v,r,s,zf) => zf | A function computing the cell stroke width from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
-| **shape**          | function(c):string     | () => "square"   | A function computing the shape of cell **c**. Expected values are within __{"square", "circle", "none"}__                                   |
+| **shape**          | function(c):string     | () => "square"   | A function computing the shape of cell **c**. Expected values are within _{"square", "circle", "none"}_                                   |
 
 ### Side style
 
@@ -374,8 +374,8 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html)
 | -------- | ---- | ------- | ----------- |
 | **valueCol** | string | undefined | The name of the column used to retrieve the cell values. |
 | **value** | function(v1,v2,r,s,zf):number | (v1, v2, r, s, zf) => 1 | A function computing the value of a cell side. This value is computed from the two adjacent cell values **v1** and **v2**. For horizontal sides, **v1** is the value of the cell below and **v2** the value of the cell above. For vertical sides, **v1** is the value of the left cell and **v2** the value of the right cell. |
-| **color** | function(side,r,s,zf):string | () => "#EA6BAC" |  A function returning the color of a cell side **side** from the resolution **r**, statistics **s** and zoom factor **zf**. A side is represented as an object __{x:number,y:number,or:"v"|"h",value:number}__. |
-| **width** | function(side,r,s,zf):number | (side, r, s, z) => r * side.value / 5 | A function returning the width of a cell side **side**, in geo unit, from the resolution **r**, statistics **s** and zoom factor **zf**. A side is represented as an object __{x:number,y:number,or:"v"|"h",value:number}__. |
+| **color** | function(side,r,s,zf):string | () => "#EA6BAC" |  A function returning the color of a cell side **side** from the resolution **r**, statistics **s** and zoom factor **zf**. A side is represented as an object _{x:number,y:number,or:"v"|"h",value:number}_. |
+| **width** | function(side,r,s,zf):number | (side, r, s, z) => r * side.value / 5 | A function returning the width of a cell side **side**, in geo unit, from the resolution **r**, statistics **s** and zoom factor **zf**. A side is represented as an object _{x:number,y:number,or:"v"|"h",value:number}_. |
 | **orientation** | number | 0 | Orientation of the sides. Set to 90 to show sides as slope lines for example. |
 | **fillColor** | function(c):string | undefined | A function returning an optional fill color for a cell **c**. |
 
@@ -533,7 +533,7 @@ Documentation coming soon.
 
 ## Stretching
 
-Most of the [Gridviz](https://github.com/eurostat/gridviz/) styling rely on a **t** parameter within [0,1], which is mapped to a visual variable such as color or size. In order to better adjust the variation of this **t** parameter to the input data distribution, one of the __stretching functions__ listed below can be used. These functions have different properties and should be chosen according to the data. The amplitude of the stretching can be adjusted with a **alpha** parameter.
+Most of the [Gridviz](https://github.com/eurostat/gridviz/) styling rely on a **t** parameter within [0,1], which is mapped to a visual variable such as color or size. In order to better adjust the variation of this **t** parameter to the input data distribution, one of the _stretching functions_ listed below can be used. These functions have different properties and should be chosen according to the data. The amplitude of the stretching can be adjusted with a **alpha** parameter.
 
 | Stretching function | Alpha                                    | Description           | Inverse function   |
 | ------------------- | ---------------------------------------- | --------------------- | ------------------ |
