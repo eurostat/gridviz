@@ -550,29 +550,22 @@ For more information on these functions and an overview of how they differ, see:
 
 ## Background layer
 
-To add background to a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **addBackgroundLayer** method: ...
+To add a background layer to a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **addBackgroundLayer** method:
 
 ```javascript
 new gviz.App(containerDiv)
-    //set position and zoom
-    .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-    //add multi scale tiled CSV layer
-    .addTiledCSVGridLayer(
-        //data URL
-        "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/",
-        //the styles
-        [
-            new gviz.SquareColorWGLStyle({
-                colorCol: "2018",
-                tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15)
-            })
-        ]
-    )
+    (...)
+    .addBackgroundLayer({
+        url: "https://gisco-services.ec.europa.eu/maps/tiles/NaturalEarth/EPSG3035/",
+        resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
+        origin: [0, 6000000],
+        filterColor: zf => "#ffffff66",
+    })
 ```
-(see [online](https://eurostat.github.io/gridviz/examples/basic_tiled_CSV.html), see [code](../examples/basic_tiled_CSV.html))
+(see [online](https://eurostat.github.io/gridviz/examples/background.html), see [code](../examples/background.html))
 
+A background layer must be based on an external [tiled web map](https://en.wikipedia.org/wiki/Tiled_web_map) to specify with the following information:
 
-Documentation coming soon.
 
 
 
