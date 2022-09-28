@@ -550,7 +550,12 @@ For more information on these functions and an overview of how they differ, see:
 
 ## Background layer
 
+To add background to a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **addBackgroundLayer** method: ...
+
 Documentation coming soon.
+
+
+
 
 ## Foreground information
 

@@ -141,12 +141,10 @@ export class BackgroundLayer {
                 if (!img) {
                     const img = new Image()
                     this.put(img, z, x, y)
-                    img.onload = () => cg.redraw
+                    img.onload = () => { cg.redraw(); }
                     img.onerror = () => {
                         //case when no image
                         this.put("failed", z, x, y)
-                        //?
-                        cg.redraw()
                     }
                     img.src = this.urlFun(x, y, z)
                     continue;
@@ -154,6 +152,7 @@ export class BackgroundLayer {
 
                 //case when no image
                 if (img === "failed") continue;
+                if (!(img instanceof HTMLImageElement)) continue;
 
                 //draw image
                 const xGeo = x0 + x * sizeG
