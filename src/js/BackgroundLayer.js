@@ -152,7 +152,10 @@ export class BackgroundLayer {
 
                 //case when no image
                 if (img === "failed") continue;
-                if (!(img instanceof HTMLImageElement)) continue;
+                if (!(img instanceof HTMLImageElement)) {
+                    console.log(img)
+                    continue;
+                }
 
                 //draw image
                 const xGeo = x0 + x * sizeG
