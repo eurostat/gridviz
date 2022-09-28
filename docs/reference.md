@@ -265,7 +265,7 @@ See [this example with dark style](https://eurostat.github.io/gridviz/examples/s
 | -------------- | ----------------- | ------------ | ----------- |
 | **colorCol**   | string                     | undefined         | The name of the column used for the color.       |
 | **tFun**       | function(v,r,s):number     | (v, r, s) => v / s.max          | A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling.              |
-| **stretching** | {fun:string, alpha:number} | undefined       | Necessary information to apply a stretching [0,1] -> [0,1] to the **t** value. Property **fun** is the type of function, among __{"pow", "powRev", "exp", "expRev"}__ - see [stretching section](#stretching) for more information on those functions. This stretching is performed on GPU side (fragment shader). |
+| **stretching** | {fun:string, alpha:number} | undefined       | Necessary information to apply a stretching [0,1] -> [0,1] to the **t** value. Property **fun** is the type of function, among _{"pow", "powRev", "exp", "expRev"}_ - see [stretching section](#stretching) for more information on those functions. This stretching is performed on GPU side (fragment shader). |
 | **colors**   | Array(string)    | Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral) | The sample of the color ramp.                                                                                                                                                                                                                                                                                      |
 | **color**      | function(t):number         | undefined                                                                                           | Instead of specifying **colors**, this property can be defined. It is a function which returns a color from a **t** value within [0,1].                                                                                                                                                                            |
 | **size**       | function(r,zf):number      | (r,zf) => r + 0.2 * zf                                                                              | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size.                                                                                                                                                                   |
@@ -292,7 +292,7 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 | **color**    | function(v,r,s):string | () => "#EA6BAC" | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**.                  |
 | **sizeCol**  | string                 | undefined       | The name of the column used for the size.                                                                                           |
 | **size**     | function(v,r,s,zf):number   | (v,r,s,zf) => r | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
-| **shape**    | function(c):string     | () => "square"  | A function computing the shape of cell **c**. Expected values are within __{"square", "circle", "donut", "none"}__                  |
+| **shape**    | function(c):string     | () => "square"  | A function computing the shape of cell **c**. Expected values are within _{"square", "circle", "donut", "none"}_      |
 
 
 ### Composition style
@@ -312,7 +312,7 @@ See [this example showing population of France by age group](https://eurostat.gi
 | Property                         | Type                        | Default         | Description                                                                                                                                                                                                |
 | -------------------------------- | --------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **color**                        | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.                                                                                                                                    |
-| **type**                         | function(c):CompositionType | () => "flag     | A function returning the symbol type of a cell **c**. CompositionType are among __"flag", "piechart", "ring", "segment", "radar", "agepyramid", "halftone"__                                               |
+| **type**                         | function(c):CompositionType | () => "flag     | A function returning the symbol type of a cell **c**. CompositionType are among _"flag", "piechart", "ring", "segment", "radar", "agepyramid", "halftone"_                                               |
 | **sizeCol**                      | string                      | undefined       | The name of the column used for the size.                                                                                                                                                                  |
 | **size**                         | function(v,r,s,zf):number  | (v,r,s,zf) => r | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom                                                                                       |
 | **stripesOrientation**           | function(c,r,zf):number            | () => 0         | For style types with stripes (flag, segment), a function returning the symbol stripes orientation (0 for horizontal, other for vertical) from the cell **c**, the resolution **r** and zoom factor **zf**. |
@@ -577,9 +577,9 @@ A background layer must be based on an external [tiled web map](https://en.wikip
 | **z0**   | number   | 0  | If number of the first zoom level (larger resolution), usually 0. |
 | **nbPix**   |  number  | 256  | The size of each tile image, in pixel number, usually 256. |
 | **origin**   |  Array(number)  |  [0, 0] | The geographical coordinates of top left corner of the tiling scheme. |
-| **filterColor**   |  function(zf):string  |  undefined | A function returning a filter color from the zoom factor **zf**. This color alpha channel can be used to soften the background layer: Use "ffffffd1" for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
-| **visible**   |  boolean  | true  | The visibility of the layer. When __false__, the layer is not drawn. |
-| **minZoom** and **maxZoom**    |  number  | 0  | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn. |
+| **filterColor**   |  function(zf):string  |  undefined | A function returning a filter color from the zoom factor **zf**. This color alpha channel can be used to soften the background layer: Use _"ffffffd1"_ for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
+| **visible**   |  boolean  | true  | The visibility of the layer. When _false_, the layer is not drawn. |
+| **minZoom** and **maxZoom**    |  number  | 0 and Infinity | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn. |
 
 ## Foreground information
 
