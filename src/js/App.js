@@ -363,8 +363,8 @@ export class App {
 
     /** @returns {LabelLayer | undefined} */
     getLabelLayer() { return this.labelLayer; }
-    /** @param {LabelLayer} val @returns {this} */
-    setLabelLayer(val) { this.labelLayer = val; return this; }
+    /** @param {object} opts @returns {this} */
+    setLabelLayer(opts) { this.labelLayer = new LabelLayer(opts); return this; }
 
 
     /** @returns {this} */

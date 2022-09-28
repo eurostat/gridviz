@@ -48,7 +48,6 @@ export * from "./utils/stretching.js"
 
 
 import { geoAzimuthalEqualArea } from 'd3-geo'
-import { LabelLayer } from "./LabelLayer"
 import { LineLayer } from "./LineLayer"
 
 
@@ -56,7 +55,7 @@ import { LineLayer } from "./LineLayer"
  * Returns label layer from Eurostat, for ETRS89-LAEA grids.
  * From dataset: https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/euronymes.csv
  * 
- * @returns {LabelLayer}
+ * @returns {object}
  */
 export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
     opts = opts || {}
@@ -77,7 +76,7 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
         delete lb.lon; delete lb.lat;
     }
     opts.url = "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v1/" + res + "/" + cc + ".csv";
-    return new LabelLayer(opts)
+    return opts
 }
 
 /**
