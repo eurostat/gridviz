@@ -15,6 +15,7 @@ import { LineLayer } from './LineLayer';
 import { select } from "d3-selection";
 import { monitor, monitorDuration } from "./utils/Utils"
 import { DatasetComponent } from './DatasetComponent';
+import { BoundaryLayer } from '.';
 //import { GeoTIFF } from './dataset/GeoTIFF';
 
 /**
@@ -358,8 +359,8 @@ export class App {
 
     /** @returns {LineLayer | undefined} */
     getBoundaryLayer() { return this.boundaryLayer; }
-    /** @param {LineLayer} val @returns {this} */
-    setBoundaryLayer(val) { this.boundaryLayer = val; return this; }
+    /** @param {object} opts @returns {this} */
+    setBoundaryLayer(opts) { this.boundaryLayer = new BoundaryLayer(opts); return this; }
 
     /** @returns {LabelLayer | undefined} */
     getLabelLayer() { return this.labelLayer; }

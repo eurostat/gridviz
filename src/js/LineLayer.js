@@ -9,16 +9,15 @@ import { json } from "d3-fetch";
 export class LineLayer {
 
     /**
-     * @param {string} url 
      * @param {object} opts 
      */
-    constructor(url, opts) {
+    constructor(opts) {
         opts = opts || {};
 
         /** 
          * @private
          * @type {string} */
-        this.url = url
+        this.url = opts.url
 
         /** 
          * @private

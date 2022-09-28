@@ -80,7 +80,7 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
 }
 
 /**
- * @returns {LineLayer}
+ * @returns {object}
  */
 export const getEurostatBoundariesLayer = function (opts) {
     opts = opts || {}
@@ -117,7 +117,6 @@ export const getEurostatBoundariesLayer = function (opts) {
         else return [10 * zf, 3 * zf]
     })
 
-    const url = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/" + nutsYear + "/" + crs + "/" + scale + "/nutsbn_" + nutsLevel + ".json"
-    return new LineLayer(url, opts)
+    opts.url = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/" + nutsYear + "/" + crs + "/" + scale + "/nutsbn_" + nutsLevel + ".json"
+    return opts
 }
-
