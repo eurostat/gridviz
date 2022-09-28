@@ -74,6 +74,7 @@ export class App {
             this.cg.clear(this.cg.backgroundColor);
 
             const zf = this.getZoomFactor();
+            this.updateExtentGeo()
 
             //go through the background layers
             for (const layer of this.bgLayers) {
@@ -100,7 +101,7 @@ export class App {
 
                 //launch data download, if necessary
                 if (strong)
-                    dsc.getData(this.cg.updateExtentGeo(), () => { this.cg.redraw(); });
+                    dsc.getData(this.cg.extGeo, () => { this.cg.redraw(); });
 
                 //update dataset view cache
                 if (strong)
@@ -510,7 +511,7 @@ export class App {
      * @param {object} opts
      * @returns {this}
      */
-     addBackgroundLayer(opts) {
+    addBackgroundLayer(opts) {
         this.bgLayers.push(
             new BackgroundLayer(opts)
         )
