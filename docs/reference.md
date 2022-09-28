@@ -593,10 +593,15 @@ To show labels on top of a [Gridviz](https://github.com/eurostat/gridviz/) map, 
 new gviz.App(containerDiv)
     (...)
 ```
+(see [online](https://eurostat.github.io/gridviz/examples/labels.html), see [code](../examples/labels.html))
+
+Example based on https://github.com/eurostat/euronym
 
 Documentation coming soon.
 
-Example based on https://github.com/eurostat/euronym
+| Property       | Type       | Default         | Description   |
+| -------------- | ------------- | ------------ | ----------- |
+| **url**   | string   |  undefined | The base URL. |
 
 For more information, [see the code](../src/js/LabelLayer.js).
 
@@ -609,14 +614,17 @@ new gviz.App(containerDiv)
     (...)
 ```
 
-
-
-Documentation coming soon.
+(see [online](https://eurostat.github.io/gridviz/examples/boundaries.html), see [code](../examples/boundaries.html))
 
 Example based on https://github.com/eurostat/Nuts2json
 
-For more information, [see the code](../src/js/LineLayer.js).
+Documentation coming soon.
 
+| Property       | Type       | Default         | Description   |
+| -------------- | ------------- | ------------ | ----------- |
+| **url**   | string   |  undefined | The base URL. |
+
+For more information, [see the code](../src/js/LineLayer.js).
 
 ## Tooltip
 
