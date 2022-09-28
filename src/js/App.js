@@ -367,6 +367,9 @@ export class App {
     setLabelLayer(val) { this.labelLayer = val; return this; }
 
 
+    /** @returns {this} */
+    redraw() { this.cg.redraw(); return this; }
+
 
     /**
      * Add a layer to the app.

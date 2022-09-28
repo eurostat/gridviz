@@ -552,6 +552,26 @@ For more information on these functions and an overview of how they differ, see:
 
 To add background to a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **addBackgroundLayer** method: ...
 
+```javascript
+new gviz.App(containerDiv)
+    //set position and zoom
+    .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+    //add multi scale tiled CSV layer
+    .addTiledCSVGridLayer(
+        //data URL
+        "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/",
+        //the styles
+        [
+            new gviz.SquareColorWGLStyle({
+                colorCol: "2018",
+                tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15)
+            })
+        ]
+    )
+```
+(see [online](https://eurostat.github.io/gridviz/examples/basic_tiled_CSV.html), see [code](../examples/basic_tiled_CSV.html))
+
+
 Documentation coming soon.
 
 
