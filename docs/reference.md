@@ -577,7 +577,7 @@ A background layer must be based on an external [tiled web map](https://en.wikip
 | **z0**   | number   | 0  | If number of the first zoom level (larger resolution), usually 0. |
 | **nbPix**   |  number  | 256  | The size of each tile image, in pixel number, usually 256. |
 | **origin**   |  Array(number)  |  [0, 0] | The geographical coordinates of top left corner of the tiling scheme. |
-| **filterColor**   |  function(zf):string  |  undefined |  |
+| **filterColor**   |  function(zf):string  |  undefined | A function returning a filter color from the zoom factor **zf**. This color alpha channel can be used to soften the background layer: Use "ffffffd1" for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
 | **visible**   |  boolean  | true  | The visibility of the layer. When __false__, the layer is not drawn. |
 | **minZoom** and **maxZoom**    |  number  | 0  | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn. |
 
