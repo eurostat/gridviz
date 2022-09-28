@@ -673,10 +673,7 @@ new gviz.App(containerDiv)
         }
     })
 ```
-
 (see [online](https://eurostat.github.io/gridviz/examples/boundaries.html), see [code](../examples/boundaries.html))
-
-
 
 Input data are structured as a _GeoJSON FeatureCollection_ of linear features.
 
