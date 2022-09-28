@@ -581,6 +581,8 @@ A background layer must be based on an external [tiled web map](https://en.wikip
 | **visible**   |  boolean  | true  | The visibility of the layer. When _false_, the layer is not drawn. |
 | **minZoom** and **maxZoom**    |  number  | 0 and Infinity | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn. |
 
+For more information, see the [BackgroundLayer class](../src/js/BackgroundLayer.js).
+
 ## Foreground information
 
 ### Showing labels
@@ -589,11 +591,15 @@ Documentation coming soon.
 
 Example based on https://github.com/eurostat/euronym
 
+For more information, see the [LabelLayer class](../src/js/LabelLayer.js).
+
 ### Showing boundaries
 
 Documentation coming soon.
 
 Example based on https://github.com/eurostat/Nuts2json
+
+For more information, see the [LineLayer class](../src/js/LineLayer.js).
 
 
 ## Tooltip
@@ -619,6 +625,8 @@ new gviz.App(containerDiv)
 
 
 Changing tooltip style: Documentation coming soon.
+
+For more information, see the [Tooltip class](../src/js/Tooltip.js).
 
 
 

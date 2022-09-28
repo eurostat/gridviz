@@ -6,13 +6,14 @@ make atlas url parameter for layer selection
 
 stats: elevation + deg urba
 
-pillar: random example
-
 map background
 https://webgate.ec.europa.eu/inspireec/rest/services/Basemaps
 Blue_marble_3035  Gray_Earth_3035  CitiesRoadsRiversLakes_3035  Hypsometric_3035  Natural_Earth_3035
 background map: OSMCartoV4Composite GreyEarth CitiesRoadsRiversLakes Hypsometric BlueMarble NaturalEarth
 
+
+
+pillar: random example
 
 
 Pollock style: https://www.arcgis.com/apps/webappviewer/index.html?id=661d96be9fe64b3db4124546b67b2f39
