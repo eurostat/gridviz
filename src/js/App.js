@@ -515,9 +515,8 @@ export class App {
      * @returns {this}
      */
     addBackgroundLayer(opts) {
-        this.bgLayers.push(
-            new BackgroundLayer(opts)
-        )
+        this.bgLayers.push( new BackgroundLayer(opts) )
+        this.redraw()
         return this;
     }
 
