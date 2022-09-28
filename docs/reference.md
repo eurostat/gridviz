@@ -569,7 +569,9 @@ new gviz.App(containerDiv)
 
 A background layer must be based on an external [tiled web map](https://en.wikipedia.org/wiki/Tiled_web_map) specified with the properties listed in the table below.
 
-| Property       | Type       | Default         | Description            |
+The **addBackgroundLayer** method has the following parameters:
+
+| Parameter       | Type       | Default         | Description            |
 | -------------- | ------------- | ------------ | ----------- |
 | **url**   | string   |  undefined | The base URL of the tiled web map. |
 | **urlFun**   |  function(x,y,z):string  |  (x, y, z) => this.url + z + "/" + x + "/" + y + ".png"  | The function returning a specific image URL from its **(x,y,z)** coordinates in the tiling scheme. |
@@ -618,7 +620,9 @@ Input data need to be as a CSV table. Each row should correspond to a label, wit
 
 For European grids based on ETRS89-LAEA CRS, the **gviz.getEuronymeLabelLayer()** function returns ready-to-use label layer settings based on [Euronym](https://github.com/eurostat/euronym) which allow zoom dependant label selection.
 
-| Property       | Type       | Default         | Description   |
+The **setLabelLayer** method has the following parameters:
+
+| Parameter       | Type       | Default         | Description   |
 | -------------- | ------------- | ------------ | ----------- |
 | **url**   | string   |  undefined | The base URL. |
 
@@ -639,7 +643,9 @@ Example based on https://github.com/eurostat/Nuts2json
 
 Documentation coming soon.
 
-| Property       | Type       | Default         | Description   |
+The **setBoundaryLayer** method has the following parameters:
+
+| Parameter       | Type       | Default         | Description   |
 | -------------- | ------------- | ------------ | ----------- |
 | **url**   | string   |  undefined | The base URL. |
 
