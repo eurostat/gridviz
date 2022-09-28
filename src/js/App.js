@@ -360,7 +360,7 @@ export class App {
     /** @returns {LineLayer | undefined} */
     getBoundaryLayer() { return this.boundaryLayer; }
     /** @param {object} opts @returns {this} */
-    setBoundaryLayer(opts) { this.boundaryLayer = new BoundaryLayer(opts); return this; }
+    setBoundaryLayer(opts) { this.boundaryLayer = new LineLayer(opts); return this; }
 
     /** @returns {LabelLayer | undefined} */
     getLabelLayer() { return this.labelLayer; }

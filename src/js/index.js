@@ -48,7 +48,6 @@ export * from "./utils/stretching.js"
 
 
 import { geoAzimuthalEqualArea } from 'd3-geo'
-import { LineLayer } from "./LineLayer"
 
 
 /**
