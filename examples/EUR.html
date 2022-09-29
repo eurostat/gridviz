@@ -213,7 +213,15 @@
                         cellInfoHTML: c => {
                             if (!c.TOT) return "No information";
                             if (c.TOT == 1) return +c.uc ? "Urban centre" : +c.du ? "Dense urban cluster" : +c.sdu ? "Semi-dense urban cluster" : +c.sbu ? "Suburban" : +c.r ? "Rural" : +c.lr ? "Low density rural" : +c.vlr ? "Very low density rural" : "Unknown";
-                            return c.TOT + " cells"
+                            const out = []
+                            if (+c.uc) out.push(c.uc + " Dense urban cluster<br>")
+                            if (+c.sdu) out.push(c.sdu + " Semi-dense urban cluster<br>")
+                            if (+c.sbu) out.push(c.sbu + " Suburban<br>")
+                            if (+c.r) out.push(c.r + " Rural<br>")
+                            if (+c.lr) out.push(c.lr + " Low density rural<br>")
+                            if (+c.vlr) out.push(c.vlr + " Very low density rural<br>")
+                            if (+c.NA) out.push(c.NA + " Unknown<br>")
+                            return out.join("")
                         }
                     }
                 )
