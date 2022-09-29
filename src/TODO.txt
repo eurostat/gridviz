@@ -1,6 +1,4 @@
-degurba map
-stats: elevation + deg urba
-+ forest
+stats: elevation + forest
 TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
 https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
 
@@ -10,8 +8,6 @@ TODO fix euronym - local names, with accents ?
 TODO document and improve euronyme
 
 pillar: random example
-
-style: rough.js
 
 Legends: improve, extend, add missing, finalise.
 TODO show several elements on size legend
@@ -28,6 +24,8 @@ background map: OSMCartoV4Composite GreyEarth CitiesRoadsRiversLakes Hypsometric
 
 Pollock style: https://www.arcgis.com/apps/webappviewer/index.html?id=661d96be9fe64b3db4124546b67b2f39
 + others
+
+style: rough.js
 
 dot density composition style
 improve performance of dotstyle - map every single individual
