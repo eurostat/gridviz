@@ -10,6 +10,9 @@
     <div id="viz-container" style="height:100%; width:100%;"></div>
 
     <script src="../../build/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         let containerDiv = document.getElementById("viz-container");
@@ -28,7 +31,7 @@
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "Ind",
-                        color: gviz.interpolateMagma,
+                        color: d3.interpolateMagma,
                         stretching: { fun: "expRev", alpha: -7 }
                     }), new gviz.StrokeStyle({ maxZoom: 15 })
                 ],

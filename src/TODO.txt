@@ -1,3 +1,17 @@
+d3 scalechromatic: remove dependency ?
+<script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+<script>
+
+const yellow = d3.interpolateYlGn(0); // "rgb(255, 255, 229)"
+const yellowGreen = d3.interpolateYlGn(0.5); // "rgb(120, 197, 120)"
+const green = d3.interpolateYlGn(1); // "rgb(0, 69, 41)"
+
+</script>
+
+
+
 make own background - with low resolution
 https://land.copernicus.eu/imagery-in-situ/eu-dem/eu-dem-v1-0-and-derived-products/hillshade?tab=download
 or... https://sdi.eea.europa.eu/data/e2cac092-4cbf-4765-a06e-0271f382d4a4?path=%2Ftiles
@@ -5,8 +19,6 @@ or... https://sdi.eea.europa.eu/data/e2cac092-4cbf-4765-a06e-0271f382d4a4?path=%
 make atlas url parameter for layer selection
 
 stats: elevation + deg urba
-
-d3 scalechromatic: remove dependency ?
 
 map background
 https://webgate.ec.europa.eu/inspireec/rest/services/Basemaps
