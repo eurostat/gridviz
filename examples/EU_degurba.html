@@ -15,7 +15,7 @@
         let containerDiv = document.getElementById("viz-container");
 
         new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(1000)
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
             .addBackgroundLayer({
@@ -46,14 +46,12 @@
                         },
                         type: () => "flag",
                         //stripesOrientation: () => 0,
-                        //sizeCol: "TOT",
-                        //size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.13, 0),
+                        sizeCol: "TOT",
+                        size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.5),
                     })
-
-
                 ],
                 {
-                    pixNb: 3
+                    pixNb: 5
                 })
 
 
