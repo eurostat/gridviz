@@ -23,6 +23,9 @@
     </div>
 
     <script src="../../build/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         let containerDiv = document.getElementById("viz-container");
@@ -34,7 +37,7 @@
             color: [
                 new gviz.SquareColorWGLStyle({
                     colorCol: "ksmval",
-                    color: gviz.interpolateRdYlGn,
+                    color: d3.interpolateRdYlGn,
                     tFun: (v, r, s) => {
                         const v_ = gviz.sExp((v) / s.max, -20)
                         const nbClass = 10

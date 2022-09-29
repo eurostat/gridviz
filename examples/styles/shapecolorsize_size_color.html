@@ -20,6 +20,9 @@
     <div id="viz-container" style="height:100%; width:100%;"></div>
 
     <script src="../../build/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         let containerDiv = document.getElementById("viz-container");
@@ -34,7 +37,7 @@
                         sizeCol: "Ind",
                         size: (v, r, s, zf) => 1.4 * r * gviz.sPow(v / s.max, 0.13),
                         colorCol: "age_ratio",
-                        color: (v, r, s) => gviz.interpolateSpectral(1 - v),
+                        color: (v, r, s) => d3.interpolateSpectral(1 - v),
                         shape: () => "circle",
                     })
                 ],
