@@ -1,3 +1,17 @@
+stats: elevation + deg urba
++ forest
+TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
+https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
+
+TODO fix euronym - local names, with accents ?
+TODO document and improve euronyme
+
+pillar: random example
+
+style: rough.js
+
+Legends: improve, extend, add missing, finalise.
+TODO show several elements on size legend
 
 make own background - with low resolution
 https://land.copernicus.eu/imagery-in-situ/eu-dem/eu-dem-v1-0-and-derived-products/hillshade?tab=download
@@ -5,30 +19,15 @@ or... https://sdi.eea.europa.eu/data/e2cac092-4cbf-4765-a06e-0271f382d4a4?path=%
 
 make atlas url parameter for layer selection
 
-stats: elevation + deg urba
-
 map background
 https://webgate.ec.europa.eu/inspireec/rest/services/Basemaps
 Blue_marble_3035  Gray_Earth_3035  CitiesRoadsRiversLakes_3035  Hypsometric_3035  Natural_Earth_3035
 background map: OSMCartoV4Composite GreyEarth CitiesRoadsRiversLakes Hypsometric BlueMarble NaturalEarth
 
-
-
-pillar: random example
-
-
 Pollock style: https://www.arcgis.com/apps/webappviewer/index.html?id=661d96be9fe64b3db4124546b67b2f39
 + others
 
-JSDOC bug: https://stackoverflow.com/questions/25773222/
-
 dot density composition style
-
-EUR, FR: add missing legend, finalise.
-
-TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
-https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
-
 improve performance of dotstyle - map every single individual
 
 TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
@@ -36,13 +35,8 @@ https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
 https://blog.ivank.net/fastest-gaussian-blur.html
 https://github.com/amilajack/gaussian-blur
 
-TODO show several elements on size legend
-
 Joyplot as nicer thick slices, with shadow effect
 Test segment orientation / color / thickness
-
-TODO document and improve euronyme
-TODO fix euronym - local names, with accents ?
 
 TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?
 https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/chernoff-faces/
@@ -50,6 +44,7 @@ https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/chernoff-faces/
 
 
 jsdoc
+JSDOC bug: https://stackoverflow.com/questions/25773222/
 https://eurostat.github.io/gridviz/docs/index.html
 https://jsdoc.app/about-commandline.html
 jsdoc src -r -d=docs
