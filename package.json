@@ -12,7 +12,9 @@
     "csv",
     "GIS",
     "WebGL",
-    "d3"
+    "d3",
+    "cartography",
+    "bertin"
   ],
   "homepage": "https://github.com/eurostat/gridviz",
   "author": "Joseph Davies, Julien Gaffuri",

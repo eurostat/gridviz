@@ -6,9 +6,6 @@ export { Layer } from "./Layer"
 export { Dataset } from "./Dataset"
 export { DatasetComponent } from "./DatasetComponent"
 
-//export color (the entire d3 scale chromatic)
-export * from "d3-scale-chromatic"
-
 //export dataset types
 export { TiledGrid } from "./dataset/TiledGrid"
 export { CSVGrid } from "./dataset/CSVGrid"
