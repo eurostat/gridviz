@@ -457,7 +457,7 @@ See [this other example](https://eurostat.github.io/gridviz/examples/styles/tana
 | **col**     | string                 | undefined       | The name of the column used for the color.                |
 | **tFun**    | function(v,r,s):number |  (v, r, s) => (v - s.min) / (s.max - s.min) | A function computing the **t** parameter (whithin [0,1]) from the value **v** of __col__ column, the resolution **r** and statistics **s**.   |
 | **colors**    |  Array(string)   | ["#a9bb9e", "#c9dcaa", "#fde89f", "#f9a579", "#eb444b"]   |  The colors. |
-| **color**    |  function(t):string    |   [d3.interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral) |  If **colors** is not specified, the color ramp function. |
+| **color**    |  function(t):string    |   () => "gray" |  If **colors** is not specified, the color ramp function. |
 | **nb**    |  number  |  undefined  |  If **colors** is not specified, the number of colors. |
 | **colDark**    |  string    |  "#111" |  Shadow color: South East side. This should be a dark color.  |
 | **colBright**    |   string   |   "#ddd"  |  Shadow color: North West side. This should be a bright color. |

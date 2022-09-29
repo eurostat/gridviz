@@ -2,7 +2,7 @@
 
 import { SquareColorWGLStyle } from "./SquareColorWGLStyle"
 import { SideStyle } from "./SideStyle"
-import { Style, Stat } from "../Style"
+import { Style } from "../Style"
 
 /**
  * 
@@ -43,7 +43,7 @@ export class TanakaStyle {
 
 
         /** A function to compute 't' from the value v
-         * @type {function(number,number,Stat):number} */
+         * @type {function(number,number,import("../Style").Stat):number} */
         opts.tFun = opts.tFun || ((v, r, s) => (v - s.min) / (s.max - s.min))
 
         //shadow colors
