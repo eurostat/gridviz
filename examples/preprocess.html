@@ -10,6 +10,9 @@
     <div id="viz-container" style="height:100%; width:100%;"></div>
 
     <script src="../build/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         let containerDiv = document.getElementById("viz-container");
@@ -25,7 +28,7 @@
                         color: (v, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             const t = Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2) / 2 + 0.5
-                            return gviz.interpolateSpectral(1 - t);
+                            return d3.interpolateSpectral(1 - t);
                         },
                         shape: () => "square",
                     }),
