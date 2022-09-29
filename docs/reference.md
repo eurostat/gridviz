@@ -683,9 +683,11 @@ The **setBoundaryLayer** method has the following parameters:
 
 | Parameter       | Type       | Default         | Description   |
 | -------------- | ------------- | ------------ | ----------- |
-| **.**   |    |   |  |
-
-(Documentation coming soon).
+| **url**   | string   |  undefined |The URL of the boundaries GeoJSON file. The file should contain the information for each boundary line, the position and other information for the display of the boundary according to the zoom level. If necessary, this data can be reformated with the **preprocess** function. |
+| **preprocess**   |  function(bn):void  | undefined  | A preprocess to run on each boundary after loading. It can be used to apply some specific treatment before, format the boundary data, project coordinates, etc. |
+| **color**   |  function(bn,zf):string  | (f, zf) => "gray"  | A function returning the color of the boundary **bn** for zoom factor **zf**. |
+| **width**   |  function(bn,zf):string  | (f, zf) => 2  | A function returning the width of the boundary **bn** for zoom factor **zf**. |
+| **lineDash**   |  function(bn,zf):string  | (f, zf) => undefined  | A function returning the dash model of the boundary **bn** for zoom factor **zf**. |
 
 For more information, [see the code](../src/js/LineLayer.js).
 
