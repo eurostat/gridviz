@@ -1,9 +1,10 @@
+degurba map
 stats: elevation + deg urba
 + forest
 TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
 https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
 
-bug: lego Euro pop
+bug: lego Euro pop + add outline
 
 TODO fix euronym - local names, with accents ?
 TODO document and improve euronyme
