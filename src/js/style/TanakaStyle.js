@@ -3,7 +3,6 @@
 import { SquareColorWGLStyle } from "./SquareColorWGLStyle"
 import { SideStyle } from "./SideStyle"
 import { Style, Stat } from "../Style"
-import { interpolateSpectral } from "d3-scale-chromatic"
 
 /**
  * 
@@ -27,7 +26,10 @@ export class TanakaStyle {
                 console.error("unexpected number of colors in tanaka (<2): " + opts.nb)
                 opts.nb = 2
             }
-            opts.color = opts.color || ((t) => interpolateSpectral(1 - t))
+            if(!opts.color) {
+                console.error("color function not defined in tanaka")
+                opts.color = () => "gray"
+            }
             opts.colors = []
             for (let i = 0; i < opts.nb; i++)
                 opts.colors.push(opts.color(i / (opts.nb - 1)))
