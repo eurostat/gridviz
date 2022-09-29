@@ -45,6 +45,7 @@ export * from "./utils/stretching.js"
 
 
 import { geoAzimuthalEqualArea } from 'd3-geo'
+import { GeoCanvas } from "./GeoCanvas"
 
 
 /**
@@ -116,3 +117,7 @@ export const getEurostatBoundariesLayer = function (opts) {
     opts.url = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/" + nutsYear + "/" + crs + "/" + scale + "/nutsbn_" + nutsLevel + ".json"
     return opts
 }
+
+
+export const getParameterByName = GeoCanvas.getParameterByName
+
