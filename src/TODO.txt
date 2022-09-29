@@ -1,4 +1,4 @@
-d3 scalechromatic: remove dependency ?
+d3 scalechromatic: remove dependency
 
 deal with all:
 .interpolate

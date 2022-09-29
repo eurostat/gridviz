@@ -18,6 +18,9 @@
     <div id="viz-container" style="height:100%; width:100%;"></div>
 
     <script src="../../build/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         let containerDiv = document.getElementById("viz-container");
@@ -56,7 +59,7 @@
                     {
                         tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
                         nb: 6,
-                        color: (t) => gviz.interpolateInferno(t * 0.9 + 0.1),
+                        color: (t) => d3.interpolateInferno(t * 0.9 + 0.1),
                         colDark: "#333"
                     }
                 ),
