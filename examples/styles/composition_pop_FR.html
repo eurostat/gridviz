@@ -46,8 +46,11 @@
         </span>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
     <script src="../../build/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         let containerDiv = document.getElementById("viz-container");
@@ -80,11 +83,11 @@
             return s
         }
 
-        const col = gviz.interpolateSpectral
-        //const col = gviz.interpolateRdYlBu
-        //const col = gviz.interpolateTurbo
-        //const col = gviz.interpolateYlOrRd
-        //const col = gviz.interpolateRainbow
+        const col = d3.interpolateSpectral
+        //const col = d3.interpolateRdYlBu
+        //const col = d3.interpolateTurbo
+        //const col = d3.interpolateYlOrRd
+        //const col = d3.interpolateRainbow
         const getColorDict = () => {
             if (getAggUI())
                 return {
