@@ -19,12 +19,12 @@
 
                 <span style="font-size: 1.25em; font-weight: bold;">Population</span>
                 <br>
-                <input type="radio" name="layer" id="2018" value="2018" checked>
-                <label for="2018">2018</label>
-                <input type="radio" name="layer" id="2011" value="2011">
-                <label for="2011">2011</label>
-                <input type="radio" name="layer" id="2006" value="2006">
-                <label for="2006">2006</label>
+                <input type="radio" name="layer" id="y2018" value="y2018" checked>
+                <label for="y2018">2018</label>
+                <input type="radio" name="layer" id="y2011" value="y2011">
+                <label for="y2011">2011</label>
+                <input type="radio" name="layer" id="y2006" value="y2006">
+                <label for="y2006">2006</label>
                 <hr>
 
                 <span style="font-size: 1.25em; font-weight: bold;">Population change</span>
@@ -126,20 +126,21 @@
             app.layers = []
 
             //select layer and style
-            if (layCode === "2006" || layCode === "2011" || layCode === "2018") {
+            if (layCode === "y2006" || layCode === "y2011" || layCode === "y2018") {
+                const layCode_ = layCode.replace("y", "")
                 app.addLayerFromDataset(
                     ds.pop,
                     [
                         new gviz.SquareColorWGLStyle({
-                            colorCol: layCode,
+                            colorCol: layCode_,
                             color: d3.interpolateOrRd,
                             stretching: { fun: "expRev", alpha: -7 }
                         }),
-                        new gviz.StrokeStyle({ strokeColorCol: layCode, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
+                        new gviz.StrokeStyle({ strokeColorCol: layCode_, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => +c[layCode] ? "<b>" + c[layCode] + "</b> inhabitant(s) in " + layCode : undefined
+                        cellInfoHTML: c => +c[layCode_] ? "<b>" + c[layCode_] + "</b> inhabitant(s) in " + layCode_ : undefined
                     }
                 )
                 //legend
