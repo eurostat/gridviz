@@ -531,6 +531,14 @@
             app.cg.redraw();
         });
 
+
+        //select layer from URL
+        const ls = gviz.getParameterByName("lay")
+        if (ls) {
+            const b = document.querySelector('#' + ls)
+            if (b) b.checked = true
+        }
+
         //initialise
         update()
 
