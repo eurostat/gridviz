@@ -145,18 +145,4 @@ export class LineLayer {
         }
     }
 
-
-
-    //getters and setters
-
-    /** @returns {string} */
-    getUrl() { return this.url; }
-    /** @param {string} val @returns {this} */
-    setUrl(val) { this.url = val; return this; }
-
-    /** @returns {function(object):void} */
-    getPreprocess() { return this.preprocess; }
-    /** @param {function(object):void} val @returns {this} */
-    setPreprocess(val) { this.preprocess = val; return this; }
-
 }

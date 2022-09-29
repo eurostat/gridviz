@@ -184,38 +184,4 @@ export class LabelLayer {
         }
     }
 
-
-
-    //getters and setters
-
-    /** @returns {string} */
-    getUrl() { return this.url; }
-    /** @param {string} val @returns {this} */
-    setUrl(val) { this.url = val; return this; }
-
-    /** @returns {function(Label,number):string} */
-    getStyle() { return this.style; }
-    /** @param {function(Label,number):string} val @returns {this} */
-    setStyle(val) { this.style = val; return this; }
-
-    /** @returns {function(Label,number):string} */
-    getColor() { return this.color; }
-    /** @param {function(Label,number):string} val @returns {this} */
-    setColor(val) { this.color = val; return this; }
-
-    /** @returns {function(Label,number):string} */
-    getHaloColor() { return this.haloColor; }
-    /** @param {function(Label,number):string} val @returns {this} */
-    setHaloColor(val) { this.haloColor = val; return this; }
-
-    /** @returns {function(Label,number):number} */
-    getHaloWidth() { return this.haloWidth; }
-    /** @param {function(Label,number):number} val @returns {this} */
-    setHaloWidth(val) { this.haloWidth = val; return this; }
-
-    /** @returns {function(object):void} */
-    getPreprocess() { return this.preprocess; }
-    /** @param {function(object):void} val @returns {this} */
-    setPreprocess(val) { this.preprocess = val; return this; }
-
 }
