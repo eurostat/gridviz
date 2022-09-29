@@ -10,6 +10,9 @@
     <div id="viz-container" style="height:100%; width:100%;"></div>
 
     <script src="../build/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         let containerDiv = document.getElementById("viz-container");
@@ -20,7 +23,7 @@
         //style data
         const s = new gviz.SquareColorWGLStyle({
             colorCol: "2018",
-            color: gviz.interpolateOrRd
+            color: d3.interpolateOrRd
         })
 
         const resolutions = [1000, 2000, 5000, 10000, 20000, 50000, 100000]
