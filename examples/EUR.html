@@ -36,6 +36,12 @@
                 <label for="d06_11">2006 to 2011</label>
                 <hr>
 
+                <span style="font-size: 1.25em; font-weight: bold;">Urbanisation</span>
+                <br>
+                <input type="radio" name="layer" id="degurba" value="degurba">
+                <label for="degurba">Degree of urbanisation</label>
+                <hr>
+
                 <span style="font-size: 1.25em; font-weight: bold;">Accessibility</span>
                 <br>
                 <input type="radio" name="layer" id="accHealth" value="accHealth">
@@ -101,6 +107,12 @@
         ds.acc = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/" + r + "m/",
+        )
+
+        //degurba dataset
+        ds.degurba = app.makeMultiScaleTiledCSVGridDataset(
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/degurba/tiled/" + r + "m/",
         )
 
 
@@ -169,6 +181,44 @@
                         }
                     })
                 )
+
+
+                //urbanisation
+
+            } else if (layCode === "degurba") {
+                app.addLayerFromDataset(
+                    ds.degurba,
+                    [
+                        new gviz.CompositionStyle({
+                            color: {
+                                "uc": "#d53e4f",
+                                "du": "#f46d43",
+                                "sdu": "#fdae61",
+                                "sbu": "#fee08b",
+                                "r": "#e6f598",
+                                "lr": "#abdda4",
+                                "vlr": "#66c2a5",
+                                "NA": "gray",
+                            },
+                            type: () => "flag",
+                            //stripesOrientation: () => 0,
+                            sizeCol: "TOT",
+                            size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.5),
+                        }),
+                        new gviz.StrokeStyle({ maxZoom: 80 }),
+                    ],
+                    {
+                        pixNb: 5,
+                        cellInfoHTML: c => {
+                            if (!c.TOT) return "No information";
+                            if (c.TOT == 1) return +c.uc ? "Urban centre" : +c.du ? "Dense urban cluster" : +c.sdu ? "Semi-dense urban cluster" : +c.sbu ? "Suburban" : +c.r ? "Rural" : +c.lr ? "Low density rural" : +c.vlr ? "Very low density rural" : "Unknown";
+                            return c.TOT + " cells"
+                        }
+                    }
+                )
+                //legend
+                //TODO add legend with classified colors
+
 
                 //accessibility
 

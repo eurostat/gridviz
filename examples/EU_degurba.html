@@ -33,44 +33,11 @@
                         colorCol: "uc",
                         tFun: (v, r, s) => v / s.max
                     })*/
-                    new gviz.CompositionStyle({
-                        color: {
-                            "uc": "#d53e4f",
-                            "du": "#f46d43",
-                            "sdu": "#fdae61",
-                            "sbu": "#fee08b",
-                            "r": "#e6f598",
-                            "lr": "#abdda4",
-                            "vlr": "#66c2a5",
-                            "NA": "gray",
-                        },
-                        type: () => "flag",
-                        //stripesOrientation: () => 0,
-                        sizeCol: "TOT",
-                        size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.5),
-                    })
                 ],
                 {
-                    pixNb: 5,
-                    cellInfoHTML: c => {
-                        if (!c.TOT) return "No information";
-                        if (c.TOT == 1) return +c.uc ? "Urban centre" : +c.du ? "Dense urban cluster" : +c.sdu ? "Semi-dense urban cluster" : +c.sbu ? "Suburban" : +c.r ? "Rural" : +c.lr ? "Low density rural" : +c.vlr ? "Very low density rural" : "Unknown";
-                        return c.TOT + " cells"
-                    }
                 })
 
 
-        /*
-                        The Degree of Urbanisation level 2 classifies the 1 sqkm grid cells by identifying the following spatial entities:
-                         uc   30 = Urban Centres <==> clusters (with smoothed boundaries) of contigous cells (4-connectivity cluster) with a total population >= 50,000 inh., each cell having a
-                                 density >= 1,500 inh./sqKm or, optionally, a built-up surface share > 50%.  
-                         du   23 = Dense Urban Clusters <==> density >= 1500 inh./sqKm and population >= 5000 and < 50000.
-                         sdu   22 = Semi-Dense Urban Clusters <==> (density >= 300 AND population >= 5000) AND at least 2-km away from borders of Urban Centres or Dense Urban Clusters.
-                         sbu   21 = Suburban Cells <==> (density >= 300 AND population >= 5000)  AND  which are not Semi-Dense Urban Clusters.
-                         r   13 = Rural Clusters <==> density >= 300 AND population >= 500 and < 5000.
-                         lr  12 = Low Density Rural Grid Cells <==> (density >= 50 AND density < 300)   OR   (density >= 300 AND population < 500 ).
-                         vlr   11 = Very Low Density Rural Grid Cells <==> density >= 0 AND < 50.
-                        */
     </script>
 
 </body>
