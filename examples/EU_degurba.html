@@ -51,7 +51,12 @@
                     })
                 ],
                 {
-                    pixNb: 5
+                    pixNb: 5,
+                    cellInfoHTML: c => {
+                        if (!c.TOT) return "No information";
+                        if (c.TOT == 1) return +c.uc ? "Urban centre" : +c.du ? "Dense urban cluster" : +c.sdu ? "Semi-dense urban cluster" : +c.sbu ? "Suburban" : +c.r ? "Rural" : +c.lr ? "Low density rural" : +c.vlr ? "Very low density rural" : "Unknown";
+                        return c.TOT + " cells"
+                    }
                 })
 
 
