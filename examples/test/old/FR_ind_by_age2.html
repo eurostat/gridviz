@@ -81,8 +81,8 @@
                 return out;
             },*/
             colorCol: "age_ratio",
-            //color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1.5)),
-            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
+            //color: (v, r, s) => d3.interpolateSpectral(1 - Math.pow(v, 1.5)),
+            color: (v, r, s) => d3.interpolateSpectral(1 - Math.pow(v, 1)),
             shape: () => "donut",
         })
 
@@ -90,7 +90,7 @@
         const sSegment = new gviz.SegmentStyle({
             orientation: () => 0,
             colorCol: "age_ratio",
-            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
+            color: (v, r, s) => d3.interpolateSpectral(1 - Math.pow(v, 1)),
             length: (v, r) => r,
             widthCol: "Ind",
             width: (v, r, s, zf) => r * Math.pow(v / s.max, 0.25),
@@ -99,7 +99,7 @@
         //pillar
         const sPillar = new gviz.PillarStyle({
             colorCol: "age_ratio",
-            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
+            color: (v, r, s) => d3.interpolateSpectral(1 - Math.pow(v, 1)),
             heightCol: "Ind",
             height: (v, r, s, z) => 15 * r * Math.pow(v / s.max, 0.6),
         })
@@ -109,7 +109,7 @@
             textCol: "age_ratio",
             text: (v, r, s) => "" + Math.trunc(100 * v),
             colorCol: "age_ratio",
-            color: (v, r, s) => gviz.interpolateSpectral(1 - Math.pow(v, 1)),
+            color: (v, r, s) => d3.interpolateSpectral(1 - Math.pow(v, 1)),
             fontSizeCol: "Ind",
             fontSize: (v, r, s, z) => (5 + 1.0 * r * Math.pow(v / s.max, 0.2)),
         })
