@@ -1,16 +1,3 @@
-d3 scalechromatic: remove dependency
-
-deal with all:
-.interpolate
-.scheme
-replace gviz. by d3.
-
-
-lego smoorth +++
-<script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
-
 
 make own background - with low resolution
 https://land.copernicus.eu/imagery-in-situ/eu-dem/eu-dem-v1-0-and-derived-products/hillshade?tab=download
