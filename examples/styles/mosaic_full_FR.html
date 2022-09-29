@@ -35,8 +35,10 @@
         </span>
     </div>
 
-
     <script src="../../build/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         let containerDiv = document.getElementById("viz-container");
@@ -69,7 +71,7 @@
                 [
                     new gviz.MosaicStyle({
                         colorCol: "Ind",
-                        color: (v, r, s) => !+v ? undefined : gviz.interpolateYlOrBr(gviz.sExpRev(v / s.max, -7)),
+                        color: (v, r, s) => !+v ? undefined : d3.interpolateYlOrBr(gviz.sExpRev(v / s.max, -7)),
                         mosaicFactor: 0.2,
                         shadowFactor: 0.25,
                         shadowColor: "#aaa"
@@ -92,7 +94,7 @@
             "font-family": "mf",
             width: 450,
             ticks: 6,
-            colorRamp: gviz.interpolateYlOrBr,
+            colorRamp: d3.interpolateYlOrBr,
             fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7)
         }))
 
