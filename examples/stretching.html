@@ -19,13 +19,18 @@
             <option value="circleHigh">Circle high</option>
         </select>
         <div id="alphaText">Alpha: -10</div>
-        <input type="range" min="-30" max="0" step="1" value="-10" id="alphaExp" style="width: 300px; display: initial;">
-        <input type="range" min="0" max="1" step="0.02" value="0.3" id="alphaPowCir" style="width: 300px; display: none;">
+        <input type="range" min="-30" max="0" step="1" value="-10" id="alphaExp"
+            style="width: 300px; display: initial;">
+        <input type="range" min="0" max="1" step="0.02" value="0.3" id="alphaPowCir"
+            style="width: 300px; display: none;">
     </div>
 
     <div id="viz-container" style="height:100%; width:100%;"></div>
 
     <script src="../build/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
         let containerDiv = document.getElementById("viz-container");
 
@@ -42,7 +47,7 @@
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "2018",
-                        color: gviz.interpolateMagma,
+                        color: d3.interpolateMagma,
                         stretching: { fun: "expRev", alpha: -10 }
                     }), new gviz.StrokeStyle({ maxZoom: 15 })
                 ],
