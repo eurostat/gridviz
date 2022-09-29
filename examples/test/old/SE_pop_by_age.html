@@ -24,6 +24,9 @@
     <script src="../build/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         let containerDiv = document.getElementById("viz-container");
@@ -34,7 +37,7 @@
         const projSweden = d3.geoTransverseMercator().rotate([-15, -0.22]).reflectX(false).reflectY(true).scale(0.9996 * 6378137).translate([500000, 0]);
         app.setLabelLayer(gviz.getEuronymeLabelLayer("SE", 20, { proj: projSweden }))
 
-        const col = gviz.interpolateSpectral;
+        const col = d3.interpolateSpectral;
         //x,y,10_15,0_5,100_,15_20,20_25,30_35,35_40,40_45,45_50,50_55,55_60,5_10,60_65,65_70,70_75,75_80,80_85,85_90,90_95,95_100,f,25_30,m,pop
         const colorDict = {
             "0_5": col(0 / 20),
