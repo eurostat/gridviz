@@ -1,15 +1,13 @@
 d3 scalechromatic: remove dependency ?
+
+deal with all:
+.interpolate
+.scheme
+replace gviz. by d3.
+
 <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
-<script>
-
-const yellow = d3.interpolateYlGn(0); // "rgb(255, 255, 229)"
-const yellowGreen = d3.interpolateYlGn(0.5); // "rgb(120, 197, 120)"
-const green = d3.interpolateYlGn(1); // "rgb(0, 69, 41)"
-
-</script>
-
 
 
 make own background - with low resolution
