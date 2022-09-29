@@ -60,6 +60,9 @@
 
     <script src="../build/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         let containerDiv = document.getElementById("viz-container");
@@ -173,8 +176,8 @@
             //remove layers
             app.layers = []
 
-            const col = gviz.interpolateSpectral
-            const col2 = gviz.schemeCategory10
+            const col = d3.interpolateSpectral
+            const col2 = d3.schemeCategory10
             const sStroke = new gviz.StrokeStyle({ maxZoom: 100 })
 
             if (layCode === "pop") {
@@ -183,7 +186,7 @@
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: "TOTAL",
-                            color: gviz.interpolateOrRd,
+                            color: d3.interpolateOrRd,
                             stretching: { fun: "expRev", alpha: -7 },
                         }),
                         new gviz.SideStyle({
@@ -202,7 +205,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7) }))
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7) }))
 
             } else if (layCode === "popGender") {
                 app.addLayerFromDataset(
@@ -213,7 +216,7 @@
                             color: (v, r, s) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                                 const t = Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2) / 2 + 0.5
-                                return gviz.interpolateSpectral(1 - t);
+                                return d3.interpolateSpectral(1 - t);
                             },
                             shape: () => "circle",
                             sizeCol: "TOTAL",
@@ -233,7 +236,7 @@
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#ccc" }))
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
-                    title: "Men / women difference (%)", ticks: 7, colorRamp: gviz.interpolateSpectral, invert: true,
+                    title: "Men / women difference (%)", ticks: 7, colorRamp: d3.interpolateSpectral, invert: true,
                     fun: (t, r, s) => {
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                         return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
@@ -337,7 +340,7 @@
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: "INACT_RATE",
-                            color: gviz.interpolateOrRd,
+                            color: d3.interpolateOrRd,
                         }), sStroke
                     ],
                     {
@@ -349,7 +352,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Inactivity rate (%)", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * t }))
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Inactivity rate (%)", ticks: 6, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * t }))
 
             } else if (layCode === "busSector") {
                 app.addLayerFromDataset(
@@ -386,7 +389,7 @@
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: "ESTABLISHMENTS - TOTAL",
-                            color: gviz.interpolateOrRd,
+                            color: d3.interpolateOrRd,
                             stretching: { fun: "pow", alpha: 0.2 },
                         }), sStroke
                     ],
@@ -396,7 +399,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Tourism - number of establishments", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sPowInverse(t, 0.2) }))
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Tourism - number of establishments", ticks: 6, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sPowInverse(t, 0.2) }))
 
             } else if (layCode === "tourAccUnits") {
                 app.addLayerFromDataset(
@@ -404,7 +407,7 @@
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL",
-                            color: gviz.interpolateOrRd,
+                            color: d3.interpolateOrRd,
                             stretching: { fun: "pow", alpha: 0.2 },
                         }), sStroke
                     ],
@@ -414,7 +417,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Tourism - number of units", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sPowInverse(t, 0.2) }))
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Tourism - number of units", ticks: 6, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sPowInverse(t, 0.2) }))
 
             } else if (layCode === "tourAccBeds") {
                 app.addLayerFromDataset(
@@ -422,7 +425,7 @@
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: "NUMBER OF PERMANENT BEDS",
-                            color: gviz.interpolateOrRd,
+                            color: d3.interpolateOrRd,
                             stretching: { fun: "pow", alpha: 0.2 }
                         }), sStroke
                     ],
@@ -432,7 +435,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Tourism - number of beds", ticks: 6, colorRamp: gviz.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sPowInverse(t, 0.2) }))
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Tourism - number of beds", ticks: 6, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sPowInverse(t, 0.2) }))
 
             } else if (layCode === "tourOriginArr") {
                 app.addLayerFromDataset(
