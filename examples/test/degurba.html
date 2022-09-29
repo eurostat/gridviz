@@ -18,17 +18,27 @@
             .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
             .addMultiScaleTiledCSVGridLayer(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/degurba/tiled/" + r + "m/",
                 [
                     new gviz.SquareColorWGLStyle({
-                        colorCol: "2018",
-                        tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50)
+                        colorCol: "uc",
+                        tFun: (v, r, s) => value / stats.max
                     })
                 ],
                 {
-                    pixNb: 3
+                    pixNb: 5
                 })
-
+/*
+                The Degree of Urbanisation level 2 classifies the 1 sqkm grid cells by identifying the following spatial entities:
+                 uc   30 = Urban Centres <==> clusters (with smoothed boundaries) of contigous cells (4-connectivity cluster) with a total population >= 50,000 inh., each cell having a
+                         density >= 1,500 inh./sqKm or, optionally, a built-up surface share > 50%.  
+                 du   23 = Dense Urban Clusters <==> density >= 1500 inh./sqKm and population >= 5000 and < 50000.
+                 sdu   22 = Semi-Dense Urban Clusters <==> (density >= 300 AND population >= 5000) AND at least 2-km away from borders of Urban Centres or Dense Urban Clusters.
+                 sbu   21 = Suburban Cells <==> (density >= 300 AND population >= 5000)  AND  which are not Semi-Dense Urban Clusters.
+                 r   13 = Rural Clusters <==> density >= 300 AND population >= 500 and < 5000.
+                 lr  12 = Low Density Rural Grid Cells <==> (density >= 50 AND density < 300)   OR   (density >= 300 AND population < 500 ).
+                 vlr   11 = Very Low Density Rural Grid Cells <==> density >= 0 AND < 50.
+                */
     </script>
 
 </body>
