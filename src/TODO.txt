@@ -12,6 +12,7 @@ style: rough.js
 
 Legends: improve, extend, add missing, finalise.
 TODO show several elements on size legend
+legend for discrete color classes - use for accessibility map legend
 
 make own background - with low resolution
 https://land.copernicus.eu/imagery-in-situ/eu-dem/eu-dem-v1-0-and-derived-products/hillshade?tab=download
@@ -65,7 +66,6 @@ new EUR layers:
 https://land.copernicus.eu/global/products/
 https://land.copernicus.eu/pan-european/high-resolution-layers
 
-legend for discrete color classes - use for accessibility map legend
 
 Style test: show as hexagonal grid - for circular symbols (?)
 
