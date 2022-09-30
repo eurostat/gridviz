@@ -107,6 +107,12 @@
         ds.acc = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/" + r + "m/",
+        )
+
+        //degurba dataset
+        ds.degurba = app.makeMultiScaleTiledCSVGridDataset(
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/degurba/tiled/" + r + "m/",
             {
                 preprocess: c => {
                     if (+c.TOT != 1) c.c = "zzz";
@@ -114,12 +120,6 @@
                         c.c = +c.uc ? "uc" : +c.du ? "du" : +c.sdu ? "sdu" : +c.sbu ? "sbu" : +c.r ? "r" : +c.lr ? "lr" : +c.vlr ? "vlr" : "NA";
                 },
             }
-        )
-
-        //degurba dataset
-        ds.degurba = app.makeMultiScaleTiledCSVGridDataset(
-            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/degurba/tiled/" + r + "m/",
         )
 
 
