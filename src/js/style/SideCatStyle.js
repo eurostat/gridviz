@@ -29,7 +29,7 @@ export class SideCatStyle extends Style {
 
         /** A function returning the width of a cell side, in geo unit
          * @type {function(Side,number,number):number} */
-        this.width = opts.width || ((side, r, z) => r * 0.2);
+        this.width = opts.width || ((side, r, z) => r * 0.3);
 
         /** A fill color for the cells.
         * @type {function(Cell):string} */
@@ -56,42 +56,52 @@ export class SideCatStyle extends Style {
         //sort cells by x and y
         cells.sort((c1, c2) => c2.x == c1.x ? c1.y - c2.y : c1.x - c2.x)
         let c1 = cells[0]
+        let v1 = c1[this.col];
         for (let i = 1; i < cells.length; i++) {
             let c2 = cells[i]
+            let v2 = c2[this.col];
 
-            if (c1.y + r == c2.y && c1.x == c2.x)
+            if (c1.y + r == c2.y && c1.x == c2.x) {
                 //cells in same column and touch along horizontal side
                 //make shared side
-                sides.push({ x: c1.x, y: c2.y, or: "h", "v1": c1[this.col], "v2": c2[this.col] })
+                if (v1 != v2)
+                    sides.push({ x: c1.x, y: c2.y, or: "h", "v1": v1, "v2": v2 })
+            }
             else {
                 //cells do not touch along horizontal side
                 //make two sides: top one for c1, bottom for c2
-                sides.push({ x: c1.x, y: c1.y + r, or: "h", "v1": c1[this.col], "v2": c2[this.col] })
-                sides.push({ x: c2.x, y: c2.y, or: "h", "v1": c1[this.col], "v2": c2[this.col] })
+                sides.push({ x: c1.x, y: c1.y + r, or: "h", "v1": v1, "v2": v2 })
+                sides.push({ x: c2.x, y: c2.y, or: "h", "v1": v1, "v2": v2 })
             }
 
             c1 = c2
+            v1 = v2
         }
 
         //make vertical sides
         //sort cells by y and x
         cells.sort((c1, c2) => c2.y == c1.y ? c1.x - c2.x : c1.y - c2.y)
         c1 = cells[0]
+        v1 = c1[this.col];
         for (let i = 1; i < cells.length; i++) {
             let c2 = cells[i]
+            let v2 = c2[this.col];
 
-            if (c1.x + r == c2.x && c1.y == c2.y)
+            if (c1.x + r == c2.x && c1.y == c2.y) {
                 //cells in same row and touch along vertical side
                 //make shared side
-                sides.push({ x: c1.x + r, y: c1.y, or: "v", "v1": c1[this.col], "v2": c2[this.col] })
+                if (v1 != v2)
+                    sides.push({ x: c1.x + r, y: c1.y, or: "v", "v1": v1, "v2": v2 })
+            }
             else {
                 //cells do not touch along vertical side
                 //make two sides: right one for c1, left for c2
-                sides.push({ x: c1.x + r, y: c1.y, or: "v", "v1": c1[this.col], "v2": c2[this.col] })
-                sides.push({ x: c2.x, y: c2.y, or: "v", "v1": c1[this.col], "v2": c2[this.col] })
+                sides.push({ x: c1.x + r, y: c1.y, or: "v", "v1": v1, "v2": v2 })
+                sides.push({ x: c2.x, y: c2.y, or: "v", "v1": v1, "v2": v2 })
             }
 
             c1 = c2
+            v1 = v2
         }
 
         //
@@ -118,19 +128,41 @@ export class SideCatStyle extends Style {
             /** @type {number|undefined} */
             const wG = this.width ? this.width(s, r, zf) : undefined
             if (!wG || wG <= 0) continue
+            const w2 = wG * 0.5;
 
             //set color and width
             cg.ctx.lineWidth = wG
-            cg.ctx.strokeStyle = this.col[s.v1];
-
-            //TODO
 
             //draw segment with correct orientation
-            cg.ctx.beginPath();
-            cg.ctx.moveTo(s.x, s.y);
-            cg.ctx.lineTo(s.x + (s.or === "h" ? r : 0), s.y + (s.or === "v" ? r : 0));
+            if (s.or === "h") {
+                //top line
+                cg.ctx.beginPath();
+                cg.ctx.strokeStyle = this.color[s.v2];
+                cg.ctx.moveTo(s.x, s.y + w2);
+                cg.ctx.lineTo(s.x + r, s.y + w2);
+                cg.ctx.stroke();
 
-            cg.ctx.stroke();
+                //bottom line
+                cg.ctx.beginPath();
+                cg.ctx.strokeStyle = this.color[s.v1];
+                cg.ctx.moveTo(s.x, s.y - w2);
+                cg.ctx.lineTo(s.x + r, s.y - w2);
+                cg.ctx.stroke();
+            } else {
+                //right line
+                cg.ctx.beginPath();
+                cg.ctx.strokeStyle = this.color[s.v2];
+                cg.ctx.moveTo(s.x + w2, s.y);
+                cg.ctx.lineTo(s.x + w2, s.y + r);
+                cg.ctx.stroke();
+
+                //left line
+                cg.ctx.beginPath();
+                cg.ctx.strokeStyle = this.color[s.v1];
+                cg.ctx.moveTo(s.x - w2, s.y);
+                cg.ctx.lineTo(s.x - w2, s.y + r);
+                cg.ctx.stroke();
+            }
 
         }
 

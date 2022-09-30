@@ -41,18 +41,17 @@
                     new gviz.SideCatStyle({
                         col: "c",
                         color: color,
-                        fillColor: (c) => "#ddd",
+                        fillColor: (c) => "#eee",
                         maxZoom: 80
                     }),
-                    new gviz.StrokeStyle({ maxZoom: 80 }),
+                    //new gviz.StrokeStyle({ maxZoom: 80 }),
                 ],
                 {
                     pixNb: 4,
                     preprocess: c => {
-                        if (+c.TOT != 1) c.c = -1;
+                        if (+c.TOT != 1) c.c = "zzz";
                         else
-                        //TODO
-                            c.c = 0
+                            c.c = +c.uc ? "uc" : +c.du ? "du" : +c.sdu ? "sdu" : +c.sbu ? "sbu" : +c.r ? "r" : +c.lr ? "lr" : +c.vlr ? "vlr" : "NA";
                     },
                 })
 
