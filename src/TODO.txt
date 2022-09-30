@@ -1,4 +1,4 @@
-style contour
+contour style
 
 new data: elevation + forest - coverage and composition
 TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
