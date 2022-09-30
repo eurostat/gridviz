@@ -18,7 +18,6 @@
             <option value="tanaka">Tanaka</option>
             <option value="lego">Lego</option>
             <option value="side">Side</option>
-            <option value="contour">Contour</option>
         </select>
         <br>
         <input type="range" min="1" max="16" value="8" class="slider" id="sigma">
@@ -72,13 +71,6 @@
                     },
                     fillColor: (c) => c["ksmval"] < 0 ? "#d13c4b" : "#4288b5",
                 })],
-            contour: [
-                new gviz.ContourStyle({
-                    valueCol: "ksmval",
-                    breaks: [100, 1000, 10000, 100000],
-                    width: 1,
-                })
-            ]
         }
 
         //define kernel smoothing filter
