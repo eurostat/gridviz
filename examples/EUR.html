@@ -194,6 +194,23 @@
                 //urbanisation
 
             } else if (layCode === "degurba") {
+
+                app.addLayerFromDataset(
+                    ds.pop,
+                    [
+                        new gviz.ShapeColorSizeStyle({
+                            color: () => "#444",
+                            sizeCol: "2018",
+                            size: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.3),
+                            shape: () => "circle",
+                        })
+                    ],
+                    {
+                        pixNb: 8,
+                        maxZoom: 120,
+                    }
+                )
+
                 const degurbaColors = {
                     "uc": "#d53e4f",
                     "du": "#f46d43",
