@@ -4,7 +4,7 @@ import { Style } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
-/** @typedef {{x:number,y:number,or:"v"|"h",v1:string,v2:string}} Side */
+/** @typedef {{x:number,y:number,or:"v"|"h",v1:string|undefined,v2:string|undefined}} Side */
 
 
 /**
@@ -70,8 +70,8 @@ export class SideCatStyle extends Style {
             else {
                 //cells do not touch along horizontal side
                 //make two sides: top one for c1, bottom for c2
-                sides.push({ x: c1.x, y: c1.y + r, or: "h", "v1": v1, "v2": v2 })
-                sides.push({ x: c2.x, y: c2.y, or: "h", "v1": v1, "v2": v2 })
+                sides.push({ x: c1.x, y: c1.y + r, or: "h", "v1": v1, "v2": undefined })
+                sides.push({ x: c2.x, y: c2.y, or: "h", "v1": undefined, "v2": v2 })
             }
 
             c1 = c2
@@ -96,8 +96,8 @@ export class SideCatStyle extends Style {
             else {
                 //cells do not touch along vertical side
                 //make two sides: right one for c1, left for c2
-                sides.push({ x: c1.x + r, y: c1.y, or: "v", "v1": v1, "v2": v2 })
-                sides.push({ x: c2.x, y: c2.y, or: "v", "v1": v1, "v2": v2 })
+                sides.push({ x: c1.x + r, y: c1.y, or: "v", "v1": v1, "v2": undefined })
+                sides.push({ x: c2.x, y: c2.y, or: "v", "v1": undefined, "v2": v2 })
             }
 
             c1 = c2
@@ -136,32 +136,40 @@ export class SideCatStyle extends Style {
             //draw segment with correct orientation
             if (s.or === "h") {
                 //top line
-                cg.ctx.beginPath();
-                cg.ctx.strokeStyle = this.color[s.v2];
-                cg.ctx.moveTo(s.x, s.y + w2);
-                cg.ctx.lineTo(s.x + r, s.y + w2);
-                cg.ctx.stroke();
+                if (s.v2) {
+                    cg.ctx.beginPath();
+                    cg.ctx.strokeStyle = this.color[s.v2];
+                    cg.ctx.moveTo(s.x, s.y + w2);
+                    cg.ctx.lineTo(s.x + r, s.y + w2);
+                    cg.ctx.stroke();
+                }
 
                 //bottom line
-                cg.ctx.beginPath();
-                cg.ctx.strokeStyle = this.color[s.v1];
-                cg.ctx.moveTo(s.x, s.y - w2);
-                cg.ctx.lineTo(s.x + r, s.y - w2);
-                cg.ctx.stroke();
+                if (s.v1) {
+                    cg.ctx.beginPath();
+                    cg.ctx.strokeStyle = this.color[s.v1];
+                    cg.ctx.moveTo(s.x, s.y - w2);
+                    cg.ctx.lineTo(s.x + r, s.y - w2);
+                    cg.ctx.stroke();
+                }
             } else {
                 //right line
-                cg.ctx.beginPath();
-                cg.ctx.strokeStyle = this.color[s.v2];
-                cg.ctx.moveTo(s.x + w2, s.y);
-                cg.ctx.lineTo(s.x + w2, s.y + r);
-                cg.ctx.stroke();
+                if (s.v2) {
+                    cg.ctx.beginPath();
+                    cg.ctx.strokeStyle = this.color[s.v2];
+                    cg.ctx.moveTo(s.x + w2, s.y);
+                    cg.ctx.lineTo(s.x + w2, s.y + r);
+                    cg.ctx.stroke();
+                }
 
                 //left line
-                cg.ctx.beginPath();
-                cg.ctx.strokeStyle = this.color[s.v1];
-                cg.ctx.moveTo(s.x - w2, s.y);
-                cg.ctx.lineTo(s.x - w2, s.y + r);
-                cg.ctx.stroke();
+                if (s.v1) {
+                    cg.ctx.beginPath();
+                    cg.ctx.strokeStyle = this.color[s.v1];
+                    cg.ctx.moveTo(s.x - w2, s.y);
+                    cg.ctx.lineTo(s.x - w2, s.y + r);
+                    cg.ctx.stroke();
+                }
             }
 
         }
