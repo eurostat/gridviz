@@ -21,15 +21,14 @@ export class ContourStyle extends SideStyle {
          * @type {number} */
         opts.interval = opts.interval || 100
 
+        opts.width = opts.width || 1
         opts.color = opts.color || "#E7A935"
-
-        //1 pixel
-        opts.width = opts.width || ((r, zf) => 0.1 * zf)
 
         //override method for contour drawing
 
         this.value = (v1, v2, r, s, zf) => {
             //check if v1 - v2 cross a contour line
+            if (!v1 || !v2) return 0
             const r1 = Math.floor(v1 / opts.interval);
             const r2 = Math.floor(v2 / opts.interval);
             return Math.abs(r2 - r1);
@@ -39,7 +38,7 @@ export class ContourStyle extends SideStyle {
         this.color = (side) => side.value ? opts.color : undefined;
 
         //width: multiple of
-        this.width = opts.width || ((side, r, s, zf) => side.value * opts.width(r, zf));
+        this.width = (side, r, s, zf) => side.value * zf * opts.width;
     }
 
 }
