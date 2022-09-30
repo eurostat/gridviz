@@ -17,6 +17,8 @@
             <option value="joyplot">Joy plot</option>
             <option value="tanaka">Tanaka</option>
             <option value="lego">Lego</option>
+            <option value="side">Side</option>
+            <option value="contour">Contour</option>
         </select>
         <br>
         <input type="range" min="1" max="16" value="8" class="slider" id="sigma">
@@ -59,6 +61,23 @@
             })],
             tanaka: gviz.TanakaStyle.get("ksmval", { tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7) }),
             lego: gviz.LegoStyle.get("ksmval", { tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7), colors: d3.schemeRdYlGn[10].reverse() }),
+            side: [
+                new gviz.SideStyle({
+                    valueCol: "ksmval",
+                    value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
+                    color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
+                    width: (side, r, s, z) => {
+                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                        return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.sPow(Math.abs(side.value) / max, 0.3))
+                    },
+                    fillColor: (c) => c["ksmval"] < 0 ? "#d13c4b" : "#4288b5",
+                })],
+            contour: [
+                new gviz.ContourStyle({
+                    valueCol: "ksmval",
+                    interval: 10000,
+                })
+            ]
         }
 
         //define kernel smoothing filter

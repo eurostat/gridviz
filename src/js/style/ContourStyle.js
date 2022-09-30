@@ -24,8 +24,7 @@ export class ContourStyle extends SideStyle {
         opts.color = opts.color || "#E7A935"
 
         //1 pixel
-        opts.width = opts.width || ((r, z) => 1 * z)
-
+        opts.width = opts.width || ((r, zf) => 0.1 * zf)
 
         //override method for contour drawing
 
@@ -40,7 +39,7 @@ export class ContourStyle extends SideStyle {
         this.color = (side) => side.value ? opts.color : undefined;
 
         //width: multiple of
-        this.width = opts.width || ((side, r, s, z) => side.value * opts.width(r, z));
+        this.width = opts.width || ((side, r, s, zf) => side.value * opts.width(r, zf));
     }
 
 }

@@ -34,7 +34,7 @@ export class SideStyle extends Style {
 
         /** A function returning the width of a cell side, in geo unit
          * @type {function(Side,number,Stat|undefined,number):number} */
-        this.width = opts.width || ((side, r, s, z) => r * side.value / 5);
+        this.width = opts.width || ((side, r, s, zf) => r * side.value / 5);
 
         /** orientation. Set to 90 to show sides as slope lines for example.
         * @type {number} */
