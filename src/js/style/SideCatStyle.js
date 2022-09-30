@@ -8,6 +8,7 @@ import { GeoCanvas } from "../GeoCanvas";
 
 
 /**
+ * A style to show the sides of grid cells based on their different categories.
  * 
  * @author Julien Gaffuri
  */
@@ -27,7 +28,7 @@ export class SideCatStyle extends Style {
          * @type {object} */
         this.color = opts.color;
 
-        /** A function returning the width of a cell side, in geo unit
+        /** A function returning the width of a cell side line, in geo unit
          * @type {function(Side,number,number):number} */
         this.width = opts.width || ((side, r, z) => r * 0.2);
 
@@ -38,8 +39,6 @@ export class SideCatStyle extends Style {
 
 
     /**
-     * Draw cells as squares depending on their value.
-     * 
      * @param {Array.<Cell>} cells 
      * @param {number} r 
      * @param {GeoCanvas} cg 

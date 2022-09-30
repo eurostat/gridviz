@@ -107,6 +107,13 @@
         ds.acc = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/" + r + "m/",
+            {
+                preprocess: c => {
+                    if (+c.TOT != 1) c.c = "zzz";
+                    else
+                        c.c = +c.uc ? "uc" : +c.du ? "du" : +c.sdu ? "sdu" : +c.sbu ? "sbu" : +c.r ? "r" : +c.lr ? "lr" : +c.vlr ? "vlr" : "NA";
+                },
+            }
         )
 
         //degurba dataset
@@ -206,7 +213,13 @@
                             sizeCol: "TOT",
                             size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.5),
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 80 }),
+                        new gviz.SideCatStyle({
+                            col: "c",
+                            color: color,
+                            width: (side, r, z) => z * 3,
+                            fillColor: (c) => color[c.c] + "55",
+                            maxZoom: 80
+                        }),
                     ],
                     {
                         pixNb: 4,

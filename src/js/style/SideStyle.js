@@ -47,8 +47,6 @@ export class SideStyle extends Style {
 
 
     /**
-     * Draw cells as squares depending on their value.
-     * 
      * @param {Array.<Cell>} cells 
      * @param {number} r 
      * @param {GeoCanvas} cg 
