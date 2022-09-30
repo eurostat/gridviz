@@ -32,26 +32,27 @@ export class ContourStyle extends SideStyle {
         //override method for contour drawing
 
         const getClass = function (v) {
+            if (v == undefined) return 0
             for (let i = 0; i < opts.breaks.length; i++)
                 if (v < opts.breaks[i]) return i;
             return opts.breaks.length
         }
 
         this.value = (v1, v2, r, s, zf) => {
-            //check if v1 - v2 cross a contour line
-            if (!v1 || !v2) return 0
+            //if (!v1 || !v2) return 0
             return Math.abs(getClass(v2) - getClass(v1));
 
+            //check if v1 - v2 cross a contour line
             //const r1 = Math.floor(v1 / opts.interval);
             //const r2 = Math.floor(v2 / opts.interval);
             //return Math.abs(r2 - r1);
         };
 
         //same color for all
-        this.color = (side, r, s, zf) => side.value ? opts.color(side,r,zf) : undefined;
+        this.color = (side, r, s, zf) => side.value ? opts.color(side, r, zf) : undefined;
 
         //width: multiple of
-        this.width = (side, r, s, zf) => side.value * zf * opts.width(side,r,zf);
+        this.width = (side, r, s, zf) => side.value * zf * opts.width(side, r, zf);
     }
 
 }
