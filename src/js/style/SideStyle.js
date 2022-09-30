@@ -110,6 +110,9 @@ export class SideStyle extends Style {
             c1 = c2
         }
 
+        //
+        if (sides.length == 0) return;
+
         //compute stats on sides
         const statSides = SideStyle.getSideStatistics(sides, true)
 
