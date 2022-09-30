@@ -17,21 +17,34 @@ export class ContourStyle extends SideStyle {
         super(opts)
         opts = opts || {};
 
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for the cell values.
-         * @type {number} */
-        opts.interval = opts.interval || 100
+        /** @type {number} */
+        //opts.interval = opts.interval || 100
 
-        opts.width = opts.width || 1
-        opts.color = opts.color || "#E7A935"
+        /** @type {Array.<number>} */
+        opts.breaks = opts.breaks || [100, 1000, 10000, 100000, 1000000]
+
+        /** @type {function(Side,number,number):string} */
+        opts.width = opts.width || (() => 1) //(s, r, zf) => ...
+
+        /** @type {function(Side,number,number):string} */
+        opts.color = opts.color || (() => "#E7A935") //(s, r, zf) => ...
 
         //override method for contour drawing
+
+        const getClass = function (v) {
+            for (let i = 0; i < opts.breaks.length; i++)
+                if (v < opts.breaks[i]) return i;
+            return opts.breaks.length
+        }
 
         this.value = (v1, v2, r, s, zf) => {
             //check if v1 - v2 cross a contour line
             if (!v1 || !v2) return 0
-            const r1 = Math.floor(v1 / opts.interval);
-            const r2 = Math.floor(v2 / opts.interval);
-            return Math.abs(r2 - r1);
+            return Math.abs(getClass(v2) - getClass(v1));
+
+            //const r1 = Math.floor(v1 / opts.interval);
+            //const r2 = Math.floor(v2 / opts.interval);
+            //return Math.abs(r2 - r1);
         };
 
         //same color for all
