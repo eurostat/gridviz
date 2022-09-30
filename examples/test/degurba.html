@@ -37,12 +37,14 @@
                         size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.5),
                     }),
 
+                    //TODO: no ! need for side style categorical
+
                     new gviz.SideStyle({
-                        valueCol: "uc",
-                        value: (v1, v2) => { console.log(v1,v2); return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
+                        valueCol: "c",
+                        value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
                         color: (side, r, s, z) => "black",
                         width: (side, r, s, z) => {
-                            return 3*z
+                            return 3 * z
                         },
                         //fillColor: (c) => null
                     })
@@ -50,7 +52,12 @@
                     //new gviz.StrokeStyle({ maxZoom: 80 }),
                 ],
                 {
-                    pixNb: 4
+                    pixNb: 4,
+                    preprocess: c => {
+                        if (+c.TOT != 1) c.c = -1;
+                        else
+                            c.c = 0
+                    },
                 })
 
     </script>
