@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Style, Stat } from "../Style"
+import { Style } from "../Style"
 import { Cell } from "../Dataset"
 import { GeoCanvas } from "../GeoCanvas";
 
@@ -11,7 +11,7 @@ import { GeoCanvas } from "../GeoCanvas";
  * 
  * @author Julien Gaffuri
  */
-export class SideStyle extends Style {
+export class SideCatStyle extends Style {
 
     /** @param {object} opts */
     constructor(opts) {
@@ -123,6 +123,8 @@ export class SideStyle extends Style {
             //set color and width
             cg.ctx.lineWidth = wG
             //cg.ctx.strokeStyle = col
+
+            //TODO
 
             //draw segment with correct orientation
             /*cg.ctx.beginPath();
