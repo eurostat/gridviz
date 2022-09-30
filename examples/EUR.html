@@ -214,14 +214,14 @@
                             //stripesOrientation: () => 0,
                             sizeCol: "TOT",
                             size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.5),
-                            minZoom: 80
+                            minZoom: 120
                         }),
                         new gviz.SideCatStyle({
                             col: "c",
                             color: degurbaColors,
                             width: (side, r, z) => z * 3,
                             fillColor: (c) => degurbaColors[c.c] + "55",
-                            maxZoom: 80
+                            maxZoom: 120
                         }),
                     ],
                     {
