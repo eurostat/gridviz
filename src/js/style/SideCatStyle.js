@@ -29,7 +29,7 @@ export class SideCatStyle extends Style {
 
         /** A function returning the width of a cell side, in geo unit
          * @type {function(Side,number,number):number} */
-        this.width = opts.width || ((side, r, z) => r * 0.3);
+        this.width = opts.width || ((side, r, z) => r * 0.2);
 
         /** A fill color for the cells.
         * @type {function(Cell):string} */
