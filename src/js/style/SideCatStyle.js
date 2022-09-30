@@ -28,8 +28,8 @@ export class SideStyle extends Style {
         this.color = opts.color;
 
         /** A function returning the width of a cell side, in geo unit
-         * @type {function(Side,number,Stat|undefined,number):number} */
-        this.width = opts.width || ((side, r, s, z) => r * 3);
+         * @type {function(Side,number,number):number} */
+        this.width = opts.width || ((side, r, z) => r * 3);
 
         /** A fill color for the cells.
         * @type {function(Cell):string} */
@@ -115,22 +115,17 @@ export class SideStyle extends Style {
         const r2 = r / 2
         for (let s of sides) {
 
-            //color
-            /** @type {string|undefined} */
-            const col = this.color ? this.color(s, r, statSides, zf) : undefined
-            if (!col || col == "none") continue
-
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(s, r, statSides, zf) : undefined
+            const wG = this.width ? this.width(s, r, zf) : undefined
             if (!wG || wG <= 0) continue
 
             //set color and width
-            cg.ctx.strokeStyle = col
             cg.ctx.lineWidth = wG
+            //cg.ctx.strokeStyle = col
 
             //draw segment with correct orientation
-            cg.ctx.beginPath();
+            /*cg.ctx.beginPath();
             if (this.orientation == 90) {
                 cg.ctx.moveTo(s.x + r2, s.y + r2);
                 if (s.or === "h")
@@ -141,39 +136,12 @@ export class SideStyle extends Style {
                 cg.ctx.moveTo(s.x, s.y);
                 cg.ctx.lineTo(s.x + (s.or === "h" ? r : 0), s.y + (s.or === "v" ? r : 0));
             }
-            cg.ctx.stroke();
+            cg.ctx.stroke();*/
 
         }
 
         //update legends
         this.updateLegends({ style: this, r: r, zf: zf });
-    }
-
-
-
-    /**
-     * Compute some statistics on a value of some sides.
-     * This is used to define how to draw specifically the sides within the view.
-     * 
-     * @param {Array.<Side>} sides 
-     * @param {boolean} ignoreZeros
-     * @returns {Stat | undefined}
-     */
-    static getSideStatistics(sides, ignoreZeros) {
-        if (!sides || sides.length == 0) return undefined
-        let min = Infinity
-        let max = -Infinity
-        //let sum = 0
-        //let nb = 0
-        for (const s of sides) {
-            const v = s.value
-            if (ignoreZeros && !v) continue
-            if (v < min) min = v
-            if (v > max) max = v
-            //sum += v
-            //nb++
-        }
-        return { min: min, max: max, }
     }
 
 }
