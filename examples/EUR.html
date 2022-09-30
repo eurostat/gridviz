@@ -199,7 +199,7 @@
                     ds.pop,
                     [
                         new gviz.ShapeColorSizeStyle({
-                            color: () => "#444",
+                            color: () => "#666",
                             sizeCol: "2018",
                             size: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.3),
                             shape: () => "circle",
@@ -259,6 +259,7 @@
                     }
                 )
                 //legend
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#666d" }))
                 //TODO add legend with classified colors
 
 
