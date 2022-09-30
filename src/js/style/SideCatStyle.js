@@ -29,7 +29,7 @@ export class SideCatStyle extends Style {
 
         /** A function returning the width of a cell side, in geo unit
          * @type {function(Side,number,number):number} */
-        this.width = opts.width || ((side, r, z) => r * 3);
+        this.width = opts.width || ((side, r, z) => r * 0.2);
 
         /** A fill color for the cells.
         * @type {function(Cell):string} */
@@ -112,7 +112,6 @@ export class SideCatStyle extends Style {
 
         //draw sides
         cg.ctx.lineCap = "butt";
-        const r2 = r / 2
         for (let s of sides) {
 
             //width
@@ -122,23 +121,16 @@ export class SideCatStyle extends Style {
 
             //set color and width
             cg.ctx.lineWidth = wG
-            //cg.ctx.strokeStyle = col
+            cg.ctx.strokeStyle = this.col[s.v1];
 
             //TODO
 
             //draw segment with correct orientation
-            /*cg.ctx.beginPath();
-            if (this.orientation == 90) {
-                cg.ctx.moveTo(s.x + r2, s.y + r2);
-                if (s.or === "h")
-                    cg.ctx.lineTo(s.x + r2, s.y - r2);
-                else
-                    cg.ctx.lineTo(s.x - r2, s.y + r2);
-            } else {
-                cg.ctx.moveTo(s.x, s.y);
-                cg.ctx.lineTo(s.x + (s.or === "h" ? r : 0), s.y + (s.or === "v" ? r : 0));
-            }
-            cg.ctx.stroke();*/
+            cg.ctx.beginPath();
+            cg.ctx.moveTo(s.x, s.y);
+            cg.ctx.lineTo(s.x + (s.or === "h" ? r : 0), s.y + (s.or === "v" ? r : 0));
+
+            cg.ctx.stroke();
 
         }
 
