@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+    <title>Gridviz - example</title>
+</head>
+
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
+    <div id="viz-container" style="height:100%; width:100%;"></div>
+
+    <script src="../../build/gridviz.js"></script>
+    <script>
+
+        let containerDiv = document.getElementById("viz-container");
+
+        new gviz.App(containerDiv)
+            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(200)
+            .addMultiScaleTiledCSVGridLayer(
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/degurba/tiled/" + r + "m/",
+                [
+                    new gviz.CompositionStyle({
+                        color: {
+                            "uc": "#d53e4f",
+                            "du": "#f46d43",
+                            "sdu": "#fdae61",
+                            "sbu": "#fee08b",
+                            "r": "#e6f598",
+                            "lr": "#abdda4",
+                            "vlr": "#66c2a5",
+                            "NA": "gray",
+                        },
+                        type: () => "flag",
+                        //stripesOrientation: () => 0,
+                        sizeCol: "TOT",
+                        size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.5),
+                    }),
+                    new gviz.StrokeStyle({ maxZoom: 80 }),
+                ],
+                {
+                    pixNb: 4
+                })
+
+    </script>
+
+</body>
+
+</html>
