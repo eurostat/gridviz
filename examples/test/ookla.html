@@ -15,14 +15,14 @@
         let containerDiv = document.getElementById("viz-container");
 
         new gviz.App(containerDiv)
-            .setGeoCenter({ x: 0, y: 0 }).setZoomFactor(1)
+            .setGeoCenter({ x: 0, y: 45 }).setZoomFactor(0.002)
             .addCSVGridLayer(
                 "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/World/ookla_download_Q1_2020_fixed.csv",
-                0.01,
+                0.005,
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "mbps",
-                        tFun: (v) => Math.min(v / 100, 1)
+                        //tFun: (v) => Math.min(v / 100, 1)
                     })
                 ]
             )
