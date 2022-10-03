@@ -19,27 +19,56 @@
 
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 3426953, y: 2326791 }).setZoomFactor(1000)
+
+            .setLabelLayer(
+                gviz.getEuronymeLabelLayer("EUR", 50, {
+                    ex: 1.8,
+                    exSize: 1,
+                    color: () => "black",
+                    haloColor: () => "#ffffff",
+                    haloWidth: () => 3
+                })
+            )
+            .setBoundaryLayer(
+                gviz.getEurostatBoundariesLayer({
+                    scale: "10M",
+                    col: "#00000044",
+                    lineDash: () => []
+                })
+            )
+
             .addMultiScaleTiledCSVGridLayer(
                 [/*1000, 2000, 5000,*/ 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/elevation/tiled/" + r + "m/",
                 [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: "elevation",
-                        color: d3.interpolateSpectral,
-                        /*tFun: (v, r, s) => {
-                            if (v === "NA") return
-                            let i = 0
-                            for (let b of breaks) {
-                                if (+v <= b) break;
-                                i++
-                            }
-                            return gviz.sPow(1 - (i - 1) / breaks.length, 2)
+
+                    new gviz.JoyPlotStyle({
+                        heightCol: "elevation",
+                        height: (v, r, s, zf) => 2 * r * v / s.max /*5 * r * gviz.sPow(v / s.max, 0.4)*/,
+                        lineColor: (y, ys, r, zf) => {
+                            const t = 255 - 255 * (y - ys.min) / (ys.max - ys.min);
+                            return "rgb(" + t + "," + t + "," + t + ")"
+                        },
+                        lineWidth: (y, ys, r, zf) => 0.1 * r,
+                        fillColor: (y, ys, r, zf) => "rgba(0,0,0," + (0.0 + (1 - (y - ys.min) / (ys.max - ys.min)) * 0.9) + ")",
+                        /*fillColor: (y, ys, r, zf) => {
+                            let t = (y - ys.min) / (ys.max - ys.min);
+                            t = Math.pow(t, 1);
+                            t *= 255;
+                            return "rgba(" + t + "," + t + "," + t + ",0.7)"
                         },*/
-                    }),
+                    })
+
+                    /*
+                                    new gviz.SquareColorWGLStyle({
+                                            colorCol: "elevation",
+                                            color: d3.interpolateCubehelixDefault,
+                                        }),*/
+
                     //new gviz.StrokeStyle({ maxZoom: 80 }),
                 ],
                 {
-                    pixNb: 4
+                    pixNb: 3
                 })
 
     </script>
