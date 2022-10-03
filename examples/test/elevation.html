@@ -40,9 +40,24 @@
             .addMultiScaleTiledCSVGridLayer(
                 [/*1000, 2000, 5000,*/ 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/elevation/tiled/" + r + "m/",
-                [
 
-                   /* new gviz.JoyPlotStyle({
+
+                /*
+                gviz.TanakaStyle.get("elevation", {
+                    nb: 8, color: d3.interpolateCubehelixDefault,
+                    tFun: (v, r, s, zf) => gviz.sPow(Math.max(v, 0) / s.max, 0.5),
+                }),*/
+
+                
+                gviz.LegoStyle.get("elevation", {
+                    tFun: (v, r, s, zf) => gviz.sPow(Math.max(v, 0) / s.max, 0.5)
+                }),
+
+
+                //[
+
+
+                /* new gviz.JoyPlotStyle({
                         heightCol: "elevation",
                         height: (v, r, s, zf) => 2 * r * v / s.max,
                         lineColor: (y, ys, r, zf) => {
@@ -54,34 +69,36 @@
                     })*/
 
 
-                    /*
-                    new gviz.ShapeColorSizeStyle({
-                        color: () => "purple",
-                        sizeCol: "elevation",
-                        size: (v, r, s, zf) => 1.4 * r * gviz.sPow(v / s.max, 0.5),
-                        shape: () => "circle",
-                    })*/
+                /*
+                new gviz.ShapeColorSizeStyle({
+                    color: () => "purple",
+                    sizeCol: "elevation",
+                    size: (v, r, s, zf) => 1.4 * r * gviz.sPow(v / s.max, 0.5),
+                    shape: () => "circle",
+                })*/
 
+                /*
+                                    new gviz.SideStyle({
+                                        valueCol: "elevation",
+                                        value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
+                                        color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
+                                        width: (side, r, s, z) => {
+                                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                            return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.sPow(Math.abs(side.value) / max, 1))
+                                        },
+                                        fillColor: (c) => "#e2c9b2",
+                                    })*/
 
-                    new gviz.SideStyle({
-                        valueCol: "elevation",
-                        value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
-                        color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
-                        width: (side, r, s, z) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.sPow(Math.abs(side.value) / max, 1))
-                        },
-                        fillColor: (c) => "#e2c9b2",
-                    })
+                /*
+                                new gviz.SquareColorWGLStyle({
+                                        colorCol: "elevation",
+                                        color: d3.interpolateCubehelixDefault,
+                                    }),*/
 
-                    /*
-                                    new gviz.SquareColorWGLStyle({
-                                            colorCol: "elevation",
-                                            color: d3.interpolateCubehelixDefault,
-                                        }),*/
+                //new gviz.StrokeStyle({ maxZoom: 80 }),
 
-                    //new gviz.StrokeStyle({ maxZoom: 80 }),
-                ],
+                //                ],
+
                 {
                     pixNb: 3
                 })
