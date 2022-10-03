@@ -28,6 +28,8 @@ export class LegoStyle {
             "#cb4e29", //redish
             "#b40000", //red
             "#720012", //dark red
+            //"purple",
+            //"#eee" //whithe
         ]
 
         opts.colDark = opts.colDark || "#333"
@@ -70,9 +72,10 @@ export class LegoStyle {
 
         }
 
-        const out = TanakaStyle.get(col, opts)
-        out.push(new LegoTopStyle())
+        const ts = TanakaStyle.get(col, opts)
+        //out.push(new StrokeStyle())
+        //out.push(new LegoTopStyle())
 
-        return out
+        return [ts[0], ts[1]]
     }
 }
