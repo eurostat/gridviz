@@ -36,6 +36,12 @@
                     lineDash: () => []
                 })
             )
+            .addBackgroundLayer({
+                url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
+                resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
+                origin: [0, 6000000],
+                filterColor: zf => "#ffffffd3",
+            })
 
             .addMultiScaleTiledCSVGridLayer(
                 [/*1000,*/ 2000, 5000, 10000, 20000, 50000, 100000],
@@ -55,56 +61,58 @@
 
 
                 [
-                    new gviz.ContourStyle({
+                    /*new gviz.ContourStyle({
                         valueCol: "elevation",
-                        breaks: [100, 200, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500, 3000, 3500, 4000],
-                    }),
+                        //breaks: [100, 200, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500, 3000, 3500, 4000],
+                        breaks: [0, 50, 100, 200, 300, 400, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000],
+                    }),*/
 
 
-                    /* new gviz.JoyPlotStyle({
-                            heightCol: "elevation",
-                            height: (v, r, s, zf) => 2 * r * v / s.max,
-                            lineColor: (y, ys, r, zf) => {
-                                const t = 255 - 255 * (y - ys.min) / (ys.max - ys.min);
-                                return "rgb(" + t + "," + t + "," + t + ")"
-                            },
-                            lineWidth: (y, ys, r, zf) => 0.1 * r,
-                            fillColor: (y, ys, r, zf) => "rgba(0,0,0," + (0.0 + (1 - (y - ys.min) / (ys.max - ys.min)) * 0.9) + ")",
-                        })*/
+                    /*new gviz.JoyPlotStyle({
+                           heightCol: "elevation",
+                           height: (v, r, s, zf) => 2 * r * v / s.max,
+                           lineColor: (y, ys, r, zf) => {
+                               const t = 255 - 255 * (y - ys.min) / (ys.max - ys.min);
+                               return "rgb(" + t + "," + t + "," + t + ")"
+                           },
+                           lineWidth: (y, ys, r, zf) => 0.1 * r,
+                           fillColor: (y, ys, r, zf) => "rgba(0,0,0," + (0.0 + (1 - (y - ys.min) / (ys.max - ys.min)) * 0.9) + ")",
+                       })*/
 
 
-                    /*
-                    new gviz.ShapeColorSizeStyle({
+
+                    /*new gviz.ShapeColorSizeStyle({
                         color: () => "purple",
                         sizeCol: "elevation",
                         size: (v, r, s, zf) => 1.4 * r * gviz.sPow(v / s.max, 0.5),
                         shape: () => "circle",
                     })*/
 
-                    /*
-                                        new gviz.SideStyle({
-                                            valueCol: "elevation",
-                                            value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
-                                            color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
-                                            width: (side, r, s, z) => {
-                                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                                return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.sPow(Math.abs(side.value) / max, 1))
-                                            },
-                                            fillColor: (c) => "#e2c9b2",
-                                        })*/
 
-                    /*
-                                    new gviz.SquareColorWGLStyle({
-                                            colorCol: "elevation",
-                                            color: d3.interpolateCubehelixDefault,
-                                        }),*/
+                    /* new gviz.SideStyle({
+                         valueCol: "elevation",
+                         value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
+                         color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
+                         width: (side, r, s, z) => {
+                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                             return r * (0.0 + (side.or === "v" ? 0.6 : 1) * 3 * gviz.sPow(Math.abs(side.value) / max, 1))
+                         },
+                         fillColor: (c) => "#e2c9b2",
+                     })*/
+
+
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "elevation",
+                        color: d3.interpolateCubehelixDefault,
+                        tFun: (v, r, s) => gviz.sPow(v / s.max, 0.3)
+                    }),
 
                     //new gviz.StrokeStyle({ maxZoom: 80 }),
 
                 ],
 
                 {
-                    pixNb: 6
+                    pixNb: 3
                 })
 
     </script>
