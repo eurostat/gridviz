@@ -1,6 +1,7 @@
 //@ts-check
 
 import { TanakaStyle } from "./TanakaStyle"
+import { StrokeStyle } from "./StrokeStyle"
 import { Style } from "../Style"
 
 /**
@@ -34,7 +35,7 @@ export class LegoStyle {
 
         opts.colDark = opts.colDark || "#333"
         opts.colBright = opts.colBright || "#aaa"
-        opts.widthFactor = opts.widthFactor || 0.05
+        opts.widthFactor = opts.widthFactor || 0.12
 
         class LegoTopStyle extends Style {
 
@@ -73,9 +74,8 @@ export class LegoStyle {
         }
 
         const ts = TanakaStyle.get(col, opts)
-        //out.push(new StrokeStyle())
-        //out.push(new LegoTopStyle())
+        const sst = new StrokeStyle({ strokeColor: () => "#666", strokeWidth: (v, r, s, z) => 0.2 * z })
 
-        return [ts[0], ts[1]]
+        return [ts[0], sst, ts[1], new LegoTopStyle()]
     }
 }

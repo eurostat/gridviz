@@ -37,7 +37,7 @@ export class StrokeStyle extends Style {
 
         /** The stroke line width in geographical unit.
        * @type {function(number,number,Stat|undefined,number):number} */
-        this.strokeWidth = opts.strokeWidth;
+        this.strokeWidth = opts.strokeWidth; // (v,r,s,z)=>...
 
         /** A function returning the shape of a cell.
          * @type {function(Cell):Shape} */
