@@ -13,6 +13,7 @@ TODO fix euronym - local names, with accents ?
 TODO document and improve euronyme
 
 pillar: random example
+check https://viglino.github.io/ol-ext/examples/map/map.layer.3D.2.html
 
 Legends: improve, extend, add missing, finalise.
 TODO show several elements on size legend
@@ -31,6 +32,8 @@ Pollock style: https://www.arcgis.com/apps/webappviewer/index.html?id=661d96be9f
 + others
 
 style: rough.js
+
+fisheye effect
 
 dot density composition style
 improve performance of dotstyle - map every single individual

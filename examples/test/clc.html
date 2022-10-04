@@ -104,13 +104,14 @@
                             }
                             return clc[v].color
                         },
+                        size: (v,r,s,z) => 0.5 *z + r,
                         minZoom: 120
                     }),
                     new gviz.SideCatStyle({
                         col: "clc",
                         color: clcColors,
                         width: (side, r, z) => z * 3,
-                        fillColor: (c) => clcColors[c.clc] + "55",
+                        fillColor: (c) => clcColors[c.clc] + "99",
                         maxZoom: 120
                     }),
 
