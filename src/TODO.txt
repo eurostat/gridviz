@@ -1,3 +1,4 @@
+further test geotiff reading performence
 new data: elevation + forest - coverage and composition + CLC
 TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
 https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000

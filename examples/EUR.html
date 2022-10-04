@@ -342,11 +342,11 @@
                 app.addLayerFromDataset(
                     ds.ele,
                     gviz.TanakaStyle.get("elevation", {
-                        nb: 20, color: d3.interpolateCubehelixDefault,
+                        nb: 15, color: d3.interpolateCubehelixDefault,
                         tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
                     }),
                     {
-                        pixNb: 3,
+                        pixNb: 4,
                         cellInfoHTML: c => "<b>" + c.elevation + "</b> m"
                     }
                 )
