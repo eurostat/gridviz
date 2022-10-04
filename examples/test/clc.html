@@ -17,6 +17,57 @@
 
         let containerDiv = document.getElementById("viz-container");
 
+
+        const clc = [
+            { color: "#e6004d", code: "111", label: "Continuous urban fabric" },
+            { color: "#ff0000", code: "112", label: "Discontinuous urban fabric" },
+            { color: "#cc4df2", code: "121", label: "Industrial or commercial units" },
+            { color: "#cc0000", code: "122", label: "Road and rail networks and associated land" },
+            { color: "#e6cccc", code: "123", label: "Port areas" },
+            { color: "#e6cce6", code: "124", label: "Airports" },
+            { color: "#a600cc", code: "131", label: "Mineral extraction sites" },
+            { color: "#a64d00", code: "132", label: "Dump sites" },
+            { color: "#ff4dff", code: "133", label: "Construction sites" },
+            { color: "#ffa6ff", code: "141", label: "Green urban areas" },
+            { color: "#ffe6ff", code: "142", label: "Sport and leisure facilities" },
+            { color: "#ffffa8", code: "211", label: "Non-irrigated arable land" },
+            { color: "#ffff00", code: "212", label: "Permanently irrigated land" },
+            { color: "#e6e600", code: "213", label: "Rice fields" },
+            { color: "#e68000", code: "221", label: "Vineyards" },
+            { color: "#f2a64d", code: "222", label: "Fruit trees and berry plantations" },
+            { color: "#e6a600", code: "223", label: "Olive groves" },
+            { color: "#e6e64d", code: "231", label: "Pastures" },
+            { color: "#ffe6a6", code: "241", label: "Annual crops associated with permanent crops" },
+            { color: "#ffe64d", code: "242", label: "Complex cultivation patterns" },
+            { color: "#e6cc4d", code: "243", label: "Land principally occupied by agriculture with significant areas of natural vegetation" },
+            { color: "#f2cca6", code: "244", label: "Agro-forestry areas" },
+            { color: "#80ff00", code: "311", label: "Broad-leaved forest" },
+            { color: "#00a600", code: "312", label: "Coniferous forest" },
+            { color: "#4dff00", code: "313", label: "Mixed forest" },
+            { color: "#ccf24d", code: "321", label: "Natural grasslands" },
+            { color: "#a6ff80", code: "322", label: "Moors and heathland" },
+            { color: "#a6e64d", code: "323", label: "Sclerophyllous vegetation" },
+            { color: "#a6f200", code: "324", label: "Transitional woodland-shrub" },
+            { color: "#e6e6e6", code: "331", label: "Beaches", label: "dunes", label: "sands" },
+            { color: "#cccccc", code: "332", label: "Bare rocks" },
+            { color: "#ccffcc", code: "333", label: "Sparsely vegetated areas" },
+            { color: "#000000", code: "334", label: "Burnt areas" },
+            { color: "#a6e6cc", code: "335", label: "Glaciers and perpetual snow" },
+            { color: "#a6a6ff", code: "411", label: "Inland marshes" },
+            { color: "#4d4dff", code: "412", label: "Peat bogs" },
+            { color: "#ccccff", code: "421", label: "Salt marshes" },
+            { color: "#e6e6ff", code: "422", label: "Salines" },
+            { color: "#a6a6e6", code: "423", label: "Intertidal flats" },
+            { color: "#00ccf2", code: "511", label: "Water courses" },
+            { color: "#80f2e6", code: "512", label: "Water bodies" },
+            { color: "#00ffa6", code: "521", label: "Coastal lagoons" },
+            { color: "#a6ffe6", code: "522", label: "Estuaries" },
+            { color: "#e6f2ff", code: "523", label: "Sea and ocean" },
+        ]
+
+
+
+
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 3426953, y: 2326791 }).setZoomFactor(1000)
 
@@ -38,26 +89,44 @@
             )
 
             .addMultiScaleTiledCSVGridLayer(
-                [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                [/*500, 1000,*/ 2000, 5000, 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/clc/tiled/" + r + "m/",
                 [
-                /*new gviz.ShapeColorSizeStyle({
-                    color: () => "purple",
-                    sizeCol: "elevation",
-                    size: (v, r, s, zf) => 1.4 * r * gviz.sPow(v / s.max, 0.5),
-                    shape: () => "circle",
-                })*/
-                /*
-                                    new gviz.SquareColorWGLStyle({
-                                        colorCol: "elevation",
-                                        color: d3.interpolateCubehelixDefault,
-                                        tFun: (v, r, s) => gviz.sPow(v / s.max, 0.5)
-                                    }),
-                */
-                //new gviz.StrokeStyle({ maxZoom: 80 }),
+                    new gviz.ShapeColorSizeStyle({
+                        colorCol: "clc",
+                        color: (v) => {
+                            v = +v - 1
+                            if (v == 127) return
+                            if (v == 47) return
+                            if (v < 0 || v >= clc.length) {
+                                console.log("value: " + v)
+                                return "red"
+                            }
+                            return clc[v].color
+                        },
+                        //sizeCol: "elevation",
+                        //size: (v, r, s, zf) => 1.4 * r * gviz.sPow(v / s.max, 0.5),
+                        //shape: () => "circle",
+                    })
+
+                    /*new gviz.SquareColorWGLStyle({
+                        colorCol: "clc",
+                        color: d3.interpolateCubehelixDefault,
+                        tFun: (v, r, s) => v / 48,
+                    }),*/
+                    //new gviz.StrokeStyle({ maxZoom: 80 }),
                 ],
                 {
-                    pixNb: 5
+                    pixNb: 3,
+                    cellInfoHTML: c => {
+                        const v = +c.clc - 1
+                        if (v == 127) return
+                        if (v < 0 || v >= clc.length) {
+                            console.log("value: " + v)
+                            return "red"
+                        }
+                        return clc[v].label
+                    }
                 })
 
     </script>
