@@ -44,21 +44,21 @@
             })*/
 
             .addMultiScaleTiledCSVGridLayer(
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/elevation/tiled/" + r + "m/",
 
 
-                /*
+                
                 gviz.TanakaStyle.get("elevation", {
                     nb: 20, color: d3.interpolateCubehelixDefault,
                     tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0)-s.min) / (s.max-s.min), 0.5),
-                }),*/
+                }),
 
-
+/*
                 gviz.LegoStyle.get("elevation", {
                     tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.6)
                 }),
-
+*/
 
                 //[
 
@@ -114,8 +114,8 @@
                 //],
 
                 {
-                    //pixNb: 3 //tanaka
-                    pixNb: 6 //lego
+                    pixNb: 3 //tanaka
+                    //pixNb: 6 //lego
                 })
 
     </script>
