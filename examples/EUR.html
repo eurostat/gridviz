@@ -16,7 +16,9 @@
         <span style="font-size: 1.25em;">
             <hr>
             <div id="layer">
-
+                <input type="radio" name="layer" id="elevation" value="elevation" checked>
+                <label for="elevation">Elevation</label>
+                <br>
                 <span style="font-size: 1.25em; font-weight: bold;">Population</span>
                 <br>
                 <input type="radio" name="layer" id="y2018" value="y2018" checked>
@@ -25,23 +27,16 @@
                 <label for="y2011">2011</label>
                 <input type="radio" name="layer" id="y2006" value="y2006">
                 <label for="y2006">2006</label>
-                <hr>
-
-                <span style="font-size: 1.25em; font-weight: bold;">Population change</span>
                 <br>
                 <input type="radio" name="layer" id="d11_18" value="d11_18">
-                <label for="d11_18">2011 to 2018</label>
+                <label for="d11_18">Change 2011 to 2018</label>
                 <br>
                 <input type="radio" name="layer" id="d06_11" value="d06_11">
-                <label for="d06_11">2006 to 2011</label>
-                <hr>
-
-                <span style="font-size: 1.25em; font-weight: bold;">Urbanisation</span>
+                <label for="d06_11">Change 2006 to 2011</label>
                 <br>
                 <input type="radio" name="layer" id="degurba" value="degurba">
                 <label for="degurba">Degree of urbanisation</label>
-                <hr>
-
+                <br>
                 <span style="font-size: 1.25em; font-weight: bold;">Accessibility</span>
                 <br>
                 <input type="radio" name="layer" id="accHealth" value="accHealth">
@@ -122,6 +117,11 @@
             }
         )
 
+        //elevation dataset
+        ds.ele = app.makeMultiScaleTiledCSVGridDataset(
+            [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/elevation/tiled/" + r + "m/",
+        )
 
         //
         const update = () => {
@@ -336,6 +336,20 @@
                 //TODO add legend with classified colors
                 //lay.styles[0].legends.push(new gviz.ColorLegend({}))
                 app.layers[0].styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
+
+            } else if (layCode === "elevation") {
+
+                app.addLayerFromDataset(
+                    ds.ele,
+                    gviz.TanakaStyle.get("elevation", {
+                        nb: 20, color: d3.interpolateCubehelixDefault,
+                        tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
+                    }),
+                    {
+                        pixNb: 3,
+                        cellInfoHTML: c => "<b>" + c.elevation + "</b> m"
+                    }
+
 
             } else {
                 console.log("Unexpected layer code: " + layCode);
