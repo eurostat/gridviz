@@ -65,8 +65,8 @@
             { color: "#e6f2ff", code: "523", label: "Sea and ocean" },
         ]
 
-
-
+        const clcColors = {}
+        for(let i=0; i<clc.length; i++) clcColors[(i+1)+""] = clc[i].color;
 
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 3426953, y: 2326791 }).setZoomFactor(1000)
@@ -104,7 +104,15 @@
                             }
                             return clc[v].color
                         },
-                    })
+                        minZoom: 120
+                    }),
+                    new gviz.SideCatStyle({
+                        col: "clc",
+                        color: clcColors,
+                        width: (side, r, z) => z * 3,
+                        fillColor: (c) => clcColors[c.clc] + "55",
+                        maxZoom: 120
+                    }),
 
                     /*new gviz.SquareColorWGLStyle({
                         colorCol: "clc",
@@ -114,7 +122,7 @@
                     //new gviz.StrokeStyle({ maxZoom: 80 }),
                 ],
                 {
-                    pixNb: 3,
+                    pixNb: 1.5,
                     cellInfoHTML: c => {
                         const v = +c.clc - 1
                         if (v == 127) return
