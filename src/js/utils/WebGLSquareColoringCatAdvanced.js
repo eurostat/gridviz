@@ -41,18 +41,19 @@ export class WebGLSquareColoringCatAdvanced {
         //declare the uniform and other variables
         let fshString = `
           precision mediump float;
-          varying float vi;`
-            + (() => {
+          varying int vi;`
+            /*+ (() => {
                 const out = []
                 for (let i = 0; i < colors.length; i++)
                     out.push("uniform vec4 c" + i + ";")
                 return out.join("")
-            })()
+            })()*/
             //start the main function, apply the stretching of t
             + `void main(void) {`
         fshString += `int i = vi;`
         //TODO choose color i
-        fshString += `gl_FragColor = vec4(c0[0], c0[1], c0[2], c0[3]);}`
+        //fshString += `gl_FragColor = vec4(c0[0], c0[1], c0[2], c0[3]);}`
+        fshString += `gl_FragColor = vec4(0.1, 0.9, 0.2, 0.6);}`
 
         /** @type {WebGLShader} */
         const fShader = createShader(gl, gl.FRAGMENT_SHADER, fshString);
@@ -98,9 +99,9 @@ export class WebGLSquareColoringCatAdvanced {
         //t data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ARRAY_BUFFER, new Int32Array(iBuffer), gl.STATIC_DRAW);
-        const t = gl.getAttribLocation(program, "t");
-        gl.vertexAttribPointer(t, 1, gl.FLOAT, false, 0, 0);
-        gl.enableVertexAttribArray(t);
+        const i = gl.getAttribLocation(program, "i");
+        gl.vertexAttribPointer(i, 1, gl.INT, false, 0, 0);
+        gl.enableVertexAttribArray(i);
 
         //transformation
         gl.uniformMatrix3fv(gl.getUniformLocation(program, "mat"), false, new Float32Array(transfoMat));

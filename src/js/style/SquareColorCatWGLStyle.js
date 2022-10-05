@@ -30,18 +30,24 @@ export class SquareColorCatWGLStyle extends Style {
          * @type {object} */
         opts.color = opts.color || undefined;
 
-        //TODO
+        /** @type { Array.<string> } */
+        const keys = Object.keys(opts.color);
+
         /** @type { object } */
         this.catToI = {}
+        for (let i = 0; i < keys.length; i++) this.catToI[keys[i]] = (i + "")
+
         //TODO
         /** @type { Array.<string> } */
         this.colors = []
+        for (let i = 0; i < keys.length; i++) {
+            this.colors.push(opts.color["" + keys[i]])
+        }
 
         /**
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
          * @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
-
     }
 
 
@@ -72,10 +78,10 @@ export class SquareColorCatWGLStyle extends Style {
         for (let i = 0; i < nb; i++) {
             c = cells[i]
             const cat = c[this.colorCol];
-            if (!cat) { console.log("Unexpected category: " + cat); continue; }
+            //if (!cat) { console.log("Unexpected category: " + cat); continue; }
             /** @type {number} */
             const i_ = this.catToI[cat];
-            if (isNaN(+i_)) { console.log("Unexpected category index: " + cat + " " + i_); continue; }
+            //if (isNaN(+i_)) { console.log("Unexpected category index: " + cat + " " + i_); continue; }
             verticesBuffer.push(c.x + r2, c.y + r2)
             iBuffer.push(+i_)
         }
