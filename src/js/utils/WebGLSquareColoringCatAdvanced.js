@@ -42,12 +42,12 @@ export class WebGLSquareColoringCatAdvanced {
         let fshString = `
           precision mediump float;
           varying float vi;`
-            /*+ (() => {
+            + (() => {
                 const out = []
                 for (let i = 0; i < colors.length; i++)
                     out.push("uniform vec4 c" + i + ";")
                 return out.join("")
-            })()*/
+            })()
             //start the main function, apply the stretching of t
             + `void main(void) {`
         fshString += `float i = vi;`

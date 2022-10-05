@@ -89,7 +89,7 @@
             )
 
             .addMultiScaleTiledCSVGridLayer(
-                [/*500,*/ 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/clc/tiled/" + r + "m/",
                 [
                     new gviz.ShapeColorSizeStyle({
@@ -105,14 +105,14 @@
                             return clc[v].color
                         },
                         size: (v,r,s,z) => 0.5 *z + r,
-                        minZoom: 120
+                        minZoom: 100
                     }),
                     new gviz.SideCatStyle({
                         col: "clc",
                         color: clcColors,
                         width: (side, r, z) => z * 3,
                         fillColor: (c) => clcColors[c.clc] + "99",
-                        maxZoom: 120
+                        maxZoom: 100
                     }),
 
                     /*new gviz.SquareColorWGLStyle({
