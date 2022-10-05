@@ -1,7 +1,5 @@
+complete SquareColorCatWGLStyle
 tanaka/cat with webGL
-deal with new SquareColorCatWGLStyle
-
-CLC: exclude 128 and 44
 
 further test geotiff reading performance ?
 new data: elevation + forest - coverage and composition + CLC
