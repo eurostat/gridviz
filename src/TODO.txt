@@ -1,13 +1,11 @@
-further test geotiff reading performance
 tanaka/cat with webGL
+further test geotiff reading performance ?
 new data: elevation + forest - coverage and composition + CLC
 TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
 https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
 https://ec.europa.eu/regional_policy/en/information/publications/working-papers/2022/passenger-rail-performance-in-europe-regional-and-territorial-accessibility-indicators-for-passenger-rail
 
-bug: lego Euro pop + add outline
-
-document SideCatStyle
+document SideCatStyle, ContourStyle
 
 TODO fix euronym - local names, with accents ?
 TODO document and improve euronyme
