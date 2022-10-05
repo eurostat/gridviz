@@ -1,4 +1,6 @@
 tanaka/cat with webGL
+deal with new SquareColorCatWGLStyle
+
 further test geotiff reading performance ?
 new data: elevation + forest - coverage and composition + CLC
 TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
