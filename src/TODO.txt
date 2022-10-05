@@ -1,5 +1,4 @@
-use SquareColorCatWGLStyle
-tanaka/cat with webGL
+use SquareColorCatWGLStyle: tanaka, lego, degurba, clc
 
 further test geotiff reading performance ?
 new data: elevation + forest - coverage and composition + CLC
