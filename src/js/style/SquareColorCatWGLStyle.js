@@ -3,7 +3,7 @@
 import { Style } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
-import { WebGLSquareColoringAdvanced } from "../utils/WebGLSquareColoringAdvanced";
+import { WebGLSquareColoringCatAdvanced } from "../utils/WebGLSquareColoringCatAdvanced";
 import { monitor, monitorDuration } from "../utils/Utils"
 
 /**
@@ -28,12 +28,20 @@ export class SquareColorCatWGLStyle extends Style {
         /**
          * The dictionary (string -> color) which give the color of each category.
          * @type {object} */
-         this.color = opts.color;
+        opts.color = opts.color || undefined;
+
+        //TODO
+        /** @type { object } */
+        this.catToI = {}
+        //TODO
+        /** @type { Array.<string> } */
+        this.colors = []
 
         /**
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
          * @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
+
     }
 
 
@@ -43,16 +51,10 @@ export class SquareColorCatWGLStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
-        if (monitor) monitorDuration("*** SquareColorWGLStyle draw")
+        if (monitor) monitorDuration("*** SquareColorCatWGLStyle draw")
 
         //zoom factor
         const zf = cg.getZf()
-
-        //compute color variable statistics
-        const statColor = Style.getStatistics(cells, c => c[this.colorCol], true)
-        if (monitor) monitorDuration("   color stats computation")
-
-        if (!statColor) return
 
         //create canvas and webgl renderer
         const cvWGL = makeWebGLCanvas(cg.w + "", cg.h + "")
@@ -66,24 +68,27 @@ export class SquareColorCatWGLStyle extends Style {
         const r2 = resolution / 2
         let c, nb = cells.length
         const verticesBuffer = []
-        const tBuffer = []
+        const iBuffer = []
         for (let i = 0; i < nb; i++) {
             c = cells[i]
-            const t = this.tFun(c[this.colorCol], resolution, statColor)
-            if (t == null || t == undefined) continue
+            const cat = c[this.colorCol];
+            if (!cat) { console.log("Unexpected category: " + cat); continue; }
+            /** @type {number} */
+            const i_ = this.catToI[cat];
+            if (isNaN(+i_)) { console.log("Unexpected category index: " + cat + " " + i_); continue; }
             verticesBuffer.push(c.x + r2, c.y + r2)
-            tBuffer.push(t > 1 ? 1 : t < 0 ? 0 : t)
+            iBuffer.push(+i_)
         }
 
         if (monitor) monitorDuration("   webgl drawing data preparation")
 
         const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
-        const wgp = new WebGLSquareColoringAdvanced(cvWGL.gl, this.colors, this.stretching, sizeGeo / zf)
+        const wgp = new WebGLSquareColoringCatAdvanced(cvWGL.gl, this.colors, sizeGeo / zf)
 
         if (monitor) monitorDuration("   webgl program preparation")
 
         //draw
-        wgp.draw(verticesBuffer, tBuffer, cg.getWebGLTransform())
+        wgp.draw(verticesBuffer, iBuffer, cg.getWebGLTransform())
 
         if (monitor) monitorDuration("   webgl drawing")
 
@@ -94,9 +99,9 @@ export class SquareColorCatWGLStyle extends Style {
         if (monitor) monitorDuration("   canvas drawing")
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor });
+        this.updateLegends({ style: this, r: resolution, zf: zf });
 
-        if (monitor) monitorDuration("*** SquareColorWGLStyle end draw")
+        if (monitor) monitorDuration("*** SquareColorCatWGLStyle end draw")
     }
 
 }

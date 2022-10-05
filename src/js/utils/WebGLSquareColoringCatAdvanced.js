@@ -6,16 +6,9 @@ import { color } from "d3-color";
 /**
  * Everything to easily draw colored squares with webGL.
  * All the same size, but different fill color.
- * The color interpolation is computed in the fragment shader program, by the GPU, thus it is less flexible but faster.
+ * Color based on categories.
  */
-export class WebGLSquareColoringAdvanced {
-
-    //see:
-    //https://webglfundamentals.org/webgl/lessons/fr/webgl-shaders-and-glsl.html#les-uniforms-dans-les-shaders-de-vertex
-    //https://thebookofshaders.com/glossary/?search=mix
-    //https://thebookofshaders.com/06/
-    //https://thebookofshaders.com/glossary/
-
+export class WebGLSquareColoringCatAdvanced {
 
     /**
      * 
@@ -35,7 +28,7 @@ export class WebGLSquareColoringAdvanced {
         uniform mat3 mat;
 
         attribute int i;
-        varying int i;
+        varying int vi;
 
         void main() {
           gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
@@ -48,8 +41,7 @@ export class WebGLSquareColoringAdvanced {
         //declare the uniform and other variables
         let fshString = `
           precision mediump float;
-          varying float vt;
-          uniform float alpha;`
+          varying float vi;`
             + (() => {
                 const out = []
                 for (let i = 0; i < colors.length; i++)
@@ -84,7 +76,7 @@ export class WebGLSquareColoringAdvanced {
     }
 
     /**  */
-    draw(verticesBuffer, tBuffer, transfoMat) {
+    draw(verticesBuffer, iBuffer, transfoMat) {
 
         const gl = this.gl
         const program = this.program
@@ -105,7 +97,7 @@ export class WebGLSquareColoringAdvanced {
 
         //t data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(tBuffer), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Int32Array(iBuffer), gl.STATIC_DRAW);
         const t = gl.getAttribLocation(program, "t");
         gl.vertexAttribPointer(t, 1, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(t);
