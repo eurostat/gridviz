@@ -1,7 +1,6 @@
 //@ts-check
 
-import { Style, Stat } from "../Style"
-import { Cell } from "../Dataset"
+import { Style } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
 
 /** @typedef {"flag"|"piechart"|"ring"|"segment"|"radar"|"agepyramid"|"halftone"} CompositionType */
@@ -28,7 +27,7 @@ export class CompositionStyle extends Style {
 
         /**
          * A function returning the type of decomposition symbol of a cell, @see CompositionType
-         * @type {function(Cell):CompositionType} */
+         * @type {function(import("../Dataset").Cell):CompositionType} */
         this.type = opts.type;
 
 
@@ -37,20 +36,20 @@ export class CompositionStyle extends Style {
         this.sizeCol = opts.sizeCol
 
         /** A function returning the size of a cell.
-         * @type {function(number,number,Stat|undefined,number):number} */
+         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.size = opts.size || ((v, r, s, zf) => r);
 
 
         /** For style types with stripes (flag, segment), the orientation of the stripes (0 for horizontal, other for vertical).
-         * @type {function(Cell,number,number):number} */
+         * @type {function(import("../Dataset").Cell,number,number):number} */
         this.stripesOrientation = opts.stripesOrientation || (() => 0); //(c,r,zf) => ...
 
         /** The function specifying an offset angle for a radar or halftone style.
-         * @type {function(Cell,number,number):number} */
+         * @type {function(import("../Dataset").Cell,number,number):number} */
         this.offsetAngle = opts.offsetAngle || (() => 0);  //(cell,r,zf) => ...
 
         /** The function specifying the height of the age pyramid, in geo unit.
-        * @type {function(Cell,number,number):number} */
+        * @type {function(import("../Dataset").Cell,number,number):number} */
         this.agePyramidHeight = opts.agePyramidHeight || ((c, r, zf) => r);  //(cell,r,zf) => ...
 
         /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
@@ -63,7 +62,7 @@ export class CompositionStyle extends Style {
     /**
      * Draw cells as squares depending on their value.
      * 
-     * @param {Array.<Cell>} cells
+     * @param {Array.<import("../Dataset").Cell>} cells
      * @param {number} r 
      * @param {GeoCanvas} cg 
      */
@@ -90,7 +89,7 @@ export class CompositionStyle extends Style {
         for (let cell of cells) {
 
             //size
-            /** @type {function(number,number,Stat|undefined,number):number} */
+            /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
             let s_ = this.size || (() => r);
             //size - in geo
             /** @type {number} */
