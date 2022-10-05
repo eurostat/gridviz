@@ -27,8 +27,8 @@ export class WebGLSquareColoringCatAdvanced {
         uniform float sizePix;
         uniform mat3 mat;
 
-        attribute int i;
-        varying int vi;
+        attribute float i;
+        varying float vi;
 
         void main() {
           gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
@@ -41,7 +41,7 @@ export class WebGLSquareColoringCatAdvanced {
         //declare the uniform and other variables
         let fshString = `
           precision mediump float;
-          varying int vi;`
+          varying float vi;`
             /*+ (() => {
                 const out = []
                 for (let i = 0; i < colors.length; i++)
@@ -50,7 +50,7 @@ export class WebGLSquareColoringCatAdvanced {
             })()*/
             //start the main function, apply the stretching of t
             + `void main(void) {`
-        fshString += `int i = vi;`
+        fshString += `float i = vi;`
         //TODO choose color i
         //fshString += `gl_FragColor = vec4(c0[0], c0[1], c0[2], c0[3]);}`
         fshString += `gl_FragColor = vec4(0.1, 0.9, 0.2, 0.6);}`
@@ -68,7 +68,7 @@ export class WebGLSquareColoringCatAdvanced {
         gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * sizePix);
 
         //colors
-        gl.uniform4fv(gl.getUniformLocation(this.program, "c0"), [0.3, 0, 0.8, 0.5]);
+        //gl.uniform4fv(gl.getUniformLocation(this.program, "c0"), [0.3, 0, 0.8, 0.5]);
         //TODO one uniform per color, indexed by i. Possible to use an array of colors?
         /*for (let i = 0; i < colors.length; i++) {
             const c = color(colors[i])
@@ -98,9 +98,9 @@ export class WebGLSquareColoringCatAdvanced {
 
         //t data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ARRAY_BUFFER, new Int32Array(iBuffer), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(iBuffer), gl.STATIC_DRAW);
         const i = gl.getAttribLocation(program, "i");
-        gl.vertexAttribPointer(i, 1, gl.INT, false, 0, 0);
+        gl.vertexAttribPointer(i, 1, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(i);
 
         //transformation
