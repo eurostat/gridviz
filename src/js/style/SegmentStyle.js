@@ -1,7 +1,6 @@
 //@ts-check
 
-import { Style, Stat } from "../Style"
-import { Cell } from "../Dataset"
+import { Style } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
 
 /**
@@ -17,7 +16,7 @@ export class SegmentStyle extends Style {
         opts = opts || {};
 
         /** A function returning the orientation (in degrees) of the segment representing a cell.
-         * @type {function(Cell):number} */
+         * @type {function(import("../Dataset").Cell):number} */
         this.orientation = opts.orientation || (() => 0);
 
         /** 
@@ -25,7 +24,7 @@ export class SegmentStyle extends Style {
         this.colorCol = opts.colorCol;
 
         /** A function returning the color of the cell segment.
-        * @type {function(number,number,Stat|undefined):string} */
+        * @type {function(number,number,import("../Style").Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
         /** 
@@ -33,7 +32,7 @@ export class SegmentStyle extends Style {
         this.lengthCol = opts.lengthCol;
 
         /** A function returning the length of the segment representing a cell, in geo unit
-         * @type {function(number,number,Stat|undefined,number):number} */
+         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.length = opts.length;
 
         /** 
@@ -41,7 +40,7 @@ export class SegmentStyle extends Style {
         this.widthCol = opts.widthCol;
 
         /** A function returning the width of the segment representing a cell, in geo unit
-         * @type {function(number,number,Stat|undefined,number):number} */
+         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.width = opts.width;
     }
 
@@ -49,7 +48,7 @@ export class SegmentStyle extends Style {
     /**
      * Draw cells as segments.
      * 
-     * @param {Array.<Cell>} cells 
+     * @param {Array.<import("../Dataset").Cell>} cells 
      * @param {number} resolution 
      * @param {GeoCanvas} cg 
      */
