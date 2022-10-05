@@ -68,8 +68,6 @@ export class WebGLSquareColoringCatAdvanced {
         out.push("else gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n}")
         const fshString = out.join("")
 
-        console.log(fshString)
-
         /** @type {WebGLShader} */
         const fShader = createShader(gl, gl.FRAGMENT_SHADER, fshString);
 
