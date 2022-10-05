@@ -39,21 +39,32 @@ export class WebGLSquareColoringCatAdvanced {
 
         //prepare fragment shader code
         //declare the uniform and other variables
-        let fshString = `
-          precision mediump float;
-          varying float vi;`
-            + (() => {
-                const out = []
-                for (let i = 0; i < colors.length; i++)
-                    out.push("uniform vec4 c" + i + ";")
-                return out.join("")
-            })()
-            //start the main function, apply the stretching of t
-            + `void main(void) {`
-        fshString += `float i = vi;`
-        //TODO choose color i
-        //fshString += `gl_FragColor = vec4(c0[0], c0[1], c0[2], c0[3]);}`
-        fshString += `gl_FragColor = vec4(0.1, 0.9, 0.2, 0.6);}`
+        const out = [];
+        out.push("precision mediump float;\nvarying float vi;\n")
+        //add color uniforms
+        for (let i = 0; i < colors.length; i++)
+            out.push("uniform vec4 c" + i + ";\n")
+        //start the main function
+        out.push("void main(void) {\n")
+        //choose color i
+        for (let i = 0; i < colors.length; i++) {
+            if (i > 0) out.push("else ")
+            out.push("if(vi==")
+            out.push(i)
+            out.push(".0) gl_FragColor = vec4(c")
+            out.push(i)
+            out.push("[0], c")
+            out.push(i)
+            out.push("[1], c")
+            out.push(i)
+            out.push("[2], c")
+            out.push(i)
+            out.push("[3]);\n")
+        }
+        out.push("else gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n}")
+        const fshString = out.join("")
+
+        console.log(fshString)
 
         /** @type {WebGLShader} */
         const fShader = createShader(gl, gl.FRAGMENT_SHADER, fshString);
@@ -70,10 +81,10 @@ export class WebGLSquareColoringCatAdvanced {
         //colors
         //gl.uniform4fv(gl.getUniformLocation(this.program, "c0"), [0.3, 0, 0.8, 0.5]);
         //TODO one uniform per color, indexed by i. Possible to use an array of colors?
-        /*for (let i = 0; i < colors.length; i++) {
+        for (let i = 0; i < colors.length; i++) {
             const c = color(colors[i])
             gl.uniform4fv(gl.getUniformLocation(this.program, "c" + i), [+c.r / 255.0, +c.g / 255.0, +c.b / 255.0, +c.opacity]);
-        }*/
+        }
     }
 
     /**  */
