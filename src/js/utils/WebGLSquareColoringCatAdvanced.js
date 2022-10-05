@@ -42,8 +42,12 @@ export class WebGLSquareColoringCatAdvanced {
         const out = [];
         out.push("precision mediump float;\nvarying float vi;\n")
         //add color uniforms
-        for (let i = 0; i < colors.length; i++)
-            out.push("uniform vec4 c" + i + ";\n")
+        out.push("uniform vec4")
+        for (let i = 0; i < colors.length; i++) {
+            if (i > 0) out.push(",")
+            out.push(" c" + i)
+        }
+        out.push(";\n")
         //start the main function
         out.push("void main(void) {\n")
         //choose color i
