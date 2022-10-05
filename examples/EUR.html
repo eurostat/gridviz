@@ -230,15 +230,21 @@
                             type: () => "flag",
                             //stripesOrientation: () => 0,
                             sizeCol: "TOT",
-                            size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.5),
-                            minZoom: 120
+                            size: (v, r, s, z) => 1 * r * gviz.sPow(v / s.max, 0.5),
+                            minZoom: 120,
                         }),
+                        /*new gviz.SquareColorCatWGLStyle({
+                            colorCol: "c",
+                            color: degurbaColors,
+                            maxZoom: 400,
+                            minZoom: 120,
+                        }),*/
                         new gviz.SideCatStyle({
                             col: "c",
                             color: degurbaColors,
                             width: (side, r, z) => z * 3,
                             fillColor: (c) => degurbaColors[c.c] + "55",
-                            maxZoom: 120
+                            maxZoom: 120,
                         }),
                     ],
                     {
