@@ -27,6 +27,7 @@ export { DotDensityStyle } from "./style/DotDensityStyle"
 export { TanakaStyle } from "./style/TanakaStyle"
 export { LegoStyle } from "./style/LegoStyle"
 export { SquareColorWGLStyle } from "./style/SquareColorWGLStyle"
+export { SquareColorCatWGLStyle } from "./style/SquareColorCatWGLStyle"
 export { MosaicStyle } from "./style/MosaicStyle"
 
 //export additional layers
