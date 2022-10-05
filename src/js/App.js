@@ -259,7 +259,7 @@ export class App {
     /**
      * Returns the layers which are within the current viewer zoom extent, that is the ones that are visible.
      * @returns {Array.<Layer>}
-     * @protected
+     * @public
      */
     getActiveLayers() {
 
@@ -293,7 +293,7 @@ export class App {
     /**
      * @param {number} marginPx 
      * @returns {Envelope}
-     * @protected
+     * @public
      */
     updateExtentGeo(marginPx = 20) {
         return this.cg.updateExtentGeo(marginPx);

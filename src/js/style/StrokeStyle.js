@@ -1,7 +1,6 @@
 //@ts-check
 
-import { Style, Stat, Shape } from "../Style"
-import { Cell } from "../Dataset"
+import { Style } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
 
 /**
@@ -20,7 +19,7 @@ export class StrokeStyle extends Style {
         this.strokeColorCol = opts.strokeColorCol;
 
         /** A function returning the color of the stroke.
-        * @type {function(number,number,Stat|undefined):string} */
+        * @type {function(number,number,import("../Style").Stat|undefined):string} */
         this.strokeColor = opts.strokeColor || (() => "#666");
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for size.
@@ -28,7 +27,7 @@ export class StrokeStyle extends Style {
         this.sizeCol = opts.sizeCol;
 
         /** A function returning the size of a cell in geographical unit.
-        * @type {function(number,number,Stat|undefined,number):number} */
+        * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.size = opts.size;
 
         /** The stroke line width, in pixels.
@@ -36,11 +35,11 @@ export class StrokeStyle extends Style {
         this.strokeWidthCol = opts.strokeWidthCol;
 
         /** The stroke line width in geographical unit.
-       * @type {function(number,number,Stat|undefined,number):number} */
+       * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.strokeWidth = opts.strokeWidth; // (v,r,s,z)=>...
 
         /** A function returning the shape of a cell.
-         * @type {function(Cell):Shape} */
+         * @type {function(import("../Dataset").Cell):import("../Style").Shape} */
         this.shape = opts.shape || (() => "square");
     }
 
@@ -48,7 +47,7 @@ export class StrokeStyle extends Style {
     /**
      * Draw cells as squares, with various colors and size.
      * 
-     * @param {Array.<Cell>} cells 
+     * @param {Array.<import("../Dataset").Cell>} cells 
      * @param {number} resolution 
      * @param {GeoCanvas} cg 
      */
@@ -80,7 +79,7 @@ export class StrokeStyle extends Style {
             cg.ctx.strokeStyle = col;
 
             //size
-            /** @type {function(number,number,Stat|undefined,number):number} */
+            /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
             let s_ = this.size || (() => resolution);
             //size - in geo unit
             const sG = s_(cell[this.sizeCol], resolution, statSize, zf)

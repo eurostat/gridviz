@@ -1,7 +1,6 @@
 //@ts-check
 
-import { Style, Stat } from "../Style"
-import { Cell } from "../Dataset"
+import { Style } from "../Style"
 import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
 import { WebGLSquareColoringAdvanced } from "../utils/WebGLSquareColoringAdvanced";
@@ -28,7 +27,7 @@ export class SquareColorCatWGLStyle extends Style {
 
         /**
          * A function returning the t value (within [0,1]) of the cell.
-        * @type {function(number,number,Stat):number} */
+        * @type {function(number,number,import("../Style").Stat):number} */
         this.tFun = opts.tFun || ((v, r, s) => v / s.max);
 
         /**
@@ -53,7 +52,7 @@ export class SquareColorCatWGLStyle extends Style {
 
 
     /**
-     * @param {Array.<Cell>} cells 
+     * @param {Array.<import("../Dataset").Cell>} cells 
      * @param {number} resolution 
      * @param {GeoCanvas} cg 
      */

@@ -1,10 +1,9 @@
 //@ts-check
-/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:Envelope }} GridInfo */
+/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../Dataset").Envelope }} GridInfo */
 
 import { json, csv } from "d3-fetch";
 import { GridTile } from './GridTile';
 import { App } from '../App';
-import { Envelope, Cell } from "../Dataset"
 import { DatasetComponent } from "../DatasetComponent";
 import { monitor, monitorDuration } from "../utils/Utils"
 
@@ -18,7 +17,7 @@ export class TiledGrid extends DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {App} app The application.
-     * @param {{preprocess?:(function(Cell):void)}} opts 
+     * @param {{preprocess?:(function(import("../Dataset").Cell):void)}} opts 
      */
     constructor(url, app, opts = {}) {
         super(url, 0, opts)
@@ -85,8 +84,8 @@ export class TiledGrid extends DatasetComponent {
      * Compute a tiling envelope from a geographical envelope.
      * This is the function to use to know which tiles to download for a geographical view.
      * 
-     * @param {Envelope} e 
-     * @returns {Envelope|undefined}
+     * @param {import("../Dataset").Envelope} e 
+     * @returns {import("../Dataset").Envelope|undefined}
      */
     getTilingEnvelope(e) {
         if (!this.info) {
@@ -109,7 +108,7 @@ export class TiledGrid extends DatasetComponent {
     /**
      * Request data within a geographic envelope.
      * 
-     * @param {Envelope} extGeo 
+     * @param {import("../Dataset").Envelope} extGeo 
      * @param {function():void} redrawFun
      * @returns {this}
      */
@@ -121,12 +120,12 @@ export class TiledGrid extends DatasetComponent {
         if (!this.info) return this;
 
         //tiles within the scope
-        /** @type {Envelope|undefined} */
+        /** @type {import("../Dataset").Envelope|undefined} */
         const tb = this.getTilingEnvelope(extGeo);
         if (!tb) return this;
 
         //grid bounds
-        /** @type {Envelope} */
+        /** @type {import("../Dataset").Envelope} */
         const gb = this.info.tilingBounds;
 
         for (let xT = Math.max(tb.xMin, gb.xMin); xT <= Math.min(tb.xMax, gb.xMax); xT++) {
@@ -208,7 +207,7 @@ export class TiledGrid extends DatasetComponent {
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      * @abstract
-     * @param {Envelope} extGeo 
+     * @param {import("../Dataset").Envelope} extGeo 
      * @returns {void}
      */
     updateViewCache(extGeo) {
@@ -220,12 +219,12 @@ export class TiledGrid extends DatasetComponent {
         if (!this.info) return;
 
         //tiles within the scope
-        /** @type {Envelope|undefined} */
+        /** @type {import("../Dataset").Envelope|undefined} */
         const tb = this.getTilingEnvelope(extGeo);
         if (!tb) return;
 
         //grid bounds
-        /** @type {Envelope} */
+        /** @type {import("../Dataset").Envelope} */
         const gb = this.info.tilingBounds;
 
         for (let xT = Math.max(tb.xMin, gb.xMin); xT <= Math.min(tb.xMax, gb.xMax); xT++) {

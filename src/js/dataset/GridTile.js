@@ -1,8 +1,5 @@
 //@ts-check
 
-import { Cell, Envelope } from "../Dataset"
-import { GridInfo } from "./TiledGrid"
-
 /**
  * A grid tile.
  * 
@@ -11,14 +8,14 @@ import { GridInfo } from "./TiledGrid"
 export class GridTile {
 
     /**
-     * @param {Array.<Cell>} cells The tile cells.
+     * @param {Array.<import("../Dataset").Cell>} cells The tile cells.
      * @param {number} xT The X position of the tile.
      * @param {number} yT The Y position of the tile.
-     * @param {GridInfo} gridInfo The grid info object.
+     * @param {import("./CSVGrid").GridInfo} gridInfo The grid info object.
      */
     constructor(cells, xT, yT, gridInfo) {
 
-        /** @type {Array.<Cell>} */
+        /** @type {Array.<import("../Dataset").Cell>} */
         this.cells = cells;
         /** @type {number} */
         this.x = xT
@@ -28,7 +25,7 @@ export class GridTile {
         const r = gridInfo.resolutionGeo;
         const s = gridInfo.tileSizeCell;
 
-        /** @type {Envelope} */
+        /** @type {import("../Dataset").Envelope} */
         this.extGeo = {
             xMin: gridInfo.originPoint.x + r * s * this.x,
             xMax: gridInfo.originPoint.x + r * s * (this.x + 1),
