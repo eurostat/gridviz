@@ -1,3 +1,4 @@
+degurba: define several layers
 use SquareColorCatWGLStyle: tanaka, lego, degurba, clc
 
 further test geotiff reading performance ?
