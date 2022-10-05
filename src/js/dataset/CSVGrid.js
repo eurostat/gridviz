@@ -2,7 +2,6 @@
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:Envelope }} GridInfo */
 
 import { csv } from "d3-fetch";
-import { Cell, Envelope } from "../Dataset"
 import { DatasetComponent } from "../DatasetComponent";
 
 /**
@@ -15,14 +14,14 @@ export class CSVGrid extends DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {{preprocess?:(function(Cell):void)}} opts 
+     * @param {{preprocess?:(function(import("../Dataset").Cell):void)}} opts 
      */
     constructor(url, resolution, opts = {}) {
         super(url, resolution, opts)
 
         /** 
          * @private
-         * @type {Array.<Cell>} */
+         * @type {Array.<import("../Dataset").Cell>} */
         this.cells = [];
 
         /**  
@@ -35,7 +34,7 @@ export class CSVGrid extends DatasetComponent {
     /**
      * Request data within a geographic envelope.
      * 
-     * @param {Envelope|undefined} e 
+     * @param {import("../Dataset").Envelope|undefined} e 
      * @param {function():void} redraw 
      */
     getData(e, redraw) {
@@ -77,7 +76,7 @@ export class CSVGrid extends DatasetComponent {
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      * 
-     * @param {Envelope} extGeo 
+     * @param {import("../Dataset").Envelope} extGeo 
      * @returns {void}
      */
     updateViewCache(extGeo) {
