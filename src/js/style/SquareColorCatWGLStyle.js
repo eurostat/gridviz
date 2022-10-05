@@ -8,7 +8,7 @@ import { monitor, monitorDuration } from "../utils/Utils"
 
 /**
  * Style based on webGL
- * To show cells as colored squares, with computation of the colors on GPU side (faster than JavaScript side).
+ * To show cells as colored squares, from categories.
  * Alls squares with the same size
  * 
  * @author Julien Gaffuri
@@ -21,28 +21,14 @@ export class SquareColorCatWGLStyle extends Style {
         opts = opts || {};
 
         /**
-         * The name of the column/attribute of the tabular data where to retrieve the variable for color.
+         * The name of the column/attribute of the tabular data where to retrieve the category of the cell, for coloring.
          * @type {string} */
         this.colorCol = opts.colorCol;
 
         /**
-         * A function returning the t value (within [0,1]) of the cell.
-        * @type {function(number,number,import("../Style").Stat):number} */
-        this.tFun = opts.tFun || ((v, r, s) => v / s.max);
-
-        /**
-         * Distribution stretching method.
-         * The stretching is performed on GPU side (fragment shader).
-         * @type {{ fun:string, alpha:number }} */
-        this.stretching = opts.stretching
-
-        /**
-         * The sample of the color ramp.
-         * The color is computed on GPU side (fragment shader) based on those values (linear interpolation).
-         * @type {Array.<string>} */
-        this.colors = opts.colors || ["rgb(158, 1, 66)", "rgb(248, 142, 83)", "rgb(251, 248, 176)", "rgb(137, 207, 165)", "rgb(94, 79, 162)"].reverse()
-        if (opts.color)
-            this.colors = [opts.color(0), opts.color(0.2), opts.color(0.4), opts.color(0.6), opts.color(0.8), opts.color(1)]
+         * The dictionary (string -> color) which give the color of each category.
+         * @type {object} */
+         this.color = opts.color;
 
         /**
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
