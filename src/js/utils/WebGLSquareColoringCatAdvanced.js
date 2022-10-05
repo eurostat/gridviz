@@ -20,11 +20,10 @@ export class WebGLSquareColoringAdvanced {
     /**
      * 
      * @param {*} gl 
-     * @param {Array.<String>} colors 
-     * @param {{fun:string,alpha:number}} stretching 
+     * @param {Array.<string>} colors 
      * @param {number} sizePix 
      */
-    constructor(gl, colors, stretching, sizePix = 10) {
+    constructor(gl, colors, sizePix = 10) {
 
         /** @type {WebGLRenderingContext} */
         this.gl = gl
@@ -35,13 +34,13 @@ export class WebGLSquareColoringAdvanced {
         uniform float sizePix;
         uniform mat3 mat;
 
-        attribute float t;
-        varying float vt;
+        attribute int i;
+        varying int i;
 
         void main() {
           gl_Position = vec4(mat * vec3(pos, 1.0), 1.0);
           gl_PointSize = sizePix;
-          vt = t;
+          vi = i;
         }
       `);
 
@@ -58,87 +57,10 @@ export class WebGLSquareColoringAdvanced {
                 return out.join("")
             })()
             //start the main function, apply the stretching of t
-            + `void main(void) {
-          `
-
-        if (stretching) {
-            if (stretching.fun == "pow")
-                //sPow = (t, alpha = 3) => Math.pow(t, alpha);
-                fshString += `float t = pow(vt, alpha);`
-            else if (stretching.fun == "powRev")
-                //sPowRev = (t, alpha = 3) => 1 - Math.pow(1 - t, 1 / alpha);
-                fshString += `float t = 1.0-pow(1.0-vt, 1.0/alpha);`
-            else if (stretching.fun == "exp")
-                //sExp = (t, alpha = 3) => alpha == 0 ? t : (Math.exp(t * alpha) - 1) / (Math.exp(alpha) - 1);
-                fshString += stretching.alpha == 0 ? `float t = vt;`
-                    : `float t = (exp(vt * alpha) - 1.0) / (exp(alpha) - 1.0);`
-            else if (stretching.fun == "expRev")
-                //sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t);
-                fshString += stretching.alpha == 0 ? `float t = vt;`
-                    : `float t = 1.0 - (1.0 / alpha) * log(exp(alpha) * (1.0 - vt) + vt);`
-            else if (stretching.fun == "circleLow") {
-                if (stretching.alpha == 0)
-                    //if (alpha == 0) return t;
-                    fshString += `float t = vt;`
-                else if (stretching.alpha == 1)
-                    // if (alpha == 1) return Math.sqrt(2 * t - t * t);
-                    fshString += `float t = sqrt(vt * (2.0 - vt));`
-                else {
-                    //const a = alpha / (1 - alpha);
-                    //return Math.sqrt(1 / (a * a) + t * (2 / a + 2 - t)) - 1 / a;
-                    fshString += `float a = alpha / (1.0 - alpha);
-                    float t = sqrt(1.0 / (a * a) + vt * ( 2.0/a + 2.0 - vt )) - 1.0 / a;`
-                }
-            } else if (stretching.fun == "circleHigh") {
-                // 1 - sCircleLow(1 - t, alpha)
-                if (stretching.alpha == 0)
-                    //if (alpha == 0) return t;
-                    fshString += `float t = vt;`
-                else if (stretching.alpha == 1)
-                    // if (alpha == 1) return Math.sqrt(2 * t - t * t);
-                    fshString += `float t = 1.0 - sqrt((1.0 - vt) * (1.0 + vt));`
-                else {
-                    //const a = alpha / (1 - alpha);
-                    //return Math.sqrt(1 / (a * a) + (2 * t) / a + 2 * t - t * t) - 1 / a;
-                    fshString += `float a = alpha / (1.0 - alpha);
-                    float t = 1.0 - sqrt(1.0 / (a * a) + (1.0-vt) * ( 2.0/a + 1.0 + vt )) + 1.0 / a;`
-                }
-            }
-            else {
-                console.error("Unexpected stretching function code: " + stretching.fun)
-                fshString += `float t = vt;`
-            }
-        } else {
-            fshString += `float t = vt;`
-        }
-
-        //choose initial and final colors, and adjust t value
-        if (colors.length == 1)
-            fshString += `
-                 vec4 cI=c0;
-                 vec4 cF=c0;`
-        else if (colors.length == 2)
-            fshString += `
-                 vec4 cI=c0;
-                 vec4 cF=c1;`
-        else {
-            const nb = colors.length - 1
-            const nbs = nb + ".0"
-            fshString += `
-                vec4 cI;
-                vec4 cF;
-                if(t<1.0/`+ nbs + `) { cI=c0; cF=c1; t=t*` + nbs + `; }`
-            for (let i = 2; i < nb; i++)
-                fshString += `else if(t<` + i + `.0/` + nbs + `) { cI=c` + (i - 1) + `; cF=c` + i + `; t=` + nbs + `*t-` + (i - 1) + `.0; }`
-            fshString += `else { cI=c` + (nb - 1) + `; cF=c` + nb + `; t=` + nbs + `*t-` + (nb - 1) + `.0; }`
-        }
-
-        //one single color
-        if (colors.length == 1)
-            fshString += `gl_FragColor = vec4(c0[0], c0[1], c0[2], c0[3]);}`
-        //set interpolated color, between initial and final one
-        else
-            fshString += `gl_FragColor = mix(cI, cF, t);}`
+            + `void main(void) {`
+        fshString += `int i = vi;`
+        //TODO choose color i
+        fshString += `gl_FragColor = vec4(c0[0], c0[1], c0[2], c0[3]);}`
 
         /** @type {WebGLShader} */
         const fShader = createShader(gl, gl.FRAGMENT_SHADER, fshString);
@@ -152,14 +74,13 @@ export class WebGLSquareColoringAdvanced {
         //sizePix
         gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * sizePix);
 
-        //stretching alpha factor
-        gl.uniform1f(gl.getUniformLocation(this.program, "alpha"), stretching ? 1.0 * stretching.alpha : 0.0);
-
         //colors
-        for (let i = 0; i < colors.length; i++) {
+        gl.uniform4fv(gl.getUniformLocation(this.program, "c0"), [0.3, 0, 0.8, 0.5]);
+        //TODO one uniform per color, indexed by i. Possible to use an array of colors?
+        /*for (let i = 0; i < colors.length; i++) {
             const c = color(colors[i])
             gl.uniform4fv(gl.getUniformLocation(this.program, "c" + i), [+c.r / 255.0, +c.g / 255.0, +c.b / 255.0, +c.opacity]);
-        }
+        }*/
     }
 
     /**  */
