@@ -1,7 +1,5 @@
 //@ts-check
 
-import { Cell, Envelope } from "./Dataset";
-
 /**
  * A dataset component, of grid cells.
  * @abstract
@@ -13,7 +11,7 @@ export class DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution, in the CRS geographical unit.
-     * @param {{preprocess?:function(Cell):void}} opts 
+     * @param {{preprocess?:function(import("./Dataset").Cell):void}} opts 
      * @abstract
      */
     constructor(url, resolution, opts = {}) {
@@ -33,12 +31,12 @@ export class DatasetComponent {
 
         /**
          * A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
-         * @type {function(Cell):void } */
+         * @type {function(import("./Dataset").Cell):void } */
         this.preprocess = opts.preprocess || (() => { });
 
         /** The cells within the view
          * @protected
-         * @type {Array.<Cell>} */
+         * @type {Array.<import("./Dataset").Cell>} */
         this.cellsViewCache = []
     }
 
@@ -46,7 +44,7 @@ export class DatasetComponent {
      * Request data within a geographic envelope.
      * 
      * @abstract
-     * @param {Envelope|undefined} extGeo 
+     * @param {import("./Dataset").Envelope|undefined} extGeo 
      * @param {function():void} callback 
      * @returns {this}
      */
@@ -57,7 +55,7 @@ export class DatasetComponent {
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      * @abstract
-     * @param {Envelope} extGeo The view geographical envelope.
+     * @param {import("./Dataset").Envelope} extGeo The view geographical envelope.
      * @returns {void}
      */
     updateViewCache(extGeo) {
@@ -71,8 +69,8 @@ export class DatasetComponent {
      * Get a cell under a given position, if any.
      * 
      * @param {{x:number,y:number}} posGeo 
-     * @param {Array.<Cell>} cells Some cells from the dataset (a subset if necessary, usually the view cache).
-     * @returns {Cell|undefined}
+     * @param {Array.<import("./Dataset").Cell>} cells Some cells from the dataset (a subset if necessary, usually the view cache).
+     * @returns {import("./Dataset").Cell|undefined}
      */
     getCellFromPosition(posGeo, cells) {
 
@@ -98,7 +96,7 @@ export class DatasetComponent {
     /** @returns {number} */
     getResolution() { return this.resolution; }
 
-    /** @returns {Array.<Cell>} */
+    /** @returns {Array.<import("./Dataset").Cell>} */
     getViewCache() { return this.cellsViewCache }
 
 }
