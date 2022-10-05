@@ -1,9 +1,9 @@
 //@ts-check
 
-import { GeoCanvas, Envelope } from './GeoCanvas';
+import { GeoCanvas } from './GeoCanvas';
 import { Layer } from './Layer';
 import { Style } from './Style';
-import { Dataset, Cell } from './Dataset';
+import { Dataset } from './Dataset';
 import { Tooltip } from './Tooltip';
 
 import { CSVGrid } from './dataset/CSVGrid';
@@ -14,8 +14,6 @@ import { LineLayer } from './LineLayer';
 
 import { select } from "d3-selection";
 import { monitor, monitorDuration } from "./utils/Utils"
-import { DatasetComponent } from './DatasetComponent';
-import { BoundaryLayer } from '.';
 //import { GeoTIFF } from './dataset/GeoTIFF';
 
 /**
@@ -97,6 +95,7 @@ export class App {
                 if (zf < layer.minZoom) continue;
 
                 //get layer dataset component
+                /** @type {import('./DatasetComponent').DatasetComponent|undefined} */
                 const dsc = layer.getDatasetComponent(zf)
                 if (!dsc) continue
 
@@ -200,7 +199,7 @@ export class App {
         const focusCell = (e) => {
             //compute mouse geo position
             const mousePositionGeo = { x: this.cg.pixToGeoX(e.offsetX), y: this.cg.pixToGeoY(e.offsetY) }
-            /** @type {{cell:Cell,html:string,resolution:number} | undefined} */
+            /** @type {{cell:import('./Dataset').Cell,html:string,resolution:number} | undefined} */
             const focus = this.getCellFocusInfo(mousePositionGeo)
             if (focus) {
                 this.tooltip.setPosition(e);
@@ -292,7 +291,7 @@ export class App {
 
     /**
      * @param {number} marginPx 
-     * @returns {Envelope}
+     * @returns {import('./Dataset').Envelope}
      * @public
      */
     updateExtentGeo(marginPx = 20) {
@@ -305,7 +304,7 @@ export class App {
      * This is usefull for user interactions, to show this info where the user clicks for example.
      * 
      * @param {{x:number,y:number}} posGeo 
-     * @returns {{cell:Cell,html:string,resolution:number} | undefined}
+     * @returns {{cell:import('./Dataset').Cell,html:string,resolution:number} | undefined}
      * @protected
      */
     getCellFocusInfo(posGeo) {
@@ -314,10 +313,11 @@ export class App {
         /** @type {Layer} */
         const layer = lays[lays.length - 1]
         if (!layer) return undefined;
+        /** @type {import('./DatasetComponent').DatasetComponent|undefined} */
         const dsc = layer.getDatasetComponent(this.getZoomFactor())
         if (!dsc) return undefined
         //get cell at mouse position
-        /** @type {Cell|undefined} */
+        /** @type {import('./Dataset').Cell|undefined} */
         const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache());
         if (!cell) return undefined;
         return { cell: cell, html: layer.cellInfoHTML(cell), resolution: dsc.getResolution() };
@@ -377,7 +377,7 @@ export class App {
      * 
      * @param {Dataset} dataset The dataset of the layer
      * @param {Array.<Style>} styles The styles of the layer
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string}} opts The layer options.
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string}} opts The layer options.
      * @returns {this}
      */
     addLayerFromDataset(dataset, styles, opts) {
@@ -407,7 +407,7 @@ export class App {
      * Make a tiled CSV grid dataset.
      * 
      * @param {string} url 
-     * @param {{preprocess?:function(Cell):void}} opts 
+     * @param {{preprocess?:function(import('./Dataset').Cell):void}} opts 
      * @returns {Dataset}
      */
     makeTiledCSVGridDataset(url, opts) {
@@ -422,7 +422,7 @@ export class App {
      * 
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURL
-     * @param {{preprocess?:function(Cell):void}} opts 
+     * @param {{preprocess?:function(import('./Dataset').Cell):void}} opts 
      * @returns {Dataset}
      */
     makeMultiScaleCSVGridDataset(resolutions, resToURL, opts) {
@@ -438,7 +438,7 @@ export class App {
      * 
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURL
-     * @param {{preprocess?:function(Cell):void}} opts 
+     * @param {{preprocess?:function(import('./Dataset').Cell):void}} opts 
      * @returns {Dataset}
      */
     makeMultiScaleTiledCSVGridDataset(resolutions, resToURL, opts) {
@@ -471,7 +471,7 @@ export class App {
     * 
     * @param {string} url 
      * @param {Array.<Style>} styles 
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:function(Cell):void}} opts 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string, preprocess?:function(import('./Dataset').Cell):void}} opts 
      * @returns {this}
      */
     addTiledCSVGridLayer(url, styles, opts) {
@@ -499,7 +499,7 @@ export class App {
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURL 
      * @param {Array.<Style>} styles 
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(Cell):string, preprocess?:function(Cell):void}} opts 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string, preprocess?:function(import('./Dataset').Cell):void}} opts 
      * @returns {this}
      */
     addMultiScaleTiledCSVGridLayer(resolutions, resToURL, styles, opts) {
@@ -516,7 +516,7 @@ export class App {
      * @returns {this}
      */
     addBackgroundLayer(opts) {
-        this.bgLayers.push( new BackgroundLayer(opts) )
+        this.bgLayers.push(new BackgroundLayer(opts))
         this.redraw()
         return this;
     }
