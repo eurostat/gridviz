@@ -48,17 +48,19 @@
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/elevation/tiled/" + r + "m/",
 
 
-                
+
                 gviz.TanakaStyle.get("elevation", {
-                    nb: 20, color: d3.interpolateCubehelixDefault,
-                    tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0)-s.min) / (s.max-s.min), 0.5),
+                    nb: 10,
+                    //color: d3.interpolateCubehelixDefault,
+                    color: d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"]),
+                    tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
                 }),
 
-/*
-                gviz.LegoStyle.get("elevation", {
-                    tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.6)
-                }),
-*/
+                /*
+                                gviz.LegoStyle.get("elevation", {
+                                    tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.6)
+                                }),
+                */
 
                 //[
 
@@ -114,7 +116,7 @@
                 //],
 
                 {
-                    pixNb: 2 //tanaka
+                    pixNb: 3 //tanaka
                     //pixNb: 6 //lego
                 })
 
