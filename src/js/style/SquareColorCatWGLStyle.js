@@ -37,7 +37,6 @@ export class SquareColorCatWGLStyle extends Style {
         this.catToI = {}
         for (let i = 0; i < keys.length; i++) this.catToI[keys[i]] = (i + "")
 
-        //TODO
         /** @type { Array.<string> } */
         this.colors = []
         for (let i = 0; i < keys.length; i++) {
@@ -48,6 +47,10 @@ export class SquareColorCatWGLStyle extends Style {
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
          * @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
+
+
+        /** @type { WebGLSquareColoringCatAdvanced } */
+        this.wgp = new WebGLSquareColoringCatAdvanced(this.colors)
     }
 
 
@@ -88,13 +91,9 @@ export class SquareColorCatWGLStyle extends Style {
         }
         if (monitor) monitorDuration("   web GL canvas creation")
 
-
-        const wgp = new WebGLSquareColoringCatAdvanced(this.colors)
-
-
         //draw
         const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
-        wgp.draw(cvWGL.gl, verticesBuffer, iBuffer, cg.getWebGLTransform(), sizeGeo / zf)
+        this.wgp.draw(cvWGL.gl, verticesBuffer, iBuffer, cg.getWebGLTransform(), sizeGeo / zf)
 
         if (monitor) monitorDuration("   webgl drawing")
 
