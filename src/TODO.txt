@@ -1,5 +1,6 @@
+use SquareColorCatWGLStyle: tanaka, lego
 degurba: define several layers
-use SquareColorCatWGLStyle: tanaka, lego, degurba, clc
+new clc map
 
 further test geotiff reading performance ?
 new data: elevation + forest - coverage and composition + CLC
