@@ -73,7 +73,9 @@ export class LegoStyle {
 
         }
 
+        //reuse tanaka as basis
         const ts = TanakaStyle.get(col, opts)
+        //style to show limits between pieces
         const sst = new StrokeStyle({ strokeColor: () => "#666", strokeWidth: (v, r, s, z) => 0.2 * z })
 
         return [ts[0], sst, ts[1], new LegoTopStyle()]

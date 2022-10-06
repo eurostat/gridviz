@@ -1,4 +1,3 @@
-new clc map
 use SquareColorCatWGLStyle: tanaka, lego
 degurba: define several layers
 
