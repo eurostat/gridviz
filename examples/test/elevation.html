@@ -120,6 +120,33 @@
                     //pixNb: 6 //lego
                 })
 
+            .addMultiScaleTiledCSVGridLayer(
+                [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/clc/tiled/" + r + "m/",
+                [
+                    new gviz.ShapeColorSizeStyle({
+                        colorCol: "clc",
+                        color: (v) =>
+                            //(+v == 1) ? "#00f6" :
+                                //(+v == 2) ? "#00f4" :
+                                    //(+v == 3) ? "#00f1" :
+                                    (+v == 41) ? "#BADDFF" :
+                                        undefined,
+                        //"1": "Continuous urban fabric",
+                        //"2": "Discontinuous urban fabric",
+                        //"3": "Industrial or commercial units",
+                        //"41": "Water bodies",
+                        //"42": "Coastal lagoons",
+                        //"43": "Estuaries",
+                        //"44": "Sea and ocean",
+                        size: (v, r, s, zf) => 1 * r,
+                        shape: () => "square",
+                    })
+                ],
+                {
+                    pixNb: 3
+                })
+
     </script>
 
 </body>

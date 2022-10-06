@@ -1,4 +1,4 @@
-use SquareColorCatWGLStyle: tanaka, lego
+elevation: use filter to show urb
 degurba: define several layers
 lego: population + land cover + elevation
 
