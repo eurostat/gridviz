@@ -49,7 +49,9 @@ export class SquareColorCatWGLStyle extends Style {
         this.size = opts.size; // (resolution, zf) => ...
 
 
-        /** @type { WebGLSquareColoringCatAdvanced } */
+        /** 
+         * @private
+         * @type { WebGLSquareColoringCatAdvanced } */
         this.wgp = new WebGLSquareColoringCatAdvanced(this.colors)
     }
 
