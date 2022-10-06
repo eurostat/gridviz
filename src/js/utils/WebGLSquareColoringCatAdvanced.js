@@ -11,18 +11,17 @@ import { color } from "d3-color";
 export class WebGLSquareColoringCatAdvanced {
 
     /**
-     * 
-     * @param {*} gl 
      * @param {Array.<string>} colors 
-     * @param {number} sizePix 
      */
-    constructor(gl, colors, sizePix = 10) {
+    constructor(colors) {
 
-        /** @type {WebGLRenderingContext} */
-        this.gl = gl
+        /** 
+         * @type {Array.<string>} */
+        this.colors = colors;
 
-        /** @type {WebGLShader} */
-        const vShader = createShader(gl, gl.VERTEX_SHADER, `
+        /** Vector shader program
+        * @type {string} */
+        this.vshString = `
         attribute vec2 pos;
         uniform float sizePix;
         uniform mat3 mat;
@@ -35,7 +34,7 @@ export class WebGLSquareColoringCatAdvanced {
           gl_PointSize = sizePix;
           vi = i;
         }
-      `);
+        `
 
         //prepare fragment shader code
         //declare the uniform and other variables
@@ -66,34 +65,36 @@ export class WebGLSquareColoringCatAdvanced {
             out.push("[3]);\n")
         }
         out.push("else gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n}")
-        const fshString = out.join("")
+        /** Fragment shader program
+         * @type {string} */
+        this.fshString = out.join("")
+    }
+
+    /**  */
+    draw(gl, verticesBuffer, iBuffer, transfoMat, sizePix = 10) {
 
         /** @type {WebGLShader} */
-        const fShader = createShader(gl, gl.FRAGMENT_SHADER, fshString);
+        const vShader = createShader(gl, gl.VERTEX_SHADER, this.vshString);
+
+        /** @type {WebGLShader} */
+        const fShader = createShader(gl, gl.FRAGMENT_SHADER, this.fshString);
 
         /** @type {WebGLProgram} */
-        this.program = initShaderProgram(gl, vShader, fShader);
-        gl.useProgram(this.program);
+        const program = initShaderProgram(gl, vShader, fShader);
+        gl.useProgram(program);
 
         //set uniforms
 
         //sizePix
-        gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * sizePix);
+        gl.uniform1f(gl.getUniformLocation(program, "sizePix"), 1.0 * sizePix);
 
         //colors
         //gl.uniform4fv(gl.getUniformLocation(this.program, "c0"), [0.3, 0, 0.8, 0.5]);
         //TODO one uniform per color, indexed by i. Possible to use an array of colors?
-        for (let i = 0; i < colors.length; i++) {
-            const c = color(colors[i])
-            gl.uniform4fv(gl.getUniformLocation(this.program, "c" + i), [+c.r / 255.0, +c.g / 255.0, +c.b / 255.0, +c.opacity]);
+        for (let i = 0; i < this.colors.length; i++) {
+            const c = color(this.colors[i])
+            gl.uniform4fv(gl.getUniformLocation(program, "c" + i), [+c.r / 255.0, +c.g / 255.0, +c.b / 255.0, +c.opacity]);
         }
-    }
-
-    /**  */
-    draw(verticesBuffer, iBuffer, transfoMat) {
-
-        const gl = this.gl
-        const program = this.program
 
         //vertice data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
@@ -109,7 +110,7 @@ export class WebGLSquareColoringCatAdvanced {
         );
         gl.enableVertexAttribArray(position);
 
-        //t data
+        //i data
         gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(iBuffer), gl.STATIC_DRAW);
         const i = gl.getAttribLocation(program, "i");

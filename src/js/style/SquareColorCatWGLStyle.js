@@ -62,14 +62,6 @@ export class SquareColorCatWGLStyle extends Style {
         //zoom factor
         const zf = cg.getZf()
 
-        //create canvas and webgl renderer
-        const cvWGL = makeWebGLCanvas(cg.w + "", cg.h + "")
-        if (!cvWGL) {
-            console.error("No webGL")
-            return
-        }
-        if (monitor) monitorDuration("   web GL canvas creation")
-
         //add vertice and fragment data
         const r2 = resolution / 2
         let c, nb = cells.length
@@ -86,15 +78,23 @@ export class SquareColorCatWGLStyle extends Style {
             iBuffer.push(+i_)
         }
 
-        if (monitor) monitorDuration("   webgl drawing data preparation")
+        if (monitor) monitorDuration("   webgl program inputs preparation")
 
-        const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
-        const wgp = new WebGLSquareColoringCatAdvanced(cvWGL.gl, this.colors, sizeGeo / zf)
+        //create canvas and webgl renderer
+        const cvWGL = makeWebGLCanvas(cg.w + "", cg.h + "")
+        if (!cvWGL) {
+            console.error("No webGL")
+            return
+        }
+        if (monitor) monitorDuration("   web GL canvas creation")
 
-        if (monitor) monitorDuration("   webgl program preparation")
+
+        const wgp = new WebGLSquareColoringCatAdvanced(this.colors)
+
 
         //draw
-        wgp.draw(verticesBuffer, iBuffer, cg.getWebGLTransform())
+        const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
+        wgp.draw(cvWGL.gl, verticesBuffer, iBuffer, cg.getWebGLTransform(), sizeGeo / zf)
 
         if (monitor) monitorDuration("   webgl drawing")
 
