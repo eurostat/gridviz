@@ -68,7 +68,7 @@ export class Dataset {
      * @param {function(Cell):boolean} filter 
      * @returns {this}
      */
-    setfilters(filter) {
+    setFilters(filter) {
         for (let ds of this.datasetComponents)
             ds.filter = filter
         return this;
