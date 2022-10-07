@@ -149,9 +149,22 @@ export class TiledGrid extends DatasetComponent {
                         (data) => {
                             if (monitor) monitorDuration("*** TiledGrid parse start")
 
+                            //filter
+                            let cells;
+                            if (this.filter) {
+                                cells = [];
+                                for (const c of data)
+                                    if (this.filter(c))
+                                        cells.push(c)
+                            } else {
+                                cells = data;
+                            }
+
+                            if (monitor) monitorDuration("filter")
+
                             //store tile in cache
                             if (!this.info) { console.error("Tile info inknown"); return }
-                            const tile_ = new GridTile(data, xT, yT, this.info);
+                            const tile_ = new GridTile(cells, xT, yT, this.info);
                             this.cache[xT][yT] = tile_;
 
                             if (monitor) monitorDuration("storage")
