@@ -211,9 +211,9 @@ To manage creation of datasets and their possible reuse accross different layers
 
 ### Data filtering
 
-Input data can be filtered before it is being used by the [Gridviz](https://github.com/eurostat/gridviz/) application in order to remove unnecessary data and release memory resources.
+Input data can be filtered before it is being used by the [Gridviz](https://github.com/eurostat/gridviz/) application in order to remove unnecessary data and release memory resources. This can be achieved by specifying a **filter** function which returns __true__ when a cell should be kept, __false__ otherwise.
 
-Here is an example showing how to select only the cells with specific values:
+Here is an example showing how to select only the cells with specific values __41__:
 
 ```javascript
 new gviz.App(containerDiv)
