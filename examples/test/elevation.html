@@ -116,8 +116,8 @@
                 //],
 
                 {
-                    pixNb: 3 //tanaka
-                    //pixNb: 6 //lego
+                    pixNb: 3, //tanaka
+                    //pixNb: 6, //lego
                 })
 
             .addMultiScaleTiledCSVGridLayer(
@@ -126,25 +126,14 @@
                 [
                     new gviz.ShapeColorSizeStyle({
                         colorCol: "clc",
-                        color: (v) =>
-                            //(+v == 1) ? "#00f6" :
-                                //(+v == 2) ? "#00f4" :
-                                    //(+v == 3) ? "#00f1" :
-                                    (+v == 41) ? "#BADDFF" :
-                                        undefined,
-                        //"1": "Continuous urban fabric",
-                        //"2": "Discontinuous urban fabric",
-                        //"3": "Industrial or commercial units",
-                        //"41": "Water bodies",
-                        //"42": "Coastal lagoons",
-                        //"43": "Estuaries",
-                        //"44": "Sea and ocean",
+                        color: (v) => "#BADDFF",
                         size: (v, r, s, zf) => 1 * r,
                         shape: () => "square",
                     })
                 ],
                 {
-                    pixNb: 3
+                    pixNb: 3,
+                    filter: (c) => +c.clc == 41
                 })
 
     </script>
