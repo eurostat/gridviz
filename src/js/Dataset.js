@@ -22,7 +22,7 @@ export class Dataset {
     /**
      * @param {Array.<DatasetComponent>} datasetComponents The dataset components
      * @param {Array.<number>} resolutions The resolutions of the dataset components, in CRS geographical unit
-     * @param { {preprocess?:function(Cell):void, filter?:function(Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values. filter: A function to filter the cells.
+     * @param { {preprocess?:function(Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values. Can be used also to select cells to keep.
      */
     constructor(datasetComponents, resolutions, opts = {}) {
         opts = opts || {};
@@ -42,35 +42,18 @@ export class Dataset {
         //set dataset preprocesses if specified
         if (opts.preprocess)
             this.setPrepocesses(opts.preprocess)
-
-        //set dataset filters if specified
-        if (opts.filter)
-            this.setFilters(opts.filter)
     }
 
     /**
      * Set a preprocess function for all dataset components.
      * This is a function applied on each cell after it has been loaded.
      * 
-     * @param {function(Cell):void} preprocess 
+     * @param {function(Cell):boolean} preprocess 
      * @returns {this}
      */
     setPrepocesses(preprocess) {
         for (let ds of this.datasetComponents)
             ds.preprocess = preprocess
-        return this;
-    }
-
-    /**
-     * Set a filter function for all dataset components.
-     * This is a function to filter the cells.
-     * 
-     * @param {function(Cell):boolean} filter 
-     * @returns {this}
-     */
-    setFilters(filter) {
-        for (let ds of this.datasetComponents)
-            ds.filter = filter
         return this;
     }
 

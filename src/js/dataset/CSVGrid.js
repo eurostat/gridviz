@@ -14,7 +14,7 @@ export class CSVGrid extends DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {{preprocess?:(function(import("../Dataset").Cell):void)}} opts 
+     * @param {{preprocess?:(function(import("../Dataset").Cell):boolean)}} opts 
      */
     constructor(url, resolution, opts = {}) {
         super(url, resolution, opts)
@@ -52,17 +52,16 @@ export class CSVGrid extends DatasetComponent {
                     for (const c of data) { c.x = +c.x; c.y = +c.y; }
 
                     //filter
-                    if (this.filter) {
+                    if (this.preprocess) {
                         this.cells = [];
-                        for (const c of data)
-                            if (this.filter(c))
-                                this.cells.push(c)
+                        for (const c of data) {
+                            const b = this.preprocess(c)
+                            if (b == false) continue;
+                            this.cells.push(c)
+                        }
                     } else {
                         this.cells = data;
                     }
-
-                    //execute preprocess, if any
-                    if (this.preprocess) for (const c of this.cells) this.preprocess(c);
 
                     //TODO check if redraw is necessary
                     //that is if the dataset belongs to a layer which is visible at the current zoom level

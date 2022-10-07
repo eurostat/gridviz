@@ -11,7 +11,7 @@ export class DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution, in the CRS geographical unit.
-     * @param {{preprocess?:function(import("./Dataset").Cell):void, filter?:function(import("./Dataset").Cell):boolean}} opts 
+     * @param {{preprocess?:function(import("./Dataset").Cell):boolean}} opts 
      * @abstract
      */
     constructor(url, resolution, opts = {}) {
@@ -30,14 +30,9 @@ export class DatasetComponent {
         this.resolution = resolution;
 
         /**
-         * A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column.
-         * @type {(function(import("./Dataset").Cell):void )| undefined } */
+         * A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column. And also to determine which cells to keep after loading.
+         * @type {(function(import("./Dataset").Cell):boolean )| undefined } */
         this.preprocess = opts.preprocess || undefined;
-
-        /**
-        * A filter function to determine the cells to keep after loading.
-        * @type {(function(import("./Dataset").Cell):boolean) | undefined } */
-        this.filter = opts.filter || undefined;
 
         /** The cells within the view
          * @protected
