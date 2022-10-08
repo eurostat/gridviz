@@ -49,12 +49,6 @@
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
-            .addBackgroundLayer({
-                url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
-                resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
-                origin: [0, 6000000],
-                filterColor: zf => "#ffffffd3",
-            })
 
         //prepare datasets
         const ds = {}
@@ -109,17 +103,21 @@
             //elevation
             if (layCode === "el") {
 
+                const colors = []
+                const colFun = d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"])
+                for (let t = 0; t <= 1; t += 1 / 10) colors.push(colFun(t))
+
                 app.addLayerFromDataset(
                     ds.el,
-                    gviz.TanakaStyle.get("elevation", {
-                        nb: 10,
-                        //color: d3.interpolateCubehelixDefault,
-                        color: d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"]),
-                        widthFactor: 0.15,
-                        tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
-                    }),
+                    gviz.LegoStyle.get(
+                        "elevation",
+                        {
+                            colors: colors,
+                            tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.6),
+                        }
+                    ),
                     {
-                        pixNb: 3,
+                        pixNb: 10,
                         cellInfoHTML: c => "<b>" + c.elevation + "</b> m"
                     }
                 )
