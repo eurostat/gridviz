@@ -51,7 +51,7 @@ export class CSVGrid extends DatasetComponent {
                     //convert coordinates in numbers
                     for (const c of data) { c.x = +c.x; c.y = +c.y; }
 
-                    //filter
+                    //preprocess/filter
                     if (this.preprocess) {
                         this.cells = [];
                         for (const c of data) {

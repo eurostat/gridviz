@@ -1,7 +1,6 @@
 //@ts-check
 
 import { DatasetComponent } from "../DatasetComponent"
-import { Cell, Envelope } from "../Dataset"
 import { fromUrl } from "geotiff"
 
 /**
@@ -15,14 +14,14 @@ export class GeoTIFF extends DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {{preprocess?:(function(Cell):void)}} opts 
+     * @param {{preprocess?:(function(import("../Dataset").Cell):boolean)}} opts 
      */
     constructor(url, resolution, opts = {}) {
         super(url, resolution, opts)
 
         /**
          * @private
-         * @type {Array.<Cell>} */
+         * @type {Array.<import("../Dataset").Cell>} */
         this.cells = [];
 
         /**  
@@ -35,7 +34,7 @@ export class GeoTIFF extends DatasetComponent {
     /**
      * Request data within a geographic envelope.
      * 
-     * @param {Envelope|undefined} e 
+     * @param {import("../Dataset").Envelope|undefined} e 
      * @param {function():void} redraw 
      */
     getData(e, redraw) {
@@ -95,7 +94,7 @@ export class GeoTIFF extends DatasetComponent {
                 }*/
 
                 //execute preprocess, if any
-                if (this.preprocess) for (const c of this.cells) this.preprocess(c);
+                //if (this.preprocess) for (const c of this.cells) this.preprocess(c);
 
                 //TODO check if redraw is necessary
                 //that is if the dataset belongs to a layer which is visible at the current zoom level
@@ -120,7 +119,7 @@ export class GeoTIFF extends DatasetComponent {
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      * 
-     * @param {Envelope} extGeo 
+     * @param {import("../Dataset").Envelope} extGeo 
      * @returns {void}
      */
     updateViewCache(extGeo) {

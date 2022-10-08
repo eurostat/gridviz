@@ -17,7 +17,7 @@ export class TiledGrid extends DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {App} app The application.
-     * @param {{preprocess?:(function(import("../Dataset").Cell):void)}} opts 
+     * @param {{preprocess?:(function(import("../Dataset").Cell):boolean)}} opts 
      */
     constructor(url, app, opts = {}) {
         super(url, 0, opts)
@@ -149,7 +149,7 @@ export class TiledGrid extends DatasetComponent {
                         (data) => {
                             if (monitor) monitorDuration("*** TiledGrid parse start")
 
-                            //filter
+                            /*/filter
                             let cells;
                             if (this.filter) {
                                 cells = [];
@@ -158,7 +158,21 @@ export class TiledGrid extends DatasetComponent {
                                         cells.push(c)
                             } else {
                                 cells = data;
-                            }
+                            }*/
+
+                    //preprocess/filter
+                    let cells;
+                    if (this.preprocess) {
+                        this.cells = [];
+                        for (const c of data) {
+                            const b = this.preprocess(c)
+                            if (b == false) continue;
+                            this.cells.push(c)
+                        }
+                    } else {
+                        this.cells = data;
+                    }
+
 
                             if (monitor) monitorDuration("filter")
 
@@ -169,10 +183,10 @@ export class TiledGrid extends DatasetComponent {
 
                             if (monitor) monitorDuration("storage")
 
-                            //execute preprocess, if any
+                            /*/execute preprocess, if any
                             if (this.preprocess)
                                 for (const c of tile_.cells)
-                                    this.preprocess(c);
+                                    this.preprocess(c);*/
 
                             if (monitor) monitorDuration("preprocess")
 
