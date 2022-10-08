@@ -1,5 +1,4 @@
 //@ts-check
-import { Cell } from "./Dataset";
 import { GeoCanvas } from './GeoCanvas';
 import { Legend } from "./Legend";
 
@@ -20,7 +19,7 @@ export class Style {
 
     /**
      * @abstract
-     * @param {{offset?:function(Cell,number,number):{{dx:number,dy:number}},minZoom?:number,maxZoom?:number}} opts 
+     * @param {{offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},minZoom?:number,maxZoom?:number}} opts 
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(opts) {
@@ -28,7 +27,7 @@ export class Style {
 
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
          * @protected
-         * @type {function(Cell,number,number):{dx:number,dy:number}} */
+         * @type {function(import('./Dataset').Cell,number,number):{dx:number,dy:number}} */
         this.offset = opts.offset || ((c, r, zf) => ({ dx: 0, dy: 0 }));
 
 
@@ -57,7 +56,7 @@ export class Style {
     /**
      * Draw cells.
      * 
-     * @param {Array.<Cell>} cells The cells to draw.
+     * @param {Array.<import('./Dataset').Cell>} cells The cells to draw.
      * @param {number} resolution Their resolution (in geographic unit)
      * @param {GeoCanvas} cg The canvas where to draw them.
      * @abstract
@@ -70,9 +69,9 @@ export class Style {
 
     //getters and setters
 
-    /** @returns {function(Cell,number,number):{dx:number,dy:number}} */
+    /** @returns {function(import('./Dataset').Cell,number,number):{dx:number,dy:number}} */
     getOffset() { return this.offset; }
-    /** @param {function(Cell,number,number):{dx:number,dy:number}} val @returns {this} */
+    /** @param {function(import('./Dataset').Cell,number,number):{dx:number,dy:number}} val @returns {this} */
     setOffset(val) { this.offset = val; return this; }
 
     /** Hide all legend elements of the style, if any
@@ -91,8 +90,8 @@ export class Style {
      * This is used to define how to draw specifically the cells within the view.
      * TODO: compute median ?
      * 
-     * @param {Array.<Cell>} cells 
-     * @param {function(Cell):number} valFun 
+     * @param {Array.<import('./Dataset').Cell>} cells 
+     * @param {function(import('./Dataset').Cell):number} valFun 
      * @param {boolean} ignoreZeros 
      * @returns {Stat | undefined}
      */

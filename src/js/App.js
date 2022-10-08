@@ -407,7 +407,7 @@ export class App {
      * Make a tiled CSV grid dataset.
      * 
      * @param {string} url 
-     * @param {{preprocess?:function(import('./Dataset').Cell):void}} opts 
+     * @param {{preprocess?:function(import('./Dataset').Cell):boolean}} opts 
      * @returns {Dataset}
      */
     makeTiledCSVGridDataset(url, opts) {
@@ -422,7 +422,7 @@ export class App {
      * 
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURL
-     * @param {{preprocess?:function(import('./Dataset').Cell):void}} opts 
+     * @param {{preprocess?:function(import('./Dataset').Cell):boolean}} opts 
      * @returns {Dataset}
      */
     makeMultiScaleCSVGridDataset(resolutions, resToURL, opts) {
@@ -438,7 +438,7 @@ export class App {
      * 
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURL
-     * @param {{preprocess?:function(import('./Dataset').Cell):void}} opts 
+     * @param {{preprocess?:function(import('./Dataset').Cell):boolean}} opts 
      * @returns {Dataset}
      */
     makeMultiScaleTiledCSVGridDataset(resolutions, resToURL, opts) {
@@ -471,7 +471,7 @@ export class App {
     * 
     * @param {string} url 
      * @param {Array.<Style>} styles 
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string, preprocess?:function(import('./Dataset').Cell):void}} opts 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string, preprocess?:function(import('./Dataset').Cell):boolean}} opts 
      * @returns {this}
      */
     addTiledCSVGridLayer(url, styles, opts) {
@@ -499,7 +499,7 @@ export class App {
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURL 
      * @param {Array.<Style>} styles 
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string, preprocess?:function(import('./Dataset').Cell):void}} opts 
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string, preprocess?:function(import('./Dataset').Cell):boolean}} opts 
      * @returns {this}
      */
     addMultiScaleTiledCSVGridLayer(resolutions, resToURL, styles, opts) {

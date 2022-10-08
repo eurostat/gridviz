@@ -1,6 +1,6 @@
 //@ts-check
 
-import { select, Selection } from "d3-selection";
+import { select } from "d3-selection";
 //import { transition } from "d3-transition";
 
 /**
@@ -44,7 +44,7 @@ export class Tooltip {
 
 		/** 
 		 * @private
-		 * @type {Selection} */
+		 * @type {import("d3-selection").Selection} */
 		this.tooltip = select("#" + this.div);
 		if (this.tooltip.empty())
 			this.tooltip = select("body").append("div").attr("id", this.div);
