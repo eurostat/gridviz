@@ -12,8 +12,7 @@
     - [Multi scale CSV data](#multi-scale-csv-data)
     - [Tiled CSV data](#tiled-csv-data)
     - [Multi scale tiled CSV data](#multi-scale-tiled-csv-data)
-    - [Data filtering](#data-filtering)
-    - [Data pre-processing](#data-pre-processing)
+    - [Data pre-processing and filtering](#data-pre-processing-and-filtering)
   - [Styles](#styles)
     - [Square color WebGL Style](#square-color-webgl-style)
     - [Shape/Color/Size Style](#shapecolorsize-style)
@@ -209,29 +208,7 @@ To manage creation of datasets and their possible reuse accross different layers
 | _app_.**makeMultiScaleCSVGridDataset**([args])      | -         | Make a multi scale CSV grid dataset.       |
 | _app_.**makeMultiScaleTiledCSVGridDataset**([args]) | -         | Make a multi scale tiled CSV grid dataset. |
 
-### Data filtering
-
-Input data can be filtered before it is being used by the [Gridviz](https://github.com/eurostat/gridviz/) application in order to remove unnecessary data and release memory resources. This can be achieved by specifying a **filter** function which returns __true__ when a cell should be kept, __false__ otherwise.
-
-Here is an example showing how to select only the cells with specific values __41__:
-
-```javascript
-new gviz.App(containerDiv)
-    .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-    .addMultiScaleTiledCSVGridLayer(
-        [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/clc/tiled/" + r + "m/",
-        [ /* define the style) */ ],
-        {
-            pixNb: 3,
-            filter: (c) => +c.clc == 41
-        }
-    )
-```
-(see [online](https://eurostat.github.io/gridviz/examples/filter.html), see [code](../examples/filter.html))
-
-
-### Data pre-processing
+### Data pre-processing and filtering
 
 Input data can be processed/transformed before it is being used by the [Gridviz](https://github.com/eurostat/gridviz/) application in order to, for example:
 - Filter/simplify the data to keep only the necessary one. This allows saving client memory,
@@ -268,6 +245,27 @@ new gviz.App(containerDiv)
 (see [online](https://eurostat.github.io/gridviz/examples/preprocess.html), see [code](../examples/preprocess.html))
 
 Note that it is unfortunatelly currently not possible to compute new columns from the combination of two different datasets.
+
+The **preprocess** function can also be used to remove unnecessary cells and release memory resources. This can be achieved by returning __false__ for the cells to remove.
+
+Here is an example showing how to select only the cells with specific values __41__:
+
+```javascript
+new gviz.App(containerDiv)
+    .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+    .addMultiScaleTiledCSVGridLayer(
+        [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+        r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/clc/tiled/" + r + "m/",
+        [ /* define the style) */ ],
+        {
+            pixNb: 3,
+            preprocess: (c) => +c.clc == 41
+        }
+    )
+```
+(see [online](https://eurostat.github.io/gridviz/examples/filter.html), see [code](../examples/filter.html))
+
+
 
 ## Styles
 
