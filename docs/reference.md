@@ -263,7 +263,7 @@ new gviz.App(containerDiv)
         }
     )
 ```
-(see [online](https://eurostat.github.io/gridviz/examples/filter.html), see [code](../examples/filter.html))
+(see [online](https://eurostat.github.io/gridviz/examples/select.html), see [code](../examples/select.html))
 
 
 
