@@ -276,25 +276,17 @@
 
                 app.addLayerFromDataset(
                     ds.urb,
-                    [
-                        new gviz.CompositionStyle({
-                            color: degurbaColors,
-                            type: () => "flag",
-                            //stripesOrientation: () => 0,
-                            sizeCol: "TOT",
-                            size: (v, r, s, z) => 1 * r * gviz.sPow(v / s.max, 0.5),
-                            minZoom: 120,
-                        }),
-                        new gviz.SideCatStyle({
-                            col: "c",
-                            color: degurbaColors,
-                            width: (side, r, z) => z * 3,
-                            fillColor: (c) => degurbaColors[c.c] + "55",
-                            maxZoom: 120,
-                        }),
-                    ],
+                    gviz.LegoStyle.get(
+                        "c",
+                        {
+                            color: d3.interpolateOrRd,
+                            nb: 15,
+                            tFun: (v, r, s) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
+                            widthFactor: 0.04,
+                        }
+                    ),
                     {
-                        pixNb: 4,
+                        pixNb: 10,
                         cellInfoHTML: c => {
                             if (!c.TOT) return "No information";
                             if (c.TOT == 1) return +c.uc ? "Urban centre" : +c.du ? "Dense urban cluster" : +c.sdu ? "Semi-dense urban cluster" : +c.sbu ? "Suburban" : +c.r ? "Rural" : +c.lr ? "Low density rural" : +c.vlr ? "Very low density rural" : "Unknown";
