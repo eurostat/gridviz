@@ -149,32 +149,20 @@ export class TiledGrid extends DatasetComponent {
                         (data) => {
                             if (monitor) monitorDuration("*** TiledGrid parse start")
 
-                            /*/filter
+                            //preprocess/filter
                             let cells;
-                            if (this.filter) {
+                            if (this.preprocess) {
                                 cells = [];
-                                for (const c of data)
-                                    if (this.filter(c))
-                                        cells.push(c)
+                                for (const c of data) {
+                                    const b = this.preprocess(c)
+                                    if (b == false) continue;
+                                    cells.push(c)
+                                }
                             } else {
                                 cells = data;
-                            }*/
+                            }
 
-                    //preprocess/filter
-                    let cells;
-                    if (this.preprocess) {
-                        this.cells = [];
-                        for (const c of data) {
-                            const b = this.preprocess(c)
-                            if (b == false) continue;
-                            this.cells.push(c)
-                        }
-                    } else {
-                        this.cells = data;
-                    }
-
-
-                            if (monitor) monitorDuration("filter")
+                            if (monitor) monitorDuration("preprocess / filter")
 
                             //store tile in cache
                             if (!this.info) { console.error("Tile info inknown"); return }
@@ -182,13 +170,6 @@ export class TiledGrid extends DatasetComponent {
                             this.cache[xT][yT] = tile_;
 
                             if (monitor) monitorDuration("storage")
-
-                            /*/execute preprocess, if any
-                            if (this.preprocess)
-                                for (const c of tile_.cells)
-                                    this.preprocess(c);*/
-
-                            if (monitor) monitorDuration("preprocess")
 
                             //if no redraw is specified, then leave
                             if (!redrawFun) return;
