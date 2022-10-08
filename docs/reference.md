@@ -246,9 +246,9 @@ new gviz.App(containerDiv)
 
 Note that it is unfortunatelly currently not possible to compute new columns from the combination of two different datasets.
 
-The **preprocess** function can also be used to remove unnecessary cells and release memory resources. This can be achieved by returning __false__ for the cells to remove.
+The **preprocess** function can also be used to remove/filter unnecessary cells and release memory resources. This can be achieved by returning __false__ for the cells to remove.
 
-Here is an example showing how to select only the cells with specific values __41__:
+Here is an example showing how to keep only the cells with specific values __41__:
 
 ```javascript
 new gviz.App(containerDiv)
