@@ -259,6 +259,7 @@ new gviz.App(containerDiv)
         [ /* define the style) */ ],
         {
             pixNb: 3,
+            //select cells with clc=41
             preprocess: (c) => +c.clc == 41
         }
     )
