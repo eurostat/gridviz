@@ -266,8 +266,6 @@ new gviz.App(containerDiv)
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/select.html), see [code](../examples/select.html))
 
-
-
 ## Styles
 
 ### Square color WebGL Style
