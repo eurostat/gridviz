@@ -1,7 +1,6 @@
 //@ts-check
 
 import { DatasetComponent } from "../DatasetComponent"
-import { Cell } from "../Dataset"
 
 /**
  * @todo
@@ -15,7 +14,7 @@ export class COGeo extends DatasetComponent {
     /**
      * 
      * @param {String} url 
-     * @param {{preprocess?:(function(Cell):void)}} opts 
+     * @param {{preprocess?:(function(import("../Dataset").Cell):boolean)}} opts 
      */
     constructor(url, opts = {}) {
         super(url, 0, opts)
