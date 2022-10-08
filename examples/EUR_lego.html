@@ -46,7 +46,7 @@
 
         let containerDiv = document.getElementById("viz-container");
         const app = new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([30, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .setViewFromURL()
 
@@ -223,22 +223,13 @@
 
                 app.addLayerFromDataset(
                     ds.lc,
-                    [
-                        new gviz.SquareColorCatWGLStyle({
-                            colorCol: "clc",
-                            color: clcColors,
-                            minZoom: 100
-                        }),
-                        new gviz.SideCatStyle({
-                            col: "clc",
-                            color: clcColors,
-                            width: (side, r, z) => z * 3,
-                            fillColor: (c) => clcColors[c.clc] + "99",
-                            maxZoom: 100
-                        }),
-                    ],
+                    gviz.LegoStyle.get(
+                        "clc",
+                        {
+                        }
+                    ),
                     {
-                        pixNb: 1.75,
+                        pixNb: 10,
                         cellInfoHTML: c => clcLabels[c.clc],
                     }
                 )
@@ -250,15 +241,17 @@
 
                 app.addLayerFromDataset(
                     ds.pop,
-                    [
-                        new gviz.SquareColorWGLStyle({
-                            colorCol: "2018",
+                    gviz.LegoStyle.get(
+                        "2018",
+                        {
                             color: d3.interpolateOrRd,
-                            stretching: { fun: "expRev", alpha: -7 }
-                        })
-                    ],
+                            nb: 15,
+                            tFun: (v, r, s) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
+                            widthFactor: 0.04,
+                        }
+                    ),
                     {
-                        pixNb: 2,
+                        pixNb: 10,
                         cellInfoHTML: c => +c["2018"] ? "<b>" + c["2018"] + "</b> inhabitant(s)" : undefined
                     }
                 )
