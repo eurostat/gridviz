@@ -2,6 +2,7 @@
 
 import { TanakaStyle } from "./TanakaStyle"
 import { StrokeStyle } from "./StrokeStyle"
+import { SquareColorCatWGLStyle } from "./SquareColorCatWGLStyle"
 import { Style } from "../Style"
 
 /**
@@ -42,46 +43,29 @@ export class LegoStyle {
         //style to show limits between pieces
         const sst = new StrokeStyle({ strokeColor: () => "#666", strokeWidth: (v, r, s, z) => 0.2 * z })
 
-        return [ts[0], sst, ts[1], new LegoTopStyle()]
+        return [ts[0], sst, ts[1], new LegoTopStyle({ colDark: opts.colDark, colBright: opts.colBright })]
     }
 
 
 
 
     /**
-     * @param {string} col 
+     * @param {function(string):string} col
      * @param {object} opts 
      * @returns {Array.<Style>}
      */
     static getCat(col, opts) {
         opts = opts || {}
 
-        //the colors
-        //http://www.jennyscrayoncollection.com/2021/06/all-current-lego-colors.html
-        //https://leonawicz.github.io/legocolors/reference/figures/README-plot-1.png
-        opts.colors = opts.colors || [
-            "#00852b", //darker green
-            "#afd246", //light green
-            "#fac80a", //dark yellow
-            "#d67923", //mostard
-            "#bb805a", //brown
-            "#cb4e29", //redish
-            "#b40000", //red
-            "#720012", //dark red
-            //"purple",
-            //"#eee" //whithe
-        ]
-
         opts.colDark = opts.colDark || "#333"
         opts.colBright = opts.colBright || "#aaa"
-        opts.widthFactor = opts.widthFactor || 0.12
 
-        //reuse tanaka as basis
-        const ts = TanakaStyle.get(col, opts)
+        const s = new SquareColorCatWGLStyle({ colorCol: col, color: opts.color })
+
         //style to show limits between pieces
         const sst = new StrokeStyle({ strokeColor: () => "#666", strokeWidth: (v, r, s, z) => 0.2 * z })
 
-        return [ts[0], sst, ts[1], new LegoTopStyle({ colDark: opts.colDark, colBright: opts.colBright })]
+        return [s, new LegoTopStyle({ colDark: opts.colDark, colBright: opts.colBright })]
     }
 
 }
@@ -91,7 +75,7 @@ export class LegoStyle {
  */
 class LegoTopStyle extends Style {
 
-    /** @param {object} opts */
+    /** @param {object|undefined} opts */
     constructor(opts) {
         super(opts)
         opts = opts || {}

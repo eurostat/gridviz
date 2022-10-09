@@ -30,14 +30,14 @@ export class SquareColorCatWGLStyle extends Style {
          * @type {object} */
         opts.color = opts.color || undefined;
 
-        /** @type { Array.<string> } */
+        /** @type { Array.<string> } @private */
         const keys = Object.keys(opts.color);
 
-        /** @type { object } */
+        /** @type { object } @private */
         this.catToI = {}
         for (let i = 0; i < keys.length; i++) this.catToI[keys[i]] = (i + "")
 
-        /** @type { Array.<string> } */
+        /** @type { Array.<string> } @private */
         this.colors = []
         for (let i = 0; i < keys.length; i++) {
             this.colors.push(opts.color["" + keys[i]])

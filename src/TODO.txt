@@ -1,3 +1,4 @@
+color cat: from dict to function
 lego cat
 lego: population + land cover + elevation
 
