@@ -1,6 +1,8 @@
-elevation: use filter to show urb ?
-degurba: define several layers
+lego cat
 lego: population + land cover + elevation
+
+elevation: use filter to show urb/water ?
+degurba: define several layers
 
 further test geotiff reading performance ?
 new data: elevation + forest - coverage and composition + CLC
