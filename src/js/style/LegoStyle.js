@@ -65,7 +65,7 @@ export class LegoStyle {
         //style to show limits between pieces
         const sst = new StrokeStyle({ strokeColor: () => "#666", strokeWidth: (v, r, s, z) => 0.2 * z })
 
-        return [s, new LegoTopStyle({ colDark: opts.colDark, colBright: opts.colBright })]
+        return [s, sst, new LegoTopStyle({ colDark: opts.colDark, colBright: opts.colBright })]
     }
 
 }
