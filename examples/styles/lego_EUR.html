@@ -24,9 +24,6 @@
                 <br>
                 <input type="radio" name="layer" id="pop" value="pop">
                 <label for="pop">Population</label>
-                <br>
-                <input type="radio" name="layer" id="urb" value="urb">
-                <label for="urb">Degree of urbanisation</label>
             </div>
             <hr>
             <input type="checkbox" id="label" checked>
@@ -74,19 +71,6 @@
                     delete c["2006"]
                     delete c["2011"]
                 }
-            }
-        )
-
-        //degurba dataset
-        ds.urb = app.makeMultiScaleTiledCSVGridDataset(
-            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/degurba/tiled/" + r + "m/",
-            {
-                preprocess: c => {
-                    if (+c.TOT != 1) c.c = "zzz";
-                    else
-                        c.c = +c.uc ? "uc" : +c.du ? "du" : +c.sdu ? "sdu" : +c.sbu ? "sbu" : +c.r ? "r" : +c.lr ? "lr" : +c.vlr ? "vlr" : "NA";
-                },
             }
         )
 
@@ -258,55 +242,6 @@
                 )
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 5, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, 7) }))
-
-
-
-            } else if (layCode === "urb") {
-                //urbanisation
-
-                const degurbaColors = {
-                    "uc": "#d53e4f",
-                    "du": "#f46d43",
-                    "sdu": "#fdae61",
-                    "sbu": "#fee08b",
-                    "r": "#e6f598",
-                    "lr": "#abdda4",
-                    "vlr": "#66c2a5",
-                    "NA": "gray",
-                }
-
-                app.addLayerFromDataset(
-                    ds.urb,
-                    gviz.LegoStyle.get(
-                        "c",
-                        {
-                            color: d3.interpolateOrRd,
-                            nb: 15,
-                            tFun: (v, r, s) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
-                            widthFactor: 0.04,
-                        }
-                    ),
-                    {
-                        pixNb: 10,
-                        cellInfoHTML: c => {
-                            if (!c.TOT) return "No information";
-                            if (c.TOT == 1) return +c.uc ? "Urban centre" : +c.du ? "Dense urban cluster" : +c.sdu ? "Semi-dense urban cluster" : +c.sbu ? "Suburban" : +c.r ? "Rural" : +c.lr ? "Low density rural" : +c.vlr ? "Very low density rural" : "Unknown";
-                            const out = []
-                            if (+c.uc) out.push(c.uc + " Dense urban cluster<br>")
-                            if (+c.sdu) out.push(c.sdu + " Semi-dense urban cluster<br>")
-                            if (+c.sbu) out.push(c.sbu + " Suburban<br>")
-                            if (+c.r) out.push(c.r + " Rural<br>")
-                            if (+c.lr) out.push(c.lr + " Low density rural<br>")
-                            if (+c.vlr) out.push(c.vlr + " Very low density rural<br>")
-                            if (+c.NA) out.push(c.NA + " Unknown<br>")
-                            return out.join("")
-                        }
-                    }
-                )
-                //legend
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#666d" }))
-                //TODO add legend with classified colors
-
 
             } else {
                 console.log("Unexpected layer code: " + layCode);

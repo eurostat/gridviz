@@ -60,8 +60,8 @@ export class LegoStyle {
         opts.colDark = opts.colDark || "#333"
         opts.colBright = opts.colBright || "#aaa"
 
+        //
         const s = new SquareColorCatWGLStyle({ colorCol: col, color: opts.color })
-
         //style to show limits between pieces
         const sst = new StrokeStyle({ strokeColor: () => "#666", strokeWidth: (v, r, s, z) => 0.2 * z })
 
