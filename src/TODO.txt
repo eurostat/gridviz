@@ -1,6 +1,7 @@
 color cat: from dict to function ?
 lego: population + land cover + elevation: finalise. Add legends.
 
+
 elevation: use filter to show urb/water ?
 degurba: define several layers
 
