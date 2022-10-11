@@ -1,7 +1,6 @@
 color cat: from dict to function ?
 lego: population + land cover + elevation: finalise. Add legends.
 
-
 elevation: use filter to show urb/water ?
 degurba: define several layers
 
@@ -52,8 +51,6 @@ Test segment orientation / color / thickness
 
 TODO test tchernioff faces - on FILOSOFI - as simplified smileys ?
 https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/chernoff-faces/
-
-
 
 jsdoc
 JSDOC bug: https://stackoverflow.com/questions/25773222/
