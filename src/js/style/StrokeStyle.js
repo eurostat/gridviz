@@ -134,6 +134,10 @@ export class StrokeStyle extends Style {
                     cell.x + r2,
                     cell.y + r2 - s2,
                 );
+                cg.ctx.lineTo(
+                    cell.x + r2 - s2,
+                    cell.y + r2,
+                );
                 cg.ctx.stroke();
             } else if (shape === "donut") {
                 console.error("Not implemented")
