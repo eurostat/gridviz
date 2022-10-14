@@ -67,6 +67,7 @@ export class ShapeColorSizeStyle extends Style {
         //in geo coordinates
         cg.setCanvasTransform()
 
+        const r2 = resolution * 0.5
         for (let cell of cells) {
 
             //color
@@ -98,22 +99,41 @@ export class ShapeColorSizeStyle extends Style {
                 //draw circle
                 cg.ctx.beginPath();
                 cg.ctx.arc(
-                    cell.x + resolution * 0.5 + offset.dx,
-                    cell.y + resolution * 0.5 + offset.dy,
+                    cell.x + r2 + offset.dx,
+                    cell.y + r2 + offset.dy,
                     sG * 0.5,
                     0, 2 * Math.PI, false);
                 cg.ctx.fill();
             } else if (shape === "donut") {
                 //draw donut
-                const xc = cell.x + resolution * 0.5 + offset.dx, yc = cell.y + resolution * 0.5 + offset.dy
+                const xc = cell.x + r2 + offset.dx, yc = cell.y + r2 + offset.dy
                 cg.ctx.beginPath();
                 cg.ctx.moveTo(xc, yc);
-                cg.ctx.arc(xc, yc, 0.5 * resolution, 0, 2 * Math.PI);
-                cg.ctx.arc(xc, yc, (1 - sG / resolution) * 0.5 * resolution, 0, 2 * Math.PI, true);
+                cg.ctx.arc(xc, yc, r2, 0, 2 * Math.PI);
+                cg.ctx.arc(xc, yc, (1 - sG / resolution) * r2, 0, 2 * Math.PI, true);
                 cg.ctx.closePath();
                 cg.ctx.fill();
             } else if (shape === "diamond") {
-                console.log("aaa!")
+                cg.ctx.beginPath();
+                cg.ctx.moveTo(
+                    cell.x + r2,
+                    cell.y + offset.dy + ll.y,
+                );
+                cg.ctx.lineTo(
+                    cell.x + offset.dx + resolution - lr.x,
+                    cell.y + offset.dy + lr.y,
+                );
+                cg.ctx.lineTo(
+                    cell.x + offset.dx + resolution - ur.x,
+                    cell.y + offset.dy + resolution - ur.y,
+                );
+                cg.ctx.lineTo(
+                    cell.x + offset.dx + ul.x,
+                    cell.y + offset.dy + resolution - ul.y,
+                );
+                cg.ctx.fill()
+    
+
             } else {
                 throw new Error('Unexpected shape:' + shape);
             }
