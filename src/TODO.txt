@@ -1,4 +1,3 @@
-losange shape: for stroke
 document SideCatStyle, ContourStyle, SquareColorCatWGLStyle, lego cat
 
 UR maps:
@@ -51,6 +50,7 @@ Pollock style: https://www.arcgis.com/apps/webappviewer/index.html?id=661d96be9f
 style: rough.js
 
 fisheye effect
+segment orientation
 
 dot density composition style
 improve performance of dotstyle - map every single individual
