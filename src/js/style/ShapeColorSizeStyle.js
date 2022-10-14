@@ -112,6 +112,8 @@ export class ShapeColorSizeStyle extends Style {
                 cg.ctx.arc(xc, yc, (1 - sG / resolution) * 0.5 * resolution, 0, 2 * Math.PI, true);
                 cg.ctx.closePath();
                 cg.ctx.fill();
+            } else if (shape === "diamond") {
+                console.log("aaa!")
             } else {
                 throw new Error('Unexpected shape:' + shape);
             }
