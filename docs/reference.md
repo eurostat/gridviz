@@ -379,7 +379,7 @@ See [this an example with random color, size, width and shape](https://eurostat.
 | **size**           | function(v,r,s,zf):number     | (v,r,s,zf) => r  | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.         |
 | **strokeWidthCol** | string                 | undefined        | The name of the column used for the stroke width.                                                                                           |
 | **strokeWidth**    | function(v,r,s,zf):number     | (v,r,s,zf) => zf | A function computing the cell stroke width from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
-| **shape**          | function(c):string     | () => "square"   | A function computing the shape of cell **c**. Expected values are within _{"square", "circle", "none"}_                                   |
+| **shape**          | function(c):string     | () => "square"   | A function computing the shape of cell **c**. Expected values are within _{"square", "circle", "diamond", "none"}_                                   |
 
 ### Side style
 
