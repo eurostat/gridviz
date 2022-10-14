@@ -1,4 +1,6 @@
 document SideCatStyle, ContourStyle, SquareColorCatWGLStyle, lego cat
+color cat: from dict to function ?
+lego: population + land cover + elevation: finalise. Add legends.
 
 UR maps:
 - degurba map - independant
@@ -9,11 +11,6 @@ UR maps:
 - format: c/p code to stat explained article. Data server - test wt? cache?
 
 zoom in/out
-
-https://openprocessing.org/sketch/1687044/
-
-color cat: from dict to function ?
-lego: population + land cover + elevation: finalise. Add legends.
 
 elevation: use filter to show urb/water ?
 degurba: define several layers
@@ -51,6 +48,7 @@ style: rough.js
 
 fisheye effect
 segment orientation
+https://openprocessing.org/sketch/1687044/
 
 dot density composition style
 improve performance of dotstyle - map every single individual
