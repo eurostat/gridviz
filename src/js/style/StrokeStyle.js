@@ -71,6 +71,7 @@ export class StrokeStyle extends Style {
         //in geo coordinates
         cg.setCanvasTransform()
 
+        const r2 = resolution * 0.5
         for (let cell of cells) {
 
             //color
@@ -109,10 +110,30 @@ export class StrokeStyle extends Style {
                 //draw circle
                 cg.ctx.beginPath();
                 cg.ctx.arc(
-                    cell.x + resolution * 0.5 + offset.dx,
-                    cell.y + resolution * 0.5 + offset.dy,
+                    cell.x + r2 + offset.dx,
+                    cell.y + r2 + offset.dy,
                     sG * 0.5,
                     0, 2 * Math.PI, false);
+                cg.ctx.stroke();
+            } else if (shape === "diamond") {
+                const s2 = sG * 0.5;
+                cg.ctx.beginPath();
+                cg.ctx.moveTo(
+                    cell.x + r2 - s2,
+                    cell.y + r2,
+                );
+                cg.ctx.lineTo(
+                    cell.x + r2,
+                    cell.y + r2 + s2,
+                );
+                cg.ctx.lineTo(
+                    cell.x + r2 + s2,
+                    cell.y + r2,
+                );
+                cg.ctx.lineTo(
+                    cell.x + r2,
+                    cell.y + r2 - s2,
+                );
                 cg.ctx.stroke();
             } else if (shape === "donut") {
                 console.error("Not implemented")
