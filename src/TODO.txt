@@ -1,3 +1,4 @@
+losange shape
 document SideCatStyle, ContourStyle, SquareColorCatWGLStyle, lego cat
 
 UR maps:
