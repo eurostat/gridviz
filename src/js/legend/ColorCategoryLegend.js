@@ -1,8 +1,8 @@
 //@ts-check
 
 import { Legend } from "../Legend";
-import { format } from "d3-format";
-import { Stat, Shape, Style } from "../Style"
+//import { format } from "d3-format";
+import { Style } from "../Style"
 
 /**
  * A legend element for color categrories.
@@ -24,7 +24,7 @@ export class ColorCategoryLegend extends Legend {
 
         /** 
          * @private
-         * @type {Shape} */
+         * @type {import("../Style").Shape} */
         this.shape = opts.shape || "circle"
         this.dimension = opts.dimension || { r: 8 }
         this.strokeColor = opts.strokeColor || "gray"
@@ -40,7 +40,7 @@ export class ColorCategoryLegend extends Legend {
     }
 
     /**
-     * @param {{ style: Style, r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
+     * @param {{ style: Style, r: number, zf: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts 
      */
     update(opts) {
 

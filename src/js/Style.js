@@ -6,7 +6,7 @@ import { Legend } from "./Legend";
  * Statistics of a set of values
  * @typedef {{min:number,max:number}} Stat */
 
-/** @typedef {"square"|"circle"|"donut"|"none"} Shape */
+/** @typedef {"square"|"circle"|"diamond"|"donut"|"none"} Shape */
 
 /**
  * A style, to show a grid dataset.
