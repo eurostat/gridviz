@@ -1,6 +1,16 @@
 document SideCatStyle, ContourStyle, SquareColorCatWGLStyle, lego cat
 
+UR maps:
+- degurba map - independant
+- population map - with color + joyplot + 3D pillars
+- CLC map
+- show "road transport performance in europe" grid
+- other: stripe CLC + bivariate
+- format: c/p code to stat explained article. Data server - test wt? cache?
+
 zoom in/out
+
+https://openprocessing.org/sketch/1687044/
 
 color cat: from dict to function ?
 lego: population + land cover + elevation: finalise. Add legends.
