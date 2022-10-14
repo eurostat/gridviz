@@ -311,7 +311,7 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 | **color**    | function(v,r,s):string | () => "#EA6BAC" | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**.                  |
 | **sizeCol**  | string                 | undefined       | The name of the column used for the size.                                                                                           |
 | **size**     | function(v,r,s,zf):number   | (v,r,s,zf) => r | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
-| **shape**    | function(c):string     | () => "square"  | A function computing the shape of cell **c**. Expected values are within _{"square", "circle", "donut", "none"}_      |
+| **shape**    | function(c):string     | () => "square"  | A function computing the shape of cell **c**. Expected values are within _{"square", "circle", "diamond", "donut", "none"}_      |
 
 
 ### Composition style
