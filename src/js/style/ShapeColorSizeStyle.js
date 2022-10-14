@@ -114,26 +114,25 @@ export class ShapeColorSizeStyle extends Style {
                 cg.ctx.closePath();
                 cg.ctx.fill();
             } else if (shape === "diamond") {
+                const s2 = sG * 0.5;
                 cg.ctx.beginPath();
                 cg.ctx.moveTo(
+                    cell.x + r2 - s2,
+                    cell.y + r2,
+                );
+                cg.ctx.lineTo(
                     cell.x + r2,
-                    cell.y + offset.dy + ll.y,
+                    cell.y + r2 + s2,
                 );
                 cg.ctx.lineTo(
-                    cell.x + offset.dx + resolution - lr.x,
-                    cell.y + offset.dy + lr.y,
+                    cell.x + r2 + s2,
+                    cell.y + r2,
                 );
                 cg.ctx.lineTo(
-                    cell.x + offset.dx + resolution - ur.x,
-                    cell.y + offset.dy + resolution - ur.y,
-                );
-                cg.ctx.lineTo(
-                    cell.x + offset.dx + ul.x,
-                    cell.y + offset.dy + resolution - ul.y,
+                    cell.x + r2,
+                    cell.y + r2 - s2,
                 );
                 cg.ctx.fill()
-    
-
             } else {
                 throw new Error('Unexpected shape:' + shape);
             }
