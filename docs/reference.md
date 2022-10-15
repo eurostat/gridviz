@@ -20,8 +20,8 @@
     - [Segment style](#segment-style)
     - [Stroke style](#stroke-style)
     - [Side style](#side-style)
-    - [SquareColorCatWGLStyle](#squarecolorcatwglstyle)
-    - [SideCatStyle](#sidecatstyle)
+    - [Square color category WebGL style](#square-color-category-webgl-style)
+    - [Side category style](#side-category-style)
     - [Dot density style](#dot-density-style)
     - [JoyPlot Style](#joyplot-style)
     - [Mosaic style](#mosaic-style)
@@ -299,7 +299,7 @@ See [this example with dark style](https://eurostat.github.io/gridviz/examples/s
 [![shape color size style](img/styles/shapesizecolor_random.png)](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html)
 [![shape color size style](img/styles/shapesizecolor_sc_donut.png)](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size_color.html)
 
-This style is a generic style which allows to define the **shape**, **color** and **size** of each grid cell, independantly according to 3 different variables. Three shapes are currently available: square, circle and donut (a disk with a hole of changing size). To show grid cells as small squares with only changing color, the style based on web GL [here](#square-color-webgl-style) should rather be used, for efficiency reasons.
+This style is a generic style which allows to define the **shape**, **color** and **size** of each grid cell, independantly according to 3 different variables. Three shapes are currently available: square, circle and donut (a disk with a hole of changing size). To show grid cells as small squares with only changing color, one of the styles based on web GL [here](#square-color-webgl-style) or [here](#square-color-category-webgl-style) should rather be used, for efficiency reasons.
 
 See [this example with changing size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_size.html) ([code](../examples/styles/shapecolorsize_size.html)).
 
@@ -401,11 +401,11 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html)
 | **fillColor** | function(c):string | undefined | A function returning an optional fill color for a cell **c**. |
 
 
-### SquareColorCatWGLStyle
+### Square color category WebGL style
 
 Documentation coming soon.
 
-### SideCatStyle
+### Side category style
 
 Documentation coming soon.
 
