@@ -1,4 +1,4 @@
-document SquareColorCatWGLStyle, SideCatStyle, ContourStyle, lego cat
+document
 color cat: from dict to function ?
 lego: population + land cover + elevation: finalise. Add legends.
 

@@ -27,8 +27,10 @@
     - [Mosaic style](#mosaic-style)
     - [Tanaka style](#tanaka-style)
     - [Lego style](#lego-style)
+    - [Lego category style](#lego-category-style)
     - [Pillars style](#pillars-style)
     - [Text style](#text-style)
+    - [Contour style](#contour-style)
     - [Kernel smoothing style](#kernel-smoothing-style)
     - [Others...](#others)
   - [Legends](#legends)
@@ -511,6 +513,9 @@ See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego
 
 Other properties: See [Tanaka style](#tanaka-style).
 
+### Lego category style
+
+Documentation coming soon.
 
 ### Pillars style
 
@@ -537,6 +542,11 @@ Documentation coming soon.
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
 | **.**    |      |         |             |
+
+
+### Contour style
+
+Documentation coming soon.
 
 ### Kernel smoothing style
 
