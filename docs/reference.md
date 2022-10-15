@@ -20,6 +20,8 @@
     - [Segment style](#segment-style)
     - [Stroke style](#stroke-style)
     - [Side style](#side-style)
+    - [SquareColorCatWGLStyle](#squarecolorcatwglstyle)
+    - [SideCatStyle](#sidecatstyle)
     - [Dot density style](#dot-density-style)
     - [JoyPlot Style](#joyplot-style)
     - [Mosaic style](#mosaic-style)
@@ -397,6 +399,16 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html)
 | **width** | function(side,r,s,zf):number | (side, r, s, z) => r * side.value / 5 | A function returning the width of a cell side **side**, in geo unit, from the resolution **r**, statistics **s** and zoom factor **zf**. A side is represented as an object _{x:number,y:number,or:"v"|"h",value:number}_. |
 | **orientation** | number | 0 | Orientation of the sides. Set to 90 to show sides as slope lines for example. |
 | **fillColor** | function(c):string | undefined | A function returning an optional fill color for a cell **c**. |
+
+
+### SquareColorCatWGLStyle
+
+Documentation coming soon.
+
+### SideCatStyle
+
+Documentation coming soon.
+
 
 ### Dot density style
 
