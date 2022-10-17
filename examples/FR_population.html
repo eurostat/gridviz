@@ -26,6 +26,8 @@
                 <label for="square">Square</label>
                 <input type="radio" name="style" id="circle" value="circle">
                 <label for="circle">Circle</label>
+                <input type="radio" name="style" id="diamond" value="diamond">
+                <label for="diamond">Diamond</label>
                 <input type="radio" name="style" id="donut" value="donut">
                 <label for="donut">Donut</label>
                 <br>
@@ -122,6 +124,20 @@
                     sizeCol: "Ind",
                     size: (v, r, s, zf) => 1.5 * r * gviz.sPow(v / s.max, 0.3),
                     shape: () => "circle",
+                })
+                ], pixNb: 10
+            },
+            diamond: {
+                style: [new gviz.ShapeColorSizeStyle({
+                    color: () => "#c08c59cc",
+                    sizeCol: "Ind",
+                    size: (v, r, s, zf) => 1.5 * r * gviz.sPow(v / s.max, 0.3),
+                    shape: () => "diamond",
+                }), new gviz.StrokeStyle({
+                    maxZoom: 15,
+                    sizeCol: "Ind",
+                    size: (v, r, s, zf) => 1.5 * r * gviz.sPow(v / s.max, 0.3),
+                    shape: () => "diamond",
                 })
                 ], pixNb: 10
             },
