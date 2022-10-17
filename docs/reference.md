@@ -26,8 +26,8 @@
     - [Text style](#text-style)
   - [Side styles](#side-styles)
     - [Side style](#side-style)
-    - [Contour style](#contour-style)
     - [Side category style](#side-category-style)
+    - [Contour style](#contour-style)
   - [Esthetic styles](#esthetic-styles)
     - [JoyPlot Style](#joyplot-style)
     - [Mosaic style](#mosaic-style)
@@ -460,12 +460,13 @@ Documentation coming soon.
 
 ## Side styles
 
+The __side styles__ are special:They do not display the cells, but their sides. They can be used to show discontinuities between cell values with, for example, some shadow effect.
 
 ### Side style
 
 [![side style](img/styles/side.png)](https://eurostat.github.io/gridviz/examples/styles/side.html)
 
-This style displays the sides of the cells as segments with different colors and widths, depending on the values of the 2 adjacent cells. This style is special because it does not display the cells, but their sides. It can be used to show discontinuities between cell values with, for example, some shadow effect.
+This style displays the sides of the cells as segments with different colors and widths, depending on the values of the 2 adjacent cells.
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](../examples/styles/side.html)).
 
@@ -478,17 +479,17 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html)
 | **orientation** | number | 0 | Orientation of the sides. Set to 90 to show sides as slope lines for example. |
 | **fillColor** | function(c):string | undefined | A function returning an optional fill color for a cell **c**. |
 
+### Side category style
+
+This style displays the sides of the cells as segments with different colors depending on the categories of the 2 adjacent cells.
+
+See [this example](https://eurostat.github.io/gridviz/examples/styles/sidecat.html) ([code](../examples/styles/sidecat.html)).
+
+Documentation coming soon.
 
 ### Contour style
 
 Documentation coming soon.
-
-
-### Side category style
-
-Documentation coming soon.
-
-
 
 ## Esthetic styles
 
