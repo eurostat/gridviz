@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title></title>
+</head>
+
+<body>
+    <div id="viz-container" style="height:600px; width:900px; left: 20px; top: 20px; position: absolute;">
+        <div
+            style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
+            <span style="font-size: 0.8em; font-family: sans-serif;"><a href="https://github.com/eurostat/gridviz"
+                    style="text-decoration:none">GridViz</a> |
+                © <a href="https://eurogeographics.org" style="text-decoration:none">EuroGeographics</a></span>
+        </div>
+    </div>
+
+    <script src="../../build/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+    <script>
+
+        const yearCode = "2018"
+
+        let containerDiv = document.getElementById("viz-container");
+        const app = new gviz.App(containerDiv)
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
+            .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+
+            .addMultiScaleTiledCSVGridLayer(
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: yearCode,
+                        color: d3.interpolateOrRd,
+                        stretching: { fun: "expRev", alpha: -7 }
+                    }),
+                    new gviz.StrokeStyle({ strokeColorCol: yearCode, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
+                ],
+                {
+                    pixNb: 2,
+                    cellInfoHTML: c => +c[yearCode] ? "<b>" + c[yearCode] + "</b> inhabitant(s) in " + yearCode : undefined
+                    /*preprocess: c => {
+                        //prepare 2011 -> 2018 change data
+                        if (!c["2011"] && !c["2018"]) c.d11_18 = 0
+                        else if (!c["2011"] && c["2018"]) c.d11_18 = + c["2018"]
+                        else if (c["2011"] && !c["2018"]) c.d11_18 = - c["2011"]
+                        else c.d11_18 = c["2018"] - c["2011"]
+
+                        //prepare 2006 -> 2011 change data
+                        if (!c["2006"] && !c["2011"]) c.d06_11 = 0
+                        else if (!c["2006"] && c["2011"]) c.d06_11 = +c["2011"]
+                        else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
+                        else c.d06_11 = c["2011"] - c["2006"]
+                    }*/
+                })
+
+            .addBackgroundLayer({
+                url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
+                resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
+                origin: [0, 6000000],
+                filterColor: zf => "#ffffffd3",
+            })
+
+    </script>
+
+</body>
+
+</html>
