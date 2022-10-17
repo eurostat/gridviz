@@ -501,11 +501,11 @@ See [this other example](https://eurostat.github.io/gridviz/examples/styles/tana
 
 [![lego style](img/styles/lego.png)](https://eurostat.github.io/gridviz/examples/styles/lego.html)
 
-This style shows the grid cells as lego bricks with changeable colors and height.
+This style shows the grid cells as lego bricks with changeable colors and height based on a quantitative variable.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego.html) ([code](../examples/styles/lego.html)).
 
-See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego_full.html) ([code](../examples/styles/lego_full.html)).
+See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego_EUR.html) ([code](../examples/styles/lego_EUR.html)).
 
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
@@ -514,6 +514,10 @@ See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego
 Other properties: See [Tanaka style](#tanaka-style).
 
 ### Lego category style
+
+This style shows the grid cells as lego bricks with changeable colors based on a categorical variable.
+
+See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego_EUR.html) ([code](../examples/styles/lego_EUR.html)).
 
 Documentation coming soon.
 
