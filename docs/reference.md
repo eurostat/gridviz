@@ -21,6 +21,7 @@
     - [Segment style](#segment-style)
     - [Stroke style](#stroke-style)
   - [Advanced styles](#advanced-styles)
+    - [Tanaka style](#tanaka-style)
     - [Dot density style](#dot-density-style)
     - [Pillars style](#pillars-style)
     - [Text style](#text-style)
@@ -31,7 +32,6 @@
   - [Esthetic styles](#esthetic-styles)
     - [JoyPlot Style](#joyplot-style)
     - [Mosaic style](#mosaic-style)
-    - [Tanaka style](#tanaka-style)
     - [Lego style](#lego-style)
     - [Lego category style](#lego-category-style)
   - [Kernel smoothing](#kernel-smoothing)
@@ -411,6 +411,28 @@ See [this an example with random color, size, width and shape](https://eurostat.
 
 ## Advanced styles
 
+### Tanaka style
+
+[![tanaka style](img/styles/tanaka.png)](https://eurostat.github.io/gridviz/examples/styles/tanaka.html)
+[![tanaka style](img/styles/tanaka_full.png)](https://eurostat.github.io/gridviz/examples/styles/tanaka_full.html)
+
+This style shows the grid cells in a [Tanaka style](http://wiki.gis.com/wiki/index.php/Tanaka_contours), that is with discrete colors and a shadow effect.
+
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](../examples/styles/tanaka.html)).
+
+See [this other example](https://eurostat.github.io/gridviz/examples/styles/tanaka_full.html) ([code](../examples/styles/tanaka_full.html)).
+
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
+| **col**     | string                 | undefined       | The name of the column used for the color.                |
+| **tFun**    | function(v,r,s):number |  (v, r, s) => (v - s.min) / (s.max - s.min) | A function computing the **t** parameter (whithin [0,1]) from the value **v** of __col__ column, the resolution **r** and statistics **s**.   |
+| **colors**    |  Array(string)   | ["#a9bb9e", "#c9dcaa", "#fde89f", "#f9a579", "#eb444b"]   |  The colors. |
+| **color**    |  function(t):string    |   () => "gray" |  If **colors** is not specified, the color ramp function. |
+| **nb**    |  number  |  undefined  |  If **colors** is not specified, the number of colors. |
+| **colDark**    |  string    |  "#111" |  Shadow color: South East side. This should be a dark color.  |
+| **colBright**    |   string   |   "#ddd"  |  Shadow color: North West side. This should be a bright color. |
+| **widthFactor**    |  number    |   0.08   | Size of the shadow, as a portion of the resolution.  |
+
 ### Dot density style
 
 [![dot density style](img/styles/dotdensity.png)](https://eurostat.github.io/gridviz/examples/styles/dotdensity.html)
@@ -544,29 +566,6 @@ See [this roman style example](https://eurostat.github.io/gridviz/examples/style
 | **mosaicFactor** | number                 | 0.15            | The mosaic factor, within [0,0.5], to control the shape irregularities. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect. |
 | **shadowFactor** | number                 | 0.2             | The mosaic shadow factor, within [0,0.5]. Set to 0 for no mosaic shadow. Set to 0.5 for strong mosaic shadow.                               |
 | **shadowColor**  | string                 | "#555"          | The mosaic shadow color.                                                                                                                    |
-
-### Tanaka style
-
-[![tanaka style](img/styles/tanaka.png)](https://eurostat.github.io/gridviz/examples/styles/tanaka.html)
-[![tanaka style](img/styles/tanaka_full.png)](https://eurostat.github.io/gridviz/examples/styles/tanaka_full.html)
-
-This style shows the grid cells in a [Tanaka style](http://wiki.gis.com/wiki/index.php/Tanaka_contours), that is with discrete colors and a shadow effect.
-
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/tanaka.html) ([code](../examples/styles/tanaka.html)).
-
-See [this other example](https://eurostat.github.io/gridviz/examples/styles/tanaka_full.html) ([code](../examples/styles/tanaka_full.html)).
-
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| **col**     | string                 | undefined       | The name of the column used for the color.                |
-| **tFun**    | function(v,r,s):number |  (v, r, s) => (v - s.min) / (s.max - s.min) | A function computing the **t** parameter (whithin [0,1]) from the value **v** of __col__ column, the resolution **r** and statistics **s**.   |
-| **colors**    |  Array(string)   | ["#a9bb9e", "#c9dcaa", "#fde89f", "#f9a579", "#eb444b"]   |  The colors. |
-| **color**    |  function(t):string    |   () => "gray" |  If **colors** is not specified, the color ramp function. |
-| **nb**    |  number  |  undefined  |  If **colors** is not specified, the number of colors. |
-| **colDark**    |  string    |  "#111" |  Shadow color: South East side. This should be a dark color.  |
-| **colBright**    |   string   |   "#ddd"  |  Shadow color: North West side. This should be a bright color. |
-| **widthFactor**    |  number    |   0.08   | Size of the shadow, as a portion of the resolution.  |
-
 
 ### Lego style
 
