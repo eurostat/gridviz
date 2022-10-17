@@ -334,7 +334,7 @@ See [this example showing population of France by age group](https://eurostat.gi
 
 | Property                         | Type                        | Default         | Description                                                                                                                                                                                                |
 | -------------------------------- | --------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **color**                        | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.                                                                                                                                    |
+| **color**      | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.     |
 | **type**                         | function(c):CompositionType | () => "flag     | A function returning the symbol type of a cell **c**. CompositionType are among _"flag", "piechart", "ring", "segment", "radar", "agepyramid", "halftone"_                                               |
 | **sizeCol**                      | string                      | undefined       | The name of the column used for the size.                                                                                                                                                                  |
 | **size**                         | function(v,r,s,zf):number  | (v,r,s,zf) => r | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom                                                                                       |
@@ -405,7 +405,18 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html)
 
 ### Square color category WebGL style
 
-Documentation coming soon.
+[![square color webgl category style](img/styles/squarecolorcatwgl_lc.png)](https://eurostat.github.io/gridviz/examples/styles/squarecolorcatwgl.html)
+
+This style displays each cell as a square, with a changing color based on a categorical variable. This style uses webGL and should thus be used to display grid cells at detailled resolutions.
+
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorcatwgl.html) ([code](../examples/styles/squarecolorcatwgl.html)).
+
+| Property       | Type                       | Default         | Description            |
+| -------------- | ----------------- | ------------ | ----------- |
+| **colorCol**   | string                     | undefined         | The name of the column used for the color.       |
+| **color**      | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.     |         |
+| **size** | function(r,zf):number  | (r,zf) => r + 0.2 * zf  | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size. |
+
 
 ### Side category style
 
