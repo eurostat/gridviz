@@ -2,8 +2,6 @@ document
 color cat: from dict to function ?
 lego: population + land cover + elevation: finalise. Add legends.
 
-lego: remove - full replace with eur
-
 UR maps:
 - degurba map - independant
 - population map - with color + joyplot + 3D pillars
