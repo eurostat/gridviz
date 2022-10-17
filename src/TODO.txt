@@ -1,16 +1,16 @@
 UR maps:
-- degurba map - independant
-- population map - with color + joyplot + 3D pillars
-- CLC map
-- show "road transport performance in europe" grid
+- degurba map: legend, show population, etc.
+- population map - with color + joyplot + 3D pillars. + legend + etc.
+- CLC map: legend, etc
+- show "road transport performance in europe" grid. M9.2
 - other: stripe CLC + bivariate
-- format: c/p code to stat explained article. Data server - test wt? cache?
+- Data server - test wt? cache?
+- fix euronym - local names, with accents ?
++ accessibility grid M9.7/8
++ forest M9.18
 
 pillar: random example
 check https://viglino.github.io/ol-ext/examples/map/map.layer.3D.2.html
-
-TODO fix euronym - local names, with accents ?
-TODO document and improve euronyme
 
 make own background - with low resolution
 https://land.copernicus.eu/imagery-in-situ/eu-dem/eu-dem-v1-0-and-derived-products/hillshade?tab=download
@@ -20,16 +20,17 @@ TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/fores
 https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
 https://ec.europa.eu/regional_policy/en/information/publications/working-papers/2022/passenger-rail-performance-in-europe-regional-and-territorial-accessibility-indicators-for-passenger-rail
 
+
+
+
+
 document
 color cat: from dict to function ?
 lego: population + land cover + elevation: finalise. Add legends.
 
 EUR elevation: use filter to show urb/water ?
-EUR degurba: define several layers
 
-
-
-
+TODO document euronyme
 
 further test geotiff reading performance ?
 FR BD foret
