@@ -43,7 +43,7 @@
                 ],
                 {
                     pixNb: 2,
-                    cellInfoHTML: c => +c[yearCode] ? "<b>" + c[yearCode] + "</b> inhabitant(s) in " + yearCode : undefined
+                    cellInfoHTML: c => +c[yearCode] ? "<b>" + c[yearCode] + "</b> inhabitant" + (+c[yearCode] == 1 ? "" : "s") + " in " + yearCode : undefined
                     /*preprocess: c => {
                         //prepare 2011 -> 2018 change data
                         if (!c["2011"] && !c["2018"]) c.d11_18 = 0
