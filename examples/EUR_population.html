@@ -33,6 +33,8 @@
                 <label for="squareSize">Square</label>
                 <input type="radio" name="style" id="circleSize" value="circleSize">
                 <label for="circleSize">Circle</label>
+                <input type="radio" name="style" id="diamondSize" value="diamondSize">
+                <label for="diamondSize">Diamond</label>
                 <input type="radio" name="style" id="donut" value="donut">
                 <label for="donut">Donut</label>
                 <br>
@@ -127,6 +129,14 @@
                         sizeCol: getSelectedYear(),
                         size: (v, r, s, zf) => 1.5 * r * gviz.sPow(v / s.max, 0.3),
                         shape: () => "circle",
+                    })], pixNb: 7
+                },
+                diamondSize: {
+                    style: [new gviz.ShapeColorSizeStyle({
+                        color: () => "#c08c59cc",
+                        sizeCol: getSelectedYear(),
+                        size: (v, r, s, zf) => 1.5 * r * gviz.sPow(v / s.max, 0.3),
+                        shape: () => "diamond",
                     })], pixNb: 7
                 },
                 donut: {
@@ -267,6 +277,18 @@
                         shape: () => "circle",
                     })], pixNb: 7
                 },
+                diamondSize: {
+                    style: [new gviz.ShapeColorSizeStyle({
+                        colorCol: getSelectedYear(),
+                        color: (v) => v > 0 ? "#d13c4bcc" : "#4288b5cc",
+                        sizeCol: getSelectedYear(),
+                        size: (v, r, s, zf) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            return 1.5 * r * gviz.sPow(Math.abs(v) / max, 0.2)
+                        },
+                        shape: () => "diamond",
+                    })], pixNb: 7
+                },
                 donut: {
                     style: [new gviz.ShapeColorSizeStyle({
                         colorCol: getSelectedYear(),
@@ -398,6 +420,7 @@
         sd.pop.circleColor.style[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 6, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25) }))
         sd.pop.squareSize.style[0].legends.push(new gviz.SizeLegend({ shape: "square", labelUnitText: "inhab.", fillColor: "#c08c59cc" }))
         sd.pop.circleSize.style[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#c08c59cc" }))
+        //sd.pop.diamondSize.style[0].legends.push(new gviz.SizeLegend({ shape: "diamond", labelUnitText: "inhab.", fillColor: "#c08c59cc" }))
         sd.pop.segmentH.style[0].legends.push(new gviz.SegmentWidthLegend({ labelUnitText: "inhab.", color: "#c08c59", orientation: 0 }))
         sd.pop.segmentV.style[0].legends.push(new gviz.SegmentWidthLegend({ labelUnitText: "inhab.", color: "#c08c59", orientation: 90 }))
         sd.pop.segmentO.style[0].legends.push(new gviz.SegmentWidthLegend({ labelUnitText: "inhab.", color: "#c08c59", orientation: 45 }))
@@ -505,6 +528,7 @@
 
             sd.pop.squareSize.style[0].sizeCol = this.value
             sd.pop.circleSize.style[0].sizeCol = this.value
+            sd.pop.diamondSize.style[0].sizeCol = this.value
             sd.pop.donut.style[0].sizeCol = this.value
 
             sd.pop.segmentH.style[0].widthCol = this.value
@@ -530,6 +554,8 @@
             sd.popchange.squareSize.style[0].colorCol = this.value
             sd.popchange.circleSize.style[0].sizeCol = this.value
             sd.popchange.circleSize.style[0].colorCol = this.value
+            sd.popchange.diamondSize.style[0].sizeCol = this.value
+            sd.popchange.diamondSize.style[0].colorCol = this.value
             sd.popchange.donut.style[0].sizeCol = this.value
             sd.popchange.donut.style[0].colorCol = this.value
 
