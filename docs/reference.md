@@ -14,28 +14,28 @@
     - [Multi scale tiled CSV data](#multi-scale-tiled-csv-data)
     - [Data pre-processing and filtering](#data-pre-processing-and-filtering)
   - [Basic styles](#basic-styles)
-  - [Advanced styles](#advanced-styles)
-  - [Side styles](#side-styles)
-  - [Esthetic styles](#esthetic-styles)
-    - [Square color WebGL Style](#square-color-webgl-style)
     - [Shape/Color/Size Style](#shapecolorsize-style)
+    - [Square color WebGL Style](#square-color-webgl-style)
+    - [Square color category WebGL style](#square-color-category-webgl-style)
     - [Composition style](#composition-style)
     - [Segment style](#segment-style)
     - [Stroke style](#stroke-style)
-    - [Side style](#side-style)
-    - [Square color category WebGL style](#square-color-category-webgl-style)
-    - [Side category style](#side-category-style)
+  - [Advanced styles](#advanced-styles)
     - [Dot density style](#dot-density-style)
+    - [Pillars style](#pillars-style)
+    - [Text style](#text-style)
+  - [Side styles](#side-styles)
+    - [Side style](#side-style)
+    - [Contour style](#contour-style)
+    - [Side category style](#side-category-style)
+  - [Esthetic styles](#esthetic-styles)
     - [JoyPlot Style](#joyplot-style)
     - [Mosaic style](#mosaic-style)
     - [Tanaka style](#tanaka-style)
     - [Lego style](#lego-style)
     - [Lego category style](#lego-category-style)
-    - [Pillars style](#pillars-style)
-    - [Text style](#text-style)
-    - [Contour style](#contour-style)
-    - [Kernel smoothing style](#kernel-smoothing-style)
-    - [Others...](#others)
+  - [Kernel smoothing](#kernel-smoothing)
+  - [Others styles](#others-styles)
   - [Legends](#legends)
   - [Stretching](#stretching)
   - [Background layer](#background-layer)
@@ -273,35 +273,10 @@ new gviz.App(containerDiv)
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/select.html), see [code](../examples/select.html))
 
+
+
+
 ## Basic styles
-## Advanced styles
-## Side styles
-## Esthetic styles
-
-
-
-
-### Square color WebGL Style
-
-[![square color webgl style](img/styles/squarecolorwgl_pop.png)](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html)
-[![square color webgl style](img/styles/squarecolorwgl_dark.png)](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html)
-
-This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display grid cells at detailled resolutions.
-
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html) ([code](../examples/styles/squarecolorwgl.html)).
-
-See [this example with dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html) ([code](../examples/styles/squarecolorwgl_dark.html)).
-
-
-| Property       | Type                       | Default         | Description            |
-| -------------- | ----------------- | ------------ | ----------- |
-| **colorCol**   | string                     | undefined         | The name of the column used for the color.       |
-| **tFun**       | function(v,r,s):number     | (v, r, s) => v / s.max          | A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling.              |
-| **stretching** | {fun:string, alpha:number} | undefined       | Necessary information to apply a stretching [0,1] -> [0,1] to the **t** value. Property **fun** is the type of function, among _{"pow", "powRev", "exp", "expRev"}_ - see [stretching section](#stretching) for more information on those functions. This stretching is performed on GPU side (fragment shader). |
-| **colors**   | Array(string)    | Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral) | The sample of the color ramp.                                                                                                                                                                                                                                                                                      |
-| **color**      | function(t):number         | undefined                                                                                           | Instead of specifying **colors**, this property can be defined. It is a function which returns a color from a **t** value within [0,1].                                                                                                                                                                            |
-| **size**       | function(r,zf):number      | (r,zf) => r + 0.2 * zf                                                                              | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size.                                                                                                                                                                   |
-
 
 ### Shape/Color/Size Style
 
@@ -325,6 +300,43 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 | **sizeCol**  | string                 | undefined       | The name of the column used for the size.                                                                                           |
 | **size**     | function(v,r,s,zf):number   | (v,r,s,zf) => r | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
 | **shape**    | function(c):string     | () => "square"  | A function computing the shape of cell **c**. Expected values are within _{"square", "circle", "diamond", "donut", "none"}_      |
+
+
+### Square color WebGL Style
+
+[![square color webgl style](img/styles/squarecolorwgl_pop.png)](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html)
+[![square color webgl style](img/styles/squarecolorwgl_dark.png)](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html)
+
+This style displays each cell as a square, with a changing color. This style uses webGL and should thus be used to display grid cells at detailled resolutions.
+
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html) ([code](../examples/styles/squarecolorwgl.html)).
+
+See [this example with dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html) ([code](../examples/styles/squarecolorwgl_dark.html)).
+
+
+| Property       | Type                       | Default         | Description            |
+| -------------- | ----------------- | ------------ | ----------- |
+| **colorCol**   | string                     | undefined         | The name of the column used for the color.       |
+| **tFun**       | function(v,r,s):number     | (v, r, s) => v / s.max          | A function computing the cell color parameter **t** (whithin [0,1]) from its __colorCol__ value **v**, the resolution **r**, and statistics **s**. This **t** value is then used to determine the cell color from the color sampling.              |
+| **stretching** | {fun:string, alpha:number} | undefined       | Necessary information to apply a stretching [0,1] -> [0,1] to the **t** value. Property **fun** is the type of function, among _{"pow", "powRev", "exp", "expRev"}_ - see [stretching section](#stretching) for more information on those functions. This stretching is performed on GPU side (fragment shader). |
+| **colors**   | Array(string)    | Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral) | The sample of the color ramp.      |
+| **color**      | function(t):number         | undefined                                                                                           | Instead of specifying **colors**, this property can be defined. It is a function which returns a color from a **t** value within [0,1].     |
+| **size**       | function(r,zf):number      | (r,zf) => r + 0.2 * zf         | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size.       |
+
+
+### Square color category WebGL style
+
+[![square color webgl category style](img/styles/squarecolorcatwgl_lc.png)](https://eurostat.github.io/gridviz/examples/styles/squarecolorcatwgl.html)
+
+This style displays each cell as a square, with a changing color based on a categorical variable. This style uses webGL and should thus be used to display grid cells at detailled resolutions.
+
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorcatwgl.html) ([code](../examples/styles/squarecolorcatwgl.html)).
+
+| Property       | Type                       | Default         | Description            |
+| -------------- | ----------------- | ------------ | ----------- |
+| **colorCol**   | string                     | undefined         | The name of the column used for the color.       |
+| **color**      | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.     |         |
+| **size** | function(r,zf):number  | (r,zf) => r + 0.2 * zf  | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size. |
 
 
 ### Composition style
@@ -394,44 +406,10 @@ See [this an example with random color, size, width and shape](https://eurostat.
 | **strokeWidth**    | function(v,r,s,zf):number     | (v,r,s,zf) => zf | A function computing the cell stroke width from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
 | **shape**          | function(c):string     | () => "square"   | A function computing the shape of cell **c**. Expected values are within _{"square", "circle", "diamond", "none"}_                                   |
 
-### Side style
-
-[![side style](img/styles/side.png)](https://eurostat.github.io/gridviz/examples/styles/side.html)
-
-This style displays the sides of the cells as segments with different colors and widths, depending on the values of the 2 adjacent cells. This style is special because it does not display the cells, but their sides. It can be used to show discontinuities between cell values with, for example, some shadow effect.
-
-See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](../examples/styles/side.html)).
-
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| **valueCol** | string | undefined | The name of the column used to retrieve the cell values. |
-| **value** | function(v1,v2,r,s,zf):number | (v1, v2, r, s, zf) => 1 | A function computing the value of a cell side. This value is computed from the two adjacent cell values **v1** and **v2**. For horizontal sides, **v1** is the value of the cell below and **v2** the value of the cell above. For vertical sides, **v1** is the value of the left cell and **v2** the value of the right cell. |
-| **color** | function(side,r,s,zf):string | () => "#EA6BAC" |  A function returning the color of a cell side **side** from the resolution **r**, statistics **s** and zoom factor **zf**. A side is represented as an object _{x:number,y:number,or:"v"|"h",value:number}_. |
-| **width** | function(side,r,s,zf):number | (side, r, s, z) => r * side.value / 5 | A function returning the width of a cell side **side**, in geo unit, from the resolution **r**, statistics **s** and zoom factor **zf**. A side is represented as an object _{x:number,y:number,or:"v"|"h",value:number}_. |
-| **orientation** | number | 0 | Orientation of the sides. Set to 90 to show sides as slope lines for example. |
-| **fillColor** | function(c):string | undefined | A function returning an optional fill color for a cell **c**. |
-
-
-### Square color category WebGL style
-
-[![square color webgl category style](img/styles/squarecolorcatwgl_lc.png)](https://eurostat.github.io/gridviz/examples/styles/squarecolorcatwgl.html)
-
-This style displays each cell as a square, with a changing color based on a categorical variable. This style uses webGL and should thus be used to display grid cells at detailled resolutions.
-
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorcatwgl.html) ([code](../examples/styles/squarecolorcatwgl.html)).
-
-| Property       | Type                       | Default         | Description            |
-| -------------- | ----------------- | ------------ | ----------- |
-| **colorCol**   | string                     | undefined         | The name of the column used for the color.       |
-| **color**      | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.     |         |
-| **size** | function(r,zf):number  | (r,zf) => r + 0.2 * zf  | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size. |
 
 
 
-### Side category style
-
-Documentation coming soon.
-
+## Advanced styles
 
 ### Dot density style
 
@@ -451,6 +429,68 @@ See [this example with random colors](https://eurostat.github.io/gridviz/example
 | **color**    |   function(c):string   |    () => "#FF5733"     | A function returning the color of the dots of a cell. Note that it is the same color for all dots within a cell.      |
 | **dotSize**    | function(r,zf):number | (r,zf) => 2 * zf | A function computing the dot size from the resolution **r** and zoom factor **zf**. It is the same size for all dots.    |
 | **sigma**    | function(r,zf):number |  (r, zf) => r * 0.4 | A function computing the sigma parameter of the dispertion (gaussian) of the dots around the cell centre, from from the resolution **r** and zoom factor **zf**. It is the same sigma for all dots.     |
+
+### Pillars style
+
+[![pillars style](img/styles/pillar.png)](https://eurostat.github.io/gridviz/examples/styles/pillar.html)
+
+This style shows the grid cells as 3D pillars, with changeable heigths and colors.
+
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](../examples/styles/pillar.html)).
+
+Documentation coming soon.
+
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
+| **.**    |      |         |             |
+
+### Text style
+
+This style shows the grid cells as text characters with different colors.
+
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text.html) ([code](../examples/styles/text.html)).
+
+Documentation coming soon.
+
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
+| **.**    |      |         |             |
+
+
+
+## Side styles
+
+
+### Side style
+
+[![side style](img/styles/side.png)](https://eurostat.github.io/gridviz/examples/styles/side.html)
+
+This style displays the sides of the cells as segments with different colors and widths, depending on the values of the 2 adjacent cells. This style is special because it does not display the cells, but their sides. It can be used to show discontinuities between cell values with, for example, some shadow effect.
+
+See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](../examples/styles/side.html)).
+
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
+| **valueCol** | string | undefined | The name of the column used to retrieve the cell values. |
+| **value** | function(v1,v2,r,s,zf):number | (v1, v2, r, s, zf) => 1 | A function computing the value of a cell side. This value is computed from the two adjacent cell values **v1** and **v2**. For horizontal sides, **v1** is the value of the cell below and **v2** the value of the cell above. For vertical sides, **v1** is the value of the left cell and **v2** the value of the right cell. |
+| **color** | function(side,r,s,zf):string | () => "#EA6BAC" |  A function returning the color of a cell side **side** from the resolution **r**, statistics **s** and zoom factor **zf**. A side is represented as an object _{x:number,y:number,or:"v"|"h",value:number}_. |
+| **width** | function(side,r,s,zf):number | (side, r, s, z) => r * side.value / 5 | A function returning the width of a cell side **side**, in geo unit, from the resolution **r**, statistics **s** and zoom factor **zf**. A side is represented as an object _{x:number,y:number,or:"v"|"h",value:number}_. |
+| **orientation** | number | 0 | Orientation of the sides. Set to 90 to show sides as slope lines for example. |
+| **fillColor** | function(c):string | undefined | A function returning an optional fill color for a cell **c**. |
+
+
+### Contour style
+
+Documentation coming soon.
+
+
+### Side category style
+
+Documentation coming soon.
+
+
+
+## Esthetic styles
 
 ### JoyPlot Style
 
@@ -542,38 +582,9 @@ See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego
 
 Documentation coming soon.
 
-### Pillars style
-
-[![pillars style](img/styles/pillar.png)](https://eurostat.github.io/gridviz/examples/styles/pillar.html)
-
-This style shows the grid cells as 3D pillars, with changeable heigths and colors.
-
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](../examples/styles/pillar.html)).
-
-Documentation coming soon.
-
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| **.**    |      |         |             |
-
-### Text style
-
-This style shows the grid cells as text characters with different colors.
-
-See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text.html) ([code](../examples/styles/text.html)).
-
-Documentation coming soon.
-
-| Property | Type | Default | Description |
-| -------- | ---- | ------- | ----------- |
-| **.**    |      |         |             |
 
 
-### Contour style
-
-Documentation coming soon.
-
-### Kernel smoothing style
+## Kernel smoothing
 
 This style is experimental. It allows applying gaussian kernel smoothing to the grid.
 
@@ -585,7 +596,7 @@ Documentation coming soon.
 | -------- | ---- | ------- | ----------- |
 | **.**    |      |         |             |
 
-### Others...
+## Others styles
 
 [Gridviz](https://github.com/eurostat/gridviz/) style library can easily be enriched with new styles, by extending the [style class](../src/js/Style.js).
 
