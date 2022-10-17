@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title></title>
+</head>
+
+<body>
+    <div id="viz-container" style="height:600px; width:900px; left: 20px; top: 20px; position: absolute;">
+        <div
+            style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
+            <span style="font-size: 0.8em; font-family: sans-serif;"><a href="https://github.com/eurostat/gridviz"
+                    style="text-decoration:none">GridViz</a> |
+                © <a href="https://eurogeographics.org" style="text-decoration:none">EuroGeographics</a></span>
+        </div>
+    </div>
+
+    <script src="../../build/gridviz.js"></script>
+    <script>
+
+        const degurbaColors = {
+            "uc": "#d53e4f",
+            "du": "#f46d43",
+            "sdu": "#fdae61",
+            "sbu": "#fee08b",
+            "r": "#e6f598",
+            "lr": "#abdda4",
+            "vlr": "#66c2a5",
+            "NA": "gray",
+        }
+
+        let containerDiv = document.getElementById("viz-container");
+        const app = new gviz.App(containerDiv)
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
+            .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+
+
+
+
+
+
+        app.addMultiScaleTiledCSVGridLayer(
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/degurba/tiled/" + r + "m/",
+            [
+                new gviz.CompositionStyle({
+                    color: degurbaColors,
+                    type: () => "flag",
+                    //stripesOrientation: () => 0,
+                    sizeCol: "TOT",
+                    size: (v, r, s, z) => 1 * r * gviz.sPow(v / s.max, 0.5),
+                    minZoom: 120,
+                }),
+                /*new gviz.SquareColorCatWGLStyle({
+                    colorCol: "c",
+                    color: degurbaColors,
+                    maxZoom: 400,
+                    minZoom: 120,
+                }),*/
+                new gviz.SideCatStyle({
+                    col: "c",
+                    color: degurbaColors,
+                    width: (side, r, z) => z * 3,
+                    fillColor: (c) => degurbaColors[c.c] + "55",
+                    maxZoom: 120,
+                }),
+            ],
+            {
+                pixNb: 4,
+                cellInfoHTML: c => {
+                    if (!c.TOT) return "No information";
+                    if (c.TOT == 1) return +c.uc ? "Urban centre" : +c.du ? "Dense urban cluster" : +c.sdu ? "Semi-dense urban cluster" : +c.sbu ? "Suburban" : +c.r ? "Rural" : +c.lr ? "Low density rural" : +c.vlr ? "Very low density rural" : "Unknown";
+                    const out = []
+                    if (+c.uc) out.push(c.uc + " Dense urban cluster<br>")
+                    if (+c.sdu) out.push(c.sdu + " Semi-dense urban cluster<br>")
+                    if (+c.sbu) out.push(c.sbu + " Suburban<br>")
+                    if (+c.r) out.push(c.r + " Rural<br>")
+                    if (+c.lr) out.push(c.lr + " Low density rural<br>")
+                    if (+c.vlr) out.push(c.vlr + " Very low density rural<br>")
+                    if (+c.NA) out.push(c.NA + " Unknown<br>")
+                    return out.join("")
+                },
+                preprocess: c => {
+                    if (+c.TOT != 1) c.c = "zzz";
+                    else
+                        c.c = +c.uc ? "uc" : +c.du ? "du" : +c.sdu ? "sdu" : +c.sbu ? "sbu" : +c.r ? "r" : +c.lr ? "lr" : +c.vlr ? "vlr" : "NA";
+                }
+            })
+
+            .addBackgroundLayer({
+                url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
+                resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
+                origin: [0, 6000000],
+                filterColor: zf => "#ffffffd3",
+            })
+
+                //legend
+                //app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#666d" }))
+                //TODO add legend with classified colors
+
+    </script>
+
+</body>
+
+</html>
