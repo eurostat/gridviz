@@ -518,8 +518,6 @@ See [this an example of shaded joyplot](https://eurostat.github.io/gridviz/examp
 
 See [this an example with random colors](https://eurostat.github.io/gridviz/examples/styles/joyplot_random.html) ([code](../examples/styles/joyplot_random.html)).
 
-Documentation coming soon.
-
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
 | **heightCol**  | string       | undefined       | The name of the column used for the line height.           |
