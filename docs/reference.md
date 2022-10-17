@@ -481,6 +481,8 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html)
 
 ### Side category style
 
+[![side category style](img/styles/sidecat.png)](https://eurostat.github.io/gridviz/examples/styles/sidecat.html)
+
 This style displays the sides of the cells as segments with different colors depending on the categories of the 2 adjacent cells.
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/sidecat.html) ([code](../examples/styles/sidecat.html)).
