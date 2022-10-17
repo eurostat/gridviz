@@ -13,7 +13,10 @@
     - [Tiled CSV data](#tiled-csv-data)
     - [Multi scale tiled CSV data](#multi-scale-tiled-csv-data)
     - [Data pre-processing and filtering](#data-pre-processing-and-filtering)
-  - [Styles](#styles)
+  - [Basic styles](#basic-styles)
+  - [Advanced styles](#advanced-styles)
+  - [Side styles](#side-styles)
+  - [Esthetic styles](#esthetic-styles)
     - [Square color WebGL Style](#square-color-webgl-style)
     - [Shape/Color/Size Style](#shapecolorsize-style)
     - [Composition style](#composition-style)
@@ -72,7 +75,7 @@ new gviz.App(containerDiv)
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/basic_CSV.html), see [code](../examples/basic_CSV.html))
 
-[Gridviz](https://github.com/eurostat/gridviz/) can display several layers on top of each others. Each layer is based on a single [multi-resolution dataset](#adding-data), which can be displayed with several [cartographic styles](#styles). For more information, see the [examples](#examples).
+[Gridviz](https://github.com/eurostat/gridviz/) can display several layers on top of each others. Each layer is based on a single [multi-resolution dataset](#adding-data), which can be displayed with several [cartographic styles](#basic-styles). For more information, see the [examples](#examples).
 
 
 ## App Configuration
@@ -93,7 +96,7 @@ The following methods allow further configuration of a [Gridviz](https://github.
 
 ## Multi layer, multi style and multi scale mapping
 
-A [Gridviz](https://github.com/eurostat/gridviz/) map is organised as a stack of layers accessible through **myApp.layer** field. Each layer shows data from one single dataset **myLayer.dataset**, following a list of styles **myLayer.styles**. The styles available are listed [here](#styles). The map can adapt to the visualisation scale/zoom level with the following mechanisms:
+A [Gridviz](https://github.com/eurostat/gridviz/) map is organised as a stack of layers accessible through **myApp.layer** field. Each layer shows data from one single dataset **myLayer.dataset**, following a list of styles **myLayer.styles**. The styles available are listed [here](#basic-styles). The map can adapt to the visualisation scale/zoom level with the following mechanisms:
 - Multi-resolution datasets can be defined, so that different grid resolutions can be shown depending to the zoom level, see [the multi-scale datasets in the next section](#adding-data).
 - The layers and styles can be restricted to some scale, using their **minZoom** and **maxZoom** properties to define the zoom ranges for which they will be shown.
 
@@ -270,7 +273,13 @@ new gviz.App(containerDiv)
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/select.html), see [code](../examples/select.html))
 
-## Styles
+## Basic styles
+## Advanced styles
+## Side styles
+## Esthetic styles
+
+
+
 
 ### Square color WebGL Style
 
@@ -416,6 +425,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squa
 | **colorCol**   | string                     | undefined         | The name of the column used for the color.       |
 | **color**      | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.     |         |
 | **size** | function(r,zf):number  | (r,zf) => r + 0.2 * zf  | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size. |
+
 
 
 ### Side category style
