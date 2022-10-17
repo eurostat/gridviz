@@ -496,7 +496,10 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/sidecat.ht
 
 ### Contour style
 
+This style displays the sides of the cells depending on discontinuities between the 2 adjacent cells, like contour lines.
+
 Documentation coming soon.
+
 
 ## Esthetic styles
 
