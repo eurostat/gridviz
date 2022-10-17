@@ -334,7 +334,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squa
 
 | Property       | Type                       | Default         | Description            |
 | -------------- | ----------------- | ------------ | ----------- |
-| **colorCol**   | string                     | undefined         | The name of the column used for the color.       |
+| **colorCol**   | string                     | undefined         | The name of the column used to retrieve each cell category.       |
 | **color**      | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.     |         |
 | **size** | function(r,zf):number  | (r,zf) => r + 0.2 * zf  | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size. |
 
@@ -487,7 +487,12 @@ This style displays the sides of the cells as segments with different colors dep
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/sidecat.html) ([code](../examples/styles/sidecat.html)).
 
-Documentation coming soon.
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
+| **col** | string | undefined | The name of the column used to retrieve the cell category. |
+| **color**      | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.     |         |
+| **width** | function(side,r,zf):number | (side, r, s, z) => r * 0.2 | A function returning the width of a cell side **side**, in geo unit, from the resolution **r** and zoom factor **zf**. A side is represented as an object _{x:number,y:number,or:"v"|"h",value:number}_. |
+| **fillColor** | function(c):string | undefined | A function returning an optional fill color for a cell **c**. |
 
 ### Contour style
 
