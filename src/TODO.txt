@@ -1,5 +1,5 @@
 UR maps:
-- degurba map: show population (+ legend). Ask confirmation to DG REGIO. Ask adjustement for colors.
+- degurba map: fix links position. show population (+ legend). Ask confirmation to DG REGIO. Ask adjustement for colors.
 - population map - with color + joyplot + 3D pillars. + legend + etc.
 - CLC map: legend, etc
 - show "road transport performance in europe" grid. M9.2

@@ -2,8 +2,6 @@
 <html lang="en" style="height:100%;">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
     <title></title>
 </head>
 
@@ -47,7 +45,7 @@
                     //stripesOrientation: () => 0,
                     sizeCol: "TOT",
                     size: (v, r, s, z) => 1 * r * gviz.sPow(v / s.max, 0.5) + (z < 500 ? 0.8 * z : 0),
-                    minZoom: 120,
+                    minZoom: 80,
                 }),
                 /*new gviz.SquareColorCatWGLStyle({
                     colorCol: "c",
@@ -60,7 +58,7 @@
                     color: degurbaColors,
                     width: (side, r, z) => z * 3,
                     fillColor: (c) => degurbaColors[c.c] + "55",
-                    maxZoom: 120,
+                    maxZoom: 80,
                 }),
             ],
             {
