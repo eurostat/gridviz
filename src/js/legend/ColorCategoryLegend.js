@@ -66,25 +66,25 @@ export class ColorCategoryLegend extends Legend {
             const d = this.div.append("div");
 
             const sw = this.strokeWidth
-            let h = 0
 
             //draw box / circle
             if (this.shape === "square") {
-                h = (this.dimension.h || 15)
+                const h = (this.dimension.h || 15)
+                const w = (this.dimension.w || 20)
                 d
                     .append("div").style("display", "inline")
 
                     .append("svg")
-                    .attr("width", (this.dimension.w || 20) + 2 * sw).attr("height", h + 2 * sw)
+                    .attr("width", w + 2 * sw).attr("height", h + 2 * sw)
 
                     .append("rect")
-                    .attr("x", sw).attr("y", sw).attr("width", (this.dimension.w || 20)).attr("height", this.dimension.h || 15)
+                    .attr("x", sw).attr("y", sw).attr("width", w).attr("height", h)
                     .style("fill", cat[0])
                     .style("stroke", this.strokeColor)
                     .style("stroke-width", this.strokeWidth)
             } else if (this.shape === "circle") {
                 const r = this.dimension.r || 8
-                h = 2 * r + 2 * sw
+                const h = 2 * r + 2 * sw
                 d
                     .append("div").style("display", "inline")
 
