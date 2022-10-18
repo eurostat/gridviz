@@ -1,6 +1,6 @@
 UR maps:
 - degurba map: Ask confirmation to DG REGIO.
-- CLC map: background - legend, etc
+- CLC map: legend
 - population map - with color + joyplot + 3D pillars. + legend + etc.
 - show "road transport performance in europe" grid. M9.2
 - other: stripe CLC + bivariate

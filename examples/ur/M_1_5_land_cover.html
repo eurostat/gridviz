@@ -66,7 +66,7 @@
             "41": "#80f2e6",
             "42": "#00ffa6",
             "43": "#a6ffe6",
-            "44": "#e6f2ff",
+            //"44": "#e6f2ff",
             "48": "gray"
         }
 
@@ -114,7 +114,7 @@
             "41": "Water bodies",
             "42": "Coastal lagoons",
             "43": "Estuaries",
-            "44": "Sea and ocean",
+            //"44": "Sea and ocean",
             "48": "No data"
         }
 
@@ -153,6 +153,27 @@
                 origin: [0, 6000000],
                 filterColor: zf => "#ffffffd3",
             })
+
+
+        //legend
+
+        //prepare legend data
+        const legData = []
+        for (let k of Object.keys(clcColors)) {
+            const col = clcColors[k]
+            const lbl = clcLabels[k]
+            if (!col || !lbl) {
+                console.error(col, lbl)
+                continue
+            }
+            legData.push([col, lbl])
+        }
+
+        //make legend and link to styles
+        const catLeg = new gviz.ColorCategoryLegend({ title: "Land cover", colCat: legData, shape: "square", })
+        app.layers[0].styles[0].legends.push(catLeg)
+        app.layers[0].styles[1].legends.push(catLeg)
+
 
     </script>
 
