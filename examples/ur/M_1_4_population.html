@@ -5,8 +5,9 @@
     <title></title>
 </head>
 
-<body>
-    <div id="vizPop" style="height:600px; width:900px;">
+<body style="font-family: sans-serif;">
+    <h1>Map 1.4 - Population</h1>
+    <div id="vizPop" style="position:relative; height:600px; width:900px;">
         <div
             style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
             <span style="font-size: 0.8em; font-family: sans-serif;"><a href="https://github.com/eurostat/gridviz"
@@ -54,7 +55,7 @@
             })
 
         //legend
-        app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 4, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, 7) }))
+        app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", width: 900, ticks: 8, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, 7) }))
 
     </script>
 
