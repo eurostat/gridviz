@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <div id="viz-container" style="height:600px; width:900px; left: 20px; top: 20px; position: absolute;">
+    <div id="vizPop" style="height:600px; width:900px;">
         <div
             style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
             <span style="font-size: 0.8em; font-family: sans-serif;"><a href="https://github.com/eurostat/gridviz"
@@ -16,6 +16,7 @@
                 © <a href="https://eurogeographics.org" style="text-decoration:none">EuroGeographics</a></span>
         </div>
     </div>
+    <div id="legendPop"></div>
 
     <script src="../../build/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
@@ -25,9 +26,9 @@
 
         const yearCode = "2018"
 
-        let containerDiv = document.getElementById("viz-container");
-        const app = new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
+        let containerDiv = document.getElementById("vizPop");
+        const app = new gviz.App(containerDiv, { legendDivId: "legendPop" })
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(4000).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
             .addMultiScaleTiledCSVGridLayer(
@@ -45,19 +46,6 @@
                 {
                     pixNb: 2,
                     cellInfoHTML: c => +c[yearCode] ? "<b>" + c[yearCode] + "</b> inhabitant" + (+c[yearCode] == 1 ? "" : "s") : undefined
-                    /*preprocess: c => {
-                        //prepare 2011 -> 2018 change data
-                        if (!c["2011"] && !c["2018"]) c.d11_18 = 0
-                        else if (!c["2011"] && c["2018"]) c.d11_18 = + c["2018"]
-                        else if (c["2011"] && !c["2018"]) c.d11_18 = - c["2011"]
-                        else c.d11_18 = c["2018"] - c["2011"]
-
-                        //prepare 2006 -> 2011 change data
-                        if (!c["2006"] && !c["2011"]) c.d06_11 = 0
-                        else if (!c["2006"] && c["2011"]) c.d06_11 = +c["2011"]
-                        else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
-                        else c.d06_11 = c["2011"] - c["2006"]
-                    }*/
                 })
 
             .addBackgroundLayer({
@@ -66,6 +54,9 @@
                 origin: [0, 6000000],
                 filterColor: zf => "#ffffffd3",
             })
+
+        //legend
+        app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 4, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, 7) }))
 
     </script>
 
