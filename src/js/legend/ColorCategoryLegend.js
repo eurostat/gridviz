@@ -75,10 +75,10 @@ export class ColorCategoryLegend extends Legend {
                     .append("div").style("display", "inline")
 
                     .append("svg")
-                    .attr("width", (this.dimension.w || 20) + 2 * sw).attr("height", h)
+                    .attr("width", (this.dimension.w || 20) + 2 * sw).attr("height", h + 2 * sw)
 
                     .append("rect")
-                    .attr("x", sw).attr("y", sw).attr("width", (this.dimension.w || 20) + 2 * sw).attr("height", h)
+                    .attr("x", sw).attr("y", sw).attr("width", (this.dimension.w || 20)).attr("height", this.dimension.h || 15)
                     .style("fill", cat[0])
                     .style("stroke", this.strokeColor)
                     .style("stroke-width", this.strokeWidth)
