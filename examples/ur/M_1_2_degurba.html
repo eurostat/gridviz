@@ -23,12 +23,12 @@
 
         const degurbaColors = {
             "uc": "#286eb4", //"#d53e4f", //Cities
-            "du": "#5e98e3", //"#f46d43", //Cities  - adjusted
+            "du": "#286eb4", //"#f46d43", //Cities
             "sbu": "#c87e04", //"#fee08b", //Suburbs
             "sdu": "#fcc974", //"#fdae61", //Towns
-            "r": "#468631", //"#e6f598", //Villages
+            "r": "#468631", //"#fcc974", //"#e6f598", //Villages
             "lr": "#9dd58a", //"#abdda4", //Dispersed rural areas
-            "vlr": "#c2d5bc", //"#66c2a5", //Mostly uninhabited areas - adjusted (to light)
+            "vlr": "#c2d5bc", //"#66c2a5", //Mostly uninhabited areas
             "NA": "gray",
         }
 
@@ -113,15 +113,23 @@
                 ["#abdda4", "Low density rural"],
                 ["#66c2a5", "Very low density rural"],
                 ["gray", "Unknown"],
-            ]*/
-                ["#286eb4", "Large cities"],
-                ["#5e98e3", "Cities"],
-                ["#c87e04", "Suburbs"],
-                ["#fcc974", "Towns"],
-                ["#468631", "Villages"],
+            */
+                ["#286eb4", "City"],
+                //["#5e98e3", "City"],
+                ["#c87e04", "Suburb"],
+                ["#fcc974", "Town"],
+                ["#468631", "Village"],
+                ["#9dd58a", "Dispersed rural area"],
+                ["#c2d5bc", "Mostly uninhabited area"],
+                //["gray", "Unknown"],
+                /*["#1952aa", "Large cities"],
+                ["#286eb4", "Cities"],
+                ["#5e98e3", "Suburbs"],
+                ["#5e98e3", "Towns"],
+                ["#1e7769", "Villages"],
                 ["#9dd58a", "Dispersed rural areas"],
                 ["#c2d5bc", "Mostly uninhabited areas"],
-                ["gray", "Unknown"],
+                ["gray", "Unknown"],*/
             ]
         })
         app.layers[0].styles[0].legends.push(catLeg)
