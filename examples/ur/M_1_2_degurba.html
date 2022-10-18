@@ -73,17 +73,17 @@
                                 +c.sbu ? "Suburb" :
                                     +c.sdu ? "Town" :
                                         +c.r ? "Village" :
-                                            +c.lr ? "Dispersed rural area" :
-                                                +c.vlr ? "Mostly uninhabited area" :
+                                            +c.lr ? "Dispersed rural" :
+                                                +c.vlr ? "Mostly uninhabited" :
                                                     "Unknown");
                     const out = []
-                    if (+c.uc) out.push(c.uc + " Large cities<br>")
-                    if (+c.du) out.push(c.du + " Cities<br>")
-                    if (+c.sbu) out.push(c.sbu + " Suburbs<br>")
-                    if (+c.sdu) out.push(c.sdu + " Towns<br>")
-                    if (+c.r) out.push(c.r + " Villages<br>")
-                    if (+c.lr) out.push(c.lr + " Dispersed rural areas<br>")
-                    if (+c.vlr) out.push(c.vlr + " Mostly uninhabited areas<br>")
+                    if (+c.uc) out.push(c.uc + " Large city cell(s)<br>")
+                    if (+c.du) out.push(c.du + " City cell(s)<br>")
+                    if (+c.sbu) out.push(c.sbu + " Suburb cell(s)<br>")
+                    if (+c.sdu) out.push(c.sdu + " Town cell(s)<br>")
+                    if (+c.r) out.push(c.r + " Village cell(s)<br>")
+                    if (+c.lr) out.push(c.lr + " Dispersed rural cell(s)<br>")
+                    if (+c.vlr) out.push(c.vlr + " Mostly uninhabited cell(s)<br>")
                     if (+c.NA) out.push(c.NA + " Unknown<br>")
                     return out.join("")
                 },
@@ -119,8 +119,8 @@
                 ["#c87e04", "Suburb"],
                 ["#fcc974", "Town"],
                 ["#468631", "Village"],
-                ["#9dd58a", "Dispersed rural area"],
-                ["#c2d5bc", "Mostly uninhabited area"],
+                ["#9dd58a", "Dispersed rural"],
+                ["#c2d5bc", "Mostly uninhabited"],
                 //["gray", "Unknown"],
                 /*["#1952aa", "Large cities"],
                 ["#286eb4", "Cities"],
