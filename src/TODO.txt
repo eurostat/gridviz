@@ -6,6 +6,7 @@ UR maps:
 - other: stripe CLC + bivariate
 - Data server - test wt? cache?
 - fix euronym - local names, with accents ?
+- Fix M of "Madrid"
 + accessibility grid M9.7/8
 + forest M9.18
 
