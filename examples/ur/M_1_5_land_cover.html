@@ -138,7 +138,7 @@
                         col: "clc",
                         color: clcColors,
                         width: (side, r, z) => z * 3,
-                        fillColor: (c) => clcColors[c.clc] + "99",
+                        fillColor: (c) => clcColors[c.clc] + "55",
                         maxZoom: 100
                     }),
                 ],
@@ -146,6 +146,13 @@
                     pixNb: 1.75,
                     cellInfoHTML: c => clcLabels[c.clc],
                 })
+
+            .addBackgroundLayer({
+                url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
+                resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
+                origin: [0, 6000000],
+                filterColor: zf => "#ffffffd3",
+            })
 
     </script>
 
