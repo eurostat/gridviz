@@ -67,6 +67,11 @@ export class ColorCategoryLegend extends Legend {
 
             const sw = this.strokeWidth
 
+            //use
+            //display: block;
+            //display: inline;
+
+
             //draw box / circle
             if (this.shape === "square") {
                 const h = (this.dimension.h || 15) + 2 * sw
