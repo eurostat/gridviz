@@ -35,6 +35,27 @@
             .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
+
+        //population layer
+        app.addMultiScaleTiledCSVGridLayer(
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+            [
+                new gviz.ShapeColorSizeStyle({
+                    color: () => "#666",
+                    sizeCol: "2018",
+                    size: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.3),
+                    shape: () => "circle",
+                })
+            ],
+            {
+                pixNb: 8,
+                maxZoom: 80,
+            }
+        )
+
+
+        //degurba layer
         app.addMultiScaleTiledCSVGridLayer(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/degurba/tiled/" + r + "m/",
@@ -99,8 +120,12 @@
                 filterColor: zf => "#ffffffd3",
             })
 
-        //legend
-        //app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#666d" }))
+
+
+        //population legend
+        app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#666d" }))
+
+        //degurba legend
         const catLeg = new gviz.ColorCategoryLegend({
             title: "Degree of urbanisation", colCat: [
                 ["#286eb4", "City"],
@@ -112,8 +137,8 @@
             ],
             shape: "square",
         })
-        app.layers[0].styles[0].legends.push(catLeg)
-        app.layers[0].styles[1].legends.push(catLeg)
+        app.layers[1].styles[0].legends.push(catLeg)
+        app.layers[1].styles[1].legends.push(catLeg)
     </script>
 
 </body>
