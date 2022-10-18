@@ -9,14 +9,20 @@
 <body>
     <h1>Test of HTML inclusion</h1>
     <p>Blah blah blah:</p>
-    <div id="viz1" style="height:400px; width:600px;"></div><div id="viz2" style="height:400px; width:600px;"></div>
+    <div id="viz1" style="height:400px; width:600px;"></div>
+    <div id="legend1"></div>
+    <p>Blah blah blah:</p>
+    <div id="viz2" style="height:400px; width:600px;"></div>
 
     <script src="../../build/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         //map 1
 
-        new gviz.App(document.getElementById("viz1"))
+        const map1 = new gviz.App(document.getElementById("viz1"), { legendDivId: "legend1" })
             .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
             .addMultiScaleTiledCSVGridLayer(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
@@ -31,6 +37,8 @@
                     pixNb: 3
                 })
 
+        //legend
+        map1.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 5, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, 7) }))
 
 
 
