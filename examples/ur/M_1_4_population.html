@@ -33,6 +33,7 @@
             .addMultiScaleTiledCSVGridLayer(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+                //r => "https://ec.europa.eu/assets/estat/E/E4/gisco/mapping/test/" + Math.round(r / 1000) + "km/",
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: yearCode,
@@ -43,7 +44,7 @@
                 ],
                 {
                     pixNb: 2,
-                    cellInfoHTML: c => +c[yearCode] ? "<b>" + c[yearCode] + "</b> inhabitant" + (+c[yearCode] == 1 ? "" : "s") + " in " + yearCode : undefined
+                    cellInfoHTML: c => +c[yearCode] ? "<b>" + c[yearCode] + "</b> inhabitant" + (+c[yearCode] == 1 ? "" : "s") : undefined
                     /*preprocess: c => {
                         //prepare 2011 -> 2018 change data
                         if (!c["2011"] && !c["2018"]) c.d11_18 = 0
