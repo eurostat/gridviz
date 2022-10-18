@@ -46,7 +46,7 @@
                     type: () => "flag",
                     //stripesOrientation: () => 0,
                     sizeCol: "TOT",
-                    size: (v, r, s, z) => 1 * r * gviz.sPow(v / s.max, 0.5),
+                    size: (v, r, s, z) => 1 * r * gviz.sPow(v / s.max, 0.5) + (z < 500 ? 0.8 * z : 0),
                     minZoom: 120,
                 }),
                 /*new gviz.SquareColorCatWGLStyle({
