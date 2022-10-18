@@ -7,6 +7,14 @@
 
 <body style="font-family: sans-serif;">
     <h1>Map 1.4 - Population</h1>
+
+    <p>Map showing the European population distribution at 1km resolution in <select id="year">
+            <option value="2018" selected>2018</option>
+            <option value="2011">2011</option>
+            <option value="2006">2006</option>
+        </select>
+    </p>
+
     <div id="vizPop" style="position:relative; height:600px; width:900px;">
         <div
             style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
@@ -29,24 +37,6 @@
         const app = new gviz.App(containerDiv, { legendDivId: "legendPop" })
             .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
-
-            .addMultiScaleTiledCSVGridLayer(
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
-                //r => "https://ec.europa.eu/assets/estat/E/E4/gisco/mapping/test/" + Math.round(r / 1000) + "km/",
-                [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: yearCode,
-                        color: d3.interpolateOrRd,
-                        stretching: { fun: "expRev", alpha: -7 }
-                    }),
-                    new gviz.StrokeStyle({ strokeColorCol: yearCode, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
-                ],
-                {
-                    pixNb: 2,
-                    cellInfoHTML: c => +c[yearCode] ? "<b>" + c[yearCode] + "</b> inhabitant" + (+c[yearCode] == 1 ? "" : "s") : undefined
-                })
-
             .addBackgroundLayer({
                 url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
                 resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
@@ -54,8 +44,45 @@
                 filterColor: zf => "#ffffffd3",
             })
 
+            
+        const popDataset = app.makeMultiScaleTiledCSVGridDataset(
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+            //r => "https://ec.europa.eu/assets/estat/E/E4/gisco/mapping/test/" + Math.round(r / 1000) + "km/",
+        )
+
+        app.addLayerFromDataset(
+            popDataset,
+            [
+                new gviz.SquareColorWGLStyle({
+                    colorCol: yearCode,
+                    color: d3.interpolateOrRd,
+                    stretching: { fun: "expRev", alpha: -7 }
+                }),
+                new gviz.StrokeStyle({ strokeColorCol: yearCode, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
+            ],
+            {
+                pixNb: 2,
+                cellInfoHTML: c => +c[yearCode] ? "<b>" + c[yearCode] + "</b> inhabitant" + (+c[yearCode] == 1 ? "" : "s") : undefined
+            })
+
         //legend
-        app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", width: 900, ticks: 8, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, 7) }))
+        app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", width: 900, ticks: 8, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7) }))
+
+        //
+        const update = () => {
+
+            //read year selection
+            const year = document.querySelector('#year').value
+
+            console.log(year)
+        }
+
+        //
+        document.querySelector('#year').addEventListener('change', update)
+
+        //initialise
+        update()
 
     </script>
 
