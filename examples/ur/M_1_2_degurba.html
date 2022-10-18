@@ -36,11 +36,6 @@
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
-
-
-
-
-
         app.addMultiScaleTiledCSVGridLayer(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/degurba/tiled/" + r + "m/",

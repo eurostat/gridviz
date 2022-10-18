@@ -9,23 +9,18 @@
 <body>
     <h1>Test of HTML inclusion</h1>
     <p>Blah blah blah:</p>
-    <div id="viz-container" style="height:400px; width:600px; left: 50px; position: absolute; border-style: solid;"></div>
+    <div id="viz1" style="height:400px; width:600px;"></div><div id="viz2" style="height:400px; width:600px;"></div>
 
     <script src="../../build/gridviz.js"></script>
     <script>
 
-        let containerDiv = document.getElementById("viz-container");
+        //map 1
 
-        new gviz.App(containerDiv)
-            //set position and zoom
+        new gviz.App(document.getElementById("viz1"))
             .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-            //add multi scale tiled CSV layer
             .addMultiScaleTiledCSVGridLayer(
-                //the resolution values, ordered
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                //the URL, from the resolution
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
-                //the styles
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "2018",
@@ -33,9 +28,75 @@
                     })
                 ],
                 {
-                    //the maximum pixel size before jumping to a lower resolution
                     pixNb: 3
                 })
+
+
+
+
+        //map2
+
+        const degurbaColors = {
+            "uc": "#d53e4f",
+            "du": "#f46d43",
+            "sdu": "#fdae61",
+            "sbu": "#fee08b",
+            "r": "#e6f598",
+            "lr": "#abdda4",
+            "vlr": "#66c2a5",
+            "NA": "gray",
+        }
+
+        new gviz.App(document.getElementById("viz2"))
+            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
+            .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+            .addMultiScaleTiledCSVGridLayer(
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/degurba/tiled/" + r + "m/",
+                [
+                    new gviz.CompositionStyle({
+                        color: degurbaColors,
+                        type: () => "flag",
+                        //stripesOrientation: () => 0,
+                        sizeCol: "TOT",
+                        size: (v, r, s, z) => 1 * r * gviz.sPow(v / s.max, 0.5),
+                        minZoom: 120,
+                    }),
+                    new gviz.SideCatStyle({
+                        col: "c",
+                        color: degurbaColors,
+                        width: (side, r, z) => z * 3,
+                        fillColor: (c) => degurbaColors[c.c] + "55",
+                        maxZoom: 120,
+                    }),
+                ],
+                {
+                    pixNb: 4,
+                    cellInfoHTML: c => {
+                        if (!c.TOT) return "No information";
+                        if (c.TOT == 1) return +c.uc ? "Urban centre" : +c.du ? "Dense urban cluster" : +c.sdu ? "Semi-dense urban cluster" : +c.sbu ? "Suburban" : +c.r ? "Rural" : +c.lr ? "Low density rural" : +c.vlr ? "Very low density rural" : "Unknown";
+                        const out = []
+                        if (+c.uc) out.push(c.uc + " Dense urban cluster<br>")
+                        if (+c.sdu) out.push(c.sdu + " Semi-dense urban cluster<br>")
+                        if (+c.sbu) out.push(c.sbu + " Suburban<br>")
+                        if (+c.r) out.push(c.r + " Rural<br>")
+                        if (+c.lr) out.push(c.lr + " Low density rural<br>")
+                        if (+c.vlr) out.push(c.vlr + " Very low density rural<br>")
+                        if (+c.NA) out.push(c.NA + " Unknown<br>")
+                        return out.join("")
+                    },
+                    preprocess: c => {
+                        if (+c.TOT != 1) c.c = "zzz";
+                        else
+                            c.c = +c.uc ? "uc" : +c.du ? "du" : +c.sdu ? "sdu" : +c.sbu ? "sbu" : +c.r ? "r" : +c.lr ? "lr" : +c.vlr ? "vlr" : "NA";
+                    }
+                })
+            .addBackgroundLayer({
+                url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
+                resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
+                origin: [0, 6000000],
+                filterColor: zf => "#ffffffd3",
+            })
 
     </script>
 

@@ -1,4 +1,5 @@
 UR maps:
+- test several
 - degurba map: legend, show population, etc.
 - population map - with color + joyplot + 3D pillars. + legend + etc.
 - CLC map: legend, etc
