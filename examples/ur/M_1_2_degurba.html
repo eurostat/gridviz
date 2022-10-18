@@ -105,32 +105,14 @@
         //app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#666d" }))
         const catLeg = new gviz.ColorCategoryLegend({
             title: "Degree of urbanisation", colCat: [
-                /*["#d53e4f", "Urban centre"],
-                ["#f46d43", "Dense urban cluster"],
-                ["#fee08b", "Suburban"],
-                ["#fdae61", "Semi-dense urban cluster"],
-                ["#e6f598", "Rural"],
-                ["#abdda4", "Low density rural"],
-                ["#66c2a5", "Very low density rural"],
-                ["gray", "Unknown"],
-            */
                 ["#286eb4", "City"],
-                //["#5e98e3", "City"],
                 ["#c87e04", "Suburb"],
                 ["#fcc974", "Town"],
                 ["#468631", "Village"],
                 ["#9dd58a", "Dispersed rural"],
                 ["#c2d5bc", "Mostly uninhabited"],
-                //["gray", "Unknown"],
-                /*["#1952aa", "Large cities"],
-                ["#286eb4", "Cities"],
-                ["#5e98e3", "Suburbs"],
-                ["#5e98e3", "Towns"],
-                ["#1e7769", "Villages"],
-                ["#9dd58a", "Dispersed rural areas"],
-                ["#c2d5bc", "Mostly uninhabited areas"],
-                ["gray", "Unknown"],*/
-            ]
+            ],
+            shape: "square",
         })
         app.layers[0].styles[0].legends.push(catLeg)
         app.layers[0].styles[1].legends.push(catLeg)

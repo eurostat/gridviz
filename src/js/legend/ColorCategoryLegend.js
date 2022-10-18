@@ -34,9 +34,8 @@ export class ColorCategoryLegend extends Legend {
         this.titleFontSize = opts.titleFontSize || "0.8em";
         this.titleFontWeight = opts.titleFontWeight || "bold";
 
-        //label font
+        //label
         this.labelFontSize = opts.labelFontSize || "0.8em"
-
     }
 
     /**
@@ -48,15 +47,13 @@ export class ColorCategoryLegend extends Legend {
         this.div.selectAll("*").remove();
 
 
-
-
         //build
 
-        if(this.title) {
+        if (this.title) {
             const d = this.div.append("div")
-            .style("font-size", this.titleFontSize)
-            .style("font-weight", this.titleFontWeight)
-            .style("margin-bottom", "7px")
+                .style("font-size", this.titleFontSize)
+                .style("font-weight", this.titleFontWeight)
+                .style("margin-bottom", "7px")
             d.text(this.title)
         }
 
@@ -66,21 +63,34 @@ export class ColorCategoryLegend extends Legend {
 
         for (let i = 0; i < nb; i++) {
             const cat = this.colCat[i]
-            const d = this.div.append("div")
+            const d = this.div.append("div");
 
             const sw = this.strokeWidth
 
             //draw box / circle
             if (this.shape === "square") {
-                d.append("svg").attr("width", (this.dimension.w || 20) + 2 * sw).attr("height", (this.dimension.h || 15) + 2 * sw)
+                const h = (this.dimension.h || 15) + 2 * sw
+
+                d
+                    //.style("height", h+5)
+                    //.append("div")
+
+                    .append("svg").attr("width", (this.dimension.w || 20) + 2 * sw).attr("height", h)
+                    .style("float", "left")
+
                     .append("rect")
-                    .attr("x", sw).attr("y", sw).attr("width", (this.dimension.w || 20) + 2 * sw).attr("height", (this.dimension.h || 15) + 2 * sw)
+                    .attr("x", sw).attr("y", sw).attr("width", (this.dimension.w || 20) + 2 * sw).attr("height", h)
                     .style("fill", cat[0])
                     .style("stroke", this.strokeColor)
                     .style("stroke-width", this.strokeWidth)
             } else if (this.shape === "circle") {
                 const r = this.dimension.r || 8
-                d.append("svg").attr("width", 2 * r + 2 * sw).attr("height", 2 * r + 2 * sw)
+                d
+                    //.append("div")
+
+                    .append("svg").attr("width", 2 * r + 2 * sw).attr("height", 2 * r + 2 * sw)
+                    .style("float", "left")
+
                     .append("circle")
                     .attr("cx", r + sw).attr("cy", r + sw).attr("r", r)
                     .style("fill", cat[0])
@@ -92,8 +102,8 @@ export class ColorCategoryLegend extends Legend {
 
             //Write label text
             d.append("div")
-                .style("float", "right")
-                .style("padding-left", "5px")
+                //.style("float", "right")
+                //.style("padding", "5px")
                 //.style("text-align", "left")
                 .style("font-size", this.labelFontSize)
                 //.style("font-weight", "bold")
