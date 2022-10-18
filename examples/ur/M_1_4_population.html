@@ -75,7 +75,7 @@
                 })
 
             //add legend
-            app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", width: 600, ticks: 9, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7) }))
+            app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", width: 600, ticks: 8, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7) }))
 
             //redraw
             app.cg.redraw();
