@@ -22,16 +22,15 @@
     <script>
 
         const degurbaColors = {
-            "uc": "#d53e4f",
-            "du": "#f46d43",
-            "sdu": "#fdae61",
-            "sbu": "#fee08b",
-            "r": "#e6f598",
-            "lr": "#abdda4",
-            "vlr": "#66c2a5",
+            "uc": "#286eb4", //"#d53e4f", //Cities
+            "du": "#5e98e3", //"#f46d43", //Cities  - adjusted
+            "sbu": "#c87e04", //"#fee08b", //Suburbs
+            "sdu": "#fcc974", //"#fdae61", //Towns
+            "r": "#468631", //"#e6f598", //Villages
+            "lr": "#9dd58a", //"#abdda4", //Dispersed rural areas
+            "vlr": "#c2d5bc", //"#66c2a5", //Mostly uninhabited areas - adjusted (to light)
             "NA": "gray",
         }
-
 
         let containerDiv = document.getElementById("vizDegurba");
         const app = new gviz.App(containerDiv, { legendDivId: "legendDegurba" })
@@ -72,8 +71,8 @@
                     const out = []
                     if (+c.uc) out.push(c.uc + " Urban centre<br>")
                     if (+c.du) out.push(c.du + " Dense urban cluster<br>")
-                    if (+c.sdu) out.push(c.sdu + " Semi-dense urban cluster<br>")
                     if (+c.sbu) out.push(c.sbu + " Suburban<br>")
+                    if (+c.sdu) out.push(c.sdu + " Semi-dense urban cluster<br>")
                     if (+c.r) out.push(c.r + " Rural<br>")
                     if (+c.lr) out.push(c.lr + " Low density rural<br>")
                     if (+c.vlr) out.push(c.vlr + " Very low density rural<br>")
