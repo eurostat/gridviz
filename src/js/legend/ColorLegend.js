@@ -3,7 +3,7 @@
 import { select } from "d3-selection";
 import { Legend } from "../Legend";
 import { format } from "d3-format";
-import { Style, Stat } from "../Style"
+import { Style } from "../Style"
 
 /**
  * A legend element for continuous color style.
@@ -38,7 +38,7 @@ export class ColorLegend extends Legend {
     }
 
     /**
-     * @param {{ style: Style, r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
+     * @param {{ style: Style, r: number, zf: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts 
      */
     update(opts) {
 

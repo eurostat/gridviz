@@ -2,7 +2,6 @@
 
 import { Legend } from "../Legend";
 import { format } from "d3-format";
-import { Stat, Shape } from "../Style"
 import { ShapeColorSizeStyle } from "../style/ShapeColorSizeStyle"
 
 /**
@@ -23,7 +22,7 @@ export class SizeLegend extends Legend {
         //symbol
         /** 
          * @private
-         * @type {Shape} */
+         * @type {import("../Style").Shape} */
         this.shape = opts.shape || "circle"
         this.fillColor = opts.fillColor || "none"
         this.strokeColor = opts.strokeColor || "gray"
@@ -39,7 +38,7 @@ export class SizeLegend extends Legend {
     }
 
     /**
-     * @param {{ style: ShapeColorSizeStyle, r: number, zf: number, sSize: Stat, sColor: Stat }} opts 
+     * @param {{ style: ShapeColorSizeStyle, r: number, zf: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts 
      */
     update(opts) {
 

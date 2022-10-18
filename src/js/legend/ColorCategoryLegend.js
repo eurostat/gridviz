@@ -1,7 +1,6 @@
 //@ts-check
 
 import { Legend } from "../Legend";
-//import { format } from "d3-format";
 import { Style } from "../Style"
 
 /**
