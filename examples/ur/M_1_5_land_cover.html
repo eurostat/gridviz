@@ -2,13 +2,12 @@
 <html lang="en" style="height:100%;">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
     <title></title>
 </head>
 
-<body>
-    <div id="viz-container" style="height:600px; width:900px; left: 20px; top: 20px; position: absolute;">
+<body style="font-family: sans-serif;">
+    <h1>Map 1.5 - Land cover</h1>
+    <div id="vizLC" style="position:relative; height:600px; width:900px;">
         <div
             style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
             <span style="font-size: 0.8em; font-family: sans-serif;"><a href="https://github.com/eurostat/gridviz"
@@ -16,6 +15,7 @@
                 © <a href="https://eurogeographics.org" style="text-decoration:none">EuroGeographics</a></span>
         </div>
     </div>
+    <div id="legendLC"></div>
 
     <script src="../../build/gridviz.js"></script>
     <script>
@@ -120,7 +120,7 @@
 
 
 
-        let containerDiv = document.getElementById("viz-container");
+        let containerDiv = document.getElementById("vizLC");
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
