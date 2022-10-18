@@ -63,7 +63,9 @@ export class ColorCategoryLegend extends Legend {
 
         for (let i = 0; i < nb; i++) {
             const cat = this.colCat[i]
-            const d = this.div.append("div");
+            const d = this.div.append("div")
+                //to enable vertical centering
+                .style("position", "relative")
 
             const sw = this.strokeWidth
 
@@ -102,14 +104,14 @@ export class ColorCategoryLegend extends Legend {
 
             //Write label text
             d.append("div")
+                //show on right of graphic
                 .style("display", "inline")
-                //.style("height", h)
-                //.style("float", "right")
+
+                //center vertically
+                .style("position", "absolute").style("top", "0").style("bottom", "0")
+
                 .style("padding-left", "5px")
-                .style("margin", "0")
-                //.style("text-align", "left")
                 .style("font-size", this.labelFontSize)
-                //.style("font-weight", "bold")
                 .text(cat[1])
         }
 
