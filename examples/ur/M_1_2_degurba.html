@@ -77,13 +77,13 @@
                                                 +c.vlr ? "Mostly uninhabited area" :
                                                     "Unknown");
                     const out = []
-                    if (+c.uc) out.push(c.uc + " Large city<br>")
-                    if (+c.du) out.push(c.du + " City<br>")
-                    if (+c.sbu) out.push(c.sbu + " Suburb<br>")
-                    if (+c.sdu) out.push(c.sdu + " Town<br>")
-                    if (+c.r) out.push(c.r + " Village<br>")
-                    if (+c.lr) out.push(c.lr + " Dispersed rural area<br>")
-                    if (+c.vlr) out.push(c.vlr + " Mostly uninhabited area<br>")
+                    if (+c.uc) out.push(c.uc + " Large cities<br>")
+                    if (+c.du) out.push(c.du + " Cities<br>")
+                    if (+c.sbu) out.push(c.sbu + " Suburbs<br>")
+                    if (+c.sdu) out.push(c.sdu + " Towns<br>")
+                    if (+c.r) out.push(c.r + " Villages<br>")
+                    if (+c.lr) out.push(c.lr + " Dispersed rural areas<br>")
+                    if (+c.vlr) out.push(c.vlr + " Mostly uninhabited areas<br>")
                     if (+c.NA) out.push(c.NA + " Unknown<br>")
                     return out.join("")
                 },
