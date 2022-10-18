@@ -69,13 +69,13 @@
                     if (!c.TOT) return "No information";
                     if (c.TOT == 1) return +c.uc ? "Urban centre" : +c.du ? "Dense urban cluster" : +c.sdu ? "Semi-dense urban cluster" : +c.sbu ? "Suburban" : +c.r ? "Rural" : +c.lr ? "Low density rural" : +c.vlr ? "Very low density rural" : "Unknown";
                     const out = []
-                    if (+c.uc) out.push(c.uc + " Urban centre<br>")
-                    if (+c.du) out.push(c.du + " Dense urban cluster<br>")
-                    if (+c.sbu) out.push(c.sbu + " Suburban<br>")
-                    if (+c.sdu) out.push(c.sdu + " Semi-dense urban cluster<br>")
-                    if (+c.r) out.push(c.r + " Rural<br>")
-                    if (+c.lr) out.push(c.lr + " Low density rural<br>")
-                    if (+c.vlr) out.push(c.vlr + " Very low density rural<br>")
+                    if (+c.uc) out.push(c.uc + " Cities<br>")
+                    if (+c.du) out.push(c.du + " Cities (2)<br>")
+                    if (+c.sbu) out.push(c.sbu + " Suburbs<br>")
+                    if (+c.sdu) out.push(c.sdu + " Towns<br>")
+                    if (+c.r) out.push(c.r + " Villages<br>")
+                    if (+c.lr) out.push(c.lr + " Dispersed rural areas<br>")
+                    if (+c.vlr) out.push(c.vlr + " Mostly uninhabited areas<br>")
                     if (+c.NA) out.push(c.NA + " Unknown<br>")
                     return out.join("")
                 },
@@ -97,13 +97,22 @@
         //app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#666d" }))
         const catLeg = new gviz.ColorCategoryLegend({
             title: "Degree of urbanisation", colCat: [
-                ["#d53e4f", "Urban centre"],
+                /*["#d53e4f", "Urban centre"],
                 ["#f46d43", "Dense urban cluster"],
-                ["#fdae61", "Semi-dense urban cluster"],
                 ["#fee08b", "Suburban"],
+                ["#fdae61", "Semi-dense urban cluster"],
                 ["#e6f598", "Rural"],
                 ["#abdda4", "Low density rural"],
                 ["#66c2a5", "Very low density rural"],
+                ["gray", "Unknown"],
+            ]*/
+                ["#286eb4", "Cities"],
+                ["#5e98e3", "Cities (2)"],
+                ["#c87e04", "Suburbs"],
+                ["#fcc974", "Towns"],
+                ["#468631", "Villages"],
+                ["#9dd58a", "Dispersed rural areas"],
+                ["#c2d5bc", "Mostly uninhabited areas"],
                 ["gray", "Unknown"],
             ]
         })
