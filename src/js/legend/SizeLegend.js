@@ -86,6 +86,8 @@ export class SizeLegend extends Legend {
                 .style("stroke-width", this.strokeWidth)
         } else if (this.shape === "donut") {
             //TODO
+        } else if (this.shape === "diamond") {
+            //TODO
         } else {
             throw new Error('Unexpected shape:' + this.shape);
         }
@@ -93,7 +95,7 @@ export class SizeLegend extends Legend {
         const valueT = format(this.labelFormat)(value);
         this.div.append("div")
             .style("display", "inline-block")
-            .style("left", "4px")
+            .style("padding-left", "5px")
             .style("font-size", this.labelFontSize)
             .text(valueT + (this.labelUnitText ? " " : "") + this.labelUnitText)
     }
