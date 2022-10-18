@@ -67,15 +67,23 @@
                 pixNb: 3.5,
                 cellInfoHTML: c => {
                     if (!c.TOT) return "No information";
-                    if (c.TOT == 1) return +c.uc ? "Urban centre" : +c.du ? "Dense urban cluster" : +c.sdu ? "Semi-dense urban cluster" : +c.sbu ? "Suburban" : +c.r ? "Rural" : +c.lr ? "Low density rural" : +c.vlr ? "Very low density rural" : "Unknown";
+                    if (c.TOT == 1) return (
+                        +c.uc ? "Large city" :
+                            +c.du ? "City" :
+                                +c.sbu ? "Suburb" :
+                                    +c.sdu ? "Town" :
+                                        +c.r ? "Village" :
+                                            +c.lr ? "Dispersed rural area" :
+                                                +c.vlr ? "Mostly uninhabited area" :
+                                                    "Unknown");
                     const out = []
-                    if (+c.uc) out.push(c.uc + " Cities<br>")
-                    if (+c.du) out.push(c.du + " Cities (2)<br>")
-                    if (+c.sbu) out.push(c.sbu + " Suburbs<br>")
-                    if (+c.sdu) out.push(c.sdu + " Towns<br>")
-                    if (+c.r) out.push(c.r + " Villages<br>")
-                    if (+c.lr) out.push(c.lr + " Dispersed rural areas<br>")
-                    if (+c.vlr) out.push(c.vlr + " Mostly uninhabited areas<br>")
+                    if (+c.uc) out.push(c.uc + " Large city<br>")
+                    if (+c.du) out.push(c.du + " City<br>")
+                    if (+c.sbu) out.push(c.sbu + " Suburb<br>")
+                    if (+c.sdu) out.push(c.sdu + " Town<br>")
+                    if (+c.r) out.push(c.r + " Village<br>")
+                    if (+c.lr) out.push(c.lr + " Dispersed rural area<br>")
+                    if (+c.vlr) out.push(c.vlr + " Mostly uninhabited area<br>")
                     if (+c.NA) out.push(c.NA + " Unknown<br>")
                     return out.join("")
                 },
@@ -106,8 +114,8 @@
                 ["#66c2a5", "Very low density rural"],
                 ["gray", "Unknown"],
             ]*/
-                ["#286eb4", "Cities"],
-                ["#5e98e3", "Cities (2)"],
+                ["#286eb4", "Large cities"],
+                ["#5e98e3", "Cities"],
                 ["#c87e04", "Suburbs"],
                 ["#fcc974", "Towns"],
                 ["#468631", "Villages"],
