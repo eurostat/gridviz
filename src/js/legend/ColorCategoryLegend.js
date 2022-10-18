@@ -67,21 +67,15 @@ export class ColorCategoryLegend extends Legend {
 
             const sw = this.strokeWidth
 
-            //use
-            //display: block;
-            //display: inline;
-
-
             //draw box / circle
             if (this.shape === "square") {
                 const h = (this.dimension.h || 15) + 2 * sw
 
                 d
-                    //.style("height", h+5)
-                    //.append("div")
+                    .append("div").style("display", "inline")
 
-                    .append("svg").attr("width", (this.dimension.w || 20) + 2 * sw).attr("height", h)
-                    .style("float", "left")
+                    .append("svg")
+                    .attr("width", (this.dimension.w || 20) + 2 * sw).attr("height", h)
 
                     .append("rect")
                     .attr("x", sw).attr("y", sw).attr("width", (this.dimension.w || 20) + 2 * sw).attr("height", h)
@@ -91,10 +85,10 @@ export class ColorCategoryLegend extends Legend {
             } else if (this.shape === "circle") {
                 const r = this.dimension.r || 8
                 d
-                    //.append("div")
+                    .append("div").style("display", "inline")
 
-                    .append("svg").attr("width", 2 * r + 2 * sw).attr("height", 2 * r + 2 * sw)
-                    .style("float", "left")
+                    .append("svg")
+                    .attr("width", 2 * r + 2 * sw).attr("height", 2 * r + 2 * sw)
 
                     .append("circle")
                     .attr("cx", r + sw).attr("cy", r + sw).attr("r", r)
@@ -107,8 +101,9 @@ export class ColorCategoryLegend extends Legend {
 
             //Write label text
             d.append("div")
+                .style("display", "inline")
                 //.style("float", "right")
-                //.style("padding", "5px")
+                .style("padding", "5px")
                 //.style("text-align", "left")
                 .style("font-size", this.labelFontSize)
                 //.style("font-weight", "bold")
