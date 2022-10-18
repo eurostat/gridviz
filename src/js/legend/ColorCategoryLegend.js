@@ -103,7 +103,7 @@ export class ColorCategoryLegend extends Legend {
             //Write label text
             d.append("div")
                 .style("display", "inline")
-                .style("height", h)
+                //.style("height", h)
                 //.style("float", "right")
                 .style("padding-left", "5px")
                 .style("margin", "0")
