@@ -63,10 +63,14 @@ export class SizeLegend extends Legend {
         else if (value * 2.5 <= value_) value *= 2.5
         else if (value * 2 <= value_) value *= 2
 
+        const d = this.div.append("div")
+            //to enable vertical centering
+            .style("position", "relative")
+
         //compute size of symbol, in pix
         const size = opts.style.size(value, opts.r, opts.sSize, opts.zf) / opts.zf;
 
-        const svg = this.div.append("svg").attr("width", size + this.strokeWidth + 2).attr("height", size + this.strokeWidth + 2)
+        const svg = d.append("svg").attr("width", size + this.strokeWidth + 2).attr("height", size + this.strokeWidth + 2)
             .style("", "inline-block")
 
         if (this.shape === "square") {
@@ -93,8 +97,13 @@ export class SizeLegend extends Legend {
         }
 
         const valueT = format(this.labelFormat)(value);
-        this.div.append("div")
-            .style("display", "inline-block")
+        d.append("div")
+            //show on right of graphic
+            .style("display", "inline")
+
+            //center vertically
+            .style("position", "absolute").style("top", "0").style("bottom", "0")
+
             .style("padding-left", "5px")
             .style("font-size", this.labelFontSize)
             .text(valueT + (this.labelUnitText ? " " : "") + this.labelUnitText)
