@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <div id="viz-container" style="height:600px; width:900px; left: 20px; top: 20px; position: absolute;">
+    <div id="vizDegurba" style="height:600px; width:900px; left: 20px; top: 20px; position: absolute;">
         <div
             style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
             <span style="font-size: 0.8em; font-family: sans-serif;"><a href="https://github.com/eurostat/gridviz"
@@ -16,6 +16,7 @@
                 © <a href="https://eurogeographics.org" style="text-decoration:none">EuroGeographics</a></span>
         </div>
     </div>
+    <div id="legendDegurba"></div>
 
     <script src="../../build/gridviz.js"></script>
     <script>
@@ -31,8 +32,9 @@
             "NA": "gray",
         }
 
-        let containerDiv = document.getElementById("viz-container");
-        const app = new gviz.App(containerDiv)
+
+        let containerDiv = document.getElementById("vizDegurba");
+        const app = new gviz.App(containerDiv, { legendDivId: "legendDegurba" })
             .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
@@ -68,7 +70,8 @@
                     if (!c.TOT) return "No information";
                     if (c.TOT == 1) return +c.uc ? "Urban centre" : +c.du ? "Dense urban cluster" : +c.sdu ? "Semi-dense urban cluster" : +c.sbu ? "Suburban" : +c.r ? "Rural" : +c.lr ? "Low density rural" : +c.vlr ? "Very low density rural" : "Unknown";
                     const out = []
-                    if (+c.uc) out.push(c.uc + " Dense urban cluster<br>")
+                    if (+c.uc) out.push(c.uc + " Urban centre<br>")
+                    if (+c.du) out.push(c.du + " Dense urban cluster<br>")
                     if (+c.sdu) out.push(c.sdu + " Semi-dense urban cluster<br>")
                     if (+c.sbu) out.push(c.sbu + " Suburban<br>")
                     if (+c.r) out.push(c.r + " Rural<br>")
@@ -91,10 +94,21 @@
                 filterColor: zf => "#ffffffd3",
             })
 
-            //legend
-            //app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#666d" }))
-            //TODO add legend with classified colors
-
+        //legend
+        //app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#666d" }))
+        const catLeg = new gviz.ColorCategoryLegend({
+            title: "Degree of urbanisation", colCat: [
+                ["#d53e4f", "Urban centre"],
+                ["#f46d43", "Dense urban cluster"],
+                ["#fdae61", "Semi-dense urban cluster"],
+                ["#fee08b", "Suburban"],
+                ["#e6f598", "Rural"],
+                ["#abdda4", "Low density rural"],
+                ["#66c2a5", "Very low density rural"],
+                ["gray", "Unknown"],
+            ]
+        })
+        app.layers[0].styles[0].legends.push(catLeg)
     </script>
 
 </body>
