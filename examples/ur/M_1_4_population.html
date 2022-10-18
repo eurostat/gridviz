@@ -31,8 +31,6 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
-        const yearCode = "2018"
-
         let containerDiv = document.getElementById("vizPop");
         const app = new gviz.App(containerDiv, { legendDivId: "legendPop" })
             .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([40, 7500])
@@ -44,30 +42,12 @@
                 filterColor: zf => "#ffffffd3",
             })
 
-            
+
         const popDataset = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
             //r => "https://ec.europa.eu/assets/estat/E/E4/gisco/mapping/test/" + Math.round(r / 1000) + "km/",
         )
-
-        app.addLayerFromDataset(
-            popDataset,
-            [
-                new gviz.SquareColorWGLStyle({
-                    colorCol: yearCode,
-                    color: d3.interpolateOrRd,
-                    stretching: { fun: "expRev", alpha: -7 }
-                }),
-                new gviz.StrokeStyle({ strokeColorCol: yearCode, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
-            ],
-            {
-                pixNb: 2,
-                cellInfoHTML: c => +c[yearCode] ? "<b>" + c[yearCode] + "</b> inhabitant" + (+c[yearCode] == 1 ? "" : "s") : undefined
-            })
-
-        //legend
-        app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", width: 900, ticks: 8, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7) }))
 
         //
         const update = () => {
@@ -75,7 +55,30 @@
             //read year selection
             const year = document.querySelector('#year').value
 
-            console.log(year)
+            //remove layers
+            app.layers = []
+
+            //add layer
+            app.addLayerFromDataset(
+                popDataset,
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: year,
+                        color: d3.interpolateOrRd,
+                        stretching: { fun: "expRev", alpha: -7 }
+                    }),
+                    new gviz.StrokeStyle({ strokeColorCol: year, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
+                ],
+                {
+                    pixNb: 2,
+                    cellInfoHTML: c => +c[year] ? "<b>" + c[year] + "</b> inhabitant" + (+c[year] == 1 ? "" : "s") : undefined
+                })
+
+            //add legend
+            app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", width: 600, ticks: 9, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7) }))
+
+            //redraw
+            app.cg.redraw();
         }
 
         //
