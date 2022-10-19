@@ -95,7 +95,7 @@ export class PillarStyle extends Style {
         //const distToViewCenter = (c) => { const dx = cvx - c.x, dy = cvy - c.y; return Math.sqrt(dx * dx + dy * dy) }
         cells.sort((c1, c2) => 100000000 * (c2.y - c1.y) + c1.x - c2.x);
 
-        cg.ctx.lineCap = this.simple? "butt" : "round";
+        cg.ctx.lineCap = this.simple ? "butt" : "round";
 
         //draw in geo coordinates
         cg.setCanvasTransform()
@@ -182,6 +182,14 @@ export class PillarStyle extends Style {
 
 
             if (this.simple) {
+
+                //draw segment
+                cg.ctx.strokeStyle = col
+                cg.ctx.lineWidth = wG
+                cg.ctx.beginPath();
+                cg.ctx.moveTo(cx, cy);
+                cg.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a));
+                cg.ctx.stroke();
 
             } else {
 

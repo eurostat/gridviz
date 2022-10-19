@@ -23,6 +23,7 @@
                     new gviz.PillarStyle({
                         heightCol: "2018",
                         height: (v, r, s, z) => 15 * r * gviz.sExpRev(v / s.max, -5),
+                        color: () => "#FF000077",
                         simple: true,
                     })
                 ],
