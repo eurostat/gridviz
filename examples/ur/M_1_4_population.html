@@ -65,6 +65,9 @@
             //r => "https://ec.europa.eu/assets/estat/E/E4/gisco/mapping/test/" + Math.round(r / 1000) + "km/",
         )
 
+        //default color
+        const col = "#e54f37"
+
         //
         const update = () => {
 
@@ -111,7 +114,11 @@
                     [
                         new gviz.PillarStyle({
                             heightCol: year,
-                            height: (v, r, s, z) => 15 * r * gviz.sPow(v / s.max, 0.7),
+                            //height: (v, r, s, z) => 15 * r * gviz.sPow(v / s.max, 0.7),
+                            height: (v, r, s, z) => 10 * r * gviz.sExpRev(v / s.max, -5),
+                            color: () => col + "aa",
+                            simple: true,
+                            viewHeightFactor: 1,
                         })
                     ],
                     {
@@ -128,7 +135,7 @@
                         new gviz.JoyPlotStyle({
                             heightCol: year,
                             height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
-                            fillColor: () => "#c08c59bb"
+                            fillColor: () => col + "bb"
                         })
                     ],
                     {

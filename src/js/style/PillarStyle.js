@@ -39,7 +39,7 @@ export class PillarStyle extends Style {
          * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.width = opts.width || ((v, r) => 0.5 * r);
 
-        this.viewHeightFactor = 1.5
+        this.viewHeightFactor = opts.viewHeightFactor || 1.5
 
         //TODO replace with sun location
         this.shadowDirection = -40.3 * Math.PI / 180.0;
@@ -100,8 +100,10 @@ export class PillarStyle extends Style {
         //draw in geo coordinates
         cg.setCanvasTransform()
 
-        //shadows
+
+        //draw shadows
         cg.ctx.strokeStyle = this.shadowColor
+        cg.ctx.fillStyle = this.shadowColor
         for (let c of cells) {
 
             //width
@@ -132,22 +134,22 @@ export class PillarStyle extends Style {
             cg.ctx.lineTo(cx + ls * Math.cos(this.shadowDirection), cy + ls * Math.sin(this.shadowDirection));
             cg.ctx.stroke();
 
-            /*/draw bottom circle
-            //cg.ctx.strokeStyle = "black"
-            cg.ctx.fillStyle = "gray"
-            //cg.ctx.lineWidth = 3
-            cg.ctx.beginPath();
-            cg.ctx.arc(
-                cx, cy,
-                wG * 0.5,
-                0, 2 * Math.PI, false);
-            //cg.ctx.stroke();
-            cg.ctx.fill();
-*/
+            /*
+            if (this.simple) {
+                //draw base circle
+                cg.ctx.beginPath();
+                cg.ctx.arc(
+                    cx, cy,
+                    wG * 0.5,
+                    0, 2 * Math.PI, false);
+                //cg.ctx.stroke();
+                cg.ctx.fill();
+            }*/
         }
 
 
 
+        //draw pillars
         for (let c of cells) {
 
             //color
