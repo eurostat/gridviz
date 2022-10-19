@@ -6,7 +6,7 @@ import { GeoCanvas } from "../GeoCanvas";
 /**
  * @author Julien Gaffuri
  */
-export class PillarStyle extends Style {
+export class PillarWGStyle extends Style {
 
     /** @param {object} opts */
     constructor(opts) {

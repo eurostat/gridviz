@@ -12,6 +12,7 @@ cat/size legend: center vertically
 
 pillar: random example
 check https://viglino.github.io/ol-ext/examples/map/map.layer.3D.2.html
+web gl version
 
 make own background - with low resolution
 https://land.copernicus.eu/imagery-in-situ/eu-dem/eu-dem-v1-0-and-derived-products/hillshade?tab=download
