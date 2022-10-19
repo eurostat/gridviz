@@ -595,7 +595,9 @@ See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego
 
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
-
+| **color**      | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.     |         |
+| **colDark**    |  string    |  "#333" |  Shadow color: South East side. This should be a dark color.  |
+| **colBright**    |   string   |   "#aaa"  |  Shadow color: North West side. This should be a bright color. |
 
 
 ## Kernel smoothing
