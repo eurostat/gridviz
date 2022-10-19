@@ -8,24 +8,32 @@
 <body style="font-family: sans-serif;">
     <h1>Map 1.4 - Population</h1>
 
-    <p>Map showing the European population distribution at 1km resolution in <select id="year">
-            <option value="2018" selected>2018</option>
-            <option value="2011">2011</option>
-            <option value="2006">2006</option>
-        </select>
-        <br>
-        Style: <span>
-            <input type="radio" name="style" id="color" value="color" checked>
-            <label for="color">color</label>
-            <input type="radio" name="style" id="pillar" value="pillar">
-            <label for="pillar">3D pillars</label>
-            <input type="radio" name="style" id="joyplot" value="joyplot">
-            <label for="joyplot">Joyplot</label>
-        </span>
+    <p>
+        Map showing the European population distribution at 1km resolution.
     </p>
 
-
     <div id="vizPop" style="position:relative; height:600px; width:900px;">
+
+        <div
+            style="font-size: 0.9em; position: absolute; left: 10px; top: 10px; width: auto; height: auto; padding: 5px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey">
+            Year: <select id="year">
+                <option value="2018" selected>2018</option>
+                <option value="2011">2011</option>
+                <option value="2006">2006</option>
+            </select>
+            <br>
+            Style:
+            <br>
+            <input type="radio" name="style" id="color" value="color" checked>
+            <label for="color">color</label>
+            <br>
+            <input type="radio" name="style" id="pillar" value="pillar">
+            <label for="pillar">3D pillars</label>
+            <br>
+            <input type="radio" name="style" id="joyplot" value="joyplot">
+            <label for="joyplot">Joyplot</label>
+        </div>
+
         <div
             style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
             <span style="font-size: 0.8em; font-family: sans-serif;"><a href="https://github.com/eurostat/gridviz"
