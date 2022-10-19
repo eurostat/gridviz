@@ -2,7 +2,7 @@ UR maps:
 cat/size legend: center vertically
 - degurba map: Ask confirmation to DG REGIO.
 - CLC map: OK
-- population map - improve 3D pillars
+- population map: OK
 - show "road transport performance in europe" grid. M9.2
 - other: stripe CLC + bivariate
 - Data server - test wt? cache?
