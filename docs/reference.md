@@ -472,11 +472,11 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pill
 | **viewHeightFactor**    |  number    |   1.5      | The view height.            |
 | **viewSX**    |  number    |    0     |   The view X position.          |
 | **viewSY**    |  number    |    -0.5     |   The view Y position.          |
-| **shadowDirection**    |  number    |   -40.3 * Math.PI / 180.0      |             |
-| **shadowFactor**    |  number    |   0.3      |             |
-| **shadowColor**    |  string    |   "#00000033"      |             |
-| **outlineCol**    |   string   |    "#FFFFFF"     |             |
-| **outlineWidthPix**    |   number   |   0.5      |             |
+| **shadowDirection**    |  number    |   -40.3 * Math.PI / 180.0      |   The shadow direction, in radian.   |
+| **shadowFactor**    |  number    |   0.3      |   A factor specifying the shadow length.       |
+| **shadowColor**    |  string    |   "#00000033"      |    The shadow color.         |
+| **outlineCol**    |   string   |    "#FFFFFF"     |  The pillar outline color.   |
+| **outlineWidthPix**    |   number   |   0.5      |   The pillar outline width, in pixels.          |
 
 ### Text style
 
