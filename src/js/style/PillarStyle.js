@@ -41,6 +41,7 @@ export class PillarStyle extends Style {
 
         this.viewHeightFactor = 1.5
 
+        //TODO replace with sun location
         this.shadowDirection = -40.3 * Math.PI / 180.0;
         this.shadowFactor = 0.3;
         this.shadowColor = "#00000033";
@@ -94,7 +95,7 @@ export class PillarStyle extends Style {
         //const distToViewCenter = (c) => { const dx = cvx - c.x, dy = cvy - c.y; return Math.sqrt(dx * dx + dy * dy) }
         cells.sort((c1, c2) => 100000000 * (c2.y - c1.y) + c1.x - c2.x);
 
-        cg.ctx.lineCap = "round";
+        cg.ctx.lineCap = this.simple? "butt" : "round";
 
         //draw in geo coordinates
         cg.setCanvasTransform()
@@ -178,33 +179,40 @@ export class PillarStyle extends Style {
             const D = Math.sqrt(dx * dx + dy * dy)
             const d = D * hG / (H - hG)
 
-            //draw background segment
-            cg.ctx.strokeStyle = this.outlineCol
-            cg.ctx.lineWidth = wG + 2 * this.outlineWidthPix * zf
-            cg.ctx.beginPath();
-            cg.ctx.moveTo(cx, cy);
-            cg.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a));
-            cg.ctx.stroke();
 
-            //draw segment
-            cg.ctx.strokeStyle = col
-            cg.ctx.lineWidth = wG
-            cg.ctx.beginPath();
-            cg.ctx.moveTo(cx, cy);
-            cg.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a));
-            cg.ctx.stroke();
 
-            //draw top circle
-            cg.ctx.strokeStyle = this.outlineCol
-            //cg.ctx.fillStyle = "#c08c59"
-            cg.ctx.lineWidth = this.outlineWidthPix * zf
-            cg.ctx.beginPath();
-            cg.ctx.arc(
-                cx + d * Math.cos(a), cy + d * Math.sin(a),
-                wG * 0.5,
-                0, 2 * Math.PI, false);
-            cg.ctx.stroke();
-            //cg.ctx.fill();
+            if (this.simple) {
+
+            } else {
+
+                //draw background segment
+                cg.ctx.strokeStyle = this.outlineCol
+                cg.ctx.lineWidth = wG + 2 * this.outlineWidthPix * zf
+                cg.ctx.beginPath();
+                cg.ctx.moveTo(cx, cy);
+                cg.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a));
+                cg.ctx.stroke();
+
+                //draw segment
+                cg.ctx.strokeStyle = col
+                cg.ctx.lineWidth = wG
+                cg.ctx.beginPath();
+                cg.ctx.moveTo(cx, cy);
+                cg.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a));
+                cg.ctx.stroke();
+
+                //draw top circle
+                cg.ctx.strokeStyle = this.outlineCol
+                //cg.ctx.fillStyle = "#c08c59"
+                cg.ctx.lineWidth = this.outlineWidthPix * zf
+                cg.ctx.beginPath();
+                cg.ctx.arc(
+                    cx + d * Math.cos(a), cy + d * Math.sin(a),
+                    wG * 0.5,
+                    0, 2 * Math.PI, false);
+                cg.ctx.stroke();
+                //cg.ctx.fill();
+            }
 
         }
 
