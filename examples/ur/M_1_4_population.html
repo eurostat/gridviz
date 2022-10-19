@@ -14,7 +14,7 @@
             <option value="2006">2006</option>
         </select>
         <br>
-        Style: <span id="style">
+        Style: <span>
             <input type="radio" name="style" id="color" value="color" checked>
             <label for="color">color</label>
             <input type="radio" name="style" id="pillar" value="pillar">
@@ -62,8 +62,13 @@
         //
         const update = () => {
 
-            //read year selection
+            //get year selection
             const year = document.querySelector('#year').value
+
+            //get style selection
+            const style = document.querySelector('input[name="style"]:checked').value
+
+            console.log(style)
 
             //remove layers
             app.layers = []
@@ -99,6 +104,9 @@
 
         //
         document.querySelector('#year').addEventListener('change', update)
+        document.querySelector('#color').addEventListener('change', update)
+        document.querySelector('#pillar').addEventListener('change', update)
+        document.querySelector('#joyplot').addEventListener('change', update)
 
         //initialise
         update()
