@@ -587,6 +587,8 @@ Other properties: See [Tanaka style](#tanaka-style).
 
 This style shows the grid cells as lego bricks with changeable colors based on a categorical variable.
 
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego_cat.html) ([code](../examples/styles/lego_cat.html)).
+
 See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego_EUR.html) ([code](../examples/styles/lego_EUR.html)).
 
 Documentation coming soon.
