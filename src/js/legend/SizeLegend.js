@@ -64,7 +64,7 @@ export class SizeLegend extends Legend {
 
         const d = this.div.append("div")
             //to enable vertical centering
-            .style("position", "relative")
+            //.style("position", "relative")
 
         //compute size of symbol, in pix
         const size = opts.style.size(value, opts.r, opts.sSize, opts.zf) / opts.zf;
@@ -101,7 +101,7 @@ export class SizeLegend extends Legend {
             .style("display", "inline")
 
             //center vertically
-            .style("position", "absolute").style("top", "0").style("bottom", "0")
+            //.style("position", "absolute").style("top", "0").style("bottom", "0")
 
             .style("padding-left", "5px")
             .style("font-size", this.labelFontSize)

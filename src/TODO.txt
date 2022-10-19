@@ -1,4 +1,5 @@
 UR maps:
+cat/size legend: center vertically
 - degurba map: Ask confirmation to DG REGIO.
 - CLC map: OK
 - population map - with color + joyplot + 3D pillars. + legend + etc.

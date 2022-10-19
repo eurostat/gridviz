@@ -65,7 +65,7 @@ export class ColorCategoryLegend extends Legend {
             //make div for category
             const d = this.div.append("div")
                 //to enable vertical centering
-                .style("position", "relative")
+                //.style("position", "relative")
 
             const sw = this.strokeWidth
 
@@ -108,7 +108,7 @@ export class ColorCategoryLegend extends Legend {
                 .style("display", "inline")
 
                 //center vertically
-                .style("position", "absolute").style("top", "0").style("bottom", "0")
+                //.style("position", "absolute").style("top", "0").style("bottom", "0")
 
                 .style("padding-left", "5px")
                 .style("font-size", this.labelFontSize)
