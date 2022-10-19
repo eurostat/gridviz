@@ -107,6 +107,20 @@
 
             } else if (style == "pillar") {
 
+                //add layer
+                app.addLayerFromDataset(
+                    popDataset,
+                    [
+                        new gviz.PillarStyle({
+                            heightCol: year,
+                            height: (v, r, s, z) => 15 * r * gviz.sPow(v / s.max, 0.7),
+                        })
+                    ],
+                    {
+                        pixNb: 6,
+                        cellInfoHTML: c => +c[year] ? "<b>" + c[year] + "</b> inhabitant" + (+c[year] == 1 ? "" : "s") : undefined
+                    })
+
             } else if (style == "joyplot") {
 
                 //add layer
