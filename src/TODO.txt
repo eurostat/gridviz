@@ -1,5 +1,4 @@
 UR maps:
-- Fix M of "Madrid"
 - degurba map: Ask confirmation to DG REGIO.
 - CLC map: OK
 - population map - with color + joyplot + 3D pillars. + legend + etc.
