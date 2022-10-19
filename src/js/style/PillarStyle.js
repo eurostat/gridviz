@@ -21,13 +21,15 @@ export class PillarStyle extends Style {
          * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.height = opts.height;
 
-        /** 
-         * @type {string} */
+        /** @type {string} */
         this.colorCol = opts.colorCol;
 
         /** A function returning the color of the line representing a cell.
         * @type {function(number,number,import("../Style").Stat|undefined):string} */
         this.color = opts.color || (() => "#c08c59"); //bb
+
+        /** @type {boolean} */
+        this.simple = opts.simple != undefined
 
         /** 
          * @type {string} */
@@ -37,14 +39,15 @@ export class PillarStyle extends Style {
          * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.width = opts.width || ((v, r) => 0.5 * r);
 
-        this.viewHeightFactor = 5
+        this.viewHeightFactor = 1.5
 
         this.shadowDirection = -40.3 * Math.PI / 180.0;
         this.shadowFactor = 0.3;
         this.shadowColor = "#00000033";
 
-        this.viewSX = -0.25
-        this.viewSY = -1.5
+        //0,0 is the center
+        this.viewSX = 0//-0.25
+        this.viewSY = -0.5//-1.5
 
         this.outlineCol = "#FFFFFF"
         this.outlineWidthPix = 0.5
@@ -128,7 +131,7 @@ export class PillarStyle extends Style {
             cg.ctx.lineTo(cx + ls * Math.cos(this.shadowDirection), cy + ls * Math.sin(this.shadowDirection));
             cg.ctx.stroke();
 
-            //draw bottom circle
+            /*/draw bottom circle
             //cg.ctx.strokeStyle = "black"
             cg.ctx.fillStyle = "gray"
             //cg.ctx.lineWidth = 3
@@ -139,7 +142,7 @@ export class PillarStyle extends Style {
                 0, 2 * Math.PI, false);
             //cg.ctx.stroke();
             cg.ctx.fill();
-
+*/
         }
 
 
@@ -207,7 +210,6 @@ export class PillarStyle extends Style {
 
         //in case...
         cg.ctx.lineCap = "butt";
-
 
         //update legends
         this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor });
