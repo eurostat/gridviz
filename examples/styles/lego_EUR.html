@@ -50,7 +50,7 @@
 
         let containerDiv = document.getElementById("viz-container");
         const app = new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(600).setZoomFactorExtent([30, 7500])
+            .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(1500).setZoomFactorExtent([30, 7500])
             .setViewFromURL()
 
             .setLabelLayer(
@@ -137,6 +137,16 @@
                         cellInfoHTML: c => "<b>" + c.elevation + "</b> m"
                     }
                 )
+
+                //legend
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
+                    title: "Elevation (m)",
+                    ticks: 5,
+                    colorRamp: colFun,
+                    fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sPowInverse(t, 0.6),
+                    width: 300,
+                }))
+
 
                 //land cover
             } else if (layCode === "lc") {
@@ -272,8 +282,15 @@
                         cellInfoHTML: c => +c["2018"] ? "<b>" + c["2018"] + "</b> inhabitant(s)" : undefined
                     }
                 )
+
                 //legend
-                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 5, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, 7) }))
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
+                    title: "Number of inhabitants",
+                    ticks: 5,
+                    colorRamp: d3.interpolateOrRd,
+                    fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                    width: 500,
+                }))
 
             } else {
                 console.log("Unexpected layer code: " + layCode);
