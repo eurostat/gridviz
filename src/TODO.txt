@@ -1,4 +1,5 @@
 UR maps:
+- Fix M of "Madrid"
 - degurba map: Ask confirmation to DG REGIO.
 - CLC map: OK
 - population map - with color + joyplot + 3D pillars. + legend + etc.
@@ -6,7 +7,6 @@ UR maps:
 - other: stripe CLC + bivariate
 - Data server - test wt? cache?
 - fix euronym - local names, with accents ?
-- Fix M of "Madrid"
 + accessibility grid M9.7/8
 + forest M9.18
 
