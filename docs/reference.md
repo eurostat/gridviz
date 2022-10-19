@@ -591,7 +591,8 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/lego
 
 See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego_EUR.html) ([code](../examples/styles/lego_EUR.html)).
 
-Documentation coming soon.
+| Property | Type | Default | Description |
+| -------- | ---- | ------- | ----------- |
 
 
 
