@@ -48,6 +48,7 @@ export class ColorCategoryLegend extends Legend {
 
         //build
 
+        //title
         if (this.title) {
             const d = this.div.append("div")
                 .style("font-size", this.titleFontSize)
@@ -56,19 +57,21 @@ export class ColorCategoryLegend extends Legend {
             d.text(this.title)
         }
 
-
+        //cztegories
         const nb = this.colCat.length
         if (nb == 0) return
 
         for (let i = 0; i < nb; i++) {
             const cat = this.colCat[i]
+
+            //make div for category
             const d = this.div.append("div")
                 //to enable vertical centering
                 .style("position", "relative")
 
             const sw = this.strokeWidth
 
-            //draw box / circle
+            //draw graphic element: box / circle
             if (this.shape === "square") {
                 const h = (this.dimension.h || 15)
                 const w = (this.dimension.w || 20)
@@ -101,7 +104,7 @@ export class ColorCategoryLegend extends Legend {
                 throw new Error('Unexpected shape:' + this.shape);
             }
 
-            //Write label text
+            //write label text
             d.append("div")
                 //show on right of graphic
                 .style("display", "inline")

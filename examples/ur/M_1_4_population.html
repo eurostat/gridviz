@@ -77,7 +77,8 @@
             //add legend
             app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
                 title: "Number of inhabitants",
-                width: 600, ticks: 7,
+                width: 600,
+                ticks: 7,
                 colorRamp: d3.interpolateOrRd,
                 fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
             }))
