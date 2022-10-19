@@ -100,12 +100,12 @@ export class LabelLayer {
         //text align
         cg.ctx.textAlign = this.textAlign || "start";
 
+        //line join and cap
+        cg.ctx.lineJoin = "bevel" //|| "round" || "miter";
+        cg.ctx.lineCap = "butt" //|| "round" || "square";
 
         //draw in pix coordinates
         cg.initCanvasTransform()
-
-        //ctx.lineJoin = "bevel" || "round" || "miter";
-        console.log(cg.ctx.lineJoin)
 
         //draw labels, one by one
         for (const lb of this.labels) {
