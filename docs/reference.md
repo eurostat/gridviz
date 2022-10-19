@@ -381,9 +381,9 @@ See [this example with random segment orientation, color, length and width](http
 | **colorCol**    | string                 | undefined       | The name of the column used for the color.                                                                                |
 | **color**       | function(v,r,s):string | () => "#EA6BAC" | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**.        |
 | **lengthCol**   | string                 | undefined       | The name of the column used for the segment length.                                                                       |
-| **length**      | function(v,r,s,zf):number     | (v,r,s,zf) => r | A function computing the segment length from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom |
+| **length**      | function(v,r,s,zf):number     | (v,r,s,zf) => r | A function computing the segment length from its __lengthCol__ value **v**, the resolution **r**, statistics **s** and zoom |
 | **widthCol**    | string                 | undefined       | The name of the column used for the segment width.                                                                        |
-| **width**       | function(v,r,s,zf):number     | (v,r,s,zf) => r | A function computing the segment width from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom  |
+| **width**       | function(v,r,s,zf):number     | (v,r,s,zf) => r | A function computing the segment width from its __widthCol__ value **v**, the resolution **r**, statistics **s** and zoom  |
 
 ### Stroke style
 
@@ -460,11 +460,23 @@ This style shows the grid cells as 3D pillars or bars, with changeable heigth, w
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](../examples/styles/pillar.html)).
 
-Documentation coming soon.
-
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
-| **.**    |      |         |             |
+| **heightCol**   | string       | undefined      | The name of the column used for the pillar height.    |
+| **height**      | function(v,r,s,zf):number    | (v,r,s,zf) => r | A function computing the pillar height from its __heightCol__ value **v**, the resolution **r**, statistics **s** and zoom |
+| **colorCol**    | string    | undefined   | The name of the column used for the color.    |
+| **color**       | function(v,r,s):string | () => "#c08c59" | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**.      |
+| **widthCol**    | string    | undefined     | The name of the column used for the pillar width.       |
+| **width**       | function(v,r,s,zf):number     | (v,r,s,zf) => r | A function computing the pillar width from its __widthCol__ value **v**, the resolution **r**, statistics **s** and zoom  |
+| **simple**    |  boolean   | false   |  Set to true for a simplified drawing (as segments only, not entire pillar).  |
+| **viewHeightFactor**    |  number    |   1.5      | The view height.            |
+| **viewSX**    |  number    |    0     |   The view X position.          |
+| **viewSY**    |  number    |    -0.5     |   The view Y position.          |
+| **shadowDirection**    |  number    |   -40.3 * Math.PI / 180.0      |             |
+| **shadowFactor**    |  number    |   0.3      |             |
+| **shadowColor**    |  string    |   "#00000033"      |             |
+| **outlineCol**    |   string   |    "#FFFFFF"     |             |
+| **outlineWidthPix**    |   number   |   0.5      |             |
 
 ### Text style
 

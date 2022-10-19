@@ -8,6 +8,8 @@ import { GeoCanvas } from "../GeoCanvas";
  */
 export class PillarStyle extends Style {
 
+    //TODO make a webGL version ?
+
     /** @param {object} opts */
     constructor(opts) {
         super(opts)

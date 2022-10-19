@@ -10,9 +10,8 @@ cat/size legend: center vertically
 + accessibility grid M9.7/8
 + forest M9.18
 
-pillar: random example
-check https://viglino.github.io/ol-ext/examples/map/map.layer.3D.2.html
-web gl version ?
+pillar: make random example
+check links from overview images to doc
 
 make own background - with low resolution
 https://land.copernicus.eu/imagery-in-situ/eu-dem/eu-dem-v1-0-and-derived-products/hillshade?tab=download
