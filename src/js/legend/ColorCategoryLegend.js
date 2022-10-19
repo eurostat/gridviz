@@ -37,6 +37,7 @@ export class ColorCategoryLegend extends Legend {
         this.labelFontSize = opts.labelFontSize || "0.8em"
 
         this.width = opts.width
+
     }
 
     /**
