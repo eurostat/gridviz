@@ -104,6 +104,9 @@ export class LabelLayer {
         //draw in pix coordinates
         cg.initCanvasTransform()
 
+        //ctx.lineJoin = "bevel" || "round" || "miter";
+        console.log(cg.ctx.lineJoin)
+
         //draw labels, one by one
         for (const lb of this.labels) {
 
