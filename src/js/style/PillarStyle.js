@@ -13,8 +13,7 @@ export class PillarStyle extends Style {
         super(opts)
         opts = opts || {};
 
-        /** 
-         * @type {string} */
+        /** @type {string} */
         this.heightCol = opts.heightCol;
 
         /** A function returning the height of the line representing a cell, in geo unit
@@ -28,30 +27,36 @@ export class PillarStyle extends Style {
         * @type {function(number,number,import("../Style").Stat|undefined):string} */
         this.color = opts.color || (() => "#c08c59"); //bb
 
-        /** @type {boolean} */
-        this.simple = opts.simple != undefined
-
-        /** 
-         * @type {string} */
+        /** @type {string} */
         this.widthCol = opts.widthCol;
 
         /** A function returning the width of the line representing a cell, in geo unit
          * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.width = opts.width || ((v, r) => 0.5 * r);
 
+        /** @type {boolean} */
+        this.simple = opts.simple != undefined
+
+        /** @type {number} */
         this.viewHeightFactor = opts.viewHeightFactor || 1.5
-
-        //TODO replace with sun location
-        this.shadowDirection = -40.3 * Math.PI / 180.0;
-        this.shadowFactor = 0.3;
-        this.shadowColor = "#00000033";
-
         //0,0 is the center
-        this.viewSX = 0//-0.25
-        this.viewSY = -0.5//-1.5
+        /** @type {number} */
+        this.viewSX = opts.viewSX == undefined ? 0 : opts.viewSX
+        /** @type {number} */
+        this.viewSY = opts.viewSY == undefined ? -0.5 : opts.viewSY
 
-        this.outlineCol = "#FFFFFF"
-        this.outlineWidthPix = 0.5
+        //TODO replace with sun location ?
+        /** @type {number} */
+        this.shadowDirection = opts.shadowDirection == undefined ? -40.3 * Math.PI / 180.0 : opts.shadowDirection
+        /** @type {number} */
+        this.shadowFactor = opts.shadowFactor || 0.3
+        /** @type {string} */
+        this.shadowColor = opts.shadowColor || "#00000033"
+
+        /** @type {string} */
+        this.outlineCol = opts.outlineCol || "#FFFFFF"
+        /** @type {number} */
+        this.outlineWidthPix = opts.outlineWidthPix == undefined ? 0.5 : opts.outlineWidthPix
     }
 
 

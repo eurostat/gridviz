@@ -456,7 +456,7 @@ See [this example with random colors](https://eurostat.github.io/gridviz/example
 
 [![pillars style](img/styles/pillar.png)](https://eurostat.github.io/gridviz/examples/styles/pillar.html)
 
-This style shows the grid cells as 3D pillars, with changeable heigths and colors.
+This style shows the grid cells as 3D pillars or bars, with changeable heigth, width and color.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](../examples/styles/pillar.html)).
 
