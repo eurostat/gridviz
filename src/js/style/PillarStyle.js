@@ -87,8 +87,7 @@ export class PillarStyle extends Style {
         //get view center geo position
         const cvx = cg.getCenter().x + this.viewSX * cg.w * zf
         const cvy = cg.getCenter().y + this.viewSY * cg.h * zf
-
-        //set view height
+        //get view height
         const H = this.viewHeightFactor * (cg.w + cg.h) * 0.5 * zf
 
         //sort cells by y and x
