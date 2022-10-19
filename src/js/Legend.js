@@ -36,6 +36,10 @@ export class Legend {
 		this["box-shadow"] = opts["box-shadow"] || "none";
 		/** @type {string} */
 		this["font-family"] = opts["font-family"] || "Helvetica, Arial, sans-serif";
+		/** @type {string} */
+		this.width = opts.width;
+		/** @type {string} */
+		this.height = opts.height;
 
 		//the div element
 		if (this.id)
@@ -65,11 +69,13 @@ export class Legend {
 			.style("box-shadow", this["box-shadow"])
 			.style("font-family", this["font-family"])
 
+		if (this.width) this.div.style("width", this.width)
+		if (this.height) this.div.style("height", this.height)
 		/*
-	if (this.top) this.div.style("top", this.top)
-	if (this.bottom) this.div.style("bottom", this.bottom)
-	if (this.left) this.div.style("left", this.left)
-	if (this.right) this.div.style("right", this.right)*/
+if (this.top) this.div.style("top", this.top)
+if (this.bottom) this.div.style("bottom", this.bottom)
+if (this.left) this.div.style("left", this.left)
+if (this.right) this.div.style("right", this.right)*/
 
 		//hide
 		//this.div.style("visibility", "hidden");

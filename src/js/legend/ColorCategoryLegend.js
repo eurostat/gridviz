@@ -35,9 +35,6 @@ export class ColorCategoryLegend extends Legend {
 
         //label
         this.labelFontSize = opts.labelFontSize || "0.8em"
-
-        this.width = opts.width
-
     }
 
     /**
@@ -48,18 +45,15 @@ export class ColorCategoryLegend extends Legend {
         //clear
         this.div.selectAll("*").remove();
 
-
         //build
 
         //title
-        if (this.title) {
-            const d = this.div.append("div")
+        if (this.title)
+            this.div.append("div")
                 .style("font-size", this.titleFontSize)
                 .style("font-weight", this.titleFontWeight)
                 .style("margin-bottom", "7px")
-            if (this.width) d.style("width", this.width)
-            d.text(this.title)
-        }
+                .text(this.title)
 
         //cztegories
         const nb = this.colCat.length

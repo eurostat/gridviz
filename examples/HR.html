@@ -242,7 +242,6 @@
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#ccc" }))
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
                     title: "Men / women difference (%)",
-                    width: 350,
                     ticks: 7,
                     tickFormat : ".1f",
                     colorRamp: d3.interpolateSpectral,
@@ -281,7 +280,7 @@
                 )
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.ColorCategoryLegend({
-                    width: 350,
+                    width: "350px",
                     title: "Age group",
                     colCat: [[col(0.2), "<= 14"], [col(0.4), "15 to 64"], [col(0.9), " > 65"]].reverse()
                 }))
