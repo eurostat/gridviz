@@ -8,7 +8,10 @@
 <body style="font-family: sans-serif;">
     <h1>Map 9.2 - Road transport performance</h1>
 
-    <p>See <a href="https://ec.europa.eu/regional_policy/en/information/publications/working-papers/2019/road-transport-performance-in-europe">Road transport performance in Europe working paper</a>, European Commission - DG Regional and Urban Policy, 2020.</p>
+    <p>See <a
+            href="https://ec.europa.eu/regional_policy/en/information/publications/working-papers/2019/road-transport-performance-in-europe">Road
+            transport performance in Europe working paper</a>, European Commission - DG Regional and Urban Policy, 2020.
+    </p>
 
     <div id="vizRTP" style="position:relative; height:600px; width:900px;">
         <div
@@ -45,6 +48,7 @@
                 ],
                 {
                     pixNb: 1,
+                    cellInfoHTML: c => +c.rp ? "<b>" + c.rp + "</b> road transport performance" : undefined
                 })
 
             .addBackgroundLayer({
