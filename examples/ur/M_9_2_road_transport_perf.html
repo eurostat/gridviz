@@ -7,6 +7,9 @@
 
 <body style="font-family: sans-serif;">
     <h1>Map 9.2 - Road transport performance</h1>
+
+    <p>See <a href="https://ec.europa.eu/regional_policy/en/information/publications/working-papers/2019/road-transport-performance-in-europe">Road transport performance in Europe working paper</a>, European Commission - DG Regional and Urban Policy, 2020.</p>
+
     <div id="vizRTP" style="position:relative; height:600px; width:900px;">
         <div
             style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
@@ -25,7 +28,7 @@
 
         let containerDiv = document.getElementById("vizRTP");
         const app = new gviz.App(containerDiv, { legendDivId: "legendRTP" })
-            .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([40, 7500])
+            .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([60, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
             .addMultiScaleTiledCSVGridLayer(
@@ -33,14 +36,15 @@
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/road_transp_perf/tiled/" + r + "m/",
                 [
                     new gviz.SquareColorWGLStyle({
-                        colorCol: "rp",
-                        color: d3.interpolateOrRd,
-                        //stretching: { fun: "expRev", alpha: -7 }
+                        colorCol: "rp", // pp ra rp
+                        color: d3.interpolateGnBu,
+                        tFun: (v, r, s) => Math.min(v, 100) / 100,
+                        stretching: { fun: "expRev", alpha: 2 }
                     }),
                     new gviz.StrokeStyle({ strokeColorCol: "rp", strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
                 ],
                 {
-                    pixNb: 1.5,
+                    pixNb: 1,
                 })
 
             .addBackgroundLayer({
