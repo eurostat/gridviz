@@ -3,7 +3,7 @@ cat/size legend: center vertically
 - degurba map: Ask confirmation to DG REGIO.
 - CLC map: OK
 - population map: OK
-- road transport perf: do it.
+- road transport perf: >100
 - stripe CLC: aggregate data
 - bivariate maps
 - Data server - test wt? cache?
