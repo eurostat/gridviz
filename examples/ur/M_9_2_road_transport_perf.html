@@ -48,7 +48,8 @@
                 ],
                 {
                     pixNb: 1,
-                    cellInfoHTML: c => +c.rp ? "<b>" + c.rp + "</b> road transport performance" : undefined
+                    cellInfoHTML: c => "<b>" + c.rp + "</b> road transport performance",
+                    preprocess: (c) => c.rp != ""
                 })
 
             .addBackgroundLayer({
