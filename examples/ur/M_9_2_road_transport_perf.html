@@ -18,6 +18,9 @@
     <div id="legendRTP"></div>
 
     <script src="../../build/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         let containerDiv = document.getElementById("vizRTP");
@@ -26,19 +29,18 @@
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
             .addMultiScaleTiledCSVGridLayer(
-                [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/road_transp_perf/tiled/" + r + "m/",
                 [
                     new gviz.SquareColorWGLStyle({
-                        colorCol: year,
+                        colorCol: "rp",
                         color: d3.interpolateOrRd,
-                        stretching: { fun: "expRev", alpha: -7 }
+                        //stretching: { fun: "expRev", alpha: -7 }
                     }),
-                    new gviz.StrokeStyle({ strokeColorCol: year, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
+                    new gviz.StrokeStyle({ strokeColorCol: "rp", strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
                 ],
                 {
-                    pixNb: 1.75,
-                    cellInfoHTML: c => clcLabels[c.clc],
+                    pixNb: 1.5,
                 })
 
             .addBackgroundLayer({
