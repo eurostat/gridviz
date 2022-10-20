@@ -25,23 +25,21 @@
             .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
-            /*/layer
-            app.addMultiScaleTiledCSVGridLayer(
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+            .addMultiScaleTiledCSVGridLayer(
+                [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/road_transp_perf/tiled/" + r + "m/",
                 [
-                    new gviz.ShapeColorSizeStyle({
-                        color: () => "#666",
-                        sizeCol: "2018",
-                        size: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.3),
-                        shape: () => "circle",
-                    })
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: year,
+                        color: d3.interpolateOrRd,
+                        stretching: { fun: "expRev", alpha: -7 }
+                    }),
+                    new gviz.StrokeStyle({ strokeColorCol: year, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
                 ],
                 {
-                    pixNb: 8,
-                    maxZoom: 80,
-                }
-            )*/
+                    pixNb: 1.75,
+                    cellInfoHTML: c => clcLabels[c.clc],
+                })
 
             .addBackgroundLayer({
                 url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
