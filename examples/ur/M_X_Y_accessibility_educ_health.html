@@ -6,7 +6,7 @@
 </head>
 
 <body style="font-family: sans-serif;">
-    <h1>Map 1.4 - Accessibility to education and health services</h1>
+    <h1>Map X.Y - Accessibility to education and health services</h1>
 
     <div id="vizAcc" style="position:relative; height:600px; width:900px;">
 
@@ -88,7 +88,7 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_h + "</b> min. to nearest service<br><b>" + c.TOT_P + "</b> inhabitant(s)"
+                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_h + "</b> min. to nearest service<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s")
                     }
                 )
                 //legend
@@ -124,7 +124,7 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>" + c.TOT_P + "</b> inhabitant(s)"
+                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s")
                     }
                 )
                 //legend
