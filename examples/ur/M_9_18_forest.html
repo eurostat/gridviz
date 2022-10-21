@@ -6,19 +6,9 @@
 </head>
 
 <body style="font-family: sans-serif;">
-    <h1>Map 9.78 - Accessibility to education and health services</h1>
+    <h1>Map 9.18 - Forest</h1>
 
     <div id="vizAcc" style="position:relative; height:600px; width:900px;">
-
-        <div
-            style="font-size: 0.9em; position: absolute; left: 10px; top: 10px; width: auto; height: auto; padding: 5px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey">
-            <input type="radio" name="serv" id="health" value="health" checked>
-            <label for="health">Health</label>
-            <br>
-            <input type="radio" name="serv" id="educ" value="educ">
-            <label for="educ">Primary education</label>
-        </div>
-
         <div
             style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
             <span style="font-size: 0.8em; font-family: sans-serif;"><a href="https://github.com/eurostat/gridviz"
@@ -38,6 +28,29 @@
         const app = new gviz.App(containerDiv, { legendDivId: "legendAcc" })
             .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([40, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+
+            .addMultiScaleTiledCSVGridLayer(
+                [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/clc/tiled/" + r + "m/",
+                [
+                    new gviz.SquareColorCatWGLStyle({
+                        colorCol: "clc",
+                        color: clcColors,
+                        minZoom: 100
+                    }),
+                    new gviz.SideCatStyle({
+                        col: "clc",
+                        color: clcColors,
+                        width: (side, r, z) => z * 3,
+                        fillColor: (c) => clcColors[c.clc] + "55",
+                        maxZoom: 100
+                    }),
+                ],
+                {
+                    pixNb: 1.75,
+                    cellInfoHTML: c => clcLabels[c.clc],
+                })
+
             .addBackgroundLayer({
                 url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
                 resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
@@ -45,108 +58,6 @@
                 filterColor: zf => "#ffffffd3",
             })
 
-        //accessibility dataset
-        ds = app.makeMultiScaleTiledCSVGridDataset(
-            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/" + r + "m/",
-            {
-                preprocess: (c) => c.avg_time_nearest_h != "NA" || c.avg_time_nearest_ep != "NA"
-            }
-        )
-
-
-        //common styles
-        const strokeStyle = new gviz.StrokeStyle({ maxZoom: 70 });
-        const popStyle = new gviz.ShapeColorSizeStyle({
-            color: () => "#000000dd",
-            sizeCol: "TOT_P",
-            size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
-            shape: () => "circle",
-        })
-        popStyle.legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
-
-
-        //
-        const update = () => {
-
-            //get service selection
-            const serv = document.querySelector('input[name="serv"]:checked').value
-
-            //remove layers
-            app.layers = []
-
-            if (serv == "health") {
-                const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
-                app.addLayerFromDataset(
-                    ds,
-                    [
-                        new gviz.SquareColorWGLStyle({
-                            colorCol: "avg_time_nearest_h",
-                            color: d3.interpolateSpectral,
-                            tFun: (v, r, s) => {
-                                if (v === "NA") return
-                                let i = 0
-                                for (let b of breaks) {
-                                    if (+v <= b) break;
-                                    i++
-                                }
-                                return gviz.sPow(1 - (i - 1) / breaks.length, 2)
-                            },
-                        }),
-                        strokeStyle,
-                        popStyle
-                    ],
-                    {
-                        pixNb: 8,
-                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_h + "</b> min. to nearest health service<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s")
-                    }
-                )
-                //legend
-                //TODO add legend with classified colors
-                //lay.styles[0].legends.push(new gviz.ColorLegend({}))
-
-            } else if (serv == "educ") {
-                const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
-                app.addLayerFromDataset(
-                    ds,
-                    [
-                        new gviz.SquareColorWGLStyle({
-                            colorCol: "avg_time_nearest_ep",
-                            color: d3.interpolateSpectral,
-                            tFun: (v, r, s) => {
-                                if (v === "NA") return
-                                let i = 0
-                                for (let b of breaks) {
-                                    if (+v <= b) break;
-                                    i++
-                                }
-                                return gviz.sPow(1 - (i - 1) / breaks.length, 2)
-                            },
-                        }),
-                        strokeStyle,
-                        popStyle
-                    ],
-                    {
-                        pixNb: 8,
-                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest primary education service<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s")
-                    }
-                )
-                //legend
-                //TODO add legend with classified colors
-                //lay.styles[0].legends.push(new gviz.ColorLegend({}))
-
-            }
-
-            //redraw
-            app.cg.redraw();
-        }
-
-        //
-        document.querySelector('#health').addEventListener('change', update)
-        document.querySelector('#educ').addEventListener('change', update)
-
-        //initialise
-        update()
 
     </script>
 
