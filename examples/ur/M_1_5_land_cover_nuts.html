@@ -30,10 +30,13 @@
             .catLabels({ "artif": "Artificial areas", "agri": "Arable land and permanent crop", "past": "Pasture and heterogeneous agricultural areas", "forest": "Forest", "shrub": "Shrub", "open": "Open spaces with little or no vegetation", "water": "Wetlands and water bodies" })
             .catColors({ "artif": "#f22300", "agri": "#ec9c00", "past": "#efde24", "forest": "#45f400", "shrub": "#b1fe26", "open": "#e9eef1", "water": "#8ab6f2" })
             .legend({ x: 10, y: 10, title: "Land cover" })
-        //.legend({x:10, y:150, title: "Animals", boxOpacity: 0.8, boxFill: "white" })
-        //.seaFillStyle("white")
-        .coastalMarginColor("lightgray")
-        //.drawGraticule(true)
+            //.legend({x:10, y:150, title: "Animals", boxOpacity: 0.8, boxFill: "white" })
+            //.seaFillStyle("white")
+            .coastalMarginColor("lightgray")
+            //.drawGraticule(true)
+            .showSourceLink(false)
+            .bordersToShow("eu", "efta")
+            .countriesToShow(["AT", "BE", "BG", "CH", "CY", "CZ", "DE", "DK", "EE", "EL", "ES", "FI", "FR", "HR", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", "ME", "MK", "MT", "NL", "NO", "PL", "PT", "RO", "RS", "SE", "SI", "SK"])
 
         map.insets("default")
 
