@@ -5,7 +5,7 @@ cat/size legend: center vertically
 - road transport perf: >100
 - CLC map grid: OK
 - accessibility health/educ: legend
-- forest M9.18
+- forest M9.18 - background
 
 - CLC map nuts stripes: aggregate data - select country properly
 - bivariate maps
