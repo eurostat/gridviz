@@ -34,14 +34,14 @@
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/forest/tiled/" + r + "m/",
                 [
                     new gviz.SquareColorWGLStyle({
-                        colorCol: "dlt",
+                        colorCol: "tcd",
                         color: d3.interpolateBuGn,
-                        tFun: (v) => v / 2
+                        tFun: (v) => v / 100
                     }),
                     new gviz.StrokeStyle({ strokeColorCol: "tcd", strokeColor: v => +v ? "#666" : "", maxZoom: 10 })
                 ],
                 {
-                    pixNb: 10,
+                    pixNb: 2,
                     cellInfoHTML: c => c.dlt,
                 })
 
