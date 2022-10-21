@@ -26,29 +26,23 @@
 
         let containerDiv = document.getElementById("vizAcc");
         const app = new gviz.App(containerDiv, { legendDivId: "legendAcc" })
-            .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([40, 7500])
+            .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([20, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
             .addMultiScaleTiledCSVGridLayer(
-                [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/clc/tiled/" + r + "m/",
+                [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/forest/tiled/" + r + "m/",
                 [
-                    new gviz.SquareColorCatWGLStyle({
-                        colorCol: "clc",
-                        color: clcColors,
-                        minZoom: 100
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "tcd",
+                        color: d3.interpolateOrRd,
+                        //stretching: { fun: "expRev", alpha: 0 }
                     }),
-                    new gviz.SideCatStyle({
-                        col: "clc",
-                        color: clcColors,
-                        width: (side, r, z) => z * 3,
-                        fillColor: (c) => clcColors[c.clc] + "55",
-                        maxZoom: 100
-                    }),
+                    new gviz.StrokeStyle({ strokeColorCol: year, strokeColor: v => +v ? "#666" : "", maxZoom: 30 })
                 ],
                 {
                     pixNb: 1.75,
-                    cellInfoHTML: c => clcLabels[c.clc],
+                    cellInfoHTML: c => clcLabels[c.tcd],
                 })
 
             .addBackgroundLayer({
