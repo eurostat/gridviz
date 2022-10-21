@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+    <svg id="map"></svg>
+    <script src="https://unpkg.com/eurostat-map"></script>
+    <script>
+        const map = eurostatmap
+            .map("scomp")
+            .title("European livestock composition in 2018")
+            .scale("60M")
+            .zoomExtent([1,2])
+            .nutsLvl(1)
+            .nutsYear(2016)
+            .stripeWidth(12)
+            map.statComp( { eurostatDatasetCode: "agr_r_animal", filters: { unit: "THS_HD", time: "2018" }, unitText: "1000 heads" },
+                "animals",
+                ["A2000", "A2300", "A2400", "A3100", "A4100", "A4200"],
+                ["bovines", "cows", "buffalos", "pigs", "sheeps", "goats"],
+                ["#7fc97f", "#beaed4", "#fdc086", "#ffff99", "#386cb0", "#f0027f"]
+            )
+            .legend({x:10, y:150, title: "Animals", boxOpacity: 0.8, boxFill: "white" })
+            .seaFillStyle("white")
+            .coastalMarginColor("lightgray")
+            .drawGraticule(false)
+
+            if (window.innerWidth > 800) {
+                map.insets("default")
+            } else {
+                // settings for smaller devices
+                map.legend({ boxOpacity: 0.8, boxFill: "white", x: window.innerWidth - 90, y:10 })
+                .titleFontSize(12)
+                .botTxtFontSize(6)
+                .tooltip({fontSize:10})
+                .legend({labelFontSize:9})
+            }
+
+            map.build();
+
+</script>
+</body>
+
+</html>
