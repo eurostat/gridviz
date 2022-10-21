@@ -26,7 +26,7 @@
 
         let containerDiv = document.getElementById("vizAcc");
         const app = new gviz.App(containerDiv, { legendDivId: "legendAcc" })
-            .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([20, 7500])
+            .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([5, 7500])
             .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
             .addMultiScaleTiledCSVGridLayer(
@@ -35,14 +35,14 @@
                 [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "tcd",
-                        color: d3.interpolateOrRd,
-                        //stretching: { fun: "expRev", alpha: 0 }
+                        color: d3.interpolateBuGn,
+                        tFun: (v) => v / 100
                     }),
-                    new gviz.StrokeStyle({ strokeColorCol: year, strokeColor: v => +v ? "#666" : "", maxZoom: 30 })
+                    new gviz.StrokeStyle({ strokeColorCol: "tcd", strokeColor: v => +v ? "#666" : "", maxZoom: 10 })
                 ],
                 {
-                    pixNb: 1.75,
-                    cellInfoHTML: c => clcLabels[c.tcd],
+                    pixNb: 2,
+                    cellInfoHTML: c => c.tcd,
                 })
 
             .addBackgroundLayer({
