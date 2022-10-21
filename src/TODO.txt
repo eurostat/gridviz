@@ -8,8 +8,10 @@ cat/size legend: center vertically
 - bivariate maps
 - Data server - test wt? cache?
 - fix euronym - local names, with accents ?
+- deal with oversea territories ?
 + accessibility grid M9.7/8
 + forest M9.18
+
 
 check links from overview images to doc
 
