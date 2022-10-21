@@ -4,13 +4,15 @@ cat/size legend: center vertically
 - population map: OK
 - road transport perf: >100
 - CLC map grid: OK
-- accessibility grid M9.7/8
+- accessibility health/educ: legend
+- forest M9.18
+
 - CLC map nuts stripes: aggregate data - select country properly
 - bivariate maps
+
 - Data server - test wt? cache?
 - fix euronym - local names, with accents ?
 - deal with oversea territories ?
-- forest M9.18
 
 
 check links from overview images to doc
