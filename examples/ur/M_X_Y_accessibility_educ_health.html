@@ -97,25 +97,41 @@
                 app.layers[0].styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
 
             } else if (serv == "educ") {
-
-                /*/add layer
+                const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
                 app.addLayerFromDataset(
-                    popDataset,
+                    ds,
                     [
-                        new gviz.PillarStyle({
-                            heightCol: year,
-                            //height: (v, r, s, z) => 15 * r * gviz.sPow(v / s.max, 0.7),
-                            height: (v, r, s, z) => 10 * r * gviz.sExpRev(v / s.max, -5),
-                            color: () => col + "aa",
-                            simple: true,
-                            viewHeightFactor: 1,
+                        new gviz.SquareColorWGLStyle({
+                            colorCol: "avg_time_nearest_ep",
+                            color: d3.interpolateSpectral,
+                            tFun: (v, r, s) => {
+                                if (v === "NA") return
+                                let i = 0
+                                for (let b of breaks) {
+                                    if (+v <= b) break;
+                                    i++
+                                }
+                                return gviz.sPow(1 - (i - 1) / breaks.length, 2)
+                            },
+                        }),
+                        new gviz.StrokeStyle({ maxZoom: 80 }),
+                        new gviz.ShapeColorSizeStyle({
+                            color: () => "#000000dd",
+                            sizeCol: "TOT_P",
+                            size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
+                            shape: () => "circle",
                         })
                     ],
                     {
-                        pixNb: 6,
-                        cellInfoHTML: c => +c[year] ? "<b>" + c[year] + "</b> inhabitant" + (+c[year] == 1 ? "" : "s") : undefined
-                    })
-*/
+                        pixNb: 8,
+                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>" + c.TOT_P + "</b> inhabitant(s)"
+                    }
+                )
+                //legend
+                //TODO add legend with classified colors
+                //lay.styles[0].legends.push(new gviz.ColorLegend({}))
+                app.layers[0].styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
+
             }
 
             //redraw
