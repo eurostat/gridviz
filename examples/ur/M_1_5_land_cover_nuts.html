@@ -26,8 +26,9 @@
             .stat("shrub", { csvURL: url, geoCol: "NUTS_ID", valueCol: "shrub" })
             .stat("open", { csvURL: url, geoCol: "NUTS_ID", valueCol: "open" })
             .stat("water", { csvURL: url, geoCol: "NUTS_ID", valueCol: "water" })
+            //https://www.eea.europa.eu/data-and-maps/figures/corine-land-cover-1990-by-country/legend/image_large
             .catLabels({ "artif": "Artificial areas", "agri": "Arable land and permanent crop", "past": "Pasture and heterogeneous agricultural areas", "forest": "Forest", "shrub": "Shrub", "open": "Open spaces with little or no vegetation", "water": "Wetlands and water bodies" })
-            .catColors({ "artif": "red", "agri": "orange", "past": "yellow", "forest": "green", "shrub": "green", "open": "gray", "water": "blue" })
+            .catColors({ "artif": "#f22300", "agri": "#ec9c00", "past": "#efde24", "forest": "#45f400", "shrub": "#b1fe26", "open": "#e9eef1", "water": "#8ab6f2" })
             .legend({ x: 500, y: 10, title: "Land cover" })
         //.legend({x:10, y:150, title: "Animals", boxOpacity: 0.8, boxFill: "white" })
         //.seaFillStyle("white")
