@@ -16,7 +16,7 @@
             <label for="health">Health</label>
             <br>
             <input type="radio" name="serv" id="educ" value="educ">
-            <label for="educ">Education</label>
+            <label for="educ">Primary education</label>
         </div>
 
         <div
@@ -98,7 +98,7 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_h + "</b> min. to nearest service<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s")
+                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_h + "</b> min. to nearest health service<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s")
                     }
                 )
                 //legend
@@ -128,7 +128,7 @@
                     ],
                     {
                         pixNb: 8,
-                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s")
+                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest primary education service<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s")
                     }
                 )
                 //legend
