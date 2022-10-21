@@ -11,11 +11,12 @@
     <script src="https://unpkg.com/eurostat-map"></script>
     <script>
 
-        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/examples/ur/clc_nuts2021_lvl3_2018.csv";
+        const nutsLevel = 3
+        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/examples/ur/clc_nuts2021_lvl"+nutsLevel+"_2018.csv";
 
         //see https://github.com/eurostat/eurostat-map.js/blob/master/docs/reference.md
         const map = eurostatmap.map("scomp")
-            .nutsLvl(3)
+            .nutsLvl(nutsLevel)
             .nutsYear(2021)
             .stripeWidth(10)
             .scale("60M")
@@ -33,6 +34,8 @@
             .legend({ x: 10, y: 10, title: "Land cover" })
             //.legend({x:10, y:150, title: "Animals", boxOpacity: 0.8, boxFill: "white" })
             //.seaFillStyle("white")
+            .cntbnStroke({0:"#777", 1:"#777", 2:"#777", 3:"#777", oth:"none", co:"none"})
+            .nutsbnStroke({0:"#666", 1:"#777", 2:"#777", 3:"#999", oth:"none", co:"#1f78b4"})
             .coastalMarginColor("lightgray")
             //.drawGraticule(true)
             .showSourceLink(false)
