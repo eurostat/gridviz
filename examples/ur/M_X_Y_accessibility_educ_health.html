@@ -49,7 +49,22 @@
         ds = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/" + r + "m/",
+            {
+                preprocess: (c) => c.avg_time_nearest_h != "NA" || c.avg_time_nearest_ep != "NA"
+            }
         )
+
+
+        //common styles
+        const strokeStyle = new gviz.StrokeStyle({ maxZoom: 70 });
+        const popStyle = new gviz.ShapeColorSizeStyle({
+            color: () => "#000000dd",
+            sizeCol: "TOT_P",
+            size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
+            shape: () => "circle",
+        })
+        popStyle.legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
+
 
         //
         const update = () => {
@@ -78,13 +93,8 @@
                                 return gviz.sPow(1 - (i - 1) / breaks.length, 2)
                             },
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 80 }),
-                        new gviz.ShapeColorSizeStyle({
-                            color: () => "#000000dd",
-                            sizeCol: "TOT_P",
-                            size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
-                            shape: () => "circle",
-                        })
+                        strokeStyle,
+                        popStyle
                     ],
                     {
                         pixNb: 8,
@@ -94,7 +104,6 @@
                 //legend
                 //TODO add legend with classified colors
                 //lay.styles[0].legends.push(new gviz.ColorLegend({}))
-                app.layers[0].styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
 
             } else if (serv == "educ") {
                 const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
@@ -114,13 +123,8 @@
                                 return gviz.sPow(1 - (i - 1) / breaks.length, 2)
                             },
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 80 }),
-                        new gviz.ShapeColorSizeStyle({
-                            color: () => "#000000dd",
-                            sizeCol: "TOT_P",
-                            size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
-                            shape: () => "circle",
-                        })
+                        strokeStyle,
+                        popStyle
                     ],
                     {
                         pixNb: 8,
@@ -130,7 +134,6 @@
                 //legend
                 //TODO add legend with classified colors
                 //lay.styles[0].legends.push(new gviz.ColorLegend({}))
-                app.layers[0].styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
 
             }
 
