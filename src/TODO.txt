@@ -4,6 +4,7 @@ cat/size legend: center vertically
 - population map: OK
 - road transport perf: >100
 - CLC map grid: OK
+- CLC map nuts: improve colors. remove unnecessary. Add oversea territories
 - accessibility health/educ: legend
 - forest M9.18 - background
 
