@@ -8,7 +8,20 @@
 <body style="font-family: sans-serif;">
     <h1>Map 9.18 - Forest</h1>
 
+    <p>European forest - <a href="https://land.copernicus.eu/pan-european/high-resolution-layers/forests">Copernicus
+            land monitoring service</a>.</p>
+
     <div id="vizAcc" style="position:relative; height:600px; width:900px;">
+
+        <div
+            style="font-size: 0.9em; position: absolute; left: 10px; top: 10px; width: auto; height: auto; padding: 5px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey">
+            <input type="radio" name="style" id="tcd" value="tcd" checked>
+            <label for="tcd">Tree cover density</label>
+            <br>
+            <input type="radio" name="style" id="dlt" value="dlt">
+            <label for="dlt">Dominant leaf type</label>
+        </div>
+
         <div
             style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
             <span style="font-size: 0.8em; font-family: sans-serif;"><a href="https://github.com/eurostat/gridviz"
@@ -33,16 +46,15 @@
                 [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/forest/tiled/" + r + "m/",
                 [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: "tcd",
-                        color: d3.interpolateBuGn,
-                        tFun: (v) => v / 100
-                    }),
-                    new gviz.StrokeStyle({ strokeColorCol: "tcd", strokeColor: v => +v ? "#666" : "", maxZoom: 10 })
                 ],
                 {
                     pixNb: 2,
-                    cellInfoHTML: c => c.tcd,
+                    cellInfoHTML: c => {
+                        let st = "Tree cover density: <b>" + c.tcd + "%</b>"
+                        if (c.dlt == "1") st += "<br>Mainly broadleaved trees"
+                        if (c.dlt == "2") st += "<br>Mainly coniferous trees"
+                        return st;
+                    },
                 })
 
             .addBackgroundLayer({
@@ -52,6 +64,48 @@
                 filterColor: zf => "#ffffffd3",
             })
 
+
+        //
+        const update = () => {
+
+            //get style selection
+            const style = document.querySelector('input[name="style"]:checked').value
+
+            if (style == "tcd") {
+
+                app.layers[0].styles = [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "tcd",
+                        color: (t) => d3.interpolateBuGn(0.2 + 0.8 * t),
+                        tFun: (v) => v / 100
+                    })
+                ]
+
+            } else if (style == "dlt") {
+
+                app.layers[0].styles = [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "dlt",
+                        color: (t) => {
+                            if (t == 0) return "#ccf24d";
+                            if (t == 1) return "#00a600";
+                            return "#a6e64d";
+                        },
+                        tFun: (v) => v / 2
+                    })
+                ]
+
+            }
+
+            //redraw
+            app.cg.redraw();
+        }
+
+        //
+        document.querySelector('#dlt').addEventListener('change', update)
+        document.querySelector('#tcd').addEventListener('change', update)
+
+        update();
 
     </script>
 
