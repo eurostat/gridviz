@@ -8,11 +8,49 @@
 
 <body>
     <svg id="map"></svg>
+<br>
+    <svg style="height: 200px;">
+        <g style="font-family: Helvetica, Arial, sans-serif;">
+            <rect id="legendBR" rx="7" ry="7" style="fill: white; opacity: 0.8;" x="-1" y="1" width="276.5"
+                height="190"></rect><text x="7" y="22"
+                style="font-size: 15px; font-weight: normal; fill: black;">Land cover</text>
+            <rect x="7" y="29" width="13" height="15" fill="#f22300" stroke="black" stroke-width="0.5"></rect><text
+                x="25" y="36.5" alignment-baseline="middle"
+                style="font-size: 12px; fill: black;">Artificial areas</text>
+            <rect x="7" y="49" width="13" height="15" fill="#ec9c00" stroke="black" stroke-width="0.5"></rect><text
+                x="25" y="56.5" alignment-baseline="middle"
+                style="font-size: 12px; fill: black;">Arable land and
+                permanent crop</text>
+            <rect x="7" y="69" width="13" height="15" fill="#efde24" stroke="black" stroke-width="0.5"></rect><text
+                x="25" y="76.5" alignment-baseline="middle"
+                style="font-size: 12px; fill: black;">Pasture and
+                heterogeneous agricultural areas</text>
+            <rect x="7" y="89" width="13" height="15" fill="#45f400" stroke="black" stroke-width="0.5"></rect><text
+                x="25" y="96.5" alignment-baseline="middle"
+                style="font-size: 12px; fill: black;">Forest</text>
+            <rect x="7" y="109" width="13" height="15" fill="#b1fe26" stroke="black" stroke-width="0.5"></rect><text
+                x="25" y="116.5" alignment-baseline="middle"
+                style="font-size: 12px; fill: black;">Shrub</text>
+            <rect x="7" y="129" width="13" height="15" fill="#e9eef1" stroke="black" stroke-width="0.5"></rect><text
+                x="25" y="136.5" alignment-baseline="middle"
+                style="font-size: 12px; fill: black;">Open spaces with little
+                or no vegetation</text>
+            <rect x="7" y="149" width="13" height="15" fill="#8ab6f2" stroke="black" stroke-width="0.5"></rect><text
+                x="25" y="156.5" alignment-baseline="middle"
+                style="font-size: 12px; fill: black;">Wetlands and water
+                bodies</text>
+            <rect x="7" y="169" width="13" height="15" fill="lightgray" stroke="black" stroke-width="0.5"></rect><text
+                x="25" y="176.5" alignment-baseline="middle"
+                style="font-size: 12px; fill: black;">No data</text>
+        </g>
+    </svg>
+
+
     <script src="https://unpkg.com/eurostat-map"></script>
     <script>
 
         const nutsLevel = 3
-        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/examples/ur/clc_nuts2021_lvl"+nutsLevel+"_2018.csv";
+        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/examples/ur/clc_nuts2021_lvl" + nutsLevel + "_2018.csv";
 
         //see https://github.com/eurostat/eurostat-map.js/blob/master/docs/reference.md
         const map = eurostatmap.map("scomp")
@@ -20,7 +58,7 @@
             .nutsYear(2021)
             .stripeWidth(10)
             .scale("60M")
-            .stripeOrientation(45)
+            //.stripeOrientation(45)
             .stat("artif", { csvURL: url, geoCol: "NUTS_ID", valueCol: "artif" })
             .stat("agri", { csvURL: url, geoCol: "NUTS_ID", valueCol: "agri" })
             .stat("past", { csvURL: url, geoCol: "NUTS_ID", valueCol: "past" })
@@ -31,11 +69,11 @@
             //https://www.eea.europa.eu/data-and-maps/figures/corine-land-cover-1990-by-country/legend/image_large
             .catLabels({ "artif": "Artificial areas", "agri": "Arable land and permanent crop", "past": "Pasture and heterogeneous agricultural areas", "forest": "Forest", "shrub": "Shrub", "open": "Open spaces with little or no vegetation", "water": "Wetlands and water bodies" })
             .catColors({ "artif": "#f22300", "agri": "#ec9c00", "past": "#efde24", "forest": "#45f400", "shrub": "#b1fe26", "open": "#e9eef1", "water": "#8ab6f2" })
-            .legend({ x: 10, y: 10, title: "Land cover" })
-            //.legend({x:10, y:150, title: "Animals", boxOpacity: 0.8, boxFill: "white" })
+            //.legend({ x: 10, y: 10, title: "Land cover" })
+            //.legend({ x: 10, y: 150, title: "Animals", boxOpacity: 0.8, boxFill: "white" })
             //.seaFillStyle("white")
-            .cntbnStroke({0:"#777", 1:"#777", 2:"#777", 3:"#777", oth:"none", co:"none"})
-            .nutsbnStroke({0:"#666", 1:"#777", 2:"#777", 3:"#999", oth:"none", co:"#1f78b4"})
+            .cntbnStroke({ 0: "#777", 1: "#777", 2: "#777", 3: "#777", oth: "none", co: "none" })
+            .nutsbnStroke({ 0: "#666", 1: "#777", 2: "#777", 3: "#999", oth: "none", co: "#1f78b4" })
             .coastalMarginColor("lightgray")
             //.drawGraticule(true)
             .showSourceLink(false)
@@ -60,6 +98,7 @@
         map.build();
 
     </script>
+
 </body>
 
 </html>
