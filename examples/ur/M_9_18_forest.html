@@ -20,6 +20,9 @@
             <br>
             <input type="radio" name="style" id="dlt" value="dlt">
             <label for="dlt">Dominant leaf type</label>
+            <br>
+            <input type="radio" name="style" id="c" value="c">
+            <label for="c">Combined</label>
         </div>
 
         <div
@@ -48,7 +51,6 @@
                 [
                 ],
                 {
-                    pixNb: 2,
                     cellInfoHTML: c => {
                         let st = "Tree cover density: <b>" + c.tcd + "%</b>"
                         if (c.dlt == "1") st += "<br>Mainly broadleaved trees"
@@ -71,20 +73,22 @@
             //get style selection
             const style = document.querySelector('input[name="style"]:checked').value
 
+            const lay = app.layers[0]
+
             if (style == "tcd") {
 
-                app.layers[0].styles = [
+                lay.styles = [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "tcd",
                         color: (t) => d3.interpolateBuGn(0.2 + 0.8 * t),
                         tFun: (v) => v / 100
                     })
                 ]
+                lay.pixNb = 2
 
             } else if (style == "dlt") {
 
-                //TODO circle size/color
-                app.layers[0].styles = [
+                lay.styles = [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "dlt",
                         color: (t) => {
@@ -95,6 +99,14 @@
                         tFun: (v) => v / 2
                     })
                 ]
+                lay.pixNb = 2
+
+            } else if (style == "c") {
+
+                //TODO circle size/color
+                lay.styles = [
+                ]
+                lay.pixNb = 4
 
             }
 
@@ -105,6 +117,7 @@
         //
         document.querySelector('#dlt').addEventListener('change', update)
         document.querySelector('#tcd').addEventListener('change', update)
+        document.querySelector('#c').addEventListener('change', update)
 
         update();
 
