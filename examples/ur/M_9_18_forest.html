@@ -119,7 +119,13 @@
                 lay.pixNb = 1.5
 
                 //set legend
-                //lay.styles[0].legends = [tcdLeg]
+                lay.styles[0].legends = [new gviz.ColorLegend({
+                    title: "Tree cover density",
+                    width: 600,
+                    ticks: 7,
+                    colorRamp: (t) => d3.interpolateBuGn(0.2 + 0.8 * t),
+                    fun: (t, r, s) => 100*t,
+                })]
 
             } else if (style == "dlt") {
 
