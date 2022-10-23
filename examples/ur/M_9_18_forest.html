@@ -117,7 +117,8 @@
                         colorCol: "tcd",
                         color: (t) => d3.interpolateBuGn(0.2 + 0.8 * t),
                         tFun: (v) => v / 100
-                    })
+                    }),
+                    new gviz.StrokeStyle({ strokeColorCol: "dlt", strokeColor: () => "#666", maxZoom: 120 })
                 ]
                 lay.pixNb = 1.5
 
@@ -140,11 +141,12 @@
                             //none
                             if (t == 0) return "#c6df58";
                             //coniferous
-                            if (v == 1) return "#38a43b";
+                            if (t == 1) return "#38a43b";
                             //broad
                             return "#9fd045";
                         },
-                    })
+                    }),
+                    new gviz.StrokeStyle({ strokeColorCol: "dlt", strokeColor: () => "#666", maxZoom: 120 })
                 ]
                 lay.pixNb = 1.5
 
