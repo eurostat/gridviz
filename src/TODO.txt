@@ -7,7 +7,7 @@ cat/size legend: center vertically
 - CLC map grid: OK
 - CLC map nuts: remove unnecessary. Add oversea territories
 - accessibility health/educ: legend
-- forest M9.18 - legend, background
+- forest M9.18 - adjust green color
 
 - CLC map nuts stripes: aggregate data - select country properly
 - bivariate maps
