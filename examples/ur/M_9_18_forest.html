@@ -15,14 +15,14 @@
 
         <div
             style="font-size: 0.9em; position: absolute; left: 10px; top: 10px; width: auto; height: auto; padding: 5px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey">
-            <input type="radio" name="style" id="tcd" value="tcd" checked>
+            <input type="radio" name="style" id="c" value="c" checked>
+            <label for="c">Combined</label>
+            <br>
+            <input type="radio" name="style" id="tcd" value="tcd">
             <label for="tcd">Tree cover density</label>
             <br>
             <input type="radio" name="style" id="dlt" value="dlt">
             <label for="dlt">Dominant leaf type</label>
-            <br>
-            <input type="radio" name="style" id="c" value="c">
-            <label for="c">Combined</label>
         </div>
 
         <div
@@ -96,17 +96,26 @@
                             if (t == 1) return "#00a600";
                             return "#a6e64d";
                         },
-                        tFun: (v) => v / 2
                     })
                 ]
                 lay.pixNb = 2
 
             } else if (style == "c") {
 
-                //TODO circle size/color
                 lay.styles = [
-                ]
-                lay.pixNb = 4
+                new gviz.ShapeColorSizeStyle({
+                        sizeCol: "tcd",
+                        size: (v, r, s, zf) => 1.2 * r * Math.sqrt(v / 100),
+                        colorCol: "dlt",
+                        color: (v) => {
+                            if (v == 0) return "#ccf24d";
+                            if (v == 2) return "#00a600";
+                            return "#a6e64d";
+                        },
+                        shape: () => "circle",
+                    })
+            ]
+                lay.pixNb = 5
 
             }
 
