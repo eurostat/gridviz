@@ -1,3 +1,5 @@
+StrokeStyle - remove unnecessary colorCol property, when color is static
+
 UR maps:
 improve tiff reading speed + missing columns
 cat/size legend: center vertically
