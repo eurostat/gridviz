@@ -67,6 +67,16 @@
                 filterColor: zf => "#ffeeff88",
             })
 
+        //DLT legend
+        const catLeg = new gviz.ColorCategoryLegend({
+            title: "Dominant leaf tree", colCat: [
+                ["#ccf24d", "None"],
+                ["#a6e64d", "Mainly broadleaved"],
+                ["#00a600", "Mainly coniferous"],
+            ],
+            shape: "square",
+        })
+
 
         //
         const update = () => {
@@ -93,6 +103,8 @@
                 ]
                 lay.pixNb = 4.5
 
+                lay.styles[0].legends = [catLeg]
+
             } else if (style == "tcd") {
 
                 lay.styles = [
@@ -117,6 +129,8 @@
                     })
                 ]
                 lay.pixNb = 1.5
+
+                lay.styles[0].legends = [catLeg]
 
             }
 
