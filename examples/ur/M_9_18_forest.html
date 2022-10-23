@@ -68,7 +68,7 @@
             })
 
         //DLT legend
-        const catLeg = new gviz.ColorCategoryLegend({
+        const dltLeg = new gviz.ColorCategoryLegend({
             title: "Dominant leaf tree", colCat: [
                 ["#ccf24d", "None"],
                 ["#a6e64d", "Mainly broadleaved"],
@@ -77,6 +77,8 @@
             shape: "square",
         })
 
+        //TCD legend
+        const tcdLeg = new gviz.SizeLegend({ shape: "circle", labelUnitText: "%", fillColor: "#666d" })
 
         //
         const update = () => {
@@ -88,6 +90,7 @@
 
             if (style == "c") {
 
+                //set style
                 lay.styles = [
                     new gviz.ShapeColorSizeStyle({
                         sizeCol: "tcd",
@@ -103,10 +106,12 @@
                 ]
                 lay.pixNb = 4.5
 
-                lay.styles[0].legends = [catLeg]
+                //set legend
+                lay.styles[0].legends = [dltLeg, tcdLeg]
 
             } else if (style == "tcd") {
 
+                //set style
                 lay.styles = [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "tcd",
@@ -116,8 +121,12 @@
                 ]
                 lay.pixNb = 1.5
 
+                //set legend
+                lay.styles[0].legends = [tcdLeg]
+
             } else if (style == "dlt") {
 
+                //set style
                 lay.styles = [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "dlt",
@@ -130,7 +139,8 @@
                 ]
                 lay.pixNb = 1.5
 
-                lay.styles[0].legends = [catLeg]
+                //set legend
+                lay.styles[0].legends = [dltLeg]
 
             }
 
