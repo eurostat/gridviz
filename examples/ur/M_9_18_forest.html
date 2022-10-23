@@ -70,9 +70,9 @@
         //DLT legend
         const dltLeg = new gviz.ColorCategoryLegend({
             title: "Dominant leaf tree", colCat: [
-                ["#ccf24d", "None"],
-                ["#a6e64d", "Mainly broadleaved"],
-                ["#00a600", "Mainly coniferous"],
+                ["#c6df58", "None"],
+                ["#9fd045", "Mainly broadleaved"],
+                ["#38a43b", "Mainly coniferous"],
             ],
             shape: "square",
         })
@@ -94,9 +94,12 @@
                         size: (v, r, s, zf) => 1.2 * r * Math.sqrt(v / 100),
                         colorCol: "dlt",
                         color: (v) => {
-                            if (v == 0) return "#ccf24d";
-                            if (v == 2) return "#00a600";
-                            return "#a6e64d";
+                            //none
+                            if (v == 0) return "#c6df58";
+                            //coniferous
+                            if (v == 2) return "#38a43b";
+                            //broad
+                            return "#9fd045";
                         },
                         shape: () => "circle",
                     })
@@ -124,7 +127,7 @@
                     width: 600,
                     ticks: 7,
                     colorRamp: (t) => d3.interpolateBuGn(0.2 + 0.8 * t),
-                    fun: (t, r, s) => 100*t,
+                    fun: (t, r, s) => 100 * t,
                 })]
 
             } else if (style == "dlt") {
@@ -134,9 +137,12 @@
                     new gviz.SquareColorWGLStyle({
                         colorCol: "dlt",
                         color: (t) => {
-                            if (t == 0) return "#ccf24d";
-                            if (t == 1) return "#00a600";
-                            return "#a6e64d";
+                            //none
+                            if (t == 0) return "#c6df58";
+                            //coniferous
+                            if (v == 1) return "#38a43b";
+                            //broad
+                            return "#9fd045";
                         },
                     })
                 ]
