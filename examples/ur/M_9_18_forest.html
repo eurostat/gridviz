@@ -77,9 +77,6 @@
             shape: "square",
         })
 
-        //TCD legend
-        const tcdLeg = new gviz.SizeLegend({ shape: "circle", labelUnitText: "%", fillColor: "#666d" })
-
         //
         const update = () => {
 
@@ -107,7 +104,7 @@
                 lay.pixNb = 4.5
 
                 //set legend
-                lay.styles[0].legends = [dltLeg, tcdLeg]
+                lay.styles[0].legends = [dltLeg, new gviz.SizeLegend({ shape: "circle", labelUnitText: "% tree cover", fillColor: "#666d" })]
 
             } else if (style == "tcd") {
 
@@ -122,7 +119,7 @@
                 lay.pixNb = 1.5
 
                 //set legend
-                lay.styles[0].legends = [tcdLeg]
+                //lay.styles[0].legends = [tcdLeg]
 
             } else if (style == "dlt") {
 
