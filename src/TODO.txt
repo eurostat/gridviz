@@ -1,3 +1,4 @@
+15/11 regio WG
 StrokeStyle - remove unnecessary colorCol property, when color is static
 
 UR maps:
