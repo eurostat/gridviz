@@ -3,6 +3,8 @@ StrokeStyle - remove unnecessary colorCol property, when color is static
 UR maps:
 improve tiff reading speed + missing columns
 cat/size legend: center vertically
+- units: change to "persons per km²"
+- coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 - degurba map: Ask confirmation to DG REGIO.
 - population map: OK
 - road transport perf: >100
