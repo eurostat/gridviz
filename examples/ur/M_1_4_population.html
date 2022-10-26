@@ -101,12 +101,12 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => +c[year] ? "<b>" + c[year] + "</b> inhabitant" + (+c[year] == 1 ? "" : "s") : undefined
+                        cellInfoHTML: c => +c[year] ? "<b>" + c[year] + "</b> person" + (+c[year] == 1 ? "" : "s") : undefined
                     })
 
                 //add legend
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
-                    title: "Number of inhabitants",
+                    title: "Number of persons",
                     width: 600,
                     ticks: 7,
                     colorRamp: d3.interpolateOrRd,
@@ -130,7 +130,7 @@
                     ],
                     {
                         pixNb: 6,
-                        cellInfoHTML: c => +c[year] ? "<b>" + c[year] + "</b> inhabitant" + (+c[year] == 1 ? "" : "s") : undefined
+                        cellInfoHTML: c => +c[year] ? "<b>" + c[year] + "</b> person" + (+c[year] == 1 ? "" : "s") : undefined
                     })
 
             } else if (style == "joyplot") {
@@ -147,7 +147,7 @@
                     ],
                     {
                         pixNb: 5,
-                        cellInfoHTML: c => +c[year] ? "<b>" + c[year] + "</b> inhabitant" + (+c[year] == 1 ? "" : "s") : undefined
+                        cellInfoHTML: c => +c[year] ? "<b>" + c[year] + "</b> person" + (+c[year] == 1 ? "" : "s") : undefined
                     })
             }
 
