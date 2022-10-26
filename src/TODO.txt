@@ -1,6 +1,7 @@
 
 UR maps:
 improve tiff reading speed + missing columns
+- bivariate maps
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 - degurba map: Ask confirmation to DG REGIO.
 - population map: OK
@@ -10,9 +11,7 @@ improve tiff reading speed + missing columns
 - accessibility health/educ: legend
 - forest M9.18: OK + 500m resolution
 - Kos border
-
 - CLC map nuts stripes: aggregate data - select country properly
-- bivariate maps
 
 - Data server - test wt? cache?
 - fix euronym - local names, with accents ?
