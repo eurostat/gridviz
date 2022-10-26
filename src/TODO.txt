@@ -1,5 +1,3 @@
-15/11 regio WG
-StrokeStyle - remove unnecessary colorCol property, when color is static
 
 UR maps:
 improve tiff reading speed + missing columns
@@ -34,6 +32,9 @@ https://ec.europa.eu/regional_policy/en/information/publications/working-papers/
 
 
 
+
+
+StrokeStyle - remove unnecessary colorCol property, when color is static
 
 FR: add text: Pour des raisons de confidentialité, ces données ont été modifiées.
 
