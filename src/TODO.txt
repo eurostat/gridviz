@@ -6,7 +6,7 @@ improve tiff reading speed + missing columns
 - road transport perf: >100
 - CLC map grid: OK
 - CLC map nuts stripes: aggregate data ? - select country properly. Add oversea territories
-- bivariate maps
+- bivariate maps: check
 - accessibility health/educ: legend
 - forest M9.18: OK + 500m resolution
 
