@@ -21,14 +21,15 @@
             .scale("60M")
             .nutsLvl(2)
             .nutsYear(2021)
-            .stat("v1", { csvURL: url, geoCol: "NUTS", valueCol: "perc" })
-            .stat("v2", { csvURL: url, geoCol: "NUTS", valueCol: "urt" })
-            //.stat("v1", { eurostatDatasetCode: "demo_r_d3dens", unitText: "inh./km²" })
-            //.stat("v2", { eurostatDatasetCode: "lfst_r_lfu3rt", filters: { age: "Y20-64", sex: "T", unit: "PC", time: 2017 }, unitText: "%" })
+            //.stat("v1", { csvURL: url, geoCol: "NUTS", valueCol: "perc" })
+            //.stat("v2", { csvURL: url, geoCol: "NUTS", valueCol: "urt" })
+            .stat("v1", { eurostatDatasetCode: "demo_r_d3dens", unitText: "inh./km²" })
+            .stat("v2", { eurostatDatasetCode: "lfst_r_lfu3rt", filters: { age: "Y20-64", sex: "T", unit: "PC", time: 2017 }, unitText: "%" })
             .clnb(4)
-            .classToFillStyle((i, j) => {
+            /*.classToFillStyle((i, j) => {
+                console.log(i,j)
                 return "red";
-            })
+            })*/
             //.legend({ boxFill: "none", squareSize: 80, label1: "Unemployment", label2: "Population", x: 10, y: 140, })
             .showSourceLink(false)
             //.seaFillStyle("#d3dee8")
