@@ -3,7 +3,7 @@ UR maps:
 improve tiff reading speed + missing columns
 - bivariate maps
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
-- degurba map: Ask confirmation to DG REGIO.
+- degurba map: OK
 - population map: OK
 - road transport perf: >100
 - CLC map grid: OK
