@@ -16,8 +16,6 @@ improve tiff reading speed + missing columns
 - fix euronym - local names, with accents ? filter by country code ?
 - deal with oversea territories ?
 
-cat/size legend: center vertically
-
 make own background - with low resolution
 https://land.copernicus.eu/imagery-in-situ/eu-dem/eu-dem-v1-0-and-derived-products/hillshade?tab=download
 or... https://sdi.eea.europa.eu/data/e2cac092-4cbf-4765-a06e-0271f382d4a4?path=%2Ftiles
@@ -26,6 +24,7 @@ TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/fores
 https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
 https://ec.europa.eu/regional_policy/en/information/publications/working-papers/2022/passenger-rail-performance-in-europe-regional-and-territorial-accessibility-indicators-for-passenger-rail
 
+cat/size legend: center vertically
 
 
 
