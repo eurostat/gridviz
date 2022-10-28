@@ -116,7 +116,7 @@ const degurbaColors = {
                                                     "Unknown");
                     const out = []
                     //if (+c.uc) out.push(c.uc + " large city cell" + (+c.uc == 1 ? "" : "s") + "<br>")
-                    if (+c.uc + +c.du) out.push((c.uc + c.du) + " city cell" + (+c.uc + c.du == 1 ? "" : "s") + "<br>")
+                    if (+c.uc + +c.du) out.push((+c.uc + +c.du) + " city cell" + (+c.uc + +c.du == 1 ? "" : "s") + "<br>")
                     if (+c.sbu) out.push(c.sbu + " suburb cell" + (+c.sbu == 1 ? "" : "s") + "<br>")
                     if (+c.sdu) out.push(c.sdu + " town cell" + (+c.sdu == 1 ? "" : "s") + "<br>")
                     if (+c.r) out.push(c.r + " village cell" + (+c.r == 1 ? "" : "s") + "<br>")
