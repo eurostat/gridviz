@@ -172,6 +172,8 @@
             } else if (layCode === "popChange") {
 
                 //TODO
+                const yIni = document.querySelector('#pcyIni').value
+                const yFin = document.querySelector('#pcyFin').value
 
                 app.addLayerFromDataset(
                     ds.pop,
@@ -511,13 +513,14 @@
         //layer selection change
         document.querySelector('#layer').addEventListener('change', function () {
             const layCode = document.querySelector('input[name="layer"]:checked').value
-            console.log(document.querySelector('#pcyIni').disable)
             if(layCode == "popChange") {
                 //enable years lists
-                //TODO
+                document.querySelector('#pcyIni').disabled = false
+                document.querySelector('#pcyFin').disabled = false
             } else {
                 //disable years lists
-                //TODO
+                document.querySelector('#pcyIni').disabled = true
+                document.querySelector('#pcyFin').disabled = true
             }
 
             update();
