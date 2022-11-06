@@ -1,5 +1,6 @@
 EUR
-
+add forest + road transport perf + others. internet ?
+degurba: upgrade from UR
 
 UR maps:
 improve tiff reading speed + missing columns
