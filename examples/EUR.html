@@ -43,13 +43,16 @@
                 <br>
                 <span style="font-size: 1.25em; font-weight: bold;">Accessibility</span>
                 <br>
+                <input type="radio" name="layer" id="rtp" value="rtp">
+                <label for="rtp">Road transport performance</label>
+                <br>
                 <input type="radio" name="layer" id="accHealth" value="accHealth">
                 <label for="accHealth">Healthcare services</label>
                 <br>
                 <input type="radio" name="layer" id="accEducPrim" value="accEducPrim">
                 <label for="accEducPrim">Primary schools</label>
                 <br>
-                <span style="font-size: 1.25em; font-weight: bold;">Other</span>
+                <span style="font-size: 1.25em; font-weight: bold;">Nature & topography</span>
                 <br>
                 <input type="radio" name="layer" id="lc" value="lc">
                 <label for="lc">Land cover</label>
@@ -124,6 +127,12 @@
         ds.acc = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/accessibility/tiled/" + r + "m/",
+        )
+
+        //road transp perf dataset
+        ds.rtp = app.makeMultiScaleTiledCSVGridDataset(
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/road_transp_perf/tiled/" + r + "m/",
         )
 
         //degurba dataset
@@ -310,8 +319,11 @@
                 //TODO add legend with classified colors
 
 
-                //accessibility
+                //road transport performence
+            } else if (layCode === "rtp") {
 
+
+                //accessibility
             } else if (layCode === "accHealth") {
                 const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
                 app.addLayerFromDataset(
