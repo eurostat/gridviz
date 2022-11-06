@@ -322,6 +322,33 @@
                 //road transport performence
             } else if (layCode === "rtp") {
 
+                app.addLayerFromDataset(
+                    ds.rtp,
+                    [
+                        new gviz.SquareColorWGLStyle({
+                            colorCol: "rp", // pp ra rp
+                            color: d3.interpolateGnBu,
+                            tFun: (v, r, s) => Math.min(v, 100) / 100,
+                            stretching: { fun: "expRev", alpha: 2 },
+                        }),
+                        new gviz.StrokeStyle({ strokeColorCol: "rp", strokeColor: v => +v ? "#666" : "", maxZoom: 100 })
+                    ],
+                    {
+                        pixNb: 1,
+                        cellInfoHTML: c => "<b>" + c.rp + "</b> road transport performance",
+                        preprocess: (c) => c.rp != ""
+                    }
+                )
+
+                //legend
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
+                    title: "Road transport performance",
+                    width: 300,
+                    ticks: 9,
+                    colorRamp: d3.interpolateGnBu,
+                    fun: (t, r, s) => 100 * gviz.sExpRevInverse(t, 2),
+                }))
+
 
                 //accessibility
             } else if (layCode === "accHealth") {

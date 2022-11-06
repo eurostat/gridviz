@@ -1,6 +1,6 @@
 EUR
 population - style dropdown
-add road transport perf + others. internet ?
+add others layers. internet ?
 degurba: upgrade from UR
 
 UR maps:
