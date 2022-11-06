@@ -31,11 +31,18 @@
                 <input type="radio" name="layer" id="y2006" value="y2006">
                 <label for="y2006">2006</label>
                 <br>
-                <input type="radio" name="layer" id="d11_18" value="d11_18">
-                <label for="d11_18">Change 2011 to 2018</label>
-                <br>
-                <input type="radio" name="layer" id="d06_11" value="d06_11">
-                <label for="d06_11">Change 2006 to 2011</label>
+                <input type="radio" name="layer" id="popChange" value="popChange">
+                <label for="popChange">Change</label> from
+                <select id="pcyIni">
+                    <option value="2006" selected>2006</option>
+                    <option value="2011">2011</option>
+                    <option value="2018">2018</option>
+                </select> to
+                <select id="pcyFin">
+                    <option value="2006">2006</option>
+                    <option value="2011">2011</option>
+                    <option value="2018" selected>2018</option>
+                </select>
                 <br>
                 <input type="radio" name="layer" id="degurba" value="degurba">
                 <label for="degurba">Degree of urbanisation</label>
@@ -162,7 +169,10 @@
                 //legend
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 5, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, 7) }))
 
-            } else if (layCode === "d06_11" || layCode === "d11_18") {
+            } else if (layCode === "popChange") {
+
+                //TODO
+
                 app.addLayerFromDataset(
                     ds.pop,
                     [
@@ -499,7 +509,9 @@
         }
 
         //layer selector
-        document.querySelector('#layer').addEventListener('change', update)
+        document.querySelector('#layer').addEventListener('change', function () {
+            update();
+        })
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
