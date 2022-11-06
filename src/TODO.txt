@@ -1,5 +1,5 @@
 EUR
-add forest + road transport perf + others. internet ?
+add road transport perf + others. internet ?
 degurba: upgrade from UR
 
 UR maps:
