@@ -33,12 +33,12 @@
                 <br>
                 <input type="radio" name="layer" id="popChange" value="popChange">
                 <label for="popChange">Change</label> from
-                <select id="pcyIni">
+                <select id="pcyIni" disabled>
                     <option value="2006" selected>2006</option>
                     <option value="2011">2011</option>
                     <option value="2018">2018</option>
                 </select> to
-                <select id="pcyFin">
+                <select id="pcyFin" disabled>
                     <option value="2006">2006</option>
                     <option value="2011">2011</option>
                     <option value="2018" selected>2018</option>
@@ -512,6 +512,10 @@
         document.querySelector('#layer').addEventListener('change', function () {
             update();
         })
+
+        //years - population change
+        document.querySelector('#pcyIni').addEventListener('change', update)
+        document.querySelector('#pcyFin').addEventListener('change', update)
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
