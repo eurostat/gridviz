@@ -97,16 +97,22 @@
             {
                 preprocess: c => {
                     //prepare 2011 -> 2018 change data
-                    if (!c["2011"] && !c["2018"]) c.d11_18 = 0
-                    else if (!c["2011"] && c["2018"]) c.d11_18 = + c["2018"]
-                    else if (c["2011"] && !c["2018"]) c.d11_18 = - c["2011"]
+                    if (!c["2011"] && !c["2018"]) c.d2011_2018 = 0
+                    else if (!c["2011"] && c["2018"]) c.d2011_2018 = + c["2018"]
+                    else if (c["2011"] && !c["2018"]) c.d2011_2018 = - c["2011"]
                     else c.d2011_2018 = c["2018"] - c["2011"]
 
                     //prepare 2006 -> 2011 change data
-                    if (!c["2006"] && !c["2011"]) c.d06_11 = 0
-                    else if (!c["2006"] && c["2011"]) c.d06_11 = +c["2011"]
-                    else if (c["2006"] && !c["2011"]) c.d06_11 = - c["2006"]
+                    if (!c["2006"] && !c["2011"]) c.d2006_2011 = 0
+                    else if (!c["2006"] && c["2011"]) c.d2006_2011 = +c["2011"]
+                    else if (c["2006"] && !c["2011"]) c.d2006_2011 = - c["2006"]
                     else c.d2006_2011 = c["2011"] - c["2006"]
+
+                    //prepare 2006 -> 2018 change data
+                    if (!c["2006"] && !c["2018"]) c.d2006_2018 = 0
+                    else if (!c["2006"] && c["2018"]) c.d2006_2018 = +c["2018"]
+                    else if (c["2006"] && !c["2018"]) c.d2006_2018 = - c["2006"]
+                    else c.d2006_2018 = c["2018"] - c["2006"]
                 }
             }
         )
@@ -174,46 +180,47 @@
 
             } else if (layCode === "popChange") {
 
-                //TODO
-
                 //
                 const yIni = document.querySelector('#pcyIni').value
                 const yFin = document.querySelector('#pcyFin').value
-                const layCode_ = "d" + yIni + "_" + yFin
+                if (yIni != yFin) {
+                    const layCode_ = "d" + yIni + "_" + yFin
 
-                app.addLayerFromDataset(
-                    ds.pop,
-                    [
-                        new gviz.ShapeColorSizeStyle({
-                            colorCol: layCode_,
-                            color: (v, r, s) => {
-                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                const t = Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2) / 2 + 0.5
-                                return d3.interpolateSpectral(1 - t);
-                            },
-                            shape: () => "square",
-                        }),
-                        new gviz.StrokeStyle({ maxZoom: 80 })
-                    ],
-                    {
-                        pixNb: 2,
-                        cellInfoHTML: c => (
-                            "2011: " + c["2011"] + "<br>2018: " + c["2018"]
-                        )
-                            + "<br>"
-                            + "<b>" + (c[layCode_] == 0 ? "No change" : (c[layCode_] > 0 ? "+" : "") + c[layCode_] + " inhabitants") + "</b>"
-                    }
-                )
-                //legend
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
-                        title: "Population change", ticks: 5, colorRamp: d3.interpolateSpectral, invert: true,
-                        fun: (t, r, s) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
+                    app.addLayerFromDataset(
+                        ds.pop,
+                        [
+                            new gviz.ShapeColorSizeStyle({
+                                colorCol: layCode_,
+                                color: (v, r, s) => {
+                                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                    const t = Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2) / 2 + 0.5
+                                    return d3.interpolateSpectral(1 - t);
+                                },
+                                shape: () => "square",
+                            }),
+                            new gviz.StrokeStyle({ maxZoom: 80 })
+                        ],
+                        {
+                            pixNb: 2,
+                            cellInfoHTML: c => (
+                                "2011: " + c["2011"] + "<br>2018: " + c["2018"]
+                            )
+                                + "<br>"
+                                + "<b>" + (c[layCode_] == 0 ? "No change" : (c[layCode_] > 0 ? "+" : "") + c[layCode_] + " inhabitants") + "</b>"
                         }
-                    })
-                )
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorLegend({
+                            title: "Population change", ticks: 5, colorRamp: d3.interpolateSpectral, invert: true,
+                            fun: (t, r, s) => {
+                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
+                            }
+                        })
+                    )
+
+                }
 
 
                 //urbanisation
