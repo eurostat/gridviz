@@ -1,7 +1,6 @@
 EUR
 population - style dropdown
 add others layers. internet ?
-degurba: upgrade from UR
 
 UR maps:
 improve tiff reading speed + missing columns
@@ -11,7 +10,7 @@ improve tiff reading speed + missing columns
 - CLC map grid: OK
 - CLC map nuts stripes: aggregate data ? - select country properly. Add oversea territories
 - bivariate maps: check
-- accessibility health/educ: legend
+- accessibility health/educ: legend + exclude CH, etc.
 - forest M9.18: OK + 500m resolution
 
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
