@@ -54,6 +54,9 @@
                 <input type="radio" name="layer" id="lc" value="lc">
                 <label for="lc">Land cover</label>
                 <br>
+                <input type="radio" name="layer" id="forest" value="forest">
+                <label for="forest">Forest</label>
+                <br>
                 <input type="radio" name="layer" id="elevation" value="elevation">
                 <label for="elevation">Elevation</label>
                 <br>
@@ -136,16 +139,22 @@
             }
         )
 
-        //elevation dataset
-        ds.ele = app.makeMultiScaleTiledCSVGridDataset(
-            [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/elevation/tiled/" + r + "m/",
-        )
-
         //land cover dataset
         ds.lc = app.makeMultiScaleTiledCSVGridDataset(
             [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/clc/tiled/" + r + "m/",
+        )
+
+        //forest dataset
+        ds.forest = app.makeMultiScaleTiledCSVGridDataset(
+            [/*100, 200, 500,*/ 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/forest/tiled/" + r + "m/",
+        )
+
+        //elevation dataset
+        ds.ele = app.makeMultiScaleTiledCSVGridDataset(
+            [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/elevation/tiled/" + r + "m/",
         )
 
         //
@@ -375,23 +384,6 @@
                 //lay.styles[0].legends.push(new gviz.ColorLegend({}))
                 app.layers[0].styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
 
-            } else if (layCode === "elevation") {
-
-                app.addLayerFromDataset(
-                    ds.ele,
-                    gviz.TanakaStyle.get("elevation", {
-                        nb: 10,
-                        //color: d3.interpolateCubehelixDefault,
-                        color: d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"]),
-                        widthFactor: 0.15,
-                        tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
-                    }),
-                    {
-                        pixNb: 3,
-                        cellInfoHTML: c => "<b>" + c.elevation + "</b> m"
-                    }
-                )
-
             } else if (layCode === "lc") {
 
                 const clcColors = {
@@ -509,6 +501,77 @@
                     {
                         pixNb: 1.75,
                         cellInfoHTML: c => clcLabels[c.clc],
+                    }
+                )
+
+
+                //forest
+            } else if (layCode === "forest") {
+
+                app.addLayerFromDataset(
+                    ds.forest,
+                    [
+                        new gviz.ShapeColorSizeStyle({
+                            sizeCol: "tcd",
+                            size: (v, r, s, zf) => 1.2 * r * Math.sqrt(v / 100),
+                            colorCol: "dlt",
+                            color: (v) => {
+                                //none
+                                if (v == 0) return "#c6df58";
+                                //coniferous
+                                if (v == 2) return "#38a43b";
+                                //broad
+                                return "#9fd045";
+                            },
+                            shape: () => "circle",
+                        }),
+                        new gviz.StrokeStyle({
+                            sizeCol: "tcd",
+                            size: (v, r, s, zf) => 1.2 * r * Math.sqrt(v / 100),
+                            strokeColor: () => "#006600",
+                            strokeWidth: (v, r, s, z) => 0.3 * z,
+                            shape: () => "circle"
+                        })
+                    ],
+                    {
+                        pixNb: 6,
+                        cellInfoHTML: c => {
+                            let st = "Tree cover density: <b>" + c.tcd + "%</b>"
+                            if (c.dlt == "1") st += "<br>Mainly broadleaved trees"
+                            if (c.dlt == "2") st += "<br>Mainly coniferous trees"
+                            return st;
+                        },
+                    }
+                )
+
+                //legend
+                app.layers[0].styles[0].legends = [
+                    new gviz.ColorCategoryLegend({
+                        title: "Dominant leaf tree", colCat: [
+                            ["#c6df58", "None"],
+                            ["#9fd045", "Mainly broadleaved"],
+                            ["#38a43b", "Mainly coniferous"],
+                        ],
+                        shape: "square",
+                    }),
+                    new gviz.SizeLegend({ shape: "circle", labelUnitText: "% tree cover density", fillColor: "#666d" })
+                ]
+
+
+            } else if (layCode === "elevation") {
+
+                app.addLayerFromDataset(
+                    ds.ele,
+                    gviz.TanakaStyle.get("elevation", {
+                        nb: 10,
+                        //color: d3.interpolateCubehelixDefault,
+                        color: d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"]),
+                        widthFactor: 0.15,
+                        tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
+                    }),
+                    {
+                        pixNb: 3,
+                        cellInfoHTML: c => "<b>" + c.elevation + "</b> m"
                     }
                 )
 
