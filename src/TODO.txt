@@ -1,4 +1,5 @@
 EUR
+population - style dropdown
 add road transport perf + others. internet ?
 degurba: upgrade from UR
 
