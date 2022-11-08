@@ -53,7 +53,7 @@ import { GeoCanvas } from "./GeoCanvas"
 
 /**
  * Returns label layer from Eurostat, for ETRS89-LAEA grids.
- * From dataset: https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/euronymes.csv
+ * From Euronym data: https://github.com/eurostat/euronym
  * 
  * @returns {object}
  */
@@ -75,7 +75,7 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
         lb.x = p[0]; lb.y = p[1];
         delete lb.lon; delete lb.lat;
     }
-    opts.url = "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v1/" + res + "/" + cc + ".csv";
+    opts.url = "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v2/UTF/" + res + "/" + cc + ".csv";
     return opts
 }
 

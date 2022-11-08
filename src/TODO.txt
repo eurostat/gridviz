@@ -1,9 +1,10 @@
-EUR
-population - style dropdown
-add others layers. internet ?
+
+- fix euronym - local names, with accents ? Add country code. Document. filter by country code ?
+
 
 UR maps:
 improve tiff reading speed + missing columns
+- forest M9.18: remove coastal high values + 500m resolution
 - degurba map: OK
 - population map: OK
 - road transport perf: >100
@@ -11,12 +12,10 @@ improve tiff reading speed + missing columns
 - CLC map nuts stripes: aggregate data ? - select country properly. Add oversea territories
 - bivariate maps: check
 - accessibility health/educ: legend + exclude CH, etc.
-- forest M9.18: OK + 500m resolution
 
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 - Kos border
 - Data server - test wt? cache?
-- fix euronym - local names, with accents ? filter by country code ?
 - deal with oversea territories ?
 
 make own background - with low resolution
@@ -44,6 +43,9 @@ formatDefaultLocale({
 
 
 StrokeStyle - remove unnecessary colorCol property, when color is static
+
+EUR: population - style dropdown
+EUR: Add others layers. internet? Farm? Other copernicus?
 
 FR: add text: Pour des raisons de confidentialité, ces données ont été modifiées.
 
