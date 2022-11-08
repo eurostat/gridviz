@@ -20,7 +20,7 @@
         const proj = d3.geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]);
 
         new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4300000, y: 2900000 }).setZoomFactor(1000)
+            .setGeoCenter({ x: 4700000, y: 2800000 }).setZoomFactor(1000)
             .setBackgroundColor("#eee")
             .addBackgroundLayer({
                 url: "https://gisco-services.ec.europa.eu/maps/tiles/NaturalEarth/EPSG3035/",
@@ -38,11 +38,13 @@
                     delete lb.lon; delete lb.lat;
                 },
                 style: (lb, zf) => {
-                    if (lb.rs < zf) return;
-                    if (lb.r1 < zf) return "1em Arial";
+                    if (lb.rs < 0.9*zf) return;
+                    if (lb.r1 < 0.9*zf) return "1em Arial";
                     return "1.5em Arial";
+                    //if (lb.rs < 0.35*zf) return;
+                    //return "1.25em Arial";
                 },
-                haloColor: ()=> "white"
+                haloColor: ()=> "white",
             })
             .redraw()
 
