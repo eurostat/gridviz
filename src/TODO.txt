@@ -1,4 +1,5 @@
 
+TODO test new euronym
 - fix euronym - local names, with accents ? Add country code. Document. filter by country code ?
 
 
