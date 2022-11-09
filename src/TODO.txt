@@ -1,18 +1,23 @@
 
-TODO test new euronym
-- fix euronym - local names, with accents ? Add country code. Document. filter by country code ?
+TODO use new euronym - filter by country code ?
+expose all URLs
 
+- check how links open in SE - do the same for all in maps.
+- svalbard north
+- legend thousand separator.
+- Legend rounding
+- bivariate legend: typologies + threshold values. Show notes and sources below the map.
 
 UR maps:
 improve tiff reading speed + missing columns
-- forest M9.18: remove coastal high values + 500m resolution
-- degurba map: OK
-- population map: OK
+- forest M9.18: size: Remain fix.remove coastal high values + 500m resolution
+- degurba map: revers town/suburb in legend
+- population map: 1km to 1km²
 - road transport perf: >100
 - CLC map grid: OK
 - CLC map nuts stripes: aggregate data ? - select country properly. Add oversea territories
 - bivariate maps: check
-- accessibility health/educ: legend + exclude CH, etc.
+- accessibility health/educ: legend + exclude CH, etc. Inhabitants instead of Inhab.
 
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 - Kos border
