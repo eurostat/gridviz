@@ -13,7 +13,7 @@ improve tiff reading speed + missing columns
 - CLC map grid: OK
 - CLC map nuts stripes: aggregate data ? - select country properly. Add oversea territories
 - bivariate maps: check
-- accessibility health/educ: legend + exclude CH, etc. (data on pcloud) Inhabitants instead of Inhab.
+- accessibility health/educ: legend + exclude CH, etc. (data on pcloud).
 
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 - Kos border
