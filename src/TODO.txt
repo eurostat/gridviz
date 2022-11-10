@@ -1,6 +1,6 @@
 
-TODO use new euronym - filter by country code ?
 expose all URLs
+TODO use new euronym - filter by country code ?
 
 - check how links open in SE - do the same for all in maps.
 - svalbard north
