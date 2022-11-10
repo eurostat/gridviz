@@ -1,7 +1,5 @@
-TODO use new euronym - filter by country code ?
 - expose all URLs
 - check how links open in SE - do the same for all in maps.
-- svalbard north
 - legend thousand separator.
 - Legend rounding
 - bivariate legend: typologies + threshold values. Show notes and sources below the map.
@@ -9,7 +7,7 @@ TODO use new euronym - filter by country code ?
 UR maps:
 improve tiff reading speed + missing columns
 - forest M9.18: size: Remain fix.remove coastal high values + 500m resolution
-- degurba map: revers town/suburb in legend
+- degurba map: OK
 - population map: 1km to 1km²
 - road transport perf: >100
 - CLC map grid: OK

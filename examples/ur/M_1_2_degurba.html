@@ -30,7 +30,7 @@
     <script src="../../build/gridviz.js"></script>
     <script>
 
-        const degurbaColors = {
+        /*const degurbaColors = {
             "uc": "#ff0202", //Cities
             "du": "#ff0202", //Cities
             "sbu": "#ffff00", //Suburbs
@@ -39,9 +39,9 @@
             "lr": "#abcd66", //Dispersed rural areas
             "vlr": "#cdf57a", //Mostly uninhabited areas
             "NA": "gray",
-        }
+        }*/
 
-        /*const degurbaColors = {
+        const degurbaColors = {
             "uc": "#286eb4", //"#d53e4f", //Cities
             "du": "#286eb4", //"#f46d43", //Cities
             "sbu": "#c87e04", //"#fee08b", //Suburbs
@@ -50,7 +50,7 @@
             "lr": "#9dd58a", //"#abdda4", //Dispersed rural areas
             "vlr": "#c2d5bc", //"#66c2a5", //Mostly uninhabited areas
             "NA": "gray",
-        }*/
+        }
 
         let containerDiv = document.getElementById("vizDegurba");
         const app = new gviz.App(containerDiv, { legendDivId: "legendDegurba" })
@@ -153,18 +153,18 @@
         //degurba legend
         const catLeg = new gviz.ColorCategoryLegend({
             title: "Degree of urbanisation", colCat: [
-                /*["#286eb4", "City"],
-                ["#c87e04", "Suburb"],
+                ["#286eb4", "City"],
                 ["#fcc974", "Town"],
+                ["#c87e04", "Suburb"],
                 ["#468631", "Village"],
                 ["#9dd58a", "Dispersed rural"],
-                ["#c2d5bc", "Mostly uninhabited"],*/
-                ["#ff0202", "City"],
-                ["#ffff00", "Suburb"],
+                ["#c2d5bc", "Mostly uninhabited"],
+                /*["#ff0202", "City"],
                 ["#a87000", "Town"],
+                ["#ffff00", "Suburb"],
                 ["#375623", "Village"],
                 ["#abcd66", "Dispersed rural"],
-                ["#cdf57a", "Mostly uninhabited"],
+                ["#cdf57a", "Mostly uninhabited"],*/
             ],
             shape: "square",
         })
