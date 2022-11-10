@@ -30,7 +30,7 @@
     <script src="../../build/gridviz.js"></script>
     <script>
 
-const degurbaColors = {
+        const degurbaColors = {
             "uc": "#ff0202", //Cities
             "du": "#ff0202", //Cities
             "sbu": "#ffff00", //Suburbs
@@ -55,7 +55,11 @@ const degurbaColors = {
         let containerDiv = document.getElementById("vizDegurba");
         const app = new gviz.App(containerDiv, { legendDivId: "legendDegurba" })
             .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([40, 7500])
-            .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+            .setLabelLayer(
+                gviz.getEuronymeLabelLayer("EUR", 50, {
+                    ccOut: ["DE"]
+                })
+            ).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
 
         //population layer
