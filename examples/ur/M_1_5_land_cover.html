@@ -6,8 +6,8 @@
 </head>
 
 <body style="font-family: sans-serif;">
-    <h1>Land cover (grid)</h1>
-    <p>Source: <a href="https://land.copernicus.eu/pan-european/corine-land-cover">CORINE Land Cover 2018</a></p>
+    <h1>Land cover</h1>
+
     <div id="vizLC" style="position:relative; height:600px; width:900px;">
         <div
             style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
@@ -167,7 +167,7 @@
             })
 
 
-        //legend
+        /*/legend
 
         //prepare legend data
         const legData = []
@@ -184,7 +184,7 @@
         //make legend and link to styles
         const catLeg = new gviz.ColorCategoryLegend({ title: "Land cover", colCat: legData, shape: "square", })
         app.layers[0].styles[0].legends.push(catLeg)
-        app.layers[0].styles[1].legends.push(catLeg)
+        app.layers[0].styles[1].legends.push(catLeg)*/
 
 
     </script>
