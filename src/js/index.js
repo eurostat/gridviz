@@ -70,6 +70,10 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
     //ETRS89-LAEA projection
     opts.proj = opts.proj || geoAzimuthalEqualArea().rotate([-10, -52]).reflectX(false).reflectY(true).scale(6378137).translate([4321000, 3210000]);
     opts.preprocess = lb => {
+
+        //exclude countries
+        if(opts.ccOut && lb.cc && opts.ccOut.includes(lb.cc)) return false;
+
         //project from geo coordinates to ETRS89-LAEA
         const p = opts.proj([lb.lon, lb.lat])
         lb.x = p[0]; lb.y = p[1];
