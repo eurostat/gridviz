@@ -737,7 +737,7 @@ The **setLabelLayer** method has the following parameters:
 | **haloWidth**   | function(lb,zf):string   |  () => 4 | A function returning the halo width of the label **lb** for zoom factor **zf**. |
 | **textAlign**   |  CanvasTextAlign  | "start"  | The anchor where to write the label, from its _(x,y)_ position. See HTML-canvas textAlign property. |
 | **offsetPix**   |  Array(number)  |  [5, 5] | Offset displacement for each label position, in pixel. |
-| **preprocess**   |  function(lb):void  | undefined  | A preprocess to run on each label after loading. It can be used to apply some specific treatment before, format the label data, project coordinates, etc. |
+| **preprocess**   |  function(lb):boolean  | undefined  | A preprocess to run on each label after loading. It can be used to apply some specific treatment before, format the label data, project coordinates, etc. This method may also be used to filter unecessary label by returning *false* for the labels not to keep.  |
 
 For more information, [see the code](../src/js/LabelLayer.js).
 

@@ -64,8 +64,9 @@ export class LabelLayer {
         /** 
          * A preprocess to run on each label after loading.
          * It can be used to apply some specific treatment before, format the label data, project coordinates, etc.
+         * Return false if the label should not be kept.
          * @private
-         * @type {function(Label):void} */
+         * @type {function(Label):boolean} */
         this.preprocess = opts.preprocess
 
         /** 
@@ -166,13 +167,18 @@ export class LabelLayer {
                     /** @param {Array.<object>} data */
                     (data) => {
 
-                        //apply preprocess, if any
-                        if (this.preprocess)
-                            for (const lb of data)
-                                this.preprocess(lb)
-
-                        //store labels
-                        this.labels = data;
+                        //preprocess/filter
+                        if (this.preprocess) {
+                            this.labels = [];
+                            for (const c of data) {
+                                const b = this.preprocess(c)
+                                if (b == false) continue;
+                                this.labels.push(c)
+                            }
+                        } else {
+                            //store labels
+                            this.labels = data;
+                        }
 
                         this.loadingStatus = "loaded"
 
