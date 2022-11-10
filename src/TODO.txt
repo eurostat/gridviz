@@ -1,4 +1,5 @@
 - handle title - metadata
+- reuse style
 - expose all URLs
 - check how links open in SE - do the same for all in maps.
 - legend thousand separator.
