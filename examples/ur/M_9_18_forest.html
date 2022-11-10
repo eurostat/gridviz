@@ -49,7 +49,11 @@
         let containerDiv = document.getElementById("vizAcc");
         const app = new gviz.App(containerDiv, { legendDivId: "legendAcc" })
             .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([50, 7500])
-            .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+            .setLabelLayer(
+                gviz.getEuronymeLabelLayer("EUR", 50, {
+                    ccIn: ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "PL", "PT", "MT", "NL", "RO", "SE", "SK", "SI", "CH", "IS", "NO", "LI", "RS", "XK", "AL", "TR", "ME", "MK"]
+                })
+            ).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
             .addMultiScaleTiledCSVGridLayer(
                 [/*100, 200, 500,*/ 1000, 2000, 5000, 10000, 20000, 50000, 100000],

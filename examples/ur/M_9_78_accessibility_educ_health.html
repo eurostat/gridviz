@@ -44,7 +44,11 @@
         let containerDiv = document.getElementById("vizAcc");
         const app = new gviz.App(containerDiv, { legendDivId: "legendAcc" })
             .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([40, 7500])
-            .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+            .setLabelLayer(
+                gviz.getEuronymeLabelLayer("EUR", 50, {
+                    ccIn: ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "PL", "PT", "MT", "NL", "RO", "SE", "SK", "SI", "CH", "IS", "NO", "LI", "RS", "XK", "AL", "TR", "ME", "MK"]
+                })
+            ).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
             .addBackgroundLayer({
                 url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
                 resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],

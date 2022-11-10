@@ -1,7 +1,5 @@
-
-expose all URLs
 TODO use new euronym - filter by country code ?
-
+- expose all URLs
 - check how links open in SE - do the same for all in maps.
 - svalbard north
 - legend thousand separator.
