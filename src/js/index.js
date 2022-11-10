@@ -73,7 +73,7 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
 
         //exclude countries
         //if(opts.ccOut && lb.cc && opts.ccOut.includes(lb.cc)) return false;
-        if (opts.ccOut && lb.cc && opts.ccOut.indexOf(lb.cc) >= 0) return false;
+        if (opts.ccIn && lb.cc && !(opts.ccIn.indexOf(lb.cc) >= 0)) return false;
 
         //project from geo coordinates to ETRS89-LAEA
         const p = opts.proj([lb.lon, lb.lat])
