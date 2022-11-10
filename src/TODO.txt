@@ -1,6 +1,6 @@
 - handle title - metadata
 - reuse style
-- expose all URLs
+- expose all URLs: nuts2json
 - check how links open in SE - do the same for all in maps.
 - legend thousand separator.
 - Legend rounding
@@ -19,7 +19,7 @@ improve tiff reading speed + missing columns
 
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 - Kos border
-- Data server - test wt? cache? check markos
+- Data server - test wt? cache? check markos. lib+dependencies+nuts2json+euronym+gridded data
 - deal with oversea territories ?
 
 make own background - with low resolution
