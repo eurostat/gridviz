@@ -46,6 +46,8 @@ formatDefaultLocale({
 });
 
 
+style polygon, to show urbanised areas only from CLC
+
 StrokeStyle - remove unnecessary colorCol property, when color is static
 
 EUR: population - style dropdown
