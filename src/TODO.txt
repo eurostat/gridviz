@@ -171,6 +171,8 @@ TODO map type: trendline - with ENACT dataset ? https://ghsl.jrc.ec.europa.eu/EN
 TODO map type: contour style. and hypsometric. See https://observablehq.com/@d3/density-contours https://observablehq.com/@sahilchinoy/contour-map?collection=@sahilchinoy/geo-experiments
 
 
+check copernicus urban atlas
+copernicus global land cover: https://land.copernicus.eu/global/products/lc
 
 
 TODO test gridded datasets:
