@@ -5,6 +5,7 @@
 - legend thousand separator.
 - Legend rounding
 - bivariate legend: typologies + threshold values. Show notes and sources below the map.
+- bivariate legend: dash versus hyphen + reverse blue/green colors
 
 UR maps:
 improve tiff reading speed + missing columns
