@@ -1,6 +1,11 @@
 upload euronym + nuts2json to cache ? check structure of other folders
 https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/20/MT.csv
 https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/
+
+https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/2021/3035/03M/nutsbn_3.json
+https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/50/EUR.csv
+
+
 use them
 
 - handle title - metadata

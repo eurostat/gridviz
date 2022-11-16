@@ -80,7 +80,8 @@ export const getEuronymeLabelLayer = function (cc = "EUR", res = 50, opts) {
         lb.x = p[0]; lb.y = p[1];
         delete lb.lon; delete lb.lat;
     }
-    opts.url = "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v2/UTF/" + res + "/" + cc + ".csv";
+    opts.baseURL = opts.baseURL || "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v2/UTF/"
+    opts.url = opts.baseURL + res + "/" + cc + ".csv";
     return opts
 }
 
@@ -122,7 +123,8 @@ export const getEurostatBoundariesLayer = function (opts) {
         else return [10 * zf, 3 * zf]
     })
 
-    opts.url = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/" + nutsYear + "/" + crs + "/" + scale + "/nutsbn_" + nutsLevel + ".json"
+    opts.baseURL = opts.baseURL || "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/"
+    opts.url = opts.baseURL + nutsYear + "/" + crs + "/" + scale + "/nutsbn_" + nutsLevel + ".json"
     return opts
 }
 
