@@ -27,6 +27,10 @@
 
     <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/gridviz.min.js"></script>
     <script>
+        const nuts2jsonBaseURL = "https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/"
+        const euronymBaseURL = "https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/"
+        const csvBaseURL = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/"
+
 
         /*const degurbaColors = {
             "uc": "#ff0202", //Cities
@@ -56,17 +60,17 @@
             .setLabelLayer(
                 gviz.getEuronymeLabelLayer("EUR", 50, {
                     ccIn: ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "PL", "PT", "MT", "NL", "RO", "SE", "SK", "SI", "CH", "IS", "NO", "LI", "RS", "XK", "AL", "TR", "ME", "MK"],
-                    baseURL: "https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/",
+                    baseURL: euronymBaseURL,
                 })
             ).setBoundaryLayer(gviz.getEurostatBoundariesLayer({
-                baseURL: "https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/",
+                baseURL: nuts2jsonBaseURL,
             }))
 
 
         //population layer
         app.addMultiScaleTiledCSVGridLayer(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+            r => csvBaseURL + "Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
             [
                 new gviz.ShapeColorSizeStyle({
                     color: () => "#666",
@@ -85,7 +89,7 @@
         //degurba layer
         app.addMultiScaleTiledCSVGridLayer(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/degurba/tiled/" + r + "m/",
+            r => csvBaseURL + "Europe/degurba/tiled/" + r + "m/",
             [
                 new gviz.CompositionStyle({
                     color: degurbaColors,
