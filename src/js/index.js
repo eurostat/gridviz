@@ -131,3 +131,12 @@ export const getEurostatBoundariesLayer = function (opts) {
 
 export const getParameterByName = GeoCanvas.getParameterByName
 
+
+// set default d3 locale
+import { formatDefaultLocale } from "d3-format";
+formatDefaultLocale({
+	"decimal": ".",
+	"thousands": " ",
+	"grouping": [3],
+	"currency": ["", "€"]
+});
