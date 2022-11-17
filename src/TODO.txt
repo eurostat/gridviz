@@ -1,24 +1,25 @@
-- legend thousand separator.
-- handle title - metadata
 - reuse style
 - Legend rounding
 - bivariate legend: typologies + threshold values. Show notes and sources below the map.
 - bivariate legend: dash versus hyphen + reverse blue/green colors
 
+//https://gdal.org/programs/gdal2tiles.html
+gdal2tiles.py --xyz -x -s EPSG:3035 --zoom=2-5 --processes=2 /home/juju/Bureau/gisco/elevation/EU_DEM_mosaic_1000K/1000.tif /home/juju/Bureau/aaa/
+
+
 UR maps:
 improve tiff reading speed + missing columns
 - forest M9.18: size: Remain fix.remove coastal high values + 500m resolution
 - degurba map: OK
-- population map: 1km to 1km²
+- population map: OK
 - road transport perf: >100
 - CLC map grid: OK
-- CLC map nuts stripes: aggregate data ? - select country properly. Add oversea territories
+- CLC map nuts stripes: select country properly. Add oversea territories
 - bivariate maps: check
 - accessibility health/educ: legend + tooltip:when data NA
 
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 - Kos border
-- Data server - test wt? cache? check markos. lib+dependencies+nuts2json+euronym+gridded data
 - deal with oversea territories ?
 
 make own background - with low resolution
