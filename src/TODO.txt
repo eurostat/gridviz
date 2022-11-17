@@ -3,10 +3,6 @@
 - bivariate legend: typologies + threshold values. Show notes and sources below the map.
 - bivariate legend: dash versus hyphen + reverse blue/green colors
 
-//https://gdal.org/programs/gdal2tiles.html
-gdal2tiles.py --xyz -x -s EPSG:3035 --zoom=2-5 --processes=2 /home/juju/Bureau/gisco/elevation/EU_DEM_mosaic_1000K/1000.tif /home/juju/Bureau/aaa/
-
-
 UR maps:
 improve tiff reading speed + missing columns
 - forest M9.18: size: Remain fix.remove coastal high values + 500m resolution
