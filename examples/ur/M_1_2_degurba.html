@@ -11,9 +11,11 @@
     <div id="vizDegurba" style="position:relative; height:600px; width:900px;">
         <div
             style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
-            <span style="font-size: 0.8em; font-family: sans-serif;"><a target="_blank" rel="nofollow noreferrer noopener" href="https://github.com/eurostat/gridviz"
+            <span style="font-size: 0.8em; font-family: sans-serif;"><a target="_blank"
+                    rel="nofollow noreferrer noopener" href="https://github.com/eurostat/gridviz"
                     style="text-decoration:none">GridViz</a> |
-                © <a target="_blank" rel="nofollow noreferrer noopener" href="https://eurogeographics.org" style="text-decoration:none">EuroGeographics</a></span>
+                © <a target="_blank" rel="nofollow noreferrer noopener" href="https://eurogeographics.org"
+                    style="text-decoration:none">EuroGeographics</a></span>
         </div>
     </div>
     <div id="legendDegurba"></div>
@@ -29,7 +31,8 @@
     <script>
         const nuts2jsonBaseURL = null//"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/"
         const euronymBaseURL = null//"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/"
-        const csvBaseURL = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/"
+        const csvBaseURL = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/"
+        //const csvBaseURL = "https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/"
 
         /*const degurbaColors = {
             "uc": "#ff0202", //Cities
@@ -69,7 +72,7 @@
         //population layer
         app.addMultiScaleTiledCSVGridLayer(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => csvBaseURL + "Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+            r => csvBaseURL + "grid_pop_tiled/" + Math.round(r / 1000) + "km/",
             [
                 new gviz.ShapeColorSizeStyle({
                     color: () => "#666",
@@ -88,7 +91,7 @@
         //degurba layer
         app.addMultiScaleTiledCSVGridLayer(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => csvBaseURL + "Europe/degurba/tiled/" + r + "m/",
+            r => csvBaseURL + "degurba/tiled/" + r + "m/",
             [
                 new gviz.CompositionStyle({
                     color: degurbaColors,
