@@ -1,6 +1,7 @@
 //test https://filedn.eu/lc0R5tk0KkXVd7QKckNF17b/data/tiledgrid/ - CORS from pcl
 //test https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/
 
+- remove titles
 - reuse style
 - Legend rounding
 - bivariate legend: typologies + threshold values. Show notes and sources below the map.
