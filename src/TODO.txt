@@ -1,3 +1,4 @@
+fix bug with images
 //test https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/
 
 - include legend within maps
@@ -21,27 +22,28 @@ improve tiff reading speed + missing columns
 - Kos border
 - deal with oversea territories ?
 
-make own background - with low resolution
-https://land.copernicus.eu/imagery-in-situ/eu-dem/eu-dem-v1-0-and-derived-products/hillshade?tab=download
-or... https://sdi.eea.europa.eu/data/e2cac092-4cbf-4765-a06e-0271f382d4a4?path=%2Ftiles
-
-TODO forest https://land.copernicus.eu/pan-european/high-resolution-layers/forests
-https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
-https://ec.europa.eu/regional_policy/en/information/publications/working-papers/2022/passenger-rail-performance-in-europe-regional-and-territorial-accessibility-indicators-for-passenger-rail
-
 cat/size legend: center vertically
 
 
 use parquet
-+ duckDB-wasm
+https://observablehq.com/@observablehq/csv-to-parquet
+https://github.com/kylebarron/parquet-wasm
+https://github.com/ironSource/parquetjs
+in java:
+https://parquet.apache.org/docs/contribution-guidelines/modules/
+https://github.com/Parquet/parquet-compatibility/blob/master/parquet-compat/src/test/java/parquet/compat/test/ConvertUtils.java
++ duckDB-wasm ?
 make joins ?
 https://twitter.com/ericMauviere/status/1592783882382082053?s=20&t=va4Gbw8-KiqZV4n5Fwa9BA 
+
 
 
 https://ieeexplore.ieee.org/document/1532144
 https://observablehq.com/@spren9er/two-tone-pseudo-color-scales
 
- 
+Drought: https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
+internet connection quality map - see OOKLA dataset - https://github.com/teamookla/ookla-open-data
+
 style polygon, to show urbanised areas only from CLC
 
 StrokeStyle - remove unnecessary colorCol property, when color is static
