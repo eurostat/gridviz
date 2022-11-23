@@ -9,6 +9,7 @@ export { DatasetComponent } from "./DatasetComponent"
 //export dataset types
 export { TiledGrid } from "./dataset/TiledGrid"
 export { CSVGrid } from "./dataset/CSVGrid"
+export { ParquetGrid } from "./dataset/ParquetGrid"
 //export { GeoTIFF } from "./dataset/GeoTIFF"
 
 //export styles
