@@ -42,6 +42,28 @@ export class ParquetGrid extends DatasetComponent {
 
         //load data
         this.infoLoadingStatus = "loading";
+
+
+        //import { tableFromIPC } from "apache-arrow";
+        // Edit the `parquet-wasm` import as necessary
+        //import { readParquet } from "parquet-wasm/node";
+
+        const resp = fetch(this.url).then((data) => {
+
+            console.log(data)
+            //https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Promise
+            //const parquetUint8Array = new Uint8Array(resp.arrayBuffer());
+            //const arrowUint8Array = readParquet(parquetUint8Array);
+            //const arrowTable = tableFromIPC(arrowUint8Array);
+
+        }).catch(() => {
+            //mark as failed
+            this.infoLoadingStatus = "failed";
+            this.cells = []
+        });
+
+
+
         /*
         csv(this.url)
             .then(
