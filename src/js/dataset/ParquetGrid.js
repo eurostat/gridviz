@@ -1,7 +1,5 @@
 //@ts-check
 
-//import { readParquet } from "parquet-wasm";
-import { readParquet } from "parquet-wasm";
 import { DatasetComponent } from "../DatasetComponent";
 
 /**
@@ -45,23 +43,23 @@ export class ParquetGrid extends DatasetComponent {
         //load data
         this.infoLoadingStatus = "loading";
 
-
-        //import { tableFromIPC } from "apache-arrow";
-        // Edit the `parquet-wasm` import as necessary
-        //import { readParquet } from "parquet-wasm/node";
-
-        //see https://github.com/kylebarron/parquet-wasm
-        const resp = fetch(this.url).then((pm) => {
+        //https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Promise
+        fetch(this.url).then((pm) => {
 
             pm.arrayBuffer().then((data) => {
                 console.log(data)
-                //https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Promise
                 const parquetUint8Array = new Uint8Array(data);
+
+
+                //see https://github.com/kylebarron/parquet-wasm
+                //import { tableFromIPC } from "apache-arrow";
+                // Edit the `parquet-wasm` import as necessary
+                //import { readParquet } from "parquet-wasm/node";
                 //data = readParquet(data);
                 //data = tableFromIPC(data);
                 //const arrowUint8Array = readParquet(parquetUint8Array);
-                data = readParquet(parquetUint8Array);
-                console.log(parquetUint8Array)
+                //data = readParquet(parquetUint8Array);
+                //console.log(parquetUint8Array)
                 //const arrowTable = tableFromIPC(arrowUint8Array);
             }).catch(() => {
                 //mark as failed
