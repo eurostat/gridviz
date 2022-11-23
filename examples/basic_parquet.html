@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+    <title>Gridviz - example</title>
+</head>
+
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
+    <div id="viz-container" style="height:100%; width:100%;"></div>
+
+    <script src="../build/gridviz.js"></script>
+    <script>
+
+        let containerDiv = document.getElementById("viz-container");
+
+        new gviz.App(containerDiv)
+            //set position and zoom
+            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+            //add CSV layer
+            .addParquetGridLayer(
+                //data URL
+                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/parquet/building_area.parquet",
+                //resolution, in CRS unit
+                1,
+                //the styles
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "Total_m2",
+                        tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15)
+                    })
+                ]
+            )
+
+    </script>
+
+</body>
+
+</html>
