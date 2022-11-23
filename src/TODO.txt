@@ -33,7 +33,16 @@ https://ec.europa.eu/regional_policy/en/information/publications/working-papers/
 cat/size legend: center vertically
 
 
+use parquet
++ duckDB-wasm
+make joins ?
 
+
+
+https://ieeexplore.ieee.org/document/1532144
+https://observablehq.com/@spren9er/two-tone-pseudo-color-scales
+
+ 
 style polygon, to show urbanised areas only from CLC
 
 StrokeStyle - remove unnecessary colorCol property, when color is static
