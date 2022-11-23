@@ -7,6 +7,7 @@ import { Dataset } from './Dataset';
 import { Tooltip } from './Tooltip';
 
 import { CSVGrid } from './dataset/CSVGrid';
+import { ParquetGrid } from './dataset/ParquetGrid';
 import { TiledGrid } from './dataset/TiledGrid';
 import { BackgroundLayer } from './BackgroundLayer';
 import { LabelLayer } from './LabelLayer';
@@ -399,9 +400,22 @@ export class App {
      * @param {object=} opts The parameters of the dataset.
      * @returns {Dataset}
      */
-    makeCSVGridDataset(url, resolution, opts) {
+     makeCSVGridDataset(url, resolution, opts) {
         return new Dataset([new CSVGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); })], [], opts)
     }
+
+    /**
+     * Make a parquet grid dataset.
+     * 
+     * @param {string} url The URL of the dataset.
+     * @param {number} resolution The dataset resolution in geographical unit.
+     * @param {object=} opts The parameters of the dataset.
+     * @returns {Dataset}
+     */
+     makeParquetGridDataset(url, resolution, opts) {
+        return new Dataset([new ParquetGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); })], [], opts)
+    }
+
 
     /**
      * Make a tiled CSV grid dataset.
@@ -466,6 +480,22 @@ export class App {
         const ds = this.makeCSVGridDataset(url, resolution, opts)
         return this.addLayerFromDataset(ds, styles, opts);
     }
+
+    /**
+     * Add a layer from a parquet grid dataset.
+     * 
+     * @param {string} url The URL of the dataset.
+     * @param {number} resolution The dataset resolution in geographical unit.
+     * @param {Array.<Style>} styles The styles, ordered in drawing order.
+     * @param {object=} opts The parameters of the dataset and layer.
+     * @returns {this}
+     */
+     addParquetGridLayer(url, resolution, styles, opts) {
+        const ds = this.makeParquetGridDataset(url, resolution, opts)
+        return this.addLayerFromDataset(ds, styles, opts);
+    }
+
+    
 
     /**
     * 
