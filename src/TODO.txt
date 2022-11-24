@@ -27,11 +27,12 @@ cat/size legend: center vertically
 
 
 
+
 use parquet
 https://observablehq.com/@observablehq/csv-to-parquet
 read parquet with:
 https://github.com/kylebarron/parquet-wasm
-https://github.com/ironSource/parquetjs
+https://github.com/ironSource/parquetjs#usage-reading-files
 or duck DB ? See https://duckdb.org/2021/10/29/duckdb-wasm.html
 
 write in java:

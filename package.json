@@ -48,8 +48,6 @@
     "d3-random": "^3.0.1",
     "d3-selection": "^3.0.0",
     "d3-zoom": "^3.0.0",
-    "geotiff": "^2.0.5",
-    "parquet-wasm": "^0.3.1",
     "publish": "^0.6.0",
     "puppeteer": "^1.13.0",
     "rbush": "^3.0.1"
