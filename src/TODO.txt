@@ -1,4 +1,3 @@
-fix bug with images
 //test https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/
 
 - include legend within maps
@@ -9,7 +8,6 @@ fix bug with images
 
 UR maps:
 improve tiff reading speed + missing columns
-- forest M9.18: size: Remain fix.remove coastal high values + 500m resolution
 - degurba map: OK
 - population map: OK
 - road transport perf: >100
@@ -17,6 +15,7 @@ improve tiff reading speed + missing columns
 - CLC map nuts stripes: select country properly. Add oversea territories
 - bivariate maps: check
 - accessibility health/educ: legend + tooltip:when data NA
+- forest M9.18: size: Remain fix.remove coastal high values + 500m resolution
 
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 - Kos border
