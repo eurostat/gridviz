@@ -156,12 +156,17 @@ export class BackgroundLayer {
                     console.log(img)
                     continue;
                 }
+                if (img.width == 0 || img.height == 0) continue;
 
                 //draw image
                 const xGeo = x0 + x * sizeG
                 const yGeo = y0 - y * sizeG
-                cg.ctx.drawImage(img, cg.geoToPixX(xGeo), cg.geoToPixY(yGeo), size, size)
-                //cg.ctx.drawImage(img, xGeo, yGeo, sizeG, -sizeG)
+                try {
+                    cg.ctx.drawImage(img, cg.geoToPixX(xGeo), cg.geoToPixY(yGeo), size, size)
+                    //cg.ctx.drawImage(img, xGeo, yGeo, sizeG, -sizeG)
+                } catch (error) {
+                    console.error(error)
+                }
             }
         }
 
