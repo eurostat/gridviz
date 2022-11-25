@@ -2,7 +2,6 @@
 
 import { DatasetComponent } from "../DatasetComponent";
 
-
 /**
  * A dataset composed of a single parquet file (not tiled).
  * 

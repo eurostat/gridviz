@@ -45,7 +45,9 @@ make joins ?
 https://twitter.com/ericMauviere/status/1592783882382082053?s=20&t=va4Gbw8-KiqZV4n5Fwa9BA 
 
 
-
+webpack:
+check https://webpack.js.org/plugins
+upgrade to v5 ?
 
 
 https://ieeexplore.ieee.org/document/1532144
