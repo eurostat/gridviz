@@ -1,5 +1,7 @@
 //test https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/
 
+https://webpack.js.org/guides/getting-started/
+
 - include legend within maps
 - reuse style
 - Legend rounding

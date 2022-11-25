@@ -1,7 +1,7 @@
 //@ts-check
 
 import { DatasetComponent } from "../DatasetComponent"
-import { fromUrl } from "geotiff"
+//import { fromUrl } from "geotiff"
 
 /**
  * @todo
@@ -45,6 +45,7 @@ export class GeoTIFF extends DatasetComponent {
         //load data
         this.infoLoadingStatus = "loading";
 
+        /*
 
         fromUrl(this.url)
             .then(tiff => {
@@ -101,8 +102,9 @@ export class GeoTIFF extends DatasetComponent {
                 this.infoLoadingStatus = "failed";
                 this.cells = []
             });
+*/
 
-        return this;
+return this;
     }
 
 
