@@ -1,9 +1,12 @@
+replace
+Example: https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/europe/clc/500m/info.json
+
+
 //test https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/
 
 export NODE_OPTIONS=--openssl-legacy-provider
 https://webpack.js.org/guides/getting-started/
 
-- include legend within maps
 - reuse style
 - Legend rounding
 - bivariate legend: typologies + threshold values. Show notes and sources below the map.
@@ -11,10 +14,7 @@ https://webpack.js.org/guides/getting-started/
 
 UR maps:
 improve tiff reading speed + missing columns
-- degurba map: OK
-- population map: OK
 - road transport perf: >100
-- CLC map grid: OK
 - CLC map nuts stripes: select country properly. Add oversea territories
 - bivariate maps: check
 - accessibility health/educ: legend + tooltip:when data NA
