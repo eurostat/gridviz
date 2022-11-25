@@ -1,5 +1,6 @@
 //test https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/
 
+export NODE_OPTIONS=--openssl-legacy-provider
 https://webpack.js.org/guides/getting-started/
 
 - include legend within maps
