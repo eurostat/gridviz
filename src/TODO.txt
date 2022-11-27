@@ -1,17 +1,15 @@
 use tiledgrids data and clean
 europe - population
+            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/"
+            r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/"
 
 
 observable neocarto
 
-
-
-
 //test https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/
-
-export NODE_OPTIONS=--openssl-legacy-provider
 https://webpack.js.org/guides/getting-started/
 
+- prepare migration to europa.eu
 - reuse style
 - Legend rounding
 - bivariate legend: typologies + threshold values. Show notes and sources below the map.

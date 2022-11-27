@@ -67,7 +67,7 @@
             .setBackgroundColor("#ECE6D3")
             .addMultiScaleTiledCSVGridLayer(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+                r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
                 [
                     new gviz.MosaicStyle({
                         colorCol: "2018",

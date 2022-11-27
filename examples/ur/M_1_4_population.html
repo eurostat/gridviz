@@ -68,7 +68,7 @@
 
         const popDataset = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+            r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
             //r => "https://ec.europa.eu/assets/estat/E/E4/gisco/mapping/test/" + Math.round(r / 1000) + "km/",
         )
 

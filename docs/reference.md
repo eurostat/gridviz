@@ -156,7 +156,7 @@ new gviz.App(containerDiv)
     //add multi scale tiled CSV layer
     .addTiledCSVGridLayer(
         //data URL
-        "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/5km/",
+        "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/5000m/",
         //the styles
         [
             new gviz.SquareColorWGLStyle({
@@ -181,7 +181,7 @@ new gviz.App(containerDiv)
         //array of resolutions, in CRS unit (m)
         [5000, 10000, 20000, 50000, 100000],
         //function which returns the URL for each resolution value
-        r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+        r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
         //the styles
         [
             new gviz.SquareColorWGLStyle({
@@ -233,7 +233,7 @@ new gviz.App(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
     .addMultiScaleTiledCSVGridLayer(
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+        r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
         [ new gviz.ShapeColorSizeStyle({ /* style construction ... */}) ],
         {
             preprocess: c => {
