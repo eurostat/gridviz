@@ -31,7 +31,7 @@
             .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(50.1).setZoomFactorExtent([7, 2000])
             .addMultiScaleTiledCSVGridLayer(
                 [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-                r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/France/filosofi/ind/2017/" + r + "m/",
+                r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/france/filosofi/ind/2017/" + r + "m/",
                 [
                     new gviz.ShapeColorSizeStyle({
                         sizeCol: "Ind",

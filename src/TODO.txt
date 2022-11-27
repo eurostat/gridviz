@@ -1,7 +1,7 @@
 replace
-Example: https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/europe/clc/500m/info.json
-croatia
+Example: https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/500m/info.json
 france
+https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/france/filosofi/
 europe
 
 
