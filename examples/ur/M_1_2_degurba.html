@@ -25,7 +25,7 @@
     <script>
         const nuts2jsonBaseURL = null//"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/"
         const euronymBaseURL = null//"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/"
-        const csvBaseURL = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/"
+        const csvBaseURL = "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/"
         //const csvBaseURL = "https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/"
 
         /*const degurbaColors = {
@@ -66,7 +66,7 @@
         //population layer
         app.addMultiScaleTiledCSVGridLayer(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => csvBaseURL + "grid_pop_tiled/" + Math.round(r / 1000) + "km/",
+            r => csvBaseURL + "population/" + r + "m/",
             [
                 new gviz.ShapeColorSizeStyle({
                     color: () => "#666",
@@ -85,7 +85,7 @@
         //degurba layer
         app.addMultiScaleTiledCSVGridLayer(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => csvBaseURL + "degurba/tiled/" + r + "m/",
+            r => csvBaseURL + "degurba/" + r + "m/",
             [
                 new gviz.CompositionStyle({
                     color: degurbaColors,
