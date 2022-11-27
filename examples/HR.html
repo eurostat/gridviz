@@ -88,7 +88,8 @@
         //population dataset
         ds.pop = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000],
-            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/Population_2011/" + r + "m/",
+            r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/croatia/Population_2011/" + r + "m/",
+
             {
                 preprocess: c => {
                     override(c, "TOTAL")
@@ -119,7 +120,7 @@
         //business dataset
         ds.bus = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000],
-            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/Active_business_entities_2016/" + r + "m/",
+            r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/croatia/Active_business_entities_2016/" + r + "m/",
             {
                 preprocess: c => {
                     //TOTAL,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
@@ -145,7 +146,7 @@
         //tourism dataset
         ds.tou = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000],
-            r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Croatia/Tourism_2017/" + r + "m/",
+            r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/croatia/Tourism_2017/" + r + "m/",
             {
                 preprocess: c => {
                     for (let s of ["ESTABLISHMENTS - TOTAL", "ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL", "NUMBER OF PERMANENT BEDS"])
