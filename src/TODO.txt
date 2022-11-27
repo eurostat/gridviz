@@ -1,6 +1,5 @@
 use tiledgrids data and clean
-europe
-population
+europe - population
 
 
 observable neocarto
