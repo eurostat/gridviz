@@ -1,6 +1,5 @@
 use tiledgrids data and clean
 europe
-https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/degurba/
 https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/road_transp_perf/
 https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/accessibility/
 
