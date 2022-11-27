@@ -1,6 +1,8 @@
-replace
-Example: https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/500m/info.json
+use tiledgrids data and clean
+https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/
 europe
+
+
 
 
 //test https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/

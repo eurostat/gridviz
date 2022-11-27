@@ -262,7 +262,7 @@ new gviz.App(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
     .addMultiScaleTiledCSVGridLayer(
         [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        r => "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/clc/tiled/" + r + "m/",
+        r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/" + r + "m/",
         [ /* define the style) */ ],
         {
             pixNb: 3,
