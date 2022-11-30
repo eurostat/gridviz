@@ -1,7 +1,7 @@
 video https://eduard.earth/
 
 
-- accessibility: reverse radio buttons. check scale and use the same for both ?
+- accessibility: show legend + use different color hues ?
 - pop map: XXX persons per YYY km² in tooltip
 - prepare migration to europa.eu - expose all URLs https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/
 - Legend rounding
