@@ -1,6 +1,11 @@
+video https://eduard.earth/
+
 //test https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/
 https://webpack.js.org/guides/getting-started/
 
+- forest map: provide source and referenc date to Andrew + most detailled resolution
+- pop map: XXX persons per YYY km² in tooltip
+- accessibility: reverse radio buttons. check scale and use the same for both ?
 - prepare migration to europa.eu
 - reuse style
 - Legend rounding
@@ -24,7 +29,6 @@ cat/size legend: center vertically
 
 
 
-
 use parquet
 https://observablehq.com/@observablehq/csv-to-parquet
 read parquet with:
@@ -39,6 +43,10 @@ https://github.com/Parquet/parquet-compatibility/blob/master/parquet-compat/src/
 make joins ?
 https://twitter.com/ericMauviere/status/1592783882382082053?s=20&t=va4Gbw8-KiqZV4n5Fwa9BA 
 
+or avro
+https://github.com/mtth/avsc
+https://www.npmjs.com/package/avro-js
+
 
 webpack:
 check https://webpack.js.org/plugins
@@ -48,8 +56,13 @@ upgrade to v5 ?
 https://ieeexplore.ieee.org/document/1532144
 https://observablehq.com/@spren9er/two-tone-pseudo-color-scales
 
+
+
+
 Drought: https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
 internet connection quality map - see OOKLA dataset - https://github.com/teamookla/ookla-open-data
+https://edgar.jrc.ec.europa.eu/emissions_data_and_maps
+
 
 style polygon, to show urbanised areas only from CLC
 
