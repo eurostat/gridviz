@@ -47,6 +47,11 @@ or avro
 https://github.com/mtth/avsc
 https://www.npmjs.com/package/avro-js
 
+or PBF
+https://gavinr.com/protocol-buffers-protobuf-browser/
+https://github.com/protobufjs/protobuf.js/
+https://github.com/mapbox/pbf
+
 
 webpack:
 check https://webpack.js.org/plugins
