@@ -1,7 +1,7 @@
 video https://eduard.earth/
 
 
-- prepare migration to europa.eu - expose all URLs
+- prepare migration to europa.eu for estat-map.js maps
 - accessibility: show legend + use different color hues ?
 - bivariate legend: typologies + threshold values. Show notes and sources below the map.
 - bivariate legend: dash versus hyphen + reverse blue/green colors
