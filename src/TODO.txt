@@ -1,8 +1,8 @@
 video https://eduard.earth/
 
 
+- prepare migration to europa.eu - expose all URLs
 - accessibility: show legend + use different color hues ?
-- prepare migration to europa.eu - expose all URLs https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/
 - bivariate legend: typologies + threshold values. Show notes and sources below the map.
 - bivariate legend: dash versus hyphen + reverse blue/green colors
 - road transport perf: >100

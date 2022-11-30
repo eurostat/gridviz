@@ -23,10 +23,10 @@
 
     <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/gridviz.min.js"></script>
     <script>
-        const nuts2jsonBaseURL = null//"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/"
-        const euronymBaseURL = null//"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/"
-        const csvBaseURL = "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/"
-        //const csvBaseURL = "https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/"
+        const nuts2jsonURL = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/" //"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/"
+        const euronymURL = "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v2/UTF/" //"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/"
+        const tiledGridsURL = "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/" //"https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/europe/"
+        const bgLayerURL = "https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/" //"https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/background/elevation_shading/"
 
         /*const degurbaColors = {
             "uc": "#ff0202", //Cities
@@ -56,17 +56,17 @@
             .setLabelLayer(
                 gviz.getEuronymeLabelLayer("EUR", 50, {
                     ccIn: ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "PL", "PT", "MT", "NL", "RO", "SE", "SK", "SI", "CH", "IS", "NO", "LI", "RS", "XK", "AL", "TR", "ME", "MK"],
-                    baseURL: euronymBaseURL,
+                    baseURL: euronymURL,
                 })
             ).setBoundaryLayer(gviz.getEurostatBoundariesLayer({
-                baseURL: nuts2jsonBaseURL,
+                baseURL: nuts2jsonURL,
             }))
 
 
         //population layer
         app.addMultiScaleTiledCSVGridLayer(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => csvBaseURL + "population/" + r + "m/",
+            r => tiledGridsURL + "population/" + r + "m/",
             [
                 new gviz.ShapeColorSizeStyle({
                     color: () => "#666",
@@ -85,7 +85,7 @@
         //degurba layer
         app.addMultiScaleTiledCSVGridLayer(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => csvBaseURL + "degurba/" + r + "m/",
+            r => tiledGridsURL + "degurba/" + r + "m/",
             [
                 new gviz.CompositionStyle({
                     color: degurbaColors,
