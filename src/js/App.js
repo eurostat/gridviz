@@ -7,7 +7,7 @@ import { Dataset } from './Dataset';
 import { Tooltip } from './Tooltip';
 
 import { CSVGrid } from './dataset/CSVGrid';
-import { ParquetGrid } from './dataset/ParquetGrid';
+//import { ParquetGrid } from './dataset/ParquetGrid';
 import { TiledGrid } from './dataset/TiledGrid';
 import { BackgroundLayer } from './BackgroundLayer';
 import { LabelLayer } from './LabelLayer';
@@ -321,7 +321,7 @@ export class App {
         /** @type {import('./Dataset').Cell|undefined} */
         const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache());
         if (!cell) return undefined;
-        return { cell: cell, html: layer.cellInfoHTML(cell), resolution: dsc.getResolution() };
+        return { cell: cell, html: layer.cellInfoHTML(cell, dsc.getResolution()), resolution: dsc.getResolution() };
     }
 
 
@@ -400,9 +400,9 @@ export class App {
      * @param {object=} opts The parameters of the dataset.
      * @returns {Dataset}
      */
-     makeCSVGridDataset(url, resolution, opts) {
+     /*makeCSVGridDataset(url, resolution, opts) {
         return new Dataset([new CSVGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); })], [], opts)
-    }
+    }*/
 
     /**
      * Make a parquet grid dataset.
@@ -412,10 +412,10 @@ export class App {
      * @param {object=} opts The parameters of the dataset.
      * @returns {Dataset}
      */
-     makeParquetGridDataset(url, resolution, opts) {
+     /*makeParquetGridDataset(url, resolution, opts) {
         return new Dataset([new ParquetGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); })], [], opts)
     }
-
+*/
 
     /**
      * Make a tiled CSV grid dataset.

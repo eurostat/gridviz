@@ -87,6 +87,11 @@
             //remove layers
             app.layers = []
 
+            //tooltip function
+            const tooltipFun = (c, r) =>
+                +c[year] ? "<b>" + c[year] + "</b> person" + (+c[year] == 1 ? "" : "s") + " per " + (r*r/1000000) + "km²" : undefined
+
+
             if (style == "color") {
                 //add layer
                 app.addLayerFromDataset(
@@ -101,7 +106,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => +c[year] ? "<b>" + c[year] + "</b> person" + (+c[year] == 1 ? "" : "s") : undefined
+                        cellInfoHTML: tooltipFun
                     })
 
                 //add legend
@@ -130,7 +135,7 @@
                     ],
                     {
                         pixNb: 6,
-                        cellInfoHTML: c => +c[year] ? "<b>" + c[year] + "</b> person" + (+c[year] == 1 ? "" : "s") : undefined
+                        cellInfoHTML: tooltipFun
                     })
 
             } else if (style == "joyplot") {
@@ -147,7 +152,7 @@
                     ],
                     {
                         pixNb: 5,
-                        cellInfoHTML: c => +c[year] ? "<b>" + c[year] + "</b> person" + (+c[year] == 1 ? "" : "s") : undefined
+                        cellInfoHTML: tooltipFun
                     })
             }
 

@@ -47,7 +47,7 @@ export class Layer {
         /**
          * The function returning cell information as HTML.
          * This is typically used for tooltip information.
-         * @type {function(import("./Dataset").Cell):string} */
+         * @type {function(import("./Dataset").Cell, number):string} */
         this.cellInfoHTML = opts.cellInfoHTML || Layer.defaultCellInfoHTML;
     }
 

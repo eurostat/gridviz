@@ -2,9 +2,7 @@ video https://eduard.earth/
 
 
 - accessibility: show legend + use different color hues ?
-- pop map: XXX persons per YYY km² in tooltip
 - prepare migration to europa.eu - expose all URLs https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/
-- Legend rounding
 - bivariate legend: typologies + threshold values. Show notes and sources below the map.
 - bivariate legend: dash versus hyphen + reverse blue/green colors
 - road transport perf: >100
@@ -15,6 +13,7 @@ video https://eduard.earth/
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 - Kos border
 - deal with oversea territories ?
+- Legend rounding
 
 
 
