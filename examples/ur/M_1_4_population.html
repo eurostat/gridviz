@@ -58,7 +58,8 @@
                     ccIn: ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "PL", "PT", "MT", "NL", "RO", "SE", "SK", "SI", "CH", "IS", "NO", "LI", "RS", "XK", "AL", "TR", "ME", "MK"],
                     baseURL: euronymURL,
                 })
-            ).setBoundaryLayer(gviz.getEurostatBoundariesLayer({
+            )
+            .setBoundaryLayer(gviz.getEurostatBoundariesLayer({
                 baseURL: nuts2jsonURL,
             }))
             .addBackgroundLayer({
