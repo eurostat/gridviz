@@ -1,30 +1,20 @@
 video https://eduard.earth/
 
-//test https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/
-https://webpack.js.org/guides/getting-started/
 
-- forest map: provide source and referenc date to Andrew + most detailled resolution
-- pop map: XXX persons per YYY km² in tooltip
 - accessibility: reverse radio buttons. check scale and use the same for both ?
-- prepare migration to europa.eu
-- reuse style
+- pop map: XXX persons per YYY km² in tooltip
+- prepare migration to europa.eu - expose all URLs https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/
 - Legend rounding
 - bivariate legend: typologies + threshold values. Show notes and sources below the map.
 - bivariate legend: dash versus hyphen + reverse blue/green colors
-
-UR maps:
-improve tiff reading speed + missing columns
 - road transport perf: >100
 - CLC map nuts stripes: select country properly. Add oversea territories
 - bivariate maps: check
 - accessibility health/educ: legend + tooltip:when data NA
 - forest M9.18: size: Remain fix.remove coastal high values + 500m resolution
-
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 - Kos border
 - deal with oversea territories ?
-
-cat/size legend: center vertically
 
 
 
@@ -61,6 +51,9 @@ upgrade to v5 ?
 https://ieeexplore.ieee.org/document/1532144
 https://observablehq.com/@spren9er/two-tone-pseudo-color-scales
 
+
+
+cat/size legend: center vertically
 
 
 
