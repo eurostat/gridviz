@@ -1,7 +1,7 @@
 video https://eduard.earth/
 
 
-- prepare migration to europa.eu for estat-map.js maps
+- prepare migration to europa.eu for estat-map.js maps. NUTS2JSON
 - accessibility: show legend + use different color hues ?
 - bivariate legend: typologies + threshold values. Show notes and sources below the map.
 - bivariate legend: dash versus hyphen + reverse blue/green colors
@@ -13,7 +13,7 @@ video https://eduard.earth/
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 - Kos border
 - deal with oversea territories ?
-- Legend rounding
+- Legend rounding ?
 
 
 
