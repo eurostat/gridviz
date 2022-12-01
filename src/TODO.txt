@@ -1,20 +1,22 @@
-video https://eduard.earth/
 
+- accessibility:
++ show color legend
++ change scaling AND show population only for low ?
++ use different color hues ?
++ tooltip:when data NA
 
-- prepare migration to europa.eu for estat-map.js maps. NUTS2JSON
-- accessibility: show legend + use different color hues ?
-- bivariate legend: typologies + threshold values. Show notes and sources below the map.
-- bivariate legend: dash versus hyphen + reverse blue/green colors
+- bivariate + stripes: show proper countries
+- bivariate legend: typologies + threshold values.
 - road transport perf: >100
-- CLC map nuts stripes: select country properly. Add oversea territories
+- CLC map nuts stripes: Add oversea territories
 - bivariate maps: check
-- accessibility health/educ: legend + tooltip:when data NA
-- forest M9.18: size: Remain fix.remove coastal high values + 500m resolution
+- forest M9.18: size: Remain fix. remove coastal high values.
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 - Kos border
-- deal with oversea territories ?
+- cover oversea territories ?
 - Legend rounding ?
 
+video https://eduard.earth/
 
 
 
@@ -40,6 +42,7 @@ or PBF
 https://gavinr.com/protocol-buffers-protobuf-browser/
 https://github.com/protobufjs/protobuf.js/
 https://github.com/mapbox/pbf
+
 
 
 webpack:
@@ -88,11 +91,6 @@ TODO show several elements on size legend
 legend for discrete color classes - use for accessibility map legend
 
 mosaic: improve. No scintillement with pseudo random
-
-map background
-https://webgate.ec.europa.eu/inspireec/rest/services/Basemaps
-Blue_marble_3035  Gray_Earth_3035  CitiesRoadsRiversLakes_3035  Hypsometric_3035  Natural_Earth_3035
-background map: OSMCartoV4Composite GreyEarth CitiesRoadsRiversLakes Hypsometric BlueMarble NaturalEarth
 
 Pollock style: https://www.arcgis.com/apps/webappviewer/index.html?id=661d96be9fe64b3db4124546b67b2f39
 + others
