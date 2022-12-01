@@ -1,6 +1,6 @@
 
 - accessibility:
-+ show color legend
++ show color legend - implement discrete color legend
 + change scaling AND show population only for low ?
 + use different color hues ?
 + tooltip:when data NA

@@ -115,9 +115,16 @@
                         cellInfoHTML: c => "<b>" + c.avg_time_nearest_h + "</b> min. to nearest health service<br><b>" + c.TOT_P + "</b> person" + (+c.TOT_P == 1 ? "" : "s")
                     }
                 )
+
                 //legend
-                //TODO add legend with classified colors
-                //lay.styles[0].legends.push(new gviz.ColorLegend({}))
+                //TODO discrete legend
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
+                    title: "Travel time to nearest health service, in minute",
+                    width: 300,
+                    ticks: 9,
+                    colorRamp: d3.interpolateSpectral,
+                    fun: (t, r, s) => 100 * gviz.sPowInverse(t, 2),
+                }))
 
             } else if (serv == "educ") {
                 const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
