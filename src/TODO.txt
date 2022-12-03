@@ -21,11 +21,10 @@ video https://eduard.earth/
 
 
 use parquet
+https://github.com/duckdb/duckdb-wasm/tree/master/packages/duckdb-wasm
+https://stackoverflow.com/questions/74613024/reading-parquet-format-from-webpack-application?noredirect=1#comment131753360_74613024
 https://observablehq.com/@observablehq/csv-to-parquet
-read parquet with:
-https://github.com/kylebarron/parquet-wasm
-https://github.com/ironSource/parquetjs#usage-reading-files
-or duck DB ? See https://duckdb.org/2021/10/29/duckdb-wasm.html
+https://duckdb.org/2021/10/29/duckdb-wasm.html
 
 write in java:
 https://parquet.apache.org/docs/contribution-guidelines/modules/
