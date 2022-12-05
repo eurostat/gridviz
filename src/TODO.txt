@@ -1,7 +1,6 @@
 
 - accessibility:
 + show color legend - implement discrete color legend
-+ tooltip:when data NA
 
 - bivariate + stripes: show proper countries
 - bivariate legend: typologies + threshold values.
