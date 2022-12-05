@@ -37,6 +37,7 @@ export { LabelLayer } from "./LabelLayer"
 export { LineLayer as BoundaryLayer } from "./LineLayer"
 
 export { ColorLegend } from "./legend/ColorLegend"
+export { ColorDiscreteLegend } from "./legend/ColorDiscreteLegend"
 export { ColorCategoryLegend } from "./legend/ColorCategoryLegend"
 export { SizeLegend } from "./legend/SizeLegend"
 export { SegmentWidthLegend } from "./legend/SegmentWidthLegend"
@@ -136,8 +137,8 @@ export const getParameterByName = GeoCanvas.getParameterByName
 // set default d3 locale
 import { formatDefaultLocale } from "d3-format";
 formatDefaultLocale({
-	"decimal": ".",
-	"thousands": " ",
-	"grouping": [3],
-	"currency": ["", "€"]
+    "decimal": ".",
+    "thousands": " ",
+    "grouping": [3],
+    "currency": ["", "€"]
 });

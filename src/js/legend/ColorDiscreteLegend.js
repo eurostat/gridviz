@@ -2,7 +2,7 @@
 
 import { select } from "d3-selection";
 import { Legend } from "../Legend";
-import { format } from "d3-format";
+//import { format } from "d3-format";
 import { Style } from "../Style"
 
 /**
@@ -75,46 +75,47 @@ export class ColorDiscreteLegend extends Legend {
         }
 */
 
-/*
-        for (let i = 0; i < this.ticks; i++) {
-            let t = i / (this.ticks - 1)
-
-            //tick line
-            g.append("line").attr("x1", w * t).attr("y1", 0).attr("x2", w * t).attr("y2", h + this.tickSize).style("stroke", "black")
-
-            //prepare tick label
-            g.append("text")
-                .attr("id", "ticklabel_" + i)
-                .attr("x", w * t)
-                .attr("y", h + this.tickSize + 2)
-                .style("font-size", this.fontSize)
-                //.style("font-weight", "bold")
-                //.style("font-family", "Arial")
-                .style("text-anchor", i == 0 ? "start" : i == (this.ticks - 1) ? "end" : "middle")
-                .style("alignment-baseline", "top")
-                .style("dominant-baseline", "hanging")
-                .style("pointer-events", "none")
-            //.text("-")
-        }
-*/
+        /*
+                for (let i = 0; i < this.ticks; i++) {
+                    let t = i / (this.ticks - 1)
+        
+                    //tick line
+                    g.append("line").attr("x1", w * t).attr("y1", 0).attr("x2", w * t).attr("y2", h + this.tickSize).style("stroke", "black")
+        
+                    //prepare tick label
+                    g.append("text")
+                        .attr("id", "ticklabel_" + i)
+                        .attr("x", w * t)
+                        .attr("y", h + this.tickSize + 2)
+                        .style("font-size", this.fontSize)
+                        //.style("font-weight", "bold")
+                        //.style("font-family", "Arial")
+                        .style("text-anchor", i == 0 ? "start" : i == (this.ticks - 1) ? "end" : "middle")
+                        .style("alignment-baseline", "top")
+                        .style("dominant-baseline", "hanging")
+                        .style("pointer-events", "none")
+                    //.text("-")
+                }
+        */
 
 
 
 
         //update tick labels
-/*
-        //label text format
-        const f = this.tickFormat && this.tickFormat != "text" ? format(this.tickFormat) : (v) => v;
-        for (let i = 0; i < this.ticks; i++) {
-            let t = i / (this.ticks - 1)
-
-            const v = this.fun(t, opts.r, opts.sColor)
-            const text = (v ? f(v) : "0") + (this.tickUnit ? this.tickUnit : "")
-
-            //tick label
-            this.div.select("#" + "ticklabel_" + i).text(text)
-        }
+        /*
+                //label text format
+                const f = this.tickFormat && this.tickFormat != "text" ? format(this.tickFormat) : (v) => v;
+                for (let i = 0; i < this.ticks; i++) {
+                    let t = i / (this.ticks - 1)
+        
+                    const v = this.fun(t, opts.r, opts.sColor)
+                    const text = (v ? f(v) : "0") + (this.tickUnit ? this.tickUnit : "")
+        
+                    //tick label
+                    this.div.select("#" + "ticklabel_" + i).text(text)
+                }
+        */
     }
-*/
+
 
 }

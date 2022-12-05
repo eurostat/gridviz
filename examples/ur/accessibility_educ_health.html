@@ -30,10 +30,10 @@
         </div>
     </div>
 
-    <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/gridviz.min.js"></script>
-    <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-color.js"></script>
-    <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-interpolate.js"></script>
-    <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-scale-chromatic.js"></script>
+    <script src="../../build/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
         const nuts2jsonURL = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/" //"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/"
         const euronymURL = "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v2/UTF/" //"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/"
@@ -72,7 +72,7 @@
         //common styles
         const strokeStyle = new gviz.StrokeStyle({ maxZoom: 70 });
         const popStyle = new gviz.ShapeColorSizeStyle({
-            color: () => "#000000dd",
+            color: () => "#000000aa",
             sizeCol: "TOT_P",
             size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
             shape: () => "circle",
@@ -108,6 +108,15 @@
                             },
                         }),
                         strokeStyle,
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_h + "</b> min. to nearest health service<br><b>" + c.TOT_P + "</b> person" + (+c.TOT_P == 1 ? "" : "s")
+                    }
+                )
+                app.addLayerFromDataset(
+                    ds,
+                    [
                         popStyle
                     ],
                     {
