@@ -118,13 +118,19 @@
 
                 //legend
                 //TODO discrete legend
-                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
-                    title: "Travel time to nearest health service, in minute",
-                    width: 300,
-                    ticks: 9,
-                    colorRamp: d3.interpolateSpectral,
-                    fun: (t, r, s) => 100 * gviz.sPowInverse(t, 2),
-                }))
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorDiscreteLegend({
+                        title: "Travel time to nearest health service, in minute",
+                        width: 300,
+                    })
+                    /*                    new gviz.ColorLegend({
+                                        title: "Travel time to nearest health service, in minute",
+                                        width: 300,
+                                        ticks: 9,
+                                        colorRamp: d3.interpolateSpectral,
+                                        fun: (t, r, s) => 100 * gviz.sPowInverse(t, 2),
+                                    })*/
+                )
 
             } else if (serv == "educ") {
                 const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
