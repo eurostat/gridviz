@@ -103,16 +103,19 @@
                         }),
                         strokeStyle,
                     ],
-                    { pixNb: 2 }
-                )
-                app.addLayerFromDataset(
-                    ds, [popStyle],
                     {
-                        pixNb: 8,
+                        pixNb: 2,
                         cellInfoHTML: c => {
                             const txt = c.avg_time_nearest_h == "NA" ? "Unknown time" : "<b>" + c.avg_time_nearest_h + "</b> min."
                             return txt + " to nearest health service<br><b>" + c.TOT_P + "</b> person" + (+c.TOT_P == 1 ? "" : "s")
                         }
+                    }
+                )
+                app.addLayerFromDataset(
+                    ds, [popStyle],
+                    {
+                        pixNb: 2,
+                        maxZoom: 300,
                     }
                 )
 
@@ -120,7 +123,7 @@
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorDiscreteLegend({
                         title: "Travel time to nearest health service, in minute",
-                        colorFun: cid => d3.interpolateSpectral(cFun(cid)),
+                        colors: Array.from(Array(breaks.length + 1).keys()).map(cid => d3.interpolateSpectral(cFun(cid))),
                         breaksText: ["3534", "FRDS"],
                         width: 300,
                     })
@@ -146,16 +149,19 @@
                         }),
                         strokeStyle,
                     ],
-                    { pixNb: 2 }
-                )
-                app.addLayerFromDataset(
-                    ds, [popStyle],
                     {
-                        pixNb: 8,
+                        pixNb: 2,
                         cellInfoHTML: c => {
                             const txt = c.avg_time_nearest_ep == "NA" ? "Unknown time" : "<b>" + c.avg_time_nearest_ep + "</b> min."
                             return txt + " to nearest primary education service<br><b>" + c.TOT_P + "</b> person" + (+c.TOT_P == 1 ? "" : "s")
                         }
+                    }
+                )
+                app.addLayerFromDataset(
+                    ds, [popStyle],
+                    {
+                        pixNb: 2,
+                        maxZoom: 300,
                     }
                 )
                 //legend
