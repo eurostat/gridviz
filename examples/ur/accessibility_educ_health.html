@@ -90,8 +90,12 @@
             app.layers = []
 
             if (serv == "health") {
-                const breaks = [5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
+                const breaks = [5, 10, 15, 20, 30, 45, 60, 90]
                 const cFun = cid => gviz.sPow(1 - cid / breaks.length, 2)
+                const cHTML = c => {
+                    const txt = c.avg_time_nearest_h == "NA" ? "Unknown time" : "<b>" + c.avg_time_nearest_h + "</b> min."
+                    return txt + " to nearest health service<br><b>" + c.TOT_P + "</b> person" + (+c.TOT_P == 1 ? "" : "s")
+                }
 
                 app.addLayerFromDataset(
                     ds,
@@ -105,10 +109,7 @@
                     ],
                     {
                         pixNb: 1.5,
-                        cellInfoHTML: c => {
-                            const txt = c.avg_time_nearest_h == "NA" ? "Unknown time" : "<b>" + c.avg_time_nearest_h + "</b> min."
-                            return txt + " to nearest health service<br><b>" + c.TOT_P + "</b> person" + (+c.TOT_P == 1 ? "" : "s")
-                        }
+                        cellInfoHTML: cHTML,
                     }
                 )
                 app.addLayerFromDataset(
@@ -116,6 +117,7 @@
                     {
                         pixNb: 1.5,
                         maxZoom: 300,
+                        cellInfoHTML: cHTML,
                     }
                 )
 
@@ -130,8 +132,12 @@
                 )
 
             } else if (serv == "educ") {
-                const breaks = [2, 4, 6, 8, 10, 20, 30]
+                const breaks = [2, 4, 6, 8, 10, 15, 20, 30]
                 const cFun = cid => gviz.sPow(1 - cid / breaks.length, 2)
+                const cHTML = c => {
+                    const txt = c.avg_time_nearest_ep == "NA" ? "Unknown time" : "<b>" + c.avg_time_nearest_ep + "</b> min."
+                    return txt + " to nearest primary education service<br><b>" + c.TOT_P + "</b> person" + (+c.TOT_P == 1 ? "" : "s")
+                }
 
                 app.addLayerFromDataset(
                     ds,
@@ -145,10 +151,7 @@
                     ],
                     {
                         pixNb: 1.5,
-                        cellInfoHTML: c => {
-                            const txt = c.avg_time_nearest_ep == "NA" ? "Unknown time" : "<b>" + c.avg_time_nearest_ep + "</b> min."
-                            return txt + " to nearest primary education service<br><b>" + c.TOT_P + "</b> person" + (+c.TOT_P == 1 ? "" : "s")
-                        }
+                        cellInfoHTML: cHTML,
                     }
                 )
                 app.addLayerFromDataset(
@@ -156,12 +159,19 @@
                     {
                         pixNb: 1.5,
                         maxZoom: 300,
+                        cellInfoHTML: cHTML,
                     }
                 )
-                //legend
-                //TODO add legend with classified colors
-                //lay.styles[0].legends.push(new gviz.ColorLegend({}))
 
+                //legend
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorDiscreteLegend({
+                        title: "Travel time to nearest primary education service, in minute",
+                        colors: Array.from(Array(breaks.length + 1).keys()).map(cid => d3.interpolateSpectral(cFun(cid))),
+                        breaksText: breaks,
+                        width: 300,
+                    })
+                )
             }
 
             //redraw
