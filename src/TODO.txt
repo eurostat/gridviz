@@ -1,8 +1,3 @@
-
-- accessibility:
-+ show color legend - implement discrete color legend
-+ mouse over: show the one where fun is defined
-
 - bivariate + stripes: show proper countries
 - bivariate legend: typologies + threshold values.
 - road transport perf: >100
