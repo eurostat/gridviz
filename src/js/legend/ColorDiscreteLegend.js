@@ -24,13 +24,16 @@ export class ColorDiscreteLegend extends Legend {
         /** @private @type {Array.<Array.<string>>} */
         this.breaksText = opts.breaksText
 
-        this.title = opts.title;
-        this.tickSize = opts.tickSize || 6
-        this.width = opts.width || 300
-        this.height = opts.height || 15
-        this.margin = opts.margin || 5
+        this.dimension = opts.dimension || { h: 15, w: 20 }
+        this.strokeColor = opts.strokeColor || "gray"
+        this.strokeWidth = opts.strokeWidth || 1
 
-        this.fontSize = opts.fontSize || "0.8em"
+        this.title = opts.title;
+        this.titleFontSize = opts.titleFontSize || "0.8em";
+        this.titleFontWeight = opts.titleFontWeight || "bold";
+
+        //label
+        this.labelFontSize = opts.labelFontSize || "0.8em"
         this.invert = opts.invert
     }
 
@@ -39,82 +42,61 @@ export class ColorDiscreteLegend extends Legend {
      */
     update(opts) {
 
-        //could happen when data is still loading
-        if (!opts.sColor) return
-
-
         //clear
         this.div.selectAll("*").remove();
 
-        const titleHeight = 12
-
-        const svgW = this.width + 2 * this.margin
-        const svgH = this.height + 3 * this.margin + titleHeight + this.tickSize + 10
-        const svg = this.div.append("svg").attr("width", svgW).attr("height", svgH)
-        //  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+        //build
 
         //title
-        svg.append("text").attr("x", this.margin).attr("y", this.margin)
-            .style("font-size", "0.8em")
-            .style("font-weight", "bold")
-            .style("alignment-baseline", "top")
-            .style("dominant-baseline", "hanging")
-            .style("pointer-events", "none")
-            .text(this.title)
+        if (this.title)
+            this.div.append("div")
+                .style("font-size", this.titleFontSize)
+                .style("font-weight", this.titleFontWeight)
+                .style("margin-bottom", "7px")
+                .text(this.title)
 
-        const g = svg.append("g").attr("transform", "translate(" + this.margin + " " + (2 * this.margin + titleHeight) + ")")
+        //classes
+        const nb = this.colors.length
+        if (nb == 0) return
 
+        for (let i = 0; i < nb; i++) {
 
-        /*/draw color bar
-        const w = this.width, h = this.height
-        const step = 5
-        for (let i = 0; i < w; i += step) {
-            let t = i / (w - 1)
-            if (this.invert) t = 1 - t
-            g.append("rect").attr("x", i).attr("y", 0).attr("width", step).attr("height", h).style("fill", this.colorRamp(t))
+            //make div for category
+            const d = this.div.append("div")
+            //to enable vertical centering
+            //.style("position", "relative")
+
+            const sw = this.strokeWidth
+
+            //draw graphic element
+            const h = (this.dimension.h || 15)
+            const w = (this.dimension.w || 20)
+            d
+                .append("div").style("display", "inline")
+
+                .append("svg")
+                .attr("width", w + 2 * sw).attr("height", h + 2 * sw)
+
+                .append("rect")
+                .attr("x", sw).attr("y", sw).attr("width", w).attr("height", h)
+                .style("fill", this.colors[i])
+                .style("stroke", this.strokeColor)
+                .style("stroke-width", this.strokeWidth)
+
+            /*/write label text
+            d.append("div")
+                //show on right of graphic
+                .style("display", "inline")
+
+                //center vertically
+                //.style("position", "absolute").style("top", "0").style("bottom", "0")
+
+                .style("padding-left", "5px")
+                .style("font-size", this.labelFontSize)
+                .text(cat[1])
+                */
         }
-*/
 
-        /*
-                for (let i = 0; i < this.ticks; i++) {
-                    let t = i / (this.ticks - 1)
-        
-                    //tick line
-                    g.append("line").attr("x1", w * t).attr("y1", 0).attr("x2", w * t).attr("y2", h + this.tickSize).style("stroke", "black")
-        
-                    //prepare tick label
-                    g.append("text")
-                        .attr("id", "ticklabel_" + i)
-                        .attr("x", w * t)
-                        .attr("y", h + this.tickSize + 2)
-                        .style("font-size", this.fontSize)
-                        //.style("font-weight", "bold")
-                        //.style("font-family", "Arial")
-                        .style("text-anchor", i == 0 ? "start" : i == (this.ticks - 1) ? "end" : "middle")
-                        .style("alignment-baseline", "top")
-                        .style("dominant-baseline", "hanging")
-                        .style("pointer-events", "none")
-                    //.text("-")
-                }
-        */
-
-
-
-
-        //update tick labels
-        /*
-                //label text format
-                const f = this.tickFormat && this.tickFormat != "text" ? format(this.tickFormat) : (v) => v;
-                for (let i = 0; i < this.ticks; i++) {
-                    let t = i / (this.ticks - 1)
-        
-                    const v = this.fun(t, opts.r, opts.sColor)
-                    const text = (v ? f(v) : "0") + (this.tickUnit ? this.tickUnit : "")
-        
-                    //tick label
-                    this.div.select("#" + "ticklabel_" + i).text(text)
-                }
-        */
     }
 
 

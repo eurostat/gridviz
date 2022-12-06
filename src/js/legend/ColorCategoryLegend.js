@@ -55,7 +55,7 @@ export class ColorCategoryLegend extends Legend {
                 .style("margin-bottom", "7px")
                 .text(this.title)
 
-        //cztegories
+        //categories
         const nb = this.colCat.length
         if (nb == 0) return
 
