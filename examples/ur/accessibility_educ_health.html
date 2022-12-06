@@ -99,7 +99,7 @@
                         new gviz.SquareColorWGLStyle({
                             colorCol: "avg_time_nearest_h",
                             color: d3.interpolateSpectral,
-                            tFun: v => cFun(gviz.getClass(v, breaks))
+                            tFun: v => v == "NA" ? undefined : cFun(gviz.getClass(v, breaks))
                         }),
                         strokeStyle,
                     ],
@@ -130,22 +130,16 @@
                 )
 
             } else if (serv == "educ") {
-                const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
+                const breaks = [2, 4, 6, 8, 10, 20, 30]
+                const cFun = cid => gviz.sPow(1 - cid / breaks.length, 2)
+
                 app.addLayerFromDataset(
                     ds,
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: "avg_time_nearest_ep",
                             color: d3.interpolateSpectral,
-                            tFun: (v, r, s) => {
-                                if (v === "NA") return
-                                let i = 0
-                                for (let b of breaks) {
-                                    if (+v <= b) break;
-                                    i++
-                                }
-                                return gviz.sPow(1 - (i - 1) / breaks.length, 2)
-                            },
+                            tFun: v => v == "NA" ? undefined : cFun(gviz.getClass(v, breaks))
                         }),
                         strokeStyle,
                     ],
