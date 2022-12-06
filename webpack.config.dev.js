@@ -1,5 +1,4 @@
 // dev
-const path = require("path");
 const LiveReloadPlugin = require("webpack-livereload-plugin");
 module.exports = {
   mode: "development",
@@ -8,7 +7,6 @@ module.exports = {
     publicPath: "dist/",
     library: "gviz",
     libraryTarget: "umd",
-    path: path.resolve(__dirname, "build")
   },
   /*node: {
     fs: "empty"
