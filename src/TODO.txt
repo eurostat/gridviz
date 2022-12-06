@@ -6,7 +6,7 @@ remove unused dependencies
 - bivariate + stripes: show proper countries
 - bivariate legend: typologies + threshold values.
 - bivariate maps: check
-- forest M9.18: size: Remain fix. remove coastal high values.
+- forest M9.18: remove coastal high values.
 
 - CLC map nuts stripes: Add oversea territories
 - cover oversea territories ?
