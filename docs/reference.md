@@ -626,7 +626,7 @@ Documentation coming soon.
 
 ## Others styles
 
-[Gridviz](https://github.com/eurostat/gridviz/) style library can easily be enriched with new styles, by extending the [style class](../src/js/Style.js).
+[Gridviz](https://github.com/eurostat/gridviz/) style library can easily be enriched with new styles, by extending the [style class](../src/Style.js).
 
 Any need or idea for new style ? feel free to [ask](https://github.com/eurostat/gridviz/issues/new) or [contribute](../README.md#support-and-contribution) !
 
@@ -651,7 +651,7 @@ Most of the [Gridviz](https://github.com/eurostat/gridviz/) styling rely on a **
 
 For more information on these functions and an overview of how they differ, see:
 - [this example](https://eurostat.github.io/gridviz/examples/stretching.html) ([code](../examples/stretching.html)).
-- the [code](../src/js/utils/stretching.js)
+- the [code](../src/utils/stretching.js)
 - those [graphs](https://observablehq.com/@jgaffuri/stretching)
 
 ## Background layer
@@ -688,7 +688,7 @@ The **addBackgroundLayer** method has the following parameters:
 | **visible**   |  boolean  | true  | The visibility of the layer. When _false_, the layer is not drawn. |
 | **minZoom** and **maxZoom**    |  number  | 0 and Infinity | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn. |
 
-For more information, [see the code](../src/js/BackgroundLayer.js).
+For more information, [see the code](../src/BackgroundLayer.js).
 
 ## Foreground information
 
@@ -739,7 +739,7 @@ The **setLabelLayer** method has the following parameters:
 | **offsetPix**   |  Array(number)  |  [5, 5] | Offset displacement for each label position, in pixel. |
 | **preprocess**   |  function(lb):boolean  | undefined  | A preprocess to run on each label after loading. It can be used to apply some specific treatment before, format the label data, project coordinates, etc. This method may also be used to filter unecessary label by returning *false* for the labels not to keep.  |
 
-For more information, [see the code](../src/js/LabelLayer.js).
+For more information, [see the code](../src/LabelLayer.js).
 
 ### Showing boundaries
 
@@ -794,7 +794,7 @@ The **setBoundaryLayer** method has the following parameters:
 | **width**   |  function(bn,zf):string  | (f, zf) => 2  | A function returning the width of the boundary **bn** for zoom factor **zf**. |
 | **lineDash**   |  function(bn,zf):string  | (f, zf) => undefined  | A function returning the dash model of the boundary **bn** for zoom factor **zf**. |
 
-For more information, [see the code](../src/js/LineLayer.js).
+For more information, [see the code](../src/LineLayer.js).
 
 ## Tooltip
 
@@ -820,7 +820,7 @@ new gviz.App(containerDiv)
 
 Changing tooltip style: Documentation coming soon.
 
-For more information, [see the code](../src/js/Tooltip.js).
+For more information, [see the code](../src/Tooltip.js).
 
 
 

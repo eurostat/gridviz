@@ -53,7 +53,7 @@ https://www.npmjs.com/package/avro-js
 
 or PBF
 https://gavinr.com/protocol-buffers-protobuf-browser/
-https://github.com/protobufjs/protobuf.js/
+https://github.com/protobufprotobuf.
 https://github.com/mapbox/pbf
 
 
@@ -144,7 +144,7 @@ https://github.com/CreatingData/deepscatter
 
 geotiff
 https://geotiffjs.github.io/
-https://github.com/geotiffjs/geotiff.js/
+https://github.com/geotiffgeotiff.
 
 new EUR layers:
 https://land.copernicus.eu/global/products/
