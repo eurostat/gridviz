@@ -124,7 +124,7 @@
                     new gviz.ColorDiscreteLegend({
                         title: "Travel time to nearest health service, in minute",
                         colors: Array.from(Array(breaks.length + 1).keys()).map(cid => d3.interpolateSpectral(cFun(cid))),
-                        breaksText: ["3534", "FRDS"],
+                        breaksText: breaks,
                         width: 300,
                     })
                 )

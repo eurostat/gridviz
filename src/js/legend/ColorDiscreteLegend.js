@@ -30,6 +30,8 @@ export class ColorDiscreteLegend extends Legend {
         this.titleFontSize = opts.titleFontSize || "0.8em";
         this.titleFontWeight = opts.titleFontWeight || "bold";
 
+        this.tickSize = opts.tickSize || 3
+
         //label
         this.labelFontSize = opts.labelFontSize || "0.8em"
         this.invert = opts.invert
@@ -58,34 +60,38 @@ export class ColorDiscreteLegend extends Legend {
         if (nb == 0) return
         const w = this.width / nb
 
+        //make svg element
+        const svg = this.div.append("svg").attr("width", this.width).attr("height", this.height + this.tickSize + 2 + 10)
+
+        //draw graphic elements
         for (let i = 0; i < nb; i++) {
-
-            //draw graphic element
-            this.div
-                .append("div").style("display", "inline")
-
-                .append("svg")
-                .attr("width", w).attr("height", this.height)
-
-                .append("rect")
-                .attr("x", 0).attr("y", 0).attr("width", w).attr("height", this.height)
+            svg.append("rect")
+                .attr("x", i * w).attr("y", 0).attr("width", w).attr("height", this.height)
                 .style("fill", this.colors[i])
+        }
 
-            /*/write label text
-            d.append("div")
-                //show on right of graphic
-                .style("display", "inline")
+        //tick line
+        for (let i = 1; i < nb; i++) {
+            svg.append("line").attr("x1", w * i).attr("y1", 0).attr("x2", w * i).attr("y2", this.height + this.tickSize).style("stroke", "black")
+        }
 
-                //center vertically
-                //.style("position", "absolute").style("top", "0").style("bottom", "0")
+        //labels
+        for (let i = 1; i < nb; i++) {
 
-                .style("padding-left", "5px")
+            //prepare label
+            svg.append("text")
+                .attr("id", "ticklabel_" + i)
+                .attr("x", w * i)
+                .attr("y", this.height + this.tickSize + 2)
                 .style("font-size", this.labelFontSize)
-                .text(cat[1])
-                */
+                //.style("font-weight", "bold")
+                //.style("font-family", "Arial")
+                .style("text-anchor", i == 0 ? "start" : i == (this.ticks - 1) ? "end" : "middle")
+                .style("alignment-baseline", "top")
+                .style("dominant-baseline", "hanging")
+                .style("pointer-events", "none")
+                .text(this.breaksText[i - 1])
         }
 
     }
-
-
 }
