@@ -1,4 +1,5 @@
 const path = require("path");
+
 module.exports = {
   mode: "production",
   entry: ["./src/js/index.js"],
@@ -10,7 +11,7 @@ module.exports = {
     path: path.resolve(__dirname, "build")
   },
   devtool: false,
-  module: {
+  /*module: {
     rules: [
       {
         test: /\.js$/,
@@ -26,7 +27,7 @@ module.exports = {
         }
       },
     ],
-  },
+  },*/
   watch: false,
   optimization: {
     usedExports: true,

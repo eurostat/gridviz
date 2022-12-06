@@ -1,3 +1,15 @@
+
+    "@babel/runtime": "^7.12.1",
+
+dev
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/preset-env": "^7.9.0",
+    "babel-loader": "^8.1.0",
+
+
+
+
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 
 - bivariate + stripes: show proper countries
