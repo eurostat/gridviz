@@ -80,8 +80,6 @@
         popStyle.legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhabitants", fillColor: "#000000dd" }))
 
 
-
-
         //
         const update = () => {
 
@@ -92,22 +90,16 @@
             app.layers = []
 
             if (serv == "health") {
-                const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
+                const breaks = [5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
+                const cFun = cid => gviz.sPow(1 - cid / breaks.length, 2)
+
                 app.addLayerFromDataset(
                     ds,
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: "avg_time_nearest_h",
                             color: d3.interpolateSpectral,
-                            tFun: (v, r, s) => {
-                                if (v === "NA") return
-                                let i = 0
-                                for (let b of breaks) {
-                                    if (+v <= b) break;
-                                    i++
-                                }
-                                return gviz.sPow(1 - (i - 1) / breaks.length, 2)
-                            },
+                            tFun: v => cFun(gviz.getClass(v, breaks))
                         }),
                         strokeStyle,
                     ],
@@ -128,7 +120,7 @@
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorDiscreteLegend({
                         title: "Travel time to nearest health service, in minute",
-                        colors: ["blue", "red", "green"],
+                        colorFun: cid => d3.interpolateSpectral(cFun(cid)),
                         breaksText: ["3534", "FRDS"],
                         width: 300,
                     })

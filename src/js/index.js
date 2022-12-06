@@ -45,6 +45,7 @@ export { SegmentWidthLegend } from "./legend/SegmentWidthLegend"
 export { goToStraight, zoomTo } from "./utils/zoomUtils"
 export * from "./utils/stretching.js"
 
+export { getClass } from "./utils/Utils"
 
 
 
