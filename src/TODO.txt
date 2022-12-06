@@ -1,13 +1,15 @@
+- coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
+
 - bivariate + stripes: show proper countries
 - bivariate legend: typologies + threshold values.
-- road transport perf: >100
-- CLC map nuts stripes: Add oversea territories
 - bivariate maps: check
 - forest M9.18: size: Remain fix. remove coastal high values.
-- coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
-- Kos border
+
+- CLC map nuts stripes: Add oversea territories
 - cover oversea territories ?
+- Kos border
 - Legend rounding ?
+- road transport perf: >100
 
 video https://eduard.earth/
 
