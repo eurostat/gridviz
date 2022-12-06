@@ -2,7 +2,6 @@
 
 import { Legend } from "../Legend";
 import { format } from "d3-format";
-import { ShapeColorSizeStyle } from "../style/ShapeColorSizeStyle"
 
 /**
  * A legend element for proportional symbols.
@@ -18,6 +17,9 @@ export class SizeLegend extends Legend {
 
         //exageration
         this.exaggerationFactor = opts.exaggerationFactor || 0.8
+
+        //if value is to be forced
+        this.value = opts.value || undefined
 
         //symbol
         /** 
@@ -38,7 +40,7 @@ export class SizeLegend extends Legend {
     }
 
     /**
-     * @param {{ style: ShapeColorSizeStyle, r: number, zf: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts 
+     * @param {{ style: import("../style/ShapeColorSizeStyle").ShapeColorSizeStyle, r: number, zf: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts 
      */
     update(opts) {
 
@@ -48,23 +50,30 @@ export class SizeLegend extends Legend {
         //clear
         this.div.selectAll("*").remove();
 
-        //get max value
-        const value_ = opts.sSize.max * this.exaggerationFactor
+        //get value
+        let value = this.value
+        if (value == undefined) {
+            //compute 'nice value
 
-        //take 'nice' value (power of ten, or multiple)
-        let pow10 = Math.log10(value_)
-        pow10 = Math.floor(pow10)
-        let value = Math.pow(10, pow10)
-        if (value * 8 <= value_) value *= 8
-        else if (value * 6 <= value_) value *= 6
-        else if (value * 5 <= value_) value *= 5
-        else if (value * 4 <= value_) value *= 4
-        else if (value * 2.5 <= value_) value *= 2.5
-        else if (value * 2 <= value_) value *= 2
+            //get max value
+            const value_ = opts.sSize.max * this.exaggerationFactor
+
+            //take 'nice' value (power of ten, or multiple)
+            let pow10 = Math.log10(value_)
+            pow10 = Math.floor(pow10)
+            value = Math.pow(10, pow10)
+            if (value * 8 <= value_) value *= 8
+            else if (value * 6 <= value_) value *= 6
+            else if (value * 5 <= value_) value *= 5
+            else if (value * 4 <= value_) value *= 4
+            else if (value * 2.5 <= value_) value *= 2.5
+            else if (value * 2 <= value_) value *= 2
+        }
+
 
         const d = this.div.append("div")
-            //to enable vertical centering
-            //.style("position", "relative")
+        //to enable vertical centering
+        //.style("position", "relative")
 
         //compute size of symbol, in pix
         const size = opts.style.size(value, opts.r, opts.sSize, opts.zf) / opts.zf;
