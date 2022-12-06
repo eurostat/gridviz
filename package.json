@@ -27,7 +27,7 @@
     "url": "https://github.com/eurostat/gridviz/issues",
     "email": "Joseph.DAVIES@ext.ec.europa.eu"
   },
-  "main": "build/gridviz.min.js",
+  "main": "dist/gridviz.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "export NODE_OPTIONS=--openssl-legacy-provider && npm run build-dev",
@@ -37,7 +37,7 @@
     "build-prod": "webpack --config webpack.config.prod.js"
   },
   "files": [
-    "build/gridviz.min.js"
+    "dist/gridviz.min.js"
   ],
   "dependencies": {
     "d3-color": "^3.1.0",

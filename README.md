@@ -52,7 +52,7 @@ gridviz = require("gridviz");
 ### standalone
 
 ```javascript
-<script src="https://unpkg.com/gridviz/build/gridviz.min.js"></script>
+<script src="https://unpkg.com/gridviz/dist/gridviz.min.js"></script>
 ```
 
 ## Documentation

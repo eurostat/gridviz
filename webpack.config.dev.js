@@ -5,7 +5,7 @@ module.exports = {
   mode: "development",
   output: {
     filename: "gridviz.js",
-    publicPath: "build/",
+    publicPath: "dist/",
     library: "gviz",
     libraryTarget: "umd",
     path: path.resolve(__dirname, "build")

@@ -4,7 +4,7 @@ module.exports = {
   mode: "production",
   output: {
     filename: "gridviz.min.js",
-    publicPath: "build/",
+    publicPath: "dist/",
     library: "gviz",
     libraryTarget: "umd",
     path: path.resolve(__dirname, "build")

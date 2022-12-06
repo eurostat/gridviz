@@ -10,7 +10,6 @@ dev
 
 
 Consider removing defaults:
-Using entry: './src/index.js': you can omit it, that's the default.
 Using output.path: path.resolve(__dirname, 'dist'): you can omit it, that's the default.
 Using output.filename: '[name].js': you can omit it, that's the default.
 
