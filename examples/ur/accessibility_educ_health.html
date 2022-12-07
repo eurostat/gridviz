@@ -59,7 +59,10 @@
                 filterColor: zf => "#ffffffb0",
             })
 
-
+        const breaksH = [5, 10, 15, 20, 30, 45, 60, 90]
+        const cFunH = cid => gviz.sPow(1 - cid / breaksH.length, 2)
+        const breaksE = [2, 4, 6, 8, 10, 15, 20, 30]
+        const cFunE = cid => gviz.sPow(1 - cid / breaksE.length, 2)
 
         //accessibility dataset
         ds = app.makeMultiScaleTiledCSVGridDataset(
@@ -67,9 +70,12 @@
             r => tiledGridsURL + "accessibility/" + r + "m/",
             {
                 preprocess: (c) => {
+                    //filter
                     const keep = c.avg_time_nearest_h != "NA" || c.avg_time_nearest_ep != "NA"
                     if (!keep) return false;
-                    //TODO classify
+                    //classify
+                    c.cH = c.avg_time_nearest_h == "NA" ? "NA" : (gviz.getClass(c.avg_time_nearest_h, breaksH))
+                    c.cE = c.avg_time_nearest_ep == "NA" ? "NA" : (gviz.getClass(c.avg_time_nearest_ep, breaksE))
                 }
             }
         )
@@ -96,8 +102,6 @@
             app.layers = []
 
             if (serv == "health") {
-                const breaks = [5, 10, 15, 20, 30, 45, 60, 90]
-                const cFun = cid => gviz.sPow(1 - cid / breaks.length, 2)
                 const cHTML = c => {
                     const txt = c.avg_time_nearest_h == "NA" ? "Unknown time" : "<b>" + c.avg_time_nearest_h + "</b> min."
                     return txt + " to nearest health service<br><b>" + c.TOT_P + "</b> person" + (+c.TOT_P == 1 ? "" : "s")
@@ -109,7 +113,7 @@
                         new gviz.SquareColorWGLStyle({
                             colorCol: "avg_time_nearest_h",
                             color: d3.interpolateSpectral,
-                            tFun: v => v == "NA" ? undefined : cFun(gviz.getClass(v, breaks))
+                            tFun: v => v == "NA" ? undefined : cFunH(gviz.getClass(v, breaksH))
                         }),
                         strokeStyle,
                     ],
@@ -131,15 +135,13 @@
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorDiscreteLegend({
                         title: "Travel time to nearest health service, in minute",
-                        colors: Array.from(Array(breaks.length + 1).keys()).map(cid => d3.interpolateSpectral(cFun(cid))),
-                        breaksText: breaks,
+                        colors: Array.from(Array(breaksH.length + 1).keys()).map(cid => d3.interpolateSpectral(cFunH(cid))),
+                        breaksText: breaksH,
                         width: 300,
                     })
                 )
 
             } else if (serv == "educ") {
-                const breaks = [2, 4, 6, 8, 10, 15, 20, 30]
-                const cFun = cid => gviz.sPow(1 - cid / breaks.length, 2)
                 const cHTML = c => {
                     const txt = c.avg_time_nearest_ep == "NA" ? "Unknown time" : "<b>" + c.avg_time_nearest_ep + "</b> min."
                     return txt + " to nearest primary education service<br><b>" + c.TOT_P + "</b> person" + (+c.TOT_P == 1 ? "" : "s")
@@ -151,7 +153,7 @@
                         new gviz.SquareColorWGLStyle({
                             colorCol: "avg_time_nearest_ep",
                             color: d3.interpolateSpectral,
-                            tFun: v => v == "NA" ? undefined : cFun(gviz.getClass(v, breaks))
+                            tFun: v => v == "NA" ? undefined : cFunE(gviz.getClass(v, breaksE))
                         }),
                         strokeStyle,
                     ],
@@ -173,8 +175,8 @@
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorDiscreteLegend({
                         title: "Travel time to nearest primary education service, in minute",
-                        colors: Array.from(Array(breaks.length + 1).keys()).map(cid => d3.interpolateSpectral(cFun(cid))),
-                        breaksText: breaks,
+                        colors: Array.from(Array(breaksE.length + 1).keys()).map(cid => d3.interpolateSpectral(cFunE(cid))),
+                        breaksText: breaksE,
                         width: 300,
                     })
                 )
