@@ -63,17 +63,19 @@
         const breaksH = [5, 10, 15, 20, 30, 45, 60, 90]
         const breaksE = [2, 4, 6, 8, 10, 15, 20, 30]
 
-        //define colors ramps
+        //define class colors
         const colorsH = {}, colorsH_=[]
         for (let cid = 0; cid < breaksH.length + 1; cid++) {
             colorsH[cid] = d3.interpolateSpectral(gviz.sPow(1 - cid / breaksH.length, 2))
             colorsH_.push(colorsH[cid])
         }
+        colorsH.NA = "#0002"
         const colorsE = {}, colorsE_=[]
         for (let cid = 0; cid < breaksE.length + 1; cid++) {
             colorsE[cid] = d3.interpolateSpectral(gviz.sPow(1 - cid / breaksE.length, 2))
             colorsE_.push(colorsE[cid])
         }
+        colorsE.NA = "#0002"
 
         //accessibility dataset
         ds = app.makeMultiScaleTiledCSVGridDataset(
