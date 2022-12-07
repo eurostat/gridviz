@@ -59,12 +59,18 @@
                 filterColor: zf => "#ffffffb0",
             })
 
+
+
         //accessibility dataset
         ds = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => tiledGridsURL + "accessibility/" + r + "m/",
             {
-                preprocess: (c) => c.avg_time_nearest_h != "NA" || c.avg_time_nearest_ep != "NA"
+                preprocess: (c) => {
+                    const keep = c.avg_time_nearest_h != "NA" || c.avg_time_nearest_ep != "NA"
+                    if (!keep) return false;
+                    //TODO classify
+                }
             }
         )
 
