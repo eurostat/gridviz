@@ -1,7 +1,7 @@
-- coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
-- bivariate + stripes maps: select countries
-- bivariate legend: typologies + threshold values.
+- CLC stripes: remove UK data
 
+- bivariate legend: typologies + threshold values.
+- bivariate + stripes maps: select countries
 - degurba, forest, CLC, population, road perf: exclude UK + BH
 - forest M9.18: remove coastal high values.
 - Legend rounding ?
@@ -9,6 +9,7 @@
 - cover oversea territories ?
 - Kos border
 - road transport perf: >100
+- coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
 
 video https://eduard.earth/
 
