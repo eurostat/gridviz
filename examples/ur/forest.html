@@ -123,7 +123,7 @@
                 lay.pixNb = 6
 
                 //set legend
-                lay.styles[0].legends = [dltLeg, new gviz.SizeLegend({ shape: "circle", value: 80, labelUnitText: "% tree cover density", fillColor: "#666d" })]
+                lay.styles[0].legends = [dltLeg, new gviz.SizeLegend({ shape: "circle", value: 100, labelUnitText: "% tree cover density", fillColor: "#666d" })]
 
             } else if (style == "tcd") {
 
@@ -141,8 +141,8 @@
                 //set legend
                 lay.styles[0].legends = [new gviz.ColorLegend({
                     title: "Tree cover density (%)",
-                    width: 600,
-                    ticks: 7,
+                    width: 250,
+                    ticks: 5,
                     colorRamp: (t) => d3.interpolateBuGn(0.2 + 0.8 * t),
                     fun: (t, r, s) => 100 * t,
                 })]
