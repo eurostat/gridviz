@@ -59,10 +59,21 @@
                 filterColor: zf => "#ffffffb0",
             })
 
+        //define class breaks
         const breaksH = [5, 10, 15, 20, 30, 45, 60, 90]
-        const cFunH = cid => gviz.sPow(1 - cid / breaksH.length, 2)
         const breaksE = [2, 4, 6, 8, 10, 15, 20, 30]
-        const cFunE = cid => gviz.sPow(1 - cid / breaksE.length, 2)
+
+        //define colors ramps
+        const colorsH = {}, colorsH_=[]
+        for (let cid = 0; cid < breaksH.length + 1; cid++) {
+            colorsH[cid] = d3.interpolateSpectral(gviz.sPow(1 - cid / breaksH.length, 2))
+            colorsH_.push(colorsH[cid])
+        }
+        const colorsE = {}, colorsE_=[]
+        for (let cid = 0; cid < breaksE.length + 1; cid++) {
+            colorsE[cid] = d3.interpolateSpectral(gviz.sPow(1 - cid / breaksE.length, 2))
+            colorsE_.push(colorsE[cid])
+        }
 
         //accessibility dataset
         ds = app.makeMultiScaleTiledCSVGridDataset(
@@ -89,6 +100,7 @@
             size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
             shape: () => "circle",
         })
+        //set legend
         popStyle.legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhabitants", fillColor: "#000000dd" }))
 
 
@@ -110,10 +122,9 @@
                 app.addLayerFromDataset(
                     ds,
                     [
-                        new gviz.SquareColorWGLStyle({
-                            colorCol: "avg_time_nearest_h",
-                            color: d3.interpolateSpectral,
-                            tFun: v => v == "NA" ? undefined : cFunH(gviz.getClass(v, breaksH))
+                        new gviz.SquareColorCatWGLStyle({
+                            colorCol: "cH",
+                            color: colorsH,
                         }),
                         strokeStyle,
                     ],
@@ -135,7 +146,7 @@
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorDiscreteLegend({
                         title: "Travel time to nearest health service, in minute",
-                        colors: Array.from(Array(breaksH.length + 1).keys()).map(cid => d3.interpolateSpectral(cFunH(cid))),
+                        colors: colorsH_,
                         breaksText: breaksH,
                         width: 300,
                     })
@@ -150,10 +161,9 @@
                 app.addLayerFromDataset(
                     ds,
                     [
-                        new gviz.SquareColorWGLStyle({
-                            colorCol: "avg_time_nearest_ep",
-                            color: d3.interpolateSpectral,
-                            tFun: v => v == "NA" ? undefined : cFunE(gviz.getClass(v, breaksE))
+                        new gviz.SquareColorCatWGLStyle({
+                            colorCol: "cE",
+                            color: colorsE,
                         }),
                         strokeStyle,
                     ],
@@ -175,7 +185,7 @@
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorDiscreteLegend({
                         title: "Travel time to nearest primary education service, in minute",
-                        colors: Array.from(Array(breaksE.length + 1).keys()).map(cid => d3.interpolateSpectral(cFunE(cid))),
+                        colors: colorsE_,
                         breaksText: breaksE,
                         width: 300,
                     })

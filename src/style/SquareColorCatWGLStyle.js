@@ -75,7 +75,7 @@ export class SquareColorCatWGLStyle extends Style {
         for (let i = 0; i < nb; i++) {
             c = cells[i]
             const cat = c[this.colorCol];
-            if (!cat) { console.log("Unexpected category: " + cat); continue; }
+            if (cat == undefined) { console.log("Unexpected category: " + cat); continue; }
             /** @type {number} */
             const i_ = this.catToI[cat];
             if (isNaN(+i_)) { console.log("Unexpected category index: " + cat + " " + i_); continue; }
