@@ -5,6 +5,7 @@
 - bivariate legend: typologies + threshold values.
 - forest M9.18: remove coastal high values.
 
+- degurba, forest, CLC, population, road perf: exclude UK + BH
 - Legend rounding ?
 - CLC map nuts stripes: Add oversea territories
 - cover oversea territories ?
@@ -13,6 +14,7 @@
 
 video https://eduard.earth/
 
+use babeljs: https://babeljs.io/setup#installation
 
 
 use parquet
@@ -39,10 +41,7 @@ https://github.com/mapbox/pbf
 
 
 
-webpack:
-check https://webpack.js.org/plugins
-upgrade to v5 ?
-
+webpack: check plugins https://webpack.js.org/plugins
 
 https://ieeexplore.ieee.org/document/1532144
 https://observablehq.com/@spren9er/two-tone-pseudo-color-scales
