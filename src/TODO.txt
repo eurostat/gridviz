@@ -1,4 +1,5 @@
-- CLC stripes: remove UK data
+parquet
+
 
 - bivariate legend: typologies + threshold values.
 - bivariate + stripes maps: select countries
