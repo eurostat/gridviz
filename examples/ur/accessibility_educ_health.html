@@ -118,7 +118,7 @@
             if (serv == "health") {
                 const cHTML = c => {
                     const txt = c.avg_time_nearest_h == "NA" ? "Unknown time" : "<b>" + c.avg_time_nearest_h + "</b> min."
-                    return txt + " to nearest health service<br><b>" + c.TOT_P + "</b> person" + (+c.TOT_P == 1 ? "" : "s")
+                    return txt + " to nearest health service<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s")
                 }
 
                 app.addLayerFromDataset(
@@ -157,7 +157,7 @@
             } else if (serv == "educ") {
                 const cHTML = c => {
                     const txt = c.avg_time_nearest_ep == "NA" ? "Unknown time" : "<b>" + c.avg_time_nearest_ep + "</b> min."
-                    return txt + " to nearest primary education service<br><b>" + c.TOT_P + "</b> person" + (+c.TOT_P == 1 ? "" : "s")
+                    return txt + " to nearest primary education service<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s")
                 }
 
                 app.addLayerFromDataset(
