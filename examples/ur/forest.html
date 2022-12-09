@@ -115,12 +115,12 @@
                     new gviz.StrokeStyle({
                         sizeCol: "tcd",
                         size: (v, r, s, zf) => 1.2 * r * Math.sqrt(v / 100),
-                        strokeColor: () => "#006600",
-                        strokeWidth: (v, r, s, z) => 0.3 * z,
+                        strokeColor: () => "#000",
+                        strokeWidth: (v, r, s, z) => 0.1 * z,
                         shape: () => "circle"
                     })
                 ]
-                lay.pixNb = 6
+                lay.pixNb = 5
 
                 //set legend
                 lay.styles[0].legends = [dltLeg, new gviz.SizeLegend({ shape: "circle", value: 100, labelUnitText: "% tree cover density", fillColor: "#666d" })]
