@@ -1,5 +1,6 @@
-parquet
-
+- forest: gray
+- road perf legend: add labels "low" VS "high" - instead of figures
+- accessibility map legend: show square with "no data" ? As discrete legend with one element ?
 
 - bivariate legend: typologies + threshold values.
 - bivariate + stripes maps: select countries
@@ -11,8 +12,7 @@ parquet
 - Kos border
 - road transport perf: >100
 - coverage: 27 EU MS, the four EFTA countries and five more countries: Montenegro North Macedonia Albania Serbia Türkiye
-
-video https://eduard.earth/
+- forest: show size legend with several circles
 
 use babeljs: https://babeljs.io/setup#installation
 
