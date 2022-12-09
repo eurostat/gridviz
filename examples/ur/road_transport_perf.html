@@ -70,11 +70,13 @@
         //add legend
         app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
             title: "Road transport performance",
-            width: 300,
-            ticks: 9,
+            width: 200,
+            ticks: 2,
             colorRamp: d3.interpolateGnBu,
-            fun: (t, r, s) => 100 * gviz.sExpRevInverse(t, 2),
+            tickFormat: "text",
+            fun: (t, r, s) => t == 0 ? "Low" : t == 1 ? "High" : "X",
         }))
+        //new gviz.ColorLegend({ title: "Equilibre jeunes/âgés", ticks: 2, tickFormat: "text", colorRamp: d3.interpolateSpectral, fun: (t, r, s) => t == 0 ? "Plus jeunes" : t == 0.5 ? "équilibre" : "Plus âgés" })
 
     </script>
 
