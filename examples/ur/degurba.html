@@ -52,7 +52,7 @@
 
         let containerDiv = document.getElementById("vizDegurba");
         const app = new gviz.App(containerDiv, { legendDivId: "legendDegurba" })
-            .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([40, 7500])
+            .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(5000).setZoomFactorExtent([40, 8000])
             .setLabelLayer(
                 gviz.getEuronymeLabelLayer("EUR", 50, {
                     ccIn: ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "PL", "PT", "MT", "NL", "RO", "SE", "SK", "SI", "CH", "IS", "NO", "LI", "RS", "XK", "AL", "TR", "ME", "MK"],

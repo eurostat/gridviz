@@ -52,7 +52,7 @@
 
         let containerDiv = document.getElementById("vizPop");
         const app = new gviz.App(containerDiv, { legendDivId: "legendPop" })
-            .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(2500).setZoomFactorExtent([40, 7500])
+            .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(5000).setZoomFactorExtent([40, 8000])
             .setLabelLayer(
                 gviz.getEuronymeLabelLayer("EUR", 50, {
                     ccIn: ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "PL", "PT", "MT", "NL", "RO", "SE", "SK", "SI", "CH", "IS", "NO", "LI", "RS", "XK", "AL", "TR", "ME", "MK"],
@@ -115,8 +115,8 @@
                 //add legend
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
                     title: "Number of inhabitants",
-                    width: 600,
-                    ticks: 7,
+                    width: 400,
+                    ticks: 5,
                     colorRamp: d3.interpolateOrRd,
                     fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
                 }))
