@@ -1,3 +1,7 @@
+degurba: show also population in tooltip
+show population on landcover and road transport perf ?
+add turkstat copyright
+Degurba level 2
 - degurba, forest, CLC, population, road perf: exclude UK + BH
 - bivariate + stripes maps: select countries
 - forest M9.18: remove coastal high values.
