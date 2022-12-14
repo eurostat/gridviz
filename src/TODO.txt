@@ -1,6 +1,6 @@
 - accessibility map legend: show square with "no data" ? As discrete legend with one element ?
+- bivariate legend: typologies + threshold values - rotate ?.
 
-- bivariate legend: typologies + threshold values.
 - bivariate + stripes maps: select countries
 - degurba, forest, CLC, population, road perf: exclude UK + BH
 - forest M9.18: remove coastal high values.

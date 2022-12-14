@@ -64,13 +64,13 @@
         const breaksE = [2, 4, 6, 8, 10, 15, 20, 30]
 
         //define class colors
-        const colorsH = {}, colorsH_=[]
+        const colorsH = {}, colorsH_ = []
         for (let cid = 0; cid < breaksH.length + 1; cid++) {
             colorsH[cid] = d3.interpolateSpectral(gviz.sPow(1 - cid / breaksH.length, 2))
             colorsH_.push(colorsH[cid])
         }
         colorsH.NA = "#0002"
-        const colorsE = {}, colorsE_=[]
+        const colorsE = {}, colorsE_ = []
         for (let cid = 0; cid < breaksE.length + 1; cid++) {
             colorsE[cid] = d3.interpolateSpectral(gviz.sPow(1 - cid / breaksE.length, 2))
             colorsE_.push(colorsE[cid])
@@ -144,13 +144,19 @@
                     }
                 )
 
-                //legend
+                //legends
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorDiscreteLegend({
                         title: "Travel time to nearest health service, in minutes",
                         colors: colorsH_,
                         breaksText: breaksH,
                         width: 300,
+                    })
+                )
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorCategoryLegend({
+                        colCat: [[colorsH.NA, "No data"]],
+                        shape: "square",
                     })
                 )
 
@@ -183,7 +189,7 @@
                     }
                 )
 
-                //legend
+                //legends
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorDiscreteLegend({
                         title: "Travel time to nearest primary education service, in minutes",
@@ -192,6 +198,13 @@
                         width: 300,
                     })
                 )
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorCategoryLegend({
+                        colCat: [[colorsH.NA, "No data"]],
+                        shape: "square",
+                    })
+                )
+
             }
 
             //redraw
