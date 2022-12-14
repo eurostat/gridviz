@@ -49,6 +49,7 @@
                 filterColor: zf => "#ffffffc0",
             })
 
+            //road transport performance layer
             .addMultiScaleTiledCSVGridLayer(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 r => tiledGridsURL + "road_transp_perf/" + r + "m/",
@@ -67,8 +68,8 @@
                     preprocess: (c) => c.rp != ""
                 })
 
-        //add legend
-        app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
+        //perf legend
+        app.layers[1].styles[0].legends.push(new gviz.ColorLegend({
             title: "Road transport performance",
             width: 200,
             ticks: 2,
@@ -76,7 +77,6 @@
             tickFormat: "text",
             fun: (t, r, s) => t == 0 ? "Low" : t == 1 ? "High" : "X",
         }))
-        //new gviz.ColorLegend({ title: "Equilibre jeunes/âgés", ticks: 2, tickFormat: "text", colorRamp: d3.interpolateSpectral, fun: (t, r, s) => t == 0 ? "Plus jeunes" : t == 0.5 ? "équilibre" : "Plus âgés" })
 
     </script>
 
