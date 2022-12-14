@@ -1,7 +1,5 @@
-- bivariate legend: typologies + threshold values - rotate ?.
-
-- bivariate + stripes maps: select countries
 - degurba, forest, CLC, population, road perf: exclude UK + BH
+- bivariate + stripes maps: select countries
 - forest M9.18: remove coastal high values.
 - Legend rounding ?
 - CLC map nuts stripes: Add oversea territories
