@@ -144,6 +144,12 @@
                     return out.join("")
                 },
                 preprocess: c => {
+                    if (c.CNTR_ID == "UK") return false
+                    if (c.CNTR_ID == "BA") return false
+                    if (c.CNTR_ID == "IM") return false
+                    //console.log(c.CNTR_ID)
+                    delete c.CNTR_ID
+
                     if (+c.TOT != 1) c.c = "zzz";
                     else
                         c.c = +c.uc ? "uc" : +c.du ? "du" : +c.sdu ? "sdu" : +c.sbu ? "sbu" : +c.r ? "r" : +c.lr ? "lr" : +c.vlr ? "vlr" : "NA";
