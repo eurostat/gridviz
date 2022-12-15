@@ -129,9 +129,22 @@
         )
 
         //accessibility dataset
+        //define class breaks
+        const breaksH = [5, 10, 15, 20, 30, 45, 60, 90]
+        const breaksE = [2, 4, 6, 8, 10, 15, 20, 30]
         ds.acc = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/accessibility/" + r + "m/",
+            {
+                preprocess: (c) => {
+                    //filter
+                    const keep = c.avg_time_nearest_h != "NA" || c.avg_time_nearest_ep != "NA"
+                    if (!keep) return false;
+                    //classify
+                    c.cH = c.avg_time_nearest_h == "NA" ? "NA" : (gviz.getClass(c.avg_time_nearest_h, breaksH))
+                    c.cE = c.avg_time_nearest_ep == "NA" ? "NA" : (gviz.getClass(c.avg_time_nearest_ep, breaksE))
+                }
+            }
         )
 
         //road transp perf dataset
@@ -392,76 +405,124 @@
 
                 //accessibility
             } else if (layCode === "accHealth") {
-                const breaks = [0, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 90]
+
+                //define class colors
+                const colorsH = {}, colorsH_ = []
+                for (let cid = 0; cid < breaksH.length + 1; cid++) {
+                    colorsH[cid] = d3.interpolateSpectral(gviz.sPow(1 - cid / breaksH.length, 2))
+                    colorsH_.push(colorsH[cid])
+                }
+                colorsH.NA = "#0002"
+
+                const cHTML = c => {
+                    const txt = c.avg_time_nearest_h == "NA" ? "Unknown time" : "<b>" + c.avg_time_nearest_h + "</b> min."
+                    return txt + " to nearest health service<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s")
+                }
+
+                //common styles
+                const strokeStyle = new gviz.StrokeStyle({ maxZoom: 70 });
+                const popStyle = new gviz.ShapeColorSizeStyle({
+                    color: () => "#000000aa",
+                    sizeCol: "TOT_P",
+                    size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
+                    shape: () => "circle",
+                })
+                //set legend
+                popStyle.legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhabitants", fillColor: "#000000dd" }))
+
+
                 app.addLayerFromDataset(
                     ds.acc,
                     [
-                        new gviz.SquareColorWGLStyle({
-                            colorCol: "avg_time_nearest_h",
-                            color: d3.interpolateSpectral,
-                            tFun: (v, r, s) => {
-                                if (v === "NA") return
-                                let i = 0
-                                for (let b of breaks) {
-                                    if (+v <= b) break;
-                                    i++
-                                }
-                                return gviz.sPow(1 - (i - 1) / breaks.length, 2)
-                            },
+                        new gviz.SquareColorCatWGLStyle({
+                            colorCol: "cH",
+                            color: colorsH,
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 80 }),
-                        new gviz.ShapeColorSizeStyle({
-                            color: () => "#000000dd",
-                            sizeCol: "TOT_P",
-                            size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
-                            shape: () => "circle",
-                        })
+                        strokeStyle,
                     ],
                     {
-                        pixNb: 8,
-                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_h + "</b> min. to nearest service<br><b>" + c.TOT_P + "</b> inhabitant(s)"
+                        pixNb: 1.5,
+                        cellInfoHTML: cHTML,
                     }
                 )
-                //legend
-                //TODO add legend with classified colors
-                //lay.styles[0].legends.push(new gviz.ColorLegend({}))
-                app.layers[0].styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
+                app.addLayerFromDataset(
+                    ds.acc, [popStyle],
+                    {
+                        pixNb: 1.5,
+                        maxZoom: 300,
+                        cellInfoHTML: cHTML,
+                    }
+                )
+
+                //legends
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorDiscreteLegend({
+                        title: "Travel time to nearest health service, in minutes",
+                        colors: colorsH_,
+                        breaksText: breaksH,
+                        width: 300,
+                    })
+                )
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorCategoryLegend({
+                        colCat: [[colorsH.NA, "No data"]],
+                        shape: "square",
+                    })
+                )
 
             } else if (layCode === "accEducPrim") {
-                const breaks = [0, 2, 4, 6, 8, 10, 20, 30]
+
+                //define class colors
+                const colorsE = {}, colorsE_ = []
+                for (let cid = 0; cid < breaksE.length + 1; cid++) {
+                    colorsE[cid] = d3.interpolateSpectral(gviz.sPow(1 - cid / breaksE.length, 2))
+                    colorsE_.push(colorsE[cid])
+                }
+                colorsE.NA = "#0002"
+
+                const cHTML = c => {
+                    const txt = c.avg_time_nearest_ep == "NA" ? "Unknown time" : "<b>" + c.avg_time_nearest_ep + "</b> min."
+                    return txt + " to nearest primary education service<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s")
+                }
+
                 app.addLayerFromDataset(
                     ds.acc,
                     [
-                        new gviz.SquareColorWGLStyle({
-                            colorCol: "avg_time_nearest_ep",
-                            color: d3.interpolateSpectral,
-                            tFun: (v, r, s) => {
-                                if (v === "NA") return
-                                let i = 0
-                                for (let b of breaks) {
-                                    if (+v <= b) break;
-                                    i++
-                                }
-                                return gviz.sPow(1 - (i - 1) / breaks.length, 2)
-                            },
+                        new gviz.SquareColorCatWGLStyle({
+                            colorCol: "cE",
+                            color: colorsE,
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 80 }),
-                        new gviz.ShapeColorSizeStyle({
-                            color: () => "#000000dd",
-                            sizeCol: "TOT_P",
-                            size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
-                            shape: () => "circle",
-                        })
+                        strokeStyle,
                     ],
                     {
-                        pixNb: 8,
-                        cellInfoHTML: c => "<b>" + c.avg_time_nearest_ep + "</b> min. to nearest school<br><b>" + c.TOT_P + "</b> inhabitant(s)"
+                        pixNb: 1.5,
+                        cellInfoHTML: cHTML,
                     }
                 )
-                //legend
-                //TODO add legend with classified colors
-                //lay.styles[0].legends.push(new gviz.ColorLegend({}))
-                app.layers[0].styles[2].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "#000000dd" }))
+                app.addLayerFromDataset(
+                    ds.acc, [popStyle],
+                    {
+                        pixNb: 1.5,
+                        maxZoom: 300,
+                        cellInfoHTML: cHTML,
+                    }
+                )
+
+                //legends
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorDiscreteLegend({
+                        title: "Travel time to nearest primary education service, in minutes",
+                        colors: colorsE_,
+                        breaksText: breaksE,
+                        width: 300,
+                    })
+                )
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorCategoryLegend({
+                        colCat: [[colorsH.NA, "No data"]],
+                        shape: "square",
+                    })
+                )
 
             } else if (layCode === "lc") {
 
