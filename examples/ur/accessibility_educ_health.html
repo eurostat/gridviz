@@ -86,6 +86,11 @@
             r => tiledGridsURL + "accessibility/" + r + "m/",
             {
                 preprocess: (c) => {
+                    if (c.CNTR_ID == "UK") return false
+                    if (c.CNTR_ID == "BA") return false
+                    //console.log(c.CNTR_ID)
+                    delete c.CNTR_ID
+
                     //filter
                     const keep = c.avg_time_nearest_h != "NA" || c.avg_time_nearest_ep != "NA"
                     if (!keep) return false;
