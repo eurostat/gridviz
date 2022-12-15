@@ -73,14 +73,33 @@
             })
 
 
-        //population layer
-        app.addMultiScaleTiledCSVGridLayer(
+        //dataset
+        const ds = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => tiledGridsURL + "population/" + r + "m/",
+            r => tiledGridsURL + "degurba/" + r + "m/",
+            {
+                preprocess: c => {
+                    if (c.CNTR_ID == "UK") return false
+                    if (c.CNTR_ID == "BA") return false
+                    if (c.CNTR_ID == "IM") return false
+                    //console.log(c.CNTR_ID)
+                    delete c.CNTR_ID
+
+                    if (+c.TOT != 1) c.c = "zzz";
+                    else
+                        c.c = +c.uc ? "uc" : +c.du ? "du" : +c.sdu ? "sdu" : +c.sbu ? "sbu" : +c.r ? "r" : +c.lr ? "lr" : +c.vlr ? "vlr" : "NA";
+                },
+            }
+        )
+
+
+        //population layer
+        app.addLayerFromDataset(
+            ds,
             [
                 new gviz.ShapeColorSizeStyle({
                     color: () => "#666",
-                    sizeCol: "2018",
+                    sizeCol: "TOT_P",
                     size: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.3),
                     shape: () => "circle",
                 })
@@ -93,9 +112,8 @@
 
 
         //degurba layer
-        app.addMultiScaleTiledCSVGridLayer(
-            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => tiledGridsURL + "degurba/" + r + "m/",
+        app.addLayerFromDataset(
+            ds,
             [
                 new gviz.CompositionStyle({
                     color: degurbaColors,
@@ -142,19 +160,9 @@
                     if (+c.vlr) out.push(c.vlr + " mostly uninhabited cell" + (+c.vlr == 1 ? "" : "s") + "<br>")
                     if (+c.NA) out.push(c.NA + " unknown cell" + (+c.NA == 1 ? "" : "s") + "<br>")
                     return out.join("")
-                },
-                preprocess: c => {
-                    if (c.CNTR_ID == "UK") return false
-                    if (c.CNTR_ID == "BA") return false
-                    if (c.CNTR_ID == "IM") return false
-                    //console.log(c.CNTR_ID)
-                    delete c.CNTR_ID
-
-                    if (+c.TOT != 1) c.c = "zzz";
-                    else
-                        c.c = +c.uc ? "uc" : +c.du ? "du" : +c.sdu ? "sdu" : +c.sbu ? "sbu" : +c.r ? "r" : +c.lr ? "lr" : +c.vlr ? "vlr" : "NA";
                 }
-            })
+            }
+        )
 
         //population legend
         app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhabitants", fillColor: "#666d" }))
