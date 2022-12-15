@@ -430,7 +430,6 @@
                 //set legend
                 popStyle.legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhabitants", fillColor: "#000000dd" }))
 
-
                 app.addLayerFromDataset(
                     ds.acc,
                     [
@@ -485,6 +484,17 @@
                     return txt + " to nearest primary education service<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s")
                 }
 
+                //common styles
+                const strokeStyle = new gviz.StrokeStyle({ maxZoom: 70 });
+                const popStyle = new gviz.ShapeColorSizeStyle({
+                    color: () => "#000000aa",
+                    sizeCol: "TOT_P",
+                    size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
+                    shape: () => "circle",
+                })
+                //set legend
+                popStyle.legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhabitants", fillColor: "#000000dd" }))
+
                 app.addLayerFromDataset(
                     ds.acc,
                     [
@@ -519,7 +529,7 @@
                 )
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
-                        colCat: [[colorsH.NA, "No data"]],
+                        colCat: [[colorsE.NA, "No data"]],
                         shape: "square",
                     })
                 )
