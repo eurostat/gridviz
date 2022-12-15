@@ -1,5 +1,8 @@
-Degurba level 2
+Degurba level 2 - remove legend title and leave map title / metadata
+set view
+zoom
 - degurba, forest, CLC, population, road perf: exclude UK + BH
+- grid maps: remove boundaries for UK/BA
 - bivariate + stripes maps: select countries
 - forest M9.18: remove coastal high values.
 - Legend rounding ?

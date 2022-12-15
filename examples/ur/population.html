@@ -73,9 +73,18 @@
             })
 
 
+        //load dataset
         const popDataset = app.makeMultiScaleTiledCSVGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => tiledGridsURL + "population/" + r + "m/",
+            {
+                preprocess: (c) => {
+                    if (c.CNTR_ID == "UK") return false
+                    if (c.CNTR_ID == "BA") return false
+                    //console.log(c.CNTR_ID)
+                    delete c.CNTR_ID
+                }
+            }
         )
 
         //default color
