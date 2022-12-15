@@ -139,7 +139,7 @@
             ],
             {
                 pixNb: 3.5,
-                cellInfoHTML: c => {
+                cellInfoHTML: (c, r) => {
                     if (!c.TOT) return "No information";
                     if (c.TOT == 1) return (
                         +c.uc ? "City" :
@@ -149,7 +149,11 @@
                                         +c.r ? "Village" :
                                             +c.lr ? "Dispersed rural" :
                                                 +c.vlr ? "Mostly uninhabited" :
-                                                    "Unknown");
+                                                    "Unknown")
+                        +
+                        //show population
+                        ((+c.TOT_P) ? "<br><b>" + c.TOT_P + "</b> inhabitant" + (+c.TOT_P == 1 ? "" : "s") + " per " + (r * r / 1000000) + "km²" : "");
+
                     const out = []
                     //if (+c.uc) out.push(c.uc + " large city cell" + (+c.uc == 1 ? "" : "s") + "<br>")
                     if (+c.uc + +c.du) out.push((+c.uc + +c.du) + " city cell" + (+c.uc + +c.du == 1 ? "" : "s") + "<br>")
@@ -159,6 +163,7 @@
                     if (+c.lr) out.push(c.lr + " dispersed rural cell" + (+c.lr == 1 ? "" : "s") + "<br>")
                     if (+c.vlr) out.push(c.vlr + " mostly uninhabited cell" + (+c.vlr == 1 ? "" : "s") + "<br>")
                     if (+c.NA) out.push(c.NA + " unknown cell" + (+c.NA == 1 ? "" : "s") + "<br>")
+
                     return out.join("")
                 }
             }

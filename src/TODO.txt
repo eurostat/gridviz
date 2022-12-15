@@ -1,4 +1,3 @@
-degurba: use population data from degurba dataset + show population in tooltip
 zoom buttons
 - degurba, forest, CLC, population, road perf: exclude UK + BH
 - grid maps: remove boundaries for UK/BA
