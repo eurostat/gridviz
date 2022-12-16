@@ -1,5 +1,5 @@
 zoom buttons
-- degurba, forest, CLC, population, road perf: exclude UK + BH
+- forest, CLC: exclude UK + BH
 - grid maps: remove boundaries for UK/BA
 - bivariate + stripes maps: select countries
 - forest M9.18: remove coastal high values. -srcnodata <value [value...]>
@@ -11,6 +11,8 @@ zoom buttons
 - forest: show size legend with several circles
 
 use babeljs: https://babeljs.io/setup#installation
+
+CLC: filter + to 200m
 
 
 use parquet
@@ -70,7 +72,6 @@ EUR elevation: use filter to show urb/water ?
 
 TODO document euronyme
 
-further test geotiff reading performance ?
 FR BD foret
 
 zoom in/out
