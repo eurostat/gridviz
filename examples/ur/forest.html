@@ -66,7 +66,7 @@
             })
 
             .addMultiScaleTiledCSVGridLayer(
-                [/*100, 200, 500,*/ 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                [/*100, 200,*/ 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 r => tiledGridsURL + "forest/" + r + "m/",
                 [
                 ],
@@ -76,6 +76,13 @@
                         if (c.dlt == "1") st += "<br>Mainly broadleaved trees"
                         if (c.dlt == "2") st += "<br>Mainly coniferous trees"
                         return st;
+                    },
+                    preprocess: c => {
+                        if (c.CNTR_ID == "UK") return false
+                        if (c.CNTR_ID == "BA") return false
+                        if (c.CNTR_ID == "IM") return false
+                        //console.log(c.CNTR_ID)
+                        delete c.CNTR_ID
                     },
                 })
 

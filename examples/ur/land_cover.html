@@ -167,6 +167,12 @@
                 {
                     pixNb: 1.75,
                     cellInfoHTML: c => clcLabels[c.clc],
+                    preprocess: c => {
+                        if (c.CNTR_ID == "UK") return false
+                        if (c.CNTR_ID == "BA") return false
+                        if (c.CNTR_ID == "IM") return false
+                        delete c.CNTR_ID
+                    },
                 })
 
         /*/legend

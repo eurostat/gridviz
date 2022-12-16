@@ -1,5 +1,5 @@
 zoom buttons
-- forest, CLC: exclude UK + BH
+- forest: check tiling filtering
 - grid maps: remove boundaries for UK/BA
 - bivariate + stripes maps: select countries
 - forest M9.18: remove coastal high values. -srcnodata <value [value...]>
