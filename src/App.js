@@ -179,7 +179,7 @@ export class App {
                 //.style("padding", this.padding)
                 .style("border", "0px")
                 .style("border-radius", "5px")
-                .style("box-shadow", "5px 5px 5px grey")
+                .style("box-shadow", "3px 3px 3px grey, -3px -3px 3px #ddd")
                 .style("font-family", "Helvetica, Arial, sans-serif")
                 .style("top", "20px")
                 .style("right", "20px")
