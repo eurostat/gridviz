@@ -9,7 +9,7 @@
     <div id="vizAcc" style="position:relative; height:600px; width:900px;">
 
         <div
-            style="font-size: 0.9em; position: absolute; left: 10px; top: 10px; width: auto; height: auto; padding: 5px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey">
+            style="font-size: 0.9em; position: absolute; left: 10px; top: 10px; width: auto; height: auto; padding: 5px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd">
             <input type="radio" name="serv" id="educ" value="educ">
             <label for="educ">Primary education</label>
             <br>
@@ -18,13 +18,11 @@
         </div>
 
         <div
-            style="position: absolute; right: 10px; top: 10px; width: auto; height: auto; padding: 5px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey">
-            <div style="font: bold 18px sans-serif; font-size: 22px;">
-                <a style="width: 26px; height: 26px; display: block; border-bottom: 1px; color: black; text-align: center; text-decoration: none;"
-                    href="#" title="Zoom in">+</a>
-                <a style="width: 26px; height: 26px; display: block; border: none; color: black; text-align: center; text-decoration: none;"
-                    href="#" title="Zoom out">−</a>
-            </div>
+            style="font: bold 20px sans-serif; position: absolute; right: 10px; top: 10px; width: auto; height: auto; padding: 5px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd">
+            <a id="zoomin" style="width: 30px; height: 30px; display: block; border: none; color: black; text-align: center; text-decoration: none;"
+                href="#" title="Zoom in">+</a><hr style="margin: 0px;">
+            <a id="zoomout" style="width: 30px; height: 30px; display: block; border: none; color: black; text-align: center; text-decoration: none;"
+                href="#" title="Zoom out">−</a>
         </div>
 
         <div
