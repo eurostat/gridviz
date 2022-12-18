@@ -26,6 +26,17 @@
             <label for="joyplot">Joyplot</label>
         </div>
 
+        <div
+            style="font: bold 20px sans-serif; position: absolute; right: 10px; top: 10px; width: auto; height: auto; padding: 5px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd">
+            <a id="zoomin"
+                style="width: 30px; height: 30px; display: block; border: none; color: black; text-align: center; text-decoration: none;"
+                href="#" title="Zoom in">+</a>
+            <hr style="margin: 0px;">
+            <a id="zoomout"
+                style="width: 30px; height: 30px; display: block; border: none; color: black; text-align: center; text-decoration: none;"
+                href="#" title="Zoom out">−</a>
+        </div>
+
         <div id="legendPop"
             style="position: absolute; left: 5px; bottom: 5px; width: auto; height: auto; padding: 0px; border: 0px; border-radius: 5px; background: #FFFFFFDD; line-height: 1.6; box-shadow: 5px 5px 5px grey, -3px -3px 3px #ddd">
         </div>
@@ -181,6 +192,10 @@
         document.querySelector('#color').addEventListener('change', update)
         document.querySelector('#pillar').addEventListener('change', update)
         document.querySelector('#joyplot').addEventListener('change', update)
+
+        //zoom
+        document.querySelector('#zoomin').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
+        document.querySelector('#zoomout').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 1.2).redraw())
 
         //initialise
         update()
