@@ -1,4 +1,4 @@
-- babeljs in gridviz: https://babeljs.io/setup#installation
+publish
 - Kos border
 - grid maps: remove boundaries for UK/BA
 - bivariate + stripes maps: select countries
