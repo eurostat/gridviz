@@ -7,18 +7,19 @@
 
 <body style="font-family: sans-serif;">
 
-    <div
-        style="font: bold 20px sans-serif; position: absolute; right: 10px; top: 10px; width: auto; height: auto; padding: 5px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd">
-        <a id="zoomin"
-            style="width: 30px; height: 30px; display: block; border: none; color: black; text-align: center; text-decoration: none;"
-            href="#" title="Zoom in">+</a>
-        <hr style="margin: 0px;">
-        <a id="zoomout"
-            style="width: 30px; height: 30px; display: block; border: none; color: black; text-align: center; text-decoration: none;"
-            href="#" title="Zoom out">−</a>
-    </div>
-
     <div id="vizLC" style="position:relative; height:600px; width:900px;">
+
+        <div
+            style="font: bold 20px sans-serif; position: absolute; right: 10px; top: 10px; width: auto; height: auto; padding: 5px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd">
+            <a id="zoomin"
+                style="width: 30px; height: 30px; display: block; border: none; color: black; text-align: center; text-decoration: none;"
+                href="#" title="Zoom in">+</a>
+            <hr style="margin: 0px;">
+            <a id="zoomout"
+                style="width: 30px; height: 30px; display: block; border: none; color: black; text-align: center; text-decoration: none;"
+                href="#" title="Zoom out">−</a>
+        </div>
+
         <div
             style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
             <span style="font-size: 0.8em; font-family: sans-serif;"><a target="_blank"
@@ -30,8 +31,9 @@
                     style="text-decoration:none">Turkstat</a>
             </span>
         </div>
+
+        <div id="legendLC"></div>
     </div>
-    <div id="legendLC"></div>
 
     <script src="../../dist/gridviz.js"></script>
     <script>

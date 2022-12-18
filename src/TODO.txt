@@ -1,6 +1,3 @@
-- add zoom buttons
-
-
 - babeljs in gridviz: https://babeljs.io/setup#installation
 - Kos border
 - grid maps: remove boundaries for UK/BA
