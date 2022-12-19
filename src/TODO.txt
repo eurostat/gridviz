@@ -1,6 +1,5 @@
 parquet: see in observable - use duckdb client only
 
-
 - bivariate + stripes maps: select countries
 - forest M9.18: remove coastal high values. -srcnodata <value [value...]>
 - CLC map nuts stripes: Add oversea territories
