@@ -92,6 +92,7 @@
             {
                 preprocess: c => {
                     if (c.CNTR_ID == "UK") return false
+                    if (c.CNTR_ID == "0-UK") return false
                     if (c.CNTR_ID == "BA") return false
                     if (c.CNTR_ID == "IM") return false
                     //console.log(c.CNTR_ID)
