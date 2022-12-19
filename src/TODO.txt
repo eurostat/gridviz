@@ -1,4 +1,6 @@
-- grid maps: remove boundaries for UK/BA
+check remaining UK cells
+check outside of bounds event - on legend
+
 - bivariate + stripes maps: select countries
 - forest M9.18: remove coastal high values. -srcnodata <value [value...]>
 - CLC map nuts stripes: Add oversea territories
