@@ -1,4 +1,6 @@
 parquet: see in observable - use duckdb client only
+https://observablehq.com/@monitus/get-remote-parquet-files-directly
+https://observablehq.com/@bmschmidt/hello-parquet-wasm
 
 - bivariate + stripes maps: select countries
 - forest M9.18: remove coastal high values. -srcnodata <value [value...]>
