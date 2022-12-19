@@ -98,9 +98,11 @@ export const getEurostatBoundariesLayer = function (opts) {
     const scale = opts.scale || "03M"
     const nutsLevel = opts.nutsLevel || "3"
     const col = opts.col || "#888"
+    const colKosovo = opts.colKosovo || "#bcbcbc"
 
     opts.color = opts.color || ((f, zf) => {
         const p = f.properties
+        if (p.id >= 100000) return colKosovo
         if (p.co === "T") return col
         if (zf < 400) return col
         else if (zf < 1000) return p.lvl >= 3 ? "" : col

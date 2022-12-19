@@ -1,11 +1,9 @@
-- Kos border
 - grid maps: remove boundaries for UK/BA
 - bivariate + stripes maps: select countries
 - forest M9.18: remove coastal high values. -srcnodata <value [value...]>
 - Legend rounding ?
 - CLC map nuts stripes: Add oversea territories
 - cover oversea territories ?
-- forest: show size legend with several circles
 
 geotiff tiling - use for forest/CLC/elevation 200m ?
 
