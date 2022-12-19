@@ -70,6 +70,8 @@ export class SizeLegend extends Legend {
             else if (value * 2 <= value_) value *= 2
         }
 
+        if (!value) return
+
 
         const d = this.div.append("div")
         //to enable vertical centering

@@ -193,7 +193,10 @@ IE: https://www.cso.ie/en/census/census2016reports/workplacezonesand1kmpopulatio
 EE: https://estat.stat.ee/StatistikaKaart/VKR
 SI: https://gis.stat.si/#lang=en
 UK-NI: irregular grid - with 100m. population https://www.nisra.gov.uk/support/geography/grid-square-products
-NO: 250m population by gender. many years.
+NO:
+Statistics Norway: https://kart.ssb.no/
+For more grid statistics (Norwegian only): https://www.ssb.no/natur-og-miljo/areal/artikler/kart-og-geodata-fra-ssb
+250m population by gender. many years.
 Kart og geodata fra SSB (own homepage, search for «Nedlasting av rutenettstatistikk»)
 Befolkningsstatistikk (POP) (250m / 1000m / 5000m) - Population statistics
 Boligstatistikk (DWE) (250m / 1000m / 5000m) - Dwelling statistics
@@ -202,6 +205,10 @@ Virksomhetsstatistikk (EST) (250m / 1000m / 5000m) - Enterprise statistics
 Landbrukseiendommer (AGP) (1000m / 5000m) - Agricultural properties
 Jordbruksstatistikk (AGH) (1000m / 5000m) - Agricultural holdings
 Handels- og serviceruter/-soner (250m) - Commerce and service routes/zones
+
+ideamapsnetwork.org - developing a gridded dataset on urban poverty
+US Census Bureau International Database and Subnational Projections (for PEPFAR countries) has extensive time series data through 2100 as well - Samuel I Dupre (CENSUS/POP FED)
+WorldPop - long time series
 
 
 

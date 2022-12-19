@@ -44,6 +44,8 @@ export class SideCatStyle extends Style {
      * @param {GeoCanvas} cg 
      */
     draw(cells, r, cg) {
+        if (!cells || cells.length == 0)
+            return;
 
         //zoom factor
         const zf = cg.getZf()
