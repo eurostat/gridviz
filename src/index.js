@@ -99,9 +99,11 @@ export const getEurostatBoundariesLayer = function (opts) {
     const nutsLevel = opts.nutsLevel || "3"
     const col = opts.col || "#888"
     const colKosovo = opts.colKosovo || "#bcbcbc"
+    const showOth = opts.showOth == undefined ? true : opts.showOth
 
     opts.color = opts.color || ((f, zf) => {
         const p = f.properties
+        if (!showOth /*&& p.co == "F"*/ && p.eu != "T" && p.cc != "T" && p.efta != "T" && p.oth === "T") return;
         if (p.id >= 100000) return colKosovo
         if (p.co === "T") return col
         if (zf < 400) return col
