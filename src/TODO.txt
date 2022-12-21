@@ -2,14 +2,6 @@ parquet: see in observable - use duckdb client only
 https://observablehq.com/@monitus/get-remote-parquet-files-directly
 https://observablehq.com/@bmschmidt/hello-parquet-wasm
 
-- bivariate + stripes maps: select countries
-- forest M9.18: remove coastal high values. -srcnodata <value [value...]>
-- CLC map nuts stripes: Add oversea territories
-- Legend rounding ?
-- cover oversea territories ?
-
-geotiff tiling - use for forest/CLC/elevation 200m ?
-
 use parquet
 
 https://github.com/duckdb/duckdb-wasm/tree/master/packages/duckdb-wasm
@@ -34,6 +26,7 @@ https://github.com/protobufprotobuf.
 https://github.com/mapbox/pbf
 
 
+geotiff tiling - use for forest/CLC/elevation 200m ?
 
 webpack: check plugins https://webpack.js.org/plugins
 
