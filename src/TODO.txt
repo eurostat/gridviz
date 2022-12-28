@@ -1,17 +1,10 @@
-parquet: see in observable - use duckdb client only
-https://observablehq.com/@monitus/get-remote-parquet-files-directly
-https://observablehq.com/@bmschmidt/hello-parquet-wasm
-
-use parquet
-
-https://github.com/duckdb/duckdb-wasm/tree/master/packages/duckdb-wasm
-https://stackoverflow.com/questions/74613024/reading-parquet-format-from-webpack-application?noredirect=1#comment131753360_74613024
-https://observablehq.com/@observablehq/csv-to-parquet
-https://duckdb.org/2021/10/29/duckdb-wasm.html
+modulise: https://webpack.js.org/guides/code-splitting/
 
 write in java:
 https://parquet.apache.org/docs/contribution-guidelines/modules/
 https://github.com/Parquet/parquet-compatibility/blob/master/parquet-compat/src/test/java/parquet/compat/test/ConvertUtils.java
+
+
 + duckDB-wasm ?
 make joins ?
 https://twitter.com/ericMauviere/status/1592783882382082053?s=20&t=va4Gbw8-KiqZV4n5Fwa9BA 
