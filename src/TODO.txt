@@ -9,6 +9,9 @@ https://github.com/Parquet/parquet-compatibility/blob/master/parquet-compat/src/
 make joins ?
 https://twitter.com/ericMauviere/status/1592783882382082053?s=20&t=va4Gbw8-KiqZV4n5Fwa9BA 
 
+arrow
+https://arrow.apache.org/docs/js/
+
 or avro
 https://github.com/mtth/avsc
 https://www.npmjs.com/package/avro-js
