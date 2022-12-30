@@ -1,6 +1,9 @@
-add CSV grid layer example: bug.
+add CSV grid layer example: bug. check !
 
+make module
 modularise: https://webpack.js.org/guides/code-splitting/
+
+
 
 write in java:
 https://parquet.apache.org/docs/contribution-guidelines/modules/
