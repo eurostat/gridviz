@@ -15,6 +15,7 @@ import { LineLayer } from './LineLayer';
 
 import { select } from "d3-selection";
 import { monitor, monitorDuration } from "./utils/Utils"
+import { ParquetGrid } from './dataset/ParquetGrid';
 //import { GeoTIFF } from './dataset/GeoTIFF';
 
 /**
@@ -400,9 +401,9 @@ export class App {
      * @param {object=} opts The parameters of the dataset.
      * @returns {Dataset}
      */
-     /*makeCSVGridDataset(url, resolution, opts) {
+    makeCSVGridDataset(url, resolution, opts) {
         return new Dataset([new CSVGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); })], [], opts)
-    }*/
+    }
 
     /**
      * Make a parquet grid dataset.
@@ -412,10 +413,10 @@ export class App {
      * @param {object=} opts The parameters of the dataset.
      * @returns {Dataset}
      */
-     /*makeParquetGridDataset(url, resolution, opts) {
+    makeParquetGridDataset(url, resolution, opts) {
         return new Dataset([new ParquetGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); })], [], opts)
     }
-*/
+
 
     /**
      * Make a tiled CSV grid dataset.
@@ -490,12 +491,12 @@ export class App {
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
-     addParquetGridLayer(url, resolution, styles, opts) {
+    addParquetGridLayer(url, resolution, styles, opts) {
         const ds = this.makeParquetGridDataset(url, resolution, opts)
         return this.addLayerFromDataset(ds, styles, opts);
     }
 
-    
+
 
     /**
     * 

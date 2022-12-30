@@ -28,4 +28,11 @@ module.exports = {
     usedExports: true,
     minimize: true,
   },
+
+
+  experiments: {
+    asyncWebAssembly: true,
+    //syncWebAssembly: true
+  },
+
 };

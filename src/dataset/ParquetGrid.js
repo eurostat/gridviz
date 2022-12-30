@@ -1,6 +1,8 @@
 //@ts-check
 
 import { DatasetComponent } from "../DatasetComponent";
+import { tableFromIPC } from "apache-arrow"
+import { readParquet } from "parquet-wasm"
 
 /**
  * A dataset composed of a single parquet file (not tiled).
@@ -43,6 +45,11 @@ export class ParquetGrid extends DatasetComponent {
         //load data
         this.infoLoadingStatus = "loading";
 
+        console.log("aahgvhva")
+
+        //const ss = tableFromIPC
+        //const sggs = readParquet
+
         return this;
     }
 
@@ -66,4 +73,13 @@ export class ParquetGrid extends DatasetComponent {
             this.cellsViewCache.push(cell)
         }
     }
+}
+
+/**
+ * Retrieve parquet wasm decoder
+ */
+const getReadParquet = async () => {
+    //const parquetModule = await import("https://unpkg.com/parquet-wasm@0.4.0-beta.5/esm/arrow2.js");
+    //await parquetModule.default();
+    //return parquetModule.readParquet;
 }

@@ -1,5 +1,6 @@
 // dev
 const LiveReloadPlugin = require("webpack-livereload-plugin");
+
 module.exports = {
   mode: "development",
   output: {
@@ -9,5 +10,11 @@ module.exports = {
   },
   plugins: [new LiveReloadPlugin()],
   watch: true,
-  devtool: "inline-source-map"
+  devtool: "inline-source-map",
+
+  experiments: {
+    asyncWebAssembly: true,
+    //syncWebAssembly: true
+  },
+
 };
