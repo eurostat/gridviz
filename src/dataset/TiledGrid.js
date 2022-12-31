@@ -8,7 +8,7 @@ import { DatasetComponent } from "../DatasetComponent";
 import { monitor, monitorDuration } from "../utils/Utils"
 
 /**
- * A tiled dataset, composed of CSV tiles.
+ * A tiled dataset, composed of CSV (or parquet) tiles.
  * 
  * @author Joseph Davies, Julien Gaffuri
  */
@@ -17,7 +17,7 @@ export class TiledGrid extends DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {App} app The application.
-     * @param {{preprocess?:(function(import("../Dataset").Cell):boolean)}} opts 
+     * @param {{preprocess?:(function(import("../Dataset").Cell):boolean), format?: import("../DatasetComponent").Format}} opts 
      */
     constructor(url, app, opts = {}) {
         super(url, 0, opts)
