@@ -1,4 +1,5 @@
 //@ts-check
+"use strict";
 
 import { GeoCanvas } from './GeoCanvas';
 import { Layer } from './Layer';
@@ -7,7 +8,7 @@ import { Dataset } from './Dataset';
 import { Tooltip } from './Tooltip';
 
 import { CSVGrid } from './dataset/CSVGrid';
-//import { ParquetGrid } from './dataset/ParquetGrid';
+import { ParquetGrid } from './dataset/ParquetGrid';
 import { TiledGrid } from './dataset/TiledGrid';
 import { BackgroundLayer } from './BackgroundLayer';
 import { LabelLayer } from './LabelLayer';
@@ -15,8 +16,6 @@ import { LineLayer } from './LineLayer';
 
 import { select } from "d3-selection";
 import { monitor, monitorDuration } from "./utils/Utils"
-import { ParquetGrid } from './dataset/ParquetGrid';
-//import { GeoTIFF } from './dataset/GeoTIFF';
 
 /**
  * A gridviz application.
@@ -470,18 +469,17 @@ export class App {
     //tiled multiscale
 
     /**
-     * Make a multi scale tiled CSV grid dataset.
+     * Make a multi scale tiled CSV/parquet grid dataset.
      * 
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURL
-     * @param {import('./DatasetComponent').Format} format
      * @param {{preprocess?:function(import('./Dataset').Cell):boolean}} opts 
      * @returns {Dataset}
      */
     makeMultiScaleTiledGridDataset(resolutions, resToURL, format, opts) {
         return Dataset.make(
             resolutions,
-            (res) => new TiledGrid(resToURL(res), this, { ...opts, format: format }).loadInfo(() => { this.cg.redraw(); }),
+            (res) => new TiledGrid(resToURL(res), this, opts).loadInfo(() => { this.cg.redraw(); }),
             opts
         )
     }
@@ -489,6 +487,7 @@ export class App {
 
     /**
      * Make a multi scale tiled CSV grid dataset.
+     * DEPRECATED
      * 
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURL
