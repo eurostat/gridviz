@@ -29,7 +29,7 @@
 
                 new gviz.App(containerDiv)
                     //set position and zoom
-                    .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+                    .setGeoCenter({ x: 4000, y: 2000 }).setZoomFactor(3000)
                     //add CSV layer
                     .addParquetGridLayer(
                         //data URL
@@ -45,9 +45,6 @@
                         ],
                         { readParquetFun: readParquet }
                     )
-
-
-
 
             }
         )

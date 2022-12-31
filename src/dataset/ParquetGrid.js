@@ -62,17 +62,48 @@ export class ParquetGrid extends DatasetComponent {
                             const arrowUint8Array = this.readParquetFun(parquetUint8Array);
                             //console.log(arrowUint8Array)
                             const t = tableFromIPC(arrowUint8Array);
-                            console.log(t)
+                            //console.log(t)
 
-                            console.log(t.schema.fields)
+                            //console.log(t.schema.fields)
 
                             //see https://arrow.apache.org/docs/js/
                             //https://loaders.gl/arrowjs/docs/developer-guide/tables#record-tojson-and-toarray
-                            const elt = t.get(0)
-                            console.log(elt.toJSON())
-                            console.log(elt.toArray())
+                            //const elt = t.get(0)
+                            //console.log(elt.toJSON())
+                            //console.log(elt.toArray())
 
-                            //TODO load !
+                            const data = []
+                            for (const e of t) {
+                                const c = e.toJSON()
+                                data.push(c)
+                            }
+                            t = null
+
+                            //convert coordinates in numbers
+                            for (const c of data) { c.x = +c.x; c.y = +c.y; }
+
+                            //preprocess/filter
+                            if (this.preprocess) {
+                                this.cells = [];
+                                for (const c of data) {
+                                    const b = this.preprocess(c)
+                                    if (b == false) continue;
+                                    this.cells.push(c)
+                                }
+                            } else {
+                                this.cells = data;
+                            }
+
+                            //console.log(this.cells)
+
+
+                            //TODO check if redraw is necessary
+                            //that is if the dataset belongs to a layer which is visible at the current zoom level
+
+                            //execute the callback, usually a draw function
+                            if (redraw) redraw()
+
+                            this.infoLoadingStatus = "loaded";
                         }
                     )
                 })
