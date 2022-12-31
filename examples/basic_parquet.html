@@ -35,11 +35,11 @@
                         //data URL
                         "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/parquet/Europe/pop_2018_5km.parquet",
                         //resolution, in CRS unit
-                        1,
+                        5000,
                         //the styles
                         [
                             new gviz.SquareColorWGLStyle({
-                                colorCol: "Total_m2",
+                                colorCol: "population",
                                 tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15)
                             })
                         ],

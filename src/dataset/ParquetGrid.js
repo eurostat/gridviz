@@ -93,9 +93,6 @@ export class ParquetGrid extends DatasetComponent {
                                 this.cells = data;
                             }
 
-                            //console.log(this.cells)
-
-
                             //TODO check if redraw is necessary
                             //that is if the dataset belongs to a layer which is visible at the current zoom level
 
