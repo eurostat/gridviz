@@ -431,6 +431,21 @@ export class App {
 
     //multi scale dataset creation
 
+    /**
+     * Make a multi scale parquet grid dataset.
+     * 
+     * @param {Array.<number>} resolutions 
+     * @param {function(number):string} resToURL
+     * @param {{preprocess?:function(import('./Dataset').Cell):boolean}} opts 
+     * @returns {Dataset}
+     */
+    makeMultiScaleParquetGridDataset(resolutions, resToURL, opts) {
+        return Dataset.make(
+            resolutions,
+            (res) => new ParquetGrid(resToURL(res), res, opts).getData(undefined, () => { this.cg.redraw(); }),
+            opts
+        )
+    }
 
     /**
      * Make a multi scale CSV grid dataset.
@@ -522,6 +537,20 @@ export class App {
      */
     addMultiScaleCSVGridLayer(resolutions, resToURL, styles, opts) {
         const ds = this.makeMultiScaleCSVGridDataset(resolutions, resToURL, opts)
+        return this.addLayerFromDataset(ds, styles, opts);
+    }
+
+    /**
+     * Add a layer from a parquet grid dataset.
+     * 
+     * @param {Array.<number>} resolutions 
+     * @param {function(number):string} resToURL
+     * @param {Array.<Style>} styles The styles, ordered in drawing order.
+     * @param {object=} opts The parameters of the dataset and layer.
+     * @returns {this}
+     */
+    addMultiScaleParquetGridLayer(resolutions, resToURL, styles, opts) {
+        const ds = this.makeMultiScaleParquetGridDataset(resolutions, resToURL, opts)
         return this.addLayerFromDataset(ds, styles, opts);
     }
 
