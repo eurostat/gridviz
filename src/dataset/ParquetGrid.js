@@ -77,7 +77,6 @@ export class ParquetGrid extends DatasetComponent {
                                 const c = e.toJSON()
                                 data.push(c)
                             }
-                            t = null
 
                             //convert coordinates in numbers
                             for (const c of data) { c.x = +c.x; c.y = +c.y; }
