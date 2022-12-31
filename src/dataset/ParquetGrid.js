@@ -52,46 +52,44 @@ export class ParquetGrid extends DatasetComponent {
         //load data
         this.infoLoadingStatus = "loading";
 
-        //test when failure case. try catch ?
-        /*
-        .catch(() => {
-            //mark as failed
-            this.infoLoadingStatus = "failed";
-            this.cells = []
-        });*/
-
-
         (async () => {
-            const resp = await fetch(this.url)
-            const parquetUint8Array = new Uint8Array(await resp.arrayBuffer());
-            const arrowUint8Array = this.readParquetFun(parquetUint8Array);
+            try {
+                const resp = await fetch(this.url)
+                const parquetUint8Array = new Uint8Array(await resp.arrayBuffer());
+                const arrowUint8Array = this.readParquetFun(parquetUint8Array);
 
-            const t = tableFromIPC(arrowUint8Array);
-            //see https://arrow.apache.org/docs/js/
-            //https://loaders.gl/arrowjs/docs/developer-guide/tables#record-tojson-and-toarray
+                const t = tableFromIPC(arrowUint8Array);
+                //see https://arrow.apache.org/docs/js/
+                //https://loaders.gl/arrowjs/docs/developer-guide/tables#record-tojson-and-toarray
 
-            this.cells = [];
-            for (const e of t) {
-                //get cell
-                const c = e.toJSON()
+                this.cells = [];
+                for (const e of t) {
+                    //get cell
+                    const c = e.toJSON()
 
-                //preprocess/filter
-                if (this.preprocess) {
-                    const b = this.preprocess(c)
-                    if (b == false) continue;
-                    this.cells.push(c)
-                } else {
-                    this.cells.push(c)
+                    //preprocess/filter
+                    if (this.preprocess) {
+                        const b = this.preprocess(c)
+                        if (b == false) continue;
+                        this.cells.push(c)
+                    } else {
+                        this.cells.push(c)
+                    }
                 }
+
+                //TODO check if redraw is necessary
+                //that is if the dataset belongs to a layer which is visible at the current zoom level
+
+                //execute the callback, usually a draw function
+                if (redraw) redraw()
+
+                this.infoLoadingStatus = "loaded";
+            } catch (error) {
+                //mark as failed
+                this.infoLoadingStatus = "failed";
+                this.cells = []
             }
 
-            //TODO check if redraw is necessary
-            //that is if the dataset belongs to a layer which is visible at the current zoom level
-
-            //execute the callback, usually a draw function
-            if (redraw) redraw()
-
-            this.infoLoadingStatus = "loaded";
         })()
 
         return this;
