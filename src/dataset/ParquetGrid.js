@@ -2,7 +2,7 @@
 
 import { DatasetComponent } from "../DatasetComponent";
 import { tableFromIPC } from "apache-arrow"
-import { readParquet } from "parquet-wasm"
+//import { readParquet } from "parquet-wasm"
 
 /**
  * A dataset composed of a single parquet file (not tiled).

@@ -18,7 +18,6 @@
             return parquetModule.readParquet;
         })().then(
             readParquet => {
-                console.log("aaa", readParquet)
 
                 let containerDiv = document.getElementById("viz-container");
 
@@ -37,7 +36,8 @@
                                 colorCol: "Total_m2",
                                 tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15)
                             })
-                        ]
+                        ],
+                        { readParquetFun: readParquet }
                     )
 
             }
