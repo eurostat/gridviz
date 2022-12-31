@@ -1,7 +1,9 @@
 add CSV grid layer example: bug. check !
 use async await +++
 
-make module
+V3:
+make modules
+format csv/parquet as parameter
 modularise: https://webpack.js.org/guides/code-splitting/
 
 
