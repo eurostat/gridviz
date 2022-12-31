@@ -1,6 +1,6 @@
 //@ts-check
 
-/** @typedef {"CSV"|"parquet"} Format */
+/** @typedef {"CSV"|"PARQUET"} Format */
 
 /**
  * A dataset component, of grid cells.

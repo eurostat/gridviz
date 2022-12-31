@@ -209,7 +209,7 @@ export class TiledGrid extends DatasetComponent {
                             //mark as failed
                             this.cache[xT][yT] = "failed"
                         });
-                else if (this.info.format === "parquet") {
+                else if (this.info.format === "PARQUET") {
                     console.log("Implement parquet tiles")
                 } else {
                     throw new Error("Tiled format not supported: " + this.info.format)
