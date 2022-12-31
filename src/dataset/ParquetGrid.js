@@ -14,7 +14,7 @@ export class ParquetGrid extends DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {{preprocess?:(function(import("../Dataset").Cell):boolean)}} opts 
+     * @param {{preprocess?:(function(import("../Dataset").Cell):boolean), readParquetFun?:Function}} opts 
      */
     constructor(url, resolution, opts = {}) {
         super(url, resolution, opts)
@@ -28,6 +28,13 @@ export class ParquetGrid extends DatasetComponent {
          * @type {string}
          * @private  */
         this.infoLoadingStatus = "notLoaded";
+
+        if (!opts.readParquetFun) throw new Error("readParquet function needed for parquet dataset")
+
+        /**  
+         * @type {Function}
+         * @private  */
+        this.readParquetFun = opts.readParquetFun
     }
 
 

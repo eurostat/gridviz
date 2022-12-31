@@ -12,25 +12,36 @@
     <script src="../dist/gridviz.js"></script>
     <script>
 
-        let containerDiv = document.getElementById("viz-container");
+        (async () => {
+            const parquetModule = await import("https://unpkg.com/parquet-wasm@0.4.0-beta.5/esm/arrow2.js");
+            parquetModule.default();
+            return parquetModule.readParquet;
+        })().then(
+            readParquet => {
+                console.log("aaa", readParquet)
 
-        new gviz.App(containerDiv)
-            //set position and zoom
-            .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-            //add CSV layer
-            .addParquetGridLayer(
-                //data URL
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/parquet/building_area.parquet",
-                //resolution, in CRS unit
-                1,
-                //the styles
-                [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: "Total_m2",
-                        tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15)
-                    })
-                ]
-            )
+                let containerDiv = document.getElementById("viz-container");
+
+                new gviz.App(containerDiv)
+                    //set position and zoom
+                    .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+                    //add CSV layer
+                    .addParquetGridLayer(
+                        //data URL
+                        "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/parquet/building_area.parquet",
+                        //resolution, in CRS unit
+                        1,
+                        //the styles
+                        [
+                            new gviz.SquareColorWGLStyle({
+                                colorCol: "Total_m2",
+                                tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15)
+                            })
+                        ]
+                    )
+
+            }
+        )
 
     </script>
 

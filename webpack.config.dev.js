@@ -13,8 +13,8 @@ module.exports = {
   devtool: "inline-source-map",
 
   experiments: {
-    //asyncWebAssembly: true,
-    syncWebAssembly: true
+    asyncWebAssembly: true,
+    //syncWebAssembly: true
   },
 
 };
