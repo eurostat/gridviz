@@ -10,13 +10,19 @@
     <div id="viz-container" style="height:100%; width:100%;"></div>
 
     <script src="../dist/gridviz.js"></script>
+    <script src="https://unpkg.com/apache-arrow@10.0.1/Arrow.es2015.min.js"></script>
     <script>
 
-        (async () => {
+        const url = "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/parquet/building_area.parquet"
+
+        //https://www.npmjs.com/package/parquet-wasm
+        const rp = async () => {
             const parquetModule = await import("https://unpkg.com/parquet-wasm@0.4.0-beta.5/esm/arrow2.js");
-            parquetModule.default();
+            await parquetModule.default();
             return parquetModule.readParquet;
-        })().then(
+        }
+
+        rp().then(
             readParquet => {
 
                 let containerDiv = document.getElementById("viz-container");
@@ -39,6 +45,9 @@
                         ],
                         { readParquetFun: readParquet }
                     )
+
+
+
 
             }
         )

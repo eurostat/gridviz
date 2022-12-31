@@ -52,10 +52,30 @@ export class ParquetGrid extends DatasetComponent {
         //load data
         this.infoLoadingStatus = "loading";
 
-        console.log("aahgvhva")
+        fetch(this.url)
+            .then(
+                (resp) => {
+                    resp.arrayBuffer().then(
+                        ab => {
+                            const parquetUint8Array = new Uint8Array(ab);
+                            //console.log(parquetUint8Array)
+                            const arrowUint8Array = this.readParquetFun(parquetUint8Array);
+                            //console.log(arrowUint8Array)
+                            const t = tableFromIPC(arrowUint8Array);
+                            console.log(t)
 
-        //const ss = tableFromIPC
-        //const sggs = readParquet
+                            console.log(t.schema.fields)
+
+                            //see https://arrow.apache.org/docs/js/
+                            //https://loaders.gl/arrowjs/docs/developer-guide/tables#record-tojson-and-toarray
+                            const elt = t.get(0)
+                            console.log(elt.toJSON())
+                            console.log(elt.toArray())
+
+                            //TODO load !
+                        }
+                    )
+                })
 
         return this;
     }
