@@ -134,6 +134,8 @@ export class TiledGrid extends DatasetComponent {
         /** @type {import("../Dataset").Envelope} */
         const gb = this.info.tilingBounds;
 
+        const format = this.info.format;
+
         for (let xT = Math.max(tb.xMin, gb.xMin); xT <= Math.min(tb.xMax, gb.xMax); xT++) {
             for (let yT = Math.max(tb.yMin, gb.yMin); yT <= Math.min(tb.yMax, gb.yMax); yT++) {
 
@@ -146,137 +148,136 @@ export class TiledGrid extends DatasetComponent {
                 if (tile) continue;
 
                 //mark tile as loading
-                this.cache[xT][yT] = "loading"
+                this.cache[xT][yT] = "loading";
 
+                (async () => {
+                    //request tile
+                    /** @type {Array.<import("../Dataset").Cell>}  */
+                    let cells;
 
-                //request tile
-                if (!this.info.format || this.info.format === "CSV") {
+                    try {
+                        /** @type {Array.<import("../Dataset").Cell>}  */
+                        // @ts-ignore
+                        const data = await csv(this.url + xT + "/" + yT + ".csv");
 
-                    (async () => {
+                        if (monitor) monitorDuration("*** TiledGrid parse start")
 
-                        try {
-
-                            const data = await csv(this.url + xT + "/" + yT + ".csv");
-                            if (monitor) monitorDuration("*** TiledGrid parse start")
-
-                            //preprocess/filter
-                            let cells;
-                            if (this.preprocess) {
-                                cells = [];
-                                for (const c of data) {
-                                    const b = this.preprocess(c)
-                                    if (b == false) continue;
-                                    cells.push(c)
-                                }
-                            } else {
-                                cells = data;
+                        //preprocess/filter
+                        if (this.preprocess) {
+                            cells = [];
+                            for (const c of data) {
+                                const b = this.preprocess(c)
+                                if (b == false) continue;
+                                cells.push(c)
                             }
-
-                            if (monitor) monitorDuration("preprocess / filter")
-
-                            //store tile in cache
-                            if (!this.info) { console.error("Tile info inknown"); return }
-                            const tile_ = new GridTile(cells, xT, yT, this.info);
-                            this.cache[xT][yT] = tile_;
-
-                            if (monitor) monitorDuration("storage")
-
-                            //if no redraw is specified, then leave
-                            if (!redrawFun) return;
-
-                            //check if redraw is really needed, that is if:
-
-                            // 1. the dataset belongs to a layer which is visible at the current zoom level
-                            let redraw = false;
-                            for (const layer of this.app.getActiveLayers()) {
-                                if (layer.getDatasetComponent(this.app.getZoomFactor()) != this) continue;
-                                //found one layer. No need to seek more.
-                                redraw = true;
-                                break;
-                            }
-                            if (monitor) monitorDuration("check redraw 1")
-
-                            if (!redraw) return;
-
-                            // 2. the tile is within the view, that is its geo envelope intersects the viewer geo envelope.
-                            const env = this.app.updateExtentGeo();
-                            const envT = tile_.extGeo;
-                            if (env.xMax <= envT.xMin) return;
-                            if (env.xMin >= envT.xMax) return;
-                            if (env.yMax <= envT.yMin) return;
-                            if (env.yMin >= envT.yMax) return;
-
-                            if (monitor) monitorDuration("check redraw 2")
-                            if (monitor) monitorDuration("*** TiledGrid parse end")
-
-                            //redraw
-                            redrawFun()
-                        } catch (error) {
-                            //mark as failed
-                            this.cache[xT][yT] = "failed"
-
+                        } else {
+                            cells = data;
                         }
 
-                    })()
+                        if (monitor) monitorDuration("preprocess / filter")
 
-
-                } else if (this.info.format === "PARQUET") {
-
-                    /*
-                    if (!this.readParquetFun) {
-                        //throw new Error("readParquet function needed for parquet dataset")
-                        console.error("readParquet function needed for parquet dataset")
-                        return this;
+                    } catch (error) {
+                        //mark as failed
+                        this.cache[xT][yT] = "failed"
+                        return
                     }
+
+                    //store tile in cache
+                    if (!this.info) { console.error("Tile info inknown"); return }
+                    const tile_ = new GridTile(cells, xT, yT, this.info);
+                    this.cache[xT][yT] = tile_;
+
+                    if (monitor) monitorDuration("storage")
+
+                    //if no redraw is specified, then leave
+                    if (!redrawFun) return;
+
+                    //check if redraw is really needed, that is if:
+
+                    // 1. the dataset belongs to a layer which is visible at the current zoom level
+                    let redraw = false;
+                    for (const layer of this.app.getActiveLayers()) {
+                        if (layer.getDatasetComponent(this.app.getZoomFactor()) != this) continue;
+                        //found one layer. No need to seek more.
+                        redraw = true;
+                        break;
+                    }
+                    if (monitor) monitorDuration("check redraw 1")
+
+                    if (!redraw) return;
+
+                    // 2. the tile is within the view, that is its geo envelope intersects the viewer geo envelope.
+                    const env = this.app.updateExtentGeo();
+                    const envT = tile_.extGeo;
+                    if (env.xMax <= envT.xMin) return;
+                    if (env.xMin >= envT.xMax) return;
+                    if (env.yMax <= envT.yMin) return;
+                    if (env.yMin >= envT.yMax) return;
+
+                    if (monitor) monitorDuration("check redraw 2")
+                    if (monitor) monitorDuration("*** TiledGrid parse end")
+
+                    //redraw
+                    redrawFun()
+
+                })()
+
+                //if (!format || format === "CSV") {
+                //} else if (format === "PARQUET") {
+                //} else throw new Error("Tiled format not supported: " + format)
+
+                /*
+                if (!this.readParquetFun) {
+                    //throw new Error("readParquet function needed for parquet dataset")
+                    console.error("readParquet function needed for parquet dataset")
+                    return this;
+                }
  
-                    (async () => {
-                        try {
-                            const resp = await fetch(this.url + xT + "/" + yT + ".parquet")
-                            const parquetUint8Array = new Uint8Array(await resp.arrayBuffer());
-                            if (!this.readParquetFun) return this;
-                            const arrowUint8Array = this.readParquetFun(parquetUint8Array);
-                            console.log(arrowUint8Array)
-                        } catch (error) {
-                            //mark as failed
-                            this.cache[xT][yT] = "failed"
-                        }
-                    })()
+                (async () => {
+                    try {
+                        const resp = await fetch(this.url + xT + "/" + yT + ".parquet")
+                        const parquetUint8Array = new Uint8Array(await resp.arrayBuffer());
+                        if (!this.readParquetFun) return this;
+                        const arrowUint8Array = this.readParquetFun(parquetUint8Array);
+                        console.log(arrowUint8Array)
+                    } catch (error) {
+                        //mark as failed
+                        this.cache[xT][yT] = "failed"
+                    }
+                })()
 */
 
-                    /*
-                    
-                                    const t = tableFromIPC(arrowUint8Array);
-                                    //see https://arrow.apache.org/docs/js/
-                                    //https://loaders.gl/arrowjs/docs/developer-guide/tables#record-tojson-and-toarray
-                    
-                                    this.cells = [];
-                                    for (const e of t) {
-                                        //get cell
-                                        const c = e.toJSON()
-                    
-                                        //preprocess/filter
-                                        if (this.preprocess) {
-                                            const b = this.preprocess(c)
-                                            if (b == false) continue;
-                                            this.cells.push(c)
-                                        } else {
-                                            this.cells.push(c)
-                                        }
+                /*
+                
+                                const t = tableFromIPC(arrowUint8Array);
+                                //see https://arrow.apache.org/docs/js/
+                                //https://loaders.gl/arrowjs/docs/developer-guide/tables#record-tojson-and-toarray
+                
+                                this.cells = [];
+                                for (const e of t) {
+                                    //get cell
+                                    const c = e.toJSON()
+                
+                                    //preprocess/filter
+                                    if (this.preprocess) {
+                                        const b = this.preprocess(c)
+                                        if (b == false) continue;
+                                        this.cells.push(c)
+                                    } else {
+                                        this.cells.push(c)
                                     }
-                    
-                                    //TODO check if redraw is necessary
-                                    //that is if the dataset belongs to a layer which is visible at the current zoom level
-                    
-                                    //execute the callback, usually a draw function
-                                    if (redraw) redraw()
-                    
-                                    this.infoLoadingStatus = "loaded";
-                    
-                    */
+                                }
+                
+                                //TODO check if redraw is necessary
+                                //that is if the dataset belongs to a layer which is visible at the current zoom level
+                
+                                //execute the callback, usually a draw function
+                                if (redraw) redraw()
+                
+                                this.infoLoadingStatus = "loaded";
+                
+                */
 
-                } else {
-                    throw new Error("Tiled format not supported: " + this.info.format)
-                }
             }
         }
         return this;
