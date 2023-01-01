@@ -17,7 +17,7 @@ export class TiledGrid extends DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
      * @param {App} app The application.
-     * @param {{preprocess?:(function(import("../Dataset").Cell):boolean) }} opts 
+     * @param {{preprocess?:(function(import("../Dataset").Cell):boolean), readParquetFun?:Function }} opts 
      */
     constructor(url, app, opts = {}) {
         super(url, 0, opts)
@@ -47,6 +47,11 @@ export class TiledGrid extends DatasetComponent {
         * @type {object}
         * */
         this.cache = {}
+
+        /**  
+         * @type {Function|undefined}
+         * @private  */
+        this.readParquetFun = opts.readParquetFun
     }
 
     /**
@@ -210,7 +215,59 @@ export class TiledGrid extends DatasetComponent {
                             this.cache[xT][yT] = "failed"
                         });
                 else if (this.info.format === "PARQUET") {
-                    console.log("Implement parquet tiles")
+
+                    if (!this.readParquetFun) {
+                        //throw new Error("readParquet function needed for parquet dataset")
+                        console.error("readParquet function needed for parquet dataset")
+                        return this;
+                    }
+
+                    (async () => {
+                        try {
+                            const resp = await fetch(this.url + xT + "/" + yT + ".parquet")
+                            const parquetUint8Array = new Uint8Array(await resp.arrayBuffer());
+                            if(!this.readParquetFun) return this;
+                            const arrowUint8Array = this.readParquetFun(parquetUint8Array);
+                            console.log(arrowUint8Array)
+                        } catch (error) {
+                            //mark as failed
+                            this.infoLoadingStatus = "failed";
+                            this.cells = []
+                        }
+                    })()
+
+
+                    /*
+                    
+                                    const t = tableFromIPC(arrowUint8Array);
+                                    //see https://arrow.apache.org/docs/js/
+                                    //https://loaders.gl/arrowjs/docs/developer-guide/tables#record-tojson-and-toarray
+                    
+                                    this.cells = [];
+                                    for (const e of t) {
+                                        //get cell
+                                        const c = e.toJSON()
+                    
+                                        //preprocess/filter
+                                        if (this.preprocess) {
+                                            const b = this.preprocess(c)
+                                            if (b == false) continue;
+                                            this.cells.push(c)
+                                        } else {
+                                            this.cells.push(c)
+                                        }
+                                    }
+                    
+                                    //TODO check if redraw is necessary
+                                    //that is if the dataset belongs to a layer which is visible at the current zoom level
+                    
+                                    //execute the callback, usually a draw function
+                                    if (redraw) redraw()
+                    
+                                    this.infoLoadingStatus = "loaded";
+                    
+                    */
+
                 } else {
                     throw new Error("Tiled format not supported: " + this.info.format)
                 }
