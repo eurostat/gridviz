@@ -10,8 +10,8 @@
   - [Adding data](#adding-data)
     - [Single CSV file](#single-csv-file)
     - [Multi scale CSV data](#multi-scale-csv-data)
-    - [Tiled CSV data](#tiled-csv-data)
-    - [Multi scale tiled CSV data](#multi-scale-tiled-csv-data)
+    - [Tiled data](#tiled-data)
+    - [Multi scale tiled data](#multi-scale-tiled-data)
     - [Data pre-processing and filtering](#data-pre-processing-and-filtering)
   - [Basic styles](#basic-styles)
     - [Shape/Color/Size Style](#shapecolorsize-style)
@@ -108,7 +108,7 @@ Input data are tabular data, in CSV format.
 
 For the position of the cell, two columns **x** and **y** must be specified, with the geographical coordinates of the **lower left corner** of the cell, expressed in the grid Coordinate Reference System. If this information is not explicitelly provided in the input data, it is however possible to compute it on-the-fly as explained [here](#data-pre-processing).
 
-It is possible to specify different data sources for different zoom levels, so that the level of detail of the data can adapt to the zoom level. Tiled CSV data can also be specified following the [tiled CSV format](tiledCSVformat.md).
+It is possible to specify different data sources for different zoom levels, so that the level of detail of the data can adapt to the zoom level. Tiled data can also be specified following the [tiled format](tiledformat.md).
 
 Are are several examples:
 
@@ -145,16 +145,16 @@ new gviz.App(containerDiv)
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/basic_multiscale_CSV.html), see [code](../examples/basic_multiscale_CSV.html))
 
-### Tiled CSV data
+### Tiled data
 
-For large dataset, it is adviced to decompose them into different data chunks and index those by geographical location, as specified in the [tiled CSV format](tiledCSVformat.md). The [Gridviz](https://github.com/eurostat/gridviz/) application can then automatically retrieve only the usefull data that fall into the view geographical extent. This is an example of how to load such data:
+For large dataset, it is adviced to decompose them into different data chunks and index those by geographical location, as specified in the [tiled format](tiledformat.md). The [Gridviz](https://github.com/eurostat/gridviz/) application can then automatically retrieve only the usefull data that fall into the view geographical extent. This is an example of how to load such data:
 
 ```javascript
 new gviz.App(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-    //add multi scale tiled CSV layer
-    .addTiledCSVGridLayer(
+    //add multi scale tiled layer
+    .addTiledGridLayer(
         //data URL
         "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/5000m/",
         //the styles
@@ -168,16 +168,16 @@ new gviz.App(containerDiv)
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/basic_tiled_CSV.html), see [code](../examples/basic_tiled_CSV.html))
 
-### Multi scale tiled CSV data
+### Multi scale tiled data
 
-Multi scale tiled CSV data based on the [tiled CSV format](tiledCSVformat.md) can also be simply loaded with the example below. Here again, the change of dataset depending on the zoom level is controled with the **pixNb** parameter:
+Multi scale tiled data based on the [tiled format](tiledformat.md) can also be simply loaded with the example below. Here again, the change of dataset depending on the zoom level is controled with the **pixNb** parameter:
 
 ```javascript
 new gviz.App(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-    //add multi scale tiled CSV layer
-    .addMultiScaleTiledCSVGridLayer(
+    //add multi scale tiled layer
+    .addMultiScaleTiledGridLayer(
         //array of resolutions, in CRS unit (m)
         [5000, 10000, 20000, 50000, 100000],
         //function which returns the URL for each resolution value
@@ -202,8 +202,8 @@ new gviz.App(containerDiv)
 | ------------------------------------------------ | ------------------------------------------ | ------------------------------------------------------ |
 | _app_.**addCSVGridLayer**([args])                | See [example](#single-csv-file)            | Add a layer from a CSV grid dataset.                   |
 | _app_.**addMultiScaleCSVGridLayer**([args])      | See [example](#multi-scale-csv-data)       | Add a layer from a multi scale CSV grid dataset.       |
-| _app_.**addTiledCSVGridLayer**([args])           | See [example](#tiled-csv-data)             | Add a layer from a tiled CSV grid dataset.             |
-| _app_.**addMultiScaleTiledCSVGridLayer**([args]) | See [example](#multi-scale-tiled-csv-data) | Add a layer from a multi scale tiled CSV grid dataset. |
+| _app_.**addTiledGridLayer**([args])           | See [example](#tiled-csv-data)             | Add a layer from a tiled grid dataset.             |
+| _app_.**addMultiScaleTiledGridLayer**([args]) | See [example](#multi-scale-tiled-csv-data) | Add a layer from a multi scale tiled grid dataset. |
 
 To manage creation of datasets and their possible reuse accross different layers (so that the data is loaded and stored once), the following methods are also available:
 
@@ -211,9 +211,9 @@ To manage creation of datasets and their possible reuse accross different layers
 | --------------------------------------------------- | --------- | ------------------------------------------ |
 | _app_.**addLayerFromDataset**([args])               | -         | Add a layer to the app.                    |
 | _app_.**makeCSVGridDataset**([args])                | -         | Make a CSV grid dataset.                   |
-| _app_.**makeTiledCSVGridDataset**([args])           | -         | Make a tiled CSV grid dataset.             |
+| _app_.**makeTiledGridDataset**([args])           | -         | Make a tiled grid dataset.             |
 | _app_.**makeMultiScaleCSVGridDataset**([args])      | -         | Make a multi scale CSV grid dataset.       |
-| _app_.**makeMultiScaleTiledCSVGridDataset**([args]) | -         | Make a multi scale tiled CSV grid dataset. |
+| _app_.**makeMultiScaleTiledGridDataset**([args]) | -         | Make a multi scale tiled grid dataset. |
 
 ### Data pre-processing and filtering
 
@@ -231,7 +231,7 @@ Here is an example showing how to compute a new column on population change, as 
 ```javascript
 new gviz.App(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-    .addMultiScaleTiledCSVGridLayer(
+    .addMultiScaleTiledGridLayer(
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
         r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
         [ new gviz.ShapeColorSizeStyle({ /* style construction ... */}) ],
@@ -260,7 +260,7 @@ Here is an example showing how to keep only the cells with specific values __41_
 ```javascript
 new gviz.App(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-    .addMultiScaleTiledCSVGridLayer(
+    .addMultiScaleTiledGridLayer(
         [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
         r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/" + r + "m/",
         [ /* define the style) */ ],

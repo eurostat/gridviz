@@ -101,7 +101,7 @@
         const baseURL = "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/france/filosofi/"
 
         //population stats dataset
-        const indDatasetFun = year => app.makeMultiScaleTiledCSVGridDataset(
+        const indDatasetFun = year => app.makeMultiScaleTiledGridDataset(
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
             r => baseURL + "ind/" + year + "/" + r + "m/",
             {
@@ -125,7 +125,7 @@
         ds.ind["2017"] = indDatasetFun(2017)
 
         //household stats dataset
-        const menDatasetFun = year => app.makeMultiScaleTiledCSVGridDataset(
+        const menDatasetFun = year => app.makeMultiScaleTiledGridDataset(
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
             r => baseURL + "men/" + year + "/" + r + "m/",
             {
@@ -152,7 +152,7 @@
         ds.men["2017"] = menDatasetFun(2017)
 
         //housing stats dataset
-        const logDatasetFun = year => app.makeMultiScaleTiledCSVGridDataset(
+        const logDatasetFun = year => app.makeMultiScaleTiledGridDataset(
             [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
             r => baseURL + "log/" + year + "/" + r + "m/",
             {

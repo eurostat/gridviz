@@ -102,7 +102,7 @@
         const ds = {}
 
         //population dataset
-        ds.pop = app.makeMultiScaleTiledCSVGridDataset(
+        ds.pop = app.makeMultiScaleTiledGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
             {
@@ -132,7 +132,7 @@
         //define class breaks
         const breaksH = [5, 10, 15, 20, 30, 45, 60, 90]
         const breaksE = [2, 4, 6, 8, 10, 15, 20, 30]
-        ds.acc = app.makeMultiScaleTiledCSVGridDataset(
+        ds.acc = app.makeMultiScaleTiledGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/accessibility/" + r + "m/",
             {
@@ -148,13 +148,13 @@
         )
 
         //road transp perf dataset
-        ds.rtp = app.makeMultiScaleTiledCSVGridDataset(
+        ds.rtp = app.makeMultiScaleTiledGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/road_transp_perf/" + r + "m/",
         )
 
         //degurba dataset
-        ds.degurba = app.makeMultiScaleTiledCSVGridDataset(
+        ds.degurba = app.makeMultiScaleTiledGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/degurba/" + r + "m/",
             {
@@ -167,19 +167,19 @@
         )
 
         //land cover dataset
-        ds.lc = app.makeMultiScaleTiledCSVGridDataset(
+        ds.lc = app.makeMultiScaleTiledGridDataset(
             [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/" + r + "m/",
         )
 
         //forest dataset
-        ds.forest = app.makeMultiScaleTiledCSVGridDataset(
+        ds.forest = app.makeMultiScaleTiledGridDataset(
             [/*100, 200, 500,*/ 1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/forest/" + r + "m/",
         )
 
         //elevation dataset
-        ds.ele = app.makeMultiScaleTiledCSVGridDataset(
+        ds.ele = app.makeMultiScaleTiledGridDataset(
             [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation/" + r + "m/",
         )

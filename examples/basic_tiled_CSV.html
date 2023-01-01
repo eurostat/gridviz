@@ -17,8 +17,8 @@
         new gviz.App(containerDiv)
             //set position and zoom
             .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-            //add multi scale tiled CSV layer
-            .addTiledCSVGridLayer(
+            //add multi scale tiled layer
+            .addTiledGridLayer(
                 //data URL
                 "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/5000m/",
                 //the styles

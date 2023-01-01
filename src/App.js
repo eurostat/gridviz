@@ -418,15 +418,16 @@ export class App {
 
 
     /**
-     * Make a tiled CSV grid dataset.
+     * Make a tiled grid dataset.
      * 
      * @param {string} url 
      * @param {{preprocess?:function(import('./Dataset').Cell):boolean}} opts 
      * @returns {Dataset}
      */
-    makeTiledCSVGridDataset(url, opts) {
+    makeTiledGridDataset(url, opts) {
         return new Dataset([new TiledGrid(url, this, opts).loadInfo(() => { this.cg.redraw(); })], [], opts)
     }
+
 
 
     //multi scale dataset creation
@@ -469,34 +470,19 @@ export class App {
     //tiled multiscale
 
     /**
-     * Make a multi scale tiled CSV/parquet grid dataset.
+     * Make a multi scale tiled grid dataset.
      * 
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURL
      * @param {{preprocess?:function(import('./Dataset').Cell):boolean}} opts 
      * @returns {Dataset}
      */
-    makeMultiScaleTiledGridDataset(resolutions, resToURL, format, opts) {
+    makeMultiScaleTiledGridDataset(resolutions, resToURL, opts) {
         return Dataset.make(
             resolutions,
             (res) => new TiledGrid(resToURL(res), this, opts).loadInfo(() => { this.cg.redraw(); }),
             opts
         )
-    }
-
-
-    /**
-     * Make a multi scale tiled CSV grid dataset.
-     * DEPRECATED
-     * 
-     * @param {Array.<number>} resolutions 
-     * @param {function(number):string} resToURL
-     * @param {{preprocess?:function(import('./Dataset').Cell):boolean, format:import('./DatasetComponent').Format}} opts 
-     * @returns {Dataset}
-     * @deprecated
-     */
-    makeMultiScaleTiledCSVGridDataset(resolutions, resToURL, opts) {
-        return this.makeMultiScaleTiledGridDataset(resolutions, resToURL, "CSV", opts)
     }
 
 
@@ -540,8 +526,8 @@ export class App {
      * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string, preprocess?:function(import('./Dataset').Cell):boolean}} opts 
      * @returns {this}
      */
-    addTiledCSVGridLayer(url, styles, opts) {
-        const ds = this.makeTiledCSVGridDataset(url, opts)
+    addTiledGridLayer(url, styles, opts) {
+        const ds = this.makeTiledGridDataset(url, opts)
         return this.addLayerFromDataset(ds, styles, opts);
     }
 
@@ -579,29 +565,14 @@ export class App {
     /**
     * @param {Array.<number>} resolutions 
     * @param {function(number):string} resToURL 
-    * @param {import('./DatasetComponent').Format} format
     * @param {Array.<Style>} styles 
     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string, preprocess?:function(import('./Dataset').Cell):boolean}} opts 
     * @returns {this}
     */
-    addMultiScaleTiledGridLayer(resolutions, resToURL, format, styles, opts) {
-        const ds = this.makeMultiScaleTiledGridDataset(resolutions, resToURL, format, opts)
+    addMultiScaleTiledGridLayer(resolutions, resToURL, styles, opts) {
+        const ds = this.makeMultiScaleTiledGridDataset(resolutions, resToURL, opts)
         return this.addLayerFromDataset(ds, styles, opts);
     }
-
-    /**
-     * @param {Array.<number>} resolutions 
-     * @param {function(number):string} resToURL 
-     * @param {Array.<Style>} styles 
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string, preprocess?:function(import('./Dataset').Cell):boolean}} opts 
-     * @returns {this}
-     * @deprecated
-     */
-    addMultiScaleTiledCSVGridLayer(resolutions, resToURL, styles, opts) {
-        const ds = this.makeMultiScaleTiledGridDataset(resolutions, resToURL, "CSV", opts)
-        return this.addLayerFromDataset(ds, styles, opts);
-    }
-
 
 
     /**

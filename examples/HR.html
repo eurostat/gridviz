@@ -86,7 +86,7 @@
         const override = (c, col) => c[col] = +c[col]
 
         //population dataset
-        ds.pop = app.makeMultiScaleTiledCSVGridDataset(
+        ds.pop = app.makeMultiScaleTiledGridDataset(
             [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/croatia/Population_2011/" + r + "m/",
 
@@ -118,7 +118,7 @@
         );
 
         //business dataset
-        ds.bus = app.makeMultiScaleTiledCSVGridDataset(
+        ds.bus = app.makeMultiScaleTiledGridDataset(
             [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/croatia/Active_business_entities_2016/" + r + "m/",
             {
@@ -144,7 +144,7 @@
         );
 
         //tourism dataset
-        ds.tou = app.makeMultiScaleTiledCSVGridDataset(
+        ds.tou = app.makeMultiScaleTiledGridDataset(
             [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/croatia/Tourism_2017/" + r + "m/",
             {

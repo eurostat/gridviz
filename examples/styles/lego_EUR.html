@@ -83,19 +83,19 @@
         const ds = {}
 
         //elevation dataset
-        ds.el = app.makeMultiScaleTiledCSVGridDataset(
+        ds.el = app.makeMultiScaleTiledGridDataset(
             [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation/" + r + "m/",
         )
 
         //land cover dataset
-        ds.lc = app.makeMultiScaleTiledCSVGridDataset(
+        ds.lc = app.makeMultiScaleTiledGridDataset(
             [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/" + r + "m/",
         )
 
         //population
-        ds.pop = app.makeMultiScaleTiledCSVGridDataset(
+        ds.pop = app.makeMultiScaleTiledGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
             {

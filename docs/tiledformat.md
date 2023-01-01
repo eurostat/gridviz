@@ -1,3 +1,3 @@
-# Tiled CSV format
+# Tiled format
 
 Documentation coming soon.
