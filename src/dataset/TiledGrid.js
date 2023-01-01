@@ -148,94 +148,100 @@ export class TiledGrid extends DatasetComponent {
                 //mark tile as loading
                 this.cache[xT][yT] = "loading"
 
+
                 //request tile
-                if (!this.info.format || this.info.format === "CSV")
+                if (!this.info.format || this.info.format === "CSV") {
 
-                    csv(this.url + xT + "/" + yT + ".csv")
-                        .then(
-                            /** @param {*} data */
-                            (data) => {
-                                if (monitor) monitorDuration("*** TiledGrid parse start")
+                    (async () => {
 
-                                //preprocess/filter
-                                let cells;
-                                if (this.preprocess) {
-                                    cells = [];
-                                    for (const c of data) {
-                                        const b = this.preprocess(c)
-                                        if (b == false) continue;
-                                        cells.push(c)
-                                    }
-                                } else {
-                                    cells = data;
+                        try {
+
+                            const data = await csv(this.url + xT + "/" + yT + ".csv");
+                            if (monitor) monitorDuration("*** TiledGrid parse start")
+
+                            //preprocess/filter
+                            let cells;
+                            if (this.preprocess) {
+                                cells = [];
+                                for (const c of data) {
+                                    const b = this.preprocess(c)
+                                    if (b == false) continue;
+                                    cells.push(c)
                                 }
+                            } else {
+                                cells = data;
+                            }
 
-                                if (monitor) monitorDuration("preprocess / filter")
+                            if (monitor) monitorDuration("preprocess / filter")
 
-                                //store tile in cache
-                                if (!this.info) { console.error("Tile info inknown"); return }
-                                const tile_ = new GridTile(cells, xT, yT, this.info);
-                                this.cache[xT][yT] = tile_;
+                            //store tile in cache
+                            if (!this.info) { console.error("Tile info inknown"); return }
+                            const tile_ = new GridTile(cells, xT, yT, this.info);
+                            this.cache[xT][yT] = tile_;
 
-                                if (monitor) monitorDuration("storage")
+                            if (monitor) monitorDuration("storage")
 
-                                //if no redraw is specified, then leave
-                                if (!redrawFun) return;
+                            //if no redraw is specified, then leave
+                            if (!redrawFun) return;
 
-                                //check if redraw is really needed, that is if:
+                            //check if redraw is really needed, that is if:
 
-                                // 1. the dataset belongs to a layer which is visible at the current zoom level
-                                let redraw = false;
-                                for (const layer of this.app.getActiveLayers()) {
-                                    if (layer.getDatasetComponent(this.app.getZoomFactor()) != this) continue;
-                                    //found one layer. No need to seek more.
-                                    redraw = true;
-                                    break;
-                                }
-                                if (monitor) monitorDuration("check redraw 1")
+                            // 1. the dataset belongs to a layer which is visible at the current zoom level
+                            let redraw = false;
+                            for (const layer of this.app.getActiveLayers()) {
+                                if (layer.getDatasetComponent(this.app.getZoomFactor()) != this) continue;
+                                //found one layer. No need to seek more.
+                                redraw = true;
+                                break;
+                            }
+                            if (monitor) monitorDuration("check redraw 1")
 
-                                if (!redraw) return;
+                            if (!redraw) return;
 
-                                // 2. the tile is within the view, that is its geo envelope intersects the viewer geo envelope.
-                                const env = this.app.updateExtentGeo();
-                                const envT = tile_.extGeo;
-                                if (env.xMax <= envT.xMin) return;
-                                if (env.xMin >= envT.xMax) return;
-                                if (env.yMax <= envT.yMin) return;
-                                if (env.yMin >= envT.yMax) return;
+                            // 2. the tile is within the view, that is its geo envelope intersects the viewer geo envelope.
+                            const env = this.app.updateExtentGeo();
+                            const envT = tile_.extGeo;
+                            if (env.xMax <= envT.xMin) return;
+                            if (env.xMin >= envT.xMax) return;
+                            if (env.yMax <= envT.yMin) return;
+                            if (env.yMin >= envT.yMax) return;
 
-                                if (monitor) monitorDuration("check redraw 2")
-                                if (monitor) monitorDuration("*** TiledGrid parse end")
+                            if (monitor) monitorDuration("check redraw 2")
+                            if (monitor) monitorDuration("*** TiledGrid parse end")
 
-                                //redraw
-                                redrawFun()
-                            })
-                        .catch(() => {
+                            //redraw
+                            redrawFun()
+                        } catch (error) {
                             //mark as failed
                             this.cache[xT][yT] = "failed"
-                        });
-                else if (this.info.format === "PARQUET") {
 
+                        }
+
+                    })()
+
+
+                } else if (this.info.format === "PARQUET") {
+
+                    /*
                     if (!this.readParquetFun) {
                         //throw new Error("readParquet function needed for parquet dataset")
                         console.error("readParquet function needed for parquet dataset")
                         return this;
                     }
-
+ 
                     (async () => {
                         try {
                             const resp = await fetch(this.url + xT + "/" + yT + ".parquet")
                             const parquetUint8Array = new Uint8Array(await resp.arrayBuffer());
-                            if(!this.readParquetFun) return this;
+                            if (!this.readParquetFun) return this;
                             const arrowUint8Array = this.readParquetFun(parquetUint8Array);
                             console.log(arrowUint8Array)
                         } catch (error) {
                             //mark as failed
-                            this.infoLoadingStatus = "failed";
-                            this.cells = []
+                            this.cache[xT][yT] = "failed"
                         }
                     })()
-
+*/
 
                     /*
                     
