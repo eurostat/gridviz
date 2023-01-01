@@ -2,6 +2,9 @@ add CSV grid layer example: bug. check !
 use async await +++
 "use strict";
 
+parquet files production: check how to reduce size. other compression? Better define types?
+See: https://parquet.apache.org/docs/file-format/types/#:~:text=The%20types%20are%3A,BYTE_ARRAY%3A%20arbitrarily%20long%20byte%20arrays.
+
 V3:
 make modules
 format csv/parquet as parameter
