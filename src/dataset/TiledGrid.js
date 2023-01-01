@@ -6,6 +6,7 @@ import { GridTile } from './GridTile';
 import { App } from '../App';
 import { DatasetComponent } from "../DatasetComponent";
 import { monitor, monitorDuration } from "../utils/Utils"
+import { tableFromIPC } from "apache-arrow"
 
 /**
  * A tiled dataset, composed of CSV (or parquet) tiles.
@@ -156,25 +157,53 @@ export class TiledGrid extends DatasetComponent {
                     let cells;
 
                     try {
-                        /** @type {Array.<import("../Dataset").Cell>}  */
-                        // @ts-ignore
-                        const data = await csv(this.url + xT + "/" + yT + ".csv");
 
-                        if (monitor) monitorDuration("*** TiledGrid parse start")
+                        if (!format || format === "CSV") {
 
-                        //preprocess/filter
-                        if (this.preprocess) {
-                            cells = [];
-                            for (const c of data) {
-                                const b = this.preprocess(c)
-                                if (b == false) continue;
-                                cells.push(c)
+                            /** @type {Array.<import("../Dataset").Cell>}  */
+                            // @ts-ignore
+                            const data = await csv(this.url + xT + "/" + yT + ".csv");
+
+                            if (monitor) monitorDuration("*** TiledGrid parse start")
+
+                            //preprocess/filter
+                            if (this.preprocess) {
+                                cells = [];
+                                for (const c of data) {
+                                    const b = this.preprocess(c)
+                                    if (b == false) continue;
+                                    cells.push(c)
+                                }
+                            } else {
+                                cells = data;
                             }
-                        } else {
-                            cells = data;
-                        }
 
-                        if (monitor) monitorDuration("preprocess / filter")
+                            if (monitor) monitorDuration("preprocess / filter")
+
+                        } else if (format === "PARQUET") {
+                            if (!this.readParquetFun) throw new Error("readParquet function needed for parquet dataset")
+
+                            const resp = await fetch(this.url + xT + "/" + yT + ".parquet")
+                            const parquetUint8Array = new Uint8Array(await resp.arrayBuffer());
+                            const arrowUint8Array = this.readParquetFun(parquetUint8Array);
+                            const t = tableFromIPC(arrowUint8Array);
+                            
+                            cells = [];
+                            for (const e of t) {
+                                //get cell
+                                const c = e.toJSON()
+            
+                                //preprocess/filter
+                                if (this.preprocess) {
+                                    const b = this.preprocess(c)
+                                    if (b == false) continue;
+                                    cells.push(c)
+                                } else {
+                                    cells.push(c)
+                                }
+                            }
+
+                        } else throw new Error("Tiled format not supported: " + format)
 
                     } catch (error) {
                         //mark as failed
@@ -221,63 +250,6 @@ export class TiledGrid extends DatasetComponent {
                     redrawFun()
 
                 })()
-
-                //if (!format || format === "CSV") {
-                //} else if (format === "PARQUET") {
-                //} else throw new Error("Tiled format not supported: " + format)
-
-                /*
-                if (!this.readParquetFun) {
-                    //throw new Error("readParquet function needed for parquet dataset")
-                    console.error("readParquet function needed for parquet dataset")
-                    return this;
-                }
- 
-                (async () => {
-                    try {
-                        const resp = await fetch(this.url + xT + "/" + yT + ".parquet")
-                        const parquetUint8Array = new Uint8Array(await resp.arrayBuffer());
-                        if (!this.readParquetFun) return this;
-                        const arrowUint8Array = this.readParquetFun(parquetUint8Array);
-                        console.log(arrowUint8Array)
-                    } catch (error) {
-                        //mark as failed
-                        this.cache[xT][yT] = "failed"
-                    }
-                })()
-*/
-
-                /*
-                
-                                const t = tableFromIPC(arrowUint8Array);
-                                //see https://arrow.apache.org/docs/js/
-                                //https://loaders.gl/arrowjs/docs/developer-guide/tables#record-tojson-and-toarray
-                
-                                this.cells = [];
-                                for (const e of t) {
-                                    //get cell
-                                    const c = e.toJSON()
-                
-                                    //preprocess/filter
-                                    if (this.preprocess) {
-                                        const b = this.preprocess(c)
-                                        if (b == false) continue;
-                                        this.cells.push(c)
-                                    } else {
-                                        this.cells.push(c)
-                                    }
-                                }
-                
-                                //TODO check if redraw is necessary
-                                //that is if the dataset belongs to a layer which is visible at the current zoom level
-                
-                                //execute the callback, usually a draw function
-                                if (redraw) redraw()
-                
-                                this.infoLoadingStatus = "loaded";
-                
-                */
-
             }
         }
         return this;
