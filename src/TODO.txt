@@ -1,4 +1,4 @@
-elevation with parquet: missing pixs - down to 200m - test several styles
+elevation with parquet: down to 200/100m - test several styles
 forest: test parquet 256 - to 200m + historical data ?
 
 add CSV grid layer example: bug. check !
