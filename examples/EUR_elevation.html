@@ -32,14 +32,14 @@
                         r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation_/" + r + "m/",
                         //the styles
                         gviz.TanakaStyle.get("elevation", {
-                            nb: 10,
+                            nb: 20,
                             //color: d3.interpolateCubehelixDefault,
                             color: d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"]),
                             widthFactor: 0.15,
                             tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
                         }),
                         {
-                            pixNb: 3,
+                            pixNb: 1.5,
                             cellInfoHTML: c => "<b>" + c.elevation + "</b> m",
                             readParquetFun: readParquet
                         })
