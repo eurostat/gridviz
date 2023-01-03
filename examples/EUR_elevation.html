@@ -28,7 +28,7 @@
                     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
                     .addMultiScaleTiledGridLayer(
                         [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                        r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation_/" + r + "m/",
+                        r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation/" + r + "m/",
                         //the styles
                         gviz.TanakaStyle.get("elevation", {
                             nb: 10,
@@ -38,7 +38,7 @@
                             tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
                         }),
                         {
-                            pixNb: 2,
+                            pixNb: 1,
                             cellInfoHTML: c => "<b>" + c.elevation + "</b> m",
                             readParquetFun: readParquet
                         })
