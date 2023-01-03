@@ -23,24 +23,21 @@
                 let containerDiv = document.getElementById("viz-container");
 
                 new gviz.App(containerDiv)
-                    //set position and zoom
                     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-                    //add multi scale tiled layer
                     .addMultiScaleTiledGridLayer(
-                        //the resolution values, ordered
                         [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                        //the URL, from the resolution
                         r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation_/" + r + "m/",
                         //the styles
-                        [
-                            new gviz.SquareColorWGLStyle({
-                                colorCol: "pop2018",
-                                tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50)
-                            })
-                        ],
+                        gviz.TanakaStyle.get("elevation", {
+                            nb: 10,
+                            //color: d3.interpolateCubehelixDefault,
+                            color: d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"]),
+                            widthFactor: 0.15,
+                            tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
+                        }),
                         {
-                            //the maximum pixel size before jumping to a lower resolution
                             pixNb: 3,
+                            cellInfoHTML: c => "<b>" + c.elevation + "</b> m",
                             readParquetFun: readParquet
                         })
             }
