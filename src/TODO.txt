@@ -1,35 +1,15 @@
+elevation with parquet
+forest: test parquet 256 - to 200m + historical data ?
+
 add CSV grid layer example: bug. check !
 use async await +++
 "use strict";
 
-parquet files production: check how to reduce size. other compression? Better define types?
-See: https://parquet.apache.org/docs/file-format/types/#:~:text=The%20types%20are%3A,BYTE_ARRAY%3A%20arbitrarily%20long%20byte%20arrays.
+parquet: make wasm import easier...
 
 V3:
 make modules
-format csv/parquet as parameter
 modularise: https://webpack.js.org/guides/code-splitting/
-
-
-
-write in java:
-https://parquet.apache.org/docs/contribution-guidelines/modules/
-https://github.com/Parquet/parquet-compatibility/blob/master/parquet-compat/src/test/java/parquet/compat/test/ConvertUtils.java
-
-
-+ duckDB-wasm ?
-make joins ?
-https://twitter.com/ericMauviere/status/1592783882382082053?s=20&t=va4Gbw8-KiqZV4n5Fwa9BA 
-
-or avro
-https://github.com/mtth/avsc
-https://www.npmjs.com/package/avro-js
-
-or PBF
-https://gavinr.com/protocol-buffers-protobuf-browser/
-https://github.com/protobufprotobuf.
-https://github.com/mapbox/pbf
-
 
 geotiff tiling - use for forest/CLC/elevation 200m ?
 
