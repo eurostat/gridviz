@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+
+<head>
+    <title>Gridviz - example</title>
+</head>
+
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
+    <div id="viz-container" style="height:600px; width:800px;"></div>
+
+
+    <div
+        style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
+        <div id="layer">
+            <input type="radio" name="layer" id="y1990" value="y1990">
+            <label for="y1990">1990</label>
+            <input type="radio" name="layer" id="y2000" value="y2000">
+            <label for="y2000">2000</label>
+            <input type="radio" name="layer" id="y2006" value="y2006">
+            <label for="y2006">2006</label>
+            <input type="radio" name="layer" id="y2012" value="y2012">
+            <label for="y2012">2012</label>
+            <input type="radio" name="layer" id="y2018" value="y2018" checked>
+            <label for="y2018">2018</label>
+        </div>
+    </div>
+
+
+    <script src="../dist/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+    <script>
+
+        //https://www.npmjs.com/package/parquet-wasm
+        const rp = (async () => {
+            const parquetModule = await import("https://unpkg.com/parquet-wasm@0.4.0-beta.5/esm/arrow2.js");
+            await parquetModule.default();
+            return parquetModule.readParquet;
+        })().then(
+            readParquet => {
+
+
+                const clcColors = {
+                    "1": "#e6004d",
+                    "2": "#ff0000",
+                    "3": "#cc4df2",
+                    "4": "#cc0000",
+                    "5": "#e6cccc",
+                    "6": "#e6cce6",
+                    "7": "#a600cc",
+                    "8": "#a64d00",
+                    "9": "#ff4dff",
+                    "10": "#ffa6ff",
+                    "11": "#ffe6ff",
+                    "12": "#ffffa8",
+                    "13": "#ffff00",
+                    "14": "#e6e600",
+                    "15": "#e68000",
+                    "16": "#f2a64d",
+                    "17": "#e6a600",
+                    "18": "#e6e64d",
+                    "19": "#ffe6a6",
+                    "20": "#ffe64d",
+                    "21": "#e6cc4d",
+                    "22": "#f2cca6",
+                    "23": "#80ff00",
+                    "24": "#00a600",
+                    "25": "#4dff00",
+                    "26": "#ccf24d",
+                    "27": "#a6ff80",
+                    "28": "#a6e64d",
+                    "29": "#a6f200",
+                    "30": "#e6e6e6",
+                    "31": "#cccccc",
+                    "32": "#ccffcc",
+                    "33": "#000000",
+                    "34": "#a6e6cc",
+                    "35": "#a6a6ff",
+                    "36": "#4d4dff",
+                    "37": "#ccccff",
+                    "38": "#e6e6ff",
+                    "39": "#a6a6e6",
+                    "40": "#00ccf2",
+                    "41": "#80f2e6",
+                    "42": "#00ffa6",
+                    "43": "#a6ffe6",
+                    "44": "#e6f2ff",
+                    "48": "gray"
+                }
+
+                const clcLabels = {
+                    "1": "Continuous urban fabric",
+                    "2": "Discontinuous urban fabric",
+                    "3": "Industrial or commercial units",
+                    "4": "Road and rail networks and associated land",
+                    "5": "Port areas",
+                    "6": "Airports",
+                    "7": "Mineral extraction sites",
+                    "8": "Dump sites",
+                    "9": "Construction sites",
+                    "10": "Green urban areas",
+                    "11": "Sport and leisure facilities",
+                    "12": "Non-irrigated arable land",
+                    "13": "Permanently irrigated land",
+                    "14": "Rice fields",
+                    "15": "Vineyards",
+                    "16": "Fruit trees and berry plantations",
+                    "17": "Olive groves",
+                    "18": "Pastures",
+                    "19": "Annual crops associated with permanent crops",
+                    "20": "Complex cultivation patterns",
+                    "21": "Land principally occupied by agriculture with significant areas of natural vegetation",
+                    "22": "Agro-forestry areas",
+                    "23": "Broad-leaved forest",
+                    "24": "Coniferous forest",
+                    "25": "Mixed forest",
+                    "26": "Natural grasslands",
+                    "27": "Moors and heathland",
+                    "28": "Sclerophyllous vegetation",
+                    "29": "Transitional woodland-shrub",
+                    "30": "sands",
+                    "31": "Bare rocks",
+                    "32": "Sparsely vegetated areas",
+                    "33": "Burnt areas",
+                    "34": "Glaciers and perpetual snow",
+                    "35": "Inland marshes",
+                    "36": "Peat bogs",
+                    "37": "Salt marshes",
+                    "38": "Salines",
+                    "39": "Intertidal flats",
+                    "40": "Water courses",
+                    "41": "Water bodies",
+                    "42": "Coastal lagoons",
+                    "43": "Estuaries",
+                    "44": "Sea and ocean",
+                    "48": "No data"
+                }
+
+
+
+                let containerDiv = document.getElementById("viz-container");
+
+                const colors = []
+                const colFun = d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"])
+                for (let t = 0; t <= 1; t += 1 / 10) colors.push(colFun(t))
+
+                new gviz.App(containerDiv)
+                    .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+                    .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+                    .addMultiScaleTiledGridLayer(
+                        [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                        r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc_/" + r + "m/",
+                        [
+                            new gviz.SquareColorCatWGLStyle({
+                                colorCol: "y2018",
+                                color: clcColors,
+                                minZoom: 100
+                            }),
+                            new gviz.SideCatStyle({
+                                col: "y2018",
+                                color: clcColors,
+                                width: (side, r, z) => z * 3,
+                                fillColor: (c) => clcColors[c.clc] + "99",
+                                maxZoom: 100
+                            }),
+                        ],
+                        {
+                            pixNb: 1.75,
+                            cellInfoHTML: c => clcLabels[c.clc],
+                            readParquetFun: readParquet,
+                        })
+            }
+        )
+    </script>
+
+</body>
+
+</html>
