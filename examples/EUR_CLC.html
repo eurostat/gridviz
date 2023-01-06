@@ -161,13 +161,13 @@
                                 col: "y2018",
                                 color: clcColors,
                                 width: (side, r, z) => z * 3,
-                                fillColor: (c) => clcColors[c.clc] + "99",
+                                fillColor: (c) => clcColors[c.y2018] + "99",
                                 maxZoom: 100
                             }),
                         ],
                         {
                             pixNb: 1.75,
-                            cellInfoHTML: c => clcLabels[c.clc],
+                            cellInfoHTML: c => clcLabels[c.y2018],
                             readParquetFun: readParquet,
                         })
             }
