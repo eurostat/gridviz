@@ -1,7 +1,6 @@
 //@ts-check
 
 import { SideStyle } from "./SideStyle"
-import { Cell } from "../Dataset"
 
 /** @typedef {{x:number,y:number,or:"v"|"h",value:number}} Side */
 
