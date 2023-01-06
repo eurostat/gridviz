@@ -44,8 +44,7 @@
                                 tFun: (v, r, s, zf) => (Math.max(v, 0) - s.min) / (s.max - s.min),
                                 stretching: { fun: "pow", alpha: 0.6 }
                             })
-                        ],*/
-
+                        ],//*/
 
                         /*/tanaka
                         gviz.TanakaStyle.get("elevation", {
@@ -54,22 +53,29 @@
                             color: d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"]),
                             widthFactor: 0.15,
                             tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
-                        }),*/
+                        }),//*/
 
-
-                        //lego
+                        /*/lego
                         gviz.LegoStyle.get(
                             "elevation",
                             {
                                 colors: colors,
                                 tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.6),
                             }
-                        ),
+                        ),//*/
 
+                        //contour
+                        [
+                            new gviz.ContourStyle({
+                                valueCol: "elevation",
+                                //breaks: [100, 200, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500, 3000, 3500, 4000],
+                                breaks: [0, 50, 100, 200, 300, 400, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000],
+                            }),
+                        ],//*/
 
                         {
-                            //pixNb: 1.5,
-                            pixNb: 6,
+                            pixNb: 1.5,
+                            //pixNb: 6,
                             cellInfoHTML: c => "<b>" + c.elevation + "</b> m",
                             readParquetFun: readParquet
                         })
