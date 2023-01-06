@@ -1,7 +1,5 @@
 //@ts-check
-import { Style, Stat } from "../Style"
-import { GeoCanvas } from "../GeoCanvas";
-import { Cell } from "../Dataset";
+import { Style } from "../Style"
 
 /**
  * @author Julien Gaffuri
@@ -18,7 +16,7 @@ export class MosaicStyle extends Style {
         this.colorCol = opts.colorCol;
 
         /** A function returning the color of the cell.
-        * @type {function(number,number,Stat|undefined):string} */
+        * @type {function(number,number,import("../Style").Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
         /** The mosaic factor, within [0,0.5]. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect.
@@ -37,9 +35,9 @@ export class MosaicStyle extends Style {
 
     /**
      * 
-     * @param {Array.<Cell>} cells 
+     * @param {Array.<import("../Dataset").Cell>} cells 
      * @param {number} resolution 
-     * @param {GeoCanvas} cg 
+     * @param {import("../GeoCanvas").GeoCanvas} cg 
      */
     draw(cells, resolution, cg) {
         //zoom factor

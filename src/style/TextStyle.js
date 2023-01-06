@@ -1,8 +1,6 @@
 //@ts-check
 
-import { Style, Stat } from "../Style"
-import { Cell } from "../Dataset"
-import { GeoCanvas } from "../GeoCanvas";
+import { Style } from "../Style"
 
 /**
  * 
@@ -20,7 +18,7 @@ export class TextStyle extends Style {
         this.textCol = opts.textCol;
 
         /** A function returning the text of a cell.
-         * @type {function(number,number,Stat|undefined):string} */
+         * @type {function(number,number,import("../Style").Stat|undefined):string} */
         this.text = opts.text || ((v, r, s, z) => "X")
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
@@ -28,7 +26,7 @@ export class TextStyle extends Style {
         this.colorCol = opts.colorCol;
 
         /** A function returning the color of the cell.
-        * @type {function(number,number,Stat|undefined):string} */
+        * @type {function(number,number,import("../Style").Stat|undefined):string} */
         this.color = opts.color || (() => "#EA6BAC");
 
 
@@ -38,7 +36,7 @@ export class TextStyle extends Style {
         this.fontSizeCol = opts.fontSizeCol;
 
         /** A function returning the font size of a cell in geo unit.
-        * @type {function(number,number,Stat|undefined,number):number} */
+        * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.fontSize = opts.fontSize || ((v, r, s, z) => r - 2);
 
 
@@ -56,9 +54,9 @@ export class TextStyle extends Style {
     /**
      * Draw cells as text.
      * 
-     * @param {Array.<Cell>} cells 
+     * @param {Array.<import("../Dataset").Cell>} cells 
      * @param {number} r 
-     * @param {GeoCanvas} cg 
+     * @param {import("../GeoCanvas").GeoCanvas} cg 
      */
     draw(cells, r, cg) {
         //zoom factor
@@ -96,7 +94,7 @@ export class TextStyle extends Style {
             cg.ctx.fillStyle = col;
 
             //font size
-            /** @type {function(number,number,Stat|undefined,number):number} */
+            /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
             let s_ = this.fontSize || (() => r / zf - 2);
             //size - in pixel unit
             const fontSizePix = s_(cell[this.fontSizeCol], r, statFontSize, zf) / zf;

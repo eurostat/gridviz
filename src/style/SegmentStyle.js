@@ -1,7 +1,6 @@
 //@ts-check
 
 import { Style } from "../Style"
-import { GeoCanvas } from "../GeoCanvas";
 
 /**
  * A style where each cell is represented by a segment whose length, width, color and orientation can vary according to statistical values.
@@ -48,11 +47,11 @@ export class SegmentStyle extends Style {
     /**
      * Draw cells as segments.
      * 
-     * @param {Array.<import("../Dataset").Cell>} cells 
-     * @param {number} resolution 
-     * @param {GeoCanvas} cg 
+    * @param {Array.<import("../Dataset").Cell>} cells 
+    * @param {number} r 
+    * @param {import("../GeoCanvas").GeoCanvas} cg
      */
-    draw(cells, resolution, cg) {
+    draw(cells, r, cg) {
         //zoom factor
         const zf = cg.getZf()
 
@@ -89,17 +88,17 @@ export class SegmentStyle extends Style {
 
             //color
             /** @type {string|undefined} */
-            const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined
+            const col = this.color ? this.color(c[this.colorCol], r, statColor) : undefined
             if (!col) continue
 
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, zf) : undefined
+            const wG = this.width ? this.width(c[this.widthCol], r, statWidth, zf) : undefined
             if (!wG || wG < 0) continue
 
             //length
             /** @type {number|undefined} */
-            const lG = this.length ? this.length(c[this.lengthCol], resolution, statLength, zf) : undefined
+            const lG = this.length ? this.length(c[this.lengthCol], r, statLength, zf) : undefined
             if (!lG || lG < 0) continue
 
             //orientation (in radian)
@@ -108,15 +107,15 @@ export class SegmentStyle extends Style {
             if (or === undefined || isNaN(or)) continue;
 
             //get offset
-            const offset = this.offset(c, resolution, zf)
+            const offset = this.offset(c, r, zf)
 
             //set color and width
             cg.ctx.strokeStyle = col
             cg.ctx.lineWidth = wG
 
             //compute segment centre postition
-            const cx = c.x + resolution / 2 + offset.dx;
-            const cy = c.y + resolution / 2 + offset.dy;
+            const cx = c.x + r / 2 + offset.dx;
+            const cy = c.y + r / 2 + offset.dy;
 
             //compute segment direction
             const dx = 0.5 * Math.cos(or) * lG
@@ -130,7 +129,7 @@ export class SegmentStyle extends Style {
         }
 
         //update legend, if any
-        this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor, sLength: statLength, sWidth: statWidth });
+        this.updateLegends({ style: this, r: r, zf: zf, sColor: statColor, sLength: statLength, sWidth: statWidth });
     }
 
 }

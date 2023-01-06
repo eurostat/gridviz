@@ -1,7 +1,6 @@
 //@ts-check
 
 import { Style } from "../Style"
-import { GeoCanvas } from "../GeoCanvas";
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -41,11 +40,11 @@ export class ShapeColorSizeStyle extends Style {
     /**
      * Draw cells as squares, with various colors and size.
      * 
-     * @param {Array.<import("../Dataset").Cell>} cells 
-     * @param {number} resolution 
-     * @param {GeoCanvas} cg 
+    * @param {Array.<import("../Dataset").Cell>} cells 
+    * @param {number} r 
+    * @param {import("../GeoCanvas").GeoCanvas} cg
      */
-    draw(cells, resolution, cg) {
+    draw(cells, r, cg) {
         //zoom factor
         const zf = cg.getZf()
 
@@ -67,11 +66,11 @@ export class ShapeColorSizeStyle extends Style {
         //in geo coordinates
         cg.setCanvasTransform()
 
-        const r2 = resolution * 0.5
+        const r2 = r * 0.5
         for (let cell of cells) {
 
             //color
-            const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined;
+            const col = this.color ? this.color(cell[this.colorCol], r, statColor) : undefined;
             if (!col || col === "none") continue
             cg.ctx.fillStyle = col;
 
@@ -81,16 +80,16 @@ export class ShapeColorSizeStyle extends Style {
 
             //size
             /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-            let s_ = this.size || (() => resolution);
+            let s_ = this.size || (() => r);
             //size - in geo unit
-            const sG = s_(cell[this.sizeCol], resolution, statSize, zf)
+            const sG = s_(cell[this.sizeCol], r, statSize, zf)
 
             //get offset
-            const offset = this.offset(cell, resolution, zf)
+            const offset = this.offset(cell, r, zf)
 
             if (shape === "square") {
                 //draw square
-                const d = resolution * (1 - sG / resolution) * 0.5
+                const d = r * (1 - sG / r) * 0.5
                 cg.ctx.fillRect(
                     cell.x + d + offset.dx,
                     cell.y + d + offset.dy,
@@ -110,7 +109,7 @@ export class ShapeColorSizeStyle extends Style {
                 cg.ctx.beginPath();
                 cg.ctx.moveTo(xc, yc);
                 cg.ctx.arc(xc, yc, r2, 0, 2 * Math.PI);
-                cg.ctx.arc(xc, yc, (1 - sG / resolution) * r2, 0, 2 * Math.PI, true);
+                cg.ctx.arc(xc, yc, (1 - sG / r) * r2, 0, 2 * Math.PI, true);
                 cg.ctx.closePath();
                 cg.ctx.fill();
             } else if (shape === "diamond") {
@@ -140,7 +139,7 @@ export class ShapeColorSizeStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: zf, sSize: statSize, sColor: statColor });
+        this.updateLegends({ style: this, r: r, zf: zf, sSize: statSize, sColor: statColor });
     }
 
 }

@@ -1,8 +1,6 @@
 //@ts-check
 
-import { Style, Stat } from "../Style"
-import { Cell } from "../Dataset"
-import { GeoCanvas } from "../GeoCanvas";
+import { Style } from "../Style"
 import { randomNormal } from "d3-random"
 import { checkWebGLSupport, makeWebGLCanvas } from "../utils/webGLUtils"
 import { WebGLSquareColoring } from "../utils/WebGLSquareColoring";
@@ -25,11 +23,11 @@ export class DotDensityStyle extends Style {
         this.nbCol = opts.nbCol;
 
         /** A function returning the number of dots for a cell value.
-        * @type {function(number,number,Stat,number):number} */
+        * @type {function(number,number,import("../Style").Stat,number):number} */
         this.nb = opts.nb || ((v, r, s, zf) => 0.3 * r * r / (zf * zf) * v / s.max)
 
         /** The color of the dots. Same color for all dots within a cell.
-        * @type {function(Cell):string} */
+        * @type {function(import("../Dataset").Cell):string} */
         this.color = opts.color || (() => "#FF5733");
 
         /** A function returning the size of the dots, in geo unit.
@@ -43,12 +41,12 @@ export class DotDensityStyle extends Style {
 
 
     /**
-     * Draw cells as text.
-     * 
-     * @param {Array.<Cell>} cells 
-     * @param {number} r 
-     * @param {GeoCanvas} cg 
-     */
+    * Draw cells as text.
+    * 
+    * @param {Array.<import("../Dataset").Cell>} cells 
+    * @param {number} r 
+    * @param {import("../GeoCanvas").GeoCanvas} cg 
+    */
     draw(cells, r, cg) {
         if (monitor) monitorDuration("*** DotDensityStyle draw")
 

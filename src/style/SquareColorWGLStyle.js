@@ -1,7 +1,6 @@
 //@ts-check
 
 import { Style } from "../Style"
-import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
 import { WebGLSquareColoringAdvanced } from "../utils/WebGLSquareColoringAdvanced";
 import { monitor, monitorDuration } from "../utils/Utils"
@@ -52,11 +51,11 @@ export class SquareColorWGLStyle extends Style {
 
 
     /**
-     * @param {Array.<import("../Dataset").Cell>} cells 
-     * @param {number} resolution 
-     * @param {GeoCanvas} cg 
+    * @param {Array.<import("../Dataset").Cell>} cells 
+    * @param {number} r 
+    * @param {import("../GeoCanvas").GeoCanvas} cg
      */
-    draw(cells, resolution, cg) {
+    draw(cells, r, cg) {
         if (monitor) monitorDuration("*** SquareColorWGLStyle draw")
 
         //zoom factor
@@ -77,13 +76,13 @@ export class SquareColorWGLStyle extends Style {
         if (monitor) monitorDuration("   web GL canvas creation")
 
         //add vertice and fragment data
-        const r2 = resolution / 2
+        const r2 = r / 2
         let c, nb = cells.length
         const verticesBuffer = []
         const tBuffer = []
         for (let i = 0; i < nb; i++) {
             c = cells[i]
-            const t = this.tFun(c[this.colorCol], resolution, statColor)
+            const t = this.tFun(c[this.colorCol], r, statColor)
             if (t == null || t == undefined) continue
             verticesBuffer.push(c.x + r2, c.y + r2)
             tBuffer.push(t > 1 ? 1 : t < 0 ? 0 : t)
@@ -91,7 +90,7 @@ export class SquareColorWGLStyle extends Style {
 
         if (monitor) monitorDuration("   webgl drawing data preparation")
 
-        const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
+        const sizeGeo = this.size ? this.size(r, zf) : r + 0.2 * zf
         const wgp = new WebGLSquareColoringAdvanced(cvWGL.gl, this.colors, this.stretching, sizeGeo / zf)
 
         if (monitor) monitorDuration("   webgl program preparation")
@@ -108,7 +107,7 @@ export class SquareColorWGLStyle extends Style {
         if (monitor) monitorDuration("   canvas drawing")
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor });
+        this.updateLegends({ style: this, r: r, zf: zf, sColor: statColor });
 
         if (monitor) monitorDuration("*** SquareColorWGLStyle end draw")
     }

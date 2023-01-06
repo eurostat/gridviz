@@ -1,7 +1,6 @@
 //@ts-check
 
 import { csv } from "d3-fetch";
-import { GeoCanvas } from "./GeoCanvas";
 
 /** A label. The name is the text to show. (x,y) are the coordinates in the same CRS as the grid.
  * @typedef {{name: string, x:number, y:number }} Label */
@@ -84,7 +83,7 @@ export class LabelLayer {
     /**
      * Draw the label layer.
      * 
-     * @param {GeoCanvas} cg The canvas where to draw the layer.
+     * @param {import("./GeoCanvas").GeoCanvas} cg The canvas where to draw the layer.
      * @returns {void}
      */
     draw(cg) {

@@ -1,8 +1,6 @@
 //@ts-check
 "use strict";
 
-import { DatasetComponent } from "./DatasetComponent";
-
 /** 
  * A grid cell.
  * @typedef {{x: number, y: number}} Cell */
@@ -21,7 +19,7 @@ import { DatasetComponent } from "./DatasetComponent";
 export class Dataset {
 
     /**
-     * @param {Array.<DatasetComponent>} datasetComponents The dataset components
+     * @param {Array.<import("./DatasetComponent").DatasetComponent>} datasetComponents The dataset components
      * @param {Array.<number>} resolutions The resolutions of the dataset components, in CRS geographical unit
      * @param { {preprocess?:function(Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values. Can be used also to select cells to keep.
      */
@@ -29,7 +27,7 @@ export class Dataset {
         opts = opts || {};
 
         /** The dataset components.
-         * @type {Array.<DatasetComponent>} */
+         * @type {Array.<import("./DatasetComponent").DatasetComponent>} */
         this.datasetComponents = datasetComponents;
 
         /** The resolutions of the dataset components, in CRS geographical unit.
@@ -65,7 +63,7 @@ export class Dataset {
      * A function to ease the creation of datasets from their components.
      * 
      * @param {Array.<number>} resolutions The resolutions of the dataset components, in CRS geographical unit
-     * @param {function(number):DatasetComponent} resToDatasetComponent Function returning a dataset component from a resolution
+     * @param {function(number):import("./DatasetComponent").DatasetComponent} resToDatasetComponent Function returning a dataset component from a resolution
      * @param { {preprocess?:function(Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values
      * @returns {Dataset}
      */

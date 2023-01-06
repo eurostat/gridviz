@@ -1,7 +1,6 @@
 //@ts-check
 
 import { Style } from "../Style"
-import { GeoCanvas } from "../GeoCanvas";
 
 /**
  * 
@@ -47,11 +46,11 @@ export class StrokeStyle extends Style {
     /**
      * Draw cells as squares, with various colors and size.
      * 
-     * @param {Array.<import("../Dataset").Cell>} cells 
-     * @param {number} resolution 
-     * @param {GeoCanvas} cg 
+    * @param {Array.<import("../Dataset").Cell>} cells 
+    * @param {number} r 
+    * @param {import("../GeoCanvas").GeoCanvas} cg
      */
-    draw(cells, resolution, cg) {
+    draw(cells, r, cg) {
         //zoom factor
         const zf = cg.getZf()
 
@@ -71,22 +70,22 @@ export class StrokeStyle extends Style {
         //in geo coordinates
         cg.setCanvasTransform()
 
-        const r2 = resolution * 0.5
+        const r2 = r * 0.5
         for (let cell of cells) {
 
             //color
-            const col = this.strokeColor ? this.strokeColor(cell[this.strokeColorCol], resolution, statColor) : undefined;
+            const col = this.strokeColor ? this.strokeColor(cell[this.strokeColorCol], r, statColor) : undefined;
             if (!col || col === "none") continue
             cg.ctx.strokeStyle = col;
 
             //size
             /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-            let s_ = this.size || (() => resolution);
+            let s_ = this.size || (() => r);
             //size - in geo unit
-            const sG = s_(cell[this.sizeCol], resolution, statSize, zf)
+            const sG = s_(cell[this.sizeCol], r, statSize, zf)
 
             //width
-            const wi = this.strokeWidth ? this.strokeWidth(cell[this.strokeWidthCol], resolution, statWidth, zf) : 1 * zf;
+            const wi = this.strokeWidth ? this.strokeWidth(cell[this.strokeWidthCol], r, statWidth, zf) : 1 * zf;
             if (!wi || wi <= 0) continue
             cg.ctx.lineWidth = wi;
 
@@ -95,11 +94,11 @@ export class StrokeStyle extends Style {
             if (shape === "none") continue
 
             //get offset
-            const offset = this.offset(cell, resolution, zf)
+            const offset = this.offset(cell, r, zf)
 
             if (shape === "square") {
                 //draw square
-                const d = resolution * (1 - sG / resolution) * 0.5
+                const d = r * (1 - sG / r) * 0.5
                 cg.ctx.beginPath();
                 cg.ctx.rect(
                     cell.x + d + offset.dx,

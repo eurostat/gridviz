@@ -1,7 +1,5 @@
 //@ts-check
 
-import { GeoCanvas } from "./GeoCanvas";
-
 /**
  * 
  * @author Julien Gaffuri
@@ -90,7 +88,7 @@ export class BackgroundLayer {
     }
 
     /**
-     * @param {GeoCanvas} cg The canvas where to draw the layer.
+     * @param {import("./GeoCanvas").GeoCanvas} cg The canvas where to draw the layer.
      * @returns {void}
      */
     draw(cg) {

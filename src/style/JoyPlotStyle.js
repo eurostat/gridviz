@@ -1,8 +1,6 @@
 //@ts-check
 
-import { Style, Stat } from "../Style"
-import { Cell } from "../Dataset"
-import { GeoCanvas } from "../GeoCanvas";
+import { Style } from "../Style"
 
 /**
  * 
@@ -20,7 +18,7 @@ export class JoyPlotStyle extends Style {
         this.heightCol = opts.heightCol
 
         /** A function returning the height of a cell.
-         * @type {function(number,number,Stat|undefined,number):number} */
+         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.height = opts.height || ((v) => Math.sqrt(v));
 
         /** 
@@ -37,12 +35,12 @@ export class JoyPlotStyle extends Style {
 
 
     /**
-     * Draw cells as squares depending on their value.
-     * 
-     * @param {Array.<Cell>} cells 
-     * @param {number} r 
-     * @param {GeoCanvas} cg 
-     */
+    * Draw cells as squares depending on their value.
+    * 
+    * @param {Array.<import("../Dataset").Cell>} cells 
+    * @param {number} r 
+    * @param {import("../GeoCanvas").GeoCanvas} cg
+    * */
     draw(cells, r, cg) {
         cg.ctx.lineJoin = "round"
 

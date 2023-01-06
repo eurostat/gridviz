@@ -1,7 +1,6 @@
 //@ts-check
 
 import { Style } from "../Style"
-import { GeoCanvas } from "../GeoCanvas";
 import { makeWebGLCanvas } from "../utils/webGLUtils";
 import { WebGLSquareColoringCatAdvanced } from "../utils/WebGLSquareColoringCatAdvanced";
 import { monitor, monitorDuration } from "../utils/Utils"
@@ -57,18 +56,18 @@ export class SquareColorCatWGLStyle extends Style {
 
 
     /**
-     * @param {Array.<import("../Dataset").Cell>} cells 
-     * @param {number} resolution 
-     * @param {GeoCanvas} cg 
+    * @param {Array.<import("../Dataset").Cell>} cells 
+    * @param {number} r 
+    * @param {import("../GeoCanvas").GeoCanvas} cg
      */
-    draw(cells, resolution, cg) {
+    draw(cells, r, cg) {
         if (monitor) monitorDuration("*** SquareColorCatWGLStyle draw")
 
         //zoom factor
         const zf = cg.getZf()
 
         //add vertice and fragment data
-        const r2 = resolution / 2
+        const r2 = r / 2
         let c, nb = cells.length
         const verticesBuffer = []
         const iBuffer = []
@@ -94,7 +93,7 @@ export class SquareColorCatWGLStyle extends Style {
         if (monitor) monitorDuration("   web GL canvas creation")
 
         //draw
-        const sizeGeo = this.size ? this.size(resolution, zf) : resolution + 0.2 * zf
+        const sizeGeo = this.size ? this.size(r, zf) : r + 0.2 * zf
         this.wgp.draw(cvWGL.gl, verticesBuffer, iBuffer, cg.getWebGLTransform(), sizeGeo / zf)
 
         if (monitor) monitorDuration("   webgl drawing")
@@ -106,7 +105,7 @@ export class SquareColorCatWGLStyle extends Style {
         if (monitor) monitorDuration("   canvas drawing")
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: zf });
+        this.updateLegends({ style: this, r: r, zf: zf });
 
         if (monitor) monitorDuration("*** SquareColorCatWGLStyle end draw")
     }

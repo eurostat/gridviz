@@ -1,8 +1,6 @@
 //@ts-check
 
 import { Style } from "../Style"
-import { Cell } from "../Dataset"
-import { GeoCanvas } from "../GeoCanvas";
 
 /** @typedef {{x:number,y:number,or:"v"|"h",v1:string|undefined,v2:string|undefined}} Side */
 
@@ -33,15 +31,15 @@ export class SideCatStyle extends Style {
         this.width = opts.width || ((side, r, z) => r * 0.2);
 
         /** A fill color for the cells.
-        * @type {function(Cell):string} */
+        * @type {function(import("../Dataset").Cell):string} */
         this.fillColor = opts.fillColor
     }
 
 
     /**
-     * @param {Array.<Cell>} cells 
-     * @param {number} r 
-     * @param {GeoCanvas} cg 
+    * @param {Array.<import("../Dataset").Cell>} cells 
+    * @param {number} r 
+    * @param {import("../GeoCanvas").GeoCanvas} cg
      */
     draw(cells, r, cg) {
         if (!cells || cells.length == 0)

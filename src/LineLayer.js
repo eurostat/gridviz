@@ -1,6 +1,5 @@
 //@ts-check
 
-import { GeoCanvas } from "./GeoCanvas";
 import { json } from "d3-fetch";
 
 /**
@@ -51,7 +50,7 @@ export class LineLayer {
 
     /**
      * Draw the layer.
-     * @param {GeoCanvas} cg The canvas where to draw the layer.
+     * @param {import("./GeoCanvas").GeoCanvas} cg The canvas where to draw the layer.
      * @returns {void}
      */
     draw(cg) {

@@ -1,6 +1,4 @@
 //@ts-check
-import { GeoCanvas } from './GeoCanvas';
-import { Legend } from "./Legend";
 
 /**
  * Statistics of a set of values
@@ -48,7 +46,7 @@ export class Style {
 
         /** 
          * @public
-         * @type {Array.<Legend>} */
+         * @type {Array.<import("./Legend").Legend>} */
         this.legends = []
     }
 
@@ -58,7 +56,7 @@ export class Style {
      * 
      * @param {Array.<import('./Dataset').Cell>} cells The cells to draw.
      * @param {number} resolution Their resolution (in geographic unit)
-     * @param {GeoCanvas} cg The canvas where to draw them.
+     * @param {import("./GeoCanvas").GeoCanvas} cg The canvas where to draw them.
      * @abstract
      */
     draw(cells, resolution, cg) {

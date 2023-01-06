@@ -1,7 +1,6 @@
 //@ts-check
 
 import { Style } from "../Style"
-import { GeoCanvas } from "../GeoCanvas";
 
 /** @typedef {"flag"|"piechart"|"ring"|"segment"|"radar"|"agepyramid"|"halftone"} CompositionType */
 
@@ -62,9 +61,9 @@ export class CompositionStyle extends Style {
     /**
      * Draw cells as squares depending on their value.
      * 
-     * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {number} r 
-     * @param {GeoCanvas} cg 
+    * @param {Array.<import("../Dataset").Cell>} cells 
+    * @param {number} r 
+    * @param {import("../GeoCanvas").GeoCanvas} cg
      */
     draw(cells, r, cg) {
 

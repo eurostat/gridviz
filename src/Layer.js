@@ -1,7 +1,4 @@
 //@ts-check
-import { Dataset } from "./Dataset";
-import { DatasetComponent } from "./DatasetComponent";
-import { Style } from "./Style";
 
 /**
  * A layer, which specifies a dataset to be shown with specified styles.
@@ -11,17 +8,17 @@ import { Style } from "./Style";
 export class Layer {
 
     /**
-     * @param {Dataset} dataset The multi resolution dataset to show.
-     * @param {Array.<Style>} styles The styles, ordered in drawing order.
+     * @param {import("./Dataset").Dataset} dataset The multi resolution dataset to show.
+     * @param {Array.<import("./Style").Style>} styles The styles, ordered in drawing order.
      * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import("./Dataset").Cell):string}} opts 
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(dataset, styles, opts = {}) {
         opts = opts || {}
 
-        /** @type {Dataset} */
+        /** @type {import("./Dataset").Dataset} */
         this.dataset = dataset;
-        /** @type {Array.<Style>} */
+        /** @type {Array.<import("./Style").Style>} */
         this.styles = styles;
 
         /** An attribute to specify if a layer should be drawn or not
@@ -56,7 +53,7 @@ export class Layer {
      * Return the relevant dataset component for a specified zoom factor.
      * 
      * @param {number} zf 
-     * @returns {DatasetComponent|undefined}
+     * @returns {import("./DatasetComponent").DatasetComponent|undefined}
      * */
     getDatasetComponent(zf) {
         if (zf < this.minZoom || zf > this.maxZoom) return;

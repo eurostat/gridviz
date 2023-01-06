@@ -1,8 +1,6 @@
 //@ts-check
 
 import { Style } from "../Style"
-import { Cell, Envelope } from "../Dataset"
-import { GeoCanvas } from "../GeoCanvas";
 
 /**
  * A style representing the cell as a smoothed layer, to smoothing local variations and show main trends across space.
@@ -23,7 +21,7 @@ export class KernelSmoothingStyle extends Style {
         opts = opts || {}
 
         /** A function specifying the value to consider for each cell. This is the value to smooth.
-         * @type {function(Cell):number} */
+         * @type {function(import("../Dataset").Cell):number} */
         this.value = opts.value
 
         /** The smoothing parameter, in geo unit. The larger, the more smoothed.
@@ -82,11 +80,11 @@ export class KernelSmoothingStyle extends Style {
     * Compute kernel smoothing of some cells.
     * 
     * @private
-    * @param {Array.<Cell>} cells The cells to be smoothed.
-    * @param {Envelope} e Geo envelope to consider.
+    * @param {Array.<import("../Dataset").Cell>} cells The cells to be smoothed.
+    * @param {import("../Dataset").Envelope} e Geo envelope to consider.
     * @param {number} r Resolution, in geo unit.
     * @param {number} s Sigma (in grid pixel !)
-    * @returns {Array.<Cell>} The list of cells, including the initial ones and the ones with smoothed values, in "ksmval" property.
+    * @returns {Array.<import("../Dataset").Cell>} The list of cells, including the initial ones and the ones with smoothed values, in "ksmval" property.
     */
     kernelSmoothing(cells, e, r, s) {
 
@@ -218,9 +216,9 @@ export class KernelSmoothingStyle extends Style {
     /**
      * Draw cells as squares depending on their value.
      * 
-     * @param {Array.<Cell>} cells 
-     * @param {number} r 
-     * @param {GeoCanvas} cg 
+    * @param {Array.<import("../Dataset").Cell>} cells 
+    * @param {number} r 
+    * @param {import("../GeoCanvas").GeoCanvas} cg
      */
     draw(cells, r, cg) {
 

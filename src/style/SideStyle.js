@@ -1,7 +1,6 @@
 //@ts-check
 
 import { Style } from "../Style"
-import { GeoCanvas } from "../GeoCanvas";
 
 /** @typedef {{x:number,y:number,or:"v"|"h",value:number}} Side */
 
@@ -46,9 +45,9 @@ export class SideStyle extends Style {
 
 
     /**
-     * @param {Array.<import("../Dataset").Cell>} cells 
-     * @param {number} r 
-     * @param {GeoCanvas} cg 
+    * @param {Array.<import("../Dataset").Cell>} cells 
+    * @param {number} r 
+    * @param {import("../GeoCanvas").GeoCanvas} cg
      */
     draw(cells, r, cg) {
 

@@ -1,7 +1,6 @@
 //@ts-check
 
 import { Style } from "../Style"
-import { GeoCanvas } from "../GeoCanvas";
 
 /**
  * @author Julien Gaffuri
@@ -65,11 +64,11 @@ export class PillarStyle extends Style {
     /**
      * Draw cells as segments.
      * 
-     * @param {Array.<import("../Dataset").Cell>} cells 
-     * @param {number} resolution 
-     * @param {GeoCanvas} cg 
+    * @param {Array.<import("../Dataset").Cell>} cells 
+    * @param {number} r 
+    * @param {import("../GeoCanvas").GeoCanvas} cg
      */
-    draw(cells, resolution, cg) {
+    draw(cells, r, cg) {
         //zoom factor
         const zf = cg.getZf()
 
@@ -114,24 +113,24 @@ export class PillarStyle extends Style {
 
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, zf) : undefined
+            const wG = this.width ? this.width(c[this.widthCol], r, statWidth, zf) : undefined
             if (!wG || wG < 0) continue
 
             //height
             /** @type {number|undefined} */
-            const hG = this.height ? this.height(c[this.heightCol], resolution, statHeight, zf) : undefined
+            const hG = this.height ? this.height(c[this.heightCol], r, statHeight, zf) : undefined
             if (!hG || hG < 0) continue
 
             //get offset
             //TODO use that
-            const offset = this.offset(c, resolution, zf)
+            const offset = this.offset(c, r, zf)
 
             //set width
             cg.ctx.lineWidth = wG
 
             //compute cell centre postition
-            const cx = c.x + resolution / 2;
-            const cy = c.y + resolution / 2;
+            const cx = c.x + r / 2;
+            const cy = c.y + r / 2;
             const ls = hG * this.shadowFactor
 
             //draw segment
@@ -160,26 +159,26 @@ export class PillarStyle extends Style {
 
             //color
             /** @type {string|undefined} */
-            const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined
+            const col = this.color ? this.color(c[this.colorCol], r, statColor) : undefined
             if (!col) continue
 
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, zf) : undefined
+            const wG = this.width ? this.width(c[this.widthCol], r, statWidth, zf) : undefined
             if (!wG || wG < 0) continue
 
             //height
             /** @type {number|undefined} */
-            const hG = this.height ? this.height(c[this.heightCol], resolution, statHeight, zf) : undefined
+            const hG = this.height ? this.height(c[this.heightCol], r, statHeight, zf) : undefined
             if (!hG || hG < 0) continue
 
             //get offset
             //TODO use that
-            const offset = this.offset(c, resolution, zf)
+            const offset = this.offset(c, r, zf)
 
             //compute cell centre postition
-            const cx = c.x + resolution / 2;
-            const cy = c.y + resolution / 2;
+            const cx = c.x + r / 2;
+            const cy = c.y + r / 2;
 
             //compute angle
             const dx = cx - cvx, dy = cy - cvy
@@ -236,7 +235,7 @@ export class PillarStyle extends Style {
         cg.ctx.lineCap = "butt";
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor });
+        this.updateLegends({ style: this, r: r, zf: zf, sColor: statColor });
     }
 
 }
