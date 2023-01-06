@@ -24,21 +24,52 @@
 
                 let containerDiv = document.getElementById("viz-container");
 
+                const colors = []
+                const colFun = d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"])
+                for (let t = 0; t <= 1; t += 1 / 10) colors.push(colFun(t))
+
                 new gviz.App(containerDiv)
                     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+                    .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
                     .addMultiScaleTiledGridLayer(
                         [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                         r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation_/" + r + "m/",
                         //the styles
+
+                        /*/color
+                        [
+                            new gviz.SquareColorWGLStyle({
+                                colorCol: "elevation",
+                                colors: ["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"],
+                                tFun: (v, r, s, zf) => (Math.max(v, 0) - s.min) / (s.max - s.min),
+                                stretching: { fun: "pow", alpha: 0.6 }
+                            })
+                        ],*/
+
+
+                        /*/tanaka
                         gviz.TanakaStyle.get("elevation", {
                             nb: 20,
                             //color: d3.interpolateCubehelixDefault,
                             color: d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"]),
                             widthFactor: 0.15,
                             tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
-                        }),
+                        }),*/
+
+
+                        //lego
+                        gviz.LegoStyle.get(
+                            "elevation",
+                            {
+                                colors: colors,
+                                tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.6),
+                            }
+                        ),
+
+
                         {
-                            pixNb: 1.8,
+                            //pixNb: 1.5,
+                            pixNb: 6,
                             cellInfoHTML: c => "<b>" + c.elevation + "</b> m",
                             readParquetFun: readParquet
                         })
