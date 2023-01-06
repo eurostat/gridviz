@@ -46,7 +46,7 @@
                             })
                         ],//*/
 
-                        /*/tanaka
+                        //tanaka
                         gviz.TanakaStyle.get("elevation", {
                             nb: 20,
                             //color: d3.interpolateCubehelixDefault,
@@ -65,7 +65,7 @@
                         ),//*/
 
                         //contour
-                        [
+                        /*[
                             new gviz.ContourStyle({
                                 valueCol: "elevation",
                                 //breaks: [100, 200, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500, 3000, 3500, 4000],
@@ -74,7 +74,7 @@
                         ],//*/
 
                         {
-                            pixNb: 1.5,
+                            pixNb: 2.5,
                             //pixNb: 6,
                             cellInfoHTML: c => "<b>" + c.elevation + "</b> m",
                             readParquetFun: readParquet

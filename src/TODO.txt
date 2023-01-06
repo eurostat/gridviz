@@ -1,5 +1,4 @@
 parquet: monitor, improve
-
 contour style: interval (min, max) => ... and color (val, min, max => ...
 elevation: test several styles: contour - add LC ? make zoom on Luxembourg ?
 forest: test parquet 256 - to 200m + historical data ?
