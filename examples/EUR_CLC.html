@@ -11,18 +11,13 @@
 
     <div
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
-        <div id="layer">
-            <input type="radio" name="layer" id="y1990" value="y1990">
-            <label for="y1990">1990</label>
-            <input type="radio" name="layer" id="y2000" value="y2000">
-            <label for="y2000">2000</label>
-            <input type="radio" name="layer" id="y2006" value="y2006">
-            <label for="y2006">2006</label>
-            <input type="radio" name="layer" id="y2012" value="y2012">
-            <label for="y2012">2012</label>
-            <input type="radio" name="layer" id="y2018" value="y2018" checked>
-            <label for="y2018">2018</label>
-        </div>
+        Year: <select id="year">
+            <option value="2018" selected>2018</option>
+            <option value="2012">2012</option>
+            <option value="2006">2006</option>
+            <option value="2000">2000</option>
+            <option value="1990">1990</option>
+        </select>
     </div>
 
 
@@ -137,41 +132,72 @@
                     "48": "No data"
                 }
 
-
-
-                let containerDiv = document.getElementById("viz-container");
-
                 const colors = []
                 const colFun = d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"])
                 for (let t = 0; t <= 1; t += 1 / 10) colors.push(colFun(t))
 
-                new gviz.App(containerDiv)
+                //make app
+                let containerDiv = document.getElementById("viz-container");
+                const app = new gviz.App(containerDiv)
                     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
                     .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
-                    .addMultiScaleTiledGridLayer(
-                        [200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                        r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc_/" + r + "m/",
+
+                //make dataset
+                const ds = app.makeMultiScaleTiledGridDataset(
+                    [200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc_/" + r + "m/",
+                    {
+                        readParquetFun: readParquet
+                    })
+
+
+                //
+                const update = () => {
+
+                    //get year selection
+                    const year = document.querySelector('#year').value
+
+                    //remove layers
+                    app.layers = []
+
+                    //add layer
+                    app.addLayerFromDataset(
+                        ds,
                         [
                             new gviz.SquareColorCatWGLStyle({
-                                colorCol: "y2018",
+                                colorCol: "y"+year,
                                 color: clcColors,
                                 minZoom: 50
                             }),
                             new gviz.SideCatStyle({
-                                col: "y2018",
+                                col: "y"+year,
                                 color: clcColors,
                                 width: (side, r, z) => z * 3,
-                                fillColor: (c) => clcColors[c.y2018] + "99",
+                                fillColor: (c) => clcColors[c["y"+year]] + "99",
                                 maxZoom: 50
                             }),
                         ],
                         {
                             pixNb: 1.3,
-                            cellInfoHTML: c => clcLabels[c.y2018],
-                            readParquetFun: readParquet,
+                            cellInfoHTML: c => clcLabels[c["y"+year]],
                         })
+
+                    //redraw
+                    app.cg.redraw();
+
+                }
+
+                //year change
+                document.querySelector('#year').addEventListener('change', update)
+
+                //initialise
+                update()
+
             }
+
+
         )
+
     </script>
 
 </body>
