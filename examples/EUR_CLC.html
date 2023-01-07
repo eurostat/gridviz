@@ -155,14 +155,14 @@
                             new gviz.SquareColorCatWGLStyle({
                                 colorCol: "y2018",
                                 color: clcColors,
-                                minZoom: 100
+                                minZoom: 50
                             }),
                             new gviz.SideCatStyle({
                                 col: "y2018",
                                 color: clcColors,
                                 width: (side, r, z) => z * 3,
                                 fillColor: (c) => clcColors[c.y2018] + "99",
-                                maxZoom: 100
+                                maxZoom: 50
                             }),
                         ],
                         {
