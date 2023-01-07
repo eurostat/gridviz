@@ -149,7 +149,7 @@
                     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
                     .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
                     .addMultiScaleTiledGridLayer(
-                        [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                        [200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                         r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc_/" + r + "m/",
                         [
                             new gviz.SquareColorCatWGLStyle({
@@ -166,7 +166,7 @@
                             }),
                         ],
                         {
-                            pixNb: 1.75,
+                            pixNb: 1.3,
                             cellInfoHTML: c => clcLabels[c.y2018],
                             readParquetFun: readParquet,
                         })
