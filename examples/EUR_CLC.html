@@ -144,9 +144,13 @@
 
                 //make dataset
                 const ds = app.makeMultiScaleTiledGridDataset(
-                    [200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc_/" + r + "m/",
                     {
+                        preprocess: c => {
+                            for (let y of [1990, 2000, 2006, 2012, 2018])
+                                if (!c["y" + y]) c["y" + y] = 48
+                        },
                         readParquetFun: readParquet
                     })
 
@@ -165,21 +169,21 @@
                         ds,
                         [
                             new gviz.SquareColorCatWGLStyle({
-                                colorCol: "y"+year,
+                                colorCol: "y" + year,
                                 color: clcColors,
-                                minZoom: 50
+                                minZoom: 30
                             }),
                             new gviz.SideCatStyle({
-                                col: "y"+year,
+                                col: "y" + year,
                                 color: clcColors,
                                 width: (side, r, z) => z * 3,
-                                fillColor: (c) => clcColors[c["y"+year]] + "99",
-                                maxZoom: 50
+                                fillColor: (c) => clcColors[c["y" + year]] + "99",
+                                maxZoom: 30
                             }),
                         ],
                         {
                             pixNb: 1.3,
-                            cellInfoHTML: c => clcLabels[c["y"+year]],
+                            cellInfoHTML: c => clcLabels[c["y" + year]],
                         })
 
                     //redraw
