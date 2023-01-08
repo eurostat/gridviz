@@ -1,3 +1,4 @@
+test on various navigtors - smartphones
 parquet: monitor, improve
 contour style: interval (min, max) => ... and color (val, min, max => ...
 elevation: test several styles: contour - add LC ? make zoom on Luxembourg ?
