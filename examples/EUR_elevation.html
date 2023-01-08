@@ -85,7 +85,7 @@
                     r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc_/" + r + "m/",
                     {
                         preprocess: c => {
-                            if (c.y2018 != 41) return false
+                            if (c.y2018 != 40 && c.y2018 != 41 && c.y2018 != 42 && c.y2018 != 43 && c.y2018 != 44 && c.y2018 != 1 && c.y2018 != 2) return false
                             delete c.y1990
                             delete c.y2000
                             delete c.y2006
@@ -95,17 +95,24 @@
                     })
 
                 //add layer
+                const clcColors = { 1: "gray", 2: "lightgray", 40: "#BADDFF", 41: "#BADDFF", 42: "#BADDFF", 43: "#BADDFF", 44: "#BADDFF" }
                 app.addLayerFromDataset(
                     ds,
                     [
-                        new gviz.SquareColorCatWGLStyle({
+                        /*new gviz.SquareColorCatWGLStyle({
                             colorCol: "y2018",
-                            color: { 41: "blue" },
-                        })
+                            color: clcColors,
+                        }),*/
+                        new gviz.SideCatStyle({
+                            col: "y2018",
+                            color: { 1: "darkgray", 2: "darkgray", 40: "darkgray", 41: "darkgray", 42: "darkgray", 43: "darkgray", 44: "darkgray" },
+                            width: (side, r, z) => z,
+                            fillColor: (c) => clcColors[c["y2018"]],
+                            //maxZoom: 30
+                        }),
                     ],
                     {
-                        pixNb: 1.3,
-                        cellInfoHTML: c => clcLabels[c["y" + year]],
+                        pixNb: 2,
                     })
 
             }
