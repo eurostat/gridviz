@@ -35,7 +35,7 @@
 - [France population, dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html)
 - [Europe population as a mosaic](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html)
 - [Europe relief - 100m](https://eurostat.github.io/gridviz/examples/EUR_elevation.html)
-- [Europe land cover change - 100m (Copernicus - Corine land cover)](https://eurostat.github.io/gridviz/examples/EUR_CLC.html)
+- [Europe land cover change - 100m (Copernicus - Corine land cover)](https://eurostat.github.io/gridviz/examples/EUR_LC.html)
 
 ## Installation
 
