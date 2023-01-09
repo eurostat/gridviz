@@ -340,10 +340,14 @@
                         document.querySelector('#year').disabled = false
                         document.querySelector('#lccyIni').disabled = true
                         document.querySelector('#lccyFin').disabled = true
-                    } else {
+                    } else if (layCode == "ch") {
                         document.querySelector('#year').disabled = true
                         document.querySelector('#lccyIni').disabled = false
                         document.querySelector('#lccyFin').disabled = false
+                    } else if (layCode == "for") {
+                        document.querySelector('#year').disabled = true
+                        document.querySelector('#lccyIni').disabled = true
+                        document.querySelector('#lccyFin').disabled = true
                     }
 
                     update();
