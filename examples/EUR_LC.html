@@ -42,7 +42,12 @@
             </select>
             <br>
             <input type="radio" name="layer" id="for" value="for">
-            <label for="for">Forest</label>
+            <label for="for">Forest in </label>
+            <select id="yearFor" disabled>
+                <option value="2018" selected>2018</option>
+                <option value="2012">2015</option>
+                <option value="1990">2012</option>
+            </select>
         </div>
     </div>
 
@@ -350,14 +355,17 @@
                         document.querySelector('#yearCLC').disabled = false
                         document.querySelector('#lccyIni').disabled = true
                         document.querySelector('#lccyFin').disabled = true
+                        document.querySelector('#yearFor').disabled = true
                     } else if (layCode == "ch") {
                         document.querySelector('#yearCLC').disabled = true
                         document.querySelector('#lccyIni').disabled = false
                         document.querySelector('#lccyFin').disabled = false
+                        document.querySelector('#yearFor').disabled = true
                     } else if (layCode == "for") {
                         document.querySelector('#yearCLC').disabled = true
                         document.querySelector('#lccyIni').disabled = true
                         document.querySelector('#lccyFin').disabled = true
+                        document.querySelector('#yearFor').disabled = false
                     }
 
                     update();
