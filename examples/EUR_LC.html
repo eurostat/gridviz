@@ -279,7 +279,43 @@
                         }
                     } else if (layCode === "for") {
 
-                        console.log("aaa")
+                        const year = 2018;
+
+                        //add layer
+                        app.addLayerFromDataset(
+                            dsForest,
+                            [
+                                new gviz.ShapeColorSizeStyle({
+                                    sizeCol: "tcd" + year,
+                                    size: (v, r, s, zf) => 1.2 * r * Math.sqrt(v / 100),
+                                    colorCol: "dlt" + year,
+                                    color: (v) => {
+                                        //none
+                                        if (v == 0) return "#c6df58";
+                                        //coniferous
+                                        if (v == 2) return "#38a43b";
+                                        //broad
+                                        return "#9fd045";
+                                    },
+                                    shape: () => "circle",
+                                }),
+                                new gviz.StrokeStyle({
+                                    sizeCol: "tcd" + year,
+                                    size: (v, r, s, zf) => 1.2 * r * Math.sqrt(v / 100),
+                                    strokeColor: () => "#000",
+                                    strokeWidth: (v, r, s, z) => 0.1 * z,
+                                    shape: () => "circle"
+                                })
+                            ],
+                            {
+                                pixNb: 5,
+                                cellInfoHTML: c => {
+                                    let st = "Tree cover density: <b>" + c.tcd + "%</b>"
+                                    if (c.dlt == "1") st += "<br>Mainly broadleaved trees"
+                                    if (c.dlt == "2") st += "<br>Mainly coniferous trees"
+                                    return st;
+                                },
+                            })
 
                     }
 
