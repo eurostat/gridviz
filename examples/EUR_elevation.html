@@ -48,11 +48,15 @@
                                 valueCol: "elevation",
                                 value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
                                 color: (side, r, s, z) => {
-                                    return side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : null
+                                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                    const tr = 0.3 * gviz.sPow(Math.abs(side.value) / max, 0.3)
+                                    return side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "rgba(0,0,0," + tr + ")" : "rgba(255,255,100," + tr + ")"
+                                    //return side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "yellow"
                                 },
                                 width: (side, r, s, z) => {
-                                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                    return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.sPow(Math.abs(side.value) / max, 0.3))
+                                    return r * 1
+                                    //const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                    //return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.sPow(Math.abs(side.value) / max, 0.3))
                                 }
                             })
                         ],//*/
@@ -106,7 +110,7 @@
                     })
 
                 //add layer
-                const clcColors = { 1: "gray", 2: "lightgray", 40: "#BADDFF", 41: "#BADDFF", 42: "#BADDFF", 43: "#BADDFF", 44: "#BADDFF" }
+                const clcColors = { 1: "#44444466", 2: "#AAAAAA66", 40: "#BADDFF", 41: "#BADDFF", 42: "#BADDFF", 43: "#BADDFF", 44: "#BADDFF" }
                 app.addLayerFromDataset(
                     ds,
                     [
