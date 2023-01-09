@@ -45,8 +45,8 @@
             <label for="for">Forest in </label>
             <select id="yearFor" disabled>
                 <option value="2018" selected>2018</option>
-                <option value="2012">2015</option>
-                <option value="1990">2012</option>
+                <option value="2015">2015</option>
+                <option value="2012">2012</option>
             </select>
         </div>
     </div>
@@ -299,7 +299,8 @@
                         }
                     } else if (layCode === "for") {
 
-                        const year = 2018;
+                        //get year selection
+                        const year = document.querySelector('#yearFor').value
 
                         //show background
                         app.bgLayers[0].visible = true
