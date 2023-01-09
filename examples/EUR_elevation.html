@@ -5,8 +5,28 @@
     <title>Gridviz - example</title>
 </head>
 
-<body>
+<body style="font-family: Arial, Helvetica, sans-serif;">
     <div id="viz-container" style="height:600px; width:800px;"></div>
+
+    <div
+        style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
+        <div id="layer">
+            <input type="radio" name="layer" id="hyp" value="hyp">
+            <label for="hyp">Hypso</label>
+            <br>
+            <input type="radio" name="layer" id="hypsh" value="hypsh" checked>
+            <label for="hypsh">Hypso with shading</label>
+            <br>
+            <input type="radio" name="layer" id="tanaka" value="tanaka">
+            <label for="tanaka">Tanaka</label>
+            <br>
+            <input type="radio" name="layer" id="contour" value="contour">
+            <label for="contour">Contour</label>
+            <br>
+            <input type="radio" name="layer" id="lego" value="lego">
+            <label for="lego">Lego</label>
+        </div>
+    </div>
 
     <script src="../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
@@ -24,77 +44,21 @@
 
                 let containerDiv = document.getElementById("viz-container");
 
-                const colors = []
-                const colFun = d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"])
-                for (let t = 0; t <= 1; t += 1 / 10) colors.push(colFun(t))
-
+                //the app
                 const app = new gviz.App(containerDiv)
                     .setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
-                    .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
-                    .addMultiScaleTiledGridLayer(
-                        [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                        r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation_/" + r + "m/",
-                        //the styles
+                    .setLabelLayer(gviz.getEuronymeLabelLayer())
+                    .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
-                        //color
-                        [
-                            new gviz.SquareColorWGLStyle({
-                                colorCol: "elevation",
-                                colors: ["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"],
-                                tFun: (v, r, s, zf) => (Math.max(v, 0) - s.min) / (s.max - s.min),
-                                stretching: { fun: "pow", alpha: 0.6 }
-                            }),
-                            new gviz.SideStyle({
-                                valueCol: "elevation",
-                                value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
-                                color: (side, r, s, z) => {
-                                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                    const tr = 0.3 * gviz.sPow(Math.abs(side.value) / max, 0.3)
-                                    return side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "rgba(0,0,0," + tr + ")" : "rgba(255,255,100," + tr + ")"
-                                    //return side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "yellow"
-                                },
-                                width: (side, r, s, z) => {
-                                    return r * 1
-                                    //const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                    //return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.sPow(Math.abs(side.value) / max, 0.3))
-                                }
-                            })
-                        ],//*/
+                //elevation dataset
+                const dsForest = app.makeMultiScaleTiledGridDataset(
+                    [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation_/" + r + "m/",
+                    {
+                        readParquetFun: readParquet
+                    })
 
-                        /*/tanaka
-                        gviz.TanakaStyle.get("elevation", {
-                            nb: 20,
-                            //color: d3.interpolateCubehelixDefault,
-                            color: d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"]),
-                            widthFactor: 0.15,
-                            tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
-                        }),//*/
-
-                        /*/lego
-                        gviz.LegoStyle.get(
-                            "elevation",
-                            {
-                                colors: colors,
-                                tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.6),
-                            }
-                        ),//*/
-
-                        //contour
-                        /*[
-                            new gviz.ContourStyle({
-                                valueCol: "elevation",
-                                //breaks: [100, 200, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500, 3000, 3500, 4000],
-                                breaks: [0, 50, 100, 200, 300, 400, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000],
-                            }),
-                        ],//*/
-
-                        {
-                            pixNb: 2.5,
-                            //pixNb: 6,
-                            cellInfoHTML: c => "<b>" + c.elevation + "</b> m",
-                            readParquetFun: readParquet
-                        })
-
+                //lc dataset
                 const ds = app.makeMultiScaleTiledGridDataset(
                     [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc_/" + r + "m/",
@@ -109,15 +73,82 @@
                         readParquetFun: readParquet
                     })
 
-                //add layer
+                //prepare colors
+                const colors = []
+                const colFun = d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"])
+                for (let t = 0; t <= 1; t += 1 / 10) colors.push(colFun(t))
+
                 const clcColors = { 1: "#44444466", 2: "#AAAAAA66", 40: "#BADDFF", 41: "#BADDFF", 42: "#BADDFF", 43: "#BADDFF", 44: "#BADDFF" }
+
+
+                /*/color
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "elevation",
+                        colors: ["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"],
+                        tFun: (v, r, s, zf) => (Math.max(v, 0) - s.min) / (s.max - s.min),
+                        stretching: { fun: "pow", alpha: 0.6 }
+                    }),
+                    new gviz.SideStyle({
+                        valueCol: "elevation",
+                        value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
+                        color: (side, r, s, z) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            const tr = 0.3 * gviz.sPow(Math.abs(side.value) / max, 0.3)
+                            return side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "rgba(0,0,0," + tr + ")" : "rgba(255,255,100," + tr + ")"
+                            //return side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "yellow"
+                        },
+                        width: (side, r, s, z) => {
+                            return r * 1
+                            //const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            //return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.sPow(Math.abs(side.value) / max, 0.3))
+                        }
+                    })
+                ],//*/
+
+                /*/tanaka
+                gviz.TanakaStyle.get("elevation", {
+                    nb: 20,
+                    //color: d3.interpolateCubehelixDefault,
+                    color: d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"]),
+                    widthFactor: 0.15,
+                    tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
+                }),//*/
+
+                /*/lego
+                gviz.LegoStyle.get(
+                    "elevation",
+                    {
+                        colors: colors,
+                        tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.6),
+                    }
+                ),//*/
+
+                //contour
+                /*[
+                    new gviz.ContourStyle({
+                        valueCol: "elevation",
+                        //breaks: [100, 200, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500, 3000, 3500, 4000],
+                        breaks: [0, 50, 100, 200, 300, 400, 500, 750, 1000, 1500, 2000, 2500, 3000, 3500, 4000],
+                    }),
+                ],//*/
+
+                /*
+                {
+                    pixNb: 1.8,
+                    //pixNb: 6,
+                    cellInfoHTML: c => "<b>" + c.elevation + "</b> m",
+                    readParquetFun: readParquet
+                })
+*/
+
+
+
+                /*/add layer
+
                 app.addLayerFromDataset(
                     ds,
                     [
-                        /*new gviz.SquareColorCatWGLStyle({
-                            colorCol: "y2018",
-                            color: clcColors,
-                        }),*/
                         new gviz.SideCatStyle({
                             col: "y2018",
                             color: { 1: "darkgray", 2: "darkgray", 40: "darkgray", 41: "darkgray", 42: "darkgray", 43: "darkgray", 44: "darkgray" },
@@ -129,6 +160,44 @@
                     {
                         pixNb: 2,
                     })
+*/
+
+
+
+                //
+                const update = () => {
+
+                    //read GUI selection
+                    const layCode = document.querySelector('input[name="layer"]:checked').value
+
+                    //remove layers
+                    app.layers = []
+
+
+                    if (layCode === "hyp") {
+
+                    } else if (layCode === "hypsh") {
+
+                    } else if (layCode === "tanaka") {
+
+                    } else if (layCode === "contour") {
+
+                    } else if (layCode === "lego") {
+
+                    }
+
+                    //redraw
+                    app.cg.redraw();
+
+                }
+
+
+
+                //layer selection change
+                document.querySelector('#layer').addEventListener('change', update)
+
+                //initialise
+                update()
 
             }
         )

@@ -11,8 +11,6 @@
 
     <div
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
-        <span style="font-size: 1.5em; font-weight: bold;">Europe land cover</span><br>
-        <hr>
         <div id="layer">
             <input type="radio" name="layer" id="lc" value="lc" checked>
             <label for="lc">Land cover in </label>
@@ -340,6 +338,21 @@
                                     return st;
                                 },
                             })
+
+
+                        //legend
+                        app.layers[0].styles[0].legends = [
+                            new gviz.ColorCategoryLegend({
+                                title: "Dominant leaf type", colCat: [
+                                    ["#c6df58", "None"],
+                                    ["#9fd045", "Mainly broadleaved"],
+                                    ["#38a43b", "Mainly coniferous"],
+                                ],
+                                shape: "square",
+                            }),
+                            new gviz.SizeLegend({ shape: "circle", labelUnitText: "% tree cover density", fillColor: "#666d" })
+                        ]
+
 
                     }
 
