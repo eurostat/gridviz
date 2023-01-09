@@ -16,7 +16,7 @@
         <div id="layer">
             <input type="radio" name="layer" id="lc" value="lc" checked>
             <label for="lc">Land cover in </label>
-            <select id="year">
+            <select id="yearCLC">
                 <option value="2018" selected>2018</option>
                 <option value="2012">2012</option>
                 <option value="2006">2006</option>
@@ -232,7 +232,7 @@
                         app.bgLayers[0].visible = false
 
                         //get year selection
-                        const year = document.querySelector('#year').value
+                        const year = document.querySelector('#yearCLC').value
 
                         //add layer
                         app.addLayerFromDataset(
@@ -347,15 +347,15 @@
                 document.querySelector('#layer').addEventListener('change', function () {
                     const layCode = document.querySelector('input[name="layer"]:checked').value
                     if (layCode == "lc") {
-                        document.querySelector('#year').disabled = false
+                        document.querySelector('#yearCLC').disabled = false
                         document.querySelector('#lccyIni').disabled = true
                         document.querySelector('#lccyFin').disabled = true
                     } else if (layCode == "ch") {
-                        document.querySelector('#year').disabled = true
+                        document.querySelector('#yearCLC').disabled = true
                         document.querySelector('#lccyIni').disabled = false
                         document.querySelector('#lccyFin').disabled = false
                     } else if (layCode == "for") {
-                        document.querySelector('#year').disabled = true
+                        document.querySelector('#yearCLC').disabled = true
                         document.querySelector('#lccyIni').disabled = true
                         document.querySelector('#lccyFin').disabled = true
                     }
