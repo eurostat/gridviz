@@ -15,7 +15,8 @@ use async await +++
 
 parquet: make wasm import easier...
 
-improve definition of cellinfohtml + possibility to make layers based on several styles
+improve definition of cellinfohtml
+possibility to make layers based on several datasets
 
 V3:
 make modules

@@ -308,6 +308,12 @@ export class App {
      * @protected
      */
     getCellFocusInfo(posGeo) {
+
+
+//TODO
+//go through all layers
+
+
         //get top layer
         const lays = this.getActiveLayers();
         /** @type {Layer} */
