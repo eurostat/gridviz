@@ -1,4 +1,3 @@
-remove app "getActiveLayers" function ?
 
 finalise: elevation, lc, forest
 

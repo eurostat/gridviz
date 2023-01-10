@@ -256,40 +256,6 @@ export class App {
 
 
     /**
-     * Returns the layers which are within the current viewer zoom extent, that is the ones that are visible.
-     * @returns {Array.<Layer>}
-     * @public
-     */
-    getActiveLayers() {
-
-        /** @type {Array.<Layer>} */
-        const out = []
-
-        //go through the layers
-        const zf = this.getZoomFactor();
-        for (const lay of this.layers) {
-            if (!lay.visible) continue
-            if (!lay.getDatasetComponent(zf)) continue;
-            out.push(lay);
-        }
-        return out;
-    }
-
-
-    /**
-     * Hide all layers (set visible attribute to false)
-     * @returns {this}
-     */
-    hideAllLayers() {
-        for (const al of this.layers)
-            al.visible = false
-        return this;
-    }
-
-
-
-
-    /**
      * @param {number} marginPx 
      * @returns {import('./Dataset').Envelope}
      * @public
