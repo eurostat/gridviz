@@ -1,7 +1,7 @@
 tooltip:
 attach it to layer - show the first defined one, from top ?
-OR: define at app level. add fun get(x,y,col) fun which retrieve info in all available datasets ?
 
+remove app "getActiveLayers" function ?
 
 finalise: elevation, lc, forest
 

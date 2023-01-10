@@ -309,24 +309,22 @@ export class App {
      */
     getCellFocusInfo(posGeo) {
 
+        //go through the layers, starting from top
+        const zf = this.getZoomFactor();
+        for (let i = this.layers.length - 1; i >= 0; i--) {
+            /** @type {Layer} */
+            const layer = this.layers[i]
+            if (!layer.visible) continue
+            if (!layer.cellInfoHTML) continue;
+            const dsc = layer.getDatasetComponent(zf)
+            if (!dsc) continue;
 
-//TODO
-//go through all layers
-
-
-        //get top layer
-        const lays = this.getActiveLayers();
-        /** @type {Layer} */
-        const layer = lays[lays.length - 1]
-        if (!layer) return undefined;
-        /** @type {import('./DatasetComponent').DatasetComponent|undefined} */
-        const dsc = layer.getDatasetComponent(this.getZoomFactor())
-        if (!dsc) return undefined
-        //get cell at mouse position
-        /** @type {import('./Dataset').Cell|undefined} */
-        const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache());
-        if (!cell) return undefined;
-        return { cell: cell, html: layer.cellInfoHTML(cell, dsc.getResolution()), resolution: dsc.getResolution() };
+            //get cell at mouse position
+            /** @type {import('./Dataset').Cell|undefined} */
+            const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache());
+            if (!cell) return undefined;
+            return { cell: cell, html: layer.cellInfoHTML(cell, dsc.getResolution()), resolution: dsc.getResolution() };
+        }
     }
 
 
