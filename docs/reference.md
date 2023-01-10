@@ -800,7 +800,7 @@ For more information, [see the code](../src/LineLayer.js).
 
 ![gridviz tooltip](img/tooltip.png)
 
-A 'tooltip' shows information related to the selected grid cell. The information shown for each selected cell can be specified at dataset level using the **cellInfoHTML** parameter. See for example:
+A 'tooltip' shows information related to the selected grid cell. The information shown for each selected cell can be specified at layer level using the **cellInfoHTML** parameter. See for example:
 
 ```javascript
 new gviz.App(containerDiv)
@@ -817,6 +817,7 @@ new gviz.App(containerDiv)
 ```
 (see [online](https://eurostat.github.io/gridviz/examples/tooltip.html), see [code](../examples/tooltip.html))
 
+By default, the **cellInfoHTML** function is a function returning a list of all cell properties. In case several layers are defined, the **cellInfoHTML** function of the top layer is used. If it is not defined, then the layer the **cellInfoHTML** function of the layer below is used instead. If no **cellInfoHTML** function is defined for all layers, then no tooltip is shown.
 
 Changing tooltip style: Documentation coming soon.
 
