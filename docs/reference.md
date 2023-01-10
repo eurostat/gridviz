@@ -43,6 +43,7 @@
     - [Showing labels](#showing-labels)
     - [Showing boundaries](#showing-boundaries)
   - [Tooltip](#tooltip)
+  - [Alright?](#alright)
 
 Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
 
@@ -824,5 +825,6 @@ Changing tooltip style: Documentation coming soon.
 For more information, [see the code](../src/Tooltip.js).
 
 
+## Alright?
 
 Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
