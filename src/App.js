@@ -3,7 +3,6 @@
 
 import { GeoCanvas } from './GeoCanvas';
 import { Layer } from './Layer';
-import { Style } from './Style';
 import { Dataset } from './Dataset';
 import { Tooltip } from './Tooltip';
 
@@ -377,7 +376,7 @@ export class App {
      * Add a layer to the app.
      * 
      * @param {Dataset} dataset The dataset of the layer
-     * @param {Array.<Style>} styles The styles of the layer
+     * @param {Array.<import('./Style').Style>} styles The styles of the layer
      * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string}} opts The layer options.
      * @returns {this}
      */
@@ -494,7 +493,7 @@ export class App {
      * 
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {Array.<Style>} styles The styles, ordered in drawing order.
+     * @param {Array.<import('./Style').Style>} styles The styles, ordered in drawing order.
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
@@ -508,7 +507,7 @@ export class App {
      * 
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {Array.<Style>} styles The styles, ordered in drawing order.
+     * @param {Array.<import('./Style').Style>} styles The styles, ordered in drawing order.
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
@@ -522,7 +521,7 @@ export class App {
     /**
     * 
     * @param {string} url 
-     * @param {Array.<Style>} styles 
+     * @param {Array.<import('./Style').Style>} styles 
      * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string, preprocess?:function(import('./Dataset').Cell):boolean}} opts 
      * @returns {this}
      */
@@ -537,7 +536,7 @@ export class App {
      * 
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURL
-     * @param {Array.<Style>} styles The styles, ordered in drawing order.
+     * @param {Array.<import('./Style').Style>} styles The styles, ordered in drawing order.
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
@@ -551,7 +550,7 @@ export class App {
      * 
      * @param {Array.<number>} resolutions 
      * @param {function(number):string} resToURL
-     * @param {Array.<Style>} styles The styles, ordered in drawing order.
+     * @param {Array.<import('./Style').Style>} styles The styles, ordered in drawing order.
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
@@ -565,7 +564,7 @@ export class App {
     /**
     * @param {Array.<number>} resolutions 
     * @param {function(number):string} resToURL 
-    * @param {Array.<Style>} styles 
+    * @param {Array.<import('./Style').Style>} styles 
     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string, preprocess?:function(import('./Dataset').Cell):boolean}} opts 
     * @returns {this}
     */
