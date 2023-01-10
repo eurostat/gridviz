@@ -1,9 +1,9 @@
+contour style: interval (min, max) => ... and color (val, min, max => ...
 
 finalise: elevation, lc, forest
 
-test on various navigtors - smartphones
+test on various navigators - smartphones
 parquet: monitor, improve
-contour style: interval (min, max) => ... and color (val, min, max => ...
 
 add CSV grid layer example: bug? check !
 use async await +++
@@ -11,7 +11,6 @@ use async await +++
 
 parquet: make wasm import easier...
 
-improve definition of cellinfohtml
 possibility to make layers based on several datasets
 
 V3:
