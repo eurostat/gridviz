@@ -1,6 +1,3 @@
-tooltip:
-attach it to layer - show the first defined one, from top ?
-
 remove app "getActiveLayers" function ?
 
 finalise: elevation, lc, forest

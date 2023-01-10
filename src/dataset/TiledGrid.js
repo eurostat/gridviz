@@ -187,12 +187,12 @@ export class TiledGrid extends DatasetComponent {
                             const parquetUint8Array = new Uint8Array(await resp.arrayBuffer());
                             const arrowUint8Array = this.readParquetFun(parquetUint8Array);
                             const t = tableFromIPC(arrowUint8Array);
-                            
+
                             cells = [];
                             for (const e of t) {
                                 //get cell
                                 const c = e.toJSON()
-            
+
                                 //preprocess/filter
                                 if (this.preprocess) {
                                     const b = this.preprocess(c)
@@ -225,8 +225,11 @@ export class TiledGrid extends DatasetComponent {
 
                     // 1. the dataset belongs to a layer which is visible at the current zoom level
                     let redraw = false;
-                    for (const layer of this.app.getActiveLayers()) {
-                        if (layer.getDatasetComponent(this.app.getZoomFactor()) != this) continue;
+                    //go through the layers
+                    const zf = this.app.getZoomFactor();
+                    for (const lay of this.app.layers) {
+                        if (!lay.visible) continue
+                        if (lay.getDatasetComponent(zf) != this) continue;
                         //found one layer. No need to seek more.
                         redraw = true;
                         break;
