@@ -316,6 +316,7 @@ export class App {
             const layer = this.layers[i]
             if (!layer.visible) continue
             if (!layer.cellInfoHTML) continue;
+            if (layer.cellInfoHTML === "none") continue;
             const dsc = layer.getDatasetComponent(zf)
             if (!dsc) continue;
 
