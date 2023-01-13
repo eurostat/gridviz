@@ -26,6 +26,7 @@ https://ieeexplore.ieee.org/document/1532144
 https://observablehq.com/@spren9er/two-tone-pseudo-color-scales
 
 
+https://jnafzig.github.io//2018/02/05/double-pendulum.html
 
 
 cat/size legend: center vertically
