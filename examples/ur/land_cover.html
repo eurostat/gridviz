@@ -154,6 +154,15 @@
             .setBoundaryLayer(gviz.getEurostatBoundariesLayer({
                 baseURL: nuts2jsonURL,
                 showOth: false,
+                color: (f, zf) => {
+                    const p = f.properties
+                    if (p.id >= 100000) return "#bcbcbc"
+                    if (p.co === "T") return "#888"
+                    if (zf < 400) return "#888"
+                    else if (zf < 1000) return p.lvl >= 3 ? "" : "#888"
+                    else if (zf < 2000) return p.lvl >= 2 ? "" : "#888"
+                    else return p.lvl >= 1 ? "" : "#888"
+                },
             }))
             .addBackgroundLayer({
                 url: bgLayerURL,
