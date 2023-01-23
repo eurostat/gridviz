@@ -20,6 +20,9 @@
             <input type="radio" name="layer" id="tanaka" value="tanaka">
             <label for="tanaka">Tanaka</label>
             <br>
+            <input type="radio" name="layer" id="joyplot" value="joyplot">
+            <label for="joyplot">Joyplot</label>
+            <br>
             <input type="radio" name="layer" id="lego" value="lego">
             <label for="lego">Lego</label>
             <br>
@@ -184,6 +187,10 @@
                         )
 
                         app.addLayerFromDataset(dsLC, lcSty, { pixNb: 1.5, cellInfoHTML: "none" })
+
+                    } else if (layCode === "joyplot") {
+
+                        
 
                     } else if (layCode === "lego") {
 
