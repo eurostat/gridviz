@@ -190,7 +190,31 @@
 
                     } else if (layCode === "joyplot") {
 
-                        
+                        //hide background
+                        app.bgLayers[0].visible = false
+
+                        app.addLayerFromDataset(
+                            ds,
+                            [
+                                new gviz.JoyPlotStyle({
+                                    heightCol: "elevation",
+                                    height: (v, r, s, zf) => 3 * r * gviz.sPow((v - s.min) / (s.max - s.min), 1),
+                                    /*lineColor: (y, ys, r, zf) => {
+                                        const t = 255 - 255 * (y - ys.min) / (ys.max - ys.min);
+                                        return "rgb(" + t + "," + t + "," + t + ")"
+                                    },*/
+                                    lineWidth: (y, ys, r, zf) => 0.1 * r,
+                                    //fillColor: (y, ys, r, zf) => "rgba(0,0,0," + (0.0 + (1 - (y - ys.min) / (ys.max - ys.min)) * 0.9) + ")",
+                                    /*fillColor: (y, ys, r, zf) => {
+                                        let t = (y - ys.min) / (ys.max - ys.min);
+                                        t = Math.pow(t, 1);
+                                        t *= 255;
+                                        return "rgba(" + t + "," + t + "," + t + ",0.7)"
+                                    },*/
+                                })
+                            ],
+                            { pixNb: 6, cellInfoHTML: cinf }
+                        )
 
                     } else if (layCode === "lego") {
 

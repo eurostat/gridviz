@@ -1,9 +1,7 @@
-elevation joyplot
-
-tiler
-
 contour style: interval (min, max) => ... and color (val, min, max => ...
 elevation legend
+
+tiler
 
 finalise: elevation, lc, forest
 
