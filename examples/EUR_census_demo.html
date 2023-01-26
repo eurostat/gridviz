@@ -50,8 +50,8 @@
             <input type="radio" name="style" id="sizeCh" value="sizeCh">
             <label for="sizeCh">Circle size</label>
             <br>
-            <input type="radio" name="style" id="rectCh" value="rectCh">
-            <label for="rectCh">Rectangle</label>
+            <input type="radio" name="style" id="segmentCh" value="segmentCh">
+            <label for="segmentCh">Segment</label>
 
             <hr>
             <input type="checkbox" id="label" checked>
@@ -148,6 +148,8 @@
                     else if (!c["2011"] && c["2018"]) c.d2011_2018 = + c["2018"]
                     else if (c["2011"] && !c["2018"]) c.d2011_2018 = - c["2011"]
                     else c.d2011_2018 = c["2018"] - c["2011"]
+                    //ratio
+                    c.p2011_2018 = c["2011"] == 0 ? 999 : c.d2011_2018 / c["2011"]
                 }
             }
         )
@@ -298,10 +300,13 @@
 
             } else if (style == "lego") {
 
+                const cols = []
+                for (let t = 0; t <= 1; t += 1 / 8) cols.push(d3.interpolateOrRd(t))
+
                 //add layer
                 app.addLayerFromDataset(
                     popDataset,
-                    gviz.LegoStyle.get(year, { tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sPow((v - s.min) / (s.max - s.min), 0.2) }),
+                    gviz.LegoStyle.get(year, { tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sPow((v - s.min) / (s.max - s.min), 0.2), colors: cols }),
                     {
                         pixNb: 10,
                         cellInfoHTML: tooltipFun
@@ -405,30 +410,35 @@
                 app.layers[0].styles[0].legends.push(lgCat)
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }))
 
-            } else if (style == "rectCh") {
+            } else if (style == "segmentCh") {
+                const maxAngle = 60
 
                 app.addLayerFromDataset(
                     popDataset,
                     [
                         new gviz.SegmentStyle({
                             orientation: (c) => {
-                                if (c.d2011_2018 < 0) return -33
-                                if (c.d2011_2018 == 0) return 0
-                                return 33
+                                let a = c.p2011_2018 * maxAngle / 0.3
+                                a = a < -maxAngle ? -maxAngle : a > maxAngle ? maxAngle : a;
+                                return a
                             },
-                            colorCol: "d2011_2018",
-                            color: (v) => v > 0 ? "#d13c4bcc" : "#4288b5cc",
+                            colorCol: "p2011_2018",
+                            color: (v) => Math.abs(v) < 0.02 ? "gray" : v > 0 ? "#d13c4bcc" : "#4288b5cc",
                             length: (v, r) => r,
                             //lengthCol: "2011",
                             //length: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25),
                             widthCol: "2018",
-                            width: (v, r, s, zf) => 0.6*r * gviz.sPow(v / s.max, 0.25)
+                            width: (v, r, s, zf) => 0.75 * r * gviz.sPow(v / s.max, 0.25)
                         })],
                     {
-                        pixNb: 7,
+                        pixNb: 8,
                         cellInfoHTML: tooltipFunCh
                     }
                 )
+
+                //legend
+                const lgCat = new gviz.ColorCategoryLegend({ title: "", shape: "circle", colCat: [["#d13c4b", "Increase"], ["gray", "Stable (<1%)"], ["#4288b5", "Decrease"]] })
+                app.layers[0].styles[0].legends.push(lgCat)
 
             }
 
@@ -448,7 +458,7 @@
         document.querySelector('#colorCh').addEventListener('change', update)
         document.querySelector('#colorSmCh').addEventListener('change', update)
         document.querySelector('#sizeCh').addEventListener('change', update)
-        document.querySelector('#rectCh').addEventListener('change', update)
+        document.querySelector('#segmentCh').addEventListener('change', update)
 
         //zoom
         document.querySelector('#zoomin').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
