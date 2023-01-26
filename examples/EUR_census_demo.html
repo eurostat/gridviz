@@ -39,6 +39,12 @@
             <label for="lego">Lego</label>
             <br>
             <span style="font-size: 1.3em; font-weight: bold;">2011 - 2018 population change</span><br>
+
+            <hr>
+            <input type="checkbox" id="label" checked>
+            <label for="label">City names</label>
+            <input type="checkbox" id="boundary" checked>
+            <label for="boundary">Boundaries</label>
         </div>
 
         <div
@@ -248,12 +254,26 @@
 
             } else if (style == "tanaka") {
 
+                //add layer
+                app.addLayerFromDataset(
+                    popDataset,
+                    [
+                        new gviz.KernelSmoothingStyle({
+                            value: c => +c[year],
+                            sigma: (r, zf) => zf * 8,
+                            styles: gviz.TanakaStyle.get("ksmval", { tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7), color: d3.interpolateOrRd, nb: 10 }),
+                        })
+                    ],
+                    {
+                        pixNb: 4,
+                        cellInfoHTML: tooltipFun
+                    })
             } else if (style == "lego") {
 
                 //add layer
                 app.addLayerFromDataset(
                     popDataset,
-                    gviz.LegoStyle.get(year, { tFun: (v, r, s, zf) => v==0? 0 : gviz.sPow((v - s.min) / (s.max - s.min), 0.2) }),
+                    gviz.LegoStyle.get(year, { tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sPow((v - s.min) / (s.max - s.min), 0.2) }),
                     {
                         pixNb: 10,
                         cellInfoHTML: tooltipFun
@@ -278,6 +298,18 @@
         //zoom
         document.querySelector('#zoomin').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
         document.querySelector('#zoomout').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 1.2).redraw())
+
+        // show/hide labels
+        document.querySelector('#label').addEventListener('change', function () {
+            app.showLabels = this.checked
+            app.cg.redraw();
+        });
+
+        // show/hide boundaries
+        document.querySelector('#boundary').addEventListener('change', function () {
+            app.showBoundaries = this.checked
+            app.cg.redraw();
+        });
 
         //initialise
         update()
