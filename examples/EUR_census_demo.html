@@ -6,7 +6,7 @@
 </head>
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
-    <div id="vizPop" style="height:70%; width:70%;">
+    <div id="vizPop" style="height:100%; width:100%;">
 
         <div
             style="font-size: 0.9em; position: absolute; left: 10px; top: 10px; width: auto; height: auto; padding: 5px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd">
@@ -208,6 +208,47 @@
                         pixNb: 5,
                         cellInfoHTML: tooltipFun
                     })
+
+            } else if (style == "size") {
+
+                //add layer
+                app.addLayerFromDataset(
+                    popDataset,
+                    [
+                        new gviz.ShapeColorSizeStyle({
+                            color: () => col + "bb",
+                            sizeCol: year,
+                            size: (v, r, s, zf) => 1.5 * r * gviz.sPow(v / s.max, 0.3),
+                            shape: () => "circle",
+                        })
+                    ],
+                    {
+                        pixNb: 7,
+                        cellInfoHTML: tooltipFun
+                    })
+
+            } else if (style == "dots") {
+
+                //add layer
+                app.addLayerFromDataset(
+                    popDataset,
+                    [
+                    new gviz.DotDensityStyle({
+                        nbCol: year,
+                        nb: (v, r, s, zf) => 10 * r * r / (zf * zf) * v / s.max,
+                        dotSize: (r, zf) => 1.2 * zf,
+                        color: () => col
+                    })
+                    ],
+                    {
+                        pixNb: 5,
+                        cellInfoHTML: tooltipFun
+                    })
+
+            } else if (style == "tanaka") {
+
+            } else if (style == "lego") {
+
             }
 
             //redraw
@@ -219,6 +260,10 @@
         document.querySelector('#color').addEventListener('change', update)
         document.querySelector('#pillar').addEventListener('change', update)
         document.querySelector('#joyplot').addEventListener('change', update)
+        document.querySelector('#size').addEventListener('change', update)
+        document.querySelector('#dots').addEventListener('change', update)
+        document.querySelector('#tanaka').addEventListener('change', update)
+        document.querySelector('#lego').addEventListener('change', update)
 
         //zoom
         document.querySelector('#zoomin').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
