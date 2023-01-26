@@ -45,8 +45,8 @@
             <input type="radio" name="style" id="colorCh" value="colorCh">
             <label for="colorCh">Color</label>
             <br>
-            <input type="radio" name="style" id="colorSmCh" value="colorSmCh">
-            <label for="colorSmCh">Color, smoothed: </label><input type="range" min="1" max="16" value="8"
+            <input type="radio" name="style" id="colorSmTK" value="colorSmTK">
+            <label for="colorSmTK">Tanaka, smoothed: </label><input type="range" min="1" max="16" value="8"
                 class="slider" id="sigmaCCH" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="sizeCh" value="sizeCh">
@@ -356,7 +356,7 @@
                     })
                 )*/
 
-            } else if (style == "colorSmCh") {
+            } else if (style == "colorSmTK") {
 
                 //get year selection
                 const sigma = document.querySelector('#sigmaCCH').value
@@ -368,7 +368,26 @@
                         new gviz.KernelSmoothingStyle({
                             value: c => +c["d2011_2018"],
                             sigma: (r, zf) => zf * sigma,
-                            styles: [
+                            styles:
+                                gviz.TanakaStyle.get("ksmval", {
+                                    tFun: (v, r, s, zf) => {
+                                        const e = 0.3;
+                                        const stre = gviz.sPow
+                                        const nb = 15
+                                        let t = 0.5
+                                        if (s.min < 0 && v < 0) {
+                                            t += stre(v / s.min, e) / 2
+                                        } else {
+                                            t -= stre(v / s.max, e) / 2
+                                        }
+                                        t = 1 - t;
+                                        t = Math.floor(t * nb) / nb
+                                        return t;
+                                    },
+                                    color: (t) => d3.interpolateSpectral(1-t), nb: 15
+                                }),
+
+                            /*[
                                 new gviz.ShapeColorSizeStyle({
                                     colorCol: "ksmval",
                                     color: (v, r, s) => {
@@ -387,7 +406,7 @@
                                     },
                                     shape: () => "square",
                                 })
-                            ],
+                            ],*/
                         }),
                         //new gviz.StrokeStyle({ maxZoom: 80 })
                     ],
@@ -480,7 +499,7 @@
         document.querySelector('#tanaka').addEventListener('change', update)
         document.querySelector('#lego').addEventListener('change', update)
         document.querySelector('#colorCh').addEventListener('change', update)
-        document.querySelector('#colorSmCh').addEventListener('change', update)
+        document.querySelector('#colorSmTK').addEventListener('change', update)
         document.querySelector('#sizeCh').addEventListener('change', update)
         document.querySelector('#segmentCh').addEventListener('change', update)
 
