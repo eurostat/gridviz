@@ -116,9 +116,10 @@
             r => tiledGridsURL + "population/" + r + "m/",
             {
                 preprocess: (c) => {
+                    //console.log(c)
                     if (c.CNTR_ID == "UK") return false
                     if (c.CNTR_ID == "0-UK") return false
-                    if (c.CNTR_ID == "BA") return false
+                    //if (c.CNTR_ID == "BA") return false
                     if (c.CNTR_ID == "IM") return false
                     //console.log(c.CNTR_ID)
                     delete c.CNTR_ID
@@ -233,12 +234,12 @@
                 app.addLayerFromDataset(
                     popDataset,
                     [
-                    new gviz.DotDensityStyle({
-                        nbCol: year,
-                        nb: (v, r, s, zf) => 10 * r * r / (zf * zf) * v / s.max,
-                        dotSize: (r, zf) => 1.2 * zf,
-                        color: () => col
-                    })
+                        new gviz.DotDensityStyle({
+                            nbCol: year,
+                            nb: (v, r, s, zf) => 10 * r * r / (zf * zf) * v / s.max,
+                            dotSize: (r, zf) => 1.2 * zf,
+                            color: () => col
+                        })
                     ],
                     {
                         pixNb: 5,
@@ -248,6 +249,15 @@
             } else if (style == "tanaka") {
 
             } else if (style == "lego") {
+
+                //add layer
+                app.addLayerFromDataset(
+                    popDataset,
+                    gviz.LegoStyle.get(year, { tFun: (v, r, s, zf) => v==0? 0 : gviz.sPow((v - s.min) / (s.max - s.min), 0.2) }),
+                    {
+                        pixNb: 10,
+                        cellInfoHTML: tooltipFun
+                    })
 
             }
 
