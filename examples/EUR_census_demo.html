@@ -10,7 +10,7 @@
 
         <div
             style="font-size: 0.9em; position: absolute; left: 10px; top: 10px; width: auto; height: auto; padding: 5px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd">
-            <span style="font-size: 1.8em; font-weight: bold;">Census 2021 grid - Demo</span><br>
+            <span style="font-size: 1.8em; font-weight: bold;">Population grid - Demo</span><br>
             <span style="font-size: 1.3em; font-weight: bold;">Total population</span><br>
             Year: <select id="year">
                 <option value="2018" selected>2018</option>
@@ -42,6 +42,9 @@
             <br>
             <input type="radio" name="style" id="colorCh" value="colorCh">
             <label for="colorCh">Color</label>
+            <br>
+            <input type="radio" name="style" id="sizeCh" value="sizeCh">
+            <label for="sizeCh">Circle size</label>
 
             <hr>
             <input type="checkbox" id="label" checked>
@@ -243,6 +246,9 @@
                         cellInfoHTML: tooltipFun
                     })
 
+                //add legend
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: col }))
+
             } else if (style == "dots") {
 
                 //add layer
@@ -324,6 +330,32 @@
                         }
                     })
                 )
+
+            } else if (style == "sizeCh") {
+
+
+
+                /*
+                                circleSize: {
+                                    style: [new gviz.ShapeColorSizeStyle({
+                                        colorCol: getSelectedYear(),
+                                        color: (v) => v > 0 ? "#d13c4bcc" : "#4288b5cc",
+                                        sizeCol: getSelectedYear(),
+                                        size: (v, r, s, zf) => {
+                                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                            return 1.5 * r * gviz.sPow(Math.abs(v) / max, 0.2)
+                                        },
+                                        shape: () => "circle",
+                                    })], pixNb: 7
+                                },
+                */
+
+                //legend
+
+                //const lgCat = new gviz.ColorCategoryLegend({ title: "", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] })
+                //sd.popchange.circleSize.style[0].legends.push(lgCat)
+                //sd.popchange.circleSize.style[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }))
+
 
             }
 
