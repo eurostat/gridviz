@@ -378,7 +378,7 @@
                     })
                 )
 
-                } else if (style == "sizeCh") {
+            } else if (style == "sizeCh") {
 
                 app.addLayerFromDataset(
                     popDataset,
@@ -406,6 +406,29 @@
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }))
 
             } else if (style == "rectCh") {
+
+                app.addLayerFromDataset(
+                    popDataset,
+                    [
+                        new gviz.SegmentStyle({
+                            orientation: (c) => {
+                                if (c.d2011_2018 < 0) return -33
+                                if (c.d2011_2018 == 0) return 0
+                                return 33
+                            },
+                            colorCol: "d2011_2018",
+                            color: (v) => v > 0 ? "#d13c4bcc" : "#4288b5cc",
+                            length: (v, r) => r,
+                            //lengthCol: "2011",
+                            //length: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25),
+                            widthCol: "2018",
+                            width: (v, r, s, zf) => 0.6*r * gviz.sPow(v / s.max, 0.25)
+                        })],
+                    {
+                        pixNb: 7,
+                        cellInfoHTML: tooltipFunCh
+                    }
+                )
 
             }
 
