@@ -37,14 +37,21 @@
             <br>
             <input type="radio" name="style" id="lego" value="lego">
             <label for="lego">Lego</label>
+
             <br>
             <span style="font-size: 1.3em; font-weight: bold;">Population change (2011 - 2018)</span>
             <br>
             <input type="radio" name="style" id="colorCh" value="colorCh">
             <label for="colorCh">Color</label>
             <br>
+            <input type="radio" name="style" id="colorSmCh" value="colorSmCh">
+            <label for="colorSmCh">Color (smoothed)</label>
+            <br>
             <input type="radio" name="style" id="sizeCh" value="sizeCh">
             <label for="sizeCh">Circle size</label>
+            <br>
+            <input type="radio" name="style" id="rectCh" value="rectCh">
+            <label for="rectCh">Rectangle</label>
 
             <hr>
             <input type="checkbox" id="label" checked>
@@ -288,6 +295,7 @@
                         pixNb: 4,
                         cellInfoHTML: tooltipFun
                     })
+
             } else if (style == "lego") {
 
                 //add layer
@@ -332,7 +340,45 @@
                     })
                 )
 
-            } else if (style == "sizeCh") {
+            } else if (style == "colorSmCh") {
+
+                //add layer
+                app.addLayerFromDataset(
+                    popDataset,
+                    [
+                        new gviz.KernelSmoothingStyle({
+                            value: c => +c["d2011_2018"],
+                            sigma: (r, zf) => zf * 8,
+                            styles: [
+                                new gviz.ShapeColorSizeStyle({
+                                    colorCol: "ksmval",
+                                    color: (v, r, s) => {
+                                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                        const t = Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2) / 2 + 0.5
+                                        return d3.interpolateSpectral(1 - t);
+                                    },
+                                    shape: () => "square",
+                                })
+                            ]
+                        })
+                    ],
+                    {
+                        pixNb: 4,
+                        cellInfoHTML: tooltipFunCh
+                    })
+
+                //legend
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorLegend({
+                        title: "Population change", ticks: 5, colorRamp: d3.interpolateSpectral, invert: true,
+                        fun: (t, r, s) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
+                        }
+                    })
+                )
+
+                } else if (style == "sizeCh") {
 
                 app.addLayerFromDataset(
                     popDataset,
@@ -359,6 +405,8 @@
                 app.layers[0].styles[0].legends.push(lgCat)
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }))
 
+            } else if (style == "rectCh") {
+
             }
 
             //redraw
@@ -375,7 +423,9 @@
         document.querySelector('#tanaka').addEventListener('change', update)
         document.querySelector('#lego').addEventListener('change', update)
         document.querySelector('#colorCh').addEventListener('change', update)
+        document.querySelector('#colorSmCh').addEventListener('change', update)
         document.querySelector('#sizeCh').addEventListener('change', update)
+        document.querySelector('#rectCh').addEventListener('change', update)
 
         //zoom
         document.querySelector('#zoomin').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
