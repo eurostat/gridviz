@@ -342,13 +342,16 @@
                 //legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
-                        title: "Population change", ticks: 5, colorRamp: d3.interpolateSpectral, invert: true,
+                        title: "Population change (number of inhabitants)", ticks: 5, colorRamp: d3.interpolateSpectral, invert: true,
                         fun: (t, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
                         }
                     })
                 )
+
+
+
 
             } else if (style == "colorSmCh") {
 
@@ -366,13 +369,22 @@
                                 new gviz.ShapeColorSizeStyle({
                                     colorCol: "ksmval",
                                     color: (v, r, s) => {
-                                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                        const t = Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2) / 2 + 0.5
-                                        return d3.interpolateSpectral(1 - t);
+                                        const e = 0.2;
+                                        const stre = gviz.sPow
+                                        const nb = 15
+                                        let t = 0.5
+                                        if (s.min < 0 && v < 0) {
+                                            t -= stre(v / s.min, e) / 2
+                                        } else {
+                                            t += stre(v / s.max, e) / 2
+                                        }
+                                        t = 1 - t;
+                                        t = Math.floor(t * nb) / nb
+                                        return d3.interpolateSpectral(t);
                                     },
                                     shape: () => "square",
                                 })
-                            ]
+                            ],
                         })
                     ],
                     {
@@ -383,7 +395,7 @@
                 //legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
-                        title: "Population change", ticks: 5, colorRamp: d3.interpolateSpectral, invert: true,
+                        title: "Population change (number of inhabitants)", ticks: 5, colorRamp: d3.interpolateSpectral, invert: true,
                         fun: (t, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                             return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
