@@ -1,5 +1,5 @@
 EUR pop demo
-
+artifact in kernel smoothing
 
 
 

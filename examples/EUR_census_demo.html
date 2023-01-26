@@ -313,7 +313,7 @@
                     popDataset,
                     gviz.LegoStyle.get(year, { tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sPow((v - s.min) / (s.max - s.min), 0.2), colors: cols }),
                     {
-                        pixNb: 10,
+                        pixNb: 9,
                         cellInfoHTML: tooltipFun
                     })
 
@@ -349,9 +349,6 @@
                         }
                     })
                 )
-
-
-
 
             } else if (style == "colorSmCh") {
 
