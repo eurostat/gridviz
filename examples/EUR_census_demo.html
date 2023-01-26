@@ -160,9 +160,14 @@
             //remove layers
             app.layers = []
 
-            //tooltip function
+            //tooltip functions
             const tooltipFun = (c, r) =>
                 +c[year] ? "<b>" + c[year] + "</b> inhabitant" + (+c[year] == 1 ? "" : "s") + " per " + (r * r / 1000000) + "km²" : undefined
+            const tooltipFunCh = c => (
+                "2011: " + c["2011"] + "<br>2018: " + c["2018"]
+            )
+                + "<br>"
+                + "<b>" + (c["d2011_2018"] == 0 ? "No change" : (c["d2011_2018"] > 0 ? "+" : "") + c["d2011_2018"] + " inhabitants") + "</b>"
 
 
             if (style == "color") {
@@ -312,11 +317,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: c => (
-                            "2011: " + c["2011"] + "<br>2018: " + c["2018"]
-                        )
-                            + "<br>"
-                            + "<b>" + (c["d2011_2018"] == 0 ? "No change" : (c["d2011_2018"] > 0 ? "+" : "") + c["d2011_2018"] + " inhabitants") + "</b>"
+                        cellInfoHTML: tooltipFunCh
                     }
                 )
 
@@ -333,29 +334,30 @@
 
             } else if (style == "sizeCh") {
 
-
-
-                /*
-                                circleSize: {
-                                    style: [new gviz.ShapeColorSizeStyle({
-                                        colorCol: getSelectedYear(),
-                                        color: (v) => v > 0 ? "#d13c4bcc" : "#4288b5cc",
-                                        sizeCol: getSelectedYear(),
-                                        size: (v, r, s, zf) => {
-                                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                            return 1.5 * r * gviz.sPow(Math.abs(v) / max, 0.2)
-                                        },
-                                        shape: () => "circle",
-                                    })], pixNb: 7
-                                },
-                */
+                app.addLayerFromDataset(
+                    popDataset,
+                    [
+                        new gviz.ShapeColorSizeStyle({
+                            colorCol: "d2011_2018",
+                            color: (v) => v > 0 ? "#d13c4bcc" : "#4288b5cc",
+                            sizeCol: "d2011_2018",
+                            size: (v, r, s, zf) => {
+                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                return 1.5 * r * gviz.sPow(Math.abs(v) / max, 0.2)
+                            },
+                            shape: () => "circle",
+                        })
+                    ],
+                    {
+                        pixNb: 7,
+                        cellInfoHTML: tooltipFunCh
+                    }
+                )
 
                 //legend
-
-                //const lgCat = new gviz.ColorCategoryLegend({ title: "", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] })
-                //sd.popchange.circleSize.style[0].legends.push(lgCat)
-                //sd.popchange.circleSize.style[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }))
-
+                const lgCat = new gviz.ColorCategoryLegend({ title: "", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] })
+                app.layers[0].styles[0].legends.push(lgCat)
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }))
 
             }
 
@@ -373,6 +375,7 @@
         document.querySelector('#tanaka').addEventListener('change', update)
         document.querySelector('#lego').addEventListener('change', update)
         document.querySelector('#colorCh').addEventListener('change', update)
+        document.querySelector('#sizeCh').addEventListener('change', update)
 
         //zoom
         document.querySelector('#zoomin').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
