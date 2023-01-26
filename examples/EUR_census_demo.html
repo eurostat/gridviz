@@ -5,15 +5,16 @@
     <title></title>
 </head>
 
-<body style="font-family: sans-serif;">
-    <div id="vizPop" style="position:relative; height:600px; width:900px;">
+<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
+    <div id="vizPop" style="height:70%; width:70%;">
 
         <div
             style="font-size: 0.9em; position: absolute; left: 10px; top: 10px; width: auto; height: auto; padding: 5px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd">
+            <span style="font-size: 1.8em; font-weight: bold;">Census 2021 grid - Demo</span><br>
+            <span style="font-size: 1.3em; font-weight: bold;">Total population</span><br>
             Year: <select id="year">
                 <option value="2018" selected>2018</option>
                 <option value="2011">2011</option>
-                <option value="2006">2006</option>
             </select>
             <br>
             <input type="radio" name="style" id="color" value="color" checked>
@@ -24,6 +25,20 @@
             <br>
             <input type="radio" name="style" id="joyplot" value="joyplot">
             <label for="joyplot">Joyplot</label>
+            <br>
+            <input type="radio" name="style" id="size" value="size">
+            <label for="size">Circle size</label>
+            <br>
+            <input type="radio" name="style" id="dots" value="dots">
+            <label for="dots">Dots</label>
+            <br>
+            <input type="radio" name="style" id="tanaka" value="tanaka">
+            <label for="tanaka">Smoothed Tanaka</label>
+            <br>
+            <input type="radio" name="style" id="lego" value="lego">
+            <label for="lego">Lego</label>
+            <br>
+            <span style="font-size: 1.3em; font-weight: bold;">2011 - 2018 population change</span><br>
         </div>
 
         <div
@@ -54,7 +69,7 @@
         </div>
     </div>
 
-    <script src="../../dist/gridviz.js"></script>
+    <script src="../dist/gridviz.js"></script>
     <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-color.js"></script>
     <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-interpolate.js"></script>
     <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-scale-chromatic.js"></script>
@@ -67,7 +82,7 @@
 
         let containerDiv = document.getElementById("vizPop");
         const app = new gviz.App(containerDiv, { legendDivId: "legendPop" })
-            .setGeoCenter({ x: 4313947, y: 3100000 }).setZoomFactor(8000).setZoomFactorExtent([40, 8000])
+            .setGeoCenter({ x: 4313947, y: 2970049 }).setZoomFactor(600).setZoomFactorExtent([40, 7500])
             .setLabelLayer(
                 gviz.getEuronymeLabelLayer("EUR", 50, {
                     ccIn: ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "PL", "PT", "MT", "NL", "RO", "SE", "SK", "SI", "CH", "IS", "NO", "LI", "RS", "XK", "AL", "TR", "ME", "MK"],
