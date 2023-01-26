@@ -1,9 +1,14 @@
-contour style: interval (min, max) => ... and color (val, min, max => ...
-elevation legend
+EUR pop demo
 
-tiler
+
+
+
+publish and document tiler
+document tile format
 
 finalise: elevation, lc, forest
+contour style: interval (min, max) => ... and color (val, min, max => ...
+elevation legend
 
 test on various navigators - smartphones
 parquet: monitor, improve
