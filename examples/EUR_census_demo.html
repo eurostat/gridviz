@@ -33,7 +33,8 @@
             <label for="dots">Dots</label>
             <br>
             <input type="radio" name="style" id="tanaka" value="tanaka">
-            <label for="tanaka">Tanaka, smoothed: </label><input type="range" min="1" max="16" value="8" class="slider" id="sigmaTK" style="width: 100px;">
+            <label for="tanaka">Tanaka, smoothed: </label><input type="range" min="1" max="16" value="8" class="slider"
+                id="sigmaTK" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="lego" value="lego">
             <label for="lego">Lego</label>
@@ -45,7 +46,8 @@
             <label for="colorCh">Color</label>
             <br>
             <input type="radio" name="style" id="colorSmCh" value="colorSmCh">
-            <label for="colorSmCh">Color, smoothed: </label><input type="range" min="1" max="16" value="8" class="slider" id="sigmaCCH" style="width: 100px;">
+            <label for="colorSmCh">Color, smoothed: </label><input type="range" min="1" max="16" value="8"
+                class="slider" id="sigmaCCH" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="sizeCh" value="sizeCh">
             <label for="sizeCh">Circle size</label>
@@ -283,13 +285,16 @@
 
             } else if (style == "tanaka") {
 
+                //get year selection
+                const sigma = document.querySelector('#sigmaTK').value
+
                 //add layer
                 app.addLayerFromDataset(
                     popDataset,
                     [
                         new gviz.KernelSmoothingStyle({
                             value: c => +c[year],
-                            sigma: (r, zf) => zf * 8,
+                            sigma: (r, zf) => zf * sigma,
                             styles: gviz.TanakaStyle.get("ksmval", { tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7), color: d3.interpolateOrRd, nb: 10 }),
                         })
                     ],
@@ -347,13 +352,16 @@
 
             } else if (style == "colorSmCh") {
 
+                //get year selection
+                const sigma = document.querySelector('#sigmaCCH').value
+
                 //add layer
                 app.addLayerFromDataset(
                     popDataset,
                     [
                         new gviz.KernelSmoothingStyle({
                             value: c => +c["d2011_2018"],
-                            sigma: (r, zf) => zf * 8,
+                            sigma: (r, zf) => zf * sigma,
                             styles: [
                                 new gviz.ShapeColorSizeStyle({
                                     colorCol: "ksmval",
@@ -459,6 +467,10 @@
         document.querySelector('#colorSmCh').addEventListener('change', update)
         document.querySelector('#sizeCh').addEventListener('change', update)
         document.querySelector('#segmentCh').addEventListener('change', update)
+
+        //sigma selection
+        document.getElementById('sigmaTK').oninput = update
+        document.getElementById('sigmaCCH').oninput = update
 
         //zoom
         document.querySelector('#zoomin').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
