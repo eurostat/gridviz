@@ -38,7 +38,10 @@
             <input type="radio" name="style" id="lego" value="lego">
             <label for="lego">Lego</label>
             <br>
-            <span style="font-size: 1.3em; font-weight: bold;">2011 - 2018 population change</span><br>
+            <span style="font-size: 1.3em; font-weight: bold;">Population change (2011 - 2018)</span>
+            <br>
+            <input type="radio" name="style" id="colorCh" value="colorCh">
+            <label for="colorCh">Color</label>
 
             <hr>
             <input type="checkbox" id="label" checked>
@@ -129,6 +132,12 @@
                     if (c.CNTR_ID == "IM") return false
                     //console.log(c.CNTR_ID)
                     delete c.CNTR_ID
+
+                    //prepare 2011 -> 2018 change data
+                    if (!c["2011"] && !c["2018"]) c.d2011_2018 = 0
+                    else if (!c["2011"] && c["2018"]) c.d2011_2018 = + c["2018"]
+                    else if (c["2011"] && !c["2018"]) c.d2011_2018 = - c["2011"]
+                    else c.d2011_2018 = c["2018"] - c["2011"]
                 }
             }
         )
@@ -279,6 +288,43 @@
                         cellInfoHTML: tooltipFun
                     })
 
+            } else if (style == "colorCh") {
+
+                app.addLayerFromDataset(
+                    popDataset,
+                    [
+                        new gviz.ShapeColorSizeStyle({
+                            colorCol: "d2011_2018",
+                            color: (v, r, s) => {
+                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                const t = Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2) / 2 + 0.5
+                                return d3.interpolateSpectral(1 - t);
+                            },
+                            shape: () => "square",
+                        }),
+                        new gviz.StrokeStyle({ maxZoom: 80 })
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: c => (
+                            "2011: " + c["2011"] + "<br>2018: " + c["2018"]
+                        )
+                            + "<br>"
+                            + "<b>" + (c["d2011_2018"] == 0 ? "No change" : (c["d2011_2018"] > 0 ? "+" : "") + c["d2011_2018"] + " inhabitants") + "</b>"
+                    }
+                )
+
+                //legend
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorLegend({
+                        title: "Population change", ticks: 5, colorRamp: d3.interpolateSpectral, invert: true,
+                        fun: (t, r, s) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
+                        }
+                    })
+                )
+
             }
 
             //redraw
@@ -294,6 +340,7 @@
         document.querySelector('#dots').addEventListener('change', update)
         document.querySelector('#tanaka').addEventListener('change', update)
         document.querySelector('#lego').addEventListener('change', update)
+        document.querySelector('#colorCh').addEventListener('change', update)
 
         //zoom
         document.querySelector('#zoomin').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
