@@ -72,6 +72,17 @@ export class KernelSmoothingStyle extends Style {
             }
             kw.push(col)
         }
+
+        /*
+        //debug: show values
+        for (let wj = kernelSize-1; wj >=0; wj--) {
+            let st = "";
+            for (let wi = 0; wi <= kernelSize; wi++) {
+                st += "   " + Math.floor(kw[wi][wj].w *1000) /1000
+            }
+            console.log(st)
+        }*/
+
         return kw;
     }
 
@@ -114,10 +125,9 @@ export class KernelSmoothingStyle extends Style {
         //get kernel matrix
         /** @type {Array.<Array.<{w:number,val:number}>>} */
         const kernelMatrix = this.getKernelMatrix(s)
-        //console.log(kernelMatrix)
         const kernelSize = kernelMatrix.length
 
-        //compute smoothing, cell by cell
+        //compute smoothing, input cell by input cell
 
         for (const i_ of Object.keys(index)) {
             const i = +i_
@@ -127,7 +137,7 @@ export class KernelSmoothingStyle extends Style {
                 //get cell i,j
                 const c = index[i][j]
 
-                //check if c is an input cell or a cell resulting from the smoothing already stored in 'cells'
+                //check if c is an input cell. Otherwise, it is a cell resulting from the smoothing already stored in 'cells'
                 if (c.notInputCell) continue;
 
                 /** 
@@ -157,15 +167,16 @@ export class KernelSmoothingStyle extends Style {
 
                 /** Check that the cell i,j is within the frame */
                 const isWithinFrame = (i, j) => i >= 0 && i < nbX && j >= 0 && j < nbY
+
                 /** Add v as a contribution to the cell i,j */
                 const addContributionTo = (i, j, v) => {
-                    //get cell at (i+ki,j+kj)
+                    //get cell at (i,j)
                     const c_ = index[i] ? index[i][j] : undefined
 
                     if (c_) {
                         //cell exists: add contribution
-                        if (c_["ksmval"]) c_["ksmval"] += v
-                        else c_["ksmval"] = v
+                        if (c_.ksmval) c_.ksmval += v
+                        else c_.ksmval = v
                     } else {
                         //cell does not exist: create a new one with the smoothed value
                         if (!index[i]) index[i] = {}
@@ -174,8 +185,11 @@ export class KernelSmoothingStyle extends Style {
                 }
 
                 //add contributions to smoothed values
-                for (let ki = 0; ki < kernelSize; ki++) {
-                    for (let kj = 0; kj < kernelSize; kj++) {
+                for (let ki = 1 - kernelSize; ki < kernelSize; ki++) {
+                    for (let kj = 1 - kernelSize; kj < kernelSize; kj++) {
+
+                        //check cell is within the frame
+                        if (! isWithinFrame(i + ki, j + kj)) continue;
 
                         //get contribution (ki,kj)
                         let ke = kernelMatrix[Math.abs(ki)][Math.abs(kj)]
@@ -185,20 +199,8 @@ export class KernelSmoothingStyle extends Style {
                         v /= sumWeights
                         if (!v) continue;
 
-                        //add contributions to 4 similar cells, if they are within the frame of course
-                        if (isWithinFrame(i + ki, j + kj))
-                            addContributionTo(i + ki, j + kj, v)
-
-                        if (ki == 0 && kj == 0) continue;
-
-                        if (isWithinFrame(i - ki, j + kj))
-                            addContributionTo(i - ki, j + kj, v)
-
-                        if (ki == 0) continue;
-                        if (isWithinFrame(i + ki, j - kj))
-                            addContributionTo(i + ki, j - kj, v)
-                        if (isWithinFrame(i - ki, j - kj))
-                            addContributionTo(i - ki, j - kj, v)
+                        //add contribution
+                        addContributionTo(i + ki, j + kj, v)
                     }
                 }
             }
