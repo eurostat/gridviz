@@ -1,8 +1,22 @@
-tanaka with new shading
 kernel smoothing: small test - fix bug
 
 EUR pop demo
 artifact in kernel smoothing
+
+
+
+bug when zooming-in: square gets too small.
+        app.addCSVGridLayer(
+            "https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/single.csv",
+            1,
+            [
+                new gviz.SquareColorWGLStyle({
+                            colorCol: "value",
+                            tFun: (v) => v/100
+                        })
+            ]
+        )
+
 
 
 
