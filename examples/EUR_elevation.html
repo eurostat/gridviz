@@ -182,6 +182,7 @@
                                 color: d3.interpolateRgbBasis(["#a8bc9f", "#bbcc9e", "#ebe8c1", "#dca255", "#d38487", "#fbf4f2"]),
                                 widthFactor: 0.15,
                                 tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.5),
+                                newShading: true,
                             }),
                             { pixNb: 1.8, cellInfoHTML: cinf }
                         )

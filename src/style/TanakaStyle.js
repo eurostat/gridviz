@@ -130,7 +130,7 @@ export class TanakaStyle {
                 (side, r, s, z) => {
                     const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                     const tr = 0.3 * sPow(Math.abs(side.value) / max, 0.3)
-                    return side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "rgba(0,0,0," + tr + ")" : "rgba(255,255,100," + tr + ")"
+                    return side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "rgba(255,255,100," + tr + ")" : "rgba(0,0,0," + tr + ")"
                 } :
                 //white or black, depending on orientation and value
                 (side, r, s, z) => {
@@ -144,7 +144,7 @@ export class TanakaStyle {
             width: opts.newShading ?
                 //fill size
                 (side, r, s, z) => {
-                    return r * 1
+                    return r * 0.5
                 } :
                 //width depends on the value, that is the number of classes of difference
                 (side, r, s, z) => opts.widthFactor * r * Math.abs(side.value) * (side.or === "v" ? 0.5 : 1),
