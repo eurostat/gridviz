@@ -33,7 +33,7 @@
             <label for="dots">Dots</label>
             <br>
             <input type="radio" name="style" id="tanaka" value="tanaka">
-            <label for="tanaka">Tanaka, smoothed: </label><input type="range" min="1" max="16" value="8" class="slider"
+            <label for="tanaka">Tanaka, smoothed: </label><input type="range" min="1" max="20" value="10" class="slider"
                 id="sigmaTK" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="lego" value="lego">
@@ -46,7 +46,7 @@
             <label for="colorCh">Color</label>
             <br>
             <input type="radio" name="style" id="colorSmTK" value="colorSmTK">
-            <label for="colorSmTK">Tanaka, smoothed: </label><input type="range" min="1" max="16" value="8"
+            <label for="colorSmTK">Tanaka, smoothed: </label><input type="range" min="1" max="20" value="10"
                 class="slider" id="sigmaCCH" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="sizeCh" value="sizeCh">
@@ -295,7 +295,13 @@
                         new gviz.KernelSmoothingStyle({
                             value: c => +c[year],
                             sigma: (r, zf) => zf * sigma,
-                            styles: gviz.TanakaStyle.get("ksmval", { tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7), color: d3.interpolateOrRd, nb: 10 }),
+                            styles: gviz.TanakaStyle.get(
+                                "ksmval",
+                                {
+                                    tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7), color: d3.interpolateOrRd,
+                                    nb: 10,
+                                    //newShading: true,
+                                }),
                         })
                     ],
                     {
@@ -384,7 +390,9 @@
                                         t = Math.floor(t * nb) / nb
                                         return t;
                                     },
-                                    color: (t) => d3.interpolateSpectral(1-t), nb: 15
+                                    color: (t) => d3.interpolateSpectral(1 - t),
+                                    nb: 15,
+                                    //newShading: true,
                                 }),
 
                             /*[

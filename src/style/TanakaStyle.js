@@ -3,7 +3,6 @@
 import { SquareColorWGLStyle } from "./SquareColorWGLStyle"
 import { SideStyle } from "./SideStyle"
 import { Style } from "../Style"
-import { sPow } from "../utils/stretching"
 
 /**
  * 
@@ -53,6 +52,12 @@ export class TanakaStyle {
 
         //width of the segment (share of the resolution)
         opts.widthFactor = opts.widthFactor || 0.08
+
+        //shading
+        opts.newShading = opts.newShading
+        opts.newShadingWidthPix = opts.newShadingWidthPix || 2
+        //transparency value, within [0,1]
+        opts.newShadingTr = opts.newShadingTr || ((sideValue, sideStat) => Math.abs(sideValue) / Math.max(Math.abs(sideStat.min), Math.abs(sideStat.max)))
 
         /**
          * @param {number} t A cell t value, within [0,1].
@@ -128,8 +133,7 @@ export class TanakaStyle {
             color: opts.newShading ?
                 //black with transparency depending on difference
                 (side, r, s, z) => {
-                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                    const tr = 0.3 * sPow(Math.abs(side.value) / max, 0.3)
+                    const tr = opts.newShadingTr(side.value, s)
                     return side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "rgba(255,255,100," + tr + ")" : "rgba(0,0,0," + tr + ")"
                 } :
                 //white or black, depending on orientation and value
@@ -144,7 +148,7 @@ export class TanakaStyle {
             width: opts.newShading ?
                 //fill size
                 (side, r, s, z) => {
-                    return r * 0.5
+                    return opts.newShadingWidthPix * z
                 } :
                 //width depends on the value, that is the number of classes of difference
                 (side, r, s, z) => opts.widthFactor * r * Math.abs(side.value) * (side.or === "v" ? 0.5 : 1),
