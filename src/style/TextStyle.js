@@ -86,7 +86,7 @@ export class TextStyle extends Style {
 
             //get cell text
             const text = this.text ? this.text(cell[this.textCol], r, statText) : undefined;
-            if (!text) continue;
+            if (text == undefined || text == null || text+"" === "") continue;
 
             //color
             const col = this.color ? this.color(cell[this.colorCol], r, statColor) : undefined;
