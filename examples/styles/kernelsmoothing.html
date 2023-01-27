@@ -17,7 +17,7 @@
             <option value="joyplot">Joy plot</option>
             <option value="tanaka">Tanaka</option>
             <option value="lego">Lego</option>
-            <option value="side">Side</option>
+            <option value="side">Shading</option>
         </select>
         <br>
         <input type="range" min="1" max="16" value="8" class="slider" id="sigma">
@@ -64,12 +64,24 @@
                 new gviz.SideStyle({
                     valueCol: "ksmval",
                     value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
+
+                    color: (side, r, s, z) => {
+                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                        const tr = 0.3 * gviz.sPow(Math.abs(side.value) / max, 0.3)
+                        return side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "rgba(0,0,0," + tr + ")" : "rgba(255,255,100," + tr + ")"
+                    },
+                    width: (side, r, s, z) => {
+                        return r * 1
+                    },
+
+                    /*
                     color: (side, r, s, z) => side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "black" : "white",
                     width: (side, r, s, z) => {
                         const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                         return r * (0.01 + (side.or === "v" ? 0.6 : 1) * 0.333 * gviz.sPow(Math.abs(side.value) / max, 0.3))
-                    },
-                    fillColor: (c) => c["ksmval"] < 0 ? "#d13c4b" : "#4288b5",
+                    },*/
+
+                    fillColor: (c) => c.ksmval < 0 ? "#d13c4b" : "#4288b5",
                 })],
         }
 
