@@ -11,7 +11,7 @@
 
     <div
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
-        <input type="range" min="1" max="16" value="1" class="slider" id="sigma">
+        <input type="range" min="1" max="16" value="8" class="slider" id="sigma">
     </div>
 
     <script src="../../dist/gridviz.js"></script>
@@ -22,7 +22,7 @@
 
         let containerDiv = document.getElementById("viz-container");
         const app = new gviz.App(containerDiv)
-            .setGeoCenter({ x: 0, y: 0 }).setZoomFactor(0.01)
+            .setGeoCenter({ x: 0, y: 0 }).setZoomFactor(0.02)
 
         //add layer
         app.addCSVGridLayer(
@@ -33,11 +33,17 @@
             [
                 new gviz.KernelSmoothingStyle({
                     value: c => +c.value,
-                    sigma: (r, zf) => zf * 8,
+                    sigma: (r, zf) => zf * 100,
                     styles: [
-                        new gviz.ShapeColorSizeStyle({
-                            colorCol: "value",
+                        /*new gviz.ShapeColorSizeStyle({
+                            colorCol: "ksmval",
                             color: (v, r, s) => d3.interpolateSpectral(1 - v / s.max),
+                        }),*/
+                        new gviz.TextStyle({
+                            textCol: "ksmval",
+                            text: ((v, r, s, z) => Math.floor(1000 * v) / 1000),
+                            color: () => "black",
+                            fontSize : ((v, r, s, z) => r * 0.3),
                         })
                     ]
                 })
