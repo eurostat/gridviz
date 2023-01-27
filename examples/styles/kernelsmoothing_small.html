@@ -11,7 +11,7 @@
 
     <div
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
-        <input type="range" min="1" max="16" value="8" class="slider" id="sigma">
+        <input type="range" min="0.001" max="20" value="1" class="slider" id="sigma">
     </div>
 
     <script src="../../dist/gridviz.js"></script>
@@ -26,14 +26,14 @@
 
         //add layer
         app.addCSVGridLayer(
-            "https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/single.csv",
-            //"https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv",
+            //"https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/single.csv",
+            "https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/small.csv",
             1,
             //[s],
             [
                 new gviz.KernelSmoothingStyle({
                     value: c => +c.value,
-                    sigma: (r, zf) => zf * 100,
+                    sigma: (r, zf) => 1,
                     styles: [
                         new gviz.ShapeColorSizeStyle({
                             colorCol: "ksmval",
@@ -47,22 +47,13 @@
                         }),
                     ]
                 })
-
-                /*new gviz.ShapeColorSizeStyle({
-                    colorCol: "value",
-                    color: (v, r, s) => d3.interpolateSpectral(1 - v / s.max),
-                })*/
-                /*new gviz.SquareColorWGLStyle({
-                            colorCol: "value",
-                            tFun: (v) => v/100
-                        })*/
             ]
         )
 
         //sigma selection
         document.getElementById('sigma').oninput = function () {
             //set sigma
-            s.sigma = (r, zf) => zf * (+this.value)
+            app.layers[0].styles[0].sigma = (r, zf) => (+this.value)
             //redraw
             app.cg.redraw()
         }
