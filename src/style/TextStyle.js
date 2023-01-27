@@ -59,6 +59,7 @@ export class TextStyle extends Style {
      * @param {import("../GeoCanvas").GeoCanvas} cg 
      */
     draw(cells, r, cg) {
+
         //zoom factor
         const zf = cg.getZf()
 
@@ -81,6 +82,10 @@ export class TextStyle extends Style {
             //and compute size variable statistics
             statFontSize = Style.getStatistics(cells, c => c[this.fontSizeCol], true)
         }
+
+        //draw with HTML canvas
+        //in screen coordinates
+        cg.initCanvasTransform()
 
         for (let cell of cells) {
 

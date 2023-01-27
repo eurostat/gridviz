@@ -35,10 +35,10 @@
                     value: c => +c.value,
                     sigma: (r, zf) => zf * 100,
                     styles: [
-                        /*new gviz.ShapeColorSizeStyle({
+                        new gviz.ShapeColorSizeStyle({
                             colorCol: "ksmval",
                             color: (v, r, s) => d3.interpolateSpectral(1 - v / s.max),
-                        }),*/
+                        }),
                         new gviz.TextStyle({
                             textCol: "ksmval",
                             text: ((v, r, s, z) => Math.floor(1000 * v) / 1000),

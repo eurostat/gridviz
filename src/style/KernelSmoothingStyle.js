@@ -235,6 +235,6 @@ export class KernelSmoothingStyle extends Style {
         //draw smoothed cells from styles
         for (let s of this.styles)
             s.draw(cells, r, cg);
-    }
 
+    }
 }
