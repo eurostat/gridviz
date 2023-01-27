@@ -1,8 +1,6 @@
-
 EUR pop demo
 legends
-artifact in kernel smoothing
-kernel smoothing: change sigma depending on zoom ?
+
 
 
 bug when zooming-in: square gets too small.
