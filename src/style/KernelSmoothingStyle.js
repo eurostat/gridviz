@@ -120,6 +120,7 @@ export class KernelSmoothingStyle extends Style {
             const j = Math.floor((c.y - yMin) / r)
             if (!index[i]) index[i] = {}
             index[i][j] = c
+            c["inputCell"] = true
         }
 
         //get kernel matrix
@@ -138,7 +139,7 @@ export class KernelSmoothingStyle extends Style {
                 const c = index[i][j]
 
                 //check if c is an input cell. Otherwise, it is a cell resulting from the smoothing already stored in 'cells'
-                if (c.notInputCell) continue;
+                if (!c["inputCell"]) continue;
 
                 /** 
                  * get value of cell c
@@ -180,7 +181,7 @@ export class KernelSmoothingStyle extends Style {
                     } else {
                         //cell does not exist: create a new one with the smoothed value
                         if (!index[i]) index[i] = {}
-                        index[i][j] = { x: xMin + i * r, y: yMin + j * r, ksmval: v, notInputCell: true }
+                        index[i][j] = { x: xMin + i * r, y: yMin + j * r, ksmval: v }
                     }
                 }
 
