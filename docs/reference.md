@@ -619,6 +619,8 @@ This style is experimental. It allows applying gaussian kernel smoothing to the 
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html) ([code](../examples/styles/kernelsmoothing.html)).
 
+See [this elementary example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing_small.html) ([code](../examples/styles/kernelsmoothing_small.html)).
+
 Documentation coming soon.
 
 | Property | Type | Default | Description |

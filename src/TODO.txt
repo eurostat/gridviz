@@ -1,4 +1,4 @@
-kernel smoothing: small test - fix bug
+kernel smoothing: add small tests
 
 EUR pop demo
 legends
@@ -41,7 +41,7 @@ possibility to make layers based on several datasets
 
 V3:
 make modules
-modularise: https://webpack.js.org/guides/code-splitting/
+see https://webpack.js.org/guides/code-splitting/
 
 geotiff tiling - use for forest/CLC/elevation 200m ?
 
