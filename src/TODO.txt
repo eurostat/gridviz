@@ -1,3 +1,6 @@
+tanaka with new shading
+kernel smoothing: small test - fix bug
+
 EUR pop demo
 artifact in kernel smoothing
 
