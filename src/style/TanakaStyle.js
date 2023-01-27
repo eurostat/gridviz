@@ -3,6 +3,7 @@
 import { SquareColorWGLStyle } from "./SquareColorWGLStyle"
 import { SideStyle } from "./SideStyle"
 import { Style } from "../Style"
+import { sPow } from "../utils/stretching"
 
 /**
  * 
@@ -26,7 +27,7 @@ export class TanakaStyle {
                 console.error("unexpected number of colors in tanaka (<2): " + opts.nb)
                 opts.nb = 2
             }
-            if(!opts.color) {
+            if (!opts.color) {
                 console.error("color function not defined in tanaka")
                 opts.color = () => "gray"
             }
@@ -123,16 +124,30 @@ export class TanakaStyle {
                 const c2 = getClass(t2)
                 return -c2 + c1;
             },
-            //white or black, depending on orientation and value
-            color: (side, r, s, z) => {
-                if (side.value === 0) return
-                //return "gray"
-                if (side.or === "v")
-                    return side.value < 0 ? opts.colBright : opts.colDark
-                return side.value < 0 ? opts.colDark : opts.colBright
-            },
-            //width depends on the value, that is the number of classes of difference
-            width: (side, r, s, z) => opts.widthFactor * r * Math.abs(side.value) * (side.or === "v" ? 0.5 : 1),
+
+            color: opts.shading ?
+                //black with transparency depending on difference
+                (side, r, s, z) => {
+                    const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                    const tr = 0.3 * sPow(Math.abs(side.value) / max, 0.3)
+                    return side.value > 0 && side.or === "h" || side.value < 0 && side.or === "v" ? "rgba(0,0,0," + tr + ")" : "rgba(255,255,100," + tr + ")"
+                } :
+                //white or black, depending on orientation and value
+                (side, r, s, z) => {
+                    if (side.value === 0) return
+                    //return "gray"
+                    if (side.or === "v")
+                        return side.value < 0 ? opts.colBright : opts.colDark
+                    return side.value < 0 ? opts.colDark : opts.colBright
+                },
+
+            width: opts.shading ?
+                //fill size
+                (side, r, s, z) => {
+                    return r * 1
+                } :
+                //width depends on the value, that is the number of classes of difference
+                (side, r, s, z) => opts.widthFactor * r * Math.abs(side.value) * (side.or === "v" ? 0.5 : 1),
         })
 
         return [colStyle, sideStyle]
