@@ -45,10 +45,10 @@ export class KernelSmoothingStyle extends Style {
     */
     getKernelMatrix(s) {
 
-        //the size of the kernel: lets limit that to ~4 times the standard deviation, as an approximation.
+        //the size of the kernel: lets limit that to ~3 times the standard deviation, as an approximation.
         const kernelSize = Math.floor(3 * s);
 
-        //prepare coefficients for gaussian computation, to avoid computing them every time.
+        //pre-compute coefficient for gaussian computation, to avoid computing them every time.
         const c2 = 2 * s * s;
 
         /**
@@ -114,6 +114,7 @@ export class KernelSmoothingStyle extends Style {
         //get kernel matrix
         /** @type {Array.<Array.<{w:number,val:number}>>} */
         const kernelMatrix = this.getKernelMatrix(s)
+        //console.log(kernelMatrix)
         const kernelSize = kernelMatrix.length
 
         //compute smoothing, cell by cell
@@ -214,7 +215,7 @@ export class KernelSmoothingStyle extends Style {
 
 
     /**
-     * Draw cells as squares depending on their value.
+     * Draw the smoothed cells depending on the list of styles specified.
      * 
     * @param {Array.<import("../Dataset").Cell>} cells 
     * @param {number} r 
