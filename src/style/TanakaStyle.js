@@ -125,7 +125,7 @@ export class TanakaStyle {
                 return -c2 + c1;
             },
 
-            color: opts.shading ?
+            color: opts.newShading ?
                 //black with transparency depending on difference
                 (side, r, s, z) => {
                     const max = Math.max(Math.abs(s.min), Math.abs(s.max))
@@ -141,7 +141,7 @@ export class TanakaStyle {
                     return side.value < 0 ? opts.colDark : opts.colBright
                 },
 
-            width: opts.shading ?
+            width: opts.newShading ?
                 //fill size
                 (side, r, s, z) => {
                     return r * 1
