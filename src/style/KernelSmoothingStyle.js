@@ -40,13 +40,13 @@ export class KernelSmoothingStyle extends Style {
     * Compute the kernel matrix, that is the matrix of the weights.
     * One quadrant is necessary only, since it is symetrical (along both x and y axes).
     * @param {number} s Sigma (in grid pixel !)
-    * @returns {Array.<Array<{w:number,val:number}>>}
+    * @returns {Array.<Array<number>>}
     * @private
     */
     getKernelMatrix(s) {
 
         //the size of the kernel: lets limit that to ~3 times the standard deviation, as an approximation.
-        const kernelSize = Math.floor(3 * s);
+        const kernelSize = Math.floor(3.25 * s);
 
         //pre-compute coefficient for gaussian computation, to avoid computing them every time.
         const c2 = 2 * s * s;
@@ -59,16 +59,14 @@ export class KernelSmoothingStyle extends Style {
          */
         const gaussian = (x, y) => Math.exp(-(x * x + y * y) / c2)
 
-        /** @type {Array.<Array<{w:number,val:number}>>} */
+        /** @type {Array.<Array<number>>} */
         const kw = []
         for (let wi = 0; wi <= kernelSize; wi++) {
-            /** @type {Array<{w:number,val:number}>} */
+            /** @type {Array<number>} */
             const col = []
             for (let wj = 0; wj <= kernelSize; wj++) {
                 //compute weight at wi,wj
-                /** @type {number} */
-                const w = gaussian(wi, wj)
-                col.push({ w: w, val: 0 })
+                col.push(gaussian(wi, wj))
             }
             kw.push(col)
         }
@@ -98,6 +96,7 @@ export class KernelSmoothingStyle extends Style {
     * @returns {Array.<import("../Dataset").Cell>} The list of cells, including the initial ones and the ones with smoothed values, in "ksmval" property.
     */
     kernelSmoothing(cells, e, r, s) {
+        const wThr = 0.01 //gaussian weights below this value will be ignored
 
         //compute extent, in grid position
         const xMin = Math.floor(e.xMin / r) * r;
@@ -124,9 +123,20 @@ export class KernelSmoothingStyle extends Style {
         }
 
         //get kernel matrix
-        /** @type {Array.<Array.<{w:number,val:number}>>} */
+        /** @type {Array.<Array.<number>>} */
         const kernelMatrix = this.getKernelMatrix(s)
         const kernelSize = kernelMatrix.length
+
+        //compute summ of the weights over entire kernel window
+        /** @type {number} */
+        let sumWeights = 0;
+        for (let ki = 1 - kernelSize; ki < kernelSize; ki++) {
+            for (let kj = 1 - kernelSize; kj < kernelSize; kj++) {
+                let w = kernelMatrix[Math.abs(ki)][Math.abs(kj)]
+                if (w < wThr) continue;
+                sumWeights += w;
+            }
+        }
 
         //compute smoothing, input cell by input cell
 
@@ -146,25 +156,6 @@ export class KernelSmoothingStyle extends Style {
                  * @type {number} */
                 const val = this.value(c);
                 if (!val) continue
-
-                //compute contribution of cell c across kernel window (ki,kj).
-                //store contributions in kernelMatrix.val field.
-
-                /** @type {number} */
-                let sumWeights = 0;
-                for (let ki = 0; ki < kernelSize; ki++) {
-                    for (let kj = 0; kj < kernelSize; kj++) {
-
-                        //get kernel element
-                        const ke = kernelMatrix[ki][kj]
-
-                        //add contribution: the weight X the value
-                        ke.val = ke.w * val
-
-                        //keep sum of weights
-                        sumWeights += ke.w;
-                    }
-                }
 
                 /** Check that the cell i,j is within the frame */
                 const isWithinFrame = (i, j) => i >= 0 && i < nbX && j >= 0 && j < nbY
@@ -190,12 +181,12 @@ export class KernelSmoothingStyle extends Style {
                     for (let kj = 1 - kernelSize; kj < kernelSize; kj++) {
 
                         //check cell is within the frame
-                        if (! isWithinFrame(i + ki, j + kj)) continue;
+                        if (!isWithinFrame(i + ki, j + kj)) continue;
 
                         //get contribution (ki,kj)
-                        let ke = kernelMatrix[Math.abs(ki)][Math.abs(kj)]
-                        if (!ke) continue
-                        let v = ke.val
+                        let w = kernelMatrix[Math.abs(ki)][Math.abs(kj)]
+                        if (!w || w < wThr) continue
+                        let v = w * val
                         if (!v) continue;
                         v /= sumWeights
                         if (!v) continue;
