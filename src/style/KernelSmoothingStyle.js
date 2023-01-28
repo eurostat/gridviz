@@ -231,5 +231,8 @@ export class KernelSmoothingStyle extends Style {
         for (let s of this.styles)
             s.draw(cells, r, cg);
 
+        //update legends
+        //for (let s of this.styles)
+        //    s.updateLegends({ style: s, r: r, zf: cg.getZf() });
     }
 }

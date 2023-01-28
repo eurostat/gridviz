@@ -1,7 +1,8 @@
-EUR pop demo
-legends
+census demo: legends
 
-
+ksmooth:
+- deal with sigma = 0 - return 1, dirac case
+- test sigma as multiple of resolution instead of nb of screen pixels
 
 bug when zooming-in: square gets too small.
         app.addCSVGridLayer(
