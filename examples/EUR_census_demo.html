@@ -319,10 +319,14 @@
                 app.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Number of inhabitants",
-                        width: 500,
-                        ticks: 6,
                         colorRamp: t => colR(Math.floor(t * nb) / nb),
-                        fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sExpRevInverse(t, -7),
+                        //width: 500,
+                        //ticks: 6,
+                        //fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sExpRevInverse(t, -7),
+                        width: 200,
+                        ticks: 2,
+                        tickFormat: "text",
+                        fun: (t, r, s) => t == 0 ? "Low" : t == 1 ? "High" : "X",
                     })
                 )
 
@@ -466,7 +470,7 @@
                 )
 
                 //legend
-                const lgCat = new gviz.ColorCategoryLegend({ title: "", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] })
+                const lgCat = new gviz.ColorCategoryLegend({ title: "Population change", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] })
                 app.layers[0].styles[0].legends.push(lgCat)
                 app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }))
 
