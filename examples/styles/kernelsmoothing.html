@@ -33,18 +33,18 @@
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(1000)
 
+        const nbClass = 10
+
         //style examples
         const styles = {
             color: [
                 new gviz.SquareColorWGLStyle({
                     colorCol: "ksmval",
-                    color: d3.interpolateRdYlGn,
+                    color: d3.interpolateCividis,
                     tFun: (v, r, s) => {
                         const v_ = gviz.sExp((v) / s.max, -20)
-                        const nbClass = 10
                         const cl = Math.floor(nbClass * v_) / nbClass
-                        if (cl < 1 / nbClass) return "white"
-                        return 1 - cl
+                        return cl
                     }
                 })
             ],
@@ -88,7 +88,7 @@
         //define kernel smoothing filter
         const s = new gviz.KernelSmoothingStyle({
             value: c => +c["2018"],
-            sigma: (r, zf) => r * 10 /10,
+            sigma: (r, zf) => r * 10 / 10,
             styles: styles.color
         });
 
@@ -117,7 +117,7 @@
         //sigma selection
         document.getElementById('sigma').oninput = function () {
             //set sigma
-            s.sigma = (r, zf) => r * (+this.value) /10
+            s.sigma = (r, zf) => r * (+this.value) / 10
             //redraw
             app.cg.redraw()
         }
