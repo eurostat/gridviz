@@ -20,7 +20,7 @@
             <option value="side">Shading</option>
         </select>
         <br>
-        <input type="range" min="1" max="16" value="8" class="slider" id="sigma">
+        <input type="range" min="0" max="30" value="10" class="slider" id="sigma">
     </div>
 
     <script src="../../dist/gridviz.js"></script>
@@ -88,7 +88,7 @@
         //define kernel smoothing filter
         const s = new gviz.KernelSmoothingStyle({
             value: c => +c["2018"],
-            sigma: (r, zf) => zf * 8,
+            sigma: (r, zf) => r * 10 /10,
             styles: styles.color
         });
 
@@ -117,7 +117,7 @@
         //sigma selection
         document.getElementById('sigma').oninput = function () {
             //set sigma
-            s.sigma = (r, zf) => zf * (+this.value)
+            s.sigma = (r, zf) => r * (+this.value) /10
             //redraw
             app.cg.redraw()
         }
