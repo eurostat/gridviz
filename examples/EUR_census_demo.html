@@ -334,7 +334,10 @@
                 //add layer
                 app.addLayerFromDataset(
                     popDataset,
-                    gviz.LegoStyle.get(year, { tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sPow((v - s.min) / (s.max - s.min), 0.2), colors: cols }),
+                    gviz.LegoStyle.get(year, {
+                        tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sPow((v - s.min) / (s.max - s.min), 0.2),
+                        colors: cols
+                    }),
                     {
                         pixNb: 9,
                         cellInfoHTML: tooltipFun
@@ -368,16 +371,29 @@
                     }
                 )
 
-                /*/legend
+                //legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
-                        title: "Population change (number of inhabitants)", ticks: 5, colorRamp: d3.interpolateSpectral, invert: true,
+                        title: "Population change (number of inhabitants)",
+                        ticks: 7,
+                        width: 500,
+                        colorRamp: d3.interpolateSpectral,
+                        invert: true,
                         fun: (t, r, s) => {
-                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
+                            const streI = gviz.sPowInverse
+                            if (t < 0.5) {
+                                t = 1-2*t
+                                return s.min * streI(t, 0.15)
+                            }
+                            if (t > 0.5) {
+                                t = 2*t-1
+                                return s.max * streI(t, 0.15)
+                            }
+                            return 0
                         }
                     })
-                )*/
+                )
+
 
             } else if (style == "colorSmTK") {
 
