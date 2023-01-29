@@ -1,7 +1,7 @@
-census demo: legends
+census demo:
+legends
+lego smoothed
 
-ksmooth:
-- deal with sigma = 0 - return 1, dirac case
 
 bug when zooming-in: square gets too small.
         app.addCSVGridLayer(

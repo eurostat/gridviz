@@ -290,14 +290,6 @@
 
                 const nb = 10
 
-                const s = gviz.TanakaStyle.get(
-                    "ksmval",
-                    {
-                        tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7), color: d3.interpolateOrRd,
-                        nb: nb,
-                        //newShading: true,
-                    });
-
                 //add layer
                 app.addLayerFromDataset(
                     popDataset,
@@ -305,7 +297,13 @@
                         new gviz.KernelSmoothingStyle({
                             value: c => +c[year],
                             sigma: (r, zf) => r * sigma / 10,
-                            styles: s,
+                            styles: gviz.TanakaStyle.get(
+                                "ksmval",
+                                {
+                                    tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7), color: d3.interpolateOrRd,
+                                    nb: nb,
+                                    //newShading: true,
+                                }),
                         })
                     ],
                     {
@@ -314,7 +312,7 @@
                     })
 
                 //legend
-                s[0].legends.push(
+                app.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorDiscreteLegend({
                         title: "Number of inhabitants",
                         width: 400,
@@ -324,6 +322,7 @@
                         breaksText: ["X", "Y"],
                     })
                 )
+                //console.log(app.layers[0].styles[0].styles[0].legends[0])
 
             } else if (style == "lego") {
 
