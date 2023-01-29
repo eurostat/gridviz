@@ -57,7 +57,8 @@ export class KernelSmoothingStyle extends Style {
          * @param {number} y 
          * @returns {number}
          */
-        const gaussian = (x, y) => Math.exp(-(x * x + y * y) / c2)
+        const gaussian = (x, y) => c2 != 0 ? Math.exp(-(x * x + y * y) / c2)
+            : x == 0 && y == 0 ? 1 : 0; //dirac case
 
         /** @type {Array.<Array<number>>} */
         const kw = []
@@ -203,6 +204,9 @@ export class KernelSmoothingStyle extends Style {
         for (let i of Object.keys(index))
             for (const j of Object.keys(index[i]))
                 out.push(index[i][j])
+
+        for (const c of cells)
+            delete c["inputCell"]
 
         return out;
     }
