@@ -311,18 +311,27 @@
                         cellInfoHTML: tooltipFun
                     })
 
-                //legend
+                /*/legend
                 app.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorDiscreteLegend({
                         title: "Number of inhabitants",
                         width: 400,
                         //TODO
-                        colors: ["red", "blue", "purple"],
+                        colors: ['rgb(94, 79, 162)', 'rgb(126, 202, 166)', 'rgb(238, 248, 168)', 'rgb(254, 217, 136)', 'rgb(248, 142, 83)', 'rgb(225, 81, 74)', 'rgb(191, 39, 73)', 'rgb(167, 11, 68)', 'rgb(158, 1, 66)'],
                         //TODO
-                        breaksText: ["X", "Y"],
+                        breaksText: [5, 10, 15, 20, 30, 45, 60, 90],
                     })
-                )
+                )*/
                 //console.log(app.layers[0].styles[0].styles[0].legends[0])
+
+                /*
+                new gviz.ColorDiscreteLegend({
+                        title: "Travel time to nearest primary education service, in minutes",
+                        colors: colorsE_,
+                        breaksText: breaksE,
+                        width: 300,
+                    })
+*/
 
             } else if (style == "lego") {
 
