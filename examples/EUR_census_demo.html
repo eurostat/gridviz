@@ -283,6 +283,18 @@
                         cellInfoHTML: tooltipFun
                     })
 
+/*
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorDiscreteLegend({
+                        title: "Number of inhabitants",
+                        width: 400,
+                        //TODO
+                        colors: ["red", "blue", "purple"],
+                        //TODO
+                        breaksText: ["x", "y"],
+                    })
+                )*/
+
             } else if (style == "tanaka") {
 
                 //get year selection
@@ -311,17 +323,17 @@
                         cellInfoHTML: tooltipFun
                     })
 
-                /*/legend
+                //legend
                 app.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorDiscreteLegend({
                         title: "Number of inhabitants",
                         width: 400,
                         //TODO
-                        colors: ['rgb(94, 79, 162)', 'rgb(126, 202, 166)', 'rgb(238, 248, 168)', 'rgb(254, 217, 136)', 'rgb(248, 142, 83)', 'rgb(225, 81, 74)', 'rgb(191, 39, 73)', 'rgb(167, 11, 68)', 'rgb(158, 1, 66)'],
+                        colors: ["red", "blue", "purple"],
                         //TODO
-                        breaksText: [5, 10, 15, 20, 30, 45, 60, 90],
+                        breaksText: ["x", "y"],
                     })
-                )*/
+                )
                 //console.log(app.layers[0].styles[0].styles[0].legends[0])
 
                 /*

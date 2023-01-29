@@ -126,6 +126,23 @@ export class App {
                             //s1.node().appendChild(s2.node())
                             this.legend.node().append(lg.div.node())
                         }
+
+                        //case for styles of styles, like kernel smoothing
+                        //TODO do better
+                        if (s["styles"]) {
+                            for (const s2 of s.styles) {
+                                if (zf > s2.maxZoom) continue;
+                                if (zf < s2.minZoom) continue;
+                                for (const lg of s2.legends) {
+                                    //console.log(s, lg)
+                                    //this.legend.append(lg.div)
+                                    //s1.node().appendChild(s2.node())
+                                    this.legend.node().append(lg.div.node())
+                                }
+                            }
+
+                        }
+
                     }
 
             }
