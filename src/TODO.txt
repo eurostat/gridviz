@@ -1,6 +1,6 @@
 census demo:
 legends
-lego smoothed
+lego smoothed + bug when pop=0
 
 
 bug when zooming-in: square gets too small.

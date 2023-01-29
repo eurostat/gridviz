@@ -331,9 +331,11 @@
                 )
 
             } else if (style == "lego") {
+                const colR = d3.interpolateOrRd
+                const nb = 8
 
                 const cols = []
-                for (let t = 0; t <= 1; t += 1 / 8) cols.push(d3.interpolateOrRd(t))
+                for (let t = 0; t < 1; t += 1 / nb) cols.push(colR(t))
 
                 //add layer
                 app.addLayerFromDataset(
@@ -346,6 +348,19 @@
                         pixNb: 9,
                         cellInfoHTML: tooltipFun
                     })
+
+
+                //legend
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorLegend({
+                        title: "Number of inhabitants",
+                        colorRamp: t => colR(Math.floor(t * nb) / nb),
+                        width: 200,
+                        ticks: 2,
+                        tickFormat: "text",
+                        fun: (t, r, s) => t == 0 ? "Low" : t == 1 ? "High" : "X",
+                    })
+                )
 
             } else if (style == "colorCh") {
 
