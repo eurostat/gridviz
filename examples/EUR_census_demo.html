@@ -33,7 +33,7 @@
             <label for="joyplot">Joyplot</label>
             <br>
             <input type="radio" name="style" id="tanaka" value="tanaka">
-            <label for="tanaka">Tanaka, smoothed: </label><input type="range" min="1" max="10" value="7" class="slider"
+            <label for="tanaka">Tanaka, smoothed: </label><input type="range" min="1" max="20" value="7" class="slider"
                 id="sigmaTK" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="lego" value="lego">
@@ -46,7 +46,7 @@
             <label for="colorCh">Color</label>
             <br>
             <input type="radio" name="style" id="colorSmTK" value="colorSmTK">
-            <label for="colorSmTK">Tanaka, smoothed: </label><input type="range" min="1" max="10" value="7"
+            <label for="colorSmTK">Tanaka, smoothed: </label><input type="range" min="1" max="20" value="7"
                 class="slider" id="sigmaCCH" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="sizeCh" value="sizeCh">
@@ -304,7 +304,7 @@
                     [
                         new gviz.KernelSmoothingStyle({
                             value: c => +c[year],
-                            sigma: (r, zf) => zf * sigma,
+                            sigma: (r, zf) => r * sigma /10,
                             styles: s,
                         })
                     ],
@@ -389,7 +389,7 @@
                     [
                         new gviz.KernelSmoothingStyle({
                             value: c => +c["d2011_2018"],
-                            sigma: (r, zf) => zf * sigma,
+                            sigma: (r, zf) => r * sigma /10,
                             styles:
                                 gviz.TanakaStyle.get("ksmval", {
                                     tFun: (v, r, s, zf) => {
