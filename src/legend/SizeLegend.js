@@ -21,6 +21,13 @@ export class SizeLegend extends Legend {
         //if value is to be forced
         this.value = opts.value || undefined
 
+        this.margin = opts.margin || 5
+
+        //title
+        this.title = opts.title;
+        this.titleFontSize = opts.titleFontSize || "0.8em"
+        this.titleFontWeight = opts.titleFontWeight || "bold"
+
         //symbol
         /** 
          * @private
@@ -76,6 +83,15 @@ export class SizeLegend extends Legend {
         const d = this.div.append("div")
         //to enable vertical centering
         //.style("position", "relative")
+
+        //title
+        if (this.title) {
+            d.append("div")
+            .attr("class", "title")
+            .style("font-size", this.titleFontSize)
+            .style("font-weight", this.titleFontWeight)
+            .text(this.title)
+        }
 
         //compute size of symbol, in pix
         const size = opts.style.size(value, opts.r, opts.sSize, opts.zf) / opts.zf;
