@@ -5,7 +5,7 @@ import { format } from "d3-format";
 import { SegmentStyle } from "../style/SegmentStyle"
 
 /**
- * A legend element for segment width.
+ * A legend element for segment orientation.
  * 
  * @author Joseph Davies, Julien Gaffuri
  */
@@ -28,6 +28,8 @@ export class SegmentWidthLegend extends Legend {
         this.color = opts.color || "gray"
         //orientation
         this.orientation = opts.orientation || 0
+        //width
+        this.width = opts.width
 
         //label
         this.labelFontSize = opts.labelFontSize || "0.8em"
