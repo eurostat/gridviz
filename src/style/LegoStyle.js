@@ -25,8 +25,8 @@ export class LegoStyle {
             "#00852b", //darker green
             "#afd246", //light green
             "#fac80a", //dark yellow
-            "#d67923", //mostard
             "#bb805a", //brown
+            "#d67923", //mostard
             "#cb4e29", //redish
             "#b40000", //red
             "#720012", //dark red

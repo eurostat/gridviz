@@ -1,6 +1,8 @@
 census demo:
-legends
-lego smoothed + bug when pop=0
+color dark
+legend segment
+lego: bug when pop=0
+lego: upgrade colors - http://www.jennyscrayoncollection.com/2021/06/all-current-lego-colors.html
 
 
 bug when zooming-in: square gets too small.
