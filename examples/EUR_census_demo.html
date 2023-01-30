@@ -6,7 +6,7 @@
 </head>
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
-    <div id="vizPop" style="height:100%; width:100%;">
+    <div id="vizPop" style="position:relative; height:700px; width:1200px;">
 
         <div
             style="font-size: 0.9em; position: absolute; left: 10px; top: 10px; width: auto; height: auto; padding: 5px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd">
@@ -65,19 +65,8 @@
             <label for="boundary">Boundaries</label>
         </div>
 
-        <div
-            style="font: bold 20px sans-serif; position: absolute; right: 10px; top: 10px; width: auto; height: auto; padding: 5px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd">
-            <a id="zoomin"
-                style="width: 30px; height: 30px; display: block; border: none; color: black; text-align: center; text-decoration: none;"
-                href="#" title="Zoom in">+</a>
-            <hr style="margin: 0px;">
-            <a id="zoomout"
-                style="width: 30px; height: 30px; display: block; border: none; color: black; text-align: center; text-decoration: none;"
-                href="#" title="Zoom out">−</a>
-        </div>
-
         <div id="legendPop"
-            style="position: absolute; left: 5px; bottom: 5px; width: auto; height: auto; padding: 0px; border: 0px; border-radius: 5px; background: #FFFFFFDD; line-height: 1.6; box-shadow: 5px 5px 5px grey, -3px -3px 3px #ddd">
+            style="position: absolute; right: 5px; top: 5px; width: auto; height: auto; padding: 0px; border: 0px; border-radius: 5px; background: #FFFFFFDD; line-height: 1.6; box-shadow: 5px 5px 5px grey, -3px -3px 3px #ddd">
         </div>
 
         <div
@@ -91,6 +80,7 @@
                     style="text-decoration:none">Turkstat</a>
             </span>
         </div>
+
     </div>
 
     <script src="../dist/gridviz.js"></script>
@@ -627,8 +617,8 @@
         document.getElementById('sigmaCCH').oninput = update
 
         //zoom
-        document.querySelector('#zoomin').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
-        document.querySelector('#zoomout').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 1.2).redraw())
+        //document.querySelector('#zoomin').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
+        //document.querySelector('#zoomout').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 1.2).redraw())
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
