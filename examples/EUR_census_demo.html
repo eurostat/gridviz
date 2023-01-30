@@ -495,9 +495,9 @@
                 )
 
                 //legend
-                const lgCat = new gviz.ColorCategoryLegend({ title: "Population change", shape: "circle", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] })
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ title: "Population change", shape: "circle", labelUnitText: "inhabitants", fillColor: "gray" }))
+                const lgCat = new gviz.ColorCategoryLegend({ shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] })
                 app.layers[0].styles[0].legends.push(lgCat)
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhab.", fillColor: "gray" }))
 
             } else if (style == "segmentCh") {
                 const maxAngle = 60
@@ -526,7 +526,7 @@
                 )
 
                 //legend
-                const lgCat = new gviz.ColorCategoryLegend({ title: "", shape: "circle", colCat: [["#d13c4b", "Increase"], ["gray", "Stable (<1%)"], ["#4288b5", "Decrease"]] })
+                const lgCat = new gviz.ColorCategoryLegend({ title: "Population change", shape: "circle", colCat: [["#d13c4b", "Increase"], ["gray", "Stable (<1%)"], ["#4288b5", "Decrease"]] })
                 app.layers[0].styles[0].legends.push(lgCat)
 
             }
