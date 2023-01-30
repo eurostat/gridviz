@@ -2,7 +2,6 @@
 
 import { Legend } from "../Legend";
 import { format } from "d3-format";
-import { Stat } from "../Style"
 import { SegmentStyle } from "../style/SegmentStyle"
 
 /**
@@ -17,6 +16,11 @@ export class SegmentWidthLegend extends Legend {
         super(opts)
         opts = opts || {};
 
+        //title
+        this.title = opts.title;
+        this.titleFontSize = opts.titleFontSize || "0.8em"
+        this.titleFontWeight = opts.titleFontWeight || "bold"
+
         //exageration
         this.exaggerationFactor = opts.exaggerationFactor || 0.5
 
@@ -30,12 +34,12 @@ export class SegmentWidthLegend extends Legend {
         this.labelUnitText = opts.labelUnitText || ""
 
         //
-        this.div.style("text-align", "center")
+        //this.div.style("text-align", "left")
     }
 
 
     /**
-     * @param {{ style: SegmentStyle, r: number, zf: number, sColor: Stat, sLength: Stat, sWidth: Stat }} opts 
+     * @param {{ style: SegmentStyle, r: number, zf: number, sColor: import("../Style").Stat, sLength: import("../Style").Stat, sWidth: import("../Style").Stat }} opts 
      */
     update(opts) {
 
@@ -44,6 +48,17 @@ export class SegmentWidthLegend extends Legend {
 
         //clear
         this.div.selectAll("*").remove();
+
+        const d = this.div.append("div")
+
+        //title
+        if (this.title) {
+            d.append("div")
+            .attr("class", "title")
+            .style("font-size", this.titleFontSize)
+            .style("font-weight", this.titleFontWeight)
+            .text(this.title)
+        }
 
         //get max value
         const value_ = opts.sWidth.max * this.exaggerationFactor
@@ -65,7 +80,7 @@ export class SegmentWidthLegend extends Legend {
 
         //TODO use orientation
 
-        const svg = this.div.append("svg").attr("width", sLength).attr("height", sWidth)
+        const svg = d.append("svg").attr("width", sLength).attr("height", sWidth)
             .style("", "inline-block")
 
         //<line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
@@ -76,10 +91,12 @@ export class SegmentWidthLegend extends Legend {
             .style("stroke-width", sWidth)
 
         const valueT = format(",.2r")(value);
-        this.div.append("div")
+        d.append("div")
+            //show on right of graphic
+            .style("display", "inline")
+            .style("padding-left", "5px")
             .style("font-size", this.labelFontSize)
             //.style("font-weight", "bold")
-            .style("", "inline-block")
             .text(valueT + (this.labelUnitText ? " " : "") + this.labelUnitText)
     }
 }

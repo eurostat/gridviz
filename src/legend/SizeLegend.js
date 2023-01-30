@@ -21,8 +21,6 @@ export class SizeLegend extends Legend {
         //if value is to be forced
         this.value = opts.value || undefined
 
-        this.margin = opts.margin || 5
-
         //title
         this.title = opts.title;
         this.titleFontSize = opts.titleFontSize || "0.8em"

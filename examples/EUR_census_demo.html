@@ -526,7 +526,12 @@
                 )
 
                 //legend
-                const lgCat = new gviz.ColorCategoryLegend({ title: "Population change", shape: "circle", colCat: [["#d13c4b", "Increase"], ["gray", "Stable (<1%)"], ["#4288b5", "Decrease"]] })
+
+                app.layers[0].styles[0].legends.push(new gviz.SegmentWidthLegend({
+                    title: "Population in 2018",
+                    labelUnitText: "inhab."
+                }))
+                const lgCat = new gviz.ColorCategoryLegend({ title: "Population change", shape: "square", colCat: [["#d13c4b", "Increase"], ["gray", "Stable (<1%)"], ["#4288b5", "Decrease"]] })
                 app.layers[0].styles[0].legends.push(lgCat)
 
             }
