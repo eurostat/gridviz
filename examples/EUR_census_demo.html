@@ -36,7 +36,7 @@
             <label for="joyplot">Joyplot</label>
             <br>
             <input type="radio" name="style" id="tanaka" value="tanaka">
-            <label for="tanaka">Tanaka, smoothed: </label><input type="range" min="0" max="20" value="9" class="slider"
+            <label for="tanaka">Tanaka, smoothed: </label><input type="range" min="0" max="20" value="10" class="slider"
                 id="sigmaTK" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="lego" value="lego">
@@ -49,7 +49,7 @@
             <label for="colorCh">Color</label>
             <br>
             <input type="radio" name="style" id="colorChSmTK" value="colorChSmTK">
-            <label for="colorChSmTK">Tanaka, smoothed: </label><input type="range" min="0" max="20" value="9"
+            <label for="colorChSmTK">Tanaka, smoothed: </label><input type="range" min="0" max="20" value="10"
                 class="slider" id="sigmaCCH" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="sizeCh" value="sizeCh">
@@ -366,7 +366,7 @@
             } else if (style == "lego") {
                 //const colR = d3.interpolateCubehelixDefault //interpolateOrRd
                 //const nb = 12
-                const sigmaFun = (r, zf) => r * 0.6
+                const sigmaFun = (r, zf) => r * 0.5
 
                 //const cols = []
                 //for (let t = 0; t < 1; t += 1 / nb) cols.push(colR(t))
@@ -385,7 +385,7 @@
                         })
                     ],
                     {
-                        pixNb: 9,
+                        pixNb: 8,
                         cellInfoHTML: tooltipFun
                     })
 

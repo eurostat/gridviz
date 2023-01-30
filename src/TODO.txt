@@ -1,6 +1,6 @@
 census demo:
 lego: bug when pop=0
-lego: upgrade colors - http://www.jennyscrayoncollection.com/2021/06/all-current-lego-colors.html
+lego: upgrade colors
 
 goto
 
