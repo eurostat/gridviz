@@ -363,6 +363,7 @@
                 )
 
             } else if (style == "colorCh") {
+                const streC = 0.22
 
                 app.addLayerFromDataset(
                     popDataset,
@@ -373,9 +374,9 @@
                                 const stre = gviz.sPow
                                 let t = 0.5
                                 if (s.min < 0 && v < 0) {
-                                    t -= stre(v / s.min, 0.15) / 2
+                                    t -= stre(v / s.min, streC) / 2
                                 } else {
-                                    t += stre(v / s.max, 0.15) / 2
+                                    t += stre(v / s.max, streC) / 2
                                 }
                                 t = 1 - t;
                                 return d3.interpolateSpectral(t);
@@ -401,9 +402,9 @@
                         fun: (t, r, s) => {
                             const streI = gviz.sPowInverse
                             if (t < 0.5)
-                                return s.min * streI(1 - 2 * t, 0.15)
+                                return s.min * streI(1 - 2 * t, streC)
                             if (t > 0.5)
-                                return s.max * streI(2 * t - 1, 0.15)
+                                return s.max * streI(2 * t - 1, streC)
                             return 0
                         }
                     })
