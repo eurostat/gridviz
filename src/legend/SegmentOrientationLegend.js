@@ -1,7 +1,6 @@
 //@ts-check
 
 import { Legend } from "../Legend";
-import { format } from "d3-format";
 import { SegmentStyle } from "../style/SegmentStyle"
 
 /**
@@ -9,7 +8,7 @@ import { SegmentStyle } from "../style/SegmentStyle"
  * 
  * @author Joseph Davies, Julien Gaffuri
  */
-export class SegmentWidthLegend extends Legend {
+export class SegmentOrientationLegend extends Legend {
 
     /** @param {Object} opts */
     constructor(opts) {
@@ -29,7 +28,7 @@ export class SegmentWidthLegend extends Legend {
         //orientation
         this.orientation = opts.orientation || 0
         //width
-        this.width = opts.width
+        this.widthPix = opts.widthPix || 3
 
         //label
         this.labelFontSize = opts.labelFontSize || "0.8em"
@@ -53,28 +52,15 @@ export class SegmentWidthLegend extends Legend {
         //title
         if (this.title) {
             d.append("div")
-            .attr("class", "title")
-            .style("font-size", this.titleFontSize)
-            .style("font-weight", this.titleFontWeight)
-            .text(this.title)
+                .attr("class", "title")
+                .style("font-size", this.titleFontSize)
+                .style("font-weight", this.titleFontWeight)
+                .text(this.title)
         }
 
-        //get max value
-        const value_ = opts.sWidth.max * this.exaggerationFactor
-
-        //take 'nice' value (power of ten, or multiple)
-        let pow10 = Math.log10(value_)
-        pow10 = Math.floor(pow10)
-        let value = Math.pow(10, pow10)
-        if (value * 8 <= value_) value *= 8
-        else if (value * 6 <= value_) value *= 6
-        else if (value * 5 <= value_) value *= 5
-        else if (value * 4 <= value_) value *= 4
-        else if (value * 2.5 <= value_) value *= 2.5
-        else if (value * 2 <= value_) value *= 2
 
         //compute segment width and length, in pix
-        const sWidth = opts.style.width(value, opts.r, opts.sWidth, opts.zf) / opts.zf;
+        const sWidth = this.widthPix
         const sLength = 1 * opts.r / opts.zf
 
         //TODO use orientation
@@ -89,13 +75,12 @@ export class SegmentWidthLegend extends Legend {
             .style("stroke", this.color)
             .style("stroke-width", sWidth)
 
-        const valueT = format(",.2r")(value);
         d.append("div")
             //show on right of graphic
             .style("display", "inline")
             .style("padding-left", "5px")
             .style("font-size", this.labelFontSize)
             //.style("font-weight", "bold")
-            .text(valueT + (this.labelUnitText ? " " : "") + this.labelUnitText)
+            .text(this.labelUnitText)
     }
 }

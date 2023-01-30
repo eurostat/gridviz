@@ -571,8 +571,35 @@
                     title: "Population in 2018",
                     labelUnitText: "inhab."
                 }))
-                const lgCat = new gviz.ColorCategoryLegend({ title: "Population change", shape: "square", colCat: [["#d13c4b", "Increase"], ["gray", "Stable (<1%)"], ["#4288b5", "Decrease"]] })
-                app.layers[0].styles[0].legends.push(lgCat)
+
+                app.layers[0].styles[0].legends.push(new gviz.SegmentOrientationLegend({
+                    title: "Population change",
+                    labelUnitText: "Strong increase",
+                    color: "#d13c4b",
+                    orientation: 60
+                }))
+                app.layers[0].styles[0].legends.push(new gviz.SegmentOrientationLegend({
+                    labelUnitText: "Low increase",
+                    color: "#d13c4b",
+                    orientation: 30
+                }))
+                app.layers[0].styles[0].legends.push(new gviz.SegmentOrientationLegend({
+                    labelUnitText: "Stability (<1%)",
+                    color: "gray",
+                    orientation: 0
+                }))
+                app.layers[0].styles[0].legends.push(new gviz.SegmentOrientationLegend({
+                    labelUnitText: "Low decrease",
+                    color: "#4288b5",
+                    orientation: -30
+                }))
+                app.layers[0].styles[0].legends.push(new gviz.SegmentOrientationLegend({
+                    labelUnitText: "Strong decrease",
+                    color: "#4288b5",
+                    orientation: -60
+                }))
+                //const lgCat = new gviz.ColorCategoryLegend({ title: "Population change", shape: "square", colCat: [["#d13c4b", "Increase"], ["gray", "Stable (<1%)"], ["#4288b5", "Decrease"]] })
+                //app.layers[0].styles[0].legends.push(lgCat)
 
             }
 

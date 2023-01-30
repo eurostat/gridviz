@@ -3,6 +3,8 @@ legend segment orientation
 lego: bug when pop=0
 lego: upgrade colors - http://www.jennyscrayoncollection.com/2021/06/all-current-lego-colors.html
 
+goto
+
 
 bug when zooming-in: square gets too small.
         app.addCSVGridLayer(
