@@ -20,6 +20,9 @@
             <input type="radio" name="style" id="color" value="color" checked>
             <label for="color">Color</label>
             <br>
+            <input type="radio" name="style" id="colorDark" value="colorDark">
+            <label for="colorDark">Color (dark)</label>
+            <br>
             <input type="radio" name="style" id="size" value="size">
             <label for="size">Circle size</label>
             <br>
@@ -180,15 +183,19 @@
                 + "<br>"
                 + "<b>" + (c["d2011_2018"] == 0 ? "No change" : (c["d2011_2018"] > 0 ? "+" : "") + c["d2011_2018"] + " inhabitants") + "</b>"
 
+            //set default background filter color
+            app.bgLayers[0].filterColor = zf => "#ffffffc0"
 
             if (style == "color") {
+                const colR = d3.interpolateOrRd
+
                 //add layer
                 app.addLayerFromDataset(
                     popDataset,
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: year,
-                            color: d3.interpolateOrRd,
+                            color: colR,
                             stretching: { fun: "expRev", alpha: -7 }
                         }),
                         new gviz.StrokeStyle({ strokeColorCol: year, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
@@ -204,7 +211,40 @@
                         title: "Number of inhabitants",
                         width: 400,
                         ticks: 5,
-                        colorRamp: d3.interpolateOrRd,
+                        colorRamp: colR,
+                        fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                    })
+                )
+
+            } else if (style == "colorDark") {
+                const colR = d3.interpolateMagma
+
+                //set dark background filter color
+                app.bgLayers[0].filterColor = zf => "#000000c0"
+
+                //add layer
+                app.addLayerFromDataset(
+                    popDataset,
+                    [
+                        new gviz.SquareColorWGLStyle({
+                            colorCol: year,
+                            color: colR,
+                            stretching: { fun: "expRev", alpha: -7 }
+                        }),
+                        new gviz.StrokeStyle({ strokeColorCol: year, strokeColor: v => +v ? "#666" : "", maxZoom: 80 })
+                    ],
+                    {
+                        pixNb: 2,
+                        cellInfoHTML: tooltipFun
+                    })
+
+                //add legend
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorLegend({
+                        title: "Number of inhabitants",
+                        width: 400,
+                        ticks: 5,
+                        colorRamp: colR,
                         fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
                     })
                 )
@@ -543,6 +583,7 @@
         //
         document.querySelector('#year').addEventListener('change', update)
         document.querySelector('#color').addEventListener('change', update)
+        document.querySelector('#colorDark').addEventListener('change', update)
         document.querySelector('#pillar').addEventListener('change', update)
         document.querySelector('#joyplot').addEventListener('change', update)
         document.querySelector('#size').addEventListener('change', update)
