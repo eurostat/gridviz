@@ -258,7 +258,9 @@
                     })
 
                 //add legend
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ title: "Number of inhabitants", shape: "circle", labelUnitText: "inhab.", fillColor: col }))
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ title: "Number of inhabitants", exaggerationFactor: 0.8, shape: "circle", fillColor: col }).style("padding", "0px 5px"))
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ exaggerationFactor: 0.25, shape: "circle", fillColor: col }).style("padding", "0px 5px"))
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ exaggerationFactor: 0.02, shape: "circle", fillColor: col }).style("padding", "0px 5px"))
 
             } else if (style == "dots") {
 

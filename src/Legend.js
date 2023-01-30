@@ -3,6 +3,7 @@
 import { select } from "d3-selection";
 
 /**
+ * A legend container.
  * 
  * @author Joseph Davies, Julien Gaffuri
  */
@@ -16,29 +17,33 @@ export class Legend {
 
 		/** @type {string} */
 		this.id = opts.id;
-		/** @type {number} */
+
+
+		//TODO stop using it. Use style method below instead.
+
+		/** @type {number} @deprecated */
 		this.top = opts.top;
-		/** @type {number} */
+		/** @type {number} @deprecated */
 		this.bottom = opts.bottom;
-		/** @type {number} */
+		/** @type {number} @deprecated */
 		this.left = opts.left;
-		/** @type {number} */
+		/** @type {number} @deprecated */
 		this.right = opts.right;
-		/** @type {string} */
+		/** @type {string} @deprecated */
 		this.background = opts.background || "none";
-		/** @type {string} */
+		/** @type {string} @deprecated */
 		this.padding = opts.padding || "5px";
-		/** @type {string} */
+		/** @type {string} @deprecated */
 		this.border = opts.border || "0px";
-		/** @type {string} */
+		/** @type {string} @deprecated */
 		this["border-radius"] = opts["border-radius"] || "none";
-		/** @type {string} */
+		/** @type {string} @deprecated */
 		this["box-shadow"] = opts["box-shadow"] || "none";
-		/** @type {string} */
+		/** @type {string} @deprecated */
 		this["font-family"] = opts["font-family"] || "Helvetica, Arial, sans-serif";
-		/** @type {string} */
+		/** @type {string} @deprecated */
 		this.width = opts.width;
-		/** @type {string} */
+		/** @type {string} @deprecated */
 		this.height = opts.height;
 
 		//the div element
@@ -53,15 +58,6 @@ export class Legend {
 
 		//set style
 		this.div
-			//.style("position", "absolute")
-			//.style("width", "auto")
-			//.style("height", "auto")
-			//.style("min-width", "10px")
-			//.style("min-height", "10px")
-			//.style("overflow", "hidden")
-			//.style("max-width", 100)
-			//this.div.style("max-width", "100px")
-			//this.div.style("font-size", this.fontSize)
 			.style("background", this.background)
 			.style("padding", this.padding)
 			.style("border", this.border)
@@ -71,14 +67,18 @@ export class Legend {
 
 		if (this.width) this.div.style("width", this.width)
 		if (this.height) this.div.style("height", this.height)
-		/*
-if (this.top) this.div.style("top", this.top)
-if (this.bottom) this.div.style("bottom", this.bottom)
-if (this.left) this.div.style("left", this.left)
-if (this.right) this.div.style("right", this.right)*/
 
-		//hide
-		//this.div.style("visibility", "hidden");
+	}
+
+	/**
+	 * Apply a style to the legend div.
+	 * @param {string} k 
+	 * @param {string} v 
+	 * @returns {this}
+	 */
+	style(k, v) {
+		this.div.style(k, v)
+		return this
 	}
 
 	/**

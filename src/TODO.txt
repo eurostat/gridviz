@@ -55,6 +55,7 @@ https://jnafzig.github.io//2018/02/05/double-pendulum.html
 
 cat/size legend: center vertically
 
+legend style: use "style" method everywhere
 
 
 Drought: https://edo.jrc.ec.europa.eu/edov2/php/index.php?id=1000
