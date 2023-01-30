@@ -41,6 +41,7 @@ export { ColorDiscreteLegend } from "./legend/ColorDiscreteLegend"
 export { ColorCategoryLegend } from "./legend/ColorCategoryLegend"
 export { SizeLegend } from "./legend/SizeLegend"
 export { SegmentWidthLegend } from "./legend/SegmentWidthLegend"
+export { SegmentOrientationLegend } from "./legend/SegmentOrientationLegend"
 
 export { goToStraight, zoomTo } from "./utils/zoomUtils"
 export * from "./utils/stretching.js"
