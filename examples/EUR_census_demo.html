@@ -527,7 +527,9 @@
                 )
 
                 //legend
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ title: "Population change", shape: "circle", labelUnitText: "inhabitants", fillColor: "gray" }))
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ title: "Population change", exaggerationFactor: 0.9, shape: "circle", labelUnitText: "inhabitants", fillColor: "gray" }).style("padding", "0px 5px"))
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ exaggerationFactor: 0.2, shape: "circle", labelUnitText: "", fillColor: "gray" }).style("padding", "0px 5px"))
+                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ exaggerationFactor: 0.01, shape: "circle", labelUnitText: "", fillColor: "gray" }).style("padding", "0px 5px"))
                 const lgCat = new gviz.ColorCategoryLegend({ shape: "square", colCat: [["#d13c4b", "Increase"], ["#4288b5", "Decrease"]] })
                 app.layers[0].styles[0].legends.push(lgCat)
 
