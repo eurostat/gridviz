@@ -57,13 +57,12 @@ export class Legend {
 		}
 
 		//set style
-		this.div
-			.style("background", this.background)
-			.style("padding", this.padding)
-			.style("border", this.border)
-			.style("border-radius", this["border-radius"])
-			.style("box-shadow", this["box-shadow"])
-			.style("font-family", this["font-family"])
+		this.div.style("background", this.background)
+		this.div.style("padding", this.padding)
+		this.div.style("border", this.border)
+		this.div.style("border-radius", this["border-radius"])
+		this.div.style("box-shadow", this["box-shadow"])
+		this.div.style("font-family", this["font-family"])
 
 		if (this.width) this.div.style("width", this.width)
 		if (this.height) this.div.style("height", this.height)
