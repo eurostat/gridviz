@@ -414,6 +414,8 @@
             } else if (style == "colorChSmTK") {
                 const colR = d3.interpolateSpectral
                 const nb = 15
+                const stre = gviz.sPow
+                const streC = 0.3
 
                 //get year selection
                 const sigma = document.querySelector('#sigmaCCH').value
@@ -428,13 +430,11 @@
                             styles:
                                 gviz.TanakaStyle.get("ksmval", {
                                     tFun: (v, r, s, zf) => {
-                                        const e = 0.3;
-                                        const stre = gviz.sPow
                                         let t = 0.5
                                         if (s.min < 0 && v < 0) {
-                                            t += stre(v / s.min, e) / 2
+                                            t += stre(v / s.min, streC) / 2
                                         } else {
-                                            t -= stre(v / s.max, e) / 2
+                                            t -= stre(v / s.max, streC) / 2
                                         }
                                         t = 1 - t;
                                         t = Math.floor(t * nb) / nb
