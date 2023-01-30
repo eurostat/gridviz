@@ -63,20 +63,23 @@ export class SegmentOrientationLegend extends Legend {
         const sWidth = this.widthPix
         const sLength = 1 * opts.r / opts.zf
 
-        //TODO use orientation
-
-        const svg = d.append("svg").attr("width", sLength).attr("height", sWidth)
+        //draw SVG segment
+        const svgS = Math.max(sLength, sWidth)
+        const svg = d.append("svg").attr("width", svgS).attr("height", svgS)
             .style("", "inline-block")
 
-        //<line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
+        const cos = Math.cos(-this.orientation * Math.PI / 180)
+        const sin = Math.sin(-this.orientation * Math.PI / 180)
+        const dc = svgS * 0.5, l2 = sLength * 0.5
         svg.append("line")
-            .attr("x1", 0).attr("y1", sWidth / 2)
-            .attr("x2", sLength).attr("y2", sWidth / 2)
+            .attr("x1", dc - cos * l2).attr("y1", dc - sin * l2)
+            .attr("x2", dc + cos * l2).attr("y2", dc + sin * l2)
             .style("stroke", this.color)
             .style("stroke-width", sWidth)
 
+        //text label
         d.append("div")
-            //show on right of graphic
+            //show on right of svg
             .style("display", "inline")
             .style("padding-left", "5px")
             .style("font-size", this.labelFontSize)
