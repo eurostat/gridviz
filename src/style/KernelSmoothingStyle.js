@@ -112,7 +112,7 @@ export class KernelSmoothingStyle extends Style {
         //initialise smoothed value to 0
         for (const c of cells) c["ksmval"] = 0
 
-        //index input cells by i/j (grid position)
+        //make matrix. add input cells by i/j (grid position)
         const index = {}
         for (const c of cells) {
             // i,j of the cell
@@ -120,8 +120,10 @@ export class KernelSmoothingStyle extends Style {
             const j = Math.floor((c.y - yMin) / r)
             if (!index[i]) index[i] = {}
             index[i][j] = c
-            c["inputCell"] = true
         }
+
+        /** Check that the cell i,j is within the frame */
+        const isWithinFrame = (i, j) => i >= 0 && i < nbX && j >= 0 && j < nbY
 
         //get kernel matrix
         /** @type {Array.<Array.<number>>} */
@@ -139,62 +141,51 @@ export class KernelSmoothingStyle extends Style {
             }
         }
 
+        /** Add v as a contribution to the cell i,j */
+        const addContributionTo = (i, j, v) => {
+            //get cell at (i,j)
+            const c_ = index[i] ? index[i][j] : undefined
+
+            if (c_) {
+                //cell exists: add contribution
+                if (c_.ksmval) c_.ksmval += v
+                else c_.ksmval = v
+            } else {
+                //cell does not exist: create a new one with the smoothed value
+                if (!index[i]) index[i] = {}
+                index[i][j] = { x: xMin + i * r, y: yMin + j * r, ksmval: v }
+            }
+        }
+
         //compute smoothing, input cell by input cell
+        for (const c of cells) {
 
-        for (const i_ of Object.keys(index)) {
-            const i = +i_
-            for (const j_ of Object.keys(index[i_])) {
-                const j = +j_
+            /** get value of cell c
+             * @type {number} */
+            const val = this.value(c);
+            if (!val) continue
 
-                //get cell i,j
-                const c = index[i][j]
+            //cell matrix coordinates
+            const i = Math.floor((c.x - xMin) / r)
+            const j = Math.floor((c.y - yMin) / r)
 
-                //check if c is an input cell. Otherwise, it is a cell resulting from the smoothing already stored in 'cells'
-                if (!c["inputCell"]) continue;
+            //add contributions to smoothed values
+            for (let ki = 1 - kernelSize; ki < kernelSize; ki++) {
+                for (let kj = 1 - kernelSize; kj < kernelSize; kj++) {
 
-                /** 
-                 * get value of cell c
-                 * @type {number} */
-                const val = this.value(c);
-                if (!val) continue
+                    //check cell is within the frame
+                    if (!isWithinFrame(i + ki, j + kj)) continue;
 
-                /** Check that the cell i,j is within the frame */
-                const isWithinFrame = (i, j) => i >= 0 && i < nbX && j >= 0 && j < nbY
+                    //get contribution (ki,kj)
+                    let w = kernelMatrix[Math.abs(ki)][Math.abs(kj)]
+                    if (!w || w < wThr) continue
+                    let v = w * val
+                    if (!v) continue;
+                    v /= sumWeights
+                    if (!v) continue;
 
-                /** Add v as a contribution to the cell i,j */
-                const addContributionTo = (i, j, v) => {
-                    //get cell at (i,j)
-                    const c_ = index[i] ? index[i][j] : undefined
-
-                    if (c_) {
-                        //cell exists: add contribution
-                        if (c_.ksmval) c_.ksmval += v
-                        else c_.ksmval = v
-                    } else {
-                        //cell does not exist: create a new one with the smoothed value
-                        if (!index[i]) index[i] = {}
-                        index[i][j] = { x: xMin + i * r, y: yMin + j * r, ksmval: v }
-                    }
-                }
-
-                //add contributions to smoothed values
-                for (let ki = 1 - kernelSize; ki < kernelSize; ki++) {
-                    for (let kj = 1 - kernelSize; kj < kernelSize; kj++) {
-
-                        //check cell is within the frame
-                        if (!isWithinFrame(i + ki, j + kj)) continue;
-
-                        //get contribution (ki,kj)
-                        let w = kernelMatrix[Math.abs(ki)][Math.abs(kj)]
-                        if (!w || w < wThr) continue
-                        let v = w * val
-                        if (!v) continue;
-                        v /= sumWeights
-                        if (!v) continue;
-
-                        //add contribution
-                        addContributionTo(i + ki, j + kj, v)
-                    }
+                    //add contribution
+                    addContributionTo(i + ki, j + kj, v)
                 }
             }
         }
@@ -204,9 +195,6 @@ export class KernelSmoothingStyle extends Style {
         for (let i of Object.keys(index))
             for (const j of Object.keys(index[i]))
                 out.push(index[i][j])
-
-        for (const c of cells)
-            delete c["inputCell"]
 
         return out;
     }
