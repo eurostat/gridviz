@@ -1,9 +1,7 @@
 census demo:
 lego: bug when pop=0
-lego: upgrade colors
 
 goto
-
 
 bug when zooming-in: square gets too small.
         app.addCSVGridLayer(

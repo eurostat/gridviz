@@ -391,11 +391,24 @@
 
 
                 //legend
-                const colsLego = ["#00852b", "#afd246", "#fac80a", "#bb805a", "#d67923", "#cb4e29", "#b40000", "#720012"]
+                //const colsLego = ["#00852b", "#afd246", "#fac80a", "#bb805a", "#d67923", "#cb4e29", "#b40000", "#720012"]
+                const colsLego = [
+                    "#237841",
+                    "#4B9F4A",
+                    "#3CB371",
+                    "#C7D23C",
+                    "#F2CD37",
+                    "#F8BB3D",
+                    "#FFA70B",
+                    "#D09168",
+                    "#B67B50",
+                    "#7C503A",
+                    "#582A12"
+                ], nb = colsLego.length
                 app.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Number of inhabitants",
-                        colorRamp: t => colsLego[t == 1 ? 7 : Math.floor(t * 8)], //colR(Math.floor(t * nb) / nb),
+                        colorRamp: t => colsLego[t == 1 ? nb-1 : Math.floor(t * nb)],
                         width: 200,
                         ticks: 2,
                         tickFormat: "text",
