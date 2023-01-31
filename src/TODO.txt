@@ -1,7 +1,10 @@
-census demo:
-lego: bug when pop=0
+gsmoothing: simplify
 
 goto
+tanaka: side check negative value - deal with sides with no-data
+
+census demo:
+lego: bug when pop=0
 
 bug when zooming-in: square gets too small.
         app.addCSVGridLayer(
@@ -51,7 +54,6 @@ https://observablehq.com/@spren9er/two-tone-pseudo-color-scales
 https://jnafzig.github.io//2018/02/05/double-pendulum.html
 
 
-cat/size legend: center vertically
 
 legend style: use "style" method everywhere
 
@@ -81,10 +83,6 @@ TODO document euronyme
 FR BD foret
 
 zoom in/out
-
-Legends: improve, extend, add missing, finalise.
-TODO show several elements on size legend
-legend for discrete color classes - use for accessibility map legend
 
 mosaic: improve. No scintillement with pseudo random
 
@@ -150,8 +148,6 @@ TODO aggregation on the fly ??? No. except for csv...
 TODO watercolor style ? Draw random plots around central point of pixel - https://github.com/rolyatmax/watercolor-canvas
 
 TODO map style: contours with color
-
-TODO legend - handle orientation in segment width legend
 
 TODO map type: bi/tri-variate colors ?
 
