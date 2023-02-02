@@ -1,6 +1,10 @@
-gsmoothing: simplify
+webgl kernel smoothing
+//https://stackoverflow.com/questions/8099979/creating-a-glsl-arrays-of-uniforms
+//see https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
 
-goto
+
+
+test goto
 tanaka: side check negative value - deal with sides with no-data
 
 census demo:
@@ -35,16 +39,13 @@ add CSV grid layer example: bug? check !
 use async await +++
 "use strict";
 
-parquet: make wasm import easier...
+parquet: make wasm import easier and wasm file smaller (https://github.com/kylebarron/parquet-wasm#custom-builds)
 
 possibility to make layers based on several datasets
 
 V3:
 make modules
 see https://webpack.js.org/guides/code-splitting/
-
-geotiff tiling - use for forest/CLC/elevation 200m ?
-
 webpack: check plugins https://webpack.js.org/plugins
 
 https://ieeexplore.ieee.org/document/1532144
