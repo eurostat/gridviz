@@ -1,9 +1,3 @@
-webgl kernel smoothing
-//https://stackoverflow.com/questions/8099979/creating-a-glsl-arrays-of-uniforms
-//see https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
-
-
-
 test goto
 tanaka: side check negative value - deal with sides with no-data
 
@@ -22,6 +16,11 @@ bug when zooming-in: square gets too small.
             ]
         )
 
+
+
+webgl kernel smoothing
+//https://stackoverflow.com/questions/8099979/creating-a-glsl-arrays-of-uniforms
+//see https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
 
 
 
@@ -54,7 +53,7 @@ https://observablehq.com/@spren9er/two-tone-pseudo-color-scales
 
 https://jnafzig.github.io//2018/02/05/double-pendulum.html
 
-
+hillshading with: https://observablehq.com/@sahilchinoy/a-faster-hillshader
 
 legend style: use "style" method everywhere
 
