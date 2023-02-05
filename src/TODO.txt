@@ -17,6 +17,9 @@ bug when zooming-in: square gets too small.
         )
 
 
+implement hill shading from https://observablehq.com/@sahilchinoy/a-faster-hillshader
+
+ 
 
 webgl kernel smoothing
 //https://stackoverflow.com/questions/8099979/creating-a-glsl-arrays-of-uniforms
