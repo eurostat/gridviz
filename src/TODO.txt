@@ -1,3 +1,8 @@
+add CSV grid layer example: bug? check !
+use async await +++
+"use strict";
+
+
 test goto
 tanaka: side check negative value - deal with sides with no-data
 
@@ -36,10 +41,6 @@ elevation legend
 
 test on various navigators - smartphones
 parquet: monitor, improve
-
-add CSV grid layer example: bug? check !
-use async await +++
-"use strict";
 
 parquet: make wasm import easier and wasm file smaller (https://github.com/kylebarron/parquet-wasm#custom-builds)
 
