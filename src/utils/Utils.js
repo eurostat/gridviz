@@ -1,6 +1,5 @@
 //@ts-check
-
-
+"use strict";
 
 
 /**

@@ -1,4 +1,5 @@
 //@ts-check
+"use strict";
 
 import { DatasetComponent } from "../DatasetComponent"
 //import { fromUrl } from "geotiff"

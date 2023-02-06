@@ -1,4 +1,5 @@
 //@ts-check
+"use strict";
 
 /**
  * A layer, which specifies a dataset to be shown with specified styles.

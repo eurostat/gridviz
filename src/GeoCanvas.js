@@ -1,4 +1,6 @@
 //@ts-check
+"use strict";
+
 /** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
 import { select } from "d3-selection";

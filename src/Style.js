@@ -1,4 +1,5 @@
 //@ts-check
+"use strict";
 
 /**
  * Statistics of a set of values

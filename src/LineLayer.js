@@ -1,4 +1,5 @@
 //@ts-check
+"use strict";
 
 import { json } from "d3-fetch";
 

@@ -1,4 +1,6 @@
 //@ts-check
+"use strict";
+
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../Dataset").Envelope }} GridInfo */
 
 import { csv } from "d3-fetch";

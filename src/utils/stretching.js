@@ -1,4 +1,5 @@
 //@ts-check
+"use strict";
 
 /**
  * Some function [0,1]->[0,1] to stretch range of values.

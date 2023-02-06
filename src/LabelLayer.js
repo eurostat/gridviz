@@ -1,4 +1,5 @@
 //@ts-check
+"use strict";
 
 import { csv } from "d3-fetch";
 

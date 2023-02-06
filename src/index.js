@@ -1,4 +1,5 @@
 //@ts-check
+"use strict";
 
 //the application
 export { App } from "./App"
