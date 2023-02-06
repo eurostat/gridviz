@@ -1,4 +1,5 @@
 //@ts-check
+"use strict";
 
 import { Style } from "../Style"
 

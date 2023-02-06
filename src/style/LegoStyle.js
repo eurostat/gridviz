@@ -1,4 +1,5 @@
 //@ts-check
+"use strict";
 
 import { TanakaStyle } from "./TanakaStyle"
 import { StrokeStyle } from "./StrokeStyle"

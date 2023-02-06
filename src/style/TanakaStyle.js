@@ -1,8 +1,8 @@
 //@ts-check
+"use strict";
 
 import { SquareColorWGLStyle } from "./SquareColorWGLStyle"
 import { SideStyle } from "./SideStyle"
-import { Style } from "../Style"
 
 /**
  * 
@@ -15,7 +15,7 @@ export class TanakaStyle {
     /**
      * @param {string} col 
      * @param {object} opts 
-     * @returns {Array.<Style>}
+     * @returns {Array.<import("../Style").Style>}
      */
     static get(col, opts) {
         opts = opts || {}
