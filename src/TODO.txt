@@ -1,12 +1,9 @@
-add CSV grid layer example: bug? check !
 use async await +++
-
 
 test goto
 tanaka: side check negative value - deal with sides with no-data
 
-census demo:
-lego: bug when pop=0
+census demo: lego: bug when pop=0
 
 bug when zooming-in: square gets too small.
         app.addCSVGridLayer(
