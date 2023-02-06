@@ -72,7 +72,7 @@ export class LabelLayer {
         /** 
          * @private
          * @type {Array.<Label> | undefined} */
-        this.labels
+        this.labels = undefined
 
         /** 
          * @private
@@ -151,7 +151,7 @@ export class LabelLayer {
      * @param {function():void} callback
      * @private
      */
-    load(callback) {
+    async load(callback) {
 
         if (!this.url) {
             console.log("Failed loading labels: No URL specified. " + this.url)
@@ -160,37 +160,71 @@ export class LabelLayer {
             return;
         }
 
-        if (this.loadingStatus === "notLoaded") {
-            this.loadingStatus = "loading"
-            csv(this.url)
-                .then(
-                    /** @param {Array.<object>} data */
-                    (data) => {
+        //check if data already loaded
+        if (this.loadingStatus != "notLoaded") return;
 
-                        //preprocess/filter
-                        if (this.preprocess) {
-                            this.labels = [];
-                            for (const c of data) {
-                                const b = this.preprocess(c)
-                                if (b == false) continue;
-                                this.labels.push(c)
-                            }
-                        } else {
-                            //store labels
-                            this.labels = data;
-                        }
+        //load data
+        this.loadingStatus = "loading";
 
-                        this.loadingStatus = "loaded"
+        try {
 
-                        //redraw
-                        if (callback) callback()
-                    })
-                .catch(() => {
-                    console.log("Failed loading labels from " + this.url)
-                    this.labels = []
-                    this.loadingStatus = "failed"
-                });
+            /** @type { Array.<Label> } */
+        const data = await csv(this.url)
+
+            //preprocess/filter
+            if (this.preprocess) {
+                this.labels = [];
+                for (const c of data) {
+                    const b = this.preprocess(c)
+                    if (b == false) continue;
+                    this.labels.push(c)
+                }
+            } else {
+                //store labels
+                this.labels = data;
+            }
+
+            this.loadingStatus = "loaded"
+
+            //redraw
+            if (callback) callback()
+
+        } catch (error) {
+            console.log("Failed loading labels from " + this.url)
+            this.labels = []
+            this.loadingStatus = "failed"
         }
+
+        /*
+                csv(this.url)
+                    .then(
+                        /** @param {Array.<object>} data */
+        /*(data) => {
+
+            //preprocess/filter
+            if (this.preprocess) {
+                this.labels = [];
+                for (const c of data) {
+                    const b = this.preprocess(c)
+                    if (b == false) continue;
+                    this.labels.push(c)
+                }
+            } else {
+                //store labels
+                this.labels = data;
+            }
+
+            this.loadingStatus = "loaded"
+
+            //redraw
+            if (callback) callback()
+        })
+    .catch(() => {
+        console.log("Failed loading labels from " + this.url)
+        this.labels = []
+        this.loadingStatus = "failed"
+    });
+*/
     }
 
 }
