@@ -1,6 +1,5 @@
 use async await +++
 
-test goto
 tanaka: side check negative value - deal with sides with no-data
 
 census demo: lego: bug when pop=0
@@ -41,6 +40,12 @@ parquet: monitor, improve
 parquet: make wasm import easier and wasm file smaller (https://github.com/kylebarron/parquet-wasm#custom-builds)
 
 possibility to make layers based on several datasets
+
+
+
+goto, zoom to: refactor (use parameter object). handle case when concurrent change trigger.
+
+
 
 V3:
 make modules

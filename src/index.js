@@ -45,7 +45,7 @@ export { SizeLegend } from "./legend/SizeLegend"
 export { SegmentWidthLegend } from "./legend/SegmentWidthLegend"
 export { SegmentOrientationLegend } from "./legend/SegmentOrientationLegend"
 
-export { goToStraight, zoomTo } from "./utils/zoomUtils"
+//export { goToStraight, zoomTo } from "./utils/zoomUtils"
 export * from "./utils/stretching.js"
 
 export { getClass } from "./utils/Utils"

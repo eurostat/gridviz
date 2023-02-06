@@ -7,17 +7,17 @@
  * @param {number} zfTarget 
  * @param {number} factor 
  * @param {number} delayMs 
- * @param {function} callback 
+ * @param {function|undefined} callback 
  * @param {number} delayBeforeCallBackMs 
  * @returns 
  */
-export function zoomTo(app, zfTarget, factor = 1.01, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
+export function zoomTo(app, zfTarget, factor = 1.01, delayMs = 0, callback = undefined, delayBeforeCallBackMs = 0) {
 
     //ensure good factor value: >1
     factor = factor || 1.01
     if (factor < 1) {
         console.error("Unexpected value for factor: " + factor + ". Set to default value 1.01")
-        factor == 1.01
+        factor = 1.01
     }
 
     const zfIni = app.getZoomFactor()
@@ -57,11 +57,11 @@ export function zoomTo(app, zfTarget, factor = 1.01, delayMs = 0, callback, dela
  * @param {number} zfTarget 
  * @param {number} progressFactorPix
  * @param {number} delayMs 
- * @param {function} callback 
+ * @param {function|undefined} callback 
  * @param {number} delayBeforeCallBackMs 
  * @returns 
  */
-export function goToStraight(app, xTarget = NaN, yTarget = NaN, zfTarget = NaN, progressFactorPix = 5, delayMs = 0, callback, delayBeforeCallBackMs = 0) {
+export function goToStraight(app, xTarget = NaN, yTarget = NaN, zfTarget = NaN, progressFactorPix = 5, delayMs = 0, callback = undefined, delayBeforeCallBackMs = 0) {
 
     //store initial position/zoom
     const zfIni = app.getZoomFactor();
@@ -113,11 +113,11 @@ export function goToStraight(app, xTarget = NaN, yTarget = NaN, zfTarget = NaN, 
         }
 
         //redraw
-        app.cg.redraw()
+        app.redraw()
 
         //if target reached, stop
         if (d == 0 && r == 1) {
-            console.log("OK !")
+            //console.log("OK !")
             clearInterval(timer)
             //trigger callback, if any
             if (callback)
