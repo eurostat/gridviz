@@ -105,7 +105,7 @@ export class GeoTIFF extends DatasetComponent {
             });
 */
 
-return this;
+        return this;
     }
 
 

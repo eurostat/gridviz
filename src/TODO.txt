@@ -1,5 +1,3 @@
-use async await: search all then(
-
 tanaka: side check negative value - deal with sides with no-data
 
 census demo: lego: bug when pop=0
