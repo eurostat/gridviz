@@ -63,24 +63,24 @@ export class TiledGrid extends DatasetComponent {
      * @param {function():void} callback
      * @returns this
      */
-    async loadInfo(callback) {
+    loadInfo(callback) {
 
         if (!this.info && this.infoLoadingStatus === "notLoaded") {
 
-            this.infoLoadingStatus = "loading"
+            (async () => {
+                try {
 
-            try {
+                    const data = await json(this.url + "info.json")
+                    this.info = data;
+                    this.resolution = data.resolutionGeo;
+                    this.infoLoadingStatus = "loaded"
+                    if (callback) callback();
 
-                const data = await json(this.url + "info.json")
-                this.info = data;
-                this.resolution = data.resolutionGeo;
-                this.infoLoadingStatus = "loaded"
-                if (callback) callback();
-
-            } catch (error) {
-                //mark as failed
-                this.infoLoadingStatus = "failed"
-            }
+                } catch (error) {
+                    //mark as failed
+                    this.infoLoadingStatus = "failed"
+                }
+            })()
 
         }
         else if (callback && (this.infoLoadingStatus === "loaded" || this.infoLoadingStatus === "failed"))
