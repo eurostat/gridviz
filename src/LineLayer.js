@@ -20,8 +20,11 @@ export class LineLayer {
         this.url = opts.url
 
         /** 
-         * @private
-         * @type {function(object):void} */
+        * A preprocess to run on each feature after loading.
+        * It can be used to apply some specific treatment before, format the label data, project coordinates, etc.
+        * Return false if the label should not be kept.
+        * @private
+        * @type {function(object):boolean} */
         this.preprocess = opts.preprocess
 
         /** 
@@ -128,13 +131,18 @@ export class LineLayer {
             /** @type { Array.<object> } */
             const data = data_.features
 
-            //apply preprocess, if any
-            if (this.preprocess)
-                for (const f of data)
-                    this.preprocess(f)
-
-            //store boundaries
-            this.fs = data;
+            //preprocess/filter
+            if (this.preprocess) {
+                this.fs = [];
+                for (const c of data) {
+                    const b = this.preprocess(c)
+                    if (b == false) continue;
+                    this.fs.push(c)
+                }
+            } else {
+                //store labels
+                this.fs = data;
+            }
 
             this.loadingStatus = "loaded"
 
