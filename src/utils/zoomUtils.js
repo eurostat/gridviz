@@ -1,13 +1,9 @@
 //@ts-check
 "use strict";
 
-import { App } from "../App"
-
-
-
 /**
  * 
- * @param {App} app 
+ * @param {import("../App").App} app 
  * @param {number} zfTarget 
  * @param {number} factor 
  * @param {number} delayMs 
@@ -37,7 +33,7 @@ export function zoomTo(app, zfTarget, factor = 1.01, delayMs = 0, callback, dela
 
         //set new zoom level
         app.setZoomFactor(zf)
-        app.cg.redraw()
+        app.redraw()
 
         //target reached
         if (zf == zfTarget) {
@@ -55,7 +51,7 @@ export function zoomTo(app, zfTarget, factor = 1.01, delayMs = 0, callback, dela
 
 /**
  * 
- * @param {App} app 
+ * @param {import("../App").App} app 
  * @param {number} xTarget 
  * @param {number} yTarget 
  * @param {number} zfTarget 
