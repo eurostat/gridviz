@@ -1,6 +1,5 @@
 add CSV grid layer example: bug? check !
 use async await +++
-"use strict";
 
 
 test goto
