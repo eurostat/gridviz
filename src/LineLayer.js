@@ -40,7 +40,7 @@ export class LineLayer {
         /** 
          * @private
          * @type {Array.<object> | undefined} */
-        this.fs
+        this.fs = undefined
 
         /** 
          * @private
@@ -106,7 +106,7 @@ export class LineLayer {
      * @param {function():void} callback
      * @private
      */
-    load(callback) {
+    async load(callback) {
 
         if (!this.url) {
             console.log("Failed loading boundaries: No URL specified. " + this.url)
@@ -115,34 +115,37 @@ export class LineLayer {
             return;
         }
 
-        if (this.loadingStatus === "notLoaded") {
-            this.loadingStatus = "loading";
+        //check if data already loaded
+        if (this.loadingStatus != "notLoaded") return;
 
-            json(this.url)
-                .then(
-                    /** @param {object} data */
-                    (data) => {
-                        data = data.features
+        //load data
+        this.loadingStatus = "loading";
 
-                        //apply preprocess, if any
-                        if (this.preprocess)
-                            for (const f of data)
-                                this.preprocess(f)
+        try {
 
-                        //store boundaries
-                        this.fs = data;
+            const data_ = await json(this.url)
 
-                        this.loadingStatus = "loaded"
+            /** @type { Array.<object> } */
+            const data = data_.features
 
-                        //redraw
-                        if (callback) callback()
-                    })
-                .catch(() => {
-                    console.log("Failed loading boundaries from " + this.url)
-                    this.fs = []
-                    this.loadingStatus = "failed"
-                });
+            //apply preprocess, if any
+            if (this.preprocess)
+                for (const f of data)
+                    this.preprocess(f)
+
+            //store boundaries
+            this.fs = data;
+
+            this.loadingStatus = "loaded"
+
+            //redraw
+            if (callback) callback()
+
+        } catch (error) {
+            console.log("Failed loading boundaries from " + this.url)
+            this.fs = []
+            this.loadingStatus = "failed"
         }
-    }
 
+    }
 }

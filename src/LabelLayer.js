@@ -169,7 +169,7 @@ export class LabelLayer {
         try {
 
             /** @type { Array.<Label> } */
-        const data = await csv(this.url)
+            const data = await csv(this.url)
 
             //preprocess/filter
             if (this.preprocess) {
