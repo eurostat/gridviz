@@ -46,38 +46,41 @@ export class CSVGrid extends DatasetComponent {
 
         //load data
         this.infoLoadingStatus = "loading";
-        csv(this.url)
-            .then(
-                /** @param {*} data */
-                (data) => {
-                    //convert coordinates in numbers
-                    for (const c of data) { c.x = +c.x; c.y = +c.y; }
 
-                    //preprocess/filter
-                    if (this.preprocess) {
-                        this.cells = [];
-                        for (const c of data) {
-                            const b = this.preprocess(c)
-                            if (b == false) continue;
-                            this.cells.push(c)
-                        }
-                    } else {
-                        this.cells = data;
+        (async () => {
+            try {
+
+                const data = await csv(this.url)
+
+                //convert coordinates in numbers
+                for (const c of data) { c.x = +c.x; c.y = +c.y; }
+
+                //preprocess/filter
+                if (this.preprocess) {
+                    this.cells = [];
+                    for (const c of data) {
+                        const b = this.preprocess(c)
+                        if (b == false) continue;
+                        this.cells.push(c)
                     }
+                } else {
+                    this.cells = data;
+                }
 
-                    //TODO check if redraw is necessary
-                    //that is if the dataset belongs to a layer which is visible at the current zoom level
+                //TODO check if redraw is necessary
+                //that is if the dataset belongs to a layer which is visible at the current zoom level
 
-                    //execute the callback, usually a draw function
-                    if (redraw) redraw()
+                //execute the callback, usually a draw function
+                if (redraw) redraw()
 
-                    this.infoLoadingStatus = "loaded";
-                })
-            .catch(() => {
+                this.infoLoadingStatus = "loaded";
+
+            } catch (error) {
                 //mark as failed
                 this.infoLoadingStatus = "failed";
                 this.cells = []
-            });
+            }
+        })()
 
         return this;
     }
