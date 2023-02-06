@@ -1,8 +1,8 @@
 //@ts-check
+"use strict";
 
 import { Legend } from "../Legend";
 import { format } from "d3-format";
-import { SegmentStyle } from "../style/SegmentStyle"
 
 /**
  * A legend element for segment width.
@@ -36,7 +36,7 @@ export class SegmentWidthLegend extends Legend {
 
 
     /**
-     * @param {{ style: SegmentStyle, r: number, zf: number, sColor: import("../Style").Stat, sLength: import("../Style").Stat, sWidth: import("../Style").Stat }} opts 
+     * @param {{ style: import("../style/SegmentStyle").SegmentStyle, r: number, zf: number, sColor: import("../Style").Stat, sLength: import("../Style").Stat, sWidth: import("../Style").Stat }} opts 
      */
     update(opts) {
 

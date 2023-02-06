@@ -1,7 +1,7 @@
 //@ts-check
+"use strict";
 
 import { Legend } from "../Legend";
-import { Style } from "../Style"
 
 /**
  * A legend element for color categrories.
@@ -38,7 +38,7 @@ export class ColorCategoryLegend extends Legend {
     }
 
     /**
-     * @param {{ style: Style, r: number, zf: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts 
+     * @param {{ style: import("../Style").Style, r: number, zf: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts 
      */
     update(opts) {
 

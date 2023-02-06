@@ -1,4 +1,5 @@
 //@ts-check
+"use strict";
 
 import { Legend } from "../Legend";
 import { format } from "d3-format";
