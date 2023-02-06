@@ -195,36 +195,6 @@ export class LabelLayer {
             this.loadingStatus = "failed"
         }
 
-        /*
-                csv(this.url)
-                    .then(
-                        /** @param {Array.<object>} data */
-        /*(data) => {
-
-            //preprocess/filter
-            if (this.preprocess) {
-                this.labels = [];
-                for (const c of data) {
-                    const b = this.preprocess(c)
-                    if (b == false) continue;
-                    this.labels.push(c)
-                }
-            } else {
-                //store labels
-                this.labels = data;
-            }
-
-            this.loadingStatus = "loaded"
-
-            //redraw
-            if (callback) callback()
-        })
-    .catch(() => {
-        console.log("Failed loading labels from " + this.url)
-        this.labels = []
-        this.loadingStatus = "failed"
-    });
-*/
     }
 
 }
