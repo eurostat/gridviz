@@ -340,6 +340,7 @@
                                     tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7), color: colR,
                                     nb: nb,
                                     //newShading: true,
+                                    filter: c => +c[year] > 0
                                 }),
                         })
                     ],
@@ -408,7 +409,7 @@
                 app.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Number of inhabitants",
-                        colorRamp: t => colsLego[t == 1 ? nb-1 : Math.floor(t * nb)],
+                        colorRamp: t => colsLego[t == 1 ? nb - 1 : Math.floor(t * nb)],
                         width: 200,
                         ticks: 2,
                         tickFormat: "text",

@@ -84,6 +84,7 @@ export class TanakaStyle {
             },
             //stretching: { fun: "expRev", alpha: -7 },
             size: (r, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
+            filter: opts.filter
         })
 
 
@@ -152,6 +153,8 @@ export class TanakaStyle {
                 } :
                 //width depends on the value, that is the number of classes of difference
                 (side, r, s, z) => opts.widthFactor * r * Math.abs(side.value) * (side.or === "v" ? 0.5 : 1),
+
+            filter: opts.filter
         })
 
         return [colStyle, sideStyle]
