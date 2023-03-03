@@ -52,6 +52,8 @@ export class KernelSmoothingWGLStyle extends Style {
     * @param {import("../GeoCanvas").GeoCanvas} cg
      */
     draw(cells, r, cg) {
+        //filter
+        cells = cells.filter(this.filter)
 
         //zoom factor
         const zf = cg.getZf()

@@ -1,12 +1,6 @@
 census demo: lego/tanaka: do not show pix when pop=0
 tanaka: side check negative value - deal with sides with no-data
 
-add
-        //filter
-        cells = cells.filter(this.filter)
-to all styles
-
-
 bug when zooming-in: square gets too small.
         app.addCSVGridLayer(
             "https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/single.csv",

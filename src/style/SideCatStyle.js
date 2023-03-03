@@ -43,6 +43,9 @@ export class SideCatStyle extends Style {
     * @param {import("../GeoCanvas").GeoCanvas} cg
      */
     draw(cells, r, cg) {
+        //filter
+        cells = cells.filter(this.filter)
+
         if (!cells || cells.length == 0)
             return;
 

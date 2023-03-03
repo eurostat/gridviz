@@ -98,6 +98,9 @@ export class KernelSmoothingStyle extends Style {
     * @returns {Array.<import("../Dataset").Cell>} The list of cells, including the initial ones and the ones with smoothed values, in "ksmval" property.
     */
     kernelSmoothing(cells, e, r, s) {
+        //filter
+        cells = cells.filter(this.filter)
+
         const wThr = 0.01 //gaussian weights below this value will be ignored
 
         //compute extent, in grid position

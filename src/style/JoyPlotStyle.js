@@ -43,6 +43,9 @@ export class JoyPlotStyle extends Style {
     * @param {import("../GeoCanvas").GeoCanvas} cg
     * */
     draw(cells, r, cg) {
+        //filter
+        cells = cells.filter(this.filter)
+
         cg.ctx.lineJoin = "round"
 
         //zoom factor
