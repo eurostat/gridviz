@@ -307,7 +307,9 @@ export class App {
             /** @type {import('./Dataset').Cell|undefined} */
             const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache());
             if (!cell) return undefined;
-            return { cell: cell, html: layer.cellInfoHTML(cell, dsc.getResolution()), resolution: dsc.getResolution() };
+            const html = layer.cellInfoHTML(cell, dsc.getResolution())
+            if(!html) return undefined
+            return { cell: cell, html: html, resolution: dsc.getResolution() };
         }
     }
 
