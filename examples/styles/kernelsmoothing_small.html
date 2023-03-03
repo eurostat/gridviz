@@ -24,6 +24,19 @@
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 0, y: 0 }).setZoomFactor(0.02)
 
+
+            app.addCSVGridLayer(
+            "https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/single.csv",
+            1,
+            [
+                new gviz.SquareColorWGLStyle({
+                            colorCol: "value",
+                            tFun: (v) => v/100
+                        })
+            ]
+        )
+
+/*
         //add layer
         app.addCSVGridLayer(
             "https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/single.csv",
@@ -49,7 +62,7 @@
                 })
             ]
         )
-
+*/
         //sigma selection
         document.getElementById('sigma').oninput = function () {
             //set sigma

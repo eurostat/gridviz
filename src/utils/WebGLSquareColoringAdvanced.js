@@ -151,6 +151,7 @@ export class WebGLSquareColoringAdvanced {
         //set uniforms
 
         //sizePix
+        //TODO: bug here. Seems to be limited to some threshold value (around 250).
         gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * sizePix);
 
         //stretching alpha factor

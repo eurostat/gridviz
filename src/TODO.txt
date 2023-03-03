@@ -1,35 +1,18 @@
-tooltip: when no text, hide.
-tanaka: side check negative value - deal with sides with no-data
+document tile format
+publish and document tiler
 
-bug when zooming-in: square gets too small.
-        app.addCSVGridLayer(
-            "https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/single.csv",
-            1,
-            [
-                new gviz.SquareColorWGLStyle({
-                            colorCol: "value",
-                            tFun: (v) => v/100
-                        })
-            ]
-        )
+finalise: elevation, lc, forest
+contour style: interval (min, max) => ... and color (val, min, max => ...
+elevation legend
+
 
 do shadow with blur + mask
 see how to improve all style using mask/clip
-
 implement hill shading from https://observablehq.com/@sahilchinoy/a-faster-hillshader
 
 webgl kernel smoothing
 //https://stackoverflow.com/questions/8099979/creating-a-glsl-arrays-of-uniforms
 //see https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
-
-
-
-publish and document tiler
-document tile format
-
-finalise: elevation, lc, forest
-contour style: interval (min, max) => ... and color (val, min, max => ...
-elevation legend
 
 test on various navigators - smartphones
 parquet: monitor, improve
