@@ -1,10 +1,8 @@
-document tile format
-publish and document tiler
-
 finalise: elevation, lc, forest
 contour style: interval (min, max) => ... and color (val, min, max => ...
 elevation legend
 
+publish and document tiler
 
 do shadow with blur + mask
 see how to improve all style using mask/clip
