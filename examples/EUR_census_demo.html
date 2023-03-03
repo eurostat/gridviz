@@ -382,6 +382,7 @@
                             styles: gviz.LegoStyle.get("ksmval", {
                                 tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
                                 //colors: cols
+                                filter: c => +c[year] > 0
                             })
                         })
                     ],

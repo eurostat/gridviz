@@ -42,9 +42,9 @@ export class LegoStyle {
         //reuse tanaka as basis
         const ts = TanakaStyle.get(col, opts)
         //style to show limits between pieces
-        const sst = new StrokeStyle({ strokeColor: () => "#666", strokeWidth: (v, r, s, z) => 0.2 * z })
+        const sst = new StrokeStyle({ strokeColor: () => "#666", strokeWidth: (v, r, s, z) => 0.2 * z, filter: opts.filter })
 
-        return [ts[0], sst, ts[1], new LegoTopStyle({ colDark: opts.colDark, colBright: opts.colBright })]
+        return [ts[0], sst, ts[1], new LegoTopStyle({ colDark: opts.colDark, colBright: opts.colBright, filter: opts.filter })]
     }
 
 
@@ -85,6 +85,9 @@ class LegoTopStyle extends Style {
     }
 
     draw(cells, r, cg) {
+        //filter
+        cells = cells.filter(this.filter)
+
         cg.ctx.lineWidth = 0.6 * cg.getZf();
 
         //dark part
