@@ -18,11 +18,16 @@ export class Style {
 
     /**
      * @abstract
-     * @param {{offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},minZoom?:number,maxZoom?:number}} opts 
+     * @param {{filter?:function(import('./Dataset').Cell):boolean,offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},minZoom?:number,maxZoom?:number}} opts 
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(opts) {
         opts = opts || {};
+
+        /** A filter function to apply to the cell list, to filter out some cells not to be drawn (such as for example the cells with value=0).
+         * @protected
+         * @type {function(import('./Dataset').Cell):boolean} */
+         this.filter = opts.filter || (()=>true);
 
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
          * @protected

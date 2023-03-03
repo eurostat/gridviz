@@ -1,4 +1,4 @@
-census demo: lego: bug when pop=0
+census demo: lego/tanaka: do not show pix when pop=0
 tanaka: side check negative value - deal with sides with no-data
 
 bug when zooming-in: square gets too small.
