@@ -2,6 +2,7 @@
 "use strict";
 
 import { Style } from "../Style"
+import { density2d } from "fast-kde"
 
 /**
  * A style representing the cell as a smoothed layer, to smoothing local variations and show main trends across space.
@@ -52,9 +53,8 @@ export class KernelSmoothingFKDEStyle extends Style {
         cells = cells.filter(this.filter)
 
 
-
         //TODO
-
+        //https://observablehq.com/d/5dd1cb5e4d21c021
 
 
         //make output list
