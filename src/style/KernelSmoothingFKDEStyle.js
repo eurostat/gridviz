@@ -37,32 +37,6 @@ export class KernelSmoothingFKDEStyle extends Style {
     }
 
 
-
-    /**
-    * Compute kernel smoothing of some cells.
-    * 
-    * @private
-    * @param {Array.<import("../Dataset").Cell>} cells The cells to be smoothed.
-    * @param {import("../Dataset").Envelope} e Geo envelope to consider.
-    * @param {number} r Resolution, in geo unit.
-    * @param {number} s Sigma (in grid pixel !)
-    * @returns {Array.<import("../Dataset").Cell>} The list of cells, including the initial ones and the ones with smoothed values, in "ksmval" property.
-    */
-    kernelSmoothing(cells, e, r, s) {
-        //filter
-        cells = cells.filter(this.filter)
-
-
-        //TODO
-        //https://observablehq.com/d/5dd1cb5e4d21c021
-
-
-        //make output list
-        const out = []
-        return out;
-    }
-
-
     /**
      * Draw the smoothed cells depending on the list of styles specified.
      * 
@@ -71,16 +45,39 @@ export class KernelSmoothingFKDEStyle extends Style {
     * @param {import("../GeoCanvas").GeoCanvas} cg
      */
     draw(cells, r, cg) {
+        //filter
+        cells = cells.filter(this.filter)
 
         if (!cells || cells.length == 0)
             return;
+
 
         //get smoothing param in geo unit
         /** @type {number} */
         const sG = this.sigma(r, cg.zf)
 
+
         //apply kernel smoothing
-        cells = this.kernelSmoothing(cells, cg.extGeo, r, sG / r)
+        //cells = this.kernelSmoothing(cells, cg.extGeo, r, sG / r)
+
+
+        //TODO
+        //https://observablehq.com/d/5dd1cb5e4d21c021
+
+        const kde = density2d(cells, {
+            x: (c) => c.x,
+            y: (c) => c.y,
+            weight: (c) => this.value(c), //TODO check
+            bins: [],
+            bandwidth: bw2d,
+            extent: extent
+        })
+
+
+
+
+
+
 
         //draw smoothed cells from styles
         for (let s of this.styles)
