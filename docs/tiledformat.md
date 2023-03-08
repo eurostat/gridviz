@@ -34,7 +34,7 @@ This **info.json** file includes the following information:
 
 | Entry | Type | Description |
 | -------- | ------- | ------- |
-| **dims** | Array(String) | The list of column names, corresponding to the grid variables. |
+| **dims** | Array(String) | The list of dimension column names, corresponding to the grid variables. |
 | **crs** | String | The [EPSG](https://spatialreference.org/) code of the grid Coordinate Reference System. |
 | **tileSizeCell** | Integer | The size of each tile, in number of cells. The tiles are square. They all have the same size. |
 | **originPoint** | { x:Number, y:Number } | The origin point of the tiling scheme, in CRS coordinates. This is the bottom left point. The tiles start being built and numbered from this point. |
@@ -65,7 +65,7 @@ Difference with slippy map **/Z/X/Y.png** tilenames:
 - Not only web mercator. Other CRS can be used, as soon as it is the CRS of the grid.
 - Not necessarly global. A local portion of space can be described with high resolution information.
 - Not image data, but tabular.
-- No predifined way to specify zoom level. The user is free to index various multi-resolution versions of the datasets in the way he prefers. See for example in [here](https://github.com/jgaffuri/tiledgrids/tree/main/data/europe/forest) how to specify multi-resolution gridded data.
+- No predifined way to specify zoom level. Every user is free to index various multi-resolution versions of the datasets in the preferred way. See for example in [here](https://github.com/jgaffuri/tiledgrids/tree/main/data/europe/forest) how to specify multi-resolution gridded data.
 
 Difference with [Cloud Optimized GeoTIFF (COG)](https://www.cogeo.org/)
 - No need for HTTP GET range requests.
