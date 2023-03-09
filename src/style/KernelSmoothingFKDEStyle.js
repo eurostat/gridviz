@@ -74,8 +74,8 @@ export class KernelSmoothingFKDEStyle extends Style {
         //TODO handle r/2
         //compute smoothing
         const kde = density2d(cells, {
-            x: (c) => c.x, //+ r/2,
-            y: (c) => c.y, //+ r/2,
+            x: (c) => c.x + r/2,
+            y: (c) => c.y + r/2,
             weight: (c) => this.value(c),
             bins: [nbX*binsF, nbY*binsF],
             bandwidth: sG,
