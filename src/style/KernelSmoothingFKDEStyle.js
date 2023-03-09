@@ -56,13 +56,17 @@ export class KernelSmoothingFKDEStyle extends Style {
         /** @type {number} */
         const sG = this.sigma(r, cg.zf)
 
-
-        //apply kernel smoothing
-        //cells = this.kernelSmoothing(cells, cg.extGeo, r, sG / r)
-
-
         //TODO
         //https://observablehq.com/d/5dd1cb5e4d21c021
+
+        //compute extent
+        const e = cg.extGeo;
+        if (!e) return;
+        const xMin = Math.floor(e.xMin / r) * r;
+        const xMax = Math.ceil(e.xMax / r) * r;
+        const yMin = Math.floor(e.yMin / r) * r;
+        const yMax = Math.ceil(e.yMax / r) * r;
+        const extent = [[xMin,xMax],[yMin,yMax]]
 
         const kde = density2d(cells, {
             x: (c) => c.x,
