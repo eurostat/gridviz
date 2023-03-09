@@ -62,11 +62,11 @@ export class KernelSmoothingFKDEStyle extends Style {
         //compute extent
         const e = cg.extGeo;
         if (!e) return;
-        const xMin = Math.floor(e.xMin / r) * r;
-        const xMax = Math.ceil(e.xMax / r) * r;
-        const yMin = Math.floor(e.yMin / r) * r;
-        const yMax = Math.ceil(e.yMax / r) * r;
-        const extent = [[xMin,xMax],[yMin,yMax]]
+        const xMin = Math.floor(e.xMin / r) * r - r / 2;
+        const xMax = Math.ceil(e.xMax / r) * r - r / 2;
+        const yMin = Math.floor(e.yMin / r) * r - r / 2;
+        const yMax = Math.ceil(e.yMax / r) * r - r / 2;
+        const extent = [[xMin, xMax], [yMin, yMax]]
         const nbX = (extent[0][1] - extent[0][0]) / r
         const nbY = (extent[1][1] - extent[1][0]) / r
         const binsF = 1 //TODO expose that. Differently ?
@@ -74,10 +74,10 @@ export class KernelSmoothingFKDEStyle extends Style {
         //TODO handle r/2
         //compute smoothing
         const kde = density2d(cells, {
-            x: (c) => c.x + r/2,
-            y: (c) => c.y + r/2,
+            x: (c) => c.x + r / 2,
+            y: (c) => c.y + r / 2,
             weight: (c) => this.value(c),
-            bins: [nbX*binsF, nbY*binsF],
+            bins: [nbX * binsF, nbY * binsF],
             bandwidth: sG,
             extent: extent
         })
@@ -89,8 +89,8 @@ export class KernelSmoothingFKDEStyle extends Style {
         cells = [];
         const pts = kde.points("x", "y", "ksmval");
         for (let p of pts) {
-          if (p.ksmval < th) continue;
-          cells.push(p);
+            if (p.ksmval < th) continue;
+            cells.push(p);
         }
 
 
