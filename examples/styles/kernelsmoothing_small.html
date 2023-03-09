@@ -24,7 +24,7 @@
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 0, y: 0 }).setZoomFactor(0.02)
 
-
+/*
             app.addCSVGridLayer(
             "https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/single.csv",
             1,
@@ -35,8 +35,8 @@
                         })
             ]
         )
+*/
 
-/*
         //add layer
         app.addCSVGridLayer(
             "https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/single.csv",
@@ -44,7 +44,7 @@
             1,
             //[s],
             [
-                new gviz.KernelSmoothingStyle({
+                new gviz.KernelSmoothingFKDEStyle({
                     value: c => +c.value,
                     sigma: (r, zf) => r * 10 / 10,
                     styles: [
@@ -62,7 +62,7 @@
                 })
             ]
         )
-*/
+
         //sigma selection
         document.getElementById('sigma').oninput = function () {
             //set sigma

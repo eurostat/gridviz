@@ -73,8 +73,8 @@ export class KernelSmoothingFKDEStyle extends Style {
 
         //compute smoothing
         const kde = density2d(cells, {
-            x: (c) => c.x,
-            y: (c) => c.y,
+            x: (c) => c.x + r/2,
+            y: (c) => c.y + r/2,
             weight: (c) => this.value(c),
             bins: [nbX*binsF, nbY*binsF],
             bandwidth: sG,
@@ -82,15 +82,15 @@ export class KernelSmoothingFKDEStyle extends Style {
         })
 
         //restructure output
-        cells = kde.points("x", "y", "ksmval");
-        /*/TODO
-        const th = 0; //1e-3;
+        //cells = kde.points("x", "y", "ksmval");
+        //TODO
+        const th = 1e-2;
         cells = [];
         const pts = kde.points("x", "y", "ksmval");
         for (let p of pts) {
-          if (p.val < th) continue;
+          if (p.ksmval < th) continue;
           cells.push(p);
-        }*/
+        }
 
 
         //draw smoothed cells from styles
