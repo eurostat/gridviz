@@ -62,14 +62,16 @@ export class KernelSmoothingFKDEStyle extends Style {
         //compute extent
         const e = cg.extGeo;
         if (!e) return;
-        const xMin = Math.floor(e.xMin / r) * r - r / 2;
-        const xMax = Math.ceil(e.xMax / r) * r - r / 2;
-        const yMin = Math.floor(e.yMin / r) * r - r / 2;
-        const yMax = Math.ceil(e.yMax / r) * r - r / 2;
+        const xMin = Math.floor(e.xMin / r) * r //+ r / 2
+        const xMax = Math.ceil(e.xMax / r) * r //+ r / 2
+        const yMin = Math.floor(e.yMin / r) * r //- r / 2
+        const yMax = Math.ceil(e.yMax / r) * r //- r / 2
         const extent = [[xMin, xMax], [yMin, yMax]]
         const nbX = (extent[0][1] - extent[0][0]) / r
         const nbY = (extent[1][1] - extent[1][0]) / r
         const binsF = 1 //TODO expose that. Differently ?
+
+        console.log(extent, nbX, nbY)
 
         //TODO handle r/2
         //compute smoothing
@@ -90,9 +92,13 @@ export class KernelSmoothingFKDEStyle extends Style {
         const pts = kde.points("x", "y", "ksmval");
         for (let p of pts) {
             if (p.ksmval < th) continue;
+            console.log(p)
+            p.x -= r/2
+            p.y -= r/2
             cells.push(p);
         }
 
+        console.log(cells)
 
         //draw smoothed cells from styles
         for (let s of this.styles)
