@@ -71,10 +71,11 @@ export class KernelSmoothingFKDEStyle extends Style {
         const nbY = (extent[1][1] - extent[1][0]) / r
         const binsF = 1 //TODO expose that. Differently ?
 
+        //TODO handle r/2
         //compute smoothing
         const kde = density2d(cells, {
-            x: (c) => c.x + r/2,
-            y: (c) => c.y + r/2,
+            x: (c) => c.x, //+ r/2,
+            y: (c) => c.y, //+ r/2,
             weight: (c) => this.value(c),
             bins: [nbX*binsF, nbY*binsF],
             bandwidth: sG,
@@ -83,7 +84,7 @@ export class KernelSmoothingFKDEStyle extends Style {
 
         //restructure output
         //cells = kde.points("x", "y", "ksmval");
-        //TODO
+        //TODO expose
         const th = 1e-2;
         cells = [];
         const pts = kde.points("x", "y", "ksmval");
