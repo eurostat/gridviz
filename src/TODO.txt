@@ -1,3 +1,5 @@
+See https://kgolid.github.io/chromotome-site/
+
 finalise: elevation, lc, forest
 contour style: interval (min, max) => ... and color (val, min, max => ...
 elevation legend
