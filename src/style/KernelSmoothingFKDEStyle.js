@@ -64,13 +64,15 @@ export class KernelSmoothingFKDEStyle extends Style {
         //TODO
         //https://observablehq.com/d/5dd1cb5e4d21c021
 
-        const nbX = cg.w / this.factor
-        const nbY = cg.h / this.factor
+        let nbX = cg.w / this.factor
+        let nbY = cg.h / this.factor
+        nbX = Math.ceil(nbX)
+        nbY = Math.ceil(nbY)
 
         //compute extent
         const e = cg.extGeo;
         if (!e) return;
-        const e_ = [[e.xMin, e.xMax], [e.yMin, e.yMax]]
+        const e_ = [[e.xMin, e.xMax], [e.yMin, e.yMax]] //TODO
 
         //compute smoothing
         const kde = density2d(cells, {
@@ -82,7 +84,20 @@ export class KernelSmoothingFKDEStyle extends Style {
             extent: e_
         })
 
-        cells = []
+        //console.log(kde.grid())
+
+        //restructure output
+        //cells = kde.points("x", "y", "ksmval");
+        //TODO expose
+        const th = 1e-3;
+        cells = [];
+        const pts = kde.points("x", "y", "ksmval");
+        for (let p of pts) {
+            if (p.ksmval < th) continue;
+            cells.push(p);
+        }
+
+        //console.log(cells)
 
 
 
