@@ -30,6 +30,11 @@ export class KernelSmoothingFKDEStyle extends Style {
          */
         this.sigma = opts.sigma // (r, zf)=>...
 
+        /** The smoothing resolution factor. When set to 1, the smoothed grid is exactly the screen resolution. Set to 2 to degrade the resolution to a factor 2.
+         * @type {number}
+         */
+        this.factor = 2
+
         /** The styles to represent the smoothed cells.
          * @type {Array.<Style>}
          */
