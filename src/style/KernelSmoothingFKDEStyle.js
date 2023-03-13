@@ -35,6 +35,11 @@ export class KernelSmoothingFKDEStyle extends Style {
          */
         this.factor = opts.factor | 2
 
+        /** A value threshold. Smoothed grid cells with values below this threshold will be ignored.
+         * @type {number}
+         */
+        this.threshold = opts.threshold
+
         /** The styles to represent the smoothed cells.
          * @type {Array.<Style>}
          */
@@ -56,97 +61,42 @@ export class KernelSmoothingFKDEStyle extends Style {
         if (!cells || cells.length == 0)
             return;
 
-
         //get smoothing param in geo unit
         /** @type {number} */
         const sG = this.sigma(r, cg.zf)
 
-        //TODO
-        //https://observablehq.com/d/5dd1cb5e4d21c021
+        //compute smoothed grid dimensions
+        const nbX = Math.ceil(cg.w / this.factor)
+        const nbY = Math.ceil(cg.h / this.factor)
+        //compute smoothed grid geo extent
+        const e_ = [[cg.pixToGeoX(0), cg.pixToGeoX(nbX * this.factor)], [cg.pixToGeoY(nbY * this.factor), cg.pixToGeoY(0)]]
 
-        let nbX = cg.w / this.factor
-        let nbY = cg.h / this.factor
-        nbX = Math.ceil(nbX)
-        nbY = Math.ceil(nbY)
-
-        //compute extent
-        const e = cg.extGeo;
-        if (!e) return;
-        const e_ = [[e.xMin, e.xMax], [e.yMin, e.yMax]] //TODO
-
-        //compute smoothing
-        const kde = density2d(cells, {
+        //compute smoothed grid
+        let g = density2d(cells, {
             x: (c) => c.x + r / 2,
             y: (c) => c.y + r / 2,
             weight: (c) => this.value(c),
             bins: [nbX, nbY],
             bandwidth: sG,
             extent: e_
-        })
+        }).grid()
 
-        //console.log(kde.grid())
+        //compute the resolution of the smoothed grid
+        const resSmoothed = (e_[0][1] - e_[0][0]) / nbX
 
-        //restructure output
-        //cells = kde.points("x", "y", "ksmval");
-        //TODO expose
-        const th = 1e-3;
-        cells = [];
-        const pts = kde.points("x", "y", "ksmval");
-        for (let p of pts) {
-            if (p.ksmval < th) continue;
-            cells.push(p);
+        //make smoothed cells
+        cells = []
+        for (let ind = 0; ind < g.length; ind++) {
+            const v = g[ind]
+            if (this.threshold && v < this.threshold) continue;
+            const row = Math.floor(ind/nbX)
+            const col = ind - row*nbX
+            cells.push({ x: e_[0][0] + col * resSmoothed, y: e_[1][0] + row * resSmoothed, ksmval: v })
         }
-
-        //console.log(cells)
-
-
-
-        /*
-                //compute extent
-                const e = cg.extGeo;
-                if (!e) return;
-                const xMin = Math.floor(e.xMin / r) * r //+ r / 2
-                const xMax = Math.ceil(e.xMax / r) * r //+ r / 2
-                const yMin = Math.floor(e.yMin / r) * r //- r / 2
-                const yMax = Math.ceil(e.yMax / r) * r //- r / 2
-                const extent = [[xMin, xMax], [yMin, yMax]]
-                const nbX = (extent[0][1] - extent[0][0]) / r
-                const nbY = (extent[1][1] - extent[1][0]) / r
-                const binsF = 1 //TODO expose that. Differently ?
-        
-                console.log(extent, nbX, nbY)
-        
-                //TODO handle r/2
-                //compute smoothing
-                const kde = density2d(cells, {
-                    x: (c) => c.x + r / 2,
-                    y: (c) => c.y + r / 2,
-                    weight: (c) => this.value(c),
-                    bins: [nbX * binsF, nbY * binsF],
-                    bandwidth: sG,
-                    extent: extent
-                })
-        
-                //restructure output
-                //cells = kde.points("x", "y", "ksmval");
-                //TODO expose
-                const th = 1e-2;
-                cells = [];
-                const pts = kde.points("x", "y", "ksmval");
-                for (let p of pts) {
-                    if (p.ksmval < th) continue;
-                    console.log(p)
-                    p.x -= r/2
-                    p.y -= r/2
-                    cells.push(p);
-                }
-        
-                //console.log(cells)
-        */
 
         //draw smoothed cells from styles
         for (let s of this.styles)
-            s.draw(cells, r, cg);
+            s.draw(cells, resSmoothed, cg);
 
         //update legends
         //for (let s of this.styles)

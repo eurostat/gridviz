@@ -47,7 +47,8 @@
                 new gviz.KernelSmoothingFKDEStyle({
                     value: c => +c.value,
                     sigma: (r, zf) => r * 10 / 10,
-                    factor: 5,
+                    factor: 3,
+                    threshold: 0.001,
                     styles: [
                         new gviz.ShapeColorSizeStyle({
                             colorCol: "ksmval",
