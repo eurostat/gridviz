@@ -35,12 +35,26 @@
 
         const nbClass = 10
 
+
+        //add layer
+        app.addMultiScaleTiledGridLayer(
+            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+            r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
+            [],
+            {
+                pixNb: 5,
+                cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)"
+            }
+        )
+        const lay = app.layers[0]
+
+
         //style examples
         const styles = {
             color: [
                 new gviz.SquareColorWGLStyle({
                     colorCol: "ksmval",
-                    color: t=>d3.interpolateSpectral(1-t), //d3.interpolateCividis,
+                    color: t => d3.interpolateSpectral(1 - t), //d3.interpolateCividis,
                     tFun: (v, r, s) => {
                         const v_ = gviz.sExp((v) / s.max, -20)
                         const cl = Math.floor(nbClass * v_) / nbClass
@@ -85,44 +99,51 @@
                 })],
         }
 
-        //define kernel smoothing filter
-        const s = new gviz.KernelSmoothingStyle({
-            value: c => +c["2018"],
-            sigma: (r, zf) => r * 10 / 10,
-            factor: 3,
-            threshold: 0.001,
-            styles: styles.color
-        });
+        //
+        const update = () => {
+            //get selected style
+            const s = document.querySelector('#style').value
 
-        //add layer
-        app.addMultiScaleTiledGridLayer(
-            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
-            [s],
-            {
-                pixNb: 5,
-                cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)"
+            //get sigma
+            const sig = document.querySelector('#sigma').value
+
+            let factor = 5
+            let styles = []
+            if (s == "color") {
+                factor = 3
+            } else if (s == "size") {
+                factor = 8
+            } else if (s == "joyplot") {
+                factor = 20
+            } else if (s == "tanaka") {
+                factor = 4
+            } else if (s == "lego") {
+                factor = 15
+            } else if (s == "side") {
+                factor = 10
             }
-        )
 
+            lay.styles = [
+                new gviz.KernelSmoothingStyle({
+                    value: c => +c["2018"],
+                    sigma: (r, zf) => r * (+sig) / 10,
+                    factor: factor,
+                    threshold: 0.001,
+                    styles: styles[s]
+                })
+            ]
 
-
-        //style selection
-        const select = document.getElementById('style');
-        select.addEventListener('change', function () {
-            //set selected style
-            s.styles = styles[this.value]
-            //redraw
-            app.cg.redraw()
-        });
-
-        //sigma selection
-        document.getElementById('sigma').oninput = function () {
-            //set sigma
-            s.sigma = (r, zf) => r * (+this.value) / 10
             //redraw
             app.cg.redraw()
         }
+
+        //style selection
+        document.getElementById('style').addEventListener('change', update);
+
+        //sigma selection
+        document.getElementById('sigma').oninput = update
+
+        update()
     </script>
 
 </body>
