@@ -33,34 +33,35 @@
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(1000)
 
-        //add layer
+        //add layer with initial kernel smoothing style
         app.addMultiScaleTiledGridLayer(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
-            [],
+            [new gviz.KernelSmoothingStyle({
+                value: c => +c["2018"],
+                threshold: 0.001,
+            })],
             {
-                pixNb: 5,
+                pixNb: 7,
                 cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)"
             }
         )
-        const lay = app.layers[0]
-
-
 
         //
         const update = () => {
-            //get selected style
-            const s = document.querySelector('#style').value
 
-            //get sigma
+            //get smoothing style
+            const s = app.layers[0].styles[0]
+
+            //set sigma
             const sig = document.querySelector('#sigma').value
+            s.sigma = (r, zf) => r * (+sig) / 10
 
-            let factor = 5
-            let styles = []
-
-            if (s == "color") {
-                factor = 3
-                styles = [
+            //set selected style
+            const sty = document.querySelector('#style').value
+            if (sty == "color") {
+                s.factor = 3
+                s.styles = [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "ksmval",
                         color: t => d3.interpolateSpectral(1 - t), //d3.interpolateCividis,
@@ -71,14 +72,14 @@
                     })
                 ]
 
-            } else if (s == "colord") {
+            } else if (sty == "colord") {
 
                 const nbClass = 12
-                factor = 2
-                styles = [
+                s.factor = 2
+                s.styles = [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "ksmval",
-                        color: t => d3.interpolateSpectral(1 - t), //d3.interpolateCividis,
+                        color: t => d3.interpolateSpectral(1 - t),
                         tFun: (v, r, s) => {
                             const v_ = gviz.sExp((v) / s.max, -20)
                             const cl = Math.floor(nbClass * v_) / nbClass
@@ -87,18 +88,18 @@
                     })
                 ]
 
-            } else if (s == "size") {
-                factor = 8
-                styles = [new gviz.ShapeColorSizeStyle({
+            } else if (sty == "size") {
+                s.factor = 8
+                s.styles = [new gviz.ShapeColorSizeStyle({
                     color: () => "black",
                     sizeCol: "ksmval",
                     size: (v, r, s, zf) => 1.3 * r * Math.pow(v / s.max, 0.3),
                     shape: () => "circle",
                 })]
 
-            } else if (s == "joyplot") {
-                factor = 20
-                styles = [new gviz.JoyPlotStyle({
+            } else if (sty == "joyplot") {
+                s.factor = 20
+                s.styles = [new gviz.JoyPlotStyle({
                     heightCol: "ksmval",
                     height: (v, r, s, zf) => {
                         console.log(5 * r * Math.sqrt(v / s.max))
@@ -106,18 +107,16 @@
                     }
                 })]
 
-            } else if (s == "lego") {
-                factor = 10
-
-                styles = gviz.LegoStyle.get("ksmval", {
+            } else if (sty == "lego") {
+                s.factor = 10
+                s.styles = gviz.LegoStyle.get("ksmval", {
                     tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
                     colors: d3.schemeRdYlGn[10].reverse()
                 })
 
-            } else if (s == "side") {
-                factor = 10
-
-                styles = [
+            } else if (sty == "side") {
+                s.factor = 10
+                s.styles = [
                     new gviz.SideStyle({
                         valueCol: "ksmval",
                         value: (v1, v2) => { return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0) },
@@ -141,16 +140,6 @@
                         fillColor: (c) => c.ksmval < 0 ? "#d13c4b" : "#4288b5",
                     })]
             }
-
-            lay.styles = [
-                new gviz.KernelSmoothingStyle({
-                    value: c => +c["2018"],
-                    sigma: (r, zf) => r * (+sig) / 10,
-                    factor: factor,
-                    threshold: 0.001,
-                    styles: styles
-                })
-            ]
 
             //redraw
             app.cg.redraw()
