@@ -35,8 +35,8 @@
             <input type="radio" name="style" id="joyplot" value="joyplot">
             <label for="joyplot">Joyplot</label>
             <br>
-            <input type="radio" name="style" id="tanaka" value="tanaka">
-            <label for="tanaka">Tanaka, smoothed: </label><input type="range" min="3" max="25" value="10" class="slider"
+            <input type="radio" name="style" id="smoothed" value="smoothed">
+            <label for="smoothed">Smoothed </label><input type="range" min="3" max="25" value="10" class="slider"
                 id="sigmaTK" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="lego" value="lego">
@@ -49,8 +49,8 @@
             <label for="colorCh">Color</label>
             <br>
             <input type="radio" name="style" id="colorChSmTK" value="colorChSmTK">
-            <label for="colorChSmTK">Tanaka, smoothed: </label><input type="range" min="3" max="25" value="10"
-                class="slider" id="sigmaCCH" style="width: 100px;">
+            <label for="colorChSmTK">Smoothed: </label><input type="range" min="3" max="25" value="10" class="slider"
+                id="sigmaCCH" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="sizeCh" value="sizeCh">
             <label for="sizeCh">Circle size</label>
@@ -319,12 +319,12 @@
                     })
 
 
-            } else if (style == "tanaka") {
+            } else if (style == "smoothed") {
 
                 //get year selection
                 const sigma = document.querySelector('#sigmaTK').value
 
-                const nb = 10
+                const nb = 8
                 const colR = d3.interpolateOrRd
 
                 //add layer
@@ -336,15 +336,26 @@
                             filter: c => +c[year] > 0,
                             sigma: (r, zf) => r * sigma / 10,
                             threshold: 0.02,
-                            factor: 2,
-                            styles: gviz.TanakaStyle.get(
+                            factor: 1,
+                            styles: [
+                                new gviz.SquareColorWGLStyle({
+                                    colorCol: "ksmval",
+                                    color: colR,
+                                    tFun: (v, r, s) => {
+                                        const v_ = gviz.sExp((v) / s.max, -20)
+                                        const cl = Math.floor(nb * v_) / nb
+                                        return cl
+                                    }
+                                })
+                            ]
+                            /*styles: gviz.TanakaStyle.get(
                                 "ksmval",
                                 {
                                     tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7), color: colR,
                                     nb: nb,
                                     //newShading: true,
                                     filter: c => +c.ksmval > 0,
-                                }),
+                                }),*/
                         })
                     ],
                     {
@@ -637,7 +648,7 @@
         document.querySelector('#joyplot').addEventListener('change', update)
         document.querySelector('#size').addEventListener('change', update)
         document.querySelector('#dots').addEventListener('change', update)
-        document.querySelector('#tanaka').addEventListener('change', update)
+        document.querySelector('#smoothed').addEventListener('change', update)
         document.querySelector('#lego').addEventListener('change', update)
         document.querySelector('#colorCh').addEventListener('change', update)
         document.querySelector('#colorChSmTK').addEventListener('change', update)
