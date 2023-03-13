@@ -14,9 +14,8 @@
         <select id="style" style="font-size: 1em">
             <option value="color" selected>Color - continuous</option>
             <option value="colord">Color - discrete</option>
-            <option value="size">size</option>
-            <option value="joyplot">Joy plot</option>
-            <option value="tanaka">Tanaka</option>
+            <option value="size">Circle size</option>
+            <option value="joyplot">Joyplot</option>
             <option value="lego">Lego</option>
             <option value="side">Shading</option>
         </select>
@@ -103,11 +102,6 @@
                     heightCol: "ksmval",
                     height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
                 })]
-
-            } else if (s == "tanaka") {
-                factor = 4
-
-                styles = gviz.TanakaStyle.get("ksmval", { tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7) })
 
             } else if (s == "lego") {
                 factor = 15
