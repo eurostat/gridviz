@@ -11,7 +11,7 @@
 
     <div
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
-        <input type="range" min="0" max="50" value="10" class="slider" id="sigma" style="width: 400px;">
+        <input type="range" min="0.001" max="50" value="5" class="slider" id="sigma" style="width: 400px;">
     </div>
 
     <script src="../../dist/gridviz.js"></script>
@@ -24,25 +24,11 @@
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 0, y: 0 }).setZoomFactor(0.02)
 
-/*
-            app.addCSVGridLayer(
-            "https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/single.csv",
-            1,
-            [
-                new gviz.SquareColorWGLStyle({
-                            colorCol: "value",
-                            tFun: (v) => v/100
-                        })
-            ]
-        )
-*/
-
         //add layer
         app.addCSVGridLayer(
             //"https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/single.csv",
             "https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/small.csv",
             1,
-            //[s],
             [
                 new gviz.KernelSmoothingStyle({
                     value: c => +c.value,
