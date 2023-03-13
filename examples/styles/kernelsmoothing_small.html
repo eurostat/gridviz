@@ -33,19 +33,19 @@
                 new gviz.KernelSmoothingStyle({
                     value: c => +c.value,
                     sigma: (r, zf) => r * 10 / 10,
-                    factor: 3,
-                    threshold: 0.001,
+                    factor: 50,
+                    //threshold: 0.001,
                     styles: [
                         new gviz.ShapeColorSizeStyle({
                             colorCol: "ksmval",
                             color: (v, r, s) => d3.interpolateSpectral(1 - v / s.max),
                         }),
-                        /*new gviz.TextStyle({
+                        new gviz.TextStyle({
                             textCol: "ksmval",
                             text: ((v, r, s, z) => Math.floor(1000 * v) / 1000),
                             color: () => "black",
                             fontSize: ((v, r, s, z) => r * 0.3),
-                        }),*/
+                        }),
                     ]
                 })
             ]
