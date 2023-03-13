@@ -47,6 +47,9 @@
             }
         )
 
+        //prepare lego colors
+        const colsLego = d3.schemeRdYlGn[10].reverse()
+
         //
         const update = () => {
 
@@ -111,7 +114,7 @@
                 s.factor = 10
                 s.styles = gviz.LegoStyle.get("ksmval", {
                     tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
-                    colors: d3.schemeRdYlGn[10].reverse()
+                    colors: colsLego
                 })
 
             } else if (sty == "side") {

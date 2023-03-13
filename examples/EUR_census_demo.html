@@ -335,18 +335,20 @@
                             value: c => +c[year],
                             filter: c => +c[year] > 0,
                             sigma: (r, zf) => r * sigma / 10,
-                            factor: 3,
+                            threshold: 0.02,
+                            factor: 2,
                             styles: gviz.TanakaStyle.get(
                                 "ksmval",
                                 {
                                     tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7), color: colR,
                                     nb: nb,
                                     //newShading: true,
+                                    filter: c => +c.ksmval > 0,
                                 }),
                         })
                     ],
                     {
-                        pixNb: 4,
+                        pixNb: 6,
                         cellInfoHTML: tooltipFun
                     })
 
@@ -368,7 +370,7 @@
             } else if (style == "lego") {
                 //const colR = d3.interpolateCubehelixDefault //interpolateOrRd
                 //const nb = 12
-                const sigmaFun = (r, zf) => 0//r * 0.5
+                //const sigmaFun = (r, zf) => r * 0.5
 
                 //const cols = []
                 //for (let t = 0; t < 1; t += 1 / nb) cols.push(colR(t))
@@ -376,18 +378,26 @@
                 //add layer
                 app.addLayerFromDataset(
                     popDataset,
-                    [
+                    gviz.LegoStyle.get(year, {
+                        tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
+                        //colors: d3.schemeRdYlGn[10].reverse()
+                    })
+
+                    /*[
                         new gviz.KernelSmoothingStyle({
                             value: c => +c[year],
                             filter: c => +c[year] > 0,
-                            factor: 20,
+                            factor: 10,
+                            threshold: 0.1,
                             sigma: sigmaFun,
-                            styles: gviz.LegoStyle.get("ksmval", {
+                            styles:
+                            gviz.LegoStyle.get(year, {
+                                filter: c => +c[year] > 0,
                                 tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
                                 //colors: cols
                             })
                         })
-                    ],
+                    ]*/,
                     {
                         pixNb: 8,
                         cellInfoHTML: tooltipFun
@@ -409,7 +419,7 @@
                     "#7C503A",
                     "#582A12"
                 ], nb = colsLego.length
-                app.layers[0].styles[0].styles[0].legends.push(
+                app.layers[0].styles[0]/*.styles[0]*/.legends.push(
                     new gviz.ColorLegend({
                         title: "Number of inhabitants",
                         colorRamp: t => colsLego[t == 1 ? nb - 1 : Math.floor(t * nb)],
