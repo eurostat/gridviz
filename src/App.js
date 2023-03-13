@@ -7,7 +7,7 @@ import { Dataset } from './Dataset';
 import { Tooltip } from './Tooltip';
 
 import { CSVGrid } from './dataset/CSVGrid';
-import { ParquetGrid } from './dataset/ParquetGrid';
+//import { ParquetGrid } from './dataset/ParquetGrid';
 import { TiledGrid } from './dataset/TiledGrid';
 import { BackgroundLayer } from './BackgroundLayer';
 import { LabelLayer } from './LabelLayer';
@@ -397,9 +397,9 @@ export class App {
      * @param {object=} opts The parameters of the dataset.
      * @returns {Dataset}
      */
-    makeParquetGridDataset(url, resolution, opts) {
+    /*makeParquetGridDataset(url, resolution, opts) {
         return new Dataset([new ParquetGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); })], [], opts)
-    }
+    }*/
 
 
     /**
@@ -425,13 +425,13 @@ export class App {
      * @param {{preprocess?:function(import('./Dataset').Cell):boolean}} opts 
      * @returns {Dataset}
      */
-    makeMultiScaleParquetGridDataset(resolutions, resToURL, opts) {
+    /*makeMultiScaleParquetGridDataset(resolutions, resToURL, opts) {
         return Dataset.make(
             resolutions,
             (res) => new ParquetGrid(resToURL(res), res, opts).getData(undefined, () => { this.cg.redraw(); }),
             opts
         )
-    }
+    }*/
 
     /**
      * Make a multi scale CSV grid dataset.
@@ -497,10 +497,10 @@ export class App {
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
-    addParquetGridLayer(url, resolution, styles, opts) {
+    /*addParquetGridLayer(url, resolution, styles, opts) {
         const ds = this.makeParquetGridDataset(url, resolution, opts)
         return this.addLayerFromDataset(ds, styles, opts);
-    }
+    }*/
 
 
 
@@ -540,10 +540,10 @@ export class App {
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
-    addMultiScaleParquetGridLayer(resolutions, resToURL, styles, opts) {
+    /*addMultiScaleParquetGridLayer(resolutions, resToURL, styles, opts) {
         const ds = this.makeMultiScaleParquetGridDataset(resolutions, resToURL, opts)
         return this.addLayerFromDataset(ds, styles, opts);
-    }
+    }*/
 
 
 
