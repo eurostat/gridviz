@@ -85,14 +85,17 @@ export class KernelSmoothingStyle extends Style {
         const resSmoothed = (e_[0][1] - e_[0][0]) / nbX
 
         //make smoothed cells
+        //let tot = 0
         cells = []
         for (let ind = 0; ind < g.length; ind++) {
             const v = g[ind]
+            //tot += +v
             if (this.threshold && v < this.threshold) continue;
             const row = Math.floor(ind/nbX)
             const col = ind % nbX
             cells.push({ x: e_[0][0] + col * resSmoothed, y: e_[1][0] + row * resSmoothed, ksmval: v })
         }
+        //console.log(tot)
 
         //draw smoothed cells from styles
         for (let s of this.styles)
