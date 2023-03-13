@@ -59,7 +59,7 @@
             let styles = []
 
             if (s == "color") {
-                factor = 2
+                factor = 3
                 styles = [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "ksmval",
@@ -100,11 +100,14 @@
                 factor = 20
                 styles = [new gviz.JoyPlotStyle({
                     heightCol: "ksmval",
-                    height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
+                    height: (v, r, s, zf) => {
+                        console.log(5 * r * Math.sqrt(v / s.max))
+                        return 5 * r * Math.sqrt(v / s.max)
+                    }
                 })]
 
             } else if (s == "lego") {
-                factor = 15
+                factor = 10
 
                 styles = gviz.LegoStyle.get("ksmval", { tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7), colors: d3.schemeRdYlGn[10].reverse() })
 
