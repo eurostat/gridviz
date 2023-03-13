@@ -8,7 +8,7 @@ import { WebGLSquareColoringKS } from "../utils/WebGLSquareColoringKS";
 /**
  * @author Julien Gaffuri
  */
-export class KernelSmoothingWGLStyle extends Style {
+export class KernelSmoothingStyle extends Style {
 
     /** @param {object} opts */
     constructor(opts) {
