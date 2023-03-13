@@ -33,7 +33,7 @@ export class KernelSmoothingFKDEStyle extends Style {
         /** The smoothing resolution factor. When set to 1, the smoothed grid is exactly the screen resolution. Set to 2 to degrade the resolution to a factor 2.
          * @type {number}
          */
-        this.factor = 2
+        this.factor = opts.factor | 2
 
         /** The styles to represent the smoothed cells.
          * @type {Array.<Style>}
@@ -64,46 +64,70 @@ export class KernelSmoothingFKDEStyle extends Style {
         //TODO
         //https://observablehq.com/d/5dd1cb5e4d21c021
 
+        const nbX = cg.w / this.factor
+        const nbY = cg.h / this.factor
+
         //compute extent
         const e = cg.extGeo;
         if (!e) return;
-        const xMin = Math.floor(e.xMin / r) * r //+ r / 2
-        const xMax = Math.ceil(e.xMax / r) * r //+ r / 2
-        const yMin = Math.floor(e.yMin / r) * r //- r / 2
-        const yMax = Math.ceil(e.yMax / r) * r //- r / 2
-        const extent = [[xMin, xMax], [yMin, yMax]]
-        const nbX = (extent[0][1] - extent[0][0]) / r
-        const nbY = (extent[1][1] - extent[1][0]) / r
-        const binsF = 1 //TODO expose that. Differently ?
+        const e_ = [[e.xMin, e.xMax], [e.yMin, e.yMax]]
 
-        console.log(extent, nbX, nbY)
-
-        //TODO handle r/2
         //compute smoothing
         const kde = density2d(cells, {
             x: (c) => c.x + r / 2,
             y: (c) => c.y + r / 2,
             weight: (c) => this.value(c),
-            bins: [nbX * binsF, nbY * binsF],
+            bins: [nbX, nbY],
             bandwidth: sG,
-            extent: extent
+            extent: e_
         })
 
-        //restructure output
-        //cells = kde.points("x", "y", "ksmval");
-        //TODO expose
-        const th = 1e-2;
-        cells = [];
-        const pts = kde.points("x", "y", "ksmval");
-        for (let p of pts) {
-            if (p.ksmval < th) continue;
-            console.log(p)
-            p.x -= r/2
-            p.y -= r/2
-            cells.push(p);
-        }
+        cells = []
 
-        console.log(cells)
+
+
+        /*
+                //compute extent
+                const e = cg.extGeo;
+                if (!e) return;
+                const xMin = Math.floor(e.xMin / r) * r //+ r / 2
+                const xMax = Math.ceil(e.xMax / r) * r //+ r / 2
+                const yMin = Math.floor(e.yMin / r) * r //- r / 2
+                const yMax = Math.ceil(e.yMax / r) * r //- r / 2
+                const extent = [[xMin, xMax], [yMin, yMax]]
+                const nbX = (extent[0][1] - extent[0][0]) / r
+                const nbY = (extent[1][1] - extent[1][0]) / r
+                const binsF = 1 //TODO expose that. Differently ?
+        
+                console.log(extent, nbX, nbY)
+        
+                //TODO handle r/2
+                //compute smoothing
+                const kde = density2d(cells, {
+                    x: (c) => c.x + r / 2,
+                    y: (c) => c.y + r / 2,
+                    weight: (c) => this.value(c),
+                    bins: [nbX * binsF, nbY * binsF],
+                    bandwidth: sG,
+                    extent: extent
+                })
+        
+                //restructure output
+                //cells = kde.points("x", "y", "ksmval");
+                //TODO expose
+                const th = 1e-2;
+                cells = [];
+                const pts = kde.points("x", "y", "ksmval");
+                for (let p of pts) {
+                    if (p.ksmval < th) continue;
+                    console.log(p)
+                    p.x -= r/2
+                    p.y -= r/2
+                    cells.push(p);
+                }
+        
+                //console.log(cells)
+        */
 
         //draw smoothed cells from styles
         for (let s of this.styles)
