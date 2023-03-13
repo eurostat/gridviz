@@ -12,7 +12,8 @@
     <div
         style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
         <select id="style" style="font-size: 1em">
-            <option value="color" selected>Color</option>
+            <option value="color" selected>Color - continuous</option>
+            <option value="colord">Color - discrete</option>
             <option value="size">size</option>
             <option value="joyplot">Joy plot</option>
             <option value="tanaka">Tanaka</option>
@@ -59,8 +60,22 @@
             let styles = []
 
             if (s == "color") {
-                const nbClass = 10
-                factor = 3
+                factor = 2
+                styles = [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: "ksmval",
+                        color: t => d3.interpolateSpectral(1 - t), //d3.interpolateCividis,
+                        tFun: (v, r, s) => {
+                            const v_ = gviz.sExp((v) / s.max, -20)
+                            return v_
+                        }
+                    })
+                ]
+
+            } else if (s == "colord") {
+
+                const nbClass = 12
+                factor = 2
                 styles = [
                     new gviz.SquareColorWGLStyle({
                         colorCol: "ksmval",
@@ -76,7 +91,7 @@
             } else if (s == "size") {
                 factor = 8
                 styles = [new gviz.ShapeColorSizeStyle({
-                    color: () => "gray",
+                    color: () => "black",
                     sizeCol: "ksmval",
                     size: (v, r, s, zf) => 1.3 * r * Math.pow(v / s.max, 0.3),
                     shape: () => "circle",
