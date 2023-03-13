@@ -36,7 +36,7 @@
             <label for="joyplot">Joyplot</label>
             <br>
             <input type="radio" name="style" id="tanaka" value="tanaka">
-            <label for="tanaka">Tanaka, smoothed: </label><input type="range" min="0" max="20" value="10" class="slider"
+            <label for="tanaka">Tanaka, smoothed: </label><input type="range" min="3" max="25" value="10" class="slider"
                 id="sigmaTK" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="lego" value="lego">
@@ -49,7 +49,7 @@
             <label for="colorCh">Color</label>
             <br>
             <input type="radio" name="style" id="colorChSmTK" value="colorChSmTK">
-            <label for="colorChSmTK">Tanaka, smoothed: </label><input type="range" min="0" max="20" value="10"
+            <label for="colorChSmTK">Tanaka, smoothed: </label><input type="range" min="3" max="25" value="10"
                 class="slider" id="sigmaCCH" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="sizeCh" value="sizeCh">
@@ -333,14 +333,15 @@
                     [
                         new gviz.KernelSmoothingStyle({
                             value: c => +c[year],
+                            filter: c => +c[year] > 0,
                             sigma: (r, zf) => r * sigma / 10,
+                            factor: 3,
                             styles: gviz.TanakaStyle.get(
                                 "ksmval",
                                 {
                                     tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7), color: colR,
                                     nb: nb,
                                     //newShading: true,
-                                    filter: c => +c[year] > 0
                                 }),
                         })
                     ],
@@ -378,11 +379,12 @@
                     [
                         new gviz.KernelSmoothingStyle({
                             value: c => +c[year],
+                            filter: c => +c[year] > 0,
+                            factor: 20,
                             sigma: sigmaFun,
                             styles: gviz.LegoStyle.get("ksmval", {
                                 tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
                                 //colors: cols
-                                filter: c => +c[year] > 0
                             })
                         })
                     ],
@@ -483,6 +485,7 @@
                         new gviz.KernelSmoothingStyle({
                             value: c => +c["d2011_2018"],
                             sigma: (r, zf) => r * sigma / 10,
+                            factor: 3,
                             styles:
                                 gviz.TanakaStyle.get("ksmval", {
                                     tFun: (v, r, s, zf) => {
