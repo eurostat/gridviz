@@ -90,7 +90,7 @@ export class KernelSmoothingFKDEStyle extends Style {
             const v = g[ind]
             if (this.threshold && v < this.threshold) continue;
             const row = Math.floor(ind/nbX)
-            const col = ind - row*nbX
+            const col = ind % nbX
             cells.push({ x: e_[0][0] + col * resSmoothed, y: e_[1][0] + row * resSmoothed, ksmval: v })
         }
 
