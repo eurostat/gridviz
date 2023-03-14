@@ -626,7 +626,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoo
 | **value**    |  function(cel):number    |         |    A function returning the value to consider for each cell. This is the value to be smoothed.         |
 | **sigma**    |  function(r, zf):number   |         |   The smoothing parameter (gaussian standard deviation), in geographical unit, computed from the resolution **r** and the zoom factor **zf**. The larger, the more smoothed. Note that for too small values, the approximation degrades significantly.   |
 | **factor**    |  number    |    2     | The smoothed grid may have a finer resolution than the input grid. This factor defines the smoothed grid resolution. When set to 1, the smoothed grid is exactly the screen resolution. Set to 2 to degrade the resolution to a factor 2. The higher, the more pixelised and the faster to compute.  |
-| **threshold**    |   number   |         |    A value threshold. Smoothed grid cells with values below this threshold will be ignored. Use it to remove cells with too low smoothed values.         |
+| **filterSm** | function(v):boolean |   | A filter function to filter the smoothed cells based on their smoothed value **v**. Return true to keep the cell, false otherwise. |
 | **sCol**    |  string    |    "ksmval"     |    The name of the attribute where the smoothed value is stored in the output smoothed grid.         |
 | **styles**    |   Array(Style)   |         |  The styles to represent the smoothed grid.           |
 

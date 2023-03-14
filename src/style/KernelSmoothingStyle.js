@@ -38,8 +38,8 @@ export class KernelSmoothingStyle extends Style {
          */
         this.factor = opts.factor || 2
 
-        /** A filter function to filter the smoothed values.
-         *  Return true to keep, false to remove.
+        /** A filter function to filter the smoothed cells based on their smoothed value.
+         *  Return true to keep the cell, false otherwise.
          * @type { function(number):boolean }
          */
         this.filterSm = opts.filterSm
