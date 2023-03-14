@@ -36,7 +36,7 @@
             <label for="joyplot">Joyplot</label>
             <br>
             <input type="radio" name="style" id="smoothed" value="smoothed">
-            <label for="smoothed">Smoothed </label><input type="range" min="3" max="20" value="8" class="slider"
+            <label for="smoothed">Smoothed </label><input type="range" min="3" max="20" value="10" class="slider"
                 id="sigmaTK" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="lego" value="lego">
@@ -49,7 +49,7 @@
             <label for="colorCh">Color</label>
             <br>
             <input type="radio" name="style" id="colorChSmTK" value="colorChSmTK">
-            <label for="colorChSmTK">Smoothed </label><input type="range" min="3" max="20" value="8" class="slider"
+            <label for="colorChSmTK">Smoothed </label><input type="range" min="3" max="20" value="10" class="slider"
                 id="sigmaCCH" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="sizeCh" value="sizeCh">
@@ -342,7 +342,7 @@
                             filter: c => +c[year] > 0,
                             sigma: (r, zf) => r * sigma / 10,
                             filterSm: v => v>0.02,
-                            factor: 1,
+                            factor: 2,
                             styles: [
                                 new gviz.SquareColorWGLStyle({
                                     colorCol: "ksmval",
@@ -498,7 +498,7 @@
 
             } else if (style == "colorChSmTK") {
                 const colR = d3.interpolateSpectral
-                const nb = 15
+                const nb = 25
                 const stre = gviz.sPow
                 const streC = 0.3
 
@@ -512,8 +512,9 @@
                         new gviz.KernelSmoothingStyle({
                             value: c => +c["d2011_2018"],
                             sigma: (r, zf) => r * sigma / 10,
-                            factor: 1,
-                            //filterSm: v => Math.abs(v) > 0.001,
+                            factor: 2,
+                            filterSm: v => Math.abs(v) > 0.0001,
+                            //filter: c => !c["2011"] && !c["2018"],
                             styles: [
                                 new gviz.SquareColorWGLStyle({
                                     colorCol: "ksmval",
@@ -550,7 +551,7 @@
                         }),
                     ],
                     {
-                        pixNb: 4,
+                        pixNb: 6,
                         cellInfoHTML: tooltipFunCh
                     })
 
