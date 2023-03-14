@@ -52,7 +52,7 @@ export class DotDensityStyle extends Style {
         if (monitor) monitorDuration("*** DotDensityStyle draw")
 
         //filter
-        cells = cells.filter(this.filter)
+        if(this.filter) cells = cells.filter(this.filter)
 
         //zoom factor
         const zf = cg.getZf()

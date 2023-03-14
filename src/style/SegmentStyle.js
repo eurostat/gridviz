@@ -54,7 +54,7 @@ export class SegmentStyle extends Style {
      */
     draw(cells, r, cg) {
         //filter
-        cells = cells.filter(this.filter)
+        if(this.filter) cells = cells.filter(this.filter)
 
         //zoom factor
         const zf = cg.getZf()

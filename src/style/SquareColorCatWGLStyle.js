@@ -65,7 +65,7 @@ export class SquareColorCatWGLStyle extends Style {
         if (monitor) monitorDuration("*** SquareColorCatWGLStyle draw")
 
         //filter
-        cells = cells.filter(this.filter)
+        if(this.filter) cells = cells.filter(this.filter)
 
         //zoom factor
         const zf = cg.getZf()

@@ -99,7 +99,7 @@ export class KernelSmoothingStyle extends Style {
     */
     kernelSmoothing(cells, e, r, s) {
         //filter
-        cells = cells.filter(this.filter)
+        if(this.filter) cells = cells.filter(this.filter)
 
         const wThr = 0.01 //gaussian weights below this value will be ignored
 
