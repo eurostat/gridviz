@@ -34,25 +34,25 @@ export class KernelSmoothingStyle extends Style {
          * When set to 1, the smoothed grid is exactly the screen resolution.
          * Set to 2 to degrade the resolution to a factor 2.
          * The higher, the more pixelised and the faster to compute.
-         * @type {number}
+         * @type { number }
          */
-        this.factor = opts.factor | 2
+        this.factor = opts.factor || 2
 
         /** A value threshold. Smoothed grid cells with values below this threshold will be ignored.
          *  Use it to remove cells with too low smoothed values.
-         * @type {number}
+         * @type { number }
          */
-        this.threshold = opts.threshold
+        this.threshold = opts.threshold || 0
 
         /** The name of the attribute where the smoothed value is stored in the output smoothed grid.
          * @type { string }
          */
-        this.sCol = opts.sCol | "ksmval"
+        this.sCol = opts.sCol || "ksmval"
 
         /** The styles to represent the smoothed grid.
          * @type {Array.<Style>}
          */
-        this.styles = opts.styles | []
+        this.styles = opts.styles || []
     }
 
 
