@@ -615,7 +615,7 @@ See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego
 
 ## Kernel smoothing
 
-This style is experimental. It allows applying gaussian kernel smoothing to the grid.
+This style allows applying a gaussian kernel smoothing to the input grid. Other styles can then be used on the smoothed grid - this style is thus more a 'filter' than a proper style.
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html) ([code](../examples/styles/kernelsmoothing.html)).
 
@@ -626,6 +626,8 @@ Documentation coming soon.
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
 | **.**    |      |         |             |
+
+This style is based on the [fast-kde](https://www.npmjs.com/package/fast-kde) library, which produces smoothing approximation very fast. Note that the approximation get limited for weak smoothing (low bandwidth value).
 
 ## Others styles
 
