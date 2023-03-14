@@ -19,7 +19,7 @@
             <option value="side">Shading</option>
         </select>
         <br>
-        <input type="range" min="3" max="40" value="10" class="slider" id="sigma">
+        <input type="range" min="3" max="30" value="10" class="slider" id="sigma">
     </div>
 
     <script src="../../dist/gridviz.js"></script>
@@ -44,7 +44,7 @@
                 filterSm: v => v>0.001,
             })],
             {
-                pixNb: 7,
+                pixNb: 10,
                 cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)"
             }
         )

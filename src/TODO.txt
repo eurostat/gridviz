@@ -1,3 +1,5 @@
+publish and document tiler
+
 fix transparency
 
 module test
@@ -19,8 +21,6 @@ contour style: interval (min, max) => ... and color (val, min, max => ...
 elevation legend
 
 make joyplot work with kernel smoothing
-
-publish and document tiler
 
 do shadow with blur + mask
 see how to improve all style using mask/clip
