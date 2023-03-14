@@ -38,11 +38,11 @@ export class KernelSmoothingStyle extends Style {
          */
         this.factor = opts.factor || 2
 
-        /** A value threshold. Smoothed grid cells with values below this threshold will be ignored.
-         *  Use it to remove cells with too low smoothed values.
-         * @type { number }
+        /** A filter function to filter the smoothed values.
+         *  Return true to keep, false to remove.
+         * @type { function(number):boolean }
          */
-        this.threshold = opts.threshold || 0
+        this.filterSm = opts.filterSm
 
         /** The name of the attribute where the smoothed value is stored in the output smoothed grid.
          * @type { string }
@@ -94,19 +94,16 @@ export class KernelSmoothingStyle extends Style {
         const resSmoothed = (e_[0][1] - e_[0][0]) / nbX
 
         //make smoothed cells
-        //let tot = 0
         cells = []
         for (let ind = 0; ind < g.length; ind++) {
             const v = g[ind]
-            //tot += +v
-            if (this.threshold && v < this.threshold) continue;
+            if (this.filterSm && !this.filterSm(v)) continue;
             const row = Math.floor(ind / nbX)
             const col = ind % nbX
             const c = { x: e_[0][0] + col * resSmoothed, y: e_[1][0] + row * resSmoothed }
             c[this.sCol] = v
             cells.push(c)
         }
-        //console.log(tot)
 
         //draw smoothed cells from styles
         for (let s of this.styles)

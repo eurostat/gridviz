@@ -41,7 +41,7 @@
             r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
             [new gviz.KernelSmoothingStyle({
                 value: c => +c["2018"],
-                threshold: 0.001,
+                filterSm: v => v>0.001,
             })],
             {
                 pixNb: 7,

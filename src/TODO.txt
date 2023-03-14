@@ -1,3 +1,5 @@
+smoothing - change threshold to filter
+
 fix transparency
 
 module test

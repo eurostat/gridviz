@@ -341,7 +341,7 @@
                             value: c => +c[year],
                             filter: c => +c[year] > 0,
                             sigma: (r, zf) => r * sigma / 10,
-                            threshold: 0.02,
+                            filterSm: v => v>0.02,
                             factor: 1,
                             styles: [
                                 new gviz.SquareColorWGLStyle({
@@ -512,10 +512,13 @@
                         new gviz.KernelSmoothingStyle({
                             value: c => +c["d2011_2018"],
                             sigma: (r, zf) => r * sigma / 10,
-                            factor: 3,
-                            styles:
-                                gviz.TanakaStyle.get("ksmval", {
-                                    tFun: (v, r, s, zf) => {
+                            factor: 1,
+                            //threshold: 0.01,
+                            styles: [
+                                new gviz.SquareColorWGLStyle({
+                                    colorCol: "ksmval",
+                                    color: t => colR(1 - t),
+                                    tFun: (v, r, s) => {
                                         let t = 0.5
                                         if (s.min < 0 && v < 0) {
                                             t += stre(v / s.min, streC) / 2
@@ -525,11 +528,25 @@
                                         t = 1 - t;
                                         t = Math.floor(t * nb) / nb
                                         return t;
-                                    },
-                                    color: (t) => colR(1 - t),
-                                    nb: nb,
-                                    //newShading: true,
-                                }),
+                                    }
+                                })
+                            ]
+                            /*gviz.TanakaStyle.get("ksmval", {
+                                tFun: (v, r, s, zf) => {
+                                    let t = 0.5
+                                    if (s.min < 0 && v < 0) {
+                                        t += stre(v / s.min, streC) / 2
+                                    } else {
+                                        t -= stre(v / s.max, streC) / 2
+                                    }
+                                    t = 1 - t;
+                                    t = Math.floor(t * nb) / nb
+                                    return t;
+                                },
+                                color: (t) => colR(1 - t),
+                                nb: nb,
+                                //newShading: true,
+                            }),*/
                         }),
                     ],
                     {
