@@ -36,7 +36,7 @@
             <label for="joyplot">Joyplot</label>
             <br>
             <input type="radio" name="style" id="smoothed" value="smoothed">
-            <label for="smoothed">Smoothed </label><input type="range" min="3" max="25" value="10" class="slider"
+            <label for="smoothed">Smoothed </label><input type="range" min="3" max="20" value="8" class="slider"
                 id="sigmaTK" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="lego" value="lego">
@@ -49,7 +49,7 @@
             <label for="colorCh">Color</label>
             <br>
             <input type="radio" name="style" id="colorChSmTK" value="colorChSmTK">
-            <label for="colorChSmTK">Smoothed: </label><input type="range" min="3" max="25" value="10" class="slider"
+            <label for="colorChSmTK">Smoothed: </label><input type="range" min="3" max="20" value="8" class="slider"
                 id="sigmaCCH" style="width: 100px;">
             <br>
             <input type="radio" name="style" id="sizeCh" value="sizeCh">
@@ -324,8 +324,14 @@
                 //get year selection
                 const sigma = document.querySelector('#sigmaTK').value
 
-                const nb = 8
+                const nb = 10
                 const colR = d3.interpolateOrRd
+                //test with transparency: it does not work !
+                /*const colR = t => {
+                    const col = d3.color(d3.interpolateOrRd(t))
+                    col.opacity=0.8
+                    return col.toString();
+                }*/
 
                 //add layer
                 app.addLayerFromDataset(
@@ -342,7 +348,7 @@
                                     colorCol: "ksmval",
                                     color: colR,
                                     tFun: (v, r, s) => {
-                                        const v_ = gviz.sExp((v) / s.max, -20)
+                                        const v_ = gviz.sExp((v) / s.max, -12)
                                         const cl = Math.floor(nb * v_) / nb
                                         return cl
                                     }
