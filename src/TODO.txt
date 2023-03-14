@@ -1,6 +1,3 @@
-bandwidth
-expose ksval
-
 module test
 
 V3

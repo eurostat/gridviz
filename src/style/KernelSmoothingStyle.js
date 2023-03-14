@@ -21,7 +21,7 @@ export class KernelSmoothingStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** A function specifying the value to consider for each cell. This is the value to smooth.
+        /** A function returning the value to consider for each cell. This is the value to be smoothed.
          * @type {function(import("../Dataset").Cell):number} */
         this.value = opts.value
 
@@ -30,20 +30,29 @@ export class KernelSmoothingStyle extends Style {
          */
         this.sigma = opts.sigma // (r, zf)=>...
 
-        /** The smoothing resolution factor. When set to 1, the smoothed grid is exactly the screen resolution. Set to 2 to degrade the resolution to a factor 2.
+        /** A factor to adjust the smoothed grid resolution.
+         * When set to 1, the smoothed grid is exactly the screen resolution.
+         * Set to 2 to degrade the resolution to a factor 2.
+         * The higher, the more pixelised and the faster to compute.
          * @type {number}
          */
         this.factor = opts.factor | 2
 
         /** A value threshold. Smoothed grid cells with values below this threshold will be ignored.
+         *  Use it to remove cells with too low smoothed values.
          * @type {number}
          */
         this.threshold = opts.threshold
 
-        /** The styles to represent the smoothed cells.
+        /** The name of the attribute where the smoothed value is stored in the output smoothed grid.
+         * @type { string }
+         */
+        this.sCol = opts.sCol | "ksmval"
+
+        /** The styles to represent the smoothed grid.
          * @type {Array.<Style>}
          */
-        this.styles = opts.styles
+        this.styles = opts.styles | []
     }
 
 
@@ -91,9 +100,11 @@ export class KernelSmoothingStyle extends Style {
             const v = g[ind]
             //tot += +v
             if (this.threshold && v < this.threshold) continue;
-            const row = Math.floor(ind/nbX)
+            const row = Math.floor(ind / nbX)
             const col = ind % nbX
-            cells.push({ x: e_[0][0] + col * resSmoothed, y: e_[1][0] + row * resSmoothed, ksmval: v })
+            const c = { x: e_[0][0] + col * resSmoothed, y: e_[1][0] + row * resSmoothed }
+            c[this.sCol] = v
+            cells.push(c)
         }
         //console.log(tot)
 
