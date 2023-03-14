@@ -615,6 +615,8 @@ See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego
 
 ## Kernel smoothing
 
+[![kernel smoothing](img/styles/kernel_smoothing.png)](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html)
+
 This style allows applying a gaussian kernel smoothing to the input grid. Other styles can then be used on the smoothed grid - this style is thus more a 'filter' than a proper style.
 
 See [this elementary example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing_small.html) ([code](../examples/styles/kernelsmoothing_small.html)).
