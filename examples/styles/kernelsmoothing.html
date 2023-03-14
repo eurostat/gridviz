@@ -15,7 +15,6 @@
             <option value="color" selected>Color - continuous</option>
             <option value="colord">Color - discrete</option>
             <option value="size">Circle size</option>
-            <option value="joyplot">Joyplot</option>
             <option value="lego">Lego</option>
             <option value="side">Shading</option>
         </select>
@@ -28,6 +27,9 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
+
+        //TODO: fix bug with joyplot
+        //            <option value="joyplot">Joyplot</option>
 
         let containerDiv = document.getElementById("viz-container");
         const app = new gviz.App(containerDiv)

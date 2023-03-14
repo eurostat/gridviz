@@ -10,6 +10,11 @@ import { WebGLSquareColoringKS } from "../utils/WebGLSquareColoringKS";
  */
 export class KernelSmoothingStyle extends Style {
 
+    //see
+    //https://stackoverflow.com/questions/8099979/creating-a-glsl-arrays-of-uniforms
+    //see https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
+    
+
     /** @param {object} opts */
     constructor(opts) {
         super(opts)

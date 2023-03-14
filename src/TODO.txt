@@ -1,3 +1,13 @@
+module test
+
+V3
+make modules
+see https://webpack.js.org/guides/code-splitting/
+webpack: check plugins https://webpack.js.org/plugins
+
+module parquet
+parquet: monitor, improve
+parquet: make wasm import easier and wasm file smaller (https://github.com/kylebarron/parquet-wasm#custom-builds)
 finalise: elevation, lc, forest
 contour style: interval (min, max) => ... and color (val, min, max => ...
 elevation legend
@@ -10,31 +20,14 @@ do shadow with blur + mask
 see how to improve all style using mask/clip
 implement hill shading from https://observablehq.com/@sahilchinoy/a-faster-hillshader
 
-webgl kernel smoothing
-//https://stackoverflow.com/questions/8099979/creating-a-glsl-arrays-of-uniforms
-//see https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
-
 test on various navigators - smartphones
-parquet: monitor, improve
-
-parquet: make wasm import easier and wasm file smaller (https://github.com/kylebarron/parquet-wasm#custom-builds)
 
 possibility to make layers based on several datasets
 
-
-
 goto, zoom to: refactor (use parameter object). handle case when concurrent change trigger.
-
-
-
-V3:
-make modules
-see https://webpack.js.org/guides/code-splitting/
-webpack: check plugins https://webpack.js.org/plugins
 
 https://ieeexplore.ieee.org/document/1532144
 https://observablehq.com/@spren9er/two-tone-pseudo-color-scales
-
 
 https://jnafzig.github.io//2018/02/05/double-pendulum.html
 
