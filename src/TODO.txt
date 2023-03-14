@@ -8,6 +8,10 @@ webpack: check plugins https://webpack.js.org/plugins
 module parquet
 parquet: monitor, improve
 parquet: make wasm import easier and wasm file smaller (https://github.com/kylebarron/parquet-wasm#custom-builds)
+
+See https://kgolid.github.io/chromotome-site/
+
+
 finalise: elevation, lc, forest
 contour style: interval (min, max) => ... and color (val, min, max => ...
 elevation legend
