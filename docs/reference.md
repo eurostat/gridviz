@@ -464,11 +464,11 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pill
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
 | **heightCol**   | string       | undefined      | The name of the column used for the pillar height.    |
-| **height**      | function(v,r,s,zf):number    | (v,r,s,zf) => r | A function computing the pillar height from its __heightCol__ value **v**, the resolution **r**, statistics **s** and zoom |
+| **height**      | function(v,r,s,zf):number    | (v,r,s,zf) => r | A function computing the pillar height from its __heightCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
 | **colorCol**    | string    | undefined   | The name of the column used for the color.    |
 | **color**       | function(v,r,s):string | () => "#c08c59" | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**.      |
 | **widthCol**    | string    | undefined     | The name of the column used for the pillar width.       |
-| **width**       | function(v,r,s,zf):number     | (v,r,s,zf) => r | A function computing the pillar width from its __widthCol__ value **v**, the resolution **r**, statistics **s** and zoom  |
+| **width**       | function(v,r,s,zf):number     | (v,r,s,zf) => r | A function computing the pillar width from its __widthCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.  |
 | **simple**    |  boolean   | false   |  Set to true for a simplified drawing (as segments only, not entire pillar).  |
 | **viewHeightFactor**    |  number    |   1.5      | The view height.            |
 | **viewSX**    |  number    |    0     |   The view X position.          |
@@ -481,7 +481,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pill
 
 ### Text style
 
-This style shows the grid cells as text characters with different colors.
+This style shows the grid cells as text. The text, its color and font size can be set according to some cell values.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text.html) ([code](../examples/styles/text.html)).
 
@@ -489,8 +489,14 @@ Documentation coming soon.
 
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
-| **.**    |      |         |             |
-
+| **textCol**    |  string    |     The name of the column/attribute of the tabular data where to retrieve the variable for text.    |             |
+| **text**    |   function(v,r,s,zf):string   |    (v, r, s, z) => "X"     |      A function returning the text of a cell from its __textCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.       |
+| **colorCol**    |   string   |         |     The name of the column/attribute of the tabular data where to retrieve the variable for color.        |
+| **color**    |   function(v,r,s,zf):string   |   () => "#EA6BAC"      |      A function returning the color of the cell from its __colorCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.       |
+| **fontSizeCol**    |  string    |         |      The name of the column/attribute of the tabular data where to retrieve the variable for font size.       |
+| **fontSize**    |   function(v,r,s,zf):number   |     (v, r, s, z) => r * 0.8    |   A function returning the font size of a cell in geo unit from its __fontSizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.          |
+| **fontFamily**    |   string   |    "Arial"     |      The text font family.       |
+| **fontWeight**    |   string   |    "bold"     |     The text font weight.        |
 
 
 ## Side styles
