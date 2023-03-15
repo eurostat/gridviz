@@ -120,9 +120,6 @@ export class TextStyle extends Style {
 
             //draw the text
             cg.ctx.fillText(text, tx, ty);
-
-            //draw stroke of the cell as a square ?
-            //this.drawStroke(cell, r, cg, c => "square")
         }
 
         //update legends
