@@ -1,4 +1,4 @@
-text doc: new example with values.
+text style doc: improve example with values + image
 
 lego shading
 test/fix transparency
