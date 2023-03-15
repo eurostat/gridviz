@@ -1,6 +1,10 @@
+text doc
+
+lego shading
+test/fix transparency
+
 publish and document tiler
 
-fix transparency
 
 module test
 
