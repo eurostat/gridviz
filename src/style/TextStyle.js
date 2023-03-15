@@ -42,11 +42,11 @@ export class TextStyle extends Style {
 
 
 
-        /** A function returning the font family.
+        /** The text font family.
         * @type {string} */
         this.fontFamily = opts.fontFamily || "Arial"
 
-        /** A function returning the font weight.
+        /** The text font weight.
          * @type {string} */
         this.fontWeight = opts.fontWeight || "bold"
     }

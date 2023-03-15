@@ -481,11 +481,9 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pill
 
 ### Text style
 
-This style shows the grid cells as text. The text, its color and font size can be set according to some cell values.
+This style shows the grid cells as text labels. The text, its color and font size can be set according to some cell values.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text.html) ([code](../examples/styles/text.html)).
-
-Documentation coming soon.
 
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
