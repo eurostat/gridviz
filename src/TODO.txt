@@ -1,4 +1,4 @@
-text doc
+text doc: new example with values.
 
 lego shading
 test/fix transparency
