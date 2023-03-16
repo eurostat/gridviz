@@ -17,13 +17,12 @@
 
         let containerDiv = document.getElementById("viz-container");
 
-        //TODO
+        //
         const opacitise = (color, opacity) => {
             const col = d3.color(color)
             col.opacity = opacity
             return col.toString();
         }
-
 
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 4500000, y: 2570000 }).setZoomFactor(100)
