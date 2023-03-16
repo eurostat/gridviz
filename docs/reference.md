@@ -294,6 +294,8 @@ See [this example with changing size and color](https://eurostat.github.io/gridv
 
 See [this example with random shape, color and size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html) ([code](../examples/styles/shapecolorsize_random.html)).
 
+See [this example with transparency](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_transparency.html) ([code](../examples/styles/shapecolorsize_transparency.html)).
+
 | Property     | Type                   | Default         | Description                                                                                                                         |
 | ------------ | ---------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | **colorCol** | string                 | undefined       | The name of the column used for the color.                                                                                          |
