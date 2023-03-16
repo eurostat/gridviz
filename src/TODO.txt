@@ -1,4 +1,4 @@
-text style doc: improve example with values + image
+text style: add overview image
 
 lego shading
 test/fix transparency
