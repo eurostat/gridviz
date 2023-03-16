@@ -481,6 +481,9 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pill
 
 ### Text style
 
+[![text style](img/styles/text_elevation.png)](https://eurostat.github.io/gridviz/examples/styles/text_elevation.html)
+[![text style](img/styles/text.png)](https://eurostat.github.io/gridviz/examples/styles/text.html)
+
 This style shows the grid cells as text labels. The text, its color and font size can be set according to some cell values.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text_elevation.html) ([code](../examples/styles/text_elevation.html)).
