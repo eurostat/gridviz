@@ -19,6 +19,7 @@
 [![lego map](/docs/img/overviews/ov_lego.png)](docs/reference.md#lego-style)
 [![mosaic map](/docs/img/overviews/ov_mosaic.png)](docs/reference.md#mosaic-style)
 [![](/docs/img/overviews/ov_piechart.png)](docs/reference.md#composition-style)
+[![](/docs/img/overviews/ov_text_elevation.png)](docs/reference.md#text-style)
 [![](/docs/img/overviews/ov_pillar.png)](docs/reference.md#pillars-style)
 [![dot density map](/docs/img/overviews/ov_dotdensity_random.png)](docs/reference.md#dot-density-style)
 [![](/docs/img/overviews/ov_popchange.png)](docs/reference.md#shapecolorsize-style)
