@@ -1,7 +1,6 @@
-text style: add overview image
+test/fix transparency
 
 lego shading
-test/fix transparency
 
 publish and document tiler
 
