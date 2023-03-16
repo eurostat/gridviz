@@ -21,8 +21,8 @@ export class ShapeColorSizeStyle extends Style {
         this.colorCol = opts.colorCol;
 
         /** A function returning the color of the cell.
-        * @type {function(number,number,import("../Style").Stat|undefined):string} */
-        this.color = opts.color || (() => "#EA6BAC"); //(v,r,s) => {}
+        * @type {function(number,number,import("../Style").Stat|undefined,number):string} */
+        this.color = opts.color || (() => "#EA6BAC"); //(v,r,s,zf) => {}
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for size.
          * @type {string} */
@@ -74,7 +74,7 @@ export class ShapeColorSizeStyle extends Style {
         for (let cell of cells) {
 
             //color
-            const col = this.color ? this.color(cell[this.colorCol], r, statColor) : undefined;
+            const col = this.color ? this.color(cell[this.colorCol], r, statColor, zf) : undefined;
             if (!col || col === "none") continue
             cg.ctx.fillStyle = col;
 
