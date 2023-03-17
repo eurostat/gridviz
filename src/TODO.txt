@@ -1,4 +1,5 @@
 use/test transparency on census
+use/test transparency on CLC
 
 publish and document tiler
 

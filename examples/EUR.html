@@ -182,7 +182,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 5, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, 7) }))
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({ title: "Number of inhabitants", ticks: 5, colorRamp: d3.interpolateOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7) }))
 
             } else if (layCode === "popChange") {
 
