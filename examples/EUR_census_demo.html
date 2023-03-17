@@ -347,6 +347,7 @@
                                 new gviz.SquareColorWGLStyle({
                                     colorCol: "ksmval",
                                     color: colR,
+                                    //opacity: (r, zf) => 0.5,
                                     tFun: (v, r, s) => {
                                         const v_ = gviz.sExp((v) / s.max, -12)
                                         const cl = Math.floor(nb * v_) / nb
