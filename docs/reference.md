@@ -316,6 +316,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squa
 
 See [this example with dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html) ([code](../examples/styles/squarecolorwgl_dark.html)).
 
+See [this example with transparency](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_transparency.html) ([code](../examples/styles/squarecolorwgl_transparency.html)).
 
 | Property       | Type                       | Default         | Description            |
 | -------------- | ----------------- | ------------ | ----------- |

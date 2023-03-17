@@ -98,8 +98,13 @@ export class SquareColorWGLStyle extends Style {
 
         if (monitor) monitorDuration("   webgl drawing data preparation")
 
+        //compute pixel size
         const sizeGeo = this.size ? this.size(r, zf) : r + 0.2 * zf
+
+        //compute opacity
         const op = this.opacity? this.opacity(r, zf) : undefined
+
+        //
         const wgp = new WebGLSquareColoringAdvanced(cvWGL.gl, this.colors, this.stretching, sizeGeo / zf, op)
 
         if (monitor) monitorDuration("   webgl program preparation")
