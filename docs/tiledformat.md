@@ -36,10 +36,11 @@ This **info.json** file includes the following information:
 | -------- | ------- | ------- |
 | **dims** | Array(String) | The list of dimension column names, corresponding to the grid variables. |
 | **crs** | String | The [EPSG](https://spatialreference.org/) code of the grid Coordinate Reference System. |
-| **tileSizeCell** | Integer | The size of each tile, in number of cells. The tiles are square. They all have the same size. |
-| **originPoint** | { x:Number, y:Number } | The origin point of the tiling scheme, in CRS coordinates. This is the bottom left point. The tiles start being built and numbered from this point. |
+| **tileSizeCell** | Integer | The size of each tile, in number of cells. The tiles are square. They all have the same size. There is no constraint on this value: It is not forced to be a power of 2. It should be chosen to ensure the tile size is low enough (so that it is fast enough to download and parse) and high enought (so that there are not too many tiles to be requested). |
+| **originPoint** | { x:Number, y:Number } | The geographical coordinates (in grid CRS) of the lower left point of the grid. This is the bottom left point. The tiles start being built and numbered from this point. |
 | **resolutionGeo** | Number | The resolution of the grid, that is the size of each cell expressed in the ground CRS unit of measure (usually meters). |
-| **tilingBounds** | { xMin:Number, yMin:Number, xMax:Number, yMax:Number } | The bounds of the tiling scheme, that is the min/max x/y coordinates of the tiles in the tiling scheme. |
+| **tilingBounds** | { xMin:Number, yMin:Number, xMax:Number, yMax:Number } | The bounds of the tiling scheme, that is the min/max x/y coordinates of the tiles in the tiling scheme. __tilingBounds__ refers to how the tiling frame is filled with data: Not all tiles may be provided, due to data sparsity. __tilingBounds__ may be used to avoid requesting tiles where no tile is expected to be found.  |
+
 
 The information provided in this **info.json** file allows to retrieve each tile by geographic location and interpret the information of each tile file to locate properly the cells it contains.
 
@@ -52,7 +53,7 @@ See for example [this dataset](https://github.com/jgaffuri/tiledgrids/tree/main/
 ## Tile format
 
 Each tile file contains the information related to the grid for the geographical location of the tile. It is a simple tabular file. Each row corresponds to a grid cell. The following columns are provided:
-- **x** and **y** specify the position of the grid cell **in the tile**. These values are thus within *[0, tileSizeCell[* interval. *(0,0)* position corresponds to the bottom left cell of the tile. It is not compulsory to describe all cells of the tile - a tile file could thus contains a very small number of rows.
+- **x** and **y** specify the position of the grid cell **in the tile**. These values are thus integer values within *[0, tileSizeCell[* interval. *(0,0)* position corresponds to the bottom left cell of the tile. It is not compulsory to describe all cells of the tile - a tile file could thus contains a very small number of rows.
 - Various columns **dims**, one for each variable describing the cells. 
 
 Each file can be encoded in whatever user defined format. [GridViz](https://github.com/eurostat/gridviz/) currently supports CSV and [Apache Parquet](https://parquet.apache.org/). Other encodings could be considered.
@@ -70,3 +71,7 @@ Difference with slippy map **/Z/X/Y.png** tilenames:
 Difference with [Cloud Optimized GeoTIFF (COG)](https://www.cogeo.org/)
 - No need for HTTP GET range requests.
 - Indexation based on file hierachy.
+
+## Tools
+
+[Eurostat GridTiler](https://github.com/eurostat/gridtiler)
