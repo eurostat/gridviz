@@ -1,10 +1,8 @@
-test/fix transparency webgl
-
-lego shading
+use/test transparency on census
 
 publish and document tiler
 
-
+lego shading
 
 module test
 
