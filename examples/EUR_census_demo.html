@@ -10,7 +10,7 @@
 
         <div
             style="font-size: 0.9em; position: absolute; left: 10px; top: 10px; width: auto; height: auto; padding: 5px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd">
-            <span style="font-size: 1.8em; font-weight: bold;">Population grid - Demo</span><br>
+            <span style="font-size: 1.8em; font-weight: bold;">Population grid</span><br>
             <span style="font-size: 1.3em; font-weight: bold;">Total population</span><br>
             Year: <select id="year">
                 <option value="2018" selected>2018</option>
@@ -43,7 +43,7 @@
             <label for="lego">Lego</label>
 
             <br>
-            <span style="font-size: 1.3em; font-weight: bold;">Population change (2011 - 2018)</span>
+            <span style="font-size: 1.3em; font-weight: bold;">2011/2018 change</span>
             <br>
             <input type="radio" name="style" id="colorCh" value="colorCh">
             <label for="colorCh">Color</label>
@@ -326,12 +326,6 @@
 
                 const nb = 10
                 const colR = d3.interpolateOrRd
-                //test with transparency: it does not work !
-                /*const colR = t => {
-                    const col = d3.color(d3.interpolateOrRd(t))
-                    col.opacity=0.8
-                    return col.toString();
-                }*/
 
                 //add layer
                 app.addLayerFromDataset(
@@ -347,7 +341,7 @@
                                 new gviz.SquareColorWGLStyle({
                                     colorCol: "ksmval",
                                     color: colR,
-                                    opacity: (r,zf) => zf < 300? 0.75 : 1,
+                                    //opacity: (r,zf) => zf < 300? 0.75 : 1,
                                     tFun: (v, r, s) => {
                                         const v_ = gviz.sExp((v) / s.max, -12)
                                         const cl = Math.floor(nb * v_) / nb
@@ -520,7 +514,7 @@
                                 new gviz.SquareColorWGLStyle({
                                     colorCol: "ksmval",
                                     color: t => colR(1 - t),
-                                    opacity: (r,zf) => zf < 300? 0.75 : 1,
+                                    //opacity: (r,zf) => zf < 300? 0.75 : 1,
                                     tFun: (v, r, s) => {
                                         let t = 0.5
                                         if (s.min < 0 && v < 0) {

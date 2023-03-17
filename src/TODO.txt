@@ -1,6 +1,3 @@
-use/test transparency on census
-use/test transparency on CLC
-
 smoothing with filosofi pop change
 
 publish and document tiler
