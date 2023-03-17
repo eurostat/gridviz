@@ -45,6 +45,12 @@ export class SquareColorWGLStyle extends Style {
             this.colors = [opts.color(0), opts.color(0.2), opts.color(0.4), opts.color(0.6), opts.color(0.8), opts.color(1)]
 
         /**
+         * Define the opacity of the style, within [0,1].
+         * If this opacity is defined, the individual color opacity will be ignored.
+         * @type {function(number,number):number} */
+        this.opacity = opts.opacity // (r,zf) => ...
+
+        /**
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
          * @type {function(number,number):number} */
         this.size = opts.size; // (resolution, zf) => ...
@@ -60,7 +66,7 @@ export class SquareColorWGLStyle extends Style {
         if (monitor) monitorDuration("*** SquareColorWGLStyle draw")
 
         //filter
-        if(this.filter) cells = cells.filter(this.filter)
+        if (this.filter) cells = cells.filter(this.filter)
 
         //zoom factor
         const zf = cg.getZf()
@@ -81,11 +87,9 @@ export class SquareColorWGLStyle extends Style {
 
         //add vertice and fragment data
         const r2 = r / 2
-        let c, nb = cells.length
         const verticesBuffer = []
         const tBuffer = []
-        for (let i = 0; i < nb; i++) {
-            c = cells[i]
+        for (let c of cells) {
             const t = this.tFun(c[this.colorCol], r, statColor)
             if (t == null || t == undefined) continue
             verticesBuffer.push(c.x + r2, c.y + r2)
@@ -95,7 +99,8 @@ export class SquareColorWGLStyle extends Style {
         if (monitor) monitorDuration("   webgl drawing data preparation")
 
         const sizeGeo = this.size ? this.size(r, zf) : r + 0.2 * zf
-        const wgp = new WebGLSquareColoringAdvanced(cvWGL.gl, this.colors, this.stretching, sizeGeo / zf)
+        const op = this.opacity? this.opacity(r, zf) : undefined
+        const wgp = new WebGLSquareColoringAdvanced(cvWGL.gl, this.colors, this.stretching, sizeGeo / zf, op)
 
         if (monitor) monitorDuration("   webgl program preparation")
 

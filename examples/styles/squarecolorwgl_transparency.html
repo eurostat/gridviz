@@ -3,26 +3,16 @@
 
 <head>
     <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-    <title>Gridviz - Shape/color/size style</title>
+    <title>Gridviz - Square color WebGL style</title>
 </head>
 
 <body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
     <div id="viz-container" style="height:100%; width:100%;"></div>
 
     <script src="../../dist/gridviz.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
 
         let containerDiv = document.getElementById("viz-container");
-
-        //
-        const opacitise = (color, opacity) => {
-            const col = d3.color(color)
-            col.opacity = opacity
-            return col.toString();
-        }
 
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 4500000, y: 2570000 }).setZoomFactor(100)
@@ -39,18 +29,16 @@
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
                 [
-                    new gviz.ShapeColorSizeStyle({
+                    new gviz.SquareColorWGLStyle({
                         colorCol: "2018",
-                        color: (v, r, s, zf) => {
-                            let c = d3.interpolateSpectral(1 - gviz.sExpRev(v / s.max, -7))
-                            //make transparent for low zoom levels
-                            if (zf < 800) c = opacitise(c, 0.65)
-                            return c
-                        }
+                        //colors: ["rgba(158, 1, 66, 0.6)", "rgba(248, 142, 83, 0.6)", "rgba(251, 248, 176, 0.6)", "rgba(137, 207, 165, 0.6)", "rgba(94, 79, 162, 0.6)"].reverse(),
+                        opacity: (r,zf) => zf < 800? 0.7 : 1,
+                        tFun: (value, resolution, stats) => value / stats.max,
+                        stretching: { fun: "expRev", alpha: -7 }
                     })
                 ],
                 {
-                    pixNb: 5,
+                    pixNb: 1.5,
                     cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)",
                 })
 

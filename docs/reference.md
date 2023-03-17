@@ -299,7 +299,7 @@ See [this example with transparency](https://eurostat.github.io/gridviz/examples
 | Property     | Type                   | Default         | Description                                                                                                                         |
 | ------------ | ---------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | **colorCol** | string                 | undefined       | The name of the column used for the color.                                                                                          |
-| **color**    | function(v,r,s):string | (v,r,s) => "#EA6BAC" | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.                  |
+| **color**    | function(v,r,s):string | (v,r,s,zf) => "#EA6BAC" | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.                  |
 | **sizeCol**  | string                 | undefined       | The name of the column used for the size.                                                                                           |
 | **size**     | function(v,r,s,zf):number   | (v,r,s,zf) => r | A function computing the cell size from its __sizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
 | **shape**    | function(c):string     | () => "square"  | A function computing the shape of cell **c**. Expected values are within _{"square", "circle", "diamond", "donut", "none"}_      |
