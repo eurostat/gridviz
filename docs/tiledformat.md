@@ -72,6 +72,6 @@ Difference with [Cloud Optimized GeoTIFF (COG)](https://www.cogeo.org/)
 - No need for HTTP GET range requests.
 - Indexation based on file hierachy.
 
-## Tools
+## Related tools
 
 [Eurostat GridTiler](https://github.com/eurostat/gridtiler)
