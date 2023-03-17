@@ -325,6 +325,7 @@ See [this example with transparency](https://eurostat.github.io/gridviz/examples
 | **stretching** | {fun:string, alpha:number} | undefined       | Necessary information to apply a stretching [0,1] -> [0,1] to the **t** value. Property **fun** is the type of function, among _{"pow", "powRev", "exp", "expRev"}_ - see [stretching section](#stretching) for more information on those functions. This stretching is performed on GPU side (fragment shader). |
 | **colors**   | Array(string)    | Colors based on [interpolateSpectral](https://github.com/d3/d3-scale-chromatic#interpolateSpectral) | The sample of the color ramp.      |
 | **color**      | function(t):number         | undefined                                                                                           | Instead of specifying **colors**, this property can be defined. It is a function which returns a color from a **t** value within [0,1].     |
+| **opacity**       | function(r,zf):number      | undefined   | A function returning the opacity of the style from the resolution **r** and zoom factor **zf**, within [0,1]. NB: If this opacity is defined, the individual color opacity will be ignored.      |
 | **size**       | function(r,zf):number      | (r,zf) => r + 0.2 * zf         | A function returning the size of the cells from the resolution **r** and zoom factor **zf**, in geographical unit. All cells have the same size.       |
 
 
@@ -495,11 +496,11 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/text.html)
 
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
-| **textCol**    |  string    |     The name of the column/attribute of the tabular data where to retrieve the variable for text.    |             |
+| **textCol**    |  string    |    undefined   |     The name of the column/attribute of the tabular data where to retrieve the variable for text.          |
 | **text**    |   function(v,r,s,zf):string   |    (v, r, s, z) => "X"     |      A function returning the text of a cell from its __textCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.       |
-| **colorCol**    |   string   |         |     The name of the column/attribute of the tabular data where to retrieve the variable for color.        |
+| **colorCol**    |   string   |    undefined     |     The name of the column/attribute of the tabular data where to retrieve the variable for color.        |
 | **color**    |   function(v,r,s,zf):string   |   () => "#EA6BAC"      |      A function returning the color of the cell from its __colorCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.       |
-| **fontSizeCol**    |  string    |         |      The name of the column/attribute of the tabular data where to retrieve the variable for font size.       |
+| **fontSizeCol**    |  string    |     undefined    |      The name of the column/attribute of the tabular data where to retrieve the variable for font size.       |
 | **fontSize**    |   function(v,r,s,zf):number   |     (v, r, s, z) => r * 0.8    |   A function returning the font size of a cell in geo unit from its __fontSizeCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.          |
 | **fontFamily**    |   string   |    "Arial"     |      The text font family.       |
 | **fontWeight**    |   string   |    "bold"     |     The text font weight.        |
