@@ -30,6 +30,9 @@ export class WebGLSquareColoringAdvanced {
 
         /** @type {WebGLRenderingContext} */
         this.gl = gl
+        //gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+        //gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        //gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
         /** @type {WebGLShader} */
         const vShader = createShader(gl, gl.VERTEX_SHADER, `

@@ -78,7 +78,8 @@ export class SquareColorWGLStyle extends Style {
         if (!statColor) return
 
         //create canvas and webgl renderer
-        const cvWGL = makeWebGLCanvas(cg.w + "", cg.h + "")
+        //for opacity control, see: https://webglfundamentals.org/webgl/lessons/webgl-and-alpha.html
+        const cvWGL = makeWebGLCanvas(cg.w + "", cg.h + "", this.opacity != undefined ? { premultipliedAlpha: false } : undefined)
         if (!cvWGL) {
             console.error("No webGL")
             return
@@ -102,7 +103,7 @@ export class SquareColorWGLStyle extends Style {
         const sizeGeo = this.size ? this.size(r, zf) : r + 0.2 * zf
 
         //compute opacity
-        const op = this.opacity? this.opacity(r, zf) : undefined
+        const op = this.opacity ? this.opacity(r, zf) : undefined
 
         //
         const wgp = new WebGLSquareColoringAdvanced(cvWGL.gl, this.colors, this.stretching, sizeGeo / zf, op)

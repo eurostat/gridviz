@@ -5,13 +5,14 @@
 /**
  * @param {string} width 
  * @param {string} height 
+ * @param {object} opts 
  * @returns {{canvas:HTMLCanvasElement, gl:WebGLRenderingContext}}
  */
-export function makeWebGLCanvas(width, height) {
+export function makeWebGLCanvas(width, height, opts) {
     const canvas = document.createElement("canvas");
     canvas.setAttribute("width", width);
     canvas.setAttribute("height", height);
-    const gl = canvas.getContext("webgl");
+    const gl = canvas.getContext("webgl", opts);
     if (!gl) {
         throw new Error("Unable to initialize WebGL. Your browser or machine may not support it.");
     }
