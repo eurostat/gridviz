@@ -103,13 +103,12 @@
             {
                 preprocess: (c) => {
                     //prepare change data
-                    //TODO
-                    /*if (!c["2011"] && !c["2018"]) c.d2011_2018 = 0
-                    else if (!c["2011"] && c["2018"]) c.d2011_2018 = + c["2018"]
-                    else if (c["2011"] && !c["2018"]) c.d2011_2018 = - c["2011"]
-                    else c.d2011_2018 = c["2018"] - c["2011"]
+                    if (!c.Ind_2015 && !c.Ind_2017) c.d2015_2017 = 0
+                    else if (!c.Ind_2015 && c.Ind_2017) c.d2015_2017 = + c.Ind_2017
+                    else if (c.Ind_2015 && !c.Ind_2017) c.d2015_2017 = - c.Ind_2015
+                    else c.d2015_2017 = c.Ind_2017 - c.Ind_2015
                     //ratio
-                    c.p2011_2018 = c["2011"] == 0 ? 999 : c.d2011_2018 / c["2011"]*/
+                    c.p2011_2018 = c.Ind_2015 == 0 ? 999 : c.d2015_2017 / c.Ind_2015
                 }
             }
         )
@@ -122,8 +121,7 @@
         const update = () => {
 
             //get year selection
-            const year = document.querySelector('#year').value
-            console.log(year)
+            const year = "Ind_" + document.querySelector('#year').value
 
             //get style selection
             const style = document.querySelector('input[name="style"]:checked').value
@@ -135,10 +133,10 @@
             const tooltipFun = (c, r) =>
                 +c[year] ? "<b>" + c[year] + "</b> inhabitant" + (+c[year] == 1 ? "" : "s") + " per " + (r * r / 1000000) + "km²" : undefined
             const tooltipFunCh = c => (
-                "2011: " + c["2011"] + "<br>2018: " + c["2018"]
+                "2011: " + c.Ind_2015 + "<br>2018: " + c.Ind_2017
             )
                 + "<br>"
-                + "<b>" + (c["d2011_2018"] == 0 ? "No change" : (c["d2011_2018"] > 0 ? "+" : "") + c["d2011_2018"] + " inhabitants") + "</b>"
+                + "<b>" + (c.d2015_2017 == 0 ? "No change" : (c.d2015_2017 > 0 ? "+" : "") + c.d2015_2017 + " inhabitants") + "</b>"
 
             //set default background filter color
             app.bgLayers[0].filterColor = zf => "#ffffffc0"
@@ -416,7 +414,7 @@
                     popDataset,
                     [
                         new gviz.ShapeColorSizeStyle({
-                            colorCol: "d2011_2018",
+                            colorCol: "d2015_2017",
                             color: (v, r, s) => {
                                 const stre = gviz.sPow
                                 let t = 0.5
@@ -472,11 +470,11 @@
                     popDataset,
                     [
                         new gviz.KernelSmoothingStyle({
-                            value: c => +c["d2011_2018"],
+                            value: c => +c.d2015_2017,
                             sigma: (r, zf) => r * sigma / 10,
                             factor: 2,
                             filterSm: v => Math.abs(v) > 0.0001,
-                            //filter: c => !c["2011"] && !c["2018"],
+                            //filter: c => !c.Ind_2015 && !c.Ind_2017,
                             styles: [
                                 new gviz.SquareColorWGLStyle({
                                     colorCol: "ksmval",
@@ -536,9 +534,9 @@
                     popDataset,
                     [
                         new gviz.ShapeColorSizeStyle({
-                            colorCol: "d2011_2018",
+                            colorCol: "d2015_2017",
                             color: (v) => v > 0 ? "#d13c4bcc" : "#4288b5cc",
-                            sizeCol: "d2011_2018",
+                            sizeCol: "d2015_2017",
                             size: (v, r, s, zf) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                                 return 1.5 * r * gviz.sPow(Math.abs(v) / max, 0.2)
@@ -574,9 +572,9 @@
                             colorCol: "p2011_2018",
                             color: (v) => Math.abs(v) < 0.02 ? "gray" : v > 0 ? "#d13c4bcc" : "#4288b5cc",
                             length: (v, r) => r,
-                            //lengthCol: "2011",
+                            //lengthCol: "Ind_2015",
                             //length: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25),
-                            widthCol: "2018",
+                            widthCol: "Ind_2017",
                             width: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.25)
                         })],
                     {
