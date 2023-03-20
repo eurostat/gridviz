@@ -1,3 +1,34 @@
+
+Austria: Vienna
+Belgium: Brussels
+Bulgaria: Sofia
+Croatia: Zagreb
+Cyprus: Nicosia
+Czech Republic: Prague
+Denmark: Copenhagen
+Estonia: Tallinn
+Finland: Helsinki
+France: Paris
+Germany: Berlin
+Greece: Athens
+Hungary: Budapest
+Ireland: Dublin
+Italy: Rome
+Latvia: Riga
+Lithuania: Vilnius
+Luxembourg: Luxembourg City.
+Malta: Valleta
+Netherlands: Amsterdam
+Poland: Warsaw
+Portugal: Lisbon
+Romania: Bucharest
+Slovakia: Bratislava
+Slovenia: Ljubljana
+Spain: Madrid
+Sweden: Stockholm
+
+
+
 publish and document tiler
 
 lego shading
@@ -165,6 +196,7 @@ copernicus global land cover: https://land.copernicus.eu/global/products/lc
 
 
 TODO test gridded datasets:
+DE: https://www.zensus2011.de/DE/Home/Aktuelles/DemografischeGrunddaten.html
 NL: https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken
 World: https://wopr.worldpop.org/?NGA/Population/v2.0
 HR: https://geostat.dzs.hr/?lang=en   1km. toutirsm, education, businesses, etc. Request sent.
