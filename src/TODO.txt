@@ -1,5 +1,3 @@
-smoothing with filosofi pop change
-
 publish and document tiler
 
 lego shading
