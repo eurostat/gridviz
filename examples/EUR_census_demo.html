@@ -24,10 +24,16 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
       .toc-element {
         margin-top: 0rem !important;
       }
+      #toc-expandable-content {
+        /* border: 0px, 2px, 2px, 2px solid #004494 !important; */
+      }
       .gridviz-slider {
         margin-left: 15px;
         margin-top: 0rem !important;
         width: 100px;
+      }
+      #gridviz-zoom-btns {
+        /* border: 2px solid #004494 !important; */
       }
       .gridviz-zoom-button {
         align-items: center;
@@ -39,6 +45,27 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
         color: black;
         text-align: center;
         text-decoration: none;
+        padding: 4px;
+      }
+      #legendPop {
+        /* border: 2px solid #004494 !important; */
+      }
+      #legendPop text {
+        display: inline-flex;
+        font: normal normal 400 1rem/1.5rem arial, sans-serif;
+        font-weight: 700 !important;
+        font-size: 15px !important;
+        fill: #404040;
+      }
+      #legendPop g text {
+        font-weight: normal !important;
+      }
+      #tooltip_eurostat {
+        box-shadow: 0 2px 4px rgba(0, 47, 103, 0.08), 0 0 10px rgba(0, 47, 103, 0.04),
+          0 4px 5px rgba(0, 47, 103, 0.04), 0 -4px 4px rgba(0, 47, 103, 0.04) !important;
+        background-color: white !important;
+        border-radius: 0px !important;
+        /* border: 2px solid #004494 !important; */
       }
     </style>
   </head>
@@ -52,20 +79,19 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
         <div class="ecl-expandable" data-ecl-expandable="true" data-ecl-auto-init="Expandable">
           <button
             class="ecl-button ecl-button--secondary ecl-expandable__toggle"
-            style="border: none !important"
             type="button"
-            aria-controls="expandable-content"
+            aria-controls="toc-expandable-content"
             data-ecl-expandable-toggle
             data-ecl-label-expanded="Options"
             data-ecl-label-collapsed="Options"
-            aria-expanded="false"
+            aria-expanded="true"
           >
             <span class="ecl-button__container"
               ><span class="ecl-button__label" data-ecl-label="true">Options</span
               ><svg
                 class="ecl-icon ecl-icon--fluid ecl-icon--rotate-180 ecl-button__icon ecl-button__icon--after"
                 focusable="false"
-                aria-hidden="true"
+                aria-hidden="false"
                 data-ecl-icon
               >
                 <use xlink:href="./ec-icons.svg#corner-arrow"></use>
@@ -75,10 +101,9 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
 
           <!-- TABLE OF CONTENTS EXPANDED CONTENT-->
           <div
-            id="expandable-content"
+            id="toc-expandable-content"
             style="padding: 15px"
             class="ecl-expandable__content ecl-u-bg-white ecl-u-shadow-1"
-            hidden
           >
             <div class="ecl-navigation-list">
               <fieldset class="ecl-form-group" aria-describedby="helper-id-1">
