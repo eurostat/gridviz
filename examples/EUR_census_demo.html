@@ -24,6 +24,22 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
       .toc-element {
         margin-top: 0rem !important;
       }
+      .gridviz-slider {
+        margin-left: 15px;
+        margin-top: 0rem !important;
+        width: 100px;
+      }
+      .gridviz-zoom-button {
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        border: none;
+        color: black;
+        text-align: center;
+        text-decoration: none;
+      }
     </style>
   </head>
 
@@ -36,6 +52,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
         <div class="ecl-expandable" data-ecl-expandable="true" data-ecl-auto-init="Expandable">
           <button
             class="ecl-button ecl-button--secondary ecl-expandable__toggle"
+            style="border: none !important"
             type="button"
             aria-controls="expandable-content"
             data-ecl-expandable-toggle
@@ -60,7 +77,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
           <div
             id="expandable-content"
             style="padding: 15px"
-            class="ecl-expandable__content ecl-u-bg-white"
+            class="ecl-expandable__content ecl-u-bg-white ecl-u-shadow-1"
             hidden
           >
             <div class="ecl-navigation-list">
@@ -69,7 +86,10 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
 
                 <!-- year select -->
 
-                <div class="toc-element" style="display: flex; margin-bottom: 0.5rem">
+                <div
+                  class="toc-element"
+                  style="display: flex; margin-bottom: 0.5rem; margin-top: 0.5rem"
+                >
                   <label
                     for="year-select"
                     style="margin-top: auto; margin-bottom: auto; margin-right: 15px"
@@ -79,7 +99,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                     class="ecl-select__container ecl-select__container--m"
                     style="max-width: 110px"
                   >
-                    <select class="ecl-select" id="year">
+                    <select class="ecl-select" id="year" style="padding: 5px">
                       <option value="2018">2018</option>
                       <option value="2011">2011</option>
                     </select>
@@ -185,7 +205,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                   data-ecl-range="true"
                   data-ecl-auto-init="Range"
                 >
-                  <div style="display: flex">
+                  <div style="display: flex; align-items: center">
                     <div class="ecl-radio toc-element">
                       <input
                         id="smoothed"
@@ -202,9 +222,8 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                     <input
                       id="sigmaTK"
                       data-ecl-range-input
-                      style="margin-left: 15px; width: 100px"
                       type="range"
-                      class="ecl-range ecl-range--m"
+                      class="ecl-range ecl-range--m gridviz-slider"
                       min="3"
                       max="20"
                       value="10"
@@ -251,7 +270,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                   data-ecl-range="true"
                   data-ecl-auto-init="Range"
                 >
-                  <div style="display: flex">
+                  <div style="display: flex; align-items: center">
                     <div class="ecl-radio toc-element">
                       <input
                         id="colorChSmTK"
@@ -268,9 +287,8 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                     <input
                       id="sigmaCCH"
                       data-ecl-range-input
-                      style="margin-left: 15px; width: 100px"
                       type="range"
-                      class="ecl-range ecl-range--m"
+                      class="ecl-range ecl-range--m gridviz-slider"
                       min="3"
                       max="20"
                       value="10"
@@ -446,54 +464,29 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
       </div> -->
 
       <div
+        class="ecl-u-bg-white ecl-u-shadow-1"
         style="
-          font: bold 20px sans-serif;
           position: absolute;
           left: 10px;
           bottom: 10px;
           width: auto;
           height: auto;
-          padding: 5px;
-          border-radius: 5px;
-          background: #ffffffcc;
-          line-height: 1.6;
-          box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd;
+          font-size: 20px;
+          font-weight: bold;
         "
       >
-        <a
-          id="zoomin"
-          style="
-            width: 30px;
-            height: 30px;
-            display: block;
-            border: none;
-            color: black;
-            text-align: center;
-            text-decoration: none;
-          "
-          href="#"
-          title="Zoom in"
-          >+</a
-        >
+        <a id="zoomin" class="gridviz-zoom-button" href="#" title="Zoom in">+</a>
         <hr style="margin: 0px" />
-        <a
-          id="zoomout"
-          style="
-            width: 30px;
-            height: 30px;
-            display: block;
-            border: none;
-            color: black;
-            text-align: center;
-            text-decoration: none;
-          "
-          href="#"
-          title="Zoom out"
-          >−</a
-        >
+        <a id="zoomout" class="gridviz-zoom-button" href="#" title="Zoom out">−</a>
       </div>
 
       <div
+        id="legendPop"
+        class="ecl-u-bg-white ecl-u-shadow-1"
+        style="position: absolute; right: 5px; top: 5px; padding: 5px"
+      ></div>
+
+      <!-- <div
         id="legendPop"
         style="
           position: absolute;
@@ -508,7 +501,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
           line-height: 1.6;
           box-shadow: 5px 5px 5px grey, -3px -3px 3px #ddd;
         "
-      ></div>
+      ></div> -->
 
       <div
         style="
@@ -584,13 +577,14 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
       toc.addEventListener("mouseenter", (event) => {
         console.log(event.type);
         document.getElementById("tooltip_eurostat").style.display = "none";
-        event.stopPropagation();
+        //containerDiv.style.pointerEvents = "none";
+        event.stopImmediatePropagation();
       });
       toc.addEventListener("mouseleave", (event) => {
         console.log(event.type);
         document.getElementById("tooltip_eurostat").style.display = "block";
         //containerDiv.style.pointerEvents = "initial";
-        event.stopPropagation();
+        event.stopImmediatePropagation();
       });
 
       const app = new gviz.App(containerDiv, { legendDivId: "legendPop" })
