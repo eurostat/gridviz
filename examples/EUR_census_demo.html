@@ -464,6 +464,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
       </div> -->
 
       <div
+        id="gridviz-zoom-btns"
         class="ecl-u-bg-white ecl-u-shadow-1"
         style="
           position: absolute;
@@ -572,19 +573,20 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
 
       let containerDiv = document.getElementById("vizPop");
 
-      //prevent tooltip when mouseover TOC
+      //prevent tooltip when mouseover TOC, legend and zoom buttons
+      let tt = document.getElementById("tooltip_eurostat");
       let toc = document.getElementById("ecl-toc");
-      toc.addEventListener("mouseenter", (event) => {
-        console.log(event.type);
-        document.getElementById("tooltip_eurostat").style.display = "none";
-        //containerDiv.style.pointerEvents = "none";
-        event.stopImmediatePropagation();
-      });
-      toc.addEventListener("mouseleave", (event) => {
-        console.log(event.type);
-        document.getElementById("tooltip_eurostat").style.display = "block";
-        //containerDiv.style.pointerEvents = "initial";
-        event.stopImmediatePropagation();
+      let zoomBtns = document.getElementById("gridviz-zoom-btns");
+      let lgndNode = document.getElementById("legendPop");
+      [toc, zoomBtns, lgndNode].forEach((node) => {
+        node.addEventListener("mouseenter", (event) => {
+          document.getElementById("tooltip_eurostat").style.display = "none";
+          event.stopImmediatePropagation();
+        });
+        node.addEventListener("mouseleave", (event) => {
+          document.getElementById("tooltip_eurostat").style.display = "block";
+          event.stopImmediatePropagation();
+        });
       });
 
       const app = new gviz.App(containerDiv, { legendDivId: "legendPop" })
@@ -1278,10 +1280,6 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
       //sigma selection
       document.getElementById("sigmaTK").oninput = update;
       document.getElementById("sigmaCCH").oninput = update;
-
-      //zoom
-      //document.querySelector('#zoomin').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
-      //document.querySelector('#zoomout').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 1.2).redraw())
 
       // show/hide labels
       document.querySelector("#label").addEventListener("change", function () {
