@@ -1,31 +1,114 @@
 
-Austria: Vienna
-Belgium: Brussels
-Bulgaria: Sofia
-Croatia: Zagreb
-Cyprus: Nicosia
-Czech Republic: Prague
-Denmark: Copenhagen
-Estonia: Tallinn
-Finland: Helsinki
-France: Paris
-Germany: Berlin
-Greece: Athens
-Hungary: Budapest
-Ireland: Dublin
-Italy: Rome
-Latvia: Riga
-Lithuania: Vilnius
-Luxembourg: Luxembourg City.
-Malta: Valleta
-Netherlands: Amsterdam
-Poland: Warsaw
-Portugal: Lisbon
-Romania: Bucharest
-Slovakia: Bratislava
-Slovenia: Ljubljana
-Spain: Madrid
-Sweden: Stockholm
+[
+{cnt:"Austria",
+na:"Vienna",
+x:2808634,
+y:4793921},
+{cnt:"Belgium",
+na:"Brussels",
+x:2808634,
+y:4793921},
+{cnt:"Bulgaria",
+na:"Sofia",
+x:2273273,
+y:5409208},
+{cnt:"Croatia",
+na:"Zagreb",
+x:2539190,
+y:4785799},
+{cnt:"Cyprus",
+na:"Nicosia",
+x:1669195,
+y:6434396},
+{cnt:"Czech Republic",
+na:"Prague",
+x:3006573,
+y:4636888},
+{cnt:"Denmark",
+na:"Copenhagen",
+x:3621928,
+y:4483714},
+{cnt:"Estonia",
+na:"Tallinn",
+x:4124112,
+y:5152541},
+{cnt:"Finland",
+na:"Helsinki",
+x:4206169,
+y:5145398},
+{cnt:"France",
+na:"Paris",
+x:2889710,
+y:3759848},
+{cnt:"Germany",
+na:"Berlin",
+x:3272768,
+y:4550204},
+{cnt:"Greece",
+na:"Athens",
+x:1763405,
+y:5528486},
+{cnt:"Hungary",
+na:"Budapest",
+x:2750854,
+y:5001006},
+{cnt:"Ireland",
+na:"Dublin",
+x:3480833,
+y:3248170},
+{cnt:"Italy",
+na:"Rome",
+x:2091787,
+y:4526939},
+{cnt:"Latvia",
+na:"Riga",
+x:3845092,
+y:5173781},
+{cnt:"Lithuania",
+na:"Vilnius",
+x:3613097,
+y:5298216},
+{cnt:"Luxembourg",
+na:"Luxembourg City",
+x:2951645,
+y:4041344},
+{cnt:"Malta",
+na:"Valleta",
+x:1438231,
+y:4731692},
+{cnt:"Netherlands",
+na:"Amsterdam",
+x:3263159,
+y:3974055},
+{cnt:"Poland",
+na:"Warsaw",
+x:3293412,
+y:5069599},
+{cnt:"Portugal",
+na:"Lisbon",
+x:1946680,
+y:2665444},
+{cnt:"Romania",
+na:"Bucharest",
+x:2507304,
+y:5594357},
+{cnt:"Slovakia",
+na:"Bratislava",
+x:2806628,
+y:4849403},
+{cnt:"Slovenia",
+na:"Ljubljana",
+x:2806628,
+y:4849403},
+{cnt:"Spain",
+na:"Madrid",
+x:2029857,
+y:3159389},
+{cnt:"Sweden",
+na:"Stockholm",
+x:4051033,
+y:4780334},
+]
 
 
 
