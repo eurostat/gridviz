@@ -472,7 +472,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pill
 | **colorCol**    | string    | undefined   | The name of the column used for the color.    |
 | **color**       | function(v,r,s):string | () => "#c08c59" | A function computing the cell color from its __colorCol__ value **v**, the resolution **r**, and statistics **s**.      |
 | **widthCol**    | string    | undefined     | The name of the column used for the pillar width.       |
-| **width**       | function(v,r,s,zf):number     | (v,r,s,zf) => r | A function computing the pillar width from its __widthCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.  |
+| **width**       | function(v,r,s,zf):number     | (v,r,s,zf) => 0.5*r | A function computing the pillar width from its __widthCol__ value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.  |
 | **simple**    |  boolean   | false   |  Set to true for a simplified drawing (as segments only, not entire pillar).  |
 | **viewHeightFactor**    |  number    |   1.5      | The view height.            |
 | **viewSX**    |  number    |    0     |   The view X position.          |
