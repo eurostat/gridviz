@@ -12,6 +12,7 @@
 [![shadow effect map](/docs/img/overviews/ov_choco.png)](docs/reference.md#side-style)
 [![](/docs/img/overviews/ov_dark.png)](docs/reference.md#square-color-webgl-style)
 [![](/docs/img/overviews/ov_kersmoo.png)](docs/reference.md#kernel-smoothing)
+[![](/docs/img/overviews/ov_pillar_simple.png)](docs/reference.md#pillars-style)
 [![](/docs/img/overviews/ov_donut.png)](docs/reference.md#shapecolorsize-style)
 [![tanaka style map](/docs/img/overviews/ov_tanaka_dark.png)](docs/reference.md#tanaka-style)
 [![](/docs/img/overviews/ov_flag.png)](docs/reference.md#composition-style)
