@@ -22,13 +22,18 @@
                 [
                     new gviz.PillarStyle({
                         heightCol: "2018",
-                        height: (v, r, s, z) => 15 * r * gviz.sExpRev(v / s.max, -5),
-                        width: (v,r,s,zf) => r,
+                        height: (v, r, s, z) => 10 * r * gviz.sExpRev(v / s.max, -2.5),
                         simple: true,
+                        color: "000d",
+                        viewHeightFactor: 2,
+                        width: (v,r,s,zf) => 0.3*r,
+                        viewSY: -1.5,
+                        shadowDirection: 21 * Math.PI / 180.0,
+                        shadowFactor: 0.5,
                     })
                 ],
                 {
-                    pixNb: 12,
+                    pixNb: 7,
                     cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)",
                 })
 
