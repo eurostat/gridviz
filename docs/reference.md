@@ -465,6 +465,8 @@ This style shows the grid cells as 3D pillars or bars, with changeable heigth, w
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](../examples/styles/pillar.html)).
 
+See [this basic example with simple style](https://eurostat.github.io/gridviz/examples/styles/pillar_simple.html) ([code](../examples/styles/pillar_simple.html)).
+
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
 | **heightCol**   | string       | undefined      | The name of the column used for the pillar height.    |
