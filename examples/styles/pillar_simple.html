@@ -39,6 +39,15 @@
                     cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)",
                 })
 
+            .setLabelLayer(gviz.getEuronymeLabelLayer("EUR", 50))
+            .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+            .addBackgroundLayer({
+                url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
+                resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
+                origin: [0, 6000000],
+                filterColor: zf => "#ffffffd3",
+            })
+
     </script>
 
 </body>
