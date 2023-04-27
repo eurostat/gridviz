@@ -1,4 +1,8 @@
-
+isotype grid
+https://fr.wikipedia.org/wiki/Isotype_(pictogramme)
+https://observablehq.com/d/0b8b2a77096cfb70
+https://www.dafont.com/isotype.font
+https://fontmeme.com/fonts/isotype-font/
 
 
 publish and document tiler
