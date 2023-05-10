@@ -110,16 +110,30 @@ new gviz.App(containerDiv, {
     legendDivId: 'myLegendDiv',
     selectionRectangleColor: 'red',
     selectionRectangleWidthPix: '1',
+    backgroundColor: 'white',
+    onZoomStartFun: (event) => {
+        console.log('pan/zoom start', event)
+    },
+    onZoomFun: (event) => {
+        console.log('zoom', event)
+    },
+    onZoomEndFun: (event) => {
+        console.log('pan/zoom end', event)
+    },
 })
 ```
 
-| Property                           | Type   | Default                | Description                                                           |
-| ---------------------------------- | ------ | ---------------------- | --------------------------------------------------------------------- |
-| _opts_.**w**                       | number | container.offsetWidth  | The width of the canvas.                                              |
-| _opts_.**h**                       | number | container.offsetHeight | The height of the canvas.                                             |
-| _opts_.**legendDivId**             | string | 'gvizLegend'           | The identifier of the element upon which the legend will be appended. |
-| _opts_.**selectionRectangleColor** | string | 'red'                  | The colour of the outline when a cell is highlighted.                 |
-| _opts_.**selectionRectangleColor** | number | 4                      | The thickness in pixels of the outline when a cell is highlighted.    |
+| Property                           | Type     | Default                | Description                                                           |
+| ---------------------------------- | -------- | ---------------------- | --------------------------------------------------------------------- |
+| _opts_.**w**                       | number   | container.offsetWidth  | The width of the canvas.                                              |
+| _opts_.**h**                       | number   | container.offsetHeight | The height of the canvas.                                             |
+| _opts_.**legendDivId**             | string   | 'gvizLegend'           | The identifier of the element upon which the legend will be appended. |
+| _opts_.**selectionRectangleColor** | string   | 'red'                  | The colour of the outline when a cell is highlighted.                 |
+| _opts_.**selectionRectangleColor** | number   | 4                      | The thickness in pixels of the outline when a cell is highlighted.    |
+| _opts_.**backgroundColor**         | string   | 'white'                | The background color of the canvas.                                   |
+| _opts_.**onZoomStartFun**          | Function | null                   | Event handler for when a pan/zoom event is initiated.                 |
+| _opts_.**onZoomFun**               | Function | null                   | Event handler for when a pan/zoom event is occurring.                 |
+| _opts_.**onZoomEndFun**            | Function | null                   | Event handler for when a pan/zoom event has finished.                 |
 
 ## Multi layer, multi style and multi scale mapping
 
