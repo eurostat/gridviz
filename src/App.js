@@ -58,7 +58,7 @@ export class App {
         /** Make geo canvas
          * @type {GeoCanvas}
          * @private */
-        this.cg = new GeoCanvas(canvas)
+        this.cg = new GeoCanvas(canvas, undefined, 1, opts)
         this.cg.redraw = (strong = true) => {
             if (monitor) monitorDuration('Start redraw')
             //console.log("?x=" + this.cg.getCenter().x + "&y=" + this.cg.getCenter().y + "&z=" + this.cg.getZf())
