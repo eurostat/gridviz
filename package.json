@@ -29,7 +29,7 @@
     },
     "main": "dist/gridviz.min.js",
     "scripts": {
-        "start": "webpack --config webpack.config.dev.js",
+        "start": "export NODE_OPTIONS=--openssl-legacy-provider && webpack --config webpack.config.dev.js",
         "server": "webpack serve -c webpack.config.dev.js --static ./",
         "doc": "./node_modules/.bin/jsdoc src/ src/dataset src/legend src/style -d docs/jsdoc",
         "build": "webpack --config webpack.config.prod.js",
