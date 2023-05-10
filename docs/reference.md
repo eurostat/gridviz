@@ -6,6 +6,7 @@
     -   [Table of contents](#table-of-contents)
     -   [Usage](#usage)
     -   [App Configuration](#app-configuration)
+        -   [App options object](#app-options-object)
     -   [Multi layer, multi style and multi scale mapping](#multi-layer-multi-style-and-multi-scale-mapping)
     -   [Adding data](#adding-data)
         -   [Single CSV file](#single-csv-file)
@@ -95,6 +96,30 @@ The following methods allow further configuration of a [Gridviz](https://github.
 | _app_.**addBackgroundLayer**([options])                                     | object                 |               | Add a background image layer, see [here](#background-layer).                                                                                                                                                           |
 | _app_.**setViewFromURL**()                                                  |                        |               | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_. |
 | _app_.**redraw**()                                                          |                        |               | Force the map to redraw.                                                                                                                                                                                               |
+
+### App options object
+
+When building a gridviz app, in addition to the container element you can also specify an options object with the properties outlined in the table below.
+
+For example:
+
+```javascript
+new gviz.App(containerDiv, {
+    w: 600,
+    h: 600,
+    legendDivId: 'myLegendDiv',
+    selectionRectangleColor: 'red',
+    selectionRectangleWidthPix: '1',
+})
+```
+
+| Property                           | Type   | Default                | Description                                                           |
+| ---------------------------------- | ------ | ---------------------- | --------------------------------------------------------------------- |
+| _opts_.**w**                       | number | container.offsetWidth  | The width of the canvas.                                              |
+| _opts_.**h**                       | number | container.offsetHeight | The height of the canvas.                                             |
+| _opts_.**legendDivId**             | string | 'gvizLegend'           | The identifier of the element upon which the legend will be appended. |
+| _opts_.**selectionRectangleColor** | string | 'red'                  | The colour of the outline when a cell is highlighted.                 |
+| _opts_.**selectionRectangleColor** | number | 4                      | The thickness in pixels of the outline when a cell is highlighted.    |
 
 ## Multi layer, multi style and multi scale mapping
 
