@@ -1,34 +1,32 @@
 //@ts-check
-"use strict";
+'use strict'
 
-import { Style } from "../Style"
-import { makeWebGLCanvas } from "../utils/webGLUtils";
-import { WebGLSquareColoringKS } from "../utils/WebGLSquareColoringKS";
+import { Style } from '../Style'
+import { makeWebGLCanvas } from '../utils/webGLUtils'
+import { WebGLSquareColoringKS } from '../utils/WebGLSquareColoringKS'
 
 /**
  * @author Julien Gaffuri
  */
 export class KernelSmoothingStyle extends Style {
-
     //see
     //https://stackoverflow.com/questions/8099979/creating-a-glsl-arrays-of-uniforms
     //see https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
-    
 
     /** @param {object} opts */
     constructor(opts) {
         super(opts)
-        opts = opts || {};
+        opts = opts || {}
 
         /**
          * The name of the column/attribute of the tabular data where to retrieve the variable for color.
          * @type {string} */
-        this.colorCol = opts.colorCol;
+        this.colorCol = opts.colorCol
 
         /**
          * A function returning the t value (within [0,1]) of the cell.
-        * @type {function(number,number,import("../Style").Stat):number} */
-        this.tFun = opts.tFun || ((v, r, s) => v / s.max);
+         * @type {function(number,number,import("../Style").Stat):number} */
+        this.tFun = opts.tFun || ((v, r, s) => v / s.max)
 
         /**
          * Distribution stretching method.
@@ -40,44 +38,59 @@ export class KernelSmoothingStyle extends Style {
          * The sample of the color ramp.
          * The color is computed on GPU side (fragment shader) based on those values (linear interpolation).
          * @type {Array.<string>} */
-        this.colors = opts.colors || ["rgb(158, 1, 66)", "rgb(248, 142, 83)", "rgb(251, 248, 176)", "rgb(137, 207, 165)", "rgb(94, 79, 162)"].reverse()
+        this.colors =
+            opts.colors ||
+            [
+                'rgb(158, 1, 66)',
+                'rgb(248, 142, 83)',
+                'rgb(251, 248, 176)',
+                'rgb(137, 207, 165)',
+                'rgb(94, 79, 162)',
+            ].reverse()
         if (opts.color)
-            this.colors = [opts.color(0), opts.color(0.2), opts.color(0.4), opts.color(0.6), opts.color(0.8), opts.color(1)]
+            this.colors = [
+                opts.color(0),
+                opts.color(0.2),
+                opts.color(0.4),
+                opts.color(0.6),
+                opts.color(0.8),
+                opts.color(1),
+            ]
 
         /**
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
          * @type {function(number,number):number} */
-        this.size = opts.size; // (resolution, zf) => ...
+        this.size = opts.size // (resolution, zf) => ...
     }
 
-
     /**
-    * @param {Array.<import("../Dataset").Cell>} cells 
-    * @param {number} r 
-    * @param {import("../GeoCanvas").GeoCanvas} cg
+     * @param {Array.<import("../Dataset").Cell>} cells
+     * @param {number} r
+     * @param {import("../GeoCanvas").GeoCanvas} cg
      */
     draw(cells, r, cg) {
         //filter
-        if(this.filter) cells = cells.filter(this.filter)
+        if (this.filter) cells = cells.filter(this.filter)
 
         //zoom factor
         const zf = cg.getZf()
 
         //compute color variable statistics
-        const statColor = Style.getStatistics(cells, c => c[this.colorCol], true)
+        const statColor = Style.getStatistics(cells, (c) => c[this.colorCol], true)
 
         if (!statColor) return
 
         //create canvas and webgl renderer
-        const cvWGL = makeWebGLCanvas(cg.w + "", cg.h + "")
+        const cvWGL = makeWebGLCanvas(cg.w + '', cg.h + '')
         if (!cvWGL) {
-            console.error("No webGL")
+            console.error('No webGL')
             return
         }
 
         //add vertice and fragment data
         const r2 = r / 2
-        let c, nb = cells.length
+        let c,
+            nb = cells.length
         const verticesBuffer = []
         //const tBuffer = []
         for (let i = 0; i < nb; i++) {
@@ -92,11 +105,11 @@ export class KernelSmoothingStyle extends Style {
         const wgp = new WebGLSquareColoringKS(cvWGL.gl, this.colors, this.stretching, sizeGeo / zf)
 
         //TODO - [i,j,t]
-        let data = [];
+        let data = []
         for (const c of cells) {
-            const xGL = cg.geoToPixX(c.x + r2); //TODO within [-1,1] ?
+            const xGL = cg.geoToPixX(c.x + r2) //TODO within [-1,1] ?
             data.push(xGL)
-            const yGL = cg.geoToPixY(c.y + r2); //TODO within [-1,1] ?
+            const yGL = cg.geoToPixY(c.y + r2) //TODO within [-1,1] ?
             data.push(yGL)
             const t = this.tFun(c[this.colorCol], r, statColor)
             data.push(t)
@@ -109,11 +122,9 @@ export class KernelSmoothingStyle extends Style {
 
         //draw in canvas geo
         cg.initCanvasTransform()
-        cg.ctx.drawImage(cvWGL.canvas, 0, 0);
+        cg.ctx.drawImage(cvWGL.canvas, 0, 0)
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf, sColor: statColor });
-
+        this.updateLegends({ style: this, r: r, zf: zf, sColor: statColor })
     }
-
 }

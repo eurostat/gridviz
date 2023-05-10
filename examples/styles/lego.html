@@ -1,35 +1,34 @@
 <!DOCTYPE html>
-<html lang="en" style="height:100%;">
+<html lang="en" style="height: 100%">
+    <head>
+        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+        <title>Gridviz - Lego style</title>
+    </head>
 
-<head>
-    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-    <title>Gridviz - Lego style</title>
-</head>
+    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+        <div id="viz-container" style="height: 100%; width: 100%"></div>
 
-<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
-    <div id="viz-container" style="height:100%; width:100%;"></div>
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            let containerDiv = document.getElementById('viz-container')
 
-    <script src="../../dist/gridviz.js"></script>
-    <script>
-
-        let containerDiv = document.getElementById("viz-container");
-
-        new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(2000)
-            .addMultiScaleTiledGridLayer(
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
-                gviz.LegoStyle.get(
-                    "2018",
-                    { tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7) }
-                ),
-                {
-                    pixNb: 10,
-                    cellInfoHTML: c => "<b>" + c["2018"] + "</b> inhabitant(s)",
-                })
-
-    </script>
-
-</body>
-
+            new gviz.App(containerDiv)
+                .setGeoCenter({ x: 4000000, y: 2960000 })
+                .setZoomFactor(2000)
+                .addMultiScaleTiledGridLayer(
+                    [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    (r) =>
+                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/' +
+                        r +
+                        'm/',
+                    gviz.LegoStyle.get('2018', {
+                        tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
+                    }),
+                    {
+                        pixNb: 10,
+                        cellInfoHTML: (c) => '<b>' + c['2018'] + '</b> inhabitant(s)',
+                    }
+                )
+        </script>
+    </body>
 </html>

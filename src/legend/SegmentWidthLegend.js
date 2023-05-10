@@ -1,60 +1,57 @@
 //@ts-check
-"use strict";
+'use strict'
 
-import { Legend } from "../Legend";
-import { format } from "d3-format";
+import { Legend } from '../Legend'
+import { format } from 'd3-format'
 
 /**
  * A legend element for segment width.
- * 
+ *
  * @author Joseph Davies, Julien Gaffuri
  */
 export class SegmentWidthLegend extends Legend {
-
     /** @param {Object} opts */
     constructor(opts) {
         super(opts)
-        opts = opts || {};
+        opts = opts || {}
 
         //title
-        this.title = opts.title;
-        this.titleFontSize = opts.titleFontSize || "0.8em"
-        this.titleFontWeight = opts.titleFontWeight || "bold"
+        this.title = opts.title
+        this.titleFontSize = opts.titleFontSize || '0.8em'
+        this.titleFontWeight = opts.titleFontWeight || 'bold'
 
         //exageration
         this.exaggerationFactor = opts.exaggerationFactor || 0.5
 
         //color
-        this.color = opts.color || "gray"
+        this.color = opts.color || 'gray'
         //orientation
         this.orientation = opts.orientation || 0
 
         //label
-        this.labelFontSize = opts.labelFontSize || "0.8em"
-        this.labelUnitText = opts.labelUnitText || ""
+        this.labelFontSize = opts.labelFontSize || '0.8em'
+        this.labelUnitText = opts.labelUnitText || ''
     }
 
-
     /**
-     * @param {{ style: import("../style/SegmentStyle").SegmentStyle, r: number, zf: number, sColor: import("../Style").Stat, sLength: import("../Style").Stat, sWidth: import("../Style").Stat }} opts 
+     * @param {{ style: import("../style/SegmentStyle").SegmentStyle, r: number, zf: number, sColor: import("../Style").Stat, sLength: import("../Style").Stat, sWidth: import("../Style").Stat }} opts
      */
     update(opts) {
-
         //could happen when data is still loading
         if (!opts.sWidth) return
 
         //clear
-        this.div.selectAll("*").remove();
+        this.div.selectAll('*').remove()
 
-        const d = this.div.append("div")
+        const d = this.div.append('div')
 
         //title
         if (this.title) {
-            d.append("div")
-            .attr("class", "title")
-            .style("font-size", this.titleFontSize)
-            .style("font-weight", this.titleFontWeight)
-            .text(this.title)
+            d.append('div')
+                .attr('class', 'title')
+                .style('font-size', this.titleFontSize)
+                .style('font-weight', this.titleFontWeight)
+                .text(this.title)
         }
 
         //get max value
@@ -72,28 +69,29 @@ export class SegmentWidthLegend extends Legend {
         else if (value * 2 <= value_) value *= 2
 
         //compute segment width and length, in pix
-        const sWidth = opts.style.width(value, opts.r, opts.sWidth, opts.zf) / opts.zf;
-        const sLength = 1 * opts.r / opts.zf
+        const sWidth = opts.style.width(value, opts.r, opts.sWidth, opts.zf) / opts.zf
+        const sLength = (1 * opts.r) / opts.zf
 
         //TODO use orientation
 
-        const svg = d.append("svg").attr("width", sLength).attr("height", sWidth)
-            .style("", "inline-block")
+        const svg = d.append('svg').attr('width', sLength).attr('height', sWidth).style('', 'inline-block')
 
         //<line x1="0" y1="0" x2="200" y2="200" style="stroke:rgb(255,0,0);stroke-width:2" />
-        svg.append("line")
-            .attr("x1", 0).attr("y1", sWidth / 2)
-            .attr("x2", sLength).attr("y2", sWidth / 2)
-            .style("stroke", this.color)
-            .style("stroke-width", sWidth)
+        svg.append('line')
+            .attr('x1', 0)
+            .attr('y1', sWidth / 2)
+            .attr('x2', sLength)
+            .attr('y2', sWidth / 2)
+            .style('stroke', this.color)
+            .style('stroke-width', sWidth)
 
-        const valueT = format(",.2r")(value);
-        d.append("div")
+        const valueT = format(',.2r')(value)
+        d.append('div')
             //show on right of graphic
-            .style("display", "inline")
-            .style("padding-left", "5px")
-            .style("font-size", this.labelFontSize)
+            .style('display', 'inline')
+            .style('padding-left', '5px')
+            .style('font-size', this.labelFontSize)
             //.style("font-weight", "bold")
-            .text(valueT + (this.labelUnitText ? " " : "") + this.labelUnitText)
+            .text(valueT + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
     }
 }

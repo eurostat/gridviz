@@ -1,7 +1,7 @@
 //@ts-check
-"use strict";
+'use strict'
 
-import { csv } from "d3-fetch";
+import { csv } from 'd3-fetch'
 
 /** A label. The name is the text to show. (x,y) are the coordinates in the same CRS as the grid.
  * @typedef {{name: string, x:number, y:number }} Label */
@@ -11,18 +11,17 @@ import { csv } from "d3-fetch";
  * The input is a CSV file with the position (x, y) of the labels and name + some other info on the label importance.
  * If the label data is not in the expected format or in the same CRS as the grid, it can be corrected with the "preprocess" function.
  * The selection of the label, their style (font, weight, etc.) and color can be specified depending on their importance and the zoom level.
- * 
+ *
  * @author Joseph Davies, Julien Gaffuri
  */
 export class LabelLayer {
-
     /**
-     * @param {object} opts 
+     * @param {object} opts
      */
     constructor(opts) {
-        opts = opts || {};
+        opts = opts || {}
 
-        /** 
+        /**
          * The URL of the label data, as CSV file.
          * The file should contain the information for each label such as the text, the position and other information for the display of the label according to the zoom level.
          * If necessary, this data can be reformated with the 'preprocess' parameter.
@@ -33,35 +32,35 @@ export class LabelLayer {
         /** Specify if and how a label should be drawn, depending on its importance and the zoom level.
          * @private
          * @type {function(Label,number):string} */
-        this.style = opts.style || (() => "bold 1em Arial")
+        this.style = opts.style || (() => 'bold 1em Arial')
 
         /** Specify the label color, depending on its importance and the zoom level.
          * @private
          * @type {function(Label,number):string} */
-        this.color = opts.color || (opts.dark ? () => "#ddd" : () => "#222")
+        this.color = opts.color || (opts.dark ? () => '#ddd' : () => '#222')
 
         /** Specify the label halo color, depending on its importance and the zoom level.
          * @private
          * @type {function(Label,number):string} */
-        this.haloColor = opts.haloColor || (opts.dark ? () => "#000000BB" : () => "#FFFFFFBB")
+        this.haloColor = opts.haloColor || (opts.dark ? () => '#000000BB' : () => '#FFFFFFBB')
 
         /** Specify the label halo width, depending on its importance and the zoom level.
-        * @private
-        * @type {function(Label,number):number} */
+         * @private
+         * @type {function(Label,number):number} */
         this.haloWidth = opts.haloWidth || (() => 4)
 
         /** The anchor where to draw the text, from label position. See HTML-canvas textAlign property.
          * "left" || "right" || "center" || "start" || "end"
          * @private
          * @type {CanvasTextAlign} */
-        this.textAlign = opts.textAlign || "start"
+        this.textAlign = opts.textAlign || 'start'
 
         /**
-        * @private
-        * @type {Array.<number>} */
+         * @private
+         * @type {Array.<number>} */
         this.offsetPix = opts.offsetPix || [5, 5]
 
-        /** 
+        /**
          * A preprocess to run on each label after loading.
          * It can be used to apply some specific treatment before, format the label data, project coordinates, etc.
          * Return false if the label should not be kept.
@@ -69,55 +68,52 @@ export class LabelLayer {
          * @type {function(Label):boolean} */
         this.preprocess = opts.preprocess
 
-        /** 
+        /**
          * @private
          * @type {Array.<Label> | undefined} */
         this.labels = undefined
 
-        /** 
+        /**
          * @private
          * @type {string} */
-        this.loadingStatus = "notLoaded"
+        this.loadingStatus = 'notLoaded'
     }
-
 
     /**
      * Draw the label layer.
-     * 
+     *
      * @param {import("./GeoCanvas").GeoCanvas} cg The canvas where to draw the layer.
      * @returns {void}
      */
     draw(cg) {
-
         //load labels, if not done yet.
         if (!this.labels) {
-            this.load(cg.redraw);
-            return;
+            this.load(cg.redraw)
+            return
         }
 
         //zoom factor
         const zf = cg.getZf()
 
         //text align
-        cg.ctx.textAlign = this.textAlign || "start";
+        cg.ctx.textAlign = this.textAlign || 'start'
 
         //line join and cap
-        cg.ctx.lineJoin = "bevel" //|| "round" || "miter";
-        cg.ctx.lineCap = "butt" //|| "round" || "square";
+        cg.ctx.lineJoin = 'bevel' //|| "round" || "miter";
+        cg.ctx.lineCap = 'butt' //|| "round" || "square";
 
         //draw in pix coordinates
         cg.initCanvasTransform()
 
         //draw labels, one by one
         for (const lb of this.labels) {
-
             //get label style
-            const st = this.style(lb, zf);
-            if (!st) continue;
-            cg.ctx.font = st;
+            const st = this.style(lb, zf)
+            if (!st) continue
+            cg.ctx.font = st
 
             //check label within the view, to be drawn
-            if (!cg.toDraw(lb)) continue;
+            if (!cg.toDraw(lb)) continue
 
             //position
             const xP = cg.geoToPixX(lb.x) + this.offsetPix[0]
@@ -125,23 +121,22 @@ export class LabelLayer {
 
             //label stroke, for the halo
             if (this.haloColor && this.haloWidth) {
-                const hc = this.haloColor(lb, zf);
-                const hw = this.haloWidth(lb, zf);
+                const hc = this.haloColor(lb, zf)
+                const hw = this.haloWidth(lb, zf)
                 if (hc && hw && hw > 0) {
-                    cg.ctx.strokeStyle = hc;
-                    cg.ctx.lineWidth = hw;
-                    cg.ctx.strokeText(lb.name, xP, yP);
+                    cg.ctx.strokeStyle = hc
+                    cg.ctx.lineWidth = hw
+                    cg.ctx.strokeText(lb.name, xP, yP)
                 }
             }
 
             //label fill
             if (this.color) {
-                const col = this.color(lb, zf);
+                const col = this.color(lb, zf)
                 if (col) {
-                    cg.ctx.fillStyle = col;
-                    cg.ctx.fillText(lb.name, xP, yP);
+                    cg.ctx.fillStyle = col
+                    cg.ctx.fillText(lb.name, xP, yP)
                 }
-
             }
         }
     }
@@ -152,49 +147,44 @@ export class LabelLayer {
      * @private
      */
     async load(callback) {
-
         if (!this.url) {
-            console.log("Failed loading labels: No URL specified. " + this.url)
-            this.loadingStatus = "failed"
+            console.log('Failed loading labels: No URL specified. ' + this.url)
+            this.loadingStatus = 'failed'
             this.labels = []
-            return;
+            return
         }
 
         //check if data already loaded
-        if (this.loadingStatus != "notLoaded") return;
+        if (this.loadingStatus != 'notLoaded') return
 
         //load data
-        this.loadingStatus = "loading";
+        this.loadingStatus = 'loading'
 
         try {
-
             /** @type { Array.<Label> } */
             const data = await csv(this.url)
 
             //preprocess/filter
             if (this.preprocess) {
-                this.labels = [];
+                this.labels = []
                 for (const c of data) {
                     const b = this.preprocess(c)
-                    if (b == false) continue;
+                    if (b == false) continue
                     this.labels.push(c)
                 }
             } else {
                 //store labels
-                this.labels = data;
+                this.labels = data
             }
 
-            this.loadingStatus = "loaded"
+            this.loadingStatus = 'loaded'
 
             //redraw
             if (callback) callback()
-
         } catch (error) {
-            console.log("Failed loading labels from " + this.url)
+            console.log('Failed loading labels from ' + this.url)
             this.labels = []
-            this.loadingStatus = "failed"
+            this.loadingStatus = 'failed'
         }
-
     }
-
 }

@@ -32,11 +32,11 @@
 
 ## Examples
 
-- [Europe - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/EUR.html)
-- [France - 200m resolution - INSEE Filosofi](https://eurostat.github.io/gridviz/examples/FR.html)
-- [Croatia - 1km resolution - DZS 2015 grid](https://eurostat.github.io/gridviz/examples/HR.html)
-- [France population, dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html)
-- [Europe population as a mosaic](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html)
+-   [Europe - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/EUR.html)
+-   [France - 200m resolution - INSEE Filosofi](https://eurostat.github.io/gridviz/examples/FR.html)
+-   [Croatia - 1km resolution - DZS 2015 grid](https://eurostat.github.io/gridviz/examples/HR.html)
+-   [France population, dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html)
+-   [Europe population as a mosaic](https://eurostat.github.io/gridviz/examples/styles/mosaic_full.html)
 
 ## Installation
 
@@ -49,7 +49,7 @@ npm install gridviz
 then
 
 ```javascript
-gridviz = require("gridviz");
+gridviz = require('gridviz')
 ```
 
 ### standalone
@@ -64,8 +64,8 @@ See the **[API reference](docs/reference.md)**.
 
 ## About
 
-|                |                   |
-| -------------- | ---------------------------------- |
+|                |                                                                                                                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | _contributors_ | [<img src="https://github.com/jgaffuri.png" height="40" />](https://github.com/jgaffuri) [<img src="https://github.com/JoeWDavies.png" height="40" />](https://github.com/JoeWDavies) |
 | _version_      | See [npm](https://www.npmjs.com/package/gridviz?activeTab=versions)                                                                                                                   |
 | _status_       | Since 2020                                                                                                                                                                            |
@@ -82,4 +82,5 @@ The [Eurostat NUTS dataset](http://ec.europa.eu/eurostat/web/nuts/overview) is c
 ### Disclaimer
 
 The designations employed and the presentation of material on these maps do not imply the expression of any opinion whatsoever on the part of the European Union concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. Kosovo*: This designation is without prejudice to positions on status, and is in line with UNSCR 1244/1999 and the ICJ Opinion on the Kosovo declaration of independence. Palestine*: This designation shall not be construed as recognition of a State of Palestine and is without prejudice to the individual positions of the Member States on this issue.
-*
+
+-

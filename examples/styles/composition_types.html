@@ -1,101 +1,124 @@
 <!DOCTYPE html>
-<html lang="en" style="height:100%;">
+<html lang="en" style="height: 100%">
+    <head>
+        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+        <title></title>
+    </head>
 
-<head>
-    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-    <title></title>
-</head>
+    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+        <div id="viz-container" style="height: 100%; width: 100%"></div>
 
-<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
-    <div id="viz-container" style="height:100%; width:100%;"></div>
+        <div
+            style="
+                position: absolute;
+                left: 20px;
+                top: 20px;
+                width: auto;
+                height: auto;
+                padding: 10px;
+                border: 0px;
+                border-radius: 5px;
+                background: #ffffffcc;
+                line-height: 1.6;
+                box-shadow: 5px 5px 5px grey;
+            "
+        >
+            <select id="type" style="font-size: 1em">
+                <option value="flag_v">Flag vertical</option>
+                <option value="flag_h">Flag horizontal</option>
+                <option value="piechart">Pie chart</option>
+                <option value="ring" selected>Ring</option>
+                <option value="segment_v">Segment vertical</option>
+                <option value="segment_h">Segment horizontal</option>
+                <option value="radar">Radar</option>
+                <option value="halftone">Halftone</option>
+                <option value="agepyramid">Age pyramid</option>
+                <option value="random">Random</option>
+            </select>
+            <br />
+            <input type="checkbox" id="size" checked />
+            <label for="size" style="font-size: 1em">Size</label>
+        </div>
 
-    <div
-        style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
-        <select id="type" style="font-size: 1em">
-            <option value="flag_v">Flag vertical</option>
-            <option value="flag_h">Flag horizontal</option>
-            <option value="piechart">Pie chart</option>
-            <option value="ring" selected>Ring</option>
-            <option value="segment_v">Segment vertical</option>
-            <option value="segment_h">Segment horizontal</option>
-            <option value="radar">Radar</option>
-            <option value="halftone">Halftone</option>
-            <option value="agepyramid">Age pyramid</option>
-            <option value="random">Random</option>
-        </select>
-        <br>
-        <input type="checkbox" id="size" checked>
-        <label for="size" style="font-size: 1em">Size</label>
-    </div>
-
-    <script src="../../dist/gridviz.js"></script>
-    <script>
-
-        let containerDiv = document.getElementById("viz-container");
-        const app = new gviz.App(containerDiv)
-            .setGeoCenter({ x: 3951000, y: 2255603 }).setZoomFactor(10).setZoomFactorExtent([4, 2000])
-            //.setBackgroundColor("black")
-            .addMultiScaleTiledGridLayer(
-                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-                r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/france/filosofi/men/2017/" + r + "m/",
-                [
-                    new gviz.CompositionStyle({
-                        color: {
-                            "Men_1ind": "#7570b3",
-                            "Men_2_4ind": "#1b9e77",
-                            "Men_5ind": "#d95f02",
+        <script src="../../dist/gridviz.js"></script>
+        <script>
+            let containerDiv = document.getElementById('viz-container')
+            const app = new gviz.App(containerDiv)
+                .setGeoCenter({ x: 3951000, y: 2255603 })
+                .setZoomFactor(10)
+                .setZoomFactorExtent([4, 2000])
+                //.setBackgroundColor("black")
+                .addMultiScaleTiledGridLayer(
+                    [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+                    (r) =>
+                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/france/filosofi/men/2017/' +
+                        r +
+                        'm/',
+                    [
+                        new gviz.CompositionStyle({
+                            color: {
+                                Men_1ind: '#7570b3',
+                                Men_2_4ind: '#1b9e77',
+                                Men_5ind: '#d95f02',
+                            },
+                            type: () => 'ring',
+                            stripesOrientation: () => 0,
+                            sizeCol: 'Men',
+                            size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.13, 0),
+                        }),
+                    ],
+                    {
+                        pixNb: 18,
+                        preprocess: (c) => {
+                            c.Men_2_4ind = +c.Men - +c.Men_1ind - +c.Men_5ind
                         },
-                        type: () => "ring",
-                        stripesOrientation: () => 0,
-                        sizeCol: "Men",
-                        size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.13, 0),
-                    })
-                ],
-                {
-                    pixNb: 18,
-                    preprocess: c => {
-                        c.Men_2_4ind = +c.Men - +c.Men_1ind - +c.Men_5ind;
                     }
-                }
-            )
+                )
 
+            //type selection
+            const s = app.layers[0].styles[0]
+            document.getElementById('type').addEventListener('change', function () {
+                const v = this.value
 
-        //type selection
-        const s = app.layers[0].styles[0];
-        document.getElementById("type").addEventListener('change', function () {
-            const v = this.value
+                //set type
+                const type = v.includes('flag') ? 'flag' : v.includes('segment') ? 'segment' : v
+                if (type === 'random')
+                    s.type = () => {
+                        const r = Math.random()
+                        return r < 2 / 9
+                            ? 'flag'
+                            : r < 3 / 9
+                            ? 'piechart'
+                            : r < 4 / 9
+                            ? 'ring'
+                            : r < 6 / 9
+                            ? 'segment'
+                            : r < 7 / 9
+                            ? 'radar'
+                            : r < 8 / 9
+                            ? 'halftone'
+                            : 'agepyramid'
+                    }
+                else s.type = () => type
 
-            //set type
-            const type = v.includes("flag") ? "flag" : v.includes("segment") ? "segment" : v
-            if (type === "random")
-                s.type = () => { const r = Math.random(); return r < 2 / 9 ? "flag" : r < 3 / 9 ? "piechart" : r < 4 / 9 ? "ring" : r < 6 / 9 ? "segment" : r < 7 / 9 ? "radar" : r < 8 / 9 ? "halftone" : "agepyramid" }
-            else
-                s.type = () => type
+                //set orientation
+                const or = v.includes('h') ? 0 : v.includes('v') ? 90 : 90
+                if (type === 'random') s.stripesOrientation = () => (Math.random() < 0.5 ? 0 : 90)
+                else s.stripesOrientation = () => or
 
-            //set orientation
-            const or = v.includes("h") ? 0 : v.includes("v") ? 90 : 90
-            if (type === "random")
-                s.stripesOrientation = () => Math.random() < 0.5 ? 0 : 90
-            else
-                s.stripesOrientation = () => or
+                //redraw
+                app.cg.redraw()
+            })
 
-            //redraw
-            app.cg.redraw()
-        });
-
-
-        //size
-        document.querySelector('#size').addEventListener('change', function () {
-            //set size
-            s.size =
-                this.checked ? (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.13, 0)
-                    : s.size = (v, r, s, zf) => r
-            //redraw
-            app.cg.redraw();
-        });
-
-
-    </script>
-</body>
-
+            //size
+            document.querySelector('#size').addEventListener('change', function () {
+                //set size
+                s.size = this.checked
+                    ? (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.13, 0)
+                    : (s.size = (v, r, s, zf) => r)
+                //redraw
+                app.cg.redraw()
+            })
+        </script>
+    </body>
 </html>

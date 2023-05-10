@@ -1,8 +1,8 @@
 //@ts-check
-"use strict";
+'use strict'
 
-import { initShaderProgram, createShader } from "./webGLUtils";
-import { color } from "d3-color";
+import { initShaderProgram, createShader } from './webGLUtils'
+import { color } from 'd3-color'
 
 /**
  * Everything to easily draw colored squares with webGL.
@@ -10,7 +10,6 @@ import { color } from "d3-color";
  * The color interpolation is computed in the fragment shader program, by the GPU, thus it is less flexible but faster.
  */
 export class WebGLSquareColoringKS {
-
     //see:
     //https://webglfundamentals.org/
     //https://webglfundamentals.org/webgl/lessons/fr/webgl-shaders-and-glsl.html#les-uniforms-dans-les-shaders-de-vertex
@@ -18,21 +17,22 @@ export class WebGLSquareColoringKS {
     //https://thebookofshaders.com/06/
     //https://thebookofshaders.com/glossary/
 
-
     /**
-     * 
-     * @param {*} gl 
-     * @param {Array.<String>} colors 
-     * @param {{fun:string,alpha:number}} stretching 
-     * @param {number} sizePix 
+     *
+     * @param {*} gl
+     * @param {Array.<String>} colors
+     * @param {{fun:string,alpha:number}} stretching
+     * @param {number} sizePix
      */
     constructor(gl, colors, stretching, sizePix = 10) {
-
         /** @type {WebGLRenderingContext} */
         this.gl = gl
 
         /** @type {WebGLShader} */
-        const vShader = createShader(gl, gl.VERTEX_SHADER, `
+        const vShader = createShader(
+            gl,
+            gl.VERTEX_SHADER,
+            `
         attribute vec2 pos;
         uniform float sizePix;
         uniform vec3 data[2];
@@ -55,7 +55,8 @@ export class WebGLSquareColoringKS {
             //pass the pixel value to the fragment as varying
             vt = data[2];
         }
-      `);
+      `
+        )
 
         //prepare fragment shader code
         //declare the uniform and other variables
@@ -81,37 +82,41 @@ export class WebGLSquareColoringKS {
         }`
 
         /** @type {WebGLShader} */
-        const fShader = createShader(gl, gl.FRAGMENT_SHADER, fshString);
+        const fShader = createShader(gl, gl.FRAGMENT_SHADER, fshString)
 
         /** @type {WebGLProgram} */
-        this.program = initShaderProgram(gl, vShader, fShader);
-        gl.useProgram(this.program);
+        this.program = initShaderProgram(gl, vShader, fShader)
+        gl.useProgram(this.program)
 
         //set uniforms
 
         //sizePix
-        gl.uniform1f(gl.getUniformLocation(this.program, "sizePix"), 1.0 * sizePix);
+        gl.uniform1f(gl.getUniformLocation(this.program, 'sizePix'), 1.0 * sizePix)
 
         //stretching alpha factor
-        gl.uniform1f(gl.getUniformLocation(this.program, "alpha"), stretching ? 1.0 * stretching.alpha : 0.0);
+        gl.uniform1f(gl.getUniformLocation(this.program, 'alpha'), stretching ? 1.0 * stretching.alpha : 0.0)
 
         //colors
         for (let i = 0; i < colors.length; i++) {
             const c = color(colors[i])
-            gl.uniform4fv(gl.getUniformLocation(this.program, "c" + i), [+c.r / 255.0, +c.g / 255.0, +c.b / 255.0, +c.opacity]);
+            gl.uniform4fv(gl.getUniformLocation(this.program, 'c' + i), [
+                +c.r / 255.0,
+                +c.g / 255.0,
+                +c.b / 255.0,
+                +c.opacity,
+            ])
         }
     }
 
     /**  */
     draw(verticesBuffer, data, transfoMat) {
-
         const gl = this.gl
         const program = this.program
 
         //vertice data
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesBuffer), gl.STATIC_DRAW);
-        const position = gl.getAttribLocation(program, "pos");
+        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticesBuffer), gl.STATIC_DRAW)
+        const position = gl.getAttribLocation(program, 'pos')
         gl.vertexAttribPointer(
             position,
             2, //numComponents
@@ -119,8 +124,8 @@ export class WebGLSquareColoringKS {
             false, //normalise
             0, //stride
             0 //offset
-        );
-        gl.enableVertexAttribArray(position);
+        )
+        gl.enableVertexAttribArray(position)
 
         //t data
         /*gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
@@ -131,19 +136,18 @@ export class WebGLSquareColoringKS {
 
         //data
         //gl.uniformMatrix3fv(gl.getUniformLocation(program, "mat"), false, new Float32Array(transfoMat));
-        gl.uniform3fv(gl.getUniformLocation(program, "data"), 2, new Float32Array(data));
+        gl.uniform3fv(gl.getUniformLocation(program, 'data'), 2, new Float32Array(data))
 
         //transformation
-        gl.uniformMatrix3fv(gl.getUniformLocation(program, "mat"), false, new Float32Array(transfoMat));
+        gl.uniformMatrix3fv(gl.getUniformLocation(program, 'mat'), false, new Float32Array(transfoMat))
 
         // Enable the depth test
         //gl.enable(gl.DEPTH_TEST);
         // Clear the color buffer bit
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.clear(gl.COLOR_BUFFER_BIT)
         // Set the view port
         //gl.viewport(0, 0, cg.w, cg.h);
 
         gl.drawArrays(gl.POINTS, 0, verticesBuffer.length / 2)
     }
-
 }

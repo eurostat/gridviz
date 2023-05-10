@@ -1,66 +1,67 @@
 {
-  "name": "gridviz",
-  "version": "2.0.17",
-  "description": "Visualization tool for gridded statistics",
-  "keywords": [
-    "statistics",
-    "grid",
-    "gridded",
-    "grids",
-    "gridded statistics",
-    "dataviz",
-    "csv",
-    "GIS",
-    "WebGL",
-    "d3",
-    "cartography",
-    "bertin"
-  ],
-  "homepage": "https://github.com/eurostat/gridviz",
-  "author": "Joseph Davies, Julien Gaffuri",
-  "license": "EUPL-1.2",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/eurostat/gridviz.git"
-  },
-  "bugs": {
-    "url": "https://github.com/eurostat/gridviz/issues",
-    "email": "Joseph.DAVIES@ext.ec.europa.eu"
-  },
-  "main": "dist/gridviz.min.js",
-  "scripts": {
-    "start": "export NODE_OPTIONS=--openssl-legacy-provider && webpack --config webpack.config.dev.js",
-    "server": "webpack serve -c webpack.config.dev.js --static ./",
-    "doc": "./node_modules/.bin/jsdoc src/ src/dataset src/legend src/style -d docs/jsdoc",
-    "build": "webpack --config webpack.config.prod.js",
-    "test": "jest"
-  },
-  "files": [
-    "dist/gridviz.min.js"
-  ],
-  "dependencies": {
-    "apache-arrow": "^10.0.1",
-    "d3-color": "^3.1.0",
-    "d3-fetch": "^3.0.1",
-    "d3-format": "^3.1.0",
-    "d3-geo": "^3.0.1",
-    "d3-random": "^3.0.1",
-    "d3-selection": "^3.0.0",
-    "d3-zoom": "^3.0.0",
-    "fast-kde": "^0.2.1"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-transform-runtime": "^7.12.1",
-    "@babel/preset-env": "^7.9.0",
-    "@babel/runtime": "^7.12.1",
-    "babel-loader": "^8.1.0",
-    "jest": "^26.6.1",
-    "jshint": "^2.12.0",
-    "puppeteer": "^9.1.1",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.0",
-    "webpack-dev-server": "^4.11.1",
-    "webpack-livereload-plugin": "^3.0.2"
-  }
+    "name": "gridviz",
+    "version": "2.0.17",
+    "description": "Visualization tool for gridded statistics",
+    "keywords": [
+        "statistics",
+        "grid",
+        "gridded",
+        "grids",
+        "gridded statistics",
+        "dataviz",
+        "csv",
+        "GIS",
+        "WebGL",
+        "d3",
+        "cartography",
+        "bertin"
+    ],
+    "homepage": "https://github.com/eurostat/gridviz",
+    "author": "Joseph Davies, Julien Gaffuri",
+    "license": "EUPL-1.2",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/eurostat/gridviz.git"
+    },
+    "bugs": {
+        "url": "https://github.com/eurostat/gridviz/issues",
+        "email": "Joseph.DAVIES@ext.ec.europa.eu"
+    },
+    "main": "dist/gridviz.min.js",
+    "scripts": {
+        "start": "webpack --config webpack.config.dev.js",
+        "server": "webpack serve -c webpack.config.dev.js --static ./",
+        "doc": "./node_modules/.bin/jsdoc src/ src/dataset src/legend src/style -d docs/jsdoc",
+        "build": "webpack --config webpack.config.prod.js",
+        "test": "jest"
+    },
+    "files": [
+        "dist/gridviz.min.js"
+    ],
+    "dependencies": {
+        "apache-arrow": "^10.0.1",
+        "d3-color": "^3.1.0",
+        "d3-fetch": "^3.0.1",
+        "d3-format": "^3.1.0",
+        "d3-geo": "^3.0.1",
+        "d3-random": "^3.0.1",
+        "d3-selection": "^3.0.0",
+        "d3-zoom": "^3.0.0",
+        "fast-kde": "^0.2.1"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.9.0",
+        "@babel/plugin-transform-runtime": "^7.12.1",
+        "@babel/preset-env": "^7.9.0",
+        "@babel/runtime": "^7.12.1",
+        "babel-loader": "^8.1.0",
+        "jest": "^26.6.1",
+        "jshint": "^2.12.0",
+        "prettier": "2.8.8",
+        "puppeteer": "^9.1.1",
+        "webpack": "^5.75.0",
+        "webpack-cli": "^5.0.0",
+        "webpack-dev-server": "^4.11.1",
+        "webpack-livereload-plugin": "^3.0.2"
+    }
 }

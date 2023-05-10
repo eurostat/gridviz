@@ -1,48 +1,51 @@
 <!DOCTYPE html>
-<html lang="en" style="height:100%;">
+<html lang="en" style="height: 100%">
+    <head>
+        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+        <title>Gridviz - example</title>
+    </head>
 
-<head>
-    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-    <title>Gridviz - example</title>
-</head>
+    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+        <div id="viz-container" style="height: 100%; width: 100%"></div>
 
-<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
-    <div id="viz-container" style="height:100%; width:100%;"></div>
+        <script src="../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script>
+            let containerDiv = document.getElementById('viz-container')
 
-    <script src="../dist/gridviz.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
-    <script>
+            new gviz.App(containerDiv)
+                .setGeoCenter({ x: 3426953, y: 2326791 })
+                .setZoomFactor(700)
 
-        let containerDiv = document.getElementById("viz-container");
+                .addMultiScaleTiledGridLayer(
+                    [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    (r) =>
+                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/' +
+                        r +
+                        'm/',
+                    [
+                        new gviz.SquareColorWGLStyle({
+                            colorCol: '2018',
+                            tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
+                            color: d3.interpolateYlOrRd,
+                        }),
+                    ],
+                    {
+                        pixNb: 1.5,
+                    }
+                )
 
-        new gviz.App(containerDiv)
-            .setGeoCenter({ x: 3426953, y: 2326791 }).setZoomFactor(700)
-
-            .addMultiScaleTiledGridLayer(
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
-                [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: "2018",
-                        tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
-                        color: d3.interpolateYlOrRd
-                    })
-                ],
-                {
-                    pixNb: 1.5
+                .addBackgroundLayer({
+                    url: 'https://gisco-services.ec.europa.eu/maps/tiles/NaturalEarth/EPSG3035/',
+                    resolutions: [
+                        156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512,
+                        9783.93962050256, 4891.96981025128, 2445.98490512564,
+                    ],
+                    origin: [0, 6000000],
+                    filterColor: (zf) => '#ffffff66',
                 })
-
-            .addBackgroundLayer({
-                url: "https://gisco-services.ec.europa.eu/maps/tiles/NaturalEarth/EPSG3035/",
-                resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
-                origin: [0, 6000000],
-                filterColor: zf => "#ffffff66",
-            })
-
-    </script>
-
-</body>
-
+        </script>
+    </body>
 </html>

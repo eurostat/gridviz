@@ -1,65 +1,77 @@
 <!DOCTYPE html>
-<html lang="en" style="height:100%;">
+<html lang="en" style="height: 100%">
+    <head>
+        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+        <title></title>
+    </head>
 
-<head>
-    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-    <title></title>
-</head>
+    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+        <div id="viz-container" style="height: 100%; width: 100%"></div>
 
-<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
-    <div id="viz-container" style="height:100%; width:100%;"></div>
+        <script src="../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script>
+            let containerDiv = document.getElementById('viz-container')
+            const app = new gviz.App(containerDiv)
+                .setGeoCenter({ x: 4000000, y: 2960000 })
+                .setZoomFactor(100)
+                .setZoomFactorExtent([50, 11000])
+                .setLabelLayer(gviz.getEuronymeLabelLayer())
+                .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
-    <script src="../dist/gridviz.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
-    <script>
+            //style data
+            const s = new gviz.SquareColorWGLStyle({
+                colorCol: '2018',
+                color: d3.interpolateOrRd,
+            })
 
-        let containerDiv = document.getElementById("viz-container");
-        const app = new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2960000 }).setZoomFactor(100).setZoomFactorExtent([50, 11000])
-            .setLabelLayer(gviz.getEuronymeLabelLayer()).setBoundaryLayer(gviz.getEurostatBoundariesLayer())
-
-        //style data
-        const s = new gviz.SquareColorWGLStyle({
-            colorCol: "2018",
-            color: d3.interpolateOrRd
-        })
-
-        const resolutions = [1000, 2000, 5000, 10000, 20000, 50000, 100000]
-        app.addMultiScaleTiledGridLayer(
-            resolutions,
-            r => "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/" + r + "m/",
-            [s],
-            {
-                cellInfoHTML: c => "Inhabitant(s)<br>2018: <b>" + c["2018"] + "</b><br>2011: <b>" + c["2011"] + "</b><br>2006: <b>" + c["2006"] + "</b>",
-                preprocess: c => { c.r = c["Ind_snv"] / c["Ind"] / 12; }
-            },
-            10)
-
-    </script>
-    <script>
-
-        /*setTimeout((a, b, c) => {
+            const resolutions = [1000, 2000, 5000, 10000, 20000, 50000, 100000]
+            app.addMultiScaleTiledGridLayer(
+                resolutions,
+                (r) =>
+                    'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/' +
+                    r +
+                    'm/',
+                [s],
+                {
+                    cellInfoHTML: (c) =>
+                        'Inhabitant(s)<br>2018: <b>' +
+                        c['2018'] +
+                        '</b><br>2011: <b>' +
+                        c['2011'] +
+                        '</b><br>2006: <b>' +
+                        c['2006'] +
+                        '</b>',
+                    preprocess: (c) => {
+                        c.r = c['Ind_snv'] / c['Ind'] / 12
+                    },
+                },
+                10
+            )
+        </script>
+        <script>
+            /*setTimeout((a, b, c) => {
             console.log("aaa", a, b, c)
         }, 5000)*/
 
-        /*let i = 0
+            /*let i = 0
         let timer = setInterval(() => {
             console.log(i++)
             if (i > 10) clearInterval(timer)
         }, 1000);*/
 
-        //no move
-        //app.goToStraight(4000000, 2960000, 100, 10, 500);
-        //zoom out
-        //app.goToStraight(4000000, 2960000, 500, 10, 100);
-        //pan
-        //app.goToStraight(4050000, 2900000, 100, 10, 1);
-        //zoom out and pan
-        //app.goToStraight(4050000, 2900000, 200, 10, 100);
+            //no move
+            //app.goToStraight(4000000, 2960000, 100, 10, 500);
+            //zoom out
+            //app.goToStraight(4000000, 2960000, 500, 10, 100);
+            //pan
+            //app.goToStraight(4050000, 2900000, 100, 10, 1);
+            //zoom out and pan
+            //app.goToStraight(4050000, 2900000, 200, 10, 100);
 
-        /*
+            /*
                 gviz.zoomTo(app, 1000, 1.05, 0, () => {
                     gviz.zoomTo(app, 110, 1.05, 0, () => {
                         gviz.zoomTo(app, 1000, 1.05, 0, () => {
@@ -70,9 +82,6 @@
                     }, 1000)
                 }, 1000)
         */
-
-    </script>
-
-</body>
-
+        </script>
+    </body>
 </html>

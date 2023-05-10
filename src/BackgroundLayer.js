@@ -1,49 +1,46 @@
 //@ts-check
-"use strict";
+'use strict'
 
 /**
- * 
+ *
  * @author Julien Gaffuri
  */
 export class BackgroundLayer {
-
     /**
-     * @param {object} opts 
+     * @param {object} opts
      */
     constructor(opts) {
-        opts = opts || {};
+        opts = opts || {}
 
         /** An attribute to specify if a layer should be drawn or not
          * @type {boolean} */
-        this.visible = opts.visible == false ? false : true;
+        this.visible = opts.visible == false ? false : true
 
         /** The minimum zoom factor: Below this level, the layer is not shown.
          * @type {number} */
-        this.minZoom = opts.minZoom || 0;
+        this.minZoom = opts.minZoom || 0
 
         /** The maximum zoom factor: Above this level, the layer is not shown.
          * @type {number} */
-        this.maxZoom = opts.maxZoom || Infinity;
+        this.maxZoom = opts.maxZoom || Infinity
 
         //ensure acceptable values for the zoom limits.
         if (this.minZoom >= this.maxZoom)
-            throw new Error("Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.")
+            throw new Error('Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.')
 
         /** The image cache, indexed by z/y/x */
         this.cache = {}
-
-
 
         /**
          * @type {string} */
         this.url = opts.url
         /** @type {function(number,number,number):string} */
-        this.urlFun = opts.urlFun || ((x, y, z) => this.url + z + "/" + x + "/" + y + ".png")
+        this.urlFun = opts.urlFun || ((x, y, z) => this.url + z + '/' + x + '/' + y + '.png')
 
         /** @type {Array.<number>} */
         this.resolutions = opts.resolutions
         if (!this.resolutions || this.resolutions.length == 0)
-            throw new Error("No resolutions provided for background layer")
+            throw new Error('No resolutions provided for background layer')
 
         /** @type {number} */
         this.nbPix = opts.nbPix || 256
@@ -59,26 +56,26 @@ export class BackgroundLayer {
 
     /**
      * Get z/x/y cache data.
-     * @param {number} z 
-     * @param {number} x 
-     * @param {number} y 
+     * @param {number} z
+     * @param {number} x
+     * @param {number} y
      * @returns {HTMLImageElement|string|undefined}
      * @private
      */
     get(z, x, y) {
-        let d = this.cache[z];
-        if (!d) return;
-        d = d[x];
-        if (!d) return;
-        return d[y];
+        let d = this.cache[z]
+        if (!d) return
+        d = d[x]
+        if (!d) return
+        return d[y]
     }
 
     /**
      * Get z/x/y cache data.
      * @param {HTMLImageElement|string} img
-     * @param {number} z 
-     * @param {number} x 
-     * @param {number} y 
+     * @param {number} z
+     * @param {number} x
+     * @param {number} y
      * @returns
      * @private
      */
@@ -93,20 +90,19 @@ export class BackgroundLayer {
      * @returns {void}
      */
     draw(cg) {
-
         if (!this.resolutions || this.resolutions.length == 0) {
-            console.error("No resolutions provided for background layer")
+            console.error('No resolutions provided for background layer')
             return
         }
 
         //
         const zf = cg.getZf()
-        const x0 = this.origin[0], y0 = this.origin[1]
+        const x0 = this.origin[0],
+            y0 = this.origin[1]
 
         //get zoom level and resolution
         let z = 0
-        for (z = 0; z < this.resolutions.length; z++)
-            if (this.resolutions[z] < zf) break
+        for (z = 0; z < this.resolutions.length; z++) if (this.resolutions[z] < zf) break
         z -= 1
         z = Math.max(0, z)
         z = Math.min(z, this.resolutions.length - 1)
@@ -132,7 +128,6 @@ export class BackgroundLayer {
         //handle images
         for (let x = xMin; x < xMax; x++) {
             for (let y = yMin; y < yMax; y++) {
-
                 //get image
                 let img = this.get(z, x, y)
 
@@ -140,22 +135,24 @@ export class BackgroundLayer {
                 if (!img) {
                     const img = new Image()
                     this.put(img, z, x, y)
-                    img.onload = () => { cg.redraw(); }
+                    img.onload = () => {
+                        cg.redraw()
+                    }
                     img.onerror = () => {
                         //case when no image
-                        this.put("failed", z, x, y)
+                        this.put('failed', z, x, y)
                     }
                     img.src = this.urlFun(x, y, z)
-                    continue;
+                    continue
                 }
 
                 //case when no image
-                if (img === "failed") continue;
+                if (img === 'failed') continue
                 if (!(img instanceof HTMLImageElement)) {
                     console.log(img)
-                    continue;
+                    continue
                 }
-                if (img.width == 0 || img.height == 0) continue;
+                if (img.width == 0 || img.height == 0) continue
 
                 //draw image
                 const xGeo = x0 + x * sizeG
@@ -172,12 +169,10 @@ export class BackgroundLayer {
         //apply filter
         if (this.filterColor) {
             const fc = this.filterColor(zf)
-            if (fc && fc != "none") {
+            if (fc && fc != 'none') {
                 cg.ctx.fillStyle = fc
                 cg.ctx.fillRect(0, 0, cg.w, cg.h)
             }
         }
-
     }
-
 }

@@ -1,652 +1,904 @@
 <!DOCTYPE html>
-<html lang="en" style="height:100%;">
+<html lang="en" style="height: 100%">
+    <head>
+        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+        <title></title>
+    </head>
 
-<head>
-    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-    <title></title>
-</head>
+    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+        <div id="viz-container" style="height: 100%; width: 100%"></div>
 
-<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
-    <div id="viz-container" style="height:100%; width:100%;"></div>
+        <div
+            style="
+                position: absolute;
+                left: 20px;
+                top: 20px;
+                width: auto;
+                height: auto;
+                padding: 10px;
+                border: 0px;
+                border-radius: 5px;
+                background: #ffffffcc;
+                line-height: 1.6;
+                box-shadow: 5px 5px 5px grey;
+            "
+        >
+            <span style="font-size: 1.8em; font-weight: bold">France</span>
+            <span style="font-size: 1.25em">
+                <div id="layer">
+                    Year:
+                    <select id="year">
+                        <option value="2015">2015</option>
+                        <option value="2017" selected>2017</option>
+                    </select>
+                    <br />
+                    <span style="font-size: 1.25em; font-weight: bold">Population</span><br />
+                    <input type="radio" name="layer" id="pop" value="pop" checked />
+                    <label for="pop">Population totale</label>
+                    <br />
+                    <input type="radio" name="layer" id="popAge" value="popAge" />
+                    <label for="popAge">Par âge</label>
+                    <input type="radio" name="layer" id="popAge3" value="popAge3" />
+                    <label for="popAge3">Par âge (3 groupes)</label>
+                    <br />
+                    <input type="radio" name="layer" id="ageR" value="ageR" />
+                    <label for="ageR">Equilibre jeunes/âgés</label>
+                    <br />
+                    <input type="radio" name="layer" id="income" value="income" />
+                    <label for="income">Revenus</label>
+                    <input type="radio" name="layer" id="poverty" value="poverty" />
+                    <label for="poverty">Pauvreté</label>
+                    <br />
+                    <span style="font-size: 1.25em; font-weight: bold">Ménages</span><br />
+                    <input type="radio" name="layer" id="men_size" value="men_size" />
+                    <label for="men_size">Taille</label>
+                    <input type="radio" name="layer" id="men_mono" value="men_mono" />
+                    <label for="men_mono">Monoparental</label>
+                    <br />
+                    <span style="font-size: 1.25em; font-weight: bold">Logement</span><br />
+                    <input type="radio" name="layer" id="men_owner" value="men_owner" />
+                    <label for="men_owner">Propriétaires</label>
+                    <br />
+                    <input type="radio" name="layer" id="men_house_surf" value="men_house_surf" />
+                    <label for="men_house_surf">Surface</label>
+                    <br />
+                    <input type="radio" name="layer" id="men_house_collective" value="men_house_collective" />
+                    <label for="men_house_collective">Maison / logement collectif</label>
+                    <br />
+                    <input type="radio" name="layer" id="log_age" value="log_age" />
+                    <label for="log_age">Par année de construction</label>
+                    <br />
+                    Logement social:
+                    <input type="radio" name="layer" id="log_soc_nb" value="log_soc_nb" />
+                    <label for="log_soc_nb">Nombre</label>
+                    <input type="radio" name="layer" id="log_soc_per" value="log_soc_per" />
+                    <label for="log_soc_per">Pourcentage</label>
+                </div>
+                <hr />
+                <input type="checkbox" id="label" checked />
+                <label for="label">City names</label>
+                <input type="checkbox" id="boundary" checked />
+                <label for="boundary">Boundaries</label>
+                <hr />
+                Source:
+                <a
+                    href="https://www.insee.fr/fr/statistiques/4176290?sommaire=4176305"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >INSEE - Filosofi 2015/2017 - 200m grid</a
+                >
+            </span>
+        </div>
 
-    <div
-        style="position: absolute; left: 20px; top: 20px; width: auto; height: auto; padding: 10px; border: 0px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 5px 5px 5px grey">
-        <span style="font-size: 1.8em; font-weight: bold;">France</span>
-        <span style="font-size: 1.25em;">
-            <div id="layer">
-                Year: <select id="year">
-                    <option value="2015">2015</option>
-                    <option value="2017" selected>2017</option>
-                </select>
-                <br>
-                <span style="font-size: 1.25em; font-weight: bold;">Population</span><br>
-                <input type="radio" name="layer" id="pop" value="pop" checked>
-                <label for="pop">Population totale</label>
-                <br>
-                <input type="radio" name="layer" id="popAge" value="popAge">
-                <label for="popAge">Par âge</label>
-                <input type="radio" name="layer" id="popAge3" value="popAge3">
-                <label for="popAge3">Par âge (3 groupes)</label>
-                <br>
-                <input type="radio" name="layer" id="ageR" value="ageR">
-                <label for="ageR">Equilibre jeunes/âgés</label>
-                <br>
-                <input type="radio" name="layer" id="income" value="income">
-                <label for="income">Revenus</label>
-                <input type="radio" name="layer" id="poverty" value="poverty">
-                <label for="poverty">Pauvreté</label>
-                <br>
-                <span style="font-size: 1.25em; font-weight: bold;">Ménages</span><br>
-                <input type="radio" name="layer" id="men_size" value="men_size">
-                <label for="men_size">Taille</label>
-                <input type="radio" name="layer" id="men_mono" value="men_mono">
-                <label for="men_mono">Monoparental</label>
-                <br>
-                <span style="font-size: 1.25em; font-weight: bold;">Logement</span><br>
-                <input type="radio" name="layer" id="men_owner" value="men_owner">
-                <label for="men_owner">Propriétaires</label>
-                <br>
-                <input type="radio" name="layer" id="men_house_surf" value="men_house_surf">
-                <label for="men_house_surf">Surface</label>
-                <br>
-                <input type="radio" name="layer" id="men_house_collective" value="men_house_collective">
-                <label for="men_house_collective">Maison / logement collectif</label>
-                <br>
-                <input type="radio" name="layer" id="log_age" value="log_age">
-                <label for="log_age">Par année de construction</label>
-                <br>
-                Logement social:
-                <input type="radio" name="layer" id="log_soc_nb" value="log_soc_nb">
-                <label for="log_soc_nb">Nombre</label>
-                <input type="radio" name="layer" id="log_soc_per" value="log_soc_per">
-                <label for="log_soc_per">Pourcentage</label>
-            </div>
-            <hr>
-            <input type="checkbox" id="label" checked>
-            <label for="label">City names</label>
-            <input type="checkbox" id="boundary" checked>
-            <label for="boundary">Boundaries</label>
-            <hr>Source: <a href="https://www.insee.fr/fr/statistiques/4176290?sommaire=4176305" target="_blank"
-                rel="noopener noreferrer">INSEE - Filosofi 2015/2017 - 200m grid</a>
-        </span>
-    </div>
+        <script src="../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
+        <script>
+            let containerDiv = document.getElementById('viz-container')
+            const app = new gviz.App(containerDiv)
+                .setGeoCenter({ x: 3763437, y: 2891045 })
+                .setZoomFactor(50.1)
+                .setZoomFactorExtent([7, 2000])
+                .setLabelLayer(gviz.getEuronymeLabelLayer('FR', '20'))
+                .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+                .setViewFromURL()
+                .addBackgroundLayer({
+                    //url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
+                    //resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
+                    //origin: [0, 6000000],
+                    //filterColor: zf => "#ffffffd3",
+                    url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/',
+                    resolutions: Array.from({ length: 9 }, (_, i) => 28.00132289714475 * Math.pow(2, 10 - i)),
+                    origin: [0, 6000000],
+                    filterColor: (zf) => '#ffffffc0',
+                })
 
-    <script src="../dist/gridviz.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
-    <script>
+            //prepare datasets, indexed by thematic domain and year
+            const ds = { ind: {}, men: {}, log: {} }
+            const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/france/filosofi/'
 
-        let containerDiv = document.getElementById("viz-container");
-        const app = new gviz.App(containerDiv)
-            .setGeoCenter({ x: 3763437, y: 2891045 }).setZoomFactor(50.1).setZoomFactorExtent([7, 2000])
-            .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20"))
-            .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
-            .setViewFromURL()
-            .addBackgroundLayer({
-                //url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",
-                //resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564],
-                //origin: [0, 6000000],
-                //filterColor: zf => "#ffffffd3",
-                url: "https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/",
-                resolutions: Array.from({ length: 9 }, (_, i) => 28.00132289714475 * Math.pow(2, 10 - i)),
-                origin: [0, 6000000],
-                filterColor: zf => "#ffffffc0",
-            })
-
-
-        //prepare datasets, indexed by thematic domain and year
-        const ds = { ind: {}, men: {}, log: {} }
-        const baseURL = "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/france/filosofi/"
-
-        //population stats dataset
-        const indDatasetFun = year => app.makeMultiScaleTiledGridDataset(
-            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-            r => baseURL + "ind/" + year + "/" + r + "m/",
-            {
-                preprocess: c => {
-                    c.Ind_0_17 = +c.Ind_0_3 + +c.Ind_4_5 + +c.Ind_6_10 + +c.Ind_11_17
-                    c.Ind_18_64 = +c.Ind_18_24 + +c.Ind_25_39 + +c.Ind_40_54 + +c.Ind_55_64
-                    c.Ind_65p = +c.Ind_65_79 + +c.Ind_80p
-
-                    c.rIncome = c.Ind_snv / c.Ind / 12;
-
-                    //<24
-                    c.yyy = +c.Ind_0_3 + +c.Ind_4_5 + +c.Ind_6_10 + +c.Ind_11_17 + +c.Ind_18_24;
-                    //>65
-                    c.ooo = +c.Ind_65_79 + +c.Ind_80p
-                    c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo);
-                    c.age_ratio = c.age_ratio * 0.5 + 0.5
-                }
-            }
-        )
-        ds.ind["2015"] = indDatasetFun(2015)
-        ds.ind["2017"] = indDatasetFun(2017)
-
-        //household stats dataset
-        const menDatasetFun = year => app.makeMultiScaleTiledGridDataset(
-            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-            r => baseURL + "men/" + year + "/" + r + "m/",
-            {
-                preprocess: c => {
-                    //ind per men
-                    c.indPerMEn = c.Ind / c.Men;
-                    //poverty
-                    c.rPoverty = c.Men_pauv / c.Men;
-                    // Men_1ind - Nombre de ménages d’un seul individu
-                    // Men_5ind - Nombre de ménages de 5 individus ou plus
-                    c.Men_2_4ind = +c.Men - +c.Men_1ind - +c.Men_5ind;
-                    // Men_fmp - Nombre de ménages monoparentaux
-                    //c.Men_nfmp = +c.Men - +c.Men_fmp;
-                    c.rMenFmp = c.Men_fmp / c.Men;
-                    // Men_prop - Nombre de ménages propriétaires
-                    //c.Men_nprop = +c.Men - +c.Men_prop;
-                    c.rMen_prop = +c.Men_prop / +c.Men;
-                    // Men_surf - Somme de la surface des logements* du carreau
-                    c.rMenSurf = +c.Men_surf / +c.Men;
-                }
-            }
-        )
-        ds.men["2015"] = menDatasetFun(2015)
-        ds.men["2017"] = menDatasetFun(2017)
-
-        //housing stats dataset
-        const logDatasetFun = year => app.makeMultiScaleTiledGridDataset(
-            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-            r => baseURL + "log/" + year + "/" + r + "m/",
-            {
-                preprocess: c => {
-                    c.Log = +c.Log_av45 + +c.Log_45_70 + +c.Log_70_90 + +c.Log_ap90 + +c.Log_inc
-                    // Log_soc - Nombre de logements* sociaux
-                    c.Log_nsoc = +c.Log - +c.Log_soc;
-                    c.rLogSoc = c.Log_soc / c.Log;
-                }
-            }
-        )
-        ds.log["2015"] = logDatasetFun(2015)
-        ds.log["2017"] = logDatasetFun(2017)
-
-
-
-
-        //
-        const update = () => {
-
-            //read GUI selection
-            const layCode = document.querySelector('input[name="layer"]:checked').value
-            const year = document.querySelector('#year').value
-
-            //remove layers
-            app.layers = []
-
-            //formater
-            const f1 = d3.format(".1f")
-
-            //set layer
-            if (layCode === "pop") {
-                //population
-                app.addLayerFromDataset(
-                    ds.ind[year],
-                    [
-                        new gviz.SquareColorWGLStyle({
-                            colorCol: "Ind",
-                            color: d3.interpolateYlOrRd,
-                            stretching: { fun: "expRev", alpha: -7 }
-                        }),
-                        new gviz.StrokeStyle({ maxZoom: 15 }),
-                        new gviz.ShapeColorSizeStyle({
-                            colorCol: "imputed",
-                            color: (v, r, s) => +v ? "#666" : "",
-                            shape: () => "circle",
-                            size: (v, r, s) => 0.3 * r,
-                            maxZoom: 30,
-                        })
-                    ],
+            //population stats dataset
+            const indDatasetFun = (year) =>
+                app.makeMultiScaleTiledGridDataset(
+                    [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+                    (r) => baseURL + 'ind/' + year + '/' + r + 'm/',
                     {
-                        pixNb: 2,
-                        cellInfoHTML: c => "<b>" + c.Ind + "</b> individu" + (+c.Ind == 1 ? "" : "s")
-                            + (+c.imputed ? "<br>(valeur imputée)" : "")
+                        preprocess: (c) => {
+                            c.Ind_0_17 = +c.Ind_0_3 + +c.Ind_4_5 + +c.Ind_6_10 + +c.Ind_11_17
+                            c.Ind_18_64 = +c.Ind_18_24 + +c.Ind_25_39 + +c.Ind_40_54 + +c.Ind_55_64
+                            c.Ind_65p = +c.Ind_65_79 + +c.Ind_80p
+
+                            c.rIncome = c.Ind_snv / c.Ind / 12
+
+                            //<24
+                            c.yyy = +c.Ind_0_3 + +c.Ind_4_5 + +c.Ind_6_10 + +c.Ind_11_17 + +c.Ind_18_24
+                            //>65
+                            c.ooo = +c.Ind_65_79 + +c.Ind_80p
+                            c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
+                            c.age_ratio = c.age_ratio * 0.5 + 0.5
+                        },
                     }
                 )
-                //legend
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({ title: "Nombre d'individus", colorRamp: d3.interpolateYlOrRd, fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7) })
+            ds.ind['2015'] = indDatasetFun(2015)
+            ds.ind['2017'] = indDatasetFun(2017)
+
+            //household stats dataset
+            const menDatasetFun = (year) =>
+                app.makeMultiScaleTiledGridDataset(
+                    [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+                    (r) => baseURL + 'men/' + year + '/' + r + 'm/',
+                    {
+                        preprocess: (c) => {
+                            //ind per men
+                            c.indPerMEn = c.Ind / c.Men
+                            //poverty
+                            c.rPoverty = c.Men_pauv / c.Men
+                            // Men_1ind - Nombre de ménages d’un seul individu
+                            // Men_5ind - Nombre de ménages de 5 individus ou plus
+                            c.Men_2_4ind = +c.Men - +c.Men_1ind - +c.Men_5ind
+                            // Men_fmp - Nombre de ménages monoparentaux
+                            //c.Men_nfmp = +c.Men - +c.Men_fmp;
+                            c.rMenFmp = c.Men_fmp / c.Men
+                            // Men_prop - Nombre de ménages propriétaires
+                            //c.Men_nprop = +c.Men - +c.Men_prop;
+                            c.rMen_prop = +c.Men_prop / +c.Men
+                            // Men_surf - Somme de la surface des logements* du carreau
+                            c.rMenSurf = +c.Men_surf / +c.Men
+                        },
+                    }
                 )
-            } else if (layCode === "popAge") {
-                //population by age
-                const col = d3.interpolateSpectral
-                app.addLayerFromDataset(
-                    ds.ind[year],
-                    [
-                        new gviz.CompositionStyle({
-                            color: {
-                                "Ind_0_3": col(0 / 80),
-                                "Ind_4_5": col(2 / 80),
-                                "Ind_6_10": col(7 / 80),
-                                "Ind_11_17": col(14 / 80),
-                                "Ind_18_24": col(21 / 80),
-                                "Ind_25_39": col(36 / 80),
-                                "Ind_40_54": col(51 / 80),
-                                "Ind_55_64": col(61 / 80),
-                                "Ind_65_79": col(76 / 80),
-                                "Ind_80p": col(1),
-                                //"Ind_inc": "black"
-                            },
-                            type: () => "agepyramid",
-                            sizeCol: "Ind",
-                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
-                            agePyramidHeight: (c, r) => 0.95 * r
+            ds.men['2015'] = menDatasetFun(2015)
+            ds.men['2017'] = menDatasetFun(2017)
+
+            //housing stats dataset
+            const logDatasetFun = (year) =>
+                app.makeMultiScaleTiledGridDataset(
+                    [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+                    (r) => baseURL + 'log/' + year + '/' + r + 'm/',
+                    {
+                        preprocess: (c) => {
+                            c.Log = +c.Log_av45 + +c.Log_45_70 + +c.Log_70_90 + +c.Log_ap90 + +c.Log_inc
+                            // Log_soc - Nombre de logements* sociaux
+                            c.Log_nsoc = +c.Log - +c.Log_soc
+                            c.rLogSoc = c.Log_soc / c.Log
+                        },
+                    }
+                )
+            ds.log['2015'] = logDatasetFun(2015)
+            ds.log['2017'] = logDatasetFun(2017)
+
+            //
+            const update = () => {
+                //read GUI selection
+                const layCode = document.querySelector('input[name="layer"]:checked').value
+                const year = document.querySelector('#year').value
+
+                //remove layers
+                app.layers = []
+
+                //formater
+                const f1 = d3.format('.1f')
+
+                //set layer
+                if (layCode === 'pop') {
+                    //population
+                    app.addLayerFromDataset(
+                        ds.ind[year],
+                        [
+                            new gviz.SquareColorWGLStyle({
+                                colorCol: 'Ind',
+                                color: d3.interpolateYlOrRd,
+                                stretching: { fun: 'expRev', alpha: -7 },
+                            }),
+                            new gviz.StrokeStyle({ maxZoom: 15 }),
+                            new gviz.ShapeColorSizeStyle({
+                                colorCol: 'imputed',
+                                color: (v, r, s) => (+v ? '#666' : ''),
+                                shape: () => 'circle',
+                                size: (v, r, s) => 0.3 * r,
+                                maxZoom: 30,
+                            }),
+                        ],
+                        {
+                            pixNb: 2,
+                            cellInfoHTML: (c) =>
+                                '<b>' +
+                                c.Ind +
+                                '</b> individu' +
+                                (+c.Ind == 1 ? '' : 's') +
+                                (+c.imputed ? '<br>(valeur imputée)' : ''),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorLegend({
+                            title: "Nombre d'individus",
+                            colorRamp: d3.interpolateYlOrRd,
+                            fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
                         })
-                    ],
-                    {
-                        pixNb: 16,
-                        cellInfoHTML: c => "<b>" + c.Ind + "</b> individu" + (+c.Ind == 1 ? "" : "s") + "<br>" + "Par âge:<br>" +
-                            " < 3 : " + c.Ind_0_3 + "<br>" +
-                            " 4-5 : " + c.Ind_4_5 + "<br>" +
-                            " 6-10: " + c.Ind_6_10 + "<br>" +
-                            "11-17: " + c.Ind_11_17 + "<br>" +
-                            "18-24: " + c.Ind_18_24 + "<br>" +
-                            "25-39: " + c.Ind_25_39 + "<br>" +
-                            "40-54: " + c.Ind_40_54 + "<br>" +
-                            "55-64: " + c.Ind_55_64 + "<br>" +
-                            "65-79: " + c.Ind_65_79 + "<br>" +
-                            " > 80: " + c.Ind_80p + "<br>" +
-                            " inc.: " + c.Ind_inc
-                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
-                    })
-                //legend
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
-                        title: "Age",
-                        colCat: [[col(0 / 80), "<= 3"], [col(2 / 80), "4-5"], [col(7 / 80), "6-10"], [col(14 / 80), "11-17"], [col(21 / 80), "18-24"], [col(36 / 80), "25-39"], [col(51 / 80), "40-54"], [col(61 / 80), "55-64"], [col(76 / 80), "65-79"], [col(1), " > 80"]].reverse()
-                    })
-                )
-
-            } else if (layCode === "popAge3") {
-                //population by age (3 age groups)
-                const col = d3.interpolateSpectral
-                app.addLayerFromDataset(
-                    ds.ind[year],
-                    [
-                        new gviz.CompositionStyle({
-                            color: {
-                                "Ind_0_17": col(0.2),
-                                "Ind_18_64": col(0.4),
-                                "Ind_65p": col(0.9),
-                            },
-                            type: () => "agepyramid",
-                            sizeCol: "Ind",
-                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
-                            agePyramidHeight: (c, r) => 0.95 * r
+                    )
+                } else if (layCode === 'popAge') {
+                    //population by age
+                    const col = d3.interpolateSpectral
+                    app.addLayerFromDataset(
+                        ds.ind[year],
+                        [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    Ind_0_3: col(0 / 80),
+                                    Ind_4_5: col(2 / 80),
+                                    Ind_6_10: col(7 / 80),
+                                    Ind_11_17: col(14 / 80),
+                                    Ind_18_24: col(21 / 80),
+                                    Ind_25_39: col(36 / 80),
+                                    Ind_40_54: col(51 / 80),
+                                    Ind_55_64: col(61 / 80),
+                                    Ind_65_79: col(76 / 80),
+                                    Ind_80p: col(1),
+                                    //"Ind_inc": "black"
+                                },
+                                type: () => 'agepyramid',
+                                sizeCol: 'Ind',
+                                size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
+                                agePyramidHeight: (c, r) => 0.95 * r,
+                            }),
+                        ],
+                        {
+                            pixNb: 16,
+                            cellInfoHTML: (c) =>
+                                '<b>' +
+                                c.Ind +
+                                '</b> individu' +
+                                (+c.Ind == 1 ? '' : 's') +
+                                '<br>' +
+                                'Par âge:<br>' +
+                                ' < 3 : ' +
+                                c.Ind_0_3 +
+                                '<br>' +
+                                ' 4-5 : ' +
+                                c.Ind_4_5 +
+                                '<br>' +
+                                ' 6-10: ' +
+                                c.Ind_6_10 +
+                                '<br>' +
+                                '11-17: ' +
+                                c.Ind_11_17 +
+                                '<br>' +
+                                '18-24: ' +
+                                c.Ind_18_24 +
+                                '<br>' +
+                                '25-39: ' +
+                                c.Ind_25_39 +
+                                '<br>' +
+                                '40-54: ' +
+                                c.Ind_40_54 +
+                                '<br>' +
+                                '55-64: ' +
+                                c.Ind_55_64 +
+                                '<br>' +
+                                '65-79: ' +
+                                c.Ind_65_79 +
+                                '<br>' +
+                                ' > 80: ' +
+                                c.Ind_80p +
+                                '<br>' +
+                                ' inc.: ' +
+                                c.Ind_inc +
+                                (+c.imputed ? '<br>(valeurs imputées)' : ''),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Age',
+                            colCat: [
+                                [col(0 / 80), '<= 3'],
+                                [col(2 / 80), '4-5'],
+                                [col(7 / 80), '6-10'],
+                                [col(14 / 80), '11-17'],
+                                [col(21 / 80), '18-24'],
+                                [col(36 / 80), '25-39'],
+                                [col(51 / 80), '40-54'],
+                                [col(61 / 80), '55-64'],
+                                [col(76 / 80), '65-79'],
+                                [col(1), ' > 80'],
+                            ].reverse(),
                         })
-                    ],
-                    {
-                        pixNb: 11,
-                        cellInfoHTML: c => "<b>" + c.Ind + "</b> individu" + (+c.Ind == 1 ? "" : "s") + "<br>" + "Par âge:<br>" +
-                            " < 17 : " + f1(c.Ind_0_17) + "<br>" +
-                            " 18-64 : " + f1(c.Ind_18_64) + "<br>" +
-                            " > 65: " + f1(c.Ind_65p) + "<br>" +
-                            " inc.: " + f1(c.Ind_inc)
-                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
-                    })
-                //legend
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({ title: "Age", colCat: [[col(0.2), "<= 17"], [col(0.4), "18-64"], [col(0.9), " > 65"]].reverse() })
-                )
-
-            } else if (layCode === "ageR") {
-                //young VS elderly
-                app.addLayerFromDataset(
-                    ds.ind[year],
-                    [
-                        new gviz.ShapeColorSizeStyle({
-                            sizeCol: "Ind",
-                            size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
-                            colorCol: "age_ratio",
-                            color: (v, r, s) => d3.interpolateSpectral(1 - v),
-                            shape: () => "circle",
+                    )
+                } else if (layCode === 'popAge3') {
+                    //population by age (3 age groups)
+                    const col = d3.interpolateSpectral
+                    app.addLayerFromDataset(
+                        ds.ind[year],
+                        [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    Ind_0_17: col(0.2),
+                                    Ind_18_64: col(0.4),
+                                    Ind_65p: col(0.9),
+                                },
+                                type: () => 'agepyramid',
+                                sizeCol: 'Ind',
+                                size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
+                                agePyramidHeight: (c, r) => 0.95 * r,
+                            }),
+                        ],
+                        {
+                            pixNb: 11,
+                            cellInfoHTML: (c) =>
+                                '<b>' +
+                                c.Ind +
+                                '</b> individu' +
+                                (+c.Ind == 1 ? '' : 's') +
+                                '<br>' +
+                                'Par âge:<br>' +
+                                ' < 17 : ' +
+                                f1(c.Ind_0_17) +
+                                '<br>' +
+                                ' 18-64 : ' +
+                                f1(c.Ind_18_64) +
+                                '<br>' +
+                                ' > 65: ' +
+                                f1(c.Ind_65p) +
+                                '<br>' +
+                                ' inc.: ' +
+                                f1(c.Ind_inc) +
+                                (+c.imputed ? '<br>(valeurs imputées)' : ''),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Age',
+                            colCat: [
+                                [col(0.2), '<= 17'],
+                                [col(0.4), '18-64'],
+                                [col(0.9), ' > 65'],
+                            ].reverse(),
                         })
-                    ],
-                    {
-                        pixNb: 6,
-                        cellInfoHTML: c => "<b>" + f1(c.yyy) + "</b> 24 ans et moins"
-                            + "<br>" + "<b>" + f1(c.ooo) + "</b> 65 ans et plus"
-                            //+ "<br>" + "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
-                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
-                    })
-                //legend
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "individus", fillColor: "#ccc" }))
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({ title: "Equilibre jeunes/âgés", ticks: 2, tickFormat: "text", colorRamp: d3.interpolateSpectral, fun: (t, r, s) => t == 0 ? "Plus jeunes" : t == 0.5 ? "équilibre" : "Plus âgés" })
-                )
-
-            } else if (layCode === "income") {
-                //income
-                app.addLayerFromDataset(
-                    ds.ind[year],
-                    [
-                        new gviz.SquareColorWGLStyle({
-                            colorCol: "rIncome",
-                            color: d3.interpolateSpectral,
-                            tFun: (v, r, s) => {
-                                let t = (v - 1200) / (3600 - 1200)
-                                //t = t > 1 ? 1 : t < 0 ? 0 : t
-                                return 1 - Math.pow(t < 0 ? 0 : t, 1.5)
-                            }
-                        }),
-                        new gviz.StrokeStyle({ maxZoom: 15 })
-                    ],
-                    {
-                        pixNb: 2,
-                        cellInfoHTML: c => "<b>" + Math.floor(c.rIncome) + "€</b> par mois et par individu, en moyenne"
-                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
-                    })
-                //legend
-                //app.layers[0].styles[0].legends.push(
-                //    new gviz.ColorLegend({ title: "Revenu par mois et par 'individu'", colorRamp: d3.interpolateSpectral, fun: (t, r, s) => t })
-                //)
-
-            } else if (layCode === "poverty") {
-                //poverty
-                app.addLayerFromDataset(
-                    ds.men[year],
-                    [
-                        new gviz.ShapeColorSizeStyle({
-                            sizeCol: "Men",
-                            size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
-                            colorCol: "rPoverty",
-                            color: (v, r, s) => {
-                                if (!v) return "#bbb"
-                                //return d3.interpolateYlOrRd(Math.pow((v - s.min) / (s.max - s.min), 0.7))
-                                return d3.interpolateYlOrRd(gviz.sPow(v, 0.65))
-                            },
-                            shape: () => "circle",
+                    )
+                } else if (layCode === 'ageR') {
+                    //young VS elderly
+                    app.addLayerFromDataset(
+                        ds.ind[year],
+                        [
+                            new gviz.ShapeColorSizeStyle({
+                                sizeCol: 'Ind',
+                                size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
+                                colorCol: 'age_ratio',
+                                color: (v, r, s) => d3.interpolateSpectral(1 - v),
+                                shape: () => 'circle',
+                            }),
+                        ],
+                        {
+                            pixNb: 6,
+                            cellInfoHTML: (c) =>
+                                '<b>' +
+                                f1(c.yyy) +
+                                '</b> 24 ans et moins' +
+                                '<br>' +
+                                '<b>' +
+                                f1(c.ooo) +
+                                '</b> 65 ans et plus' +
+                                //+ "<br>" + "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
+                                (+c.imputed ? '<br>(valeurs imputées)' : ''),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({
+                            shape: 'circle',
+                            labelUnitText: 'individus',
+                            fillColor: '#ccc',
                         })
-                    ],
-                    {
-                        pixNb: 6,
-                        cellInfoHTML: c => (c.rPoverty == 0 ? "Pas" : "<b>" + f1(Math.floor(1000 * c.rPoverty) / 10) + "%</b>") + " de ménages pauvres<br>"
-                            + "sur " + c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
-                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
-                    })
-                //legend
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({ title: "Part des ménages pauvres (%)", colorRamp: d3.interpolateYlOrRd, fun: (t) => 100 * Math.pow(t, 1 / 0.65) })
-                )
-
-            } else if (layCode === "men_size") {
-                //houshold size
-                app.addLayerFromDataset(
-                    ds.men[year],
-                    [
-                        new gviz.CompositionStyle({
-                            color: {
-                                "Men_1ind": "#e31a1c",
-                                "Men_2_4ind": "#ffff99",
-                                "Men_5ind": "#1f78b4",
-                            },
-                            type: () => "ring",
-                            stripesOrientation: () => 90,
-                            sizeCol: "Men",
-                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.15, 0),
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorLegend({
+                            title: 'Equilibre jeunes/âgés',
+                            ticks: 2,
+                            tickFormat: 'text',
+                            colorRamp: d3.interpolateSpectral,
+                            fun: (t, r, s) => (t == 0 ? 'Plus jeunes' : t == 0.5 ? 'équilibre' : 'Plus âgés'),
                         })
-                    ],
-                    {
-                        pixNb: 10,
-                        cellInfoHTML: c => c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
-                            + "<br><b>" + c.Men_1ind + "</b> d'un seul individu"
-                            + "<br><b>" + f1(c.Men_2_4ind) + "</b> de 2 à 4 individus"
-                            + "<br><b>" + c.Men_5ind + "</b> de 5 individus ou plus"
-                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
-                    })
-                //legend
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({ title: "Taille des ménages", colCat: [["#e31a1c", "Un seul individu"], ["#ffff99", "2 à 4 individus"], ["#1f78b4", "5 individus ou plus"]] })
-                )
-
-            } else if (layCode === "men_mono") {
-                //single-parent
-                app.addLayerFromDataset(
-                    ds.men[year],
-                    [
-                        new gviz.ShapeColorSizeStyle({
-                            sizeCol: "Men",
-                            size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
-                            colorCol: "rMenFmp",
-                            color: (v, r, s) => v == 0 ? "#ccc" : d3.interpolateYlOrRd(gviz.sPow(v, 0.4)),
-                            shape: () => "circle",
+                    )
+                } else if (layCode === 'income') {
+                    //income
+                    app.addLayerFromDataset(
+                        ds.ind[year],
+                        [
+                            new gviz.SquareColorWGLStyle({
+                                colorCol: 'rIncome',
+                                color: d3.interpolateSpectral,
+                                tFun: (v, r, s) => {
+                                    let t = (v - 1200) / (3600 - 1200)
+                                    //t = t > 1 ? 1 : t < 0 ? 0 : t
+                                    return 1 - Math.pow(t < 0 ? 0 : t, 1.5)
+                                },
+                            }),
+                            new gviz.StrokeStyle({ maxZoom: 15 }),
+                        ],
+                        {
+                            pixNb: 2,
+                            cellInfoHTML: (c) =>
+                                '<b>' +
+                                Math.floor(c.rIncome) +
+                                '€</b> par mois et par individu, en moyenne' +
+                                (+c.imputed ? '<br>(valeurs imputées)' : ''),
+                        }
+                    )
+                    //legend
+                    //app.layers[0].styles[0].legends.push(
+                    //    new gviz.ColorLegend({ title: "Revenu par mois et par 'individu'", colorRamp: d3.interpolateSpectral, fun: (t, r, s) => t })
+                    //)
+                } else if (layCode === 'poverty') {
+                    //poverty
+                    app.addLayerFromDataset(
+                        ds.men[year],
+                        [
+                            new gviz.ShapeColorSizeStyle({
+                                sizeCol: 'Men',
+                                size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
+                                colorCol: 'rPoverty',
+                                color: (v, r, s) => {
+                                    if (!v) return '#bbb'
+                                    //return d3.interpolateYlOrRd(Math.pow((v - s.min) / (s.max - s.min), 0.7))
+                                    return d3.interpolateYlOrRd(gviz.sPow(v, 0.65))
+                                },
+                                shape: () => 'circle',
+                            }),
+                        ],
+                        {
+                            pixNb: 6,
+                            cellInfoHTML: (c) =>
+                                (c.rPoverty == 0
+                                    ? 'Pas'
+                                    : '<b>' + f1(Math.floor(1000 * c.rPoverty) / 10) + '%</b>') +
+                                ' de ménages pauvres<br>' +
+                                'sur ' +
+                                c.Men +
+                                ' ménage' +
+                                (+c.Men == 1 ? '' : 's') +
+                                (+c.imputed ? '<br>(valeurs imputées)' : ''),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorLegend({
+                            title: 'Part des ménages pauvres (%)',
+                            colorRamp: d3.interpolateYlOrRd,
+                            fun: (t) => 100 * Math.pow(t, 1 / 0.65),
                         })
-                    ],
-                    {
-                        pixNb: 6,
-                        cellInfoHTML: c => c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
-                            + "<br><b>" + c.Men_fmp + "</b> monoparenta" + (+c.Men_fmp == 1 ? "l" : "ux")
-                            + "<br><b>" + f1(100 * c.rMenFmp) + "</b> %"
-                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
-                    })
-                //legend
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({ title: "Part des ménages monoparentaux (%)", colorRamp: d3.interpolateYlOrRd, fun: (t) => 100 * Math.pow(t, 1 / 0.4) })
-                )
-
-            } else if (layCode === "men_owner") {
-                //owners
-                app.addLayerFromDataset(
-                    ds.men[year],
-                    [
-                        new gviz.ShapeColorSizeStyle({
-                            sizeCol: "Men",
-                            size: (v, r, s) => 1.4 * r * gviz.sPow(v / s.max, 0.2),
-                            colorCol: "rMen_prop",
-                            color: (v) => d3.interpolatePuBuGn(1 - gviz.sPow((1 - v), 0.6)),
-                            shape: () => "circle",
+                    )
+                } else if (layCode === 'men_size') {
+                    //houshold size
+                    app.addLayerFromDataset(
+                        ds.men[year],
+                        [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    Men_1ind: '#e31a1c',
+                                    Men_2_4ind: '#ffff99',
+                                    Men_5ind: '#1f78b4',
+                                },
+                                type: () => 'ring',
+                                stripesOrientation: () => 90,
+                                sizeCol: 'Men',
+                                size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.15, 0),
+                            }),
+                        ],
+                        {
+                            pixNb: 10,
+                            cellInfoHTML: (c) =>
+                                c.Men +
+                                ' ménage' +
+                                (+c.Men == 1 ? '' : 's') +
+                                '<br><b>' +
+                                c.Men_1ind +
+                                "</b> d'un seul individu" +
+                                '<br><b>' +
+                                f1(c.Men_2_4ind) +
+                                '</b> de 2 à 4 individus' +
+                                '<br><b>' +
+                                c.Men_5ind +
+                                '</b> de 5 individus ou plus' +
+                                (+c.imputed ? '<br>(valeurs imputées)' : ''),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Taille des ménages',
+                            colCat: [
+                                ['#e31a1c', 'Un seul individu'],
+                                ['#ffff99', '2 à 4 individus'],
+                                ['#1f78b4', '5 individus ou plus'],
+                            ],
                         })
-                    ],
-                    {
-                        pixNb: 6,
-                        cellInfoHTML: c => c.Men + " ménage" + (+c.Men == 1 ? "" : "s") + "<br>" +
-                            "<b>" + c.Men_prop + "</b> propriétaires<br>" +
-                            "<b>" + f1(100 * c.rMen_prop) + "</b> %"
-                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
-                    })
-                //legend
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "ménages", fillColor: "#ccc" }))
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({ title: "Part des ménages propriétaires (%)", colorRamp: d3.interpolatePuBuGn, fun: (t) => 100 * (1 - Math.pow((1 - t), 1 / 0.6)) })
-                )
-
-            } else if (layCode === "men_house_surf") {
-                //housing surface per houshold
-                app.addLayerFromDataset(
-                    ds.men[year],
-                    [
-                        new gviz.SquareColorWGLStyle({
-                            colorCol: "rMenSurf",
-                            color: d3.interpolateSpectral,
-                            tFun: (v, r, s) => 1 - (v - s.min) / (s.max - s.min)
-                        }),
-                        new gviz.StrokeStyle({ maxZoom: 15 })
-                    ],
-                    {
-                        pixNb: 2,
-                        cellInfoHTML: c => "<b>" + f1(Math.floor(10 * c.rMenSurf) / 10) + "</b> m² par logement."
-                            + "<br>" + c.Men + " logement" + (+c.Men == 1 ? "" : "s")
-                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
-                    })
-                //legend
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
-                        title: "Surface moyenne des logements de ménages (m²)", colorRamp: d3.interpolateSpectral,
-                        fun: (t, r, s) => s.min + (1 - t) * (s.max - s.min)
-                    })
-                )
-
-            } else if (layCode === "men_house_collective") {
-                //housing type: house/collective
-                app.addLayerFromDataset(
-                    ds.men[year],
-                    [
-                        new gviz.CompositionStyle({
-                            color: {
-                                "Men_coll": "green",
-                                "Men_mais": "orange",
-                            },
-                            type: () => "flag",
-                            stripesOrientation: () => 90,
-                            sizeCol: "Men",
-                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.15, 0),
+                    )
+                } else if (layCode === 'men_mono') {
+                    //single-parent
+                    app.addLayerFromDataset(
+                        ds.men[year],
+                        [
+                            new gviz.ShapeColorSizeStyle({
+                                sizeCol: 'Men',
+                                size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
+                                colorCol: 'rMenFmp',
+                                color: (v, r, s) =>
+                                    v == 0 ? '#ccc' : d3.interpolateYlOrRd(gviz.sPow(v, 0.4)),
+                                shape: () => 'circle',
+                            }),
+                        ],
+                        {
+                            pixNb: 6,
+                            cellInfoHTML: (c) =>
+                                c.Men +
+                                ' ménage' +
+                                (+c.Men == 1 ? '' : 's') +
+                                '<br><b>' +
+                                c.Men_fmp +
+                                '</b> monoparenta' +
+                                (+c.Men_fmp == 1 ? 'l' : 'ux') +
+                                '<br><b>' +
+                                f1(100 * c.rMenFmp) +
+                                '</b> %' +
+                                (+c.imputed ? '<br>(valeurs imputées)' : ''),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorLegend({
+                            title: 'Part des ménages monoparentaux (%)',
+                            colorRamp: d3.interpolateYlOrRd,
+                            fun: (t) => 100 * Math.pow(t, 1 / 0.4),
                         })
-                    ],
-                    {
-                        pixNb: 8,
-                        cellInfoHTML: c => c.Men + " ménage" + (+c.Men == 1 ? "" : "s")
-                            + "<br><b>" + (c.Men_coll == 0 ? "Aucun" : c.Men_coll) + "</b> en logement collectif"
-                            + "<br><b>" + (c.Men_mais == 0 ? "Aucun" : c.Men_mais) + "</b> en maison"
-                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
-                    })
-                //legend
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "square", labelUnitText: "ménages", fillColor: "#ccc" }))
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({ title: "Type de logement", colCat: [["green", "Logement collectif"], ["orange", "Maison"]] })
-                )
-
-            } else if (layCode === "log_age") {
-                //housing age
-                const col = d3.interpolateViridis
-                app.addLayerFromDataset(
-                    ds.log[year],
-                    [
-                        new gviz.CompositionStyle({
-                            color: {
-                                "Log_av45": col(0 / 3),
-                                "Log_45_70": col(1 / 3),
-                                "Log_70_90": col(2 / 3),
-                                "Log_ap90": col(3 / 3),
-                                "Log_inc": "gray"
-                            },
-                            type: () => "flag",
-                            //stripesOrientation: () => 90,
-                            sizeCol: "Log",
-                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
+                    )
+                } else if (layCode === 'men_owner') {
+                    //owners
+                    app.addLayerFromDataset(
+                        ds.men[year],
+                        [
+                            new gviz.ShapeColorSizeStyle({
+                                sizeCol: 'Men',
+                                size: (v, r, s) => 1.4 * r * gviz.sPow(v / s.max, 0.2),
+                                colorCol: 'rMen_prop',
+                                color: (v) => d3.interpolatePuBuGn(1 - gviz.sPow(1 - v, 0.6)),
+                                shape: () => 'circle',
+                            }),
+                        ],
+                        {
+                            pixNb: 6,
+                            cellInfoHTML: (c) =>
+                                c.Men +
+                                ' ménage' +
+                                (+c.Men == 1 ? '' : 's') +
+                                '<br>' +
+                                '<b>' +
+                                c.Men_prop +
+                                '</b> propriétaires<br>' +
+                                '<b>' +
+                                f1(100 * c.rMen_prop) +
+                                '</b> %' +
+                                (+c.imputed ? '<br>(valeurs imputées)' : ''),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorLegend({
+                            title: 'Part des ménages propriétaires (%)',
+                            colorRamp: d3.interpolatePuBuGn,
+                            fun: (t) => 100 * (1 - Math.pow(1 - t, 1 / 0.6)),
                         })
-                    ],
-                    {
-                        pixNb: 8,
-                        cellInfoHTML: c => f1(c.Log) + " logement" + (+c.Log == 1 ? "" : "s")
-                            + "<br>" + "Année de construction:<br>" +
-                            "<b>" + c.Log_av45 + "</b> avant 1945<br>" +
-                            "<b>" + c.Log_45_70 + "</b> entre 1945 et 1969<br>" +
-                            "<b>" + c.Log_70_90 + "</b> entre 1970 et 1989<br>" +
-                            "<b>" + c.Log_ap90 + "</b> depuis 1990<br>" +
-                            "<b>" + c.Log_inc + "</b> inconnue" + (+c.Log_inc == 1 ? "" : "s")
-                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
-                    })
-                //legend
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "square", labelUnitText: "logements", fillColor: "#ccc" }))
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({ title: "Année de construction", colCat: [[col(0 / 3), "avant 1945"], [col(1 / 3), "entre 1945 et 1969"], [col(2 / 3), "entre 1970 et 1989"], [col(3 / 3), "depuis 1990"], ["gray", "inconnue"]] })
-                )
-
-            } else if (layCode === "log_soc_nb") {
-                //social housing
-                app.addLayerFromDataset(
-                    ds.log[year],
-                    [
-                        new gviz.CompositionStyle({
-                            color: {
-                                "Log_nsoc": "#ccc",
-                                "Log_soc": "#33a02c",
-                            },
-                            type: () => "ring",
-                            sizeCol: "Log",
-                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.15, 0),
+                    )
+                } else if (layCode === 'men_house_surf') {
+                    //housing surface per houshold
+                    app.addLayerFromDataset(
+                        ds.men[year],
+                        [
+                            new gviz.SquareColorWGLStyle({
+                                colorCol: 'rMenSurf',
+                                color: d3.interpolateSpectral,
+                                tFun: (v, r, s) => 1 - (v - s.min) / (s.max - s.min),
+                            }),
+                            new gviz.StrokeStyle({ maxZoom: 15 }),
+                        ],
+                        {
+                            pixNb: 2,
+                            cellInfoHTML: (c) =>
+                                '<b>' +
+                                f1(Math.floor(10 * c.rMenSurf) / 10) +
+                                '</b> m² par logement.' +
+                                '<br>' +
+                                c.Men +
+                                ' logement' +
+                                (+c.Men == 1 ? '' : 's') +
+                                (+c.imputed ? '<br>(valeurs imputées)' : ''),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorLegend({
+                            title: 'Surface moyenne des logements de ménages (m²)',
+                            colorRamp: d3.interpolateSpectral,
+                            fun: (t, r, s) => s.min + (1 - t) * (s.max - s.min),
                         })
-                    ],
-                    {
-                        pixNb: 8,
-                        cellInfoHTML: c => f1(c.Log) + " logement" + (+c.Log == 1 ? "" : "s") + "<br>" +
-                            "<b>" + (c.Log_soc == 0 ? "Aucun" : c.Log_soc) + "</b> logement" + (+c.Log_soc == 1 ? "" : "s") + " social(ux)<br>" +
-                            "<b>" + (c.Log_nsoc == 0 ? "Aucun" : f1(c.Log_nsoc)) + "</b> autre" + (+c.Log_nsoc == 1 ? "" : "s")
-                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
-                    })
-                //legend
-                app.layers[0].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "logements", fillColor: "#fff" }))
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({ title: "Logement social", colCat: [["#33a02c", "logements sociaux"], ["#ccc", "autres logements"]] })
-                )
+                    )
+                } else if (layCode === 'men_house_collective') {
+                    //housing type: house/collective
+                    app.addLayerFromDataset(
+                        ds.men[year],
+                        [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    Men_coll: 'green',
+                                    Men_mais: 'orange',
+                                },
+                                type: () => 'flag',
+                                stripesOrientation: () => 90,
+                                sizeCol: 'Men',
+                                size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.15, 0),
+                            }),
+                        ],
+                        {
+                            pixNb: 8,
+                            cellInfoHTML: (c) =>
+                                c.Men +
+                                ' ménage' +
+                                (+c.Men == 1 ? '' : 's') +
+                                '<br><b>' +
+                                (c.Men_coll == 0 ? 'Aucun' : c.Men_coll) +
+                                '</b> en logement collectif' +
+                                '<br><b>' +
+                                (c.Men_mais == 0 ? 'Aucun' : c.Men_mais) +
+                                '</b> en maison' +
+                                (+c.imputed ? '<br>(valeurs imputées)' : ''),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({ shape: 'square', labelUnitText: 'ménages', fillColor: '#ccc' })
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Type de logement',
+                            colCat: [
+                                ['green', 'Logement collectif'],
+                                ['orange', 'Maison'],
+                            ],
+                        })
+                    )
+                } else if (layCode === 'log_age') {
+                    //housing age
+                    const col = d3.interpolateViridis
+                    app.addLayerFromDataset(
+                        ds.log[year],
+                        [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    Log_av45: col(0 / 3),
+                                    Log_45_70: col(1 / 3),
+                                    Log_70_90: col(2 / 3),
+                                    Log_ap90: col(3 / 3),
+                                    Log_inc: 'gray',
+                                },
+                                type: () => 'flag',
+                                //stripesOrientation: () => 90,
+                                sizeCol: 'Log',
+                                size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
+                            }),
+                        ],
+                        {
+                            pixNb: 8,
+                            cellInfoHTML: (c) =>
+                                f1(c.Log) +
+                                ' logement' +
+                                (+c.Log == 1 ? '' : 's') +
+                                '<br>' +
+                                'Année de construction:<br>' +
+                                '<b>' +
+                                c.Log_av45 +
+                                '</b> avant 1945<br>' +
+                                '<b>' +
+                                c.Log_45_70 +
+                                '</b> entre 1945 et 1969<br>' +
+                                '<b>' +
+                                c.Log_70_90 +
+                                '</b> entre 1970 et 1989<br>' +
+                                '<b>' +
+                                c.Log_ap90 +
+                                '</b> depuis 1990<br>' +
+                                '<b>' +
+                                c.Log_inc +
+                                '</b> inconnue' +
+                                (+c.Log_inc == 1 ? '' : 's') +
+                                (+c.imputed ? '<br>(valeurs imputées)' : ''),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({
+                            shape: 'square',
+                            labelUnitText: 'logements',
+                            fillColor: '#ccc',
+                        })
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Année de construction',
+                            colCat: [
+                                [col(0 / 3), 'avant 1945'],
+                                [col(1 / 3), 'entre 1945 et 1969'],
+                                [col(2 / 3), 'entre 1970 et 1989'],
+                                [col(3 / 3), 'depuis 1990'],
+                                ['gray', 'inconnue'],
+                            ],
+                        })
+                    )
+                } else if (layCode === 'log_soc_nb') {
+                    //social housing
+                    app.addLayerFromDataset(
+                        ds.log[year],
+                        [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    Log_nsoc: '#ccc',
+                                    Log_soc: '#33a02c',
+                                },
+                                type: () => 'ring',
+                                sizeCol: 'Log',
+                                size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.15, 0),
+                            }),
+                        ],
+                        {
+                            pixNb: 8,
+                            cellInfoHTML: (c) =>
+                                f1(c.Log) +
+                                ' logement' +
+                                (+c.Log == 1 ? '' : 's') +
+                                '<br>' +
+                                '<b>' +
+                                (c.Log_soc == 0 ? 'Aucun' : c.Log_soc) +
+                                '</b> logement' +
+                                (+c.Log_soc == 1 ? '' : 's') +
+                                ' social(ux)<br>' +
+                                '<b>' +
+                                (c.Log_nsoc == 0 ? 'Aucun' : f1(c.Log_nsoc)) +
+                                '</b> autre' +
+                                (+c.Log_nsoc == 1 ? '' : 's') +
+                                (+c.imputed ? '<br>(valeurs imputées)' : ''),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({
+                            shape: 'circle',
+                            labelUnitText: 'logements',
+                            fillColor: '#fff',
+                        })
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Logement social',
+                            colCat: [
+                                ['#33a02c', 'logements sociaux'],
+                                ['#ccc', 'autres logements'],
+                            ],
+                        })
+                    )
+                } else if (layCode === 'log_soc_per') {
+                    //social housing percentage
+                    app.addLayerFromDataset(
+                        ds.log[year],
+                        [
+                            new gviz.SquareColorWGLStyle({
+                                colorCol: 'rLogSoc',
+                                color: d3.interpolatePuBuGn,
+                                tFun: (v, r, s) => (+v == 0 ? null : v),
+                                //if (!v) return "#ccc"
+                            }),
+                            new gviz.StrokeStyle({ maxZoom: 15 }),
+                        ],
+                        {
+                            pixNb: 2,
+                            cellInfoHTML: (c) =>
+                                (c.rLogSoc == 0
+                                    ? 'Pas'
+                                    : '<b>' + f1(Math.floor(1000 * c.rLogSoc) / 10) + '%</b>') +
+                                ' de logements sociaux.' +
+                                (+c.imputed ? '<br>(valeurs imputées)' : ''),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorLegend({
+                            title: 'Part des logements sociaux (%)',
+                            colorRamp: d3.interpolatePuBuGn,
+                            fun: (t, r, s) => 100 * t,
+                        })
+                    )
+                } else console.error('Unexpected layer code: ' + layCode)
 
-            } else if (layCode === "log_soc_per") {
-                //social housing percentage
-                app.addLayerFromDataset(
-                    ds.log[year],
-                    [
-                        new gviz.SquareColorWGLStyle({
-                            colorCol: "rLogSoc",
-                            color: d3.interpolatePuBuGn,
-                            tFun: (v, r, s) => +v == 0 ? null : v
-                            //if (!v) return "#ccc"
-                        }),
-                        new gviz.StrokeStyle({ maxZoom: 15 })
-                    ],
-                    {
-                        pixNb: 2,
-                        cellInfoHTML: c =>
-                            (c.rLogSoc == 0 ? "Pas" : "<b>" + f1(Math.floor(1000 * c.rLogSoc) / 10) + "%</b>")
-                            + " de logements sociaux."
-                            + (+c.imputed ? "<br>(valeurs imputées)" : "")
-                    })
-                //legend
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({ title: "Part des logements sociaux (%)", colorRamp: d3.interpolatePuBuGn, fun: (t, r, s) => 100 * t })
-                )
+                //redraw
+                app.cg.redraw()
+            }
 
-            } else console.error("Unexpected layer code: " + layCode);
+            //layer and year update
+            document.querySelector('#layer').addEventListener('change', update)
+            document.querySelector('#year').addEventListener('change', update)
 
-            //redraw
-            app.cg.redraw();
-        }
+            // show/hide labels
+            document.querySelector('#label').addEventListener('change', function () {
+                app.showLabels = this.checked
+                app.cg.redraw()
+            })
 
-        //layer and year update
-        document.querySelector('#layer').addEventListener('change', update)
-        document.querySelector('#year').addEventListener('change', update)
+            // show/hide boundaries
+            document.querySelector('#boundary').addEventListener('change', function () {
+                app.showBoundaries = this.checked
+                app.cg.redraw()
+            })
 
-        // show/hide labels
-        document.querySelector('#label').addEventListener('change', function () {
-            app.showLabels = this.checked
-            app.cg.redraw();
-        });
+            //select layer from URL
+            const ls = gviz.getParameterByName('lay')
+            if (ls) {
+                const b = document.querySelector('#' + ls)
+                if (b) b.checked = true
+            }
 
-        // show/hide boundaries
-        document.querySelector('#boundary').addEventListener('change', function () {
-            app.showBoundaries = this.checked
-            app.cg.redraw();
-        });
+            //initialise
+            update()
+        </script>
 
-
-        //select layer from URL
-        const ls = gviz.getParameterByName("lay")
-        if (ls) {
-            const b = document.querySelector('#' + ls)
-            if (b) b.checked = true
-        }
-
-
-        //initialise
-        update()
-
-    </script>
-
-    <div
-        style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
-        <span style="font-size: 0.8em;"><a href="https://github.com/eurostat/gridviz"
-                style="text-decoration:none">GridViz</a> |
-            © <a href="https://eurogeographics.org" style="text-decoration:none">EuroGeographics</a></span>
-    </div>
-
-</body>
-
+        <div
+            style="
+                position: absolute;
+                right: 0px;
+                bottom: 0px;
+                width: auto;
+                height: auto;
+                padding: 1px;
+                border: 0px;
+                background: #ffffffcc;
+            "
+        >
+            <span style="font-size: 0.8em"
+                ><a href="https://github.com/eurostat/gridviz" style="text-decoration: none">GridViz</a> | ©
+                <a href="https://eurogeographics.org" style="text-decoration: none">EuroGeographics</a></span
+            >
+        </div>
+    </body>
 </html>
