@@ -48,12 +48,15 @@ export class App {
         /** @type {number} */
         this.h = opts.h || container.offsetHeight
 
-        //create canvas element
+        //create canvas element if user doesnt specify one
         /** @type {HTMLCanvasElement} */
-        const canvas = document.createElement('canvas')
-        canvas.setAttribute('width', '' + this.w)
-        canvas.setAttribute('height', '' + this.h)
-        container.appendChild(canvas)
+        let canvas = opts.canvas || null
+        if (!canvas) {
+            canvas = document.createElement('canvas')
+            canvas.setAttribute('width', '' + this.w)
+            canvas.setAttribute('height', '' + this.h)
+            container.appendChild(canvas)
+        }
 
         /** Make geo canvas
          * @type {GeoCanvas}
