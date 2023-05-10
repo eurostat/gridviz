@@ -1,45 +1,45 @@
 <!DOCTYPE html>
-<html lang="en" style="height:100%;">
+<html lang="en" style="height: 100%">
+    <head>
+        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+        <title></title>
+    </head>
 
-<head>
-    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-    <title></title>
-</head>
+    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+        <div id="viz-container" style="height: 100%; width: 100%"></div>
 
-<body style="margin: 0; height:100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden;">
-    <div id="viz-container" style="height:100%; width:100%;"></div>
+        <script src="../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+        <script>
+            let containerDiv = document.getElementById('viz-container')
 
-    <script src="../dist/gridviz.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
-    <script>
+            new gviz.App(containerDiv)
+                .setGeoCenter({ x: 4000000, y: 2260000 })
+                .setZoomFactor(500)
+                .setLabelLayer(gviz.getEuronymeLabelLayer('FR', '20'))
+                .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
-        let containerDiv = document.getElementById("viz-container");
-
-        new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2260000 }).setZoomFactor(500)
-            .setLabelLayer(gviz.getEuronymeLabelLayer("FR", "20"))
-            .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
-
-
-            //addCSVGridLayer(url, resolution, styles, minZoom, maxZoom, opts) {
-            .addGeoTIFFLayer(
-                "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/tiff/test/IMD_2018_010m_E42N20_03035_v020.tif",
-                1000,
-                [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: "Total_m2",
-                        color: d3.interpolateSpectral,
-                        tFun: (v, r, s) => 1 - Math.pow((v - s.min) / (s.max - s.min), 1.5),
-                    }),
-                    new gviz.StrokeStyle({ maxZoom: 200 })
-                ],
-                { preprocess: c => { c.x *= 1000; c.y *= 1000; } }
-            )
-
-    </script>
-
-</body>
-
+                //addCSVGridLayer(url, resolution, styles, minZoom, maxZoom, opts) {
+                .addGeoTIFFLayer(
+                    'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/tiff/test/IMD_2018_010m_E42N20_03035_v020.tif',
+                    1000,
+                    [
+                        new gviz.SquareColorWGLStyle({
+                            colorCol: 'Total_m2',
+                            color: d3.interpolateSpectral,
+                            tFun: (v, r, s) => 1 - Math.pow((v - s.min) / (s.max - s.min), 1.5),
+                        }),
+                        new gviz.StrokeStyle({ maxZoom: 200 }),
+                    ],
+                    {
+                        preprocess: (c) => {
+                            c.x *= 1000
+                            c.y *= 1000
+                        },
+                    }
+                )
+        </script>
+    </body>
 </html>

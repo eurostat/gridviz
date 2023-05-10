@@ -1,5 +1,5 @@
 //@ts-check
-"use strict";
+'use strict'
 
 /**
  * Some function [0,1]->[0,1] to stretch range of values.
@@ -7,80 +7,73 @@
  * @see https://observablehq.com/@jgaffuri/stretching
  */
 
-
-/**
-  * Function [0,1]->[0,1] to stretch range of values.
-  * Polynomial
-  * 
-  * @param {number} t The value to stretch, within [0,1]
-  * @param {number} alpha 1: no stretching. <1: show low values. >1: show high values.
-  * @returns {number} The stretched value, within [0,1]
-  */
-export const sPow = (t, alpha = 3) => Math.pow(t, alpha);
-
 /**
  * Function [0,1]->[0,1] to stretch range of values.
- * Polynomial (reverse)
- * 
+ * Polynomial
+ *
  * @param {number} t The value to stretch, within [0,1]
  * @param {number} alpha 1: no stretching. <1: show low values. >1: show high values.
  * @returns {number} The stretched value, within [0,1]
  */
-export const sPowRev = (t, alpha = 3) => 1 - Math.pow(1 - t, 1 / alpha);
+export const sPow = (t, alpha = 3) => Math.pow(t, alpha)
 
+/**
+ * Function [0,1]->[0,1] to stretch range of values.
+ * Polynomial (reverse)
+ *
+ * @param {number} t The value to stretch, within [0,1]
+ * @param {number} alpha 1: no stretching. <1: show low values. >1: show high values.
+ * @returns {number} The stretched value, within [0,1]
+ */
+export const sPowRev = (t, alpha = 3) => 1 - Math.pow(1 - t, 1 / alpha)
 
 /**
  * Function [0,1]->[0,1] to stretch range of values.
  * Exponential
- * 
+ *
  * @param {number} t The value to stretch, within [0,1]
  * @param {number} alpha 0: no stretching. -Inf: show low values. Inf: show high values.
  * @returns {number} The stretched value, within [0,1]
  */
-export const sExp = (t, alpha = 3) => alpha == 0 ? t : (Math.exp(t * alpha) - 1) / (Math.exp(alpha) - 1);
+export const sExp = (t, alpha = 3) => (alpha == 0 ? t : (Math.exp(t * alpha) - 1) / (Math.exp(alpha) - 1))
 
 /**
  * Function [0,1]->[0,1] to stretch range of values.
  * Exponential (reverse)
- * 
+ *
  * @param {number} t The value to stretch, within [0,1]
  * @param {number} alpha 0: no stretching. -Inf: show low values. Inf: show high values.
  * @returns {number} The stretched value, within [0,1]
  */
-export const sExpRev = (t, alpha = 3) => alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t);
-
-
+export const sExpRev = (t, alpha = 3) =>
+    alpha == 0 ? t : 1 - (1 / alpha) * Math.log(Math.exp(alpha) * (1 - t) + t)
 
 /**
  * Function [0,1]->[0,1] to stretch range of values.
  * Circle, show low values
  * NB: sCircleHigh and sCircleLow are inverse functions of each other.
- * 
+ *
  * @param {number} t The value to stretch, within [0,1]
  * @param {number} alpha 0: no stretching. 1: perfect circle section
  * @returns {number} The stretched value, within [0,1]
  */
 export const sCircleLow = (t, alpha = 0.8) => {
-  if (alpha == 0) return t;
-  if (alpha == 1) return Math.sqrt(t * (2 - t));
-  const a = alpha / (1 - alpha);
-  return Math.sqrt(1 / (a * a) + t * (2 / a + 2 - t)) - 1 / a;
+    if (alpha == 0) return t
+    if (alpha == 1) return Math.sqrt(t * (2 - t))
+    const a = alpha / (1 - alpha)
+    return Math.sqrt(1 / (a * a) + t * (2 / a + 2 - t)) - 1 / a
 }
 
 /**
  * Function [0,1]->[0,1] to stretch range of values.
  * Circle, show high values
  * NB: sCircleHigh and sCircleLow are inverse functions of each other.
- * 
+ *
  * @param {number} t The value to stretch, within [0,1]
  * @param {number} alpha 0: no stretching. 1: perfect circle section
  * @returns {number} The stretched value, within [0,1]
  */
 export const sCircleHigh = (t, alpha = 0.8) => 1 - sCircleLow(1 - t, alpha)
-
-
-
-
 
 /**
  * Inverse functions
@@ -88,38 +81,37 @@ export const sCircleHigh = (t, alpha = 0.8) => 1 - sCircleLow(1 - t, alpha)
 
 /**
  * Inverse function of sExp
- * @param {number} y 
- * @param {number} alpha 
+ * @param {number} y
+ * @param {number} alpha
  * @returns {number}
  */
-export const sExpInverse = (y, alpha = 3) => alpha == 0 ? y : 1 / alpha * Math.log(1 - y + y * Math.exp(alpha));
+export const sExpInverse = (y, alpha = 3) =>
+    alpha == 0 ? y : (1 / alpha) * Math.log(1 - y + y * Math.exp(alpha))
 
 /**
  * Inverse function of sExpRev
- * @param {number} y 
- * @param {number} alpha 
+ * @param {number} y
+ * @param {number} alpha
  * @returns {number}
  */
 export const sExpRevInverse = (y, alpha = 3) => (Math.exp(-alpha * y) - 1) / (Math.exp(-alpha) - 1)
 
 /**
  * Inverse function of sPow
- * @param {number} y 
- * @param {number} alpha 
+ * @param {number} y
+ * @param {number} alpha
  * @returns {number}
  */
 
-export const sPowInverse = (y, alpha = 3) => Math.pow(y, 1 / alpha);
+export const sPowInverse = (y, alpha = 3) => Math.pow(y, 1 / alpha)
 
 /**
  * Inverse function of sPowRev
- * @param {number} y 
- * @param {number} alpha 
+ * @param {number} y
+ * @param {number} alpha
  * @returns {number}
  */
-export const sPowRevInverse = (y, alpha = 3) => 1 - Math.pow(1 - y, alpha);
-
-
+export const sPowRevInverse = (y, alpha = 3) => 1 - Math.pow(1 - y, alpha)
 
 //test code
 /*

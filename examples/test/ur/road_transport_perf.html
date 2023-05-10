@@ -1,157 +1,278 @@
 <!DOCTYPE html>
-<html lang="en" style="height:100%;">
+<html lang="en" style="height: 100%">
+    <head>
+        <title></title>
+    </head>
 
-<head>
-    <title></title>
-</head>
+    <body style="font-family: sans-serif">
+        <div id="vizRTP" style="position: relative; height: 600px; width: 900px">
+            <div
+                style="
+                    font: bold 20px sans-serif;
+                    position: absolute;
+                    right: 10px;
+                    top: 10px;
+                    width: auto;
+                    height: auto;
+                    padding: 5px;
+                    border-radius: 5px;
+                    background: #ffffffcc;
+                    line-height: 1.6;
+                    box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd;
+                "
+            >
+                <a
+                    id="zoomin"
+                    style="
+                        width: 30px;
+                        height: 30px;
+                        display: block;
+                        border: none;
+                        color: black;
+                        text-align: center;
+                        text-decoration: none;
+                    "
+                    href="#"
+                    title="Zoom in"
+                    >+</a
+                >
+                <hr style="margin: 0px" />
+                <a
+                    id="zoomout"
+                    style="
+                        width: 30px;
+                        height: 30px;
+                        display: block;
+                        border: none;
+                        color: black;
+                        text-align: center;
+                        text-decoration: none;
+                    "
+                    href="#"
+                    title="Zoom out"
+                    >−</a
+                >
+            </div>
 
-<body style="font-family: sans-serif;">
+            <div
+                style="
+                    position: absolute;
+                    right: 0px;
+                    bottom: 0px;
+                    width: auto;
+                    height: auto;
+                    padding: 1px;
+                    border: 0px;
+                    background: #ffffffcc;
+                "
+            >
+                <span style="font-size: 0.8em; font-family: sans-serif"
+                    ><a
+                        target="_blank"
+                        rel="nofollow noreferrer noopener"
+                        href="https://github.com/eurostat/gridviz"
+                        style="text-decoration: none"
+                        >GridViz</a
+                    >
+                    | ©
+                    <a
+                        target="_blank"
+                        rel="nofollow noreferrer noopener"
+                        href="https://eurogeographics.org"
+                        style="text-decoration: none"
+                        >EuroGeographics</a
+                    ></span
+                >
+            </div>
 
-    <div id="vizRTP" style="position:relative; height:600px; width:900px;">
-
-        <div
-            style="font: bold 20px sans-serif; position: absolute; right: 10px; top: 10px; width: auto; height: auto; padding: 5px; border-radius: 5px; background: #FFFFFFCC; line-height: 1.6; box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd">
-            <a id="zoomin"
-                style="width: 30px; height: 30px; display: block; border: none; color: black; text-align: center; text-decoration: none;"
-                href="#" title="Zoom in">+</a>
-            <hr style="margin: 0px;">
-            <a id="zoomout"
-                style="width: 30px; height: 30px; display: block; border: none; color: black; text-align: center; text-decoration: none;"
-                href="#" title="Zoom out">−</a>
+            <div
+                id="legendRTP"
+                style="
+                    position: absolute;
+                    left: 5px;
+                    bottom: 5px;
+                    width: auto;
+                    height: auto;
+                    padding: 0px;
+                    border: 0px;
+                    border-radius: 5px;
+                    background: #ffffffdd;
+                    line-height: 1.6;
+                    box-shadow: 5px 5px 5px grey, -3px -3px 3px #ddd;
+                "
+            ></div>
         </div>
 
-        <div
-            style="position: absolute; right: 0px; bottom: 0px; width: auto; height: auto; padding: 1px; border: 0px; background: #FFFFFFCC;">
-            <span style="font-size: 0.8em; font-family: sans-serif;"><a target="_blank"
-                    rel="nofollow noreferrer noopener" href="https://github.com/eurostat/gridviz"
-                    style="text-decoration:none">GridViz</a> |
-                © <a target="_blank" rel="nofollow noreferrer noopener" href="https://eurogeographics.org"
-                    style="text-decoration:none">EuroGeographics</a></span>
-        </div>
+        <script src="../../dist/gridviz.js"></script>
+        <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-color.js"></script>
+        <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-interpolate.js"></script>
+        <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-scale-chromatic.js"></script>
+        <script>
+            const nuts2jsonURL = 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/' //"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/"
+            const euronymURL = 'https://raw.githubusercontent.com/eurostat/euronym/main/pub/v2/UTF/' //"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/"
+            const tiledGridsURL = 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/' //"https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/europe/"
+            const bgLayerURL = 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/' //"https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/background/elevation_shading/"
 
-        <div id="legendRTP"
-            style="position: absolute; left: 5px; bottom: 5px; width: auto; height: auto; padding: 0px; border: 0px; border-radius: 5px; background: #FFFFFFDD; line-height: 1.6; box-shadow: 5px 5px 5px grey, -3px -3px 3px #ddd">
-        </div>
-    </div>
+            let containerDiv = document.getElementById('vizRTP')
+            const app = new gviz.App(containerDiv, { legendDivId: 'legendRTP' })
+                .setGeoCenter({ x: 4313947, y: 3100000 })
+                .setZoomFactor(8000)
+                .setZoomFactorExtent([40, 8000])
+                .setLabelLayer(
+                    gviz.getEuronymeLabelLayer('EUR', 50, {
+                        ccIn: [
+                            'AT',
+                            'BE',
+                            'BG',
+                            'CY',
+                            'CZ',
+                            'DE',
+                            'DK',
+                            'EE',
+                            'ES',
+                            'FI',
+                            'FR',
+                            'GR',
+                            'HR',
+                            'HU',
+                            'IE',
+                            'IT',
+                            'LT',
+                            'LU',
+                            'LV',
+                            'PL',
+                            'PT',
+                            'MT',
+                            'NL',
+                            'RO',
+                            'SE',
+                            'SK',
+                            'SI',
+                            'CH',
+                            'IS',
+                            'NO',
+                            'LI',
+                            'RS',
+                            'XK',
+                            'AL',
+                            'TR',
+                            'ME',
+                            'MK',
+                        ],
+                        baseURL: euronymURL,
+                    })
+                )
+                .setBoundaryLayer(
+                    gviz.getEurostatBoundariesLayer({
+                        baseURL: nuts2jsonURL,
+                        showOth: false,
+                        color: (f, zf) => {
+                            const p = f.properties
+                            if (p.id >= 100000) return '#bcbcbc'
+                            if (p.co === 'T') return '#888'
+                            if (zf < 400) return '#888'
+                            else if (zf < 1000) return p.lvl >= 3 ? '' : '#888'
+                            else if (zf < 2000) return p.lvl >= 2 ? '' : '#888'
+                            else return p.lvl >= 1 ? '' : '#888'
+                        },
+                    })
+                )
+                .addBackgroundLayer({
+                    url: bgLayerURL,
+                    resolutions: Array.from({ length: 9 }, (_, i) => 28.00132289714475 * Math.pow(2, 10 - i)),
+                    origin: [0, 6000000],
+                    filterColor: (zf) => '#ffffffc0',
+                })
 
-    <script src="../../dist/gridviz.js"></script>
-    <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-color.js"></script>
-    <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-interpolate.js"></script>
-    <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-scale-chromatic.js"></script>
-    <script>
-        const nuts2jsonURL = "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/" //"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/"
-        const euronymURL = "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v2/UTF/" //"https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/"
-        const tiledGridsURL = "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/" //"https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/grid_data/europe/"
-        const bgLayerURL = "https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/" //"https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/background/elevation_shading/"
+            //dataset
+            const ds = app.makeMultiScaleTiledGridDataset(
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (r) => tiledGridsURL + 'road_transp_perf/' + r + 'm/',
+                {
+                    preprocess: (c) => {
+                        if (c.CNTR_ID == 'UK') return false
+                        if (c.CNTR_ID == '0-UK') return false
+                        if (c.CNTR_ID == '') return false
+                        if (c.CNTR_ID == 'BA') return false
+                        if (c.CNTR_ID == 'IM') return false
+                        //console.log(c.CNTR_ID)
+                        //delete c.CNTR_ID
 
-        let containerDiv = document.getElementById("vizRTP");
-        const app = new gviz.App(containerDiv, { legendDivId: "legendRTP" })
-            .setGeoCenter({ x: 4313947, y: 3100000 }).setZoomFactor(8000).setZoomFactorExtent([40, 8000])
-            .setLabelLayer(
-                gviz.getEuronymeLabelLayer("EUR", 50, {
-                    ccIn: ["AT", "BE", "BG", "CY", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GR", "HR", "HU", "IE", "IT", "LT", "LU", "LV", "PL", "PT", "MT", "NL", "RO", "SE", "SK", "SI", "CH", "IS", "NO", "LI", "RS", "XK", "AL", "TR", "ME", "MK"],
-                    baseURL: euronymURL,
+                        if (c.rp == '') return false
+                        //c.TOT_P = +c.TOT_P
+                    },
+                }
+            )
+
+            ttFun = (c) => '<b>' + c.rp + '</b> road transport performance'
+
+            //road transport performance layer
+            app.addLayerFromDataset(
+                ds,
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: 'rp', // pp ra rp
+                        color: d3.interpolateGnBu,
+                        tFun: (v, r, s) => Math.min(v, 100) / 100,
+                        stretching: { fun: 'expRev', alpha: 2 },
+                    }),
+                    new gviz.StrokeStyle({
+                        strokeColorCol: 'rp',
+                        strokeColor: (v) => (+v ? '#666' : ''),
+                        maxZoom: 100,
+                    }),
+                ],
+                {
+                    pixNb: 1,
+                    cellInfoHTML: ttFun,
+                }
+            )
+
+            //population layer
+            app.addLayerFromDataset(
+                ds,
+                [
+                    new gviz.ShapeColorSizeStyle({
+                        color: () => '#666',
+                        sizeCol: 'TOT_P',
+                        size: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.3),
+                        shape: () => 'circle',
+                    }),
+                ],
+                {
+                    pixNb: 8,
+                    maxZoom: 80,
+                    cellInfoHTML: (c) =>
+                        ttFun(c) +
+                        //show population
+                        (+c.TOT_P ? '<br>' + c.TOT_P + ' inhabitant' + (+c.TOT_P == 1 ? '' : 's') : ''),
+                }
+            )
+
+            //perf legend
+            app.layers[0].styles[0].legends.push(
+                new gviz.ColorLegend({
+                    title: 'Road transport performance',
+                    width: 200,
+                    ticks: 2,
+                    colorRamp: d3.interpolateGnBu,
+                    tickFormat: 'text',
+                    fun: (t, r, s) => (t == 0 ? 'Low' : t == 1 ? 'High' : 'X'),
                 })
             )
-            .setBoundaryLayer(gviz.getEurostatBoundariesLayer({
-                baseURL: nuts2jsonURL,
-                showOth: false,
-                color: (f, zf) => {
-                    const p = f.properties
-                    if (p.id >= 100000) return "#bcbcbc"
-                    if (p.co === "T") return "#888"
-                    if (zf < 400) return "#888"
-                    else if (zf < 1000) return p.lvl >= 3 ? "" : "#888"
-                    else if (zf < 2000) return p.lvl >= 2 ? "" : "#888"
-                    else return p.lvl >= 1 ? "" : "#888"
-                },
-            }))
-            .addBackgroundLayer({
-                url: bgLayerURL,
-                resolutions: Array.from({ length: 9 }, (_, i) => 28.00132289714475 * Math.pow(2, 10 - i)),
-                origin: [0, 6000000],
-                filterColor: zf => "#ffffffc0",
-            })
 
+            //population legend
+            app.layers[1].styles[0].legends.push(
+                new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhabitants', fillColor: '#666d' })
+            )
 
-        //dataset
-        const ds = app.makeMultiScaleTiledGridDataset(
-            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            r => tiledGridsURL + "road_transp_perf/" + r + "m/",
-            {
-                preprocess: c => {
-                    if (c.CNTR_ID == "UK") return false
-                    if (c.CNTR_ID == "0-UK") return false
-                    if (c.CNTR_ID == "") return false
-                    if (c.CNTR_ID == "BA") return false
-                    if (c.CNTR_ID == "IM") return false
-                    //console.log(c.CNTR_ID)
-                    //delete c.CNTR_ID
-
-                    if (c.rp == "") return false
-                    //c.TOT_P = +c.TOT_P
-                },
-            }
-        )
-
-        ttFun = c => "<b>" + c.rp + "</b> road transport performance"
-
-        //road transport performance layer
-        app.addLayerFromDataset(
-            ds,
-            [
-                new gviz.SquareColorWGLStyle({
-                    colorCol: "rp", // pp ra rp
-                    color: d3.interpolateGnBu,
-                    tFun: (v, r, s) => Math.min(v, 100) / 100,
-                    stretching: { fun: "expRev", alpha: 2 },
-                }),
-                new gviz.StrokeStyle({ strokeColorCol: "rp", strokeColor: v => +v ? "#666" : "", maxZoom: 100 })
-            ],
-            {
-                pixNb: 1,
-                cellInfoHTML: ttFun
-            })
-
-        //population layer
-        app.addLayerFromDataset(
-            ds,
-            [
-                new gviz.ShapeColorSizeStyle({
-                    color: () => "#666",
-                    sizeCol: "TOT_P",
-                    size: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.3),
-                    shape: () => "circle",
-                })
-            ],
-            {
-                pixNb: 8,
-                maxZoom: 80,
-                cellInfoHTML: c => ttFun(c) +
-                    //show population
-                    ((+c.TOT_P) ? "<br>" + c.TOT_P + " inhabitant" + (+c.TOT_P == 1 ? "" : "s") : "")
-            }
-        )
-
-        //perf legend
-        app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
-            title: "Road transport performance",
-            width: 200,
-            ticks: 2,
-            colorRamp: d3.interpolateGnBu,
-            tickFormat: "text",
-            fun: (t, r, s) => t == 0 ? "Low" : t == 1 ? "High" : "X",
-        }))
-
-        //population legend
-        app.layers[1].styles[0].legends.push(new gviz.SizeLegend({ shape: "circle", labelUnitText: "inhabitants", fillColor: "#666d" }))
-
-        //zoom
-        document.querySelector('#zoomin').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
-        document.querySelector('#zoomout').addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 1.2).redraw())
-
-    </script>
-
-</body>
-
+            //zoom
+            document
+                .querySelector('#zoomin')
+                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
+            document
+                .querySelector('#zoomout')
+                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 1.2).redraw())
+        </script>
+    </body>
 </html>

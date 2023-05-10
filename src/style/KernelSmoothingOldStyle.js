@@ -1,15 +1,14 @@
 //@ts-check
-"use strict";
+'use strict'
 
-import { Style } from "../Style"
+import { Style } from '../Style'
 
 /**
  * A style representing the cell as a smoothed layer, to smoothing local variations and show main trends across space.
- * 
+ *
  * @author Julien Gaffuri
  */
 export class KernelSmoothingStyle extends Style {
-
     //bandwidth
     // https://observablehq.com/@uwdata/fast-kde
     // https://observablehq.com/d/3127b6d89ada959f
@@ -36,30 +35,27 @@ export class KernelSmoothingStyle extends Style {
         this.styles = opts.styles
     }
 
-
     /**
-    * Compute the kernel matrix, that is the matrix of the weights.
-    * One quadrant is necessary only, since it is symetrical (along both x and y axes).
-    * @param {number} s Sigma (in grid pixel !)
-    * @returns {Array.<Array<number>>}
-    * @private
-    */
+     * Compute the kernel matrix, that is the matrix of the weights.
+     * One quadrant is necessary only, since it is symetrical (along both x and y axes).
+     * @param {number} s Sigma (in grid pixel !)
+     * @returns {Array.<Array<number>>}
+     * @private
+     */
     getKernelMatrix(s) {
-
         //the size of the kernel: lets limit that to ~3 times the standard deviation, as an approximation.
-        const kernelSize = Math.floor(3.25 * s);
+        const kernelSize = Math.floor(3.25 * s)
 
         //pre-compute coefficient for gaussian computation, to avoid computing them every time.
-        const c2 = 2 * s * s;
+        const c2 = 2 * s * s
 
         /**
          * The gaussian function. TODO expose that function as a parameter, to use other kernels ?
-         * @param {number} x 
-         * @param {number} y 
+         * @param {number} x
+         * @param {number} y
          * @returns {number}
          */
-        const gaussian = (x, y) => c2 != 0 ? Math.exp(-(x * x + y * y) / c2)
-            : x == 0 && y == 0 ? 1 : 0; //dirac case
+        const gaussian = (x, y) => (c2 != 0 ? Math.exp(-(x * x + y * y) / c2) : x == 0 && y == 0 ? 1 : 0) //dirac case
 
         /** @type {Array.<Array<number>>} */
         const kw = []
@@ -83,38 +79,37 @@ export class KernelSmoothingStyle extends Style {
             console.log(st)
         }*/
 
-        return kw;
+        return kw
     }
 
-
     /**
-    * Compute kernel smoothing of some cells.
-    * 
-    * @private
-    * @param {Array.<import("../Dataset").Cell>} cells The cells to be smoothed.
-    * @param {import("../Dataset").Envelope} e Geo envelope to consider.
-    * @param {number} r Resolution, in geo unit.
-    * @param {number} s Sigma (in grid pixel !)
-    * @returns {Array.<import("../Dataset").Cell>} The list of cells, including the initial ones and the ones with smoothed values, in "ksmval" property.
-    */
+     * Compute kernel smoothing of some cells.
+     *
+     * @private
+     * @param {Array.<import("../Dataset").Cell>} cells The cells to be smoothed.
+     * @param {import("../Dataset").Envelope} e Geo envelope to consider.
+     * @param {number} r Resolution, in geo unit.
+     * @param {number} s Sigma (in grid pixel !)
+     * @returns {Array.<import("../Dataset").Cell>} The list of cells, including the initial ones and the ones with smoothed values, in "ksmval" property.
+     */
     kernelSmoothing(cells, e, r, s) {
         //filter
-        if(this.filter) cells = cells.filter(this.filter)
+        if (this.filter) cells = cells.filter(this.filter)
 
         const wThr = 0.01 //gaussian weights below this value will be ignored
 
         //compute extent, in grid position
-        const xMin = Math.floor(e.xMin / r) * r;
-        const xMax = Math.floor(e.xMax / r) * r;
-        const yMin = Math.floor(e.yMin / r) * r;
-        const yMax = Math.floor(e.yMax / r) * r;
+        const xMin = Math.floor(e.xMin / r) * r
+        const xMax = Math.floor(e.xMax / r) * r
+        const yMin = Math.floor(e.yMin / r) * r
+        const yMax = Math.floor(e.yMax / r) * r
 
         //compute matrix dimensions
         const nbX = (xMax - xMin) / r + 1
         const nbY = (yMax - yMin) / r + 1
 
         //initialise smoothed value to 0
-        for (const c of cells) c["ksmval"] = 0
+        for (const c of cells) c['ksmval'] = 0
 
         //make matrix. add input cells by i/j (grid position)
         const index = {}
@@ -136,12 +131,12 @@ export class KernelSmoothingStyle extends Style {
 
         //compute summ of the weights over entire kernel window
         /** @type {number} */
-        let sumWeights = 0;
+        let sumWeights = 0
         for (let ki = 1 - kernelSize; ki < kernelSize; ki++) {
             for (let kj = 1 - kernelSize; kj < kernelSize; kj++) {
                 let w = kernelMatrix[Math.abs(ki)][Math.abs(kj)]
-                if (w < wThr) continue;
-                sumWeights += w;
+                if (w < wThr) continue
+                sumWeights += w
             }
         }
 
@@ -163,10 +158,9 @@ export class KernelSmoothingStyle extends Style {
 
         //compute smoothing, input cell by input cell
         for (const c of cells) {
-
             /** get value of cell c
              * @type {number} */
-            const val = this.value(c);
+            const val = this.value(c)
             if (!val) continue
 
             //cell matrix coordinates
@@ -176,17 +170,16 @@ export class KernelSmoothingStyle extends Style {
             //add contributions to smoothed values
             for (let ki = 1 - kernelSize; ki < kernelSize; ki++) {
                 for (let kj = 1 - kernelSize; kj < kernelSize; kj++) {
-
                     //check cell is within the frame
-                    if (!isWithinFrame(i + ki, j + kj)) continue;
+                    if (!isWithinFrame(i + ki, j + kj)) continue
 
                     //get contribution (ki,kj)
                     let w = kernelMatrix[Math.abs(ki)][Math.abs(kj)]
                     if (!w || w < wThr) continue
                     let v = w * val
-                    if (!v) continue;
+                    if (!v) continue
                     v /= sumWeights
-                    if (!v) continue;
+                    if (!v) continue
 
                     //add contribution
                     addContributionTo(i + ki, j + kj, v)
@@ -196,25 +189,20 @@ export class KernelSmoothingStyle extends Style {
 
         //make output list
         const out = []
-        for (let i of Object.keys(index))
-            for (const j of Object.keys(index[i]))
-                out.push(index[i][j])
+        for (let i of Object.keys(index)) for (const j of Object.keys(index[i])) out.push(index[i][j])
 
-        return out;
+        return out
     }
-
 
     /**
      * Draw the smoothed cells depending on the list of styles specified.
-     * 
-    * @param {Array.<import("../Dataset").Cell>} cells 
-    * @param {number} r 
-    * @param {import("../GeoCanvas").GeoCanvas} cg
+     *
+     * @param {Array.<import("../Dataset").Cell>} cells
+     * @param {number} r
+     * @param {import("../GeoCanvas").GeoCanvas} cg
      */
     draw(cells, r, cg) {
-
-        if (!cells || cells.length == 0)
-            return;
+        if (!cells || cells.length == 0) return
 
         //get smoothing param in geo unit
         /** @type {number} */
@@ -224,8 +212,7 @@ export class KernelSmoothingStyle extends Style {
         cells = this.kernelSmoothing(cells, cg.extGeo, r, sG / r)
 
         //draw smoothed cells from styles
-        for (let s of this.styles)
-            s.draw(cells, r, cg);
+        for (let s of this.styles) s.draw(cells, r, cg)
 
         //update legends
         //for (let s of this.styles)

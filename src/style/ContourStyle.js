@@ -1,21 +1,19 @@
 //@ts-check
-"use strict";
+'use strict'
 
-import { SideStyle } from "./SideStyle"
+import { SideStyle } from './SideStyle'
 
 /** @typedef {{x:number,y:number,or:"v"|"h",value:number}} Side */
 
-
 /**
- * 
+ *
  * @author Julien Gaffuri
  */
 export class ContourStyle extends SideStyle {
-
     /** @param {object} opts */
     constructor(opts) {
         super(opts)
-        opts = opts || {};
+        opts = opts || {}
 
         /** @type {number} */
         //opts.interval = opts.interval || 100
@@ -27,32 +25,30 @@ export class ContourStyle extends SideStyle {
         opts.width = opts.width || (() => 1) //(s, r, zf) => ...
 
         /** @type {function(Side,number,number):string} */
-        opts.color = opts.color || (() => "#E7A935") //(s, r, zf) => ...
+        opts.color = opts.color || (() => '#E7A935') //(s, r, zf) => ...
 
         //override method for contour drawing
 
         const getClass = function (v) {
             if (v == undefined) return 0
-            for (let i = 0; i < opts.breaks.length; i++)
-                if (v < opts.breaks[i]) return i;
+            for (let i = 0; i < opts.breaks.length; i++) if (v < opts.breaks[i]) return i
             return opts.breaks.length
         }
 
         this.value = (v1, v2, r, s, zf) => {
             //if (!v1 || !v2) return 0
-            return Math.abs(getClass(v2) - getClass(v1));
+            return Math.abs(getClass(v2) - getClass(v1))
 
             //check if v1 - v2 cross a contour line
             //const r1 = Math.floor(v1 / opts.interval);
             //const r2 = Math.floor(v2 / opts.interval);
             //return Math.abs(r2 - r1);
-        };
+        }
 
         //same color for all
-        this.color = (side, r, s, zf) => side.value ? opts.color(side, r, zf) : undefined;
+        this.color = (side, r, s, zf) => (side.value ? opts.color(side, r, zf) : undefined)
 
         //width: multiple of
-        this.width = (side, r, s, zf) => side.value * zf * opts.width(side, r, zf);
+        this.width = (side, r, s, zf) => side.value * zf * opts.width(side, r, zf)
     }
-
 }

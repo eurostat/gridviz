@@ -1,5 +1,5 @@
 //@ts-check
-"use strict";
+'use strict'
 
 /**
  * Statistics of a set of values
@@ -9,94 +9,90 @@
 
 /**
  * A style, to show a grid dataset.
- * 
+ *
  * @abstract
- * 
+ *
  * @author Joseph Davies, Julien Gaffuri
  */
 export class Style {
-
     /**
      * @abstract
-     * @param {{filter?:function(import('./Dataset').Cell):boolean,offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},minZoom?:number,maxZoom?:number}} opts 
+     * @param {{filter?:function(import('./Dataset').Cell):boolean,offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},minZoom?:number,maxZoom?:number}} opts
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(opts) {
-        opts = opts || {};
+        opts = opts || {}
 
         /** A filter function to apply to the cell list, to filter out some cells not to be drawn (such as for example the cells with value=0).
          * @protected
          * @type {function(import('./Dataset').Cell):boolean} */
-         this.filter = opts.filter || (()=>true);
+        this.filter = opts.filter || (() => true)
 
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
          * @protected
          * @type {function(import('./Dataset').Cell,number,number):{dx:number,dy:number}} */
-        this.offset = opts.offset || ((c, r, zf) => ({ dx: 0, dy: 0 }));
-
+        this.offset = opts.offset || ((c, r, zf) => ({ dx: 0, dy: 0 }))
 
         /** The minimum zoom factor: Below this level, the layer is not shown.
          * @type {number}
          * */
-        this.minZoom = opts.minZoom || 0;
+        this.minZoom = opts.minZoom || 0
 
         /** The maximum zoom factor: Above this level, the layer is not shown.
          * @type {number}
          * */
-        this.maxZoom = opts.maxZoom || Infinity;
+        this.maxZoom = opts.maxZoom || Infinity
 
         //ensure acceptable values for the zoom limits.
         if (this.minZoom >= this.maxZoom)
-            throw new Error("Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.")
+            throw new Error('Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.')
 
-
-        /** 
+        /**
          * @public
          * @type {Array.<import("./Legend").Legend>} */
         this.legends = []
     }
 
-
     /**
      * Draw cells.
-     * 
+     *
      * @param {Array.<import('./Dataset').Cell>} cells The cells to draw.
      * @param {number} resolution Their resolution (in geographic unit)
      * @param {import("./GeoCanvas").GeoCanvas} cg The canvas where to draw them.
      * @abstract
      */
     draw(cells, resolution, cg) {
-        throw new Error('Method draw not implemented.');
+        throw new Error('Method draw not implemented.')
     }
-
-
 
     //getters and setters
 
     /** @returns {function(import('./Dataset').Cell,number,number):{dx:number,dy:number}} */
-    getOffset() { return this.offset; }
+    getOffset() {
+        return this.offset
+    }
     /** @param {function(import('./Dataset').Cell,number,number):{dx:number,dy:number}} val @returns {this} */
-    setOffset(val) { this.offset = val; return this; }
-
-    /** Hide all legend elements of the style, if any
-     * @param {object} opts
-    * @returns {this} */
-    updateLegends(opts) {
-        for (const lg of this.legends)
-            lg.update(opts)
+    setOffset(val) {
+        this.offset = val
         return this
     }
 
-
+    /** Hide all legend elements of the style, if any
+     * @param {object} opts
+     * @returns {this} */
+    updateLegends(opts) {
+        for (const lg of this.legends) lg.update(opts)
+        return this
+    }
 
     /**
      * Compute some statistics on a value of some cells.
      * This is used to define how to draw specifically the cells within the view.
      * TODO: compute median ?
-     * 
-     * @param {Array.<import('./Dataset').Cell>} cells 
-     * @param {function(import('./Dataset').Cell):number} valFun 
-     * @param {boolean} ignoreZeros 
+     *
+     * @param {Array.<import('./Dataset').Cell>} cells
+     * @param {function(import('./Dataset').Cell):number} valFun
+     * @param {boolean} ignoreZeros
      * @returns {Stat | undefined}
      */
     static getStatistics(cells, valFun, ignoreZeros) {
@@ -106,14 +102,13 @@ export class Style {
         //let sum = 0
         //let nb = 0
         for (const cell of cells) {
-            const v = +valFun(cell);
+            const v = +valFun(cell)
             if (ignoreZeros && !v) continue
             if (v < min) min = v
             if (v > max) max = v
             //sum += v
             //nb++
         }
-        return { min: min, max: max, }
+        return { min: min, max: max }
     }
-
 }
