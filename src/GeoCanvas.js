@@ -55,6 +55,9 @@ export class GeoCanvas {
         /** @type {function():void} */
         this.onZoomEndFun = opts.onZoomEndFun
 
+        /** @type {function():void} */
+        this.onZoomFun = opts.onZoomFun
+
         //current extent
         /** @type {Envelope} */
         this.extGeo = { xMin: NaN, xMax: NaN, yMin: NaN, yMax: NaN }
@@ -97,6 +100,8 @@ export class GeoCanvas {
                     }
                 }
                 tP = t
+
+                if (this.onZoomFun) this.onZoomFun(e)
             })
             .on('start', (e) => {
                 this.canvasSave.c = document.createElement('canvas')
@@ -107,13 +112,13 @@ export class GeoCanvas {
                 this.canvasSave.dy = 0
                 this.canvasSave.f = 1
 
-                if (this.onZoomStartFun) this.onZoomStartFun()
+                if (this.onZoomStartFun) this.onZoomStartFun(e)
             })
             .on('end', (e) => {
                 this.redraw(true)
                 this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
 
-                if (this.onZoomEndFun) this.onZoomEndFun()
+                if (this.onZoomEndFun) this.onZoomEndFun(e)
             })
         z(select(this.canvas))
         //select(this.canvas).call(z);
