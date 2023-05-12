@@ -132,6 +132,7 @@ new gviz.App(containerDiv, {
 | _opts_.**selectionRectangleColor** | string            | 'red'                            | The colour of the outline when a cell is highlighted.                 |
 | _opts_.**selectionRectangleColor** | number            | 4                                | The thickness in pixels of the outline when a cell is highlighted.    |
 | _opts_.**backgroundColor**         | string            | 'white'                          | The background color of the canvas.                                   |
+| _opts_.**disableZoom**             | Boolean           | false                            | Disables d3 pan and zoom when set to true.                            |
 | _opts_.**onZoomStartFun**          | Function          | null                             | Event handler for when a pan/zoom event is initiated.                 |
 | _opts_.**onZoomFun**               | Function          | null                             | Event handler for when a pan/zoom event is occurring.                 |
 | _opts_.**onZoomEndFun**            | Function          | null                             | Event handler for when a pan/zoom event has finished.                 |
