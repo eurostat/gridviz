@@ -20,7 +20,7 @@ export class GeoCanvas {
      * @param {object} opts
      */
     constructor(canvas, center, zf, opts) {
-        opts = opts || {}
+        this.opts = opts || {}
 
         /** @type {HTMLCanvasElement} */
         this.canvas = canvas
@@ -193,8 +193,12 @@ export class GeoCanvas {
      * @param {string} color
      */
     clear(color = 'white') {
-        if (this.ctx) this.ctx.fillStyle = color
-        this.ctx.fillRect(0, 0, this.w, this.h)
+        if (this.opts.transparentBackground) {
+            this.ctx.clearRect(0, 0, this.w, this.h)
+        } else {
+            if (this.ctx) this.ctx.fillStyle = color
+            this.ctx.fillRect(0, 0, this.w, this.h)
+        }
     }
 
     /**

@@ -123,19 +123,20 @@ new gviz.App(containerDiv, {
 })
 ```
 
-| Property                           | Type              | Default                          | Description                                                           |
-| ---------------------------------- | ----------------- | -------------------------------- | --------------------------------------------------------------------- |
-| _opts_.**canvas**                  | HTMLCanvasElement | created automatically by gridviz | Specify your own canvas element upon which gridviz will be rendered.  |
-| _opts_.**w**                       | number            | container.offsetWidth            | The width of the canvas.                                              |
-| _opts_.**h**                       | number            | container.offsetHeight           | The height of the canvas.                                             |
-| _opts_.**legendDivId**             | string            | 'gvizLegend'                     | The identifier of the element upon which the legend will be appended. |
-| _opts_.**selectionRectangleColor** | string            | 'red'                            | The colour of the outline when a cell is highlighted.                 |
-| _opts_.**selectionRectangleColor** | number            | 4                                | The thickness in pixels of the outline when a cell is highlighted.    |
-| _opts_.**backgroundColor**         | string            | 'white'                          | The background color of the canvas.                                   |
-| _opts_.**disableZoom**             | Boolean           | false                            | Disables d3 pan and zoom when set to true.                            |
-| _opts_.**onZoomStartFun**          | Function          | null                             | Event handler for when a pan/zoom event is initiated.                 |
-| _opts_.**onZoomFun**               | Function          | null                             | Event handler for when a pan/zoom event is occurring.                 |
-| _opts_.**onZoomEndFun**            | Function          | null                             | Event handler for when a pan/zoom event has finished.                 |
+| Property                           | Type              | Default                          | Description                                                                                                                                                         |
+| ---------------------------------- | ----------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _opts_.**canvas**                  | HTMLCanvasElement | created automatically by gridviz | Specify your own canvas element upon which gridviz will be rendered.                                                                                                |
+| _opts_.**w**                       | number            | container.offsetWidth            | The width of the canvas.                                                                                                                                            |
+| _opts_.**h**                       | number            | container.offsetHeight           | The height of the canvas.                                                                                                                                           |
+| _opts_.**legendDivId**             | string            | 'gvizLegend'                     | The identifier of the element upon which the legend will be appended.                                                                                               |
+| _opts_.**selectionRectangleColor** | string            | 'red'                            | The colour of the outline when a cell is highlighted.                                                                                                               |
+| _opts_.**selectionRectangleColor** | number            | 4                                | The thickness in pixels of the outline when a cell is highlighted.                                                                                                  |
+| _opts_.**transparentbackground**   | boolean           | false                            | Whether the background should be filled with colour (backgroundColor) or not. It is essentially the difference between using context.fillRect vs context.clearRect. |
+| _opts_.**backgroundColor**         | string            | 'white'                          | The background color of the canvas when transparentBackground is set to false.                                                                                      |
+| _opts_.**disableZoom**             | Boolean           | false                            | Disables d3 pan and zoom when set to true.                                                                                                                          |
+| _opts_.**onZoomStartFun**          | Function          | null                             | Event handler for when a pan/zoom event is initiated.                                                                                                               |
+| _opts_.**onZoomFun**               | Function          | null                             | Event handler for when a pan/zoom event is occurring.                                                                                                               |
+| _opts_.**onZoomEndFun**            | Function          | null                             | Event handler for when a pan/zoom event has finished.                                                                                                               |
 
 ## Multi layer, multi style and multi scale mapping
 
