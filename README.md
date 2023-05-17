@@ -6,29 +6,29 @@
 
 [Gridviz](https://github.com/eurostat/gridviz/) is a JavaScript library to visualise gridded data (or any tabular dataset with x/y position) in the browser in a large variety of advanced cartographic styles. Unlike traditional raster-based web mapping tools, [Gridviz](https://github.com/eurostat/gridviz/) renders everything client-side, on the fly.
 
-[![](/docs/img/overviews/ov_accessibility.png)](docs/reference.md#shapecolorsize-style)
-[![](/docs/img/overviews/ov_side_cat.png)](docs/reference.md#side-category-style)
-[![](/docs/img/overviews/ov_age_balance.png)](docs/reference.md#shapecolorsize-style)
-[![shadow effect map](/docs/img/overviews/ov_choco.png)](docs/reference.md#side-style)
-[![](/docs/img/overviews/ov_dark.png)](docs/reference.md#square-color-webgl-style)
-[![](/docs/img/overviews/ov_kersmoo.png)](docs/reference.md#kernel-smoothing)
-[![](/docs/img/overviews/ov_pillar_simple.png)](docs/reference.md#pillars-style)
-[![](/docs/img/overviews/ov_donut.png)](docs/reference.md#shapecolorsize-style)
-[![tanaka style map](/docs/img/overviews/ov_tanaka_dark.png)](docs/reference.md#tanaka-style)
-[![](/docs/img/overviews/ov_flag.png)](docs/reference.md#composition-style)
-[![joyplot map](/docs/img/overviews/ov_joyplot_shade.png)](docs/reference.md#joyplot-style)
-[![lego map](/docs/img/overviews/ov_lego.png)](docs/reference.md#lego-style)
-[![mosaic map](/docs/img/overviews/ov_mosaic.png)](docs/reference.md#mosaic-style)
-[![](/docs/img/overviews/ov_piechart.png)](docs/reference.md#composition-style)
-[![](/docs/img/overviews/ov_pillar.png)](docs/reference.md#pillars-style)
-[![](/docs/img/overviews/ov_text_elevation.png)](docs/reference.md#text-style)
-[![dot density map](/docs/img/overviews/ov_dotdensity_random.png)](docs/reference.md#dot-density-style)
-[![](/docs/img/overviews/ov_popchange.png)](docs/reference.md#shapecolorsize-style)
-[![](/docs/img/overviews/ov_ring.png)](docs/reference.md#composition-style)
-[![](/docs/img/overviews/ov_segment.png)](docs/reference.md#segment-style)
-[![tanaka style map](/docs/img/overviews/ov_tanaka.png)](docs/reference.md#tanaka-style)
-[![dot density map](/docs/img/overviews/ov_dotdensity.png)](docs/reference.md#dot-density-style)
-[![joyplot map](/docs/img/overviews/ov_joyplot.png)](docs/reference.md#joyplot-style)
+[![](/docs/img/overviews/ov_accessibility.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
+[![](/docs/img/overviews/ov_side_cat.png)](https://eurostat.github.io/gridviz/docs/reference#side-category-style)
+[![](/docs/img/overviews/ov_age_balance.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
+[![shadow effect map](/docs/img/overviews/ov_choco.png)](https://eurostat.github.io/gridviz/docs/reference#side-style)
+[![](/docs/img/overviews/ov_dark.png)](https://eurostat.github.io/gridviz/docs/reference#square-color-webgl-style)
+[![](/docs/img/overviews/ov_kersmoo.png)](https://eurostat.github.io/gridviz/docs/reference#kernel-smoothing)
+[![](/docs/img/overviews/ov_pillar_simple.png)](https://eurostat.github.io/gridviz/docs/reference#pillars-style)
+[![](/docs/img/overviews/ov_donut.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
+[![tanaka style map](/docs/img/overviews/ov_tanaka_dark.png)](https://eurostat.github.io/gridviz/docs/reference#tanaka-style)
+[![](/docs/img/overviews/ov_flag.png)](https://eurostat.github.io/gridviz/docs/reference#composition-style)
+[![joyplot map](/docs/img/overviews/ov_joyplot_shade.png)](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
+[![lego map](/docs/img/overviews/ov_lego.png)](https://eurostat.github.io/gridviz/docs/reference#lego-style)
+[![mosaic map](/docs/img/overviews/ov_mosaic.png)](https://eurostat.github.io/gridviz/docs/reference#mosaic-style)
+[![](/docs/img/overviews/ov_piechart.png)](https://eurostat.github.io/gridviz/docs/reference#composition-style)
+[![](/docs/img/overviews/ov_pillar.png)](https://eurostat.github.io/gridviz/docs/reference#pillars-style)
+[![](/docs/img/overviews/ov_text_elevation.png)](https://eurostat.github.io/gridviz/docs/reference#text-style)
+[![dot density map](/docs/img/overviews/ov_dotdensity_random.png)](https://eurostat.github.io/gridviz/docs/reference#dot-density-style)
+[![](/docs/img/overviews/ov_popchange.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
+[![](/docs/img/overviews/ov_ring.png)](https://eurostat.github.io/gridviz/docs/reference#composition-style)
+[![](/docs/img/overviews/ov_segment.png)](https://eurostat.github.io/gridviz/docs/reference#segment-style)
+[![tanaka style map](/docs/img/overviews/ov_tanaka.png)](https://eurostat.github.io/gridviz/docs/reference#tanaka-style)
+[![dot density map](/docs/img/overviews/ov_dotdensity.png)](https://eurostat.github.io/gridviz/docs/reference#dot-density-style)
+[![joyplot map](/docs/img/overviews/ov_joyplot.png)](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
 
 ## Examples
 
@@ -60,7 +60,7 @@ gridviz = require('gridviz')
 
 ## Documentation
 
-See the **[API reference](docs/reference.md)**.
+See the **[API reference](https://eurostat.github.io/gridviz/docs/reference)**.
 
 ## About
 
