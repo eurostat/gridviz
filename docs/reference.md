@@ -137,6 +137,7 @@ new gviz.App(containerDiv, {
 | _opts_.**onZoomStartFun**          | Function          | null                             | Event handler for when a pan/zoom event is initiated.                                                                                                               |
 | _opts_.**onZoomFun**               | Function          | null                             | Event handler for when a pan/zoom event is occurring.                                                                                                               |
 | _opts_.**onZoomEndFun**            | Function          | null                             | Event handler for when a pan/zoom event has finished.                                                                                                               |
+| _opts_.**tooltip**                 | Object            | undefined                        | See [tooltip docs](#tooltip)                                                                                                                                        |
 
 ## Multi layer, multi style and multi scale mapping
 
@@ -910,7 +911,24 @@ new gviz.App(containerDiv)
 
 By default, the **cellInfoHTML** function is a function returning a list of all cell properties. In case several layers are defined, the **cellInfoHTML** function of the top layer is used. If it is not defined, then the layer the **cellInfoHTML** function of the layer below is used instead. If no **cellInfoHTML** function is defined for all layers, then no tooltip is shown.
 
-Changing tooltip style: Documentation coming soon.
+You can adjust the tooltip settings by specifying a tooltip object in the [app options](#app-options-object), using the following properties:
+
+| Property                      | Type   | Default                        | Description                                                                           |
+| ----------------------------- | ------ | ------------------------------ | ------------------------------------------------------------------------------------- |
+| _opts_.**div**                | String | 'tooltip_eurostat'             | Specify the div id to use as a tooltip. If unspecified, one is created automatically. |
+| _opts_.**transitionDuration** | string | 100                            | The duration in ms of the tooltip transition animation.                               |
+| _opts_.**xOffset**            | number | 30                             | The X offset to apply to the position of the tooltip container.                       |
+| _opts_.**yOffset**            | number | 20                             | The Y offset to apply to the position of the tooltip container.                       |
+| _opts_.**xMouseOffset**       | number | 0                              | The X offset to apply to the position of the mouse when hovering a cell.              |
+| _opts_.**yMouseOffset**       | number | 0                              | The Y offset to apply to the position of the mouse when hovering a cell.              |
+| _opts_.**maxWidth**           | number | 20em                           | The max width of the tooltip.                                                         |
+| _opts_.**fontSize**           | number | 1.2em                          | The tooltip font size.                                                                |
+| _opts_.**background**         | number | 'white'                        | The background color of the tooltip                                                   |
+| _opts_.**padding**            | string | '5px'                          | The tooltip padding.                                                                  |
+| _opts_.**border**             | string | '0px'                          | The tooltip border CSS property.                                                      |
+| _opts_.**border-radius**      | string | '5px'                          | The tooltip border-radius.                                                            |
+| _opts_.**box-shadow**         | string | '5px 5px 5px grey'             | The tooltip box-shadow.                                                               |
+| _opts_.**font-family**        | string | 'Helvetica, Arial, sans-serif' | The tooltip font-family.                                                              |
 
 For more information, [see the code](../src/Tooltip.js).
 

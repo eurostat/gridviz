@@ -12,7 +12,7 @@ export class Tooltip {
     /**
      * @param {object} opts
      */
-    constructor(opts = undefined) {
+    constructor(opts) {
         opts = opts || {}
 
         /** @type {string} */
@@ -40,6 +40,10 @@ export class Tooltip {
         this.xOffset = opts.xOffset || 30
         /** @type {number} */
         this.yOffset = opts.yOffset || 20
+        /** @type {number} */ // e.g. to prevent mouse cursor covering cell being highlighted
+        this.yMouseOffset = opts.yMouseOffset || 0
+        /** @type {number} */
+        this.xMouseOffset = opts.xMouseOffset || 0
 
         /**
          * @private
