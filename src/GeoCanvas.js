@@ -20,7 +20,7 @@ export class GeoCanvas {
      * @param {object} opts
      */
     constructor(canvas, center, zf, opts) {
-        opts = opts || {}
+        this.opts = opts || {}
 
         /** @type {HTMLCanvasElement} */
         this.canvas = canvas
@@ -64,63 +64,65 @@ export class GeoCanvas {
         this.updateExtentGeo()
 
         //rely on d3 zoom for pan/zoom
-        let tP = zoomIdentity
-        const z = zoom()
-            //to make the zooming a bit faster
-            .wheelDelta((e) => -e.deltaY * (e.deltaMode === 1 ? 0.07 : e.deltaMode ? 1 : 0.004))
-            .on('zoom', (e) => {
-                const t = e.transform
-                const f = tP.k / t.k
-                if (f == 1) {
-                    //pan
-                    const dx = tP.x - t.x
-                    const dy = tP.y - t.y
-                    this.pan(dx * this.getZf(), -dy * this.getZf())
-                } else {
-                    const se = e.sourceEvent
-                    if (se instanceof WheelEvent) {
-                        //zoom at the mouse position
-                        this.zoom(
-                            f,
-                            this.pixToGeoX(e.sourceEvent.offsetX),
-                            this.pixToGeoY(e.sourceEvent.offsetY)
-                        )
-                    } else if (se instanceof TouchEvent) {
-                        //compute average position of the touches
-                        let tx = 0,
-                            ty = 0
-                        for (let tt of se.targetTouches) {
-                            tx += tt.clientX
-                            ty += tt.clientY
+        if (!opts.disableZoom) {
+            let tP = zoomIdentity
+            const z = zoom()
+                //to make the zooming a bit faster
+                .wheelDelta((e) => -e.deltaY * (e.deltaMode === 1 ? 0.07 : e.deltaMode ? 1 : 0.004))
+                .on('zoom', (e) => {
+                    const t = e.transform
+                    const f = tP.k / t.k
+                    if (f == 1) {
+                        //pan
+                        const dx = tP.x - t.x
+                        const dy = tP.y - t.y
+                        this.pan(dx * this.getZf(), -dy * this.getZf())
+                    } else {
+                        const se = e.sourceEvent
+                        if (se instanceof WheelEvent) {
+                            //zoom at the mouse position
+                            this.zoom(
+                                f,
+                                this.pixToGeoX(e.sourceEvent.offsetX),
+                                this.pixToGeoY(e.sourceEvent.offsetY)
+                            )
+                        } else if (se instanceof TouchEvent) {
+                            //compute average position of the touches
+                            let tx = 0,
+                                ty = 0
+                            for (let tt of se.targetTouches) {
+                                tx += tt.clientX
+                                ty += tt.clientY
+                            }
+                            tx /= se.targetTouches.length
+                            ty /= se.targetTouches.length
+                            //zoom at this average position
+                            this.zoom(f, this.pixToGeoX(tx), this.pixToGeoY(ty))
                         }
-                        tx /= se.targetTouches.length
-                        ty /= se.targetTouches.length
-                        //zoom at this average position
-                        this.zoom(f, this.pixToGeoX(tx), this.pixToGeoY(ty))
                     }
-                }
-                tP = t
+                    tP = t
 
-                if (this.onZoomFun) this.onZoomFun(e)
-            })
-            .on('start', (e) => {
-                this.canvasSave.c = document.createElement('canvas')
-                this.canvasSave.c.setAttribute('width', '' + this.w)
-                this.canvasSave.c.setAttribute('height', '' + this.h)
-                this.canvasSave.c.getContext('2d').drawImage(this.canvas, 0, 0)
-                this.canvasSave.dx = 0
-                this.canvasSave.dy = 0
-                this.canvasSave.f = 1
+                    if (this.onZoomFun) this.onZoomFun(e)
+                })
+                .on('start', (e) => {
+                    this.canvasSave.c = document.createElement('canvas')
+                    this.canvasSave.c.setAttribute('width', '' + this.w)
+                    this.canvasSave.c.setAttribute('height', '' + this.h)
+                    this.canvasSave.c.getContext('2d').drawImage(this.canvas, 0, 0)
+                    this.canvasSave.dx = 0
+                    this.canvasSave.dy = 0
+                    this.canvasSave.f = 1
 
-                if (this.onZoomStartFun) this.onZoomStartFun(e)
-            })
-            .on('end', (e) => {
-                this.redraw(true)
-                this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
+                    if (this.onZoomStartFun) this.onZoomStartFun(e)
+                })
+                .on('end', (e) => {
+                    this.redraw(true)
+                    this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
 
-                if (this.onZoomEndFun) this.onZoomEndFun(e)
-            })
-        z(select(this.canvas))
+                    if (this.onZoomEndFun) this.onZoomEndFun(e)
+                })
+            z(select(this.canvas))
+        }
         //select(this.canvas).call(z);
 
         /** Zoom extent, to limit zoom in and out
@@ -191,8 +193,12 @@ export class GeoCanvas {
      * @param {string} color
      */
     clear(color = 'white') {
-        if (this.ctx) this.ctx.fillStyle = color
-        this.ctx.fillRect(0, 0, this.w, this.h)
+        if (this.opts.transparentBackground) {
+            this.ctx.clearRect(0, 0, this.w, this.h)
+        } else {
+            if (this.ctx) this.ctx.fillStyle = color
+            this.ctx.fillRect(0, 0, this.w, this.h)
+        }
     }
 
     /**

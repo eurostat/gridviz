@@ -204,14 +204,35 @@ export class App {
         /**
          * @private
          * @type {Tooltip} */
-        this.tooltip = new Tooltip()
+        this.tooltip = new Tooltip(opts.tooltip)
 
         /** @param {MouseEvent} e */
         const focusCell = (e) => {
             //compute mouse geo position
-            const mousePositionGeo = { x: this.cg.pixToGeoX(e.offsetX), y: this.cg.pixToGeoY(e.offsetY) }
+            const mousePositionGeo = {
+                x: this.cg.pixToGeoX(e.offsetX + this.tooltip.xMouseOffset),
+                y: this.cg.pixToGeoY(e.offsetY + this.tooltip.yMouseOffset),
+            }
             /** @type {{cell:import('./Dataset').Cell,html:string,resolution:number} | undefined} */
             const focus = this.getCellFocusInfo(mousePositionGeo)
+
+            // transparent background (e.g. leaflet) 'red painting' fix
+            if (opts.transparentBackground) {
+                if (focus) {
+                    this.tooltip.setPosition(e)
+                    this.tooltip.show()
+                    this.tooltip.html(focus.html)
+                } else {
+                    this.tooltip.hide()
+                }
+                this.canvasSave = document.createElement('canvas')
+                this.canvasSave.setAttribute('width', '' + this.w)
+                this.canvasSave.setAttribute('height', '' + this.h)
+                this.canvasSave.getContext('2d').drawImage(this.cg.canvas, 0, 0)
+                this.cg.initCanvasTransform()
+                return
+            }
+
             if (focus) {
                 this.tooltip.setPosition(e)
                 this.tooltip.show()
