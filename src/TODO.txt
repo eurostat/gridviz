@@ -1,3 +1,14 @@
+module test
+
+V3
+make modules
+see https://webpack.js.org/guides/code-splitting/
+webpack: check plugins https://webpack.js.org/plugins
+
+
+https://www.svgrepo.com/
+
+
 Cover Crops accross Europe
 https://esdac.jrc.ec.europa.eu/content/cover-crops-accross-europe#tabs-0-description=1
 
@@ -13,12 +24,6 @@ publish and document tiler
 
 lego shading
 
-module test
-
-V3
-make modules
-see https://webpack.js.org/guides/code-splitting/
-webpack: check plugins https://webpack.js.org/plugins
 
 module parquet
 parquet: monitor, improve
@@ -217,10 +222,31 @@ https://ghsl.jrc.ec.europa.eu/ESMVisualisation.php
 https://ghsl.jrc.ec.europa.eu/enactVisualisation.php
 
 
+DE
+
+German Census 2011 data in 100m grid cells for population, housing, families and houeseholds
+https://www.zensus2011.de/DE/Home/Aktuelles/DemografischeGrunddaten.html?nn=559100#Gitter
+
+Agriculture (5 and 10km grid)
+https://agraratlas.statistikportal.de/
+
+Mobility indicators by mobile phone usage
+https://storymaps.arcgis.com/stories/58b7b89db42749e69b611a4764870546
+
+It looks like we have grid based tourism data for each year from 2017-2021, see
+https://gis-hsl.hessen.de/portal/apps/webappviewer/index.html?id=621b2739ff8f43e895a759cc0dcc2c70
+however it is available as WMS but it is not immediately clear if we offer the data in csv-Format as well and this afternoon is not a good time to find somebody who might know. But let me know if this is something, you might be interested in, even though it's far from a 10yr+ timeseries.
+
+a little english language tutorial how to deal with 100m grid data in Germany:
+https://github.com/wahlatlas/grid_data/blob/main/gridded_data_tutorial.ipynb
+It uses Python and QGis but describes how the data is structured in general terms.
+
+
+
+
 Census 2021:
 - Gender (males, females)
 - Age (under 15, 15 to 64, 65 and over)
 - Employment
 - Place of birth (in the reporting country, in another EU country, outside EU)
 - Usual residence 12 months before (unchanged, within reporting country, outside of the reporting country).
-
