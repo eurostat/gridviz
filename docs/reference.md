@@ -111,6 +111,10 @@ new gviz.App(containerDiv, {
     selectionRectangleColor: 'red',
     selectionRectangleWidthPix: '1',
     backgroundColor: 'white',
+    tooltip: {
+        fontSize: '1.2em',
+        transitionDuration: 100
+    },
     onZoomStartFun: (event) => {
         console.log('pan/zoom start', event)
     },
@@ -921,9 +925,9 @@ You can adjust the tooltip settings by specifying a tooltip object in the [app o
 | _opts_.**yOffset**            | number | 20                             | The Y offset to apply to the position of the tooltip container.                       |
 | _opts_.**xMouseOffset**       | number | 0                              | The X offset to apply to the position of the mouse when hovering a cell.              |
 | _opts_.**yMouseOffset**       | number | 0                              | The Y offset to apply to the position of the mouse when hovering a cell.              |
-| _opts_.**maxWidth**           | number | 20em                           | The max width of the tooltip.                                                         |
-| _opts_.**fontSize**           | number | 1.2em                          | The tooltip font size.                                                                |
-| _opts_.**background**         | number | 'white'                        | The background color of the tooltip                                                   |
+| _opts_.**maxWidth**           | string | 20em                           | The max width of the tooltip.                                                         |
+| _opts_.**fontSize**           | string | 1.2em                          | The tooltip font size.                                                                |
+| _opts_.**background**         | string | 'white'                        | The background color of the tooltip                                                   |
 | _opts_.**padding**            | string | '5px'                          | The tooltip padding.                                                                  |
 | _opts_.**border**             | string | '0px'                          | The tooltip border CSS property.                                                      |
 | _opts_.**border-radius**      | string | '5px'                          | The tooltip border-radius.                                                            |
