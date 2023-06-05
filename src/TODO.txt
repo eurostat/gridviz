@@ -99,6 +99,11 @@ https://openprocessing.org/sketch/1687044/
 
 dot density composition style
 improve performance of dotstyle - map every single individual
+See:
+https://www.washingtonpost.com/graphics/2018/national/segregation-us-cities/
+https://brussels-diversity.jetpack.ai/
+https://twitter.com/bothness/status/1663835509708271616?s=20
+
 
 TODO smoothing: test d3.blur2 https://github.com/d3/d3-array/blob/main/README.md#blur2 see https://observablehq.com/@d3/d3-blur
 https://gist.github.com/jasonkit/c5b4fd62e8cbfe2780cc
