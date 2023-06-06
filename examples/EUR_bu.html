@@ -23,7 +23,7 @@
                         'm/',
                     [
                         new gviz.SquareColorWGLStyle({
-                            colorCol: 'comm_serv',
+                            colorCol: 'habPer100m2',
                             tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
                         }),
                     ],
@@ -34,7 +34,7 @@
                             c.bu = c.res+ c.agri + c.indus + c.comm_serv
                             c.habPer100m2 = c.bu>0? +c.TOT_P_2021 / c.bu : -999;
                             c.resSurfPerHab = c.TOT_P_2021>0? c.res/c.TOT_P_2021 : -999;
-                            console.log(c)
+                            //console.log(c)
                         },
                         pixNb: 2,
                     }
