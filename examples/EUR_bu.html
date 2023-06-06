@@ -13,29 +13,30 @@
             let containerDiv = document.getElementById('viz-container')
 
             new gviz.App(containerDiv)
-                //set position and zoom
                 .setGeoCenter({ x: 4500000, y: 2900000 })
                 .setZoomFactor(3000)
-                //add multi scale tiled layer
                 .addMultiScaleTiledGridLayer(
-                    //the resolution values, ordered
                     [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                    //the URL, from the resolution
                     (r) =>
                         'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/bustat/' +
                         r +
                         'm/',
-                    //the styles
                     [
                         new gviz.SquareColorWGLStyle({
-                            //TOT_P_2021	agri	comm_serv	indus	res
                             colorCol: 'comm_serv',
                             tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
                         }),
                     ],
                     {
-                        //the maximum pixel size before jumping to a lower resolution
-                        pixNb: 3,
+                        preprocess: (c) => {
+                            //TOT_P_2021	agri	comm_serv	indus	res
+                            c.TOT_P_2021 = +c.TOT_P_2021; c.res = +c.res; c.agri = +c.agri; c.indus = +c.indus; c.comm_serv = +c.comm_serv;
+                            c.bu = c.res+ c.agri + c.indus + c.comm_serv
+                            c.habPer100m2 = c.bu>0? +c.TOT_P_2021 / c.bu : -999;
+                            c.resSurfPerHab = c.TOT_P_2021>0? c.res/c.TOT_P_2021 : -999;
+                            console.log(c)
+                        },
+                        pixNb: 2,
                     }
                 )
         </script>
