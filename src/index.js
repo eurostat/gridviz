@@ -36,6 +36,7 @@ export { MosaicStyle } from './style/MosaicStyle'
 
 //export additional layers
 export { BackgroundLayer } from './BackgroundLayer'
+export { BackgroundLayerWMS } from './BackgroundLayerWMS'
 export { LabelLayer } from './LabelLayer'
 export { LineLayer as BoundaryLayer } from './LineLayer'
 
