@@ -10,6 +10,7 @@ import { CSVGrid } from './dataset/CSVGrid'
 //import { ParquetGrid } from './dataset/ParquetGrid';
 import { TiledGrid } from './dataset/TiledGrid'
 import { BackgroundLayer } from './BackgroundLayer'
+import { BackgroundLayerWMS } from './BackgroundLayerWMS'
 import { LabelLayer } from './LabelLayer'
 import { LineLayer } from './LineLayer'
 
@@ -613,6 +614,18 @@ export class App {
      */
     addBackgroundLayer(opts) {
         this.bgLayers.push(new BackgroundLayer(opts))
+        this.redraw()
+        return this
+    }
+
+    /**
+     * Add a WMS background layer to the app.
+     *
+     * @param {object} opts
+     * @returns {this}
+     */
+    addBackgroundLayerWMS(opts) {
+        this.bgLayers.push(new BackgroundLayerWMS(opts))
         this.redraw()
         return this
     }
