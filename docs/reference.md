@@ -2,49 +2,51 @@
 
 ## Table of contents
 
--   [Gridviz API reference](#gridviz-api-reference)
-    -   [Table of contents](#table-of-contents)
-    -   [Usage](#usage)
-    -   [App Configuration](#app-configuration)
-        -   [App options object](#app-options-object)
-    -   [Multi layer, multi style and multi scale mapping](#multi-layer-multi-style-and-multi-scale-mapping)
-    -   [Adding data](#adding-data)
-        -   [Single CSV file](#single-csv-file)
-        -   [Multi scale CSV data](#multi-scale-csv-data)
-        -   [Tiled data](#tiled-data)
-        -   [Multi scale tiled data](#multi-scale-tiled-data)
-        -   [Data pre-processing and filtering](#data-pre-processing-and-filtering)
-    -   [Basic styles](#basic-styles)
-        -   [Shape/Color/Size Style](#shapecolorsize-style)
-        -   [Square color WebGL Style](#square-color-webgl-style)
-        -   [Square color category WebGL style](#square-color-category-webgl-style)
-        -   [Composition style](#composition-style)
-        -   [Segment style](#segment-style)
-        -   [Stroke style](#stroke-style)
-    -   [Advanced styles](#advanced-styles)
-        -   [Tanaka style](#tanaka-style)
-        -   [Dot density style](#dot-density-style)
-        -   [Pillars style](#pillars-style)
-        -   [Text style](#text-style)
-    -   [Side styles](#side-styles)
-        -   [Side style](#side-style)
-        -   [Side category style](#side-category-style)
-        -   [Contour style](#contour-style)
-    -   [Esthetic styles](#esthetic-styles)
-        -   [JoyPlot Style](#joyplot-style)
-        -   [Mosaic style](#mosaic-style)
-        -   [Lego style](#lego-style)
-        -   [Lego category style](#lego-category-style)
-    -   [Kernel smoothing](#kernel-smoothing)
-    -   [Others styles](#others-styles)
-    -   [Legends](#legends)
-    -   [Stretching](#stretching)
-    -   [Background layer](#background-layer)
-    -   [Foreground information](#foreground-information)
-        -   [Showing labels](#showing-labels)
-        -   [Showing boundaries](#showing-boundaries)
-    -   [Tooltip](#tooltip)
-    -   [Alright?](#alright)
+- [Gridviz API reference](#gridviz-api-reference)
+  - [Table of contents](#table-of-contents)
+  - [Usage](#usage)
+  - [App Configuration](#app-configuration)
+    - [App options object](#app-options-object)
+  - [Multi layer, multi style and multi scale mapping](#multi-layer-multi-style-and-multi-scale-mapping)
+  - [Adding data](#adding-data)
+    - [Single CSV file](#single-csv-file)
+    - [Multi scale CSV data](#multi-scale-csv-data)
+    - [Tiled data](#tiled-data)
+    - [Multi scale tiled data](#multi-scale-tiled-data)
+    - [Data pre-processing and filtering](#data-pre-processing-and-filtering)
+  - [Basic styles](#basic-styles)
+    - [Shape/Color/Size Style](#shapecolorsize-style)
+    - [Square color WebGL Style](#square-color-webgl-style)
+    - [Square color category WebGL style](#square-color-category-webgl-style)
+    - [Composition style](#composition-style)
+    - [Segment style](#segment-style)
+    - [Stroke style](#stroke-style)
+  - [Advanced styles](#advanced-styles)
+    - [Tanaka style](#tanaka-style)
+    - [Dot density style](#dot-density-style)
+    - [Pillars style](#pillars-style)
+    - [Text style](#text-style)
+  - [Side styles](#side-styles)
+    - [Side style](#side-style)
+    - [Side category style](#side-category-style)
+    - [Contour style](#contour-style)
+  - [Esthetic styles](#esthetic-styles)
+    - [JoyPlot Style](#joyplot-style)
+    - [Mosaic style](#mosaic-style)
+    - [Lego style](#lego-style)
+    - [Lego category style](#lego-category-style)
+  - [Kernel smoothing](#kernel-smoothing)
+  - [Others styles](#others-styles)
+  - [Legends](#legends)
+  - [Stretching](#stretching)
+  - [Background layer](#background-layer)
+    - [Tiled layer](#tiled-layer)
+    - [WMS](#wms)
+  - [Foreground information](#foreground-information)
+    - [Showing labels](#showing-labels)
+    - [Showing boundaries](#showing-boundaries)
+  - [Tooltip](#tooltip)
+  - [Alright?](#alright)
 
 Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
 
@@ -744,6 +746,9 @@ For more information on these functions and an overview of how they differ, see:
 
 [![gridviz background layer TMS](img/background.png)](https://eurostat.github.io/gridviz/examples/background.html)
 
+
+### Tiled layer
+
 To add a background layer to a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **addBackgroundLayer** method:
 
 ```javascript
@@ -757,7 +762,7 @@ new gviz.App(containerDiv)
     })
 ```
 
-(see [online](https://eurostat.github.io/gridviz/examples/background.html), see [code](https://github.com/eurostat/gridviz/blob/master/examples/background.html))
+See [this example](https://eurostat.github.io/gridviz/examples/background.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/background.html)).
 
 A background layer must be based on an external [tiled web map](https://en.wikipedia.org/wiki/Tiled_web_map) specified with the properties listed in the table below.
 
@@ -776,6 +781,33 @@ The **addBackgroundLayer** method has the following parameters:
 | **minZoom** and **maxZoom** | number                 | 0 and Infinity                                         | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn.                                                                                                                                                                               |
 
 For more information, [see the code](../src/BackgroundLayer.js).
+
+
+### WMS
+
+To add a WMS background layer to a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **addBackgroundLayerWMS** method:
+
+```javascript
+new gviz.App(containerDiv)
+    (...)
+    .addBackgroundLayerWMS({
+        url: 'https://sgx.geodatenzentrum.de/wms_basemapde?&service=WMS&request=GetMap&layers=de_basemapde_web_raster_grau&styles=&format=image%2Fjpeg&transparent=false&version=1.1.1&srs=EPSG%3A3035',
+        maxZoom: 50,
+    })
+```
+
+See [this example](https://eurostat.github.io/gridviz/examples/background_WMS.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/background_WMS.html)).
+
+The **addBackgroundLayer** method has the following parameters:
+
+| Parameter                   | Type                   | Default                 | Description      |
+| ------------------- | ---------------------- | ------------- | ----------------- |
+| **url**     | string                 | undefined       | The base URL of the WMS. This URL must contain all necessary parameters, except *width*, *height* and *bbox* which are computed by the application.         |
+| **visible**    | boolean      | true       | The visibility of the layer. When _false_, the layer is not drawn.     |
+| **minZoom** and **maxZoom** | number    | 0 and Infinity    | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn.    |
+
+For more information, [see the code](../src/BackgroundLayerWMS.js).
+
 
 ## Foreground information
 
