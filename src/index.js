@@ -3,6 +3,8 @@
 
 //the application
 export { App } from './App'
+export { GeoCanvas } from './GeoCanvas'
+export { Style } from './Style'
 export { Layer } from './Layer'
 export { Dataset } from './Dataset'
 export { DatasetComponent } from './DatasetComponent'
