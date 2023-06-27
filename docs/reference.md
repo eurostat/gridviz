@@ -663,7 +663,21 @@ See [this roman style example](https://eurostat.github.io/gridviz/examples/style
 
 ### Ninja star style
 
-(Documentation coming soon)
+[![Ninja star style](img/styles/ninja_star.png)](https://eurostat.github.io/gridviz/examples/styles/ninja_star.html)
+
+This style shows the cell as a star polygon whose compacity depends on a variable. The higher the value, the more compact the star: Maximum values correspond to a square, and minimum values correspond to a thin star. The shapes in between correspond to 4 branches stars looking like a ninja star.
+
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/ninja_star.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ninja_star.html)).
+
+
+| Property     | Type                      | Default                 | Description                                                                                                                           |
+| ------------ | ------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **colorCol** | string                    | undefined               | The name of the column used for the color.                                                                                            |
+| **color**    | function(v,r,s):string    | (v,r,s,zf) => "#EA6BAC" | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
+| **sizeCol**  | string                    | undefined               | The name of the column used for the size.                                                                                             |
+| **size**     | function(v,r,s,zf):number | (v,r,s,zf) => t         | A function computing the cell size, within [0,1], from its **sizeCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. 1 corresponds to a square, 0 to an infinitly thin cross.  |
+| **shape**    | function(c):string        | () => "o"          | A function computing the orientation of the ninja star: *"o"* for 45deg oblique star, *"p"* for a star parallel to the x/y axes.  |
+
 
 ### Lego style
 
