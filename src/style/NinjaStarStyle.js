@@ -90,32 +90,29 @@ export class NinjaStarStyle extends Style {
             //center position
             const cx = cell.x + r2
             const cy = cell.y + r2
-            const r2sq = r2 * 1.4142
 
-            if (shape === 'o') {
-                //TODO
-            } else if (shape === 'p') {
+            if (shape === 'p') {
+                cg.ctx.beginPath()
+                cg.ctx.moveTo(cx, cy + r2)
+                cg.ctx.lineTo(cx + sG2, cy + sG2)
+                cg.ctx.lineTo(cx + r2, cy)
+                cg.ctx.lineTo(cx + sG2, cy - sG2)
+                cg.ctx.lineTo(cx, cy - r2)
+                cg.ctx.lineTo(cx - sG2, cy - sG2)
+                cg.ctx.lineTo(cx - r2, cy)
+                cg.ctx.lineTo(cx - sG2, cy + sG2)
+                cg.ctx.fill()
+            } else if (shape === 'o') {
                 cg.ctx.beginPath()
                 cg.ctx.moveTo(cx, cy + sG2)
-                cg.ctx.lineTo(cx + r2sq, cy + r2sq)
+                cg.ctx.lineTo(cx + r2, cy + r2)
                 cg.ctx.lineTo(cx + sG2, cy)
-                cg.ctx.lineTo(cx + r2sq, cy - r2sq)
+                cg.ctx.lineTo(cx + r2, cy - r2)
                 cg.ctx.lineTo(cx, cy - sG2)
-                cg.ctx.lineTo(cx - r2sq, cy - r2sq)
+                cg.ctx.lineTo(cx - r2, cy - r2)
                 cg.ctx.lineTo(cx - sG2, cy)
-                cg.ctx.lineTo(cx - r2sq, cy + r2sq)
+                cg.ctx.lineTo(cx - r2, cy + r2)
                 cg.ctx.fill()
-
-                /*
-                const s2 = sG * 0.5
-                cg.ctx.beginPath()
-                cg.ctx.moveTo(cell.x + r2 - s2, cell.y + r2)
-                cg.ctx.lineTo(cell.x + r2, cell.y + r2 + s2)
-                cg.ctx.lineTo(cell.x + r2 + s2, cell.y + r2)
-                cg.ctx.lineTo(cell.x + r2, cell.y + r2 - s2)
-                cg.ctx.fill()
-*/
-
             } else {
                 throw new Error('Unexpected shape:' + shape)
             }
