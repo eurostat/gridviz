@@ -35,6 +35,7 @@ export { LegoStyle } from './style/LegoStyle'
 export { SquareColorWGLStyle } from './style/SquareColorWGLStyle'
 export { SquareColorCatWGLStyle } from './style/SquareColorCatWGLStyle'
 export { MosaicStyle } from './style/MosaicStyle'
+export { NinjaStarStyle } from './style/NinjaStarStyle'
 
 //export additional layers
 export { BackgroundLayer } from './BackgroundLayer'
@@ -148,10 +149,10 @@ export const getEurostatBoundariesLayer = function (opts) {
                 return p.lvl == 3
                     ? [2 * zf, 2 * zf]
                     : p.lvl == 2
-                    ? [5 * zf, 2 * zf]
-                    : p.lvl == 1
-                    ? [5 * zf, 2 * zf]
-                    : [10 * zf, 3 * zf]
+                        ? [5 * zf, 2 * zf]
+                        : p.lvl == 1
+                            ? [5 * zf, 2 * zf]
+                            : [10 * zf, 3 * zf]
             else if (zf < 1000)
                 return p.lvl == 2 ? [5 * zf, 2 * zf] : p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
             else if (zf < 2000) return p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
