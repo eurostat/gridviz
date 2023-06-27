@@ -33,6 +33,7 @@
   - [Esthetic styles](#esthetic-styles)
     - [JoyPlot Style](#joyplot-style)
     - [Mosaic style](#mosaic-style)
+    - [Ninja star style](#ninja-star-style)
     - [Lego style](#lego-style)
     - [Lego category style](#lego-category-style)
   - [Kernel smoothing](#kernel-smoothing)
@@ -659,6 +660,10 @@ See [this roman style example](https://eurostat.github.io/gridviz/examples/style
 | **mosaicFactor** | number                 | 0.15            | The mosaic factor, within [0,0.5], to control the shape irregularities. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect. |
 | **shadowFactor** | number                 | 0.2             | The mosaic shadow factor, within [0,0.5]. Set to 0 for no mosaic shadow. Set to 0.5 for strong mosaic shadow.                               |
 | **shadowColor**  | string                 | "#555"          | The mosaic shadow color.                                                                                                                    |
+
+### Ninja star style
+
+(Documentation coming soon)
 
 ### Lego style
 
