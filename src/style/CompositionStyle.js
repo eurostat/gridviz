@@ -41,7 +41,8 @@ export class CompositionStyle extends Style {
          * @type {function(import("../Dataset").Cell,number,number):number} */
         this.stripesOrientation = opts.stripesOrientation || (() => 0) //(c,r,zf) => ...
 
-        /** The function specifying an offset angle for a radar or halftone style.
+        /** The function specifying an offset angle for a radar, halftone or pie chart style.
+         * The angle is specified in degree. The rotation is anti-clockwise.
          * @type {function(import("../Dataset").Cell,number,number):number} */
         this.offsetAngle = opts.offsetAngle || (() => 0) //(cell,r,zf) => ...
 
@@ -102,6 +103,9 @@ export class CompositionStyle extends Style {
             const xc = cell.x + offset.dx + (type_ === 'agepyramid' ? 0 : r * 0.5)
             const yc = cell.y + offset.dy + (type_ === 'agepyramid' ? 0 : r * 0.5)
 
+            //compute offset angle, when relevant
+            const offAng =  this.offsetAngle ? (this.offsetAngle(cell, r, zf) * Math.PI) / 180 : 0
+
             if (type_ === 'agepyramid' || type_ === 'radar' || type_ === 'halftone') {
                 //get cell category max value
                 let maxVal = -Infinity
@@ -115,8 +119,7 @@ export class CompositionStyle extends Style {
                 if (type_ === 'agepyramid' && this.agePyramidHeight)
                     cumul = (r - this.agePyramidHeight(cell, r, zf)) / 2
                 if (type_ === 'radar' || type_ === 'halftone')
-                    cumul =
-                        Math.PI / 2 + (this.offsetAngle ? (this.offsetAngle(cell, r, zf) * Math.PI) / 180 : 0)
+                    cumul = Math.PI / 2 + offAng
 
                 //compute the increment, which is the value to increment the cumul for each category
                 const incr =
@@ -246,9 +249,9 @@ export class CompositionStyle extends Style {
                         //draw
                         cg.ctx.beginPath()
                         cg.ctx.moveTo(xc, yc)
-                        cg.ctx.arc(xc, yc, sG * 0.5, a1, a2)
+                        cg.ctx.arc(xc, yc, sG * 0.5, a1+offAng, a2+offAng)
                         if (this.pieChartInternalRadiusFactor)
-                            cg.ctx.arc(xc, yc, sG * 0.5 * this.pieChartInternalRadiusFactor, a1, a2, true)
+                            cg.ctx.arc(xc, yc, sG * 0.5 * this.pieChartInternalRadiusFactor, a1+offAng, a2+offAng, true)
                         cg.ctx.closePath()
                         cg.ctx.fill()
                     } else if (type_ === 'ring') {
