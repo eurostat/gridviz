@@ -112,7 +112,7 @@ new gviz.App(containerDiv, {
     h: 600,
     legendDivId: 'myLegendDiv',
     selectionRectangleColor: 'red',
-    selectionRectangleWidthPix: '1',
+    selectionRectangleWidthPix: () => '1',
     backgroundColor: 'white',
     tooltip: {
         fontSize: '1.2em',
@@ -137,7 +137,7 @@ new gviz.App(containerDiv, {
 | _opts_.**h**                       | number            | container.offsetHeight           | The height of the canvas.                                                                                                                                           |
 | _opts_.**legendDivId**             | string            | 'gvizLegend'                     | The identifier of the element upon which the legend will be appended.                                                                                               |
 | _opts_.**selectionRectangleColor** | string            | 'red'                            | The colour of the outline when a cell is highlighted.                                                                                                               |
-| _opts_.**selectionRectangleWidthPix** | number            | 4                                | The thickness in pixels of the outline when a cell is highlighted.                                                                                                  |
+| _opts_.**selectionRectangleWidthPix** | Function            | (r,zf) => 4             | A function specifying the thickness in pixels of the outline when a cell is highlighted. The function parameter *r* is the cell resolution. *zf* is the zoom level.              |
 | _opts_.**transparentbackground**   | boolean           | false                            | Whether the background should be filled with colour (backgroundColor) or not. It is essentially the difference between using context.fillRect vs context.clearRect. |
 | _opts_.**backgroundColor**         | string            | 'white'                          | The background color of the canvas when transparentBackground is set to false.                                                                                      |
 | _opts_.**disableZoom**             | Boolean           | false                            | Disables d3 pan and zoom when set to true.                                                                                                                          |

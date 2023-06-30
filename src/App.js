@@ -250,15 +250,17 @@ export class App {
                 }
 
                 //draw image saved + draw rectangle
+                const rectWPix = this.selectionRectangleWidthPix ? this.selectionRectangleWidthPix(focus.resolution, this.getZoomFactor()) : 4;
                 this.cg.initCanvasTransform()
                 this.cg.ctx.strokeStyle = this.selectionRectangleColor
-                this.cg.ctx.lineWidth = this.selectionRectangleWidthPix
+                this.cg.ctx.lineWidth = rectWPix
                 this.cg.ctx.beginPath()
+
                 this.cg.ctx.rect(
-                    this.cg.geoToPixX(focus.cell.x) - this.selectionRectangleWidthPix / 2,
-                    this.cg.geoToPixY(focus.cell.y) + this.selectionRectangleWidthPix / 2,
-                    focus.resolution / this.getZoomFactor() + this.selectionRectangleWidthPix,
-                    -focus.resolution / this.getZoomFactor() - this.selectionRectangleWidthPix
+                    this.cg.geoToPixX(focus.cell.x) - rectWPix / 2,
+                    this.cg.geoToPixY(focus.cell.y) + rectWPix / 2,
+                    focus.resolution / this.getZoomFactor() + rectWPix,
+                    -focus.resolution / this.getZoomFactor() - rectWPix
                 )
                 this.cg.ctx.stroke()
             } else {
@@ -286,7 +288,7 @@ export class App {
         this.canvasSave = null
 
         this.selectionRectangleColor = opts.selectionRectangleColor || 'red'
-        this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || 4
+        this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || (() => 4) //(r,zf) => {}
 
         //
         //canvas.addEventListener("keydown", e => { console.log(arguments) });
