@@ -118,5 +118,14 @@ export class BackgroundLayerWMS {
             this.img.src = urlS
         }
 
+        //apply filter
+        const zf = cg.getZf()
+        if (this.filterColor) {
+            const fc = this.filterColor(zf)
+            if (fc && fc != 'none') {
+                cg.ctx.fillStyle = fc
+                cg.ctx.fillRect(0, 0, cg.w, cg.h)
+            }
+        }
     }
 }
