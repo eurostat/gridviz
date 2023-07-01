@@ -162,7 +162,7 @@ export class App {
             return this
         }
 
-        /** @type {Array.<BackgroundLayer>} */
+        /** @type {Array.<BackgroundLayer|BackgroundLayerWMS>} */
         this.bgLayers = []
         /** @type {boolean} */
         this.showBgLayers = true

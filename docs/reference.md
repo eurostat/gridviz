@@ -797,10 +797,10 @@ The **addBackgroundLayer** method has the following parameters:
 | **resolutions**             | Array(number)          | undefined                                              | The list of resolutions by zoom **z** level, starting with the zoom level with larger resolution to lower resolutions.                                                                                                                                                       |
 | **z0**                      | number                 | 0                                                      | If number of the first zoom level (larger resolution), usually 0.                                                                                                                                                                                                            |
 | **nbPix**                   | number                 | 256                                                    | The size of each tile image, in pixel number, usually 256.                                                                                                                                                                                                                   |
-| **origin**                  | Array(number)          | [0, 0]                                                 | The geographical coordinates of top left corner of the tiling scheme.                                                                                                                                                                                                        |
-| **filterColor**             | function(zf):string    | undefined                                              | A function returning a filter color from the zoom factor **zf**. This color alpha channel can be used to soften the background layer: Use _"ffffffd1"_ for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
-| **visible**                 | boolean                | true                                                   | The visibility of the layer. When _false_, the layer is not drawn.                                                                                                                                                                                                           |
-| **minZoom** and **maxZoom** | number                 | 0 and Infinity                                         | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn.                                                                                                                                                                               |
+| **origin**                  | Array(number)          | [0, 0]                                                 | The geographical coordinates of top left corner of the tiling scheme.     |
+| **visible**          | boolean      | true         | The visibility of the layer. When _false_, the layer is not drawn.          |
+| **minZoom** and **maxZoom** | number     | 0 and Infinity        | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn.   |
+| **filterColor**      | function(zf):string    | undefined      | A function returning a filter color from the zoom factor **zf**. This color alpha channel can be used to soften the background layer: Use _"ffffffd1"_ for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
 
 For more information, [see the code](../src/BackgroundLayer.js).
 
@@ -825,8 +825,9 @@ The **addBackgroundLayer** method has the following parameters:
 | Parameter                   | Type                   | Default                 | Description      |
 | ------------------- | ---------------------- | ------------- | ----------------- |
 | **url**     | string                 | undefined       | The base URL of the WMS. This URL must contain all necessary parameters, except *width*, *height* and *bbox* which are computed by the application.         |
-| **visible**    | boolean      | true       | The visibility of the layer. When _false_, the layer is not drawn.     |
-| **minZoom** and **maxZoom** | number    | 0 and Infinity    | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn.    |
+| **visible**          | boolean      | true         | The visibility of the layer. When _false_, the layer is not drawn.          |
+| **minZoom** and **maxZoom** | number     | 0 and Infinity        | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn.   |
+| **filterColor**      | function(zf):string    | undefined      | A function returning a filter color from the zoom factor **zf**. This color alpha channel can be used to soften the background layer: Use _"ffffffd1"_ for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
 
 For more information, [see the code](../src/BackgroundLayerWMS.js).
 

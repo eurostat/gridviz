@@ -35,7 +35,7 @@ export class BackgroundLayerWMS {
         this.url = opts.url
 
         /** @type {function(number):string} */
-        this.filterColor = opts.filterColor
+        this.filterColor = opts.filterColor // (zf) => "#eee7"
 
         /** @type {HTMLImageElement|undefined} */
         this.img = undefined;
