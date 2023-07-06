@@ -160,6 +160,9 @@ export class App {
 
             if (monitor) monitorDuration('End redraw')
 
+            // listen for resize events on the App's container and handle them
+            this.defineResizeObserver(container, canvas)
+
             return this
         }
 
@@ -650,5 +653,29 @@ export class App {
     setViewFromURL() {
         this.cg.setViewFromURL()
         return this
+    }
+
+    /**
+     * @description Add a resize event observer to the Apps container and update the canvas accordingly
+     * @param {HTMLDivElement} container The App's container element
+     * @param {HTMLCanvasElement} canvas The App canvas element
+     * @memberof App
+     */
+    defineResizeObserver(container, canvas) {
+        // listen to resize events
+        const resizeObserver = new ResizeObserver(() => {
+            // update the app and canvas size
+            if (this.h !== container.clientHeight || this.w !== container.clientWidth) {
+                this.h = container.clientHeight
+                this.w = container.clientWidth
+                this.cg.h = container.clientHeight
+                this.cg.w = container.clientWidth
+                canvas.setAttribute('width', '' + this.w)
+                canvas.setAttribute('height', '' + this.h)
+                this.redraw()
+            }
+        })
+
+        resizeObserver.observe(container)
     }
 }
