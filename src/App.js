@@ -663,16 +663,26 @@ export class App {
      */
     defineResizeObserver(container, canvas) {
         // listen to resize events
-        const resizeObserver = new ResizeObserver(() => {
-            // update the app and canvas size
-            if (this.h !== container.clientHeight || this.w !== container.clientWidth) {
-                this.h = container.clientHeight
-                this.w = container.clientWidth
-                this.cg.h = container.clientHeight
-                this.cg.w = container.clientWidth
-                canvas.setAttribute('width', '' + this.w)
-                canvas.setAttribute('height', '' + this.h)
-                this.redraw()
+        const resizeObserver = new ResizeObserver((entries) => {
+            // make sure canvas has been built
+            if (container.clientWidth > 0 && container.clientHeight > 0) {
+                // make sure we dont exceed loop limit first
+                // see: https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
+                window.requestAnimationFrame(() => {
+                    if (!Array.isArray(entries) || !entries.length) {
+                        return
+                    }
+                    // update the app and canvas size
+                    if (this.h !== container.clientHeight || this.w !== container.clientWidth) {
+                        this.h = container.clientHeight
+                        this.w = container.clientWidth
+                        this.cg.h = container.clientHeight
+                        this.cg.w = container.clientWidth
+                        canvas.setAttribute('width', '' + this.w)
+                        canvas.setAttribute('height', '' + this.h)
+                        this.redraw()
+                    }
+                })
             }
         })
 
