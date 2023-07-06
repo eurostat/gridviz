@@ -49,8 +49,43 @@ npm install gridviz
 then
 
 ```javascript
-gridviz = require('gridviz')
+import * as gridviz from 'gridviz'
 ```
+
+Or you can cherry-pick only the modules that you need, for example:
+
+```javascript
+import { App, SquareColorWGLStyle } from 'gridviz'
+```
+
+### Basic example
+
+Here’s a basic example that loads a CSV file on Europe population (5km resolution):
+
+```javascript
+let myApp = new gridviz.App(containerDiv)
+    //set position and zoom
+    .setGeoCenter({ x: 4500000, y: 2900000 })
+    .setZoomFactor(3000)
+    //add CSV layer
+    .addCSVGridLayer(
+        //data URL
+        'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv',
+        //resolution, in CRS unit (m)
+        5000,
+        //the style
+        [
+            new gridviz.SquareColorWGLStyle({
+                //the CSV column to show
+                colorCol: 'Population',
+                //value to [0,1] mapping function
+                tFun: (value) => gridviz.sExp(Math.min(value / 100000, 1), -15),
+            }),
+        ]
+    )
+```
+
+See the **[documentation page](https://eurostat.github.io/gridviz/docs/reference)** for more information.
 
 ### standalone
 
