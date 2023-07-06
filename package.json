@@ -28,6 +28,11 @@
         "email": "Joseph.DAVIES@ext.ec.europa.eu"
     },
     "main": "dist/gridviz.min.js",
+    "module": "dist/gridviz.min.js",
+    "exports": {
+        "umd": "./dist/gridviz.min.js",
+        "default": "./src/index.js"
+    },
     "scripts": {
         "start": "export NODE_OPTIONS=--openssl-legacy-provider && webpack --config webpack.config.dev.js",
         "start-dev": "webpack --config webpack.config.dev.js",
