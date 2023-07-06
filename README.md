@@ -60,7 +60,7 @@ import { App, SquareColorWGLStyle } from 'gridviz'
 
 ### Basic example
 
-Here’s a basic example that loads a CSV file on Europe population (5km resolution):
+Here’s a basic example that loads a CSV file of a European population grid (5km resolution):
 
 ```javascript
 let myApp = new gridviz.App(containerDiv)
