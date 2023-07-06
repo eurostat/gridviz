@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Style } from '../Style'
+import { Style } from '../Style.js'
 import { density2d } from 'fast-kde'
 
 /**

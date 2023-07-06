@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { initShaderProgram, createShader } from './webGLUtils'
+import { initShaderProgram, createShader } from './webGLUtils.js'
 import { color } from 'd3-color'
 
 /**

@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Style } from '../Style'
+import { Style } from '../Style.js'
 
 /**
  * A style representing the cell as a smoothed layer, to smoothing local variations and show main trends across space.

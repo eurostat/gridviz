@@ -1,21 +1,22 @@
 //@ts-check
 'use strict'
 
-import { GeoCanvas } from './GeoCanvas'
-import { Layer } from './Layer'
-import { Dataset } from './Dataset'
-import { Tooltip } from './Tooltip'
-
-import { CSVGrid } from './dataset/CSVGrid'
+// internal imports
+import { GeoCanvas } from './GeoCanvas.js'
+import { Layer } from './Layer.js'
+import { Dataset } from './Dataset.js'
+import { Tooltip } from './Tooltip.js'
+import { CSVGrid } from './dataset/CSVGrid.js'
 //import { ParquetGrid } from './dataset/ParquetGrid';
-import { TiledGrid } from './dataset/TiledGrid'
-import { BackgroundLayer } from './BackgroundLayer'
-import { BackgroundLayerWMS } from './BackgroundLayerWMS'
-import { LabelLayer } from './LabelLayer'
-import { LineLayer } from './LineLayer'
+import { TiledGrid } from './dataset/TiledGrid.js'
+import { BackgroundLayer } from './BackgroundLayer.js'
+import { BackgroundLayerWMS } from './BackgroundLayerWMS.js'
+import { LabelLayer } from './LabelLayer.js'
+import { LineLayer } from './LineLayer.js'
+import { monitor, monitorDuration } from './utils/Utils.js'
 
+// external imports
 import { select } from 'd3-selection'
-import { monitor, monitorDuration } from './utils/Utils'
 
 /**
  * A gridviz application.
@@ -250,7 +251,9 @@ export class App {
                 }
 
                 //draw image saved + draw rectangle
-                const rectWPix = this.selectionRectangleWidthPix ? this.selectionRectangleWidthPix(focus.resolution, this.getZoomFactor()) : 4;
+                const rectWPix = this.selectionRectangleWidthPix
+                    ? this.selectionRectangleWidthPix(focus.resolution, this.getZoomFactor())
+                    : 4
                 this.cg.initCanvasTransform()
                 this.cg.ctx.strokeStyle = this.selectionRectangleColor
                 this.cg.ctx.lineWidth = rectWPix

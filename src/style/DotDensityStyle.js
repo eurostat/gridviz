@@ -1,12 +1,12 @@
 //@ts-check
 'use strict'
 
-import { Style } from '../Style'
+import { Style } from '../Style.js'
 import { randomNormal } from 'd3-random'
-import { checkWebGLSupport, makeWebGLCanvas } from '../utils/webGLUtils'
-import { WebGLSquareColoring } from '../utils/WebGLSquareColoring'
+import { checkWebGLSupport, makeWebGLCanvas } from '../utils/webGLUtils.js'
+import { WebGLSquareColoring } from '../utils/WebGLSquareColoring.js'
 import { color } from 'd3-color'
-import { monitor, monitorDuration } from '../utils/Utils'
+import { monitor, monitorDuration } from '../utils/Utils.js'
 
 /**
  *

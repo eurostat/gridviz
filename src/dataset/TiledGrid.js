@@ -3,11 +3,14 @@
 
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../Dataset").Envelope, format:import("../DatasetComponent").Format }} GridInfo */
 
+// internal
+import { GridTile } from './GridTile.js'
+import { App } from '../App.js'
+import { DatasetComponent } from '../DatasetComponent.js'
+import { monitor, monitorDuration } from '../utils/Utils.js'
+
+// external
 import { json, csv } from 'd3-fetch'
-import { GridTile } from './GridTile'
-import { App } from '../App'
-import { DatasetComponent } from '../DatasetComponent'
-import { monitor, monitorDuration } from '../utils/Utils'
 import { tableFromIPC } from 'apache-arrow'
 
 /**
@@ -142,7 +145,6 @@ export class TiledGrid extends DatasetComponent {
 
                 //mark tile as loading
                 this.cache[xT][yT] = 'loading'
-
                 ;(async () => {
                     //request tile
                     /** @type {Array.<import("../Dataset").Cell>}  */

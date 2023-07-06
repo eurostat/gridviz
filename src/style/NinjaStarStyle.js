@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Style } from '../Style'
+import { Style } from '../Style.js'
 
 /**
  *
@@ -33,7 +33,7 @@ export class NinjaStarStyle extends Style {
 
         /** A function returning the shape.
          * @type {function(import("../Dataset").Cell):string} */
-        this.shape = opts.shape || (() => "o")
+        this.shape = opts.shape || (() => 'o')
     }
 
     /**

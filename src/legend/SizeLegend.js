@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Legend } from '../Legend'
+import { Legend } from '../Legend.js'
 import { format } from 'd3-format'
 
 /**

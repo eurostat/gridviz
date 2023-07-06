@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { DatasetComponent } from '../DatasetComponent'
+import { DatasetComponent } from '../DatasetComponent.js'
 
 /**
  * @todo

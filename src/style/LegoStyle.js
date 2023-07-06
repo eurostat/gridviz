@@ -1,10 +1,10 @@
 //@ts-check
 'use strict'
 
-import { TanakaStyle } from './TanakaStyle'
-import { StrokeStyle } from './StrokeStyle'
-import { SquareColorCatWGLStyle } from './SquareColorCatWGLStyle'
-import { Style } from '../Style'
+import { TanakaStyle } from './TanakaStyle.js'
+import { StrokeStyle } from './StrokeStyle.js'
+import { SquareColorCatWGLStyle } from './SquareColorCatWGLStyle.js'
+import { Style } from '../Style.js'
 
 /**
  * @author Julien Gaffuri

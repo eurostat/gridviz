@@ -1,62 +1,63 @@
 //@ts-check
 'use strict'
 
-//the application
-export { App } from './App'
-export { GeoCanvas } from './GeoCanvas'
-export { Style } from './Style'
-export { Layer } from './Layer'
-export { Dataset } from './Dataset'
-export { DatasetComponent } from './DatasetComponent'
+// the application
+export { App } from './App.js'
+export { GeoCanvas } from './GeoCanvas.js'
+export { Style } from './Style.js'
+export { Layer } from './Layer.js'
+export { Dataset } from './Dataset.js'
+export { DatasetComponent } from './DatasetComponent.js'
 
-//export dataset types
-export { TiledGrid } from './dataset/TiledGrid'
-export { CSVGrid } from './dataset/CSVGrid'
+// export dataset types
+export { TiledGrid } from './dataset/TiledGrid.js'
+export { CSVGrid } from './dataset/CSVGrid.js'
 //export { ParquetGrid } from "./dataset/ParquetGrid"
 //export { GeoTIFF } from "./dataset/GeoTIFF"
 
-//export styles
-export { ShapeColorSizeStyle } from './style/ShapeColorSizeStyle'
-export { StrokeStyle } from './style/StrokeStyle'
-export { JoyPlotStyle } from './style/JoyPlotStyle'
-export { CompositionStyle } from './style/CompositionStyle'
-export { SegmentStyle } from './style/SegmentStyle'
-export { TextStyle } from './style/TextStyle'
-export { KernelSmoothingStyle } from './style/KernelSmoothingStyle'
+// export styles
+export { ShapeColorSizeStyle } from './style/ShapeColorSizeStyle.js'
+export { StrokeStyle } from './style/StrokeStyle.js'
+export { JoyPlotStyle } from './style/JoyPlotStyle.js'
+export { CompositionStyle } from './style/CompositionStyle.js'
+export { SegmentStyle } from './style/SegmentStyle.js'
+export { TextStyle } from './style/TextStyle.js'
+export { KernelSmoothingStyle } from './style/KernelSmoothingStyle.js'
 //export { KernelSmoothingOldStyle } from "./style/KernelSmoothingStyle"
 //export { KernelSmoothingWGLStyle } from "./style/KernelSmoothingStyle"
-export { PillarStyle } from './style/PillarStyle'
-export { SideStyle } from './style/SideStyle'
-export { ContourStyle } from './style/ContourStyle'
-export { SideCatStyle } from './style/SideCatStyle'
-export { DotDensityStyle } from './style/DotDensityStyle'
-export { TanakaStyle } from './style/TanakaStyle'
-export { LegoStyle } from './style/LegoStyle'
-export { SquareColorWGLStyle } from './style/SquareColorWGLStyle'
-export { SquareColorCatWGLStyle } from './style/SquareColorCatWGLStyle'
-export { MosaicStyle } from './style/MosaicStyle'
-export { NinjaStarStyle } from './style/NinjaStarStyle'
+export { PillarStyle } from './style/PillarStyle.js'
+export { SideStyle } from './style/SideStyle.js'
+export { ContourStyle } from './style/ContourStyle.js'
+export { SideCatStyle } from './style/SideCatStyle.js'
+export { DotDensityStyle } from './style/DotDensityStyle.js'
+export { TanakaStyle } from './style/TanakaStyle.js'
+export { LegoStyle } from './style/LegoStyle.js'
+export { SquareColorWGLStyle } from './style/SquareColorWGLStyle.js'
+export { SquareColorCatWGLStyle } from './style/SquareColorCatWGLStyle.js'
+export { MosaicStyle } from './style/MosaicStyle.js'
+export { NinjaStarStyle } from './style/NinjaStarStyle.js'
 
-//export additional layers
-export { BackgroundLayer } from './BackgroundLayer'
-export { BackgroundLayerWMS } from './BackgroundLayerWMS'
-export { LabelLayer } from './LabelLayer'
-export { LineLayer as BoundaryLayer } from './LineLayer'
+// export additional layers
+export { BackgroundLayer } from './BackgroundLayer.js'
+export { BackgroundLayerWMS } from './BackgroundLayerWMS.js'
+export { LabelLayer } from './LabelLayer.js'
+export { LineLayer as BoundaryLayer } from './LineLayer.js'
 
-export { ColorLegend } from './legend/ColorLegend'
-export { ColorDiscreteLegend } from './legend/ColorDiscreteLegend'
-export { ColorCategoryLegend } from './legend/ColorCategoryLegend'
-export { SizeLegend } from './legend/SizeLegend'
-export { SegmentWidthLegend } from './legend/SegmentWidthLegend'
-export { SegmentOrientationLegend } from './legend/SegmentOrientationLegend'
+// export legends
+export { ColorLegend } from './legend/ColorLegend.js'
+export { ColorDiscreteLegend } from './legend/ColorDiscreteLegend.js'
+export { ColorCategoryLegend } from './legend/ColorCategoryLegend.js'
+export { SizeLegend } from './legend/SizeLegend.js'
+export { SegmentWidthLegend } from './legend/SegmentWidthLegend.js'
+export { SegmentOrientationLegend } from './legend/SegmentOrientationLegend.js'
 
-//export { goToStraight, zoomTo } from "./utils/zoomUtils"
+// export { goToStraight, zoomTo } from "./utils/zoomUtils"
 export * from './utils/stretching.js'
 
-export { getClass } from './utils/Utils'
+export { getClass } from './utils/Utils.js'
 
+import { GeoCanvas } from './GeoCanvas.js'
 import { geoAzimuthalEqualArea } from 'd3-geo'
-import { GeoCanvas } from './GeoCanvas'
 
 /**
  * Returns label layer from Eurostat, for ETRS89-LAEA grids.
@@ -149,10 +150,10 @@ export const getEurostatBoundariesLayer = function (opts) {
                 return p.lvl == 3
                     ? [2 * zf, 2 * zf]
                     : p.lvl == 2
-                        ? [5 * zf, 2 * zf]
-                        : p.lvl == 1
-                            ? [5 * zf, 2 * zf]
-                            : [10 * zf, 3 * zf]
+                    ? [5 * zf, 2 * zf]
+                    : p.lvl == 1
+                    ? [5 * zf, 2 * zf]
+                    : [10 * zf, 3 * zf]
             else if (zf < 1000)
                 return p.lvl == 2 ? [5 * zf, 2 * zf] : p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
             else if (zf < 2000) return p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]

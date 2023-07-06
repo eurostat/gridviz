@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Style } from '../Style'
+import { Style } from '../Style.js'
 import { makeWebGLCanvas } from '../utils/webGLUtils'
 import { WebGLSquareColoringKS } from '../utils/WebGLSquareColoringKS'
 

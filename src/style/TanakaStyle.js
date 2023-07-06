@@ -1,8 +1,8 @@
 //@ts-check
 'use strict'
 
-import { SquareColorWGLStyle } from './SquareColorWGLStyle'
-import { SideStyle } from './SideStyle'
+import { SquareColorWGLStyle } from './SquareColorWGLStyle.js'
+import { SideStyle } from './SideStyle.js'
 
 /**
  *

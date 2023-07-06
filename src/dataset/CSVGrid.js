@@ -4,7 +4,7 @@
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../Dataset").Envelope }} GridInfo */
 
 import { csv } from 'd3-fetch'
-import { DatasetComponent } from '../DatasetComponent'
+import { DatasetComponent } from '../DatasetComponent.js'
 
 /**
  * A dataset composed of a single CSV file (not tiled).
@@ -43,7 +43,6 @@ export class CSVGrid extends DatasetComponent {
 
         //load data
         this.infoLoadingStatus = 'loading'
-
         ;(async () => {
             try {
                 const data = await csv(this.url)

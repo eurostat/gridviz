@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { DatasetComponent } from '../DatasetComponent'
+import { DatasetComponent } from '../DatasetComponent.js'
 import { tableFromIPC } from 'apache-arrow'
 //import { readParquet } from "parquet-wasm"
 
@@ -49,7 +49,6 @@ export class ParquetGrid extends DatasetComponent {
 
         //load data
         this.infoLoadingStatus = 'loading'
-
         ;(async () => {
             try {
                 const resp = await fetch(this.url)

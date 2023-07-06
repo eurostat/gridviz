@@ -1,10 +1,10 @@
 //@ts-check
 'use strict'
 
-import { Style } from '../Style'
-import { makeWebGLCanvas } from '../utils/webGLUtils'
-import { WebGLSquareColoringAdvanced } from '../utils/WebGLSquareColoringAdvanced'
-import { monitor, monitorDuration } from '../utils/Utils'
+import { Style } from '../Style.js'
+import { makeWebGLCanvas } from '../utils/webGLUtils.js'
+import { WebGLSquareColoringAdvanced } from '../utils/WebGLSquareColoringAdvanced.js'
+import { monitor, monitorDuration } from '../utils/Utils.js'
 
 /**
  * Style based on webGL

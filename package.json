@@ -1,6 +1,6 @@
 {
     "name": "gridviz",
-    "version": "2.0.27",
+    "version": "2.0.31",
     "description": "Visualization tool for gridded statistics",
     "keywords": [
         "statistics",
@@ -27,6 +27,7 @@
         "url": "https://github.com/eurostat/gridviz/issues",
         "email": "Joseph.DAVIES@ext.ec.europa.eu"
     },
+    "type": "module",
     "main": "dist/gridviz.min.js",
     "module": "dist/gridviz.min.js",
     "exports": {
@@ -34,15 +35,16 @@
         "default": "./src/index.js"
     },
     "scripts": {
-        "start": "export NODE_OPTIONS=--openssl-legacy-provider && webpack --config webpack.config.dev.js",
-        "start-dev": "webpack --config webpack.config.dev.js",
+        "start": "export NODE_OPTIONS=--openssl-legacy-provider && webpack --config webpack.config.dev.cjs",
+        "start-dev": "webpack --config webpack.config.dev.cjs",
         "server": "webpack serve -c webpack.config.dev.js --static ./",
         "doc": "./node_modules/.bin/jsdoc src/ src/dataset src/legend src/style -d docs/jsdoc",
-        "build": "webpack --config webpack.config.prod.js",
+        "build": "webpack --config webpack.config.prod.cjs",
         "test": "jest"
     },
     "files": [
-        "dist/gridviz.min.js"
+        "dist/**/*.js",
+        "src/**/*.js"
     ],
     "dependencies": {
         "apache-arrow": "^10.0.1",
@@ -69,5 +71,8 @@
         "webpack-cli": "^5.0.0",
         "webpack-dev-server": "^4.11.1",
         "webpack-livereload-plugin": "^3.0.2"
+    },
+    "engines": {
+        "node": ">=14"
     }
 }

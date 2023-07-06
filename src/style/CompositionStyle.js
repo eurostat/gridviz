@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Style } from '../Style'
+import { Style } from '../Style.js'
 
 /** @typedef {"flag"|"piechart"|"ring"|"segment"|"radar"|"agepyramid"|"halftone"} CompositionType */
 
@@ -104,7 +104,7 @@ export class CompositionStyle extends Style {
             const yc = cell.y + offset.dy + (type_ === 'agepyramid' ? 0 : r * 0.5)
 
             //compute offset angle, when relevant
-            const offAng =  this.offsetAngle ? (this.offsetAngle(cell, r, zf) * Math.PI) / 180 : 0
+            const offAng = this.offsetAngle ? (this.offsetAngle(cell, r, zf) * Math.PI) / 180 : 0
 
             if (type_ === 'agepyramid' || type_ === 'radar' || type_ === 'halftone') {
                 //get cell category max value
@@ -118,8 +118,7 @@ export class CompositionStyle extends Style {
                 let cumul = 0
                 if (type_ === 'agepyramid' && this.agePyramidHeight)
                     cumul = (r - this.agePyramidHeight(cell, r, zf)) / 2
-                if (type_ === 'radar' || type_ === 'halftone')
-                    cumul = Math.PI / 2 + offAng
+                if (type_ === 'radar' || type_ === 'halftone') cumul = Math.PI / 2 + offAng
 
                 //compute the increment, which is the value to increment the cumul for each category
                 const incr =
@@ -249,9 +248,16 @@ export class CompositionStyle extends Style {
                         //draw
                         cg.ctx.beginPath()
                         cg.ctx.moveTo(xc, yc)
-                        cg.ctx.arc(xc, yc, sG * 0.5, a1+offAng, a2+offAng)
+                        cg.ctx.arc(xc, yc, sG * 0.5, a1 + offAng, a2 + offAng)
                         if (this.pieChartInternalRadiusFactor)
-                            cg.ctx.arc(xc, yc, sG * 0.5 * this.pieChartInternalRadiusFactor, a1+offAng, a2+offAng, true)
+                            cg.ctx.arc(
+                                xc,
+                                yc,
+                                sG * 0.5 * this.pieChartInternalRadiusFactor,
+                                a1 + offAng,
+                                a2 + offAng,
+                                true
+                            )
                         cg.ctx.closePath()
                         cg.ctx.fill()
                     } else if (type_ === 'ring') {

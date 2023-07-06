@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { SideStyle } from './SideStyle'
+import { SideStyle } from './SideStyle.js'
 
 /** @typedef {{x:number,y:number,or:"v"|"h",value:number}} Side */
 
