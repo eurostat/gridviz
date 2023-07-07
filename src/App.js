@@ -283,7 +283,10 @@ export class App {
         container.addEventListener('mouseout', () => {
             this.tooltip.hide()
         })
-        this.cg.onZoomStartFun = () => {
+
+        // add extra logic to onZoomStartFun
+        this.cg.onZoomStartFun = (e) => {
+            if (opts.onZoomStartFun) opts.onZoomStartFun(e)
             this.tooltip.hide()
         }
 

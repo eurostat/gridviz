@@ -15,7 +15,11 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            const app = new gviz.App(containerDiv)
+            const app = new gviz.App(containerDiv, {
+                onZoomStartFun: (e) => {
+                    console.log(event)
+                },
+            })
                 //set position and zoom
                 .setGeoCenter({ x: 3426953, y: 2326791 })
                 .setZoomFactor(1000)
