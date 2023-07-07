@@ -141,26 +141,24 @@ export class Tooltip {
      * @param {MouseEvent} event
      */
     ensureTooltipInsideContainer = function (event) {
-        let node = this.tooltip.node()
-        let rect = this.parentElement.getBoundingClientRect()
-        let parentWidth = rect.width
-        let parentHeight = rect.height
+        let ttNode = this.tooltip.node()
+        let parentRect = this.parentElement.getBoundingClientRect()
 
         //too far right
-        if (node.offsetLeft > rect.left + parentWidth - node.clientWidth) {
-            let left = event.x - node.clientWidth - this.xOffset
-            node.style.left = left + 'px'
+        if (ttNode.offsetLeft > parentRect.left + parentRect.width - ttNode.clientWidth) {
+            let left = event.pageX - ttNode.clientWidth - this.xOffset
+            ttNode.style.left = left + 'px'
             // check if mouse covers tooltip
-            if (node.offsetLeft + node.clientWidth > event.x) {
+            if (ttNode.offsetLeft + ttNode.clientWidth > event.pageX) {
                 //move tooltip left so it doesnt cover mouse
-                let left2 = event.x - (node.clientWidth + this.xOffset)
-                node.style.left = left2 + 'px'
+                let left2 = event.pageX - (ttNode.clientWidth + this.xOffset)
+                ttNode.style.left = left2 + 'px'
             }
         }
 
         //too far down
-        if (node.offsetTop + node.clientHeight > rect.top + parentHeight) {
-            node.style.top = node.offsetTop - node.clientHeight + 'px'
+        if (event.pageY + ttNode.clientHeight > parentRect.top + parentRect.height) {
+            ttNode.style.top = event.pageY - ttNode.clientHeight + 'px'
         }
     }
 }
