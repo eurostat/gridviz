@@ -100,8 +100,8 @@ export class Tooltip {
      */
     setPosition(event) {
         this.tooltip
-            .style('left', event.pageX + this.xOffset + 'px')
-            .style('top', event.pageY - this.yOffset + 'px')
+            .style('left', event.pageX - this.parentElement.offsetLeft + this.xOffset + 'px')
+            .style('top', event.pageY - this.parentElement.offsetTop - this.yOffset + 'px')
 
         this.ensureTooltipInsideContainer(event)
     }
@@ -145,20 +145,22 @@ export class Tooltip {
         let parentRect = this.parentElement.getBoundingClientRect()
 
         //too far right
-        if (ttNode.offsetLeft > parentRect.left + parentRect.width - ttNode.clientWidth) {
-            let left = event.pageX - ttNode.clientWidth - this.xOffset
+        let maxRight = parentRect.width
+        let ttRight = ttNode.offsetLeft + ttNode.clientWidth
+        if (ttRight > maxRight) {
+            let left = event.pageX - this.parentElement.offsetLeft - ttNode.clientWidth - this.xOffset
             ttNode.style.left = left + 'px'
             // check if mouse covers tooltip
-            if (ttNode.offsetLeft + ttNode.clientWidth > event.pageX) {
+            if (ttNode.offsetLeft + ttNode.clientWidth + this.parentElement.offsetLeft > event.pageX) {
                 //move tooltip left so it doesnt cover mouse
-                let left2 = event.pageX - (ttNode.clientWidth + this.xOffset)
+                let left2 = event.pageX - (ttNode.clientWidth + this.xOffset + this.parentElement.offsetLeft)
                 ttNode.style.left = left2 + 'px'
             }
         }
 
         //too far down
-        if (event.pageY + ttNode.clientHeight > parentRect.top + parentRect.height) {
-            ttNode.style.top = event.pageY - ttNode.clientHeight + 'px'
+        if (ttNode.offsetTop + ttNode.clientHeight > parentRect.height) {
+            ttNode.style.top = ttNode.offsetTop - ttNode.clientHeight + 'px'
         }
     }
 }
