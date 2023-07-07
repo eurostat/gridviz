@@ -99,11 +99,13 @@ export class Tooltip {
      * @param {MouseEvent} event
      */
     setPosition(event) {
-        this.tooltip
-            .style('left', event.pageX - this.parentElement.offsetLeft + this.xOffset + 'px')
-            .style('top', event.pageY - this.parentElement.offsetTop - this.yOffset + 'px')
+        let parentRect = this.parentElement.getBoundingClientRect()
 
-        this.ensureTooltipInsideContainer(event)
+        this.tooltip
+            .style('left', event.pageX - parentRect.left + this.xOffset + 'px')
+            .style('top', event.pageY - parentRect.top - this.yOffset + 'px')
+
+        this.ensureTooltipInsideContainer(event, parentRect)
     }
 
     /*
@@ -139,21 +141,21 @@ export class Tooltip {
      * @function ensureTooltipInsideContainer
      * @description Prevents the tooltip from overflowing out of the App container (ensures that the tooltip is inside the gridviz container)
      * @param {MouseEvent} event
+     * @param {DOMRect} parentRect
      */
-    ensureTooltipInsideContainer = function (event) {
+    ensureTooltipInsideContainer = function (event, parentRect) {
         let ttNode = this.tooltip.node()
-        let parentRect = this.parentElement.getBoundingClientRect()
 
         //too far right
         let maxRight = parentRect.width
         let ttRight = ttNode.offsetLeft + ttNode.clientWidth
         if (ttRight > maxRight) {
-            let left = event.pageX - this.parentElement.offsetLeft - ttNode.clientWidth - this.xOffset
+            let left = event.pageX - parentRect.left - ttNode.clientWidth - this.xOffset
             ttNode.style.left = left + 'px'
             // check if mouse covers tooltip
-            if (ttNode.offsetLeft + ttNode.clientWidth + this.parentElement.offsetLeft > event.pageX) {
+            if (ttNode.offsetLeft + ttNode.clientWidth + parentRect.left > event.pageX) {
                 //move tooltip left so it doesnt cover mouse
-                let left2 = event.pageX - (ttNode.clientWidth + this.xOffset + this.parentElement.offsetLeft)
+                let left2 = event.pageX - (ttNode.clientWidth + this.xOffset + parentRect.left)
                 ttNode.style.left = left2 + 'px'
             }
         }
