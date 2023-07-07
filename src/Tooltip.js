@@ -44,12 +44,17 @@ export class Tooltip {
         this.yMouseOffset = opts.yMouseOffset || 0
         /** @type {number} */
         this.xMouseOffset = opts.xMouseOffset || 0
+        /** @type {HTMLElement} */
+        this.parentElement = opts.parentElement || document.body
 
         /**
          * @private
          * @type {import("d3-selection").Selection} */
         this.tooltip = select('#' + this.div)
-        if (this.tooltip.empty()) this.tooltip = select('body').append('div').attr('id', this.div)
+        if (this.tooltip.empty())
+            this.tooltip = select('#' + this.parentElement.id)
+                .append('div')
+                .attr('id', this.div)
 
         //initialise
         this.tooltip.style('max-width', this.maxWidth)
@@ -64,6 +69,9 @@ export class Tooltip {
         this.tooltip.style('position', 'absolute')
         this.tooltip.style('pointer-events', 'none')
         this.tooltip.style('opacity', '0')
+
+        // aria-labels (thanks to wahlatlas)
+        this.tooltip.attr('role', 'tooltip').attr('aria-live', 'polite')
     }
 
     /** Show the tooltip */
@@ -94,6 +102,8 @@ export class Tooltip {
         this.tooltip
             .style('left', event.pageX + this.xOffset + 'px')
             .style('top', event.pageY - this.yOffset + 'px')
+
+        this.ensureTooltipInsideContainer(event)
     }
 
     /*
@@ -101,12 +111,12 @@ export class Tooltip {
 		if (html) my.html(html);
 		my.setPosition(event);
 		my.show()
-		//this.ensureTooltipOnScreen();
+		//this.ensureTooltipInsideContainer();
 	};
 	
 	my.mousemove = function (event) {
 		my.setPosition(event);
-		//this.ensureTooltipOnScreen();
+		//this.ensureTooltipInsideContainer();
 	};
 	
 	my.mouseout = function () {
@@ -126,25 +136,31 @@ export class Tooltip {
     }
 
     /**
-     * @function ensureTooltipOnScreen
-     * @description Prevents the tooltip from overflowing off screen
+     * @function ensureTooltipInsideContainer
+     * @description Prevents the tooltip from overflowing out of the App container (ensures that the tooltip is inside the gridviz container)
+     * @param {MouseEvent} event
      */
-    /*my.ensureTooltipOnScreen = function () {
-		// TODO: parent needs to be the all-encompassing container, not the map SVG id otherwise it just uses the last SVG which will be an inset SVG.
-		let parent = document.getElementById(config.parentContainerId);
-		let bbox = parent.getBBox();
-		let parentWidth = bbox.width;
-		let parentHeight = bbox.height;
-		let node = tooltip.node();
-		//too far right
-		if (node.offsetLeft > parentWidth - node.clientWidth) {
-			node.style.left = node.offsetLeft - (node.clientWidth + config.xOffset * 2) + "px";
-	
-		}
-		//too far down
-		if (node.offsetTop + node.clientHeight > parentHeight) {
-			node.style.top = node.offsetTop - (node.clientHeight + config.yOffset * 2) + "px";
-		}
-	
-	}*/
+    ensureTooltipInsideContainer = function (event) {
+        let node = this.tooltip.node()
+        let rect = this.parentElement.getBoundingClientRect()
+        let parentWidth = rect.width
+        let parentHeight = rect.height
+
+        //too far right
+        if (node.offsetLeft > rect.left + parentWidth - node.clientWidth) {
+            let left = event.x - node.clientWidth - this.xOffset
+            node.style.left = left + 'px'
+            // check if mouse covers tooltip
+            if (node.offsetLeft + node.clientWidth > event.x) {
+                //move tooltip left so it doesnt cover mouse
+                let left2 = event.x - (node.clientWidth + this.xOffset)
+                node.style.left = left2 + 'px'
+            }
+        }
+
+        //too far down
+        if (node.offsetTop + node.clientHeight > rect.top + parentHeight) {
+            node.style.top = node.offsetTop - node.clientHeight + 'px'
+        }
+    }
 }

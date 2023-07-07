@@ -2,52 +2,52 @@
 
 ## Table of contents
 
-- [Gridviz API reference](#gridviz-api-reference)
-  - [Table of contents](#table-of-contents)
-  - [Usage](#usage)
-  - [App Configuration](#app-configuration)
-    - [App options object](#app-options-object)
-  - [Multi layer, multi style and multi scale mapping](#multi-layer-multi-style-and-multi-scale-mapping)
-  - [Adding data](#adding-data)
-    - [Single CSV file](#single-csv-file)
-    - [Multi scale CSV data](#multi-scale-csv-data)
-    - [Tiled data](#tiled-data)
-    - [Multi scale tiled data](#multi-scale-tiled-data)
-    - [Data pre-processing and filtering](#data-pre-processing-and-filtering)
-  - [Basic styles](#basic-styles)
-    - [Shape/Color/Size Style](#shapecolorsize-style)
-    - [Square color WebGL Style](#square-color-webgl-style)
-    - [Square color category WebGL style](#square-color-category-webgl-style)
-    - [Composition style](#composition-style)
-    - [Segment style](#segment-style)
-    - [Stroke style](#stroke-style)
-  - [Advanced styles](#advanced-styles)
-    - [Tanaka style](#tanaka-style)
-    - [Dot density style](#dot-density-style)
-    - [Pillars style](#pillars-style)
-    - [Text style](#text-style)
-  - [Side styles](#side-styles)
-    - [Side style](#side-style)
-    - [Side category style](#side-category-style)
-    - [Contour style](#contour-style)
-  - [Esthetic styles](#esthetic-styles)
-    - [JoyPlot Style](#joyplot-style)
-    - [Mosaic style](#mosaic-style)
-    - [Ninja star style](#ninja-star-style)
-    - [Lego style](#lego-style)
-    - [Lego category style](#lego-category-style)
-  - [Kernel smoothing](#kernel-smoothing)
-  - [Others styles](#others-styles)
-  - [Legends](#legends)
-  - [Stretching](#stretching)
-  - [Background layer](#background-layer)
-    - [Tiled layer](#tiled-layer)
-    - [WMS](#wms)
-  - [Foreground information](#foreground-information)
-    - [Showing labels](#showing-labels)
-    - [Showing boundaries](#showing-boundaries)
-  - [Tooltip](#tooltip)
-  - [Alright?](#alright)
+-   [Gridviz API reference](#gridviz-api-reference)
+    -   [Table of contents](#table-of-contents)
+    -   [Usage](#usage)
+    -   [App Configuration](#app-configuration)
+        -   [App options object](#app-options-object)
+    -   [Multi layer, multi style and multi scale mapping](#multi-layer-multi-style-and-multi-scale-mapping)
+    -   [Adding data](#adding-data)
+        -   [Single CSV file](#single-csv-file)
+        -   [Multi scale CSV data](#multi-scale-csv-data)
+        -   [Tiled data](#tiled-data)
+        -   [Multi scale tiled data](#multi-scale-tiled-data)
+        -   [Data pre-processing and filtering](#data-pre-processing-and-filtering)
+    -   [Basic styles](#basic-styles)
+        -   [Shape/Color/Size Style](#shapecolorsize-style)
+        -   [Square color WebGL Style](#square-color-webgl-style)
+        -   [Square color category WebGL style](#square-color-category-webgl-style)
+        -   [Composition style](#composition-style)
+        -   [Segment style](#segment-style)
+        -   [Stroke style](#stroke-style)
+    -   [Advanced styles](#advanced-styles)
+        -   [Tanaka style](#tanaka-style)
+        -   [Dot density style](#dot-density-style)
+        -   [Pillars style](#pillars-style)
+        -   [Text style](#text-style)
+    -   [Side styles](#side-styles)
+        -   [Side style](#side-style)
+        -   [Side category style](#side-category-style)
+        -   [Contour style](#contour-style)
+    -   [Esthetic styles](#esthetic-styles)
+        -   [JoyPlot Style](#joyplot-style)
+        -   [Mosaic style](#mosaic-style)
+        -   [Ninja star style](#ninja-star-style)
+        -   [Lego style](#lego-style)
+        -   [Lego category style](#lego-category-style)
+    -   [Kernel smoothing](#kernel-smoothing)
+    -   [Others styles](#others-styles)
+    -   [Legends](#legends)
+    -   [Stretching](#stretching)
+    -   [Background layer](#background-layer)
+        -   [Tiled layer](#tiled-layer)
+        -   [WMS](#wms)
+    -   [Foreground information](#foreground-information)
+        -   [Showing labels](#showing-labels)
+        -   [Showing boundaries](#showing-boundaries)
+    -   [Tooltip](#tooltip)
+    -   [Alright?](#alright)
 
 Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
 
@@ -116,7 +116,7 @@ new gviz.App(containerDiv, {
     backgroundColor: 'white',
     tooltip: {
         fontSize: '1.2em',
-        transitionDuration: 100
+        transitionDuration: 100,
     },
     onZoomStartFun: (event) => {
         console.log('pan/zoom start', event)
@@ -130,21 +130,21 @@ new gviz.App(containerDiv, {
 })
 ```
 
-| Property                           | Type              | Default                          | Description                                                                                                                                                         |
-| ---------------------------------- | ----------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| _opts_.**canvas**                  | HTMLCanvasElement | created automatically by gridviz | Specify your own canvas element upon which gridviz will be rendered.                                                                                                |
-| _opts_.**w**                       | number            | container.offsetWidth            | The width of the canvas.                                                                                                                                            |
-| _opts_.**h**                       | number            | container.offsetHeight           | The height of the canvas.                                                                                                                                           |
-| _opts_.**legendDivId**             | string            | 'gvizLegend'                     | The identifier of the element upon which the legend will be appended.                                                                                               |
-| _opts_.**selectionRectangleColor** | string            | 'red'                            | The colour of the outline when a cell is highlighted.                                                                                                               |
-| _opts_.**selectionRectangleWidthPix** | Function            | (r,zf) => 4             | A function specifying the thickness in pixels of the outline when a cell is highlighted. The function parameter *r* is the cell resolution. *zf* is the zoom level.              |
-| _opts_.**transparentbackground**   | boolean           | false                            | Whether the background should be filled with colour (backgroundColor) or not. It is essentially the difference between using context.fillRect vs context.clearRect. |
-| _opts_.**backgroundColor**         | string            | 'white'                          | The background color of the canvas when transparentBackground is set to false.                                                                                      |
-| _opts_.**disableZoom**             | Boolean           | false                            | Disables d3 pan and zoom when set to true.                                                                                                                          |
-| _opts_.**onZoomStartFun**          | Function          | null                             | Event handler for when a pan/zoom event is initiated.                                                                                                               |
-| _opts_.**onZoomFun**               | Function          | null                             | Event handler for when a pan/zoom event is occurring.                                                                                                               |
-| _opts_.**onZoomEndFun**            | Function          | null                             | Event handler for when a pan/zoom event has finished.                                                                                                               |
-| _opts_.**tooltip**                 | Object            | undefined                        | See [tooltip docs](#tooltip)                                                                                                                                        |
+| Property                              | Type              | Default                          | Description                                                                                                                                                         |
+| ------------------------------------- | ----------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _opts_.**canvas**                     | HTMLCanvasElement | created automatically by gridviz | Specify your own canvas element upon which gridviz will be rendered.                                                                                                |
+| _opts_.**w**                          | number            | container.offsetWidth            | The width of the canvas.                                                                                                                                            |
+| _opts_.**h**                          | number            | container.offsetHeight           | The height of the canvas.                                                                                                                                           |
+| _opts_.**legendDivId**                | string            | 'gvizLegend'                     | The identifier of the element upon which the legend will be appended.                                                                                               |
+| _opts_.**selectionRectangleColor**    | string            | 'red'                            | The colour of the outline when a cell is highlighted.                                                                                                               |
+| _opts_.**selectionRectangleWidthPix** | Function          | (r,zf) => 4                      | A function specifying the thickness in pixels of the outline when a cell is highlighted. The function parameter _r_ is the cell resolution. _zf_ is the zoom level. |
+| _opts_.**transparentbackground**      | boolean           | false                            | Whether the background should be filled with colour (backgroundColor) or not. It is essentially the difference between using context.fillRect vs context.clearRect. |
+| _opts_.**backgroundColor**            | string            | 'white'                          | The background color of the canvas when transparentBackground is set to false.                                                                                      |
+| _opts_.**disableZoom**                | Boolean           | false                            | Disables d3 pan and zoom when set to true.                                                                                                                          |
+| _opts_.**onZoomStartFun**             | Function          | null                             | Event handler for when a pan/zoom event is initiated.                                                                                                               |
+| _opts_.**onZoomFun**                  | Function          | null                             | Event handler for when a pan/zoom event is occurring.                                                                                                               |
+| _opts_.**onZoomEndFun**               | Function          | null                             | Event handler for when a pan/zoom event has finished.                                                                                                               |
+| _opts_.**tooltip**                    | Object            | undefined                        | See [tooltip docs](#tooltip)                                                                                                                                        |
 
 ## Multi layer, multi style and multi scale mapping
 
@@ -427,16 +427,16 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/comp
 
 See [this example showing population of France by age group](https://eurostat.github.io/gridviz/examples/styles/composition_pop_FR.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/composition_pop_FR.html)).
 
-| Property                         | Type                        | Default         | Description                                                                                                                                                                                                |
-| -------------------------------- | --------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **color**                        | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.                                                                                                                                    |
-| **type**                         | function(c):CompositionType | () => "flag     | A function returning the symbol type of a cell **c**. CompositionType are among _"flag", "piechart", "ring", "segment", "radar", "agepyramid", "halftone"_                                                 |
-| **sizeCol**                      | string                      | undefined       | The name of the column used for the size.                                                                                                                                                                  |
-| **size**                         | function(v,r,s,zf):number   | (v,r,s,zf) => r | A function computing the cell size from its **sizeCol** value **v**, the resolution **r**, statistics **s** and zoom                                                                                       |
-| **stripesOrientation**           | function(c,r,zf):number     | () => 0         | For style types with stripes (flag, segment), a function returning the symbol stripes orientation (0 for horizontal, other for vertical) from the cell **c**, the resolution **r** and zoom factor **zf**. |
-| **offsetAngle**                  | function(c,r,zf):number     | () => 0         | For radar, halftone or pie chart style, a function returning the offset angle from the cell **c**, the resolution **r** and zoom factor **zf**. The angle is specified in degree. The rotation is anti-clockwise.   |
-| **agePyramidHeight**             | function(c,r,zf):number     | (c,r,zf) => r   | The function specifying the height of the age pyramid.                                                                                                                                                     |
-| **pieChartInternalRadiusFactor** | number                      | 0               | For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut. 0 for normal pie charts, 0.5 to empty half of the radius.                                                  |
+| Property                         | Type                        | Default         | Description                                                                                                                                                                                                       |
+| -------------------------------- | --------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **color**                        | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.                                                                                                                                           |
+| **type**                         | function(c):CompositionType | () => "flag     | A function returning the symbol type of a cell **c**. CompositionType are among _"flag", "piechart", "ring", "segment", "radar", "agepyramid", "halftone"_                                                        |
+| **sizeCol**                      | string                      | undefined       | The name of the column used for the size.                                                                                                                                                                         |
+| **size**                         | function(v,r,s,zf):number   | (v,r,s,zf) => r | A function computing the cell size from its **sizeCol** value **v**, the resolution **r**, statistics **s** and zoom                                                                                              |
+| **stripesOrientation**           | function(c,r,zf):number     | () => 0         | For style types with stripes (flag, segment), a function returning the symbol stripes orientation (0 for horizontal, other for vertical) from the cell **c**, the resolution **r** and zoom factor **zf**.        |
+| **offsetAngle**                  | function(c,r,zf):number     | () => 0         | For radar, halftone or pie chart style, a function returning the offset angle from the cell **c**, the resolution **r** and zoom factor **zf**. The angle is specified in degree. The rotation is anti-clockwise. |
+| **agePyramidHeight**             | function(c,r,zf):number     | (c,r,zf) => r   | The function specifying the height of the age pyramid.                                                                                                                                                            |
+| **pieChartInternalRadiusFactor** | number                      | 0               | For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut. 0 for normal pie charts, 0.5 to empty half of the radius.                                                         |
 
 ### Segment style
 
@@ -672,15 +672,13 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/ninj
 
 See [this other example](https://eurostat.github.io/gridviz/examples/styles/ninja_star_p.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/ninja_star_p.html)) with stars parallel to the x/y axes.
 
-
-| Property     | Type                      | Default                 | Description                                                                                                                           |
-| ------------ | ------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| **colorCol** | string                    | undefined               | The name of the column used for the color.                                                                                            |
-| **color**    | function(v,r,s):string    | (v,r,s,zf) => "#EA6BAC" | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
-| **sizeCol**  | string                    | undefined               | The name of the column used for the size.                                                                                             |
-| **size**     | function(v,r,s,zf):number | (v,r,s,zf) => t         | A function computing the cell size, within [0,1], from its **sizeCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. 1 corresponds to a square, 0 to an infinitly thin cross.  |
-| **shape**    | function(c):string        | () => "o"          | A function computing the orientation of the ninja star: *"o"* for 45deg oblique star, *"p"* for a star parallel to the x/y axes.  |
-
+| Property     | Type                      | Default                 | Description                                                                                                                                                                                                 |
+| ------------ | ------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **colorCol** | string                    | undefined               | The name of the column used for the color.                                                                                                                                                                  |
+| **color**    | function(v,r,s):string    | (v,r,s,zf) => "#EA6BAC" | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.                                                                       |
+| **sizeCol**  | string                    | undefined               | The name of the column used for the size.                                                                                                                                                                   |
+| **size**     | function(v,r,s,zf):number | (v,r,s,zf) => t         | A function computing the cell size, within [0,1], from its **sizeCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. 1 corresponds to a square, 0 to an infinitly thin cross. |
+| **shape**    | function(c):string        | () => "o"               | A function computing the orientation of the ninja star: _"o"_ for 45deg oblique star, _"p"_ for a star parallel to the x/y axes.                                                                            |
 
 ### Lego style
 
@@ -768,7 +766,6 @@ For more information on these functions and an overview of how they differ, see:
 
 [![gridviz background layer TMS](img/background.png)](https://eurostat.github.io/gridviz/examples/background.html)
 
-
 ### Tiled layer
 
 To add a background layer to a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **addBackgroundLayer** method:
@@ -797,13 +794,12 @@ The **addBackgroundLayer** method has the following parameters:
 | **resolutions**             | Array(number)          | undefined                                              | The list of resolutions by zoom **z** level, starting with the zoom level with larger resolution to lower resolutions.                                                                                                                                                       |
 | **z0**                      | number                 | 0                                                      | If number of the first zoom level (larger resolution), usually 0.                                                                                                                                                                                                            |
 | **nbPix**                   | number                 | 256                                                    | The size of each tile image, in pixel number, usually 256.                                                                                                                                                                                                                   |
-| **origin**                  | Array(number)          | [0, 0]                                                 | The geographical coordinates of top left corner of the tiling scheme.     |
-| **visible**          | boolean      | true         | The visibility of the layer. When _false_, the layer is not drawn.          |
-| **minZoom** and **maxZoom** | number     | 0 and Infinity        | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn.   |
-| **filterColor**      | function(zf):string    | undefined      | A function returning a filter color from the zoom factor **zf**. This color alpha channel can be used to soften the background layer: Use _"ffffffd1"_ for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
+| **origin**                  | Array(number)          | [0, 0]                                                 | The geographical coordinates of top left corner of the tiling scheme.                                                                                                                                                                                                        |
+| **visible**                 | boolean                | true                                                   | The visibility of the layer. When _false_, the layer is not drawn.                                                                                                                                                                                                           |
+| **minZoom** and **maxZoom** | number                 | 0 and Infinity                                         | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn.                                                                                                                                                                               |
+| **filterColor**             | function(zf):string    | undefined                                              | A function returning a filter color from the zoom factor **zf**. This color alpha channel can be used to soften the background layer: Use _"ffffffd1"_ for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
 
 For more information, [see the code](../src/BackgroundLayer.js).
-
 
 ### WMS
 
@@ -822,15 +818,14 @@ See [this example](https://eurostat.github.io/gridviz/examples/background_WMS.ht
 
 The **addBackgroundLayer** method has the following parameters:
 
-| Parameter                   | Type                   | Default                 | Description      |
-| ------------------- | ---------------------- | ------------- | ----------------- |
-| **url**     | string                 | undefined       | The base URL of the WMS. This URL must contain all necessary parameters, except *width*, *height* and *bbox* which are computed by the application.         |
-| **visible**          | boolean      | true         | The visibility of the layer. When _false_, the layer is not drawn.          |
-| **minZoom** and **maxZoom** | number     | 0 and Infinity        | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn.   |
-| **filterColor**      | function(zf):string    | undefined      | A function returning a filter color from the zoom factor **zf**. This color alpha channel can be used to soften the background layer: Use _"ffffffd1"_ for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
+| Parameter                   | Type                | Default        | Description                                                                                                                                                                                                                                                                  |
+| --------------------------- | ------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **url**                     | string              | undefined      | The base URL of the WMS. This URL must contain all necessary parameters, except _width_, _height_ and _bbox_ which are computed by the application.                                                                                                                          |
+| **visible**                 | boolean             | true           | The visibility of the layer. When _false_, the layer is not drawn.                                                                                                                                                                                                           |
+| **minZoom** and **maxZoom** | number              | 0 and Infinity | The min/maximum zoom factors to show the layer. Outside of this range, the layer is not drawn.                                                                                                                                                                               |
+| **filterColor**             | function(zf):string | undefined      | A function returning a filter color from the zoom factor **zf**. This color alpha channel can be used to soften the background layer: Use _"ffffffd1"_ for example. This color can addapt to the zoom level, so that the layer can progressively fade away when zooming out. |
 
 For more information, [see the code](../src/BackgroundLayerWMS.js).
-
 
 ## Foreground information
 

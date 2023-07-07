@@ -43,6 +43,17 @@
                     }
                 )
 
+            //add legend
+            app.layers[0].styles[0].legends.push(
+                new gviz.ColorLegend({
+                    title: 'Number of inhabitants',
+                    width: 400,
+                    ticks: 5,
+                    colorRamp: d3.interpolateYlOrRd,
+                    fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                })
+            )
+
             /*app.addBackgroundLayer({
             urlFun: (x, y, z) => "https://webgate.ec.europa.eu/inspireec/arcgis/rest/services/Basemaps/Natural_Earth_3035/MapServer/tile/" + z + "/" + y + "/" + x,
             resolutions: [66145.9656252646, 26458.386250105836, 13229.193125052918, 6614.596562526459, 2645.8386250105837, 1322.9193125052918,],

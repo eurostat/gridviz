@@ -186,7 +186,7 @@ export class App {
         this.legendDivId = opts.legendDivId || 'gvizLegend'
         this.legend = select('#' + this.legendDivId)
         if (this.legend.empty()) {
-            this.legend = select('body')
+            this.legend = select('#' + container.id)
                 .append('div')
                 .attr('id', this.legendDivId)
                 .style('position', 'absolute')
@@ -205,6 +205,10 @@ export class App {
         }
 
         //tooltip
+
+        // set App container as default parent element for tooltip
+        if (!opts.tooltip) opts.tooltip = {}
+        if (!opts.tooltip.parentElement) opts.tooltip.parentElement = container
 
         /**
          * @private
