@@ -15,7 +15,11 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            const app = new gviz.App(containerDiv)
+            const app = new gviz.App(containerDiv, {
+                onZoomStartFun: (e) => {
+                    console.log(event)
+                },
+            })
                 //set position and zoom
                 .setGeoCenter({ x: 3426953, y: 2326791 })
                 .setZoomFactor(1000)
@@ -38,6 +42,17 @@
                         pixNb: 2,
                     }
                 )
+
+            //add legend
+            app.layers[0].styles[0].legends.push(
+                new gviz.ColorLegend({
+                    title: 'Number of inhabitants',
+                    width: 400,
+                    ticks: 5,
+                    colorRamp: d3.interpolateYlOrRd,
+                    fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                })
+            )
 
             /*app.addBackgroundLayer({
             urlFun: (x, y, z) => "https://webgate.ec.europa.eu/inspireec/arcgis/rest/services/Basemaps/Natural_Earth_3035/MapServer/tile/" + z + "/" + y + "/" + x,

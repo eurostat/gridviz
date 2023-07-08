@@ -186,7 +186,7 @@ export class App {
         this.legendDivId = opts.legendDivId || 'gvizLegend'
         this.legend = select('#' + this.legendDivId)
         if (this.legend.empty()) {
-            this.legend = select('body')
+            this.legend = select('#' + container.id)
                 .append('div')
                 .attr('id', this.legendDivId)
                 .style('position', 'absolute')
@@ -205,6 +205,10 @@ export class App {
         }
 
         //tooltip
+
+        // set App container as default parent element for tooltip
+        if (!opts.tooltip) opts.tooltip = {}
+        if (!opts.tooltip.parentElement) opts.tooltip.parentElement = container
 
         /**
          * @private
@@ -283,7 +287,10 @@ export class App {
         container.addEventListener('mouseout', () => {
             this.tooltip.hide()
         })
-        this.cg.onZoomStartFun = () => {
+
+        // add extra logic to onZoomStartFun
+        this.cg.onZoomStartFun = (e) => {
+            if (opts.onZoomStartFun) opts.onZoomStartFun(e)
             this.tooltip.hide()
         }
 
@@ -663,16 +670,26 @@ export class App {
      */
     defineResizeObserver(container, canvas) {
         // listen to resize events
-        const resizeObserver = new ResizeObserver(() => {
-            // update the app and canvas size
-            if (this.h !== container.clientHeight || this.w !== container.clientWidth) {
-                this.h = container.clientHeight
-                this.w = container.clientWidth
-                this.cg.h = container.clientHeight
-                this.cg.w = container.clientWidth
-                canvas.setAttribute('width', '' + this.w)
-                canvas.setAttribute('height', '' + this.h)
-                this.redraw()
+        const resizeObserver = new ResizeObserver((entries) => {
+            // make sure canvas has been built
+            if (container.clientWidth > 0 && container.clientHeight > 0) {
+                // make sure we dont exceed loop limit first
+                // see: https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
+                window.requestAnimationFrame(() => {
+                    if (!Array.isArray(entries) || !entries.length) {
+                        return
+                    }
+                    // update the app and canvas size
+                    if (this.h !== container.clientHeight || this.w !== container.clientWidth) {
+                        this.h = container.clientHeight
+                        this.w = container.clientWidth
+                        this.cg.h = container.clientHeight
+                        this.cg.w = container.clientWidth
+                        canvas.setAttribute('width', '' + this.w)
+                        canvas.setAttribute('height', '' + this.h)
+                        this.redraw()
+                    }
+                })
             }
         })
 
