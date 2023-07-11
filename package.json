@@ -54,8 +54,7 @@
         "d3-geo": "^3.0.1",
         "d3-random": "^3.0.1",
         "d3-selection": "^3.0.0",
-        "d3-zoom": "^3.0.0",
-        "fast-kde": "^0.2.1"
+        "d3-zoom": "^3.0.0"
     },
     "devDependencies": {
         "@babel/core": "^7.9.0",

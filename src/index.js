@@ -22,9 +22,6 @@ export { JoyPlotStyle } from './style/JoyPlotStyle.js'
 export { CompositionStyle } from './style/CompositionStyle.js'
 export { SegmentStyle } from './style/SegmentStyle.js'
 export { TextStyle } from './style/TextStyle.js'
-export { KernelSmoothingStyle } from './style/KernelSmoothingStyle.js'
-//export { KernelSmoothingOldStyle } from "./style/KernelSmoothingStyle"
-//export { KernelSmoothingWGLStyle } from "./style/KernelSmoothingStyle"
 export { PillarStyle } from './style/PillarStyle.js'
 export { SideStyle } from './style/SideStyle.js'
 export { ContourStyle } from './style/ContourStyle.js'
