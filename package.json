@@ -47,7 +47,6 @@
         "src/**/*.js"
     ],
     "dependencies": {
-        "apache-arrow": "^10.0.1",
         "d3-color": "^3.1.0",
         "d3-fetch": "^3.0.1",
         "d3-format": "^3.1.0",

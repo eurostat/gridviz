@@ -12,7 +12,6 @@ export { DatasetComponent } from './DatasetComponent.js'
 // export dataset types
 export { TiledGrid } from './dataset/TiledGrid.js'
 export { CSVGrid } from './dataset/CSVGrid.js'
-//export { ParquetGrid } from "./dataset/ParquetGrid"
 //export { GeoTIFF } from "./dataset/GeoTIFF"
 
 // export styles
@@ -52,6 +51,9 @@ export { SegmentOrientationLegend } from './legend/SegmentOrientationLegend.js'
 export * from './utils/stretching.js'
 
 export { getClass } from './utils/Utils.js'
+
+
+
 
 import { GeoCanvas } from './GeoCanvas.js'
 import { geoAzimuthalEqualArea } from 'd3-geo'
