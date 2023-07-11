@@ -7,7 +7,6 @@ import { Layer } from './Layer.js'
 import { Dataset } from './Dataset.js'
 import { Tooltip } from './Tooltip.js'
 import { CSVGrid } from './dataset/CSVGrid.js'
-//import { ParquetGrid } from './dataset/ParquetGrid';
 import { TiledGrid } from './dataset/TiledGrid.js'
 import { BackgroundLayer } from './BackgroundLayer.js'
 import { BackgroundLayerWMS } from './BackgroundLayerWMS.js'
@@ -451,18 +450,6 @@ export class App {
     }
 
     /**
-     * Make a parquet grid dataset.
-     *
-     * @param {string} url The URL of the dataset.
-     * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {object=} opts The parameters of the dataset.
-     * @returns {Dataset}
-     */
-    /*makeParquetGridDataset(url, resolution, opts) {
-        return new Dataset([new ParquetGrid(url, resolution, opts).getData(undefined, () => { this.cg.redraw(); })], [], opts)
-    }*/
-
-    /**
      * Make a tiled grid dataset.
      *
      * @param {string} url
@@ -482,22 +469,6 @@ export class App {
     }
 
     //multi scale dataset creation
-
-    /**
-     * Make a multi scale parquet grid dataset.
-     *
-     * @param {Array.<number>} resolutions
-     * @param {function(number):string} resToURL
-     * @param {{preprocess?:function(import('./Dataset').Cell):boolean}} opts
-     * @returns {Dataset}
-     */
-    /*makeMultiScaleParquetGridDataset(resolutions, resToURL, opts) {
-        return Dataset.make(
-            resolutions,
-            (res) => new ParquetGrid(resToURL(res), res, opts).getData(undefined, () => { this.cg.redraw(); }),
-            opts
-        )
-    }*/
 
     /**
      * Make a multi scale CSV grid dataset.
@@ -555,19 +526,6 @@ export class App {
         return this.addLayerFromDataset(ds, styles, opts)
     }
 
-    /**
-     * Add a layer from a parquet grid dataset.
-     *
-     * @param {string} url The URL of the dataset.
-     * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {Array.<import('./Style').Style>} styles The styles, ordered in drawing order.
-     * @param {object=} opts The parameters of the dataset and layer.
-     * @returns {this}
-     */
-    /*addParquetGridLayer(url, resolution, styles, opts) {
-        const ds = this.makeParquetGridDataset(url, resolution, opts)
-        return this.addLayerFromDataset(ds, styles, opts);
-    }*/
 
     /**
      *
@@ -594,20 +552,6 @@ export class App {
         const ds = this.makeMultiScaleCSVGridDataset(resolutions, resToURL, opts)
         return this.addLayerFromDataset(ds, styles, opts)
     }
-
-    /**
-     * Add a layer from a parquet grid dataset.
-     *
-     * @param {Array.<number>} resolutions
-     * @param {function(number):string} resToURL
-     * @param {Array.<import('./Style').Style>} styles The styles, ordered in drawing order.
-     * @param {object=} opts The parameters of the dataset and layer.
-     * @returns {this}
-     */
-    /*addMultiScaleParquetGridLayer(resolutions, resToURL, styles, opts) {
-        const ds = this.makeMultiScaleParquetGridDataset(resolutions, resToURL, opts)
-        return this.addLayerFromDataset(ds, styles, opts);
-    }*/
 
     /**
      * @param {Array.<number>} resolutions
