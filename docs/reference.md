@@ -2,52 +2,52 @@
 
 ## Table of contents
 
--   [Gridviz API reference](#gridviz-api-reference)
-    -   [Table of contents](#table-of-contents)
-    -   [Usage](#usage)
-    -   [App Configuration](#app-configuration)
-        -   [App options object](#app-options-object)
-    -   [Multi layer, multi style and multi scale mapping](#multi-layer-multi-style-and-multi-scale-mapping)
-    -   [Adding data](#adding-data)
-        -   [Single CSV file](#single-csv-file)
-        -   [Multi scale CSV data](#multi-scale-csv-data)
-        -   [Tiled data](#tiled-data)
-        -   [Multi scale tiled data](#multi-scale-tiled-data)
-        -   [Data pre-processing and filtering](#data-pre-processing-and-filtering)
-    -   [Basic styles](#basic-styles)
-        -   [Shape/Color/Size Style](#shapecolorsize-style)
-        -   [Square color WebGL Style](#square-color-webgl-style)
-        -   [Square color category WebGL style](#square-color-category-webgl-style)
-        -   [Composition style](#composition-style)
-        -   [Segment style](#segment-style)
-        -   [Stroke style](#stroke-style)
-    -   [Advanced styles](#advanced-styles)
-        -   [Tanaka style](#tanaka-style)
-        -   [Dot density style](#dot-density-style)
-        -   [Pillars style](#pillars-style)
-        -   [Text style](#text-style)
-    -   [Side styles](#side-styles)
-        -   [Side style](#side-style)
-        -   [Side category style](#side-category-style)
-        -   [Contour style](#contour-style)
-    -   [Esthetic styles](#esthetic-styles)
-        -   [JoyPlot Style](#joyplot-style)
-        -   [Mosaic style](#mosaic-style)
-        -   [Ninja star style](#ninja-star-style)
-        -   [Lego style](#lego-style)
-        -   [Lego category style](#lego-category-style)
-    -   [Kernel smoothing](#kernel-smoothing)
-    -   [Others styles](#others-styles)
-    -   [Legends](#legends)
-    -   [Stretching](#stretching)
-    -   [Background layer](#background-layer)
-        -   [Tiled layer](#tiled-layer)
-        -   [WMS](#wms)
-    -   [Foreground information](#foreground-information)
-        -   [Showing labels](#showing-labels)
-        -   [Showing boundaries](#showing-boundaries)
-    -   [Tooltip](#tooltip)
-    -   [Alright?](#alright)
+- [Gridviz API reference](#gridviz-api-reference)
+  - [Table of contents](#table-of-contents)
+  - [Usage](#usage)
+  - [App Configuration](#app-configuration)
+    - [App options object](#app-options-object)
+  - [Multi layer, multi style and multi scale mapping](#multi-layer-multi-style-and-multi-scale-mapping)
+  - [Adding data](#adding-data)
+    - [Single CSV file](#single-csv-file)
+    - [Multi scale CSV data](#multi-scale-csv-data)
+    - [Tiled data](#tiled-data)
+    - [Multi scale tiled data](#multi-scale-tiled-data)
+    - [Data pre-processing and filtering](#data-pre-processing-and-filtering)
+  - [Basic styles](#basic-styles)
+    - [Shape/Color/Size Style](#shapecolorsize-style)
+    - [Square color WebGL Style](#square-color-webgl-style)
+    - [Square color category WebGL style](#square-color-category-webgl-style)
+    - [Composition style](#composition-style)
+    - [Segment style](#segment-style)
+    - [Stroke style](#stroke-style)
+  - [Advanced styles](#advanced-styles)
+    - [Tanaka style](#tanaka-style)
+    - [Dot density style](#dot-density-style)
+    - [Pillars style](#pillars-style)
+    - [Text style](#text-style)
+  - [Side styles](#side-styles)
+    - [Side style](#side-style)
+    - [Side category style](#side-category-style)
+    - [Contour style](#contour-style)
+  - [Esthetic styles](#esthetic-styles)
+    - [JoyPlot Style](#joyplot-style)
+    - [Mosaic style](#mosaic-style)
+    - [Ninja star style](#ninja-star-style)
+    - [Lego style](#lego-style)
+    - [Lego category style](#lego-category-style)
+  - [Kernel smoothing](#kernel-smoothing)
+  - [Others styles](#others-styles)
+  - [Legends](#legends)
+  - [Stretching](#stretching)
+  - [Background layer](#background-layer)
+    - [Tiled layer](#tiled-layer)
+    - [WMS](#wms)
+  - [Foreground information](#foreground-information)
+    - [Showing labels](#showing-labels)
+    - [Showing boundaries](#showing-boundaries)
+  - [Tooltip](#tooltip)
+  - [Alright?](#alright)
 
 Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
 
@@ -718,18 +718,20 @@ See [this other example](https://eurostat.github.io/gridviz/examples/styles/lego
 
 This style allows applying a gaussian kernel smoothing to the input grid. Other styles can then be used on the smoothed grid - this style is thus more a 'filter' than a proper style.
 
+Note that this style is available within the [gridviz-smoothing](https://github.com/eurostat/gridviz-smoothing) extension which need to be added as: `<script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing"></script>`.
+
 See [this elementary example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing_small.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/kernelsmoothing_small.html)).
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/kernelsmoothing.html)).
 
-| Property     | Type                   | Default  | Description                                                                                                                                                                                                                                                                                         |
-| ------------ | ---------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **value**    | function(cel):number   |          | A function returning the value to consider for each cell. This is the value to be smoothed.                                                                                                                                                                                                         |
-| **sigma**    | function(r, zf):number |          | The smoothing parameter (gaussian standard deviation), in geographical unit, computed from the resolution **r** and the zoom factor **zf**. The larger, the more smoothed. Note that for too small values, the approximation degrades significantly.                                                |
+| Property     | Type      | Default  | Description          |
+| ------------ | ------------ | -------- | ------------- |
+| **value**    | function(cel):number   |          | A function returning the value to consider for each cell. This is the value to be smoothed.        |
+| **sigma**    | function(r, zf):number |          | The smoothing parameter (gaussian standard deviation), in geographical unit, computed from the resolution **r** and the zoom factor **zf**. The larger, the more smoothed. Note that for too small values, the approximation degrades significantly.          |
 | **factor**   | number                 | 2        | The smoothed grid may have a finer resolution than the input grid. This factor defines the smoothed grid resolution. When set to 1, the smoothed grid is exactly the screen resolution. Set to 2 to degrade the resolution to a factor 2. The higher, the more pixelised and the faster to compute. |
-| **filterSm** | function(v):boolean    |          | A filter function to filter the smoothed cells based on their smoothed value **v**. Return true to keep the cell, false otherwise.                                                                                                                                                                  |
-| **sCol**     | string                 | "ksmval" | The name of the attribute where the smoothed value is stored in the output smoothed grid.                                                                                                                                                                                                           |
-| **styles**   | Array(Style)           |          | The styles to represent the smoothed grid.                                                                                                                                                                                                                                                          |
+| **filterSm** | function(v):boolean    |        | A filter function to filter the smoothed cells based on their smoothed value **v**. Return true to keep the cell, false otherwise.              |
+| **sCol**     | string                 | "ksmval" | The name of the attribute where the smoothed value is stored in the output smoothed grid.            |
+| **styles**   | Array(Style)           |          | The styles to represent the smoothed grid.     |
 
 The kernel smoothing computation relies on the [fast-kde](https://www.npmjs.com/package/fast-kde) library, which produces smoothing approximation very fast. Note that the approximation degrades significantly for weak smoothing (for low sigma values).
 
