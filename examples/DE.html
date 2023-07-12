@@ -36,8 +36,9 @@
                         c.fernw = +c.fernw
                         c.zentral = +c.zentral
                         c.etagen = +c.etagen
-                        c.anderen = +c.Insg - c.etagen - c.zentral - c.fernw
-                        delete c.Insg
+                        const a = c.Insg - c.fernw - c.etagen - c.zentral;
+                        c.sonst = a < 0 ? 0 : a;
+                        delete Insg
                     }
                 }
             )
