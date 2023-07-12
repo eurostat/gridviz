@@ -22,15 +22,24 @@
                     new gviz.CompositionStyle({
                         //x,y,Insg,fernw,etagen,zentral
                         color: {
-                            fernw: 'purple',
-                            zentral: 'yellow',
-                            etagen: 'orange',
+                            fernw: '#7570b3', //purple
+                            zentral: '#1b9e77', //green
+                            etagen: '#d95f02', //orange
                             Insg: "gray"
                         },
                         type: () => 'piechart',
                         offsetAngle: () => 0,
                     }),
-                ]
+                ],
+                {
+                    preprocess: (c) => {
+                        c.fernw = +c.fernw
+                        c.zentral = +c.zentral
+                        c.etagen = +c.etagen
+                        c.anderen = +c.Insg - c.etagen - c.zentral - c.fernw
+                        delete c.Insg
+                    }
+                }
             )
     </script>
 </body>
