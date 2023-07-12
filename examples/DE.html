@@ -15,7 +15,7 @@
 
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 4301000, y: 2889000 })
-            .setZoomFactor(3)
+            .setZoomFactor(100)
             .addMultiScaleTiledGridLayer(
                 //the resolution values, ordered
                 [100, 200, 500, 1000, 2000, 5000, 10000],
@@ -36,6 +36,8 @@
                         },
                         type: () => 'piechart',
                         offsetAngle: () => 0,
+                        sizeCol:"Insg",
+                        size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.10, 0),
                     }),
                 ],
                 {
@@ -46,7 +48,6 @@
                         c.etagen = +c.etagen
                         const a = c.Insg - c.fernw - c.etagen - c.zentral;
                         c.sonst = a < 0 ? 0 : a;
-                        delete Insg
                     }
                 }
             )
