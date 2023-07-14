@@ -784,7 +784,6 @@ For styling legends see [Legend Styling](#legend-styling).
 ![](img/legends/color_category_legend.png)
 
 ```javascript
-
 new gviz.ColorCategoryLegend({
     title: 'Dominant leaf type',
     colCat: [
@@ -794,7 +793,6 @@ new gviz.ColorCategoryLegend({
     ],
     shape: 'square',
 })
-
 ```
 
 
@@ -803,14 +801,12 @@ new gviz.ColorCategoryLegend({
 ![](img/legends/color_discrete_legend.png)
 
 ```javascript
-
 new gviz.ColorDiscreteLegend({
     title: 'Travel time to nearest health service, in minutes',
     colors: ["#FDFECC","#B2E3AA","#6AC5A4","#4FA1A2","#427C9A","#3E5791","#3D3562","#281A2C"],
     breaksText: [5, 10, 15, 20, 30, 45, 60, 90],
     width: 300,
 })
-
 ```
 
 ### ColorLegend
@@ -818,7 +814,6 @@ new gviz.ColorDiscreteLegend({
 ![](img/legends/color_legend.png)
 
 ```javascript
-
 new gviz.ColorLegend({
     title: 'Number of inhabitants',
     width: 400,
@@ -826,7 +821,6 @@ new gviz.ColorLegend({
     colorRamp: d3.interpolateOrRd,
     fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
 })
-
 ```
 
 ### SegmentOrientationLegend
@@ -834,27 +828,22 @@ new gviz.ColorLegend({
 ![](img/legends/segment_orientation_legend.png)
 
 ```javascript
-
 new gviz.SegmentOrientationLegend({
     title: 'Population change',
     labelUnitText: 'Strong increase',
     color: '#d13c4b',
     orientation: 60,
 })
-
 ```
 ### SegmentWidthLegend
 
 ![](img/legends/segment_width_legend.png)
 
 ```javascript
-
 new gviz.SegmentWidthLegend({
     title: 'Population in 2018',
     labelUnitText: 'inhab.',
 })
-
-
 ```
 
 ### SizeLegend
@@ -862,14 +851,12 @@ new gviz.SegmentWidthLegend({
 ![](img/legends/size_legend.png)
 
 ```javascript
-
 new gviz.SizeLegend({
     title: 'Number of inhabitants',
     exaggerationFactor: 0.8,
     shape: 'circle',
     fillColor: '#e54f37',
 })
-
 ```
 
 
@@ -878,14 +865,12 @@ new gviz.SizeLegend({
 You can style each legend by using the 'D3-like' style() function after constructing your legend, like so:
 
 ```javascript
-
 new gviz.SizeLegend({
     title: 'Number of inhabitants',
     exaggerationFactor: 0.8,
     shape: 'circle',
     fillColor: '#3E5791',
 }).style('padding', '0px 5px')
-
 ```
 
 ## Stretching
