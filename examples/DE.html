@@ -30,7 +30,6 @@
                 minZoom: 50,
             })
 
-
             .addMultiScaleTiledGridLayer(
                 [100, 200, 500, 1000, 2000, 5000, 10000],
                 (r) =>
@@ -49,7 +48,7 @@
                         type: () => 'piechart',
                         offsetAngle: () => 0,
                         sizeCol: "Insg",
-                        size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.10, 0),
+                        size: (v, r, s, zf) => 1.1 * r * gviz.sPow(v / s.max, 0.2, 0),
                     }),
                 ],
                 {
