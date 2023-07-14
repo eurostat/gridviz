@@ -39,6 +39,13 @@
   - [Kernel smoothing](#kernel-smoothing)
   - [Others styles](#others-styles)
   - [Legends](#legends)
+    - [ColorCategoryLegend](#colorcategorylegend)
+    - [ColorDiscreteLegend](#colordiscretelegend)
+    - [ColorLegend](#colorlegend)
+    - [SegmentOrientationLegend](#segmentorientationlegend)
+    - [SegmentWidthLegend](#segmentwidthlegend)
+    - [SizeLegend](#sizelegend)
+    - [Legend styling](#legend-styling)
   - [Stretching](#stretching)
   - [Background layer](#background-layer)
     - [Tiled layer](#tiled-layer)
@@ -205,7 +212,7 @@ new gviz.App(containerDiv)
 
 ### Tiled data
 
-For large dataset, it is adviced to decompose them into different data chunks and index those by geographical location, as specified in the [tiled format](tiledformat.md). The [Gridviz](https://github.com/eurostat/gridviz/) application can then automatically retrieve only the usefull data that fall into the view geographical extent. This is an example of how to load such data:
+For large datasets, it is recommended that you decompose them into different data chunks and index them by geographical location, as specified in the [tiled format specification](tiledformat.md). The [Gridviz](https://github.com/eurostat/gridviz/) application can then automatically retrieve only the useful data that falls into the viewer's geographical extent. Here is an example of how to load such data:
 
 ```javascript
 new gviz.App(containerDiv)
@@ -724,14 +731,14 @@ See [this elementary example](https://eurostat.github.io/gridviz/examples/styles
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoothing.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/kernelsmoothing.html)).
 
-| Property     | Type      | Default  | Description          |
-| ------------ | ------------ | -------- | ------------- |
-| **value**    | function(cel):number   |          | A function returning the value to consider for each cell. This is the value to be smoothed.        |
-| **sigma**    | function(r, zf):number |          | The smoothing parameter (gaussian standard deviation), in geographical unit, computed from the resolution **r** and the zoom factor **zf**. The larger, the more smoothed. Note that for too small values, the approximation degrades significantly.          |
+| Property     | Type                   | Default  | Description                                                                                                                                                                                                                                                                                         |
+| ------------ | ---------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **value**    | function(cel):number   |          | A function returning the value to consider for each cell. This is the value to be smoothed.                                                                                                                                                                                                         |
+| **sigma**    | function(r, zf):number |          | The smoothing parameter (gaussian standard deviation), in geographical unit, computed from the resolution **r** and the zoom factor **zf**. The larger, the more smoothed. Note that for too small values, the approximation degrades significantly.                                                |
 | **factor**   | number                 | 2        | The smoothed grid may have a finer resolution than the input grid. This factor defines the smoothed grid resolution. When set to 1, the smoothed grid is exactly the screen resolution. Set to 2 to degrade the resolution to a factor 2. The higher, the more pixelised and the faster to compute. |
-| **filterSm** | function(v):boolean    |        | A filter function to filter the smoothed cells based on their smoothed value **v**. Return true to keep the cell, false otherwise.              |
-| **sCol**     | string                 | "ksmval" | The name of the attribute where the smoothed value is stored in the output smoothed grid.            |
-| **styles**   | Array(Style)           |          | The styles to represent the smoothed grid.     |
+| **filterSm** | function(v):boolean    |          | A filter function to filter the smoothed cells based on their smoothed value **v**. Return true to keep the cell, false otherwise.                                                                                                                                                                  |
+| **sCol**     | string                 | "ksmval" | The name of the attribute where the smoothed value is stored in the output smoothed grid.                                                                                                                                                                                                           |
+| **styles**   | Array(Style)           |          | The styles to represent the smoothed grid.                                                                                                                                                                                                                                                          |
 
 The kernel smoothing computation relies on the [fast-kde](https://www.npmjs.com/package/fast-kde) library, which produces smoothing approximation very fast. Note that the approximation degrades significantly for weak smoothing (for low sigma values).
 
@@ -743,7 +750,126 @@ Any need or idea for new style ? feel free to [ask](https://github.com/eurostat/
 
 ## Legends
 
-Documentation coming soon.
+Gridviz offers different types of legends that are suited to different cartographic styles, namely:
+
+-   [ColorCategoryLegend](#colorcategorylegend)
+-   [ColorDiscreteLegend](#colordiscretelegend)
+-   [ColorLegend](#colorLegend)
+-   [SegmentOrientationLegend](#segmentorientationlegend)
+-   [SegmentWidthLegend](#segmentwidthlegend)
+-   [SizeLegend](#sizelegend)
+
+For styling legends see [Legend Styling](#legend-styling)
+
+The legends are appended to the div element specified in the `legendDivId` property in the [App options object](#app-options-object). If this is not specified then gridviz will generate one automatically.
+
+### ColorCategoryLegend
+
+![](img/legends/color_category_legend.png)
+
+```javascript
+app.layers[0].styles[0].legends.push(
+    new gviz.ColorCategoryLegend({
+        title: 'Dominant leaf type',
+        colCat: [
+            ['#c6df58', 'None'],
+            ['#9fd045', 'Mainly broadleaved'],
+            ['#38a43b', 'Mainly coniferous'],
+        ],
+        shape: 'square',
+    })
+)
+```
+
+
+### ColorDiscreteLegend
+
+![](img/legends/color_discrete_legend.png)
+
+```javascript
+app.layers[0].styles[0].legends.push(
+    new gviz.ColorDiscreteLegend({
+        title: 'Travel time to nearest health service, in minutes',
+        colors: ["#FDFECC","#B2E3AA","#6AC5A4","#4FA1A2","#427C9A","#3E5791","#3D3562","#281A2C"],
+        breaksText: [5, 10, 15, 20, 30, 45, 60, 90],
+        width: 300,
+    })
+)
+```
+
+### ColorLegend
+
+![](img/legends/color_legend.png)
+
+```javascript
+app.layers[0].styles[0].legends.push(
+    new gviz.ColorLegend({
+        title: 'Number of inhabitants',
+        width: 400,
+        ticks: 5,
+        colorRamp: d3.interpolateOrRd,
+        fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+    })
+)
+```
+
+### SegmentOrientationLegend
+
+![](img/legends/segment_orientation_legend.png)
+
+```javascript
+app.layers[0].styles[0].legends.push(
+    new gviz.SegmentOrientationLegend({
+        title: 'Population change',
+        labelUnitText: 'Strong increase',
+        color: '#d13c4b',
+        orientation: 60,
+    })
+)
+```
+### SegmentWidthLegend
+
+![](img/legends/segment_width_legend.png)
+
+```javascript
+app.layers[0].styles[0].legends.push(
+    new gviz.SegmentWidthLegend({
+        title: 'Population in 2018',
+        labelUnitText: 'inhab.',
+    })
+)
+
+```
+
+### SizeLegend
+
+![](img/legends/size_legend.png)
+
+```javascript
+app.layers[0].styles[0].legends.push(
+    new gviz.SizeLegend({
+        title: 'Number of inhabitants',
+        exaggerationFactor: 0.8,
+        shape: 'circle',
+        fillColor: '#e54f37',
+})
+```
+
+
+### Legend styling
+
+You can style each legend by using the 'D3-like' style() function after constructing your legend, like so:
+
+```javascript
+app.layers[0].styles[0].legends.push(
+    new gviz.SizeLegend({
+        title: 'Number of inhabitants',
+        exaggerationFactor: 0.8,
+        shape: 'circle',
+        fillColor: '#3E5791',
+    }).style('padding', '0px 5px')
+)
+```
 
 ## Stretching
 
