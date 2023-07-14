@@ -78,15 +78,16 @@ export class App {
             this.updateExtentGeo()
 
             //go through the background layers
-            for (const layer of this.bgLayers) {
-                //check if layer is visible
-                if (!layer.visible) continue
-                if (zf > layer.maxZoom) continue
-                if (zf < layer.minZoom) continue
+            if (this.showBgLayers)
+                for (const layer of this.bgLayers) {
+                    //check if layer is visible
+                    if (!layer.visible) continue
+                    if (zf > layer.maxZoom) continue
+                    if (zf < layer.minZoom) continue
 
-                //draw layer
-                layer.draw(this.cg)
-            }
+                    //draw layer
+                    layer.draw(this.cg)
+                }
 
             //go through the layers
             for (const layer of this.layers) {
