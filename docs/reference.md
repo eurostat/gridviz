@@ -759,91 +759,12 @@ Gridviz offers different types of legends that are suited to different cartograp
 -   [SegmentWidthLegend](#segmentwidthlegend)
 -   [SizeLegend](#sizelegend)
 
-For styling legends see [Legend Styling](#legend-styling)
 
 The legends are appended to the div element specified in the `legendDivId` property in the [App options object](#app-options-object). If this is not specified then gridviz will generate one automatically.
 
-### ColorCategoryLegend
+Each layer style can have an array of legends.
 
-![](img/legends/color_category_legend.png)
-
-```javascript
-app.layers[0].styles[0].legends.push(
-    new gviz.ColorCategoryLegend({
-        title: 'Dominant leaf type',
-        colCat: [
-            ['#c6df58', 'None'],
-            ['#9fd045', 'Mainly broadleaved'],
-            ['#38a43b', 'Mainly coniferous'],
-        ],
-        shape: 'square',
-    })
-)
-```
-
-
-### ColorDiscreteLegend
-
-![](img/legends/color_discrete_legend.png)
-
-```javascript
-app.layers[0].styles[0].legends.push(
-    new gviz.ColorDiscreteLegend({
-        title: 'Travel time to nearest health service, in minutes',
-        colors: ["#FDFECC","#B2E3AA","#6AC5A4","#4FA1A2","#427C9A","#3E5791","#3D3562","#281A2C"],
-        breaksText: [5, 10, 15, 20, 30, 45, 60, 90],
-        width: 300,
-    })
-)
-```
-
-### ColorLegend
-
-![](img/legends/color_legend.png)
-
-```javascript
-app.layers[0].styles[0].legends.push(
-    new gviz.ColorLegend({
-        title: 'Number of inhabitants',
-        width: 400,
-        ticks: 5,
-        colorRamp: d3.interpolateOrRd,
-        fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
-    })
-)
-```
-
-### SegmentOrientationLegend
-
-![](img/legends/segment_orientation_legend.png)
-
-```javascript
-app.layers[0].styles[0].legends.push(
-    new gviz.SegmentOrientationLegend({
-        title: 'Population change',
-        labelUnitText: 'Strong increase',
-        color: '#d13c4b',
-        orientation: 60,
-    })
-)
-```
-### SegmentWidthLegend
-
-![](img/legends/segment_width_legend.png)
-
-```javascript
-app.layers[0].styles[0].legends.push(
-    new gviz.SegmentWidthLegend({
-        title: 'Population in 2018',
-        labelUnitText: 'inhab.',
-    })
-)
-
-```
-
-### SizeLegend
-
-![](img/legends/size_legend.png)
+To add a legend, simply push it to the corresponding legends array of that style, for example:
 
 ```javascript
 app.layers[0].styles[0].legends.push(
@@ -852,7 +773,103 @@ app.layers[0].styles[0].legends.push(
         exaggerationFactor: 0.8,
         shape: 'circle',
         fillColor: '#e54f37',
+    })
+)
+```
+
+For styling legends see [Legend Styling](#legend-styling).
+
+### ColorCategoryLegend
+
+![](img/legends/color_category_legend.png)
+
+```javascript
+
+new gviz.ColorCategoryLegend({
+    title: 'Dominant leaf type',
+    colCat: [
+        ['#c6df58', 'None'],
+        ['#9fd045', 'Mainly broadleaved'],
+        ['#38a43b', 'Mainly coniferous'],
+    ],
+    shape: 'square',
 })
+
+```
+
+
+### ColorDiscreteLegend
+
+![](img/legends/color_discrete_legend.png)
+
+```javascript
+
+new gviz.ColorDiscreteLegend({
+    title: 'Travel time to nearest health service, in minutes',
+    colors: ["#FDFECC","#B2E3AA","#6AC5A4","#4FA1A2","#427C9A","#3E5791","#3D3562","#281A2C"],
+    breaksText: [5, 10, 15, 20, 30, 45, 60, 90],
+    width: 300,
+})
+
+```
+
+### ColorLegend
+
+![](img/legends/color_legend.png)
+
+```javascript
+
+new gviz.ColorLegend({
+    title: 'Number of inhabitants',
+    width: 400,
+    ticks: 5,
+    colorRamp: d3.interpolateOrRd,
+    fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+})
+
+```
+
+### SegmentOrientationLegend
+
+![](img/legends/segment_orientation_legend.png)
+
+```javascript
+
+new gviz.SegmentOrientationLegend({
+    title: 'Population change',
+    labelUnitText: 'Strong increase',
+    color: '#d13c4b',
+    orientation: 60,
+})
+
+```
+### SegmentWidthLegend
+
+![](img/legends/segment_width_legend.png)
+
+```javascript
+
+new gviz.SegmentWidthLegend({
+    title: 'Population in 2018',
+    labelUnitText: 'inhab.',
+})
+
+
+```
+
+### SizeLegend
+
+![](img/legends/size_legend.png)
+
+```javascript
+
+new gviz.SizeLegend({
+    title: 'Number of inhabitants',
+    exaggerationFactor: 0.8,
+    shape: 'circle',
+    fillColor: '#e54f37',
+})
+
 ```
 
 
@@ -861,14 +878,14 @@ app.layers[0].styles[0].legends.push(
 You can style each legend by using the 'D3-like' style() function after constructing your legend, like so:
 
 ```javascript
-app.layers[0].styles[0].legends.push(
-    new gviz.SizeLegend({
-        title: 'Number of inhabitants',
-        exaggerationFactor: 0.8,
-        shape: 'circle',
-        fillColor: '#3E5791',
-    }).style('padding', '0px 5px')
-)
+
+new gviz.SizeLegend({
+    title: 'Number of inhabitants',
+    exaggerationFactor: 0.8,
+    shape: 'circle',
+    fillColor: '#3E5791',
+}).style('padding', '0px 5px')
+
 ```
 
 ## Stretching
