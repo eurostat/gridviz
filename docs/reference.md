@@ -54,6 +54,7 @@
     - [Showing labels](#showing-labels)
     - [Showing boundaries](#showing-boundaries)
   - [Tooltip](#tooltip)
+  - [Leaflet](#leaflet)
   - [Alright?](#alright)
 
 Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
@@ -1115,6 +1116,35 @@ You can adjust the tooltip settings by specifying a tooltip object in the [app o
 | _opts_.**font-family**        | string | 'Helvetica, Arial, sans-serif' | The tooltip font-family.                                                              |
 
 For more information, [see the code](../src/Tooltip.js).
+
+## Leaflet
+
+Gridviz can be used with leaflet by using the [leaflet-gridviz plugin](https://github.com/eurostat/leaflet-gridviz)
+
+Usage:
+
+```javascript
+// import leaflet-gridviz after importing leaflet
+<script src="https://www.unpkg.com/leaflet-gridviz"></script>
+
+// create your leaflet map
+let map = new L.Map('map', {
+    center: ['50.00754', '19.98211'],
+})
+
+// define your leaflet-gridviz layer
+let gridvizLayer = new L.GridvizLayer(AppOptions)
+
+// add it to the map
+gridvizLayer.addTo(map)
+
+//then customize it as you wish by using the gridviz app attached to our GridvizLayer...
+gridvizLayer.app
+    .addMultiScaleTiledGridLayer(etc)
+
+```
+
+
 
 ## Alright?
 
