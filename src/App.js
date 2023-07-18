@@ -186,7 +186,7 @@ export class App {
         this.legendDivId = opts.legendDivId || 'gvizLegend'
         this.legend = select('#' + this.legendDivId)
         if (this.legend.empty()) {
-            this.legend = select('#' + container.id)
+            this.legend = select(container.id ? '#' + container.id : 'body')
                 .append('div')
                 .attr('id', this.legendDivId)
                 .style('position', 'absolute')
@@ -526,7 +526,6 @@ export class App {
         const ds = this.makeCSVGridDataset(url, resolution, opts)
         return this.addLayerFromDataset(ds, styles, opts)
     }
-
 
     /**
      *
