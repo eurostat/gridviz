@@ -48,7 +48,7 @@ export class Tooltip {
         this.parentElement = opts.parentElement || document.body
 
         /**
-         * @private
+         * @public
          * @type {import("d3-selection").Selection} */
         this.tooltip = select('#' + this.div)
         if (this.tooltip.empty())
