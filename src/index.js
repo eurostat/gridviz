@@ -11,6 +11,7 @@ export { DatasetComponent } from './DatasetComponent.js'
 
 // export dataset types
 export { TiledGrid } from './dataset/TiledGrid.js'
+export { GridTile } from './dataset/GridTile.js'
 export { CSVGrid } from './dataset/CSVGrid.js'
 //export { GeoTIFF } from "./dataset/GeoTIFF"
 
