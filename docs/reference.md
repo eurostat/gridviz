@@ -2,60 +2,60 @@
 
 ## Table of contents
 
-- [Gridviz API reference](#gridviz-api-reference)
-  - [Table of contents](#table-of-contents)
-  - [Usage](#usage)
-  - [App Configuration](#app-configuration)
-    - [App options object](#app-options-object)
-  - [Multi layer, multi style and multi scale mapping](#multi-layer-multi-style-and-multi-scale-mapping)
-  - [Adding data](#adding-data)
-    - [Single CSV file](#single-csv-file)
-    - [Multi scale CSV data](#multi-scale-csv-data)
-    - [Tiled data](#tiled-data)
-    - [Multi scale tiled data](#multi-scale-tiled-data)
-    - [Data pre-processing and filtering](#data-pre-processing-and-filtering)
-  - [Basic styles](#basic-styles)
-    - [Shape/Color/Size Style](#shapecolorsize-style)
-    - [Square color WebGL Style](#square-color-webgl-style)
-    - [Square color category WebGL style](#square-color-category-webgl-style)
-    - [Composition style](#composition-style)
-    - [Segment style](#segment-style)
-    - [Stroke style](#stroke-style)
-  - [Advanced styles](#advanced-styles)
-    - [Tanaka style](#tanaka-style)
-    - [Dot density style](#dot-density-style)
-    - [Pillars style](#pillars-style)
-    - [Text style](#text-style)
-  - [Side styles](#side-styles)
-    - [Side style](#side-style)
-    - [Side category style](#side-category-style)
-    - [Contour style](#contour-style)
-  - [Esthetic styles](#esthetic-styles)
-    - [JoyPlot Style](#joyplot-style)
-    - [Mosaic style](#mosaic-style)
-    - [Ninja star style](#ninja-star-style)
-    - [Lego style](#lego-style)
-    - [Lego category style](#lego-category-style)
-  - [Kernel smoothing](#kernel-smoothing)
-  - [Others styles](#others-styles)
-  - [Legends](#legends)
-    - [ColorCategoryLegend](#colorcategorylegend)
-    - [ColorDiscreteLegend](#colordiscretelegend)
-    - [ColorLegend](#colorlegend)
-    - [SegmentOrientationLegend](#segmentorientationlegend)
-    - [SegmentWidthLegend](#segmentwidthlegend)
-    - [SizeLegend](#sizelegend)
-    - [Legend styling](#legend-styling)
-  - [Stretching](#stretching)
-  - [Background layer](#background-layer)
-    - [Tiled layer](#tiled-layer)
-    - [WMS](#wms)
-  - [Foreground information](#foreground-information)
-    - [Showing labels](#showing-labels)
-    - [Showing boundaries](#showing-boundaries)
-  - [Tooltip](#tooltip)
-  - [Leaflet](#leaflet)
-  - [Alright?](#alright)
+-   [Gridviz API reference](#gridviz-api-reference)
+    -   [Table of contents](#table-of-contents)
+    -   [Usage](#usage)
+    -   [App Configuration](#app-configuration)
+        -   [App options object](#app-options-object)
+    -   [Multi layer, multi style and multi scale mapping](#multi-layer-multi-style-and-multi-scale-mapping)
+    -   [Adding data](#adding-data)
+        -   [Single CSV file](#single-csv-file)
+        -   [Multi scale CSV data](#multi-scale-csv-data)
+        -   [Tiled data](#tiled-data)
+        -   [Multi scale tiled data](#multi-scale-tiled-data)
+        -   [Data pre-processing and filtering](#data-pre-processing-and-filtering)
+    -   [Basic styles](#basic-styles)
+        -   [Shape/Color/Size Style](#shapecolorsize-style)
+        -   [Square color WebGL Style](#square-color-webgl-style)
+        -   [Square color category WebGL style](#square-color-category-webgl-style)
+        -   [Composition style](#composition-style)
+        -   [Segment style](#segment-style)
+        -   [Stroke style](#stroke-style)
+    -   [Advanced styles](#advanced-styles)
+        -   [Tanaka style](#tanaka-style)
+        -   [Dot density style](#dot-density-style)
+        -   [Pillars style](#pillars-style)
+        -   [Text style](#text-style)
+    -   [Side styles](#side-styles)
+        -   [Side style](#side-style)
+        -   [Side category style](#side-category-style)
+        -   [Contour style](#contour-style)
+    -   [Esthetic styles](#esthetic-styles)
+        -   [JoyPlot Style](#joyplot-style)
+        -   [Mosaic style](#mosaic-style)
+        -   [Ninja star style](#ninja-star-style)
+        -   [Lego style](#lego-style)
+        -   [Lego category style](#lego-category-style)
+    -   [Kernel smoothing](#kernel-smoothing)
+    -   [Others styles](#others-styles)
+    -   [Legends](#legends)
+        -   [ColorCategoryLegend](#colorcategorylegend)
+        -   [ColorDiscreteLegend](#colordiscretelegend)
+        -   [ColorLegend](#colorlegend)
+        -   [SegmentOrientationLegend](#segmentorientationlegend)
+        -   [SegmentWidthLegend](#segmentwidthlegend)
+        -   [SizeLegend](#sizelegend)
+        -   [Legend styling](#legend-styling)
+    -   [Stretching](#stretching)
+    -   [Background layer](#background-layer)
+        -   [Tiled layer](#tiled-layer)
+        -   [WMS](#wms)
+    -   [Foreground information](#foreground-information)
+        -   [Showing labels](#showing-labels)
+        -   [Showing boundaries](#showing-boundaries)
+    -   [Tooltip](#tooltip)
+    -   [Leaflet](#leaflet)
+    -   [Alright?](#alright)
 
 Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/gridviz/issues/new) !
 
@@ -107,6 +107,7 @@ The following methods allow further configuration of a [Gridviz](https://github.
 | _app_.**addBackgroundLayer**([options])                                     | object                 |               | Add a background image layer, see [here](#background-layer).                                                                                                                                                           |
 | _app_.**setViewFromURL**()                                                  |                        |               | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_. |
 | _app_.**redraw**()                                                          |                        |               | Force the map to redraw.                                                                                                                                                                                               |
+| _app_.**destroy**()                                                         |                        |               | Destroy the app, canvas, legend and tooltip and remove their event listeners.                                                                                                                                          |
 
 ### App options object
 
@@ -760,7 +761,6 @@ Gridviz offers different types of legends that are suited to different cartograp
 -   [SegmentWidthLegend](#segmentwidthlegend)
 -   [SizeLegend](#sizelegend)
 
-
 The legends are appended to the div element specified in the `legendDivId` property in the [App options object](#app-options-object). If this is not specified then gridviz will generate one automatically.
 
 Each layer style can have an array of legends.
@@ -796,7 +796,6 @@ new gviz.ColorCategoryLegend({
 })
 ```
 
-
 ### ColorDiscreteLegend
 
 ![](img/legends/color_discrete_legend.png)
@@ -804,7 +803,7 @@ new gviz.ColorCategoryLegend({
 ```javascript
 new gviz.ColorDiscreteLegend({
     title: 'Travel time to nearest health service, in minutes',
-    colors: ["#FDFECC","#B2E3AA","#6AC5A4","#4FA1A2","#427C9A","#3E5791","#3D3562","#281A2C"],
+    colors: ['#FDFECC', '#B2E3AA', '#6AC5A4', '#4FA1A2', '#427C9A', '#3E5791', '#3D3562', '#281A2C'],
     breaksText: [5, 10, 15, 20, 30, 45, 60, 90],
     width: 300,
 })
@@ -836,6 +835,7 @@ new gviz.SegmentOrientationLegend({
     orientation: 60,
 })
 ```
+
 ### SegmentWidthLegend
 
 ![](img/legends/segment_width_legend.png)
@@ -859,7 +859,6 @@ new gviz.SizeLegend({
     fillColor: '#e54f37',
 })
 ```
-
 
 ### Legend styling
 
@@ -1098,22 +1097,23 @@ By default, the **cellInfoHTML** function is a function returning a list of all 
 
 You can adjust the tooltip settings by specifying a tooltip object in the [app options](#app-options-object), using the following properties:
 
-| Property                      | Type   | Default                        | Description                                                                           |
-| ----------------------------- | ------ | ------------------------------ | ------------------------------------------------------------------------------------- |
-| _opts_.**div**                | String | 'tooltip_eurostat'             | Specify the div id to use as a tooltip. If unspecified, one is created automatically. |
-| _opts_.**transitionDuration** | string | 100                            | The duration in ms of the tooltip transition animation.                               |
-| _opts_.**xOffset**            | number | 30                             | The X offset to apply to the position of the tooltip container.                       |
-| _opts_.**yOffset**            | number | 20                             | The Y offset to apply to the position of the tooltip container.                       |
-| _opts_.**xMouseOffset**       | number | 0                              | The X offset to apply to the position of the mouse when hovering a cell.              |
-| _opts_.**yMouseOffset**       | number | 0                              | The Y offset to apply to the position of the mouse when hovering a cell.              |
-| _opts_.**maxWidth**           | string | 20em                           | The max width of the tooltip.                                                         |
-| _opts_.**fontSize**           | string | 1.2em                          | The tooltip font size.                                                                |
-| _opts_.**background**         | string | 'white'                        | The background color of the tooltip                                                   |
-| _opts_.**padding**            | string | '5px'                          | The tooltip padding.                                                                  |
-| _opts_.**border**             | string | '0px'                          | The tooltip border CSS property.                                                      |
-| _opts_.**border-radius**      | string | '5px'                          | The tooltip border-radius.                                                            |
-| _opts_.**box-shadow**         | string | '5px 5px 5px grey'             | The tooltip box-shadow.                                                               |
-| _opts_.**font-family**        | string | 'Helvetica, Arial, sans-serif' | The tooltip font-family.                                                              |
+| Property                      | Type        | Default                        | Description                                                                           |
+| ----------------------------- | ----------- | ------------------------------ | ------------------------------------------------------------------------------------- |
+| _opts_.**div**                | String      | 'tooltip_eurostat'             | Specify the div id to use as a tooltip. If unspecified, one is created automatically. |
+| _opts_.**parentElement**      | HTMLelement | document.body                  | Specify the HTML element to which the tooltip will be appended                        |
+| _opts_.**transitionDuration** | string      | 100                            | The duration in ms of the tooltip transition animation.                               |
+| _opts_.**xOffset**            | number      | 30                             | The X offset to apply to the position of the tooltip container.                       |
+| _opts_.**yOffset**            | number      | 20                             | The Y offset to apply to the position of the tooltip container.                       |
+| _opts_.**xMouseOffset**       | number      | 0                              | The X offset to apply to the position of the mouse when hovering a cell.              |
+| _opts_.**yMouseOffset**       | number      | 0                              | The Y offset to apply to the position of the mouse when hovering a cell.              |
+| _opts_.**maxWidth**           | string      | 20em                           | The max width of the tooltip.                                                         |
+| _opts_.**fontSize**           | string      | 1.2em                          | The tooltip font size.                                                                |
+| _opts_.**background**         | string      | 'white'                        | The background color of the tooltip                                                   |
+| _opts_.**padding**            | string      | '5px'                          | The tooltip padding.                                                                  |
+| _opts_.**border**             | string      | '0px'                          | The tooltip border CSS property.                                                      |
+| _opts_.**border-radius**      | string      | '5px'                          | The tooltip border-radius.                                                            |
+| _opts_.**box-shadow**         | string      | '5px 5px 5px grey'             | The tooltip box-shadow.                                                               |
+| _opts_.**font-family**        | string      | 'Helvetica, Arial, sans-serif' | The tooltip font-family.                                                              |
 
 For more information, [see the code](../src/Tooltip.js).
 
@@ -1125,7 +1125,7 @@ Usage:
 
 ```javascript
 // import leaflet-gridviz after importing leaflet
-<script src="https://www.unpkg.com/leaflet-gridviz"></script>
+;<script src="https://www.unpkg.com/leaflet-gridviz"></script>
 
 // create your leaflet map
 let map = new L.Map('map', {
@@ -1139,12 +1139,8 @@ let gridvizLayer = new L.GridvizLayer(AppOptions)
 gridvizLayer.addTo(map)
 
 //then customize it as you wish by using the gridviz app attached to our GridvizLayer...
-gridvizLayer.app
-    .addMultiScaleTiledGridLayer(etc)
-
+gridvizLayer.app.addMultiScaleTiledGridLayer(etc)
 ```
-
-
 
 ## Alright?
 

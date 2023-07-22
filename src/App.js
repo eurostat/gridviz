@@ -37,17 +37,17 @@ export class App {
         this.layers = []
 
         //get container element
-        container = container || document.getElementById('gridviz')
-        if (!container) {
+        this.container = container || document.getElementById('gridviz')
+        if (!this.container) {
             console.error('Cannot find gridviz container element.')
             return
         }
 
         //set dimensions
         /** @type {number} */
-        this.w = opts.w || container.offsetWidth
+        this.w = opts.w || this.container.offsetWidth
         /** @type {number} */
-        this.h = opts.h || container.offsetHeight
+        this.h = opts.h || this.container.offsetHeight
 
         //create canvas element if user doesnt specify one
         /** @type {HTMLCanvasElement} */
@@ -56,7 +56,7 @@ export class App {
             canvas = document.createElement('canvas')
             canvas.setAttribute('width', '' + this.w)
             canvas.setAttribute('height', '' + this.h)
-            container.appendChild(canvas)
+            this.container.appendChild(canvas)
         }
 
         /** Make geo canvas
@@ -161,7 +161,7 @@ export class App {
             if (monitor) monitorDuration('End redraw')
 
             // listen for resize events on the App's container and handle them
-            this.defineResizeObserver(container, canvas)
+            this.defineResizeObserver(this.container, canvas)
 
             return this
         }
@@ -186,7 +186,9 @@ export class App {
         this.legendDivId = opts.legendDivId || 'gvizLegend'
         this.legend = select('#' + this.legendDivId)
         if (this.legend.empty()) {
-            this.legend = select(container.id ? '#' + container.id : 'body')
+            this.legend = select(
+                this.container.id && this.container.id != '' ? '#' + this.container.id : 'body'
+            )
                 .append('div')
                 .attr('id', this.legendDivId)
                 .style('position', 'absolute')
@@ -208,7 +210,7 @@ export class App {
 
         // set App container as default parent element for tooltip
         if (!opts.tooltip) opts.tooltip = {}
-        if (!opts.tooltip.parentElement) opts.tooltip.parentElement = container
+        if (!opts.tooltip.parentElement) opts.tooltip.parentElement = this.container
 
         /**
          * @private
@@ -278,15 +280,14 @@ export class App {
                 if (this.canvasSave) this.cg.ctx.drawImage(this.canvasSave, 0, 0)
             }
         }
-        container.addEventListener('mouseover', (e) => {
-            focusCell(e)
-        })
-        container.addEventListener('mousemove', (e) => {
-            focusCell(e)
-        })
-        container.addEventListener('mouseout', () => {
-            this.tooltip.hide()
-        })
+
+        // add event listeners to container
+        this.mouseOverHandler = (e) => focusCell(e)
+        this.mouseMoveHandler = (e) => focusCell(e)
+        this.mouseOutHandler = (e) => this.tooltip.hide()
+        this.container.addEventListener('mouseover', this.mouseOverHandler)
+        this.container.addEventListener('mousemove', this.mouseMoveHandler)
+        this.container.addEventListener('mouseout', this.mouseOutHandler)
 
         // add extra logic to onZoomStartFun
         this.cg.onZoomStartFun = (e) => {
@@ -638,5 +639,30 @@ export class App {
         })
 
         resizeObserver.observe(container)
+    }
+
+    /**
+     * @description Destroy the app and it's event listeners
+     * This should significantly reduce the memory used when creating and destroying gridviz app instances (for example in leaflet-gridviz)
+     * @memberof App
+     */
+    destroy() {
+        // clear layers
+        this.layers = []
+        this.bgLayers = []
+
+        // remove event listeners from container
+        this.container.removeEventListener('mouseover', this.mouseOverHandler)
+        this.container.removeEventListener('mousemove', this.mouseMoveHandler)
+        this.container.removeEventListener('mouseout', this.mouseOutHandler)
+
+        // remove canvas
+        this.cg.canvas.remove()
+
+        // remove legend
+        this.legend?.remove()
+
+        // remove tooltip
+        this.tooltip.tooltip?.remove()
     }
 }
