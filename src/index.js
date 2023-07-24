@@ -33,6 +33,7 @@ export { SquareColorWGLStyle } from './style/SquareColorWGLStyle.js'
 export { SquareColorCatWGLStyle } from './style/SquareColorCatWGLStyle.js'
 export { MosaicStyle } from './style/MosaicStyle.js'
 export { NinjaStarStyle } from './style/NinjaStarStyle.js'
+export { SparklineStyle } from './style/SparklineStyle.js'
 
 // export additional layers
 export { BackgroundLayer } from './BackgroundLayer.js'
