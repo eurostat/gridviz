@@ -14,7 +14,9 @@
         "WebGL",
         "d3",
         "cartography",
-        "bertin"
+        "bertin",
+        "geospatial",
+        "mapping"
     ],
     "homepage": "https://github.com/eurostat/gridviz",
     "author": "Joseph Davies, Julien Gaffuri",
