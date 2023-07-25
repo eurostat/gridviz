@@ -4,11 +4,12 @@
 import { Style } from '../Style.js'
 
 /**
- * Style based on sparkline map of https://datagistips.hypotheses.org/488
+ * Show cell as timeseries chart
+ * Can be used for sparkline map of https://datagistips.hypotheses.org/488
  *
  * @author Julien Gaffuri
  */
-export class SparklineStyle extends Style {
+export class TimeSeriesStyle extends Style {
     /** @param {object} opts */
     constructor(opts) {
         super(opts)
