@@ -25,7 +25,7 @@ export class TimeSeriesStyle extends Style {
         this.widthCol = opts.widthCol
 
         /** A function returning the width of the line, in geo unit
-         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
+         * @type {function(number,number,import("../Style.js").Stat|undefined,number):number} */
         this.width = opts.width || ((v, r, s, z) => 1 * z)
 
         /**
@@ -33,7 +33,7 @@ export class TimeSeriesStyle extends Style {
         this.colorCol = opts.colorCol
 
         /** A function returning the color of the cell segment.
-         * @type {function(number,number,import("../Style").Stat|undefined):string} */
+         * @type {function(number,number,import("../Style.js").Stat|undefined):string} */
         this.color = opts.color || (() => '#EA6BAC')
 
     }
