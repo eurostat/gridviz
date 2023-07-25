@@ -25,7 +25,15 @@ export class SparklineStyle extends Style {
 
         /** A function returning the width of the line, in geo unit
          * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-        this.width = opts.width ||  ((v,r,s,z) => 1*z)
+        this.width = opts.width || ((v, r, s, z) => 1 * z)
+
+        /**
+         * @type {string} */
+        this.colorCol = opts.colorCol
+
+        /** A function returning the color of the cell segment.
+         * @type {function(number,number,import("../Style").Stat|undefined):string} */
+        this.color = opts.color || (() => '#EA6BAC')
 
     }
 
@@ -48,6 +56,12 @@ export class SparklineStyle extends Style {
         if (this.widthCol) {
             //and compute size variable statistics
             statWidth = Style.getStatistics(cells, (c) => c[this.widthCol], true)
+        }
+
+        let statColor
+        if (this.colorCol) {
+            //compute color variable statistics
+            statColor = Style.getStatistics(cells, (c) => c[this.colorCol], true)
         }
 
         //compute cell amplitude
@@ -73,13 +87,6 @@ export class SparklineStyle extends Style {
         if (!ampMax) return
 
 
-        //draw with HTML canvas
-        //in geo coordinates
-        cg.setCanvasTransform()
-
-        cg.ctx.strokeStyle = "black"
-        //
-        cg.ctx.lineCap = 'butt'
 
         const offX = 0 //TODO
         const offY = 0 //TODO
@@ -88,6 +95,12 @@ export class SparklineStyle extends Style {
         const nb = this.ts.length
         const stepX = width / (nb - 1)
 
+        //draw with HTML canvas
+        //in geo coordinates
+        cg.setCanvasTransform()
+
+        cg.ctx.lineCap = 'butt'
+
         for (let c of cells) {
 
             //width
@@ -95,16 +108,13 @@ export class SparklineStyle extends Style {
             const wG = this.width ? this.width(c[this.widthCol], r, statWidth, zf) : undefined
             if (!wG || wG < 0) continue
 
-            cg.ctx.lineWidth = wG
+            //color
+            /** @type {string|undefined} */
+            const col = this.color ? this.color(c[this.colorCol], r, statColor) : undefined
+            if (!col) continue
 
-            /*/get min value
-            let minY
-            {
-                for (let t of this.ts) {
-                    const val = c[t]
-                    if (minY == undefined || val < minY) minY = val
-                }
-            }*/
+            cg.ctx.lineWidth = wG
+            cg.ctx.strokeStyle = col
 
             //draw line
             cg.ctx.beginPath()
