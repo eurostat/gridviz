@@ -26,7 +26,7 @@ export class TimeSeriesStyle extends Style {
 
         /** A function returning the width of the line, in geo unit
          * @type {function(number,number,import("../Style.js").Stat|undefined,number):number} */
-        this.width = opts.width || ((v, r, s, z) => 1 * z)
+        this.width = opts.width || ((v, r, s, z) => 1.5 * z)
 
         /**
          * @type {string} */
@@ -34,7 +34,7 @@ export class TimeSeriesStyle extends Style {
 
         /** A function returning the color of the cell segment.
          * @type {function(number,number,import("../Style.js").Stat|undefined):string} */
-        this.color = opts.color || (() => '#EA6BAC')
+        this.color = opts.color || (() => 'black')
 
     }
 
@@ -88,13 +88,19 @@ export class TimeSeriesStyle extends Style {
         if (!ampMax) return
 
 
-
+        //x
         const offX = 0 //TODO
-        const offY = 0 //TODO
         const width = r
-        const height = r
-        const nb = this.ts.length
         const stepX = width / (nb - 1)
+
+        //y
+        const offY = 0 //TODO
+        const height = r
+        const anchorModeY = "first" //for sparkline
+        //center
+        //bottom
+
+        const nb = this.ts.length
 
         //draw with HTML canvas
         //in geo coordinates
