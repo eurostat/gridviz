@@ -87,6 +87,7 @@ export class TimeSeriesStyle extends Style {
         }
         if (!ampMax) return
 
+        const nb = this.ts.length
 
         //x
         const offX = 0 //TODO
@@ -100,7 +101,6 @@ export class TimeSeriesStyle extends Style {
         //center
         //bottom
 
-        const nb = this.ts.length
 
         //draw with HTML canvas
         //in geo coordinates
