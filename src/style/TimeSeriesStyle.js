@@ -98,8 +98,8 @@ export class TimeSeriesStyle extends Style {
         const offY = 0 //TODO
         const height = r
         const anchorModeY = "first" //for sparkline
-        //center
         //bottom
+        //center
 
 
         //draw with HTML canvas
@@ -125,14 +125,42 @@ export class TimeSeriesStyle extends Style {
 
             //draw line
             cg.ctx.beginPath()
-            const val0 = c[this.ts[0]]
-            for (let i = 0; i < nb; i++) {
-                const val = c[this.ts[i]]
-                if (i == 0)
-                    cg.ctx.moveTo(c.x, c.y)
-                else
-                    cg.ctx.lineTo(c.x + i * stepX, c.y + (val - val0) * height / ampMax)
+
+            if (anchorModeY === "first") {
+                const val0 = c[this.ts[0]]
+                for (let i = 0; i < nb; i++) {
+                    const val = c[this.ts[i]]
+                    if (i == 0)
+                        cg.ctx.moveTo(c.x + offX, c.y + offY)
+                    else
+                        cg.ctx.lineTo(c.x + i * stepX + offX, c.y + (val - val0) * height / ampMax + offY)
+                }
+            } else if (anchorModeY === "bottom") {
+                console.log("Not implemented yet: bottom")
+                //compute min
+                let min
+                for (let t of this.ts) {
+                    const val = c[t];
+                    if (val == undefined) continue
+                    if (min == undefined || val < min) min = val
+                }
+                if (min == undefined) continue
+            } else if (anchorModeY === "center") {
+                console.log("Not implemented yet: center")
+                //compute min and max
+                let min, max
+                for (let t of this.ts) {
+                    const val = c[t];
+                    if (val == undefined) continue
+                    if (min == undefined || val < min) min = val
+                    if (max == undefined || val > max) max = val
+                }
+                if (min == undefined) continue
+
+            } else {
+                console.log("Unexpected anchorModeY: " + anchorModeY)
             }
+
             cg.ctx.stroke()
 
         }
