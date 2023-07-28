@@ -22,11 +22,11 @@ export class TimeSeriesStyle extends Style {
 
         /**
          * @type {string} */
-        this.widthCol = opts.widthCol
+        this.lineWidthCol = opts.lineWidthCol
 
         /** A function returning the width of the line, in geo unit
          * @type {function(number,number,import("../Style.js").Stat|undefined,number):number} */
-        this.width = opts.width || ((v, r, s, z) => 1.5 * z)
+        this.lineWidth = opts.lineWidth || ((v, r, s, z) => 1.5 * z)
 
         /**
          * @type {string} */
@@ -35,6 +35,23 @@ export class TimeSeriesStyle extends Style {
         /** A function returning the color of the cell segment.
          * @type {function(number,number,import("../Style.js").Stat|undefined):string} */
         this.color = opts.color || (() => 'black')
+
+
+        //x
+        /** @type {function(import("../Dataset.js").Cell,number,number):number} */
+        this.offsetX = opts.offsetX || ((c, r, zf) => 0)
+        /** @type {function(import("../Dataset.js").Cell,number,number):number} */
+        this.width = opts.width || ((c, r, zf) => r)
+
+        //y
+        /** @type {function(import("../Dataset.js").Cell,number,number):number} */
+        this.offsetY = opts.offsetY || ((c, r, zf) => 0)
+        /** @type {function(import("../Dataset.js").Cell,number,number):number} */
+        this.height = opts.height || ((c, r, zf) => r)
+        /** @type {function(import("../Dataset.js").Cell,number,number):string} */
+        this.anchorModeY = opts.height || ((c, r, zf) => "center")
+        //TODO enum
+        //first bottom center top
 
     }
 
@@ -54,9 +71,9 @@ export class TimeSeriesStyle extends Style {
         const zf = cg.getZf()
 
         let statWidth
-        if (this.widthCol) {
+        if (this.lineWidthCol) {
             //and compute size variable statistics
-            statWidth = Style.getStatistics(cells, (c) => c[this.widthCol], true)
+            statWidth = Style.getStatistics(cells, (c) => c[this.lineWidthCol], true)
         }
 
         let statColor
@@ -89,65 +106,64 @@ export class TimeSeriesStyle extends Style {
 
         const nb = this.ts.length
 
-        //TODO expose as parameter
-        //x
-        const offX = 0 //TODO
-        const width = r
-        const stepX = width / (nb - 1)
-
-        //TODO expose as parameter
-        //y
-        const offY = 0 //TODO
-        const height = r
-        const anchorModeY = "first"
-        //first bottom center top
-
-
-
         //draw with HTML canvas
         //in geo coordinates
         cg.setCanvasTransform()
 
         cg.ctx.lineCap = 'butt'
-
         for (let c of cells) {
 
-            //width
+            //line width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(c[this.widthCol], r, statWidth, zf) : undefined
+            const wG = this.lineWidth ? this.lineWidth(c[this.lineWidthCol], r, statWidth, zf) : undefined
             if (!wG || wG < 0) continue
 
-            //color
+            //line color
             /** @type {string|undefined} */
             const col = this.color ? this.color(c[this.colorCol], r, statColor) : undefined
             if (!col) continue
+
+
+            //x
+            const offX = this.offsetX ? this.offsetX(c, r, zf) : 0
+            if (offX == undefined || isNaN(offX)) continue
+            const w = this.width ? this.width(c, r, zf) : r
+            if (w == undefined || isNaN(w)) continue
+
+            //y
+            const offY = this.offsetY ? this.offsetY(c, r, zf) : 0
+            if (offY == undefined || isNaN(offY)) continue
+            const h = this.height ? this.height(c, r, zf) : r
+            if (h == undefined || isNaN(h)) continue
+            const anchY = this.anchorModeY ? this.anchorModeY(c, r, zf) : "first"
+            if (!anchY) continue
 
             cg.ctx.lineWidth = wG
             cg.ctx.strokeStyle = col
 
             //compute anchor Y figures
-            let v0, d0
-            if (anchorModeY === "first") {
+            let val0, y0
+            if (anchY === "first") {
                 //get first value
-                v0 = c[this.ts[0]]
-                d0 = 0
-            } else if (anchorModeY === "bottom") {
+                val0 = c[this.ts[0]]
+                y0 = 0
+            } else if (anchY === "bottom") {
                 //get min
                 for (let t of this.ts) {
                     const val = +c[t];
                     if (val == undefined) continue
-                    if (v0 == undefined || val < v0) v0 = val
+                    if (val0 == undefined || val < val0) val0 = val
                 }
-                d0 = 0
-            } else if (anchorModeY === "top") {
+                y0 = 0
+            } else if (anchY === "top") {
                 //get max
                 for (let t of this.ts) {
                     const val = +c[t];
                     if (val == undefined) continue
-                    if (v0 == undefined || val > v0) v0 = val
+                    if (val0 == undefined || val > val0) val0 = val
                 }
-                d0 = r
-            } else if (anchorModeY === "center") {
+                y0 = r
+            } else if (anchY === "center") {
                 //get min and max
                 let min, max
                 for (let t of this.ts) {
@@ -156,24 +172,25 @@ export class TimeSeriesStyle extends Style {
                     if (min == undefined || val < min) min = val
                     if (max == undefined || val > max) max = val
                 }
-                v0 = (+max + +min) * 0.5
-                d0 = r / 2
+                val0 = (+max + +min) * 0.5
+                y0 = r / 2
             } else {
-                console.log("Unexpected anchorModeY: " + anchorModeY)
+                console.log("Unexpected anchorModeY: " + anchY)
                 continue;
             }
 
-            if (v0 == undefined || isNaN(v0)) continue
+            if (val0 == undefined || isNaN(val0)) continue
 
             //draw line
             cg.ctx.beginPath()
+            const sX = w / (nb - 1)
             for (let i = 0; i < nb; i++) {
                 const val = c[this.ts[i]]
-                if (!val) break
+                if (val == undefined) break
                 if (i == 0)
-                    cg.ctx.moveTo(c.x + i * stepX + offX, c.y + d0 + (val - v0) * height / ampMax + offY)
+                    cg.ctx.moveTo(c.x + i * sX + offX, c.y + y0 + (val - val0) * h / ampMax + offY)
                 else
-                    cg.ctx.lineTo(c.x + i * stepX + offX, c.y + d0 + (val - v0) * height / ampMax + offY)
+                    cg.ctx.lineTo(c.x + i * sX + offX, c.y + y0 + (val - val0) * h / ampMax + offY)
             }
 
             cg.ctx.stroke()
