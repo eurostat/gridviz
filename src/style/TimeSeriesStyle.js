@@ -97,9 +97,9 @@ export class TimeSeriesStyle extends Style {
         //y
         const offY = 0 //TODO
         const height = r
-        const anchorModeY = "first" //for sparkline
-        //bottom
-        //center
+        const anchorModeY = "first"
+        //first bottom center top
+
 
 
         //draw with HTML canvas
@@ -123,31 +123,30 @@ export class TimeSeriesStyle extends Style {
             cg.ctx.lineWidth = wG
             cg.ctx.strokeStyle = col
 
-            //draw line
-            cg.ctx.beginPath()
-
+            //compute anchor Y figures
+            let v0, d0
             if (anchorModeY === "first") {
-                const val0 = c[this.ts[0]]
-                for (let i = 0; i < nb; i++) {
-                    const val = c[this.ts[i]]
-                    if (i == 0)
-                        cg.ctx.moveTo(c.x + offX, c.y + offY)
-                    else
-                        cg.ctx.lineTo(c.x + i * stepX + offX, c.y + (val - val0) * height / ampMax + offY)
-                }
+                //get first value
+                v0 = c[this.ts[0]]
+                d0 = 0
             } else if (anchorModeY === "bottom") {
-                console.log("Not implemented yet: bottom")
-                //compute min
-                let min
+                //get min
                 for (let t of this.ts) {
-                    const val = c[t];
+                    const val = +c[t];
                     if (val == undefined) continue
-                    if (min == undefined || val < min) min = val
+                    if (v0 == undefined || val < v0) v0 = val
                 }
-                if (min == undefined) continue
+                d0 = 0
+            } else if (anchorModeY === "top") {
+                //get max
+                for (let t of this.ts) {
+                    const val = +c[t];
+                    if (val == undefined) continue
+                    if (v0 == undefined || val > v0) v0 = val
+                }
+                d0 = r
             } else if (anchorModeY === "center") {
-                console.log("Not implemented yet: center")
-                //compute min and max
+                //get min and max
                 let min, max
                 for (let t of this.ts) {
                     const val = c[t];
@@ -155,10 +154,24 @@ export class TimeSeriesStyle extends Style {
                     if (min == undefined || val < min) min = val
                     if (max == undefined || val > max) max = val
                 }
-                if (min == undefined) continue
-
+                v0 = (+max + +min) * 0.5
+                d0 = r / 2
             } else {
                 console.log("Unexpected anchorModeY: " + anchorModeY)
+                continue;
+            }
+
+            if (v0 == undefined || isNaN(v0)) continue
+
+            //draw line
+            cg.ctx.beginPath()
+            for (let i = 0; i < nb; i++) {
+                const val = c[this.ts[i]]
+                if (!val) break
+                if (i == 0)
+                    cg.ctx.moveTo(c.x + i * stepX + offX, c.y + d0 + (val - v0) * height / ampMax + offY)
+                else
+                    cg.ctx.lineTo(c.x + i * stepX + offX, c.y + d0 + (val - v0) * height / ampMax + offY)
             }
 
             cg.ctx.stroke()
