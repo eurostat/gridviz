@@ -3,6 +3,8 @@
 
 import { Style } from '../Style.js'
 
+/** @typedef {"first"|"bottom"|"center"|"top"|"last"} AnchorModeYEnum */
+
 /**
  * Show cell as timeseries chart
  * Can be used for sparkline map of https://datagistips.hypotheses.org/488
@@ -48,10 +50,8 @@ export class TimeSeriesStyle extends Style {
         this.offsetY = opts.offsetY || ((c, r, zf) => 0)
         /** @type {function(import("../Dataset.js").Cell,number,number):number} */
         this.height = opts.height || ((c, r, zf) => r)
-        /** @type {function(import("../Dataset.js").Cell,number,number):string} */
+        /** @type {function(import("../Dataset.js").Cell,number,number):AnchorModeYEnum} */
         this.anchorModeY = opts.height || ((c, r, zf) => "center")
-        //TODO enum
-        //first bottom center top
 
     }
 
@@ -146,6 +146,10 @@ export class TimeSeriesStyle extends Style {
             if (anchY === "first") {
                 //get first value
                 val0 = c[this.ts[0]]
+                y0 = 0
+            } else if (anchY === "last") {
+                //get last value
+                val0 = c[this.ts[this.ts.length - 1]]
                 y0 = 0
             } else if (anchY === "bottom") {
                 //get min
