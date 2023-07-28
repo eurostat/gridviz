@@ -32,10 +32,12 @@
                         ts: ["2006", "2011", "2018"],
                         color: () => "black",
                         lineWidthCol: "2018",
-                        lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.5) * 6) * z },
+                        lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.4) * 7) * z },
                         //offsetX: (c, r, z) => r / 2,
                         //offsetY: (c, r, z) => r / 2,
-                        anchorModeY: (c, r, z) => "first"
+                        //width: (c, r, z) => 1.5*r,
+                        //height: (c, r, z) => 2*r,
+                        //anchorModeY: (c, r, z) => "first"
                     })],
                 {
                     //the maximum pixel size before jumping to a lower resolution

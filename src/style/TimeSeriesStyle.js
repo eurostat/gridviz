@@ -51,7 +51,7 @@ export class TimeSeriesStyle extends Style {
         /** @type {function(import("../Dataset.js").Cell,number,number):number} */
         this.height = opts.height || ((c, r, zf) => r)
         /** @type {function(import("../Dataset.js").Cell,number,number):AnchorModeYEnum} */
-        this.anchorModeY = opts.height || ((c, r, zf) => "center")
+        this.anchorModeY = opts.anchorModeY || ((c, r, zf) => "center")
 
     }
 
@@ -135,7 +135,7 @@ export class TimeSeriesStyle extends Style {
             if (offY == undefined || isNaN(offY)) continue
             const h = this.height ? this.height(c, r, zf) : r
             if (h == undefined || isNaN(h)) continue
-            const anchY = this.anchorModeY ? this.anchorModeY(c, r, zf) : "first"
+            const anchY = this.anchorModeY ? this.anchorModeY(c, r, zf) : "center"
             if (!anchY) continue
 
             cg.ctx.lineWidth = wG
