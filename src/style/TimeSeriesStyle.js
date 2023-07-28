@@ -89,11 +89,13 @@ export class TimeSeriesStyle extends Style {
 
         const nb = this.ts.length
 
+        //TODO expose as parameter
         //x
         const offX = 0 //TODO
         const width = r
         const stepX = width / (nb - 1)
 
+        //TODO expose as parameter
         //y
         const offY = 0 //TODO
         const height = r
