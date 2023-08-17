@@ -110,11 +110,18 @@ export class App {
                 //update dataset view cache
                 if (strong) dsc.updateViewCache(this.cg.extGeo)
 
+                //TODO set layer alpha
+
                 //draw cells, style by style
                 if (strong)
                     for (const s of layer.styles) {
+                        //check if style is visible
+                        if (!s.visible) continue
                         if (zf > s.maxZoom) continue
                         if (zf < s.minZoom) continue
+
+                        //TODO set style alpha
+
                         s.draw(dsc.getViewCache(), dsc.getResolution(), this.cg)
                     }
 

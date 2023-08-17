@@ -23,7 +23,7 @@ export class Layer {
 
         /** An attribute to specify if a layer should be drawn or not
          * @type {boolean} */
-        this.visible = opts.visible == false ? false : true
+        this.visible = opts.visible === false ? false : true
 
         /** The alpha of the layer, between 0.0 (fully transparent) and 1.0 (fully opaque).
          * (see CanvasRenderingContext2D: globalAlpha property)
