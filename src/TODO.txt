@@ -1,6 +1,16 @@
 transparency/blending for layer, styles and all layers (background, etc.)
 
 
+/* globalCompositeOperation :
+  normal | multiply | screen | overlay | 
+  darken | lighten | color-dodge | color-burn | hard-light | 
+  soft-light | difference | exclusion | hue | saturation | 
+  color | luminosity
+*/
+ctx.globalCompositeOperation = 'multiply';
+
+
+
 module parquet
 parquet: monitor, improve
 parquet: make wasm import easier and wasm file smaller (https://github.com/kylebarron/parquet-wasm#custom-builds)

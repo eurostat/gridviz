@@ -110,7 +110,8 @@ export class App {
                 //update dataset view cache
                 if (strong) dsc.updateViewCache(this.cg.extGeo)
 
-                //TODO set layer alpha
+                //set layer alpha
+                this.cg.ctx.globalAlpha = layer.alpha === undefined? 1 : layer.alpha
 
                 //draw cells, style by style
                 if (strong)
@@ -120,7 +121,9 @@ export class App {
                         if (zf > s.maxZoom) continue
                         if (zf < s.minZoom) continue
 
-                        //TODO set style alpha
+                        //set style alpha
+                        //TODO: multiply by layer alpha ?
+                        this.cg.ctx.globalAlpha = s.alpha === undefined? 1 : s.alpha
 
                         s.draw(dsc.getViewCache(), dsc.getResolution(), this.cg)
                     }
