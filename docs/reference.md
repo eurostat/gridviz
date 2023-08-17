@@ -588,7 +588,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/text.html)
 
 [![time series style](img/styles/timeseries.png)](https://eurostat.github.io/gridviz/examples/styles/time_series.html)
 
-This style shows the grid cells as a time series chart.
+This style shows the grid cells as a time series chart. It is particulary suitable to show data that has high temporal granularity and low geographical granurality (variation across time rather than space).
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/time_series.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/time_series.html)).
 
@@ -596,7 +596,18 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/time
 
 | Property        | Type                      | Default                  | Description              |
 | --------------- | ------------------------- | ------------------------ | ------------------------------------ |
-| **aaa**     | string          | undefined                | aaa.        |
+| **ts**     | Array(string)          | undefined       | -        |
+| **offsetX**     | function(c,r,zf):string         | ()=>0         | -        |
+| **width**     | function(c,r,zf):string          | ()=>r        | -     |
+| **offsetY**     | function(c,r,zf):string          | ()=>0     | -     |
+| **height**     | function(c,r,zf):string          | ()=>r  | -  |
+| **anchorModeY**     | function(c,r,zf):string  | (c, r, zf) => "center"     | -  |
+| **lineWidthCol**     | string  | undefined    | -        |
+| **lineWidth**     | string   | undefined   | -        |
+| **colorCol**     | string  | undefined    | -        |
+| **color**     | string  | undefined       | -   |
+
+Note: The style currently requires time series with non-missing data.
 
 
 ## Side styles

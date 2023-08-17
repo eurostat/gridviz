@@ -21,24 +21,6 @@ export class TimeSeriesStyle extends Style {
          * @type {Array.<string>} */
         this.ts = opts.ts
 
-
-        /**
-         * @type {string} */
-        this.lineWidthCol = opts.lineWidthCol
-
-        /** A function returning the width of the line, in geo unit
-         * @type {function(number,number,import("../Style.js").Stat|undefined,number):number} */
-        this.lineWidth = opts.lineWidth || ((v, r, s, z) => 1.5 * z)
-
-        /**
-         * @type {string} */
-        this.colorCol = opts.colorCol
-
-        /** A function returning the color of the cell segment.
-         * @type {function(number,number,import("../Style.js").Stat|undefined):string} */
-        this.color = opts.color || (() => 'black')
-
-
         //x
         /** @type {function(import("../Dataset.js").Cell,number,number):number} */
         this.offsetX = opts.offsetX || ((c, r, zf) => 0)
@@ -52,6 +34,24 @@ export class TimeSeriesStyle extends Style {
         this.height = opts.height || ((c, r, zf) => r)
         /** @type {function(import("../Dataset.js").Cell,number,number):AnchorModeYEnum} */
         this.anchorModeY = opts.anchorModeY || ((c, r, zf) => "center")
+
+
+        /**
+         * @type {string} */
+        this.lineWidthCol = opts.lineWidthCol
+
+        /** A function returning the width of the line, in geo unit
+         * @type {function(number,number,import("../Style.js").Stat|undefined,number):number} */
+        this.lineWidth = opts.lineWidth || ((v, r, s, z) => 1.5 * z)
+
+
+        /**
+         * @type {string} */
+        this.colorCol = opts.colorCol
+
+        /** A function returning the color of the cell segment.
+         * @type {function(number,number,import("../Style.js").Stat|undefined):string} */
+        this.color = opts.color || (() => 'black')
 
     }
 
