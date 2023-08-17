@@ -573,9 +573,9 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/text
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/text.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/text.html)).
 
-| Property        | Type                      | Default                  | Description                                                                                                                                                   |
-| --------------- | ------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **textCol**     | string                    | undefined                | The name of the column/attribute of the tabular data where to retrieve the variable for text.                                                                 |
+| Property        | Type                      | Default                  | Description              |
+| --------------- | ------------------------- | ------------------------ | ------------------------------------ |
+| **textCol**     | string          | undefined                | The name of the column/attribute of the tabular data where to retrieve the variable for text.        |
 | **text**        | function(v,r,s,zf):string | (v, r, s, z) => "X"      | A function returning the text of a cell from its **textCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.                      |
 | **colorCol**    | string                    | undefined                | The name of the column/attribute of the tabular data where to retrieve the variable for color.                                                                |
 | **color**       | function(v,r,s,zf):string | () => "#EA6BAC"          | A function returning the color of the cell from its **colorCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.                  |
@@ -586,7 +586,17 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/text.html)
 
 ### Time series style
 
+[![time series style](img/styles/timeseries.png)](https://eurostat.github.io/gridviz/examples/styles/time_series.html)
+
+This style shows the grid cells as a time series chart.
+
+See [this basic example](https://eurostat.github.io/gridviz/examples/styles/time_series.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/time_series.html)).
+
 (documentation coming soon)
+
+| Property        | Type                      | Default                  | Description              |
+| --------------- | ------------------------- | ------------------------ | ------------------------------------ |
+| **aaa**     | string          | undefined                | aaa.        |
 
 
 ## Side styles
