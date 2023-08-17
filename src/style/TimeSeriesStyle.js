@@ -42,16 +42,16 @@ export class TimeSeriesStyle extends Style {
 
         /** A function returning the width of the line, in geo unit
          * @type {function(number,number,import("../Style.js").Stat|undefined,number):number} */
-        this.lineWidth = opts.lineWidth || ((v, r, s, z) => 1.5 * z)
+        this.lineWidth = opts.lineWidth || ((v, r, s, zf) => 1.5 * zf)
 
 
         /**
          * @type {string} */
         this.colorCol = opts.colorCol
 
-        /** A function returning the color of the cell segment.
-         * @type {function(number,number,import("../Style.js").Stat|undefined):string} */
-        this.color = opts.color || (() => 'black')
+        /** A function returning the color of the cell.
+         * @type {function(number,number,import("../Style.js").Stat|undefined,number):string} */
+        this.color = opts.color || ((v, r, s, zf) => 'black')
 
     }
 
@@ -120,7 +120,7 @@ export class TimeSeriesStyle extends Style {
 
             //line color
             /** @type {string|undefined} */
-            const col = this.color ? this.color(c[this.colorCol], r, statColor) : undefined
+            const col = this.color ? this.color(c[this.colorCol], r, statColor, zf) : undefined
             if (!col) continue
 
 

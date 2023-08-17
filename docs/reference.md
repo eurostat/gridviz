@@ -379,9 +379,9 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 See [this example with transparency](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_transparency.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/shapecolorsize_transparency.html)).
 
 | Property     | Type                      | Default                 | Description                                                                                                                           |
-| ------------ | ------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| ------------ | ------------------------- | ----------------------- | ----------------- |
 | **colorCol** | string                    | undefined               | The name of the column used for the color.                                                                                            |
-| **color**    | function(v,r,s):string    | (v,r,s,zf) => "#EA6BAC" | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
+| **color**    | function(v,r,s,zf):string    | (v,r,s,zf) => "#EA6BAC" | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
 | **sizeCol**  | string                    | undefined               | The name of the column used for the size.                                                                                             |
 | **size**     | function(v,r,s,zf):number | (v,r,s,zf) => r         | A function computing the cell size from its **sizeCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.   |
 | **shape**    | function(c):string        | () => "square"          | A function computing the shape of cell **c**. Expected values are within _{"square", "circle", "diamond", "donut", "none"}_           |
@@ -465,9 +465,9 @@ See [this example with random segment orientation, color, length and width](http
 | **colorCol**    | string                    | undefined       | The name of the column used for the color.                                                                                  |
 | **color**       | function(v,r,s):string    | () => "#EA6BAC" | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, and statistics **s**.          |
 | **lengthCol**   | string                    | undefined       | The name of the column used for the segment length.                                                                         |
-| **length**      | function(v,r,s,zf):number | (v,r,s,zf) => r | A function computing the segment length from its **lengthCol** value **v**, the resolution **r**, statistics **s** and zoom |
+| **length**      | function(v,r,s,zf):number | (v,r,s,zf) => r | A function computing the segment length from its **lengthCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
 | **widthCol**    | string                    | undefined       | The name of the column used for the segment width.                                                                          |
-| **width**       | function(v,r,s,zf):number | (v,r,s,zf) => r | A function computing the segment width from its **widthCol** value **v**, the resolution **r**, statistics **s** and zoom   |
+| **width**       | function(v,r,s,zf):number | (v,r,s,zf) => r | A function computing the segment width from its **widthCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.   |
 
 ### Stroke style
 
@@ -588,7 +588,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/text.html)
 
 [![time series style](img/styles/timeseries.png)](https://eurostat.github.io/gridviz/examples/styles/time_series.html)
 
-This style shows the grid cells as a time series chart. It is particulary suitable to show data that has high temporal granularity and low geographical granurality (variation across time rather than space).
+This style shows the grid cells as a time series chart. It is particulary suitable to show data that has high temporal granularity and low geographical granurality (variation across time rather than space). The time series charts can be colored and sized according to other variables.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/time_series.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/time_series.html)).
 
@@ -602,10 +602,10 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/time
 | **offsetY**     | function(c,r,zf):string          | ()=>0     | -     |
 | **height**     | function(c,r,zf):string          | ()=>r  | -  |
 | **anchorModeY**     | function(c,r,zf):string  | (c, r, zf) => "center"     | -  |
-| **lineWidthCol**     | string  | undefined    | -        |
-| **lineWidth**     | string   | undefined   | -        |
-| **colorCol**     | string  | undefined    | -        |
-| **color**     | string  | undefined       | -   |
+| **lineWidthCol**     | string  | undefined    | The name of the column used for the line width.  |
+| **lineWidth**     | string   | (v, r, s, z) => 1.5 * z   | A function computing the cell chart line width in geographical unit from its **sizeCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.  |
+| **colorCol**     | string  | undefined    | The name of the column used for the color. |
+| **color**     | string  | (v, r, s, zf) => 'black'       | A function computing the cell chart color from its **colorCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.  |
 
 
 ## Side styles
