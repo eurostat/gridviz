@@ -17,7 +17,7 @@
 export class Style {
     /**
      * @abstract
-     * @param {{filter?:function(import('./Dataset').Cell):boolean,offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},minZoom?:number,maxZoom?:number}} opts
+     * @param {{filter?:function(import('./Dataset').Cell):boolean,offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},visible?:boolean,alpha?:number,minZoom?:number,maxZoom?:number}} opts
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(opts) {
@@ -32,6 +32,15 @@ export class Style {
          * @protected
          * @type {function(import('./Dataset').Cell,number,number):{dx:number,dy:number}} */
         this.offset = opts.offset || ((c, r, zf) => ({ dx: 0, dy: 0 }))
+
+        /** An attribute to specify if a style should be drawn or not
+         * @type {boolean} */
+        this.visible = opts.visible == false ? false : true
+
+        /** The alpha of the style, between 0.0 (fully transparent) and 1.0 (fully opaque).
+         * (see CanvasRenderingContext2D: globalAlpha property)
+         * @type {number|undefined} */
+        this.alpha = opts.alpha
 
         /** The minimum zoom factor: Below this level, the layer is not shown.
          * @type {number}
