@@ -10,7 +10,7 @@ export class Layer {
     /**
      * @param {import("./Dataset").Dataset} dataset The multi resolution dataset to show.
      * @param {Array.<import("./Style").Style>} styles The styles, ordered in drawing order.
-     * @param {{visible?:boolean,alpha?:number,compositeOperation?:GlobalCompositeOperation,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import("./Dataset").Cell):string}} opts
+     * @param {{visible?:boolean,alpha?:number,blendOperation?:GlobalCompositeOperation,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import("./Dataset").Cell):string}} opts
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(dataset, styles, opts = {}) {
@@ -30,10 +30,10 @@ export class Layer {
          * @type {number|undefined} */
         this.alpha = opts.alpha
 
-        /** The blend/composite operation
+        /** The blend operation
          * (see CanvasRenderingContext2D: globalCompositeOperation property)
-         * @type {GlobalCompositeOperation|undefined} */
-        this.compositeOperation = opts.compositeOperation
+         * @type {GlobalCompositeOperation} */
+        this.blendOperation = opts.blendOperation || 'normal'
 
         /** The minimum zoom factor: Below this level, the layer is not shown.
          * @type {number} */

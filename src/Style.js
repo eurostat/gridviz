@@ -17,7 +17,7 @@
 export class Style {
     /**
      * @abstract
-     * @param {{filter?:function(import('./Dataset').Cell):boolean,offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},visible?:boolean,alpha?:number,compositeOperation?:GlobalCompositeOperation,minZoom?:number,maxZoom?:number}} opts
+     * @param {{filter?:function(import('./Dataset').Cell):boolean,offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},visible?:boolean,alpha?:number,blendOperation?:GlobalCompositeOperation,minZoom?:number,maxZoom?:number}} opts
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(opts) {
@@ -42,10 +42,10 @@ export class Style {
          * @type {number|undefined} */
         this.alpha = opts.alpha
 
-        /** The blend/composite operation
+        /** The blend operation
          * (see CanvasRenderingContext2D: globalCompositeOperation property)
-         * @type {GlobalCompositeOperation|undefined} */
-        this.compositeOperation = opts.compositeOperation
+         * @type {GlobalCompositeOperation} */
+        this.blendOperation = opts.blendOperation || 'normal'
 
         /** The minimum zoom factor: Below this level, the layer is not shown.
          * @type {number}
