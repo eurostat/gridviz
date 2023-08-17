@@ -592,16 +592,15 @@ This style shows the grid cells as a time series chart. It is particulary suitab
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/time_series.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/time_series.html)).
 
-(documentation coming soon)
 
 | Property        | Type                      | Default                  | Description              |
 | --------------- | ------------------------- | ------------------------ | ------------------------------------ |
 | **ts**     | Array(string)          | undefined       | The columns of the time series, ordered in chronological order. Note that the style currently requires full time series, without missing data.  |
-| **offsetX**     | function(c,r,zf):string         | ()=>0         | -        |
-| **width**     | function(c,r,zf):string          | ()=>r        | -     |
-| **offsetY**     | function(c,r,zf):string          | ()=>0     | -     |
-| **height**     | function(c,r,zf):string          | ()=>r  | -  |
-| **anchorModeY**     | function(c,r,zf):string  | (c, r, zf) => "center"     | -  |
+| **offsetX**     | function(c,r,zf):string         | ()=>0         | A fonction computing the offset along X axis, in geographical unit, from origin point (lower left cell corner). This value is computed from the cell **c**, resolution **r** and zoom factor **zf**.   |
+| **width**     | function(c,r,zf):string          | ()=>r        | A fonction computing the chart width, in geographical unit. This value is computed from the cell **c**, resolution **r** and zoom factor **zf**.  |
+| **offsetY**     | function(c,r,zf):string          | ()=>0     | Same as **offsetX** but along Y axis.     |
+| **height**     | function(c,r,zf):string          | ()=>r  | Same as **width**, but for the chart height.  |
+| **anchorModeY**     | function(c,r,zf):string  | (c, r, zf) => "center"     | The anchor mode along Y axis: *first* to anchor to the first value, *last* for the last, *bottom* to anchor the minimum value to the bottom, *top* to anchor the maximum value to the top, *center* to center the chart along Y axis.  |
 | **lineWidthCol**     | string  | undefined    | The name of the column used for the line width.  |
 | **lineWidth**     | string   | (v, r, s, z) => 1.5 * z   | A function computing the cell chart line width in geographical unit from its **sizeCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.  |
 | **colorCol**     | string  | undefined    | The name of the column used for the color. |
