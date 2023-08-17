@@ -596,7 +596,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/time
 
 | Property        | Type                      | Default                  | Description              |
 | --------------- | ------------------------- | ------------------------ | ------------------------------------ |
-| **ts**     | Array(string)          | undefined       | -        |
+| **ts**     | Array(string)          | undefined       | The columns of the time series, ordered in chronological order. Note that the style currently requires full time series, without missing data.  |
 | **offsetX**     | function(c,r,zf):string         | ()=>0         | -        |
 | **width**     | function(c,r,zf):string          | ()=>r        | -     |
 | **offsetY**     | function(c,r,zf):string          | ()=>0     | -     |
@@ -606,8 +606,6 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/time
 | **lineWidth**     | string   | undefined   | -        |
 | **colorCol**     | string  | undefined    | -        |
 | **color**     | string  | undefined       | -   |
-
-Note: The style currently requires time series with non-missing data.
 
 
 ## Side styles
