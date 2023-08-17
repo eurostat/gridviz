@@ -22,13 +22,15 @@ export class TimeSeriesStyle extends Style {
         this.ts = opts.ts
 
         //x
-        /** @type {function(import("../Dataset.js").Cell,number,number):number} */
+        /** in geo unit
+         * @type {function(import("../Dataset.js").Cell,number,number):number} */
         this.offsetX = opts.offsetX || ((c, r, zf) => 0)
         /** @type {function(import("../Dataset.js").Cell,number,number):number} */
         this.width = opts.width || ((c, r, zf) => r)
 
         //y
-        /** @type {function(import("../Dataset.js").Cell,number,number):number} */
+        /** in geo unit
+         * @type {function(import("../Dataset.js").Cell,number,number):number} */
         this.offsetY = opts.offsetY || ((c, r, zf) => 0)
         /** @type {function(import("../Dataset.js").Cell,number,number):number} */
         this.height = opts.height || ((c, r, zf) => r)
