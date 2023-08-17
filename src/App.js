@@ -110,8 +110,8 @@ export class App {
                 //update dataset view cache
                 if (strong) dsc.updateViewCache(this.cg.extGeo)
 
-                //set layer alpha
-                this.cg.ctx.globalAlpha = layer.alpha === undefined? 1 : layer.alpha
+                //set layer alpha TODO and composite/blend mode
+                this.cg.ctx.globalAlpha = layer.alpha === undefined ? 1 : layer.alpha
 
                 //draw cells, style by style
                 if (strong)
@@ -121,9 +121,10 @@ export class App {
                         if (zf > s.maxZoom) continue
                         if (zf < s.minZoom) continue
 
-                        //set style alpha
+                        //set style alpha TODO and composite/blend mode
                         //TODO: multiply by layer alpha ?
-                        this.cg.ctx.globalAlpha = s.alpha === undefined? 1 : s.alpha
+                        this.cg.ctx.globalAlpha = s.alpha === undefined ? 1 : s.alpha
+                        //this.cg.ctx.globalCompositeOperation = s.compositeOperation === undefined? 1 : s.compositeOperation
 
                         s.draw(dsc.getViewCache(), dsc.getResolution(), this.cg)
                     }
