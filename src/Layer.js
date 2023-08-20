@@ -25,15 +25,16 @@ export class Layer {
          * @type {boolean} */
         this.visible = opts.visible === false ? false : true
 
-        /** The alpha of the layer, between 0.0 (fully transparent) and 1.0 (fully opaque).
+        /** A function returning the alpha (transparency/opacity), between 0.0 (fully transparent) and 1.0 (fully opaque).
+         *  The function parameter is the zoom factor.
          * (see CanvasRenderingContext2D: globalAlpha property)
-         * @type {number|undefined} */
+         * @type {function(number):number|undefined} */
         this.alpha = opts.alpha
 
-        /** The blend operation
+        /** A function returning the blend operation. The function parameter is the zoom factor.
          * (see CanvasRenderingContext2D: globalCompositeOperation property)
          * @type {GlobalCompositeOperation} */
-        this.blendOperation = opts.blendOperation || 'normal'
+        this.blendOperation = opts.blendOperation || (zf => 'normal')
 
         /** The minimum zoom factor: Below this level, the layer is not shown.
          * @type {number} */

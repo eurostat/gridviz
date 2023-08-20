@@ -111,8 +111,8 @@ export class App {
                 if (strong) dsc.updateViewCache(this.cg.extGeo)
 
                 //set layer alpha and blend mode
-                this.cg.ctx.globalAlpha = layer.alpha === undefined ? 1 : layer.alpha
-                this.cg.ctx.globalCompositeOperation = layer.blendOperation
+                this.cg.ctx.globalAlpha = layer.alpha? layer.alpha(zf) : 1.0
+                this.cg.ctx.globalCompositeOperation = layer.blendOperation(zf)
 
                 //draw cells, style by style
                 if (strong)
@@ -124,9 +124,9 @@ export class App {
 
                         //set style alpha and blend mode
                         //TODO: multiply by layer alpha ?
-                        this.cg.ctx.globalAlpha = s.alpha === undefined ? 1 : s.alpha
-                        this.cg.ctx.globalCompositeOperation = s.blendOperation
-
+                        this.cg.ctx.globalAlpha = s.alpha? s.alpha(zf) : 1.0
+                        this.cg.ctx.globalCompositeOperation = s.blendOperation(zf)
+        
                         s.draw(dsc.getViewCache(), dsc.getResolution(), this.cg)
                     }
 
