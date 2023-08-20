@@ -34,8 +34,8 @@
                         tFun: (value, resolution, stats) => value == 0 ? undefined : gviz.sExpRev(value / stats.max, -10),
                         color: t => d3.color(colFun(t)),
                         //set alpha and blend operation
-                        alpha: 0.75,
-                        blendOperation: "multiply"
+                        alpha: () => 0.75,
+                        blendOperation: () => "multiply"
                         //normal | multiply | screen | overlay | darken | lighten | color-dodge | color-burn | hard-light | soft-light | difference | exclusion | hue | saturation | color | luminosity
                     }),
                 ],
