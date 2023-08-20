@@ -1,13 +1,5 @@
 transparency/blending for layer, styles and all layers (background, etc.)
-
-
-/* globalCompositeOperation :
-  normal | multiply | screen | overlay | 
-  darken | lighten | color-dodge | color-burn | hard-light | 
-  soft-light | difference | exclusion | hue | saturation | 
-  color | luminosity
-*/
-ctx.globalCompositeOperation = 'multiply';
+//normal | multiply | screen | overlay | darken | lighten | color-dodge | color-burn | hard-light | soft-light | difference | exclusion | hue | saturation | color | luminosity
 
 
 
