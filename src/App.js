@@ -111,7 +111,7 @@ export class App {
                 if (strong) dsc.updateViewCache(this.cg.extGeo)
 
                 //set layer alpha and blend mode
-                this.cg.ctx.globalAlpha = layer.alpha? layer.alpha(zf) : 1.0
+                this.cg.ctx.globalAlpha = layer.alpha ? layer.alpha(zf) : 1.0
                 this.cg.ctx.globalCompositeOperation = layer.blendOperation(zf)
 
                 //draw cells, style by style
@@ -124,14 +124,14 @@ export class App {
 
                         //set style alpha and blend mode
                         //TODO: multiply by layer alpha ?
-                        this.cg.ctx.globalAlpha = s.alpha? s.alpha(zf) : 1.0
+                        this.cg.ctx.globalAlpha = s.alpha ? s.alpha(zf) : 1.0
                         this.cg.ctx.globalCompositeOperation = s.blendOperation(zf)
-        
+
                         s.draw(dsc.getViewCache(), dsc.getResolution(), this.cg)
                     }
 
                 //add legend element
-                if (this.legend && strong)
+                if (this.legend && strong) {
                     for (const s of layer.styles) {
                         if (zf > s.maxZoom) continue
                         if (zf < s.minZoom) continue
@@ -157,6 +157,11 @@ export class App {
                             }
                         }
                     }
+                }
+
+                //restore default alpha and blend operation
+                //this.cg.ctx.globalAlpha = 1.0
+                //this.cg.ctx.globalCompositeOperation = "normal"
             }
 
             //draw boundary layer

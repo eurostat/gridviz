@@ -30,6 +30,8 @@
                             colorCol: '2018',
                             tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
                             color: d3.interpolateYlOrRd,
+                            //alpha: ()=>0.9999,
+                            //blendOperation:()=>"multiply"
                         }),
                     ],
                     {
@@ -44,7 +46,7 @@
                         9783.93962050256, 4891.96981025128, 2445.98490512564,
                     ],
                     origin: [0, 6000000],
-                    filterColor: (zf) => '#ffffff66',
+                    //filterColor: (zf) => '#ffffff44',
                 })
         </script>
     </body>
