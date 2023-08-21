@@ -15,7 +15,7 @@
 
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 4500000, y: 2900000 })
-            .setZoomFactor(200)
+            .setZoomFactor(30)
 
             .addMultiScaleTiledGridLayer(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
@@ -28,7 +28,7 @@
                         colorCol: '2018',
                         tFun: (value, resolution, stats) => value == 0 ? undefined : gviz.sExpRev(value / stats.max, -10),
                         //set alpha and blend operation
-                        alpha: () => 0.75,
+                        alpha: (zf) => zf < 70 ? 0.75 : 1.0,
                         blendOperation: () => "multiply"
                         //normal | multiply | screen | overlay | darken | lighten | color-dodge | color-burn | hard-light | soft-light | difference | exclusion | hue | saturation | color | luminosity
                     }),
@@ -38,11 +38,10 @@
                 }
             )
 
-        .addBackgroundLayerWMS({
-            url: 'https://sgx.geodatenzentrum.de/wms_basemapde?&service=WMS&request=GetMap&layers=de_basemapde_web_raster_grau&styles=&format=image%2Fjpeg&transparent=false&version=1.1.1&srs=EPSG%3A3035',
-            maxZoom: 50,
-            //filterColor: (zf) => zf < 10 ? '#0000ff66' : '#ff000066',
-        })
+            .addBackgroundLayerWMS({
+                url: 'https://sgx.geodatenzentrum.de/wms_basemapde?&service=WMS&request=GetMap&layers=de_basemapde_web_raster_grau&styles=&format=image%2Fjpeg&transparent=false&version=1.1.1&srs=EPSG%3A3035',
+                maxZoom: 70,
+            })
 
     </script>
 </body>
