@@ -11,9 +11,11 @@
 
     <script src="../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
     <script>
-
-
 
         //https://www.npmjs.com/package/parquet-wasm
         const rp = (async () => {
@@ -42,23 +44,16 @@
                     minZoom: 50,
                 })
 
+            //prepare datasets, indexed by thematic domain and year
+            const ds = {};
+            const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-germany-zensus2011/main/out/';
 
-            //add parquet layer
-            gviz_par.addMultiScaleTiledParquetGridLayer(app,
+            //create demography population dataset
+            ds.demo_pop = gviz_par.makeMultiScaleTiledParquetGridDataset(
+                app,
                 [100, 200, 500, 1000, 2000, 5000],
-                (res) => 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-germany-zensus2011/main/out/demo_pop/' + res + 'm/',
-                [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: 'pop',
-                        //tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
-                        tFun: (value, resolution, stats) => value == 0 ? undefined : gviz.sExpRev(value / stats.max, -7),
-                        //set alpha and blend operation
-                        //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
-                        blendOperation: () => "multiply"
-                    }),
-                ],
+                (res) => baseURL + 'demo_pop/' + res + 'm/',
                 {
-                    pixNb: 1,
                     readParquetFun: readParquet,
                     preprocess: (c) => {
                         //console.log(c)
@@ -68,8 +63,39 @@
                         c.pop = +(c.pop + "")
                         //console.log(c.x, c.y, c.INSGESAMT_0)
                     },
+                })
+
+
+            //demo_pop layer
+            app.addLayerFromDataset(
+                ds.demo_pop,
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: 'pop',
+                        color: d3.interpolateYlOrRd,
+                        stretching: { fun: 'expRev', alpha: -7 },
+                        //set alpha and blend operation
+                        //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
+                        blendOperation: () => "multiply"
+                    }),
+                    new gviz.StrokeStyle({ maxZoom: 7 }),
+                ],
+                {
+                    pixNb: 1.5,
+                    cellInfoHTML: (c) => '<b>' + c.pop + '</b> person(s)'
                 }
             )
+            //legend
+            app.layers[0].styles[0].legends.push(
+                new gviz.ColorLegend({
+                    title: "Population",
+                    colorRamp: d3.interpolateYlOrRd,
+                    fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                })
+            )
+
+
+
 
 
 
@@ -114,6 +140,26 @@
 
 
     </script>
+
+    <div style="
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    width: auto;
+    height: auto;
+    padding: 1px;
+    border: 0px;
+    background: #ffffffcc;
+">
+        <span style="font-size: 0.8em">
+            <a href="https://github.com/eurostat/gridviz" style="text-decoration: none">GridViz</a> | ©<a
+                href="https://www.zensus2011.de/DE/Home/Aktuelles/DemografischeGrunddaten.html?nn=559100#Gitter"
+                style="text-decoration: none">Statistisches Bundesamt,
+                Wiesbaden 2018</a> |
+            ©<a href="https://eurogeographics.org" style="text-decoration: none">EuroGeographics</a></span>
+    </div>
+
+
 </body>
 
 </html>
