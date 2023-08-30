@@ -9,6 +9,42 @@
 <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
     <div id="viz-container" style="height: 100%; width: 100%"></div>
 
+    <div style="
+        position: absolute;
+        left: 20px;
+        top: 20px;
+        width: auto;
+        height: auto;
+        padding: 10px;
+        border: 0px;
+        border-radius: 5px;
+        background: #ffffffcc;
+        line-height: 1.6;
+        box-shadow: 5px 5px 5px grey;
+    ">
+        <span style="font-size: 1.8em; font-weight: bold">Germany</span>
+        <span style="font-size: 1.25em">
+            <div id="layer">
+                <input type="radio" name="layer" id="pop" value="pop" checked />
+                <label for="pop">Total population</label>
+                <br />
+                <input type="radio" name="layer" id="popAge" value="popAge" />
+                <label for="popAge">Population by age</label>
+            </div>
+            <hr />
+            <input type="checkbox" id="label" checked />
+            <label for="label">City names</label>
+            <input type="checkbox" id="boundary" checked />
+            <label for="boundary">Boundaries</label>
+            <hr />
+            Source:
+            <a href="https://www.zensus2011.de/DE/Home/Aktuelles/DemografischeGrunddaten.html?nn=559100#Gitter"
+                style="text-decoration: none">Statistisches Bundesamt, Wiesbaden 2018</a>
+        </span>
+    </div>
+
+
+
     <script src="../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
@@ -48,56 +84,160 @@
             const ds = {};
             const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-germany-zensus2011/main/out/';
 
-            //create demography population dataset
+            const cleanCell = (c) => {
+                for (let k of Object.keys(c)) c[k] = +(c[k] + "")
+            };
+
+            //create demography (population only) dataset
             ds.demo_pop = gviz_par.makeMultiScaleTiledParquetGridDataset(
                 app,
                 [100, 200, 500, 1000, 2000, 5000],
                 (res) => baseURL + 'demo_pop/' + res + 'm/',
                 {
                     readParquetFun: readParquet,
-                    preprocess: (c) => {
-                        //console.log(c)
-                        //c.x = +(c.x.replace("n",""))
-                        c.x = +(c.x + "")
-                        c.y = +(c.y + "")
-                        c.pop = +(c.pop + "")
-                        //console.log(c.x, c.y, c.INSGESAMT_0)
-                    },
+                    preprocess: (c) => { cleanCell(c) },
                 })
 
-
-            //demo_pop layer
-            app.addLayerFromDataset(
-                ds.demo_pop,
-                [
-                    new gviz.SquareColorWGLStyle({
-                        colorCol: 'pop',
-                        color: d3.interpolateYlOrRd,
-                        stretching: { fun: 'expRev', alpha: -7 },
-                        //set alpha and blend operation
-                        //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
-                        blendOperation: () => "multiply"
-                    }),
-                    new gviz.StrokeStyle({ maxZoom: 7 }),
-                ],
+            //create demography full dataset
+            ds.demo = gviz_par.makeMultiScaleTiledParquetGridDataset(
+                app,
+                [100, 200, 500, 1000, 2000, 5000],
+                (res) => baseURL + 'demo/' + res + 'm/',
                 {
-                    pixNb: 1.5,
-                    cellInfoHTML: (c) => '<b>' + c.pop + '</b> person(s)'
-                }
-            )
-            //legend
-            app.layers[0].styles[0].legends.push(
-                new gviz.ColorLegend({
-                    title: "Population",
-                    colorRamp: d3.interpolateYlOrRd,
-                    fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                    readParquetFun: readParquet,
+                    preprocess: (c) => { cleanCell(c) },
                 })
-            )
 
 
+            //
+            const update = () => {
+                //read GUI selection
+                const layCode = document.querySelector('input[name="layer"]:checked').value
 
+                //remove layers
+                app.layers = []
 
+                //formater
+                const f1 = d3.format('.1f')
 
+                //set layer
+                if (layCode === 'pop') {
+                    app.addLayerFromDataset(
+                        ds.demo_pop,
+                        [
+                            new gviz.SquareColorWGLStyle({
+                                colorCol: 'pop',
+                                color: d3.interpolateYlOrRd,
+                                stretching: { fun: 'expRev', alpha: -7 },
+                                //set alpha and blend operation
+                                //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
+                                blendOperation: () => "multiply"
+                            }),
+                            new gviz.StrokeStyle({ maxZoom: 7 }),
+                        ],
+                        {
+                            pixNb: 1.5,
+                            cellInfoHTML: (c) => '<b>' + c.pop + '</b> person' + (+c.pop == 1 ? '' : 's')
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorLegend({
+                            title: "Population",
+                            colorRamp: d3.interpolateYlOrRd,
+                            fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                        })
+                    )
+                } else if (layCode === 'popAge') {
+                    /*population by age (5 age groups)  ALTER_KURZ   1 Under 18     2 18 - 29    3 30 - 49    4 50 - 64   5 65 and over */
+                    const col = d3.interpolateSpectral
+                    app.addLayerFromDataset(
+                        ds.demo,
+                        [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    ALTER_KURZ_1: col(0.1),
+                                    ALTER_KURZ_2: col(0.3),
+                                    ALTER_KURZ_3: col(0.5),
+                                    ALTER_KURZ_4: col(0.7),
+                                    ALTER_KURZ_5: col(0.9),
+                                },
+                                type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                sizeCol: 'INSGESAMT_0',
+                                size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25, 0),
+                                stripesOrientation: () => 90,
+                                //agePyramidHeight: (c, r) => 0.95 * r,
+                                blendOperation: (zf) => "multiply"
+                            }),
+                        ],
+                        {
+                            pixNb: 14,
+                            cellInfoHTML: (c) =>
+                                '<b>' +
+                                c.INSGESAMT_0 +
+                                '</b> person' +
+                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
+                                '<br>' +
+                                'By age:<br>' +
+                                ' < 18 : ' +
+                                (c.ALTER_KURZ_1) +
+                                '<br>' +
+                                ' 18-29 : ' +
+                                (c.ALTER_KURZ_2) +
+                                '<br>' +
+                                ' 30-49 : ' +
+                                (c.ALTER_KURZ_3) +
+                                '<br>' +
+                                ' 50-64 : ' +
+                                (c.ALTER_KURZ_4) +
+                                '<br>' +
+                                ' > 64: ' +
+                                (c.ALTER_KURZ_5),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Age',
+                            colCat: [
+                                [col(0.1), '< 18'],
+                                [col(0.3), '18-29'],
+                                [col(0.5), '30-49'],
+                                [col(0.7), '50-64'],
+                                [col(0.9), ' > 64'],
+                            ].reverse(),
+                        })
+                    )
+                } else console.error('Unexpected layer code: ' + layCode)
+
+                //redraw
+                app.cg.redraw()
+            }
+
+            //layer and year update
+            document.querySelector('#layer').addEventListener('change', update)
+
+            // show/hide labels
+            document.querySelector('#label').addEventListener('change', function () {
+                app.showLabels = this.checked
+                app.cg.redraw()
+            })
+
+            // show/hide boundaries
+            document.querySelector('#boundary').addEventListener('change', function () {
+                app.showBoundaries = this.checked
+                app.cg.redraw()
+            })
+
+            //select layer from URL
+            const ls = gviz.getParameterByName('lay')
+            if (ls) {
+                const b = document.querySelector('#' + ls)
+                if (b) b.checked = true
+            }
+
+            //initialise
+            update()
 
 
             /*
