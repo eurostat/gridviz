@@ -142,7 +142,7 @@
                                 stretching: { fun: 'expRev', alpha: -7 },
                                 //set alpha and blend operation
                                 //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
-                                blendOperation: () => "multiply"
+                                blendOperation: (zf) => zf < 15 ? "multiply" : "normal"
                             }),
                             new gviz.StrokeStyle({ maxZoom: 7 }),
                         ],
@@ -178,7 +178,7 @@
                                 size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25, 0),
                                 stripesOrientation: () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
-                                blendOperation: (zf) => "multiply"
+                                blendOperation: (zf) => zf < 7 ? "multiply" : "normal"
                             }),
                         ],
                         {
@@ -230,7 +230,7 @@
                                 colorCol: 'age_ratio',
                                 color: (v, r, s) => d3.interpolateSpectral(1 - v),
                                 shape: () => 'circle',
-                                blendOperation: (zf) => "multiply"
+                                blendOperation: (zf) => zf < 7 ? "multiply" : "normal"
                             }),
                         ],
                         {
