@@ -30,6 +30,9 @@
                 <br />
                 <input type="radio" name="layer" id="popAge" value="popAge" />
                 <label for="popAge">Population by age</label>
+                <br />
+                <input type="radio" name="layer" id="ageR" value="ageR" />
+                <label for="ageR">Age balance</label>
             </div>
             <hr />
             <input type="checkbox" id="label" checked />
@@ -105,7 +108,15 @@
                 (res) => baseURL + 'demo/' + res + 'm/',
                 {
                     readParquetFun: readParquet,
-                    preprocess: (c) => { cleanCell(c) },
+                    preprocess: (c) => {
+                        cleanCell(c)
+                        //<29
+                        c.yyy = +c.ALTER_KURZ_1 + c.ALTER_KURZ_2
+                        //>50
+                        c.ooo = +c.ALTER_KURZ_4 + c.ALTER_KURZ_5
+                        c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
+                        c.age_ratio = c.age_ratio * 0.5 + 0.5
+                    },
                 })
 
 
@@ -206,6 +217,51 @@
                                 [col(0.7), '50-64'],
                                 [col(0.9), ' > 64'],
                             ].reverse(),
+                        })
+                    )
+                } else if (layCode === 'ageR') {
+                    //young VS elderly
+                    app.addLayerFromDataset(
+                        ds.demo,
+                        [
+                            new gviz.ShapeColorSizeStyle({
+                                sizeCol: 'INSGESAMT_0',
+                                size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
+                                colorCol: 'age_ratio',
+                                color: (v, r, s) => d3.interpolateSpectral(1 - v),
+                                shape: () => 'circle',
+                                blendOperation: (zf) => "multiply"
+                            }),
+                        ],
+                        {
+                            pixNb: 7,
+                            cellInfoHTML: (c) =>
+                                '<b>' +
+                                f1(c.yyy) +
+                                '</b> 29 and younger' +
+                                '<br>' +
+                                '<b>' +
+                                f1(c.ooo) +
+                                '</b> > 50 and elder'
+                            //+ "<br>" + "(Balance: " + (Math.round(c.age_ratio * 100)) + "%)"
+                            ,
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({
+                            shape: 'circle',
+                            labelUnitText: 'people',
+                            fillColor: '#ccc',
+                        })
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorLegend({
+                            title: 'Balance young/old',
+                            ticks: 2,
+                            tickFormat: 'text',
+                            colorRamp: d3.interpolateSpectral,
+                            fun: (t, r, s) => (t == 0 ? 'Younger' : t == 0.5 ? 'Balanced' : 'Elder'),
                         })
                     )
                 } else console.error('Unexpected layer code: ' + layCode)
