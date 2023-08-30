@@ -10,26 +10,71 @@
     <div id="viz-container" style="height: 100%; width: 100%"></div>
 
     <script src="../dist/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet"></script>
     <script>
-        let containerDiv = document.getElementById('viz-container')
 
-        new gviz.App(containerDiv)
-            .setGeoCenter({ x: 4301000, y: 2889000 })
-            .setZoomFactor(100)
-            .setLabelLayer(gviz.getEuronymeLabelLayer('DE', '20'))
+
+
+        //https://www.npmjs.com/package/parquet-wasm
+        const rp = (async () => {
+            const parquetModule = await import(
+                'https://unpkg.com/parquet-wasm@0.4.0-beta.5/esm/arrow2.js'
+            )
+            await parquetModule.default()
+            return parquetModule.readParquet
+        })().then((readParquet) => {
+            let containerDiv = document.getElementById('viz-container')
+
+            const app = new gviz.App(containerDiv)
+                .setGeoCenter({ x: 4301000, y: 2889000 })
+                .setZoomFactor(100)
+                .setLabelLayer(gviz.getEuronymeLabelLayer('DE', '20'))
                 .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
-            .addBackgroundLayerWMS({
-                url: 'https://sgx.geodatenzentrum.de/wms_basemapde?&service=WMS&request=GetMap&layers=de_basemapde_web_raster_grau&styles=&format=image%2Fjpeg&transparent=false&version=1.1.1&srs=EPSG%3A3035',
-                maxZoom: 50,
-            })
-            .addBackgroundLayer({
-                url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/',
-                resolutions: Array.from({ length: 9 }, (_, i) => 28.00132289714475 * Math.pow(2, 10 - i)),
-                origin: [0, 6000000],
-                filterColor: (zf) => '#ffffff60',
-                minZoom: 50,
-            })
+                .addBackgroundLayerWMS({
+                    url: 'https://sgx.geodatenzentrum.de/wms_basemapde?&service=WMS&request=GetMap&layers=de_basemapde_web_raster_grau&styles=&format=image%2Fjpeg&transparent=false&version=1.1.1&srs=EPSG%3A3035',
+                    maxZoom: 50,
+                })
+                .addBackgroundLayer({
+                    url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/',
+                    resolutions: Array.from({ length: 9 }, (_, i) => 28.00132289714475 * Math.pow(2, 10 - i)),
+                    origin: [0, 6000000],
+                    filterColor: (zf) => '#ffffff60',
+                    minZoom: 50,
+                })
 
+
+            //add parquet layer
+            gviz_par.addMultiScaleTiledParquetGridLayer(app,
+                [100, 200, 500, 1000, 2000, 5000],
+                (res) => 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-germany-zensus2011/main/out/demo_pop/' + res + 'm/',
+                [
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: 'pop',
+                        //tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
+                        tFun: (value, resolution, stats) => value == 0 ? undefined : gviz.sExpRev(value / stats.max, -7),
+                        //set alpha and blend operation
+                        //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
+                        blendOperation: () => "multiply"
+                    }),
+                ],
+                {
+                    pixNb: 1,
+                    readParquetFun: readParquet,
+                    preprocess: (c) => {
+                        //console.log(c)
+                        //c.x = +(c.x.replace("n",""))
+                        c.x=+(c.x+"")
+                        c.y=+(c.y+"")
+                        c.pop=+(c.pop+"")
+                        //console.log(c.x, c.y, c.INSGESAMT_0)
+                    },
+                }
+            )
+
+
+
+
+            /*
             .addMultiScaleTiledGridLayer(
                 [100, 200, 500, 1000, 2000, 5000, 10000],
                 (r) =>
@@ -62,6 +107,11 @@
                     }
                 }
             )
+*/
+
+
+        })
+
 
     </script>
 </body>
