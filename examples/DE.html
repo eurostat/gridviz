@@ -306,7 +306,6 @@
                                 (c.ooo) +
                                 '</b> person(s) aged 50 or elder'
                             //+ "<br>" + "(Balance: " + (Math.round(c.age_ratio * 100)) + "%)"
-                            ,
                         }
                     )
                     //legend
@@ -326,6 +325,26 @@
                             fun: (t, r, s) => (t == 0 ? 'Younger' : t == 0.5 ? 'Balanced' : 'Elder'),
                         })
                     )
+
+                    /*app.addLayerFromDataset(
+                        ds.demo,
+                        [
+                            new gviz.SquareColorWGLStyle({
+                                colorCol: 'age_ratio',
+                                color: ((t) => d3.interpolateSpectral(1 - t)),
+                                //stretching: { fun: 'expRev', alpha: -7 },
+                                //set alpha and blend operation
+                                //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
+                                blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
+                            }),
+                            new gviz.StrokeStyle({ maxZoom: 7 }),
+                        ],
+                        {
+                            pixNb: 2,
+                            //cellInfoHTML: (c) => '<b>' + c.pop + '</b> person' + (+c.pop == 1 ? '' : 's')
+                        }
+                    )*/
+
                 } else console.error('Unexpected layer code: ' + layCode)
 
                 //redraw
