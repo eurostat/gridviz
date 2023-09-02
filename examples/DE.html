@@ -28,8 +28,8 @@
                 <input type="radio" name="layer" id="pop" value="pop" checked />
                 <label for="pop">Total population</label>
                 <br />
-                <input type="radio" name="layer" id="popGender" value="popGender" />
-                <label for="popGender">Population by gender</label>
+                <input type="radio" name="layer" id="popSex" value="popSex" />
+                <label for="popSex">Population by sex</label>
                 <br />
                 <input type="radio" name="layer" id="popMarital" value="popMarital" />
                 <label for="popMarital">Population by marital status</label>
@@ -117,7 +117,7 @@
                     preprocess: (c) => {
                         cleanCell(c)
 
-                        //gender
+                        //sex
                         c.DIFF_MEN_WOMEN = +c.GESCHLECHT_1 - c.GESCHLECHT_2
                         c.DIFF_MEN_WOMEN = (100 * c.DIFF_MEN_WOMEN) / c.INSGESAMT_0
                         if (isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
@@ -180,7 +180,7 @@
                             fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
                         })
                     )
-                } else if (layCode === 'popGender') {
+                } else if (layCode === 'popSex') {
                     app.addLayerFromDataset(
                         ds.demo,
                         [
