@@ -242,7 +242,64 @@
                     W 3 Widowed 6 Civil partner deceased (including “civil union dissolved by death” and “civil union dissolved by declaration of death”)
                     ND 8 No data
                     */
-
+                    //const col = d3.interpolateSpectral
+                    app.addLayerFromDataset(
+                        ds.demo,
+                        [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    FAMSTND_AUSF_M: "#e31a1c", //red
+                                    FAMSTND_AUSF_S: "#33a02c", //green
+                                    FAMSTND_AUSF_D: "#1f78b4", //blue,
+                                    FAMSTND_AUSF_W: "#6a3d9a", //purple
+                                    FAMSTND_AUSF_ND: "#ddd", //gray
+                                },
+                                type: () => 'ring', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                sizeCol: 'INSGESAMT_0',
+                                size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0),
+                                //stripesOrientation: () => 90,
+                                //agePyramidHeight: (c, r) => 0.95 * r,
+                                //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                            }),
+                        ],
+                        {
+                            pixNb: 14,
+                            cellInfoHTML: (c) =>
+                                '<b>' +
+                                c.INSGESAMT_0 +
+                                '</b> person' +
+                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
+                                '<br>' +
+                                'By marital status:<br>' +
+                                'Single: ' +
+                                (c.FAMSTND_AUSF_S) +
+                                '<br>' +
+                                'Married / civil union: ' +
+                                (c.FAMSTND_AUSF_M) +
+                                '<br>' +
+                                'Divorced / annulled : ' +
+                                (c.FAMSTND_AUSF_D) +
+                                '<br>' +
+                                'Widowed / partner deceased : ' +
+                                (c.FAMSTND_AUSF_W) +
+                                '<br>' +
+                                'No data: ' +
+                                (c.FAMSTND_AUSF_ND),
+                        }
+                    )
+                    /*/legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Age',
+                            colCat: [
+                                [col(0.1), '< 18'],
+                                [col(0.3), '18-29'],
+                                [col(0.5), '30-49'],
+                                [col(0.7), '50-64'],
+                                [col(0.9), ' > 64'],
+                            ].reverse(),
+                        })
+                    )*/
                 } else if (layCode === 'popAge') {
                     /*population by age (5 age groups)  ALTER_KURZ   1 Under 18     2 18 - 29    3 30 - 49    4 50 - 64   5 65 and over */
                     const col = d3.interpolateSpectral
