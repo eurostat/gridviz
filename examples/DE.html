@@ -122,6 +122,13 @@
                         c.DIFF_MEN_WOMEN = (100 * c.DIFF_MEN_WOMEN) / c.INSGESAMT_0
                         if (isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
 
+                        //marital status
+                        c.FAMSTND_AUSF_S = c.FAMSTND_AUSF_1
+                        c.FAMSTND_AUSF_M = c.FAMSTND_AUSF_2 + c.FAMSTND_AUSF_5
+                        c.FAMSTND_AUSF_D = c.FAMSTND_AUSF_4 + c.FAMSTND_AUSF_7
+                        c.FAMSTND_AUSF_W = c.FAMSTND_AUSF_3 + c.FAMSTND_AUSF_6
+                        c.FAMSTND_AUSF_ND = c.FAMSTND_AUSF_8
+
                         //age ratio
                         //<29
                         c.yyy = +c.ALTER_KURZ_1 + c.ALTER_KURZ_2
@@ -129,6 +136,7 @@
                         c.ooo = +c.ALTER_KURZ_4 + c.ALTER_KURZ_5
                         c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
                         c.age_ratio = c.age_ratio * 0.5 + 0.5
+
                     },
                 })
 
@@ -142,7 +150,7 @@
                 app.layers = []
 
                 //formater
-                const f1 = d3.format('.1f')
+                //const f1 = d3.format('.1f')
 
                 //set layer
                 if (layCode === 'pop') {
@@ -226,17 +234,14 @@
                     )
                 } else if (layCode === 'popMarital') {
                     //population by marital status
-/*
-                    FAMSTND_AUSF
-1 Single
-2 Married
-5 Party to a civil union
-4 Divorced (including annulled marriages)
-7 Civil union annulled
-3 Widowed
-6 Civil partner deceased (including “civil union dissolved by death” and “civil union dissolved by declaration of death”)
-8 No data
-*/
+                    /*
+                                        FAMSTND_AUSF
+                    S 1 Single
+                    M 2 Married 5 Party to a civil union
+                    D 4 Divorced (including annulled marriages) 7 Civil union annulled
+                    W 3 Widowed 6 Civil partner deceased (including “civil union dissolved by death” and “civil union dissolved by declaration of death”)
+                    ND 8 No data
+                    */
 
                 } else if (layCode === 'popAge') {
                     /*population by age (5 age groups)  ALTER_KURZ   1 Under 18     2 18 - 29    3 30 - 49    4 50 - 64   5 65 and over */
