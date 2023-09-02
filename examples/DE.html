@@ -31,6 +31,9 @@
                 <input type="radio" name="layer" id="popGender" value="popGender" />
                 <label for="popGender">Population by gender</label>
                 <br />
+                <input type="radio" name="layer" id="popMarital" value="popMarital" />
+                <label for="popMarital">Population by marital status</label>
+                <br />
                 <input type="radio" name="layer" id="popAge" value="popAge" />
                 <label for="popAge">Population by age</label>
                 <br />
@@ -70,8 +73,8 @@
             let containerDiv = document.getElementById('viz-container')
 
             const app = new gviz.App(containerDiv)
-                .setGeoCenter({ x: 4301000, y: 2889000 })
-                .setZoomFactor(100)
+                .setGeoCenter({ x: 4301000, y: 3050000 })
+                .setZoomFactor(400)
                 .setLabelLayer(gviz.getEuronymeLabelLayer('DE', '20'))
                 .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
                 .addBackgroundLayerWMS({
@@ -221,6 +224,20 @@
                             },
                         })
                     )
+                } else if (layCode === 'popMarital') {
+                    //population by marital status
+/*
+                    FAMSTND_AUSF
+1 Single
+2 Married
+5 Party to a civil union
+4 Divorced (including annulled marriages)
+7 Civil union annulled
+3 Widowed
+6 Civil partner deceased (including “civil union dissolved by death” and “civil union dissolved by declaration of death”)
+8 No data
+*/
+
                 } else if (layCode === 'popAge') {
                     /*population by age (5 age groups)  ALTER_KURZ   1 Under 18     2 18 - 29    3 30 - 49    4 50 - 64   5 65 and over */
                     const col = d3.interpolateSpectral
