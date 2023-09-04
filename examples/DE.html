@@ -29,22 +29,30 @@
                 <label for="pop">Total population</label>
                 <br />
                 <input type="radio" name="layer" id="popSex" value="popSex" />
-                <label for="popSex">Population by sex</label>
+                <label for="popSex">By sex</label>
                 <br />
                 <input type="radio" name="layer" id="popMarital" value="popMarital" />
-                <label for="popMarital">Population by marital status</label>
+                <label for="popMarital">By marital status</label>
                 <br />
                 <input type="radio" name="layer" id="popAge" value="popAge" />
-                <label for="popAge">Population by age</label>
+                <label for="popAge">By age</label>
                 <br />
                 <input type="radio" name="layer" id="ageR" value="ageR" />
                 <label for="ageR">Age balance</label>
+                <br />
+                <input type="radio" name="layer" id="popCoB" value="popCoB" />
+                <label for="popCoB">By birth place</label>
+                <br />
+                <input type="radio" name="layer" id="popCit" value="popCit" />
+                <label for="popCit">By citizenship</label>
             </div>
             <hr />
             <input type="checkbox" id="label" checked />
             <label for="label">City names</label>
             <input type="checkbox" id="boundary" checked />
             <label for="boundary">Boundaries</label>
+            <input type="checkbox" id="background" checked />
+            <label for="background">Background</label>
             <hr />
             Source:
             <a href="https://www.zensus2011.de/DE/Home/Aktuelles/DemografischeGrunddaten.html?nn=559100#Gitter"
@@ -136,6 +144,28 @@
                         c.ooo = +c.ALTER_KURZ_4 + c.ALTER_KURZ_5
                         c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
                         c.age_ratio = c.age_ratio * 0.5 + 0.5
+
+                        //Religion
+                        //RELIGION_KURZ
+                        //1 Roman Catholic
+                        //2 Evangelical Church
+                        //3 Other, none, no data
+
+                        //STAATSANGE_HLND Citizenship by selected countries
+                        //1 Germany
+                        //2 Bosnia and Herzegovina
+                        //3 Greece
+                        //4 Italy
+                        //5 Kazakhstan
+                        //6 Croatia
+                        //7 Netherlands
+                        //8 Austria
+                        //9 Poland
+                        //10 Romania
+                        //11 Russian Federation
+                        //12 Turkey
+                        //13 Ukraine
+                        //14 Other
                     },
                 })
 
@@ -403,25 +433,151 @@
                             fun: (t, r, s) => (t == 0 ? 'Younger' : t == 0.5 ? 'Balanced' : 'Elder'),
                         })
                     )
+                } else if (layCode === 'popCoB') {
+                    //population by country of birth
 
-                    /*app.addLayerFromDataset(
+                    //GEBURTLAND_GRP
+                    //1 Germany
+                    //21 EU27
+                    //22 Rest of Europe
+                    //23 Rest of the world
+                    //24 Other
+
+                    app.addLayerFromDataset(
                         ds.demo,
                         [
-                            new gviz.SquareColorWGLStyle({
-                                colorCol: 'age_ratio',
-                                color: ((t) => d3.interpolateSpectral(1 - t)),
-                                //stretching: { fun: 'expRev', alpha: -7 },
-                                //set alpha and blend operation
-                                //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
-                                blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
+                            new gviz.CompositionStyle({
+                                color: {
+                                    GEBURTLAND_GRP_1: "#fed9a6", //light mostard
+                                    GEBURTLAND_GRP_21: "#7570b3", //blueish
+                                    GEBURTLAND_GRP_22: "#1b9e77", //greenish,
+                                    GEBURTLAND_GRP_23: "#d95f02", //orange
+                                    GEBURTLAND_GRP_24: "#ddd", //gray
+                                },
+                                type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                sizeCol: 'INSGESAMT_0',
+                                size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0),
+                                //stripesOrientation: () => 90,
+                                //agePyramidHeight: (c, r) => 0.95 * r,
+                                //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                             }),
-                            new gviz.StrokeStyle({ maxZoom: 7 }),
                         ],
                         {
-                            pixNb: 2,
-                            //cellInfoHTML: (c) => '<b>' + c.pop + '</b> person' + (+c.pop == 1 ? '' : 's')
+                            pixNb: 22,
+                            cellInfoHTML: (c) =>
+                                '<b>' +
+                                c.INSGESAMT_0 +
+                                '</b> person' +
+                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
+                                '<br>' +
+                                'By birth place:<br>' +
+                                'Germany: ' +
+                                (c.GEBURTLAND_GRP_1) +
+                                '<br>' +
+                                'European union: ' +
+                                (c.GEBURTLAND_GRP_21) +
+                                '<br>' +
+                                'Rest of Europe: ' +
+                                (c.GEBURTLAND_GRP_22) +
+                                '<br>' +
+                                'Rest of the world: ' +
+                                (c.GEBURTLAND_GRP_23) +
+                                '<br>' +
+                                'Other: ' +
+                                (c.GEBURTLAND_GRP_24),
                         }
-                    )*/
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({
+                            shape: 'circle',
+                            labelUnitText: 'people',
+                            fillColor: '#ccc',
+                            exaggerationFactor: 0.05,
+                        })
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Birth place',
+                            colCat: [
+                                ["#fed9a6", "Germany"],
+                                ["#7570b3", "European union"],
+                                ["#1b9e77", "Rest of Europe"],
+                                ["#d95f02", "Rest of the world"],
+                                ["#ddd", "Other"],
+                            ],//.reverse(),
+                        })
+                    )
+
+                } else if (layCode === 'popCit') {
+                    //population by citizenship
+                    //STAATSANGE_GRP
+
+                    app.addLayerFromDataset(
+                        ds.demo,
+                        [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    STAATSANGE_GRP_1: "#fed9a6", //light mostard
+                                    STAATSANGE_GRP_21: "#7570b3", //blueish
+                                    STAATSANGE_GRP_22: "#1b9e77", //greenish,
+                                    STAATSANGE_GRP_23: "#d95f02", //orange
+                                    STAATSANGE_GRP_24: "#ddd", //gray
+                                },
+                                type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                sizeCol: 'INSGESAMT_0',
+                                size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0),
+                                //stripesOrientation: () => 90,
+                                //agePyramidHeight: (c, r) => 0.95 * r,
+                                //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                            }),
+                        ],
+                        {
+                            pixNb: 22,
+                            cellInfoHTML: (c) =>
+                                '<b>' +
+                                c.INSGESAMT_0 +
+                                '</b> person' +
+                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
+                                '<br>' +
+                                'By citizenship:<br>' +
+                                'Germany: ' +
+                                (c.STAATSANGE_GRP_1) +
+                                '<br>' +
+                                'European union: ' +
+                                (c.STAATSANGE_GRP_21) +
+                                '<br>' +
+                                'Rest of Europe: ' +
+                                (c.STAATSANGE_GRP_22) +
+                                '<br>' +
+                                'Rest of the world: ' +
+                                (c.STAATSANGE_GRP_23) +
+                                '<br>' +
+                                'Other: ' +
+                                (c.STAATSANGE_GRP_24),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({
+                            shape: 'circle',
+                            labelUnitText: 'people',
+                            fillColor: '#ccc',
+                            exaggerationFactor: 0.05,
+                        })
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Citizenship',
+                            colCat: [
+                                ["#fed9a6", "Germany"],
+                                ["#7570b3", "European union"],
+                                ["#1b9e77", "Rest of Europe"],
+                                ["#d95f02", "Rest of the world"],
+                                ["#ddd", "Other"],
+                            ],//.reverse(),
+                        })
+                    )
 
                 } else console.error('Unexpected layer code: ' + layCode)
 
@@ -429,7 +585,7 @@
                 app.cg.redraw()
             }
 
-            //layer and year update
+            //layer update
             document.querySelector('#layer').addEventListener('change', update)
 
             // show/hide labels
@@ -441,6 +597,12 @@
             // show/hide boundaries
             document.querySelector('#boundary').addEventListener('change', function () {
                 app.showBoundaries = this.checked
+                app.cg.redraw()
+            })
+
+            // show/hide background layer
+            document.querySelector('#background').addEventListener('change', function () {
+                app.showBgLayers = this.checked
                 app.cg.redraw()
             })
 
