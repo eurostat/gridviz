@@ -36,13 +36,11 @@
                 <br />
                 <input type="radio" name="layer" id="popAge" value="popAge" />
                 <label for="popAge">By age</label>
-                <br />
                 <input type="radio" name="layer" id="ageR" value="ageR" />
                 <label for="ageR">Age balance</label>
                 <br />
                 <input type="radio" name="layer" id="popCoB" value="popCoB" />
                 <label for="popCoB">By birth place</label>
-                <br />
                 <input type="radio" name="layer" id="popCit" value="popCit" />
                 <label for="popCit">By citizenship</label>
                 <br />
@@ -674,43 +672,6 @@
 
             //initialise
             update()
-
-
-            /*
-            .addMultiScaleTiledGridLayer(
-                [100, 200, 500, 1000, 2000, 5000, 10000],
-                (r) =>
-                    'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/germany/heizung/' +
-                    r +
-                    'm/',
-                [
-                    new gviz.CompositionStyle({
-                        //x,y,Insg,fernw,etagen,zentral
-                        color: {
-                            fernw: '#7570b3cc', //purple
-                            zentral: '#1b9e77cc', //green
-                            etagen: '#d95f02cc', //orange
-                            sonst: "#888888cc" //grey
-                        },
-                        type: () => 'piechart',
-                        offsetAngle: () => 0,
-                        sizeCol: "Insg",
-                        size: (v, r, s, zf) => 1.1 * r * gviz.sPow(v / s.max, 0.2, 0),
-                    }),
-                ],
-                {
-                    pixNb: 12,
-                    preprocess: (c) => {
-                        c.fernw = +c.fernw
-                        c.zentral = +c.zentral
-                        c.etagen = +c.etagen
-                        const a = c.Insg - c.fernw - c.etagen - c.zentral;
-                        c.sonst = a < 0 ? 0 : a;
-                    }
-                }
-            )
-*/
-
 
         })
 
