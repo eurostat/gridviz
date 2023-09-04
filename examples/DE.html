@@ -45,6 +45,9 @@
                 <br />
                 <input type="radio" name="layer" id="popCit" value="popCit" />
                 <label for="popCit">By citizenship</label>
+                <br />
+                <input type="radio" name="layer" id="popRelig" value="popRelig" />
+                <label for="popRelig">By religion</label>
             </div>
             <hr />
             <input type="checkbox" id="label" checked />
@@ -144,12 +147,6 @@
                         c.ooo = +c.ALTER_KURZ_4 + c.ALTER_KURZ_5
                         c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
                         c.age_ratio = c.age_ratio * 0.5 + 0.5
-
-                        //Religion
-                        //RELIGION_KURZ
-                        //1 Roman Catholic
-                        //2 Evangelical Church
-                        //3 Other, none, no data
 
                         //STAATSANGE_HLND Citizenship by selected countries
                         //1 Germany
@@ -575,6 +572,68 @@
                                 ["#1b9e77", "Rest of Europe"],
                                 ["#d95f02", "Rest of the world"],
                                 ["#ddd", "Other"],
+                            ],//.reverse(),
+                        })
+                    )
+                } else if (layCode === 'popRelig') {
+                    //population by religion
+                    //RELIGION_KURZ
+                    //1 Roman Catholic
+                    //2 Evangelical Church
+                    //3 Other, none, no data
+
+                    app.addLayerFromDataset(
+                        ds.demo,
+                        [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    RELIGION_KURZ_1: "#7570b3", //blueish
+                                    RELIGION_KURZ_2: "#1b9e77", //greenish,
+                                    RELIGION_KURZ_3: "#e6ab02", //light mostard
+                                },
+                                type: () => 'segment', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                sizeCol: 'INSGESAMT_0',
+                                size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
+                                stripesOrientation: () => 90,
+                                //agePyramidHeight: (c, r) => 0.95 * r,
+                                //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                            }),
+                        ],
+                        {
+                            pixNb: 12,
+                            cellInfoHTML: (c) =>
+                                '<b>' +
+                                c.INSGESAMT_0 +
+                                '</b> person' +
+                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
+                                '<br>' +
+                                'By religion:<br>' +
+                                'Roman Catholic: ' +
+                                (c.RELIGION_KURZ_1) +
+                                '<br>' +
+                                'Evangelical Church: ' +
+                                (c.RELIGION_KURZ_2) +
+                                '<br>' +
+                                'Other, none, no data: ' +
+                                (c.RELIGION_KURZ_3),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({
+                            shape: 'circle',
+                            labelUnitText: 'people',
+                            fillColor: '#ccc',
+                            exaggerationFactor: 0.05,
+                        })
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Religion',
+                            colCat: [
+                                ["#7570b3", "Roman Catholic"],
+                                ["#1b9e77", "Evangelical Church"],
+                                ["#e6ab02", "Other, none, no data"],
                             ],//.reverse(),
                         })
                     )
