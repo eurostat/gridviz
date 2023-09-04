@@ -23,15 +23,15 @@
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 //the URL, from the resolution
                 (r) =>
-                    'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/' +
+                    'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
                     r +
                     'm/',
                 //the styles
                 [
                     new gviz.TimeSeriesStyle({
-                        ts: ["2006", "2011", "2018"],
+                        ts: ["TOT_P_2006", "TOT_P_2011", "TOT_P_2018", "TOT_P_2021"],
                         color: () => "black",
-                        lineWidthCol: "2018",
+                        lineWidthCol: "TOT_P_2021",
                         lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.4) * 7) * z },
                         //offsetX: (c, r, z) => r / 2,
                         //offsetY: (c, r, z) => r / 2,
