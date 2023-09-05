@@ -32,10 +32,13 @@
                 <label for="popSex">By sex</label>
                 <br />
                 <input type="radio" name="layer" id="popMarital" value="popMarital" />
-                <label for="popMarital">By marital status</label>
+                <label for="popMarital">By marital status</label> (<input type="checkbox" id="popMaritalCB" />
+                <label for="popMaritalCB">size by population</label>)
                 <br />
                 <input type="radio" name="layer" id="popAge" value="popAge" />
-                <label for="popAge">By age</label>
+                <label for="popAge">By age</label> (<input type="checkbox" id="popAgeCB" />
+                <label for="popAgeCB">size by population</label>)
+                <br />
                 <input type="radio" name="layer" id="ageR" value="ageR" />
                 <label for="ageR">Age balance</label>
                 <br />
@@ -267,7 +270,9 @@
                     W 3 Widowed 6 Civil partner deceased (including “civil union dissolved by death” and “civil union dissolved by declaration of death”)
                     ND 8 No data
                     */
-                    //const col = d3.interpolateSpectral
+
+                    const sized = document.querySelector('#popMaritalCB').checked
+
                     app.addLayerFromDataset(
                         ds.demo,
                         [
@@ -279,16 +284,16 @@
                                     FAMSTND_AUSF_W: "#6a3d9a", //purple
                                     FAMSTND_AUSF_ND: "#ddd", //gray
                                 },
-                                type: () => 'segment', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                type: sized ? () => 'segment' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
-                                size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
+                                size: sized ? (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
-                                blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                                blendOperation: (zf) => zf < 6 ? "multiply" : "normal"
                             }),
                         ],
                         {
-                            pixNb: 10,
+                            pixNb: sized ? 10 : 6,
                             cellInfoHTML: (c) =>
                                 '<b>' +
                                 c.INSGESAMT_0 +
@@ -313,6 +318,15 @@
                         }
                     )
                     //legend
+                    if (sized)
+                        app.layers[0].styles[0].legends.push(
+                            new gviz.SizeLegend({
+                                shape: 'square',
+                                labelUnitText: 'people',
+                                fillColor: '#ccc',
+                                //exaggerationFactor: 0.05,
+                            })
+                        )
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Marital status',
@@ -327,7 +341,10 @@
                     )
                 } else if (layCode === 'popAge') {
                     /*population by age (5 age groups)  ALTER_KURZ   1 Under 18     2 18 - 29    3 30 - 49    4 50 - 64   5 65 and over */
+
                     const col = d3.interpolateSpectral
+                    const sized = document.querySelector('#popAgeCB').checked
+
                     app.addLayerFromDataset(
                         ds.demo,
                         [
@@ -341,14 +358,14 @@
                                 },
                                 type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
-                                size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25, 0),
+                                size: sized ? (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
                                 blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                             }),
                         ],
                         {
-                            pixNb: 14,
+                            pixNb: sized ? 14 : 8,
                             cellInfoHTML: (c) =>
                                 '<b>' +
                                 c.INSGESAMT_0 +
@@ -373,6 +390,15 @@
                         }
                     )
                     //legend
+                    if (sized)
+                        app.layers[0].styles[0].legends.push(
+                            new gviz.SizeLegend({
+                                shape: 'square',
+                                labelUnitText: 'people',
+                                fillColor: '#ccc',
+                                //exaggerationFactor: 0.05,
+                            })
+                        )
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Age',
@@ -452,16 +478,16 @@
                                     GEBURTLAND_GRP_23: "#d95f02", //orange
                                     GEBURTLAND_GRP_24: "#ddd", //gray
                                 },
-                                type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                type: sized ? () => 'halftone' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
-                                size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0),
-                                //stripesOrientation: () => 90,
+                                size: sized ? (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
+                                stripesOrientation: sized ? undefined : () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
-                                //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                                blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "normal"
                             }),
                         ],
                         {
-                            pixNb: 22,
+                            pixNb: sized ? 22 : 5,
                             cellInfoHTML: (c) =>
                                 '<b>' +
                                 c.INSGESAMT_0 +
@@ -486,14 +512,15 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({
-                            shape: 'circle',
-                            labelUnitText: 'people',
-                            fillColor: '#ccc',
-                            exaggerationFactor: 0.05,
-                        })
-                    )
+                    if (sized)
+                        app.layers[0].styles[0].legends.push(
+                            new gviz.SizeLegend({
+                                shape: 'circle',
+                                labelUnitText: 'people',
+                                fillColor: '#ccc',
+                                exaggerationFactor: 0.05,
+                            })
+                        )
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Birth place',
@@ -512,7 +539,7 @@
                     //STAATSANGE_GRP
 
                     const sized = document.querySelector('#popCoBCitCB').checked
-                    
+
                     app.addLayerFromDataset(
                         ds.demo,
                         [
@@ -524,16 +551,16 @@
                                     STAATSANGE_GRP_23: "#d95f02", //orange
                                     STAATSANGE_GRP_24: "#ddd", //gray
                                 },
-                                type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                type: sized ? () => 'halftone' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
-                                size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0),
-                                //stripesOrientation: () => 90,
+                                size: sized ? (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
+                                stripesOrientation: sized ? undefined : () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
-                                //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                                blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "normal"
                             }),
                         ],
                         {
-                            pixNb: 22,
+                            pixNb: sized ? 22 : 5,
                             cellInfoHTML: (c) =>
                                 '<b>' +
                                 c.INSGESAMT_0 +
@@ -558,14 +585,15 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({
-                            shape: 'circle',
-                            labelUnitText: 'people',
-                            fillColor: '#ccc',
-                            exaggerationFactor: 0.05,
-                        })
-                    )
+                    if (sized)
+                        app.layers[0].styles[0].legends.push(
+                            new gviz.SizeLegend({
+                                shape: 'circle',
+                                labelUnitText: 'people',
+                                fillColor: '#ccc',
+                                exaggerationFactor: 0.05,
+                            })
+                        )
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Citizenship',
