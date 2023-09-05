@@ -22,9 +22,10 @@
         line-height: 1.6;
         box-shadow: 5px 5px 5px grey;
     ">
-        <span style="font-size: 1.8em; font-weight: bold">Germany</span>
-        <span style="font-size: 1.25em">
-            <div id="layer">
+        <div id="layer">
+            <span style="font-size: 1.5em; font-weight: bold">Population</span>
+            <br />
+            <span style="font-size: 1.2em">
                 <input type="radio" name="layer" id="pop" value="pop" checked />
                 <label for="pop">Total population</label>
                 <br />
@@ -47,7 +48,16 @@
                 <input type="radio" name="layer" id="popRelig" value="popRelig" />
                 <label for="popRelig">By religion</label> (<input type="checkbox" id="popReligCB" />
                 <label for="popReligCB">size by population</label>)
-            </div>
+                <br />
+            </span>
+            <span style="font-size: 1.5em; font-weight: bold">Habitation</span>
+            <br />
+            <span style="font-size: 1.2em">
+                <input type="radio" name="layer" id="habHeat" value="habHeat" />
+                <label for="habHeat">Heating system</label>
+            </span>
+        </div>
+        <span style="font-size: 1.2em">
             <hr />
             <input type="checkbox" id="label" checked />
             <label for="label">City names</label>
@@ -101,6 +111,7 @@
             const ds = {};
             const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-germany-zensus2011/main/out/';
 
+            //TODO
             const cleanCell = (c) => {
                 for (let k of Object.keys(c)) c[k] = +(c[k] + "")
             };
@@ -160,6 +171,27 @@
                         //12 Turkey
                         //13 Ukraine
                         //14 Other
+                    },
+                })
+
+
+            //create wohnung dataset
+            ds.wohn = gviz_par.makeMultiScaleTiledParquetGridDataset(
+                app,
+                [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
+                (res) => baseURL + 'wohn/' + res + 'm/',
+                {
+                    readParquetFun: readParquet,
+                    preprocess: (c) => {
+                        cleanCell(c)
+
+                        //heating system
+                        c.fernw = c.HEIZTYP_1
+                        c.etagen = c.HEIZTYP_2
+                        c.zentral = c.HEIZTYP_4
+                        const sonst = c.INSGESAMT_0 - c.fernw - c.etagen - c.zentral;
+                        c.sonst = sonst < 0 ? 0 : sonst;
+                        for (let i = 1; i <= 6; i++) delete c["HEIZTYP_" + i]
                     },
                 })
 
@@ -662,6 +694,115 @@
                             ],//.reverse(),
                         })
                     )
+
+                } else if (layCode === 'habHeat') {
+                    /*
+HEIZTYP
+    1	 Fernheizung (Fernwärme)   Chauffage urbain (chauffage urbain)
+    2	 Etagenheizung			  chauffage au sol
+    3	 Blockheizung			  chauffe-bloc
+    4	 Zentralheizung			  chauffage central
+    5	 Einzel-/Mehrraumöfen (auch Nachtspeicherheizung)			  Chauffages pour une ou plusieurs pièces (également chauffage à accumulation de nuit)
+    6	 Keine Heizung im Gebäude oder in den Wohnungen			  Pas de chauffage dans l'immeuble ni dans les appartements
+*/
+
+                    app.addLayerFromDataset(
+                        ds.wohn,
+                        [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    "fernw": "rgb(255, 140, 255)",
+                                    "sonst": "rgb(180, 180, 180)",
+                                    "etagen": "rgb(255, 164, 52)",
+                                    "zentral": "rgb(255, 225, 66)",
+                                },
+                                type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                sizeCol: 'INSGESAMT_0',
+                                size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0),
+                                //stripesOrientation: () => 90,
+                                //agePyramidHeight: (c, r) => 0.95 * r,
+                                blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                            }),
+                        ],
+                        {
+                            pixNb: 12,
+                            //TODO
+                            /*cellInfoHTML: (c) =>
+                                '<b>' +
+                                c.INSGESAMT_0 +
+                                '</b> person' +
+                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
+                                '<br>' +
+                                'By religion:<br>' +
+                                'Roman catholic: ' +
+                                (c.RELIGION_KURZ_1) +
+                                '<br>' +
+                                'Evangelical church: ' +
+                                (c.RELIGION_KURZ_2) +
+                                '<br>' +
+                                'Other, none, no data: ' +
+                                (c.RELIGION_KURZ_3),*/
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({
+                            shape: 'circle',
+                            labelUnitText: 'habitations',
+                            fillColor: '#ccc',
+                            exaggerationFactor: 0.5,
+                        })
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Heating system',
+                            colCat: [
+                                ["rgb(255, 225, 66)", "Central heating"], //zentral
+                                ["rgb(255, 164, 52)", "Floor heating"], //etagen
+                                ["rgb(255, 140, 255)", "District heating"], //fernw
+                                ["rgb(180, 180, 180)", "Other"],
+                            ],//.reverse(),
+                        })
+                    )
+
+
+                    /*
+                                        BAUJAHR_MZ			Baujahr (Mikrozensus-Klassen) 
+                                            1	 Vor 1919	Année de construction (classes de microrecensement)
+                                            2	 1919 - 1948	
+                                            3	 1949 - 1978	
+                                            4	 1979 - 1986	
+                                            5	 1987 - 1990	
+                                            6	 1991 - 1995	
+                                            7	 1996 - 2000	
+                                            8	 2001 - 2004	
+                                            9	 2005 - 2008	
+                                            10	 2009 und später	
+                                        
+                    
+                                            GEBTYPBAUWEISE			Gebäudetyp-Bauweise 		
+                        1	 Freistehendes Haus	type de bâtiment		Maison individuelle
+                        2	 Doppelhaus hälfte			  maison jumelée
+                        3	 Gereihtes Haus 			  Maison mitoyenne
+                        4	 Anderer Gebäudetyp			  Type de bâtiment différent
+                    
+                                        
+                    
+                    
+                        GEBTYPGROESSE			Gebäudetyp-Größe 		
+                        1	 Freistehendes Einfamilienhaus	taille du type de bâtiment		Maison individuelle pour une famille
+                        2	 Einfamilienhaus: Doppelhaushälfte			  Maison individuelle : maison jumelée
+                        3	 Einfamilienhaus: Reihenhaus			  Maison individuelle : maison mitoyenne
+                        4	 Freistehendes Zweifamilienhaus			  Maison bifamiliale individuelle
+                        5	 Zweifamilienhaus: Doppelhaushälfte			  Maison à 2 apts : maison jumelée
+                        6	 Zweifamilienhaus: Reihenhaus			  Maison à 2 apts : maison mitoyenne
+                        7	 Mehrfamilienhaus: 3-6 Wohnungen			  Immeuble : 3-6 appartements
+                        8	 Mehrfamilienhaus: 7-12 Wohnungen			  Immeuble : 7-12 appartements
+                        9	 Mehrfamilienhaus: 13 und mehr Wohnungen			  Immeuble à appartements : 13 appartements et plus
+                        10	 Anderer Gebäudetyp			  Type de bâtiment différent
+                    
+                    
+                                        */
 
                 } else console.error('Unexpected layer code: ' + layCode)
 
