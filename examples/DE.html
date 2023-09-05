@@ -61,8 +61,6 @@
         </span>
     </div>
 
-
-
     <script src="../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
@@ -211,6 +209,7 @@
                             new gviz.ShapeColorSizeStyle({
                                 colorCol: 'DIFF_MEN_WOMEN',
                                 color: (v, r, s) => {
+                                    console.log(v+"")
                                     const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                                     const t = (Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
                                     return d3.interpolateSpectral(1 - t)

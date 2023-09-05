@@ -12,7 +12,10 @@ see https://webpack.js.org/guides/code-splitting/
 webpack: check plugins https://webpack.js.org/plugins
 
 
-
+climate/weather
+https://www.worldclim.org/data/monthlywth.html
+https://chelsa-climate.org/
+https://prism.oregonstate.edu/
 
 
 https://www.svgrepo.com/
@@ -191,10 +194,8 @@ copernicus global land cover: https://land.copernicus.eu/global/products/lc
 
 
 TODO test gridded datasets:
-DE: https://www.zensus2011.de/DE/Home/Aktuelles/DemografischeGrunddaten.html
 NL: https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/kaart-van-100-meter-bij-100-meter-met-statistieken
 World: https://wopr.worldpop.org/?NGA/Population/v2.0
-HR: https://geostat.dzs.hr/?lang=en   1km. toutirsm, education, businesses, etc. Request sent.
 AT: https://www.statistik.at/atlas/?mapid=them_bevoelkerung_bevoelkerungsstand&layerid=layer1&sublayerid=sublayer0&languageid=1
 https://www.statistik.at/en/services/tools/services/regional-information/regional-statistics
 250m population by year... not free. free: 10km sample. Citizenship/origin
