@@ -42,7 +42,8 @@
                 <input type="radio" name="layer" id="popCoB" value="popCoB" />
                 <label for="popCoB">By birth place</label>
                 <input type="radio" name="layer" id="popCit" value="popCit" />
-                <label for="popCit">By citizenship</label>
+                <label for="popCit">or citizenship</label> (<input type="checkbox" id="popCoBCitCB" checked />
+                <label for="popCoBCitCB">size by population</label>)
                 <br />
                 <input type="radio" name="layer" id="popRelig" value="popRelig" />
                 <label for="popRelig">By religion</label> (<input type="checkbox" id="popReligCB" />
@@ -438,6 +439,8 @@
                     //23 Rest of the world
                     //24 Other
 
+                    const sized = document.querySelector('#popCoBCitCB').checked
+
                     app.addLayerFromDataset(
                         ds.demo,
                         [
@@ -508,6 +511,8 @@
                     //population by citizenship
                     //STAATSANGE_GRP
 
+                    const sized = document.querySelector('#popCoBCitCB').checked
+                    
                     app.addLayerFromDataset(
                         ds.demo,
                         [
@@ -608,10 +613,10 @@
                                 (+c.INSGESAMT_0 == 1 ? '' : 's') +
                                 '<br>' +
                                 'By religion:<br>' +
-                                'Roman Catholic: ' +
+                                'Roman catholic: ' +
                                 (c.RELIGION_KURZ_1) +
                                 '<br>' +
-                                'Evangelical Church: ' +
+                                'Evangelical church: ' +
                                 (c.RELIGION_KURZ_2) +
                                 '<br>' +
                                 'Other, none, no data: ' +
@@ -620,10 +625,9 @@
                     )
                     //legend
                     if (sized)
-                        //TODO segment width instead
                         app.layers[0].styles[0].legends.push(
                             new gviz.SizeLegend({
-                                shape: 'circle',
+                                shape: 'square',
                                 labelUnitText: 'people',
                                 fillColor: '#ccc',
                                 exaggerationFactor: 0.05,
@@ -633,8 +637,8 @@
                         new gviz.ColorCategoryLegend({
                             title: 'Religion',
                             colCat: [
-                                ["#7570b3", "Roman Catholic"],
-                                ["#1b9e77", "Evangelical Church"],
+                                ["#7570b3", "Roman catholic"],
+                                ["#1b9e77", "Evangelical church"],
                                 ["#e6ab02", "Other, none, no data"],
                             ],//.reverse(),
                         })
