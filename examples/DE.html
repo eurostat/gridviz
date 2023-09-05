@@ -32,20 +32,25 @@
                 <label for="popSex">By sex</label>
                 <br />
                 <input type="radio" name="layer" id="popMarital" value="popMarital" />
-                <label for="popMarital">By marital status</label>
+                <label for="popMarital">By marital status</label> (<input type="checkbox" id="popMaritalCB" />
+                <label for="popMaritalCB">size by population</label>)
                 <br />
                 <input type="radio" name="layer" id="popAge" value="popAge" />
-                <label for="popAge">By age</label>
+                <label for="popAge">By age</label> (<input type="checkbox" id="popAgeCB" />
+                <label for="popAgeCB">size by population</label>)
+                <br />
                 <input type="radio" name="layer" id="ageR" value="ageR" />
                 <label for="ageR">Age balance</label>
                 <br />
                 <input type="radio" name="layer" id="popCoB" value="popCoB" />
                 <label for="popCoB">By birth place</label>
                 <input type="radio" name="layer" id="popCit" value="popCit" />
-                <label for="popCit">By citizenship</label>
+                <label for="popCit">or citizenship</label> (<input type="checkbox" id="popCoBCitCB" checked />
+                <label for="popCoBCitCB">size by population</label>)
                 <br />
                 <input type="radio" name="layer" id="popRelig" value="popRelig" />
-                <label for="popRelig">By religion</label>
+                <label for="popRelig">By religion</label> (<input type="checkbox" id="popReligCB" />
+                <label for="popReligCB">size by population</label>)
             </div>
             <hr />
             <input type="checkbox" id="label" checked />
@@ -60,8 +65,6 @@
                 style="text-decoration: none">Statistisches Bundesamt, Wiesbaden 2018</a>
         </span>
     </div>
-
-
 
     <script src="../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-parquet"></script>
@@ -211,6 +214,7 @@
                             new gviz.ShapeColorSizeStyle({
                                 colorCol: 'DIFF_MEN_WOMEN',
                                 color: (v, r, s) => {
+                                    console.log(v + "")
                                     const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                                     const t = (Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
                                     return d3.interpolateSpectral(1 - t)
@@ -266,7 +270,9 @@
                     W 3 Widowed 6 Civil partner deceased (including “civil union dissolved by death” and “civil union dissolved by declaration of death”)
                     ND 8 No data
                     */
-                    //const col = d3.interpolateSpectral
+
+                    const sized = document.querySelector('#popMaritalCB').checked
+
                     app.addLayerFromDataset(
                         ds.demo,
                         [
@@ -278,16 +284,16 @@
                                     FAMSTND_AUSF_W: "#6a3d9a", //purple
                                     FAMSTND_AUSF_ND: "#ddd", //gray
                                 },
-                                type: () => 'segment', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                type: sized ? () => 'segment' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
-                                size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
+                                size: sized ? (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
-                                blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                                blendOperation: (zf) => zf < 6 ? "multiply" : "normal"
                             }),
                         ],
                         {
-                            pixNb: 10,
+                            pixNb: sized ? 10 : 6,
                             cellInfoHTML: (c) =>
                                 '<b>' +
                                 c.INSGESAMT_0 +
@@ -312,6 +318,15 @@
                         }
                     )
                     //legend
+                    if (sized)
+                        app.layers[0].styles[0].legends.push(
+                            new gviz.SizeLegend({
+                                shape: 'square',
+                                labelUnitText: 'people',
+                                fillColor: '#ccc',
+                                //exaggerationFactor: 0.05,
+                            })
+                        )
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Marital status',
@@ -326,7 +341,10 @@
                     )
                 } else if (layCode === 'popAge') {
                     /*population by age (5 age groups)  ALTER_KURZ   1 Under 18     2 18 - 29    3 30 - 49    4 50 - 64   5 65 and over */
+
                     const col = d3.interpolateSpectral
+                    const sized = document.querySelector('#popAgeCB').checked
+
                     app.addLayerFromDataset(
                         ds.demo,
                         [
@@ -340,14 +358,14 @@
                                 },
                                 type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
-                                size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25, 0),
+                                size: sized ? (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
                                 blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                             }),
                         ],
                         {
-                            pixNb: 14,
+                            pixNb: sized ? 14 : 8,
                             cellInfoHTML: (c) =>
                                 '<b>' +
                                 c.INSGESAMT_0 +
@@ -372,6 +390,15 @@
                         }
                     )
                     //legend
+                    if (sized)
+                        app.layers[0].styles[0].legends.push(
+                            new gviz.SizeLegend({
+                                shape: 'square',
+                                labelUnitText: 'people',
+                                fillColor: '#ccc',
+                                //exaggerationFactor: 0.05,
+                            })
+                        )
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Age',
@@ -438,6 +465,8 @@
                     //23 Rest of the world
                     //24 Other
 
+                    const sized = document.querySelector('#popCoBCitCB').checked
+
                     app.addLayerFromDataset(
                         ds.demo,
                         [
@@ -449,16 +478,16 @@
                                     GEBURTLAND_GRP_23: "#d95f02", //orange
                                     GEBURTLAND_GRP_24: "#ddd", //gray
                                 },
-                                type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                type: sized ? () => 'halftone' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
-                                size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0),
-                                //stripesOrientation: () => 90,
+                                size: sized ? (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
+                                stripesOrientation: sized ? undefined : () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
-                                //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                                blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "normal"
                             }),
                         ],
                         {
-                            pixNb: 22,
+                            pixNb: sized ? 22 : 5,
                             cellInfoHTML: (c) =>
                                 '<b>' +
                                 c.INSGESAMT_0 +
@@ -483,14 +512,15 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({
-                            shape: 'circle',
-                            labelUnitText: 'people',
-                            fillColor: '#ccc',
-                            exaggerationFactor: 0.05,
-                        })
-                    )
+                    if (sized)
+                        app.layers[0].styles[0].legends.push(
+                            new gviz.SizeLegend({
+                                shape: 'circle',
+                                labelUnitText: 'people',
+                                fillColor: '#ccc',
+                                exaggerationFactor: 0.05,
+                            })
+                        )
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Birth place',
@@ -508,6 +538,8 @@
                     //population by citizenship
                     //STAATSANGE_GRP
 
+                    const sized = document.querySelector('#popCoBCitCB').checked
+
                     app.addLayerFromDataset(
                         ds.demo,
                         [
@@ -519,16 +551,16 @@
                                     STAATSANGE_GRP_23: "#d95f02", //orange
                                     STAATSANGE_GRP_24: "#ddd", //gray
                                 },
-                                type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                type: sized ? () => 'halftone' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
-                                size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0),
-                                //stripesOrientation: () => 90,
+                                size: sized ? (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
+                                stripesOrientation: sized ? undefined : () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
-                                //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                                blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "normal"
                             }),
                         ],
                         {
-                            pixNb: 22,
+                            pixNb: sized ? 22 : 5,
                             cellInfoHTML: (c) =>
                                 '<b>' +
                                 c.INSGESAMT_0 +
@@ -553,14 +585,15 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({
-                            shape: 'circle',
-                            labelUnitText: 'people',
-                            fillColor: '#ccc',
-                            exaggerationFactor: 0.05,
-                        })
-                    )
+                    if (sized)
+                        app.layers[0].styles[0].legends.push(
+                            new gviz.SizeLegend({
+                                shape: 'circle',
+                                labelUnitText: 'people',
+                                fillColor: '#ccc',
+                                exaggerationFactor: 0.05,
+                            })
+                        )
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Citizenship',
@@ -580,6 +613,8 @@
                     //2 Evangelical Church
                     //3 Other, none, no data
 
+                    const sized = document.querySelector('#popReligCB').checked
+
                     app.addLayerFromDataset(
                         ds.demo,
                         [
@@ -591,14 +626,14 @@
                                 },
                                 type: () => 'segment', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
-                                size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
+                                size: sized ? (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
                                 //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                             }),
                         ],
                         {
-                            pixNb: 12,
+                            pixNb: sized ? 10 : 4,
                             cellInfoHTML: (c) =>
                                 '<b>' +
                                 c.INSGESAMT_0 +
@@ -606,10 +641,10 @@
                                 (+c.INSGESAMT_0 == 1 ? '' : 's') +
                                 '<br>' +
                                 'By religion:<br>' +
-                                'Roman Catholic: ' +
+                                'Roman catholic: ' +
                                 (c.RELIGION_KURZ_1) +
                                 '<br>' +
-                                'Evangelical Church: ' +
+                                'Evangelical church: ' +
                                 (c.RELIGION_KURZ_2) +
                                 '<br>' +
                                 'Other, none, no data: ' +
@@ -617,20 +652,21 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({
-                            shape: 'circle',
-                            labelUnitText: 'people',
-                            fillColor: '#ccc',
-                            exaggerationFactor: 0.05,
-                        })
-                    )
+                    if (sized)
+                        app.layers[0].styles[0].legends.push(
+                            new gviz.SizeLegend({
+                                shape: 'square',
+                                labelUnitText: 'people',
+                                fillColor: '#ccc',
+                                exaggerationFactor: 0.05,
+                            })
+                        )
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Religion',
                             colCat: [
-                                ["#7570b3", "Roman Catholic"],
-                                ["#1b9e77", "Evangelical Church"],
+                                ["#7570b3", "Roman catholic"],
+                                ["#1b9e77", "Evangelical church"],
                                 ["#e6ab02", "Other, none, no data"],
                             ],//.reverse(),
                         })
