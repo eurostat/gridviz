@@ -45,7 +45,8 @@
                 <label for="popCit">By citizenship</label>
                 <br />
                 <input type="radio" name="layer" id="popRelig" value="popRelig" />
-                <label for="popRelig">By religion</label>
+                <label for="popRelig">By religion</label> (<input type="checkbox" id="popReligCB" />
+                <label for="popReligCB">size by population</label>)
             </div>
             <hr />
             <input type="checkbox" id="label" checked />
@@ -209,7 +210,7 @@
                             new gviz.ShapeColorSizeStyle({
                                 colorCol: 'DIFF_MEN_WOMEN',
                                 color: (v, r, s) => {
-                                    console.log(v+"")
+                                    console.log(v + "")
                                     const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                                     const t = (Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
                                     return d3.interpolateSpectral(1 - t)
@@ -579,6 +580,8 @@
                     //2 Evangelical Church
                     //3 Other, none, no data
 
+                    const sized = document.querySelector('#popReligCB').checked
+
                     app.addLayerFromDataset(
                         ds.demo,
                         [
@@ -590,14 +593,14 @@
                                 },
                                 type: () => 'segment', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
-                                size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
+                                size: sized ? (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
                                 //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                             }),
                         ],
                         {
-                            pixNb: 12,
+                            pixNb: sized ? 10 : 4,
                             cellInfoHTML: (c) =>
                                 '<b>' +
                                 c.INSGESAMT_0 +
@@ -616,14 +619,16 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({
-                            shape: 'circle',
-                            labelUnitText: 'people',
-                            fillColor: '#ccc',
-                            exaggerationFactor: 0.05,
-                        })
-                    )
+                    if (sized)
+                        //TODO segment width instead
+                        app.layers[0].styles[0].legends.push(
+                            new gviz.SizeLegend({
+                                shape: 'circle',
+                                labelUnitText: 'people',
+                                fillColor: '#ccc',
+                                exaggerationFactor: 0.05,
+                            })
+                        )
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Religion',
