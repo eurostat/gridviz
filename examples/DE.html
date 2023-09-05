@@ -726,22 +726,24 @@ HEIZTYP
                         ],
                         {
                             pixNb: 12,
-                            //TODO
-                            /*cellInfoHTML: (c) =>
+                            cellInfoHTML: (c) =>
                                 '<b>' +
                                 c.INSGESAMT_0 +
-                                '</b> person' +
+                                '</b> habitation' +
                                 (+c.INSGESAMT_0 == 1 ? '' : 's') +
                                 '<br>' +
-                                'By religion:<br>' +
-                                'Roman catholic: ' +
-                                (c.RELIGION_KURZ_1) +
+                                'By heating system:<br>' +
+                                'Central heating: ' +
+                                (c.zentral) +
                                 '<br>' +
-                                'Evangelical church: ' +
-                                (c.RELIGION_KURZ_2) +
+                                'Floor heating: ' +
+                                (c.etagen) +
                                 '<br>' +
-                                'Other, none, no data: ' +
-                                (c.RELIGION_KURZ_3),*/
+                                'District heating: ' +
+                                (c.fernw) +
+                                '<br>' +
+                                'Other: ' +
+                                (c.sonst),
                         }
                     )
                     //legend
