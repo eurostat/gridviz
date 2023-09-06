@@ -53,6 +53,9 @@
             <span style="font-size: 1.5em; font-weight: bold">Habitation</span>
             <br />
             <span style="font-size: 1.2em">
+                <input type="radio" name="layer" id="habType" value="habType" />
+                <label for="habType">Building type</label>
+                <br />
                 <input type="radio" name="layer" id="habHeat" value="habHeat" />
                 <label for="habHeat">Heating system</label>
             </span>
@@ -695,16 +698,95 @@
                         })
                     )
 
-                } else if (layCode === 'habHeat') {
+                } else if (layCode === 'habType') {
+                    /* GEBTYPBAUWEISE			Gebäudetyp-Bauweise 		
+     1	 Freistehendes Haus
+     2	 Doppelhaus hälfte
+     3	 Gereihtes Haus
+     4	 Anderer Gebäudetyp */
+
+                    app.addLayerFromDataset(
+                        ds.wohn,
+                        [
+                            new gviz.CompositionStyle({
+                                color: {
+                                    "GEBTYPBAUWEISE_1": "#33a02c", //green Detached house
+                                    "GEBTYPBAUWEISE_2": "#1f78b4", //blue Semi-detached houses
+                                    "GEBTYPBAUWEISE_3": "#6a3d9a", //purple Terraced house
+                                    "GEBTYPBAUWEISE_4": "#ff7f00", //orange Other type
+                                },
+                                type: () => 'segment', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                sizeCol: 'INSGESAMT_0',
+                                size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0),
+                                //stripesOrientation: () => 90,
+                                //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                            }),
+                        ],
+                        {
+                            pixNb: 12,
+                            cellInfoHTML: (c) =>
+                                '<b>' +
+                                c.INSGESAMT_0 +
+                                '</b> habitation' +
+                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
+                                '<br>' +
+                                'By building type:<br>' +
+                                'Detached house: ' +
+                                (c.GEBTYPBAUWEISE_1) +
+                                '<br>' +
+                                'Semi-detached houses: ' +
+                                (c.GEBTYPBAUWEISE_2) +
+                                '<br>' +
+                                'Terraced house: ' +
+                                (c.GEBTYPBAUWEISE_3) +
+                                '<br>' +
+                                'Other type: ' +
+                                (c.GEBTYPBAUWEISE_4),
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({
+                            shape: 'circle',
+                            labelUnitText: 'habitations',
+                            fillColor: '#ccc',
+                            exaggerationFactor: 0.3,
+                        })
+                    )
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Building type',
+                            colCat: [
+                                ["#33a02c", "Detached house"],
+                                ["#1f78b4", "Semi-detached houses"],
+                                ["#6a3d9a", "Terraced house"],
+                                ["#ff7f00", "Other type"],
+                            ],//.reverse(),
+                        })
+                    )
+
                     /*
-HEIZTYP
+                        GEBTYPGROESSE			Gebäudetyp-Größe 		
+                        1	 Freistehendes Einfamilienhaus	taille du type de bâtiment		Maison individuelle pour une famille
+                        2	 Einfamilienhaus: Doppelhaushälfte			  Maison individuelle : maison jumelée
+                        3	 Einfamilienhaus: Reihenhaus			  Maison individuelle : maison mitoyenne
+                        4	 Freistehendes Zweifamilienhaus			  Maison bifamiliale individuelle
+                        5	 Zweifamilienhaus: Doppelhaushälfte			  Maison à 2 apts : maison jumelée
+                        6	 Zweifamilienhaus: Reihenhaus			  Maison à 2 apts : maison mitoyenne
+                        7	 Mehrfamilienhaus: 3-6 Wohnungen			  Immeuble : 3-6 appartements
+                        8	 Mehrfamilienhaus: 7-12 Wohnungen			  Immeuble : 7-12 appartements
+                        9	 Mehrfamilienhaus: 13 und mehr Wohnungen			  Immeuble à appartements : 13 appartements et plus
+                        10	 Anderer Gebäudetyp			  Type de bâtiment différent
+                                        */
+
+                } else if (layCode === 'habHeat') {
+                    /* HEIZTYP
     1	 Fernheizung (Fernwärme)   Chauffage urbain (chauffage urbain)
     2	 Etagenheizung			  chauffage au sol
     3	 Blockheizung			  chauffe-bloc
     4	 Zentralheizung			  chauffage central
     5	 Einzel-/Mehrraumöfen (auch Nachtspeicherheizung)			  Chauffages pour une ou plusieurs pièces (également chauffage à accumulation de nuit)
-    6	 Keine Heizung im Gebäude oder in den Wohnungen			  Pas de chauffage dans l'immeuble ni dans les appartements
-*/
+    6	 Keine Heizung im Gebäude oder in den Wohnungen			  Pas de chauffage dans l'immeuble ni dans les appartements */
 
                     app.addLayerFromDataset(
                         ds.wohn,
@@ -767,6 +849,7 @@ HEIZTYP
                         })
                     )
 
+                } else if (layCode === 'habYear') {
 
                     /*
                                         BAUJAHR_MZ			Baujahr (Mikrozensus-Klassen) 
@@ -780,30 +863,6 @@ HEIZTYP
                                             8	 2001 - 2004	
                                             9	 2005 - 2008	
                                             10	 2009 und später	
-                                        
-                    
-                                            GEBTYPBAUWEISE			Gebäudetyp-Bauweise 		
-                        1	 Freistehendes Haus	type de bâtiment		Maison individuelle
-                        2	 Doppelhaus hälfte			  maison jumelée
-                        3	 Gereihtes Haus 			  Maison mitoyenne
-                        4	 Anderer Gebäudetyp			  Type de bâtiment différent
-                    
-                                        
-                    
-                    
-                        GEBTYPGROESSE			Gebäudetyp-Größe 		
-                        1	 Freistehendes Einfamilienhaus	taille du type de bâtiment		Maison individuelle pour une famille
-                        2	 Einfamilienhaus: Doppelhaushälfte			  Maison individuelle : maison jumelée
-                        3	 Einfamilienhaus: Reihenhaus			  Maison individuelle : maison mitoyenne
-                        4	 Freistehendes Zweifamilienhaus			  Maison bifamiliale individuelle
-                        5	 Zweifamilienhaus: Doppelhaushälfte			  Maison à 2 apts : maison jumelée
-                        6	 Zweifamilienhaus: Reihenhaus			  Maison à 2 apts : maison mitoyenne
-                        7	 Mehrfamilienhaus: 3-6 Wohnungen			  Immeuble : 3-6 appartements
-                        8	 Mehrfamilienhaus: 7-12 Wohnungen			  Immeuble : 7-12 appartements
-                        9	 Mehrfamilienhaus: 13 und mehr Wohnungen			  Immeuble à appartements : 13 appartements et plus
-                        10	 Anderer Gebäudetyp			  Type de bâtiment différent
-                    
-                    
                                         */
 
                 } else console.error('Unexpected layer code: ' + layCode)
