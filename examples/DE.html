@@ -56,6 +56,9 @@
                 <input type="radio" name="layer" id="habType" value="habType" />
                 <label for="habType">Building type</label>
                 <br />
+                <input type="radio" name="layer" id="habYear" value="habYear" />
+                <label for="habYear">Construction date</label>
+                <br />
                 <input type="radio" name="layer" id="habHeat" value="habHeat" />
                 <label for="habHeat">Heating system</label>
             </span>
@@ -715,10 +718,10 @@
                                     "GEBTYPBAUWEISE_3": "#6a3d9a", //purple Terraced house
                                     "GEBTYPBAUWEISE_4": "#ff7f00", //orange Other type
                                 },
-                                type: () => 'segment', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
-                                size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0),
-                                //stripesOrientation: () => 90,
+                                size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
+                                stripesOrientation: () => 90,
                                 //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                             }),
                         ],
@@ -747,7 +750,7 @@
                     //legend
                     app.layers[0].styles[0].legends.push(
                         new gviz.SizeLegend({
-                            shape: 'circle',
+                            shape: 'square',
                             labelUnitText: 'habitations',
                             fillColor: '#ccc',
                             exaggerationFactor: 0.3,
@@ -778,6 +781,79 @@
                         9	 Mehrfamilienhaus: 13 und mehr Wohnungen			  Immeuble à appartements : 13 appartements et plus
                         10	 Anderer Gebäudetyp			  Type de bâtiment différent
                                         */
+
+
+
+                } else if (layCode === 'habYear') {
+
+                    /*   BAUJAHR_MZ			Baujahr (Mikrozensus-Klassen) 
+                                            1	 "before 1919"
+                                            2	 "1919 - 1948"	
+                                            3	 "1949 - 1978"	
+                                            4	 "1979 - 1986"	
+                                            5	 "1987 - 1990"	
+                                            6	 "1991 - 1995"	
+                                            7	 "1996 - 2000"
+                                            8	 "2001 - 2004"	
+                                            9	 "2005 - 2008"	
+                                            10	 "2009 und later"  */
+
+                    const labels = ["before 1919", "1919 - 1948", "1949 - 1978", "1979 - 1986", "1987 - 1990", "1991 - 1995", "1996 - 2000", "2001 - 2004", "2005 - 2008", "2009 and later"]
+
+                    const col = d3.interpolateViridis
+                    const colsDict = {}; for (let i = 1; i <= 10; i++) colsDict["BAUJAHR_MZ_" + i] = col((i - 1) / 9)
+
+                    app.addLayerFromDataset(
+                        ds.wohn,
+                        [
+                            new gviz.CompositionStyle({
+                                color: colsDict,
+                                type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
+                                sizeCol: 'INSGESAMT_0',
+                                size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
+                                stripesOrientation: () => 90,
+                                blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                            }),
+                        ],
+                        {
+                            pixNb: 12,
+                            /*cellInfoHTML: (c) =>
+                                '<b>' +
+                                c.INSGESAMT_0 +
+                                '</b> habitation' +
+                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
+                                '<br>' +
+                                'By building type:<br>' +
+                                'Detached house: ' +
+                                (c.GEBTYPBAUWEISE_1) +
+                                '<br>' +
+                                'Semi-detached houses: ' +
+                                (c.GEBTYPBAUWEISE_2) +
+                                '<br>' +
+                                'Terraced house: ' +
+                                (c.GEBTYPBAUWEISE_3) +
+                                '<br>' +
+                                'Other type: ' +
+                                (c.GEBTYPBAUWEISE_4),*/
+                        }
+                    )
+                    //legend
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.SizeLegend({
+                            shape: 'square',
+                            labelUnitText: 'habitations',
+                            fillColor: '#ccc',
+                            exaggerationFactor: 0.3,
+                        })
+                    )
+                    const colCats = []; for (let i = 1; i <= 10; i++) colCats.push([col((i - 1) / 9), labels[i - 1]])
+                    app.layers[0].styles[0].legends.push(
+                        new gviz.ColorCategoryLegend({
+                            title: 'Building type',
+                            shape: "square",
+                            colCat: colCats,//.reverse(),
+                        })
+                    )
 
                 } else if (layCode === 'habHeat') {
                     /* HEIZTYP
@@ -848,22 +924,6 @@
                             ],//.reverse(),
                         })
                     )
-
-                } else if (layCode === 'habYear') {
-
-                    /*
-                                        BAUJAHR_MZ			Baujahr (Mikrozensus-Klassen) 
-                                            1	 Vor 1919	Année de construction (classes de microrecensement)
-                                            2	 1919 - 1948	
-                                            3	 1949 - 1978	
-                                            4	 1979 - 1986	
-                                            5	 1987 - 1990	
-                                            6	 1991 - 1995	
-                                            7	 1996 - 2000	
-                                            8	 2001 - 2004	
-                                            9	 2005 - 2008	
-                                            10	 2009 und später	
-                                        */
 
                 } else console.error('Unexpected layer code: ' + layCode)
 
