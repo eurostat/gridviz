@@ -151,13 +151,16 @@
                         //if (diff != 0) console.log(diff, 100 * diff / +c.INSGESAMT_0)
 
                         //marital status
-                        c.FAMSTND_AUSF_TOT = 0; for (let i = 1; i < 8; i++) c.FAMSTND_AUSF_TOT += c["FAMSTND_AUSF_" + i]
+                        c.FAMSTND_AUSF_TOT = 0; for (let i = 1; i <= 8; i++) c.FAMSTND_AUSF_TOT += c["FAMSTND_AUSF_" + i]
                         c.FAMSTND_AUSF_S = c.FAMSTND_AUSF_1
                         c.FAMSTND_AUSF_M = c.FAMSTND_AUSF_2 + c.FAMSTND_AUSF_5
                         c.FAMSTND_AUSF_D = c.FAMSTND_AUSF_4 + c.FAMSTND_AUSF_7
                         c.FAMSTND_AUSF_W = c.FAMSTND_AUSF_3 + c.FAMSTND_AUSF_6
                         c.FAMSTND_AUSF_ND = c.FAMSTND_AUSF_8
-                        //const diff = c.INSGESAMT_0 - c.FAMSTND_AUSF_TOT
+
+                        //age
+                        c.ALTER_KURZ_TOT = 0; for (let i = 1; i <= 5; i++) c.ALTER_KURZ_TOT += c["ALTER_KURZ_" + i]
+                        //const diff = c.INSGESAMT_0 - c.ALTER_KURZ_TOT
                         //if (diff != 0) console.log(diff, 100 * diff / +c.INSGESAMT_0)
 
                         //age ratio
@@ -398,7 +401,7 @@
                                     ALTER_KURZ_5: col(0.9),
                                 },
                                 type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'INSGESAMT_0',
+                                sizeCol: 'ALTER_KURZ_TOT',
                                 size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25, 0),
                                 stripesOrientation: () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
@@ -408,12 +411,6 @@
                         {
                             pixNb: 14,
                             cellInfoHTML: (c) =>
-                                '<b>' +
-                                c.INSGESAMT_0 +
-                                '</b> person' +
-                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
-                                '<br>' +
-                                'By age:<br>' +
                                 ' < 18 : ' +
                                 (c.ALTER_KURZ_1) +
                                 '<br>' +
@@ -436,7 +433,7 @@
                             shape: 'square',
                             labelUnitText: 'people',
                             fillColor: '#ccc',
-                            //exaggerationFactor: 0.05,
+                            exaggerationFactor: 0.5,
                         })
                     )
                     app.layers[0].styles[0].legends.push(
@@ -458,7 +455,7 @@
                         ds.demo,
                         [
                             new gviz.ShapeColorSizeStyle({
-                                sizeCol: 'INSGESAMT_0',
+                                sizeCol: 'ALTER_KURZ_TOT',
                                 size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                                 colorCol: 'age_ratio',
                                 color: (v, r, s) => d3.interpolateSpectral(1 - v),
