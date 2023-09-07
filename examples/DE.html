@@ -339,7 +339,7 @@
                             new gviz.CompositionStyle({
                                 color: {
                                     FAMSTND_AUSF_S: "#33a02c", //green
-                                    FAMSTND_AUSF_M: "#e31a1c", //red
+                                    FAMSTND_AUSF_M: "#ff7f00", //orange
                                     FAMSTND_AUSF_D: "#1f78b4", //blue,
                                     FAMSTND_AUSF_W: "#6a3d9a", //purple
                                     FAMSTND_AUSF_ND: "#ddd", //gray
@@ -353,7 +353,7 @@
                             }),
                         ],
                         {
-                            pixNb: 10,
+                            pixNb: 12,
                             cellInfoHTML: (c) =>
                                 //'<b>' +
                                 //c.INSGESAMT_0 +
@@ -392,7 +392,7 @@
                             shape: "square",
                             colCat: [
                                 ["#33a02c", "Single"],
-                                ["#e31a1c", "Married / civil union"],
+                                ["#ff7f00", "Married / civil union"],
                                 ["#1f78b4", "Divorced / annulled"],
                                 ["#6a3d9a", "Widowed / partner deceased"],
                                 ["#ddd", "No data"],
@@ -402,18 +402,17 @@
                 } else if (layCode === 'popAge') {
                     /*population by age (5 age groups)  ALTER_KURZ   1 Under 18     2 18 - 29    3 30 - 49    4 50 - 64   5 65 and over */
 
-                    const col = d3.interpolateSpectral
-
+                    //const col = d3.interpolateSpectral
                     app.addLayerFromDataset(
                         ds.demo,
                         [
                             new gviz.CompositionStyle({
                                 color: {
-                                    ALTER_KURZ_1: col(0.1),
-                                    ALTER_KURZ_2: col(0.3),
-                                    ALTER_KURZ_3: col(0.5),
-                                    ALTER_KURZ_4: col(0.7),
-                                    ALTER_KURZ_5: col(0.9),
+                                    ALTER_KURZ_1: "#984ea3", //col(0.1),
+                                    ALTER_KURZ_2: "#377eb8", //col(0.3),
+                                    ALTER_KURZ_3: "#ffff33", //col(0.5),
+                                    ALTER_KURZ_4: "#ff7f00", //col(0.7),
+                                    ALTER_KURZ_5: "#e41a1c", //col(0.9),
                                 },
                                 type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'ALTER_KURZ_TOT',
@@ -424,7 +423,7 @@
                             }),
                         ],
                         {
-                            pixNb: 14,
+                            pixNb: 15,
                             cellInfoHTML: (c) =>
                                 ' < 18 : ' +
                                 (c.ALTER_KURZ_1) +
@@ -456,11 +455,11 @@
                             title: 'Age',
                             shape: "square",
                             colCat: [
-                                [col(0.1), '< 18'],
-                                [col(0.3), '18-29'],
-                                [col(0.5), '30-49'],
-                                [col(0.7), '50-64'],
-                                [col(0.9), ' > 64'],
+                                ["#984ea3", '< 18'],
+                                ["#377eb8", '18-29'],
+                                ["#ffff33", '30-49'],
+                                ["#ff7f00", '50-64'],
+                                ["#a65628", ' > 64'],
                             ].reverse(),
                         })
                     )
@@ -729,7 +728,7 @@
                                 sizeCol: 'GEBTYPBAUWEISE_TOT',
                                 size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
                                 stripesOrientation: () => 90,
-                                //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                                blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                             }),
                         ],
                         {
@@ -858,10 +857,10 @@
                         [
                             new gviz.CompositionStyle({
                                 color: {
-                                    "fernw": "rgb(255, 140, 255)",
+                                    "fernw": "#1f78b4",
                                     "sonst": "rgb(180, 180, 180)",
                                     "etagen": "rgb(255, 164, 52)",
-                                    "zentral": "rgb(255, 225, 66)",
+                                    "zentral": "#33a02c",
                                 },
                                 type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
@@ -893,16 +892,16 @@
                             shape: 'circle',
                             labelUnitText: 'habitations',
                             fillColor: '#ccc',
-                            exaggerationFactor: 0.5,
+                            exaggerationFactor: 0.3,
                         })
                     )
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Heating system',
                             colCat: [
-                                ["rgb(255, 225, 66)", "Central heating"], //zentral
+                                ["#33a02c", "Central heating"], //zentral
                                 ["rgb(255, 164, 52)", "Floor heating"], //etagen
-                                ["rgb(255, 140, 255)", "District heating"], //fernw
+                                ["#1f78b4", "District heating"], //fernw
                                 ["rgb(180, 180, 180)", "Other"],
                             ],//.reverse(),
                         })
