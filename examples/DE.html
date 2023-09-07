@@ -178,7 +178,7 @@
                         c.STAATSANGE_GRP_TOT = c.STAATSANGE_GRP_1 + c.STAATSANGE_GRP_21 + c.STAATSANGE_GRP_22 + c.STAATSANGE_GRP_23 + c.STAATSANGE_GRP_24
 
                         //religion
-
+                        c.RELIGION_KURZ_TOT = c.RELIGION_KURZ_1 + c.RELIGION_KURZ_2 + c.RELIGION_KURZ_3
 
                         //STAATSANGE_HLND Citizenship by selected countries
                         //1 Germany
@@ -208,6 +208,12 @@
                     readParquetFun: readParquet,
                     preprocess: (c) => {
                         cleanCell(c)
+
+                        //building type
+                        c.GEBTYPBAUWEISE_TOT = c.GEBTYPBAUWEISE_1 + c.GEBTYPBAUWEISE_2 + c.GEBTYPBAUWEISE_3 + c.GEBTYPBAUWEISE_4
+
+                        //building age
+                        c.BAUJAHR_MZ_TOT = 0; for (let i = 1; i <= 10; i++) c.BAUJAHR_MZ_TOT += c["BAUJAHR_MZ_" + i]
 
                         //heating system
                         c.fernw = c.HEIZTYP_1
@@ -526,7 +532,7 @@
                                     GEBURTLAND_GRP_24: "#ddd", //gray
                                 },
                                 type: sized ? () => 'halftone' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'INSGESAMT_0',
+                                sizeCol: 'GEBURTLAND_GRP_TOT',
                                 size: sized ? (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: sized ? undefined : () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
@@ -593,7 +599,7 @@
                                     STAATSANGE_GRP_24: "#ddd", //gray
                                 },
                                 type: sized ? () => 'halftone' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'INSGESAMT_0',
+                                sizeCol: 'STAATSANGE_GRP_TOT',
                                 size: sized ? (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: sized ? undefined : () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
@@ -660,7 +666,7 @@
                                     RELIGION_KURZ_3: "#e6ab02", //light mostard
                                 },
                                 type: () => 'segment', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'INSGESAMT_0',
+                                sizeCol: 'RELIGION_KURZ_TOT',
                                 size: sized ? (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
@@ -720,7 +726,7 @@
                                     "GEBTYPBAUWEISE_4": "#ff7f00", //orange Other type
                                 },
                                 type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'INSGESAMT_0',
+                                sizeCol: 'GEBTYPBAUWEISE_TOT',
                                 size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
                                 stripesOrientation: () => 90,
                                 //blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
@@ -804,7 +810,7 @@
                             new gviz.CompositionStyle({
                                 color: colsDict,
                                 type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'INSGESAMT_0',
+                                sizeCol: 'BAUJAHR_MZ_TOT',
                                 size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
                                 stripesOrientation: () => 90,
                                 blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
@@ -868,12 +874,6 @@
                         {
                             pixNb: 12,
                             cellInfoHTML: (c) =>
-                                '<b>' +
-                                c.INSGESAMT_0 +
-                                '</b> habitation' +
-                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
-                                '<br>' +
-                                'By heating system:<br>' +
                                 'Central heating: ' +
                                 (c.zentral) +
                                 '<br>' +
