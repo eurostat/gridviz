@@ -459,7 +459,7 @@
                                 ["#377eb8", '18-29'],
                                 ["#ffff33", '30-49'],
                                 ["#ff7f00", '50-64'],
-                                ["#a65628", ' > 64'],
+                                ["#e41a1c", ' > 64'],
                             ].reverse(),
                         })
                     )
@@ -570,6 +570,7 @@
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Birth place',
+                            shape: sized ? 'circle' : "square",
                             colCat: [
                                 ["#fed9a6", "Germany"],
                                 ["#7570b3", "European union"],
@@ -637,6 +638,7 @@
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Citizenship',
+                            shape: sized ? 'circle' : "square",
                             colCat: [
                                 ["#fed9a6", "Germany"],
                                 ["#7570b3", "European union"],
