@@ -143,16 +143,22 @@
                         cleanCell(c)
 
                         //sex
-                        c.DIFF_MEN_WOMEN = +c.GESCHLECHT_1 - c.GESCHLECHT_2
-                        c.DIFF_MEN_WOMEN = (100 * c.DIFF_MEN_WOMEN) / c.INSGESAMT_0
+                        c.GESCHLECHT_TOT = c.GESCHLECHT_1 + c.GESCHLECHT_2
+                        c.DIFF_MEN_WOMEN = c.GESCHLECHT_1 - c.GESCHLECHT_2
+                        c.DIFF_MEN_WOMEN = (100 * c.DIFF_MEN_WOMEN) / c.GESCHLECHT_TOT
                         if (isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
+                        //const diff = +c.INSGESAMT_0 - +c.GESCHLECHT_1 - +c.GESCHLECHT_2
+                        //if (diff != 0) console.log(diff, 100 * diff / +c.INSGESAMT_0)
 
                         //marital status
+                        c.FAMSTND_AUSF_TOT = 0; for (let i = 1; i < 8; i++) c.FAMSTND_AUSF_TOT += c["FAMSTND_AUSF_" + i]
                         c.FAMSTND_AUSF_S = c.FAMSTND_AUSF_1
                         c.FAMSTND_AUSF_M = c.FAMSTND_AUSF_2 + c.FAMSTND_AUSF_5
                         c.FAMSTND_AUSF_D = c.FAMSTND_AUSF_4 + c.FAMSTND_AUSF_7
                         c.FAMSTND_AUSF_W = c.FAMSTND_AUSF_3 + c.FAMSTND_AUSF_6
                         c.FAMSTND_AUSF_ND = c.FAMSTND_AUSF_8
+                        //const diff = c.INSGESAMT_0 - c.FAMSTND_AUSF_TOT
+                        //if (diff != 0) console.log(diff, 100 * diff / +c.INSGESAMT_0)
 
                         //age ratio
                         //<29
@@ -242,19 +248,20 @@
                         })
                     )
                 } else if (layCode === 'popSex') {
+                    const fs = d3.format('.1f')
+
                     app.addLayerFromDataset(
                         ds.demo,
                         [
                             new gviz.ShapeColorSizeStyle({
                                 colorCol: 'DIFF_MEN_WOMEN',
                                 color: (v, r, s) => {
-                                    console.log(v + "")
                                     const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                                     const t = (Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
                                     return d3.interpolateSpectral(1 - t)
                                 },
                                 shape: () => 'circle',
-                                sizeCol: 'INSGESAMT_0',
+                                sizeCol: 'GESCHLECHT_TOT',
                                 size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.2),
                                 blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                             }),
@@ -263,15 +270,15 @@
                             pixNb: 8,
                             cellInfoHTML: (c) => {
                                 return (
-                                    '<b>' +
-                                    c.INSGESAMT_0 +
-                                    '</b> inhabitants<br>' +
+                                    //'<b>' +
+                                    //c.INSGESAMT_0 +
+                                    //'</b> inhabitants<br>' +
                                     c.GESCHLECHT_1 +
                                     ' men<br>' +
                                     c.GESCHLECHT_2 +
                                     ' women<br>Difference: <b>' +
                                     (c.DIFF_MEN_WOMEN > 0 ? '+' : '') +
-                                    d3.format('.1f')(c.DIFF_MEN_WOMEN) +
+                                    fs(c.DIFF_MEN_WOMEN) +
                                     ' % men</b>'
                                 )
                             },
@@ -283,15 +290,18 @@
                     )
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorLegend({
-                            title: 'Men / women difference (%)',
-                            ticks: 7,
-                            tickFormat: '.1f',
+                            title: 'Men / women difference',
+                            ticks: 3,
+                            //ticks: 5,
+                            tickFormat: 'text',
+                            //tickFormat: '.1f',
                             colorRamp: d3.interpolateSpectral,
                             invert: true,
-                            fun: (t, r, s) => {
+                            fun: (t, r, s) => (t == 0 ? 'More women' : t == 0.5 ? 'Balanced' : 'More men'),
+                            /*fun: (t, r, s) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                                 return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
-                            },
+                            },*/
                         })
                     )
                 } else if (layCode === 'popMarital') {
@@ -317,7 +327,7 @@
                                     FAMSTND_AUSF_ND: "#ddd", //gray
                                 },
                                 type: () => 'segment', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'INSGESAMT_0',
+                                sizeCol: 'FAMSTND_AUSF_TOT',
                                 size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
                                 stripesOrientation: () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
@@ -327,12 +337,12 @@
                         {
                             pixNb: 10,
                             cellInfoHTML: (c) =>
-                                '<b>' +
-                                c.INSGESAMT_0 +
-                                '</b> person' +
-                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
-                                '<br>' +
-                                'By marital status:<br>' +
+                                //'<b>' +
+                                //c.INSGESAMT_0 +
+                                //'</b> person' +
+                                //(+c.INSGESAMT_0 == 1 ? '' : 's') +
+                                //'<br>' +
+                                //'By marital status:<br>' +
                                 'Single: ' +
                                 (c.FAMSTND_AUSF_S) +
                                 '<br>' +
