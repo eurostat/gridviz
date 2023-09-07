@@ -171,6 +171,15 @@
                         c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
                         c.age_ratio = c.age_ratio * 0.5 + 0.5
 
+                        //place of birth
+                        c.GEBURTLAND_GRP_TOT = c.GEBURTLAND_GRP_1 + c.GEBURTLAND_GRP_21 + c.GEBURTLAND_GRP_22 + c.GEBURTLAND_GRP_23 + c.GEBURTLAND_GRP_24
+
+                        //citizenship
+                        c.STAATSANGE_GRP_TOT = c.STAATSANGE_GRP_1 + c.STAATSANGE_GRP_21 + c.STAATSANGE_GRP_22 + c.STAATSANGE_GRP_23 + c.STAATSANGE_GRP_24
+
+                        //religion
+
+
                         //STAATSANGE_HLND Citizenship by selected countries
                         //1 Germany
                         //2 Bosnia and Herzegovina
@@ -486,7 +495,7 @@
                     )
                     app.layers[0].styles[0].legends.push(
                         new gviz.ColorLegend({
-                            title: 'Balance young/old',
+                            title: 'Balance young / old',
                             ticks: 2,
                             tickFormat: 'text',
                             colorRamp: d3.interpolateSpectral,
@@ -518,7 +527,7 @@
                                 },
                                 type: sized ? () => 'halftone' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
-                                size: sized ? (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
+                                size: sized ? (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: sized ? undefined : () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
                                 blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "normal"
@@ -527,12 +536,6 @@
                         {
                             pixNb: sized ? 22 : 5,
                             cellInfoHTML: (c) =>
-                                '<b>' +
-                                c.INSGESAMT_0 +
-                                '</b> person' +
-                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
-                                '<br>' +
-                                'By birth place:<br>' +
                                 'Germany: ' +
                                 (c.GEBURTLAND_GRP_1) +
                                 '<br>' +
@@ -591,7 +594,7 @@
                                 },
                                 type: sized ? () => 'halftone' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                                 sizeCol: 'INSGESAMT_0',
-                                size: sized ? (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
+                                size: sized ? (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: sized ? undefined : () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
                                 blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "normal"
@@ -600,12 +603,6 @@
                         {
                             pixNb: sized ? 22 : 5,
                             cellInfoHTML: (c) =>
-                                '<b>' +
-                                c.INSGESAMT_0 +
-                                '</b> person' +
-                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
-                                '<br>' +
-                                'By citizenship:<br>' +
                                 'Germany: ' +
                                 (c.STAATSANGE_GRP_1) +
                                 '<br>' +
@@ -673,16 +670,10 @@
                         {
                             pixNb: sized ? 10 : 4,
                             cellInfoHTML: (c) =>
-                                '<b>' +
-                                c.INSGESAMT_0 +
-                                '</b> person' +
-                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
-                                '<br>' +
-                                'By religion:<br>' +
                                 'Roman catholic church: ' +
                                 (c.RELIGION_KURZ_1) +
                                 '<br>' +
-                                'Evangelical church: ' +
+                                'Protestant church: ' +
                                 (c.RELIGION_KURZ_2) +
                                 '<br>' +
                                 'Other, none, no data: ' +
@@ -705,7 +696,7 @@
                             shape: "square",
                             colCat: [
                                 ["#7570b3", "Roman catholic church"],
-                                ["#1b9e77", "Evangelical church"],
+                                ["#1b9e77", "Protestant church"],
                                 ["#e6ab02", "Other, none, no data"],
                             ],//.reverse(),
                         })
@@ -738,12 +729,6 @@
                         {
                             pixNb: 12,
                             cellInfoHTML: (c) =>
-                                '<b>' +
-                                c.INSGESAMT_0 +
-                                '</b> habitation' +
-                                (+c.INSGESAMT_0 == 1 ? '' : 's') +
-                                '<br>' +
-                                'By building type:<br>' +
                                 'Detached house: ' +
                                 (c.GEBTYPBAUWEISE_1) +
                                 '<br>' +
@@ -828,13 +813,7 @@
                         {
                             pixNb: 12,
                             cellInfoHTML: (c) => {
-                                const sb = [
-                                    '<b>' +
-                                    c.INSGESAMT_0 +
-                                    '</b> habitation' +
-                                    (+c.INSGESAMT_0 == 1 ? '' : 's') +
-                                    '<br>' +
-                                    'By construction date:']
+                                const sb = []
                                 for (let i = 1; i <= 10; i++)
                                     sb.push("<br>" + labels[i - 1] + ": " + c["BAUJAHR_MZ_" + i])
                                 return sb.join("")
