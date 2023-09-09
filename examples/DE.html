@@ -191,7 +191,7 @@
 
 
 
-            //create demography (population only) dataset
+            /*/create demography (population only) dataset
             ds.demo_pop = gviz_par.makeMultiScaleTiledParquetGridDataset(
                 app,
                 [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
@@ -254,7 +254,7 @@
 
                     },
                 })
-
+*/
 
             //create wohnung dataset
             ds.wohn = gviz_par.makeMultiScaleTiledParquetGridDataset(
@@ -713,12 +713,12 @@
                         [
                             new gviz.CompositionStyle({
                                 color: {
-                                    RELIGION_KURZ_1: "#7570b3", //blueish
-                                    RELIGION_KURZ_2: "#1b9e77", //greenish,
-                                    RELIGION_KURZ_3: "#e6ab02", //light mostard
+                                    1: "#7570b3", //blueish
+                                    2: "#1b9e77", //greenish,
+                                    3: "#e6ab02", //light mostard
                                 },
                                 type: () => 'segment', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'RELIGION_KURZ_TOT',
+                                sizeCol: 'TOT',
                                 size: sized ? (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
@@ -729,13 +729,13 @@
                             pixNb: sized ? 10 : 4,
                             cellInfoHTML: (c) =>
                                 'Roman catholic church: ' +
-                                (c.RELIGION_KURZ_1) +
+                                (c["1"]) +
                                 '<br>' +
                                 'Protestant church: ' +
-                                (c.RELIGION_KURZ_2) +
+                                (c["2"]) +
                                 '<br>' +
                                 'Other, none, no data: ' +
-                                (c.RELIGION_KURZ_3),
+                                (c["3"]),
                         }
                     )
                     //legend
