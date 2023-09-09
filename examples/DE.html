@@ -190,72 +190,6 @@
             })
 
 
-
-            /*/create demography (population only) dataset
-            ds.demo_pop = gviz_par.makeMultiScaleTiledParquetGridDataset(
-                app,
-                [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
-                (res) => baseURL + 'demo_pop/' + res + 'm/',
-                {
-                    readParquetFun: readParquet,
-                    preprocess: (c) => { cleanCell(c) },
-                })
-
-            //create demography full dataset
-            ds.demo = gviz_par.makeMultiScaleTiledParquetGridDataset(
-                app,
-                [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
-                (res) => baseURL + 'demo/' + res + 'm/',
-                {
-                    readParquetFun: readParquet,
-                    preprocess: (c) => {
-                        cleanCell(c)
-
-                        //sex
-                        c.GESCHLECHT_TOT = c.GESCHLECHT_1 + c.GESCHLECHT_2
-                        c.DIFF_MEN_WOMEN = c.GESCHLECHT_1 - c.GESCHLECHT_2
-                        c.DIFF_MEN_WOMEN = (100 * c.DIFF_MEN_WOMEN) / c.GESCHLECHT_TOT
-                        if (isNaN(c.DIFF_MEN_WOMEN)) c.DIFF_MEN_WOMEN = 0
-                        //const diff = +c.INSGESAMT_0 - +c.GESCHLECHT_1 - +c.GESCHLECHT_2
-                        //if (diff != 0) console.log(diff, 100 * diff / +c.INSGESAMT_0)
-
-                        //marital status
-                        c.FAMSTND_AUSF_TOT = 0; for (let i = 1; i <= 8; i++) c.FAMSTND_AUSF_TOT += c["FAMSTND_AUSF_" + i]
-                        c.FAMSTND_AUSF_S = c.FAMSTND_AUSF_1
-                        c.FAMSTND_AUSF_M = c.FAMSTND_AUSF_2 + c.FAMSTND_AUSF_5
-                        c.FAMSTND_AUSF_D = c.FAMSTND_AUSF_4 + c.FAMSTND_AUSF_7
-                        c.FAMSTND_AUSF_W = c.FAMSTND_AUSF_3 + c.FAMSTND_AUSF_6
-                        c.FAMSTND_AUSF_ND = c.FAMSTND_AUSF_8
-
-                        //age
-                        c.ALTER_KURZ_TOT = 0; for (let i = 1; i <= 5; i++) c.ALTER_KURZ_TOT += c["ALTER_KURZ_" + i]
-                        //const diff = c.INSGESAMT_0 - c.ALTER_KURZ_TOT
-                        //if (diff != 0) console.log(diff, 100 * diff / +c.INSGESAMT_0)
-
-                        //age ratio
-                        //<29
-                        c.yyy = +c.ALTER_KURZ_1 + c.ALTER_KURZ_2
-                        //>50
-                        c.ooo = +c.ALTER_KURZ_4 + c.ALTER_KURZ_5
-                        c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
-                        c.age_ratio = c.age_ratio * 0.5 + 0.5
-
-                        //median age
-                        //TODO
-
-                        //place of birth
-                        c.GEBURTLAND_GRP_TOT = c.GEBURTLAND_GRP_1 + c.GEBURTLAND_GRP_21 + c.GEBURTLAND_GRP_22 + c.GEBURTLAND_GRP_23 + c.GEBURTLAND_GRP_24
-
-                        //citizenship
-                        c.STAATSANGE_GRP_TOT = c.STAATSANGE_GRP_1 + c.STAATSANGE_GRP_21 + c.STAATSANGE_GRP_22 + c.STAATSANGE_GRP_23 + c.STAATSANGE_GRP_24
-
-                        //religion
-                        c.RELIGION_KURZ_TOT = c.RELIGION_KURZ_1 + c.RELIGION_KURZ_2 + c.RELIGION_KURZ_3
-
-                    },
-                })
-*/
-
             //create wohnung dataset
             ds.wohn = gviz_par.makeMultiScaleTiledParquetGridDataset(
                 app,
@@ -709,7 +643,7 @@
                     const sized = document.querySelector('#popReligCB').checked
 
                     app.addLayerFromDataset(
-                        ds.demo,
+                        ds.RELIGION_KURZ,
                         [
                             new gviz.CompositionStyle({
                                 color: {
