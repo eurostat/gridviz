@@ -130,20 +130,32 @@
                     { preprocess: preprocess }
                 )
             }
-            //"INSGESAMT", "ALTER_KURZ", "FAMSTND_AUSF", "GEBURTLAND_GRP", "GESCHLECHT",
+
+            //"INSGESAMT", "ALTER_KURZ", "", "GEBURTLAND_GRP", "GESCHLECHT",
             //"RELIGION_KURZ", "STAATSANGE_GRP", "GEBTYPBAUWEISE", "BAUJAHR_MZ", "HEIZTYP",
 
             ds.INSGESAMT = makeDataset("INSGESAMT", c => {
                 cleanCell(c)
             })
 
+            //sex
             ds.GESCHLECHT = makeDataset("GESCHLECHT", c => {
                 cleanCell(c)
-                //sex
                 c.TOT = c["1"] + c["2"]
                 c.I = c["1"] - c["2"]
                 c.I = (100 * c.I) / c.TOT
                 if (isNaN(c.I)) c.I = 0
+            })
+
+            //marital status
+            ds.FAMSTND_AUSF = makeDataset("FAMSTND_AUSF", c => {
+                cleanCell(c)
+                c.TOT = 0; for (let i = 1; i <= 8; i++) c.TOT += c[i]
+                c.S = c["1"]
+                c.M = c["2"] + c["5"]
+                c.D = c["4"] + c["7"]
+                c.W = c["3"] + c["6"]
+                c.ND = c["8"]
             })
 
 
@@ -362,18 +374,18 @@
                     */
 
                     app.addLayerFromDataset(
-                        ds.demo,
+                        ds.FAMSTND_AUSF,
                         [
                             new gviz.CompositionStyle({
                                 color: {
-                                    FAMSTND_AUSF_S: "#33a02c", //green
-                                    FAMSTND_AUSF_M: "#ff7f00", //orange
-                                    FAMSTND_AUSF_D: "#1f78b4", //blue,
-                                    FAMSTND_AUSF_W: "#6a3d9a", //purple
-                                    FAMSTND_AUSF_ND: "#ddd", //gray
+                                    S: "#33a02c", //green
+                                    M: "#ff7f00", //orange
+                                    D: "#1f78b4", //blue,
+                                    W: "#6a3d9a", //purple
+                                    ND: "#ddd", //gray
                                 },
                                 type: () => 'segment', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'FAMSTND_AUSF_TOT',
+                                sizeCol: 'TOT',
                                 size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
                                 stripesOrientation: () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
@@ -383,26 +395,20 @@
                         {
                             pixNb: 12,
                             cellInfoHTML: (c) =>
-                                //'<b>' +
-                                //c.INSGESAMT_0 +
-                                //'</b> person' +
-                                //(+c.INSGESAMT_0 == 1 ? '' : 's') +
-                                //'<br>' +
-                                //'By marital status:<br>' +
                                 'Single: ' +
-                                (c.FAMSTND_AUSF_S) +
+                                (c.S) +
                                 '<br>' +
                                 'Married / civil union: ' +
-                                (c.FAMSTND_AUSF_M) +
+                                (c.M) +
                                 '<br>' +
                                 'Divorced / annulled: ' +
-                                (c.FAMSTND_AUSF_D) +
+                                (c.D) +
                                 '<br>' +
                                 'Widowed / partner deceased: ' +
-                                (c.FAMSTND_AUSF_W) +
+                                (c.W) +
                                 '<br>' +
                                 'No data: ' +
-                                (c.FAMSTND_AUSF_ND),
+                                (c.ND),
                         }
                     )
                     //legend
