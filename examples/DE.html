@@ -131,7 +131,6 @@
                 )
             }
 
-            //"RELIGION_KURZ", "", "GEBTYPBAUWEISE", "BAUJAHR_MZ", "HEIZTYP",
 
             //total population
             ds.INSGESAMT = makeDataset("INSGESAMT", c => {
@@ -190,31 +189,32 @@
             })
 
 
-            //create wohnung dataset
-            ds.wohn = gviz_par.makeMultiScaleTiledParquetGridDataset(
-                app,
-                [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
-                (res) => baseURL + 'wohn/' + res + 'm/',
-                {
-                    readParquetFun: readParquet,
-                    preprocess: (c) => {
-                        cleanCell(c)
 
-                        //building type
-                        c.GEBTYPBAUWEISE_TOT = c.GEBTYPBAUWEISE_1 + c.GEBTYPBAUWEISE_2 + c.GEBTYPBAUWEISE_3 + c.GEBTYPBAUWEISE_4
+            //building type
+            ds.GEBTYPBAUWEISE = makeDataset("GEBTYPBAUWEISE", c => {
+                cleanCell(c)
+                c.TOT = 0; for (let i = 1; i <= 4; i++) c.TOT += c[i]
+            })
 
-                        //building age
-                        c.BAUJAHR_MZ_TOT = 0; for (let i = 1; i <= 10; i++) c.BAUJAHR_MZ_TOT += c["BAUJAHR_MZ_" + i]
+            //building age
+            ds.BAUJAHR_MZ = makeDataset("BAUJAHR_MZ", c => {
+                cleanCell(c)
+                c.TOT = 0; for (let i = 1; i <= 10; i++) c.TOT += c[i]
+            })
 
-                        //heating system
-                        c.fernw = c.HEIZTYP_1
-                        c.etagen = c.HEIZTYP_2
-                        c.zentral = c.HEIZTYP_4
-                        const sonst = c.INSGESAMT_0 - c.fernw - c.etagen - c.zentral;
-                        c.sonst = sonst < 0 ? 0 : sonst;
-                        for (let i = 1; i <= 6; i++) delete c["HEIZTYP_" + i]
-                    },
-                })
+            //heating system
+            ds.HEIZTYP = makeDataset("HEIZTYP", c => {
+                cleanCell(c)
+                c.TOT = 0; for (let i = 1; i <= 6; i++) c.TOT += c[i]
+
+                c.fernw = c.HEIZTYP_1
+                c.etagen = c.HEIZTYP_2
+                c.zentral = c.HEIZTYP_4
+                const sonst = c.INSGESAMT_0 - c.fernw - c.etagen - c.zentral;
+                c.sonst = sonst < 0 ? 0 : sonst;
+                for (let i = 1; i <= 6; i++) delete c["HEIZTYP_" + i]
+            })
+
 
 
             //
@@ -702,17 +702,17 @@
      4	 Anderer Gebäudetyp */
 
                     app.addLayerFromDataset(
-                        ds.wohn,
+                        ds.GEBTYPBAUWEISE,
                         [
                             new gviz.CompositionStyle({
                                 color: {
-                                    "GEBTYPBAUWEISE_1": "#33a02c", //green Detached house
-                                    "GEBTYPBAUWEISE_2": "#1f78b4", //blue Semi-detached houses
-                                    "GEBTYPBAUWEISE_3": "#6a3d9a", //purple Terraced house
-                                    "GEBTYPBAUWEISE_4": "#ff7f00", //orange Other type
+                                    1: "#33a02c", //green Detached house
+                                    2: "#1f78b4", //blue Semi-detached houses
+                                    3: "#6a3d9a", //purple Terraced house
+                                    4: "#ff7f00", //orange Other type
                                 },
                                 type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'GEBTYPBAUWEISE_TOT',
+                                sizeCol: 'TOT',
                                 size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
                                 stripesOrientation: () => 90,
                                 blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
@@ -722,16 +722,16 @@
                             pixNb: 12,
                             cellInfoHTML: (c) =>
                                 'Detached house: ' +
-                                (c.GEBTYPBAUWEISE_1) +
+                                (c["1"]) +
                                 '<br>' +
                                 'Semi-detached houses: ' +
-                                (c.GEBTYPBAUWEISE_2) +
+                                (c["2"]) +
                                 '<br>' +
                                 'Terraced house: ' +
-                                (c.GEBTYPBAUWEISE_3) +
+                                (c["3"]) +
                                 '<br>' +
                                 'Other type: ' +
-                                (c.GEBTYPBAUWEISE_4),
+                                (c["4"]),
                         }
                     )
                     //legend
@@ -788,15 +788,15 @@
                     const labels = ["before 1919", "1919 - 1948", "1949 - 1978", "1979 - 1986", "1987 - 1990", "1991 - 1995", "1996 - 2000", "2001 - 2004", "2005 - 2008", "2009 and later"]
 
                     const col = d3.interpolateViridis
-                    const colsDict = {}; for (let i = 1; i <= 10; i++) colsDict["BAUJAHR_MZ_" + i] = col((i - 1) / 9)
+                    const colsDict = {}; for (let i = 1; i <= 10; i++) colsDict["" + i] = col((i - 1) / 9)
 
                     app.addLayerFromDataset(
-                        ds.wohn,
+                        ds.BAUJAHR_MZ,
                         [
                             new gviz.CompositionStyle({
                                 color: colsDict,
                                 type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'BAUJAHR_MZ_TOT',
+                                sizeCol: 'TOT',
                                 size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
                                 stripesOrientation: () => 90,
                                 blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
@@ -807,7 +807,7 @@
                             cellInfoHTML: (c) => {
                                 const sb = []
                                 for (let i = 1; i <= 10; i++)
-                                    sb.push("<br>" + labels[i - 1] + ": " + c["BAUJAHR_MZ_" + i])
+                                    sb.push("<br>" + labels[i - 1] + ": " + c["" + i])
                                 return sb.join("")
                             }
                         }
