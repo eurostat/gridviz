@@ -131,8 +131,7 @@
                 )
             }
 
-            //"INSGESAMT", "ALTER_KURZ", "", "GEBURTLAND_GRP", "GESCHLECHT",
-            //"RELIGION_KURZ", "STAATSANGE_GRP", "GEBTYPBAUWEISE", "BAUJAHR_MZ", "HEIZTYP",
+            //"RELIGION_KURZ", "", "GEBTYPBAUWEISE", "BAUJAHR_MZ", "HEIZTYP",
 
             //total population
             ds.INSGESAMT = makeDataset("INSGESAMT", c => {
@@ -171,6 +170,23 @@
                 c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
                 c.age_ratio = c.age_ratio * 0.5 + 0.5
             })
+
+            //place of birth
+            ds.GEBURTLAND_GRP = makeDataset("GEBURTLAND_GRP", c => {
+                c.TOT = c["1"] + c["21"] + c["22"] + c["23"] + c["24"]
+            })
+
+            //citizenship
+            ds.STAATSANGE_GRP = makeDataset("STAATSANGE_GRP", c => {
+                c.TOT = c["1"] + c["21"] + c["22"] + c["23"] + c["24"]
+            })
+
+            //religion
+            ds.RELIGION_KURZ = makeDataset("RELIGION_KURZ", c => {
+                c.TOT = c["1"] + c["2"] + c["3"]
+            })
+
+
 
             //create demography (population only) dataset
             ds.demo_pop = gviz_par.makeMultiScaleTiledParquetGridDataset(
@@ -233,21 +249,6 @@
                         //religion
                         c.RELIGION_KURZ_TOT = c.RELIGION_KURZ_1 + c.RELIGION_KURZ_2 + c.RELIGION_KURZ_3
 
-                        //STAATSANGE_HLND Citizenship by selected countries
-                        //1 Germany
-                        //2 Bosnia and Herzegovina
-                        //3 Greece
-                        //4 Italy
-                        //5 Kazakhstan
-                        //6 Croatia
-                        //7 Netherlands
-                        //8 Austria
-                        //9 Poland
-                        //10 Romania
-                        //11 Russian Federation
-                        //12 Turkey
-                        //13 Ukraine
-                        //14 Other
                     },
                 })
 
