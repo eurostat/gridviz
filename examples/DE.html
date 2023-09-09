@@ -173,16 +173,19 @@
 
             //place of birth
             ds.GEBURTLAND_GRP = makeDataset("GEBURTLAND_GRP", c => {
+                cleanCell(c)
                 c.TOT = c["1"] + c["21"] + c["22"] + c["23"] + c["24"]
             })
 
             //citizenship
             ds.STAATSANGE_GRP = makeDataset("STAATSANGE_GRP", c => {
+                cleanCell(c)
                 c.TOT = c["1"] + c["21"] + c["22"] + c["23"] + c["24"]
             })
 
             //religion
             ds.RELIGION_KURZ = makeDataset("RELIGION_KURZ", c => {
+                cleanCell(c)
                 c.TOT = c["1"] + c["2"] + c["3"]
             })
 
@@ -568,18 +571,18 @@
                     const sized = document.querySelector('#popCoBCitCB').checked
 
                     app.addLayerFromDataset(
-                        ds.demo,
+                        ds.GEBURTLAND_GRP,
                         [
                             new gviz.CompositionStyle({
                                 color: {
-                                    GEBURTLAND_GRP_1: "#fed9a6", //light mostard
-                                    GEBURTLAND_GRP_21: "#7570b3", //blueish
-                                    GEBURTLAND_GRP_22: "#1b9e77", //greenish,
-                                    GEBURTLAND_GRP_23: "#d95f02", //orange
-                                    GEBURTLAND_GRP_24: "#ddd", //gray
+                                    1: "#fed9a6", //light mostard
+                                    21: "#7570b3", //blueish
+                                    22: "#1b9e77", //greenish,
+                                    23: "#d95f02", //orange
+                                    24: "#ddd", //gray
                                 },
                                 type: sized ? () => 'halftone' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'GEBURTLAND_GRP_TOT',
+                                sizeCol: 'TOT',
                                 size: sized ? (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: sized ? undefined : () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
@@ -590,19 +593,19 @@
                             pixNb: sized ? 22 : 5,
                             cellInfoHTML: (c) =>
                                 'Germany: ' +
-                                (c.GEBURTLAND_GRP_1) +
+                                (c["1"]) +
                                 '<br>' +
                                 'European union: ' +
-                                (c.GEBURTLAND_GRP_21) +
+                                (c["21"]) +
                                 '<br>' +
                                 'Rest of Europe: ' +
-                                (c.GEBURTLAND_GRP_22) +
+                                (c["22"]) +
                                 '<br>' +
                                 'Rest of the world: ' +
-                                (c.GEBURTLAND_GRP_23) +
+                                (c["23"]) +
                                 '<br>' +
                                 'Other: ' +
-                                (c.GEBURTLAND_GRP_24),
+                                (c["24"]),
                         }
                     )
                     //legend
@@ -636,18 +639,18 @@
                     const sized = document.querySelector('#popCoBCitCB').checked
 
                     app.addLayerFromDataset(
-                        ds.demo,
+                        ds.STAATSANGE_GRP,
                         [
                             new gviz.CompositionStyle({
                                 color: {
-                                    STAATSANGE_GRP_1: "#fed9a6", //light mostard
-                                    STAATSANGE_GRP_21: "#7570b3", //blueish
-                                    STAATSANGE_GRP_22: "#1b9e77", //greenish,
-                                    STAATSANGE_GRP_23: "#d95f02", //orange
-                                    STAATSANGE_GRP_24: "#ddd", //gray
+                                    1: "#fed9a6", //light mostard
+                                    21: "#7570b3", //blueish
+                                    22: "#1b9e77", //greenish,
+                                    23: "#d95f02", //orange
+                                    24: "#ddd", //gray
                                 },
                                 type: sized ? () => 'halftone' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'STAATSANGE_GRP_TOT',
+                                sizeCol: 'TOT',
                                 size: sized ? (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                                 stripesOrientation: sized ? undefined : () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
@@ -658,19 +661,19 @@
                             pixNb: sized ? 22 : 5,
                             cellInfoHTML: (c) =>
                                 'Germany: ' +
-                                (c.STAATSANGE_GRP_1) +
+                                (c["1"]) +
                                 '<br>' +
                                 'European union: ' +
-                                (c.STAATSANGE_GRP_21) +
+                                (c["21"]) +
                                 '<br>' +
                                 'Rest of Europe: ' +
-                                (c.STAATSANGE_GRP_22) +
+                                (c["22"]) +
                                 '<br>' +
                                 'Rest of the world: ' +
-                                (c.STAATSANGE_GRP_23) +
+                                (c["23"]) +
                                 '<br>' +
                                 'Other: ' +
-                                (c.STAATSANGE_GRP_24),
+                                (c["24"]),
                         }
                     )
                     //legend
