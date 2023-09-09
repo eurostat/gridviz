@@ -122,6 +122,31 @@
                 for (let k of Object.keys(c)) c[k] = +(c[k] + "")
             };
 
+            const baseURLCSV = "https://raw.githubusercontent.com/jgaffuri/tiled-grid-germany-zensus2011/main/out/"
+            const makeDataset = (code, preprocess) => {
+                return app.makeMultiScaleTiledGridDataset(
+                    [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
+                    (r) => baseURLCSV + code + 'csv/' + r + 'm/',
+                    { preprocess: preprocess }
+                )
+            }
+            //"INSGESAMT", "ALTER_KURZ", "FAMSTND_AUSF", "GEBURTLAND_GRP", "GESCHLECHT",
+            //"RELIGION_KURZ", "STAATSANGE_GRP", "GEBTYPBAUWEISE", "BAUJAHR_MZ", "HEIZTYP",
+
+            ds.INSGESAMT = makeDataset("INSGESAMT", c => {
+                cleanCell(c)
+            })
+
+            ds.GESCHLECHT = makeDataset("GESCHLECHT", c => {
+                cleanCell(c)
+                //sex
+                c.TOT = c["1"] + c["2"]
+                c.I = c["1"] - c["2"]
+                c.I = (100 * c.I) / c.TOT
+                if (isNaN(c.I)) c.I = 0
+            })
+
+
             //create demography (population only) dataset
             ds.demo_pop = gviz_par.makeMultiScaleTiledParquetGridDataset(
                 app,
@@ -243,10 +268,12 @@
                 //set layer
                 if (layCode === 'pop') {
                     app.addLayerFromDataset(
-                        ds.demo_pop,
+                        //ds.demo_pop,
+                        ds.INSGESAMT,
                         [
                             new gviz.SquareColorWGLStyle({
-                                colorCol: 'pop',
+                                //colorCol: 'pop',
+                                colorCol: '0',
                                 color: d3.interpolateYlOrRd,
                                 stretching: { fun: 'expRev', alpha: -7 },
                                 //set alpha and blend operation
@@ -257,7 +284,7 @@
                         ],
                         {
                             pixNb: 1.5,
-                            cellInfoHTML: (c) => '<b>' + c.pop + '</b> person' + (+c.pop == 1 ? '' : 's')
+                            cellInfoHTML: (c) => '<b>' + c["0"] + '</b> person' + (+c["0"] == 1 ? '' : 's')
                         }
                     )
                     //legend
@@ -272,17 +299,18 @@
                     const fs = d3.format('.1f')
 
                     app.addLayerFromDataset(
-                        ds.demo,
+                        //ds.demo,
+                        ds.GESCHLECHT,
                         [
                             new gviz.ShapeColorSizeStyle({
-                                colorCol: 'DIFF_MEN_WOMEN',
+                                colorCol: 'I',
                                 color: (v, r, s) => {
                                     const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                                     const t = (Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
                                     return d3.interpolateSpectral(1 - t)
                                 },
                                 shape: () => 'circle',
-                                sizeCol: 'GESCHLECHT_TOT',
+                                sizeCol: 'TOT',
                                 size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.2),
                                 blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                             }),
@@ -291,15 +319,12 @@
                             pixNb: 8,
                             cellInfoHTML: (c) => {
                                 return (
-                                    //'<b>' +
-                                    //c.INSGESAMT_0 +
-                                    //'</b> inhabitants<br>' +
-                                    c.GESCHLECHT_1 +
+                                    c["1"] +
                                     ' men<br>' +
-                                    c.GESCHLECHT_2 +
+                                    c["2"] +
                                     ' women<br>Difference: <b>' +
-                                    (c.DIFF_MEN_WOMEN > 0 ? '+' : '') +
-                                    fs(c.DIFF_MEN_WOMEN) +
+                                    (c.I > 0 ? '+' : '') +
+                                    fs(c.I) +
                                     ' % men</b>'
                                 )
                             },
