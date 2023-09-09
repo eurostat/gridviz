@@ -158,6 +158,18 @@
                 c.ND = c["8"]
             })
 
+            //age
+            ds.ALTER_KURZ = makeDataset("ALTER_KURZ", c => {
+                cleanCell(c)
+                c.TOT = 0; for (let i = 1; i <= 5; i++) c.TOT += c[i]
+                //age ratio
+                //<29
+                c.yyy = +c["1"] + c["2"]
+                //>50
+                c.ooo = +c["4"] + c["5"]
+                c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
+                c.age_ratio = c.age_ratio * 0.5 + 0.5
+            })
 
             //create demography (population only) dataset
             ds.demo_pop = gviz_par.makeMultiScaleTiledParquetGridDataset(
@@ -438,18 +450,18 @@
 
                     //const col = d3.interpolateSpectral
                     app.addLayerFromDataset(
-                        ds.demo,
+                        ds.ALTER_KURZ,
                         [
                             new gviz.CompositionStyle({
                                 color: {
-                                    ALTER_KURZ_1: "#984ea3", //col(0.1),
-                                    ALTER_KURZ_2: "#377eb8", //col(0.3),
-                                    ALTER_KURZ_3: "#ffff33", //col(0.5),
-                                    ALTER_KURZ_4: "#ff7f00", //col(0.7),
-                                    ALTER_KURZ_5: "#e41a1c", //col(0.9),
+                                    1: "#984ea3", //col(0.1),
+                                    2: "#377eb8", //col(0.3),
+                                    3: "#ffff33", //col(0.5),
+                                    4: "#ff7f00", //col(0.7),
+                                    5: "#e41a1c", //col(0.9),
                                 },
                                 type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
-                                sizeCol: 'ALTER_KURZ_TOT',
+                                sizeCol: 'TOT',
                                 size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25, 0),
                                 stripesOrientation: () => 90,
                                 //agePyramidHeight: (c, r) => 0.95 * r,
@@ -460,19 +472,19 @@
                             pixNb: 15,
                             cellInfoHTML: (c) =>
                                 ' < 18 : ' +
-                                (c.ALTER_KURZ_1) +
+                                (c["1"]) +
                                 '<br>' +
                                 ' 18-29 : ' +
-                                (c.ALTER_KURZ_2) +
+                                (c["2"]) +
                                 '<br>' +
                                 ' 30-49 : ' +
-                                (c.ALTER_KURZ_3) +
+                                (c["3"]) +
                                 '<br>' +
                                 ' 50-64 : ' +
-                                (c.ALTER_KURZ_4) +
+                                (c["4"]) +
                                 '<br>' +
                                 ' > 64: ' +
-                                (c.ALTER_KURZ_5),
+                                (c["5"]),
                         }
                     )
                     //legend
@@ -500,10 +512,10 @@
                 } else if (layCode === 'ageR') {
                     //young VS elderly
                     app.addLayerFromDataset(
-                        ds.demo,
+                        ds.ALTER_KURZ,
                         [
                             new gviz.ShapeColorSizeStyle({
-                                sizeCol: 'ALTER_KURZ_TOT',
+                                sizeCol: 'TOT',
                                 size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                                 colorCol: 'age_ratio',
                                 color: (v, r, s) => d3.interpolateSpectral(1 - v),
