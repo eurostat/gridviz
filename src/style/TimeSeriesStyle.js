@@ -116,7 +116,7 @@ export class TimeSeriesStyle extends Style {
         //in geo coordinates
         cg.setCanvasTransform()
 
-        cg.ctx.lineCap = 'round' //"butt"
+        cg.ctx.lineCap = "butt"
         for (let c of cells) {
 
             //line width
