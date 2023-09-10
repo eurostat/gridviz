@@ -110,7 +110,7 @@
 
         //TODO
         const cleanCell = (c) => {
-            for (let k of Object.keys(c)) c[k] = +(c[k] + "")
+            for (let k of Object.keys(c)) c[k] = +c[k]
         };
 
         const baseURLCSV = "https://raw.githubusercontent.com/jgaffuri/tiled-grid-germany-zensus2011/main/out/"
