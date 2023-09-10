@@ -21,6 +21,10 @@ export class TimeSeriesStyle extends Style {
          * @type {Array.<string>} */
         this.ts = opts.ts
 
+        /** A function specifying when a value should be considered as "no data" and thus not ignored in that chart drawing
+         * @type {function(number):boolean} */
+        this.noData = opts.noData || ((v) => v === undefined || v === null || isNaN(v))
+
         //x
         /** in geo unit
          * @type {function(import("../Dataset.js").Cell,number,number):number} */
@@ -192,24 +196,48 @@ export class TimeSeriesStyle extends Style {
             const sX = w / (nb - 1)
             for (let i = 0; i < nb; i++) {
                 const val = c[this.ts[i]]
-                if (val == undefined) break
+                if (val == undefined || isNaN(val)) break
                 if (i == 0)
                     cg.ctx.moveTo(c.x + i * sX + offX, c.y + y0 + (val - val0) * h / ampMax + offY)
                 else
                     cg.ctx.lineTo(c.x + i * sX + offX, c.y + y0 + (val - val0) * h / ampMax + offY)
-            }*/
+            }
+            cg.ctx.stroke()*/
+
 
             //draw line, segment by segment
             const sX = w / (nb - 1)
-            let v0 = c[this.ts[0]], v1
+
+            //handle first point
+            let v0 = c[this.ts[0]]
+            if (!this.noData(v0)) {
+                cg.ctx.beginPath()
+                cg.ctx.moveTo(c.x + offX, c.y + y0 + (v0 - val0) * h / ampMax + offY)
+            } else console.log("aaaaaa")
+
+            let v1
             for (let i = 1; i < nb; i++) {
                 v1 = c[this.ts[i]]
-                if (!v0 || !v1) { }
-                else {
-                    cg.ctx.beginPath()
-                    cg.ctx.moveTo(c.x + i * sX + offX, c.y + y0 + (v0 - val0) * h / ampMax + offY)
-                    cg.ctx.lineTo(c.x + i * sX + offX, c.y + y0 + (v1 - val0) * h / ampMax + offY)
+
+                //draw segment from v0 to v1
+
+                //both points 'no data'
+                if (this.noData(v0) && this.noData(v1)) {
+
+                    //second point 'no data'
+                } else if (!this.noData(v0) && this.noData(v1)) {
                     cg.ctx.stroke()
+
+                    //first point 'no data'
+                } else if (this.noData(v0) && !this.noData(v1)) {
+                    cg.ctx.beginPath()
+                    cg.ctx.moveTo(c.x + i * sX + offX, c.y + y0 + (v1 - val0) * h / ampMax + offY)
+
+                    //both points have data: trace line
+                } else {
+                    cg.ctx.lineTo(c.x + i * sX + offX, c.y + y0 + (v1 - val0) * h / ampMax + offY)
+                    //if it is the last point, stroke
+                    if (i == nb - 1) cg.ctx.stroke()
                 }
                 v0 = v1
             }
@@ -217,4 +245,6 @@ export class TimeSeriesStyle extends Style {
         }
 
     }
+
 }
+
