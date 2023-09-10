@@ -39,7 +39,7 @@
 
             //define parquet dataset
             const cleanCell = (c) => {
-                for (let k of Object.keys(c)) c[k] = +(c[k] + "")
+                for (let k of Object.keys(c)) { const v = c[k]; c[k] = v ? +(v + "") : undefined }
             };
             const ds = gviz_par.makeMultiScaleTiledParquetGridDataset(
                 app,
