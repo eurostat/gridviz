@@ -189,9 +189,8 @@ export class TimeSeriesStyle extends Style {
                 continue;
             }
 
-            if (val0 == undefined || isNaN(val0)) continue
-
             /*/draw line
+            if (val0 == undefined || isNaN(val0)) continue
             cg.ctx.beginPath()
             const sX = w / (nb - 1)
             for (let i = 0; i < nb; i++) {
@@ -213,7 +212,8 @@ export class TimeSeriesStyle extends Style {
             if (!this.noData(v0)) {
                 cg.ctx.beginPath()
                 cg.ctx.moveTo(c.x + offX, c.y + y0 + (v0 - val0) * h / ampMax + offY)
-            } else console.log("aaaaaa")
+            }
+            //console.log(v0, isNaN(v0))
 
             let v1
             for (let i = 1; i < nb; i++) {
