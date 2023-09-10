@@ -112,7 +112,7 @@ export class TimeSeriesStyle extends Style {
         //in geo coordinates
         cg.setCanvasTransform()
 
-        cg.ctx.lineCap = 'butt'
+        cg.ctx.lineCap = 'round' //"butt"
         for (let c of cells) {
 
             //line width
@@ -187,7 +187,7 @@ export class TimeSeriesStyle extends Style {
 
             if (val0 == undefined || isNaN(val0)) continue
 
-            //draw line
+            /*/draw line
             cg.ctx.beginPath()
             const sX = w / (nb - 1)
             for (let i = 0; i < nb; i++) {
@@ -197,9 +197,22 @@ export class TimeSeriesStyle extends Style {
                     cg.ctx.moveTo(c.x + i * sX + offX, c.y + y0 + (val - val0) * h / ampMax + offY)
                 else
                     cg.ctx.lineTo(c.x + i * sX + offX, c.y + y0 + (val - val0) * h / ampMax + offY)
-            }
+            }*/
 
-            cg.ctx.stroke()
+            //draw line, segment by segment
+            const sX = w / (nb - 1)
+            let v0 = c[this.ts[0]], v1
+            for (let i = 1; i < nb; i++) {
+                v1 = c[this.ts[i]]
+                if (!v0 || !v1) { }
+                else {
+                    cg.ctx.beginPath()
+                    cg.ctx.moveTo(c.x + i * sX + offX, c.y + y0 + (v0 - val0) * h / ampMax + offY)
+                    cg.ctx.lineTo(c.x + i * sX + offX, c.y + y0 + (v1 - val0) * h / ampMax + offY)
+                    cg.ctx.stroke()
+                }
+                v0 = v1
+            }
 
         }
 
