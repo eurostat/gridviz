@@ -21,9 +21,9 @@ export class TimeSeriesStyle extends Style {
          * @type {Array.<string>} */
         this.ts = opts.ts
 
-        /** A function specifying when a value should be considered as "no data" and thus not ignored in that chart drawing
+        /** A function specifying when a value should be considered as "no data" and thus not ignored. The line will have a break at these values.
          * @type {function(string):boolean} */
-        this.noData = opts.noData || ((v) => v === undefined || v == "" || v === null || isNaN(v))
+        this.noData = opts.noData || ((v) => v === undefined || v == "" || v === null || isNaN(+v))
 
         //x
         /** in geo unit

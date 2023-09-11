@@ -596,6 +596,7 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/time
 | Property        | Type                      | Default                  | Description              |
 | --------------- | ------------------------- | ------------------------ | ------------------------------------ |
 | **ts**     | Array(string)          | undefined       | The columns of the time series, ordered in chronological order. Note that the style currently requires full time series, without missing data.  |
+| **noData**     | function(string):boolean  | (v) => v === undefined || v == "" || v === null || isNaN(+v)     | A function specifying when a value should be considered as "no data" and thus not ignored. The line will have a break at these values.  |
 | **offsetX**     | function(c,r,zf):string         | ()=>0         | A fonction computing the offset along X axis, in geographical unit, from origin point (lower left cell corner). This value is computed from the cell **c**, resolution **r** and zoom factor **zf**.   |
 | **width**     | function(c,r,zf):string          | ()=>r        | A fonction computing the chart width, in geographical unit. This value is computed from the cell **c**, resolution **r** and zoom factor **zf**.  |
 | **offsetY**     | function(c,r,zf):string          | ()=>0     | Same as **offsetX** but along Y axis.     |
