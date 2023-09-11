@@ -1,5 +1,4 @@
 NO
-fix timeserie, when all equal to 0 ?
 fix projection
 
 
