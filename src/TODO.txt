@@ -1,5 +1,19 @@
 NO
 fix projection
+POP Pop
+250m - total population
+1000m - tot pop, by gender, average age?
+DWE Dwelling
+250m - SSBID0250M;dwe_todw;dwe_det;dwe_2dw;dwe_row;dwe_mult;dwe_com;dwe_oth;dwe_area
+1000m - same
+BUI - buildings
+250m - SSBID0250M;bui0all;bui99nn;bui1dwe;bui1ind;bui1off;bui1tra;bui1hot;bui1edu;bui1hos;bui1pri;bui2det;bui2hou;bui2row;bui2mul;bui2com;bui2hol;bui2hut;bui2gar;bui2ore;bui2ind;bui2pow;bui2war;bui2agr;bui2off;bui2bus;bui2con;bui2ser;bui2tel;bui2han;bui2roa;bui2hot;bui2acc;bui2res;bui2sch;bui2uni;bui2mus;bui2spo;bui2ent;bui2rel;bui2hos;bui2nur;bui2hea;bui2pri;bui2eme;bui2mon;bui2toi
+1000m - same
+EST - enterprise
+250m - est_tot;emp_tot
+AGH - agri stats
+1000m - agh_typ1;agh_typ2;agh_typ3;agh_typ4;agh_typ5;agh_typ6;agh_typ7;agh_typ8;agh_typ9;agh_typ10;agh_typ11;agh_typ12;agh_typ13;agh_tot;agh_ope;agh_fme;agh_sme;agh_use
+
 
 
 Document alpha/blendoperation
