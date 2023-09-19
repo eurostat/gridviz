@@ -29,6 +29,10 @@
                 <input type="radio" name="layer" id="pop" value="pop" checked />
                 <label for="pop">Total population</label>
                 <br />
+                <input type="radio" name="layer" id="popS" value="popS" />
+                <label for="popS">Smoothed</label><input type="range" min="3" max="30" value="10" class="slider"
+                    id="sigma" />
+                <br />
                 <input type="radio" name="layer" id="popSex" value="popSex" />
                 <label for="popSex">By sex</label>
                 <br />
@@ -892,6 +896,9 @@
 
         //layer update
         document.querySelector('#layer').addEventListener('change', update)
+        //sigma selection
+        //TODO necessary ?
+        //document.getElementById('sigma').oninput = update
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
