@@ -252,6 +252,10 @@
                         fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
                     })
                 )
+            } else if (layCode === 'popS') {
+                const sig = document.querySelector('#sigma').value
+                console.log(sig)
+                //s.sigma = (r, zf) => (r * +sig) / 10
             } else if (layCode === 'popSex') {
                 const fs = d3.format('.1f')
 
@@ -897,8 +901,7 @@
         //layer update
         document.querySelector('#layer').addEventListener('change', update)
         //sigma selection
-        //TODO necessary ?
-        //document.getElementById('sigma').oninput = update
+        document.getElementById('sigma').oninput = update
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
