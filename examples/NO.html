@@ -9,6 +9,42 @@
 <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
     <div id="viz-container" style="height: 100%; width: 100%"></div>
 
+    <div style="
+        position: absolute;
+        left: 20px;
+        top: 20px;
+        width: auto;
+        height: auto;
+        padding: 10px;
+        border: 0px;
+        border-radius: 5px;
+        background: #ffffffcc;
+        line-height: 1.6;
+        box-shadow: 5px 5px 5px grey;
+    ">
+        <div id="layer">
+            <span style="font-size: 1.5em; font-weight: bold">Population</span>
+            <br />
+            <span style="font-size: 1.2em">
+                <input type="radio" name="layer" id="pop" value="pop" checked />
+                <label for="pop">Total population</label>
+                <br />
+                <input type="radio" name="layer" id="popSex" value="popSex" />
+                <label for="popSex">By sex</label>
+                <br />
+            </span>
+        </div>
+        <span style="font-size: 1.2em">
+            <hr />
+            <input type="checkbox" id="label" checked />
+            <label for="label">City names</label>
+            <hr />
+            Source:
+            <a href="https://www.ssb.no/natur-og-miljo/areal/artikler/kart-og-geodata-fra-ssb"
+                style="text-decoration: none">Statistisk sentralbyrå, Statistics Norway</a>
+        </span>
+    </div>
+
     <script src="../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
