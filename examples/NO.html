@@ -50,7 +50,6 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
     <script>
 
-
         //UTM zone 33 with datum WGS 84
         //https://spatialreference.org/ref/epsg/32633/html/
         const proj = d3.geoTransverseMercator()
@@ -59,10 +58,6 @@
             .reflectY(true)
             .scale(6378137)//0.9996
             .translate([2501000, -27000])
-
-        //console.log(proj([59.911, 10.7441]))
-        //console.log(proj([10.7441, 59.911]))
-        //console.log("2260466, 6648862")
 
         //define app
         let containerDiv = document.getElementById('viz-container')
@@ -73,6 +68,7 @@
                 proj: proj
             }))
         //.setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+        //TODO add boundaries with projection
 
         //add layer
         const ts = []; for (let i = 2002; i <= 2022; i++) ts.push("y" + i)
