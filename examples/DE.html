@@ -29,10 +29,6 @@
                 <input type="radio" name="layer" id="pop" value="pop" checked />
                 <label for="pop">Total population</label>
                 <br />
-                <input type="radio" name="layer" id="popS" value="popS" />
-                <label for="popS">Smoothed</label> <input type="range" min="3" max="30" value="10" class="slider"
-                    id="sigma" />
-                <br />
                 <input type="radio" name="layer" id="popSex" value="popSex" />
                 <label for="popSex">By sex</label>
                 <br />
@@ -52,6 +48,10 @@
                 <input type="radio" name="layer" id="popRelig" value="popRelig" />
                 <label for="popRelig">By religion</label> (<input type="checkbox" id="popReligCB" />
                 <label for="popReligCB">size by population</label>)
+                <br />
+                <input type="radio" name="layer" id="popS" value="popS" />
+                <label for="popS">Smoothed</label> <input type="range" min="3" max="30" value="10" class="slider"
+                    id="sigma" />
                 <br />
             </span>
             <span style="font-size: 1.5em; font-weight: bold">Habitation</span>
@@ -254,6 +254,7 @@
 
             } else if (layCode === 'popS') {
                 const sig = document.querySelector('#sigma').value
+                const colR = d3.interpolateYlOrRd
                 const nb = 5
 
                 app.addLayerFromDataset(
@@ -267,7 +268,7 @@
                             styles: [
                                 new gviz.SquareColorWGLStyle({
                                     colorCol: 'ksmval',
-                                    color: d3.interpolateYlOrRd,
+                                    color: colR,
                                     //stretching: { fun: 'expRev', alpha: -7 },
                                     tFun: (v, r, s) => {
                                         const v_ = gviz.sExp(v / s.max, -12)
@@ -287,8 +288,21 @@
                     }
                 )
 
+                //legend
+                app.layers[0].styles[0].styles[0].legends.push(
+                    new gviz.ColorLegend({
+                        title: 'Number of inhabitants',
+                        colorRamp: (t) => colR(Math.floor(t * nb) / nb),
+                        //width: 500,
+                        //ticks: 6,
+                        //fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sExpRevInverse(t, -7),
+                        width: 200,
+                        ticks: 2,
+                        tickFormat: 'text',
+                        fun: (t, r, s) => (t == 0 ? 'Low' : t == 1 ? 'High' : 'X'),
+                    })
+                )
 
-                //s.sigma = (r, zf) => (r * +sig) / 10
             } else if (layCode === 'popSex') {
                 const fs = d3.format('.1f')
 
