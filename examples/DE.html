@@ -254,6 +254,7 @@
 
             } else if (layCode === 'popS') {
                 const sig = document.querySelector('#sigma').value
+                const nb = 5
 
                 app.addLayerFromDataset(
                     ds.INSGESAMT,
@@ -262,15 +263,20 @@
                             value: (c) => +c['0'],
                             filterSm: (v) => v > 0.001,
                             sigma: (r, zf) => (r * +sig) / 10,
-                            factor: 5,
+                            factor: 2,
                             styles: [
                                 new gviz.SquareColorWGLStyle({
                                     colorCol: 'ksmval',
                                     color: d3.interpolateYlOrRd,
-                                    stretching: { fun: 'expRev', alpha: -7 },
+                                    //stretching: { fun: 'expRev', alpha: -7 },
+                                    tFun: (v, r, s) => {
+                                        const v_ = gviz.sExp(v / s.max, -12)
+                                        const cl = Math.floor(nb * v_) / nb
+                                        return cl
+                                    },
                                     //set alpha and blend operation
                                     //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
-                                    blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
+                                    blendOperation: (zf) => zf < 50 ? "multiply" : "normal"
                                 })
                             ]
                         }),
