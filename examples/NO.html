@@ -48,6 +48,10 @@
     <script src="../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
     <script>
 
         //UTM zone 33 with datum WGS 84
@@ -74,6 +78,7 @@
         //prepare datasets, indexed by thematic domain and year
         const ds = {};
         const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-norway/main/out/';
+
         const makeDataset = (code, preprocess) => {
             return app.makeMultiScaleTiledGridDataset(
                 [250, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
@@ -82,10 +87,12 @@
             )
         }
 
+        //population datasets, by year
+        for (let y = 2001; y <= 2022; y++)
+            ds["pop" + y] = makeDataset("pop" + y)
+
         //population timeseries
-        ds.popTS = makeDataset("popTS", c => {
-            //cleanCell(c)
-        })
+        ds.popTS = makeDataset("popTS")
 
         //
         const update = () => {
@@ -99,7 +106,38 @@
             //const f1 = d3.format('.1f')
 
             //set layer
-            if (layCode === 'popTS') {
+            if (layCode === 'pop') {
+
+                const y = 2019
+
+                app.addLayerFromDataset(
+                    ds["pop" + y],
+                    [
+                        new gviz.SquareColorWGLStyle({
+                            colorCol: 'p',
+                            color: d3.interpolateYlOrRd,
+                            stretching: { fun: 'expRev', alpha: -7 },
+                            //set alpha and blend operation
+                            //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
+                            //blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
+                        }),
+                        new gviz.StrokeStyle({ maxZoom: 7 }),
+                    ],
+                    {
+                        pixNb: 1.5,
+                        cellInfoHTML: (c) => '<b>' + c.p + '</b> person' + (+c.p == 1 ? '' : 's')
+                    }
+                )
+                //legend
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorLegend({
+                        title: "Population",
+                        colorRamp: d3.interpolateYlOrRd,
+                        fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                    })
+                )
+
+            } else if (layCode === 'popTS') {
 
                 const ts = []; for (let i = 2002; i <= 2022; i++) ts.push("y" + i)
 
