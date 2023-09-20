@@ -28,10 +28,7 @@
             <span style="font-size: 1.2em">
                 <input type="radio" name="layer" id="pop" value="pop" checked />
                 <label for="pop">Total population</label> in
-                <select id="year">
-                    <option value="2018">2018</option>
-                    <option value="2011">2011</option>
-                </select>
+                <select id="year"></select>
                 <br />
                 <input type="radio" name="layer" id="popTS" value="popTS" />
                 <label for="popTS">Population time series</label>
@@ -78,6 +75,18 @@
             }))
         //.setBoundaryLayer(gviz.getEurostatBoundariesLayer())
         //TODO add boundaries with projection
+
+        //fill years list
+        for (let y = 2001; y <= 2022; y++) {
+            const option = document.createElement("option");
+            option.text = y;
+            option.value = y;
+            document.getElementById("year").add(option);
+        }
+        //select 2018
+        document.getElementById("year").value = "2018"
+
+
 
 
         //prepare datasets dictionnary, indexed by thematic domain
@@ -185,14 +194,13 @@
         }
 
 
-
         //on layer selection change, update map
-        document.querySelector('#layer').addEventListener('change', update)
+        document.getElementById('layer').addEventListener('change', update)
         //on year selection change, update map
-        document.querySelector('#year').addEventListener('change', update)
+        document.getElementById('year').addEventListener('change', update)
 
         // show/hide labels
-        document.querySelector('#label').addEventListener('change', function () {
+        document.getElementById('label').addEventListener('change', function () {
             app.showLabels = this.checked
             app.cg.redraw()
         })
@@ -200,7 +208,7 @@
         //select layer from URL
         const ls = gviz.getParameterByName('lay')
         if (ls) {
-            const b = document.querySelector('#' + ls)
+            const b = document.getElementById(ls)
             if (b) b.checked = true
         }
 
