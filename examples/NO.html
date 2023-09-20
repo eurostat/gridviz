@@ -58,6 +58,7 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
     <script>
 
+        //define map projection for Norway
         //UTM zone 33 with datum WGS 84
         //https://spatialreference.org/ref/epsg/32633/html/
         const proj = d3.geoTransverseMercator()
@@ -67,7 +68,7 @@
             .scale(6378137)//0.9996
             .translate([2500000, -27000])
 
-        //define app
+        //define application
         let containerDiv = document.getElementById('viz-container')
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 2179500, y: 6783250 })
@@ -79,10 +80,11 @@
         //TODO add boundaries with projection
 
 
-        //prepare datasets, indexed by thematic domain and year
+        //prepare datasets dictionnary, indexed by thematic domain
         const ds = {};
         const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-norway/main/out/';
 
+        //generic function to make multi-resolution dataset for Norway
         const makeDataset = (code, preprocess) => {
             return app.makeMultiScaleTiledGridDataset(
                 [250, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
@@ -91,11 +93,11 @@
             )
         }
 
-        //population datasets, by year
+        //make population datasets, by year
         for (let y = 2001; y <= 2022; y++)
             ds["pop" + y] = makeDataset("pop" + y)
 
-        //population timeseries
+        //make population timeseries dataset
         ds.popTS = makeDataset("popTS")
 
         //TODO style per gender, age. x,y,p,m,f,ta
@@ -114,11 +116,15 @@
             //set layer
             if (layCode === 'pop') {
 
+                //get selected year
                 const y = document.querySelector('#year').value
 
+                //add layer
                 app.addLayerFromDataset(
+                    //set dataset: population dataset on year y
                     ds["pop" + y],
                     [
+                        //define style
                         new gviz.SquareColorWGLStyle({
                             colorCol: 'p',
                             color: d3.interpolateYlOrRd,
@@ -127,6 +133,7 @@
                             //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
                             //blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
                         }),
+                        //show stroke for low resolutions
                         new gviz.StrokeStyle({ maxZoom: 7 }),
                     ],
                     {
@@ -145,10 +152,14 @@
 
             } else if (layCode === 'popTS') {
 
+                //define time series list of years
                 const ts = []; for (let i = 2002; i <= 2022; i++) ts.push("y" + i)
 
+                //add layer
                 app.addLayerFromDataset(
+                    //use dataset on population time series
                     ds.popTS,
+                    //define style
                     [
                         new gviz.TimeSeriesStyle({
                             ts: ts,
@@ -175,8 +186,9 @@
 
 
 
-        //layer update
+        //on layer selection change, update map
         document.querySelector('#layer').addEventListener('change', update)
+        //on year selection change, update map
         document.querySelector('#year').addEventListener('change', update)
 
         // show/hide labels
