@@ -30,10 +30,19 @@
                 <label for="pop">Total population</label> in
                 <select id="year"></select>
                 <br />
+                <input type="radio" name="layer" id="popS" value="popS" />
+                <label for="popS">Smoothed</label> <input type="range" min="3" max="30" value="10" class="slider"
+                    id="sigma" />
+                <br />
+            </span>
+            <span style="font-size: 1.5em; font-weight: bold">Population change</span>
+            <br />
+            <span style="font-size: 1.2em">
                 <input type="radio" name="layer" id="popTS" value="popTS" />
                 <label for="popTS">Population time series</label>
                 <br />
             </span>
+
         </div>
         <span style="font-size: 1.2em">
             <hr />
@@ -47,6 +56,7 @@
     </div>
 
     <script src="../dist/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@1.0.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
@@ -159,6 +169,62 @@
                     })
                 )
 
+            } else if (layCode === 'popS') {
+
+                //get selected year
+                const y = document.querySelector('#year').value
+
+                //get smoothing sigma
+                const sig = document.querySelector('#sigma').value
+
+                //define color ramp and number of classes
+                const colR = d3.interpolateYlOrRd
+                const nb = 5
+
+                app.addLayerFromDataset(
+                    //set dataset: population dataset on year y
+                    ds["pop" + y],
+                    [
+                        new gviz_sm.KernelSmoothingStyle({
+                            value: (c) => +c.p,
+                            filterSm: (v) => v > 0.001,
+                            sigma: (r, zf) => (r * +sig) / 10,
+                            factor: 2,
+                            styles: [
+                                new gviz.SquareColorWGLStyle({
+                                    colorCol: 'ksmval',
+                                    color: colR,
+                                    //stretching: { fun: 'expRev', alpha: -7 },
+                                    tFun: (v, r, s) => {
+                                        const v_ = gviz.sExp(v / s.max, -35)
+                                        const cl = Math.floor(nb * v_) / nb
+                                        return cl
+                                    },
+                                    //set alpha and blend operation
+                                    //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
+                                    blendOperation: (zf) => zf < 50 ? "multiply" : "normal"
+                                })
+                            ]
+                        }),
+                    ],
+                    {
+                        pixNb: 1.5,
+                        cellInfoHTML: (c) => '<b>' + c.p + '</b> person' + (+c.p == 1 ? '' : 's')
+                    }
+                )
+
+                //legend
+                app.layers[0].styles[0].styles[0].legends.push(
+                    new gviz.ColorLegend({
+                        title: 'Population',
+                        colorRamp: (t) => colR(Math.floor(t * nb) / nb),
+                        width: 200,
+                        ticks: 2,
+                        tickFormat: 'text',
+                        fun: (t, r, s) => (t == 0 ? 'Low' : t == 1 ? 'High' : 'X'),
+                    })
+                )
+
             } else if (layCode === 'popTS') {
 
                 //define time series list of years
@@ -198,6 +264,8 @@
         document.getElementById('layer').addEventListener('change', update)
         //on year selection change, update map
         document.getElementById('year').addEventListener('change', update)
+        //on sigma selection change, update map
+        document.getElementById('sigma').oninput = update
 
         // show/hide labels
         document.getElementById('label').addEventListener('change', function () {
