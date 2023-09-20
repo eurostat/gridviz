@@ -27,7 +27,11 @@
             <br />
             <span style="font-size: 1.2em">
                 <input type="radio" name="layer" id="pop" value="pop" checked />
-                <label for="pop">Total population</label>
+                <label for="pop">Total population</label> in
+                <select id="year">
+                    <option value="2018">2018</option>
+                    <option value="2011">2011</option>
+                </select>
                 <br />
                 <input type="radio" name="layer" id="popTS" value="popTS" />
                 <label for="popTS">Population time series</label>
@@ -110,7 +114,7 @@
             //set layer
             if (layCode === 'pop') {
 
-                const y = 2019
+                const y = document.querySelector('#year').value
 
                 app.addLayerFromDataset(
                     ds["pop" + y],
@@ -173,6 +177,7 @@
 
         //layer update
         document.querySelector('#layer').addEventListener('change', update)
+        document.querySelector('#year').addEventListener('change', update)
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
