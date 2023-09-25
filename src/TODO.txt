@@ -15,6 +15,10 @@ AGH - agri stats
 1000m - agh_typ1;agh_typ2;agh_typ3;agh_typ4;agh_typ5;agh_typ6;agh_typ7;agh_typ8;agh_typ9;agh_typ10;agh_typ11;agh_typ12;agh_typ13;agh_tot;agh_ope;agh_fme;agh_sme;agh_use
 
 
+climate / air pollution
+https://atmosphere.copernicus.eu/new-interface-our-european-air-quality-forecasts?utm_source=socialmedia&utm_medium=tw&utm_campaign=news-airquality-september
+https://sdi.eea.europa.eu/catalogue/datahub/eng/catalog.search#/metadata/82700fbd-2953-467b-be0a-78a520c3a7ef
+
 
 Document alpha/blendoperation
 transparency/blending for layer, styles and all layers (background, etc.)
