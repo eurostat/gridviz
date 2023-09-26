@@ -17,9 +17,10 @@
             .setGeoCenter({ x: 0, y: 0 })
             .setZoomFactor(0.02)
 
-        const cells = [], nb = 20
+        const cells = [], nb = 15
         for (let x = 0; x < nb; x++) {
             cells.push({ x: x, y: 0, v: x / (nb-1) * 100 })
+            cells.push({ x: x, y: 2, v: x / (nb-1) * 100 })
         }
 
         app.addLayerFromDataset(
@@ -27,9 +28,10 @@
             ),
             [
                 new gviz.NinjaStarStyle({
-                    color: () => 'purple',
+                    color: () => 'black',
                     sizeCol: 'v',
                     size: (v, r, s, zf) => v / 100,
+                    shape: (c)=> c.y==0?"p":"o"
                 }),
             ],
             {
