@@ -3,7 +3,6 @@
 
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../Dataset.js").Envelope }} GridInfo */
 
-import { csv } from 'd3-fetch'
 import { DatasetComponent } from '../DatasetComponent.js'
 
 /**
@@ -13,22 +12,16 @@ import { DatasetComponent } from '../DatasetComponent.js'
  */
 export class LGrid extends DatasetComponent {
     /**
-     * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {{preprocess?:(function(import("../Dataset.js").Cell):boolean)}} opts
+     * @param {Array.<Object>} cells The cells.
      */
-    constructor(url, resolution, opts = {}) {
-        super(url, resolution, opts)
+    constructor(resolution, cells) {
+        super("", resolution)
 
         /**
          * @private
          * @type {Array.<import("../Dataset.js").Cell>} */
-        this.cells = opts.cells || []
-
-        /**
-         * @type {string}
-         * @private  */
-        this.infoLoadingStatus = 'notLoaded'
+        this.cells = cells || []
     }
 
     /**

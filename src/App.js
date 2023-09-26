@@ -458,10 +458,7 @@ export class App {
      * @returns {Dataset}
      */
     makeLGridDataset(resolution, cells, opts) {
-        return new Dataset(
-            [
-                new LGrid("", resolution, {cells:cells}),
-            ],
+        return new Dataset([new LGrid(resolution, cells),],
             [],
             opts
         )

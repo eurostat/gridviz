@@ -712,7 +712,7 @@ See [this other example](https://eurostat.github.io/gridviz/examples/styles/ninj
 | **color**    | function(v,r,s):string    | (v,r,s,zf) => "#EA6BAC" | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.                                                                       |
 | **sizeCol**  | string                    | undefined               | The name of the column used for the size.                                                                                                                                                                   |
 | **size**     | function(v,r,s,zf):number | (v,r,s,zf) => t         | A function computing the cell size, within [0,1], from its **sizeCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. 1 corresponds to a square, 0 to an infinitly thin cross. |
-| **shape**    | function(c):string        | () => "o"               | A function computing the orientation of the ninja star: _"o"_ for 45deg oblique star, _"p"_ for a star parallel to the x/y axes.                                                                            |
+| **shape**    | function(c):string        | (c) => "o"               | A function computing the orientation of the ninja star of a cell **c**: _"o"_ for 45deg oblique star, _"p"_ for a star parallel to the x/y axes.                                                                            |
 
 ### Lego style
 

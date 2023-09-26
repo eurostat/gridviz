@@ -15,16 +15,15 @@
 
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 0, y: 0 })
-            .setZoomFactor(0.1)
+            .setZoomFactor(0.02)
+
+        const cells = [], nb = 20
+        for (let x = 0; x < nb; x++) {
+            cells.push({ x: x, y: 0, v: x / (nb-1) * 100 })
+        }
 
         app.addLayerFromDataset(
-            app.makeLGridDataset(1, [
-                { x: 0, y: 0, v: 1 },
-                { x: 1, y: 0, v: 25 },
-                { x: 2, y: 0, v: 50 },
-                { x: 2, y: 0, v: 75 },
-                { x: 3, y: 0, v: 100 },
-            ]
+            app.makeLGridDataset(1, cells
             ),
             [
                 new gviz.NinjaStarStyle({
