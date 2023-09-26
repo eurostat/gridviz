@@ -13,22 +13,30 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-        new gviz.App(containerDiv)
+        const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 0, y: 0 })
             .setZoomFactor(0.1)
-            app.addLayerFromDataset(
-                ds,
-                [
-                    new gviz.NinjaStarStyle({
-                        color: () => 'purple',
-                        sizeCol: 'v',
-                        size: (v, r, s, zf) => v/100,
-                    }),
-                ],
-                {
-                    cellInfoHTML: (c) => c.v + "%",
-                }
-            )
+
+        app.addLayerFromDataset(
+            app.makeLGridDataset(1, [
+                { x: 0, y: 0, v: 1 },
+                { x: 1, y: 0, v: 25 },
+                { x: 2, y: 0, v: 50 },
+                { x: 2, y: 0, v: 75 },
+                { x: 3, y: 0, v: 100 },
+            ]
+            ),
+            [
+                new gviz.NinjaStarStyle({
+                    color: () => 'purple',
+                    sizeCol: 'v',
+                    size: (v, r, s, zf) => v / 100,
+                }),
+            ],
+            {
+                cellInfoHTML: (c) => c.v + "%",
+            }
+        )
     </script>
 </body>
 

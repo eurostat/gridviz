@@ -7,6 +7,7 @@ import { Layer } from './Layer.js'
 import { Dataset } from './Dataset.js'
 import { Tooltip } from './Tooltip.js'
 import { CSVGrid } from './dataset/CSVGrid.js'
+import { LGrid } from './dataset/LGrid.js'
 import { TiledGrid } from './dataset/TiledGrid.js'
 import { BackgroundLayer } from './BackgroundLayer.js'
 import { BackgroundLayerWMS } from './BackgroundLayerWMS.js'
@@ -447,6 +448,24 @@ export class App {
     }
 
     //dataset creation
+
+    /**
+     * Make a local grid dataset.
+     *
+     * @param {number} resolution The dataset resolution in geographical unit.
+     * @param {Array} cells The cells.
+     * @param {object=} opts The parameters of the dataset.
+     * @returns {Dataset}
+     */
+    makeLGridDataset(resolution, cells, opts) {
+        return new Dataset(
+            [
+                new LGrid("", resolution, {cells:cells}),
+            ],
+            [],
+            opts
+        )
+    }
 
     /**
      * Make a CSV grid dataset.
