@@ -13,8 +13,6 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-        
-
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 0, y: 0 })
             .setZoomFactor(0.1)
@@ -24,9 +22,12 @@
                     new gviz.NinjaStarStyle({
                         color: () => 'purple',
                         sizeCol: 'v',
-                        size: (v, r, s, zf) => v,
+                        size: (v, r, s, zf) => v/100,
                     }),
-                ]
+                ],
+                {
+                    cellInfoHTML: (c) => c.v + "%",
+                }
             )
     </script>
 </body>
