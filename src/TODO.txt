@@ -1,7 +1,4 @@
-make boundary layer use projection. Use for NO.
-
 NO
-fix projection
 POP Pop
 250m - total population
 1000m - tot pop, by gender, average age?
