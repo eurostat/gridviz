@@ -1,6 +1,6 @@
 {
     "name": "gridviz",
-    "version": "2.0.52",
+    "version": "2.1.0",
     "description": "Visualization tool for gridded statistics",
     "keywords": [
         "statistics",
@@ -52,7 +52,6 @@
         "d3-color": "^3.1.0",
         "d3-fetch": "^3.0.1",
         "d3-format": "^3.1.0",
-        "d3-geo": "^3.0.1",
         "d3-random": "^3.0.1",
         "d3-selection": "^3.0.0",
         "d3-zoom": "^3.0.0"
