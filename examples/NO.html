@@ -93,11 +93,8 @@
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 2179500, y: 6783250 })
             .setZoomFactor(500)
-            .setLabelLayer(gviz_es.getEuronymeLabelLayer('NO', '20', {
-                proj: proj
-            }))
-        //.setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
-        //TODO add boundaries with projection
+            .setLabelLayer(gviz_es.getEuronymeLabelLayer('NO', '10', { proj: proj }))
+            .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ crs: "4326", proj: proj }))
 
         //fill years list
         for (let y = 2001; y <= 2022; y++) {
