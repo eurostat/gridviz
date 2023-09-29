@@ -63,6 +63,7 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6"></script>
     <script>
 
         //define map projection for Norway
@@ -249,7 +250,17 @@
                         })],
                     {
                         pixNb: 10,
-                        //cellInfoHTML: (c) => '<b>' + c["0"] + '</b> person' + (+c["0"] == 1 ? '' : 's')
+                        cellInfoHTML: (c) => {
+                            //https://observablehq.com/@observablehq/plot-simple-line-chart?intent=fork
+                            //Plot.lineY(aapl, {x: "Date", y: "Close"}).plot({y: {grid: true}})
+
+                            /*
+                                                    const plot = Plot.rectY({length: 10000}, Plot.binX({y: "count"}, {x: Math.random})).plot();
+                            const div = document.querySelector("#myplot");
+                            div.append(plot);
+                            */
+                        }
+
                     }
                 )
 
