@@ -57,8 +57,27 @@ export { getClass } from './utils/Utils.js'
 
 
 
-
 import { GeoCanvas } from './GeoCanvas.js'
+export const getParameterByName = GeoCanvas.getParameterByName
+
+// set default d3 locale
+import { formatDefaultLocale } from 'd3-format'
+formatDefaultLocale({
+    decimal: '.',
+    thousands: ' ',
+    grouping: [3],
+    currency: ['', '€'],
+})
+
+
+
+
+
+
+
+
+// DEPRECATED - use gridviz-eurostat instead
+
 import { geoAzimuthalEqualArea } from 'd3-geo'
 
 /**
@@ -166,14 +185,3 @@ export const getEurostatBoundariesLayer = function (opts) {
     opts.url = opts.baseURL + nutsYear + '/' + crs + '/' + scale + '/nutsbn_' + nutsLevel + '.json'
     return opts
 }
-
-export const getParameterByName = GeoCanvas.getParameterByName
-
-// set default d3 locale
-import { formatDefaultLocale } from 'd3-format'
-formatDefaultLocale({
-    decimal: '.',
-    thousands: ' ',
-    grouping: [3],
-    currency: ['', '€'],
-})
