@@ -23,16 +23,19 @@
         box-shadow: 5px 5px 5px grey;
     ">
         <div id="layer">
-            <span style="font-size: 1.5em; font-weight: bold">Population</span>
+            <span style="font-size: 1.5em; font-weight: bold">Population in <select id="year"></select></span>
             <br />
             <span style="font-size: 1.2em">
                 <input type="radio" name="layer" id="pop" value="pop" checked />
-                <label for="pop">Total population</label> in
-                <select id="year"></select>
+                <label for="pop">Total population</label>
                 <br />
                 <input type="radio" name="layer" id="popS" value="popS" />
                 <label for="popS">Smoothed</label> <input type="range" min="3" max="30" value="10" class="slider"
                     id="sigma" />
+                <br />
+                <input type="radio" name="layer" id="popSex" value="popSex" /> <label for="popSex">by sex</label>
+                <br />
+                <input type="radio" name="layer" id="popAge" value="popAge" /> <label for="popAge">by age (?)</label>
                 <br />
             </span>
             <span style="font-size: 1.5em; font-weight: bold">Population change</span>
@@ -113,17 +116,30 @@
         const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-norway/main/out/';
 
         //generic function to make multi-resolution dataset for Norway
-        const makeDataset = (code, preprocess) => {
+        const makeDataset = (code, short, preprocess) => {
             return app.makeMultiScaleTiledGridDataset(
-                [250, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                short ? [1000, 2000, 5000, 10000, 20000, 50000, 100000] : [250, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => baseURL + code + 'csv/' + r + 'm/',
                 { preprocess: preprocess }
             )
         }
 
         //make population datasets, by year
-        for (let y = 2001; y <= 2022; y++)
+        for (let y = 2001; y <= 2022; y++) {
             ds["pop" + y] = makeDataset("pop" + y)
+            ds["popf" + y] = makeDataset("pop" + y, true, (c) => {
+                //sex
+                c.Isex = c.m - c.f
+                c.Isex = (100 * c.Isex) / c.p
+                if (isNaN(c.Isex)) c.Isex = 0
+
+                //average age ?
+                c.aa = +c.ta / +c.p
+
+                //console.log(c.aa, c.ta, c.p)
+                //console.log(c)
+            })
+        }
 
         //make population timeseries dataset
         ds.popTS = makeDataset("popTS")
@@ -233,6 +249,102 @@
                         fun: (t, r, s) => (t == 0 ? 'Low' : t == 1 ? 'High' : 'X'),
                     })
                 )
+            } else if (layCode === 'popSex') {
+                const fs = d3.format('.1f')
+
+                //get selected year
+                const y = document.querySelector('#year').value
+
+                app.addLayerFromDataset(
+                    ds["popf" + y],
+                    [
+                        new gviz.ShapeColorSizeStyle({
+                            colorCol: 'Isex',
+                            color: (v, r, s) => {
+                                const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                const t = (Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
+                                return d3.interpolateSpectral(1 - t)
+                            },
+                            shape: () => 'circle',
+                            sizeCol: 'p',
+                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.2),
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                        }),
+                    ],
+                    {
+                        pixNb: 8,
+                        cellInfoHTML: (c) => {
+                            return (
+                                c.m +
+                                ' men<br>' +
+                                c.f +
+                                ' women<br>Difference: <b>' +
+                                (c.Isex > 0 ? '+' : '') +
+                                fs(c.Isex) +
+                                ' % men</b>'
+                            )
+                        },
+                    }
+                )
+                //legend
+                app.layers[0].styles[0].legends.push(
+                    new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
+                )
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorLegend({
+                        title: 'Men / women difference',
+                        ticks: 3,
+                        //ticks: 5,
+                        tickFormat: 'text',
+                        //tickFormat: '.1f',
+                        colorRamp: d3.interpolateSpectral,
+                        invert: true,
+                        fun: (t, r, s) => (t == 0 ? 'More women' : t == 0.5 ? 'Balanced' : 'More men'),
+                        /*fun: (t, r, s) => {
+                            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                            return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
+                        },*/
+                    })
+                )
+
+
+            } else if (layCode === 'popAge') {
+
+                //get selected year
+                const y = document.querySelector('#year').value
+
+                //age
+                app.addLayerFromDataset(
+                    ds["popf" + y],
+                    [
+                        new gviz.ShapeColorSizeStyle({
+                            sizeCol: 'p',
+                            size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
+                            colorCol: 'aa',
+                            color: (v, r, s) => {
+                                if (v == 0) return "gray";
+                                const t = (v - s.min) / (s.max - s.min)
+                                return d3.interpolateSpectral(t)
+                            },
+                            shape: () => 'circle',
+                        }),
+                    ],
+                    {
+                        pixNb: 6,
+                        /*cellInfoHTML: (c) =>
+                            '<b>' +
+                            f1(c.yyy) +
+                            '</b> 24 ans et moins' +
+                            '<br>' +
+                            '<b>' +
+                            f1(c.ooo) +
+                            '</b> 65 ans et plus' +
+                            //+ "<br>" + "(Déséquilibre: " + (Math.round(c.age_ratio * 100)) + "%)"
+                            (+c.imputed ? '<br>(valeurs imputées)' : ''),*/
+                    }
+                )
+
+
 
             } else if (layCode === 'popTS') {
 
