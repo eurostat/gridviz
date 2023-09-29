@@ -1076,7 +1076,7 @@ new gviz.App(containerDiv)
 
 Input data are structured as a _GeoJSON FeatureCollection_ of linear features.
 
-The **gviz.getEurostatBoundariesLayer()** function returns ready-to-use boundary layer settings based on [Nuts2json](https://github.com/eurostat/Nuts2json) datasets.
+The **gviz_es.getEurostatBoundariesLayer()** function from [gridviz-eurostat](https://github.com/eurostat/gridviz-eurostat) module returns ready-to-use boundary layer settings based on [Nuts2json](https://github.com/eurostat/Nuts2json) datasets.
 
 The **setBoundaryLayer** method has the following parameters:
 

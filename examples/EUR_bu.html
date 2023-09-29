@@ -17,7 +17,7 @@
                 .setGeoCenter({ x: 4500000, y: 2900000 })
                 .setZoomFactor(1100)
                 .setLabelLayer(gviz_es.getEuronymeLabelLayer('FR', '20'))
-                .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+                .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
                 .setViewFromURL()
                 .addMultiScaleTiledGridLayer(
                     [1000, 2000, 5000, 10000, 20000, 50000, 100000],
