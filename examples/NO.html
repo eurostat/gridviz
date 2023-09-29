@@ -63,7 +63,15 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3-time@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-time-format@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-path@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-shape@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-selection@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-axis@3"></script>
+
     <script>
 
         //define map projection for Norway
@@ -251,14 +259,61 @@
                     {
                         pixNb: 10,
                         cellInfoHTML: (c) => {
-                            //https://observablehq.com/@observablehq/plot-simple-line-chart?intent=fork
-                            //Plot.lineY(aapl, {x: "Date", y: "Close"}).plot({y: {grid: true}})
 
-                            /*
-                                                    const plot = Plot.rectY({length: 10000}, Plot.binX({y: "count"}, {x: Math.random})).plot();
-                            const div = document.querySelector("#myplot");
-                            div.append(plot);
-                            */
+                            //prepare chart data
+                            const tsdata = []
+                            for (let d of ts)
+                                tsdata.push({ year: +d.replace("y", ""), pop: +c[d] })
+
+                            const maxPop = d3.max(tsdata, d => d.pop)
+
+                            const w = 300;
+                            const h = 250;
+                            const marginTop = 5;
+                            const marginRight = 2;
+                            const marginBottom = 20;
+                            const marginLeft = 10 + 8 * (maxPop + "").length;
+
+                            //x scale
+                            const x = d3.scaleLinear(d3.extent(tsdata, d => d.year), [marginLeft, w - marginRight]);
+
+                            //y scale
+                            const y = d3.scaleLinear([0, maxPop], [h - marginBottom, marginTop]);
+
+                            //make div and svg
+                            const div = d3.create("div")
+                            const svg = div.append("svg")
+                                .attr("width", w)
+                                .attr("height", h)
+                                .attr("viewBox", [0, 0, w, h])
+                                .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+
+                            //x-axis.
+                            svg.append("g")
+                                .attr("transform", `translate(0,${h - marginBottom})`)
+                                .call(d3.axisBottom(x)
+                                    .ticks(w / 80)
+                                    .tickSizeOuter(0)
+                                    .tickFormat(d => "" + d)
+                                );
+
+                            //y-axis
+                            svg.append("g")
+                                .attr("transform", `translate(${marginLeft},0)`)
+                                .call(d3.axisLeft(y)
+                                    .ticks(h / 40))
+
+                            //draw line
+                            const line = d3.line()
+                                .x(d => x(d.year))
+                                .y(d => y(d.pop));
+                            svg.append("path")
+                                .attr("stroke-width", 2)
+                                .attr("stroke", "black")
+                                .attr("fill", "none")
+                                .attr("d", line(tsdata));
+
+                            return (div.html())
                         }
 
                     }
