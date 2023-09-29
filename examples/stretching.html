@@ -54,6 +54,7 @@
         <div id="viz-container" style="height: 100%; width: 100%"></div>
 
         <script src="../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
@@ -65,7 +66,7 @@
                 .setZoomFactor(600)
 
                 .setBackgroundColor('black')
-                .setLabelLayer(gviz.getEuronymeLabelLayer('EUR', '20', { dark: true }))
+                .setLabelLayer(gviz_es.getEuronymeLabelLayer('EUR', '20', { dark: true }))
                 .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
 
                 .addMultiScaleTiledGridLayer(

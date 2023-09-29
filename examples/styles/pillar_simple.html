@@ -9,6 +9,7 @@
         <div id="viz-container" style="height: 100%; width: 100%"></div>
 
         <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.0"></script>
         <script>
             let containerDiv = document.getElementById('viz-container')
 
@@ -42,8 +43,8 @@
                     }
                 )
 
-                .setLabelLayer(gviz.getEuronymeLabelLayer('EUR', 50))
-                .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+                .setLabelLayer(gviz_es.getEuronymeLabelLayer('EUR', 50))
+                .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
                 .addBackgroundLayer({
                     url: 'https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/',
                     resolutions: [

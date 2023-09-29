@@ -65,6 +65,7 @@
         </div>
 
         <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
@@ -76,13 +77,13 @@
                 .setZoomFactor(100)
                 .setZoomFactorExtent([5, 1500])
                 .setLabelLayer(
-                    gviz.getEuronymeLabelLayer('FR', '20', {
+                    gviz_es.getEuronymeLabelLayer('FR', '20', {
                         haloWidth: () => 5,
                         haloColor: () => '#FFFFFFDD',
                     })
                 )
                 .setBoundaryLayer(
-                    gviz.getEurostatBoundariesLayer({
+                    gviz_es.getEurostatBoundariesLayer({
                         color: (f, zf) => {
                             const p = f.properties
                             const col = '#888'

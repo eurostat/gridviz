@@ -86,6 +86,7 @@
         </div>
 
         <script src="../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
@@ -95,8 +96,8 @@
                 .setGeoCenter({ x: 4313947, y: 2970049 })
                 .setZoomFactor(600)
                 .setZoomFactorExtent([40, 7500])
-                .setLabelLayer(gviz.getEuronymeLabelLayer())
-                .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+                .setLabelLayer(gviz_es.getEuronymeLabelLayer())
+                .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
                 //.setBackgroundColor("#d3eeff")
                 .setViewFromURL()
                 .addBackgroundLayer({

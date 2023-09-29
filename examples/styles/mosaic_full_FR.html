@@ -52,6 +52,7 @@
         </div>
 
         <script src="../../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
@@ -65,7 +66,7 @@
                 .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
                 .setViewFromURL()
                 .setLabelLayer(
-                    gviz.getEuronymeLabelLayer('FR', 20, {
+                    gviz_es.getEuronymeLabelLayer('FR', 20, {
                         ex: 1.6,
                         fontFamily: 'mf',
                         exSize: 1.2,
@@ -75,7 +76,7 @@
                     })
                 )
                 .setBoundaryLayer(
-                    gviz.getEurostatBoundariesLayer({
+                    gviz_es.getEurostatBoundariesLayer({
                         scale: '10M',
                         col: '#00000077',
                         lineDash: () => [],

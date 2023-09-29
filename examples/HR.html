@@ -77,6 +77,7 @@
         </div>
 
         <script src="../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
         <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
@@ -87,8 +88,8 @@
                 .setGeoCenter({ x: 4806935, y: 2446234 })
                 .setZoomFactor(400.1)
                 .setZoomFactorExtent([20, 2000])
-                .setLabelLayer(gviz.getEuronymeLabelLayer('HR', '20'))
-                .setBoundaryLayer(gviz.getEurostatBoundariesLayer())
+                .setLabelLayer(gviz_es.getEuronymeLabelLayer('HR', '20'))
+                .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
                 .setViewFromURL()
                 .addBackgroundLayer({
                     //url: "https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/",

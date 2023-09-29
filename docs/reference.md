@@ -1016,7 +1016,7 @@ new gviz.App(containerDiv)
 
 Input data need to be as a CSV table. Each row should correspond to a label, with a _x_ and _y_ column for the label position, and a _name_ column for the text to write. The data can be restructured on the fly after loading to meet this requirement using the **preprocess** function.
 
-For European grids based on ETRS89-LAEA CRS, the **gviz.getEuronymeLabelLayer()** function returns ready-to-use label layer settings based on [Euronym](https://github.com/eurostat/euronym) which allow zoom dependant label selection.
+For European grids based on ETRS89-LAEA CRS, the **gviz_es.getEuronymeLabelLayer()** function from [gridviz-eurostat](https://github.com/eurostat/gridviz-eurostat) module returns ready-to-use label layer settings based on [Euronym](https://github.com/eurostat/euronym) which allow zoom dependant label selection.
 
 The **setLabelLayer** method has the following parameters:
 

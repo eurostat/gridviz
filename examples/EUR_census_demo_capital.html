@@ -164,6 +164,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
         </div>
 
         <script src="../dist/gridviz.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.0"></script>
         <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-color.js"></script>
         <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-interpolate.js"></script>
         <script src="https://ec.europa.eu/assets/estat/E/E4/gisco/ure2023/d3-scale-chromatic.js"></script>
@@ -391,7 +392,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                 .setZoomFactor(600)
                 .setZoomFactorExtent([40, 7500])
                 .setLabelLayer(
-                    gviz.getEuronymeLabelLayer('EUR', 50, {
+                    gviz_es.getEuronymeLabelLayer('EUR', 50, {
                         ccIn: [
                             'AT',
                             'BE',
@@ -435,7 +436,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                     })
                 )
                 .setBoundaryLayer(
-                    gviz.getEurostatBoundariesLayer({
+                    gviz_es.getEurostatBoundariesLayer({
                         baseURL: nuts2jsonURL,
                         showOth: false,
                         color: (f, zf) => {

@@ -60,6 +60,7 @@
 
     <script src="../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@1.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
@@ -92,7 +93,7 @@
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 2179500, y: 6783250 })
             .setZoomFactor(500)
-            .setLabelLayer(gviz.getEuronymeLabelLayer('NO', '20', {
+            .setLabelLayer(gviz_es.getEuronymeLabelLayer('NO', '20', {
                 proj: proj
             }))
         //.setBoundaryLayer(gviz.getEurostatBoundariesLayer())
