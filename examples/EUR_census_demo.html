@@ -691,10 +691,10 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                             delete c.CNTR_ID
 
                             //prepare 2011 -> 2018 change data
-                            if (!c['2011'] && !c['2018']) c.d2011_2018 = 0
-                            else if (!c['2011'] && c['2018']) c.d2011_2018 = +c['2018']
-                            else if (c['2011'] && !c['2018']) c.d2011_2018 = -c['2011']
-                            else c.d2011_2018 = c['2018'] - c['2011']
+                            if (!c['2011'] && !c.TOT_P_2018) c.d2011_2018 = 0
+                            else if (!c['2011'] && c.TOT_P_2018) c.d2011_2018 = +c.TOT_P_2018
+                            else if (c['2011'] && !c.TOT_P_2018) c.d2011_2018 = -c['2011']
+                            else c.d2011_2018 = c.TOT_P_2018 - c['2011']
                             //ratio
                             c.p2011_2018 = c['2011'] == 0 ? 999 : c.d2011_2018 / c['2011']
                         },
@@ -733,7 +733,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                     '2011: ' +
                     c['2011'] +
                     '<br>2018: ' +
-                    c['2018'] +
+                    c.TOT_P_2018 +
                     '<br>' +
                     '<b>' +
                     (c['d2011_2018'] == 0
