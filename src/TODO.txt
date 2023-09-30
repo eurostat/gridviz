@@ -1,3 +1,11 @@
+show background on FR/EUR examples
+migrate population to population2 and show 2021 population
+custom style test
+style: rough.js
+observable HQ test
+
+
+
 NO
 POP Pop
 250m - total population
@@ -117,8 +125,6 @@ mosaic: improve. No scintillement with pseudo random
 
 Pollock style: https://www.arcgis.com/apps/webappviewer/index.html?id=661d96be9fe64b3db4124546b67b2f39
 + others
-
-style: rough.js
 
 fisheye effect
 segment orientation
