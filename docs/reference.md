@@ -225,11 +225,11 @@ new gviz.App(containerDiv)
     //add multi scale tiled layer
     .addTiledGridLayer(
         //data URL
-        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/5000m/',
+        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/5000m/',
         //the styles
         [
             new gviz.SquareColorWGLStyle({
-                colorCol: '2018',
+                colorCol: 'TOT_P_2021',
                 tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15),
             }),
         ]
@@ -253,11 +253,11 @@ new gviz.App(containerDiv)
         [5000, 10000, 20000, 50000, 100000],
         //function which returns the URL for each resolution value
         (r) =>
-            'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/' + r + 'm/',
+            'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + r + 'm/',
         //the styles
         [
             new gviz.SquareColorWGLStyle({
-                colorCol: '2018',
+                colorCol: 'TOT_P_2018',
                 tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
             }),
         ],
@@ -299,7 +299,7 @@ Input data can be processed/transformed before it is being used by the [Gridviz]
 
 This process is run on each cell individually, only once, after the data has been downloaded.
 
-Here is an example showing how to compute a new column on population change, as the difference between two columns _2011_ and _2018_. This new column is then used directly to be shown on the map:
+Here is an example showing how to compute a new column on population change, as the difference between two columns _TOT_P_2021_ and _TOT_P_2011_. This new column is then used directly to be shown on the map:
 
 ```javascript
 new gviz.App(containerDiv)
@@ -308,7 +308,7 @@ new gviz.App(containerDiv)
     .addMultiScaleTiledGridLayer(
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
         (r) =>
-            'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/' + r + 'm/',
+            'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + r + 'm/',
         [
             new gviz.ShapeColorSizeStyle({
                 /* style construction ... */
@@ -316,15 +316,16 @@ new gviz.App(containerDiv)
         ],
         {
             preprocess: (c) => {
-                //for each cell, compute 2011 -> 2018 change and store it in a new "change" column
-                if (!c['2011'] && !c['2018']) c.change = 0
-                else if (!c['2011'] && c['2018']) c.change = +c['2018']
-                else if (c['2011'] && !c['2018']) c.change = -c['2011']
-                else c.change = c['2018'] - c['2011']
+                //for each cell, compute 2011 -> 2021 change and store it in a new "change" column
+                if (!c.TOT_P_2011 && !c.TOT_P_2021) c.change = 0
+                else if (!c.TOT_P_2011 && c.TOT_P_2021) c.change = +c.TOT_P_2021
+                else if (c.TOT_P_2011 && !c.TOT_P_2021) c.change = -c.TOT_P_2011
+                else c.change = c.TOT_P_2021 - c.TOT_P_2011
                 //remove unused information
-                delete c['2006']
-                delete c['2011']
-                delete c['2018']
+                delete c.TOT_P_2006
+                delete c.TOT_P_2011
+                delete c.TOT_P_2018
+                delete c.TOT_P_2021
             },
             pixNb: 3,
         }
