@@ -1,5 +1,6 @@
-migrate population to population2 and show 2021 population
+migrate population to population2 and show 2021 population: check all !
 check eur_census_demo
+
 show background on FR/EUR examples
 custom style test
 style: rough.js
