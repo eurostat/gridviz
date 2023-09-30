@@ -736,9 +736,9 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                     c.TOT_P_2018 +
                     '<br>' +
                     '<b>' +
-                    (c['d2011_2018'] == 0
+                    (c.d2011_2018 == 0
                         ? 'No change'
-                        : (c['d2011_2018'] > 0 ? '+' : '') + c['d2011_2018'] + ' inhabitants') +
+                        : (c.d2011_2018 > 0 ? '+' : '') + c.d2011_2018 + ' inhabitants') +
                     '</b>'
 
                 //set default background filter color
@@ -1090,7 +1090,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                         popDataset,
                         [
                             new gviz_sm.KernelSmoothingStyle({
-                                value: (c) => +c['d2011_2018'],
+                                value: (c) => +c.d2011_2018,
                                 sigma: (r, zf) => (r * sigma) / 10,
                                 factor: 2,
                                 filterSm: (v) => Math.abs(v) > 0.0001,
