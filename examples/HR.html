@@ -218,8 +218,6 @@
                             for (let nat of ['AUSTRIAN', 'GERMAN', 'ITALIAN', 'SLOVENIAN'])
                                 override(c, p + '_' + nat + ' TOURISTS')
                         }
-                        //console.log(c["TOTAL ARRIVALS"] == c["A_DOMESTIC TOURISTS - TOTAL"]+c["A_FOREIGN TOURISTS - TOTAL"]) true
-                        //console.log(c["TOTAL NIGHTS"] == c["N_DOMESTIC TOURISTS - TOTAL"]+c["N_FOREIGN TOURISTS - TOTAL"]) true
 
                         for (let p of ['A', 'N'])
                             c[p + '_OTHER'] =
@@ -228,7 +226,6 @@
                                 c[p + '_GERMAN TOURISTS'] -
                                 c[p + '_ITALIAN TOURISTS'] -
                                 c[p + '_SLOVENIAN TOURISTS']
-                        //console.log(c["A_OTHER"] >= 0, c["N_OTHER"] >= 0) true true
                     },
                 }
             )
