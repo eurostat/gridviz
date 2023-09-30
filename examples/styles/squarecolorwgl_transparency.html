@@ -27,12 +27,12 @@
                 .addMultiScaleTiledGridLayer(
                     [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     (r) =>
-                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/' +
+                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
                         r +
                         'm/',
                     [
                         new gviz.SquareColorWGLStyle({
-                            colorCol: '2018',
+                            colorCol: 'TOT_P_2021',
                             //colors: ["rgba(158, 1, 66, 0.6)", "rgba(248, 142, 83, 0.6)", "rgba(251, 248, 176, 0.6)", "rgba(137, 207, 165, 0.6)", "rgba(94, 79, 162, 0.6)"].reverse(),
                             opacity: (r, zf) => (zf < 800 ? 0.7 : 1),
                             tFun: (value, resolution, stats) => value / stats.max,
@@ -41,7 +41,7 @@
                     ],
                     {
                         pixNb: 1.5,
-                        cellInfoHTML: (c) => '<b>' + c['2018'] + '</b> inhabitant(s)',
+                        cellInfoHTML: (c) => '<b>' + c['TOT_P_2021'] + '</b> inhabitant(s)',
                     }
                 )
         </script>

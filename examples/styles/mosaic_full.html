@@ -85,12 +85,12 @@
                 .addMultiScaleTiledGridLayer(
                     [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     (r) =>
-                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/' +
+                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
                         r +
                         'm/',
                     [
                         new gviz.MosaicStyle({
-                            colorCol: '2018',
+                            colorCol: 'TOT_P_2021',
                             color: (v, r, s) =>
                                 !+v ? undefined : d3.interpolateYlOrBr(gviz.sExpRev(v / s.max, -7)),
                             mosaicFactor: 0.2,
@@ -101,7 +101,7 @@
                     {
                         pixNb: 12,
                         cellInfoHTML: (c) =>
-                            '<b>' + c['2018'] + '</b> inhabitant' + (c['2018'] == 1 ? '' : 's'),
+                            '<b>' + c['TOT_P_2021'] + '</b> inhabitant' + (c['TOT_P_2021'] == 1 ? '' : 's'),
                     }
                 )
                 .addBackgroundLayer({

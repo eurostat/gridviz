@@ -127,7 +127,7 @@
             ds.pop = app.makeMultiScaleTiledGridDataset(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) =>
-                    'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/' +
+                    'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
                     r +
                     'm/',
                 {
@@ -295,7 +295,7 @@
 
                     app.addLayerFromDataset(
                         ds.pop,
-                        gviz.LegoStyle.get('2018', {
+                        gviz.LegoStyle.get('TOT_P_2021', {
                             color: d3.interpolateOrRd,
                             nb: 15,
                             tFun: (v, r, s) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
@@ -304,7 +304,7 @@
                         {
                             pixNb: 10,
                             cellInfoHTML: (c) =>
-                                +c['2018'] ? '<b>' + c['2018'] + '</b> inhabitant(s)' : undefined,
+                                +c['TOT_P_2021'] ? '<b>' + c['TOT_P_2021'] + '</b> inhabitant(s)' : undefined,
                         }
                     )
 

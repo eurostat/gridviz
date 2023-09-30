@@ -118,28 +118,28 @@
             ds.pop = app.makeMultiScaleTiledGridDataset(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) =>
-                    'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population/' +
+                    'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
                     r +
                     'm/',
                 {
                     preprocess: (c) => {
                         //prepare 2011 -> 2018 change data
-                        if (!c['2011'] && !c['2018']) c.d2011_2018 = 0
-                        else if (!c['2011'] && c['2018']) c.d2011_2018 = +c['2018']
-                        else if (c['2011'] && !c['2018']) c.d2011_2018 = -c['2011']
-                        else c.d2011_2018 = c['2018'] - c['2011']
+                        if (!c['TOT_P_2011'] && !c['TOT_P_2018']) c.d2011_2018 = 0
+                        else if (!c['TOT_P_2011'] && c['TOT_P_2018']) c.d2011_2018 = +c['TOT_P_2018']
+                        else if (c['TOT_P_2011'] && !c['TOT_P_2018']) c.d2011_2018 = -c['TOT_P_2011']
+                        else c.d2011_2018 = c['TOT_P_2018'] - c['TOT_P_2011']
 
                         //prepare 2006 -> 2011 change data
-                        if (!c['2006'] && !c['2011']) c.d2006_2011 = 0
-                        else if (!c['2006'] && c['2011']) c.d2006_2011 = +c['2011']
-                        else if (c['2006'] && !c['2011']) c.d2006_2011 = -c['2006']
-                        else c.d2006_2011 = c['2011'] - c['2006']
+                        if (!c['TOT_P_2006'] && !c['TOT_P_2011']) c.d2006_2011 = 0
+                        else if (!c['TOT_P_2006'] && c['TOT_P_2011']) c.d2006_2011 = +c['TOT_P_2011']
+                        else if (c['TOT_P_2006'] && !c['TOT_P_2011']) c.d2006_2011 = -c['TOT_P_2006']
+                        else c.d2006_2011 = c['TOT_P_2011'] - c['TOT_P_2006']
 
                         //prepare 2006 -> 2018 change data
-                        if (!c['2006'] && !c['2018']) c.d2006_2018 = 0
-                        else if (!c['2006'] && c['2018']) c.d2006_2018 = +c['2018']
-                        else if (c['2006'] && !c['2018']) c.d2006_2018 = -c['2006']
-                        else c.d2006_2018 = c['2018'] - c['2006']
+                        if (!c['TOT_P_2006'] && !c['TOT_P_2018']) c.d2006_2018 = 0
+                        else if (!c['TOT_P_2006'] && c['TOT_P_2018']) c.d2006_2018 = +c['TOT_P_2018']
+                        else if (c['TOT_P_2006'] && !c['TOT_P_2018']) c.d2006_2018 = -c['TOT_P_2006']
+                        else c.d2006_2018 = c['TOT_P_2018'] - c['TOT_P_2006']
                     },
                 }
             )
@@ -276,9 +276,9 @@
                                 pixNb: 2,
                                 cellInfoHTML: (c) =>
                                     '2011: ' +
-                                    c['2011'] +
+                                    c['TOT_P_2011'] +
                                     '<br>2018: ' +
-                                    c['2018'] +
+                                    c['TOT_P_2018'] +
                                     '<br>' +
                                     '<b>' +
                                     (c[layCode_] == 0
@@ -309,7 +309,7 @@
                         [
                             new gviz.ShapeColorSizeStyle({
                                 color: () => '#666',
-                                sizeCol: '2018',
+                                sizeCol: 'TOT_P_2018',
                                 size: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.3),
                                 shape: () => 'circle',
                             }),
