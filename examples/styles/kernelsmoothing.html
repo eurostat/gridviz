@@ -58,13 +58,13 @@
                     'm/',
                 [
                     new gviz_sm.KernelSmoothingStyle({
-                        value: (c) => +c['TOT_P_2021'],
+                        value: (c) => +c.TOT_P_2021,
                         filterSm: (v) => v > 0.001,
                     }),
                 ],
                 {
                     pixNb: 10,
-                    cellInfoHTML: (c) => '<b>' + c['TOT_P_2021'] + '</b> inhabitant(s)',
+                    cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
                 }
             )
 
