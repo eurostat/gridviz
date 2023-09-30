@@ -1,5 +1,5 @@
 migrate population to population2 and show 2021 population: check all !
-check eur_census_demo
+check:
 EUR
 
 show background on FR/EUR examples
