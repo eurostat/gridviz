@@ -868,7 +868,7 @@ new gviz.SegmentOrientationLegend({
 
 ```javascript
 new gviz.SegmentWidthLegend({
-    title: 'Population in 2018',
+    title: 'Population in 2021',
     labelUnitText: 'inhab.',
 })
 ```

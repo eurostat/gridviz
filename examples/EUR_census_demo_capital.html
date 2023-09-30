@@ -474,7 +474,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                 }
             )
 
-            const year = 2018
+            const popCol = "TOT_P_2021"
 
             //set default background filter color
             app.bgLayers[0].filterColor = (zf) => '#ffffffc0'
@@ -486,12 +486,12 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                 popDataset,
                 [
                     new gviz.SquareColorWGLStyle({
-                        colorCol: year,
+                        colorCol: popCol,
                         color: colR,
                         stretching: { fun: 'expRev', alpha: -7 },
                     }),
                     new gviz.StrokeStyle({
-                        strokeColorCol: year,
+                        strokeColorCol: popCol,
                         strokeColor: (v) => (+v ? '#666' : ''),
                         maxZoom: 80,
                     }),
@@ -499,11 +499,11 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                 {
                     pixNb: 1.8,
                     cellInfoHTML: (c, r) =>
-                        +c[year]
+                        +c[popCol]
                             ? '<b>' +
-                              c[year] +
+                              c[popCol] +
                               '</b> inhabitant' +
-                              (+c[year] == 1 ? '' : 's') +
+                              (+c[popCol] == 1 ? '' : 's') +
                               ' per ' +
                               (r * r) / 1000000 +
                               'km²'

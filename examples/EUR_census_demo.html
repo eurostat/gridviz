@@ -690,13 +690,13 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
                             //console.log(c.CNTR_ID)
                             delete c.CNTR_ID
 
-                            //prepare 2011 -> 2018 change data
-                            if (!c.TOT_P_2011 && !c.TOT_P_2018) c.d2011_2018 = 0
-                            else if (!c.TOT_P_2011 && c.TOT_P_2018) c.d2011_2018 = +c.TOT_P_2018
-                            else if (c.TOT_P_2011 && !c.TOT_P_2018) c.d2011_2018 = -c.TOT_P_2011
-                            else c.d2011_2018 = c.TOT_P_2018 - c.TOT_P_2011
+                            //prepare 2011 -> 2021 change data
+                            if (!c.TOT_P_2011 && !c.TOT_P_2021) c.d2011_2021 = 0
+                            else if (!c.TOT_P_2011 && c.TOT_P_2021) c.d2011_2021 = +c.TOT_P_2021
+                            else if (c.TOT_P_2011 && !c.TOT_P_2028) c.d2011_2021 = -c.TOT_P_2011
+                            else c.d2011_2021 = c.TOT_P_2021 - c.TOT_P_2011
                             //ratio
-                            c.p2011_2018 = c.TOT_P_2011 == 0 ? 999 : c.d2011_2018 / c.TOT_P_2011
+                            c.p2011_2021 = c.TOT_P_2011 == 0 ? 999 : c.d2011_2021 / c.TOT_P_2011
                         },
                     }
                 )
@@ -1234,7 +1234,7 @@ sha512-Ig1Qe8A0LuSgPWs1TsBVFTqRzgd9fe5BzwVLYuIGwETOpp3cvrZ3UJe93ty+BEVOZCKfKL/X4
 
                     app.layers[0].styles[0].legends.push(
                         new gviz.SegmentWidthLegend({
-                            title: 'Population in 2018',
+                            title: 'Population in 2021',
                             labelUnitText: 'inhab.',
                         })
                     )
