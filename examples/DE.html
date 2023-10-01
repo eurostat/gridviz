@@ -271,7 +271,7 @@
                                     color: colR,
                                     //stretching: { fun: 'expRev', alpha: -7 },
                                     tFun: (v, r, s) => {
-                                        const v_ = gviz.sExp(v / s.max, -20)
+                                        const v_ = gviz.sExpRev(v / s.max, -10)
                                         const cl = Math.floor(nb * v_) / nb
                                         return cl
                                     },
