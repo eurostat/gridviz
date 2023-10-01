@@ -1,8 +1,8 @@
+check stretching.html
 show background on FR/EUR examples
 custom style test
 style: rough.js
 observable HQ test
-check stretching.html
 
 
 NO
