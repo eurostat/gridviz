@@ -1,6 +1,6 @@
-migrate population to population2 and show 2021 population: check all !
 check:
 EUR
+
 
 show background on FR/EUR examples
 custom style test
