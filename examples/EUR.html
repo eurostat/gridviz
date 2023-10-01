@@ -44,14 +44,14 @@
                     <option value="2006">2006</option>
                     <option value="2011" selected>2011</option>
                     <option value="2018">2018</option>
-                    <option value="2018">2021</option>
+                    <option value="2021">2021</option>
                 </select>
                 to
                 <select id="pcyFin" disabled>
                     <option value="2006">2006</option>
                     <option value="2011">2011</option>
                     <option value="2018">2018</option>
-                    <option value="2018" selected>2021</option>
+                    <option value="2021" selected>2021</option>
                 </select>
                 <br />
                 <input type="radio" name="layer" id="degurba" value="degurba" />
@@ -233,7 +233,7 @@
                         pixNb: 2,
                         cellInfoHTML: (c) =>
                             +c[layCode_]
-                                ? '<b>' + c[layCode_] + '</b> inhabitant(s) in ' + layCode_
+                                ? '<b>' + c[layCode_] + '</b> inhabitant(s) in ' + (layCode.replace('y', ''))
                                 : undefined,
                     }
                 )
