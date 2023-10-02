@@ -1,4 +1,3 @@
-check stretching.html
 show background on FR/EUR examples
 custom style test
 style: rough.js
