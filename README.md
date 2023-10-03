@@ -31,6 +31,7 @@
 [![tanaka style map](/docs/img/overviews/ov_tanaka.png)](https://eurostat.github.io/gridviz/docs/reference#tanaka-style)
 [![dot density map](/docs/img/overviews/ov_dotdensity.png)](https://eurostat.github.io/gridviz/docs/reference#dot-density-style)
 [![joyplot map](/docs/img/overviews/ov_joyplot.png)](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
+[![](/docs/img/overviews/ov_stroke.png)](https://eurostat.github.io/gridviz/docs/reference#stroke-style)
 
 ## Examples
 
