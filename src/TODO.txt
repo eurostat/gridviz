@@ -1,5 +1,5 @@
 show background on EUR examples
-vignettes timeserie ninja stroke
+vignettes timeserie stroke
 
 custom style test
 style: rough.js
