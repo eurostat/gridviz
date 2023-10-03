@@ -51,6 +51,8 @@
             <hr />
             <input type="checkbox" id="label" checked />
             <label for="label">City names</label>
+            <input type="checkbox" id="boundary" checked />
+            <label for="boundary">Boundaries</label>
             <hr />
             Source:
             <a href="https://www.ssb.no/natur-og-miljo/areal/artikler/kart-og-geodata-fra-ssb"
@@ -445,6 +447,12 @@
         // show/hide labels
         document.getElementById('label').addEventListener('change', function () {
             app.showLabels = this.checked
+            app.cg.redraw()
+        })
+
+        // show/hide boundaries
+        document.querySelector('#boundary').addEventListener('change', function () {
+            app.showBoundaries = this.checked
             app.cg.redraw()
         })
 
