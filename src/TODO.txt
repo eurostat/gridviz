@@ -1,7 +1,11 @@
 show background on EUR examples
-vignettes timeserie stroke
+vignettes stroke
+
+merge demos slide and https://github.com/eurostat/gridviz/#examples section
 
 custom style test
+const myStyle = new gviz.Style()
+myStyle.draw = (cells, r, canvas)=>{...}
 style: rough.js
 observable HQ test
 
