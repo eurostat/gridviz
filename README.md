@@ -9,6 +9,7 @@
 [![](/docs/img/overviews/ov_accessibility.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
 [![](/docs/img/overviews/ov_side_cat.png)](https://eurostat.github.io/gridviz/docs/reference#side-category-style)
 [![](/docs/img/overviews/ov_age_balance.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
+[![](/docs/img/overviews/ov_ninja.png)](https://eurostat.github.io/gridviz/docs/reference#ninja-star-style)
 [![shadow effect map](/docs/img/overviews/ov_choco.png)](https://eurostat.github.io/gridviz/docs/reference#side-style)
 [![](/docs/img/overviews/ov_dark.png)](https://eurostat.github.io/gridviz/docs/reference#square-color-webgl-style)
 [![](/docs/img/overviews/ov_kersmoo.png)](https://eurostat.github.io/gridviz/docs/reference#kernel-smoothing)
