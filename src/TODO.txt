@@ -1,4 +1,3 @@
-show background on EUR examples
 merge demos slide and https://github.com/eurostat/gridviz/#examples section
 
 custom style test
