@@ -50,8 +50,8 @@
                     //x,y,TOT_P_2021,agri,comm_serv,indus,res
 
                     new gviz.ShapeColorSizeStyle({
-                        sizeCol: 'TOT_P_2021',
-                        //sizeCol: 'res',
+                        //sizeCol: 'TOT_P_2021',
+                        sizeCol: 'res',
                         size: (v, r, s, zf) => 1.4 * r * gviz.sExpRev(v / s.max, -12),
                         shape: () => 'circle',
 
@@ -71,6 +71,7 @@
                             if (value == -999) return;
                             return gviz.sExp(value / stats.max, -25)
                         },*/
+                        blendOperation: (zf) => zf < 50 ? "multiply" : "normal"
                     }),
 
                     /*new gviz.SquareColorCatWGLStyle({
