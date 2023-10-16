@@ -342,12 +342,12 @@
                     [
                         new gviz.CompositionStyle({
                             color: {
-                                Ind_0_17: col(0.2),
-                                Ind_18_64: col(0.4),
-                                Ind_65p: col(0.9),
+                                ind_0_17: col(0.2),
+                                ind_18_64: col(0.4),
+                                ind_65p: col(0.9),
                             },
                             type: () => 'agepyramid',
-                            sizeCol: 'Ind',
+                            sizeCol: 'ind',
                             size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
                             agePyramidHeight: (c, r) => 0.95 * r,
                         }),
@@ -392,7 +392,7 @@
                     ds.ind[year],
                     [
                         new gviz.ShapeColorSizeStyle({
-                            sizeCol: 'Ind',
+                            sizeCol: "ind",
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: 'age_ratio',
                             color: (v, r, s) => d3.interpolateSpectral(1 - v),
@@ -467,7 +467,7 @@
                     ds.men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
-                            sizeCol: 'Men',
+                            sizeCol: 'men',
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: 'rPoverty',
                             color: (v, r, s) => {
@@ -517,7 +517,7 @@
                             },
                             type: () => 'ring',
                             stripesOrientation: () => 90,
-                            sizeCol: 'Men',
+                            sizeCol: "men",
                             size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.15, 0),
                             //blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
                         }),
@@ -560,7 +560,7 @@
                     ds.men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
-                            sizeCol: 'Men',
+                            sizeCol: "men",
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: 'rMenFmp',
                             color: (v, r, s) =>
@@ -602,7 +602,7 @@
                     ds.men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
-                            sizeCol: 'Men',
+                            sizeCol: "men",
                             size: (v, r, s) => 1.4 * r * gviz.sPow(v / s.max, 0.2),
                             colorCol: 'rMen_prop',
                             color: (v) => d3.interpolatePuBuGn(1 - gviz.sPow(1 - v, 0.6)),
@@ -683,7 +683,7 @@
                             },
                             type: () => 'flag',
                             stripesOrientation: () => 90,
-                            sizeCol: 'Men',
+                            sizeCol: "men",
                             size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.15, 0),
                             blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
                         }),
