@@ -120,7 +120,7 @@
 
         //prepare datasets, indexed by thematic domain and year
         const ds = { ind: {}, men: {}, log: {} }
-        const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/france/filosofi/'
+        const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/'
 
         //population stats dataset
         const indDatasetFun = (year) =>
@@ -129,16 +129,16 @@
                 (r) => baseURL + 'ind/' + year + '/' + r + 'm/',
                 {
                     preprocess: (c) => {
-                        c.Ind_0_17 = +c.Ind_0_3 + +c.Ind_4_5 + +c.Ind_6_10 + +c.Ind_11_17
-                        c.Ind_18_64 = +c.Ind_18_24 + +c.Ind_25_39 + +c.Ind_40_54 + +c.Ind_55_64
-                        c.Ind_65p = +c.Ind_65_79 + +c.Ind_80p
+                        c.ind_0_17 = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17
+                        c.ind_18_64 = +c.ind_18_24 + +c.ind_25_39 + +c.ind_40_54 + +c.ind_55_64
+                        c.ind_65p = +c.ind_65_79 + +c.ind_80p
 
-                        c.rIncome = c.Ind_snv / c.Ind / 12
+                        c.rIncome = c.ind_snv / c.ind / 12
 
                         //<24
-                        c.yyy = +c.Ind_0_3 + +c.Ind_4_5 + +c.Ind_6_10 + +c.Ind_11_17 + +c.Ind_18_24
+                        c.yyy = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
                         //>65
-                        c.ooo = +c.Ind_65_79 + +c.Ind_80p
+                        c.ooo = +c.ind_65_79 + +c.ind_80p
                         c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
                         c.age_ratio = c.age_ratio * 0.5 + 0.5
                     },
@@ -155,7 +155,7 @@
                 {
                     preprocess: (c) => {
                         //ind per men
-                        c.indPerMEn = c.Ind / c.Men
+                        c.indPerMEn = c.ind / c.Men
                         //poverty
                         c.rPoverty = c.Men_pauv / c.Men
                         // Men_1ind - Nombre de ménages d’un seul individu
@@ -229,9 +229,9 @@
                         pixNb: 2,
                         cellInfoHTML: (c) =>
                             '<b>' +
-                            c.Ind +
+                            c.ind +
                             '</b> individu' +
-                            (+c.Ind == 1 ? '' : 's') +
+                            (+c.ind == 1 ? '' : 's') +
                             (+c.imputed ? '<br>(valeur imputée)' : ''),
                     }
                 )
@@ -273,43 +273,43 @@
                         pixNb: 16,
                         cellInfoHTML: (c) =>
                             '<b>' +
-                            c.Ind +
+                            c.ind +
                             '</b> individu' +
-                            (+c.Ind == 1 ? '' : 's') +
+                            (+c.ind == 1 ? '' : 's') +
                             '<br>' +
                             'Par âge:<br>' +
                             ' < 3 : ' +
-                            c.Ind_0_3 +
+                            c.ind_0_3 +
                             '<br>' +
                             ' 4-5 : ' +
-                            c.Ind_4_5 +
+                            c.ind_4_5 +
                             '<br>' +
                             ' 6-10: ' +
-                            c.Ind_6_10 +
+                            c.ind_6_10 +
                             '<br>' +
                             '11-17: ' +
-                            c.Ind_11_17 +
+                            c.ind_11_17 +
                             '<br>' +
                             '18-24: ' +
-                            c.Ind_18_24 +
+                            c.ind_18_24 +
                             '<br>' +
                             '25-39: ' +
-                            c.Ind_25_39 +
+                            c.ind_25_39 +
                             '<br>' +
                             '40-54: ' +
-                            c.Ind_40_54 +
+                            c.ind_40_54 +
                             '<br>' +
                             '55-64: ' +
-                            c.Ind_55_64 +
+                            c.ind_55_64 +
                             '<br>' +
                             '65-79: ' +
-                            c.Ind_65_79 +
+                            c.ind_65_79 +
                             '<br>' +
                             ' > 80: ' +
-                            c.Ind_80p +
+                            c.ind_80p +
                             '<br>' +
                             ' inc.: ' +
-                            c.Ind_inc +
+                            c.ind_inc +
                             (+c.imputed ? '<br>(valeurs imputées)' : ''),
                     }
                 )
@@ -353,22 +353,22 @@
                         pixNb: 11,
                         cellInfoHTML: (c) =>
                             '<b>' +
-                            c.Ind +
+                            c.ind +
                             '</b> individu' +
-                            (+c.Ind == 1 ? '' : 's') +
+                            (+c.ind == 1 ? '' : 's') +
                             '<br>' +
                             'Par âge:<br>' +
                             ' < 17 : ' +
-                            f1(c.Ind_0_17) +
+                            f1(c.ind_0_17) +
                             '<br>' +
                             ' 18-64 : ' +
-                            f1(c.Ind_18_64) +
+                            f1(c.ind_18_64) +
                             '<br>' +
                             ' > 65: ' +
-                            f1(c.Ind_65p) +
+                            f1(c.ind_65p) +
                             '<br>' +
                             ' inc.: ' +
-                            f1(c.Ind_inc) +
+                            f1(c.ind_inc) +
                             (+c.imputed ? '<br>(valeurs imputées)' : ''),
                     }
                 )
