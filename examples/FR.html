@@ -126,7 +126,7 @@
         //population stats dataset
         const indDatasetFun = (year) =>
             app.makeMultiScaleTiledGridDataset(
-                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => baseURL + 'ind/' + year + '/' + r + 'm/',
                 {
                     preprocess: (c) => {
@@ -150,7 +150,7 @@
         //household stats dataset
         const menDatasetFun = (year) =>
             app.makeMultiScaleTiledGridDataset(
-                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => baseURL + 'men/' + year + '/' + r + 'm/',
                 {
                     preprocess: (c) => {
@@ -179,7 +179,7 @@
         //housing stats dataset
         const logDatasetFun = (year) =>
             app.makeMultiScaleTiledGridDataset(
-                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => baseURL + 'log/' + year + '/' + r + 'm/',
                 {
                     preprocess: (c) => {
@@ -197,7 +197,7 @@
         //total population and income
         const incDatasetFun = (year) =>
             app.makeMultiScaleTiledGridDataset(
-                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => baseURL + 'inc/' + year + '/' + r + 'm/',
                 {
                     preprocess: (c) => {
