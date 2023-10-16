@@ -113,27 +113,27 @@
         const getColorDict = () => {
             if (getAggUI())
                 return {
-                    Ind_0_17: col(0.2),
-                    Ind_18_64: col(0.4),
-                    Ind_65p: col(0.9),
-                    /*"Ind_0_24": "#66a61e",
-                "Ind_25_54": "#e6ab02",
-                "Ind_55p": "#a6761d",*/
-                    //"Ind_inc": "black"
+                    ind_0_17: col(0.2),
+                    ind_18_64: col(0.4),
+                    ind_65p: col(0.9),
+                    /*"ind_0_24": "#66a61e",
+                "ind_25_54": "#e6ab02",
+                "ind_55p": "#a6761d",*/
+                    //"ind_inc": "black"
                 }
             else
                 return {
-                    Ind_0_3: col(0 / 80),
-                    Ind_4_5: col(2 / 80),
-                    Ind_6_10: col(7 / 80),
-                    Ind_11_17: col(14 / 80),
-                    Ind_18_24: col(21 / 80),
-                    Ind_25_39: col(36 / 80),
-                    Ind_40_54: col(51 / 80),
-                    Ind_55_64: col(61 / 80),
-                    Ind_65_79: col(76 / 80),
-                    Ind_80p: col(1),
-                    //"Ind_inc": "black"
+                    ind_0_3: col(0 / 80),
+                    ind_4_5: col(2 / 80),
+                    ind_6_10: col(7 / 80),
+                    ind_11_17: col(14 / 80),
+                    ind_18_24: col(21 / 80),
+                    ind_25_39: col(36 / 80),
+                    ind_40_54: col(51 / 80),
+                    ind_55_64: col(61 / 80),
+                    ind_65_79: col(76 / 80),
+                    ind_80p: col(1),
+                    //"ind_inc": "black"
                 }
         }
 
@@ -148,74 +148,74 @@
         s.size_ = (v, r, s, zf) => r - 1.5 * zf
 
         app.addMultiScaleTiledGridLayer(
-            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+            [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
             (r) =>
-                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/france/filosofi/ind/2015/' +
+                'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2019/' +
                 r +
                 'm/',
             [getStyle()],
             {
                 pixNb: 12,
                 cellInfoHTML: (c) => {
-                    let out = '<b>' + c.Ind + '</b> inhabitant(s)<br>' + 'By age:<br>'
+                    let out = '<b>' + c.ind + '</b> inhabitant(s)<br>' + 'By age:<br>'
                     if (getAggUI()) {
                         out =
                             out +
                             '  < 18: ' +
-                            d3.format('.1f')(c.Ind_0_17) +
+                            d3.format('.1f')(c.ind_0_17) +
                             '<br>' +
                             ' 18-64: ' +
-                            d3.format('.1f')(c.Ind_18_64) +
+                            d3.format('.1f')(c.ind_18_64) +
                             '<br>' +
                             '  > 65: ' +
-                            d3.format('.1f')(c.Ind_65p) +
+                            d3.format('.1f')(c.ind_65p) +
                             '<br>' +
                             ' unk.: ' +
-                            d3.format('.1f')(c.Ind_inc) +
+                            d3.format('.1f')(c.ind_inc) +
                             '<br>'
                     } else {
                         out =
                             out +
                             ' < 3 : ' +
-                            c.Ind_0_3 +
+                            c.ind_0_3 +
                             '<br>' +
                             ' 4-5 : ' +
-                            c.Ind_4_5 +
+                            c.ind_4_5 +
                             '<br>' +
                             ' 6-10: ' +
-                            c.Ind_6_10 +
+                            c.ind_6_10 +
                             '<br>' +
                             '11-17: ' +
-                            c.Ind_11_17 +
+                            c.ind_11_17 +
                             '<br>' +
                             '18-24: ' +
-                            c.Ind_18_24 +
+                            c.ind_18_24 +
                             '<br>' +
                             '25-39: ' +
-                            c.Ind_25_39 +
+                            c.ind_25_39 +
                             '<br>' +
                             '40-54: ' +
-                            c.Ind_40_54 +
+                            c.ind_40_54 +
                             '<br>' +
                             '55-64: ' +
-                            c.Ind_55_64 +
+                            c.ind_55_64 +
                             '<br>' +
                             '65-79: ' +
-                            c.Ind_65_79 +
+                            c.ind_65_79 +
                             '<br>' +
                             ' > 80: ' +
-                            c.Ind_80p +
+                            c.ind_80p +
                             '<br>' +
                             ' unk.: ' +
-                            c.Ind_inc +
+                            c.ind_inc +
                             '<br>'
                     }
                     return out
                 },
                 preprocess: (c) => {
-                    c.Ind_0_17 = +c.Ind_0_3 + +c.Ind_4_5 + +c.Ind_6_10 + +c.Ind_11_17
-                    c.Ind_18_64 = +c.Ind_18_24 + +c.Ind_25_39 + +c.Ind_40_54 + +c.Ind_55_64
-                    c.Ind_65p = +c.Ind_65_79 + +c.Ind_80p
+                    c.ind_0_17 = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17
+                    c.ind_18_64 = +c.ind_18_24 + +c.ind_25_39 + +c.ind_40_54 + +c.ind_55_64
+                    c.ind_65p = +c.ind_65_79 + +c.ind_80p
                 },
             }
         )
@@ -225,9 +225,9 @@
             const opts = { title: 'Age group', shape: 'circle' }
             if (getAggUI())
                 opts.colCat = [
-                    [getColorDict()['Ind_0_17'], '< 17'],
-                    [getColorDict()['Ind_18_64'], '18 to 65'],
-                    [getColorDict()['Ind_65p'], '> 65'],
+                    [getColorDict()['ind_0_17'], '< 17'],
+                    [getColorDict()['ind_18_64'], '18 to 65'],
+                    [getColorDict()['ind_65p'], '> 65'],
                 ].reverse()
             else
                 opts.colCat = [
