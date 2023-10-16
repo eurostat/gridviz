@@ -873,12 +873,17 @@
             //read GUI selection
             const geo = document.querySelector('#geo').value
 
+            //clean layers
+            app.bgLayers = []
+            app.labelLayer = undefined
+            app.boundaryLayer = undefined
+
             //set app parameters depending on the geographical selection
 
             //metropolitan france
             if (geo == "met") {
-                app.setGeoCenter({ x: 3763437, y: 2891045 })
-                    .setZoomFactor(50.1)
+                app.setGeoCenter({ x: 3760000, y: 2750000 }) //{ x: 3763437, y: 2891045 })
+                    .setZoomFactor(300)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
                     .addBackgroundLayer({
                         url: "https://gisco-services.ec.europa.eu/maps/tiles/OSMPositronBackground/EPSG3035/",
@@ -897,11 +902,14 @@
 
             //reunion
             else if (geo == "reun") {
+                app.setGeoCenter({ x: 300000, y: 7600000 })
+                    .setZoomFactor(500)
             }
 
             //martinique
             else if (geo == "mart") {
-
+                app.setGeoCenter({ x: 600000, y: 1500000 })
+                    .setZoomFactor(500)
             }
             else { console.error("Unexpected geo: " + geo); return; }
 
