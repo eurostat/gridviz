@@ -95,7 +95,7 @@
     </div>
 
     <script src="../dist/gridviz.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
@@ -104,7 +104,6 @@
         let containerDiv = document.getElementById('viz-container')
         const app = new gviz.App(containerDiv)
             .setZoomFactorExtent([3, 2000])
-            .setLabelLayer(gviz_es.getEuronymeLabelLayer('FR', '20'))
             .setViewFromURL()
 
         //create datasets, indexed by geo, theme and year
@@ -885,6 +884,7 @@
                 app.setGeoCenter({ x: 3760000, y: 2750000 }) //{ x: 3763437, y: 2891045 })
                     .setZoomFactor(300)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
+                    .setLabelLayer(gviz_es.getEuronymeLabelLayer('FR', '20'))
                     .addBackgroundLayer({
                         url: "https://gisco-services.ec.europa.eu/maps/tiles/OSMPositronBackground/EPSG3035/",
                         resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564, 1222.99245256282, 611.49622628141, 305.748113140705, 152.8740565703525, 76.43702828517625, 38.21851414258813, 19.109257071294063, 9.554628535647032, 4.777314267823516, 2.388657133911758, 1.19432856695, 0.597164283477939],
@@ -904,75 +904,7 @@
             else if (geo == "reun") {
                 app.setGeoCenter({ x: 350000, y: 7660000 })
                     .setZoomFactor(75)
-
-
-                //TODO
-                const getEurostatBoundariesLayer = function (opts) {
-                    opts = opts || {}
-                    const nutsYear = opts.nutsYear || '2021'
-                    //TODO
-                    const geo = opts.geo
-                    const crs = opts.crs || '3035'
-                    const scale = opts.scale || '03M'
-                    const nutsLevel = opts.nutsLevel || '3'
-                    const col = opts.col || '#888'
-                    const colKosovo = opts.colKosovo || '#bcbcbc'
-                    const showOth = opts.showOth == undefined ? true : opts.showOth
-
-                    opts.color =
-                        opts.color ||
-                        ((f, zf) => {
-                            const p = f.properties
-                            if (!showOth /*&& p.co == "F"*/ && p.eu != 'T' && p.cc != 'T' && p.efta != 'T' && p.oth === 'T')
-                                return
-                            if (p.id >= 100000) return colKosovo
-                            if (p.co === 'T') return col
-                            if (zf < 400) return col
-                            else if (zf < 1000) return p.lvl >= 3 ? '' : col
-                            else if (zf < 2000) return p.lvl >= 2 ? '' : col
-                            else return p.lvl >= 1 ? '' : col
-                        })
-
-                    opts.width =
-                        opts.width ||
-                        ((f, zf) => {
-                            const p = f.properties
-                            if (p.co === 'T') return 0.5
-                            if (zf < 400) return p.lvl == 3 ? 2.2 : p.lvl == 2 ? 2.2 : p.lvl == 1 ? 2.2 : 4
-                            else if (zf < 1000) return p.lvl == 2 ? 1.8 : p.lvl == 1 ? 1.8 : 2.5
-                            else if (zf < 2000) return p.lvl == 1 ? 1.8 : 2.5
-                            else return 1.2
-                        })
-
-                    opts.lineDash =
-                        opts.lineDash ||
-                        ((f, zf) => {
-                            const p = f.properties
-                            if (p.co === 'T') return []
-                            if (zf < 400)
-                                return p.lvl == 3
-                                    ? [2 * zf, 2 * zf]
-                                    : p.lvl == 2
-                                        ? [5 * zf, 2 * zf]
-                                        : p.lvl == 1
-                                            ? [5 * zf, 2 * zf]
-                                            : [10 * zf, 3 * zf]
-                            else if (zf < 1000)
-                                return p.lvl == 2 ? [5 * zf, 2 * zf] : p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
-                            else if (zf < 2000) return p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
-                            else return [10 * zf, 3 * zf]
-                        })
-
-                    opts.baseURL = opts.baseURL || 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/'
-                    //TODO
-                    opts.url = opts.baseURL + nutsYear + (geo ? '/' + geo : '') + '/' + crs + '/' + scale + '/nutsbn_' + nutsLevel + '.json'
-                    return opts
-                }
-
-
-                app.setBoundaryLayer(getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" }))
-
-
+                    .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" }))
             }
 
             //martinique
