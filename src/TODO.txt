@@ -1,6 +1,8 @@
 FR DOMs
 upgrade FR_pop
 
+check DE and NO for rounded figures - if necessary, relaunch
+
 custom style test
 const myStyle = new gviz.Style()
 myStyle.draw = (cells, r, canvas)=>{...}
