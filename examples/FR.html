@@ -905,6 +905,8 @@
                 app.setGeoCenter({ x: 350000, y: 7660000 })
                     .setZoomFactor(75)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" }))
+                //TODO labels
+                //TODO background
             }
 
             //martinique
@@ -912,6 +914,8 @@
                 app.setGeoCenter({ x: 710000, y: 1620000 })
                     .setZoomFactor(75)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "MQ", crs: "32620", scale: "01M" }))
+                //TODO labels
+                //TODO background
             }
             else { console.error("Unexpected geo: " + geo); return; }
 
