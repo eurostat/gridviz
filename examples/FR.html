@@ -175,6 +175,7 @@
             )
         ds.men['2015'] = menDatasetFun(2015)
         ds.men['2017'] = menDatasetFun(2017)
+        ds.men['2019'] = menDatasetFun(2019)
 
         //housing stats dataset
         const logDatasetFun = (year) =>
@@ -183,10 +184,10 @@
                 (r) => baseURL + 'log/' + year + '/' + r + 'm/',
                 {
                     preprocess: (c) => {
-                        c.Log = +c.Log_av45 + +c.Log_45_70 + +c.Log_70_90 + +c.Log_ap90 + +c.Log_inc
-                        // Log_soc - Nombre de logements* sociaux
-                        c.Log_nsoc = +c.Log - +c.Log_soc
-                        c.rLogSoc = c.Log_soc / c.Log
+                        c.log = +c.log_av45 + +c.log_45_70 + +c.log_70_90 + +c.log_ap90 + +c.log_inc
+                        // log_soc - Nombre de logements* sociaux
+                        c.log_nsoc = +c.log - +c.log_soc
+                        c.rLogSoc = c.log_soc / c.log
                     },
                 }
             )
@@ -738,27 +739,27 @@
                     {
                         pixNb: 8,
                         cellInfoHTML: (c) =>
-                            f1(c.Log) +
+                            f1(c.log) +
                             ' logement' +
-                            (+c.Log == 1 ? '' : 's') +
+                            (+c.log == 1 ? '' : 's') +
                             '<br>' +
                             'Année de construction:<br>' +
                             '<b>' +
-                            c.Log_av45 +
+                            c.log_av45 +
                             '</b> avant 1945<br>' +
                             '<b>' +
-                            c.Log_45_70 +
+                            c.log_45_70 +
                             '</b> entre 1945 et 1969<br>' +
                             '<b>' +
-                            c.Log_70_90 +
+                            c.log_70_90 +
                             '</b> entre 1970 et 1989<br>' +
                             '<b>' +
-                            c.Log_ap90 +
+                            c.log_ap90 +
                             '</b> depuis 1990<br>' +
                             '<b>' +
-                            c.Log_inc +
+                            c.log_inc +
                             '</b> inconnue' +
-                            (+c.Log_inc == 1 ? '' : 's') +
+                            (+c.log_inc == 1 ? '' : 's') +
                             (+c.imputed ? '<br>(valeurs imputées)' : ''),
                     }
                 )
@@ -801,19 +802,19 @@
                     {
                         pixNb: 8,
                         cellInfoHTML: (c) =>
-                            f1(c.Log) +
+                            f1(c.log) +
                             ' logement' +
-                            (+c.Log == 1 ? '' : 's') +
+                            (+c.log == 1 ? '' : 's') +
                             '<br>' +
                             '<b>' +
-                            (c.Log_soc == 0 ? 'Aucun' : c.Log_soc) +
+                            (c.log_soc == 0 ? 'Aucun' : c.log_soc) +
                             '</b> logement' +
-                            (+c.Log_soc == 1 ? '' : 's') +
+                            (+c.log_soc == 1 ? '' : 's') +
                             ' social(ux)<br>' +
                             '<b>' +
-                            (c.Log_nsoc == 0 ? 'Aucun' : f1(c.Log_nsoc)) +
+                            (c.log_nsoc == 0 ? 'Aucun' : f1(c.log_nsoc)) +
                             '</b> autre' +
-                            (+c.Log_nsoc == 1 ? '' : 's') +
+                            (+c.log_nsoc == 1 ? '' : 's') +
                             (+c.imputed ? '<br>(valeurs imputées)' : ''),
                     }
                 )
