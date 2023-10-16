@@ -27,14 +27,14 @@
                 .setViewFromURL()
 
                 .addMultiScaleTiledGridLayer(
-                    [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+                    [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     (r) =>
-                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/france/filosofi/ind/2015/' +
+                        'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2019/' +
                         r +
                         'm/',
                     [
                         new gviz.SquareColorWGLStyle({
-                            colorCol: 'Ind',
+                            colorCol: 'ind',
                             color: d3.interpolateMagma,
                             stretching: { fun: 'expRev', alpha: -7 },
                         }),
@@ -42,7 +42,7 @@
                     ],
                     {
                         pixNb: 1.5,
-                        cellInfoHTML: (c) => '<b>' + c.Ind + '</b> inhabitant' + (c.Ind == 1 ? '' : 's'),
+                        cellInfoHTML: (c) => '<b>' + c.ind + '</b> inhabitant' + (c.ind == 1 ? '' : 's'),
                     }
                 )
 
