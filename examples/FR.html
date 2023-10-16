@@ -79,8 +79,8 @@
             Géo:
             <select id="geo">
                 <option value="met">France métropolitaine</option>
-                <option value="reun" selected>Réunion</option>
-                <option value="mart">Martinique</option>
+                <option value="reun">Réunion</option>
+                <option value="mart" selected>Martinique</option>
             </select>
             <br />
             <input type="checkbox" id="label" checked />
@@ -908,8 +908,8 @@
 
             //martinique
             else if (geo == "mart") {
-                app.setGeoCenter({ x: 600000, y: 1500000 })
-                    .setZoomFactor(500)
+                app.setGeoCenter({ x: 710000, y: 1620000 })
+                    .setZoomFactor(75)
             }
             else { console.error("Unexpected geo: " + geo); return; }
 
