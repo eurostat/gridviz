@@ -125,7 +125,7 @@
         //population stats dataset
         const indDatasetFun = (year) =>
             app.makeMultiScaleTiledGridDataset(
-                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => baseURL + 'ind/' + year + '/' + r + 'm/',
                 {
                     preprocess: (c) => {
@@ -133,7 +133,7 @@
                         c.ind_18_64 = +c.ind_18_24 + +c.ind_25_39 + +c.ind_40_54 + +c.ind_55_64
                         c.ind_65p = +c.ind_65_79 + +c.ind_80p
 
-                        c.rIncome = c.ind_snv / c.ind / 12
+                        //c.rIncome = c.ind_snv / c.ind / 12
 
                         //<24
                         c.yyy = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
@@ -146,29 +146,30 @@
             )
         ds.ind['2015'] = indDatasetFun(2015)
         ds.ind['2017'] = indDatasetFun(2017)
+        ds.ind['2019'] = indDatasetFun(2019)
 
         //household stats dataset
         const menDatasetFun = (year) =>
             app.makeMultiScaleTiledGridDataset(
-                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => baseURL + 'men/' + year + '/' + r + 'm/',
                 {
                     preprocess: (c) => {
                         //ind per men
-                        c.indPerMEn = c.ind / c.Men
+                        c.indPerMEn = c.ind / c.men
                         //poverty
-                        c.rPoverty = c.Men_pauv / c.Men
+                        c.rPoverty = c.men_pauv / c.men
                         // Men_1ind - Nombre de ménages d’un seul individu
                         // Men_5ind - Nombre de ménages de 5 individus ou plus
-                        c.Men_2_4ind = +c.Men - +c.Men_1ind - +c.Men_5ind
+                        c.men_2_4ind = +c.men - +c.men_1ind - +c.men_5ind
                         // Men_fmp - Nombre de ménages monoparentaux
-                        //c.Men_nfmp = +c.Men - +c.Men_fmp;
-                        c.rMenFmp = c.Men_fmp / c.Men
+                        //c.men_nfmp = +c.men - +c.men_fmp;
+                        c.rMenFmp = c.men_fmp / c.men
                         // Men_prop - Nombre de ménages propriétaires
-                        //c.Men_nprop = +c.Men - +c.Men_prop;
-                        c.rMen_prop = +c.Men_prop / +c.Men
+                        //c.men_nprop = +c.men - +c.men_prop;
+                        c.rMen_prop = +c.men_prop / +c.men
                         // Men_surf - Somme de la surface des logements* du carreau
-                        c.rMenSurf = +c.Men_surf / +c.Men
+                        c.rMenSurf = +c.men_surf / +c.men
                     },
                 }
             )
@@ -178,7 +179,7 @@
         //housing stats dataset
         const logDatasetFun = (year) =>
             app.makeMultiScaleTiledGridDataset(
-                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
+                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => baseURL + 'log/' + year + '/' + r + 'm/',
                 {
                     preprocess: (c) => {
@@ -484,9 +485,9 @@
                                 : '<b>' + f1(Math.floor(1000 * c.rPoverty) / 10) + '%</b>') +
                             ' de ménages pauvres<br>' +
                             'sur ' +
-                            c.Men +
+                            c.men +
                             ' ménage' +
-                            (+c.Men == 1 ? '' : 's') +
+                            (+c.men == 1 ? '' : 's') +
                             (+c.imputed ? '<br>(valeurs imputées)' : ''),
                     }
                 )
@@ -522,17 +523,17 @@
                     {
                         pixNb: 10,
                         cellInfoHTML: (c) =>
-                            c.Men +
+                            c.men +
                             ' ménage' +
-                            (+c.Men == 1 ? '' : 's') +
+                            (+c.men == 1 ? '' : 's') +
                             '<br><b>' +
-                            c.Men_1ind +
+                            c.men_1ind +
                             "</b> d'un seul individu" +
                             '<br><b>' +
-                            f1(c.Men_2_4ind) +
+                            f1(c.men_2_4ind) +
                             '</b> de 2 à 4 individus' +
                             '<br><b>' +
-                            c.Men_5ind +
+                            c.men_5ind +
                             '</b> de 5 individus ou plus' +
                             (+c.imputed ? '<br>(valeurs imputées)' : ''),
                     }
@@ -569,13 +570,13 @@
                     {
                         pixNb: 6,
                         cellInfoHTML: (c) =>
-                            c.Men +
+                            c.men +
                             ' ménage' +
-                            (+c.Men == 1 ? '' : 's') +
+                            (+c.men == 1 ? '' : 's') +
                             '<br><b>' +
-                            c.Men_fmp +
+                            c.men_fmp +
                             '</b> monoparenta' +
-                            (+c.Men_fmp == 1 ? 'l' : 'ux') +
+                            (+c.men_fmp == 1 ? 'l' : 'ux') +
                             '<br><b>' +
                             f1(100 * c.rMenFmp) +
                             '</b> %' +
@@ -610,12 +611,12 @@
                     {
                         pixNb: 6,
                         cellInfoHTML: (c) =>
-                            c.Men +
+                            c.men +
                             ' ménage' +
-                            (+c.Men == 1 ? '' : 's') +
+                            (+c.men == 1 ? '' : 's') +
                             '<br>' +
                             '<b>' +
-                            c.Men_prop +
+                            c.men_prop +
                             '</b> propriétaires<br>' +
                             '<b>' +
                             f1(100 * c.rMen_prop) +
@@ -654,9 +655,9 @@
                             f1(Math.floor(10 * c.rMenSurf) / 10) +
                             '</b> m² par logement.' +
                             '<br>' +
-                            c.Men +
+                            c.men +
                             ' logement' +
-                            (+c.Men == 1 ? '' : 's') +
+                            (+c.men == 1 ? '' : 's') +
                             (+c.imputed ? '<br>(valeurs imputées)' : ''),
                     }
                 )
@@ -688,14 +689,14 @@
                     {
                         pixNb: 8,
                         cellInfoHTML: (c) =>
-                            c.Men +
+                            c.men +
                             ' ménage' +
-                            (+c.Men == 1 ? '' : 's') +
+                            (+c.men == 1 ? '' : 's') +
                             '<br><b>' +
-                            (c.Men_coll == 0 ? 'Aucun' : c.Men_coll) +
+                            (c.men_coll == 0 ? 'Aucun' : c.men_coll) +
                             '</b> en logement collectif' +
                             '<br><b>' +
-                            (c.Men_mais == 0 ? 'Aucun' : c.Men_mais) +
+                            (c.men_mais == 0 ? 'Aucun' : c.men_mais) +
                             '</b> en maison' +
                             (+c.imputed ? '<br>(valeurs imputées)' : ''),
                     }
