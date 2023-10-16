@@ -78,8 +78,8 @@
             <hr />
             Géo:
             <select id="geo">
-                <option value="met" selected>France métropolitaine</option>
-                <option value="reun">Réunion</option>
+                <option value="met">France métropolitaine</option>
+                <option value="reun" selected>Réunion</option>
                 <option value="mart">Martinique</option>
             </select>
             <br />
@@ -902,8 +902,8 @@
 
             //reunion
             else if (geo == "reun") {
-                app.setGeoCenter({ x: 300000, y: 7600000 })
-                    .setZoomFactor(500)
+                app.setGeoCenter({ x: 350000, y: 7660000 })
+                    .setZoomFactor(75)
             }
 
             //martinique
