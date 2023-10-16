@@ -159,16 +159,16 @@
                         c.indPerMEn = c.ind / c.men
                         //poverty
                         c.rPoverty = c.men_pauv / c.men
-                        // Men_1ind - Nombre de ménages d’un seul individu
-                        // Men_5ind - Nombre de ménages de 5 individus ou plus
+                        // men_1ind - Nombre de ménages d’un seul individu
+                        // men_5ind - Nombre de ménages de 5 individus ou plus
                         c.men_2_4ind = +c.men - +c.men_1ind - +c.men_5ind
-                        // Men_fmp - Nombre de ménages monoparentaux
+                        // men_fmp - Nombre de ménages monoparentaux
                         //c.men_nfmp = +c.men - +c.men_fmp;
                         c.rMenFmp = c.men_fmp / c.men
-                        // Men_prop - Nombre de ménages propriétaires
+                        // men_prop - Nombre de ménages propriétaires
                         //c.men_nprop = +c.men - +c.men_prop;
                         c.rMen_prop = +c.men_prop / +c.men
-                        // Men_surf - Somme de la surface des logements* du carreau
+                        // men_surf - Somme de la surface des logements* du carreau
                         c.rMenSurf = +c.men_surf / +c.men
                     },
                 }
@@ -791,8 +791,8 @@
                     [
                         new gviz.CompositionStyle({
                             color: {
-                                Log_nsoc: '#ccc',
-                                Log_soc: '#33a02c',
+                                log_nsoc: '#ccc',
+                                log_soc: '#33a02c',
                             },
                             type: () => 'ring',
                             sizeCol: "log",
