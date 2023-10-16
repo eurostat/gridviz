@@ -911,6 +911,7 @@
             else if (geo == "mart") {
                 app.setGeoCenter({ x: 710000, y: 1620000 })
                     .setZoomFactor(75)
+                    .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "MQ", crs: "32620", scale: "01M" }))
             }
             else { console.error("Unexpected geo: " + geo); return; }
 
