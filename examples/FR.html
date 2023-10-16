@@ -193,6 +193,7 @@
             )
         ds.log['2015'] = logDatasetFun(2015)
         ds.log['2017'] = logDatasetFun(2017)
+        ds.log['2019'] = logDatasetFun(2019)
 
         //
         const update = () => {
@@ -213,7 +214,7 @@
                     ds.ind[year],
                     [
                         new gviz.SquareColorWGLStyle({
-                            colorCol: 'Ind',
+                            colorCol: 'ind',
                             color: d3.interpolateYlOrRd,
                             stretching: { fun: 'expRev', alpha: -7 },
                             blendOperation: (zf) => zf < 20 ? "multiply" : "normal"
@@ -253,20 +254,20 @@
                     [
                         new gviz.CompositionStyle({
                             color: {
-                                Ind_0_3: col(0 / 80),
-                                Ind_4_5: col(2 / 80),
-                                Ind_6_10: col(7 / 80),
-                                Ind_11_17: col(14 / 80),
-                                Ind_18_24: col(21 / 80),
-                                Ind_25_39: col(36 / 80),
-                                Ind_40_54: col(51 / 80),
-                                Ind_55_64: col(61 / 80),
-                                Ind_65_79: col(76 / 80),
-                                Ind_80p: col(1),
-                                //"Ind_inc": "black"
+                                ind_0_3: col(0 / 80),
+                                ind_4_5: col(2 / 80),
+                                ind_6_10: col(7 / 80),
+                                ind_11_17: col(14 / 80),
+                                ind_18_24: col(21 / 80),
+                                ind_25_39: col(36 / 80),
+                                ind_40_54: col(51 / 80),
+                                ind_55_64: col(61 / 80),
+                                ind_65_79: col(76 / 80),
+                                ind_80p: col(1),
+                                //"ind_inc": "black"
                             },
                             type: () => 'agepyramid',
-                            sizeCol: 'Ind',
+                            sizeCol: 'ind',
                             size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
                             agePyramidHeight: (c, r) => 0.95 * r,
                         }),
