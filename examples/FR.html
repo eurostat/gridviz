@@ -120,7 +120,7 @@
 
 
         //prepare datasets, indexed by thematic domain and year
-        const ds = { ind: {}, men: {}, log: {} }
+        const ds = { ind: {}, men: {}, log: {}, inc: {} }
         const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/'
 
         //population stats dataset
@@ -133,8 +133,6 @@
                         c.ind_0_17 = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17
                         c.ind_18_64 = +c.ind_18_24 + +c.ind_25_39 + +c.ind_40_54 + +c.ind_55_64
                         c.ind_65p = +c.ind_65_79 + +c.ind_80p
-
-                        //c.rIncome = c.ind_snv / c.ind / 12
 
                         //<24
                         c.yyy = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
@@ -196,6 +194,21 @@
         ds.log['2017'] = logDatasetFun(2017)
         ds.log['2019'] = logDatasetFun(2019)
 
+        //total population and income
+        const incDatasetFun = (year) =>
+            app.makeMultiScaleTiledGridDataset(
+                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (r) => baseURL + 'inc/' + year + '/' + r + 'm/',
+                {
+                    preprocess: (c) => {
+                        c.rIncome = c.ind_snv / c.ind / 12
+                    },
+                }
+            )
+        ds.inc['2015'] = incDatasetFun(2015)
+        ds.inc['2017'] = incDatasetFun(2017)
+        ds.inc['2019'] = incDatasetFun(2019)
+
         //
         const update = () => {
             //read GUI selection
@@ -212,7 +225,7 @@
             if (layCode === 'pop') {
                 //population
                 app.addLayerFromDataset(
-                    ds.ind[year],
+                    ds.inc[year],
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: 'ind',
@@ -435,7 +448,7 @@
             } else if (layCode === 'income') {
                 //income
                 app.addLayerFromDataset(
-                    ds.ind[year],
+                    ds.inc[year],
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: 'rIncome',
