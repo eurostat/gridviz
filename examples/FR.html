@@ -117,98 +117,85 @@
                 minZoom: 50,
             })
 
-
-
-
-        //prepare datasets, indexed by thematic domain and year
-        const ds = { met: { ind: {}, men: {}, log: {}, inc: {} } }
+        //create datasets, indexed by geo, theme and year
+        const ds = {}
         const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/'
+        for (let geo of ["met", "reun", "mart"]) {
+            ds[geo] = { ind: {}, men: {}, log: {}, inc: {} }
+            for (let year of [2015, 2017, 2019]) {
 
-        //population stats dataset
-        const indDatasetFun = (year, geo) =>
-            app.makeMultiScaleTiledGridDataset(
-                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                (r) => baseURL + geo + '/ind/' + year + '/' + r + 'm/',
-                {
-                    preprocess: (c) => {
-                        c.ind_0_17 = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17
-                        c.ind_18_64 = +c.ind_18_24 + +c.ind_25_39 + +c.ind_40_54 + +c.ind_55_64
-                        c.ind_65p = +c.ind_65_79 + +c.ind_80p
+                //dataset on population by age
+                ds[geo].ind[year] = app.makeMultiScaleTiledGridDataset(
+                    [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    (r) => baseURL + geo + '/ind/' + year + '/' + r + 'm/',
+                    {
+                        preprocess: (c) => {
+                            c.ind_0_17 = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17
+                            c.ind_18_64 = +c.ind_18_24 + +c.ind_25_39 + +c.ind_40_54 + +c.ind_55_64
+                            c.ind_65p = +c.ind_65_79 + +c.ind_80p
 
-                        //<24
-                        c.yyy = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
-                        //>65
-                        c.ooo = +c.ind_65_79 + +c.ind_80p
-                        c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
-                        c.age_ratio = c.age_ratio * 0.5 + 0.5
-                    },
-                }
-            )
-        ds.met.ind['2015'] = indDatasetFun(2015, "met")
-        ds.met.ind['2017'] = indDatasetFun(2017, "met")
-        ds.met.ind['2019'] = indDatasetFun(2019, "met")
+                            //<24
+                            c.yyy = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
+                            //>65
+                            c.ooo = +c.ind_65_79 + +c.ind_80p
+                            c.age_ratio = c.yyy + c.ooo == 0 ? 0 : (c.yyy - c.ooo) / (c.yyy + c.ooo)
+                            c.age_ratio = c.age_ratio * 0.5 + 0.5
+                        },
+                    }
+                )
 
-        //household stats dataset
-        const menDatasetFun = (year, geo) =>
-            app.makeMultiScaleTiledGridDataset(
-                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                (r) => baseURL + geo + '/men/' + year + '/' + r + 'm/',
-                {
-                    preprocess: (c) => {
-                        //ind per men
-                        c.indPerMEn = c.ind / c.men
-                        //poverty
-                        c.rPoverty = c.men_pauv / c.men
-                        // men_1ind - Nombre de ménages d’un seul individu
-                        // men_5ind - Nombre de ménages de 5 individus ou plus
-                        c.men_2_4ind = +c.men - +c.men_1ind - +c.men_5ind
-                        // men_fmp - Nombre de ménages monoparentaux
-                        //c.men_nfmp = +c.men - +c.men_fmp;
-                        c.rMenFmp = c.men_fmp / c.men
-                        // men_prop - Nombre de ménages propriétaires
-                        //c.men_nprop = +c.men - +c.men_prop;
-                        c.rMen_prop = +c.men_prop / +c.men
-                        // men_surf - Somme de la surface des logements* du carreau
-                        c.rMenSurf = +c.men_surf / +c.men
-                    },
-                }
-            )
-        ds.met.men['2015'] = menDatasetFun(2015, "met")
-        ds.met.men['2017'] = menDatasetFun(2017, "met")
-        ds.met.men['2019'] = menDatasetFun(2019, "met")
+                //dataset on household stats
+                ds[geo].men[year] = app.makeMultiScaleTiledGridDataset(
+                    [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    (r) => baseURL + geo + '/men/' + year + '/' + r + 'm/',
+                    {
+                        preprocess: (c) => {
+                            //ind per men
+                            c.indPerMEn = c.ind / c.men
+                            //poverty
+                            c.rPoverty = c.men_pauv / c.men
+                            // men_1ind - Nombre de ménages d’un seul individu
+                            // men_5ind - Nombre de ménages de 5 individus ou plus
+                            c.men_2_4ind = +c.men - +c.men_1ind - +c.men_5ind
+                            // men_fmp - Nombre de ménages monoparentaux
+                            //c.men_nfmp = +c.men - +c.men_fmp;
+                            c.rMenFmp = c.men_fmp / c.men
+                            // men_prop - Nombre de ménages propriétaires
+                            //c.men_nprop = +c.men - +c.men_prop;
+                            c.rMen_prop = +c.men_prop / +c.men
+                            // men_surf - Somme de la surface des logements* du carreau
+                            c.rMenSurf = +c.men_surf / +c.men
+                        },
+                    }
+                )
 
-        //housing stats dataset
-        const logDatasetFun = (year, geo) =>
-            app.makeMultiScaleTiledGridDataset(
-                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                (r) => baseURL + geo + '/log/' + year + '/' + r + 'm/',
-                {
-                    preprocess: (c) => {
-                        c.log = +c.log_av45 + +c.log_45_70 + +c.log_70_90 + +c.log_ap90 + +c.log_inc
-                        // log_soc - Nombre de logements* sociaux
-                        c.log_nsoc = +c.log - +c.log_soc
-                        c.rLogSoc = c.log_soc / c.log
-                    },
-                }
-            )
-        ds.met.log['2015'] = logDatasetFun(2015, "met")
-        ds.met.log['2017'] = logDatasetFun(2017, "met")
-        ds.met.log['2019'] = logDatasetFun(2019, "met")
+                //dataset on housing stats
+                ds[geo].log[year] = app.makeMultiScaleTiledGridDataset(
+                    [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    (r) => baseURL + geo + '/log/' + year + '/' + r + 'm/',
+                    {
+                        preprocess: (c) => {
+                            c.log = +c.log_av45 + +c.log_45_70 + +c.log_70_90 + +c.log_ap90 + +c.log_inc
+                            // log_soc - Nombre de logements* sociaux
+                            c.log_nsoc = +c.log - +c.log_soc
+                            c.rLogSoc = c.log_soc / c.log
+                        },
+                    }
+                )
 
-        //total population and income
-        const incDatasetFun = (year, geo) =>
-            app.makeMultiScaleTiledGridDataset(
-                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                (r) => baseURL + geo + '/inc/' + year + '/' + r + 'm/',
-                {
-                    preprocess: (c) => {
-                        c.rIncome = c.ind_snv / c.ind / 12
-                    },
-                }
-            )
-        ds.met.inc['2015'] = incDatasetFun(2015, "met")
-        ds.met.inc['2017'] = incDatasetFun(2017, "met")
-        ds.met.inc['2019'] = incDatasetFun(2019, "met")
+                //dataset on total population and income
+                ds[geo].inc[year] = app.makeMultiScaleTiledGridDataset(
+                    [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    (r) => baseURL + geo + '/inc/' + year + '/' + r + 'm/',
+                    {
+                        preprocess: (c) => {
+                            c.rIncome = c.ind_snv / c.ind / 12
+                        },
+                    }
+                )
+            }
+        }
+
 
         //
         const update = () => {
