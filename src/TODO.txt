@@ -1,5 +1,6 @@
 upgrade FR_pop
 FR DOMs: finalise
+FR: bug with 600m level
 
 custom style test
 const myStyle = new gviz.Style()
