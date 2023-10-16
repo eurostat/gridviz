@@ -1,4 +1,5 @@
-merge demos slide and https://github.com/eurostat/gridviz/#examples section
+FR DOMs
+upgrade FR_pop
 
 custom style test
 const myStyle = new gviz.Style()
