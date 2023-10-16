@@ -511,9 +511,9 @@
                     [
                         new gviz.CompositionStyle({
                             color: {
-                                Men_1ind: '#e31a1c',
-                                Men_2_4ind: '#ffff99',
-                                Men_5ind: '#1f78b4',
+                                men_1ind: '#e31a1c',
+                                men_2_4ind: '#ffff99',
+                                men_5ind: '#1f78b4',
                             },
                             type: () => 'ring',
                             stripesOrientation: () => 90,
@@ -678,8 +678,8 @@
                     [
                         new gviz.CompositionStyle({
                             color: {
-                                Men_coll: 'green',
-                                Men_mais: 'orange',
+                                men_coll: 'green',
+                                men_mais: 'orange',
                             },
                             type: () => 'flag',
                             stripesOrientation: () => 90,
@@ -724,15 +724,15 @@
                     [
                         new gviz.CompositionStyle({
                             color: {
-                                Log_av45: col(0 / 3),
-                                Log_45_70: col(1 / 3),
-                                Log_70_90: col(2 / 3),
-                                Log_ap90: col(3 / 3),
-                                Log_inc: 'gray',
+                                log_av45: col(0 / 3),
+                                log_45_70: col(1 / 3),
+                                log_70_90: col(2 / 3),
+                                log_ap90: col(3 / 3),
+                                log_inc: 'gray',
                             },
                             type: () => 'flag',
                             //stripesOrientation: () => 90,
-                            sizeCol: 'Log',
+                            sizeCol: "log",
                             size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
                             blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
                         }),
@@ -795,7 +795,7 @@
                                 Log_soc: '#33a02c',
                             },
                             type: () => 'ring',
-                            sizeCol: 'Log',
+                            sizeCol: "log",
                             size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.15, 0),
                             blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
                         }),
