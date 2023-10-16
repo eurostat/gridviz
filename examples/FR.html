@@ -904,6 +904,75 @@
             else if (geo == "reun") {
                 app.setGeoCenter({ x: 350000, y: 7660000 })
                     .setZoomFactor(75)
+
+
+                //TODO
+                const getEurostatBoundariesLayer = function (opts) {
+                    opts = opts || {}
+                    const nutsYear = opts.nutsYear || '2021'
+                    //TODO
+                    const geo = opts.geo
+                    const crs = opts.crs || '3035'
+                    const scale = opts.scale || '03M'
+                    const nutsLevel = opts.nutsLevel || '3'
+                    const col = opts.col || '#888'
+                    const colKosovo = opts.colKosovo || '#bcbcbc'
+                    const showOth = opts.showOth == undefined ? true : opts.showOth
+
+                    opts.color =
+                        opts.color ||
+                        ((f, zf) => {
+                            const p = f.properties
+                            if (!showOth /*&& p.co == "F"*/ && p.eu != 'T' && p.cc != 'T' && p.efta != 'T' && p.oth === 'T')
+                                return
+                            if (p.id >= 100000) return colKosovo
+                            if (p.co === 'T') return col
+                            if (zf < 400) return col
+                            else if (zf < 1000) return p.lvl >= 3 ? '' : col
+                            else if (zf < 2000) return p.lvl >= 2 ? '' : col
+                            else return p.lvl >= 1 ? '' : col
+                        })
+
+                    opts.width =
+                        opts.width ||
+                        ((f, zf) => {
+                            const p = f.properties
+                            if (p.co === 'T') return 0.5
+                            if (zf < 400) return p.lvl == 3 ? 2.2 : p.lvl == 2 ? 2.2 : p.lvl == 1 ? 2.2 : 4
+                            else if (zf < 1000) return p.lvl == 2 ? 1.8 : p.lvl == 1 ? 1.8 : 2.5
+                            else if (zf < 2000) return p.lvl == 1 ? 1.8 : 2.5
+                            else return 1.2
+                        })
+
+                    opts.lineDash =
+                        opts.lineDash ||
+                        ((f, zf) => {
+                            const p = f.properties
+                            if (p.co === 'T') return []
+                            if (zf < 400)
+                                return p.lvl == 3
+                                    ? [2 * zf, 2 * zf]
+                                    : p.lvl == 2
+                                        ? [5 * zf, 2 * zf]
+                                        : p.lvl == 1
+                                            ? [5 * zf, 2 * zf]
+                                            : [10 * zf, 3 * zf]
+                            else if (zf < 1000)
+                                return p.lvl == 2 ? [5 * zf, 2 * zf] : p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
+                            else if (zf < 2000) return p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
+                            else return [10 * zf, 3 * zf]
+                        })
+
+                    opts.baseURL = opts.baseURL || 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/'
+                    //TODO
+                    opts.url = opts.baseURL + nutsYear + (geo ? '/' + geo : '') + '/' + crs + '/' + scale + '/nutsbn_' + nutsLevel + '.json'
+                    return opts
+                }
+
+
+                app.setBoundaryLayer(getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" }))
+
+
             }
 
             //martinique
