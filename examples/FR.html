@@ -82,8 +82,8 @@
             <label for="boundary">Limites adm.</label>
             <hr />
             Source:
-            <a href="https://www.insee.fr/fr/statistiques/7655515" target="_blank"
-                rel="noopener noreferrer">INSEE - Filosofi</a>
+            <a href="https://www.insee.fr/fr/statistiques/7655515" target="_blank" rel="noopener noreferrer">INSEE -
+                Filosofi</a>
         </span>
     </div>
 
@@ -121,14 +121,14 @@
 
 
         //prepare datasets, indexed by thematic domain and year
-        const ds = { ind: {}, men: {}, log: {}, inc: {} }
-        const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/'
+        const ds = { met: { ind: {}, men: {}, log: {}, inc: {} } }
+        const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/'
 
         //population stats dataset
-        const indDatasetFun = (year) =>
+        const indDatasetFun = (year, geo) =>
             app.makeMultiScaleTiledGridDataset(
                 [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                (r) => baseURL + 'ind/' + year + '/' + r + 'm/',
+                (r) => baseURL + geo + '/ind/' + year + '/' + r + 'm/',
                 {
                     preprocess: (c) => {
                         c.ind_0_17 = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17
@@ -144,15 +144,15 @@
                     },
                 }
             )
-        ds.ind['2015'] = indDatasetFun(2015)
-        ds.ind['2017'] = indDatasetFun(2017)
-        ds.ind['2019'] = indDatasetFun(2019)
+        ds.met.ind['2015'] = indDatasetFun(2015, "met")
+        ds.met.ind['2017'] = indDatasetFun(2017, "met")
+        ds.met.ind['2019'] = indDatasetFun(2019, "met")
 
         //household stats dataset
-        const menDatasetFun = (year) =>
+        const menDatasetFun = (year, geo) =>
             app.makeMultiScaleTiledGridDataset(
                 [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                (r) => baseURL + 'men/' + year + '/' + r + 'm/',
+                (r) => baseURL + geo + '/men/' + year + '/' + r + 'm/',
                 {
                     preprocess: (c) => {
                         //ind per men
@@ -173,15 +173,15 @@
                     },
                 }
             )
-        ds.men['2015'] = menDatasetFun(2015)
-        ds.men['2017'] = menDatasetFun(2017)
-        ds.men['2019'] = menDatasetFun(2019)
+        ds.met.men['2015'] = menDatasetFun(2015, "met")
+        ds.met.men['2017'] = menDatasetFun(2017, "met")
+        ds.met.men['2019'] = menDatasetFun(2019, "met")
 
         //housing stats dataset
-        const logDatasetFun = (year) =>
+        const logDatasetFun = (year, geo) =>
             app.makeMultiScaleTiledGridDataset(
                 [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                (r) => baseURL + 'log/' + year + '/' + r + 'm/',
+                (r) => baseURL + geo + '/log/' + year + '/' + r + 'm/',
                 {
                     preprocess: (c) => {
                         c.log = +c.log_av45 + +c.log_45_70 + +c.log_70_90 + +c.log_ap90 + +c.log_inc
@@ -191,30 +191,32 @@
                     },
                 }
             )
-        ds.log['2015'] = logDatasetFun(2015)
-        ds.log['2017'] = logDatasetFun(2017)
-        ds.log['2019'] = logDatasetFun(2019)
+        ds.met.log['2015'] = logDatasetFun(2015, "met")
+        ds.met.log['2017'] = logDatasetFun(2017, "met")
+        ds.met.log['2019'] = logDatasetFun(2019, "met")
 
         //total population and income
-        const incDatasetFun = (year) =>
+        const incDatasetFun = (year, geo) =>
             app.makeMultiScaleTiledGridDataset(
                 [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                (r) => baseURL + 'inc/' + year + '/' + r + 'm/',
+                (r) => baseURL + geo + '/inc/' + year + '/' + r + 'm/',
                 {
                     preprocess: (c) => {
                         c.rIncome = c.ind_snv / c.ind / 12
                     },
                 }
             )
-        ds.inc['2015'] = incDatasetFun(2015)
-        ds.inc['2017'] = incDatasetFun(2017)
-        ds.inc['2019'] = incDatasetFun(2019)
+        ds.met.inc['2015'] = incDatasetFun(2015, "met")
+        ds.met.inc['2017'] = incDatasetFun(2017, "met")
+        ds.met.inc['2019'] = incDatasetFun(2019, "met")
 
         //
         const update = () => {
             //read GUI selection
             const layCode = document.querySelector('input[name="layer"]:checked').value
             const year = document.querySelector('#year').value
+
+            const geo = "met"
 
             //remove layers
             app.layers = []
@@ -226,7 +228,7 @@
             if (layCode === 'pop') {
                 //population
                 app.addLayerFromDataset(
-                    ds.inc[year],
+                    ds[geo].inc[year],
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: 'ind',
@@ -265,7 +267,7 @@
                 //population by age
                 const col = d3.interpolateSpectral
                 app.addLayerFromDataset(
-                    ds.ind[year],
+                    ds[geo].ind[year],
                     [
                         new gviz.CompositionStyle({
                             color: {
@@ -353,7 +355,7 @@
                 //population by age (3 age groups)
                 const col = d3.interpolateSpectral
                 app.addLayerFromDataset(
-                    ds.ind[year],
+                    ds[geo].ind[year],
                     [
                         new gviz.CompositionStyle({
                             color: {
@@ -404,7 +406,7 @@
             } else if (layCode === 'ageR') {
                 //young VS elderly
                 app.addLayerFromDataset(
-                    ds.ind[year],
+                    ds[geo].ind[year],
                     [
                         new gviz.ShapeColorSizeStyle({
                             sizeCol: "ind",
@@ -449,7 +451,7 @@
             } else if (layCode === 'income') {
                 //income
                 app.addLayerFromDataset(
-                    ds.inc[year],
+                    ds[geo].inc[year],
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: 'rIncome',
@@ -479,7 +481,7 @@
             } else if (layCode === 'poverty') {
                 //poverty
                 app.addLayerFromDataset(
-                    ds.men[year],
+                    ds[geo].men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
                             sizeCol: 'men',
@@ -522,7 +524,7 @@
             } else if (layCode === 'men_size') {
                 //houshold size
                 app.addLayerFromDataset(
-                    ds.men[year],
+                    ds[geo].men[year],
                     [
                         new gviz.CompositionStyle({
                             color: {
@@ -572,7 +574,7 @@
             } else if (layCode === 'men_mono') {
                 //single-parent
                 app.addLayerFromDataset(
-                    ds.men[year],
+                    ds[geo].men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
                             sizeCol: "men",
@@ -614,7 +616,7 @@
             } else if (layCode === 'men_owner') {
                 //owners
                 app.addLayerFromDataset(
-                    ds.men[year],
+                    ds[geo].men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
                             sizeCol: "men",
@@ -655,7 +657,7 @@
             } else if (layCode === 'men_house_surf') {
                 //housing surface per houshold
                 app.addLayerFromDataset(
-                    ds.men[year],
+                    ds[geo].men[year],
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: 'rMenSurf',
@@ -689,7 +691,7 @@
             } else if (layCode === 'men_house_collective') {
                 //housing type: house/collective
                 app.addLayerFromDataset(
-                    ds.men[year],
+                    ds[geo].men[year],
                     [
                         new gviz.CompositionStyle({
                             color: {
@@ -735,7 +737,7 @@
                 //housing age
                 const col = d3.interpolateViridis
                 app.addLayerFromDataset(
-                    ds.log[year],
+                    ds[geo].log[year],
                     [
                         new gviz.CompositionStyle({
                             color: {
@@ -802,7 +804,7 @@
             } else if (layCode === 'log_soc_nb') {
                 //social housing
                 app.addLayerFromDataset(
-                    ds.log[year],
+                    ds[geo].log[year],
                     [
                         new gviz.CompositionStyle({
                             color: {
@@ -854,7 +856,7 @@
             } else if (layCode === 'log_soc_per') {
                 //social housing percentage
                 app.addLayerFromDataset(
-                    ds.log[year],
+                    ds[geo].log[year],
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: 'rLogSoc',
