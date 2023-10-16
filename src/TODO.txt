@@ -1,22 +1,5 @@
-FR DOMs
-
-    elif geo == "reun":
-        crs = "2975"
-https://spatialreference.org/ref/epsg/rgr92-utm-zone-40s/
-        RE	Réunion	32740 - UTM zone 40S
-https://spatialreference.org/ref/epsg/wgs-84-utm-zone-40s/
-
-
-    elif geo == "mart":
-        crs = "5490"
-MQ	Martinique	32620 - UTM zone 20N
-
-
-
-
 upgrade FR_pop
-
-check DE and NO for rounded figures - if necessary, relaunch
+FR DOMs: finalise
 
 custom style test
 const myStyle = new gviz.Style()
