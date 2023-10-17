@@ -772,7 +772,7 @@ The kernel smoothing computation relies on the [fast-kde](https://www.npmjs.com/
 
 ## Custom styles
 
-Any need or idea for new style ? feel free to [ask](https://github.com/eurostat/gridviz/issues/new) or [contribute](../README.md#support-and-contribution) !
+Any need or idea for a new style ? feel free to [ask](https://github.com/eurostat/gridviz/issues/new) or [contribute](../README.md#support-and-contribution) !
 
 [![custom style arrow](img/styles/custom.png)](https://eurostat.github.io/gridviz/examples/custom_style.html)
 
