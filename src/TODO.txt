@@ -2,10 +2,8 @@ upgrade FR_pop
 FR DOMs: finalise
 FR: bug with 600m level
 
-custom style test
-const myStyle = new gviz.Style()
-myStyle.draw = (cells, r, canvas)=>{...}
 style: rough.js
+style: coupe
 observable HQ test
 
 

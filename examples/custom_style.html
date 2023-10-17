@@ -22,20 +22,18 @@
             //draw with HTML canvas in geo coordinates
             cg.setCanvasTransform()
 
-            //draw each cell as a circle
+            //set fill color as orange
             cg.ctx.fillStyle = "orange"
+
+            //draw each cell as a triangle
             for (let cell of cells) {
                 cg.ctx.beginPath()
-                cg.ctx.arc(cell.x + resolution / 2, cell.y + resolution / 2, resolution * 0.4, Math.PI, 2 * Math.PI, false)
+                cg.ctx.moveTo(cell.x, cell.y)
+                cg.ctx.lineTo(cell.x + resolution, cell.y)
+                cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution)
                 cg.ctx.fill()
             }
-            //draw each cell as a circle
-            cg.ctx.fillStyle = "blue"
-            for (let cell of cells) {
-                cg.ctx.beginPath()
-                cg.ctx.arc(cell.x + resolution / 2, cell.y + resolution / 2, resolution * 0.4, 0, Math.PI, false)
-                cg.ctx.fill()
-            }
+
         }
 
 
