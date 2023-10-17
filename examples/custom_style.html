@@ -32,8 +32,9 @@
                 //fill triangle
                 cg.ctx.beginPath()
                 cg.ctx.moveTo(cell.x, cell.y)
+                cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution / 3)
                 cg.ctx.lineTo(cell.x + resolution, cell.y)
-                cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution)
+                cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution * 4 / 3)
                 cg.ctx.fill()
             }
 
