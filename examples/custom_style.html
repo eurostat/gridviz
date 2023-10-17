@@ -13,10 +13,9 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-
         //define custom style
-        const s = new gviz.Style()
-        s.draw = (cells, resolution, cg) => {
+        const customStyle = new gviz.Style()
+        customStyle.draw = (cells, resolution, cg) => {
 
             //draw with HTML canvas in geo coordinates
             cg.setCanvasTransform()
@@ -43,16 +42,15 @@
 
         }
 
-
-        //make application with new style
+        //make application with custom style
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 4000000, y: 2960000 })
             .setZoomFactor(500)
             .addCSVGridLayer(
                 'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
                 10000,
-                //the style
-                [s]
+                //use the curstom style
+                [customStyle]
             )
 
     </script>
