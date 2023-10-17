@@ -38,7 +38,7 @@
     - [Lego style](#lego-style)
     - [Lego category style](#lego-category-style)
   - [Kernel smoothing](#kernel-smoothing)
-  - [Others styles](#others-styles)
+  - [Custom styles](#custom-styles)
   - [Legends](#legends)
     - [ColorCategoryLegend](#colorcategorylegend)
     - [ColorDiscreteLegend](#colordiscretelegend)
@@ -770,11 +770,49 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/kernelsmoo
 
 The kernel smoothing computation relies on the [fast-kde](https://www.npmjs.com/package/fast-kde) library, which produces smoothing approximation very fast. Note that the approximation degrades significantly for weak smoothing (for low sigma values).
 
-## Others styles
-
-[Gridviz](https://github.com/eurostat/gridviz/) style library can easily be enriched with new styles, by extending the [style class](../src/Style.js).
+## Custom styles
 
 Any need or idea for new style ? feel free to [ask](https://github.com/eurostat/gridviz/issues/new) or [contribute](../README.md#support-and-contribution) !
+
+[Gridviz](https://github.com/eurostat/gridviz/) style library can easily be extended with new styles, by extending the [style class](../src/Style.js). See this example:
+
+```javascript
+
+//create custom style
+const customStyle = new gviz.Style()
+
+//define draw function
+customStyle.draw = (cells, resolution, cg) => {
+
+    //draw with HTML canvas in geo coordinates
+    cg.setCanvasTransform()
+
+    //draw each cell as an arrow
+    //with a fill color depending on the property "population"
+    for (let cell of cells) {
+
+        //do not draw cells with no data or no population
+        if (!cell.population) continue
+
+        //set fill color as a shade from cyan to red depending on "population" property
+        const t = Math.floor(255 * Math.round(Math.pow(cell.population / 1000000, 1 / 5) * 6) / 6)
+        cg.ctx.fillStyle = "rgb(" + t + "," + (255 - t) + "," + (255 - t) + ")"
+
+        //fill arrow
+        cg.ctx.beginPath()
+        cg.ctx.moveTo(cell.x, cell.y)
+        cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution / 3)
+        cg.ctx.lineTo(cell.x + resolution, cell.y)
+        cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution * 4 / 3)
+        cg.ctx.fill()
+    }
+}
+```
+
+See [online](https://eurostat.github.io/gridviz/examples/custom_style.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/custom_style.html)).
+
+
+
 
 ## Legends
 
