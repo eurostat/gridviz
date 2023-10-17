@@ -22,11 +22,14 @@
             //draw with HTML canvas in geo coordinates
             cg.setCanvasTransform()
 
-            //set fill color as orange
-            cg.ctx.fillStyle = "orange"
-
             //draw each cell as a triangle
             for (let cell of cells) {
+
+                //set fill color
+                const t = Math.floor(255 * Math.max(0, Math.min(1, cell.population / 200000.0)));
+                cg.ctx.fillStyle = "rgb(" + t + ",50,50)"
+
+                //fill triangle
                 cg.ctx.beginPath()
                 cg.ctx.moveTo(cell.x, cell.y)
                 cg.ctx.lineTo(cell.x + resolution, cell.y)
@@ -36,24 +39,17 @@
 
         }
 
-
-
         //make application with new style
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 4000000, y: 2960000 })
-            .setZoomFactor(2000)
-            .addMultiScaleTiledGridLayer(
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                (r) =>
-                    'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
-                    r +
-                    'm/',
-                [s],
-                {
-                    pixNb: 12,
-                    cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
-                }
+            .setZoomFactor(500)
+            .addCSVGridLayer(
+                'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
+                10000,
+                //the style
+                [s]
             )
+
     </script>
 </body>
 
