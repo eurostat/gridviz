@@ -13,12 +13,34 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-        //define style
+
+
+        //define custom style
         const s = new gviz.Style()
         s.draw = (cells, resolution, cg) => {
-            console.log("aaa")
+
+            //draw with HTML canvas in geo coordinates
+            cg.setCanvasTransform()
+
+            //draw each cell as a circle
+            cg.ctx.fillStyle = "orange"
+            for (let cell of cells) {
+                cg.ctx.beginPath()
+                cg.ctx.arc(cell.x + resolution / 2, cell.y + resolution / 2, resolution * 0.4, Math.PI, 2 * Math.PI, false)
+                cg.ctx.fill()
+            }
+            //draw each cell as a circle
+            cg.ctx.fillStyle = "blue"
+            for (let cell of cells) {
+                cg.ctx.beginPath()
+                cg.ctx.arc(cell.x + resolution / 2, cell.y + resolution / 2, resolution * 0.4, 0, Math.PI, false)
+                cg.ctx.fill()
+            }
         }
 
+
+
+        //make application with new style
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 4000000, y: 2960000 })
             .setZoomFactor(2000)
@@ -30,7 +52,7 @@
                     'm/',
                 [s],
                 {
-                    pixNb: 8,
+                    pixNb: 12,
                     cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
                 }
             )
