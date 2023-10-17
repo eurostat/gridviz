@@ -35,9 +35,13 @@
 
                 //fill arrow
                 cg.ctx.beginPath()
+                //left point
                 cg.ctx.moveTo(cell.x, cell.y)
+                //bottom center point
                 cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution / 3)
+                //right point
                 cg.ctx.lineTo(cell.x + resolution, cell.y)
+                //top center point
                 cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution * 4 / 3)
                 cg.ctx.fill()
             }
