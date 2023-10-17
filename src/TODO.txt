@@ -6,6 +6,7 @@ style: rough.js
 style: coupe
 observable HQ test
 
+by symbol map
 
 NO
 POP Pop
