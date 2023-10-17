@@ -22,12 +22,17 @@
             //draw with HTML canvas in geo coordinates
             cg.setCanvasTransform()
 
-            //draw each cell as a triangle
+            //draw each cell as an arrow
+            //with a fill color depending on the property "population"
             for (let cell of cells) {
 
-                //set fill color
-                const t = Math.floor(255 * Math.max(0, Math.min(1, cell.population / 200000.0)));
-                cg.ctx.fillStyle = "rgb(" + t + ",50,50)"
+                //do not draw cells with no data or no population
+                if (!cell.population) continue
+
+                //set fill color as a shade from blue to red
+                let t = Math.max(0, Math.min(1, cell.population / 1000000.0));
+                t = Math.pow(t, 1 / 5)
+                cg.ctx.fillStyle = "rgb(" + Math.floor(255 * t) + ",50," + Math.floor(255 * (1 - t)) + ")"
 
                 //fill triangle
                 cg.ctx.beginPath()
