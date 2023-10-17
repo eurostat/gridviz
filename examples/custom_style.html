@@ -27,9 +27,9 @@
                 //do not draw cells with no data or no population
                 if (!cell.population) continue
 
-                //set fill color as a shade from blue to red depending on "population" property
-                const t = Math.round(Math.pow(cell.population / 1000000, 1 / 5) * 7) / 7
-                cg.ctx.fillStyle = "rgb(" + Math.floor(255 * t) + ",50," + Math.floor(255 * (1 - t)) + ")"
+                //set fill color as a shade from cyan to red depending on "population" property
+                const t = Math.floor(255 * Math.round(Math.pow(cell.population / 1000000, 1 / 5) * 6) / 6)
+                cg.ctx.fillStyle = "rgb(" + t + "," + (255 - t) + "," + (255 - t) + ")"
 
                 //fill triangle
                 cg.ctx.beginPath()
