@@ -817,7 +817,7 @@ customStyle.draw = (cells, resolution, cg) => {
 
 See [online](https://eurostat.github.io/gridviz/examples/custom_style.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/custom_style.html)).
 
-For more examples and inspiration, have a look at the code of existing styles [**here**](/src/style).
+For more examples and inspiration, have a look at the code of existing styles [**here**](https://github.com/eurostat/gridviz/tree/master/src/style).
 
 
 ## Legends
