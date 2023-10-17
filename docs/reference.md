@@ -776,7 +776,7 @@ Any need or idea for new style ? feel free to [ask](https://github.com/eurostat/
 
 [![custom style arrow](img/styles/custom.png)](https://eurostat.github.io/gridviz/examples/custom_style.html)
 
-[Gridviz](https://github.com/eurostat/gridviz/) style library can easily be extended with new styles, by extending the [style class](../src/Style.js). See for example this style to draw cells as an arrow with a color depending on a statistical value `population`:
+[Gridviz](https://github.com/eurostat/gridviz/) style library can easily be extended with new styles. See for example this custom style defined to draw cells as an arrow with a color depending on a statistical value `population`:
 
 ```javascript
 
@@ -802,9 +802,13 @@ customStyle.draw = (cells, resolution, cg) => {
 
         //fill arrow
         cg.ctx.beginPath()
+        //left point
         cg.ctx.moveTo(cell.x, cell.y)
+        //bottom center point
         cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution / 3)
+        //right point
         cg.ctx.lineTo(cell.x + resolution, cell.y)
+        //top center point
         cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution * 4 / 3)
         cg.ctx.fill()
     }
@@ -813,7 +817,7 @@ customStyle.draw = (cells, resolution, cg) => {
 
 See [online](https://eurostat.github.io/gridviz/examples/custom_style.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/custom_style.html)).
 
-
+For more examples and inspiration, have a look at the code of existing styles [**here**](/src/style).
 
 
 ## Legends
