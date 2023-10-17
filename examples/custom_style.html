@@ -30,8 +30,7 @@
                 if (!cell.population) continue
 
                 //set fill color as a shade from blue to red
-                let t = Math.max(0, Math.min(1, cell.population / 1000000.0));
-                t = Math.pow(t, 1 / 5)
+                const t = Math.pow(cell.population / 1000000, 1 / 5)
                 cg.ctx.fillStyle = "rgb(" + Math.floor(255 * t) + ",50," + Math.floor(255 * (1 - t)) + ")"
 
                 //fill triangle
