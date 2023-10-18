@@ -1,4 +1,3 @@
-blend firefox
 upgrade FR_pop
 FR DOMs: finalise
 FR: bug with 600m level
