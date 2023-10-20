@@ -1,4 +1,3 @@
-doc ts style bug
 tootip bug: test in small map
 upgrade FR_pop
 FR DOMs: finalise
