@@ -46,7 +46,7 @@ export class Style {
         /** A function returning the blend operation. The function parameter is the zoom factor.
          * (see CanvasRenderingContext2D: globalCompositeOperation property)
          * @type {function(number):GlobalCompositeOperation} */
-        this.blendOperation = opts.blendOperation || (zf => 'normal')
+        this.blendOperation = opts.blendOperation || (zf => "source-over")
 
         /** The minimum zoom factor: Below this level, the layer is not shown.
          * @type {number}

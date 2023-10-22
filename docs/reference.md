@@ -159,12 +159,12 @@ new gviz.App(containerDiv, {
 
 ## Multi layer, multi style and multi scale mapping
 
-A [Gridviz](https://github.com/eurostat/gridviz/) map is organised as a stack of layers accessible through **myApp.layer** field. Each layer shows data from one single dataset **myLayer.dataset**, following a list of styles **myLayer.styles**. The styles available are listed [here](#basic-styles). The map can adapt to the visualisation scale/zoom level with the following mechanisms:
+A [Gridviz](https://github.com/eurostat/gridviz/) map is organised as a stack of layers accessible through **myApp.layers** property. Each layer shows data from one single dataset **myLayer.dataset**, following a list of styles **myLayer.styles**. The map can adapt to the visualisation scale/zoom level with the following mechanisms:
 
--   Multi-resolution datasets can be defined, so that different grid resolutions can be shown depending to the zoom level, see [the multi-scale datasets in the next section](#adding-data).
--   The layers and styles can be restricted to some scale, using their **minZoom** and **maxZoom** properties to define the zoom ranges for which they will be shown.
-
-For further information, see the [examples](../examples/).
+- Multi-resolution datasets can be defined, so that different grid resolutions can be shown depending to the zoom level, see [the multi-scale datasets in the next section](#adding-data).
+- The layers and styles can be restricted to some scale, using their **minZoom** and **maxZoom** properties to define the zoom ranges for which they will be shown.
+- Most style parameters are not static values, but *functions* of various parameters, including the map zoom factor, usually noted **zf** (for "zoom factor") which represent the size of a pixel screen in ground meter. Style parameters can thus be defined depending on the zoom level so that they adapt to the visualisation scale.
+- Transparency can be defined at layer or style level with their **alpha** and **blendOperation** properties (see CanvasRenderingContext2D [globalAlpha](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha) and [globalCompositeOperation](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation) properties). These values are also not static, but functions of the zoom factor **zf**. It is thus possible to define the transparency depending on the zoom level,so that a layer or a style fades away when zooming in or out.
 
 ## Adding data
 
