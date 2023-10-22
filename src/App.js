@@ -325,9 +325,8 @@ export class App {
         //
         //canvas.addEventListener("keydown", e => { console.log(arguments) });
 
-
         //set default globalCompositeOperation
-        this.defaultGlobalCompositeOperation = opts.defaultGlobalCompositeOperation || "normal";
+        this.defaultGlobalCompositeOperation = opts.defaultGlobalCompositeOperation || this.cg.ctx.globalCompositeOperation;
     }
 
     /**

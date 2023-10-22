@@ -90,10 +90,6 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
     <script>
-
-        //use this to fix blend mode bug in firefox
-        const blendMultiplyOverrideFirefox = navigator.userAgent.indexOf("Firefox") != -1 ? "normal" : "multiply";
-
         let containerDiv = document.getElementById('viz-container')
 
         const app = new gviz.App(containerDiv)
@@ -237,7 +233,7 @@
                             stretching: { fun: 'expRev', alpha: -7 },
                             //set alpha and blend operation
                             //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
-                            blendOperation: (zf) => zf < 10 ? blendMultiplyOverrideFirefox : "normal"
+                            blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
                         }),
                         new gviz.StrokeStyle({ maxZoom: 7 }),
                     ],
@@ -280,7 +276,7 @@
                                     },
                                     //set alpha and blend operation
                                     //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
-                                    blendOperation: (zf) => zf < 50 ? blendMultiplyOverrideFirefox : "normal"
+                                    blendOperation: (zf) => zf < 50 ? "multiply" : "normal"
                                 })
                             ]
                         }),
@@ -323,7 +319,7 @@
                             shape: () => 'circle',
                             sizeCol: 'TOT',
                             size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.2),
-                            blendOperation: (zf) => zf < 4 ? blendMultiplyOverrideFirefox : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                         }),
                     ],
                     {
@@ -388,7 +384,7 @@
                             size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
                             stripesOrientation: () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
-                            blendOperation: (zf) => zf < 6 ? blendMultiplyOverrideFirefox : "normal"
+                            blendOperation: (zf) => zf < 6 ? "multiply" : "normal"
                         }),
                     ],
                     {
@@ -452,7 +448,7 @@
                             size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25, 0),
                             stripesOrientation: () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
-                            blendOperation: (zf) => zf < 4 ? blendMultiplyOverrideFirefox : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                         }),
                     ],
                     {
@@ -507,7 +503,7 @@
                             colorCol: 'age_ratio',
                             color: (v, r, s) => d3.interpolateSpectral(1 - v),
                             shape: () => 'circle',
-                            blendOperation: (zf) => zf < 4 ? blendMultiplyOverrideFirefox : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                         }),
                     ],
                     {
@@ -568,7 +564,7 @@
                             size: sized ? (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                             stripesOrientation: sized ? undefined : () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
-                            blendOperation: sized ? undefined : (zf) => zf < 6 ? blendMultiplyOverrideFirefox : "normal"
+                            blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "normal"
                         }),
                     ],
                     {
@@ -636,7 +632,7 @@
                             size: sized ? (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                             stripesOrientation: sized ? undefined : () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
-                            blendOperation: sized ? undefined : (zf) => zf < 6 ? blendMultiplyOverrideFirefox : "normal"
+                            blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "normal"
                         }),
                     ],
                     {
@@ -704,7 +700,7 @@
                             size: sized ? (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                             stripesOrientation: () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
-                            blendOperation: (zf) => zf < 4 ? blendMultiplyOverrideFirefox : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                         }),
                     ],
                     {
@@ -763,7 +759,7 @@
                             sizeCol: 'TOT',
                             size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
                             stripesOrientation: () => 90,
-                            blendOperation: (zf) => zf < 4 ? blendMultiplyOverrideFirefox : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                         }),
                     ],
                     {
@@ -847,7 +843,7 @@
                             sizeCol: 'TOT',
                             size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
                             stripesOrientation: () => 90,
-                            blendOperation: (zf) => zf < 4 ? blendMultiplyOverrideFirefox : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                         }),
                     ],
                     {
@@ -902,7 +898,7 @@
                             size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0),
                             //stripesOrientation: () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
-                            blendOperation: (zf) => zf < 4 ? blendMultiplyOverrideFirefox : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
                         }),
                     ],
                     {
