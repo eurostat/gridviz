@@ -377,8 +377,6 @@ See [this example with changing size and color](https://eurostat.github.io/gridv
 
 See [this example with random shape, color and size](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_random.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/shapecolorsize_random.html)).
 
-See [this example with transparency](https://eurostat.github.io/gridviz/examples/styles/shapecolorsize_transparency.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/shapecolorsize_transparency.html)).
-
 | Property     | Type                      | Default                 | Description                                                                                                                           |
 | ------------ | ------------------------- | ----------------------- | ----------------- |
 | **colorCol** | string                    | undefined               | The name of the column used for the color.                                                                                            |
@@ -397,8 +395,6 @@ This style displays each cell as a square, with a changing color. This style use
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/squarecolorwgl.html)).
 
 See [this example with dark style](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_dark.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/squarecolorwgl_dark.html)).
-
-See [this example with transparency](https://eurostat.github.io/gridviz/examples/styles/squarecolorwgl_transparency.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/squarecolorwgl_transparency.html)).
 
 | Property       | Type                       | Default                                                                                             | Description                                                                                                                                                                                                                                                                                                      |
 | -------------- | -------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
