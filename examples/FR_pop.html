@@ -23,60 +23,68 @@
                 line-height: 1.6;
                 box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd;
             ">
-        <span style="font-size: 1.3em; font-weight: bold">Population totale</span><br />
-        Year:
-        <select id="year">
-            <option value="2015">2015</option>
-            <option value="2017">2017</option>
-            <option value="2019" selected>2019</option>
+        <span style="font-size: 1.3em; font-weight: bold">Population en France</span><br />
+        <div id="layer">
+            Année:
+            <select id="year">
+                <option value="2015">2015</option>
+                <option value="2017">2017</option>
+                <option value="2019" selected>2019</option>
+            </select>
+            <br />
+            <input type="radio" name="style" id="color" value="color" checked />
+            <label for="color">Couleur</label>
+            <br />
+            <input type="radio" name="style" id="colorDark" value="colorDark" />
+            <label for="colorDark">Couleur sombre</label>
+            <br />
+            <input type="radio" name="style" id="size" value="size" />
+            <label for="size">Cercles proportionnels</label>
+            <br />
+            <input type="radio" name="style" id="dots" value="dots" />
+            <label for="dots">Nuage de points</label>
+            <br />
+            <input type="radio" name="style" id="pillar" value="pillar" />
+            <label for="pillar">Barres 3D</label>
+            <br />
+            <input type="radio" name="style" id="joyplot" value="joyplot" />
+            <label for="joyplot">Joyplot</label>
+            <br />
+            <input type="radio" name="style" id="smoothed" value="smoothed" />
+            <label for="smoothed">Lissage </label><input type="range" min="3" max="20" value="10" class="slider"
+                id="sigmaTK" style="width: 100px" />
+            <br />
+            <input type="radio" name="style" id="lego" value="lego" />
+            <label for="lego">Lego</label>
+
+            <br />
+            <span style="font-size: 1.3em; font-weight: bold">Changement</span>
+            <br />
+            <input type="radio" name="style" id="colorCh" value="colorCh" />
+            <label for="colorCh">Couleur</label>
+            <br />
+            <input type="radio" name="style" id="colorChSmTK" value="colorChSmTK" />
+            <label for="colorChSmTK">Lissage </label><input type="range" min="3" max="20" value="10" class="slider"
+                id="sigmaCCH" style="width: 100px" />
+            <br />
+            <input type="radio" name="style" id="sizeCh" value="sizeCh" />
+            <label for="sizeCh">Cercles proportionnels</label>
+            <br />
+            <input type="radio" name="style" id="segmentCh" value="segmentCh" />
+            <label for="segmentCh">Segments</label>
+        </div>
+        <hr />
+        Géo:
+        <select id="geo">
+            <option value="met" selected>France métropolitaine</option>
+            <option value="reun">Réunion</option>
+            <option value="mart">Martinique</option>
         </select>
         <br />
-        <input type="radio" name="style" id="color" value="color" checked />
-        <label for="color">Color</label>
-        <br />
-        <input type="radio" name="style" id="colorDark" value="colorDark" />
-        <label for="colorDark">Color (dark)</label>
-        <br />
-        <input type="radio" name="style" id="size" value="size" />
-        <label for="size">Circle size</label>
-        <br />
-        <input type="radio" name="style" id="dots" value="dots" />
-        <label for="dots">Dots</label>
-        <br />
-        <input type="radio" name="style" id="pillar" value="pillar" />
-        <label for="pillar">3D bars</label>
-        <br />
-        <input type="radio" name="style" id="joyplot" value="joyplot" />
-        <label for="joyplot">Joyplot</label>
-        <br />
-        <input type="radio" name="style" id="smoothed" value="smoothed" />
-        <label for="smoothed">Smoothed </label><input type="range" min="3" max="20" value="10" class="slider"
-            id="sigmaTK" style="width: 100px" />
-        <br />
-        <input type="radio" name="style" id="lego" value="lego" />
-        <label for="lego">Lego</label>
-
-        <br />
-        <span style="font-size: 1.3em; font-weight: bold">2015/2017 change</span>
-        <br />
-        <input type="radio" name="style" id="colorCh" value="colorCh" />
-        <label for="colorCh">Color</label>
-        <br />
-        <input type="radio" name="style" id="colorChSmTK" value="colorChSmTK" />
-        <label for="colorChSmTK">Smoothed </label><input type="range" min="3" max="20" value="10" class="slider"
-            id="sigmaCCH" style="width: 100px" />
-        <br />
-        <input type="radio" name="style" id="sizeCh" value="sizeCh" />
-        <label for="sizeCh">Circle size</label>
-        <br />
-        <input type="radio" name="style" id="segmentCh" value="segmentCh" />
-        <label for="segmentCh">Segment</label>
-
-        <hr />
         <input type="checkbox" id="label" checked />
-        <label for="label">City names</label>
+        <label for="label">Noms villes</label>
         <input type="checkbox" id="boundary" checked />
-        <label for="boundary">Boundaries</label>
+        <label for="boundary">Limites adm.</label>
         <hr />
         Source:
         <a href="https://www.insee.fr/fr/statistiques/7655515" target="_blank" rel="noopener noreferrer">INSEE -
@@ -98,18 +106,8 @@
         let containerDiv = document.getElementById('viz-container')
 
         const app = new gviz.App(containerDiv)
-            .setGeoCenter({ x: 3763437, y: 2891045 })
-            .setZoomFactor(50.1)
             .setZoomFactorExtent([10, 1500])
-            .setLabelLayer(gviz_es.getEuronymeLabelLayer('FR', '20'))
-            .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ showOth: false }))
             .setViewFromURL()
-            .addBackgroundLayer({
-                url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/',
-                resolutions: Array.from({ length: 9 }, (_, i) => 28.00132289714475 * Math.pow(2, 10 - i)),
-                origin: [0, 6000000],
-                filterColor: (zf) => '#ffffffc0',
-            })
 
         const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/'
 
@@ -711,20 +709,69 @@
             app.cg.redraw()
         }
 
+
+
         //
+        const updateGeo = () => {
+            //read GUI selection
+            const geo = document.querySelector('#geo').value
+
+            //clean layers
+            app.bgLayers = []
+            app.labelLayer = undefined
+            app.boundaryLayer = undefined
+
+            //set app parameters depending on the geographical selection
+
+            //metropolitan france
+            if (geo == "met") {
+                app.setGeoCenter({ x: 3760000, y: 2750000 }) //{ x: 3763437, y: 2891045 })
+                    .setZoomFactor(300)
+                    .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
+                    .setLabelLayer(gviz_es.getEuronymeLabelLayer('FR', '20'))
+                    .addBackgroundLayer({
+                        url: "https://gisco-services.ec.europa.eu/maps/tiles/OSMPositronBackground/EPSG3035/",
+                        resolutions: [156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512, 9783.93962050256, 4891.96981025128, 2445.98490512564, 1222.99245256282, 611.49622628141, 305.748113140705, 152.8740565703525, 76.43702828517625, 38.21851414258813, 19.109257071294063, 9.554628535647032, 4.777314267823516, 2.388657133911758, 1.19432856695, 0.597164283477939],
+                        origin: [0, 6000000],
+                        maxZoom: 50,
+                    })
+                    .addBackgroundLayer({
+                        url: 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/',
+                        resolutions: Array.from({ length: 9 }, (_, i) => 28.00132289714475 * Math.pow(2, 10 - i)),
+                        origin: [0, 6000000],
+                        filterColor: (zf) => '#ffffff60',
+                        minZoom: 50,
+                    })
+            }
+
+            //reunion
+            else if (geo == "reun") {
+                app.setGeoCenter({ x: 350000, y: 7660000 })
+                    .setZoomFactor(75)
+                    .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" }))
+                //TODO labels
+                //TODO background
+            }
+
+            //martinique
+            else if (geo == "mart") {
+                app.setGeoCenter({ x: 710000, y: 1620000 })
+                    .setZoomFactor(75)
+                    .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "MQ", crs: "32620", scale: "01M" }))
+                //TODO labels
+                //TODO background
+            }
+            else { console.error("Unexpected geo: " + geo); return; }
+
+
+            update();
+        }
+
+
+        //layer and year update
+        document.querySelector('#layer').addEventListener('change', update)
         document.querySelector('#year').addEventListener('change', update)
-        document.querySelector('#color').addEventListener('change', update)
-        document.querySelector('#colorDark').addEventListener('change', update)
-        document.querySelector('#pillar').addEventListener('change', update)
-        document.querySelector('#joyplot').addEventListener('change', update)
-        document.querySelector('#size').addEventListener('change', update)
-        document.querySelector('#dots').addEventListener('change', update)
-        document.querySelector('#smoothed').addEventListener('change', update)
-        document.querySelector('#lego').addEventListener('change', update)
-        document.querySelector('#colorCh').addEventListener('change', update)
-        document.querySelector('#colorChSmTK').addEventListener('change', update)
-        document.querySelector('#sizeCh').addEventListener('change', update)
-        document.querySelector('#segmentCh').addEventListener('change', update)
+        document.querySelector('#geo').addEventListener('change', updateGeo)
 
         //sigma selection
         document.getElementById('sigmaTK').oninput = update
@@ -743,7 +790,7 @@
         })
 
         //initialise
-        update()
+        updateGeo()
     </script>
 
     <div style="
