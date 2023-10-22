@@ -162,7 +162,7 @@ export class App {
 
                 //restore default alpha and blend operation
                 this.cg.ctx.globalAlpha = 1.0
-                this.cg.ctx.globalCompositeOperation = "normal"
+                this.cg.ctx.globalCompositeOperation = this.defaultGlobalCompositeOperation
             }
 
             //draw boundary layer
@@ -324,6 +324,10 @@ export class App {
 
         //
         //canvas.addEventListener("keydown", e => { console.log(arguments) });
+
+
+        //set default globalCompositeOperation
+        this.defaultGlobalCompositeOperation = opts.defaultGlobalCompositeOperation || "normal";
     }
 
     /**
