@@ -1,5 +1,5 @@
+upgrade FR_pop
 tootip bug: test in small map
-upgrade FR_pop: publish join tiled grid
 FR DOMs: finalise
 FR: bug with 600m level
 

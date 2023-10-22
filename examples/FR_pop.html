@@ -32,45 +32,45 @@
                 <option value="2019" selected>2019</option>
             </select>
             <br />
-            <input type="radio" name="style" id="color" value="color" checked />
+            <input type="radio" name="layer" id="color" value="color" checked />
             <label for="color">Couleur</label>
             <br />
-            <input type="radio" name="style" id="colorDark" value="colorDark" />
+            <input type="radio" name="layer" id="colorDark" value="colorDark" />
             <label for="colorDark">Couleur sombre</label>
             <br />
-            <input type="radio" name="style" id="size" value="size" />
+            <input type="radio" name="layer" id="size" value="size" />
             <label for="size">Cercles proportionnels</label>
             <br />
-            <input type="radio" name="style" id="dots" value="dots" />
+            <input type="radio" name="layer" id="dots" value="dots" />
             <label for="dots">Nuage de points</label>
             <br />
-            <input type="radio" name="style" id="pillar" value="pillar" />
+            <input type="radio" name="layer" id="pillar" value="pillar" />
             <label for="pillar">Barres 3D</label>
             <br />
-            <input type="radio" name="style" id="joyplot" value="joyplot" />
+            <input type="radio" name="layer" id="joyplot" value="joyplot" />
             <label for="joyplot">Joyplot</label>
             <br />
-            <input type="radio" name="style" id="smoothed" value="smoothed" />
+            <input type="radio" name="layer" id="smoothed" value="smoothed" />
             <label for="smoothed">Lissage </label><input type="range" min="3" max="20" value="10" class="slider"
                 id="sigmaTK" style="width: 100px" />
             <br />
-            <input type="radio" name="style" id="lego" value="lego" />
+            <input type="radio" name="layer" id="lego" value="lego" />
             <label for="lego">Lego</label>
 
             <br />
             <span style="font-size: 1.3em; font-weight: bold">Changement</span>
             <br />
-            <input type="radio" name="style" id="colorCh" value="colorCh" />
+            <input type="radio" name="layer" id="colorCh" value="colorCh" />
             <label for="colorCh">Couleur</label>
             <br />
-            <input type="radio" name="style" id="colorChSmTK" value="colorChSmTK" />
+            <input type="radio" name="layer" id="colorChSmTK" value="colorChSmTK" />
             <label for="colorChSmTK">Lissage </label><input type="range" min="3" max="20" value="10" class="slider"
                 id="sigmaCCH" style="width: 100px" />
             <br />
-            <input type="radio" name="style" id="sizeCh" value="sizeCh" />
+            <input type="radio" name="layer" id="sizeCh" value="sizeCh" />
             <label for="sizeCh">Cercles proportionnels</label>
             <br />
-            <input type="radio" name="style" id="segmentCh" value="segmentCh" />
+            <input type="radio" name="layer" id="segmentCh" value="segmentCh" />
             <label for="segmentCh">Segments</label>
         </div>
         <hr />
@@ -104,38 +104,41 @@
             .setZoomFactorExtent([10, 1500])
             .setViewFromURL()
 
-        const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/'
-
-        //load dataset
-        const popDataset = app.makeMultiScaleTiledGridDataset(
-            [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
-            (r) =>
-                'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/france/filosofi/pop/' +
-                r +
-                'm/',
-            {
-                preprocess: (c) => {
-                    //prepare change data
-                    if (!c.Ind_2015 && !c.Ind_2017) c.d2015_2017 = 0
-                    else if (!c.Ind_2015 && c.Ind_2017) c.d2015_2017 = +c.Ind_2017
-                    else if (c.Ind_2015 && !c.Ind_2017) c.d2015_2017 = -c.Ind_2015
-                    else c.d2015_2017 = c.Ind_2017 - c.Ind_2015
-                    //ratio
-                    c.p2011_2018 = c.Ind_2015 == 0 ? 999 : c.d2015_2017 / c.Ind_2015
-                },
-            }
-        )
+        //load datasets, one per geo region
+        const popDataset = {}
+        const getDataset = (geo) =>
+            app.makeMultiScaleTiledGridDataset(
+                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000],
+                (r) =>
+                    "https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/" + geo + "/ts_ind/" +
+                    r +
+                    "m/",
+                {
+                    preprocess: (c) => {
+                        /*/prepare change data
+                        if (!c.Ind_2015 && !c.Ind_2017) c.d2015_2017 = 0
+                        else if (!c.Ind_2015 && c.Ind_2017) c.d2015_2017 = +c.Ind_2017
+                        else if (c.Ind_2015 && !c.Ind_2017) c.d2015_2017 = -c.Ind_2015
+                        else c.d2015_2017 = c.Ind_2017 - c.Ind_2015
+                        //ratio
+                        c.p2011_2018 = c.Ind_2015 == 0 ? 999 : c.d2015_2017 / c.Ind_2015*/
+                    },
+                }
+            )
+        popDataset.met = getDataset("met")
+        popDataset.reun = getDataset("reun")
+        popDataset.mart = getDataset("mart")
 
         //default color
         const col = '#e54f37'
 
         //
         const update = () => {
-            //get year selection
-            const year = 'Ind_' + document.querySelector('#year').value
+            //read GUI selection
+            const layCode = document.querySelector('input[name="layer"]:checked').value
+            const year = "ind" + document.querySelector('#year').value
+            const geo = document.querySelector('#geo').value
 
-            //get style selection
-            const style = document.querySelector('input[name="style"]:checked').value
 
             //remove layers
             app.layers = []
@@ -145,33 +148,26 @@
                 +c[year]
                     ? '<b>' +
                     c[year] +
-                    '</b> inhabitant' +
+                    '</b> individu' +
                     (+c[year] == 1 ? '' : 's') +
-                    ' per ' +
+                    ' par ' +
                     (r * r) / 1000000 +
                     'km²'
                     : undefined
             const tooltipFunCh = (c) =>
-                '2011: ' +
-                c.Ind_2015 +
-                '<br>2018: ' +
-                c.Ind_2017 +
-                '<br>' +
-                '<b>' +
-                (c.d2015_2017 == 0
-                    ? 'No change'
-                    : (c.d2015_2017 > 0 ? '+' : '') + c.d2015_2017 + ' inhabitants') +
-                '</b>'
+                '2015: ' +
+                c.ind2015 +
+                '<br>2017: ' +
+                c.ind2017 +
+                '<br>2019: ' +
+                c.ind2019
 
-            //set default background filter color
-            app.bgLayers[0].filterColor = (zf) => '#ffffffc0'
-
-            if (style == 'color') {
+            if (layCode == 'color') {
                 const colR = d3.interpolateOrRd
 
                 //add layer
                 app.addLayerFromDataset(
-                    popDataset,
+                    popDataset[geo],
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: year,
@@ -200,7 +196,7 @@
                         fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
                     })
                 )
-            } else if (style == 'colorDark') {
+            } else if (layCode == 'colorDark') {
                 const colR = d3.interpolateMagma
 
                 //set dark background filter color
@@ -208,7 +204,7 @@
 
                 //add layer
                 app.addLayerFromDataset(
-                    popDataset,
+                    popDataset[geo],
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: year,
@@ -237,10 +233,10 @@
                         fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
                     })
                 )
-            } else if (style == 'size') {
+            } else if (layCode == 'size') {
                 //add layer
                 app.addLayerFromDataset(
-                    popDataset,
+                    popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
                             color: () => col + 'bb',
@@ -278,10 +274,10 @@
                         fillColor: col,
                     }).style('padding', '0px 5px')
                 )
-            } else if (style == 'dots') {
+            } else if (layCode == 'dots') {
                 //add layer
                 app.addLayerFromDataset(
-                    popDataset,
+                    popDataset[geo],
                     [
                         new gviz.DotDensityStyle({
                             nbCol: year,
@@ -295,10 +291,10 @@
                         cellInfoHTML: tooltipFun,
                     }
                 )
-            } else if (style == 'pillar') {
+            } else if (layCode == 'pillar') {
                 //add layer
                 app.addLayerFromDataset(
-                    popDataset,
+                    popDataset[geo],
                     [
                         new gviz.PillarStyle({
                             heightCol: year,
@@ -314,10 +310,10 @@
                         cellInfoHTML: tooltipFun,
                     }
                 )
-            } else if (style == 'joyplot') {
+            } else if (layCode == 'joyplot') {
                 //add layer
                 app.addLayerFromDataset(
-                    popDataset,
+                    popDataset[geo],
                     [
                         new gviz.JoyPlotStyle({
                             heightCol: year,
@@ -330,7 +326,7 @@
                         cellInfoHTML: tooltipFun,
                     }
                 )
-            } else if (style == 'smoothed') {
+            } else if (layCode == 'smoothed') {
                 //get year selection
                 const sigma = document.querySelector('#sigmaTK').value
 
@@ -339,7 +335,7 @@
 
                 //add layer
                 app.addLayerFromDataset(
-                    popDataset,
+                    popDataset[geo],
                     [
                         new gviz_sm.KernelSmoothingStyle({
                             value: (c) => +c[year],
@@ -389,7 +385,7 @@
                         fun: (t, r, s) => (t == 0 ? 'Low' : t == 1 ? 'High' : 'X'),
                     })
                 )
-            } else if (style == 'lego') {
+            } else if (layCode == 'lego') {
                 //const colR = d3.interpolateCubehelixDefault //interpolateOrRd
                 //const nb = 12
                 //const sigmaFun = (r, zf) => r * 0.5
@@ -399,7 +395,7 @@
 
                 //add layer
                 app.addLayerFromDataset(
-                    popDataset,
+                    popDataset[geo],
                     gviz.LegoStyle.get(year, {
                         tFun: (v, r, s, zf) =>
                             v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
@@ -453,11 +449,11 @@
                             fun: (t, r, s) => (t == 0 ? 'Low' : t == 1 ? 'High' : 'X'),
                         })
                     )
-            } else if (style == 'colorCh') {
+            } else if (layCode == 'colorCh') {
                 const streC = 0.22
 
                 app.addLayerFromDataset(
-                    popDataset,
+                    popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
                             colorCol: 'd2015_2017',
@@ -498,7 +494,7 @@
                         },
                     })
                 )
-            } else if (style == 'colorChSmTK') {
+            } else if (layCode == 'colorChSmTK') {
                 const colR = d3.interpolateSpectral
                 const nb = 25
                 const stre = gviz.sPow
@@ -509,7 +505,7 @@
 
                 //add layer
                 app.addLayerFromDataset(
-                    popDataset,
+                    popDataset[geo],
                     [
                         new gviz_sm.KernelSmoothingStyle({
                             value: (c) => +c.d2015_2017,
@@ -570,9 +566,9 @@
                         fun: (t, r, s) => (t == 0 ? 'Decrease' : t == 1 ? 'Increase' : 'Stable'),
                     })
                 )
-            } else if (style == 'sizeCh') {
+            } else if (layCode == 'sizeCh') {
                 app.addLayerFromDataset(
-                    popDataset,
+                    popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
                             colorCol: 'd2015_2017',
@@ -625,11 +621,11 @@
                     ],
                 })
                 app.layers[0].styles[0].legends.push(lgCat)
-            } else if (style == 'segmentCh') {
+            } else if (layCode == 'segmentCh') {
                 const maxAngle = 60
 
                 app.addLayerFromDataset(
-                    popDataset,
+                    popDataset[geo],
                     [
                         new gviz.SegmentStyle({
                             orientation: (c) => {
