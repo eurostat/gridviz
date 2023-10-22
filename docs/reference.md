@@ -166,6 +166,8 @@ A [Gridviz](https://github.com/eurostat/gridviz/) map is organised as a stack of
 - Most style parameters are not static values, but *functions* of various parameters, including the map zoom factor, usually noted **zf** (for "zoom factor") which represent the size of a pixel screen in ground meter. Style parameters can thus be defined depending on the zoom level so that they adapt to the visualisation scale.
 - Transparency can be defined at layer or style level with their **alpha** and **blendOperation** properties (see CanvasRenderingContext2D [globalAlpha](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha) and [globalCompositeOperation](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation) properties). These values are also not static, but functions of the zoom factor **zf**. It is thus possible to define the transparency depending on the zoom level,so that a layer or a style fades away when zooming in or out.
 
+For further information, see the [examples](../examples/).
+
 ## Adding data
 
 Input data are tabular data, in CSV format.
