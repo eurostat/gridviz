@@ -539,7 +539,7 @@ See [this example with random colors](https://eurostat.github.io/gridviz/example
 [![pillars style](img/styles/pillar.png)](https://eurostat.github.io/gridviz/examples/styles/pillar.html)
 [![pillars style](img/styles/pillar_simple.png)](https://eurostat.github.io/gridviz/examples/styles/pillar_simple.html)
 
-This style shows the grid cells as 3D pillars or, with changeable heigth, width and color. This is isometric 3D.
+This style shows the grid cells as 3D pillars or, with changeable heigth, width and color.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/pillar.html)).
 
