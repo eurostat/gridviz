@@ -1,13 +1,14 @@
+doc blend mode
 tootip bug: test in small map
-upgrade FR_pop
+upgrade FR_pop: publish join tiled grid
 FR DOMs: finalise
 FR: bug with 600m level
 
 style: rough.js
 style: coupe
-observable HQ test
 
 bi-symbol map
+spider net diagram style
 
 NO
 POP Pop

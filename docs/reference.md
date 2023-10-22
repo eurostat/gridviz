@@ -54,6 +54,7 @@
   - [Foreground information](#foreground-information)
     - [Showing labels](#showing-labels)
     - [Showing boundaries](#showing-boundaries)
+  - [Transparency](#transparency)
   - [Tooltip](#tooltip)
   - [Leaflet](#leaflet)
   - [Alright?](#alright)
@@ -1130,6 +1131,8 @@ The **setBoundaryLayer** method has the following parameters:
 | **lineDash**   | function(bn,zf):string | (f, zf) => undefined | A function returning the dash model of the boundary **bn** for zoom factor **zf**.                                                                                                                                                                                                  |
 
 For more information, [see the code](../src/LineLayer.js).
+
+## Transparency
 
 ## Tooltip
 
