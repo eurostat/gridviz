@@ -117,6 +117,8 @@
             else if (!y1_ && y2_) c[k] = +y2_
             else if (y1_ && !y2_) c[k] = -y1_
             else c[k] = +y2_ - +y1_
+            //rate of change
+            c["p" + y1 + "_" + y2] = y1 == 0 ? 999 : c[k] / y1
         }
 
         const getDataset = (geo) =>
@@ -132,14 +134,6 @@
                         computeChange(c, 2015, 2017)
                         computeChange(c, 2015, 2019)
                         computeChange(c, 2017, 2019)
-
-                        /*/prepare change data
-                        if (!c.Ind_2015 && !c.Ind_2017) c.d2015_2017 = 0
-                        else if (!c.Ind_2015 && c.Ind_2017) c.d2015_2017 = +c.Ind_2017
-                        else if (c.Ind_2015 && !c.Ind_2017) c.d2015_2017 = -c.Ind_2015
-                        else c.d2015_2017 = c.Ind_2017 - c.Ind_2015
-                        //ratio
-                        c.p2011_2018 = c.Ind_2015 == 0 ? 999 : c.d2015_2017 / c.Ind_2015*/
                     },
                 }
             )
@@ -592,24 +586,29 @@
                 app.layers[0].styles[0].legends.push(lgCat)
             } else if (layCode == 'segmentCh') {
                 const maxAngle = 60
+                const per = chYears.replace("d", "p")
+                const sizeYear = chYears.split("_")[1]
+
+
 
                 app.addLayerFromDataset(
                     popDataset[geo],
                     [
                         new gviz.SegmentStyle({
                             orientation: (c) => {
-                                let a = (c.p2011_2018 * maxAngle) / 0.3
+                                let a = (c[per] * maxAngle) / 0.3
                                 a = a < -maxAngle ? -maxAngle : a > maxAngle ? maxAngle : a
                                 return a
                             },
-                            colorCol: 'p2011_2018',
+                            colorCol: per,
                             color: (v) =>
-                                Math.abs(v) < 0.02 ? 'gray' : v > 0 ? '#d13c4bcc' : '#4288b5cc',
+                                Math.abs(v) < 0.02 ? 'gray' : v > 0 ? '#d13c4b' : '#4288b5',
                             length: (v, r) => r,
                             //lengthCol: "Ind_2015",
                             //length: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25),
-                            widthCol: 'Ind_2017',
+                            widthCol: "ind" + sizeYear,
                             width: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.25),
+                            blendOperation: () => "multiply"
                         }),
                     ],
                     {
