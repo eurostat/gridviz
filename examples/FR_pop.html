@@ -265,14 +265,15 @@
                     popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
-                            color: () => col + 'bb',
+                            color: () => col, // + 'bb',
                             sizeCol: year,
                             size: (v, r, s, zf) => 1.5 * r * gviz.sPow(v / s.max, 0.3),
                             shape: () => 'circle',
+                            blendOperation: () => "multiply"
                         }),
                     ],
                     {
-                        pixNb: 7,
+                        pixNb: 5,
                         cellInfoHTML: tooltipFun,
                     }
                 )
@@ -390,7 +391,7 @@
                             }),*/
                             //set alpha and blend operation
                             //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
-                            blendOperation: (zf) => zf < 1e10 ? "multiply" : "source-over"
+                            blendOperation: (zf) => "multiply"
                         }),
                     ],
                     {
@@ -434,6 +435,7 @@
                                 return d3.interpolateSpectral(t)
                             },
                             shape: () => 'square',
+                            blendOperation: (zf) => zf < 25 ? "multiply" : "source-over"
                         }),
                         new gviz.StrokeStyle({ maxZoom: 15 }),
                     ],
@@ -512,6 +514,7 @@
                             nb: nb,
                             //newShading: true,
                         }),*/
+                            blendOperation: () => "multiply"
                         }),
                     ],
                     {
@@ -537,17 +540,18 @@
                     [
                         new gviz.ShapeColorSizeStyle({
                             colorCol: chYears,
-                            color: (v) => (v > 0 ? '#d13c4bcc' : '#4288b5cc'),
+                            color: (v) => (v > 0 ? '#d13c4b' : '#4288b5'),
                             sizeCol: chYears,
                             size: (v, r, s, zf) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                                 return 1.5 * r * gviz.sPow(Math.abs(v) / max, 0.2)
                             },
                             shape: () => 'circle',
+                            blendOperation: () => "multiply"
                         }),
                     ],
                     {
-                        pixNb: 7,
+                        pixNb: 6,
                         cellInfoHTML: tooltipFunCh,
                     }
                 )
