@@ -333,7 +333,7 @@
                 //get year selection
                 const sigma = document.querySelector('#sigmaTK').value
 
-                const nb = 10
+                const nb = 8
                 const colR = d3.interpolateOrRd
 
                 //add layer
@@ -350,9 +350,8 @@
                                 new gviz.SquareColorWGLStyle({
                                     colorCol: 'ksmval',
                                     color: colR,
-                                    //opacity: (r,zf) => zf < 300? 0.75 : 1,
                                     tFun: (v, r, s) => {
-                                        const v_ = gviz.sExp(v / s.max, -12)
+                                        const v_ = gviz.sExpRev(v / s.max, -7)
                                         const cl = Math.floor(nb * v_) / nb
                                         return cl
                                     },
@@ -366,6 +365,9 @@
                                 //newShading: true,
                                 filter: c => +c.ksmval > 0,
                             }),*/
+                            //set alpha and blend operation
+                            //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
+                            blendOperation: (zf) => zf < 1e10 ? "multiply" : "source-over"
                         }),
                     ],
                     {
