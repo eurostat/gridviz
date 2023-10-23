@@ -1,5 +1,6 @@
 FR: bug with 600m level
 upgrade FR_pop
+stretching - check rev/pow correspondence. add new one for diverging, see d3.scale
 
 tootip bug: test in small map
 FR DOMs: finalise
