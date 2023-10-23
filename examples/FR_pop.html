@@ -213,7 +213,7 @@
                 //add legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
-                        title: 'Number of inhabitants',
+                        title: "Nombre d'habitants",
                         width: 400,
                         ticks: 5,
                         colorRamp: colR,
@@ -252,7 +252,7 @@
                 //add legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
-                        title: 'Number of inhabitants',
+                        title: "Nombre d'habitants",
                         width: 400,
                         ticks: 5,
                         colorRamp: colR,
@@ -281,7 +281,7 @@
                 //add legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
-                        title: 'Number of inhabitants',
+                        title: "Nombre d'habitants",
                         exaggerationFactor: 0.8,
                         shape: 'circle',
                         fillColor: col,
@@ -403,7 +403,7 @@
                 //legend
                 app.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorLegend({
-                        title: 'Number of inhabitants',
+                        title: "Nombre d'habitants",
                         colorRamp: (t) => colR(Math.floor(t * nb) / nb),
                         //width: 500,
                         //ticks: 6,
@@ -448,7 +448,7 @@
                 //legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
-                        title: 'Population change (number of inhabitants)',
+                        title: "Changement de population (nb d'hab.)",
                         ticks: 7,
                         width: 500,
                         colorRamp: d3.interpolateSpectral,
@@ -562,7 +562,7 @@
                         title: 'Population change',
                         exaggerationFactor: 0.9,
                         shape: 'circle',
-                        labelUnitText: 'inhabitants',
+                        labelUnitText: 'individus',
                         fillColor: 'gray',
                     }).style('padding', '0px 5px')
                 )
@@ -623,7 +623,7 @@
                 app.layers[0].styles[0].legends.push(
                     new gviz.SegmentWidthLegend({
                         title: 'Population in 2018',
-                        labelUnitText: 'inhab.',
+                        labelUnitText: 'hab.',
                     })
                 )
 
