@@ -97,7 +97,7 @@
         let containerDiv = document.getElementById('viz-container')
 
         const app = new gviz.App(containerDiv)
-            .setZoomFactorExtent([10, 1500])
+            .setZoomFactorExtent([3, 1500])
             .setViewFromURL()
 
         //load datasets, one per geo region
@@ -173,6 +173,7 @@
                             colorCol: year,
                             color: colR,
                             stretching: { fun: 'expRev', alpha: -7 },
+                            blendOperation: (zf) => zf < 25 ? "multiply" : "source-over"
                         }),
                         new gviz.StrokeStyle({
                             strokeColorCol: year,
@@ -211,6 +212,7 @@
                             colorCol: year,
                             color: colR,
                             stretching: { fun: 'expRev', alpha: -7 },
+                            //blendOperation: (zf) => zf < 25 ? "multiply" : "source-over"
                         }),
                         new gviz.StrokeStyle({
                             strokeColorCol: year,

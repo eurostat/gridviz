@@ -238,7 +238,7 @@
                             colorCol: layCode_,
                             color: d3.interpolateOrRd,
                             stretching: { fun: 'expRev', alpha: -7 },
-                            blendOperation: (zf) => zf < 50 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                         }),
                         new gviz.StrokeStyle({
                             strokeColorCol: layCode_,
@@ -281,7 +281,7 @@
                                     return d3.interpolateSpectral(1 - t)
                                 },
                                 shape: () => 'square',
-                                blendOperation: (zf) => zf < 50 ? "multiply" : "normal"
+                                blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                             }),
                             new gviz.StrokeStyle({ maxZoom: 80 }),
                         ],
@@ -474,7 +474,7 @@
                             color: d3.interpolateGnBu,
                             tFun: (v, r, s) => Math.min(v, 100) / 100,
                             stretching: { fun: 'expRev', alpha: 2 },
-                            blendOperation: (zf) => zf < 50 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                         }),
                         new gviz.StrokeStyle({
                             strokeColorCol: 'rp',
@@ -532,7 +532,7 @@
                     sizeCol: 'TOT_P',
                     size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
                     shape: () => 'circle',
-                    blendOperation: (zf) => zf < 50 ? "multiply" : "normal"
+                    blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                 })
                 //set legend
                 popStyle.legends.push(
@@ -549,7 +549,7 @@
                         new gviz.SquareColorCatWGLStyle({
                             colorCol: 'cH',
                             color: colorsH,
-                            blendOperation: (zf) => zf < 50 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                         }),
                         strokeStyle,
                     ],
@@ -610,7 +610,7 @@
                     sizeCol: 'TOT_P',
                     size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
                     shape: () => 'circle',
-                    blendOperation: (zf) => zf < 50 ? "multiply" : "normal"
+                    blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                 })
                 //set legend
                 popStyle.legends.push(
@@ -627,7 +627,7 @@
                         new gviz.SquareColorCatWGLStyle({
                             colorCol: 'cE',
                             color: colorsE,
-                            blendOperation: (zf) => zf < 50 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                         }),
                         strokeStyle,
                     ],

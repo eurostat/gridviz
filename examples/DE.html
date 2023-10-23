@@ -233,7 +233,7 @@
                             stretching: { fun: 'expRev', alpha: -7 },
                             //set alpha and blend operation
                             //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
-                            blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                         new gviz.StrokeStyle({ maxZoom: 7 }),
                     ],
@@ -276,7 +276,7 @@
                                     },
                                     //set alpha and blend operation
                                     //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
-                                    blendOperation: (zf) => zf < 50 ? "multiply" : "normal"
+                                    blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                                 })
                             ]
                         }),
@@ -319,7 +319,7 @@
                             shape: () => 'circle',
                             sizeCol: 'TOT',
                             size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.2),
-                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -384,7 +384,7 @@
                             size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
                             stripesOrientation: () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
-                            blendOperation: (zf) => zf < 6 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 6 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -448,7 +448,7 @@
                             size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25, 0),
                             stripesOrientation: () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
-                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -503,7 +503,7 @@
                             colorCol: 'age_ratio',
                             color: (v, r, s) => d3.interpolateSpectral(1 - v),
                             shape: () => 'circle',
-                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -564,7 +564,7 @@
                             size: sized ? (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                             stripesOrientation: sized ? undefined : () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
-                            blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "normal"
+                            blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -632,7 +632,7 @@
                             size: sized ? (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                             stripesOrientation: sized ? undefined : () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
-                            blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "normal"
+                            blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -700,7 +700,7 @@
                             size: sized ? (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
                             stripesOrientation: () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
-                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -759,7 +759,7 @@
                             sizeCol: 'TOT',
                             size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
                             stripesOrientation: () => 90,
-                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -843,7 +843,7 @@
                             sizeCol: 'TOT',
                             size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
                             stripesOrientation: () => 90,
-                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -898,7 +898,7 @@
                             size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0),
                             //stripesOrientation: () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
-                            blendOperation: (zf) => zf < 4 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
                         }),
                     ],
                     {

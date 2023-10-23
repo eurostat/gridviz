@@ -208,7 +208,7 @@
                             colorCol: 'ind',
                             color: d3.interpolateYlOrRd,
                             stretching: { fun: 'expRev', alpha: -7 },
-                            blendOperation: (zf) => zf < 20 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 20 ? "multiply" : "source-over"
                         }),
                         new gviz.StrokeStyle({ maxZoom: 15 }),
                         new gviz.ShapeColorSizeStyle({
@@ -388,7 +388,7 @@
                             colorCol: 'age_ratio',
                             color: (v, r, s) => d3.interpolateSpectral(1 - v),
                             shape: () => 'circle',
-                            blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -435,7 +435,7 @@
                                 //t = t > 1 ? 1 : t < 0 ? 0 : t
                                 return 1 - Math.pow(t < 0 ? 0 : t, 1.5)
                             },
-                            blendOperation: (zf) => zf < 20 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 20 ? "multiply" : "source-over"
                         }),
                         new gviz.StrokeStyle({ maxZoom: 15 }),
                     ],
@@ -467,7 +467,7 @@
                                 return d3.interpolateYlOrRd(gviz.sPow(v, 0.65))
                             },
                             shape: () => 'circle',
-                            blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -510,7 +510,7 @@
                             stripesOrientation: () => 90,
                             sizeCol: "men",
                             size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.15, 0),
-                            //blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
+                            //blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -557,7 +557,7 @@
                             color: (v, r, s) =>
                                 v == 0 ? '#ccc' : d3.interpolateYlOrRd(gviz.sPow(v, 0.4)),
                             shape: () => 'circle',
-                            blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -598,7 +598,7 @@
                             colorCol: 'rMen_prop',
                             color: (v) => d3.interpolatePuBuGn(1 - gviz.sPow(1 - v, 0.6)),
                             shape: () => 'circle',
-                            blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -637,7 +637,7 @@
                             colorCol: 'rMenSurf',
                             color: d3.interpolateSpectral,
                             tFun: (v, r, s) => 1 - (v - s.min) / (s.max - s.min),
-                            blendOperation: (zf) => zf < 20 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 20 ? "multiply" : "source-over"
                         }),
                         new gviz.StrokeStyle({ maxZoom: 15 }),
                     ],
@@ -676,7 +676,7 @@
                             stripesOrientation: () => 90,
                             sizeCol: "men",
                             size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.15, 0),
-                            blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -725,7 +725,7 @@
                             //stripesOrientation: () => 90,
                             sizeCol: "log",
                             size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
-                            blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -788,7 +788,7 @@
                             type: () => 'ring',
                             sizeCol: "log",
                             size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.15, 0),
-                            blendOperation: (zf) => zf < 10 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -837,7 +837,7 @@
                             color: d3.interpolatePuBuGn,
                             tFun: (v, r, s) => (+v == 0 ? null : v),
                             //if (!v) return "#ccc"
-                            blendOperation: (zf) => zf < 20 ? "multiply" : "normal"
+                            blendOperation: (zf) => zf < 20 ? "multiply" : "source-over"
                         }),
                         new gviz.StrokeStyle({ maxZoom: 15 }),
                     ],

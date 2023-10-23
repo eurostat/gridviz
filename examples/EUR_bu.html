@@ -71,7 +71,7 @@
                             if (value == -999) return;
                             return gviz.sExp(value / stats.max, -25)
                         },*/
-                        blendOperation: (zf) => zf < 50 ? "multiply" : "normal"
+                        blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                     }),
 
                     /*new gviz.SquareColorCatWGLStyle({
