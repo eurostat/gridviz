@@ -173,7 +173,12 @@
                 y1 + ': ' +
                 c["ind" + y1] +
                 "<br>" + y2 + ": " +
-                c["ind" + y2]
+                c["ind" + y2] +
+                '<br><b>' +
+                    (c[chYears] == 0
+                        ? 'Pas de changement'
+                        : (c[chYears] > 0 ? '+' : '') + c[chYears] + ' habitants') +
+                    '</b>'
 
             //set default background filter
             for (let bgl of app.bgLayers) bgl.filterColor = (zf) => '#ffffff60'
