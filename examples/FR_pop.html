@@ -74,6 +74,9 @@
             <br />
             <input type="radio" name="layer" id="segmentCh" value="segmentCh" />
             <label for="segmentCh">Segments</label>
+            <br />
+            <input type="radio" name="layer" id="ts" value="ts" />
+            <label for="ts">Série temporelle</label>
         </div>
         <hr />
         Géo:
@@ -96,9 +99,17 @@
     <script src="../dist/gridviz.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@1.0.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-path@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-shape@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-selection@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-axis@3"></script>
     <script>
         let containerDiv = document.getElementById('viz-container')
 
@@ -663,7 +674,87 @@
                         orientation: -60,
                     })
                 )
-            }
+            } else if (layCode == 'ts') {
+                //define time series list of years
+                const ts = ["ind2015", "ind2017", "ind2019"]
+
+                //add layer
+                app.addLayerFromDataset(
+                    popDataset[geo],
+                    [
+                        new gviz.TimeSeriesStyle({
+                            ts: ts,
+                            color: () => "black",
+                            lineWidthCol: "ind2019",
+                            lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.4) * 4) * z },
+                            //offsetX: (c, r, z) => r / 2,
+                            //offsetY: (c, r, z) => r / 2,
+                            //width: (c, r, z) => 1.5*r,
+                            //height: (c, r, z) => 2*r,
+                            //anchorModeY: (c, r, z) => "first"
+                        })],
+                    {
+                        pixNb: 10,
+                        cellInfoHTML: (c) => {
+
+                            //prepare chart data
+                            const tsdata = []
+                            for (let d of ts)
+                                tsdata.push({ year: +d.replace("ind", ""), pop: +c[d] })
+
+                            const maxPop = d3.max(tsdata, d => d.pop)
+
+                            const w = 300;
+                            const h = 250;
+                            const marginTop = 5;
+                            const marginRight = 2;
+                            const marginBottom = 20;
+                            const marginLeft = 10 + 8 * (maxPop + "").length;
+
+                            //x scale
+                            const x = d3.scaleLinear(d3.extent(tsdata, d => d.year), [marginLeft, w - marginRight]);
+
+                            //y scale
+                            const y = d3.scaleLinear([0, maxPop], [h - marginBottom, marginTop]);
+
+                            //make div and svg
+                            const div = d3.create("div")
+                            const svg = div.append("svg")
+                                .attr("width", w)
+                                .attr("height", h)
+                                .attr("viewBox", [0, 0, w, h])
+                                .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+
+                            //x-axis.
+                            svg.append("g")
+                                .attr("transform", `translate(0,${h - marginBottom})`)
+                                .call(d3.axisBottom(x)
+                                    .ticks(w / 80)
+                                    .tickSizeOuter(0)
+                                    .tickFormat(d => "" + d)
+                                );
+
+                            //y-axis
+                            svg.append("g")
+                                .attr("transform", `translate(${marginLeft},0)`)
+                                .call(d3.axisLeft(y)
+                                    .ticks(h / 40))
+
+                            //draw line
+                            const line = d3.line()
+                                .x(d => x(d.year))
+                                .y(d => y(d.pop));
+                            svg.append("path")
+                                .attr("stroke-width", 2)
+                                .attr("stroke", "black")
+                                .attr("fill", "none")
+                                .attr("d", line(tsdata));
+
+                            return (div.html())
+                        }
+                    }
+                )
+            } else console.error('Unexpected layer code: ' + layCode)
 
             //redraw
             app.cg.redraw()

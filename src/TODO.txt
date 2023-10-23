@@ -1,6 +1,5 @@
-time series style
+FR_pop: time series style
 FR DOMs: finalise
-upgrade FR_pop
 
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale
 FR: bug with 600m level
