@@ -56,6 +56,12 @@
             <br />
             <span style="font-size: 1.3em; font-weight: bold">Changement</span>
             <br />
+            <select id="chYears">
+                <option value="d2017_2019" selected>De 2017 à 2019</option>
+                <option value="d2015_2017">De 2015 à 2017</option>
+                <option value="d2015_2019">De 2015 à 2019</option>
+            </select>
+            <br />
             <input type="radio" name="layer" id="colorCh" value="colorCh" />
             <label for="colorCh">Couleur</label>
             <br />
@@ -100,8 +106,19 @@
             .setZoomFactorExtent([3, 1500])
             .setViewFromURL()
 
-        //load datasets, one per geo region
+        //population datasets, indexed by geo region
         const popDataset = {}
+
+        //prepare function for population difference computation
+        const computeChange = (c, y1, y2) => {
+            const y1_ = c["ind" + y1], y2_ = c["ind" + y2]
+            const k = "d" + y1 + "_" + y2
+            if (!y1_ && !y2_) c[k] = 0
+            else if (!y1_ && y2_) c[k] = +y2_
+            else if (y1_ && !y2_) c[k] = -y1_
+            else c[k] = +y2_ - +y1_
+        }
+
         const getDataset = (geo) =>
             app.makeMultiScaleTiledGridDataset(
                 [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
@@ -111,6 +128,11 @@
                     "m/",
                 {
                     preprocess: (c) => {
+                        //compute change figures
+                        computeChange(c, 2015, 2017)
+                        computeChange(c, 2015, 2019)
+                        computeChange(c, 2017, 2019)
+
                         /*/prepare change data
                         if (!c.Ind_2015 && !c.Ind_2017) c.d2015_2017 = 0
                         else if (!c.Ind_2015 && c.Ind_2017) c.d2015_2017 = +c.Ind_2017
@@ -133,6 +155,7 @@
             //read GUI selection
             const layCode = document.querySelector('input[name="layer"]:checked').value
             const year = "ind" + document.querySelector('#year').value
+            const chYears = document.querySelector('#chYears').value
             const geo = document.querySelector('#geo').value
 
             //remove layers
@@ -390,70 +413,7 @@
                         fun: (t, r, s) => (t == 0 ? 'Low' : t == 1 ? 'High' : 'X'),
                     })
                 )
-            } else if (layCode == 'lego') {
-                //const colR = d3.interpolateCubehelixDefault //interpolateOrRd
-                //const nb = 12
-                //const sigmaFun = (r, zf) => r * 0.5
 
-                //const cols = []
-                //for (let t = 0; t < 1; t += 1 / nb) cols.push(colR(t))
-
-                //add layer
-                app.addLayerFromDataset(
-                    popDataset[geo],
-                    gviz.LegoStyle.get(year, {
-                        tFun: (v, r, s, zf) =>
-                            v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
-                        //colors: d3.schemeRdYlGn[10].reverse()
-                    }),
-
-                        /*[
-            new gviz_sm.KernelSmoothingStyle({
-                value: c => +c[year],
-                filter: c => +c[year] > 0,
-                factor: 10,
-                threshold: 0.1,
-                sigma: sigmaFun,
-                styles:
-                gviz.LegoStyle.get(year, {
-                    filter: c => +c[year] > 0,
-                    tFun: (v, r, s, zf) => v == 0 ? 0 : gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
-                    //colors: cols
-                })
-            })
-        ]*/ {
-                        pixNb: 7,
-                        cellInfoHTML: tooltipFun,
-                    }
-                )
-
-                //legend
-                //const colsLego = ["#00852b", "#afd246", "#fac80a", "#bb805a", "#d67923", "#cb4e29", "#b40000", "#720012"]
-                const colsLego = [
-                    '#237841',
-                    '#4B9F4A',
-                    '#3CB371',
-                    '#C7D23C',
-                    '#F2CD37',
-                    '#F8BB3D',
-                    '#FFA70B',
-                    '#D09168',
-                    '#B67B50',
-                    '#7C503A',
-                    '#582A12',
-                ],
-                    nb = colsLego.length
-                app.layers[0].styles[0] /*.styles[0]*/.legends
-                    .push(
-                        new gviz.ColorLegend({
-                            title: 'Number of inhabitants',
-                            colorRamp: (t) => colsLego[t == 1 ? nb - 1 : Math.floor(t * nb)],
-                            width: 200,
-                            ticks: 2,
-                            tickFormat: 'text',
-                            fun: (t, r, s) => (t == 0 ? 'Low' : t == 1 ? 'High' : 'X'),
-                        })
-                    )
             } else if (layCode == 'colorCh') {
                 const streC = 0.22
 
@@ -461,7 +421,7 @@
                     popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
-                            colorCol: 'd2015_2017',
+                            colorCol: chYears,
                             color: (v, r, s) => {
                                 const stre = gviz.sPow
                                 let t = 0.5
@@ -513,7 +473,7 @@
                     popDataset[geo],
                     [
                         new gviz_sm.KernelSmoothingStyle({
-                            value: (c) => +c.d2015_2017,
+                            value: (c) => +c[chYears],
                             sigma: (r, zf) => (r * sigma) / 10,
                             factor: 2,
                             filterSm: (v) => Math.abs(v) > 0.0001,
@@ -576,9 +536,9 @@
                     popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
-                            colorCol: 'd2015_2017',
+                            colorCol: chYears,
                             color: (v) => (v > 0 ? '#d13c4bcc' : '#4288b5cc'),
-                            sizeCol: 'd2015_2017',
+                            sizeCol: chYears,
                             size: (v, r, s, zf) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
                                 return 1.5 * r * gviz.sPow(Math.abs(v) / max, 0.2)
