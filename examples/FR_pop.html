@@ -170,12 +170,10 @@
 
             //tooltip function: for population change
             const tooltipFunCh = (c) =>
-                '2015: ' +
-                c.ind2015 +
-                '<br>2017: ' +
-                c.ind2017 +
-                '<br>2019: ' +
-                c.ind2019
+                y1 + ': ' +
+                c["ind" + y1] +
+                "<br>" + y2 + ": " +
+                c["ind" + y2]
 
             //set default background filter
             for (let bgl of app.bgLayers) bgl.filterColor = (zf) => '#ffffff60'
