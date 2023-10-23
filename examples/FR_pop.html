@@ -54,10 +54,6 @@
             <label for="smoothed">Lissage </label><input type="range" min="3" max="20" value="10" class="slider"
                 id="sigmaTK" style="width: 100px" />
             <br />
-            <input type="radio" name="layer" id="lego" value="lego" />
-            <label for="lego">Lego</label>
-
-            <br />
             <span style="font-size: 1.3em; font-weight: bold">Changement</span>
             <br />
             <input type="radio" name="layer" id="colorCh" value="colorCh" />
@@ -108,7 +104,7 @@
         const popDataset = {}
         const getDataset = (geo) =>
             app.makeMultiScaleTiledGridDataset(
-                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000],
+                [200, 400, 1000, 2000, 5000, 10000, 20000, 50000],
                 (r) =>
                     "https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/" + geo + "/ts_ind/" +
                     r +
@@ -139,7 +135,6 @@
             const year = "ind" + document.querySelector('#year').value
             const geo = document.querySelector('#geo').value
 
-
             //remove layers
             app.layers = []
 
@@ -154,6 +149,7 @@
                     (r * r) / 1000000 +
                     'km²'
                     : undefined
+
             const tooltipFunCh = (c) =>
                 '2015: ' +
                 c.ind2015 +
@@ -161,6 +157,10 @@
                 c.ind2017 +
                 '<br>2019: ' +
                 c.ind2019
+
+            //set default background filter
+            for (let bgl of app.bgLayers) bgl.filterColor = (zf) => '#ffffff60'
+            app.setBackgroundColor("white")
 
             if (layCode == 'color') {
                 const colR = d3.interpolateOrRd
@@ -200,7 +200,8 @@
                 const colR = d3.interpolateMagma
 
                 //set dark background filter color
-                app.bgLayers[0].filterColor = (zf) => '#000000c0'
+                for (let bgl of app.bgLayers) bgl.filterColor = (zf) => '#000000c0'
+                app.setBackgroundColor("black")
 
                 //add layer
                 app.addLayerFromDataset(

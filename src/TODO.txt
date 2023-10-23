@@ -1,12 +1,12 @@
-FR: bug with 600m level
 upgrade FR_pop
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale
+FR: bug with 600m level
 
 tootip bug: test in small map
 FR DOMs: finalise
 FR: income map
 
-style: rough.js
+style: rough.js - test on observable with this.cg.pixToGeoX ?
 style: coupe
 style: bi-symbol map
 style: spider net diagram

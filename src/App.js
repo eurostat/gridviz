@@ -354,13 +354,14 @@ export class App {
             const layer = this.layers[i]
             if (!layer.visible) continue
             if (!layer.cellInfoHTML) continue
-            if (layer.cellInfoHTML === 'none') continue
+            //if (layer.cellInfoHTML === 'none') continue
             const dsc = layer.getDatasetComponent(zf)
             if (!dsc) continue
 
             //get cell at mouse position
             /** @type {import('./Dataset').Cell|undefined} */
             const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache())
+            //console.log(cell, dsc.resolution)
             if (!cell) return undefined
             const html = layer.cellInfoHTML(cell, dsc.getResolution())
             if (!html) return undefined
