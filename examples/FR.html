@@ -941,11 +941,14 @@
         })
 
         //select layer from URL
-        const ls = gviz.getParameterByName('lay')
+        let ls = gviz.getParameterByName('lay')
         if (ls) {
             const b = document.querySelector('#' + ls)
             if (b) b.checked = true
         }
+        //select geo from URL
+        ls = gviz.getParameterByName('geo')
+        if (ls) document.querySelector('#geo').value = ls
 
         //initialise
         updateGeo()

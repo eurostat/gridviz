@@ -94,7 +94,7 @@
     </div>
 
     <script src="../dist/gridviz.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@1.0.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
@@ -750,11 +750,14 @@
         })
 
         //select layer from URL
-        const ls = gviz.getParameterByName('lay')
+        let ls = gviz.getParameterByName('lay')
         if (ls) {
             const b = document.querySelector('#' + ls)
             if (b) b.checked = true
         }
+        //select geo from URL
+        ls = gviz.getParameterByName('geo')
+        if (ls) document.querySelector('#geo').value = ls
 
         //initialise
         updateGeo()
