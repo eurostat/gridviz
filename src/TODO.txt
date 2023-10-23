@@ -1,13 +1,14 @@
+FR: bug with 600m level
 upgrade FR_pop
+
 tootip bug: test in small map
 FR DOMs: finalise
-FR: bug with 600m level
+FR: income map
 
 style: rough.js
 style: coupe
-
-bi-symbol map
-spider net diagram style
+style: bi-symbol map
+style: spider net diagram
 
 NO
 POP Pop
