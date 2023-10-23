@@ -442,7 +442,7 @@
                 //legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
-                        title: "Changement de population (nb d'hab.)",
+                        title: "Changement de population (nombre d'habitants)",
                         ticks: 7,
                         width: 500,
                         colorRamp: d3.interpolateSpectral,
@@ -589,8 +589,6 @@
                 const per = chYears.replace("d", "p")
                 const sizeYear = chYears.split("_")[1]
 
-
-
                 app.addLayerFromDataset(
                     popDataset[geo],
                     [
@@ -621,43 +619,43 @@
 
                 app.layers[0].styles[0].legends.push(
                     new gviz.SegmentWidthLegend({
-                        title: 'Population in 2018',
+                        title: 'Population en ' + sizeYear,
                         labelUnitText: 'hab.',
                     })
                 )
 
                 app.layers[0].styles[0].legends.push(
                     new gviz.SegmentOrientationLegend({
-                        title: 'Population change',
-                        labelUnitText: 'Strong increase',
+                        title: 'Changement de population',
+                        labelUnitText: 'Forte hausse',
                         color: '#d13c4b',
                         orientation: 60,
                     })
                 )
                 app.layers[0].styles[0].legends.push(
                     new gviz.SegmentOrientationLegend({
-                        labelUnitText: 'Weak increase',
+                        labelUnitText: 'Faible hausse',
                         color: '#d13c4b',
                         orientation: 30,
                     })
                 )
                 app.layers[0].styles[0].legends.push(
                     new gviz.SegmentOrientationLegend({
-                        labelUnitText: 'Stability (<1%)',
+                        labelUnitText: 'Stabilité (<1%)',
                         color: 'gray',
                         orientation: 0,
                     })
                 )
                 app.layers[0].styles[0].legends.push(
                     new gviz.SegmentOrientationLegend({
-                        labelUnitText: 'Weak decrease',
+                        labelUnitText: 'Faible baisse',
                         color: '#4288b5',
                         orientation: -30,
                     })
                 )
                 app.layers[0].styles[0].legends.push(
                     new gviz.SegmentOrientationLegend({
-                        labelUnitText: 'Strong decrease',
+                        labelUnitText: 'Forte baisse',
                         color: '#4288b5',
                         orientation: -60,
                     })
