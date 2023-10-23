@@ -588,6 +588,7 @@
                 app.layers[0].styles[0].legends.push(lgCat)
             } else if (layCode == 'segmentCh') {
                 const maxAngle = 60
+                const per = "p" + y1 + "_" + y2
 
                 app.addLayerFromDataset(
                     popDataset[geo],
@@ -598,7 +599,7 @@
                                 a = a < -maxAngle ? -maxAngle : a > maxAngle ? maxAngle : a
                                 return a
                             },
-                            colorCol: "p" + y1 + "_" + y2,
+                            colorCol: per,
                             color: (v) =>
                                 Math.abs(v) < 0.02 ? 'gray' : v > 0 ? '#d13c4b' : '#4288b5',
                             length: (v, r) => r,
@@ -619,7 +620,7 @@
 
                 app.layers[0].styles[0].legends.push(
                     new gviz.SegmentWidthLegend({
-                        title: 'Population en ' + sizeYear,
+                        title: 'Population en ' + y2,
                         labelUnitText: 'hab.',
                     })
                 )
