@@ -1,4 +1,3 @@
-FR_pop: time series style
 FR DOMs: finalise
 
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale
