@@ -604,10 +604,8 @@
                             },
                             colorCol: per,
                             color: (v) =>
-                                Math.abs(v) < 0.02 ? 'gray' : v > 0 ? '#d13c4b' : '#4288b5',
+                                Math.abs(v) < 0.01 ? 'gray' : v > 0 ? '#d13c4b' : '#4288b5',
                             length: (v, r) => r,
-                            //lengthCol: "Ind_2015",
-                            //length: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25),
                             widthCol: "ind" + y2,
                             width: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.25),
                             blendOperation: () => "multiply"
