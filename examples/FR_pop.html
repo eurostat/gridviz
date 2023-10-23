@@ -118,7 +118,7 @@
             else if (y1_ && !y2_) c[k] = -y1_
             else c[k] = +y2_ - +y1_
             //rate of change
-            c["p" + y1 + "_" + y2] = y1 == 0 ? 999 : c[k] / y1
+            c["p" + y1 + "_" + y2] = y1_ == 0 ? 999 : c[k] / y1_
         }
 
         const getDataset = (geo) =>
@@ -179,6 +179,7 @@
                     ? 'Pas de changement'
                     : (c[chYears] > 0 ? '+' : '') + c[chYears] + ' habitants') +
                 '</b>'
+            //+ "<br>" + c["p" + y1 + "_" + y2]
 
             //set default background filter
             for (let bgl of app.bgLayers) bgl.filterColor = (zf) => '#ffffff60'
@@ -604,7 +605,7 @@
                             },
                             colorCol: per,
                             color: (v) =>
-                                Math.abs(v) < 0.01 ? 'gray' : v > 0 ? '#d13c4b' : '#4288b5',
+                                Math.abs(v) < 0.02 ? 'gray' : v > 0 ? '#d13c4b' : '#4288b5',
                             length: (v, r) => r,
                             widthCol: "ind" + y2,
                             width: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.25),
