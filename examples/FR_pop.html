@@ -520,12 +520,12 @@
                 //legend
                 app.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorLegend({
-                        title: 'Population change',
+                        title: 'Changement de population',
                         width: 200,
                         ticks: 3,
                         colorRamp: (t) => colR(1 - Math.floor(t * nb) / nb),
                         tickFormat: 'text',
-                        fun: (t, r, s) => (t == 0 ? 'Decrease' : t == 1 ? 'Increase' : 'Stable'),
+                        fun: (t, r, s) => (t == 0 ? 'Baisse' : t == 1 ? 'Hausse' : 'Stabilité'),
                     })
                 )
             } else if (layCode == 'sizeCh') {
@@ -553,7 +553,7 @@
                 //legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
-                        title: 'Population change',
+                        title: 'Changement de population',
                         exaggerationFactor: 0.9,
                         shape: 'circle',
                         labelUnitText: 'habitants',
