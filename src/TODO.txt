@@ -1,4 +1,6 @@
-stretching - check rev/pow correspondence. add new one for diverging, see d3.scale
+stretching - check rev/pow correspondence. add new one for diverging, see d3.scale. with invert
+test https://d3js.org/d3-scale/ instead of stretching
+
 FR: bug with 600m level
 FR DOMs: finalise. define projection to show euronym names
 
