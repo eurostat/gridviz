@@ -537,8 +537,8 @@
                 //legend
                 app.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorLegend({
-                        title: 'Changement de population',
-                        width: 200,
+                        title: "Changement de population de "+y1+" à "+y2,
+                        width: 300,
                         ticks: 3,
                         colorRamp: (t) => colR(1 - Math.floor(t * nb) / nb),
                         tickFormat: 'text',
