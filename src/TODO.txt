@@ -1,15 +1,13 @@
-FR DOMs: finalise. define projection to show euronym names
-
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale
 FR: bug with 600m level
-
-yvaral style - https://observablehq.com/@pstuffa/yvaral-in-d3
+FR DOMs: finalise. define projection to show euronym names
 
 tootip bug: test in small map
 FR: income map
 
 style: rough.js - test on observable with this.cg.pixToGeoX ?
-style: coupe
+yvaral style - https://observablehq.com/@pstuffa/yvaral-in-d3
+style: pseudo hexagones. Coupe?
 style: bi-symbol map
 style: spider net diagram
 
