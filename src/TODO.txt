@@ -3,6 +3,8 @@ FR DOMs: finalise
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale
 FR: bug with 600m level
 
+yvaral style - https://observablehq.com/@pstuffa/yvaral-in-d3
+
 tootip bug: test in small map
 FR: income map
 
