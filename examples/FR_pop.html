@@ -459,7 +459,7 @@
                 //legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
-                        title: "Changement de population de "+y1+" à "+y2+", en nombre d'habitants",
+                        title: "Changement de population de " + y1 + " à " + y2 + ", en nombre d'habitants",
                         ticks: 7,
                         width: 500,
                         colorRamp: d3.interpolateSpectral,
@@ -537,7 +537,7 @@
                 //legend
                 app.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorLegend({
-                        title: "Changement de population de "+y1+" à "+y2,
+                        title: "Changement de population de " + y1 + " à " + y2,
                         width: 300,
                         ticks: 3,
                         colorRamp: (t) => colR(1 - Math.floor(t * nb) / nb),
@@ -570,7 +570,7 @@
                 //legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
-                        title: 'Changement de population',
+                        title: "Changement de population " + y1 + "-" + y2,
                         exaggerationFactor: 0.9,
                         shape: 'circle',
                         labelUnitText: 'habitants',
