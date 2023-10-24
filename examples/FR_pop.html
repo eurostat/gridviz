@@ -156,12 +156,12 @@
         const col = '#e54f37'
 
         //style for imputed values
-        const getStyleImputed = year => new gviz.ShapeColorSizeStyle({
+        const getStyleImputed = (year, mz = 30, sr = 0.25) => new gviz.ShapeColorSizeStyle({
             colorCol: 'imp' + year,
             color: (v, r, s) => (+v ? '#666' : ''),
             shape: () => 'circle',
-            size: (v, r, s) => 0.25 * r,
-            maxZoom: 30,
+            size: (v, r, s) => sr * r,
+            maxZoom: mz,
         })
 
 
@@ -266,6 +266,7 @@
                             strokeColor: (v) => (+v ? '#999' : ''),
                             maxZoom: 15,
                         }),
+                        getStyleImputed(year_)
                     ],
                     {
                         pixNb: 1.8,
@@ -295,6 +296,7 @@
                             shape: () => 'circle',
                             blendOperation: () => "multiply"
                         }),
+                        //getStyleImputed(year_, 20, 0.15)
                     ],
                     {
                         pixNb: 5,
