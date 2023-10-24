@@ -160,7 +160,7 @@
             colorCol: 'imp' + year,
             color: (v, r, s) => (+v ? '#666' : ''),
             shape: () => 'circle',
-            size: (v, r, s) => 0.3 * r,
+            size: (v, r, s) => 0.25 * r,
             maxZoom: 30,
         })
 
@@ -226,6 +226,7 @@
                             strokeColor: (v) => (+v ? '#666' : ''),
                             maxZoom: 15,
                         }),
+                        getStyleImputed(year_)
                     ],
                     {
                         pixNb: 1.8,
