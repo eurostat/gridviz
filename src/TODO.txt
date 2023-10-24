@@ -1,4 +1,4 @@
-FR DOMs: finalise
+FR DOMs: finalise. define projection to show euronym names
 
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale
 FR: bug with 600m level
