@@ -31,6 +31,7 @@
     - [Side style](#side-style)
     - [Side category style](#side-category-style)
     - [Contour style](#contour-style)
+    - [Isometric fence style](#isometric-fence-style)
   - [Esthetic styles](#esthetic-styles)
     - [JoyPlot Style](#joyplot-style)
     - [Mosaic style](#mosaic-style)
@@ -651,6 +652,12 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/sidecat.ht
 This style is experimental / under development. It displays the sides of the cells depending on discontinuities between the 2 adjacent cells, like contour lines.
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/side_contour.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/side_contour.html)).
+
+### Isometric fence style
+
+See [this example](https://eurostat.github.io/gridviz/examples/styles/isofence.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/isofence.html)).
+
+Documentation coming soon.
 
 ## Esthetic styles
 
