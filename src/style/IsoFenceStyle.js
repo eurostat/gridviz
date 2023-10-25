@@ -120,6 +120,8 @@ export class IsoFenceStyle extends Style {
             if (sides.length == 0) return
 
 
+            //TODO
+            console.log(sides)
 
 
         }
