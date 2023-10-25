@@ -31,7 +31,7 @@ export class IsoFenceStyle extends Style {
         //TODO add that
         /** The perspective angle.
          * @type {number} */
-        //this.angle = opts.angle
+        this.angle = opts.angle || 45
     }
 
     /**
@@ -118,13 +118,14 @@ export class IsoFenceStyle extends Style {
         //
         if (sides.length == 0) return
 
+        //angle in radians
+        const aRad = this.angle * Math.PI / 180, cos = Math.cos(aRad), sin = Math.sin(aRad)
+
         //draw in geo coordinates
         cg.setCanvasTransform()
 
         //for dev
         cg.ctx.fillStyle = "#FF000077"
-        cg.ctx.strokeStyle = "black"
-        cg.ctx.lineWidth = 2 * zf
 
         //draw sides
         for (let s of sides) {
@@ -143,9 +144,9 @@ export class IsoFenceStyle extends Style {
                 //top left
                 cg.ctx.lineTo(s.x, s.y + r2)
                 //top right
-                cg.ctx.lineTo(s.x + hG2, s.y + r2 + hG2)
+                cg.ctx.lineTo(s.x + hG2 * cos, s.y + r2 + hG2 * sin)
                 //bottom right
-                cg.ctx.lineTo(s.x + hG1, s.y - r2 + hG1)
+                cg.ctx.lineTo(s.x + hG1 * cos, s.y - r2 + hG1 * sin)
             } else {
                 //vertical side - horizontal section
                 //bottom left
@@ -153,15 +154,31 @@ export class IsoFenceStyle extends Style {
                 //bottom right
                 cg.ctx.lineTo(s.x + r2, s.y)
                 //top right
-                cg.ctx.lineTo(s.x + r2 + hG2, s.y + hG2)
+                cg.ctx.lineTo(s.x + r2 + hG2 * cos, s.y + hG2 * sin)
                 //top left
-                cg.ctx.lineTo(s.x - r2 + hG1, s.y + hG1)
+                cg.ctx.lineTo(s.x - r2 + hG1 * cos, s.y + hG1 * sin)
             }
             cg.ctx.closePath()
-            //cg.ctx.fill()
-            cg.ctx.stroke()
+            cg.ctx.fill()
+
         }
 
+
+        cg.ctx.strokeStyle = "black"
+        cg.ctx.lineWidth = 2.5 * zf
+
+        for (let c of cells) {
+            //height - in geo
+            /** @type {number} */
+            const hG = h_(c[this.heightCol], r, stat, zf)
+
+            cg.ctx.beginPath()
+            cg.ctx.moveTo(c.x + r2, c.y + r2)
+            cg.ctx.lineTo(c.x + r2 + hG * cos, c.y + r2 + hG * sin)
+            cg.ctx.closePath()
+            cg.ctx.stroke()
+
+        }
 
         //update legends
         this.updateLegends({ style: this, r: r, zf: zf, sSize: stat })
