@@ -146,8 +146,8 @@ export class IsoFenceStyle extends Style {
                 //draw stripe of side s and category column
 
                 //get values for both cells
-                let v1 = s.c1 ? s.c1[column] : 0
-                let v2 = s.c2 ? s.c2[column] : 0
+                let v1 = s.c1 ? +s.c1[column] : 0
+                let v2 = s.c2 ? +s.c2[column] : 0
                 if (v1 == 0 && v2 == 0) continue
 
                 //compute heights
@@ -169,7 +169,7 @@ export class IsoFenceStyle extends Style {
                     //bottom right
                     cg.ctx.lineTo(s.x + h1n * cos, s.y - r2 + h1n * sin)
                 } else {
-                    //vertical side - horizontal section
+                    /*/vertical side - horizontal section
                     //bottom left
                     cg.ctx.moveTo(s.x - r2, s.y)
                     //bottom right
@@ -177,7 +177,7 @@ export class IsoFenceStyle extends Style {
                     //top right
                     cg.ctx.lineTo(s.x + r2 + hG2 * cos, s.y + hG2 * sin)
                     //top left
-                    cg.ctx.lineTo(s.x - r2 + hG1 * cos, s.y + hG1 * sin)
+                    cg.ctx.lineTo(s.x - r2 + hG1 * cos, s.y + hG1 * sin)*/
                 }
                 cg.ctx.closePath()
 
@@ -187,6 +187,7 @@ export class IsoFenceStyle extends Style {
 
                 cumul1 += v1
                 cumul2 += v2
+                //break
             }
         }
 
@@ -217,9 +218,9 @@ const computeTotal = (cell, categories) => {
     if (!cell) return 0
     let total = 0
     for (let column of categories) {
-        const v = +cell[column]
+        const v = cell[column]
         if (!v) continue
-        total += v
+        total += +v
     }
     return total || 0
 }
