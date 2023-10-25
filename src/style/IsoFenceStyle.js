@@ -30,7 +30,7 @@ export class IsoFenceStyle extends Style {
 
         /** The perspective angle.
          * @type {number} */
-        this.angle = opts.angle || 45
+        this.angle = opts.angle != undefined ? opts.angle : 45
     }
 
     /**
