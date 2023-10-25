@@ -138,11 +138,8 @@ export class IsoFenceStyle extends Style {
                 /** @type {number} */
                 const hG2 = s.c2 ? h_(s.c2[this.heightCol], r, stat, zf) : 0
 
-                const ih = s.or == "h"
-
                 cg.ctx.beginPath()
-
-                if (ih) {
+                if (s.or == "h") {
                     //horizontal side - vertical section
                     //bottom left
                     cg.ctx.moveTo(s.x, s.y - r2)
@@ -165,9 +162,7 @@ export class IsoFenceStyle extends Style {
                 }
                 cg.ctx.closePath()
                 cg.ctx.fill()
-
             }
-
         }
 
         //update legends
