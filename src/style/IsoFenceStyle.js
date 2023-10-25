@@ -130,7 +130,7 @@ export class IsoFenceStyle extends Style {
         for (let s of sides) {
 
             //for dev
-            cg.ctx.fillStyle = s.or == "h" ? "#FF0000DD" : "#884444DD"
+            cg.ctx.fillStyle = s.or == "h" ? "#FF2222" : "#884444"
 
             //heights - in geo
             /** @type {number} */
