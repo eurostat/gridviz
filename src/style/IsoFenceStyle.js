@@ -31,6 +31,14 @@ export class IsoFenceStyle extends Style {
         /** The perspective angle.
          * @type {number} */
         this.angle = opts.angle != undefined ? opts.angle : 45
+
+        /** A function returning the corner line stroke style.
+         * @type {function(import('../Dataset.js').Cell,number,number):string} */
+        this.cornerLineStrokeColor = opts.cornerLineStrokeColor || ((c, r, zf) => "#333")
+
+        /** A function returning the corner line width.
+        * @type {function(import('../Dataset.js').Cell,number,number):number} */
+        this.cornerLineWidth = opts.cornerLineWidth || ((c, r, zf) => 0.8 * zf)
     }
 
     /**
@@ -57,7 +65,6 @@ export class IsoFenceStyle extends Style {
 
         //nb categories - used for radar and agepyramid
         const cats = Object.keys(this.color)
-        const nbCat = cats.length
 
         //draw in geo coordinates
         cg.setCanvasTransform()
@@ -191,21 +198,20 @@ export class IsoFenceStyle extends Style {
             }
         }
 
-        cg.ctx.strokeStyle = "#333"
-        cg.ctx.lineWidth = 0.8 * zf
-
+        //draw corner lines
         for (let c of cells) {
             //height - in geo
             const hG = h_(c[this.heightCol], r, stat, zf)
+
+            cg.ctx.strokeStyle = this.cornerLineStrokeColor ? this.cornerLineStrokeColor(c, r, zf) : "#333"
+            cg.ctx.lineWidth = this.cornerLineWidth ? this.cornerLineWidth(c, r, zf) : 0.8 * zf
 
             cg.ctx.beginPath()
             cg.ctx.moveTo(c.x + r2, c.y + r2)
             cg.ctx.lineTo(c.x + r2 + hG * cos, c.y + r2 + hG * sin)
             cg.ctx.closePath()
             cg.ctx.stroke()
-
         }
-
 
         //update legends
         this.updateLegends({ style: this, r: r, zf: zf, sSize: stat })
