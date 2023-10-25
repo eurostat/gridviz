@@ -149,23 +149,23 @@ export class IsoFenceStyle extends Style {
                 let v2 = s.c2 ? s.c2[column] : 0
 
                 //compute heights
-                const h1 = total1 > 0 ? cumul1 / total1 * hG1 : 0
-                const h1n = total1 > 0 ? (cumul1 + v1) / total1 * hG1 : 0
-                const h2 = total2 > 0 ? cumul1 / total2 * hG2 : 0
-                const h2n = total2 > 0 ? (cumul2 + v2) / total2 * hG2 : 0
+                const h1 = total1 > 0 ? hG1 * cumul1 / total1 : 0
+                const h1n = total1 > 0 ? hG1 * (cumul1 + v1) / total1 : 0
+                const h2 = total2 > 0 ? hG2 * cumul2 / total2 : 0
+                const h2n = total2 > 0 ? hG2 * (cumul2 + v2) / total2 : 0
 
                 //make path
                 cg.ctx.beginPath()
                 if (s.or == "h") {
                     //horizontal side - vertical section
                     //bottom left
-                    cg.ctx.moveTo(s.x, s.y - r2)
+                    cg.ctx.moveTo(s.x + h1 * cos, s.y - r2 + h1 * sin)
                     //top left
-                    cg.ctx.lineTo(s.x, s.y + r2)
+                    cg.ctx.lineTo(s.x + h2 * cos, s.y + r2 + h2 * sin)
                     //top right
-                    cg.ctx.lineTo(s.x + hG2 * cos, s.y + r2 + hG2 * sin)
+                    cg.ctx.lineTo(s.x + h2n * cos, s.y + r2 + h2n * sin)
                     //bottom right
-                    cg.ctx.lineTo(s.x + hG1 * cos, s.y - r2 + hG1 * sin)
+                    cg.ctx.lineTo(s.x + h1n * cos, s.y - r2 + h1n * sin)
                 } else {
                     //vertical side - horizontal section
                     //bottom left
