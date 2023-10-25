@@ -10,33 +10,42 @@
     <div id="viz-container" style="height: 100%; width: 100%"></div>
 
     <script src="../../dist/gridviz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
         let containerDiv = document.getElementById('viz-container')
+        const col = d3.interpolateSpectral
         const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 3951000, y: 2255603 })
             .setZoomFactor(10)
             .addMultiScaleTiledGridLayer(
                 [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) =>
-                    'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/men/2019/' +
+                    'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2019/' +
                     r +
                     'm/',
                 [
                     new gviz.IsoFenceStyle({
                         color: {
-                            men_1ind: '#7570b3',  //blue
+                            ind_0_17: col(0.2),
+                            ind_18_64: col(0.4),
+                            ind_65p: col(0.9),
+                            /*men_1ind: '#7570b3',  //blue
                             men_2_4ind: '#1b9e77', //green
-                            men_5ind: '#d95f02', //orange
+                            men_5ind: '#d95f02', //orange*/
                         },
                         angle: 55,
-                        heightCol: 'men',
-                        height: (v, r, s, zf) => 0.8 * r * gviz.sExpRev(v / s.max, -7, 0),
+                        heightCol: 'ind',
+                        height: (v, r, s, zf) => 0.99 * r * gviz.sExpRev(v / s.max, -7, 0),
                     }),
                 ],
                 {
-                    pixNb: 25,
+                    pixNb: 20,
                     preprocess: (c) => {
-                        c.men_2_4ind = +c.men - +c.men_1ind - +c.men_5ind
+                        c.ind_0_17 = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17
+                        c.ind_18_64 = +c.ind_18_24 + +c.ind_25_39 + +c.ind_40_54 + +c.ind_55_64
+                        c.ind_65p = +c.ind_65_79 + +c.ind_80p
                     },
                 }
             )

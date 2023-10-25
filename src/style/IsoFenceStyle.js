@@ -169,15 +169,15 @@ export class IsoFenceStyle extends Style {
                     //bottom right
                     cg.ctx.lineTo(s.x + h1n * cos, s.y - r2 + h1n * sin)
                 } else {
-                    /*/vertical side - horizontal section
+                    //vertical side - horizontal section
                     //bottom left
-                    cg.ctx.moveTo(s.x - r2, s.y)
+                    cg.ctx.moveTo(s.x - r2 + h1 * cos, s.y + h1 * sin)
                     //bottom right
-                    cg.ctx.lineTo(s.x + r2, s.y)
+                    cg.ctx.lineTo(s.x + r2 + h2 * cos, s.y + h2 * sin)
                     //top right
-                    cg.ctx.lineTo(s.x + r2 + hG2 * cos, s.y + hG2 * sin)
+                    cg.ctx.lineTo(s.x + r2 + h2n * cos, s.y + h2n * sin)
                     //top left
-                    cg.ctx.lineTo(s.x - r2 + hG1 * cos, s.y + hG1 * sin)*/
+                    cg.ctx.lineTo(s.x - r2 + h1n * cos, s.y + h1n * sin)
                 }
                 cg.ctx.closePath()
 
@@ -191,8 +191,8 @@ export class IsoFenceStyle extends Style {
             }
         }
 
-        cg.ctx.strokeStyle = "darkgray"
-        cg.ctx.lineWidth = 1 * zf
+        cg.ctx.strokeStyle = "#333"
+        cg.ctx.lineWidth = 0.8 * zf
 
         for (let c of cells) {
             //height - in geo
