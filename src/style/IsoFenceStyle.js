@@ -123,11 +123,13 @@ export class IsoFenceStyle extends Style {
         //draw in geo coordinates
         cg.setCanvasTransform()
 
+        sides.sort((s1, s2) => (Math.hypot(s1.x - s2.x, s1.y - s2.y))
+
         //draw sides
         for (let s of sides) {
 
             //for dev
-            cg.ctx.fillStyle = s.or == "h"?"#FF0000" : "#0000FF"
+            cg.ctx.fillStyle = s.or == "h" ? "#FF0000" : "#0000FF"
 
             //heights - in geo
             /** @type {number} */
