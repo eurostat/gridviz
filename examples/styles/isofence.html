@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+
+<head>
+    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+</head>
+
+<body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+    <div id="viz-container" style="height: 100%; width: 100%"></div>
+
+    <script src="../../dist/gridviz.js"></script>
+    <script>
+        let containerDiv = document.getElementById('viz-container')
+        const app = new gviz.App(containerDiv)
+            .setGeoCenter({ x: 3951000, y: 2255603 })
+            .setZoomFactor(10)
+            .addMultiScaleTiledGridLayer(
+                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (r) =>
+                    'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/men/2019/' +
+                    r +
+                    'm/',
+                [
+                    new gviz.IsoFenceStyle({
+                        color: {
+                            men_1ind: '#7570b3',  //blue
+                            men_2_4ind: '#1b9e77', //green
+                            men_5ind: '#d95f02', //orange
+                        },
+                        heightCol: 'men',
+                        height: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.13, 0),
+                    }),
+                ],
+                {
+                    pixNb: 35,
+                    preprocess: (c) => {
+                        c.men_2_4ind = +c.men - +c.men_1ind - +c.men_5ind
+                    },
+                }
+            )
+
+    </script>
+</body>
+
+</html>
