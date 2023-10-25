@@ -65,105 +65,103 @@ export class IsoFenceStyle extends Style {
         //half resolution
         const r2 = r / 2
 
-        //draw calls
-        for (let cell of cells) {
-            //height
-            /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-            let h_ = this.height
+        //height
+        /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
+        let h_ = this.height
 
-            //make sides
-            /**  @type {Array.<Side>} */
-            const sides = []
+        //make sides
+        /**  @type {Array.<Side>} */
+        const sides = []
 
-            //make horizontal sides
-            //sort cells by x and y
-            cells.sort((c1, c2) => (c2.x == c1.x ? c1.y - c2.y : c1.x - c2.x))
-            let c1 = cells[0]
-            for (let i = 1; i < cells.length; i++) {
-                let c2 = cells[i]
+        //make horizontal sides
+        //sort cells by x and y
+        cells.sort((c1, c2) => (c2.x == c1.x ? c1.y - c2.y : c1.x - c2.x))
+        let c1 = cells[0]
+        for (let i = 1; i < cells.length; i++) {
+            let c2 = cells[i]
 
-                if ((c1.y + r == c2.y) && (c1.x == c2.x))
-                    //cells in same column and touch along horizontal side
-                    //make shared side
-                    sides.push({ x: c1.x + r2, y: c2.y, or: 'h', c1: c1, c2: c2 })
-                else {
-                    //cells do not touch along horizontal side
-                    //make two sides: top one for c1, bottom for c2
-                    sides.push({ x: c1.x + r2, y: c1.y + r, or: 'h', c1: c1, c2: undefined })
-                    sides.push({ x: c2.x + r2, y: c2.y, or: 'h', c1: undefined, c2: c2 })
-                }
-
-                c1 = c2
+            if ((c1.y + r == c2.y) && (c1.x == c2.x))
+                //cells in same column and touch along horizontal side
+                //make shared side
+                sides.push({ x: c1.x + r2, y: c2.y, or: 'h', c1: c1, c2: c2 })
+            else {
+                //cells do not touch along horizontal side
+                //make two sides: top one for c1, bottom for c2
+                sides.push({ x: c1.x + r2, y: c1.y + r, or: 'h', c1: c1, c2: undefined })
+                sides.push({ x: c2.x + r2, y: c2.y, or: 'h', c1: undefined, c2: c2 })
             }
 
-            //make vertical sides
-            //sort cells by y and x
-            cells.sort((c1, c2) => (c2.y == c1.y ? c1.x - c2.x : c1.y - c2.y))
-            c1 = cells[0]
-            for (let i = 1; i < cells.length; i++) {
-                let c2 = cells[i]
-
-                if ((c1.x + r == c2.x) && (c1.y == c2.y))
-                    //cells in same row and touch along vertical side
-                    //make shared side
-                    sides.push({ x: c2.x, y: c1.y + r2, or: 'v', c1: c1, c2: c2 })
-                else {
-                    //cells do not touch along vertical side
-                    //make two sides: right one for c1, left for c2
-                    sides.push({ x: c1.x + r, y: c1.y + r2, or: 'v', c1: c1, c2: undefined })
-                    sides.push({ x: c2.x, y: c2.y + r2, or: 'v', c1: undefined, c2: c2 })
-                }
-
-                c1 = c2
-            }
-
-            //
-            if (sides.length == 0) return
-
-            //draw in geo coordinates
-            cg.setCanvasTransform()
-
-            //TODO
-            //console.log(sides)
-
-            //for dev
-            cg.ctx.fillStyle = "#FF000077"
-
-            //draw sides
-            for (let s of sides) {
-
-                //heights - in geo
-                /** @type {number} */
-                const hG1 = s.c1 ? h_(s.c1[this.heightCol], r, stat, zf) : 0
-                /** @type {number} */
-                const hG2 = s.c2 ? h_(s.c2[this.heightCol], r, stat, zf) : 0
-
-                cg.ctx.beginPath()
-                if (s.or == "h") {
-                    //horizontal side - vertical section
-                    //bottom left
-                    cg.ctx.moveTo(s.x, s.y - r2)
-                    //top left
-                    cg.ctx.lineTo(s.x, s.y + r2)
-                    //top right
-                    cg.ctx.lineTo(s.x + hG2, s.y + r2 + hG2)
-                    //bottom right
-                    cg.ctx.lineTo(s.x + hG1, s.y - r2 + hG1)
-                } else {
-                    //vertical side - horizontal section
-                    //bottom left
-                    cg.ctx.moveTo(s.x - r2, s.y)
-                    //bottom right
-                    cg.ctx.lineTo(s.x + r2, s.y)
-                    //top right
-                    cg.ctx.lineTo(s.x + r2 + hG2, s.y + hG2)
-                    //top left
-                    cg.ctx.lineTo(s.x - r2 + hG1, s.y + hG1)
-                }
-                cg.ctx.closePath()
-                cg.ctx.fill()
-            }
+            c1 = c2
         }
+
+        //make vertical sides
+        //sort cells by y and x
+        cells.sort((c1, c2) => (c2.y == c1.y ? c1.x - c2.x : c1.y - c2.y))
+        c1 = cells[0]
+        for (let i = 1; i < cells.length; i++) {
+            let c2 = cells[i]
+
+            if ((c1.x + r == c2.x) && (c1.y == c2.y))
+                //cells in same row and touch along vertical side
+                //make shared side
+                sides.push({ x: c2.x, y: c1.y + r2, or: 'v', c1: c1, c2: c2 })
+            else {
+                //cells do not touch along vertical side
+                //make two sides: right one for c1, left for c2
+                sides.push({ x: c1.x + r, y: c1.y + r2, or: 'v', c1: c1, c2: undefined })
+                sides.push({ x: c2.x, y: c2.y + r2, or: 'v', c1: undefined, c2: c2 })
+            }
+
+            c1 = c2
+        }
+
+        //
+        if (sides.length == 0) return
+
+        //draw in geo coordinates
+        cg.setCanvasTransform()
+
+        //for dev
+        cg.ctx.fillStyle = "#FF000077"
+        cg.ctx.strokeStyle = "black"
+        cg.ctx.lineWidth = 2 * zf
+
+        //draw sides
+        for (let s of sides) {
+
+            //heights - in geo
+            /** @type {number} */
+            const hG1 = s.c1 ? h_(s.c1[this.heightCol], r, stat, zf) : 0
+            /** @type {number} */
+            const hG2 = s.c2 ? h_(s.c2[this.heightCol], r, stat, zf) : 0
+
+            cg.ctx.beginPath()
+            if (s.or == "h") {
+                //horizontal side - vertical section
+                //bottom left
+                cg.ctx.moveTo(s.x, s.y - r2)
+                //top left
+                cg.ctx.lineTo(s.x, s.y + r2)
+                //top right
+                cg.ctx.lineTo(s.x + hG2, s.y + r2 + hG2)
+                //bottom right
+                cg.ctx.lineTo(s.x + hG1, s.y - r2 + hG1)
+            } else {
+                //vertical side - horizontal section
+                //bottom left
+                cg.ctx.moveTo(s.x - r2, s.y)
+                //bottom right
+                cg.ctx.lineTo(s.x + r2, s.y)
+                //top right
+                cg.ctx.lineTo(s.x + r2 + hG2, s.y + hG2)
+                //top left
+                cg.ctx.lineTo(s.x - r2 + hG1, s.y + hG1)
+            }
+            cg.ctx.closePath()
+            //cg.ctx.fill()
+            cg.ctx.stroke()
+        }
+
 
         //update legends
         this.updateLegends({ style: this, r: r, zf: zf, sSize: stat })
