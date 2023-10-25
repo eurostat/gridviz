@@ -13,6 +13,8 @@ style: pseudo hexagones. Coupe?
 style: bi-symbol map
 style: spider net diagram
 
+https://www.esa-landcover-cci.org/
+
 NO
 POP Pop
 250m - total population
