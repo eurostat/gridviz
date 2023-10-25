@@ -124,7 +124,7 @@ export class IsoFenceStyle extends Style {
         cg.setCanvasTransform()
 
         //sort sides so that the north east ones are drown first
-        sides.sort((s1, s2) => (Math.hypot(s1.x - s2.x, s1.y - s2.y)))
+        sides.sort((s1, s2) => (Math.hypot(s2.x, s2.y) - Math.hypot(s1.x, s1.y)))
 
         //draw sides
         for (let s of sides) {
