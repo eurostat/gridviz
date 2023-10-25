@@ -138,19 +138,28 @@ export class IsoFenceStyle extends Style {
                 /** @type {number} */
                 const hG2 = s.c2 ? h_(s.c2[this.heightCol], r, stat, zf) : 0
 
+                const ih = s.or == "h"
+
                 cg.ctx.beginPath()
 
-                cg.ctx.moveTo(x + r / 2, y)
-                //cg.ctx.lineTo(x + r / 2, y + hG)
+                if (ih) {
+                    //horizontal side - vertical section
+                    //bottom left
+                    cg.ctx.moveTo(s.x, s.y - r2)
+                    //top left
+                    cg.ctx.lineTo(s.x, s.y + r2)
+                    //bottom right
+                    cg.ctx.lineTo(s.x + hG2, s.y + r2 + hG2)
+                    //top right
+                    cg.ctx.lineTo(s.x + hG1, s.y - r2 + hG1)
+                } else {
+                    //vertical side - horizontal section
 
-
+                }
                 cg.ctx.closePath()
                 cg.ctx.fill()
 
             }
-
-
-
 
         }
 
