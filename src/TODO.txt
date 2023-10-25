@@ -7,11 +7,12 @@ FR DOMs: finalise. define projection to show euronym names
 tootip bug: test in small map
 FR: income map
 
+style: isometric fence diagram, with sides
 style: rough.js - test on observable with this.cg.pixToGeoX ?
-yvaral style - https://observablehq.com/@pstuffa/yvaral-in-d3
-style: pseudo hexagones. Coupe?
+style: pseudo hexagones
 style: bi-symbol map
 style: spider net diagram
+style: package yvaral
 
 https://www.esa-landcover-cci.org/
 
