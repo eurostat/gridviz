@@ -130,7 +130,7 @@ export class IsoFenceStyle extends Style {
         for (let s of sides) {
 
             //for dev
-            cg.ctx.fillStyle = s.or == "h" ? "#FF0000" : "#0000FF"
+            cg.ctx.fillStyle = s.or == "h" ? "#FF0000DD" : "#884444DD"
 
             //heights - in geo
             /** @type {number} */
@@ -165,22 +165,22 @@ export class IsoFenceStyle extends Style {
 
         }
 
-
-        cg.ctx.strokeStyle = "black"
-        cg.ctx.lineWidth = 2.5 * zf
-
-        for (let c of cells) {
-            //height - in geo
-            /** @type {number} */
-            const hG = h_(c[this.heightCol], r, stat, zf)
-
-            cg.ctx.beginPath()
-            cg.ctx.moveTo(c.x + r2, c.y + r2)
-            cg.ctx.lineTo(c.x + r2 + hG * cos, c.y + r2 + hG * sin)
-            cg.ctx.closePath()
-            cg.ctx.stroke()
-
-        }
+        /*
+                cg.ctx.strokeStyle = "none"
+                cg.ctx.lineWidth = 2.5 * zf
+        
+                for (let c of cells) {
+                    //height - in geo
+                    const hG = h_(c[this.heightCol], r, stat, zf)
+        
+                    cg.ctx.beginPath()
+                    cg.ctx.moveTo(c.x + r2, c.y + r2)
+                    cg.ctx.lineTo(c.x + r2 + hG * cos, c.y + r2 + hG * sin)
+                    cg.ctx.closePath()
+                    cg.ctx.stroke()
+        
+                }
+        */
 
         //update legends
         this.updateLegends({ style: this, r: r, zf: zf, sSize: stat })
