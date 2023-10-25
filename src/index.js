@@ -35,6 +35,7 @@ export { SquareColorCatWGLStyle } from './style/SquareColorCatWGLStyle.js'
 export { MosaicStyle } from './style/MosaicStyle.js'
 export { NinjaStarStyle } from './style/NinjaStarStyle.js'
 export { TimeSeriesStyle } from './style/TimeSeriesStyle.js'
+export { IsoFenceStyle } from './style/IsoFenceStyle.js'
 
 // export additional layers
 export { BackgroundLayer } from './BackgroundLayer.js'
