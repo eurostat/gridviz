@@ -139,6 +139,7 @@ export class IsoFenceStyle extends Style {
             //compute totals for both cells
             const total1 = computeTotal(s.c1, cats)
             const total2 = computeTotal(s.c2, cats)
+            if (total1 == 0 && total2 == 0) continue
 
             let cumul1 = 0, cumul2 = 0
             for (let [column, color] of Object.entries(this.color)) {
@@ -147,6 +148,7 @@ export class IsoFenceStyle extends Style {
                 //get values for both cells
                 let v1 = s.c1 ? s.c1[column] : 0
                 let v2 = s.c2 ? s.c2[column] : 0
+                if (v1 == 0 && v2 == 0) continue
 
                 //compute heights
                 const h1 = total1 > 0 ? hG1 * cumul1 / total1 : 0
