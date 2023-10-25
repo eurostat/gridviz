@@ -28,9 +28,10 @@ export class IsoFenceStyle extends Style {
          * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.height = opts.height || ((v, r, s, zf) => r * 0.4)
 
+        //TODO add that
         /** The perspective angle.
          * @type {number} */
-        this.angle = opts.angle
+        //this.angle = opts.angle
     }
 
     /**
@@ -66,9 +67,6 @@ export class IsoFenceStyle extends Style {
             //height
             /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
             let h_ = this.height
-            //height - in geo
-            /** @type {number} */
-            const hG = h_(cell[this.heightCol], r, stat, zf)
 
             //make sides
             /**  @type {Array.<Side>} */
@@ -119,9 +117,34 @@ export class IsoFenceStyle extends Style {
             //
             if (sides.length == 0) return
 
+            //draw in geo coordinates
+            cg.setCanvasTransform()
 
             //TODO
-            console.log(sides)
+            //console.log(sides)
+
+            //for dev
+            cg.ctx.fillStyle = "#FF000077"
+
+            //draw sides
+            for (let s of sides) {
+
+                //heights - in geo
+                /** @type {number} */
+                const hG1 = s.c1 ? h_(s.c1[this.heightCol], r, stat, zf) : 0
+                /** @type {number} */
+                const hG2 = s.c2 ? h_(s.c2[this.heightCol], r, stat, zf) : 0
+
+                cg.ctx.beginPath()
+
+                
+
+                cg.ctx.closePath()
+                cg.ctx.fill()
+
+            }
+
+
 
 
         }
