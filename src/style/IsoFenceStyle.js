@@ -148,13 +148,20 @@ export class IsoFenceStyle extends Style {
                     cg.ctx.moveTo(s.x, s.y - r2)
                     //top left
                     cg.ctx.lineTo(s.x, s.y + r2)
-                    //bottom right
-                    cg.ctx.lineTo(s.x + hG2, s.y + r2 + hG2)
                     //top right
+                    cg.ctx.lineTo(s.x + hG2, s.y + r2 + hG2)
+                    //bottom right
                     cg.ctx.lineTo(s.x + hG1, s.y - r2 + hG1)
                 } else {
                     //vertical side - horizontal section
-
+                    //bottom left
+                    cg.ctx.moveTo(s.x - r2, s.y)
+                    //bottom right
+                    cg.ctx.lineTo(s.x + r2, s.y)
+                    //top right
+                    cg.ctx.lineTo(s.x + r2 + hG2, s.y + hG2)
+                    //top left
+                    cg.ctx.lineTo(s.x - r2 + hG1, s.y + hG1)
                 }
                 cg.ctx.closePath()
                 cg.ctx.fill()
