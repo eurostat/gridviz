@@ -56,7 +56,8 @@ export class IsoFenceStyle extends Style {
         }
 
         //nb categories - used for radar and agepyramid
-        const nbCat = Object.entries(this.color).length
+        const cats = Object.keys(this.color)
+        const nbCat = cats.length
 
         //draw in geo coordinates
         cg.setCanvasTransform()
@@ -129,60 +130,94 @@ export class IsoFenceStyle extends Style {
         //draw sides
         for (let s of sides) {
 
-            //for dev
-            cg.ctx.fillStyle = s.or == "h" ? "#FF2222" : "#884444"
-
             //heights - in geo
             /** @type {number} */
             const hG1 = s.c1 ? h_(s.c1[this.heightCol], r, stat, zf) : 0
             /** @type {number} */
             const hG2 = s.c2 ? h_(s.c2[this.heightCol], r, stat, zf) : 0
 
-            cg.ctx.beginPath()
-            if (s.or == "h") {
-                //horizontal side - vertical section
-                //bottom left
-                cg.ctx.moveTo(s.x, s.y - r2)
-                //top left
-                cg.ctx.lineTo(s.x, s.y + r2)
-                //top right
-                cg.ctx.lineTo(s.x + hG2 * cos, s.y + r2 + hG2 * sin)
-                //bottom right
-                cg.ctx.lineTo(s.x + hG1 * cos, s.y - r2 + hG1 * sin)
-            } else {
-                //vertical side - horizontal section
-                //bottom left
-                cg.ctx.moveTo(s.x - r2, s.y)
-                //bottom right
-                cg.ctx.lineTo(s.x + r2, s.y)
-                //top right
-                cg.ctx.lineTo(s.x + r2 + hG2 * cos, s.y + hG2 * sin)
-                //top left
-                cg.ctx.lineTo(s.x - r2 + hG1 * cos, s.y + hG1 * sin)
+            //compute totals for both cells
+            const total1 = computeTotal(s.c1, cats)
+            const total2 = computeTotal(s.c2, cats)
+
+            let cumul1 = 0, cumul2 = 0
+            for (let [column, color] of Object.entries(this.color)) {
+                //draw stripe of side s and category column
+
+                //get values for both cells
+                let v1 = s.c1 ? s.c1[column] : 0
+                let v2 = s.c2 ? s.c2[column] : 0
+
+                //compute heights
+                const h1 = total1 > 0 ? cumul1 / total1 * hG1 : 0
+                const h1n = total1 > 0 ? (cumul1 + v1) / total1 * hG1 : 0
+                const h2 = total2 > 0 ? cumul1 / total2 * hG2 : 0
+                const h2n = total2 > 0 ? (cumul2 + v2) / total2 * hG2 : 0
+
+                //make path
+                cg.ctx.beginPath()
+                if (s.or == "h") {
+                    //horizontal side - vertical section
+                    //bottom left
+                    cg.ctx.moveTo(s.x, s.y - r2)
+                    //top left
+                    cg.ctx.lineTo(s.x, s.y + r2)
+                    //top right
+                    cg.ctx.lineTo(s.x + hG2 * cos, s.y + r2 + hG2 * sin)
+                    //bottom right
+                    cg.ctx.lineTo(s.x + hG1 * cos, s.y - r2 + hG1 * sin)
+                } else {
+                    //vertical side - horizontal section
+                    //bottom left
+                    cg.ctx.moveTo(s.x - r2, s.y)
+                    //bottom right
+                    cg.ctx.lineTo(s.x + r2, s.y)
+                    //top right
+                    cg.ctx.lineTo(s.x + r2 + hG2 * cos, s.y + hG2 * sin)
+                    //top left
+                    cg.ctx.lineTo(s.x - r2 + hG1 * cos, s.y + hG1 * sin)
+                }
+                cg.ctx.closePath()
+
+                //fill
+                cg.ctx.fillStyle = color
+                cg.ctx.fill()
+
+                cumul1 += v1
+                cumul2 += v2
             }
+        }
+
+        cg.ctx.strokeStyle = "darkgray"
+        cg.ctx.lineWidth = 1 * zf
+
+        for (let c of cells) {
+            //height - in geo
+            const hG = h_(c[this.heightCol], r, stat, zf)
+
+            cg.ctx.beginPath()
+            cg.ctx.moveTo(c.x + r2, c.y + r2)
+            cg.ctx.lineTo(c.x + r2 + hG * cos, c.y + r2 + hG * sin)
             cg.ctx.closePath()
-            cg.ctx.fill()
+            cg.ctx.stroke()
 
         }
 
-        /*
-                cg.ctx.strokeStyle = "none"
-                cg.ctx.lineWidth = 2.5 * zf
-        
-                for (let c of cells) {
-                    //height - in geo
-                    const hG = h_(c[this.heightCol], r, stat, zf)
-        
-                    cg.ctx.beginPath()
-                    cg.ctx.moveTo(c.x + r2, c.y + r2)
-                    cg.ctx.lineTo(c.x + r2 + hG * cos, c.y + r2 + hG * sin)
-                    cg.ctx.closePath()
-                    cg.ctx.stroke()
-        
-                }
-        */
 
         //update legends
         this.updateLegends({ style: this, r: r, zf: zf, sSize: stat })
     }
+}
+
+
+
+const computeTotal = (cell, categories) => {
+    if (!cell) return 0
+    let total = 0
+    for (let column of categories) {
+        const v = +cell[column]
+        if (!v) continue
+        total += v
+    }
+    return total || 0
 }
