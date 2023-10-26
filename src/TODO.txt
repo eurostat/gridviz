@@ -1,4 +1,6 @@
 isometric fence diagstyle: document
+adapt line to angle - vanish when +-90
+
 
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale. with invert
 test https://d3js.org/d3-scale/ instead of stretching
