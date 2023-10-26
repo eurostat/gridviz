@@ -1,6 +1,3 @@
-isometric fence style: document + little bug for angle < -90 ?
-
-
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale. with invert
 test https://d3js.org/d3-scale/ instead of stretching
 
@@ -15,6 +12,7 @@ style: pseudo hexagones
 style: bi-symbol map
 style: spider net diagram
 style: package yvaral
+isometric fence style: little bug for angle < -90 ?
 
 https://www.esa-landcover-cci.org/
 
