@@ -34,7 +34,7 @@ export class IsoFenceStyle extends Style {
 
         /** A function returning the corner line stroke style.
          * @type {function(import('../Dataset.js').Cell,number,number,number):string} */
-        this.cornerLineStrokeColor = opts.cornerLineStrokeColor || ((c, r, zf, angle) => "#333")
+        this.cornerLineStrokeColor = opts.cornerLineStrokeColor || ((c, r, zf, angle) => "#999")
 
         /** A function returning the corner line width.
         * @type {function(import('../Dataset.js').Cell,number,number,number):number} */
