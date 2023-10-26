@@ -621,8 +621,8 @@ This style displays the sides of the cells as segments with different colors and
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/side.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/side.html)).
 
-| Property        | Type                          | Default                                | Description                                                                                                                                                                                                                                                                                                                     |
-| --------------- | ----------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| Property        | Type                          | Default                                | Description                                  |
+| --------------- | ----------------------------- | -------------------------------------- | ---------------------- | -------------------- |
 | **valueCol**    | string                        | undefined                              | The name of the column used to retrieve the cell values.                                                                                                                                                                                                                                                                        |
 | **value**       | function(v1,v2,r,s,zf):number | (v1, v2, r, s, zf) => 1                | A function computing the value of a cell side. This value is computed from the two adjacent cell values **v1** and **v2**. For horizontal sides, **v1** is the value of the cell below and **v2** the value of the cell above. For vertical sides, **v1** is the value of the left cell and **v2** the value of the right cell. |
 | **color**       | function(side,r,s,zf):string  | () => "#EA6BAC"                        | A function returning the color of a cell side **side** from the resolution **r**, statistics **s** and zoom factor **zf**. A side is represented as an object \_{x:number,y:number,or:"v"                                                                                                                                       | "h",value:number}\_. |
@@ -638,9 +638,9 @@ This style displays the sides of the cells as segments with different colors dep
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/sidecat.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/sidecat.html)).
 
-| Property      | Type                       | Default                     | Description                                                                                                                                                                           |
-| ------------- | -------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| **col**       | string                     | undefined                   | The name of the column used to retrieve the cell category.                                                                                                                            |
+| Property      | Type                       | Default                     | Description              |
+| ------------- | -------------------------- | --------------------------- | ----------------- | -------------------- |
+| **col**       | string                     | undefined                   | The name of the column used to retrieve the cell category.                     |
 | **color**     | Object, string -> color    | undefined                   | The dictionary (string -> color) which give the color of each category.                                                                                                               |                      |
 | **width**     | function(side,r,zf):number | (side, r, s, z) => r \* 0.2 | A function returning the width of a cell side **side**, in geo unit, from the resolution **r** and zoom factor **zf**. A side is represented as an object \_{x:number,y:number,or:"v" | "h",value:number}\_. |
 | **fillColor** | function(c):string         | undefined                   | A function returning an optional fill color for a cell **c**.                                                                                                                         |
@@ -661,14 +661,14 @@ This style shows the composition of a total quantity into categories as vertical
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/isofence.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/isofence.html)).
 
-| Property      | Type                       | Default                     | Description                   |
-| ------------- | -------------------------- | --------------------------- | --------------- | -------------------- |
+| Property    | Type    | Default  | Description    |
+| ------------- | ----------- | ------------ | --------------- | -------------------- |
 | color    |  object()   |     |  The dictionary (string -> color) which give the color of each category.   |
 | heightCol    |  string   |     |  The column where to get the height values.   |
-| height    | function(v1,r,s,zf):number    |  (v, r, s, zf) => r * 0.4   |   A function returning the height of a cell from its value **v**, the resolution **r**, some statistics **s** and the zoom factor **zf**.  |
+| height | function(v1,r,s,zf):number | (v, r, s, zf) => r * 0.4 | A function returning the height of a cell from its value **v**, the resolution **r**, some statistics **s** and the zoom factor **zf**.  |
 | angle    |  number   |  50   |  The isometric perspectiv angle.   |
 | cornerLineStrokeColor    |  function(Cell,number,number,number):string   |   (c, r, zf, angle) => "#999"  |   A function returning the corner line stroke style.  |
-| cornerLineWidth    |  function(Cell,number,number,number):number    |  (c, r, zf, angle) => (angle % 90 == 0 ? 0 : 0.8 * zf)   |  A function returning the corner line width.   |
+| cornerLineWidth    |  function(Cell,number,number,number):number    |  (c, r, zf, angle) => (angle % 90 == 0 ? 0 : 0.8 * zf)   |  A function returning the corner line width.  |
 
 
 ## Esthetic styles
