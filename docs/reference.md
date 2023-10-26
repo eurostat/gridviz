@@ -666,7 +666,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/isofence.h
 | color    |  object   |     |  The dictionary (string -> color) which give the color of each category.   |
 | heightCol    |  string   |     |  The column where to get the height values.   |
 | height | function(v,r,s,zf):number | (v, r, s, zf) => r * 0.4 | A function returning the height of a cell from its value **v**, the resolution **r**, some statistics **s** and the zoom factor **zf**.  |
-| angle    |  number   |  50   |  The isometric perspectiv angle.   |
+| angle    |  number   |  50   |  The isometric perspective angle.   |
 | cornerLineStrokeColor    |  function(cell,r,zf,angle): string   |   (c, r, zf, angle) => "#999"  |   A function returning the corner line stroke style.  |
 | cornerLineWidth    |  function(cell,r,zf,angle): number    |  (c, r, zf, angle) => (angle % 90 == 0 ? 0 : 0.8 * zf)   |  A function returning the corner line width.  |
 
