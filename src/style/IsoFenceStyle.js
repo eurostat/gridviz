@@ -33,12 +33,12 @@ export class IsoFenceStyle extends Style {
         this.angle = opts.angle != undefined ? opts.angle : 45
 
         /** A function returning the corner line stroke style.
-         * @type {function(import('../Dataset.js').Cell,number,number):string} */
-        this.cornerLineStrokeColor = opts.cornerLineStrokeColor || ((c, r, zf) => "#333")
+         * @type {function(import('../Dataset.js').Cell,number,number,number):string} */
+        this.cornerLineStrokeColor = opts.cornerLineStrokeColor || ((c, r, zf, angle) => "#333")
 
         /** A function returning the corner line width.
-        * @type {function(import('../Dataset.js').Cell,number,number):number} */
-        this.cornerLineWidth = opts.cornerLineWidth || ((c, r, zf) => 0.8 * zf)
+        * @type {function(import('../Dataset.js').Cell,number,number,number):number} */
+        this.cornerLineWidth = opts.cornerLineWidth || ((c, r, zf, angle) => (angle % 90 == 0 ? 0 : 0.8 * zf))
     }
 
     /**
@@ -203,8 +203,8 @@ export class IsoFenceStyle extends Style {
             //height - in geo
             const hG = h_(c[this.heightCol], r, stat, zf)
 
-            cg.ctx.strokeStyle = this.cornerLineStrokeColor ? this.cornerLineStrokeColor(c, r, zf) : "#333"
-            cg.ctx.lineWidth = this.cornerLineWidth ? this.cornerLineWidth(c, r, zf) : 0.8 * zf
+            cg.ctx.strokeStyle = this.cornerLineStrokeColor ? this.cornerLineStrokeColor(c, r, zf, this.angle) : "#333"
+            cg.ctx.lineWidth = this.cornerLineWidth ? this.cornerLineWidth(c, r, zf, this.angle) : 0.8 * zf
 
             cg.ctx.beginPath()
             cg.ctx.moveTo(c.x + r2, c.y + r2)
