@@ -30,7 +30,7 @@ export class IsoFenceStyle extends Style {
 
         /** The perspective angle.
          * @type {number} */
-        this.angle = opts.angle != undefined ? opts.angle : 45
+        this.angle = opts.angle != undefined ? opts.angle : 50
 
         /** A function returning the corner line stroke style.
          * @type {function(import('../Dataset.js').Cell,number,number,number):string} */

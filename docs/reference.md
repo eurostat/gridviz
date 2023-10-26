@@ -661,6 +661,16 @@ This style shows the composition of a total quantity into categories as vertical
 
 See [this example](https://eurostat.github.io/gridviz/examples/styles/isofence.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/isofence.html)).
 
+| Property      | Type                       | Default                     | Description                   |
+| ------------- | -------------------------- | --------------------------- | --------------- | -------------------- |
+| color    |  object()   |     |  The dictionary (string -> color) which give the color of each category.   |
+| heightCol    |  string   |     |  The column where to get the height values.   |
+| height    | function(v1,r,s,zf):number    |  (v, r, s, zf) => r * 0.4   |   A function returning the height of a cell from its value **v**, the resolution **r**, some statistics **s** and the zoom factor **zf**.  |
+| angle    |  number   |  50   |  The isometric perspectiv angle.   |
+| cornerLineStrokeColor    |  function(Cell,number,number,number):string   |   (c, r, zf, angle) => "#999"  |   A function returning the corner line stroke style.  |
+| cornerLineWidth    |  function(Cell,number,number,number):number    |  (c, r, zf, angle) => (angle % 90 == 0 ? 0 : 0.8 * zf)   |  A function returning the corner line width.   |
+
+
 ## Esthetic styles
 
 ### JoyPlot Style
