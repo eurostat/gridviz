@@ -20,6 +20,7 @@
 [![joyplot map](/docs/img/overviews/ov_joyplot_shade.png)](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
 [![lego map](/docs/img/overviews/ov_lego.png)](https://eurostat.github.io/gridviz/docs/reference#lego-style)
 [![timeseries map](/docs/img/overviews/ov_timeseries.png)](https://eurostat.github.io/gridviz/docs/reference#time-series-style)
+[![isometric fence map](/docs/img/overviews/ov_isofence.png)](https://eurostat.github.io/gridviz/docs/reference#isofence-style)
 [![mosaic map](/docs/img/overviews/ov_mosaic.png)](https://eurostat.github.io/gridviz/docs/reference#mosaic-style)
 [![](/docs/img/overviews/ov_piechart.png)](https://eurostat.github.io/gridviz/docs/reference#composition-style)
 [![](/docs/img/overviews/ov_pillar.png)](https://eurostat.github.io/gridviz/docs/reference#pillars-style)
