@@ -13,8 +13,6 @@
         <script src="https://unpkg.com/browse/d3-scale@3.2.3/dist/d3-scale.min.js"></script>
 
         <script>
-
-
             const nuts2jsonURL = 'https://ec.europa.eu/assets/estat/E/E4/gisco/pub/nuts2json/v2/'
             const euronymURL = 'https://ec.europa.eu/assets/estat/E/E4/gisco/pub/euronym/v2/UTF/'
             const bgLayerURL = 'https://ec.europa.eu/eurostat/cache/GISCO/mbkg/elevation_shading/'
@@ -85,6 +83,10 @@
                 {
                     pixNb: 1.5,
                     cellInfoHTML: TOOLTIPFUNCTION,
+                    preprocess: (c) => {
+                        c.x = Math.ceil(c.x / 25000) * 25000
+                        c.y = Math.ceil(c.y / 25000) * 25000
+                    },
                 }
             )
 
@@ -97,7 +99,7 @@
                     colors: colors,
                     breaksText: breaks,
                     width: 600,
-                    height: 30
+                    height: 30,
                 })
             )
         </script>
