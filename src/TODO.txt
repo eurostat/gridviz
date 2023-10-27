@@ -1,18 +1,20 @@
+isometric fence style: little bug for angle < -90 ?
+FR: income map
+
+
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale. with invert
 test https://d3js.org/d3-scale/ instead of stretching
 
-FR: bug with 600m level
+FR: bug with mouseover event: happens with: FR 600m level - isofence pixNb=50
 FR DOMs: finalise. define projection to show euronym names
 
 tootip bug: test in small map
-FR: income map
 
 style: rough.js - test on observable with this.cg.pixToGeoX ?
 style: pseudo hexagones
 style: bi-symbol map
 style: spider net diagram
 style: package yvaral
-isometric fence style: little bug for angle < -90 ?
 
 https://www.esa-landcover-cci.org/
 

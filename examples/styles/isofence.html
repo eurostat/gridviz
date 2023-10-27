@@ -32,13 +32,13 @@
                             ind_25_64: col(0.4),
                             ind_65p: col(0.9),
                         },
-                        angle: 55,
+                        angle: -55,
                         heightCol: 'ind',
                         height: (v, r, s, zf) => 0.99 * r * gviz.sExpRev(v / s.max, -7, 0),
                     }),
                 ],
                 {
-                    pixNb: 25,
+                    pixNb: 40,
                     preprocess: (c) => {
                         //aggregate to 3 age groups only
                         c.ind_0_24 = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
