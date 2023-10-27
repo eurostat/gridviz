@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+    <head>
+        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+        <title>Gridviz - Kernel smoothing style</title>
+    </head>
+
+    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+        <div id="viz-container" style="height: 100%; width: 100%"></div>
+
+        <script src="./gridviz.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gridviz-smoothing@1.0.1"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+
+
+
+        <script>
+            let containerDiv = document.getElementById('viz-container')
+            const app = new gviz.App(containerDiv).setGeoCenter({ x: 4500000, y: 2900000 }).setZoomFactor(3000)
+            const colors = ['#FEE5D9', '#FCBBA1', '#FC9272', '#FB6A4A', '#DE2D26', '#A50F15']
+            const breaks = [1, 2, 10, 75, 150, 999999]
+            const DATAFIELD = 'value'
+            const TOOLTIPFUNCTION = (c, r) => {
+                return +c[DATAFIELD] ? '<b>' + c[DATAFIELD] + '</b> days' : ''
+            }
+            const COLORFUNCTION = (value) => {
+                if (value) {
+                    if (value < breaks[0]) return colors[0] // 0
+                    if (value == breaks[0]) return colors[1] // 1
+                    if (value >= breaks[1] && value < breaks[2]) return colors[2] //  2 - < 10
+                    if (value >= breaks[2] && value < breaks[3]) return colors[3] //  10 - <75
+                    if (value >= breaks[3] && value < breaks[4]) return colors[4] //  75 - <150
+                    if (value >= breaks[4]) return colors[5] //>= 150
+                    return colors[5]
+                }
+            }
+
+            //add layer
+            app.addCSVGridLayer(
+                //data URL
+                '../../assets/csv/Europe/TMAX_ranking.csv',
+                //resolution, in CRS unit (m)
+                25000,
+                //the style
+                [
+                    // new gviz.ShapeColorSizeStyle({
+                    //     colorCol: 'value',
+                    //     color: COLORFUNCTION,
+                    // }),
+                    new gviz.SquareColorWGLStyle({
+                        colorCol: DATAFIELD,
+                        tFun: (value) => value/10,
+                    }),
+                ],
+                {
+                    cellInfoHTML: TOOLTIPFUNCTION,
+                }
+            )
+
+            //add legend
+            app.layers[0].styles[0].legends.push(
+                new gviz.ColorDiscreteLegend({
+                    title: 'Days',
+                    titleFontSize: '15px',
+                    labelFontSize: '15px',
+                    colors: colors,
+                    breaksText: breaks,
+                    width: 250,
+                })
+            )
+        </script>
+    </body>
+</html>
