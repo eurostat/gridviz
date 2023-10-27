@@ -248,9 +248,9 @@ export class App {
             // transparent background (e.g. leaflet) 'red painting' fix
             if (opts.transparentBackground) {
                 if (focus) {
+                    this.tooltip.html(focus.html)
                     this.tooltip.setPosition(e)
                     this.tooltip.show()
-                    this.tooltip.html(focus.html)
                 } else {
                     this.tooltip.hide()
                 }
@@ -263,9 +263,9 @@ export class App {
             }
 
             if (focus) {
+                this.tooltip.html(focus.html)
                 this.tooltip.setPosition(e)
                 this.tooltip.show()
-                this.tooltip.html(focus.html)
 
                 //show cell position as a rectangle
                 if (!this.canvasSave) {
