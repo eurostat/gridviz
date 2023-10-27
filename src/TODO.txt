@@ -1,11 +1,11 @@
-isometric fence style: little bug for angle < -90 ?
+isometric fence style: offset - link to joyplot
 FR: income map
 
 
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale. with invert
 test https://d3js.org/d3-scale/ instead of stretching
 
-FR: bug with mouseover event: happens with: FR 600m level - isofence pixNb=50
+FR: bug with mouseover event: happens with: FR 600m level - isofence pixNb=50,60
 FR DOMs: finalise. define projection to show euronym names
 
 tootip bug: test in small map
