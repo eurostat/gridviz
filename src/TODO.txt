@@ -1,4 +1,4 @@
-isometric fence style: offset - link to joyplot
+isometric fence style: link to joyplot
 FR: income map
 
 

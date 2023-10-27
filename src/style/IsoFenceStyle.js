@@ -216,11 +216,15 @@ export class IsoFenceStyle extends Style {
 
         //draw corner lines
         for (let c of cells) {
+
+            //line style
+            const lw = this.cornerLineWidth ? this.cornerLineWidth(c, r, zf, this.angle) : 0.8 * zf
+            if (lw == 0) continue
+            cg.ctx.strokeStyle = this.cornerLineStrokeColor ? this.cornerLineStrokeColor(c, r, zf, this.angle) : "#333"
+            cg.ctx.lineWidth = lw
+
             //height - in geo
             const hG = h_(c[this.heightCol], r, stat, zf)
-
-            cg.ctx.strokeStyle = this.cornerLineStrokeColor ? this.cornerLineStrokeColor(c, r, zf, this.angle) : "#333"
-            cg.ctx.lineWidth = this.cornerLineWidth ? this.cornerLineWidth(c, r, zf, this.angle) : 0.8 * zf
 
             cg.ctx.beginPath()
             cg.ctx.moveTo(c.x + r2 + dx, c.y + r2 + dy)
