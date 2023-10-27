@@ -32,9 +32,10 @@
                             ind_25_64: col(0.4),
                             ind_65p: col(0.9),
                         },
-                        angle: 55,
+                        angle: 90,
                         heightCol: 'ind',
                         height: (v, r, s, zf) => 0.99 * r * gviz.sExpRev(v / s.max, -7, 0),
+                        offset: (c, r, zf) => { return { dx: 0, dy: -r * 0.5 } }
                     }),
                 ],
                 {
@@ -42,7 +43,7 @@
                     preprocess: (c) => {
                         //aggregate to 3 age groups only
                         c.ind_0_24 = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
-                        c.ind_25_64 =  +c.ind_25_39 + +c.ind_40_54 + +c.ind_55_64
+                        c.ind_25_64 = +c.ind_25_39 + +c.ind_40_54 + +c.ind_55_64
                         c.ind_65p = +c.ind_65_79 + +c.ind_80p
                     },
                 }

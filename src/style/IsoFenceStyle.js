@@ -72,6 +72,10 @@ export class IsoFenceStyle extends Style {
         //half resolution
         const r2 = r / 2
 
+        //get offset
+        // @ts-ignore
+        const offset = this.offset(undefined, r, zf), dx = offset.dx, dy = offset.dy
+
         //height
         /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         let h_ = this.height
@@ -180,23 +184,23 @@ export class IsoFenceStyle extends Style {
                 if (s.or == "h") {
                     //horizontal side - vertical section
                     //bottom left
-                    cg.ctx.moveTo(s.x + h1 * cos, s.y - r2 + h1 * sin)
+                    cg.ctx.moveTo(s.x + h1 * cos + dx, s.y - r2 + h1 * sin + dy)
                     //top left
-                    cg.ctx.lineTo(s.x + h2 * cos, s.y + r2 + h2 * sin)
+                    cg.ctx.lineTo(s.x + h2 * cos + dx, s.y + r2 + h2 * sin + dy)
                     //top right
-                    cg.ctx.lineTo(s.x + h2n * cos, s.y + r2 + h2n * sin)
+                    cg.ctx.lineTo(s.x + h2n * cos + dx, s.y + r2 + h2n * sin + dy)
                     //bottom right
-                    cg.ctx.lineTo(s.x + h1n * cos, s.y - r2 + h1n * sin)
+                    cg.ctx.lineTo(s.x + h1n * cos + dx, s.y - r2 + h1n * sin + dy)
                 } else {
                     //vertical side - horizontal section
                     //bottom left
-                    cg.ctx.moveTo(s.x - r2 + h1 * cos, s.y + h1 * sin)
+                    cg.ctx.moveTo(s.x - r2 + h1 * cos + dx, s.y + h1 * sin + dy)
                     //bottom right
-                    cg.ctx.lineTo(s.x + r2 + h2 * cos, s.y + h2 * sin)
+                    cg.ctx.lineTo(s.x + r2 + h2 * cos + dx, s.y + h2 * sin + dy)
                     //top right
-                    cg.ctx.lineTo(s.x + r2 + h2n * cos, s.y + h2n * sin)
+                    cg.ctx.lineTo(s.x + r2 + h2n * cos + dx, s.y + h2n * sin + dy)
                     //top left
-                    cg.ctx.lineTo(s.x - r2 + h1n * cos, s.y + h1n * sin)
+                    cg.ctx.lineTo(s.x - r2 + h1n * cos + dx, s.y + h1n * sin + dy)
                 }
                 cg.ctx.closePath()
 
@@ -219,8 +223,8 @@ export class IsoFenceStyle extends Style {
             cg.ctx.lineWidth = this.cornerLineWidth ? this.cornerLineWidth(c, r, zf, this.angle) : 0.8 * zf
 
             cg.ctx.beginPath()
-            cg.ctx.moveTo(c.x + r2, c.y + r2)
-            cg.ctx.lineTo(c.x + r2 + hG * cos, c.y + r2 + hG * sin)
+            cg.ctx.moveTo(c.x + r2 + dx, c.y + r2 + dy)
+            cg.ctx.lineTo(c.x + r2 + hG * cos + dx, c.y + r2 + hG * sin + dy)
             cg.ctx.closePath()
             cg.ctx.stroke()
         }
