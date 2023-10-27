@@ -39,6 +39,16 @@ export class IsoFenceStyle extends Style {
         /** A function returning the corner line width.
         * @type {function(import('../Dataset.js').Cell,number,number,number):number} */
         this.cornerLineWidth = opts.cornerLineWidth || ((c, r, zf, angle) => (angle % 90 == 0 ? 0 : 0.8 * zf))
+
+        /**
+        * Show vertical cross-sections.
+        * @type {boolean} */
+        this.sVert = opts.sVert != undefined ? opts.sVert : true
+
+        /**
+        * Show horizontal cross-sections.
+        * @type {boolean} */
+        this.sHor = opts.sHor != undefined ? opts.sHor : true
     }
 
     /**
@@ -86,7 +96,7 @@ export class IsoFenceStyle extends Style {
 
         //make horizontal sides - except when angle%180=0
         //sort cells by x and y
-        if (this.angle % 180 != 90) {
+        if (this.angle % 180 != 90 && this.sVert) {
             cells.sort((c1, c2) => (c2.x == c1.x ? c1.y - c2.y : c1.x - c2.x))
             let c1 = cells[0]
             for (let i = 1; i < cells.length; i++) {
@@ -109,7 +119,7 @@ export class IsoFenceStyle extends Style {
 
         //make vertical sides - except when angle%180=90
         //sort cells by y and x
-        if (this.angle % 180 != 0) {
+        if (this.angle % 180 != 0 && this.sHor) {
             cells.sort((c1, c2) => (c2.y == c1.y ? c1.x - c2.x : c1.y - c2.y))
             let c1 = cells[0]
             for (let i = 1; i < cells.length; i++) {

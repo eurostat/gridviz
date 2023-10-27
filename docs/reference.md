@@ -669,7 +669,8 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/isofence.h
 | angle    |  number   |  50   |  The isometric perspective angle.   |
 | cornerLineStrokeColor    |  function(cell,r,zf,angle): string   |   (c, r, zf, angle) => "#999"  |   A function returning the corner line stroke style.  |
 | cornerLineWidth    |  function(cell,r,zf,angle): number    |  (c, r, zf, angle) => (angle % 90 == 0 ? 0 : 0.8 * zf)   |  A function returning the corner line width.  |
-
+| sVert    |  boolean    |  true   |  Show vertical cross-sections.  |
+| sHor    |  boolean    |  true   |  Show horizontal cross-sections.  |
 
 ## Esthetic styles
 
