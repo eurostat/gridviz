@@ -680,7 +680,7 @@ See [this example](https://eurostat.github.io/gridviz/examples/styles/isofence.h
 [![joyplot style](img/styles/joyplot_full.png)](https://eurostat.github.io/gridviz/examples/styles/joyplot_shading.html)
 [![joyplot style](img/styles/joyplot_random.png)](https://eurostat.github.io/gridviz/examples/styles/joyplot_random.html)
 
-This style shows cell rows in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover. To show joyplots with composition or various orientations and perspective, see [isometric fence style](#isometric-fence-style).
+This style shows cell rows in the form of a 'joyplot' - named after Joy Division's "Unknown Pleasures" album cover. For joyplot style showing composition by categories, or for various orientations and perspective angles, see [isometric fence style](#isometric-fence-style).
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/joyplot.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/joyplot.html)).
 
