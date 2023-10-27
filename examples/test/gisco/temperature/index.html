@@ -101,7 +101,11 @@
                     }),
                 ],
                 {
-                    cellInfoHTML: (c) => clcLabels[c.value],
+                    cellInfoHTML: (c) => categories[c.value-1],
+                    preprocess: (c) => {
+                        c.x = Math.floor(c.x / 25000) * 25000
+                        c.y = Math.floor(c.y / 25000) * 25000
+                    },
                 }
             )
 
