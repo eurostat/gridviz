@@ -160,6 +160,29 @@ export class IsoFenceStyle extends Style {
             //south west ones are drown first
             sides.sort((s1, s2) => (Math.hypot(s2.x - cg.extGeo.xMax, s2.y - cg.extGeo.yMax) - Math.hypot(s1.x - cg.extGeo.xMax, s1.y - cg.extGeo.yMax)))
 
+
+        //prepare function to draw corner line for a cell *c*
+        const drawCornerLine = (c) => {
+
+            if (!c) return
+            //line style
+            const lw = this.cornerLineWidth ? this.cornerLineWidth(c, r, zf, this.angle) : 0.8 * zf
+            if (lw == 0) return
+            cg.ctx.strokeStyle = this.cornerLineStrokeColor ? this.cornerLineStrokeColor(c, r, zf, this.angle) : "#333"
+            cg.ctx.lineWidth = lw
+
+            //height - in geo
+            const hG = h_(c[this.heightCol], r, stat, zf)
+
+            //draw line
+            cg.ctx.beginPath()
+            cg.ctx.moveTo(c.x + r2 + dx, c.y + r2 + dy)
+            cg.ctx.lineTo(c.x + r2 + hG * cos + dx, c.y + r2 + hG * sin + dy)
+            cg.ctx.closePath()
+            cg.ctx.stroke()
+        }
+
+
         //draw sides
         for (let s of sides) {
 
@@ -220,27 +243,11 @@ export class IsoFenceStyle extends Style {
 
                 cumul1 += v1
                 cumul2 += v2
-                //break
+
+                //draw corner line
+                drawCornerLine(s.c1)
+                drawCornerLine(s.c2)
             }
-        }
-
-        //draw corner lines
-        for (let c of cells) {
-
-            //line style
-            const lw = this.cornerLineWidth ? this.cornerLineWidth(c, r, zf, this.angle) : 0.8 * zf
-            if (lw == 0) continue
-            cg.ctx.strokeStyle = this.cornerLineStrokeColor ? this.cornerLineStrokeColor(c, r, zf, this.angle) : "#333"
-            cg.ctx.lineWidth = lw
-
-            //height - in geo
-            const hG = h_(c[this.heightCol], r, stat, zf)
-
-            cg.ctx.beginPath()
-            cg.ctx.moveTo(c.x + r2 + dx, c.y + r2 + dy)
-            cg.ctx.lineTo(c.x + r2 + hG * cos + dx, c.y + r2 + hG * sin + dy)
-            cg.ctx.closePath()
-            cg.ctx.stroke()
         }
 
         //update legends
