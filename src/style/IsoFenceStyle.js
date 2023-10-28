@@ -166,7 +166,6 @@ export class IsoFenceStyle extends Style {
             cg.ctx.beginPath()
             cg.ctx.moveTo(c.x + r2 + dx, c.y + r2 + dy)
             cg.ctx.lineTo(c.x + r2 + hG * cos + dx, c.y + r2 + hG * sin + dy)
-            cg.ctx.closePath()
             cg.ctx.stroke()
         }
 
@@ -226,7 +225,7 @@ export class IsoFenceStyle extends Style {
                     //top left
                     cg.ctx.lineTo(s.x - r2 + h1n * cos + dx, s.y + h1n * sin + dy)
                 }
-                cg.ctx.closePath()
+                //cg.ctx.closePath()
 
                 //fill
                 cg.ctx.fillStyle = color
