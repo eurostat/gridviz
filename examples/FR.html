@@ -114,7 +114,7 @@
 
                 //dataset on population by age
                 ds[geo].ind[year] = app.makeMultiScaleTiledGridDataset(
-                    [200, 400, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     (r) => baseURL + geo + '/ind/' + year + '/' + r + 'm/',
                     {
                         preprocess: (c) => {
@@ -134,7 +134,7 @@
 
                 //dataset on household stats
                 ds[geo].men[year] = app.makeMultiScaleTiledGridDataset(
-                    [200, 400, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     (r) => baseURL + geo + '/men/' + year + '/' + r + 'm/',
                     {
                         preprocess: (c) => {
@@ -159,7 +159,7 @@
 
                 //dataset on housing stats
                 ds[geo].log[year] = app.makeMultiScaleTiledGridDataset(
-                    [200, 400, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     (r) => baseURL + geo + '/log/' + year + '/' + r + 'm/',
                     {
                         preprocess: (c) => {
@@ -173,7 +173,7 @@
 
                 //dataset on total population and income
                 ds[geo].inc[year] = app.makeMultiScaleTiledGridDataset(
-                    [200, 400, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                    [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     (r) => baseURL + geo + '/inc/' + year + '/' + r + 'm/',
                     {
                         preprocess: (c) => {
