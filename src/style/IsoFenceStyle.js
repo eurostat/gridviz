@@ -245,8 +245,8 @@ export class IsoFenceStyle extends Style {
                 cumul2 += v2
 
                 //draw corner line
-                drawCornerLine(s.c1)
-                drawCornerLine(s.c2)
+                if (this.angle < -90) drawCornerLine(s.c1)
+                else drawCornerLine(s.c2)
             }
         }
 
