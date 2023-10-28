@@ -149,16 +149,21 @@ export class IsoFenceStyle extends Style {
         //draw in geo coordinates
         cg.setCanvasTransform()
 
-        //sort sides so that the back ones are drawn first. This depends on the angle
-        if (Math.abs(this.angle) <= 90)
-            //north east ones are drown first
-            sides.sort((s1, s2) => (Math.hypot(s2.x, s2.y) - Math.hypot(s1.x, s1.y)))
-        else if (this.angle > 90)
-            //north west ones are drown first
-            sides.sort((s1, s2) => (Math.hypot(s2.x - cg.extGeo.xMax, s2.y) - Math.hypot(s1.x - cg.extGeo.xMax, s1.y)))
-        else if (this.angle < 90)
-            //south west ones are drown first
+        //sort sides so that the back ones are drawn first. This depends on the angle.
+        let amod = this.angle //% 360; if (amod < 0) amod += 360
+        //console.log(this.angle, amod)
+        if (amod < -90)
+            //south west sides are drown first
             sides.sort((s1, s2) => (Math.hypot(s2.x - cg.extGeo.xMax, s2.y - cg.extGeo.yMax) - Math.hypot(s1.x - cg.extGeo.xMax, s1.y - cg.extGeo.yMax)))
+        else if (amod < 0)
+            //south east sides are drown first
+            sides.sort((s1, s2) => (Math.hypot(s2.x - cg.extGeo.xMin, s2.y - cg.extGeo.yMax) - Math.hypot(s1.x - cg.extGeo.xMin, s1.y - cg.extGeo.yMax)))
+        else if (amod < 90)
+            //north east sides are drown first
+            sides.sort((s1, s2) => (Math.hypot(s2.x - cg.extGeo.xMin, s2.y - cg.extGeo.yMin) - Math.hypot(s1.x - cg.extGeo.xMin, s1.y - cg.extGeo.yMin)))
+        else
+            //north west sides are drown first
+            sides.sort((s1, s2) => (Math.hypot(s2.x - cg.extGeo.xMax, s2.y - cg.extGeo.yMin) - Math.hypot(s1.x - cg.extGeo.xMax, s1.y - cg.extGeo.yMin)))
 
 
         //prepare function to draw corner line for a cell *c*
