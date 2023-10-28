@@ -150,10 +150,10 @@ export class IsoFenceStyle extends Style {
         cg.setCanvasTransform()
 
         //sort sides so that the back ones are drawn first. This depends on the angle.
-        const xRef = Math.abs(this.angle) < 90 ? cg.extGeo.xMin : cg.extGeo.xMax
-        const yRef = this.angle < 0 ? cg.extGeo.yMax : cg.extGeo.yMin
-        //sort sides depending on distance to the reference point
-        sides.sort((s1, s2) => (Math.hypot(s2.x - xRef, s2.y - yRef) - Math.hypot(s1.x - xRef, s1.y - yRef)))
+        //depending on distance to the reference corner point
+        const xCorner = Math.abs(this.angle) < 90 ? cg.extGeo.xMin : cg.extGeo.xMax
+        const yCorner = this.angle < 0 ? cg.extGeo.yMax : cg.extGeo.yMin
+        sides.sort((s1, s2) => (Math.hypot(s2.x - xCorner, s2.y - yCorner) - Math.hypot(s1.x - xCorner, s1.y - yCorner)))
 
         //prepare function to draw corner line for a cell *c*
         const drawCornerLine = (c) => {
