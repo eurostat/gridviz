@@ -1,4 +1,3 @@
-isofence: draw cell lines with sections - overlap issue when high exageration.
 FR: income map
 FR DOMs: finalise. define projection to show euronym names
 

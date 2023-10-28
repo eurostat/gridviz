@@ -195,10 +195,10 @@ export class IsoFenceStyle extends Style {
                 if (v1 == 0 && v2 == 0) continue
 
                 //compute heights
-                const h1 = total1 > 0 ? hG1 * cumul1 / total1 : 0
-                const h1n = total1 > 0 ? hG1 * (cumul1 + v1) / total1 : 0
-                const h2 = total2 > 0 ? hG2 * cumul2 / total2 : 0
-                const h2n = total2 > 0 ? hG2 * (cumul2 + v2) / total2 : 0
+                const h1 = hG1 * cumul1 / total1 || 0
+                const h1n = hG1 * (cumul1 + v1) / total1 || 0
+                const h2 = hG2 * cumul2 / total2 || 0
+                const h2n = hG2 * (cumul2 + v2) / total2 || 0
 
                 //make path
                 cg.ctx.beginPath()
@@ -232,11 +232,14 @@ export class IsoFenceStyle extends Style {
                 cumul1 += v1
                 cumul2 += v2
 
+                //TODO draw only one line
                 //draw corner line
-                if (s.or == "h") {
-                    if (this.angle < 0) drawCornerLine(s.c1)
-                    else drawCornerLine(s.c2)
-                }
+                //if (s.or == "h") {
+                drawCornerLine(s.c1)
+                drawCornerLine(s.c2)
+                //if (this.angle > 0 && s.or == "h") drawCornerLine(s.c2)
+                //else drawCornerLine(s.c2)
+                //}
             }
         }
 
