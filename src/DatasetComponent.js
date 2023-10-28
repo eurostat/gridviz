@@ -90,10 +90,10 @@ export class DatasetComponent {
         const r = this.getResolution()
         for (const cell of cells) {
             if (posGeo.x < cell.x) continue
-            if (cell.x + r < posGeo.x) continue
-            if (posGeo.y < cell.y) continue
-            if (cell.y + r < posGeo.y) continue
-            return cell
+            else if (cell.x + r < posGeo.x) continue
+            else if (posGeo.y < cell.y) continue
+            else if (cell.y + r < posGeo.y) continue
+            else return cell
         }
         return undefined
 
