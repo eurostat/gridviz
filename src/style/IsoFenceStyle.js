@@ -28,7 +28,7 @@ export class IsoFenceStyle extends Style {
          * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.height = opts.height || ((v, r, s, zf) => r * 0.4)
 
-        /** The perspective angle.
+        /** The perspective angle, in degree, within [-180,180], from [O,x] axis.
          * @type {number} */
         this.angle = opts.angle != undefined ? opts.angle : 50
 
