@@ -22,6 +22,8 @@
                 box-shadow: 5px 5px 5px grey;
             ">
         <input type="range" min="-180" max="180" value="50" class="slider" id="orientation" style="width: 250px" />
+        <br />
+        <input type="range" min="0" max="10" step="0.05" value="1" class="slider" id="exa" style="width: 250px" />
     </div>
 
     <script src="../../dist/gridviz.js"></script>
@@ -49,7 +51,7 @@
                         },
                         angle: 50,
                         heightCol: 'ind',
-                        height: (v, r, s, zf) => 5 * r * gviz.sExpRev(v / s.max, -7, 0),
+                        height: (v, r, s, zf) => r * gviz.sExpRev(v / s.max, -7, 0),
                         //offset: (c, r, zf) => { return { dx: 0, dy: -r * 0.5 } }
                         //sVert: false
                     }),
@@ -69,6 +71,14 @@
         document.getElementById('orientation').oninput = function () {
             //set orientation
             app.layers[0].styles[0].angle = this.value
+            //redraw
+            app.cg.redraw()
+        }
+
+        //height exageration selection
+        document.getElementById('exa').oninput = function () {
+            //set orientation
+            app.layers[0].styles[0].height = (v, r, s, zf) => this.value * r * gviz.sExpRev(v / s.max, -7, 0)
             //redraw
             app.cg.redraw()
         }
