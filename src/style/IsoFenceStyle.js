@@ -236,9 +236,7 @@ export class IsoFenceStyle extends Style {
 
                 //draw corner line
                 if (s.or == "h") {
-                    if (this.angle < -90) drawCornerLine(s.c1)
-                    else if (this.angle < 0) drawCornerLine(s.c1)
-                    else if (this.angle < 90) drawCornerLine(s.c2)
+                    if (this.angle < 0) drawCornerLine(s.c1)
                     else drawCornerLine(s.c2)
                 }
             }
