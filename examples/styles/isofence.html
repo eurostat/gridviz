@@ -52,7 +52,9 @@
                         angle: 50,
                         heightCol: 'ind',
                         height: (v, r, s, zf) => r * gviz.sExpRev(v / s.max, -7, 0),
-                        //offset: (c, r, zf) => { return { dx: 0, dy: -r * 0.5 } }
+                        cornerLineWidth: (c, r, zf, a) => 10 * zf,
+                        cornerLineStrokeColor: (c, r, zf, a) => "#0008",
+                        //offset: (c, r, zf) => { return { dx: 0, dy: -r * 0.5 } },
                         //sVert: false
                     }),
                 ],

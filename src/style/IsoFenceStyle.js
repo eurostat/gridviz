@@ -76,9 +76,6 @@ export class IsoFenceStyle extends Style {
         //nb categories - used for radar and agepyramid
         const cats = Object.keys(this.color)
 
-        //draw in geo coordinates
-        cg.setCanvasTransform()
-
         //half resolution
         const r2 = r / 2
 
@@ -146,9 +143,6 @@ export class IsoFenceStyle extends Style {
         //angle in radians
         const aRad = this.angle * Math.PI / 180, cos = Math.cos(aRad), sin = Math.sin(aRad)
 
-        //draw in geo coordinates
-        cg.setCanvasTransform()
-
         //sort sides so that the back ones are drawn first. This depends on the angle.
         //depending on distance to the reference corner point
         const xCorner = Math.abs(this.angle) < 90 ? cg.extGeo.xMin : cg.extGeo.xMax
@@ -176,8 +170,11 @@ export class IsoFenceStyle extends Style {
             cg.ctx.stroke()
         }
 
+        //draw in geo coordinates
+        cg.setCanvasTransform()
 
         //draw sides
+        cg.ctx.lineCap = "round";
         for (let s of sides) {
 
             //heights - in geo
@@ -239,8 +236,12 @@ export class IsoFenceStyle extends Style {
                 cumul2 += v2
 
                 //draw corner line
-                if (this.angle < -90) drawCornerLine(s.c1)
-                else drawCornerLine(s.c2)
+                if (s.or == "h") {
+                    if (this.angle < -90) drawCornerLine(s.c1)
+                    else if (this.angle < 0) drawCornerLine(s.c1)
+                    else if (this.angle < 90) drawCornerLine(s.c2)
+                    else drawCornerLine(s.c2)
+                }
             }
         }
 
