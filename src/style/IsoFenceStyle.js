@@ -177,14 +177,12 @@ export class IsoFenceStyle extends Style {
         for (let s of sides) {
 
             //heights - in geo
-            /** @type {number} */
-            const hG1 = s.c1 ? h_(s.c1[this.heightCol], r, stat, zf) : 0
-            /** @type {number} */
-            const hG2 = s.c2 ? h_(s.c2[this.heightCol], r, stat, zf) : 0
+            const hG1 = s.c1 ? h_(s.c1[this.heightCol], r, stat, zf) : 0,
+                hG2 = s.c2 ? h_(s.c2[this.heightCol], r, stat, zf) : 0
 
             //compute totals for both cells
-            const total1 = computeTotal(s.c1, cats)
-            const total2 = computeTotal(s.c2, cats)
+            const total1 = computeTotal(s.c1, cats),
+                total2 = computeTotal(s.c2, cats)
             if (total1 == 0 && total2 == 0) continue
 
             let cumul1 = 0, cumul2 = 0
