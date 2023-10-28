@@ -150,21 +150,10 @@ export class IsoFenceStyle extends Style {
         cg.setCanvasTransform()
 
         //sort sides so that the back ones are drawn first. This depends on the angle.
-        let amod = this.angle //% 360; if (amod < 0) amod += 360
-        //console.log(this.angle, amod)
-        if (amod < -90)
-            //south west sides are drown first
-            sides.sort((s1, s2) => (Math.hypot(s2.x - cg.extGeo.xMax, s2.y - cg.extGeo.yMax) - Math.hypot(s1.x - cg.extGeo.xMax, s1.y - cg.extGeo.yMax)))
-        else if (amod < 0)
-            //south east sides are drown first
-            sides.sort((s1, s2) => (Math.hypot(s2.x - cg.extGeo.xMin, s2.y - cg.extGeo.yMax) - Math.hypot(s1.x - cg.extGeo.xMin, s1.y - cg.extGeo.yMax)))
-        else if (amod < 90)
-            //north east sides are drown first
-            sides.sort((s1, s2) => (Math.hypot(s2.x - cg.extGeo.xMin, s2.y - cg.extGeo.yMin) - Math.hypot(s1.x - cg.extGeo.xMin, s1.y - cg.extGeo.yMin)))
-        else
-            //north west sides are drown first
-            sides.sort((s1, s2) => (Math.hypot(s2.x - cg.extGeo.xMax, s2.y - cg.extGeo.yMin) - Math.hypot(s1.x - cg.extGeo.xMax, s1.y - cg.extGeo.yMin)))
-
+        const xRef = Math.abs(this.angle) < 90 ? cg.extGeo.xMin : cg.extGeo.xMax
+        const yRef = this.angle < 0 ? cg.extGeo.yMax : cg.extGeo.yMin
+        //sort sides depending on distance to the reference point
+        sides.sort((s1, s2) => (Math.hypot(s2.x - xRef, s2.y - yRef) - Math.hypot(s1.x - xRef, s1.y - yRef)))
 
         //prepare function to draw corner line for a cell *c*
         const drawCornerLine = (c) => {
