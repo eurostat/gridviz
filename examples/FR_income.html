@@ -116,9 +116,11 @@
                     },
                 }
             )
-        for (let geo of ["met", "reun", "mart"])
+        for (let geo of ["met", "reun", "mart"]) {
+            incDataset[geo] = {}
             for (let year of ["2015", "2017", "2019"])
-                incDataset.met = getDataset(geo, year)
+                incDataset[geo][year] = getDataset(geo, year)
+        }
 
         //ts_ind_snv/100000m/0/0.csv
         //x	y	ind_snv2015	imp2015	ind_snv2017	imp2017	ind_snv2019	imp2019
@@ -153,27 +155,22 @@
             const layCode = document.querySelector('input[name="layer"]:checked').value
             const year_ = document.querySelector('#year').value
             const year = "ind" + year_
-            const chYears = document.querySelector('#chYears').value
-            const y1 = chYears.split("_")[0].replace("d", ""), y2 = chYears.split("_")[1]
+            //const chYears = document.querySelector('#chYears').value
+            //const y1 = chYears.split("_")[0].replace("d", ""), y2 = chYears.split("_")[1]
             const geo = document.querySelector('#geo').value
 
             //remove layers
             app.layers = []
 
-            //tooltip function: for total population
+            //tooltip function: for income
             const tooltipFun = (c, r) =>
-                +c[year]
-                    ? '<b>' +
-                    c[year] +
-                    '</b> habitant' +
-                    (+c[year] == 1 ? '' : 's') +
-                    ' par ' +
-                    (r * r) / 1000000 +
-                    'km²' +
-                    (+c["imp" + year_] && r < 1000 ? '<br>(valeur imputée)' : '')
-                    : undefined
+                +c.revind
+                    ?
+                    c.revind +
+                    ' €/habitant' +
+                    (+c.imputed && r < 1000 ? '<br>(valeur imputée)' : '') : undefined
 
-            //tooltip function: for population change
+            /*/tooltip function: for population change
             const tooltipFunCh = (c) =>
                 y1 + ': ' +
                 c["ind" + y1] +
@@ -184,7 +181,7 @@
                     ? 'Pas de changement'
                     : (c[chYears] > 0 ? '+' : '') + c[chYears] + ' habitants') +
                 '</b>'
-            //+ "<br>" + c["p" + y1 + "_" + y2]
+            //+ "<br>" + c["p" + y1 + "_" + y2]*/
 
             //set default background filter
             for (let bgl of app.bgLayers) bgl.filterColor = (zf) => '#ffffff60'
@@ -195,20 +192,20 @@
 
                 //add layer
                 app.addLayerFromDataset(
-                    popDataset[geo],
+                    incDataset[geo][year_],
                     [
                         new gviz.SquareColorWGLStyle({
-                            colorCol: year,
+                            colorCol: "revind",
                             color: colR,
-                            stretching: { fun: 'expRev', alpha: -7 },
+                            stretching: { fun: 'expRev', alpha: 0 },
                             blendOperation: (zf) => zf < 25 ? "multiply" : "source-over"
                         }),
                         new gviz.StrokeStyle({
-                            strokeColorCol: year,
+                            strokeColorCol: "revind",
                             strokeColor: (v) => (+v ? '#666' : ''),
                             maxZoom: 15,
                         }),
-                        getStyleImputed(year_)
+                        //getStyleImputed(year_)
                     ],
                     {
                         pixNb: 1.8,
