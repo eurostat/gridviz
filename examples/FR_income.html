@@ -102,10 +102,28 @@
             .setZoomFactorExtent([3, 1500])
             .setViewFromURL()
 
-        //population datasets, indexed by geo region
-        const popDataset = {}
+        //income datasets, indexed by geo region and year
+        const incDataset = {}
+        const getDataset = (geo, year) =>
+            app.makeMultiScaleTiledGridDataset(
+                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000],
+                (r) => "https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/" + geo + "/inc/" + year + "/" + r + "m/",
+                {
+                    preprocess: (c) => {
+                        //x	y	imputed	ind	ind_snv
+                        c.revind = Math.round(c.ind_snv / c.ind)
+                        delete c.ind_snv
+                    },
+                }
+            )
+        for (let geo of ["met", "reun", "mart"])
+            for (let year of ["2015", "2017", "2019"])
+                incDataset.met = getDataset(geo, year)
 
-        //prepare function for population difference computation
+        //ts_ind_snv/100000m/0/0.csv
+        //x	y	ind_snv2015	imp2015	ind_snv2017	imp2017	ind_snv2019	imp2019
+
+        /*/prepare function for population difference computation
         const computeChange = (c, y1, y2) => {
             const y1_ = c["ind" + y1], y2_ = c["ind" + y2]
             const k = "d" + y1 + "_" + y2
@@ -115,40 +133,19 @@
             else c[k] = +y2_ - +y1_
             //rate of change
             c["p" + y1 + "_" + y2] = y1_ == 0 ? 999 : c[k] / y1_
-        }
+        }*/
 
-        const getDataset = (geo) =>
-            app.makeMultiScaleTiledGridDataset(
-                [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000],
-                (r) =>
-                    "https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/" + geo + "/ts_ind/" +
-                    r +
-                    "m/",
-                {
-                    preprocess: (c) => {
-                        //compute change figures
-                        computeChange(c, 2015, 2017)
-                        computeChange(c, 2015, 2019)
-                        computeChange(c, 2017, 2019)
-                    },
-                }
-            )
-        popDataset.met = getDataset("met")
-        popDataset.reun = getDataset("reun")
-        popDataset.mart = getDataset("mart")
-
-        //default color
-        const col = '#e54f37'
-
-        //style for imputed values
+        /*/style for imputed values
         const getStyleImputed = (year, mz = 30, sr = 0.25) => new gviz.ShapeColorSizeStyle({
             colorCol: 'imp' + year,
             color: (v, r, s) => (+v ? '#666' : ''),
             shape: () => 'circle',
             size: (v, r, s) => sr * r,
             maxZoom: mz,
-        })
+        })*/
 
+        //default color
+        const col = '#e54f37'
 
         //
         const update = () => {
