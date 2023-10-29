@@ -111,7 +111,7 @@
                 {
                     preprocess: (c) => {
                         //x	y	imputed	ind	ind_snv
-                        c.revind = Math.round(c.ind_snv / c.ind)
+                        c.revind = Math.round(c.ind_snv / c.ind / 12)
                         delete c.ind_snv
                     },
                 }
@@ -167,7 +167,7 @@
                 +c.revind
                     ?
                     c.revind +
-                    ' €/habitant' +
+                    ' €/mois/habitant' +
                     (+c.imputed && r < 1000 ? '<br>(valeur imputée)' : '') : undefined
 
             /*/tooltip function: for population change
