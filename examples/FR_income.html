@@ -205,8 +205,8 @@
                             colorCol: 'revind',
                             color: d3.interpolateSpectral,
                             tFun: (v, r, s) => {
-                                let t = (v - s.min) / (s.max - s.min)
-                                //let t = (v - 1200) / (3600 - 1200)
+                                //let t = (v - s.min) / (s.max - s.min)
+                                let t = (v - 1000) / (4000 - 1200)
                                 //t = t > 1 ? 1 : t < 0 ? 0 : t
                                 return 1 - Math.pow(t < 0 ? 0 : t, 1.5)
                             },
