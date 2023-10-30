@@ -23,7 +23,7 @@
                 line-height: 1.6;
                 box-shadow: 3px 3px 3px grey, -3px -3px 3px #ddd;
             ">
-        <span style="font-size: 1.3em; font-weight: bold">Revenus en France</span><br />
+        <span style="font-size: 1.3em; font-weight: bold">Niveau de vie en France</span><br />
         <div id="layer">
             Année:
             <select id="year">
@@ -95,6 +95,7 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-shape@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-selection@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-axis@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
     <script>
         let containerDiv = document.getElementById('viz-container')
 
@@ -158,6 +159,18 @@
         //default color
         const col = '#e54f37'
 
+        //default formater for income
+        const lFr = d3.formatLocale({
+            decimal: ",",
+            thousands: "\u00a0",
+            grouping: [3],
+            currency: ["", "\u00a0€"],
+            minus: "\u2212",
+            percent: "\u202f%"
+        })
+        const f = lFr.format(",")
+
+
         //
         const update = () => {
             //read GUI selection
@@ -175,7 +188,7 @@
             const tooltipFun = (c, r) =>
                 +c.revind
                     ?
-                    '<b>' + c.revind +
+                    '<b>' + f(c.revind) +
                     '€</b> par mois et par individu, en moyenne' +
                     (+c.imputed && r < 1000 ? '<br>(valeur imputée)' : '') : undefined
 
@@ -232,8 +245,8 @@
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Niveau de vie, en € par mois et par individu",
-                        width: 400,
-                        ticks: 4,
+                        width: 500,
+                        ticks: 7,
                         colorRamp: colR,
                         fun: (t, r, s) => 1000 + t * (4000 - 1000),
                     })
