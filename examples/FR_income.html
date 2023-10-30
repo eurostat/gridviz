@@ -208,6 +208,7 @@
                             strokeColor: (v) => (+v ? '#666' : ''),
                             maxZoom: 15,
                         }),
+                        getStyleImputed(geo, year_)
                     ],
                     {
                         pixNb: 2,
@@ -215,32 +216,11 @@
                     }
                 )
 
-                /*
-                                const colR = d3.interpolateOrRd
-                
-                                //add layer
-                                app.addLayerFromDataset(
-                                    incDataset[geo][year_],
-                                    [
-                                        new gviz.SquareColorWGLStyle({
-                                            colorCol: "revind",
-                                            color: colR,
-                                            stretching: { fun: 'expRev', alpha: 0 },
-                                            blendOperation: (zf) => zf < 25 ? "multiply" : "source-over"
-                                        }),
-                                        new gviz.StrokeStyle({
-                                            strokeColorCol: "revind",
-                                            strokeColor: (v) => (+v ? '#666' : ''),
-                                            maxZoom: 15,
-                                        }),
-                                        //getStyleImputed(year_)
-                                    ],
-                                    {
-                                        pixNb: 1.8,
-                                        cellInfoHTML: tooltipFun,
-                                    }
-                                )
-                */
+                //legend
+                //app.layers[0].styles[0].legends.push(
+                //    new gviz.ColorLegend({ title: "Revenu par mois et par 'individu'", colorRamp: d3.interpolateSpectral, fun: (t, r, s) => t })
+                //)
+
                 /*/add legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
