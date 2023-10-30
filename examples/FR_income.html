@@ -166,8 +166,8 @@
             const tooltipFun = (c, r) =>
                 +c.revind
                     ?
-                    c.revind +
-                    ' €/mois/habitant' +
+                    '<b>' + c.revind +
+                    '€</b> par mois et par individu, en moyenne' +
                     (+c.imputed && r < 1000 ? '<br>(valeur imputée)' : '') : undefined
 
             /*/tooltip function: for population change
@@ -188,32 +188,55 @@
             app.setBackgroundColor("white")
 
             if (layCode == 'color') {
-                const colR = d3.interpolateOrRd
-
-                //add layer
+                //income
                 app.addLayerFromDataset(
                     incDataset[geo][year_],
                     [
                         new gviz.SquareColorWGLStyle({
-                            colorCol: "revind",
-                            color: colR,
-                            stretching: { fun: 'expRev', alpha: 0 },
-                            blendOperation: (zf) => zf < 25 ? "multiply" : "source-over"
+                            colorCol: 'revind',
+                            color: d3.interpolateSpectral,
+                            tFun: (v, r, s) => {
+                                let t = (v - 1200) / (3600 - 1200)
+                                //t = t > 1 ? 1 : t < 0 ? 0 : t
+                                return 1 - Math.pow(t < 0 ? 0 : t, 1.5)
+                            },
+                            blendOperation: (zf) => zf < 20 ? "multiply" : "source-over"
                         }),
-                        new gviz.StrokeStyle({
-                            strokeColorCol: "revind",
-                            strokeColor: (v) => (+v ? '#666' : ''),
-                            maxZoom: 15,
-                        }),
-                        //getStyleImputed(year_)
+                        new gviz.StrokeStyle({ maxZoom: 15 }),
                     ],
                     {
-                        pixNb: 1.8,
+                        pixNb: 2,
                         cellInfoHTML: tooltipFun,
                     }
                 )
 
-                //add legend
+                /*
+                                const colR = d3.interpolateOrRd
+                
+                                //add layer
+                                app.addLayerFromDataset(
+                                    incDataset[geo][year_],
+                                    [
+                                        new gviz.SquareColorWGLStyle({
+                                            colorCol: "revind",
+                                            color: colR,
+                                            stretching: { fun: 'expRev', alpha: 0 },
+                                            blendOperation: (zf) => zf < 25 ? "multiply" : "source-over"
+                                        }),
+                                        new gviz.StrokeStyle({
+                                            strokeColorCol: "revind",
+                                            strokeColor: (v) => (+v ? '#666' : ''),
+                                            maxZoom: 15,
+                                        }),
+                                        //getStyleImputed(year_)
+                                    ],
+                                    {
+                                        pixNb: 1.8,
+                                        cellInfoHTML: tooltipFun,
+                                    }
+                                )
+                */
+                /*/add legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Nombre d'habitants",
@@ -222,7 +245,7 @@
                         colorRamp: colR,
                         fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
                     })
-                )
+                )*/
 
             } else if (layCode == 'smoothed') {
                 //get year selection
