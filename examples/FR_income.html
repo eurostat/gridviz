@@ -196,13 +196,18 @@
                             colorCol: 'revind',
                             color: d3.interpolateSpectral,
                             tFun: (v, r, s) => {
-                                let t = (v - 1200) / (3600 - 1200)
+                                let t = (v - s.min) / (s.max - s.min)
+                                //let t = (v - 1200) / (3600 - 1200)
                                 //t = t > 1 ? 1 : t < 0 ? 0 : t
                                 return 1 - Math.pow(t < 0 ? 0 : t, 1.5)
                             },
                             blendOperation: (zf) => zf < 20 ? "multiply" : "source-over"
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 15 }),
+                        new gviz.StrokeStyle({
+                            strokeColorCol: "revind",
+                            strokeColor: (v) => (+v ? '#666' : ''),
+                            maxZoom: 15,
+                        }),
                     ],
                     {
                         pixNb: 2,
