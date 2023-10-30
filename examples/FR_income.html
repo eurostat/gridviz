@@ -197,18 +197,21 @@
             app.setBackgroundColor("white")
 
             if (layCode == 'color') {
+                const colR = t => d3.interpolateSpectral(1 - t)
                 //income
                 app.addLayerFromDataset(
                     incDataset[geo][year_],
                     [
                         new gviz.SquareColorWGLStyle({
                             colorCol: 'revind',
-                            color: d3.interpolateSpectral,
+                            color: colR,
                             tFun: (v, r, s) => {
                                 //let t = (v - s.min) / (s.max - s.min)
-                                let t = (v - 1000) / (4000 - 1200)
-                                //t = t > 1 ? 1 : t < 0 ? 0 : t
-                                return 1 - Math.pow(t < 0 ? 0 : t, 1.5)
+                                let t = (v - 1000) / (4000 - 1000)
+                                t = t > 1 ? 1 : t < 0 ? 0 : t
+                                //return gviz.sPow(t, 1.5)
+                                //return gviz.sExp(t, 0)
+                                return t
                             },
                             blendOperation: (zf) => zf < 20 ? "multiply" : "source-over"
                         }),
@@ -226,20 +229,15 @@
                 )
 
                 //legend
-                //app.layers[0].styles[0].legends.push(
-                //    new gviz.ColorLegend({ title: "Revenu par mois et par 'individu'", colorRamp: d3.interpolateSpectral, fun: (t, r, s) => t })
-                //)
-
-                /*/add legend
                 app.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
-                        title: "Nombre d'habitants",
+                        title: "Niveau de vie, en € par mois et par individu",
                         width: 400,
-                        ticks: 5,
+                        ticks: 4,
                         colorRamp: colR,
-                        fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                        fun: (t, r, s) => 1000 + t * (4000 - 1000),
                     })
-                )*/
+                )
 
             } else if (layCode == 'smoothed') {
                 //get year selection
