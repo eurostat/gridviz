@@ -122,6 +122,15 @@
                 incDataset[geo][year] = getDataset(geo, year)
         }
 
+        const imputedStyle =
+            new gviz.ShapeColorSizeStyle({
+                colorCol: 'imputed',
+                color: (v, r, s) => (+v ? '#666' : ''),
+                shape: () => 'circle',
+                size: (v, r, s) => 0.25 * r,
+                maxZoom: 30,
+            })
+
         //ts_ind_snv/100000m/0/0.csv
         //x	y	ind_snv2015	imp2015	ind_snv2017	imp2017	ind_snv2019	imp2019
 
@@ -208,7 +217,7 @@
                             strokeColor: (v) => (+v ? '#666' : ''),
                             maxZoom: 15,
                         }),
-                        getStyleImputed(geo, year_)
+                        imputedStyle,
                     ],
                     {
                         pixNb: 2,
