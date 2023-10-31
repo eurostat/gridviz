@@ -112,8 +112,8 @@
                 {
                     preprocess: (c) => {
                         //x	y	imputed	ind	ind_snv
+                        //income per inhabitant per month
                         c.revind = Math.round(c.ind_snv / c.ind / 12)
-                        delete c.ind_snv
                     },
                 }
             )
@@ -211,6 +211,7 @@
             app.setBackgroundColor("white")
 
             if (layCode == 'color') {
+                const colR = t => d3.interpolateSpectral(1 - t)
                 //income
                 app.addLayerFromDataset(
                     incDataset[geo][year_],
@@ -263,8 +264,8 @@
                     incDataset[geo][year_],
                     [
                         new gviz_sm.KernelSmoothingStyle({
-                            value: (c) => +c.revind,
-                            filter: (c) => +c.revind > 0,
+                            value: (c) => +c.ind_snv,
+                            filter: (c) => +c.ind_snv > 0,
                             sigma: (r, zf) => (r * sigma) / 10,
                             filterSm: (v) => v > 0.02,
                             factor: 2,
@@ -275,6 +276,7 @@
                                     tFun: (v, r, s) => {
                                         let t = (v - s.min) / (s.max - s.min)
                                         t = t > 1 ? 1 : t < 0 ? 0 : t
+                                        t = gviz.sExpRev(t, -10)
                                         const cl = Math.floor(nb * t) / nb
                                         return cl
                                     },

@@ -1,4 +1,5 @@
 FR: income map
+style: value by alpha
 FR DOMs: finalise. define projection to show euronym names
 
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale. with invert
