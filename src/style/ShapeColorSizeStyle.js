@@ -34,6 +34,14 @@ export class ShapeColorSizeStyle extends Style {
         /** A function returning the shape of a cell.
          * @type {function(import("../Dataset").Cell):import("../Style").Shape} */
         this.shape = opts.shape || (() => 'square')
+
+        /** The name of the column/attribute of the tabular data where to retrieve the variable for color alpha.
+         * @type {string} */
+        this.alphaCol = opts.alphaCol
+
+        /** A function returning the color of the cell.
+         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
+        this.alpha = opts.alpha
     }
 
     /**
@@ -62,6 +70,12 @@ export class ShapeColorSizeStyle extends Style {
         if (this.colorCol) {
             //compute color variable statistics
             statColor = Style.getStatistics(cells, (c) => c[this.colorCol], true)
+        }
+
+        let statAlpha
+        if (this.alphaCol) {
+            //compute color alpha variable statistics
+            statAlpha = Style.getStatistics(cells, (c) => c[this.alphaCol], true)
         }
 
         //draw with HTML canvas
