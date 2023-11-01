@@ -2,7 +2,7 @@
 'use strict'
 
 import { Style } from '../Style.js'
-import { color } from 'd3'
+import { color } from 'd3-color'
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
