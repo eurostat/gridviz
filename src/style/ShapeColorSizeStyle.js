@@ -2,6 +2,7 @@
 'use strict'
 
 import { Style } from '../Style.js'
+import { color } from 'd3'
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -85,17 +86,19 @@ export class ShapeColorSizeStyle extends Style {
         const r2 = r * 0.5
         for (let cell of cells) {
             //color
-            const col = this.color ? this.color(cell[this.colorCol], r, statColor, zf) : undefined
+            let col = this.color ? this.color(cell[this.colorCol], r, statColor, zf) : undefined
             if (!col || col === 'none') continue
 
             //alpha
             if (this.alphaCol && this.alphaF) {
-                //apply alpha to color col
+                //get alpha
                 const alpha = this.alphaF(cell[this.alphaCol], r, statAlpha, zf)
-                //TODO
+                if (alpha == 0) continue
+                //apply alpha to color col
+                const col_ = color(col);
+                if (col_) col = `rgba(${col_.r}, ${col_.g}, ${col_.b}, ${alpha})`;
+                else console.warn("Could not decode color " + col + " in ShapeColorSizeStyle")
             }
-
-            cg.ctx.fillStyle = col
 
             //shape
             const shape = this.shape ? this.shape(cell) : 'square'
@@ -110,6 +113,7 @@ export class ShapeColorSizeStyle extends Style {
             //get offset
             const offset = this.offset(cell, r, zf)
 
+            cg.ctx.fillStyle = col
             if (shape === 'square') {
                 //draw square
                 const d = r * (1 - sG / r) * 0.5
