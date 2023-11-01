@@ -39,9 +39,9 @@ export class ShapeColorSizeStyle extends Style {
          * @type {string} */
         this.alphaCol = opts.alphaCol
 
-        /** A function returning the color of the cell.
+        /** A function returning the color alpha of the cell.
          * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-        this.alpha = opts.alpha
+        this.alphaF = opts.alphaF
     }
 
     /**
@@ -87,6 +87,14 @@ export class ShapeColorSizeStyle extends Style {
             //color
             const col = this.color ? this.color(cell[this.colorCol], r, statColor, zf) : undefined
             if (!col || col === 'none') continue
+
+            //alpha
+            if (this.alphaCol && this.alphaF) {
+                //apply alpha to color col
+                const alpha = this.alphaF(cell[this.alphaCol], r, statAlpha, zf)
+                //TODO
+            }
+
             cg.ctx.fillStyle = col
 
             //shape
