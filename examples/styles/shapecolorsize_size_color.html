@@ -53,7 +53,7 @@
                         size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.13),
                         colorCol: 'revind',
                         color: (v, r, s) => {
-                            let t = (v - 1000) / (4000 - 1000)
+                            let t = (v - 1200) / (3700 - 1200)
                             t = t > 1 ? 1 : t < 0 ? 0 : t
                             return d3.interpolateSpectral(1 - t)
                         },
