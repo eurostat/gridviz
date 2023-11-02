@@ -1,5 +1,9 @@
+wording
 FR: income map - size and alpha - legend
 tooltip - add population
+changement:
+serie temporelle
+percentage evolution ?
 
 
 style value by alpha: Document
