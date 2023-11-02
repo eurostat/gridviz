@@ -1,5 +1,5 @@
 FR: income map
-style: value by alpha: test ShapeColorSizeStyle. Same with webgl ?
+style: value by alpha: Same with webgl ? Document
 FR DOMs: finalise. define projection to show euronym names
 
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale. with invert
