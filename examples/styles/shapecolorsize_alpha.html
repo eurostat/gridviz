@@ -23,27 +23,25 @@
                 .addMultiScaleTiledGridLayer(
                     [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     (r) =>
-                        'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2019/' +
+                        'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/inc/2019/' +
                         r +
                         'm/',
                     [
                         new gviz.ShapeColorSizeStyle({
                             sizeCol: 'ind',
                             size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.13),
-                            colorCol: 'age_ratio',
-                            color: (v, r, s) => d3.interpolateSpectral(1 - v),
-                            //shape: () => 'circle',
+                            colorCol: 'revind',
+                            color: (v, r, s) => {
+                                let t = (v - 1000) / (4000 - 1000)
+                                t = t > 1 ? 1 : t < 0 ? 0 : t
+                                return d3.interpolateSpectral(1 - t)
+                            },
                         }),
                     ],
                     {
                         pixNb: 6,
                         preprocess: (c) => {
-                            //<24
-                            const yyy = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
-                            //>65
-                            const ooo = +c.ind_65_79 + +c.ind_80p
-                            c.age_ratio = yyy + ooo == 0 ? 0 : (yyy - ooo) / (yyy + ooo)
-                            c.age_ratio = c.age_ratio * 0.5 + 0.5
+                            c.revind = Math.round(c.ind_snv / c.ind / 12)
                         },
                     }
                 )
