@@ -1,5 +1,6 @@
-FR: income map - size and alpha
-style: Document
+FR: income map - size and alpha. test alternative colorramp
+https://observablehq.com/d/fc6619f32c215ce9
+style value by alpha: Document
 FR DOMs: finalise. define projection to show euronym names
 
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale. with invert

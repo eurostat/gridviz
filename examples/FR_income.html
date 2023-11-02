@@ -33,11 +33,13 @@
             </select>
             <br />
             <input type="radio" name="layer" id="color" value="color" checked />
-            <label for="color">Couleur</label>
+            <label for="color">Couleur seulement</label>
             <br />
-            <input type="radio" name="layer" id="smoothed" value="smoothed" />
-            <label for="smoothed">Lissage </label><input type="range" min="3" max="15" value="6" class="slider"
-                id="sigmaTK" style="width: 100px" />
+            <input type="radio" name="layer" id="size" value="size" />
+            <label for="size">Couleur et population par taille</label>
+            <br />
+            <input type="radio" name="layer" id="alpha" value="alpha" />
+            <label for="alpha">Couleur et population par transparence</label>
             <br />
             <span style="font-size: 1.3em; font-weight: bold">Changement</span>
             <br />
@@ -156,9 +158,9 @@
             maxZoom: mz,
         })*/
 
-        //default color
+        //default colors
         const col = '#e54f37'
-        const colR = t => d3.interpolateYlOrRd(t) //interpolateSpectral
+        const colR = t => d3.interpolateSpectral(1 - t)
 
         //default formater for income
         const lFr = d3.formatLocale({
@@ -193,26 +195,12 @@
                     '€</b> par mois et par individu, en moyenne' +
                     (+c.imputed && r < 1000 ? '<br>(valeur imputée)' : '') : undefined
 
-            /*/tooltip function: for population change
-            const tooltipFunCh = (c) =>
-                y1 + ': ' +
-                c["ind" + y1] +
-                "<br>" + y2 + ": " +
-                c["ind" + y2] +
-                '<br><b>' +
-                (c[chYears] == 0
-                    ? 'Pas de changement'
-                    : (c[chYears] > 0 ? '+' : '') + c[chYears] + ' habitants') +
-                '</b>'
-            //+ "<br>" + c["p" + y1 + "_" + y2]*/
-
             //set default background filter
             for (let bgl of app.bgLayers) bgl.filterColor = (zf) => '#ffffff60'
             app.setBackgroundColor("white")
 
             if (layCode == 'color') {
-                const colR = t => d3.interpolateSpectral(1 - t)
-                //income
+
                 app.addLayerFromDataset(
                     incDataset[geo][year_],
                     [
@@ -220,12 +208,8 @@
                             colorCol: 'revind',
                             color: colR,
                             tFun: (v, r, s) => {
-                                //let t = (v - s.min) / (s.max - s.min)
-                                //let t = (v - 1000) / (4000 - 1000)
                                 let t = (v - 1200) / (3700 - 1200)
                                 t = t > 1 ? 1 : t < 0 ? 0 : t
-                                //return gviz.sPow(t, 1.5)
-                                //return gviz.sExp(t, 0)
                                 return t
                             },
                             blendOperation: (zf) => zf < 20 ? "multiply" : "source-over"
@@ -250,9 +234,58 @@
                         width: 500,
                         ticks: 7,
                         colorRamp: colR,
-                        fun: (t, r, s) => 1000 + t * (4000 - 1000),
+                        fun: (t, r, s) => 1200 + t * (3700 - 1200),
                     })
                 )
+
+            } else if (layCode == 'size') {
+
+                app.addLayerFromDataset(
+                    incDataset[geo][year_],
+                    [
+                        new gviz.ShapeColorSizeStyle({
+                            sizeCol: "ind",
+                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, stretch),
+                            colorCol: "revind",
+                            color: (v, r, s) => {
+                                let t = (v - 1200) / (3700 - 1200);
+                                t = t > 1 ? 1 : t < 0 ? 0 : t;
+                                return colR(1 - t);
+                            },
+                            blendOperation: (zf) => (zf < 20 ? "multiply" : "source-over")
+                        })
+                    ],
+                    {
+                        pixNb: 5,
+                        cellInfoHTML: tooltipFun,
+                    }
+                )
+
+            } else if (layCode == 'alpha') {
+
+                app.addLayerFromDataset(
+                    incDataset[geo][year_],
+                    [
+                        new gviz.ShapeColorSizeStyle({
+                            alphaCol: "ind",
+                            alphaF: (v, r, s, zf) => gviz.sPow(v / s.max, stretch),
+                            colorCol: "revind",
+                            color: (v, r, s) => {
+                                let t = (v - 1200) / (3700 - 1200);
+                                t = t > 1 ? 1 : t < 0 ? 0 : t;
+                                return colR(1 - t);
+                            },
+                            blendOperation: (zf) => (zf < 20 ? "multiply" : "source-over")
+                        }),
+                        strokeStyle
+                    ],
+                    {
+                        pixNb: 5,
+                        cellInfoHTML: tooltipFun,
+                    }
+                )
+
+
 
             } else if (layCode == 'smoothed') {
                 //get year selection
