@@ -1,5 +1,7 @@
-FR: income map - size and alpha. test alternative colorramp
-https://observablehq.com/d/fc6619f32c215ce9
+FR: income map - size and alpha.
+test alternative colorramp
+tooltip - add population
+
 style value by alpha: Document
 FR DOMs: finalise. define projection to show euronym names
 
