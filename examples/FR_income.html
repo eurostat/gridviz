@@ -160,7 +160,11 @@
 
         //default colors
         const col = '#e54f37'
-        const colR = t => d3.interpolateSpectral(1 - t)
+        //const colR = t => d3.interpolateSpectral(1 - t)
+        //const colR = d3.scaleLinear([0, 0.5, 1], ["blue", "yellow", "red"])
+        //const colR = d3.scaleLinear([0, 0.5, 1], ["#7570b3", "#e6ab02", "#e7298a"])
+        const colR = d3.scaleLinear([0, 0.4, 1], ["#377eb8", "#ffff33", "#e41a1c"])
+        const incMin = 1200, incMax = 3700
 
         //default formater for income
         const lFr = d3.formatLocale({
@@ -177,6 +181,14 @@
             strokeColorCol: "revind",
             strokeColor: (v) => (+v ? '#666' : ''),
             maxZoom: 15,
+        })
+
+        const legendInc = new gviz.ColorLegend({
+            title: "Niveau de vie, en € par mois et par individu",
+            width: 500,
+            ticks: 7,
+            colorRamp: colR,
+            fun: (t, r, s) => incMin + t * (incMax - incMin),
         })
 
 
@@ -215,7 +227,7 @@
                             colorCol: 'revind',
                             color: colR,
                             tFun: (v, r, s) => {
-                                let t = (v - 1200) / (3700 - 1200)
+                                let t = (v - incMin) / (incMax - incMin)
                                 t = t > 1 ? 1 : t < 0 ? 0 : t
                                 return t
                             },
@@ -231,15 +243,7 @@
                 )
 
                 //legend
-                app.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
-                        title: "Niveau de vie, en € par mois et par individu",
-                        width: 500,
-                        ticks: 7,
-                        colorRamp: colR,
-                        fun: (t, r, s) => 1200 + t * (3700 - 1200),
-                    })
-                )
+                app.layers[0].styles[0].legends.push(legendInc)
 
             } else if (layCode == 'size') {
 
@@ -251,7 +255,7 @@
                             size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1),
                             colorCol: "revind",
                             color: (v, r, s) => {
-                                let t = (v - 1200) / (3700 - 1200);
+                                let t = (v - incMin) / (incMax - incMin);
                                 t = t > 1 ? 1 : t < 0 ? 0 : t;
                                 return colR(t);
                             },
@@ -264,6 +268,9 @@
                     }
                 )
 
+                //legend
+                app.layers[0].styles[0].legends.push(legendInc)
+
             } else if (layCode == 'alpha') {
 
                 app.addLayerFromDataset(
@@ -274,7 +281,7 @@
                             alphaF: (v, r, s, zf) => gviz.sPow(v / s.max, 0.1),
                             colorCol: "revind",
                             color: (v, r, s) => {
-                                let t = (v - 1200) / (3700 - 1200);
+                                let t = (v - incMin) / (incMax - incMin);
                                 t = t > 1 ? 1 : t < 0 ? 0 : t;
                                 return colR(t);
                             },
@@ -289,7 +296,8 @@
                     }
                 )
 
-
+                //legend
+                app.layers[0].styles[0].legends.push(legendInc)
 
             } else if (layCode == 'smoothed') {
                 //get year selection

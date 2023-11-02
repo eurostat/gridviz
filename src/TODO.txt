@@ -1,6 +1,6 @@
-FR: income map - size and alpha.
-test alternative colorramp
+FR: income map - size and alpha - legend
 tooltip - add population
+
 
 style value by alpha: Document
 FR DOMs: finalise. define projection to show euronym names
