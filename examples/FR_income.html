@@ -173,6 +173,12 @@
         })
         const f = lFr.format(",")
 
+        const strokeStyle = new gviz.StrokeStyle({
+            strokeColorCol: "revind",
+            strokeColor: (v) => (+v ? '#666' : ''),
+            maxZoom: 15,
+        })
+
 
         //
         const update = () => {
@@ -214,11 +220,7 @@
                             },
                             blendOperation: (zf) => zf < 20 ? "multiply" : "source-over"
                         }),
-                        new gviz.StrokeStyle({
-                            strokeColorCol: "revind",
-                            strokeColor: (v) => (+v ? '#666' : ''),
-                            maxZoom: 15,
-                        }),
+                        strokeStyle,
                         imputedStyle,
                     ],
                     {
@@ -277,10 +279,11 @@
                             },
                             blendOperation: (zf) => (zf < 20 ? "multiply" : "source-over")
                         }),
-                        strokeStyle
+                        strokeStyle,
+                        imputedStyle,
                     ],
                     {
-                        pixNb: 5,
+                        pixNb: 2.5,
                         cellInfoHTML: tooltipFun,
                     }
                 )
