@@ -29,7 +29,7 @@
                     [
                         new gviz.ShapeColorSizeStyle({
                             alphaCol: 'ind',
-                            alphaF: (v, r, s, zf) => gviz.sPow(v / s.max, 0.13),
+                            alphaF: (v, r, s, zf) => gviz.sPow(v / s.max, 0.1),
                             colorCol: 'revind',
                             color: (v, r, s) => {
                                 let t = (v - 1000) / (4000 - 1000)
@@ -39,7 +39,7 @@
                         }),
                     ],
                     {
-                        pixNb: 6,
+                        pixNb: 3,
                         preprocess: (c) => {
                             c.revind = Math.round(c.ind_snv / c.ind / 12)
                         },
