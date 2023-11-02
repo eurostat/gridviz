@@ -245,12 +245,12 @@
                     [
                         new gviz.ShapeColorSizeStyle({
                             sizeCol: "ind",
-                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, stretch),
+                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1),
                             colorCol: "revind",
                             color: (v, r, s) => {
                                 let t = (v - 1200) / (3700 - 1200);
                                 t = t > 1 ? 1 : t < 0 ? 0 : t;
-                                return colR(1 - t);
+                                return colR(t);
                             },
                             blendOperation: (zf) => (zf < 20 ? "multiply" : "source-over")
                         })
@@ -268,12 +268,12 @@
                     [
                         new gviz.ShapeColorSizeStyle({
                             alphaCol: "ind",
-                            alphaF: (v, r, s, zf) => gviz.sPow(v / s.max, stretch),
+                            alphaF: (v, r, s, zf) => gviz.sPow(v / s.max, 0.1),
                             colorCol: "revind",
                             color: (v, r, s) => {
                                 let t = (v - 1200) / (3700 - 1200);
                                 t = t > 1 ? 1 : t < 0 ? 0 : t;
-                                return colR(1 - t);
+                                return colR(t);
                             },
                             blendOperation: (zf) => (zf < 20 ? "multiply" : "source-over")
                         }),
@@ -739,8 +739,8 @@
         document.querySelector('#geo').addEventListener('change', updateGeo)
 
         //sigma selection
-        document.getElementById('sigmaTK').oninput = update
-        document.getElementById('sigmaCCH').oninput = update
+        //document.getElementById('sigmaTK').oninput = update
+        //document.getElementById('sigmaCCH').oninput = update
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
