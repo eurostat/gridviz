@@ -194,12 +194,13 @@
             app.layers = []
 
             //tooltip function: for income
-            const tooltipFun = (c, r) =>
-                +c.revind
-                    ?
+            const tooltipFun = (withPopulation = false) => (c, r) =>
+                +c.revind ?
                     '<b>' + f(c.revind) +
                     '€</b> par mois et par individu, en moyenne' +
-                    (+c.imputed && r < 1000 ? '<br>(valeur imputée)' : '') : undefined
+                    (withPopulation ? "<br>" + c.ind + " habitant" + (+c.ind == 1 ? "" : "s") : "") +
+                    (+c.imputed && r < 1000 ? '<br>(valeur imputée)' : '')
+                    : undefined
 
             //set default background filter
             for (let bgl of app.bgLayers) bgl.filterColor = (zf) => '#ffffff60'
@@ -225,7 +226,7 @@
                     ],
                     {
                         pixNb: 2,
-                        cellInfoHTML: tooltipFun,
+                        cellInfoHTML: tooltipFun(),
                     }
                 )
 
@@ -259,7 +260,7 @@
                     ],
                     {
                         pixNb: 5,
-                        cellInfoHTML: tooltipFun,
+                        cellInfoHTML: tooltipFun(true),
                     }
                 )
 
@@ -284,7 +285,7 @@
                     ],
                     {
                         pixNb: 2.5,
-                        cellInfoHTML: tooltipFun,
+                        cellInfoHTML: tooltipFun(true),
                     }
                 )
 
@@ -324,7 +325,7 @@
                     ],
                     {
                         pixNb: 6,
-                        cellInfoHTML: tooltipFun,
+                        cellInfoHTML: tooltipFun(true),
                     }
                 )
 
