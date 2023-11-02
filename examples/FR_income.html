@@ -153,30 +153,6 @@
                 maxZoom: 30,
             })
 
-        //ts_ind_snv/100000m/0/0.csv
-        //x	y	ind_snv2015	imp2015	ind_snv2017	imp2017	ind_snv2019	imp2019
-
-        /*/prepare function for population difference computation
-        const computeChange = (c, y1, y2) => {
-            const y1_ = c["ind" + y1], y2_ = c["ind" + y2]
-            const k = "d" + y1 + "_" + y2
-            if (!y1_ && !y2_) c[k] = 0
-            else if (!y1_ && y2_) c[k] = +y2_
-            else if (y1_ && !y2_) c[k] = -y1_
-            else c[k] = +y2_ - +y1_
-            //rate of change
-            c["p" + y1 + "_" + y2] = y1_ == 0 ? 999 : c[k] / y1_
-        }*/
-
-        /*/style for imputed values
-        const getStyleImputed = (year, mz = 30, sr = 0.25) => new gviz.ShapeColorSizeStyle({
-            colorCol: 'imp' + year,
-            color: (v, r, s) => (+v ? '#666' : ''),
-            shape: () => 'circle',
-            size: (v, r, s) => sr * r,
-            maxZoom: mz,
-        })*/
-
         //default colors
         const col = '#e54f37'
         //const colR = t => d3.interpolateSpectral(1 - t)

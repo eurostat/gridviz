@@ -1,4 +1,4 @@
-wording
+wording: revenus
 FR: income map - size and alpha - legend
 tooltip - add population
 changement:
