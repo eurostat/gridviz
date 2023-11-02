@@ -1,4 +1,4 @@
-FR: income map
+FR: income map - size and alpha
 style: Document
 FR DOMs: finalise. define projection to show euronym names
 
