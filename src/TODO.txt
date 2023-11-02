@@ -1,5 +1,5 @@
 FR: income map
-style: value by alpha: Same with webgl ? Document
+style: Document
 FR DOMs: finalise. define projection to show euronym names
 
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale. with invert
@@ -73,6 +73,8 @@ hillshading with: https://observablehq.com/@sahilchinoy/a-faster-hillshader
 legend style: use "style" method everywhere
 
 style polygon, to show urbanised areas only from CLC
+
+value by alpha: Make it for webgl style
 
 StrokeStyle - remove unnecessary colorCol property, when color is static
 
