@@ -1,7 +1,8 @@
 wording: revenus
 FR: income map - size and alpha - legend
-tooltip - add population
+test halftone, bivariate, bi-symbol
 changement:
+alter dataset
 serie temporelle
 percentage evolution ?
 
