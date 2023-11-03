@@ -1,6 +1,7 @@
 FR: income map - size and alpha - legend
 test halftone, bivariate, bi-symbol
 changement:
+TS: finalise, with legend
 percentage evolution ?
 
 
