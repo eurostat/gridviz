@@ -115,9 +115,10 @@
                 (r) => "https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/" + geo + "/ts_ind_snv/" + + r + "m/",
                 {
                     preprocess: (c) => {
-                        //x,y,ind_snv2015,imp2015,ind_snv2017,imp2017,ind_snv2019,imp2019
+                        //x,y,ind2015,ind_snv2015,ind2017,ind_snv2017,ind2019,ind_snv2019
                         //income per inhabitant per month
-                        //c.revind = Math.round(c.ind_snv / c.ind / 12)
+                        for (let year of ["2015", "2017", "2019"])
+                            c["revind" + year] = Math.round(c["ind_snv" + year] / c["ind" + year] / 12)
                     },
                 }
             )
@@ -140,8 +141,8 @@
         //const colR = t => d3.interpolateSpectral(1 - t)
         //const colR = d3.scaleLinear([0, 0.5, 1], ["blue", "yellow", "red"])
         //const colR = d3.scaleLinear([0, 0.5, 1], ["#7570b3", "#e6ab02", "#e7298a"])
-        const colR = d3.scaleLinear([0, 0.4, 1], ["#377eb8", "#ffff33", "#e41a1c"])
-        const incMin = 1200, incMax = 3700
+        const colR = d3.scaleLinear([0, 0.65, 1], ["#377eb8", "#ffff33", "#e41a1c"])
+        const incMin = 1300, incMax = 3700
 
         //default formater for income
         const lFr = d3.formatLocale({
@@ -229,7 +230,7 @@
                     [
                         new gviz.ShapeColorSizeStyle({
                             sizeCol: "ind",
-                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.13),
+                            size: (v, r, s, zf) => r * gviz.sPow((v - s.min) / (s.max - s.min), 0.13),
                             colorCol: "revind",
                             color: (v, r, s) => {
                                 let t = (v - incMin) / (incMax - incMin);
@@ -255,7 +256,7 @@
                     [
                         new gviz.ShapeColorSizeStyle({
                             alphaCol: "ind",
-                            alphaF: (v, r, s, zf) => gviz.sPow(v / s.max, 0.2),
+                            alphaF: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2),
                             colorCol: "revind",
                             color: (v, r, s) => {
                                 let t = (v - incMin) / (incMax - incMin);
@@ -268,7 +269,7 @@
                         imputedStyle,
                     ],
                     {
-                        pixNb: 2.5,
+                        pixNb: 2,
                         cellInfoHTML: tooltipFun(true),
                     }
                 )
@@ -281,7 +282,7 @@
 
             } else if (layCode == 'ts') {
                 //define time series list of years
-                const ts = ["ind_snv2015", "ind_snv2017", "ind_snv2019"]
+                const ts = ["revind2015", "revind2017", "revind2019"]
 
                 //add layer
                 app.addLayerFromDataset(
@@ -289,9 +290,17 @@
                     [
                         new gviz.TimeSeriesStyle({
                             ts: ts,
-                            color: () => "black",
-                            lineWidthCol: "ind_snv2019",
-                            lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.4) * 4) * z },
+                            lineWidthCol: "ind2019",
+                            lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.5) * 4) * z },
+                            //color: () => "black",
+                            colorCol: "revind2019",
+                            color: (v, r, s) => {
+                                let t = (v - incMin) / (incMax - incMin);
+                                t = t > 1 ? 1 : t < 0 ? 0 : t;
+                                const nb = 4
+                                t = Math.ceil(t * nb) / nb
+                                return colR(t);
+                            },
                             //offsetX: (c, r, z) => r / 2,
                             //offsetY: (c, r, z) => r / 2,
                             //width: (c, r, z) => 1.5*r,
@@ -305,7 +314,7 @@
                             //prepare chart data
                             const tsdata = []
                             for (let d of ts)
-                                tsdata.push({ year: +d.replace("ind", ""), pop: +c[d] })
+                                tsdata.push({ year: +d.replace("revind", ""), pop: +c[d] })
 
                             const maxPop = d3.max(tsdata, d => d.pop)
 
