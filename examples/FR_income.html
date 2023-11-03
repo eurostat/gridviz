@@ -284,6 +284,9 @@
                 //define time series list of years
                 const ts = ["revind2015", "revind2017", "revind2019"]
 
+                const nb = 10
+                const colR = d3.scaleLinear([0, 1], ["#377eb8", "#e41a1c"])
+
                 //add layer
                 app.addLayerFromDataset(
                     incTsDataset[geo],
@@ -297,7 +300,6 @@
                             color: (v, r, s) => {
                                 let t = (v - incMin) / (incMax - incMin);
                                 t = t > 1 ? 1 : t < 0 ? 0 : t;
-                                const nb = 4
                                 t = Math.ceil(t * nb) / nb
                                 return colR(t);
                             },
