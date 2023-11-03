@@ -1,9 +1,7 @@
-wording: revenus
 FR: income map - size and alpha - legend
 test halftone, bivariate, bi-symbol
 changement:
-alter dataset
-serie temporelle
+serie temporelle: use new
 percentage evolution ?
 
 
