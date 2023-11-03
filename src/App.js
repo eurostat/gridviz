@@ -14,6 +14,7 @@ import { BackgroundLayerWMS } from './BackgroundLayerWMS.js'
 import { LabelLayer } from './LabelLayer.js'
 import { LineLayer } from './LineLayer.js'
 import { monitor, monitorDuration } from './utils/Utils.js'
+import { ZoomButtons } from './button/ZoomButtons.js'
 
 // external imports
 import { select } from 'd3-selection'
@@ -326,7 +327,8 @@ export class App {
         //canvas.addEventListener("keydown", e => { console.log(arguments) });
 
         //set default globalCompositeOperation
-        this.defaultGlobalCompositeOperation = opts.defaultGlobalCompositeOperation || this.cg.ctx.globalCompositeOperation;
+        this.defaultGlobalCompositeOperation =
+            opts.defaultGlobalCompositeOperation || this.cg.ctx.globalCompositeOperation
     }
 
     /**
@@ -462,10 +464,7 @@ export class App {
      * @returns {Dataset}
      */
     makeLGridDataset(resolution, cells, opts) {
-        return new Dataset([new LGrid(resolution, cells),],
-            [],
-            opts
-        )
+        return new Dataset([new LGrid(resolution, cells)], [], opts)
     }
 
     /**
@@ -638,6 +637,29 @@ export class App {
         return this
     }
 
+    /**
+     *
+     * @param {object} opts
+     * @returns {this}
+     */
+    addZoomButtons(opts) {
+        // * opts.app - the gridviz app
+        // * opts.id
+        // * opts.onZoom - custom event handler
+        // * opts.x
+        // * opts.y
+
+       this.zoomButtons = new ZoomButtons({
+            app: this,
+            id: opts?.id || 'gridviz-zoom-buttons',
+            x: opts?.x || this.w - 50,
+            y: opts?.y || 10,
+            onZoom: opts?.onZoom,
+        })
+
+        return this
+    }
+
     /** @returns {this} */
     setViewFromURL() {
         this.cg.setViewFromURL()
@@ -670,6 +692,9 @@ export class App {
                         canvas.setAttribute('width', '' + this.w)
                         canvas.setAttribute('height', '' + this.h)
                         this.redraw()
+
+                        //update button positions
+                        if (this.zoomButtons) this.zoomButtons.node.style.left = this.w - 50 + 'px'
                     }
                 })
             }
