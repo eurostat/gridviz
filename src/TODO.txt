@@ -1,10 +1,10 @@
 FR: income map
-TS bug on mouse over
 alpha: legend. Bivariate?
 test halftone, bivariate, bi-symbol
 changement:
 TS: finalise, with legend
 percentage evolution ?
+double smoothing map ?
 
 
 style value by alpha: Document
