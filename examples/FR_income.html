@@ -230,7 +230,7 @@
                     [
                         new gviz.ShapeColorSizeStyle({
                             sizeCol: "ind",
-                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow((v - s.min) / (s.max - s.min), 0.2),
+                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow((v - s.min) / (s.max - s.min), 0.16),
                             colorCol: "revind",
                             color: (v, r, s) => {
                                 let t = (v - incMin) / (incMax - incMin);
