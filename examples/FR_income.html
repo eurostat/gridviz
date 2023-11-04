@@ -162,7 +162,7 @@
         })
 
         const legendInc = new gviz.ColorLegend({
-            title: "Niveau de vie, en € par mois et par individu",
+            title: "Revenu, en € par mois et par personne",
             width: 500,
             ticks: 6,
             colorRamp: colR,
@@ -187,7 +187,7 @@
             const tooltipFun = (withPopulation = false) => (c, r) =>
                 +c.revind ?
                     '<b>' + f(c.revind) +
-                    '€</b> par mois et par individu, en moyenne' +
+                    '€</b> par mois et par personne, en moyenne' +
                     (withPopulation ? "<br>" + c.ind + " habitant" + (+c.ind == 1 ? "" : "s") : "") +
                     (+c.imputed && r < 1000 ? '<br>(valeur imputée)' : '')
                     : undefined
@@ -230,7 +230,7 @@
                     [
                         new gviz.ShapeColorSizeStyle({
                             sizeCol: "ind",
-                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow((v - s.min) / (s.max - s.min), 0.13),
+                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow((v - s.min) / (s.max - s.min), 0.2),
                             colorCol: "revind",
                             color: (v, r, s) => {
                                 let t = (v - incMin) / (incMax - incMin);
@@ -249,11 +249,24 @@
 
                 //legend
                 app.layers[0].styles[0].legends.push(legendInc)
-
                 app.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         title: "Nombre d'habitants",
-                        exaggerationFactor: 0.8,
+                        exaggerationFactor: 1,
+                        shape: 'circle',
+                        fillColor: "black",
+                    }).style('padding', '0px 5px')
+                )
+                app.layers[0].styles[0].legends.push(
+                    new gviz.SizeLegend({
+                        exaggerationFactor: 0.4,
+                        shape: 'circle',
+                        fillColor: "black",
+                    }).style('padding', '0px 5px')
+                )
+                app.layers[0].styles[0].legends.push(
+                    new gviz.SizeLegend({
+                        exaggerationFactor: 0.05,
                         shape: 'circle',
                         fillColor: "black",
                     }).style('padding', '0px 5px')
@@ -287,8 +300,6 @@
 
                 //legend
                 app.layers[0].styles[0].legends.push(legendInc)
-
-
 
 
             } else if (layCode == 'ts') {
