@@ -230,24 +230,35 @@
                     [
                         new gviz.ShapeColorSizeStyle({
                             sizeCol: "ind",
-                            size: (v, r, s, zf) => r * gviz.sPow((v - s.min) / (s.max - s.min), 0.13),
+                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow((v - s.min) / (s.max - s.min), 0.13),
                             colorCol: "revind",
                             color: (v, r, s) => {
                                 let t = (v - incMin) / (incMax - incMin);
                                 t = t > 1 ? 1 : t < 0 ? 0 : t;
                                 return colR(t);
                             },
+                            shape: () => 'circle',
                             blendOperation: (zf) => (zf < 20 ? "multiply" : "source-over")
                         })
                     ],
                     {
-                        pixNb: 5,
+                        pixNb: 4,
                         cellInfoHTML: tooltipFun(true),
                     }
                 )
 
                 //legend
                 app.layers[0].styles[0].legends.push(legendInc)
+
+                app.layers[0].styles[0].legends.push(
+                    new gviz.SizeLegend({
+                        title: "Nombre d'habitants",
+                        exaggerationFactor: 0.8,
+                        shape: 'circle',
+                        fillColor: "black",
+                    }).style('padding', '0px 5px')
+                )
+
 
             } else if (layCode == 'alpha') {
 
@@ -285,7 +296,7 @@
                 const ts = ["revind2015", "revind2017", "revind2019"]
 
                 const nb = 10
-                const colR = d3.scaleLinear([0, 0.5, 1], ["blue","orange", "red"])
+                const colR = d3.scaleLinear([0, 0.5, 1], ["blue", "orange", "red"])
 
                 //add layer
                 app.addLayerFromDataset(
