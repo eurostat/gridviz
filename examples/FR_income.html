@@ -327,22 +327,22 @@
                             //prepare chart data
                             const tsdata = []
                             for (let d of ts)
-                                tsdata.push({ year: +d.replace("revind", ""), pop: +c[d] })
+                                tsdata.push({ year: +d.replace("revind", ""), v: c[d] ? +c[d] : 0 })
 
-                            const maxPop = d3.max(tsdata, d => d.pop)
+                            const max = d3.max(tsdata, d => d.v)
 
                             const w = 300;
                             const h = 250;
                             const marginTop = 5;
                             const marginRight = 2;
                             const marginBottom = 20;
-                            const marginLeft = 10 + 8 * (maxPop + "").length;
+                            const marginLeft = 10 + 8 * (max + "").length;
 
                             //x scale
                             const x = d3.scaleLinear(d3.extent(tsdata, d => d.year), [marginLeft, w - marginRight]);
 
                             //y scale
-                            const y = d3.scaleLinear([0, maxPop], [h - marginBottom, marginTop]);
+                            const y = d3.scaleLinear([0, max], [h - marginBottom, marginTop]);
 
                             //make div and svg
                             const div = d3.create("div")
@@ -370,7 +370,7 @@
                             //draw line
                             const line = d3.line()
                                 .x(d => x(d.year))
-                                .y(d => y(d.pop));
+                                .y(d => y(d.v));
                             svg.append("path")
                                 .attr("stroke-width", 2)
                                 .attr("stroke", "black")

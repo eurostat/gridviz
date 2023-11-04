@@ -1,6 +1,6 @@
 FR: income map
 TS bug on mouse over
-size and alpha - legend
+alpha: legend. Bivariate?
 test halftone, bivariate, bi-symbol
 changement:
 TS: finalise, with legend
