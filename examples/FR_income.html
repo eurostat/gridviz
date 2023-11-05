@@ -276,13 +276,14 @@
 
 
             } else if (layCode == 'alpha') {
+                const str = 0.1
 
                 app.addLayerFromDataset(
                     incDataset[geo][year_],
                     [
                         new gviz.ShapeColorSizeStyle({
                             alphaCol: "ind",
-                            alphaF: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2),
+                            alphaF: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), str),
                             colorCol: "revind",
                             color: (v, r, s) => {
                                 let t = (v - incMin) / (incMax - incMin);
@@ -307,7 +308,7 @@
                     width: 500,
                     ticks: 6,
                     colorRamp: d3.interpolateGreys,
-                    fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sPowInverse(t, 0.2),
+                    fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sPowInverse(t, str),
                 }))
 
 

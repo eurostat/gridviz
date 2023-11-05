@@ -1,13 +1,10 @@
-FR - alpha legend
-
 SegmentWidthLegend
 fix exaggerationFactor
 add new param for length - maybe length exageration
 
-
 FR: income map
 alpha: legend. Bivariate?
-test halftone, bivariate, bi-symbol
+test halftone, bivariate color, bi-symbol
 changement:
 TS: finalise, with legend
 percentage evolution ?
