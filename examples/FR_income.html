@@ -276,14 +276,14 @@
 
 
             } else if (layCode == 'alpha') {
-                const str = 0.1
+                const str = -10
 
                 app.addLayerFromDataset(
                     incDataset[geo][year_],
                     [
                         new gviz.ShapeColorSizeStyle({
                             alphaCol: "ind",
-                            alphaF: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), str),
+                            alphaF: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), str),
                             colorCol: "revind",
                             color: (v, r, s) => {
                                 let t = (v - incMin) / (incMax - incMin);
@@ -305,10 +305,11 @@
                 app.layers[0].styles[0].legends.push(legendInc)
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
                     title: "Population - par transparence",
-                    width: 500,
-                    ticks: 6,
+                    width: 200,
+                    ticks: 4,
                     colorRamp: d3.interpolateGreys,
-                    fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sPowInverse(t, str),
+                    fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sExpRevInverse(t, str),
+                    getStats: opts => opts.sAlpha
                 }))
 
 
