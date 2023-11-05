@@ -144,6 +144,8 @@
         const colR = d3.scaleLinear([0, 0.65, 1], ["#377eb8", "#ffff33", "#e41a1c"])
         const incMin = 1300, incMax = 3700
 
+
+
         //default formater for income
         const lFr = d3.formatLocale({
             decimal: ",",
@@ -300,6 +302,13 @@
 
                 //legend
                 app.layers[0].styles[0].legends.push(legendInc)
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
+                    title: "Population - par transparence",
+                    width: 500,
+                    ticks: 6,
+                    colorRamp: d3.interpolateGreys,
+                    fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sPowInverse(t, 0.2),
+                }))
 
 
             } else if (layCode == 'ts') {
