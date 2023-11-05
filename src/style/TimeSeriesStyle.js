@@ -244,6 +244,15 @@ export class TimeSeriesStyle extends Style {
 
         }
 
+        //update legend, if any
+        this.updateLegends({
+            style: this,
+            r: r,
+            zf: zf,
+            sColor: statColor,
+            sWidth: statWidth,
+        })
+
     }
 
 }

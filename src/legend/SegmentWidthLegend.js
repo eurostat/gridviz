@@ -57,6 +57,8 @@ export class SegmentWidthLegend extends Legend {
         //get max value
         const value_ = opts.sWidth.max * this.exaggerationFactor
 
+        //TODO fix that - exageration does not work for small values
+
         //take 'nice' value (power of ten, or multiple)
         let pow10 = Math.log10(value_)
         pow10 = Math.floor(pow10)
