@@ -90,6 +90,8 @@
         <label for="label">Noms villes</label>
         <input type="checkbox" id="boundary" checked />
         <label for="boundary">Limites adm.</label>
+        <input type="checkbox" id="background" checked />
+        <label for="background">Fond</label>
         <hr />
         Source:
         <a href="https://www.insee.fr/fr/statistiques/7655515" target="_blank" rel="noopener noreferrer">INSEE -
@@ -863,6 +865,12 @@
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
             app.showBoundaries = this.checked
+            app.cg.redraw()
+        })
+
+        // show/hide background
+        document.querySelector('#background').addEventListener('change', function () {
+            app.showBgLayers = this.checked
             app.cg.redraw()
         })
 
