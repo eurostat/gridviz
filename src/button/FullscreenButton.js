@@ -27,11 +27,27 @@ export class FullscreenButton extends Button {
         // append fullscreen icon to button container
         this.node.innerHTML = `
         <svg
-            style="height: 1.5rem; width: 1.5rem;"
+            style="height: 1.5rem; width: 1.5rem; fill:black; margin:0;"
             focusable="false"
             aria-hidden="true"
         >
-            <symbol viewBox="0 0 48 48" id="fullscreen" xmlns="http://www.w3.org/2000/svg"><path d="M8 30v10h10v4H4V30h4Zm36 0v14H30v-4h10V30h4ZM18 4v4H8v10H4V4h14Zm26 0v14h-4V8H30V4h14Z"/></symbol>
+            <svg fill="#000000" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+
+            <title/>
+            
+            <g>
+            
+            <path d="M30,0H6A5.9966,5.9966,0,0,0,0,6V30a6,6,0,0,0,12,0V12H30A6,6,0,0,0,30,0Z"/>
+            
+            <path d="M90,0H66a6,6,0,0,0,0,12H84V30a6,6,0,0,0,12,0V6A5.9966,5.9966,0,0,0,90,0Z"/>
+            
+            <path d="M30,84H12V66A6,6,0,0,0,0,66V90a5.9966,5.9966,0,0,0,6,6H30a6,6,0,0,0,0-12Z"/>
+            
+            <path d="M90,60a5.9966,5.9966,0,0,0-6,6V84H66a6,6,0,0,0,0,12H90a5.9966,5.9966,0,0,0,6-6V66A5.9966,5.9966,0,0,0,90,60Z"/>
+            
+            </g>
+            
+            </svg>
         </svg>
         `
 
@@ -40,10 +56,10 @@ export class FullscreenButton extends Button {
         this.defaultWidth = this.app.w
 
         // event handler
-
         this.node.addEventListener('click', (e) => {
             this.onClickFunction(e)
         })
+
     }
 
     onClickFunction(e) {

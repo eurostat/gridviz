@@ -680,7 +680,7 @@ export class App {
             app: this,
             id: opts?.id || 'gridviz-fullscreen-button',
             x: opts?.x || this.w - 50,
-            y: opts?.y || 200,
+            y: opts?.y || 85,
         })
 
         return this
@@ -721,6 +721,7 @@ export class App {
 
                         //update button positions
                         if (this.zoomButtons) this.zoomButtons.node.style.left = this.w - 50 + 'px'
+                        if (this.fullscreenButton) this.fullscreenButton.node.style.left = this.w - 50 + 'px'
                     }
                 })
             }

@@ -1,33 +1,5 @@
 import { Button } from './Button.js'
-// duration	number (defaults to 250)
-// Animation duration in milliseconds.
 
-// className	string (defaults to 'ol-zoom')
-// CSS class name.
-
-// zoomInClassName	string (defaults to className + '-in')
-// CSS class name for the zoom-in button.
-
-// zoomOutClassName	string (defaults to className + '-out')
-// CSS class name for the zoom-out button.
-
-// zoomInLabel	string | HTMLElement (defaults to '+')
-// Text label to use for the zoom-in button. Instead of text, also an element (e.g. a span element) can be used.
-
-// zoomOutLabel	string | HTMLElement (defaults to '–')
-// Text label to use for the zoom-out button. Instead of text, also an element (e.g. a span element) can be used.
-
-// zoomInTipLabel	string (defaults to 'Zoom in')
-// Text label to use for the button tip.
-
-// zoomOutTipLabel	string (defaults to 'Zoom out')
-// Text label to use for the button tip.
-
-// delta	number (defaults to 1)
-// The zoom delta applied on each click.
-
-// target	HTMLElement | string | undefined
-// Specify a target if you want the control to be rendered outside of the map's viewport.
 
 /**
  * Button for toggling fullscreen mode
@@ -65,8 +37,6 @@ export class ZoomButtons extends Button {
         btns.forEach((btn, i)=>{
             btn.style.alignItems = 'center';
             btn.style.justifyContent = 'center';
-            btn.style.width = '30px';
-            btn.style.height = '30px';
             btn.style.display = 'flex';
             btn.style.border = 'none';
             btn.style.color = 'black';
@@ -78,6 +48,10 @@ export class ZoomButtons extends Button {
             btn.style.userSelect = 'none';
             if (i==0) btn.style.borderBottom = '1px solid grey'
         })
+
+        // unset parent class height
+        this.node.style.height="unset"
+        this.node.style.display="unset"
 
         // append to button container
         this.node.appendChild(this.zoomInBtn)
