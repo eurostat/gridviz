@@ -24,13 +24,13 @@ export class Button {
         // create HTML node
         this.node = document.createElement('div')
         this.node.id = this.id
-        this.node.title = opts.title
+        if (opts.title) this.node.title = opts.title
         this.node.classList.add(opts.class)
         this.node.style.boxShadow = '0 7px 8px rgba(0,47,103,.08), 0 0 22px rgba(0,47,103,.04), 0 12px 17px rgba(0,47,103,.04), 0 -4px 4px rgba(0,47,103,.04)' //.ecl-u-shadow-3
         this.node.style.backgroundColor = '#ffffff' //.ecl-u-bg-white
 
         // add events
-        this.node.addEventListener('onclick', opts.onClickFunction)
+        if (opts.onClickFunction) this.node.addEventListener('onclick', opts.onClickFunction)
 
         //set styles
         this.node.style.position = 'absolute'

@@ -15,6 +15,7 @@ import { LabelLayer } from './LabelLayer.js'
 import { LineLayer } from './LineLayer.js'
 import { monitor, monitorDuration } from './utils/Utils.js'
 import { ZoomButtons } from './button/ZoomButtons.js'
+import { FullscreenButton } from './button/FullscreenButton.js'
 
 // external imports
 import { select } from 'd3-selection'
@@ -638,6 +639,7 @@ export class App {
     }
 
     /**
+     * Adds a set of zoom buttons to the app
      *
      * @param {object} opts
      * @returns {this}
@@ -645,16 +647,40 @@ export class App {
     addZoomButtons(opts) {
         // * opts.app - the gridviz app
         // * opts.id
-        // * opts.onZoom - custom event handler
+        // * opts.onZoom - custom event handler function
         // * opts.x
         // * opts.y
+        // * opts.delta - zoom delta applied on each click
 
-       this.zoomButtons = new ZoomButtons({
+        this.zoomButtons = new ZoomButtons({
             app: this,
             id: opts?.id || 'gridviz-zoom-buttons',
             x: opts?.x || this.w - 50,
             y: opts?.y || 10,
             onZoom: opts?.onZoom,
+            delta: 0.2,
+        })
+
+        return this
+    }
+
+    /**
+     * Adds a fullscreen toggle button to the app
+     *
+     * @param {object} opts
+     * @returns {this}
+     */
+    addFullscreenButton(opts) {
+        // * opts.app - the gridviz app
+        // * opts.id
+        // * opts.x
+        // * opts.y
+
+        this.fullscreenButton = new FullscreenButton({
+            app: this,
+            id: opts?.id || 'gridviz-fullscreen-button',
+            x: opts?.x || this.w - 50,
+            y: opts?.y || 200,
         })
 
         return this

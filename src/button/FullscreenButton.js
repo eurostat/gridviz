@@ -1,3 +1,5 @@
+import { Button } from './Button.js'
+
 /**
  * Button for toggling fullscreen mode
  *
@@ -12,11 +14,14 @@ export class FullscreenButton extends Button {
      * opts.title - HTML title attribute
      * opts.class - css class
      * opts.onClickFunction
-     * opts.x - CSS x position
-     * opts.y - CSS y position
+     * opts.x - x position of the button
+     * opts.y - y position of the button
      */
+
+    // default state
+    isFullscreen = false
+
     constructor(opts) {
-        opts.onClickFunction = opts.onClickFunction || this.onClickFunction
         super(opts)
 
         // append fullscreen icon to button container
@@ -30,27 +35,35 @@ export class FullscreenButton extends Button {
         </svg>
         `
 
-        this.isFullscreen = false
+        //save initial app dimensions
+        this.defaultHeight = this.app.h
+        this.defaultWidth = this.app.w
+
+        // event handler
+
+        this.node.addEventListener('click', (e) => {
+            this.onClickFunction(e)
+        })
     }
 
-    onClickFunction() {
+    onClickFunction(e) {
         if (this.isFullscreen) {
             this.closeFullscreen(containerDiv)
             //resize canvas to default
             // have to remove previous canvas and rebuild otherwise gridviz just keeps appending new ones
-            let existing = containerDiv.querySelector('canvas')
-            containerDiv.removeChild(existing)
-            app = buildApp(defaultHeight, defaultWidth)
-            update()
+
+            this.app.h = this.defaultHeight
+            this.app.w = this.defaultWidth
+
             this.isFullscreen = false
         } else {
             this.openFullscreen(containerDiv)
             //resize canvas to fullscreen
             // have to remove previous canvas otherwise gridviz just keeps appending new ones
-            let existing = containerDiv.querySelector('canvas')
-            containerDiv.removeChild(existing)
-            app = buildApp(window.screen.height, window.screen.width)
-            update()
+
+            this.app.h = window.screen.height
+            this.app.w = window.screen.width
+
             this.isFullscreen = true
             //"cut and paste" tooltip into containerDiv for fullscreen mode
             if (!containerDiv.querySelector('#tooltip_eurostat')) {

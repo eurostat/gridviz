@@ -47,6 +47,7 @@ export class ZoomButtons extends Button {
         // zoom in btn
         this.zoomInBtn = document.createElement('a')
         this.zoomInBtn.innerHTML = `<a id="zoomin" class="gridviz-zoom-button" title="Zoom in">+</a>`
+        this.zoomInBtn.title = 'Zoom in';
         this.zoomInBtn.addEventListener('click', (e)=>{this.zoomIn(e)})
         this.zoomInBtn.addEventListener('mouseover', (e)=>{this.zoomInBtn.style.backgroundColor = 'lightgrey'})
         this.zoomInBtn.addEventListener('mouseout', (e)=>{this.zoomInBtn.style.backgroundColor = '#ffffff'})
@@ -54,6 +55,7 @@ export class ZoomButtons extends Button {
         // zoom out btn
         this.zoomOutBtn = document.createElement('a')
         this.zoomOutBtn.innerHTML = `<a id="zoomin" class="gridviz-zoom-button" title="Zoom out">-</a>`
+        this.zoomOutBtn.title = 'Zoom out';
         this.zoomOutBtn.addEventListener('click', (e)=>{this.zoomOut(e)})
         this.zoomOutBtn.addEventListener('mouseover', (e)=>{this.zoomOutBtn.style.backgroundColor = 'lightgrey'})
         this.zoomOutBtn.addEventListener('mouseout', (e)=>{this.zoomOutBtn.style.backgroundColor = '#ffffff'})
@@ -73,6 +75,7 @@ export class ZoomButtons extends Button {
             btn.style.padding = '4px';
             btn.style.fontSize = '20px';
             btn.style.fontWeight = 'bold';
+            btn.style.userSelect = 'none';
             if (i==0) btn.style.borderBottom = '1px solid grey'
         })
 
