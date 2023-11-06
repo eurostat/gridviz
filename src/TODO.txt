@@ -16,7 +16,6 @@ style: rough.js - test on observable with this.cg.pixToGeoX ?
 style: pseudo hexagones
 style: bi-symbol map
 style: spider net diagram
-style: package yvaral ?
 
 
 NO
