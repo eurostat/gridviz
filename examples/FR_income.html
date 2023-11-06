@@ -325,7 +325,7 @@
                         new gviz.TimeSeriesStyle({
                             ts: ts,
                             lineWidthCol: "ind2019",
-                            lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.5) * 4) * z },
+                            lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.35) * 4) * z },
                             //color: () => "black",
                             colorCol: "revind2019",
                             color: (v, r, s) => {
@@ -335,7 +335,7 @@
                             },
                         })],
                     {
-                        pixNb: 10,
+                        pixNb: 12,
                         cellInfoHTML: (c) => {
 
                             //prepare chart data
@@ -398,16 +398,21 @@
 
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
                     title: "Niveau de revenu (2019)",
-                    width: 200,
+                    width: 150,
                     colorRamp: colR,
                     ticks: 2,
                     tickFormat: 'text',
                     fun: (t, r, s) => (t == 0 ? 'Bas' : t == 1 ? 'Haut' : '-'),
                 }))
 
-                //t = Math.ceil(t * nb) / nb
-
-
+                app.layers[0].styles[0].legends.push(
+                    new gviz.SegmentWidthLegend({
+                        title: "Population (2019)",
+                        labelUnitText: 'hab.',
+                        exaggerationFactor: 0.8,
+                        color: "black",
+                    })
+                )
 
             } else if (layCode == 'smoothed') {
                 //get year selection
