@@ -32,21 +32,13 @@ export class FullscreenButton extends Button {
             aria-hidden="true"
         >
             <svg fill="#000000" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
-
             <title/>
-            
             <g>
-            
             <path d="M30,0H6A5.9966,5.9966,0,0,0,0,6V30a6,6,0,0,0,12,0V12H30A6,6,0,0,0,30,0Z"/>
-            
             <path d="M90,0H66a6,6,0,0,0,0,12H84V30a6,6,0,0,0,12,0V6A5.9966,5.9966,0,0,0,90,0Z"/>
-            
             <path d="M30,84H12V66A6,6,0,0,0,0,66V90a5.9966,5.9966,0,0,0,6,6H30a6,6,0,0,0,0-12Z"/>
-            
             <path d="M90,60a5.9966,5.9966,0,0,0-6,6V84H66a6,6,0,0,0,0,12H90a5.9966,5.9966,0,0,0,6-6V66A5.9966,5.9966,0,0,0,90,60Z"/>
-            
             </g>
-            
             </svg>
         </svg>
         `
@@ -66,25 +58,15 @@ export class FullscreenButton extends Button {
         if (this.isFullscreen) {
             this.closeFullscreen(containerDiv)
             //resize canvas to default
-            // have to remove previous canvas and rebuild otherwise gridviz just keeps appending new ones
-
             this.app.h = this.defaultHeight
             this.app.w = this.defaultWidth
-
             this.isFullscreen = false
         } else {
             this.openFullscreen(containerDiv)
             //resize canvas to fullscreen
-            // have to remove previous canvas otherwise gridviz just keeps appending new ones
-
             this.app.h = window.screen.height
             this.app.w = window.screen.width
-
             this.isFullscreen = true
-            //"cut and paste" tooltip into containerDiv for fullscreen mode
-            if (!containerDiv.querySelector('#tooltip_eurostat')) {
-                containerDiv.appendChild(document.getElementById('tooltip_eurostat'))
-            }
         }
     }
 
