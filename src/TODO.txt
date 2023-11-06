@@ -1,12 +1,7 @@
-SegmentWidthLegend
-fix exaggerationFactor
-add new param for length - maybe length exageration
-
 FR: income map
 alpha: legend. Bivariate?
 test halftone, bivariate color, bi-symbol
 changement:
-TS: finalise, with legend
 percentage evolution ?
 double smoothing map ?
 
@@ -21,7 +16,6 @@ style: rough.js - test on observable with this.cg.pixToGeoX ?
 style: pseudo hexagones
 style: bi-symbol map
 style: spider net diagram
-style: package yvaral ?
 
 
 NO

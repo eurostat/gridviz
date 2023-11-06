@@ -50,7 +50,6 @@ export class TimeSeriesStyle extends Style {
          * @type {function(number,number,import("../Style.js").Stat|undefined,number):number} */
         this.lineWidth = opts.lineWidth || ((v, r, s, zf) => 1.5 * zf)
 
-
         /**
          * @type {string} */
         this.colorCol = opts.colorCol
@@ -246,10 +245,11 @@ export class TimeSeriesStyle extends Style {
 
         //update legend, if any
         this.updateLegends({
-            style: this,
+            widthFun: this.lineWidth,
             r: r,
             zf: zf,
             sColor: statColor,
+            //sLength: statLength,
             sWidth: statWidth,
         })
 

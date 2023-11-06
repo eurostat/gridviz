@@ -58,6 +58,8 @@
         <label for="label">Noms villes</label>
         <input type="checkbox" id="boundary" checked />
         <label for="boundary">Limites adm.</label>
+        <input type="checkbox" id="background" checked />
+        <label for="background">Fond</label>
         <hr />
         Source:
         <a href="https://www.insee.fr/fr/statistiques/7655515" target="_blank" rel="noopener noreferrer">INSEE -
@@ -194,10 +196,6 @@
                     (+c.imputed && r < 1000 ? '<br>(valeur imputée)' : '')
                     : undefined
 
-            //set default background filter
-            for (let bgl of app.bgLayers) bgl.filterColor = (zf) => '#ffffff60'
-            app.setBackgroundColor("white")
-
             if (layCode == 'color') {
 
                 app.addLayerFromDataset(
@@ -305,7 +303,7 @@
                 app.layers[0].styles[0].legends.push(legendInc)
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
                     title: "Population - par transparence",
-                    width: 200,
+                    width: 300,
                     ticks: 4,
                     colorRamp: d3.interpolateGreys,
                     fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sExpRevInverse(t, str),
@@ -317,8 +315,8 @@
                 //define time series list of years
                 const ts = ["revind2015", "revind2017", "revind2019"]
 
-                const nb = 10
-                const colR = d3.scaleLinear([0, 0.5, 1], ["blue", "orange", "red"])
+                //colors
+                const colR = d3.scaleQuantize([0, 1], [d3.schemeCategory10[4], d3.schemeCategory10[0], d3.schemeCategory10[2], d3.schemeCategory10[1], d3.schemeCategory10[3]]);
 
                 //add layer
                 app.addLayerFromDataset(
@@ -327,23 +325,17 @@
                         new gviz.TimeSeriesStyle({
                             ts: ts,
                             lineWidthCol: "ind2019",
-                            lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.5) * 4) * z },
+                            lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.35) * 4) * z },
                             //color: () => "black",
                             colorCol: "revind2019",
                             color: (v, r, s) => {
                                 let t = (v - incMin) / (incMax - incMin);
                                 t = t > 1 ? 1 : t < 0 ? 0 : t;
-                                t = Math.ceil(t * nb) / nb
                                 return colR(t);
                             },
-                            //offsetX: (c, r, z) => r / 2,
-                            //offsetY: (c, r, z) => r / 2,
-                            //width: (c, r, z) => 1.5*r,
-                            //height: (c, r, z) => 2*r,
-                            //anchorModeY: (c, r, z) => "first"
                         })],
                     {
-                        pixNb: 10,
+                        pixNb: 12,
                         cellInfoHTML: (c) => {
 
                             //prepare chart data
@@ -404,6 +396,23 @@
                     }
                 )
 
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
+                    title: "Niveau de revenu (2019)",
+                    width: 150,
+                    colorRamp: colR,
+                    ticks: 2,
+                    tickFormat: 'text',
+                    fun: (t, r, s) => (t == 0 ? 'Bas' : t == 1 ? 'Haut' : '-'),
+                }))
+
+                app.layers[0].styles[0].legends.push(
+                    new gviz.SegmentWidthLegend({
+                        title: "Population (2019)",
+                        labelUnitText: 'hab.',
+                        exaggerationFactor: 0.8,
+                        color: "black",
+                    })
+                )
 
             } else if (layCode == 'smoothed') {
                 //get year selection
@@ -790,6 +799,12 @@
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
             app.showBoundaries = this.checked
+            app.cg.redraw()
+        })
+
+        // show/hide background
+        document.querySelector('#background').addEventListener('change', function () {
+            app.showBgLayers = this.checked
             app.cg.redraw()
         })
 

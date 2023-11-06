@@ -90,6 +90,8 @@
         <label for="label">Noms villes</label>
         <input type="checkbox" id="boundary" checked />
         <label for="boundary">Limites adm.</label>
+        <input type="checkbox" id="background" checked />
+        <label for="background">Fond</label>
         <hr />
         Source:
         <a href="https://www.insee.fr/fr/statistiques/7655515" target="_blank" rel="noopener noreferrer">INSEE -
@@ -205,7 +207,7 @@
             //+ "<br>" + c["p" + y1 + "_" + y2]
 
             //set default background filter
-            for (let bgl of app.bgLayers) bgl.filterColor = (zf) => '#ffffff60'
+            for (let bgl of app.bgLayers) bgl.filterColor = (zf) => zf > 50 ? '#ffffff60' : 'none'
             app.setBackgroundColor("white")
 
             if (layCode == 'color') {
@@ -774,7 +776,7 @@
                     new gviz.SegmentWidthLegend({
                         title: "Population en 2019",
                         labelUnitText: 'hab.',
-                        exaggerationFactor: 0.01,
+                        exaggerationFactor: 0.6,
                         color: "black",
                         //r: resolution
                     })
@@ -863,6 +865,12 @@
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
             app.showBoundaries = this.checked
+            app.cg.redraw()
+        })
+
+        // show/hide background
+        document.querySelector('#background').addEventListener('change', function () {
+            app.showBgLayers = this.checked
             app.cg.redraw()
         })
 
