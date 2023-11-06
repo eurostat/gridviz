@@ -24,28 +24,37 @@ export class Button {
         // create HTML node
         this.node = document.createElement('div')
         this.node.id = this.id
-        this.node.title = opts.title
-        this.node.classList.add(opts.class)
-        this.node.style.boxShadow = '0 7px 8px rgba(0,47,103,.08), 0 0 22px rgba(0,47,103,.04), 0 12px 17px rgba(0,47,103,.04), 0 -4px 4px rgba(0,47,103,.04)' //.ecl-u-shadow-3
-        this.node.style.backgroundColor = '#ffffff' //.ecl-u-bg-white
+        if (opts.title) this.node.title = opts.title
 
         // add events
-        this.node.addEventListener('onclick', opts.onClickFunction)
+        if (opts.onClickFunction) this.node.addEventListener('onclick', opts.onClickFunction)
+        this.node.addEventListener('mouseover', (e)=>{this.node.style.backgroundColor = 'lightgrey'})
+        this.node.addEventListener('mouseout', (e)=>{this.node.style.backgroundColor = '#ffffff'})
 
         //set styles
+        this.node.classList.add(opts.class)
+        this.node.style.boxShadow =
+            '0 7px 8px rgba(0,47,103,.08), 0 0 22px rgba(0,47,103,.04), 0 12px 17px rgba(0,47,103,.04), 0 -4px 4px rgba(0,47,103,.04)' //.ecl-u-shadow-3
+        this.node.style.backgroundColor = '#ffffff' //.ecl-u-bg-white
         this.node.style.position = 'absolute'
         this.node.style.cursor = 'pointer'
-        this.node.style.top = opts.y +'px'
-        this.node.style.left = opts.x +'px'
+         this.node.style.display = 'flex'
+        this.node.style.justifyContent = 'center'
+        this.node.style.alignItems = 'center'
+        this.node.style.width = '30px'
+        this.node.style.height = '30px'
+        // this.node.style.padding = '4px'
+        this.node.style.top = opts.y + 'px'
+        this.node.style.left = opts.x + 'px'
 
         // append to parent
         this.parentNode.appendChild(this.node)
-
     }
 }
 
 //       <div id="gridviz-fullscreen" class="ecl-u-bg-white ecl-u-shadow-3" title="Fullscreen mode">
-{/* <svg
+{
+    /* <svg
 class="ecl-icon ecl-icon--m ecl-icon--none"
 focusable="false"
 aria-hidden="true"
@@ -62,4 +71,5 @@ aria-hidden="true"
 <a id="zoomout" class="gridviz-zoom-button" href="#" title="Zoom out"
 >−</a
 >
-</div> */}
+</div> */
+}
