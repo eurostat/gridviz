@@ -316,7 +316,9 @@
                 const ts = ["revind2015", "revind2017", "revind2019"]
 
                 const nb = 10
-                const colR = d3.scaleLinear([0, 0.5, 1], ["blue", "orange", "red"])
+                const colR = d3.scaleLinear([0, 0.5, 1], [d3.schemeTableau10[0], d3.schemeTableau10[5], d3.schemeTableau10[2]])
+                //const colR = d3.interpolateCool //d3.scaleLinear([0, 0.5, 1], ["orange", "red"])
+
 
                 //add layer
                 app.addLayerFromDataset(
@@ -334,11 +336,6 @@
                                 t = Math.ceil(t * nb) / nb
                                 return colR(t);
                             },
-                            //offsetX: (c, r, z) => r / 2,
-                            //offsetY: (c, r, z) => r / 2,
-                            //width: (c, r, z) => 1.5*r,
-                            //height: (c, r, z) => 2*r,
-                            //anchorModeY: (c, r, z) => "first"
                         })],
                     {
                         pixNb: 10,
@@ -401,6 +398,18 @@
                         }
                     }
                 )
+
+                app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
+                    title: "Niveau de revenu",
+                    width: 200,
+                    colorRamp: colR,
+                    ticks: 2,
+                    tickFormat: 'text',
+                    fun: (t, r, s) => (t == 0 ? 'Bas' : t == 1 ? 'Haut' : 'X'),
+                }))
+
+                //t = Math.ceil(t * nb) / nb
+
 
 
             } else if (layCode == 'smoothed') {
