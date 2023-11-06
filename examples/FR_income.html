@@ -315,10 +315,8 @@
                 //define time series list of years
                 const ts = ["revind2015", "revind2017", "revind2019"]
 
-                const nb = 10
-                const colR = d3.scaleLinear([0, 0.5, 1], [d3.schemeTableau10[0], d3.schemeTableau10[5], d3.schemeTableau10[2]])
-                //const colR = d3.interpolateCool //d3.scaleLinear([0, 0.5, 1], ["orange", "red"])
-
+                //colors
+                const colR = d3.scaleQuantize([0, 1], [d3.schemeCategory10[4], d3.schemeCategory10[0], d3.schemeCategory10[2], d3.schemeCategory10[1], d3.schemeCategory10[3]]);
 
                 //add layer
                 app.addLayerFromDataset(
@@ -333,7 +331,6 @@
                             color: (v, r, s) => {
                                 let t = (v - incMin) / (incMax - incMin);
                                 t = t > 1 ? 1 : t < 0 ? 0 : t;
-                                t = Math.ceil(t * nb) / nb
                                 return colR(t);
                             },
                         })],
@@ -400,12 +397,12 @@
                 )
 
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
-                    title: "Niveau de revenu",
+                    title: "Niveau de revenu (2019)",
                     width: 200,
                     colorRamp: colR,
                     ticks: 2,
                     tickFormat: 'text',
-                    fun: (t, r, s) => (t == 0 ? 'Bas' : t == 1 ? 'Haut' : 'X'),
+                    fun: (t, r, s) => (t == 0 ? 'Bas' : t == 1 ? 'Haut' : '-'),
                 }))
 
                 //t = Math.ceil(t * nb) / nb
