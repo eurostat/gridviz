@@ -207,7 +207,7 @@
             //+ "<br>" + c["p" + y1 + "_" + y2]
 
             //set default background filter
-            for (let bgl of app.bgLayers) bgl.filterColor = (zf) => '#ffffff60'
+            for (let bgl of app.bgLayers) bgl.filterColor = (zf) => zf > 50 ? '#ffffff60' : 'none'
             app.setBackgroundColor("white")
 
             if (layCode == 'color') {

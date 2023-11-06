@@ -196,10 +196,6 @@
                     (+c.imputed && r < 1000 ? '<br>(valeur imputée)' : '')
                     : undefined
 
-            //set default background filter
-            for (let bgl of app.bgLayers) bgl.filterColor = (zf) => '#ffffff60'
-            app.setBackgroundColor("white")
-
             if (layCode == 'color') {
 
                 app.addLayerFromDataset(
