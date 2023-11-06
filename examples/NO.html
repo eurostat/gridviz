@@ -430,6 +430,15 @@
                     }
                 )
 
+                app.layers[0].styles[0].legends.push(
+                    new gviz.SegmentWidthLegend({
+                        title: "Population (2018)",
+                        labelUnitText: 'inhabitants',
+                        exaggerationFactor: 0.8,
+                        color: "black",
+                    })
+                )
+
             } else console.error('Unexpected layer code: ' + layCode)
 
             //redraw
