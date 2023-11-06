@@ -58,6 +58,8 @@
         <label for="label">Noms villes</label>
         <input type="checkbox" id="boundary" checked />
         <label for="boundary">Limites adm.</label>
+        <input type="checkbox" id="background" checked />
+        <label for="background">Fond</label>
         <hr />
         Source:
         <a href="https://www.insee.fr/fr/statistiques/7655515" target="_blank" rel="noopener noreferrer">INSEE -
@@ -305,7 +307,7 @@
                 app.layers[0].styles[0].legends.push(legendInc)
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
                     title: "Population - par transparence",
-                    width: 200,
+                    width: 300,
                     ticks: 4,
                     colorRamp: d3.interpolateGreys,
                     fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sExpRevInverse(t, str),
@@ -790,6 +792,12 @@
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
             app.showBoundaries = this.checked
+            app.cg.redraw()
+        })
+
+        // show/hide background
+        document.querySelector('#background').addEventListener('change', function () {
+            app.showBgLayers = this.checked
             app.cg.redraw()
         })
 
