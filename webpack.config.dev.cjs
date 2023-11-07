@@ -16,4 +16,11 @@ module.exports = {
         asyncWebAssembly: true,
         //syncWebAssembly: true
     },
+
+    devServer: {
+        static: {
+            directory: '/home/juju/serveur_data/',
+        },
+        port: 1234,
+    },
 }
