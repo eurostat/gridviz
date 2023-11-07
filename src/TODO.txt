@@ -1,5 +1,3 @@
-local server
-
 FR: income map
 alpha: legend. Bivariate?
 test halftone, bivariate color, bi-symbol
