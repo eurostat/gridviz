@@ -654,6 +654,7 @@ export class App {
         this.zoomButtons = new ZoomButtons({
             app: this,
             id: opts?.id || 'gridviz-zoom-buttons',
+            class: opts?.class,
             x: opts?.x || this.w - 50,
             y: opts?.y || 10,
             onZoom: opts?.onZoom,
