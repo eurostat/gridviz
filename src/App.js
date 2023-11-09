@@ -645,7 +645,6 @@ export class App {
      * @returns {this}
      */
     addZoomButtons(opts) {
-        // * opts.app - the gridviz app
         // * opts.id
         // * opts.onZoom - custom event handler function
         // * opts.x
@@ -658,7 +657,7 @@ export class App {
             x: opts?.x || this.w - 50,
             y: opts?.y || 10,
             onZoom: opts?.onZoom,
-            delta: 0.2,
+            delta: opts?.delta || 0.2
         })
 
         return this
