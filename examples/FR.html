@@ -110,6 +110,7 @@
         //create datasets, indexed by geo, theme and year
         const ds = {}
         const baseURL = 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/'
+        //const baseURL = "http://localhost:1234/"
         for (let geo of ["met", "reun", "mart"]) {
             ds[geo] = { ind: {}, men: {}, log: {}, inc: {} }
             for (let year of [2015, 2017, 2019]) {

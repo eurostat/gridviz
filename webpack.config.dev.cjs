@@ -16,4 +16,14 @@ module.exports = {
         asyncWebAssembly: true,
         //syncWebAssembly: true
     },
+
+    //this is to test data from a local folder, exposed via a local server. Replace directory and port on request.
+    devServer: {
+        static: {
+            //directory: '/home/juju/workspace/',
+            directory: '/home/juju/workspace/tiled-grid-france-filosofi/out/csv/',
+        },
+        port: 1234,
+        headers: { 'Access-Control-Allow-Origin': '*', },
+    },
 }

@@ -167,7 +167,7 @@
 
         const legendInc = new gviz.ColorLegend({
             title: "Revenu, en € par mois et par personne",
-            width: 500,
+            width: 320,
             ticks: 6,
             colorRamp: colR,
             fun: (t, r, s) => incMin + t * (incMax - incMin),
@@ -252,21 +252,21 @@
                 app.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         title: "Nombre d'habitants",
-                        exaggerationFactor: 1,
+                        exaggerationFactor: 0.8,
                         shape: 'circle',
                         fillColor: "black",
                     }).style('padding', '0px 5px')
                 )
                 app.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
-                        exaggerationFactor: 0.4,
+                        exaggerationFactor: 0.2,
                         shape: 'circle',
                         fillColor: "black",
                     }).style('padding', '0px 5px')
                 )
                 app.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
-                        exaggerationFactor: 0.05,
+                        exaggerationFactor: 0.01,
                         shape: 'circle',
                         fillColor: "black",
                     }).style('padding', '0px 5px')
@@ -303,7 +303,7 @@
                 app.layers[0].styles[0].legends.push(legendInc)
                 app.layers[0].styles[0].legends.push(new gviz.ColorLegend({
                     title: "Population - par transparence",
-                    width: 300,
+                    width: 320,
                     ticks: 4,
                     colorRamp: d3.interpolateGreys,
                     fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sExpRevInverse(t, str),
@@ -718,6 +718,8 @@
 
             } else console.error('Unexpected layer code: ' + layCode)
 
+            console.log("?lay="+layCode+"&z="+app.getZoomFactor()+"&x="+app.getGeoCenter().x+"&y="+app.getGeoCenter().y)
+
             //redraw
             app.cg.redraw()
         }
@@ -775,7 +777,6 @@
                 //TODO background
             }
             else { console.error("Unexpected geo: " + geo); return; }
-
 
             update();
         }
