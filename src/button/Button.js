@@ -18,13 +18,14 @@ export class Button {
         opts = opts || {}
 
         this.app = opts.app
-        this.parentNode = opts.app.container
+        this.parentNode = opts.parentNode || opts.app.container
         this.id = opts.id || 'button-' + Math.random()
 
         // create HTML node
         this.node = document.createElement('div')
         this.node.id = this.id
         if (opts.title) this.node.title = opts.title
+        if (opts.class) this.node.classList.add(opts.class) 
 
         // add events
         if (opts.onClickFunction) this.node.addEventListener('onclick', opts.onClickFunction)
@@ -50,26 +51,4 @@ export class Button {
         // append to parent
         this.parentNode.appendChild(this.node)
     }
-}
-
-//       <div id="gridviz-fullscreen" class="ecl-u-bg-white ecl-u-shadow-3" title="Fullscreen mode">
-{
-    /* <svg
-class="ecl-icon ecl-icon--m ecl-icon--none"
-focusable="false"
-aria-hidden="true"
->
-<use xlink:href="./ec-icons.svg#fullscreen"></use>
-</svg>
-</div>
-
-<div id="gridviz-zoom-btns" class="ecl-u-bg-white ecl-u-shadow-3">
-<a id="zoomin" class="gridviz-zoom-button" href="#" title="Zoom in"
->+</a
->
-<hr style="margin: 0px" />
-<a id="zoomout" class="gridviz-zoom-button" href="#" title="Zoom out"
->−</a
->
-</div> */
 }
