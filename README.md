@@ -101,7 +101,7 @@ See the **[documentation page](https://eurostat.github.io/gridviz/docs/reference
 
 ## Documentation
 
-See the **[API reference](https://github.com/eurostat/gridviz/docs/reference)**.
+See the **[API reference](https://github.com/eurostat/gridviz/blob/master/docs/reference.md)**.
 
 ## About
 
