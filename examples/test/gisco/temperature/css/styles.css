@@ -9,7 +9,7 @@ header {
 }
 
 footer {
-    height: 35px;
+    height: 28px;
     display: flex;
     justify-content: space-between;
 }
@@ -28,7 +28,7 @@ main {
 #gridviz-title {
     margin-bottom: 0px;
     margin-top: 0px;
-    font-size: 1.3rem;
+    font-size: 1.8rem;
 }
 
 #gridviz-subtitle {
@@ -62,20 +62,23 @@ main {
 }
 
 #estat-ribbon-container {
+    position: absolute;
+    bottom: -4px;
+    right: 0px;
     z-index: 99999;
 }
 
 #estat-ribbon-svg {
-    height: 2.3rem;
+    height: 82px;
 }
 
 #gridviz-legend {
     position: absolute;
-    bottom: 40px !important;
+    bottom: 46px !important;
     left: 10px;
     background: white;
     padding: 3px;
-    box-shadow: grey 3px 3px 3px, rgb(221, 221, 221) -3px -3px 3px;
+    box-shadow: rgb(221, 221, 221) 0px 0px 3px 3px;
 }
 
 #gridviz-legend>div>div {
