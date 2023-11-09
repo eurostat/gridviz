@@ -27,7 +27,7 @@ export class FullscreenButton extends Button {
         // append fullscreen icon to button container
         this.node.innerHTML = `
         <svg
-            style="height: 1.5rem; width: 1.5rem; fill:black; margin:0;"
+            style="height: 1.2rem; width: 1.2rem; fill:black; margin:0;"
             focusable="false"
             aria-hidden="true"
         >
