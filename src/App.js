@@ -679,6 +679,7 @@ export class App {
         this.fullscreenButton = new FullscreenButton({
             app: this,
             id: opts?.id || 'gridviz-fullscreen-button',
+            class: opts?.class,
             x: opts?.x || this.w - 50,
             y: opts?.y || 85,
         })
