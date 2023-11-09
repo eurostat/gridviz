@@ -1,0 +1,147 @@
+.wrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    min-height: 75px;
+}
+
+footer {
+    height: 35px;
+    display: flex;
+    justify-content: space-between;
+}
+
+main {
+    max-height: 100vh;
+    height: calc(100vh - 110px);
+    flex: 1;
+}
+
+#main-container {
+    height: 100%;
+    max-height: 100%;
+}
+
+#gridviz-title {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 1.3rem;
+}
+
+#gridviz-subtitle {
+    margin-bottom: 0px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    margin-top: 3px;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+#gridviz-title-container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    padding: 15px;
+    width: 100%;
+    background-color: white;
+}
+
+#estat-logo-container {
+    padding: 6px;
+    background: white;
+    margin-left: 5px;
+    display: flex;
+}
+
+#estat-logo-svg {
+    height: 1rem;
+    align-self: center;
+}
+
+#estat-ribbon-container {
+    z-index: 99999;
+}
+
+#estat-ribbon-svg {
+    height: 2.3rem;
+}
+
+#gridviz-legend {
+    position: absolute;
+    bottom: 40px !important;
+    left: 10px;
+    background: white;
+    padding: 3px;
+    box-shadow: grey 3px 3px 3px, rgb(221, 221, 221) -3px -3px 3px;
+}
+
+#gridviz-legend>div>div {
+    display: flex;
+}
+
+#tooltip_eurostat {
+    z-index: 999;
+    box-shadow: 0 2px 4px rgba(0, 47, 103, 0.08),
+        0 0 10px rgba(0, 47, 103, 0.04), 0 4px 5px rgba(0, 47, 103, 0.04),
+        0 -4px 4px rgba(0, 47, 103, 0.04) !important;
+    background-color: white !important;
+    border-radius: 0px !important;
+    font-size: 1rem !important;
+}
+
+.gridviz-zoom-button:hover {
+    background-color: lightgray;
+}
+
+#gridviz-fullscreen {
+    position: absolute;
+    top: 95px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    padding: 4px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    cursor: pointer;
+}
+
+#gridviz-zoom-btns {
+    position: absolute;
+    left: 10px;
+    top: 80px;
+    width: auto;
+    height: auto;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.gridviz-zoom-button {
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    border: none;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    padding: 4px;
+    border: 1px solid lightgrey;
+}
+
+#gridviz-attribution {
+    width: auto;
+    height: 100%;
+    display: flex;
+    padding: 1px;
+    border: 0px;
+    background: #ffffffcc;
+}
+
+#gridviz-attribution>span {
+    align-self: center;
+}
