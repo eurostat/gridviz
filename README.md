@@ -14,7 +14,6 @@
 [<img src="/docs/img/overviews/ov_accessibility.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
 [<img src="/docs/img/overviews/ov_side_cat.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#side-category-style)
 [<img src="/docs/img/overviews/ov_age_balance.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
-[<img src="/docs/img/overviews/ov_ninja.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#ninja-star-style)
 [<img src="/docs/img/overviews/ov_dark.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#square-color-webgl-style)
 [<img src="/docs/img/overviews/ov_kersmoo.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#kernel-smoothing)
 [<img src="/docs/img/overviews/ov_tanaka_dark.png" width="70" height="70">](https://eurostat.github.io/gridviz/docs/reference#tanaka-style)
