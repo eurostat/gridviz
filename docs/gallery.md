@@ -34,7 +34,7 @@ Here are some examples of the different styles available in gridviz!
 [Side](https://eurostat.github.io/gridviz/docs/reference#side-style)
 [![shadow effect map](/docs/img/overviews/ov_choco.png)](https://eurostat.github.io/gridviz/docs/reference#side-style)
 
-[Side Category]((https://eurostat.github.io/gridviz/docs/reference#side-category-style))
+[Side Category](https://eurostat.github.io/gridviz/docs/reference#side-category-style)
 [![](/docs/img/overviews/ov_side_cat.png)](https://eurostat.github.io/gridviz/docs/reference#side-category-style)
 
 [Pillars](https://eurostat.github.io/gridviz/docs/reference#pillars-style)
