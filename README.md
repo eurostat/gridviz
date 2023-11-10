@@ -6,35 +6,24 @@
 
 [Gridviz](https://github.com/eurostat/gridviz/) is a JavaScript library for visualizing gridded data (or any tabular dataset with x/y coordinates for that matter) in the browser in a large variety of [cartographic styles](https://eurostat.github.io/gridviz/docs/reference). Unlike traditional raster-based web mapping tools, [Gridviz](https://github.com/eurostat/gridviz/) renders everything client-side, on the fly.
 
-[![](/docs/img/overviews/ov_accessibility.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
-[![](/docs/img/overviews/ov_side_cat.png)](https://eurostat.github.io/gridviz/docs/reference#side-category-style)
-[![](/docs/img/overviews/ov_age_balance.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
-[![ninja star map](/docs/img/overviews/ov_ninja.png)](https://eurostat.github.io/gridviz/docs/reference#ninja-star-style)
-[![shadow effect map](/docs/img/overviews/ov_choco.png)](https://eurostat.github.io/gridviz/docs/reference#side-style)
-[![](/docs/img/overviews/ov_dark.png)](https://eurostat.github.io/gridviz/docs/reference#square-color-webgl-style)
-[![](/docs/img/overviews/ov_kersmoo.png)](https://eurostat.github.io/gridviz/docs/reference#kernel-smoothing)
-[![](/docs/img/overviews/ov_pillar_simple.png)](https://eurostat.github.io/gridviz/docs/reference#pillars-style)
-[![](/docs/img/overviews/ov_donut.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
-[![tanaka style map](/docs/img/overviews/ov_tanaka_dark.png)](https://eurostat.github.io/gridviz/docs/reference#tanaka-style)
-[![](/docs/img/overviews/ov_flag.png)](https://eurostat.github.io/gridviz/docs/reference#composition-style)
-[![joyplot map](/docs/img/overviews/ov_joyplot_shade.png)](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
-[![lego map](/docs/img/overviews/ov_lego.png)](https://eurostat.github.io/gridviz/docs/reference#lego-style)
-[![timeseries map](/docs/img/overviews/ov_timeseries.png)](https://eurostat.github.io/gridviz/docs/reference#time-series-style)
-[![isometric fence map](/docs/img/overviews/ov_isofence.png)](https://eurostat.github.io/gridviz/docs/reference#isometric-fence-style)
-[![mosaic map](/docs/img/overviews/ov_mosaic.png)](https://eurostat.github.io/gridviz/docs/reference#mosaic-style)
-[![](/docs/img/overviews/ov_piechart.png)](https://eurostat.github.io/gridviz/docs/reference#composition-style)
-[![](/docs/img/overviews/ov_pillar.png)](https://eurostat.github.io/gridviz/docs/reference#pillars-style)
-[![](/docs/img/overviews/ov_text_elevation.png)](https://eurostat.github.io/gridviz/docs/reference#text-style)
-[![dot density map](/docs/img/overviews/ov_dotdensity_random.png)](https://eurostat.github.io/gridviz/docs/reference#dot-density-style)
-[![](/docs/img/overviews/ov_popchange.png)](https://eurostat.github.io/gridviz/docs/reference#shapecolorsize-style)
-[![](/docs/img/overviews/ov_ring.png)](https://eurostat.github.io/gridviz/docs/reference#composition-style)
-[![](/docs/img/overviews/ov_segment.png)](https://eurostat.github.io/gridviz/docs/reference#segment-style)
-[![tanaka style map](/docs/img/overviews/ov_tanaka.png)](https://eurostat.github.io/gridviz/docs/reference#tanaka-style)
-[![dot density map](/docs/img/overviews/ov_dotdensity.png)](https://eurostat.github.io/gridviz/docs/reference#dot-density-style)
-[![joyplot map](/docs/img/overviews/ov_joyplot.png)](https://eurostat.github.io/gridviz/docs/reference#joyplot-style)
-[![](/docs/img/overviews/ov_stroke.png)](https://eurostat.github.io/gridviz/docs/reference#stroke-style)
+## Styles
 
-## Examples
+[Visit the style gallery](https://github.com/eurostat/gridviz/blob/master/docs/gallery.md) to see a gallery of the different styles available for visualizing gridded data with gridviz.
+
+<img src="/docs/img/overviews/ov_accessibility.png" width="60" height="60">
+<img src="/docs/img/overviews/ov_side_cat.png" width="60" height="60">
+<img src="/docs/img/overviews/ov_age_balance.png" width="60" height="60">
+<img src="/docs/img/overviews/ov_ninja.png" width="60" height="60">
+<img src="/docs/img/overviews/ov_dark.png" width="60" height="60">
+<img src="/docs/img/overviews/ov_kersmoo.png" width="60" height="60">
+<img src="/docs/img/overviews/ov_tanaka_dark.png" width="60" height="60">
+<img src="/docs/img/overviews/ov_joyplot_shade.png" width="60" height="60">
+<img src="/docs/img/overviews/ov_lego.png" width="60" height="60">
+<img src="/docs/img/overviews/ov_text_elevation.png" width="60" height="60">
+<img src="/docs/img/overviews/ov_dotdensity.png" width="60" height="60">
+<img src="/docs/img/overviews/ov_joyplot.png" width="60" height="60">
+
+## Live Demos
 
 -   [Europe - 1km resolution - GEOSTAT/GISCO](https://eurostat.github.io/gridviz/examples/EUR.html)
 -   [Germany - 100m resolution - Zensus 2011](https://eurostat.github.io/gridviz/examples/DE.html)
@@ -101,7 +90,11 @@ See the **[documentation page](https://eurostat.github.io/gridviz/docs/reference
 
 ## Documentation
 
-See the **[API reference](https://github.com/eurostat/gridviz/blob/master/docs/reference.md)**.
+See the **[gridviz documentation page](https://github.com/eurostat/gridviz/blob/master/docs/reference.md)**.
+
+## Grid tiling
+
+In order to visualize large grids efficiently, you can produce tiled grids in a [tiled grid format](https://eurostat.github.io/gridviz/docs/tiledformat) with **[GridTiler](https://github.com/eurostat/gridtiler)**.
 
 ## About
 
