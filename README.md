@@ -4,7 +4,7 @@
 ![npm](https://img.shields.io/npm/v/gridviz)
 ![license](https://img.shields.io/badge/license-EUPL-success)
 
-<p align="center">
+<p align="center" style="height: 350px;">
     <img src="docs/img/banner.png">
 </p>
 
