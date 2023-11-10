@@ -10,6 +10,7 @@
 
 [Visit the style gallery](https://github.com/eurostat/gridviz/blob/master/docs/gallery.md) to see a gallery of the different styles available for visualizing gridded data with gridviz.
 
+<div style="display: flex">
 <img src="/docs/img/overviews/ov_accessibility.png" width="60" height="60">
 <img src="/docs/img/overviews/ov_side_cat.png" width="60" height="60">
 <img src="/docs/img/overviews/ov_age_balance.png" width="60" height="60">
@@ -22,6 +23,7 @@
 <img src="/docs/img/overviews/ov_text_elevation.png" width="60" height="60">
 <img src="/docs/img/overviews/ov_dotdensity.png" width="60" height="60">
 <img src="/docs/img/overviews/ov_joyplot.png" width="60" height="60">
+</div>
 
 ## Live Demos
 
