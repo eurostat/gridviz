@@ -1,3 +1,4 @@
+include draw function as style constructor option
 FR DOMs: finalise. define projection to show euronym names
 style value by alpha: Document
 
