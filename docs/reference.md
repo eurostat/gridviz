@@ -799,10 +799,10 @@ Any need or idea for a new style ? feel free to [ask](https://github.com/eurosta
 
 ```javascript
 //create custom style
-const customStyle = new gviz.Style()
+const customStyle = new gviz.Style({
 
 //define draw function
-customStyle.draw = (cells, resolution, cg) => {
+drawFun : (cells, resolution, cg) => {
     //draw with HTML canvas in geo coordinates
     cg.setCanvasTransform()
 
@@ -829,6 +829,7 @@ customStyle.draw = (cells, resolution, cg) => {
         cg.ctx.fill()
     }
 }
+})
 ```
 
 See [online](https://eurostat.github.io/gridviz/examples/custom_style.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/custom_style.html)).
