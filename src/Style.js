@@ -17,8 +17,7 @@
 export class Style {
     /**
      * @abstract
-     * @param {{filter?:function(import('./Dataset').Cell):boolean,offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},visible?:boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,minZoom?:number,maxZoom?:number}} opts
-     *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
+     * @param {{filter?:function(import('./Dataset').Cell):boolean,offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},visible?:boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,minZoom?:number,maxZoom?:number,drawFun?:function}} opts
      */
     constructor(opts) {
         opts = opts || {}
@@ -58,6 +57,10 @@ export class Style {
          * */
         this.maxZoom = opts.maxZoom || Infinity
 
+        /** A draw function for the style.
+         * @type {function} */
+        this.drawFun = opts.drawFun
+
         //ensure acceptable values for the zoom limits.
         if (this.minZoom >= this.maxZoom)
             throw new Error('Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.')
@@ -77,7 +80,8 @@ export class Style {
      * @abstract
      */
     draw(cells, resolution, cg) {
-        throw new Error('Method draw not implemented.')
+        if (this.drawFun) this.drawFun(cells, resolution, cg)
+        else throw new Error('Method draw not implemented.')
     }
 
     //getters and setters
