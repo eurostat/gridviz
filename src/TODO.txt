@@ -1,19 +1,14 @@
-FR DOMs: finalise. define projection to show euronym names
 style value by alpha: Document
-
-FR: income map
-alpha: legend. Bivariate?
-test halftone, bivariate color, bi-symbol
-income change: double smoothing map ?
 
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale. with invert
 test https://d3js.org/d3-scale/ instead of stretching
 
 style: rough.js - test on observable with this.cg.pixToGeoX ?
-style: pseudo hexagones
-style: bi-symbol map
 style: spider net diagram
 style: flower - for composition
+style: bi-symbol map
+
+income change: double smoothing map ?
 
 legend for bivariate map
 

@@ -781,7 +781,14 @@
                 app.setGeoCenter({ x: 710000, y: 1620000 })
                     .setZoomFactor(75)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "MQ", crs: "32620", scale: "01M" }))
-                //TODO labels
+                    .setLabelLayer(gviz_es.getEuronymeLabelLayer('MQ', '20', {
+                        //https://spatialreference.org/ref/epsg/wgs-84-utm-zone-20n/html/
+                        proj: d3.geoTransverseMercator()
+                            .rotate([63, 0])
+                            .reflectY(true)
+                            .scale(6378137)
+                            .translate([500000, -11000])
+                    }))
                 //TODO background
             }
             else { console.error("Unexpected geo: " + geo); return; }
