@@ -101,6 +101,8 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
     <script>
         let containerDiv = document.getElementById('viz-container')
         const app = new gviz.App(containerDiv)
@@ -907,7 +909,14 @@
                 app.setGeoCenter({ x: 350000, y: 7660000 })
                     .setZoomFactor(75)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" }))
-                //TODO labels
+                    .setLabelLayer(gviz_es.getEuronymeLabelLayer('RE', '20', {
+                        //https://spatialreference.org/ref/epsg/wgs-84-utm-zone-40s/html/
+                        proj: d3.geoTransverseMercator()
+                            .rotate([-57, 0])
+                            .reflectY(true)
+                            .scale(6378137)
+                            .translate([500000, 10016000])
+                    }))
                 //TODO background
             }
 
