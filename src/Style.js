@@ -10,8 +10,6 @@
 /**
  * A style, to show a grid dataset.
  *
- * @abstract
- *
  * @author Joseph Davies, Julien Gaffuri
  */
 export class Style {
