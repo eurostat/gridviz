@@ -14,39 +14,39 @@
         let containerDiv = document.getElementById('viz-container')
 
         //create custom style
-        const customStyle = new gviz.Style()
+        const customStyle = new gviz.Style({
+            //define draw function
+            drawFun : (cells, resolution, cg) => {
 
-        //define draw function
-        customStyle.draw = (cells, resolution, cg) => {
+                //draw with HTML canvas in geo coordinates
+                cg.setCanvasTransform()
 
-            //draw with HTML canvas in geo coordinates
-            cg.setCanvasTransform()
+                //draw each cell as an arrow
+                //with a fill color depending on the property "population"
+                for (let cell of cells) {
 
-            //draw each cell as an arrow
-            //with a fill color depending on the property "population"
-            for (let cell of cells) {
+                    //do not draw cells with no data or no population
+                    if (!cell.population) continue
 
-                //do not draw cells with no data or no population
-                if (!cell.population) continue
+                    //set fill color as a shade from cyan to red depending on "population" property
+                    const t = Math.floor(255 * Math.round(Math.pow(cell.population / 1000000, 1 / 5) * 6) / 6)
+                    cg.ctx.fillStyle = "rgb(" + t + "," + (255 - t) + "," + (255 - t) + ")"
 
-                //set fill color as a shade from cyan to red depending on "population" property
-                const t = Math.floor(255 * Math.round(Math.pow(cell.population / 1000000, 1 / 5) * 6) / 6)
-                cg.ctx.fillStyle = "rgb(" + t + "," + (255 - t) + "," + (255 - t) + ")"
+                    //fill arrow
+                    cg.ctx.beginPath()
+                    //left point
+                    cg.ctx.moveTo(cell.x, cell.y)
+                    //bottom center point
+                    cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution / 3)
+                    //right point
+                    cg.ctx.lineTo(cell.x + resolution, cell.y)
+                    //top center point
+                    cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution * 4 / 3)
+                    cg.ctx.fill()
+                }
 
-                //fill arrow
-                cg.ctx.beginPath()
-                //left point
-                cg.ctx.moveTo(cell.x, cell.y)
-                //bottom center point
-                cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution / 3)
-                //right point
-                cg.ctx.lineTo(cell.x + resolution, cell.y)
-                //top center point
-                cg.ctx.lineTo(cell.x + resolution / 2, cell.y + resolution * 4 / 3)
-                cg.ctx.fill()
             }
-
-        }
+        })
 
         //make application with custom style
         new gviz.App(containerDiv)
