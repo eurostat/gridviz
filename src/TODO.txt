@@ -1,5 +1,6 @@
 style value by alpha: Document
 
+quantile classification
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale. with invert
 test https://d3js.org/d3-scale/ instead of stretching
 
@@ -9,7 +10,6 @@ style: flower - for composition
 style: bi-symbol map
 
 income change: double smoothing map ?
-
 legend for bivariate map
 
 NO
