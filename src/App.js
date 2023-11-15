@@ -46,6 +46,9 @@ export class App {
             return
         }
 
+        //https://css-tricks.com/absolute-positioning-inside-relative-positioning/
+        this.container.style.position = "relative"; // container element must have relative positioning
+
         //set dimensions
         /** @type {number} */
         this.w = opts.w || this.container.offsetWidth
@@ -201,8 +204,7 @@ export class App {
         /** @type {boolean} */
         this.showBoundaries = true
 
-        //legend div
-
+        // legend div
         this.legendDivId = opts.legendDivId || 'gvizLegend'
         this.legend = select('#' + this.legendDivId)
         if (this.legend.empty()) {
@@ -214,14 +216,14 @@ export class App {
                 .style('position', 'absolute')
                 .style('width', 'auto')
                 .style('height', 'auto')
-                .style('background', '#FFFFFFCC')
+                .style('background', '#FFFFFF')
                 //.style("padding", this.padding)
                 .style('border', '0px')
-                .style('border-radius', '5px')
+                //.style('border-radius', '5px')
                 .style('box-shadow', '3px 3px 3px grey, -3px -3px 3px #ddd')
                 .style('font-family', 'Helvetica, Arial, sans-serif')
-                .style('top', '20px')
-                .style('right', '20px')
+                .style('bottom', '15px')
+                .style('right', '15px')
             //hide
             //.style("visibility", "hidden")
         }

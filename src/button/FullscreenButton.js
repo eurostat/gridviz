@@ -51,6 +51,8 @@ export class FullscreenButton extends Button {
         this.node.addEventListener('click', (e) => {
             this.onClickFunction(e)
         })
+        this.node.addEventListener('mouseover', (e)=>{this.node.style.backgroundColor = 'lightgrey'})
+        this.node.addEventListener('mouseout', (e)=>{this.node.style.backgroundColor = '#ffffff'})
 
     }
 

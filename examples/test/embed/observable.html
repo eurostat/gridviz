@@ -16,7 +16,8 @@
         <h1>Test of Observable notebook inclusion</h1>
 
         <div class="observablehq">
-            <div id="map" style="height: 400px; width: 600px"></div>
+            <div id="container" style="height: 400px; width: 600px;"></div>
+            <div id="map" style="height: 400px; width: 600px;margin-left:20px; padding-left:20px;"></div>
         </div>
 
         <script src="../../../dist/gridviz.js"></script>
@@ -45,7 +46,7 @@
                     {
                         pixNb: 3,
                     }
-                )
+                ).addZoomButtons().addFullscreenButton()
 
             //legend
             map1.layers[0].styles[0].legends.push(
@@ -54,6 +55,8 @@
                     ticks: 5,
                     colorRamp: d3.interpolateOrRd,
                     fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, 7),
+                    x:10,
+                    y:400
                 })
             )
 

@@ -29,8 +29,7 @@ export class Button {
 
         // add events
         if (opts.onClickFunction) this.node.addEventListener('onclick', opts.onClickFunction)
-        this.node.addEventListener('mouseover', (e)=>{this.node.style.backgroundColor = 'lightgrey'})
-        this.node.addEventListener('mouseout', (e)=>{this.node.style.backgroundColor = '#ffffff'})
+
 
         //set styles
         this.node.classList.add(opts.class)

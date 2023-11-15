@@ -28,7 +28,7 @@ export class Tooltip {
         /** @type {string} */
         this.border = opts.border || '0px'
         /** @type {string} */
-        this['border-radius'] = opts['border-radius'] || '5px'
+        this['border-radius'] = opts['border-radius'] || '0px'
         /** @type {string} */
         this['box-shadow'] = opts['box-shadow'] || '5px 5px 5px grey'
         /** @type {string} */
@@ -51,14 +51,16 @@ export class Tooltip {
          * @public
          * @type {import("d3-selection").Selection} */
         this.tooltip = select('#' + this.div)
-        if (this.tooltip.empty())
-            this.tooltip = select(
-                '#' + this.parentElement.id && this.parentElement.id != ''
-                    ? '#' + this.parentElement.id
-                    : 'body'
-            )
-                .append('div')
-                .attr('id', this.div)
+
+        if (this.tooltip.empty()) {
+            //create tooltip DOM node
+            // this.tooltip = select(
+            //     '#' + this.parentElement.id && this.parentElement.id != ''
+            //         ? '#' + this.parentElement.id
+            //         : 'body'
+            // )
+            this.tooltip = select('body').append('div').attr('id', this.div)
+        }
 
         //initialise
         this.tooltip.style('max-width', this.maxWidth)
