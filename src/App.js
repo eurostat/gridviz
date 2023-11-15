@@ -307,9 +307,9 @@ export class App {
         this.mouseOverHandler = (e) => focusCell(e)
         this.mouseMoveHandler = (e) => focusCell(e)
         this.mouseOutHandler = (e) => this.tooltip.hide()
-        this.container.addEventListener('mouseover', this.mouseOverHandler)
-        this.container.addEventListener('mousemove', this.mouseMoveHandler)
-        this.container.addEventListener('mouseout', this.mouseOutHandler)
+        this.cg.canvas.addEventListener('mouseover', this.mouseOverHandler)
+        this.cg.canvas.addEventListener('mousemove', this.mouseMoveHandler)
+        this.cg.canvas.addEventListener('mouseout', this.mouseOutHandler)
 
         // add extra logic to onZoomStartFun
         this.cg.onZoomStartFun = (e) => {
@@ -657,8 +657,6 @@ export class App {
             app: this,
             id: opts?.id || 'gridviz-zoom-buttons',
             class: opts?.class,
-            x: opts?.x || this.w - 50,
-            y: opts?.y || 10,
             onZoom: opts?.onZoom,
             delta: opts?.delta || 0.2
         })
@@ -675,15 +673,11 @@ export class App {
     addFullscreenButton(opts) {
         // * opts.app - the gridviz app
         // * opts.id
-        // * opts.x
-        // * opts.y
 
         this.fullscreenButton = new FullscreenButton({
             app: this,
             id: opts?.id || 'gridviz-fullscreen-button',
             class: opts?.class,
-            x: opts?.x || this.w - 50,
-            y: opts?.y || 85,
         })
 
         return this
@@ -723,8 +717,8 @@ export class App {
                         this.redraw()
 
                         //update button positions
-                        if (this.zoomButtons) this.zoomButtons.node.style.left = this.w - 50 + 'px'
-                        if (this.fullscreenButton) this.fullscreenButton.node.style.left = this.w - 50 + 'px'
+                        // if (this.zoomButtons) this.zoomButtons.node.style.left = this.w - 50 + 'px'
+                        // if (this.fullscreenButton) this.fullscreenButton.node.style.left = this.w - 50 + 'px'
                     }
                 })
             }

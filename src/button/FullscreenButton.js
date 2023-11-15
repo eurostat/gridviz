@@ -25,7 +25,7 @@ export class FullscreenButton extends Button {
         super(opts)
 
         // append fullscreen icon to button container
-        this.node.innerHTML = `
+        this.div.node().innerHTML = `
         <svg
             style="height: 1.2rem; width: 1.2rem; fill:black; margin:0;"
             focusable="false"
@@ -48,23 +48,31 @@ export class FullscreenButton extends Button {
         this.defaultWidth = this.app.w
 
         // event handler
-        this.node.addEventListener('click', (e) => {
+        this.div.on('click', (e) => {
             this.onClickFunction(e)
         })
-        this.node.addEventListener('mouseover', (e)=>{this.node.style.backgroundColor = 'lightgrey'})
-        this.node.addEventListener('mouseout', (e)=>{this.node.style.backgroundColor = '#ffffff'})
+        this.div.on('mouseover', (e)=>{this.style('background-color','lightgrey')})
+        this.div.on('mouseout', (e)=>{this.style('background-color','#ffffff')})
+
+        //set position
+        this.style('top','140px')
 
     }
 
     onClickFunction(e) {
         if (this.isFullscreen) {
-            this.closeFullscreen(containerDiv)
+            this.closeFullscreen(this.app.container)
             //resize canvas to default
             this.app.h = this.defaultHeight
             this.app.w = this.defaultWidth
+            this.app.cg.h = this.defaultHeight
+            this.app.cg.w = this.defaultWidth
+            this.app.cg.canvas.setAttribute('width', '' + this.defaultWidth)
+            this.app.cg.canvas.setAttribute('height', '' + this.defaultHeight)
+            this.app.redraw()
             this.isFullscreen = false
         } else {
-            this.openFullscreen(containerDiv)
+            this.openFullscreen(this.app.container)
             //resize canvas to fullscreen
             this.app.h = window.screen.height
             this.app.w = window.screen.width

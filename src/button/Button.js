@@ -1,3 +1,5 @@
+import { select } from 'd3-selection'
+
 /**
  * Parent class for button elements used to interact with the gridviz viewer.
  *
@@ -19,35 +21,47 @@ export class Button {
 
         this.app = opts.app
         this.parentNode = opts.parentNode || opts.app.container
-        this.id = opts.id || 'button-' + Math.random()
 
-        // create HTML node
-        this.node = document.createElement('div')
-        this.node.id = this.id
-        if (opts.title) this.node.title = opts.title
-        if (opts.class) this.node.classList.add(opts.class) 
+        // the div element
+        if (this.id) this.div = select('#' + this.id)
+
+        if (!this.div || this.div.empty()) {
+            this.div = select(document.createElement('div'))
+            if (this.id) this.div.attr('id', this.id)
+        }
+
+        if (opts.title) this.div.attr('title',opts.title)
+        if (opts.class) this.div.attr('class',opts.class)
 
         // add events
-        if (opts.onClickFunction) this.node.addEventListener('onclick', opts.onClickFunction)
-
+        if (opts.onClickFunction) this.div.on('click', opts.onClickFunction)
 
         //set styles
-        this.node.classList.add(opts.class)
-        this.node.style.boxShadow =
-            '0 7px 8px rgba(0,47,103,.08), 0 0 22px rgba(0,47,103,.04), 0 12px 17px rgba(0,47,103,.04), 0 -4px 4px rgba(0,47,103,.04)' //.ecl-u-shadow-3
-        this.node.style.backgroundColor = '#ffffff' //.ecl-u-bg-white
-        this.node.style.position = 'absolute'
-        this.node.style.cursor = 'pointer'
-         this.node.style.display = 'flex'
-        this.node.style.justifyContent = 'center'
-        this.node.style.alignItems = 'center'
-        this.node.style.width = '30px'
-        this.node.style.height = '30px'
-        // this.node.style.padding = '4px'
-        this.node.style.top = opts.y + 'px'
-        this.node.style.left = opts.x + 'px'
+        this.style('box-shadow','0 7px 8px rgba(0,47,103,.08), 0 0 22px rgba(0,47,103,.04), 0 12px 17px rgba(0,47,103,.04), 0 -4px 4px rgba(0,47,103,.04)') //.ecl-u-shadow-3
+        this.style('background-color','#ffffff')
+        this.style('position' , 'absolute')
+        this.style('cursor' , 'pointer')
+        this.style('display' , 'flex')
+        this.style('justify-content' , 'center')
+        this.style('align-items' , 'center')
+        this.style('width' , '30px')
+        this.style('height' , '30px')
+        // this.style(padding , '4px'
+        this.style('top' , '10px')
+        this.style('right' , '10px')
 
         // append to parent
-        this.parentNode.appendChild(this.node)
+        this.parentNode.appendChild(this.div.node())
+    }
+
+    /**
+     * Apply a style to the button div.
+     * @param {string} k
+     * @param {string} v
+     * @returns {this}
+     */
+    style(k, v) {
+        this.div.style(k, v)
+        return this
     }
 }

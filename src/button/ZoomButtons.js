@@ -49,13 +49,13 @@ export class ZoomButtons extends Button {
             if (i==0) btn.style.borderBottom = '1px solid grey'
         })
 
-        // unset parent class height
-        this.node.style.height="unset"
-        this.node.style.display="unset"
+        // unset parent class height and display for dual buttons
+        this.style('height',"unset")
+        this.style('display',"unset")
 
         // append to button container
-        this.node.appendChild(this.zoomInBtn)
-        this.node.appendChild(this.zoomOutBtn)
+        this.div.node().appendChild(this.zoomInBtn)
+        this.div.node().appendChild(this.zoomOutBtn)
     }
 
     /* Zoom in */
