@@ -51,12 +51,24 @@ export class FullscreenButton extends Button {
         this.div.on('click', (e) => {
             this.onClickFunction(e)
         })
-        this.div.on('mouseover', (e)=>{this.style('background-color','lightgrey')})
-        this.div.on('mouseout', (e)=>{this.style('background-color','#ffffff')})
+        this.div.on('mouseover', (e) => {
+            this.style('background-color', 'lightgrey')
+        })
+        this.div.on('mouseout', (e) => {
+            this.style('background-color', '#ffffff')
+        })
 
         //set position
-        this.style('top','140px')
-
+        if (opts.x) {
+            this.style('left', opts.x + 'px')
+        } else {
+            this.style('right', '10px')
+        }
+        if (opts.y) {
+            this.style('top', opts.y + 'px')
+        } else {
+            this.style('top', '90px')
+        }
     }
 
     onClickFunction(e) {

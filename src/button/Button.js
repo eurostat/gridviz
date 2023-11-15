@@ -47,8 +47,7 @@ export class Button {
         this.style('width' , '30px')
         this.style('height' , '30px')
         // this.style(padding , '4px'
-        this.style('top' , '10px')
-        this.style('right' , '10px')
+
 
         // append to parent
         this.parentNode.appendChild(this.div.node())

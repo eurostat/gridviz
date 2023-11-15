@@ -657,6 +657,8 @@ export class App {
             app: this,
             id: opts?.id || 'gridviz-zoom-buttons',
             class: opts?.class,
+            x: opts?.x,
+            y: opts?.y,
             onZoom: opts?.onZoom,
             delta: opts?.delta || 0.2
         })
@@ -673,11 +675,15 @@ export class App {
     addFullscreenButton(opts) {
         // * opts.app - the gridviz app
         // * opts.id
+        // * opts.x
+        // * opts.y
 
         this.fullscreenButton = new FullscreenButton({
             app: this,
             id: opts?.id || 'gridviz-fullscreen-button',
             class: opts?.class,
+            x: opts?.x,
+            y: opts?.y
         })
 
         return this
