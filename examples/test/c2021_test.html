@@ -23,12 +23,8 @@
 
         const nbCl = 12
         const col = d3.scaleQuantile().range(Array.from({ length: nbCl }, (_, i) => d3.interpolateYlOrRd(i / (nbCl - 1))))
-        const colIni = (cells, r, zf) => {
-            col.domain(cells.filter((c) => c.T).map((c) => c.T));
-            return col;
-        }
-        const color = (c, colInfo) => colInfo(c.T)
 
+        /*
         const style = new gviz.Style({
             drawFun: (cells, r, cg) => {
                 const colInfo = colIni(cells, r);
@@ -40,20 +36,30 @@
                 }
             }
         })
+        */
+
+        const style = new gviz.ShapeColorSizeStyle_({
+            color: (c, r, zf, vc) => vc.colR(c.T),
+            viewContext: (cells, r, zf) => {
+                col.domain(cells.filter((c) => c.T).map((c) => c.T));
+                return { colR: col };
+            }
+        })
+
 
         //make application with custom style
         new gviz.App(containerDiv)
             .setGeoCenter({ x: 4598000, y: 2715000 })
             .setZoomFactor(700)
             .addMultiScaleTiledGridLayer(
-                [1000, 2000, 5000, 10000, 20000, 50000],
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) =>
                     'http://localhost:1234/' +
                     r +
                     'm/',
                 [style],
                 {
-                    pixNb: 5,
+                    pixNb: 10,
                     preprocess: (c) => c.T
                 }
 
