@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+
+<head>
+    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
+    <title>Gridviz - Custom style</title>
+</head>
+
+<body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
+    <div id="viz-container" style="height: 100%; width: 100%"></div>
+
+<script src="https://unpkg.com/gridviz@2.1.14/dist/gridviz.min.js"></script>
+    <script>
+        let containerDiv = document.getElementById('viz-container')
+
+
+const colR = d3.interpolateYlOrRd
+const nbCl = 12
+const cols = Array.from({ length: nbCl }, (_, i) => colR(i / (nbCl - 1)))
+
+        const style = new gviz.Style({
+            drawFun : (cells, r, cg) => {
+
+console.log(cells)
+
+                cg.setCanvasTransform()
+                for (let c of cells) {
+      cg.ctx.fillStyle = "red";
+      cg.ctx.fillRect(c.x, c.y, r, r);
+                }
+
+            }
+        })
+
+        //make application with custom style
+        new gviz.App(containerDiv)
+            .setGeoCenter({ x: 4598000, y: 2715000 })
+            .setZoomFactor(700)
+                .addMultiScaleTiledGridLayer(
+                    [1000, 2000, 5000, 10000, 20000, 50000],
+                    (r) =>
+                        'http://localhost:1234/' +
+                        r +
+                        'm/',
+                [style],
+                    {
+                        pixNb: 5,
+                    }
+
+            )
+
+    </script>
+</body>
+
+</html>
