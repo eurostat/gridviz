@@ -1,10 +1,13 @@
+quantile classification
 style value by alpha: Document
 
-quantile classification
+revamp layers, API - see lflt
+static image background layer
+extract modules ?
+
 stretching - check rev/pow correspondence. add new one for diverging, see d3.scale. with invert
 test https://d3js.org/d3-scale/ instead of stretching
 
-style: rough.js - test on observable with this.cg.pixToGeoX ?
 style: spider net diagram
 style: flower - for composition
 style: bi-symbol map
