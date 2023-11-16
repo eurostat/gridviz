@@ -104,6 +104,6 @@ export class ShapeColorSizeStyle_ extends Style {
         }
 
         //update legends
-        //this.updateLegends({ style: this, r: r, zf: zf, sSize: statSize, sColor: statColor, sAlpha: statAlpha })
+        this.updateLegends({ style: this, r: r, zf: zf, viewContext: vc })
     }
 }
