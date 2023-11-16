@@ -46,7 +46,23 @@
             },
         })
 
-        const style = styleSex
+        //by age
+        const colAge = d3.interpolateSpectral
+        const styleAge = new gviz.CompositionStyle({
+            color: {
+                Y_LT15: colAge(0.2),
+                "Y15-64": colAge(0.4),
+                Y_GE65: colAge(0.9),
+            },
+            type: () => 'agepyramid',
+            sizeCol: 'T',
+            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
+            agePyramidHeight: (c, r) => 0.95 * r,
+        })
+
+
+        const style = styleAge
+        const pixNb = 11
 
         /*
         "T" >= Total population
@@ -83,7 +99,7 @@
                     'm/',
                 [style],
                 {
-                    pixNb: 4,
+                    pixNb: pixNb,
                     preprocess: (c) => {
                         if (!c.T || +c.T == 0) return false
 
