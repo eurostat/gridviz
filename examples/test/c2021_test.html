@@ -21,12 +21,10 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-        const colR = d3.interpolateYlOrRd
         const nbCl = 12
-        const cols = Array.from({ length: nbCl }, (_, i) => colR(i / (nbCl - 1)))
-        const col = d3.scaleQuantile().range(cols)
+        const col = d3.scaleQuantile().range(Array.from({ length: nbCl }, (_, i) => d3.interpolateYlOrRd(i / (nbCl - 1))))
         const colIni = (cells, r, zf) => {
-            col.domain(cells.filter((c) => c.ind).map((c) => c.T));
+            col.domain(cells.filter((c) => c.T).map((c) => c.T));
             return col;
         }
         const color = (c, colInfo) => colInfo(c.T)

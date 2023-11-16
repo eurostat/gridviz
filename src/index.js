@@ -18,6 +18,7 @@ export { LGrid } from './dataset/LGrid.js'
 
 // export styles
 export { ShapeColorSizeStyle } from './style/ShapeColorSizeStyle.js'
+export { ShapeColorSizeStyle_ } from './style/ShapeColorSizeStyle_.js'
 export { StrokeStyle } from './style/StrokeStyle.js'
 export { JoyPlotStyle } from './style/JoyPlotStyle.js'
 export { CompositionStyle } from './style/CompositionStyle.js'
