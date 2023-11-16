@@ -24,27 +24,57 @@
         const nbCl = 12
         const col = d3.scaleQuantile().range(Array.from({ length: nbCl }, (_, i) => d3.interpolateYlOrRd(i / (nbCl - 1))))
 
-        /*
-        const style = new gviz.Style({
-            drawFun: (cells, r, cg) => {
-                const colInfo = colIni(cells, r);
-
-                cg.setCanvasTransform();
-                for (let c of cells) {
-                    cg.ctx.fillStyle = color(c, colInfo);
-                    cg.ctx.fillRect(c.x, c.y, r, r);
-                }
-            }
-        })
-        */
-
-        const style = new gviz.ShapeColorSizeStyle_({
+        const styleT = new gviz.ShapeColorSizeStyle_({
             color: (c, r, zf, vc) => vc.colR(c.T),
             viewContext: (cells, r, zf) => {
-                col.domain(cells.filter((c) => c.T).map((c) => c.T));
+                col.domain(cells.map((c) => c.T));
                 return { colR: col };
             }
         })
+
+        const styleSex = new gviz.ShapeColorSizeStyle_({
+            color: (c, r, zf, vc) => vc.colR(c.T),
+            viewContext: (cells, r, zf) => {
+                col.domain(cells.map((c) => c.T));
+                return { colR: col };
+            }
+        })
+
+        const style = styleSex
+
+        /*
+        
+                                new gviz.ShapeColorSizeStyle({
+                                    colorCol: 'I',
+                                    color: (v, r, s) => {
+                                        const max = Math.max(Math.abs(s.min), Math.abs(s.max))
+                                        const t = (Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
+                                        return d3.interpolateSpectral(1 - t)
+                                    },
+                                    shape: () => 'circle',
+                                    sizeCol: 'TOT',
+                                    size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.2),
+                                    blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
+                                }),
+        
+        */
+
+        /*
+        "T" >= Total population
+        "F" >= Women
+        "M" >= Men
+        "Y_LT15" >= Age under 15 years
+        "Y15-64" >= Age 15 to 64 years
+        "Y_GE65" >= Age 65 years and older
+        "EMP" >= Employed (working population)
+        "NAT" >= Born in the Netherlands
+        "EU_OTH" >= Born in another EU member state
+        "OTH" >= Born outside the EU
+        "SAME" >= Residence unchanged (as of January 1, 2021, compared to January 1, 2020)
+        "CHG_IN" >= Moved within the Netherlands (as of January 1, 2021, compared to January 1, 2020)
+        "CHG_OUT" >= Moved from outside the Netherlands (as of January 1, 2021, compared to January 1, 2020)
+        */
+
 
 
         //make application with custom style
@@ -59,8 +89,15 @@
                     'm/',
                 [style],
                 {
-                    pixNb: 10,
-                    preprocess: (c) => c.T
+                    pixNb: 4,
+                    preprocess: (c) => {
+                        if (!c.T) return false
+
+                        if (+c.F + +c.M != c.T) console.error("Error found in sex total")
+                        c.indMF = +c.M - +c.F
+                        c.indMF = (100 * c.indMF) / c.T
+                        if (isNaN(c.indMF)) c.indMF = 0
+                    }
                 }
 
             )
