@@ -148,7 +148,7 @@
                 CHG_IN: "#7570b3", //blueish
                 CHG_OUT: "#d95f02", //orange
             },
-            type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
+            type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
             size: (c, r, zf, scale) => scale(+c.T),
             viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
         })
@@ -196,10 +196,16 @@
                     preprocess: (c) => {
                         if (!c.T || +c.T == 0) return false
 
+                        //male/female index
                         //if (+c.F + +c.M != c.T) console.error("Error found in sex total")
                         c.indMF = +c.M - (+c.F)
                         c.indMF = (100 * c.indMF) / (+c.M + +c.F)
                         if (isNaN(c.indMF)) c.indMF = 0
+
+                        //employment
+                        c.remp = c.EMP / c.T * 100
+                        if (c.remp < 0 || c.remp > 100) console.log("Unexpected employment rate: " + c.remp, c.EMP, c.T)
+                        c.remp = c.remp > 100 ? 100 : c.remp < 0 ? 0 : c.remp
                     }
                 }
 
