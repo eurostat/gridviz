@@ -22,35 +22,32 @@
         let containerDiv = document.getElementById('viz-container')
 
         //generic function for quantile color maps
-        const quantileColorScale = (dataFun, nbCl = 12, colR = d3.interpolateYlOrRd, prop = "quantileColorScale") => {
+        const quantileColorScale = (dataFun, nbCl = 12, colR = d3.interpolateYlOrRd) => {
             const scale = d3.scaleQuantile().range(Array.from({ length: nbCl }, (_, i) => colR(i / (nbCl - 1))))
             return (cells) => {
                 scale.domain(cells.map(dataFun));
-                const out = {}; out[prop] = scale
-                return out;
+                return scale;
             }
         }
 
         //generic function for size map
-        const sizeScale = (dataFun, exponent = 0.5, minValue = 0, minSizePix = 0, maxSizeFactor = 1.41, prop = "sizeScale") => {
+        const sizeScale = (dataFun, exponent = 0.5, minValue = 0, minSizePix = 0, maxSizeFactor = 1.41) => {
             const scale = d3.scalePow().exponent(exponent)
             return (cells, r, zf) => {
                 scale.domain([minValue, d3.max(cells, dataFun)])
                 scale.range([minSizePix * zf, r * maxSizeFactor])
-                const out = {}; out[prop] = scale
-                return out;
+                return scale;
             }
         }
 
         //generic function for size map - quantile
-        const sizeQuantileScale = (dataFun, nbCl = 12, minSizePix = 1, maxSizeFactor = 1, prop = "sizeQuantileScale") => {
+        const sizeQuantileScale = (dataFun, nbCl = 12, minSizePix = 1, maxSizeFactor = 1) => {
             const scale = d3.scaleQuantile()
             return (cells, r, zf) => {
                 scale.domain(cells.map(dataFun))
                 const minS = minSizePix * zf, maxS = r * maxSizeFactor
                 scale.range(Array.from({ length: nbCl }, (_, i) => minS + i * (maxS - minS) / (nbCl - 1)))
-                const out = {}; out[prop] = scale
-                return out;
+                return scale;
             }
         }
 
@@ -60,20 +57,20 @@
 
         //total population - color
         const styleTotalColor = new gviz.ShapeColorSizeStyle_({
-            color: (c, r, zf, vc) => vc.quantileColorScale(c.T),
+            color: (c, r, zf, vc) => vc(c.T),
             viewContext: quantileColorScale((c) => +c.T, 12, d3.interpolateYlOrRd)
         })
 
         //total population - size
         const styleTotalSize = new gviz.ShapeColorSizeStyle_({
-            size: (c, r, zf, vc) => vc.sizeScale(+c.T),
+            size: (c, r, zf, vc) => vc(+c.T),
             shape: () => "circle",
             viewContext: sizeScale((c) => +c.T, 0.35)
         })
 
         //total population - size quantile
         const styleTotalSizeQ = new gviz.ShapeColorSizeStyle_({
-            size: (c, r, zf, vc) => vc.sizeQuantileScale(+c.T),
+            size: (c, r, zf, vc) => vc(+c.T),
             shape: () => "circle",
             viewContext: sizeQuantileScale((c) => +c.T, 12)
         })
@@ -86,7 +83,7 @@
                 //const t = (Math.sign(c.indMF) * gviz.sPow(Math.abs(c.indMF) / max, 0.03)) / 2 + 0.5
                 //return d3.interpolateSpectral(1 - t)
             },
-            size: (c, r, zf, vc) => vc.sizeScale(+c.T),
+            size: (c, r, zf, vc) => vc(c.T),
             shape: () => 'circle',
             viewContext: sizeScale((c) => +c.T, 0.2)
         })
