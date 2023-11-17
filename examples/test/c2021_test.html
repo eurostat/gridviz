@@ -22,31 +22,43 @@
         let containerDiv = document.getElementById('viz-container')
 
         //generic function for quantile color maps
-        const quantileColorScale = (dataFun, nbCl = 12, colR = d3.interpolateYlOrRd) => {
-            const scale = d3.scaleQuantile().range(Array.from({ length: nbCl }, (_, i) => colR(i / (nbCl - 1))))
+        //valueFunction, classNumber, colorRamp
+        const quantileColorScale = (opts) => {
+            const classNumber = opts.classNumber || 12
+            const colorRamp = opts.colorRamp || (() => "purple")
+            const scale = d3.scaleQuantile().range(Array.from({ length: classNumber }, (_, i) => colorRamp(i / (classNumber - 1))))
             return (cells) => {
-                scale.domain(cells.map(dataFun));
+                scale.domain(cells.map(opts.valueFunction));
                 return scale;
             }
         }
 
         //generic function for size map
-        const sizeScale = (dataFun, exponent = 0.5, minValue = 0, minSizePix = 0, maxSizeFactor = 1.41) => {
+        //valueFunction, exponent, minValue, minSizePix, maxSizeFactor
+        const sizeScale = (opts) => {
+            const exponent = opts.exponent || 0.5
+            const minValue = opts.minValue || 0
+            const minSizePix = opts.minSizePix || 0
+            const maxSizeFactor = opts.minSizePix || 1.41
             const scale = d3.scalePow().exponent(exponent)
             return (cells, r, zf) => {
-                scale.domain([minValue, d3.max(cells, dataFun)])
+                scale.domain([minValue, d3.max(cells, opts.valueFunction)])
                 scale.range([minSizePix * zf, r * maxSizeFactor])
                 return scale;
             }
         }
 
         //generic function for size map - quantile
-        const sizeQuantileScale = (dataFun, nbCl = 12, minSizePix = 1, maxSizeFactor = 1) => {
+        //valueFunction, classNumber, minSizePix, maxSizeFactor
+        const sizeQuantileScale = (opts) => {
+            const classNumber = opts.classNumber || 12
+            const minSizePix = opts.minSizePix || 0
+            const maxSizeFactor = opts.minSizePix || 1
             const scale = d3.scaleQuantile()
             return (cells, r, zf) => {
-                scale.domain(cells.map(dataFun))
+                scale.domain(cells.map(opts.valueFunction))
                 const minS = minSizePix * zf, maxS = r * maxSizeFactor
-                scale.range(Array.from({ length: nbCl }, (_, i) => minS + i * (maxS - minS) / (nbCl - 1)))
+                scale.range(Array.from({ length: classNumber }, (_, i) => minS + i * (maxS - minS) / (classNumber - 1)))
                 return scale;
             }
         }
@@ -58,21 +70,21 @@
         //total population - color
         const styleTotalColor = new gviz.ShapeColorSizeStyle_({
             color: (c, r, zf, vc) => vc(c.T),
-            viewContext: quantileColorScale((c) => +c.T, 12, d3.interpolateYlOrRd)
+            viewContext: quantileColorScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd })
         })
 
         //total population - size
         const styleTotalSize = new gviz.ShapeColorSizeStyle_({
             size: (c, r, zf, vc) => vc(+c.T),
             shape: () => "circle",
-            viewContext: sizeScale((c) => +c.T, 0.35)
+            viewContext: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.35 })
         })
 
         //total population - size quantile
         const styleTotalSizeQ = new gviz.ShapeColorSizeStyle_({
             size: (c, r, zf, vc) => vc(+c.T),
             shape: () => "circle",
-            viewContext: sizeQuantileScale((c) => +c.T, 12)
+            viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12 })
         })
 
         //by sex
@@ -85,7 +97,7 @@
             },
             size: (c, r, zf, vc) => vc(c.T),
             shape: () => 'circle',
-            viewContext: sizeScale((c) => +c.T, 0.2)
+            viewContext: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.2 })
         })
 
         //by age
