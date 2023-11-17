@@ -127,24 +127,34 @@
             viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
             //viewContext: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
             stripesOrientation: () => 90
-            //agePyramidHeight: (c, r) => 0.95 * r,
         })
 
         //place of birth
-        const styleBirthPlace = new gviz.CompositionStyle({
+        const styleBirthPlace = new gviz.CompositionStyle_({
             color: {
                 NAT: "#fed9a6", //light mostard
                 EU_OTH: "#7570b3", //blueish
                 OTH: "#d95f02", //orange
             },
             type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
-            sizeCol: 'T',
-            size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0),
-            //agePyramidHeight: (c, r) => 0.95 * r,
+            size: (c, r, zf, scale) => scale(+c.T),
+            viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
+        })
+
+        //mobility
+        const styleMobility = new gviz.CompositionStyle_({
+            color: {
+                SAME: "#fed9a6", //light mostard
+                CHG_IN: "#7570b3", //blueish
+                CHG_OUT: "#d95f02", //orange
+            },
+            type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
+            size: (c, r, zf, scale) => scale(+c.T),
+            viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
         })
 
 
-        const style = styleAge
+        const style = styleMobility
         const pixNb = 10
 
         /*
