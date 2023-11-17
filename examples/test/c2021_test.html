@@ -105,34 +105,29 @@
         })
 
         //by sex
+        const colorScaleSex = colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral })
+        const sizeScaleSex = sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
         const styleSex = new gviz.ShapeColorSizeStyle_({
-            color: (c, r, zf, colorScale) => colorScale(c.indMF),
-            //viewContext: colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
-            viewContext: colorScale({ valueFunction: (c) => +c.indMF, exponent: 1, colorRamp: d3.interpolateSpectral }),
-            /*
-                        color: (c, r, zf, vc) => {
-                            return "red"
-                            //const max = Math.max(Math.abs(vc.colorMinMax[0]), Math.abs(vc.colorMinMax[1]))
-                            //const t = (Math.sign(c.indMF) * gviz.sPow(Math.abs(c.indMF) / max, 0.03)) / 2 + 0.5
-                            //return d3.interpolateSpectral(1 - t)
-                        },*/
-            //size: (c, r, zf, vc) => vc(c.T),
-            //viewContext: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.35 })
-            //shape: () => 'circle',
+            color: (c, r, zf, vc) => vc.colorScale(c.indMF),
+            size: (c, r, zf, vc) => vc.sizeScale(c.T),
+            viewContext: (cells, r, zf) => ({ colorScale: colorScaleSex(cells, r, zf), sizeScale: sizeScaleSex(cells, r, zf) }),
+            shape: () => 'circle',
         })
 
         //by age
         const colAge = d3.interpolateSpectral
-        const styleAge = new gviz.CompositionStyle({
+        const styleAge = new gviz.CompositionStyle_({
             color: {
                 Y_LT15: colAge(0.2),
                 "Y15-64": colAge(0.4),
                 Y_GE65: colAge(0.9),
             },
-            type: () => 'agepyramid',
-            sizeCol: 'T',
-            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
-            agePyramidHeight: (c, r) => 0.95 * r,
+            type: () => 'flag',
+            size: (c, r, zf, scale) => scale(+c.T),
+            viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
+            //viewContext: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
+            stripesOrientation: () => 90
+            //agePyramidHeight: (c, r) => 0.95 * r,
         })
 
         //place of birth
@@ -149,8 +144,8 @@
         })
 
 
-        const style = styleSex
-        const pixNb = 6
+        const style = styleAge
+        const pixNb = 10
 
         /*
         "T" >= Total population
