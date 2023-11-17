@@ -84,7 +84,7 @@
         const styleTotalSizeQ = new gviz.ShapeColorSizeStyle_({
             size: (c, r, zf, vc) => vc(+c.T),
             shape: () => "circle",
-            viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, minSizePix: 3, maxSizeFactor: 1.2 })
+            viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 })
         })
 
         //by sex
@@ -129,7 +129,7 @@
 
 
         const style = styleTotalSizeQ
-        const pixNb = 3
+        const pixNb = 5
 
         /*
         "T" >= Total population
