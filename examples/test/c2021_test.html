@@ -24,11 +24,12 @@
         //generic function for quantile color maps
         //valueFunction, classNumber, colorRamp
         const quantileColorScale = (opts) => {
+            const valueFunction = opts.valueFunction
             const classNumber = opts.classNumber || 12
             const colorRamp = opts.colorRamp || (() => "purple")
             const scale = d3.scaleQuantile().range(Array.from({ length: classNumber }, (_, i) => colorRamp(i / (classNumber - 1))))
             return (cells) => {
-                scale.domain(cells.map(opts.valueFunction));
+                scale.domain(cells.map(valueFunction));
                 return scale;
             }
         }
@@ -36,13 +37,14 @@
         //generic function for size map
         //valueFunction, exponent, minValue, minSizePix, maxSizeFactor
         const sizeScale = (opts) => {
+            const valueFunction = opts.valueFunction
             const exponent = opts.exponent || 0.5
             const minValue = opts.minValue || 0
             const minSizePix = opts.minSizePix || 0
             const maxSizeFactor = opts.minSizePix || 1.41
             const scale = d3.scalePow().exponent(exponent)
             return (cells, r, zf) => {
-                scale.domain([minValue, d3.max(cells, opts.valueFunction)])
+                scale.domain([minValue, d3.max(cells, valueFunction)])
                 scale.range([minSizePix * zf, r * maxSizeFactor])
                 return scale;
             }
@@ -51,12 +53,13 @@
         //generic function for size map - quantile
         //valueFunction, classNumber, minSizePix, maxSizeFactor
         const sizeQuantileScale = (opts) => {
+            const valueFunction = opts.valueFunction
             const classNumber = opts.classNumber || 12
             const minSizePix = opts.minSizePix || 1
             const maxSizeFactor = opts.maxSizeFactor || 1
             const scale = d3.scaleQuantile()
             return (cells, r, zf) => {
-                scale.domain(cells.map(opts.valueFunction))
+                scale.domain(cells.map(valueFunction))
                 const minSizeGeo = minSizePix * zf, maxSizeGeo = r * maxSizeFactor
                 scale.range(Array.from({ length: classNumber }, (_, i) => minSizeGeo + i * (maxSizeGeo - minSizeGeo) / (classNumber - 1)))
                 return scale;
