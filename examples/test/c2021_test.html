@@ -21,14 +21,41 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-        //total population
-        const nbCl = 12
-        const col = d3.scaleQuantile().range(Array.from({ length: nbCl }, (_, i) => d3.interpolateYlOrRd(i / (nbCl - 1))))
-        const styleT = new gviz.ShapeColorSizeStyle_({
-            color: (c, r, zf, vc) => vc.colR(c.T),
+        //generic function for quantile color maps
+        const quantileColor = (dataFun, nbCl, colR, prop = "quantileColorScale") => {
+            const scale = d3.scaleQuantile().range(Array.from({ length: nbCl }, (_, i) => colR(i / (nbCl - 1))))
+            return (cells) => {
+                scale.domain(cells.map(dataFun));
+                const out = {}; out[prop] = scale
+                return out;
+            }
+        }
+
+        //generic function for quantile color maps
+        const quantileValue = (dataFun, nbCl, minSize, maxSize, prop = "quantileValueScale") => {
+            const scale = d3.scaleQuantile().range(Array.from({ length: nbCl }, (_, i) => minSize + i * (maxSize - minSize) / (nbCl - 1)))
+            return (cells) => {
+                scale.domain(cells.map(dataFun));
+                const out = {}; out[prop] = scale
+                return out;
+            }
+        }
+
+        //total population - color
+        const styleTotalColor = new gviz.ShapeColorSizeStyle_({
+            color: (c, r, zf, vc) => vc.quantileColorScale(c.T),
+            viewContext: quantileColor((c) => c.T, 12, d3.interpolateYlOrRd)
+        })
+
+        //total population - size
+        const scaleSize = d3.scaleLinear();
+        const styleTotalSize = new gviz.ShapeColorSizeStyle_({
+            size: (c, r, zf, vc) => vc.scaleSize(c.T),
+            shape: () => "circle",
             viewContext: (cells, r, zf) => {
-                col.domain(cells.map((c) => c.T));
-                return { colR: col };
+                scaleSize.domain([0, 10000])
+                scaleSize.range([zf, r * 1.41])
+                return { scaleSize: scaleSize }
             }
         })
 
@@ -74,8 +101,8 @@
         })
 
 
-        const style = styleBirthPlace
-        const pixNb = 15
+        const style = styleTotalSize
+        const pixNb = 3
 
         /*
         "T" >= Total population

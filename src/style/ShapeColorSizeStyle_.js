@@ -18,19 +18,19 @@ export class ShapeColorSizeStyle_ extends Style {
 
         /** A function returning the view context object.
          * @type {function(Array.<import('../Dataset.js').Cell>,number, number):object} */
-        this.viewContext = opts.viewContext
+        this.viewContext = opts.viewContext //(cells,r,z) => {}
 
         /** A function returning the color of the cell.
          * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
-        this.color = opts.color || (() => '#EA6BAC') //(c,o) => {}
+        this.color = opts.color //(c,r,z,o) => {}
 
         /** A function returning the size of a cell in geographical unit.
          * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
-        this.size = opts.size
+        this.size = opts.size //(c,r,z,o) => {}
 
         /** A function returning the shape of a cell.
          * @type {function(import("../Dataset.js").Cell,number, number,object):import("../Style.js").Shape} */
-        this.shape = opts.shape || (() => 'square')
+        this.shape = opts.shape //(c,r,z,o) => {}
     }
 
     /**
@@ -60,8 +60,8 @@ export class ShapeColorSizeStyle_ extends Style {
             if (!col || col === 'none') continue
 
             //size
-            const sG = this.size ? this.size(c, r, zf, vc) : r
-            if (!sG) continue
+            const size = this.size ? this.size(c, r, zf, vc) : r
+            if (!size) continue
 
             //shape
             const shape = this.shape ? this.shape(c, r, zf, vc) : 'square'
@@ -73,12 +73,12 @@ export class ShapeColorSizeStyle_ extends Style {
             cg.ctx.fillStyle = col
             if (shape === 'square') {
                 //draw square
-                const d = r * (1 - sG / r) * 0.5
-                cg.ctx.fillRect(c.x + d + offset.dx, c.y + d + offset.dy, sG, sG)
+                const d = r * (1 - size / r) * 0.5
+                cg.ctx.fillRect(c.x + d + offset.dx, c.y + d + offset.dy, size, size)
             } else if (shape === 'circle') {
                 //draw circle
                 cg.ctx.beginPath()
-                cg.ctx.arc(c.x + r2 + offset.dx, c.y + r2 + offset.dy, sG * 0.5, 0, 2 * Math.PI, false)
+                cg.ctx.arc(c.x + r2 + offset.dx, c.y + r2 + offset.dy, size * 0.5, 0, 2 * Math.PI, false)
                 cg.ctx.fill()
             } else if (shape === 'donut') {
                 //draw donut
@@ -87,11 +87,11 @@ export class ShapeColorSizeStyle_ extends Style {
                 cg.ctx.beginPath()
                 cg.ctx.moveTo(xc, yc)
                 cg.ctx.arc(xc, yc, r2, 0, 2 * Math.PI)
-                cg.ctx.arc(xc, yc, (1 - sG / r) * r2, 0, 2 * Math.PI, true)
+                cg.ctx.arc(xc, yc, (1 - size / r) * r2, 0, 2 * Math.PI, true)
                 cg.ctx.closePath()
                 cg.ctx.fill()
             } else if (shape === 'diamond') {
-                const s2 = sG * 0.5
+                const s2 = size * 0.5
                 cg.ctx.beginPath()
                 cg.ctx.moveTo(c.x + r2 - s2, c.y + r2)
                 cg.ctx.lineTo(c.x + r2, c.y + r2 + s2)
