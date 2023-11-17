@@ -43,7 +43,7 @@
         }
 
         //generic function for size map - quantile
-        const sizeQuantileScale = (dataFun, nbCl = 12, minSizePix = 0, maxSizeFactor = 1, prop = "sizeQuantileScale") => {
+        const sizeQuantileScale = (dataFun, nbCl = 12, minSizePix = 1, maxSizeFactor = 1, prop = "sizeQuantileScale") => {
             const scale = d3.scaleQuantile()
             return (cells, r, zf) => {
                 scale.domain(cells.map(dataFun))
