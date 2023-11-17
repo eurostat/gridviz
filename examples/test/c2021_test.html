@@ -27,7 +27,7 @@
             const valueFunction = opts.valueFunction
             const exponent = opts.exponent || 0.5
             const colorRamp = opts.colorRamp || (() => "purple")
-            const scale = d3.scalePow().exponent(exponent).range(Array.from({ length: classNumber }, (_, i) => colorRamp(i / (classNumber - 1))))
+            const scale = d3.scaleSequentialPow().exponent(exponent).interpolator(colorRamp)
             return (cells, r, zf) => {
                 scale.domain(d3.extent(cells, valueFunction))
                 return scale;
@@ -107,7 +107,8 @@
         //by sex
         const styleSex = new gviz.ShapeColorSizeStyle_({
             color: (c, r, zf, colorScale) => colorScale(c.indMF),
-            viewContext: colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
+            //viewContext: colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
+            viewContext: colorScale({ valueFunction: (c) => +c.indMF, exponent: 1, colorRamp: d3.interpolateSpectral }),
             /*
                         color: (c, r, zf, vc) => {
                             return "red"
