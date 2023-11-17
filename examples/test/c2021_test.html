@@ -105,12 +105,24 @@
         })
 
         //by sex
+        //TODO vc combine?
         const colorScaleSex = colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral })
         const sizeScaleSex = sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
         const styleSex = new gviz.ShapeColorSizeStyle_({
             color: (c, r, zf, vc) => vc.colorScale(c.indMF),
             size: (c, r, zf, vc) => vc.sizeScale(c.T),
             viewContext: (cells, r, zf) => ({ colorScale: colorScaleSex(cells, r, zf), sizeScale: sizeScaleSex(cells, r, zf) }),
+            shape: () => 'circle',
+        })
+
+        //by employment rate
+        //TODO vc combine?
+        const colorScaleEmp = colorQuantileScale({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd })
+        const sizeScaleEmp = sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
+        const styleEmp = new gviz.ShapeColorSizeStyle_({
+            color: (c, r, zf, vc) => vc.colorScale(c.remp),
+            size: (c, r, zf, vc) => vc.sizeScale(c.T),
+            viewContext: (cells, r, zf) => ({ colorScale: colorScaleEmp(cells, r, zf), sizeScale: sizeScaleEmp(cells, r, zf) }),
             shape: () => 'circle',
         })
 
@@ -154,8 +166,8 @@
         })
 
 
-        const style = styleMobility
-        const pixNb = 10
+        const style = styleEmp
+        const pixNb = 5
 
         /*
         "T" >= Total population
