@@ -52,13 +52,13 @@
         //valueFunction, classNumber, minSizePix, maxSizeFactor
         const sizeQuantileScale = (opts) => {
             const classNumber = opts.classNumber || 12
-            const minSizePix = opts.minSizePix || 0
-            const maxSizeFactor = opts.minSizePix || 1
+            const minSizePix = opts.minSizePix || 1
+            const maxSizeFactor = opts.maxSizeFactor || 1
             const scale = d3.scaleQuantile()
             return (cells, r, zf) => {
                 scale.domain(cells.map(opts.valueFunction))
-                const minS = minSizePix * zf, maxS = r * maxSizeFactor
-                scale.range(Array.from({ length: classNumber }, (_, i) => minS + i * (maxS - minS) / (classNumber - 1)))
+                const minSizeGeo = minSizePix * zf, maxSizeGeo = r * maxSizeFactor
+                scale.range(Array.from({ length: classNumber }, (_, i) => minSizeGeo + i * (maxSizeGeo - minSizeGeo) / (classNumber - 1)))
                 return scale;
             }
         }
@@ -84,7 +84,7 @@
         const styleTotalSizeQ = new gviz.ShapeColorSizeStyle_({
             size: (c, r, zf, vc) => vc(+c.T),
             shape: () => "circle",
-            viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12 })
+            viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, minSizePix: 3, maxSizeFactor: 1.2 })
         })
 
         //by sex
@@ -128,7 +128,7 @@
         })
 
 
-        const style = styleSex
+        const style = styleTotalSizeQ
         const pixNb = 3
 
         /*
