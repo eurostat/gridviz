@@ -22,8 +22,22 @@
         let containerDiv = document.getElementById('viz-container')
 
         //generic function for quantile color maps
+        //valueFunction, exponent, colorRamp
+        const colorScale = (opts) => {
+            const valueFunction = opts.valueFunction
+            const exponent = opts.exponent || 0.5
+            const colorRamp = opts.colorRamp || (() => "purple")
+            const scale = d3.scalePow().exponent(exponent).range(Array.from({ length: classNumber }, (_, i) => colorRamp(i / (classNumber - 1))))
+            return (cells, r, zf) => {
+                scale.domain(d3.extent(cells, valueFunction))
+                return scale;
+            }
+
+        }
+
+        //generic function for quantile color maps
         //valueFunction, classNumber, colorRamp
-        const quantileColorScale = (opts) => {
+        const colorQuantileScale = (opts) => {
             const valueFunction = opts.valueFunction
             const classNumber = opts.classNumber || 12
             const colorRamp = opts.colorRamp || (() => "purple")
@@ -72,35 +86,38 @@
 
         //total population - color
         const styleTotalColor = new gviz.ShapeColorSizeStyle_({
-            color: (c, r, zf, vc) => vc(c.T),
-            viewContext: quantileColorScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd })
+            color: (c, r, zf, scale) => scale(c.T),
+            viewContext: colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd })
         })
 
         //total population - size
         const styleTotalSize = new gviz.ShapeColorSizeStyle_({
-            size: (c, r, zf, vc) => vc(+c.T),
+            size: (c, r, zf, scale) => scale(+c.T),
             shape: () => "circle",
             viewContext: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.35 })
         })
 
         //total population - size quantile
         const styleTotalSizeQ = new gviz.ShapeColorSizeStyle_({
-            size: (c, r, zf, vc) => vc(+c.T),
+            size: (c, r, zf, scale) => scale(+c.T),
             shape: () => "circle",
             viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 })
         })
 
         //by sex
         const styleSex = new gviz.ShapeColorSizeStyle_({
-            color: (c, r, zf, vc) => {
-                return "red"
-                //const max = Math.max(Math.abs(vc.colorMinMax[0]), Math.abs(vc.colorMinMax[1]))
-                //const t = (Math.sign(c.indMF) * gviz.sPow(Math.abs(c.indMF) / max, 0.03)) / 2 + 0.5
-                //return d3.interpolateSpectral(1 - t)
-            },
-            size: (c, r, zf, vc) => vc(c.T),
-            shape: () => 'circle',
-            viewContext: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.2 })
+            color: (c, r, zf, colorScale) => colorScale(c.indMF),
+            viewContext: colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
+            /*
+                        color: (c, r, zf, vc) => {
+                            return "red"
+                            //const max = Math.max(Math.abs(vc.colorMinMax[0]), Math.abs(vc.colorMinMax[1]))
+                            //const t = (Math.sign(c.indMF) * gviz.sPow(Math.abs(c.indMF) / max, 0.03)) / 2 + 0.5
+                            //return d3.interpolateSpectral(1 - t)
+                        },*/
+            //size: (c, r, zf, vc) => vc(c.T),
+            //viewContext: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.35 })
+            //shape: () => 'circle',
         })
 
         //by age
@@ -131,8 +148,8 @@
         })
 
 
-        const style = styleTotalSizeQ
-        const pixNb = 5
+        const style = styleSex
+        const pixNb = 6
 
         /*
         "T" >= Total population
@@ -175,7 +192,7 @@
 
                         //if (+c.F + +c.M != c.T) console.error("Error found in sex total")
                         c.indMF = +c.M - (+c.F)
-                        c.indMF = (100 * c.indMF) / +c.T
+                        c.indMF = (100 * c.indMF) / (+c.M + +c.F)
                         if (isNaN(c.indMF)) c.indMF = 0
                     }
                 }
