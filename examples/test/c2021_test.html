@@ -102,9 +102,14 @@
             viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 })
         })
 
+
+
         const vcCombine = (obj) => {
+            //obj: prop and a function to call
             return (cells, r, zf) => {
-                return {}
+                const out = {}
+                for (const p in obj) { out[p] = obj[p](cells, r, zf) }
+                return out
             }
         }
 
