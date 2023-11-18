@@ -31,7 +31,6 @@
                 scale.domain(d3.extent(cells, valueFunction))
                 return scale;
             }
-
         }
 
         //generic function for quantile color maps
@@ -102,6 +101,12 @@
             shape: () => "circle",
             viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 })
         })
+
+        const vcCombine = (obj) => {
+            return (cells, r, zf) => {
+                return {}
+            }
+        }
 
         //by sex
         //TODO vc combine?
