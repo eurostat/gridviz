@@ -20,7 +20,7 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-        //generic function for quantile color maps
+        //generic function for continuous color maps
         //valueFunction, exponent, colorRamp
         const colorScale = (opts) => {
             const valueFunction = opts.valueFunction
@@ -117,22 +117,22 @@
 
         //by sex
         const styleSex = new gviz.ShapeColorSizeStyle_({
-            color: (c, r, zf, viewScale) => viewScale.colorScale(c.indMF),
-            size: (c, r, zf, viewScale) => viewScale.sizeScale(c.T),
+            color: (c, r, zf, viewScale) => viewScale.color(c.indMF),
+            size: (c, r, zf, viewScale) => viewScale.size(c.T),
             viewScale: viewScaleCombination({
-                colorScale: colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
-                sizeScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
+                color: colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
+                size: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
             }),
             shape: () => 'circle',
         })
 
         //by employment rate
         const styleEmp = new gviz.ShapeColorSizeStyle_({
-            color: (c, r, zf, viewScale) => viewScale.colorScale(c.remp),
-            size: (c, r, zf, viewScale) => viewScale.sizeScale(c.T),
+            color: (c, r, zf, viewScale) => viewScale.color(c.remp),
+            size: (c, r, zf, viewScale) => viewScale.size(c.T),
             viewScale: viewScaleCombination({
-                colorScale: colorQuantileScale({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
-                sizeScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
+                color: colorQuantileScale({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
+                size: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
             }),
             shape: () => 'circle',
         })
