@@ -10731,9 +10731,9 @@ class CompositionStyle_ extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         super(opts)
         opts = opts || {}
 
-        /** A function returning the view context object.
+        /** A function returning the view scale.
          * @type {function(Array.<import('../Dataset.js').Cell>,number, number):object} */
-        this.viewContext = opts.viewContext
+        this.viewScale = opts.viewScale
 
         /**
          * The dictionary (string -> color) which give the color of each category.
@@ -10782,8 +10782,8 @@ class CompositionStyle_ extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //zoom factor
         const zf = cg.getZf()
 
-        //get view context object
-        const vc = this.viewContext ? this.viewContext(cells, r, zf) : undefined
+        //get view scale
+        const vc = this.viewScale ? this.viewScale(cells, r, zf) : undefined
 
         //nb categories - used for radar and agepyramid
         const nbCat = Object.entries(this.color).length
@@ -11000,7 +11000,7 @@ class CompositionStyle_ extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf, viewContext: vc })
+        this.updateLegends({ style: this, r: r, zf: zf, viewScale: vc })
     }
 }
 
@@ -12669,9 +12669,9 @@ class ShapeColorSizeStyle_ extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style 
         super(opts)
         opts = opts || {}
 
-        /** A function returning the view context object.
+        /** A function returning the view scale.
          * @type {function(Array.<import('../Dataset.js').Cell>,number, number):object} */
-        this.viewContext = opts.viewContext //(cells,r,z) => {}
+        this.viewScale = opts.viewScale //(cells,r,z) => {}
 
         /** A function returning the color of the cell.
          * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
@@ -12700,8 +12700,8 @@ class ShapeColorSizeStyle_ extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style 
         //zoom factor
         const zf = cg.getZf()
 
-        //get view context object
-        const vc = this.viewContext ? this.viewContext(cells, r, zf) : undefined
+        //get view scale
+        const vc = this.viewScale ? this.viewScale(cells, r, zf) : undefined
 
         //draw with HTML canvas in geo coordinates
         cg.setCanvasTransform()
@@ -12757,7 +12757,7 @@ class ShapeColorSizeStyle_ extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style 
         }
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf, viewContext: vc })
+        this.updateLegends({ style: this, r: r, zf: zf, viewScale: vc })
     }
 }
 

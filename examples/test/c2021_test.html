@@ -79,31 +79,7 @@
         }
 
 
-
-        //style
-
-        //total population - color
-        const styleTotalColor = new gviz.ShapeColorSizeStyle_({
-            color: (c, r, zf, scale) => scale(c.T),
-            viewContext: colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd })
-        })
-
-        //total population - size
-        const styleTotalSize = new gviz.ShapeColorSizeStyle_({
-            size: (c, r, zf, scale) => scale(+c.T),
-            shape: () => "circle",
-            viewContext: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.35 })
-        })
-
-        //total population - size quantile
-        const styleTotalSizeQ = new gviz.ShapeColorSizeStyle_({
-            size: (c, r, zf, scale) => scale(+c.T),
-            shape: () => "circle",
-            viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 })
-        })
-
-
-
+        //combine scales
         const vcCombine = (obj) => {
             //obj: prop and a function to call
             return (cells, r, zf) => {
@@ -113,25 +89,51 @@
             }
         }
 
+
+        //viewScale -> getViewshedScale
+
+
+        //style
+
+        //total population - color
+        const styleTotalColor = new gviz.ShapeColorSizeStyle_({
+            color: (c, r, zf, scale) => scale(c.T),
+            viewScale: colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd })
+        })
+
+        //total population - size
+        const styleTotalSize = new gviz.ShapeColorSizeStyle_({
+            size: (c, r, zf, scale) => scale(+c.T),
+            shape: () => "circle",
+            viewScale: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.35 })
+        })
+
+        //total population - size quantile
+        const styleTotalSizeQ = new gviz.ShapeColorSizeStyle_({
+            size: (c, r, zf, scale) => scale(+c.T),
+            shape: () => "circle",
+            viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 })
+        })
+
         //by sex
-        //TODO vc combine?
-        const colorScaleSex = colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral })
-        const sizeScaleSex = sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
         const styleSex = new gviz.ShapeColorSizeStyle_({
             color: (c, r, zf, vc) => vc.colorScale(c.indMF),
             size: (c, r, zf, vc) => vc.sizeScale(c.T),
-            viewContext: (cells, r, zf) => ({ colorScale: colorScaleSex(cells, r, zf), sizeScale: sizeScaleSex(cells, r, zf) }),
+            viewScale: vcCombine({
+                colorScale: colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
+                sizeScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
+            }),
             shape: () => 'circle',
         })
 
         //by employment rate
-        //TODO vc combine?
-        const colorScaleEmp = colorQuantileScale({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd })
-        const sizeScaleEmp = sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
         const styleEmp = new gviz.ShapeColorSizeStyle_({
             color: (c, r, zf, vc) => vc.colorScale(c.remp),
             size: (c, r, zf, vc) => vc.sizeScale(c.T),
-            viewContext: (cells, r, zf) => ({ colorScale: colorScaleEmp(cells, r, zf), sizeScale: sizeScaleEmp(cells, r, zf) }),
+            viewScale: vcCombine({
+                colorScale: colorQuantileScale({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
+                sizeScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
+            }),
             shape: () => 'circle',
         })
 
@@ -145,8 +147,8 @@
             },
             type: () => 'flag',
             size: (c, r, zf, scale) => scale(+c.T),
-            viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
-            //viewContext: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
+            viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
+            //viewScale: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
             stripesOrientation: () => 90
         })
 
@@ -159,7 +161,7 @@
             },
             type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
             size: (c, r, zf, scale) => scale(+c.T),
-            viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
+            viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
         })
 
         //mobility
@@ -171,7 +173,7 @@
             },
             type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
             size: (c, r, zf, scale) => scale(+c.T),
-            viewContext: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
+            viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
         })
 
 
