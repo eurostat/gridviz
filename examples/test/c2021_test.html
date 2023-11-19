@@ -80,7 +80,7 @@
 
 
         //combine scales
-        const vcCombine = (obj) => {
+        const viewScaleCombination = (obj) => {
             //obj: prop and a function to call
             return (cells, r, zf) => {
                 const out = {}
@@ -117,9 +117,9 @@
 
         //by sex
         const styleSex = new gviz.ShapeColorSizeStyle_({
-            color: (c, r, zf, vc) => vc.colorScale(c.indMF),
-            size: (c, r, zf, vc) => vc.sizeScale(c.T),
-            viewScale: vcCombine({
+            color: (c, r, zf, viewScale) => viewScale.colorScale(c.indMF),
+            size: (c, r, zf, viewScale) => viewScale.sizeScale(c.T),
+            viewScale: viewScaleCombination({
                 colorScale: colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
                 sizeScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
             }),
@@ -128,9 +128,9 @@
 
         //by employment rate
         const styleEmp = new gviz.ShapeColorSizeStyle_({
-            color: (c, r, zf, vc) => vc.colorScale(c.remp),
-            size: (c, r, zf, vc) => vc.sizeScale(c.T),
-            viewScale: vcCombine({
+            color: (c, r, zf, viewScale) => viewScale.colorScale(c.remp),
+            size: (c, r, zf, viewScale) => viewScale.sizeScale(c.T),
+            viewScale: viewScaleCombination({
                 colorScale: colorQuantileScale({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
                 sizeScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
             }),
