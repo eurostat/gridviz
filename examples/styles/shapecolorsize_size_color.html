@@ -54,11 +54,9 @@
                             t = t > 1 ? 1 : t < 0 ? 0 : t
                             return d3.interpolateSpectral(1 - t)
                         },
-                        size: (c, r, zf, viewScale) => viewScale.size(c.ind),
-                        viewScale: gviz.viewScaleCombination({
-                            size: gviz.sizeContinuousScale({ valueFunction: (c) => +c.ind, stretching: gviz.powerScale(0.13) }),
-                        }),
-                        shape: () => "donut"
+                        size: (c, r, zf, viewScale) => 1.41 * viewScale(c.ind),
+                        viewScale: gviz.sizeContinuousScale({ valueFunction: (c) => +c.ind, stretching: gviz.powerScale(0.13) }),
+                        shape: () => "circle"
                     }),
                 ],
                 {
@@ -78,8 +76,8 @@
             s.shape = () => v_
 
             //set size
-            const sizeFactor = (v_ === 'circle' || v_ === 'diamond') ? 1.4 : 1
-            s.size = (c, r, zf, viewScale) => sizeFactor * viewScale.size(c.ind)
+            const sizeFactor = (v_ === 'circle' || v_ === 'diamond') ? 1.41 : 1
+            s.size = (c, r, zf, viewScale) => sizeFactor * viewScale(c.ind)
             //redraw
             map.cg.redraw()
         })
