@@ -969,6 +969,8 @@ Most of [Gridviz](https://github.com/eurostat/gridviz/) styles rely on a continu
 | **logarithmicScale**            | Exponential function           | Logarithmic base, from -Infinity to Infinity. No change: 0 |
 | **powerInverseScale**            | Polynomial inverse function    | Power exponent, from 0 to Infinity. No change: 1         |
 | **exponentialScale**         | Exponential    | Logarithmic base, from -Infinity to Infinity. No change: 0 |
+| **circularScale**         | Circular    | 0: no stretching. 1: perfect circle section |
+| **circularInverseScale**         | Circular    | 0: no stretching. 1: perfect circle section |
 
 For more information on these functions and an overview of how they differ, see:
 
