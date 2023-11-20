@@ -13,7 +13,7 @@ import { Style } from '../Style.js'
  *
  * @author Julien Gaffuri
  */
-export class CompositionStyle_ extends Style {
+export class CompositionStyle extends Style {
     /** @param {object} opts */
     constructor(opts) {
         super(opts)

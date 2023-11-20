@@ -62,9 +62,9 @@
                         },
                         type: () => 'ring',
                         stripesOrientation: () => 0,
-                        sizeCol: 'men',
+                        size: (c, r, zf, scale) => scale(+c.men),
+                        viewScale: gviz.sizeQuantileScale({ valueFunction: (c) => +c.men, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
                         offsetAngle: () => 90,
-                        size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.13, 0),
                     }),
                 ],
                 {
@@ -114,8 +114,8 @@
         document.querySelector('#size').addEventListener('change', function () {
             //set size
             s.size = this.checked
-                ? (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.13, 0)
-                : (s.size = (v, r, s, zf) => r)
+                ? (c, r, zf, scale) => scale(+c.men)
+                : (c, r) => r
             //redraw
             map.cg.redraw()
         })
