@@ -1,3 +1,5 @@
+app -> map
+
 
 revamp layers, API - see lflt
 static image background layer
@@ -6,7 +8,6 @@ change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coor
 extract modules ?
 
 API changes for v3:
-app -> map
 map.addLayer
 zoom factor -> zoom
 layer.addTo(map)

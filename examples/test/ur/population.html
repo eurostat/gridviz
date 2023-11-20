@@ -157,7 +157,7 @@
             const boundaryColor = '#888'
 
             let containerDiv = document.getElementById('vizPop')
-            const app = new gviz.App(containerDiv, { legendDivId: 'legendPop' })
+            const app = new gviz.Map(containerDiv, { legendDivId: 'legendPop' })
                 .setGeoCenter({ x: 4313947, y: 3100000 })
                 .setZoomFactor(8000)
                 .setZoomFactorExtent([40, 8000])

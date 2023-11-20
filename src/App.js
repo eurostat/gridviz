@@ -25,7 +25,7 @@ import { select } from 'd3-selection'
  *
  * @author Joseph Davies, Julien Gaffuri
  */
-export class App {
+export class Map {
     /**
      * @param {HTMLDivElement} container
      * @param {object} opts

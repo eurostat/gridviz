@@ -71,7 +71,7 @@
             const bgLayerURL = 'https://ec.europa.eu/eurostat/cache/GISCO/mbkg/elevation_shading/'
 
             let containerDiv = document.getElementById('viz-container')
-            const app = new gviz.App(containerDiv, { legendDivId: 'gridviz-legend' })
+            const app = new gviz.Map(containerDiv, { legendDivId: 'gridviz-legend' })
                 .setGeoCenter({ x: 4500000, y: 3300000 })
                 .setZoomFactor(6000)
                 .setLabelLayer(

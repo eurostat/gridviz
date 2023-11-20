@@ -64,12 +64,12 @@ Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/grid
 
 ## Usage
 
-Create a [Gridviz](https://github.com/eurostat/gridviz/) application using `const app = new gviz.App();` and customise it with the methods described in the documentation below.
+Create a [Gridviz](https://github.com/eurostat/gridviz/) application using `const app = new gviz.Map();` and customise it with the methods described in the documentation below.
 
 Here's a basic example that loads a CSV file on Europe population (5km resolution):
 
 ```javascript
-new gviz.App(containerDiv)
+new gviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoomFactor(3000)
@@ -121,7 +121,7 @@ When building a gridviz app, in addition to the container element you can also s
 For example:
 
 ```javascript
-new gviz.App(containerDiv, {
+new gviz.Map(containerDiv, {
     w: 600,
     h: 600,
     legendDivId: 'myLegendDiv',
@@ -190,7 +190,7 @@ This is the simplest case, when a unique CSV file is loaded. See the [basic exam
 When several CSV files contain the data with different resolutions, it is possible to define a multi-scale dataset from those files. The change of dataset depending on the zoom level is controled with the **pixNb** parameter:
 
 ```javascript
-new gviz.App(containerDiv)
+new gviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoomFactor(3000)
@@ -224,7 +224,7 @@ new gviz.App(containerDiv)
 For large datasets, it is recommended that you decompose them into different data chunks and index them by geographical location, as specified in the [tiled format specification](tiledformat.md). The [Gridviz](https://github.com/eurostat/gridviz/) application can then automatically retrieve only the useful data that falls into the viewer's geographical extent. Here is an example of how to load such data:
 
 ```javascript
-new gviz.App(containerDiv)
+new gviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoomFactor(3000)
@@ -249,7 +249,7 @@ new gviz.App(containerDiv)
 Multi scale tiled data based on the [tiled format](tiledformat.md) can also be simply loaded with the example below. Here again, the change of dataset depending on the zoom level is controled with the **pixNb** parameter:
 
 ```javascript
-new gviz.App(containerDiv)
+new gviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoomFactor(3000)
@@ -308,7 +308,7 @@ This process is run on each cell individually, only once, after the data has bee
 Here is an example showing how to compute a new column on population change, as the difference between two columns _TOT_P_2021_ and _TOT_P_2011_. This new column is then used directly to be shown on the map:
 
 ```javascript
-new gviz.App(containerDiv)
+new gviz.Map(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoomFactor(3000)
     .addMultiScaleTiledGridLayer(
@@ -347,7 +347,7 @@ The **preprocess** function can also be used to remove/filter unnecessary cells 
 Here is an example showing how to keep only the cells with specific values **41**:
 
 ```javascript
-new gviz.App(containerDiv)
+new gviz.Map(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoomFactor(3000)
     .addMultiScaleTiledGridLayer(
@@ -987,7 +987,7 @@ For more information on these functions and an overview of how they differ, see:
 To add a background layer to a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **addBackgroundLayer** method:
 
 ```javascript
-new gviz.App(containerDiv)
+new gviz.Map(containerDiv)
     (...)
     .addBackgroundLayer({
         url: "https://gisco-services.ec.europa.eu/maps/tiles/NaturalEarth/EPSG3035/",
@@ -1022,7 +1022,7 @@ For more information, [see the code](../src/BackgroundLayer.js).
 To add a WMS background layer to a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **addBackgroundLayerWMS** method:
 
 ```javascript
-new gviz.App(containerDiv)
+new gviz.Map(containerDiv)
     (...)
     .addBackgroundLayerWMS({
         url: 'https://sgx.geodatenzentrum.de/wms_basemapde?&service=WMS&request=GetMap&layers=de_basemapde_web_raster_grau&styles=&format=image%2Fjpeg&transparent=false&version=1.1.1&srs=EPSG%3A3035',
@@ -1052,7 +1052,7 @@ For more information, [see the code](../src/BackgroundLayerWMS.js).
 To show labels on top of a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **setLabelLayer** method:
 
 ```javascript
-new gviz.App(containerDiv)
+new gviz.Map(containerDiv)
     (...)
     .setLabelLayer({
         url: "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v2/UTF/50/EUR.csv",
@@ -1102,7 +1102,7 @@ For more information, [see the code](../src/LabelLayer.js).
 To show boundaries on top of a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **setBoundaryLayer** method:
 
 ```javascript
-new gviz.App(containerDiv)
+new gviz.Map(containerDiv)
     (...)
     .setBoundaryLayer({
         url: "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2021/3035/03M/nutsbn_3.json",
@@ -1160,7 +1160,7 @@ For more information, [see the code](../src/LineLayer.js).
 A 'tooltip' shows information related to the selected grid cell. The information shown for each selected cell can be specified at layer level using the **cellInfoHTML** parameter. See for example:
 
 ```javascript
-new gviz.App(containerDiv)
+new gviz.Map(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoomFactor(500)
     .addCSVGridLayer(

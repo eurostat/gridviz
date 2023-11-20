@@ -21,7 +21,7 @@
         <script>
             //map 1
 
-            const map1 = new gviz.App(document.getElementById('viz1'), { legendDivId: 'legend1' })
+            const map1 = new gviz.Map(document.getElementById('viz1'), { legendDivId: 'legend1' })
                 .setGeoCenter({ x: 4500000, y: 2900000 })
                 .setZoomFactor(3000)
                 .addMultiScaleTiledGridLayer(
@@ -64,7 +64,7 @@
                 NA: 'gray',
             }
 
-            new gviz.App(document.getElementById('viz2'))
+            new gviz.Map(document.getElementById('viz2'))
                 .setGeoCenter({ x: 4000000, y: 2960000 })
                 .setZoomFactor(600)
                 .setZoomFactorExtent([40, 7500])

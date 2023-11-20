@@ -17,7 +17,7 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-        new gviz.App(containerDiv)
+        new gviz.Map(containerDiv)
             .setGeoCenter({ x: 3763437, y: 2891045 })
             .setZoomFactor(150)
             .setLabelLayer(gviz_es.getEuronymeLabelLayer('EUR', '20'))

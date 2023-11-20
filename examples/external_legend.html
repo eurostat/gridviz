@@ -16,7 +16,7 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            let app = new gviz.App(containerDiv, { legendDivId: 'ext_legend' })
+            let app = new gviz.Map(containerDiv, { legendDivId: 'ext_legend' })
                 //set position and zoom
                 .setGeoCenter({ x: 4500000, y: 2900000 })
                 .setZoomFactor(3000)

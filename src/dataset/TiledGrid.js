@@ -5,7 +5,7 @@
 
 // internal
 import { GridTile } from './GridTile.js'
-import { App } from '../App.js'
+import { Map } from '../App.js'
 import { DatasetComponent } from '../DatasetComponent.js'
 import { monitor, monitorDuration } from '../utils/Utils.js'
 
@@ -20,7 +20,7 @@ import { json, csv } from 'd3-fetch'
 export class TiledGrid extends DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
-     * @param {App} app The application.
+     * @param {Map} app The application.
      * @param {{preprocess?:(function(import("../Dataset").Cell):boolean) }} opts
      */
     constructor(url, app, opts = {}) {
@@ -28,7 +28,7 @@ export class TiledGrid extends DatasetComponent {
 
         /**
          * The app being used.
-         * @type {App}
+         * @type {Map}
          */
         this.app = app
 
