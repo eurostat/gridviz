@@ -47,9 +47,9 @@
         <span style="font-size: 1.2em">
             <hr />
             <input type="checkbox" id="label" checked />
-            <label for="label">City names</label>
+            <label for="label">City names</label><br />
             <input type="checkbox" id="boundary" checked />
-            <label for="boundary">Boundaries</label>
+            <label for="boundary">Boundaries</label><br />
             <input type="checkbox" id="background" checked />
             <label for="background">Background</label>
         </span>
@@ -240,13 +240,14 @@
                     [
                         new gviz.ShapeColorSizeStyle_({
                             color: (c, r, zf, scale) => scale(c.T),
-                            viewScale: colorContinuousScale({ valueFunction: (c) => +c.T, colorRamp: d3.interpolateYlOrRd, stretching: gviz.logarithmicScale(-7) })
-                            //viewScale: colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd })
+                            viewScale: colorContinuousScale({ valueFunction: (c) => +c.T, colorRamp: d3.interpolateYlOrRd, stretching: gviz.logarithmicScale(-7) }),
+                            //viewScale: colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
                             //size
                             //size: (c, r, zf, scale) => scale(+c.T),
                             //shape: () => "circle",
-                            //viewScale: sizeContinuousScale({ valueFunction: (c) => +c.T, stretching: gviz.logarithmicScale(-8) })
-                            //viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 })
+                            //viewScale: sizeContinuousScale({ valueFunction: (c) => +c.T, stretching: gviz.logarithmicScale(-8) }),
+                            //viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 }),
+                            blendOperation: (zf) => zf < 100 ? "multiply" : "source-over",
                         }),
                         new gviz.StrokeStyle({ maxZoom: 70 }),
                     ],
@@ -267,6 +268,7 @@
                                 size: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
                             }),
                             shape: () => 'circle',
+                            blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
                         }),
                     ],
                     {
@@ -287,6 +289,7 @@
                                 size: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
                             }),
                             shape: () => 'circle',
+                            blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
                         }),
                         new gviz.StrokeStyle({ maxZoom: 7 }),
                     ],
@@ -311,7 +314,8 @@
                             size: (c, r, zf, scale) => scale(+c.T),
                             viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
                             //viewScale: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
-                            stripesOrientation: () => 90
+                            stripesOrientation: () => 90,
+                            blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
                         })
                         ,
                     ],
@@ -334,6 +338,7 @@
                             type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             size: (c, r, zf, scale) => scale(+c.T),
                             viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
+                            blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
                         }),
                         new gviz.StrokeStyle({ maxZoom: 7 }),
                     ],
@@ -356,6 +361,7 @@
                             type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             size: (c, r, zf, scale) => scale(+c.T),
                             viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
+                            blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
                         }),
                         new gviz.StrokeStyle({ maxZoom: 7 }),
                     ],
