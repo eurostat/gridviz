@@ -58,15 +58,7 @@
                         viewScale: gviz.viewScaleCombination({
                             size: gviz.sizeContinuousScale({ valueFunction: (c) => +c.ind, stretching: gviz.powerScale(0.13) }),
                         }),
-                        /*
-                                                sizeCol: 'ind',
-                                                size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.13),
-                                                colorCol: 'revind',
-                                                color: (v, r, s) => {
-                                                    let t = (v - 1200) / (3700 - 1200)
-                                                    t = t > 1 ? 1 : t < 0 ? 0 : t
-                                                    return d3.interpolateSpectral(1 - t)
-                                                },*/
+                        shape: () => "donut"
                     }),
                 ],
                 {
@@ -86,13 +78,8 @@
             s.shape = () => v_
 
             //set size
-            s.size = (v, r, s, zf) =>
-                (v_ === 'circle' || v_ === 'diamond')
-                    ? 1.4 * r * gviz.sPow(v / s.max, 0.13)
-                    : v_ === 'square'
-                        ? r * gviz.sPow(v / s.max, 0.1)
-                        : r * gviz.sPow(v / s.max, 0.2)
-
+            const sizeFactor = (v_ === 'circle' || v_ === 'diamond') ? 1.4 : 1
+            s.size = (c, r, zf, viewScale) => sizeFactor * viewScale.size(c.ind)
             //redraw
             map.cg.redraw()
         })
