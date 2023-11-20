@@ -101,7 +101,7 @@
 
         //generic function for size map
         //valueFunction, minValue, minSizePix, maxSizeFactor, stretching
-        const sizeScale = (opts) => {
+        const sizeContinuousScale = (opts) => {
             const valueFunction = opts.valueFunction
             const minValue = opts.minValue || 0
             const minSizePix = opts.minSizePix || 0
@@ -222,17 +222,18 @@
                     [
                         new gviz.ShapeColorSizeStyle_({
                             color: (c, r, zf, scale) => scale(c.T),
-                            viewScale: colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd })
+                            viewScale: colorContinuousScale({ valueFunction: (c) => +c.T, colorRamp: d3.interpolateYlOrRd, stretching: gviz.logarithmicScale(-7)  })
+                            //viewScale: colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd })
                             //size
                             //size: (c, r, zf, scale) => scale(+c.T),
                             //shape: () => "circle",
-                            //viewScale: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.35 })
+                            //viewScale: sizeContinuousScale({ valueFunction: (c) => +c.T, stretching: gviz.logarithmicScale(-8) })
                             //viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 })
                         }),
                         new gviz.StrokeStyle({ maxZoom: 70 }),
                     ],
                     {
-                        pixNb: 1.8,
+                        pixNb: 1.5, //8,
                         cellInfoHTML: (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
                     }
                 )
