@@ -25,14 +25,14 @@
             ">
         Function:
         <select id="fun" style="font-size: 1em">
-            <option value="pow">Polynomial</option>
-            <option value="powRev">Polynomial (reverse)</option>
+            <option value="pow">Power</option>
+            <option value="powRev">Power inverse</option>
+            <option value="expRev" selected>Logarithmic</option>
             <option value="exp">Exponential</option>
-            <option value="expRev" selected>Exponential (reverse)</option>
-            <option value="circleLow">Circle low</option>
-            <option value="circleHigh">Circle high</option>
+            <option value="circleLow">Circular</option>
+            <option value="circleHigh">Circular inverse</option>
         </select>
-        <div id="alphaText">Alpha: -10</div>
+        <div id="alphaText">Stretching parameter: -10</div>
         <input type="range" min="-30" max="0" step="1" value="-10" id="alphaExp"
             style="width: 300px; display: initial" />
         <input type="range" min="0" max="1" step="0.02" value="0.3" id="alphaPowCir"
@@ -97,7 +97,7 @@
             //set style stretching function
             s.stretching = { fun: fun, alpha: a }
 
-            document.getElementById('alphaText').textContent = 'Alpha: ' + a
+            document.getElementById('alphaText').textContent = 'Stretching parameter: ' + a
 
             //redraw
             app.cg.redraw()
