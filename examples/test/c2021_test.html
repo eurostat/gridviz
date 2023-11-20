@@ -155,13 +155,13 @@
                     [
                         new gviz.ShapeColorSizeStyle_({
                             color: (c, r, zf, scale) => scale(c.T),
-                            viewScale: colorContinuousScale({ valueFunction: (c) => +c.T, colorRamp: d3.interpolateYlOrRd, stretching: gviz.logarithmicScale(-7) }),
-                            //viewScale: colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
+                            viewScale: gviz.colorContinuousScale({ valueFunction: (c) => +c.T, colorRamp: d3.interpolateYlOrRd, stretching: gviz.logarithmicScale(-7) }),
+                            //viewScale: gviz.colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
                             //size
                             //size: (c, r, zf, scale) => scale(+c.T),
                             //shape: () => "circle",
-                            //viewScale: sizeContinuousScale({ valueFunction: (c) => +c.T, stretching: gviz.logarithmicScale(-8) }),
-                            //viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 }),
+                            //viewScale: gviz.sizeContinuousScale({ valueFunction: (c) => +c.T, stretching: gviz.logarithmicScale(-8) }),
+                            //viewScale: gviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 }),
                             blendOperation: (zf) => zf < 100 ? "multiply" : "source-over",
                         }),
                         new gviz.StrokeStyle({ maxZoom: 70 }),
@@ -178,9 +178,9 @@
                         new gviz.ShapeColorSizeStyle_({
                             color: (c, r, zf, viewScale) => viewScale.color(c.indMF),
                             size: (c, r, zf, viewScale) => viewScale.size(c.T),
-                            viewScale: viewScaleCombination({
-                                color: colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
-                                size: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
+                            viewScale: gviz.viewScaleCombination({
+                                color: gviz.colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
+                                size: gviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
                             }),
                             shape: () => 'circle',
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
@@ -199,9 +199,9 @@
                         new gviz.ShapeColorSizeStyle_({
                             color: (c, r, zf, viewScale) => viewScale.color(c.remp),
                             size: (c, r, zf, viewScale) => viewScale.size(c.T),
-                            viewScale: viewScaleCombination({
-                                color: colorQuantileScale({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
-                                size: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
+                            viewScale: gviz.viewScaleCombination({
+                                color: gviz.colorQuantileScale({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
+                                size: gviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1 })
                             }),
                             shape: () => 'circle',
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
@@ -227,8 +227,8 @@
                             },
                             type: () => 'flag',
                             size: (c, r, zf, scale) => scale(+c.T),
-                            viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
-                            //viewScale: sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
+                            viewScale: gviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
+                            //viewScale: gviz.sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
                             stripesOrientation: () => 90,
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
                         })
@@ -252,7 +252,7 @@
                             },
                             type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             size: (c, r, zf, scale) => scale(+c.T),
-                            viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
+                            viewScale: gviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
                         }),
                         new gviz.StrokeStyle({ maxZoom: 7 }),
@@ -275,7 +275,7 @@
                             },
                             type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             size: (c, r, zf, scale) => scale(+c.T),
-                            viewScale: sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
+                            viewScale: gviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8, maxSizeFactor: 1 }),
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
                         }),
                         new gviz.StrokeStyle({ maxZoom: 7 }),

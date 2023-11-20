@@ -10,7 +10,7 @@ export const colorContinuousScale = (opts) => {
     const valueFunction = opts.valueFunction
     const colorRamp = opts.colorRamp || (() => "purple")
     const stretching = opts.stretching
-    return (cells, r, zf) => {
+    return (cells) => {
         const domain = extent(cells, valueFunction)
         const scale = t => {
             //scale to [0,1]
