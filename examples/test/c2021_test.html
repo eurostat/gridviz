@@ -21,14 +21,21 @@
         let containerDiv = document.getElementById('viz-container')
 
         //generic function for continuous color maps
-        //valueFunction, exponent, colorRamp
-        const colorScale = (opts) => {
+        //valueFunction, colorRamp, stretching
+        const colorContinuousScale = (opts) => {
             const valueFunction = opts.valueFunction
-            const exponent = opts.exponent || 0.5
             const colorRamp = opts.colorRamp || (() => "purple")
-            const scale = d3.scaleSequentialPow().exponent(exponent).interpolator(colorRamp)
+            const stretching = opts.stretching
             return (cells, r, zf) => {
-                scale.domain(d3.extent(cells, valueFunction))
+                const domain = d3.extent(cells, valueFunction)
+                const scale = t => {
+                    //scale to [0,1]
+                    t = (t - domain[0]) / (domain[1] - domain[0])
+                    //stretch
+                    if (stretching) t = stretching(t)
+                    return colorRamp(t)
+                }
+                //scale.domain(d3.extent(cells, valueFunction))
                 return scale;
             }
         }
@@ -47,17 +54,24 @@
         }
 
         //generic function for size map
-        //valueFunction, exponent, minValue, minSizePix, maxSizeFactor
+        //valueFunction, minValue, minSizePix, maxSizeFactor, stretching
         const sizeScale = (opts) => {
             const valueFunction = opts.valueFunction
-            const exponent = opts.exponent || 0.5
             const minValue = opts.minValue || 0
             const minSizePix = opts.minSizePix || 0
             const maxSizeFactor = opts.minSizePix || 1.41
-            const scale = d3.scalePow().exponent(exponent)
+            const stretching = opts.stretching
             return (cells, r, zf) => {
-                scale.domain([minValue, d3.max(cells, valueFunction)])
-                scale.range([minSizePix * zf, r * maxSizeFactor])
+                const domain = [minValue, d3.max(cells, valueFunction)]
+                const range = [minSizePix * zf, r * maxSizeFactor]
+                const scale = t => {
+                    //scale to [0,1]
+                    t = (t - domain[0]) / (domain[1] - domain[0])
+                    //stretch
+                    if (stretching) t = stretching(t)
+                    //scale to range
+                    return range[0] + t * (range[1] - range[0])
+                }
                 return scale;
             }
         }

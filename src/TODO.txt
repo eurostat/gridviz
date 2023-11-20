@@ -1,6 +1,9 @@
 quantile classification
 style value by alpha: Document
 
+- rename expRev into log
+
+
 revamp layers, API - see lflt
 static image background layer
 extract modules ?
