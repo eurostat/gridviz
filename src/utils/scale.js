@@ -43,7 +43,7 @@ export const sizeContinuousScale = (opts) => {
     const valueFunction = opts.valueFunction
     const minValue = opts.minValue || 0
     const minSizePix = opts.minSizePix || 0
-    const maxSizeFactor = opts.minSizePix || 1.41
+    const maxSizeFactor = opts.maxSizeFactor || 1.41
     const stretching = opts.stretching
     return (cells, r, zf) => {
         const domain = [minValue, max(cells, valueFunction)]
