@@ -6,7 +6,7 @@
 //stretching functions [0,1]=>[0,1]
 
 export const powerScale = (exponent = 3) => t => Math.pow(t, exponent)
-export const powerReverseScale = (exponent = 3) => t => 1 - Math.pow(1 - t, 1 / exponent)
+export const powerInverseScale = (exponent = 3) => t => 1 - Math.pow(1 - t, 1 / exponent)
 export const exponentialScale = (base = 3) => {
     if (base == 0) return t => t
     const a = (Math.exp(base) - 1)
@@ -123,6 +123,10 @@ export const sExpRevInverse = (y, base = 3) => (Math.exp(-base * y) - 1) / (Math
  */
 
 export const sPowInverse = (y, exponent = 3) => Math.pow(y, 1 / exponent)
+
+
+
+
 
 /**
  * Inverse function of sPowRev

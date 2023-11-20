@@ -961,16 +961,14 @@ new gviz.SizeLegend({
 
 ## Stretching
 
-Most of the [Gridviz](https://github.com/eurostat/gridviz/) styling rely on a **t** parameter within [0,1], which is mapped to a visual variable such as color or size. In order to better adjust the variation of this **t** parameter to the input data distribution, one of the _stretching functions_ listed below can be used. These functions have different properties and should be chosen according to the data. The amplitude of the stretching can be adjusted with a **alpha** parameter.
+Most of [Gridviz](https://github.com/eurostat/gridviz/) styles rely on a continuous mapping from a statistical variable to a visual variable (color, size, etc.). The statistical distribution can be stretched with one of the _stretching functions_ listed below can be used. These functions have different properties and should be chosen according to the data distribution. The amplitude of the stretching can be adjusted with a parameter.
 
-| Stretching function | Alpha                                    | Description           | Inverse function   |
-| ------------------- | ---------------------------------------- | --------------------- | ------------------ |
-| **sPow**            | From 0 to Infinity. No change: 1         | Polynomial            | **sPowInverse**    |
-| **sPowRev**         | From 0 to Infinity. No change: 1         | Polynomial reverse    | **sPowRevInverse** |
-| **sExp**            | From -Infinity to Infinity. No change: 0 | Exponential           | **sExpInverse**    |
-| **sExpRev**         | From -Infinity to Infinity. No change: 0 | Exponential reverse   | **sExpRevInverse** |
-| **sCircularLow**    | From 0 (no change) to 1 (circle)         | Circular, low values  | **sCircularHigh**  |
-| **sCircularHigh**   | From 0 (no change) to 1 (circle)         | Circular, high values | **sCircularLow**   |
+| Stretching function | Description           | Stretching parameter                                    |
+| ------------------- | ---------------------------------------- | --------------------- |
+| **powerScale**            | Polynomial function            | Power exponent, from 0 to Infinity. No change: 1         |
+| **logarithmicScale**            | Exponential function           | Logarithmic base, from -Infinity to Infinity. No change: 0 |
+| **powerInverseScale**            | Polynomial inverse function    | Power exponent, from 0 to Infinity. No change: 1         |
+| **exponentialScale**         | Exponential    | Logarithmic base, from -Infinity to Infinity. No change: 0 |
 
 For more information on these functions and an overview of how they differ, see:
 

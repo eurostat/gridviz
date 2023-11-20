@@ -1,14 +1,14 @@
-quantile classification
 style value by alpha: Document
 
-- rename expRev into log
+
+V3
+stretching: transition to new functions
 
 
 revamp layers, API - see lflt
 static image background layer
 extract modules ?
 
-stretching: use new.
 
 style: spider net diagram
 style: flower - for composition
