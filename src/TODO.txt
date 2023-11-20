@@ -1,14 +1,20 @@
-stretching: transition to new functions
-
-
-
-style value by alpha: Document
-
 
 revamp layers, API - see lflt
 static image background layer
+merge geocanvas and app
+change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coords by default (!)
 extract modules ?
 
+API changes for v3:
+app -> map
+map.addLayer
+zoom factor -> zoom
+layer.addTo(map)
+
+
+stretching: transition to new functions
+
+style value by alpha: Document
 
 style: spider net diagram
 style: flower - for composition
