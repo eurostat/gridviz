@@ -2,7 +2,7 @@
 'use strict'
 
 // the application
-export { App } from './App.js'
+export { Map } from './Map.js'
 export { GeoCanvas } from './GeoCanvas.js'
 export { Style } from './Style.js'
 export { Layer } from './Layer.js'

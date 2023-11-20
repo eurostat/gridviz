@@ -103,7 +103,7 @@ export class Map {
                 if (zf < layer.minZoom) continue
 
                 //get layer dataset component
-                /** @type {import('./DatasetComponent').DatasetComponent|undefined} */
+                /** @type {import('./DatasetComponent.js').DatasetComponent|undefined} */
                 const dsc = layer.getDatasetComponent(zf)
                 if (!dsc) continue
 
@@ -246,7 +246,7 @@ export class Map {
                 x: this.cg.pixToGeoX(e.offsetX + this.tooltip.xMouseOffset),
                 y: this.cg.pixToGeoY(e.offsetY + this.tooltip.yMouseOffset),
             }
-            /** @type {{cell:import('./Dataset').Cell,html:string,resolution:number} | undefined} */
+            /** @type {{cell:import('./Dataset.js').Cell,html:string,resolution:number} | undefined} */
             const focus = this.getCellFocusInfo(mousePositionGeo)
 
             // transparent background (e.g. leaflet) 'red painting' fix
@@ -336,7 +336,7 @@ export class Map {
 
     /**
      * @param {number} marginPx
-     * @returns {import('./Dataset').Envelope}
+     * @returns {import('./Dataset.js').Envelope}
      * @public
      */
     updateExtentGeo(marginPx = 20) {
@@ -348,7 +348,7 @@ export class Map {
      * This is usefull for user interactions, to show this info where the user clicks for example.
      *
      * @param {{x:number,y:number}} posGeo
-     * @returns {{cell:import('./Dataset').Cell,html:string,resolution:number} | undefined}
+     * @returns {{cell:import('./Dataset.js').Cell,html:string,resolution:number} | undefined}
      * @protected
      */
     getCellFocusInfo(posGeo) {
@@ -364,7 +364,7 @@ export class Map {
             if (!dsc) continue
 
             //get cell at mouse position
-            /** @type {import('./Dataset').Cell|undefined} */
+            /** @type {import('./Dataset.js').Cell|undefined} */
             const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache())
             //console.log(cell, dsc.resolution)
             if (!cell) return undefined
@@ -446,8 +446,8 @@ export class Map {
      * Add a layer to the map.
      *
      * @param {Dataset} dataset The dataset of the layer
-     * @param {Array.<import('./Style').Style>} styles The styles of the layer
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string}} opts The layer options.
+     * @param {Array.<import('./Style.js').Style>} styles The styles of the layer
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset.js').Cell):string}} opts The layer options.
      * @returns {this}
      */
     addLayerFromDataset(dataset, styles, opts) {
@@ -494,7 +494,7 @@ export class Map {
      * Make a tiled grid dataset.
      *
      * @param {string} url
-     * @param {{preprocess?:function(import('./Dataset').Cell):boolean}} opts
+     * @param {{preprocess?:function(import('./Dataset.js').Cell):boolean}} opts
      * @returns {Dataset}
      */
     makeTiledGridDataset(url, opts) {
@@ -516,7 +516,7 @@ export class Map {
      *
      * @param {Array.<number>} resolutions
      * @param {function(number):string} resToURL
-     * @param {{preprocess?:function(import('./Dataset').Cell):boolean}} opts
+     * @param {{preprocess?:function(import('./Dataset.js').Cell):boolean}} opts
      * @returns {Dataset}
      */
     makeMultiScaleCSVGridDataset(resolutions, resToURL, opts) {
@@ -537,7 +537,7 @@ export class Map {
      *
      * @param {Array.<number>} resolutions
      * @param {function(number):string} resToURL
-     * @param {{preprocess?:function(import('./Dataset').Cell):boolean}} opts
+     * @param {{preprocess?:function(import('./Dataset.js').Cell):boolean}} opts
      * @returns {Dataset}
      */
     makeMultiScaleTiledGridDataset(resolutions, resToURL, opts) {
@@ -558,7 +558,7 @@ export class Map {
      *
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {Array.<import('./Style').Style>} styles The styles, ordered in drawing order.
+     * @param {Array.<import('./Style.js').Style>} styles The styles, ordered in drawing order.
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
@@ -570,8 +570,8 @@ export class Map {
     /**
      *
      * @param {string} url
-     * @param {Array.<import('./Style').Style>} styles
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string, preprocess?:function(import('./Dataset').Cell):boolean}} opts
+     * @param {Array.<import('./Style.js').Style>} styles
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset.js').Cell):string, preprocess?:function(import('./Dataset.js').Cell):boolean}} opts
      * @returns {this}
      */
     addTiledGridLayer(url, styles, opts) {
@@ -584,7 +584,7 @@ export class Map {
      *
      * @param {Array.<number>} resolutions
      * @param {function(number):string} resToURL
-     * @param {Array.<import('./Style').Style>} styles The styles, ordered in drawing order.
+     * @param {Array.<import('./Style.js').Style>} styles The styles, ordered in drawing order.
      * @param {object=} opts The parameters of the dataset and layer.
      * @returns {this}
      */
@@ -596,8 +596,8 @@ export class Map {
     /**
      * @param {Array.<number>} resolutions
      * @param {function(number):string} resToURL
-     * @param {Array.<import('./Style').Style>} styles
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset').Cell):string, preprocess?:function(import('./Dataset').Cell):boolean}} opts
+     * @param {Array.<import('./Style.js').Style>} styles
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset.js').Cell):string, preprocess?:function(import('./Dataset.js').Cell):boolean}} opts
      * @returns {this}
      */
     addMultiScaleTiledGridLayer(resolutions, resToURL, styles, opts) {

@@ -5,7 +5,7 @@
 
 // internal
 import { GridTile } from './GridTile.js'
-import { Map } from '../App.js'
+import { Map } from '../Map.js'
 import { DatasetComponent } from '../DatasetComponent.js'
 import { monitor, monitorDuration } from '../utils/Utils.js'
 
