@@ -68,7 +68,7 @@
 
             //add layer
             //add layer
-            app.addCSVGridLayer(
+            map.addCSVGridLayer(
                 //data URL
                 '../../../../assets/csv/Europe/fire_danger.csv',
                 //resolution, in CRS unit (m)
@@ -91,7 +91,7 @@
             )
 
             //add legend
-            app.layers[0].styles[0].legends.push(
+            map.layers[0].styles[0].legends.push(
                 new gviz.ColorDiscreteLegend({
                     title: 'Average annual number of days with high to extreme fire danger by weather, 2013–2022',
                     titleFontSize: '15px',

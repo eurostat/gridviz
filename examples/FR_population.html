@@ -304,7 +304,7 @@
             },
         }
 
-        app.addMultiScaleTiledGridLayer(
+        map.addMultiScaleTiledGridLayer(
             [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
             (r) =>
                 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/inc/2019/' +
@@ -355,7 +355,7 @@
             //get checked value
             const value = document.querySelector('input[name="style"]:checked').value
 
-            const lay = app.layers[0]
+            const lay = map.layers[0]
 
             //set new style
             lay.styles = sd[value].style
@@ -364,19 +364,19 @@
             lay.pixNb = sd[value].pixNb
 
             //redraw
-            app.cg.redraw()
+            map.cg.redraw()
         })
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
-            app.showLabels = this.checked
-            app.cg.redraw()
+            map.showLabels = this.checked
+            map.cg.redraw()
         })
 
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
-            app.showBoundaries = this.checked
-            app.cg.redraw()
+            map.showBoundaries = this.checked
+            map.cg.redraw()
         })
     </script>
 

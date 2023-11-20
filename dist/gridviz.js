@@ -6510,7 +6510,7 @@ class App {
     }
 
     /**
-     * Add a layer to the app.
+     * Add a layer to the map.
      *
      * @param {Dataset} dataset The dataset of the layer
      * @param {Array.<import('./Style').Style>} styles The styles of the layer
@@ -6673,7 +6673,7 @@ class App {
     }
 
     /**
-     * Add a background layer to the app.
+     * Add a background layer to the map.
      *
      * @param {object} opts
      * @returns {this}
@@ -6685,7 +6685,7 @@ class App {
     }
 
     /**
-     * Add a WMS background layer to the app.
+     * Add a WMS background layer to the map.
      *
      * @param {object} opts
      * @returns {this}
@@ -8786,7 +8786,7 @@ class Button {
         opts = opts || {}
 
         this.app = opts.app
-        this.parentNode = opts.parentNode || opts.app.container
+        this.parentNode = opts.parentNode || opts.map.container
 
         // the div element
         if (this.id) this.div = (0,d3_selection__WEBPACK_IMPORTED_MODULE_0__["default"])('#' + this.id)
@@ -8891,8 +8891,8 @@ class FullscreenButton extends _Button_js__WEBPACK_IMPORTED_MODULE_0__.Button {
         `
 
         //save initial app dimensions
-        this.defaultHeight = this.app.h
-        this.defaultWidth = this.app.w
+        this.defaultHeight = this.map.h
+        this.defaultWidth = this.map.w
 
         // event handler
         this.div.on('click', (e) => {
@@ -8920,21 +8920,21 @@ class FullscreenButton extends _Button_js__WEBPACK_IMPORTED_MODULE_0__.Button {
 
     onClickFunction(e) {
         if (this.isFullscreen) {
-            this.closeFullscreen(this.app.container)
+            this.closeFullscreen(this.map.container)
             //resize canvas to default
-            this.app.h = this.defaultHeight
-            this.app.w = this.defaultWidth
-            this.app.cg.h = this.defaultHeight
-            this.app.cg.w = this.defaultWidth
-            this.app.cg.canvas.setAttribute('width', '' + this.defaultWidth)
-            this.app.cg.canvas.setAttribute('height', '' + this.defaultHeight)
-            this.app.redraw()
+            this.map.h = this.defaultHeight
+            this.map.w = this.defaultWidth
+            this.map.cg.h = this.defaultHeight
+            this.map.cg.w = this.defaultWidth
+            this.map.cg.canvas.setAttribute('width', '' + this.defaultWidth)
+            this.map.cg.canvas.setAttribute('height', '' + this.defaultHeight)
+            this.map.redraw()
             this.isFullscreen = false
         } else {
-            this.openFullscreen(this.app.container)
+            this.openFullscreen(this.map.container)
             //resize canvas to fullscreen
-            this.app.h = window.screen.height
-            this.app.w = window.screen.width
+            this.map.h = window.screen.height
+            this.map.w = window.screen.width
             this.isFullscreen = true
         }
     }
@@ -9065,13 +9065,13 @@ class ZoomButtons extends _Button_js__WEBPACK_IMPORTED_MODULE_0__.Button {
 
     /* Zoom in */
     zoomIn(e) {
-        this.app.setZoomFactor(this.app.getZoomFactor() * (1 - this.delta)).redraw()
+        this.map.setZoomFactor(this.map.getZoomFactor() * (1 - this.delta)).redraw()
         if (this.onZoom) this.onZoom(e)
     }
 
     /* Zoom out */
     zoomOut(e) {
-        this.app.setZoomFactor(this.app.getZoomFactor() * (1 + this.delta)).redraw()
+        this.map.setZoomFactor(this.map.getZoomFactor() * (1 + this.delta)).redraw()
         if (this.onZoom) this.onZoom(e)
     }
 }
@@ -9528,8 +9528,8 @@ class TiledGrid extends _DatasetComponent_js__WEBPACK_IMPORTED_MODULE_2__.Datase
                     // 1. the dataset belongs to a layer which is visible at the current zoom level
                     let redraw = false
                     //go through the layers
-                    const zf = this.app.getZoomFactor()
-                    for (const lay of this.app.layers) {
+                    const zf = this.map.getZoomFactor()
+                    for (const lay of this.map.layers) {
                         if (!lay.visible) continue
                         if (lay.getDatasetComponent(zf) != this) continue
                         //found one layer. No need to seek more.
@@ -9541,7 +9541,7 @@ class TiledGrid extends _DatasetComponent_js__WEBPACK_IMPORTED_MODULE_2__.Datase
                     if (!redraw) return
 
                     // 2. the tile is within the view, that is its geo envelope intersects the viewer geo envelope.
-                    const env = this.app.updateExtentGeo()
+                    const env = this.map.updateExtentGeo()
                     const envT = tile_.extGeo
                     if (env.xMax <= envT.xMin) return
                     if (env.xMin >= envT.xMax) return

@@ -228,7 +228,7 @@
                 })
 
             //load dataset
-            const popDataset = app.makeMultiScaleTiledGridDataset(
+            const popDataset = map.makeMultiScaleTiledGridDataset(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => tiledGridsURL + 'population2/' + r + 'm/',
                 {
@@ -255,7 +255,7 @@
                 const style = document.querySelector('input[name="style"]:checked').value
 
                 //remove layers
-                app.layers = []
+                map.layers = []
 
                 //tooltip function
                 const tooltipFun = (c, r) =>
@@ -271,7 +271,7 @@
 
                 if (style == 'color') {
                     //add layer
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         popDataset,
                         [
                             new gviz.SquareColorWGLStyle({
@@ -292,7 +292,7 @@
                     )
 
                     //add legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorLegend({
                             title: 'Number of inhabitants',
                             width: 400,
@@ -303,7 +303,7 @@
                     )
                 } else if (style == 'pillar') {
                     //add layer
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         popDataset,
                         [
                             new gviz.PillarStyle({
@@ -322,7 +322,7 @@
                     )
                 } else if (style == 'joyplot') {
                     //add layer
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         popDataset,
                         [
                             new gviz.JoyPlotStyle({
@@ -339,7 +339,7 @@
                 }
 
                 //redraw
-                app.cg.redraw()
+                map.cg.redraw()
             }
 
             //
@@ -351,10 +351,10 @@
             //zoom
             document
                 .querySelector('#zoomin')
-                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
+                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 0.8).redraw())
             document
                 .querySelector('#zoomout')
-                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 1.2).redraw())
+                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 1.2).redraw())
 
             //initialise
             update()

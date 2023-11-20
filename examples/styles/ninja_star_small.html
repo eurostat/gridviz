@@ -23,8 +23,8 @@
             cells.push({ x: x, y: 2, v: x / (nb-1) * 100 })
         }
 
-        app.addLayerFromDataset(
-            app.makeLGridDataset(1, cells
+        map.addLayerFromDataset(
+            map.makeLGridDataset(1, cells
             ),
             [
                 new gviz.NinjaStarStyle({

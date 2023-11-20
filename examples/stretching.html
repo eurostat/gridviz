@@ -76,7 +76,7 @@
             )
 
         //update
-        const s = app.layers[0].styles[0]
+        const s = map.layers[0].styles[0]
         const update = () => {
 
             //get stretching function
@@ -100,7 +100,7 @@
             document.getElementById('alphaText').textContent = 'Stretching parameter: ' + a
 
             //redraw
-            app.cg.redraw()
+            map.cg.redraw()
         }
 
         //

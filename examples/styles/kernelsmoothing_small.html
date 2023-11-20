@@ -44,7 +44,7 @@
             const map = new gviz.Map(containerDiv).setGeoCenter({ x: 0, y: 0 }).setZoomFactor(0.02)
 
             //add layer
-            app.addCSVGridLayer(
+            map.addCSVGridLayer(
                 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/single.csv',
                 //"https://raw.githubusercontent.com/jgaffuri/tiledgrids/master/data/test/small.csv",
                 1,
@@ -73,9 +73,9 @@
             //sigma selection
             document.getElementById('sigma').oninput = function () {
                 //set sigma
-                app.layers[0].styles[0].sigma = (r, zf) => (r * +this.value) / 10
+                map.layers[0].styles[0].sigma = (r, zf) => (r * +this.value) / 10
                 //redraw
-                app.cg.redraw()
+                map.cg.redraw()
             }
         </script>
     </body>

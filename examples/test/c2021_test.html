@@ -196,7 +196,7 @@
 
 
         //prepare dataset
-        const dataset = app.makeMultiScaleTiledGridDataset(
+        const dataset = map.makeMultiScaleTiledGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             (r) =>
                 'http://localhost:1234/' +
@@ -227,7 +227,7 @@
             const layCode = document.querySelector('input[name="layer"]:checked').value
 
             //remove layers
-            app.layers = []
+            map.layers = []
 
             //formater
             //const f1 = d3.format('.1f')
@@ -235,7 +235,7 @@
             //set layer
             if (layCode === 'pop') {
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     dataset,
                     [
                         new gviz.ShapeColorSizeStyle_({
@@ -257,7 +257,7 @@
                     }
                 )
             } else if (layCode === 'sex') {
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     dataset,
                     [
                         new gviz.ShapeColorSizeStyle_({
@@ -278,7 +278,7 @@
                 )
 
             } else if (layCode === 'emp') {
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     dataset,
                     [
                         new gviz.ShapeColorSizeStyle_({
@@ -301,7 +301,7 @@
 
             } else if (layCode === 'age') {
                 const colAge = d3.interpolateSpectral
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     dataset,
                     [
                         new gviz.CompositionStyle_({
@@ -326,7 +326,7 @@
                 )
 
             } else if (layCode === 'mobility') {
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     dataset,
                     [
                         new gviz.CompositionStyle_({
@@ -349,7 +349,7 @@
                 )
 
             } else if (layCode === 'pob') {
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     dataset,
                     [
                         new gviz.CompositionStyle_({
@@ -374,7 +374,7 @@
             } else console.error('Unexpected layer code: ' + layCode)
 
             //redraw
-            app.cg.redraw()
+            map.cg.redraw()
         }
 
 
@@ -383,20 +383,20 @@
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
-            app.showLabels = this.checked
-            app.cg.redraw()
+            map.showLabels = this.checked
+            map.cg.redraw()
         })
 
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
-            app.showBoundaries = this.checked
-            app.cg.redraw()
+            map.showBoundaries = this.checked
+            map.cg.redraw()
         })
 
         // show/hide background layer
         document.querySelector('#background').addEventListener('change', function () {
-            app.showBgLayers = this.checked
-            app.cg.redraw()
+            map.showBgLayers = this.checked
+            map.cg.redraw()
         })
 
         //select layer from URL

@@ -319,16 +319,16 @@
 
         //make legend and link to styles
         const catLeg = new gviz.ColorCategoryLegend({ title: "Land cover", colCat: legData, shape: "square", })
-        app.layers[0].styles[0].legends.push(catLeg)
-        app.layers[0].styles[1].legends.push(catLeg)*/
+        map.layers[0].styles[0].legends.push(catLeg)
+        map.layers[0].styles[1].legends.push(catLeg)*/
 
             //zoom
             document
                 .querySelector('#zoomin')
-                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
+                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 0.8).redraw())
             document
                 .querySelector('#zoomout')
-                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 1.2).redraw())
+                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 1.2).redraw())
         </script>
     </body>
 </html>

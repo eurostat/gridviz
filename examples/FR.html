@@ -118,7 +118,7 @@
             for (let year of [2015, 2017, 2019]) {
 
                 //dataset on population by age
-                ds[geo].ind[year] = app.makeMultiScaleTiledGridDataset(
+                ds[geo].ind[year] = map.makeMultiScaleTiledGridDataset(
                     [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     (r) => baseURL + geo + '/ind/' + year + '/' + r + 'm/',
                     {
@@ -138,7 +138,7 @@
                 )
 
                 //dataset on household stats
-                ds[geo].men[year] = app.makeMultiScaleTiledGridDataset(
+                ds[geo].men[year] = map.makeMultiScaleTiledGridDataset(
                     [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     (r) => baseURL + geo + '/men/' + year + '/' + r + 'm/',
                     {
@@ -163,7 +163,7 @@
                 )
 
                 //dataset on housing stats
-                ds[geo].log[year] = app.makeMultiScaleTiledGridDataset(
+                ds[geo].log[year] = map.makeMultiScaleTiledGridDataset(
                     [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     (r) => baseURL + geo + '/log/' + year + '/' + r + 'm/',
                     {
@@ -177,7 +177,7 @@
                 )
 
                 //dataset on total population and income
-                ds[geo].inc[year] = app.makeMultiScaleTiledGridDataset(
+                ds[geo].inc[year] = map.makeMultiScaleTiledGridDataset(
                     [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     (r) => baseURL + geo + '/inc/' + year + '/' + r + 'm/',
                     {
@@ -198,7 +198,7 @@
             const geo = document.querySelector('#geo').value
 
             //remove layers
-            app.layers = []
+            map.layers = []
 
             //formater
             const f1 = d3.format('.1f')
@@ -206,7 +206,7 @@
             //set layer
             if (layCode === 'pop') {
                 //population
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].inc[year],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -235,7 +235,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Nombre d'individus",
                         colorRamp: d3.interpolateYlOrRd,
@@ -245,7 +245,7 @@
             } else if (layCode === 'popAge') {
                 //population by age
                 const col = d3.interpolateSpectral
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].ind[year],
                     [
                         new gviz.CompositionStyle({
@@ -313,7 +313,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Age',
                         colCat: [
@@ -333,7 +333,7 @@
             } else if (layCode === 'popAge3') {
                 //population by age (3 age groups)
                 const col = d3.interpolateSpectral
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].ind[year],
                     [
                         new gviz.CompositionStyle({
@@ -372,7 +372,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Age',
                         colCat: [
@@ -384,7 +384,7 @@
                 )
             } else if (layCode === 'ageR') {
                 //young VS elderly
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].ind[year],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -411,14 +411,14 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         shape: 'circle',
                         labelUnitText: 'individus',
                         fillColor: '#ccc',
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: 'Equilibre jeunes/âgés',
                         ticks: 2,
@@ -429,7 +429,7 @@
                 )
             } else if (layCode === 'income') {
                 //income
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].inc[year],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -454,12 +454,12 @@
                     }
                 )
                 //legend
-                //app.layers[0].styles[0].legends.push(
+                //map.layers[0].styles[0].legends.push(
                 //    new gviz.ColorLegend({ title: "Revenu par mois et par 'individu'", colorRamp: d3.interpolateSpectral, fun: (t, r, s) => t })
                 //)
             } else if (layCode === 'poverty') {
                 //poverty
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -490,10 +490,10 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: 'Part des ménages pauvres (%)',
                         colorRamp: d3.interpolateYlOrRd,
@@ -502,7 +502,7 @@
                 )
             } else if (layCode === 'men_size') {
                 //houshold size
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].men[year],
                     [
                         new gviz.CompositionStyle({
@@ -537,10 +537,10 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Taille des ménages',
                         colCat: [
@@ -552,7 +552,7 @@
                 )
             } else if (layCode === 'men_mono') {
                 //single-parent
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -582,10 +582,10 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: 'Part des ménages monoparentaux (%)',
                         colorRamp: d3.interpolateYlOrRd,
@@ -594,7 +594,7 @@
                 )
             } else if (layCode === 'men_owner') {
                 //owners
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -623,10 +623,10 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: 'Part des ménages propriétaires (%)',
                         colorRamp: d3.interpolatePuBuGn,
@@ -635,7 +635,7 @@
                 )
             } else if (layCode === 'men_house_surf') {
                 //housing surface per houshold
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].men[year],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -660,7 +660,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: 'Surface moyenne des logements de ménages (m²)',
                         colorRamp: d3.interpolateSpectral,
@@ -669,7 +669,7 @@
                 )
             } else if (layCode === 'men_house_collective') {
                 //housing type: house/collective
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].men[year],
                     [
                         new gviz.CompositionStyle({
@@ -700,10 +700,10 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({ shape: 'square', labelUnitText: 'ménages', fillColor: '#ccc' })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Type de logement',
                         colCat: [
@@ -715,7 +715,7 @@
             } else if (layCode === 'log_age') {
                 //housing age
                 const col = d3.interpolateViridis
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].log[year],
                     [
                         new gviz.CompositionStyle({
@@ -761,14 +761,14 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         shape: 'square',
                         labelUnitText: 'logements',
                         fillColor: '#ccc',
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Année de construction',
                         colCat: [
@@ -782,7 +782,7 @@
                 )
             } else if (layCode === 'log_soc_nb') {
                 //social housing
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].log[year],
                     [
                         new gviz.CompositionStyle({
@@ -816,14 +816,14 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         shape: 'circle',
                         labelUnitText: 'logements',
                         fillColor: '#fff',
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Logement social',
                         colCat: [
@@ -834,7 +834,7 @@
                 )
             } else if (layCode === 'log_soc_per') {
                 //social housing percentage
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds[geo].log[year],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -857,7 +857,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: 'Part des logements sociaux (%)',
                         colorRamp: d3.interpolatePuBuGn,
@@ -867,7 +867,7 @@
             } else console.error('Unexpected layer code: ' + layCode)
 
             //redraw
-            app.cg.redraw()
+            map.cg.redraw()
         }
 
 
@@ -877,15 +877,15 @@
             const geo = document.querySelector('#geo').value
 
             //clean layers
-            app.bgLayers = []
-            app.labelLayer = undefined
-            app.boundaryLayer = undefined
+            map.bgLayers = []
+            map.labelLayer = undefined
+            map.boundaryLayer = undefined
 
             //set app parameters depending on the geographical selection
 
             //metropolitan france
             if (geo == "met") {
-                app.setGeoCenter({ x: 3760000, y: 2750000 }) //{ x: 3763437, y: 2891045 })
+                map.setGeoCenter({ x: 3760000, y: 2750000 }) //{ x: 3763437, y: 2891045 })
                     .setZoomFactor(300)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
                     .setLabelLayer(gviz_es.getEuronymeLabelLayer('FR', '20'))
@@ -906,7 +906,7 @@
 
             //reunion
             else if (geo == "reun") {
-                app.setGeoCenter({ x: 350000, y: 7660000 })
+                map.setGeoCenter({ x: 350000, y: 7660000 })
                     .setZoomFactor(75)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" }))
                     .setLabelLayer(gviz_es.getEuronymeLabelLayer('RE', '20', {
@@ -922,7 +922,7 @@
 
             //martinique
             else if (geo == "mart") {
-                app.setGeoCenter({ x: 710000, y: 1620000 })
+                map.setGeoCenter({ x: 710000, y: 1620000 })
                     .setZoomFactor(75)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "MQ", crs: "32620", scale: "01M" }))
                     .setLabelLayer(gviz_es.getEuronymeLabelLayer('MQ', '20', {
@@ -949,20 +949,20 @@
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
-            app.showLabels = this.checked
-            app.cg.redraw()
+            map.showLabels = this.checked
+            map.cg.redraw()
         })
 
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
-            app.showBoundaries = this.checked
-            app.cg.redraw()
+            map.showBoundaries = this.checked
+            map.cg.redraw()
         })
 
         // show/hide background
         document.querySelector('#background').addEventListener('change', function () {
-            app.showBgLayers = this.checked
-            app.cg.redraw()
+            map.showBgLayers = this.checked
+            map.cg.redraw()
         })
 
         //select layer from URL
@@ -977,7 +977,7 @@
 
         //initialise
         updateGeo()
-        app.setViewFromURL()
+        map.setViewFromURL()
 
     </script>
 

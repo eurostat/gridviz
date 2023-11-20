@@ -117,7 +117,7 @@
 
         //generic function to make multi-resolution dataset for Norway
         const makeDataset = (code, short, preprocess) => {
-            return app.makeMultiScaleTiledGridDataset(
+            return map.makeMultiScaleTiledGridDataset(
                 short ? [1000, 2000, 5000, 10000, 20000, 50000, 100000] : [250, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => baseURL + code + 'csv/' + r + 'm/',
                 { preprocess: preprocess }
@@ -152,7 +152,7 @@
             const layCode = document.querySelector('input[name="layer"]:checked').value
 
             //remove layers
-            app.layers = []
+            map.layers = []
 
             //formater
             //const f1 = d3.format('.1f')
@@ -164,7 +164,7 @@
                 const y = document.querySelector('#year').value
 
                 //add layer
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     //set dataset: population dataset on year y
                     ds["pop" + y],
                     [
@@ -186,7 +186,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Population",
                         colorRamp: d3.interpolateYlOrRd,
@@ -206,7 +206,7 @@
                 const colR = d3.interpolateYlOrRd
                 const nb = 5
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     //set dataset: population dataset on year y
                     ds["pop" + y],
                     [
@@ -238,7 +238,7 @@
                 )
 
                 //legend
-                app.layers[0].styles[0].styles[0].legends.push(
+                map.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: 'Population',
                         colorRamp: (t) => colR(Math.floor(t * nb) / nb),
@@ -254,7 +254,7 @@
                 //get selected year
                 const y = document.querySelector('#year').value
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds["popf" + y],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -286,10 +286,10 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: 'Men / women difference',
                         ticks: 3,
@@ -313,7 +313,7 @@
                 const y = document.querySelector('#year').value
 
                 //age
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds["popf" + y],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -351,7 +351,7 @@
                 const ts = []; for (let i = 2002; i <= 2022; i++) ts.push("y" + i)
 
                 //add layer
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     //use dataset on population time series
                     ds.popTS,
                     //define style
@@ -430,7 +430,7 @@
                     }
                 )
 
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SegmentWidthLegend({
                         title: "Population (2018)",
                         labelUnitText: 'inhabitants',
@@ -442,7 +442,7 @@
             } else console.error('Unexpected layer code: ' + layCode)
 
             //redraw
-            app.cg.redraw()
+            map.cg.redraw()
         }
 
 
@@ -455,14 +455,14 @@
 
         // show/hide labels
         document.getElementById('label').addEventListener('change', function () {
-            app.showLabels = this.checked
-            app.cg.redraw()
+            map.showLabels = this.checked
+            map.cg.redraw()
         })
 
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
-            app.showBoundaries = this.checked
-            app.cg.redraw()
+            map.showBoundaries = this.checked
+            map.cg.redraw()
         })
 
         //select layer from URL

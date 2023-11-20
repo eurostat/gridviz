@@ -136,7 +136,7 @@
         }
 
         const getDataset = (geo) =>
-            app.makeMultiScaleTiledGridDataset(
+            map.makeMultiScaleTiledGridDataset(
                 [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000],
                 (r) =>
                     "https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/" + geo + "/ts_ind/" +
@@ -179,7 +179,7 @@
             const geo = document.querySelector('#geo').value
 
             //remove layers
-            app.layers = []
+            map.layers = []
 
             //tooltip function: for total population
             const tooltipFun = (c, r) =>
@@ -208,14 +208,14 @@
             //+ "<br>" + c["p" + y1 + "_" + y2]
 
             //set default background filter
-            for (let bgl of app.bgLayers) bgl.filterColor = (zf) => zf > 50 ? '#ffffff60' : 'none'
-            app.setBackgroundColor("white")
+            for (let bgl of map.bgLayers) bgl.filterColor = (zf) => zf > 50 ? '#ffffff60' : 'none'
+            map.setBackgroundColor("white")
 
             if (layCode == 'color') {
                 const colR = d3.interpolateOrRd
 
                 //add layer
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     popDataset[geo],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -238,7 +238,7 @@
                 )
 
                 //add legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Nombre d'habitants",
                         width: 400,
@@ -251,11 +251,11 @@
                 const colR = d3.interpolateMagma
 
                 //set dark background filter color
-                for (let bgl of app.bgLayers) bgl.filterColor = (zf) => '#000000c0'
-                app.setBackgroundColor("black")
+                for (let bgl of map.bgLayers) bgl.filterColor = (zf) => '#000000c0'
+                map.setBackgroundColor("black")
 
                 //add layer
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     popDataset[geo],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -278,7 +278,7 @@
                 )
 
                 //add legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Nombre d'habitants",
                         width: 400,
@@ -289,7 +289,7 @@
                 )
             } else if (layCode == 'size') {
                 //add layer
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -308,7 +308,7 @@
                 )
 
                 //add legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         title: "Nombre d'habitants",
                         exaggerationFactor: 0.8,
@@ -316,14 +316,14 @@
                         fillColor: col,
                     }).style('padding', '0px 5px')
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         exaggerationFactor: 0.25,
                         shape: 'circle',
                         fillColor: col,
                     }).style('padding', '0px 5px')
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         exaggerationFactor: 0.02,
                         shape: 'circle',
@@ -332,7 +332,7 @@
                 )
             } else if (layCode == 'dots') {
                 //add layer
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     popDataset[geo],
                     [
                         new gviz.DotDensityStyle({
@@ -349,7 +349,7 @@
                 )
             } else if (layCode == 'pillar') {
                 //add layer
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     popDataset[geo],
                     [
                         new gviz.PillarStyle({
@@ -368,7 +368,7 @@
                 )
             } else if (layCode == 'joyplot') {
                 //add layer
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     popDataset[geo],
                     [
                         new gviz.JoyPlotStyle({
@@ -390,7 +390,7 @@
                 const colR = d3.interpolateOrRd
 
                 //add layer
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     popDataset[geo],
                     [
                         new gviz_sm.KernelSmoothingStyle({
@@ -430,7 +430,7 @@
                 )
 
                 //legend
-                app.layers[0].styles[0].styles[0].legends.push(
+                map.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Nombre d'habitants",
                         colorRamp: (t) => colR(Math.floor(t * nb) / nb),
@@ -447,7 +447,7 @@
             } else if (layCode == 'colorCh') {
                 const streC = 0.22
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -475,7 +475,7 @@
                 )
 
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Changement de population de " + y1 + " à " + y2 + ", en nombre d'habitants",
                         ticks: 7,
@@ -500,7 +500,7 @@
                 const sigma = document.querySelector('#sigmaCCH').value
 
                 //add layer
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     popDataset[geo],
                     [
                         new gviz_sm.KernelSmoothingStyle({
@@ -553,7 +553,7 @@
                 )
 
                 //legend
-                app.layers[0].styles[0].styles[0].legends.push(
+                map.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Changement de population de " + y1 + " à " + y2,
                         width: 300,
@@ -564,7 +564,7 @@
                     })
                 )
             } else if (layCode == 'sizeCh') {
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -586,7 +586,7 @@
                 )
 
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         title: "Changement de population " + y1 + "-" + y2,
                         exaggerationFactor: 0.9,
@@ -595,7 +595,7 @@
                         fillColor: 'gray',
                     }).style('padding', '0px 5px')
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         exaggerationFactor: 0.2,
                         shape: 'circle',
@@ -603,7 +603,7 @@
                         fillColor: 'gray',
                     }).style('padding', '0px 5px')
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         exaggerationFactor: 0.01,
                         shape: 'circle',
@@ -618,12 +618,12 @@
                         ['#4288b5', 'Baisse'],
                     ],
                 })
-                app.layers[0].styles[0].legends.push(lgCat)
+                map.layers[0].styles[0].legends.push(lgCat)
             } else if (layCode == 'segmentCh') {
                 const maxAngle = 60
                 const per = "p" + y1 + "_" + y2
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     popDataset[geo],
                     [
                         new gviz.SegmentStyle({
@@ -649,14 +649,14 @@
 
                 //legend
 
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SegmentWidthLegend({
                         title: 'Population en ' + y2,
                         labelUnitText: 'hab.',
                     })
                 )
 
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SegmentOrientationLegend({
                         title: "Changement de population " + y1 + "-" + y2,
                         labelUnitText: 'Forte hausse',
@@ -664,28 +664,28 @@
                         orientation: 60,
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SegmentOrientationLegend({
                         labelUnitText: 'Faible hausse',
                         color: '#d13c4b',
                         orientation: 30,
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SegmentOrientationLegend({
                         labelUnitText: 'Stabilité (<1%)',
                         color: 'gray',
                         orientation: 0,
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SegmentOrientationLegend({
                         labelUnitText: 'Faible baisse',
                         color: '#4288b5',
                         orientation: -30,
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SegmentOrientationLegend({
                         labelUnitText: 'Forte baisse',
                         color: '#4288b5',
@@ -697,7 +697,7 @@
                 const ts = ["ind2015", "ind2017", "ind2019"]
 
                 //add layer
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     popDataset[geo],
                     [
                         new gviz.TimeSeriesStyle({
@@ -773,7 +773,7 @@
                     }
                 )
 
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SegmentWidthLegend({
                         title: "Population en 2019",
                         labelUnitText: 'hab.',
@@ -786,7 +786,7 @@
             } else console.error('Unexpected layer code: ' + layCode)
 
             //redraw
-            app.cg.redraw()
+            map.cg.redraw()
         }
 
 
@@ -797,15 +797,15 @@
             const geo = document.querySelector('#geo').value
 
             //clean layers
-            app.bgLayers = []
-            app.labelLayer = undefined
-            app.boundaryLayer = undefined
+            map.bgLayers = []
+            map.labelLayer = undefined
+            map.boundaryLayer = undefined
 
             //set app parameters depending on the geographical selection
 
             //metropolitan france
             if (geo == "met") {
-                app.setGeoCenter({ x: 3760000, y: 2650000 }) //{ x: 3763437, y: 2891045 })
+                map.setGeoCenter({ x: 3760000, y: 2650000 }) //{ x: 3763437, y: 2891045 })
                     .setZoomFactor(900)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
                     .setLabelLayer(gviz_es.getEuronymeLabelLayer('FR', '20'))
@@ -826,7 +826,7 @@
 
             //reunion
             else if (geo == "reun") {
-                app.setGeoCenter({ x: 350000, y: 7660000 })
+                map.setGeoCenter({ x: 350000, y: 7660000 })
                     .setZoomFactor(75)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" }))
                     .setLabelLayer(gviz_es.getEuronymeLabelLayer('RE', '20', {
@@ -842,7 +842,7 @@
 
             //martinique
             else if (geo == "mart") {
-                app.setGeoCenter({ x: 710000, y: 1620000 })
+                map.setGeoCenter({ x: 710000, y: 1620000 })
                     .setZoomFactor(75)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "MQ", crs: "32620", scale: "01M" }))
                     .setLabelLayer(gviz_es.getEuronymeLabelLayer('MQ', '20', {
@@ -873,20 +873,20 @@
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
-            app.showLabels = this.checked
-            app.cg.redraw()
+            map.showLabels = this.checked
+            map.cg.redraw()
         })
 
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
-            app.showBoundaries = this.checked
-            app.cg.redraw()
+            map.showBoundaries = this.checked
+            map.cg.redraw()
         })
 
         // show/hide background
         document.querySelector('#background').addEventListener('change', function () {
-            app.showBgLayers = this.checked
-            app.cg.redraw()
+            map.showBgLayers = this.checked
+            map.cg.redraw()
         })
 
         //select layer from URL
@@ -901,7 +901,7 @@
 
         //initialise
         updateGeo()
-        app.setViewFromURL()
+        map.setViewFromURL()
 
     </script>
 

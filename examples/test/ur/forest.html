@@ -256,7 +256,7 @@
                 //get style selection
                 const style = document.querySelector('input[name="style"]:checked').value
 
-                const lay = app.layers[0]
+                const lay = map.layers[0]
 
                 if (style == 'c') {
                     //set style
@@ -340,7 +340,7 @@
                 }
 
                 //redraw
-                app.cg.redraw()
+                map.cg.redraw()
             }
 
             //
@@ -351,10 +351,10 @@
             //zoom
             document
                 .querySelector('#zoomin')
-                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
+                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 0.8).redraw())
             document
                 .querySelector('#zoomout')
-                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 1.2).redraw())
+                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 1.2).redraw())
 
             update()
         </script>

@@ -20,7 +20,7 @@ export class Button {
         opts = opts || {}
 
         this.app = opts.app
-        this.parentNode = opts.parentNode || opts.app.container
+        this.parentNode = opts.parentNode || opts.map.container
 
         // the div element
         if (this.id) this.div = select('#' + this.id)

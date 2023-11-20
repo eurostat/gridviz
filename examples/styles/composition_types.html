@@ -76,7 +76,7 @@
             )
 
         //type selection
-        const s = app.layers[0].styles[0]
+        const s = map.layers[0].styles[0]
         document.getElementById('type').addEventListener('change', function () {
             const v = this.value
 
@@ -107,7 +107,7 @@
             else s.stripesOrientation = () => or
 
             //redraw
-            app.cg.redraw()
+            map.cg.redraw()
         })
 
         //size
@@ -117,7 +117,7 @@
                 ? (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.13, 0)
                 : (s.size = (v, r, s, zf) => r)
             //redraw
-            app.cg.redraw()
+            map.cg.redraw()
         })
     </script>
 </body>

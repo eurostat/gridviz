@@ -213,7 +213,7 @@
                 })
 
             //dataset
-            const ds = app.makeMultiScaleTiledGridDataset(
+            const ds = map.makeMultiScaleTiledGridDataset(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => tiledGridsURL + 'degurba/' + r + 'm/',
                 {
@@ -247,7 +247,7 @@
             )
 
             //population layer
-            app.addLayerFromDataset(
+            map.addLayerFromDataset(
                 ds,
                 [
                     new gviz.ShapeColorSizeStyle({
@@ -264,7 +264,7 @@
             )
 
             //degurba layer
-            app.addLayerFromDataset(
+            map.addLayerFromDataset(
                 ds,
                 [
                     new gviz.CompositionStyle({
@@ -340,7 +340,7 @@
             )
 
             //population legend
-            app.layers[0].styles[0].legends.push(
+            map.layers[0].styles[0].legends.push(
                 new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhabitants', fillColor: '#666d' })
             )
 
@@ -363,16 +363,16 @@
                 ],
                 shape: 'square',
             })
-            app.layers[1].styles[0].legends.push(catLeg)
-            app.layers[1].styles[1].legends.push(catLeg)
+            map.layers[1].styles[0].legends.push(catLeg)
+            map.layers[1].styles[1].legends.push(catLeg)
 
             //zoom
             document
                 .querySelector('#zoomin')
-                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
+                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 0.8).redraw())
             document
                 .querySelector('#zoomout')
-                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 1.2).redraw())
+                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 1.2).redraw())
         </script>
     </body>
 </html>

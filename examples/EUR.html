@@ -136,7 +136,7 @@
             else if (y1_ && !y2_) c[k] = -y1_
             else c[k] = +y2_ - +y1_
         }
-        ds.pop = app.makeMultiScaleTiledGridDataset(
+        ds.pop = map.makeMultiScaleTiledGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             (r) =>
                 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
@@ -159,7 +159,7 @@
         //define class breaks
         const breaksH = [5, 10, 15, 20, 30, 45, 60, 90]
         const breaksE = [2, 4, 6, 8, 10, 15, 20, 30]
-        ds.acc = app.makeMultiScaleTiledGridDataset(
+        ds.acc = map.makeMultiScaleTiledGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             (r) =>
                 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/accessibility/' +
@@ -182,7 +182,7 @@
         )
 
         //road transp perf dataset
-        ds.rtp = app.makeMultiScaleTiledGridDataset(
+        ds.rtp = map.makeMultiScaleTiledGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             (r) =>
                 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/road_transp_perf/' +
@@ -191,7 +191,7 @@
         )
 
         //degurba dataset
-        ds.degurba = app.makeMultiScaleTiledGridDataset(
+        ds.degurba = map.makeMultiScaleTiledGridDataset(
             [1000, 2000, 5000, 10000, 20000, 50000, 100000],
             (r) =>
                 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/degurba/' +
@@ -226,12 +226,12 @@
             const layCode = document.querySelector('input[name="layer"]:checked').value
 
             //remove layers
-            app.layers = []
+            map.layers = []
 
             //select layer and style
             if (layCode === 'y2006' || layCode === 'y2011' || layCode === 'y2018' || layCode === 'y2021') {
                 const layCode_ = "TOT_P_" + layCode.replace('y', '')
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.pop,
                     [
                         new gviz.SquareColorWGLStyle({
@@ -255,7 +255,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: 'Number of inhabitants',
                         ticks: 5,
@@ -270,7 +270,7 @@
                 if (yIni != yFin) {
                     const layCode_ = 'd' + yIni + '_' + yFin
 
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.pop,
                         [
                             new gviz.ShapeColorSizeStyle({
@@ -301,7 +301,7 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorLegend({
                             title: 'Population change',
                             ticks: 5,
@@ -317,7 +317,7 @@
 
                 //urbanisation
             } else if (layCode === 'degurba') {
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.pop,
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -344,7 +344,7 @@
                     NA: 'gray',
                 }
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.degurba,
                     [
                         new gviz.CompositionStyle({
@@ -438,7 +438,7 @@
                 )
 
                 //population legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'persons', fillColor: '#666d' })
                 )
 
@@ -461,12 +461,12 @@
                     ],
                     shape: 'square',
                 })
-                app.layers[1].styles[0].legends.push(catLeg)
-                app.layers[1].styles[1].legends.push(catLeg)
+                map.layers[1].styles[0].legends.push(catLeg)
+                map.layers[1].styles[1].legends.push(catLeg)
 
                 //road transport performence
             } else if (layCode === 'rtp') {
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.rtp,
                     [
                         new gviz.SquareColorWGLStyle({
@@ -490,7 +490,7 @@
                 )
 
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: 'Road transport performance',
                         width: 300,
@@ -543,7 +543,7 @@
                     })
                 )
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.acc,
                     [
                         new gviz.SquareColorCatWGLStyle({
@@ -558,14 +558,14 @@
                         cellInfoHTML: cHTML,
                     }
                 )
-                app.addLayerFromDataset(ds.acc, [popStyle], {
+                map.addLayerFromDataset(ds.acc, [popStyle], {
                     pixNb: 1.5,
                     maxZoom: 300,
                     cellInfoHTML: cHTML,
                 })
 
                 //legends
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorDiscreteLegend({
                         title: 'Travel time to nearest health service, in minutes',
                         colors: colorsH_,
@@ -573,7 +573,7 @@
                         width: 300,
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         colCat: [[colorsH.NA, 'No data']],
                         shape: 'square',
@@ -621,7 +621,7 @@
                     })
                 )
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.acc,
                     [
                         new gviz.SquareColorCatWGLStyle({
@@ -636,14 +636,14 @@
                         cellInfoHTML: cHTML,
                     }
                 )
-                app.addLayerFromDataset(ds.acc, [popStyle], {
+                map.addLayerFromDataset(ds.acc, [popStyle], {
                     pixNb: 1.5,
                     maxZoom: 300,
                     cellInfoHTML: cHTML,
                 })
 
                 //legends
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorDiscreteLegend({
                         title: 'Travel time to nearest primary education service, in minutes',
                         colors: colorsE_,
@@ -651,7 +651,7 @@
                         width: 300,
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         colCat: [[colorsE.NA, 'No data']],
                         shape: 'square',
@@ -663,7 +663,7 @@
             }
 
             //redraw
-            app.cg.redraw()
+            map.cg.redraw()
         }
 
         //layer selection change
@@ -688,14 +688,14 @@
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
-            app.showLabels = this.checked
-            app.cg.redraw()
+            map.showLabels = this.checked
+            map.cg.redraw()
         })
 
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
-            app.showBoundaries = this.checked
-            app.cg.redraw()
+            map.showBoundaries = this.checked
+            map.cg.redraw()
         })
 
         //select layer from URL

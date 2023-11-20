@@ -108,7 +108,7 @@
             const ds = {}
 
             //elevation dataset
-            ds.el = app.makeMultiScaleTiledGridDataset(
+            ds.el = map.makeMultiScaleTiledGridDataset(
                 [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) =>
                     'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation/' +
@@ -117,14 +117,14 @@
             )
 
             //land cover dataset
-            ds.lc = app.makeMultiScaleTiledGridDataset(
+            ds.lc = map.makeMultiScaleTiledGridDataset(
                 [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) =>
                     'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/' + r + 'm/'
             )
 
             //population
-            ds.pop = app.makeMultiScaleTiledGridDataset(
+            ds.pop = map.makeMultiScaleTiledGridDataset(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) =>
                     'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
@@ -144,7 +144,7 @@
                 const layCode = document.querySelector('input[name="layer"]:checked').value
 
                 //remove layers
-                app.layers = []
+                map.layers = []
 
                 //elevation
                 if (layCode === 'el') {
@@ -159,7 +159,7 @@
                     ])
                     for (let t = 0; t <= 1; t += 1 / 10) colors.push(colFun(t))
 
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.el,
                         gviz.LegoStyle.get('elevation', {
                             colors: colors,
@@ -172,7 +172,7 @@
                     )
 
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorLegend({
                             title: 'Elevation (m)',
                             ticks: 5,
@@ -280,7 +280,7 @@
                         48: 'No data',
                     }
 
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.lc,
                         gviz.LegoStyle.getCat('clc', {
                             color: clcColors,
@@ -293,7 +293,7 @@
                 } else if (layCode === 'pop') {
                     //population
 
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.pop,
                         gviz.LegoStyle.get('TOT_P_2021', {
                             color: d3.interpolateOrRd,
@@ -309,7 +309,7 @@
                     )
 
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorLegend({
                             title: 'Number of inhabitants',
                             ticks: 5,
@@ -324,7 +324,7 @@
                 }
 
                 //redraw
-                app.cg.redraw()
+                map.cg.redraw()
             }
 
             //layer selector
@@ -332,14 +332,14 @@
 
             // show/hide labels
             document.querySelector('#label').addEventListener('change', function () {
-                app.showLabels = this.checked
-                app.cg.redraw()
+                map.showLabels = this.checked
+                map.cg.redraw()
             })
 
             // show/hide boundaries
             document.querySelector('#boundary').addEventListener('change', function () {
-                app.showBoundaries = this.checked
-                app.cg.redraw()
+                map.showBoundaries = this.checked
+                map.cg.redraw()
             })
 
             //select layer from URL

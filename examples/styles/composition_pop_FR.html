@@ -147,7 +147,7 @@
         })
         s.size_ = (v, r, s, zf) => r - 1.5 * zf
 
-        app.addMultiScaleTiledGridLayer(
+        map.addMultiScaleTiledGridLayer(
             [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
             (r) =>
                 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2019/' +
@@ -248,13 +248,13 @@
 
         const updateStyle = () => {
             const ssel = getStyle()
-            app.layers[0].styles = [ssel]
+            map.layers[0].styles = [ssel]
         }
 
         //combo list
         document.querySelector('#style').addEventListener('change', function () {
             updateStyle()
-            app.cg.redraw()
+            map.cg.redraw()
         })
 
         // size adaptation
@@ -266,7 +266,7 @@
             }
             swap(s, 'size')
             updateStyle()
-            app.cg.redraw()
+            map.cg.redraw()
         })
 
         // aggregation
@@ -277,19 +277,19 @@
             //update legend
             s.legends = [new gviz.ColorCategoryLegend(getLegendOpts())]
 
-            app.cg.redraw()
+            map.cg.redraw()
         })
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
-            app.showLabels = this.checked
-            app.cg.redraw()
+            map.showLabels = this.checked
+            map.cg.redraw()
         })
 
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
-            app.showBoundaries = this.checked
-            app.cg.redraw()
+            map.showBoundaries = this.checked
+            map.cg.redraw()
         })
     </script>
 

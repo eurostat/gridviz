@@ -72,17 +72,17 @@
         //orientation selection
         document.getElementById('orientation').oninput = function () {
             //set orientation
-            app.layers[0].styles[0].angle = this.value
+            map.layers[0].styles[0].angle = this.value
             //redraw
-            app.cg.redraw()
+            map.cg.redraw()
         }
 
         //height exageration selection
         document.getElementById('exa').oninput = function () {
             //set orientation
-            app.layers[0].styles[0].height = (v, r, s, zf) => this.value * r * gviz.sExpRev(v / s.max, -7, 0)
+            map.layers[0].styles[0].height = (v, r, s, zf) => this.value * r * gviz.sExpRev(v / s.max, -7, 0)
             //redraw
-            app.cg.redraw()
+            map.cg.redraw()
         }
 
     </script>

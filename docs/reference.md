@@ -287,7 +287,7 @@ To manage creation of datasets and their possible reuse accross different layers
 
 | Method                                           | Arguments | Description                            |
 | ------------------------------------------------ | --------- | -------------------------------------- |
-| _app_.**addLayerFromDataset**([args])            | -         | Add a layer to the app.                |
+| _app_.**addLayerFromDataset**([args])            | -         | Add a layer to the map.                |
 | _app_.**makeCSVGridDataset**([args])             | -         | Make a CSV grid dataset.               |
 | _app_.**makeTiledGridDataset**([args])           | -         | Make a tiled grid dataset.             |
 | _app_.**makeMultiScaleCSVGridDataset**([args])   | -         | Make a multi scale CSV grid dataset.   |
@@ -854,7 +854,7 @@ Each layer style can have an array of legends.
 To add a legend, simply push it to the corresponding legends array of that style, for example:
 
 ```javascript
-app.layers[0].styles[0].legends.push(
+map.layers[0].styles[0].legends.push(
     new gviz.SizeLegend({
         title: 'Number of inhabitants',
         exaggerationFactor: 0.8,
@@ -1227,7 +1227,7 @@ let gridvizLayer = new L.GridvizLayer(AppOptions)
 gridvizLayer.addTo(map)
 
 //then customize it as you wish by using the gridviz app attached to our GridvizLayer...
-gridvizLayer.app.addMultiScaleTiledGridLayer(etc)
+gridvizLayer.map.addMultiScaleTiledGridLayer(etc)
 ```
 
 ## Alright?

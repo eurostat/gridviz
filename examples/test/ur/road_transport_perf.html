@@ -186,7 +186,7 @@
                 })
 
             //dataset
-            const ds = app.makeMultiScaleTiledGridDataset(
+            const ds = map.makeMultiScaleTiledGridDataset(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => tiledGridsURL + 'road_transp_perf/' + r + 'm/',
                 {
@@ -208,7 +208,7 @@
             ttFun = (c) => '<b>' + c.rp + '</b> road transport performance'
 
             //road transport performance layer
-            app.addLayerFromDataset(
+            map.addLayerFromDataset(
                 ds,
                 [
                     new gviz.SquareColorWGLStyle({
@@ -230,7 +230,7 @@
             )
 
             //population layer
-            app.addLayerFromDataset(
+            map.addLayerFromDataset(
                 ds,
                 [
                     new gviz.ShapeColorSizeStyle({
@@ -251,7 +251,7 @@
             )
 
             //perf legend
-            app.layers[0].styles[0].legends.push(
+            map.layers[0].styles[0].legends.push(
                 new gviz.ColorLegend({
                     title: 'Road transport performance',
                     width: 200,
@@ -263,17 +263,17 @@
             )
 
             //population legend
-            app.layers[1].styles[0].legends.push(
+            map.layers[1].styles[0].legends.push(
                 new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhabitants', fillColor: '#666d' })
             )
 
             //zoom
             document
                 .querySelector('#zoomin')
-                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
+                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 0.8).redraw())
             document
                 .querySelector('#zoomout')
-                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 1.2).redraw())
+                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 1.2).redraw())
         </script>
     </body>
 </html>

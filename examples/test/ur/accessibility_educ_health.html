@@ -236,7 +236,7 @@
             colorsE.NA = '#0002'
 
             //accessibility dataset
-            ds = app.makeMultiScaleTiledGridDataset(
+            ds = map.makeMultiScaleTiledGridDataset(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => tiledGridsURL + 'accessibility/' + r + 'm/',
                 {
@@ -281,7 +281,7 @@
                 const serv = document.querySelector('input[name="serv"]:checked').value
 
                 //remove layers
-                app.layers = []
+                map.layers = []
 
                 if (serv == 'health') {
                     const cHTML = (c) => {
@@ -298,7 +298,7 @@
                         )
                     }
 
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds,
                         [
                             new gviz.SquareColorCatWGLStyle({
@@ -312,14 +312,14 @@
                             cellInfoHTML: cHTML,
                         }
                     )
-                    app.addLayerFromDataset(ds, [popStyle], {
+                    map.addLayerFromDataset(ds, [popStyle], {
                         pixNb: 1.5,
                         maxZoom: 300,
                         cellInfoHTML: cHTML,
                     })
 
                     //legends
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorDiscreteLegend({
                             title: 'Travel time to nearest health service, in minutes',
                             colors: colorsH_,
@@ -327,7 +327,7 @@
                             width: 300,
                         })
                     )
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             colCat: [[colorsH.NA, 'No data']],
                             shape: 'square',
@@ -348,7 +348,7 @@
                         )
                     }
 
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds,
                         [
                             new gviz.SquareColorCatWGLStyle({
@@ -362,14 +362,14 @@
                             cellInfoHTML: cHTML,
                         }
                     )
-                    app.addLayerFromDataset(ds, [popStyle], {
+                    map.addLayerFromDataset(ds, [popStyle], {
                         pixNb: 1.5,
                         maxZoom: 300,
                         cellInfoHTML: cHTML,
                     })
 
                     //legends
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorDiscreteLegend({
                             title: 'Travel time to nearest primary education service, in minutes',
                             colors: colorsE_,
@@ -377,7 +377,7 @@
                             width: 300,
                         })
                     )
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             colCat: [[colorsH.NA, 'No data']],
                             shape: 'square',
@@ -386,7 +386,7 @@
                 }
 
                 //redraw
-                app.cg.redraw()
+                map.cg.redraw()
             }
 
             //
@@ -396,10 +396,10 @@
             //zoom
             document
                 .querySelector('#zoomin')
-                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 0.8).redraw())
+                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 0.8).redraw())
             document
                 .querySelector('#zoomout')
-                .addEventListener('click', () => app.setZoomFactor(app.getZoomFactor() * 1.2).redraw())
+                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 1.2).redraw())
 
             //initialise
             update()

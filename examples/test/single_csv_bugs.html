@@ -131,7 +131,7 @@
             }
 
             //add layer
-            app.addCSVGridLayer(
+            map.addCSVGridLayer(
                 //data URL
                 '../../assets/csv/Europe/TMAX_ranking.csv',
                 //resolution, in CRS unit (m)
@@ -223,14 +223,14 @@
             //add legend
             let colCat = colors.map((color,i)=> [color,categories[i]])
 
-            app.layers[0].styles[0].legends.push(
+            map.layers[0].styles[0].legends.push(
                 new gviz.ColorCategoryLegend({
                 title: 'Ranking since 1991',
                 colCat: colCat,
                 shape: 'square',
             }))
 
-            // app.layers[0].styles[0].legends.push(
+            // map.layers[0].styles[0].legends.push(
             //     new gviz.ColorDiscreteLegend({
             //         title: 'Ranking since 1991',
             //         titleFontSize: '15px',

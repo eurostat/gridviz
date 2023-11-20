@@ -187,8 +187,8 @@ export class TiledGrid extends DatasetComponent {
                     // 1. the dataset belongs to a layer which is visible at the current zoom level
                     let redraw = false
                     //go through the layers
-                    const zf = this.app.getZoomFactor()
-                    for (const lay of this.app.layers) {
+                    const zf = this.map.getZoomFactor()
+                    for (const lay of this.map.layers) {
                         if (!lay.visible) continue
                         if (lay.getDatasetComponent(zf) != this) continue
                         //found one layer. No need to seek more.
@@ -200,7 +200,7 @@ export class TiledGrid extends DatasetComponent {
                     if (!redraw) return
 
                     // 2. the tile is within the view, that is its geo envelope intersects the viewer geo envelope.
-                    const env = this.app.updateExtentGeo()
+                    const env = this.map.updateExtentGeo()
                     const envT = tile_.extGeo
                     if (env.xMax <= envT.xMin) return
                     if (env.xMin >= envT.xMax) return

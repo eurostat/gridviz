@@ -119,7 +119,7 @@
 
         const baseURLCSV = "https://raw.githubusercontent.com/jgaffuri/tiled-grid-germany-zensus2011/main/out/"
         const makeDataset = (code, preprocess) => {
-            return app.makeMultiScaleTiledGridDataset(
+            return map.makeMultiScaleTiledGridDataset(
                 [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000],
                 (r) => baseURLCSV + code + 'csv/' + r + 'm/',
                 { preprocess: preprocess }
@@ -217,14 +217,14 @@
             const layCode = document.querySelector('input[name="layer"]:checked').value
 
             //remove layers
-            app.layers = []
+            map.layers = []
 
             //formater
             //const f1 = d3.format('.1f')
 
             //set layer
             if (layCode === 'pop') {
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.INSGESAMT,
                     [
                         new gviz.SquareColorWGLStyle({
@@ -243,7 +243,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: "Population",
                         colorRamp: d3.interpolateYlOrRd,
@@ -256,7 +256,7 @@
                 const colR = d3.interpolateYlOrRd
                 const nb = 5
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.INSGESAMT,
                     [
                         new gviz_sm.KernelSmoothingStyle({
@@ -288,7 +288,7 @@
                 )
 
                 //legend
-                app.layers[0].styles[0].styles[0].legends.push(
+                map.layers[0].styles[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: 'Population',
                         colorRamp: (t) => colR(Math.floor(t * nb) / nb),
@@ -305,7 +305,7 @@
             } else if (layCode === 'popSex') {
                 const fs = d3.format('.1f')
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     //ds.demo,
                     ds.GESCHLECHT,
                     [
@@ -338,10 +338,10 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: 'Men / women difference',
                         ticks: 3,
@@ -368,7 +368,7 @@
                 ND 8 No data
                 */
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.FAMSTND_AUSF,
                     [
                         new gviz.CompositionStyle({
@@ -407,7 +407,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         shape: 'square',
                         labelUnitText: 'people',
@@ -415,7 +415,7 @@
                         //exaggerationFactor: 0.05,
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Marital status',
                         shape: "square",
@@ -432,7 +432,7 @@
                 /*population by age (5 age groups)  ALTER_KURZ   1 Under 18     2 18 - 29    3 30 - 49    4 50 - 64   5 65 and over */
 
                 //const col = d3.interpolateSpectral
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.ALTER_KURZ,
                     [
                         new gviz.CompositionStyle({
@@ -471,7 +471,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         shape: 'square',
                         labelUnitText: 'people',
@@ -479,7 +479,7 @@
                         exaggerationFactor: 0.5,
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Age',
                         shape: "square",
@@ -494,7 +494,7 @@
                 )
             } else if (layCode === 'ageR') {
                 //young VS elderly
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.ALTER_KURZ,
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -520,14 +520,14 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         shape: 'circle',
                         labelUnitText: 'people',
                         fillColor: '#ccc',
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorLegend({
                         title: 'Balance young / old',
                         ticks: 2,
@@ -548,7 +548,7 @@
 
                 const sized = document.querySelector('#popCoBCitCB').checked
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.GEBURTLAND_GRP,
                     [
                         new gviz.CompositionStyle({
@@ -588,7 +588,7 @@
                 )
                 //legend
                 if (sized)
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.SizeLegend({
                             shape: 'circle',
                             labelUnitText: 'people',
@@ -596,7 +596,7 @@
                             exaggerationFactor: 0.05,
                         })
                     )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Birth place',
                         shape: sized ? 'circle' : "square",
@@ -616,7 +616,7 @@
 
                 const sized = document.querySelector('#popCoBCitCB').checked
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.STAATSANGE_GRP,
                     [
                         new gviz.CompositionStyle({
@@ -656,7 +656,7 @@
                 )
                 //legend
                 if (sized)
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.SizeLegend({
                             shape: 'circle',
                             labelUnitText: 'people',
@@ -664,7 +664,7 @@
                             exaggerationFactor: 0.05,
                         })
                     )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Citizenship',
                         shape: sized ? 'circle' : "square",
@@ -686,7 +686,7 @@
 
                 const sized = document.querySelector('#popReligCB').checked
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.RELIGION_KURZ,
                     [
                         new gviz.CompositionStyle({
@@ -718,7 +718,7 @@
                 )
                 //legend
                 if (sized)
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.SizeLegend({
                             shape: 'square',
                             labelUnitText: 'people',
@@ -726,7 +726,7 @@
                             exaggerationFactor: 0.05,
                         })
                     )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Religion',
                         shape: "square",
@@ -745,7 +745,7 @@
  3	 Gereihtes Haus
  4	 Anderer Gebäudetyp */
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.GEBTYPBAUWEISE,
                     [
                         new gviz.CompositionStyle({
@@ -779,7 +779,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         shape: 'square',
                         labelUnitText: 'habitations',
@@ -787,7 +787,7 @@
                         exaggerationFactor: 0.3,
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Building type',
                         colCat: [
@@ -834,7 +834,7 @@
                 const col = d3.interpolateViridis
                 const colsDict = {}; for (let i = 1; i <= 10; i++) colsDict["" + i] = col((i - 1) / 9)
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.BAUJAHR_MZ,
                     [
                         new gviz.CompositionStyle({
@@ -857,7 +857,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         shape: 'square',
                         labelUnitText: 'habitations',
@@ -866,7 +866,7 @@
                     })
                 )
                 const colCats = []; for (let i = 1; i <= 10; i++) colCats.push([col((i - 1) / 9), labels[i - 1]])
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Construction date',
                         shape: "square",
@@ -883,7 +883,7 @@
 5	 Einzel-/Mehrraumöfen (auch Nachtspeicherheizung)			  Chauffages pour une ou plusieurs pièces (également chauffage à accumulation de nuit)
 6	 Keine Heizung im Gebäude oder in den Wohnungen			  Pas de chauffage dans l'immeuble ni dans les appartements */
 
-                app.addLayerFromDataset(
+                map.addLayerFromDataset(
                     ds.HEIZTYP,
                     [
                         new gviz.CompositionStyle({
@@ -918,7 +918,7 @@
                     }
                 )
                 //legend
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.SizeLegend({
                         shape: 'circle',
                         labelUnitText: 'habitations',
@@ -926,7 +926,7 @@
                         exaggerationFactor: 0.3,
                     })
                 )
-                app.layers[0].styles[0].legends.push(
+                map.layers[0].styles[0].legends.push(
                     new gviz.ColorCategoryLegend({
                         title: 'Heating system',
                         colCat: [
@@ -941,7 +941,7 @@
             } else console.error('Unexpected layer code: ' + layCode)
 
             //redraw
-            app.cg.redraw()
+            map.cg.redraw()
         }
 
         //layer update
@@ -951,20 +951,20 @@
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
-            app.showLabels = this.checked
-            app.cg.redraw()
+            map.showLabels = this.checked
+            map.cg.redraw()
         })
 
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
-            app.showBoundaries = this.checked
-            app.cg.redraw()
+            map.showBoundaries = this.checked
+            map.cg.redraw()
         })
 
         // show/hide background layer
         document.querySelector('#background').addEventListener('change', function () {
-            app.showBgLayers = this.checked
-            app.cg.redraw()
+            map.showBgLayers = this.checked
+            map.cg.redraw()
         })
 
         //select layer from URL

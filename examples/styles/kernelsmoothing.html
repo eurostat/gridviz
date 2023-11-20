@@ -50,7 +50,7 @@
                 .setZoomFactor(1000)
 
             //add layer with initial kernel smoothing style
-            app.addMultiScaleTiledGridLayer(
+            map.addMultiScaleTiledGridLayer(
                 [1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) =>
                     'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
@@ -74,7 +74,7 @@
             //
             const update = () => {
                 //get smoothing style
-                const s = app.layers[0].styles[0]
+                const s = map.layers[0].styles[0]
 
                 //set sigma
                 const sig = document.querySelector('#sigma').value
@@ -169,7 +169,7 @@
                 }
 
                 //redraw
-                app.cg.redraw()
+                map.cg.redraw()
             }
 
             //style selection

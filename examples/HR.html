@@ -107,7 +107,7 @@
             const override = (c, col) => (c[col] = +c[col])
 
             //population dataset
-            ds.pop = app.makeMultiScaleTiledGridDataset(
+            ds.pop = map.makeMultiScaleTiledGridDataset(
                 [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000],
                 (r) =>
                     'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/croatia/Population_2011/' +
@@ -146,7 +146,7 @@
             )
 
             //business dataset
-            ds.bus = app.makeMultiScaleTiledGridDataset(
+            ds.bus = map.makeMultiScaleTiledGridDataset(
                 [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000],
                 (r) =>
                     'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/croatia/Active_business_entities_2016/' +
@@ -197,7 +197,7 @@
             )
 
             //tourism dataset
-            ds.tou = app.makeMultiScaleTiledGridDataset(
+            ds.tou = map.makeMultiScaleTiledGridDataset(
                 [1000, 2000, 3000, 5000, 7000, 10000, 15000, 25000, 40000, 100000],
                 (r) =>
                     'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/croatia/Tourism_2017/' +
@@ -236,14 +236,14 @@
                 const layCode = document.querySelector('input[name="layer"]:checked').value
 
                 //remove layers
-                app.layers = []
+                map.layers = []
 
                 const col = d3.interpolateSpectral
                 const col2 = d3.schemeCategory10
                 const sStroke = new gviz.StrokeStyle({ maxZoom: 100 })
 
                 if (layCode === 'pop') {
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.pop,
                         [
                             new gviz.SquareColorWGLStyle({
@@ -278,7 +278,7 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorLegend({
                             title: 'Number of inhabitants',
                             ticks: 5,
@@ -287,7 +287,7 @@
                         })
                     )
                 } else if (layCode === 'popSex') {
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.pop,
                         [
                             new gviz.ShapeColorSizeStyle({
@@ -321,10 +321,10 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
                     )
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorLegend({
                             title: 'Men / women difference (%)',
                             ticks: 7,
@@ -338,7 +338,7 @@
                         })
                     )
                 } else if (layCode === 'popAge') {
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.pop,
                         [
                             new gviz.CompositionStyle({
@@ -373,7 +373,7 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Age group',
                             colCat: [
@@ -384,7 +384,7 @@
                         })
                     )
                 } else if (layCode === 'popEducation') {
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.pop,
                         [
                             new gviz.CompositionStyle({
@@ -423,10 +423,10 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
                     )
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Education level',
                             colCat: [
@@ -438,7 +438,7 @@
                         })
                     )
                 } else if (layCode === 'popLabor') {
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.pop,
                         [
                             new gviz.CompositionStyle({
@@ -473,10 +473,10 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.SizeLegend({ shape: 'square', labelUnitText: 'inhab.', fillColor: '#ccc' })
                     )
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Labor status',
                             colCat: [
@@ -487,7 +487,7 @@
                         })
                     )
                 } else if (layCode === 'popInact') {
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.pop,
                         [
                             new gviz.SquareColorWGLStyle({
@@ -511,7 +511,7 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorLegend({
                             title: 'Inactivity rate (%)',
                             ticks: 6,
@@ -520,7 +520,7 @@
                         })
                     )
                 } else if (layCode === 'busSector') {
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.bus,
                         [
                             new gviz.CompositionStyle({
@@ -554,14 +554,14 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.SizeLegend({
                             shape: 'circle',
                             labelUnitText: 'businesses',
                             fillColor: '#ccc',
                         })
                     )
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Sector',
                             colCat: [
@@ -572,7 +572,7 @@
                         })
                     )
                 } else if (layCode === 'tourAccNb') {
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.tou,
                         [
                             new gviz.SquareColorWGLStyle({
@@ -591,7 +591,7 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorLegend({
                             title: 'Tourism - number of establishments',
                             ticks: 5,
@@ -600,7 +600,7 @@
                         })
                     )
                 } else if (layCode === 'tourAccUnits') {
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.tou,
                         [
                             new gviz.SquareColorWGLStyle({
@@ -619,7 +619,7 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorLegend({
                             title: 'Tourism - number of units',
                             ticks: 5,
@@ -628,7 +628,7 @@
                         })
                     )
                 } else if (layCode === 'tourAccBeds') {
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.tou,
                         [
                             new gviz.SquareColorWGLStyle({
@@ -647,7 +647,7 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorLegend({
                             title: 'Tourism - number of beds',
                             ticks: 5,
@@ -656,7 +656,7 @@
                         })
                     )
                 } else if (layCode === 'tourOriginArr') {
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.tou,
                         [
                             new gviz.CompositionStyle({
@@ -697,10 +697,10 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'arrivals', fillColor: '#ccc' })
                     )
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Tourist origin',
                             colCat: [
@@ -714,7 +714,7 @@
                         })
                     )
                 } else if (layCode === 'tourOriginNights') {
-                    app.addLayerFromDataset(
+                    map.addLayerFromDataset(
                         ds.tou,
                         [
                             new gviz.CompositionStyle({
@@ -755,10 +755,10 @@
                         }
                     )
                     //legend
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'nights', fillColor: '#ccc' })
                     )
-                    app.layers[0].styles[0].legends.push(
+                    map.layers[0].styles[0].legends.push(
                         new gviz.ColorCategoryLegend({
                             title: 'Tourist origin',
                             colCat: [
@@ -777,7 +777,7 @@
                 }
 
                 //redraw
-                app.cg.redraw()
+                map.cg.redraw()
             }
 
             //layer selector
@@ -785,14 +785,14 @@
 
             // show/hide labels
             document.querySelector('#label').addEventListener('change', function () {
-                app.showLabels = this.checked
-                app.cg.redraw()
+                map.showLabels = this.checked
+                map.cg.redraw()
             })
 
             // show/hide boundaries
             document.querySelector('#boundary').addEventListener('change', function () {
-                app.showBoundaries = this.checked
-                app.cg.redraw()
+                map.showBoundaries = this.checked
+                map.cg.redraw()
             })
 
             //select layer from URL

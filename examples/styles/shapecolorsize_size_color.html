@@ -68,7 +68,7 @@
             )
 
         //shape selection
-        const s = app.layers[0].styles[0]
+        const s = map.layers[0].styles[0]
         document.getElementById('shape').addEventListener('change', function () {
             const v_ = this.value
 
@@ -84,7 +84,7 @@
                         : r * gviz.sPow(v / s.max, 0.2)
 
             //redraw
-            app.cg.redraw()
+            map.cg.redraw()
         })
     </script>
 </body>

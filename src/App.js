@@ -443,7 +443,7 @@ export class Map {
     }
 
     /**
-     * Add a layer to the app.
+     * Add a layer to the map.
      *
      * @param {Dataset} dataset The dataset of the layer
      * @param {Array.<import('./Style').Style>} styles The styles of the layer
@@ -606,7 +606,7 @@ export class Map {
     }
 
     /**
-     * Add a background layer to the app.
+     * Add a background layer to the map.
      *
      * @param {object} opts
      * @returns {this}
@@ -618,7 +618,7 @@ export class Map {
     }
 
     /**
-     * Add a WMS background layer to the app.
+     * Add a WMS background layer to the map.
      *
      * @param {object} opts
      * @returns {this}
