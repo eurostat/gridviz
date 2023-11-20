@@ -6,6 +6,7 @@ static image background layer
 merge geocanvas and app
 change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coords by default (!)
 extract modules ?
+stretching: transition to new functions - clean stretching lib
 
 API changes for v3:
 map.addLayer
@@ -13,7 +14,6 @@ zoom factor -> zoom
 layer.addTo(map)
 
 
-stretching: transition to new functions
 
 style value by alpha: Document
 

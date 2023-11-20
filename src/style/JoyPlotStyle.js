@@ -13,13 +13,13 @@ export class JoyPlotStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** The cell column where to get the value to represent.
-         * @type {string} */
-        this.heightCol = opts.heightCol
+        /** A function returning the view scale.
+         * @type {function(Array.<import('../Dataset.js').Cell>,number, number):object} */
+        this.viewScale = opts.viewScale
 
-        /** A function returning the height of a cell.
-         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-        this.height = opts.height || ((v) => Math.sqrt(v))
+        /** A function returning the height of a cell in geographical unit.
+         * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
+        this.height = opts.height //(c,r,z,vs) => {}
 
         /**
          * @type {function(number,{min:number, max:number},number,number):string} */
@@ -48,8 +48,8 @@ export class JoyPlotStyle extends Style {
         //zoom factor
         const zf = cg.getZf()
 
-        //compute statistics
-        const stat = Style.getStatistics(cells, (c) => c[this.heightCol], true)
+        //get view scale
+        const vs = this.viewScale ? this.viewScale(cells, r, zf) : undefined
 
         //index cells by y and x
         /**  @type {object} */
@@ -60,7 +60,7 @@ export class JoyPlotStyle extends Style {
                 row = {}
                 ind[cell.y] = row
             }
-            row[cell.x] = this.height(cell[this.heightCol], r, stat, zf)
+            row[cell.x] = this.height(cell, r, zf, vs)
         }
 
         //compute extent

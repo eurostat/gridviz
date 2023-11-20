@@ -31,24 +31,24 @@ export class CompositionStyle_ extends Style {
         /**
          * A function returning the type of decomposition symbol of a cell, @see CompositionType
          * @type {function(import("../Dataset.js").Cell,number, number,object):CompositionType} */
-        this.type = opts.type
+        this.type = opts.type //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
          * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
-        this.size = opts.size
+        this.size = opts.size //(c,r,z,vs) => {}
 
         /** For style types with stripes (flag, segment), the orientation of the stripes (0 for horizontal, other for vertical).
          * @type {function(import("../Dataset.js").Cell,number,number,object):number} */
-        this.stripesOrientation = opts.stripesOrientation || (() => 0) //(c,r,zf,vc) => ...
+        this.stripesOrientation = opts.stripesOrientation || (() => 0) //(c,r,zf,vs) => ...
 
         /** The function specifying an offset angle for a radar, halftone or pie chart style.
          * The angle is specified in degree. The rotation is anti-clockwise.
          * @type {function(import("../Dataset.js").Cell,number,number,object):number} */
-        this.offsetAngle = opts.offsetAngle || (() => 0) //(cell,r,zf,vc) => ...
+        this.offsetAngle = opts.offsetAngle || (() => 0) //(cell,r,zf,vs) => ...
 
         /** The function specifying the height of the age pyramid, in geo unit.
          * @type {function(import("../Dataset.js").Cell,number,number,object):number} */
-        this.agePyramidHeight = opts.agePyramidHeight || ((c, r, zf) => r) //(cell,r,zf,vc) => ...
+        this.agePyramidHeight = opts.agePyramidHeight || ((c, r, zf) => r) //(cell,r,zf,vs) => ...
 
         /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
          * 0 for normal pie charts, 0.5 to empty half of the radius.
@@ -71,7 +71,7 @@ export class CompositionStyle_ extends Style {
         const zf = cg.getZf()
 
         //get view scale
-        const vc = this.viewScale ? this.viewScale(cells, r, zf) : undefined
+        const vs = this.viewScale ? this.viewScale(cells, r, zf) : undefined
 
         //nb categories - used for radar and agepyramid
         const nbCat = Object.entries(this.color).length
@@ -83,21 +83,21 @@ export class CompositionStyle_ extends Style {
         for (let cell of cells) {
 
             //size
-            const sG = this.size ? this.size(cell, r, zf, vc) : r
+            const sG = this.size ? this.size(cell, r, zf, vs) : r
             if (!sG) continue
 
             //get offset
             const offset = this.offset(cell, r, zf)
 
             //get symbol type
-            const type_ = this.type ? this.type(cell, r, zf, vc) : 'flag'
+            const type_ = this.type ? this.type(cell, r, zf, vs) : 'flag'
 
             //compute center position
             const xc = cell.x + offset.dx + (type_ === 'agepyramid' ? 0 : r * 0.5)
             const yc = cell.y + offset.dy + (type_ === 'agepyramid' ? 0 : r * 0.5)
 
             //compute offset angle, when relevant
-            const offAng = this.offsetAngle ? (this.offsetAngle(cell, r, zf, vc) * Math.PI) / 180 : 0
+            const offAng = this.offsetAngle ? (this.offsetAngle(cell, r, zf, vs) * Math.PI) / 180 : 0
 
             if (type_ === 'agepyramid' || type_ === 'radar' || type_ === 'halftone') {
                 //get cell category max value
@@ -110,13 +110,13 @@ export class CompositionStyle_ extends Style {
                 //cumul
                 let cumul = 0
                 if (type_ === 'agepyramid' && this.agePyramidHeight)
-                    cumul = (r - this.agePyramidHeight(cell, r, zf, vc)) / 2
+                    cumul = (r - this.agePyramidHeight(cell, r, zf, vs)) / 2
                 if (type_ === 'radar' || type_ === 'halftone') cumul = Math.PI / 2 + offAng
 
                 //compute the increment, which is the value to increment the cumul for each category
                 const incr =
                     type_ === 'agepyramid'
-                        ? (this.agePyramidHeight ? this.agePyramidHeight(cell, r, zf, vc) : r) / nbCat
+                        ? (this.agePyramidHeight ? this.agePyramidHeight(cell, r, zf, vs) : r) / nbCat
                         : type_ === 'radar' || type_ === 'halftone'
                             ? (2 * Math.PI) / nbCat
                             : undefined
@@ -201,7 +201,7 @@ export class CompositionStyle_ extends Style {
                 //draw decomposition symbol
                 let cumul = 0
                 const d = r * (1 - sG / r) * 0.5
-                const ori = this.stripesOrientation(cell, r, zf, vc)
+                const ori = this.stripesOrientation(cell, r, zf, vs)
 
                 for (let [column, color] of Object.entries(this.color)) {
                     //get share
@@ -288,6 +288,6 @@ export class CompositionStyle_ extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf, viewScale: vc })
+        this.updateLegends({ style: this, r: r, zf: zf, viewScale: vs })
     }
 }

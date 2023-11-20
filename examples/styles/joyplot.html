@@ -24,8 +24,8 @@
                         'm/',
                     [
                         new gviz.JoyPlotStyle({
-                            heightCol: 'TOT_P_2021',
-                            height: (v, r, s, zf) => 5 * r * gviz.sPow(v / s.max, 0.5),
+                            height: (c, r, z, scale) => scale(c.TOT_P_2021),
+                            viewScale: gviz.sizeContinuousScale({ valueFunction: (c) => +c.TOT_P_2021, stretching: gviz.logarithmicScale(-8) }),
                             lineColor: () => 'white',
                             lineWidth: (y, ys, r, zf) => 0.15 * r,
                             fillColor: () => 'black',

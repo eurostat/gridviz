@@ -21,15 +21,15 @@ export class ShapeColorSizeStyle_ extends Style {
 
         /** A function returning the color of the cell.
          * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
-        this.color = opts.color //(c,r,z,o) => {}
+        this.color = opts.color //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
          * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
-        this.size = opts.size //(c,r,z,o) => {}
+        this.size = opts.size //(c,r,z,vs) => {}
 
         /** A function returning the shape of a cell.
          * @type {function(import("../Dataset.js").Cell,number, number,object):import("../Style.js").Shape} */
-        this.shape = opts.shape //(c,r,z,o) => {}
+        this.shape = opts.shape //(c,r,z,vs) => {}
     }
 
     /**
@@ -47,7 +47,7 @@ export class ShapeColorSizeStyle_ extends Style {
         const zf = cg.getZf()
 
         //get view scale
-        const vc = this.viewScale ? this.viewScale(cells, r, zf) : undefined
+        const vs = this.viewScale ? this.viewScale(cells, r, zf) : undefined
 
         //draw with HTML canvas in geo coordinates
         cg.setCanvasTransform()
@@ -55,15 +55,15 @@ export class ShapeColorSizeStyle_ extends Style {
         const r2 = r * 0.5
         for (let c of cells) {
             //color
-            let col = this.color ? this.color(c, r, zf, vc) : "black"
+            let col = this.color ? this.color(c, r, zf, vs) : "black"
             if (!col || col === 'none') continue
 
             //size
-            const size = this.size ? this.size(c, r, zf, vc) : r
+            const size = this.size ? this.size(c, r, zf, vs) : r
             if (!size) continue
 
             //shape
-            const shape = this.shape ? this.shape(c, r, zf, vc) : 'square'
+            const shape = this.shape ? this.shape(c, r, zf, vs) : 'square'
             if (shape === 'none') continue
 
             //get offset
@@ -103,6 +103,6 @@ export class ShapeColorSizeStyle_ extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf, viewScale: vc })
+        this.updateLegends({ style: this, r: r, zf: zf, viewScale: vs })
     }
 }
