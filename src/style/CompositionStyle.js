@@ -13,11 +13,15 @@ import { Style } from '../Style.js'
  *
  * @author Julien Gaffuri
  */
-export class CompositionStyle extends Style {
+export class CompositionStyle_ extends Style {
     /** @param {object} opts */
     constructor(opts) {
         super(opts)
         opts = opts || {}
+
+        /** A function returning the view scale.
+         * @type {function(Array.<import('../Dataset.js').Cell>,number, number):object} */
+        this.viewScale = opts.viewScale
 
         /**
          * The dictionary (string -> color) which give the color of each category.
@@ -26,29 +30,25 @@ export class CompositionStyle extends Style {
 
         /**
          * A function returning the type of decomposition symbol of a cell, @see CompositionType
-         * @type {function(import("../Dataset").Cell):CompositionType} */
-        this.type = opts.type
+         * @type {function(import("../Dataset.js").Cell,number, number,object):CompositionType} */
+        this.type = opts.type //(c,r,z,vs) => {}
 
-        /** The column where to get the size values.
-         * @type {string} */
-        this.sizeCol = opts.sizeCol
-
-        /** A function returning the size of a cell.
-         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-        this.size = opts.size || ((v, r, s, zf) => r)
+        /** A function returning the size of a cell in geographical unit.
+         * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
+        this.size = opts.size //(c,r,z,vs) => {}
 
         /** For style types with stripes (flag, segment), the orientation of the stripes (0 for horizontal, other for vertical).
-         * @type {function(import("../Dataset").Cell,number,number):number} */
-        this.stripesOrientation = opts.stripesOrientation || (() => 0) //(c,r,zf) => ...
+         * @type {function(import("../Dataset.js").Cell,number,number,object):number} */
+        this.stripesOrientation = opts.stripesOrientation || (() => 0) //(c,r,zf,vs) => ...
 
         /** The function specifying an offset angle for a radar, halftone or pie chart style.
          * The angle is specified in degree. The rotation is anti-clockwise.
-         * @type {function(import("../Dataset").Cell,number,number):number} */
-        this.offsetAngle = opts.offsetAngle || (() => 0) //(cell,r,zf) => ...
+         * @type {function(import("../Dataset.js").Cell,number,number,object):number} */
+        this.offsetAngle = opts.offsetAngle || (() => 0) //(cell,r,zf,vs) => ...
 
         /** The function specifying the height of the age pyramid, in geo unit.
-         * @type {function(import("../Dataset").Cell,number,number):number} */
-        this.agePyramidHeight = opts.agePyramidHeight || ((c, r, zf) => r) //(cell,r,zf) => ...
+         * @type {function(import("../Dataset.js").Cell,number,number,object):number} */
+        this.agePyramidHeight = opts.agePyramidHeight || ((c, r, zf) => r) //(cell,r,zf,vs) => ...
 
         /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
          * 0 for normal pie charts, 0.5 to empty half of the radius.
@@ -59,9 +59,9 @@ export class CompositionStyle extends Style {
     /**
      * Draw cells as squares depending on their value.
      *
-     * @param {Array.<import("../Dataset").Cell>} cells
+     * @param {Array.<import("../Dataset.js").Cell>} cells
      * @param {number} r
-     * @param {import("../GeoCanvas").GeoCanvas} cg
+     * @param {import("../GeoCanvas.js").GeoCanvas} cg
      */
     draw(cells, r, cg) {
         //filter
@@ -70,13 +70,8 @@ export class CompositionStyle extends Style {
         //zoom factor
         const zf = cg.getZf()
 
-        let stat
-        if (this.sizeCol) {
-            //if size is used, sort cells by size so that the biggest are drawn first
-            cells.sort((c1, c2) => c2[this.sizeCol] - c1[this.sizeCol])
-            //and compute statistics
-            stat = Style.getStatistics(cells, (c) => c[this.sizeCol], true)
-        }
+        //get view scale
+        const vs = this.viewScale ? this.viewScale(cells, r, zf) : undefined
 
         //nb categories - used for radar and agepyramid
         const nbCat = Object.entries(this.color).length
@@ -86,25 +81,23 @@ export class CompositionStyle extends Style {
 
         //draw calls
         for (let cell of cells) {
+
             //size
-            /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-            let s_ = this.size || (() => r)
-            //size - in geo
-            /** @type {number} */
-            const sG = s_(cell[this.sizeCol], r, stat, zf)
+            const sG = this.size ? this.size(cell, r, zf, vs) : r
+            if (!sG) continue
 
             //get offset
             const offset = this.offset(cell, r, zf)
 
             //get symbol type
-            const type_ = this.type ? this.type(cell) : 'flag'
+            const type_ = this.type ? this.type(cell, r, zf, vs) : 'flag'
 
             //compute center position
             const xc = cell.x + offset.dx + (type_ === 'agepyramid' ? 0 : r * 0.5)
             const yc = cell.y + offset.dy + (type_ === 'agepyramid' ? 0 : r * 0.5)
 
             //compute offset angle, when relevant
-            const offAng = this.offsetAngle ? (this.offsetAngle(cell, r, zf) * Math.PI) / 180 : 0
+            const offAng = this.offsetAngle ? (this.offsetAngle(cell, r, zf, vs) * Math.PI) / 180 : 0
 
             if (type_ === 'agepyramid' || type_ === 'radar' || type_ === 'halftone') {
                 //get cell category max value
@@ -117,16 +110,16 @@ export class CompositionStyle extends Style {
                 //cumul
                 let cumul = 0
                 if (type_ === 'agepyramid' && this.agePyramidHeight)
-                    cumul = (r - this.agePyramidHeight(cell, r, zf)) / 2
+                    cumul = (r - this.agePyramidHeight(cell, r, zf, vs)) / 2
                 if (type_ === 'radar' || type_ === 'halftone') cumul = Math.PI / 2 + offAng
 
                 //compute the increment, which is the value to increment the cumul for each category
                 const incr =
                     type_ === 'agepyramid'
-                        ? (this.agePyramidHeight ? this.agePyramidHeight(cell, r, zf) : r) / nbCat
+                        ? (this.agePyramidHeight ? this.agePyramidHeight(cell, r, zf, vs) : r) / nbCat
                         : type_ === 'radar' || type_ === 'halftone'
-                        ? (2 * Math.PI) / nbCat
-                        : undefined
+                            ? (2 * Math.PI) / nbCat
+                            : undefined
                 if (incr === undefined) throw new Error('Unexpected symbol type:' + type_)
 
                 for (let [column, color] of Object.entries(this.color)) {
@@ -208,7 +201,7 @@ export class CompositionStyle extends Style {
                 //draw decomposition symbol
                 let cumul = 0
                 const d = r * (1 - sG / r) * 0.5
-                const ori = this.stripesOrientation(cell, r, zf)
+                const ori = this.stripesOrientation(cell, r, zf, vs)
 
                 for (let [column, color] of Object.entries(this.color)) {
                     //get share
@@ -295,6 +288,6 @@ export class CompositionStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf, sSize: stat })
+        this.updateLegends({ style: this, r: r, zf: zf, viewScale: vs })
     }
 }
