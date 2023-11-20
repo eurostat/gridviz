@@ -1,8 +1,9 @@
-style value by alpha: Document
 
-
-V3
 stretching: transition to new functions
+
+
+
+style value by alpha: Document
 
 
 revamp layers, API - see lflt
