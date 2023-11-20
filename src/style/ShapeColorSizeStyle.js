@@ -2,7 +2,6 @@
 'use strict'
 
 import { Style } from '../Style.js'
-import { color } from 'd3-color'
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.
@@ -16,41 +15,29 @@ export class ShapeColorSizeStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         * @type {string} */
-        this.colorCol = opts.colorCol
+        /** A function returning the view scale.
+         * @type {function(Array.<import('../Dataset.js').Cell>,number, number):object} */
+        this.viewScale = opts.viewScale //(cells,r,z) => {}
 
         /** A function returning the color of the cell.
-         * @type {function(number,number,import("../Style").Stat|undefined,number):string} */
-        this.color = opts.color || (() => '#EA6BAC') //(v,r,s,zf) => {}
-
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for size.
-         * @type {string} */
-        this.sizeCol = opts.sizeCol
+         * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
+        this.color = opts.color //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
-         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-        this.size = opts.size
+         * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
+        this.size = opts.size //(c,r,z,vs) => {}
 
         /** A function returning the shape of a cell.
-         * @type {function(import("../Dataset").Cell):import("../Style").Shape} */
-        this.shape = opts.shape || (() => 'square')
-
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for color alpha.
-         * @type {string} */
-        this.alphaCol = opts.alphaCol
-
-        /** A function returning the color alpha of the cell.
-         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-        this.alphaF = opts.alphaF
+         * @type {function(import("../Dataset.js").Cell,number, number,object):import("../Style.js").Shape} */
+        this.shape = opts.shape //(c,r,z,vs) => {}
     }
 
     /**
-     * Draw cells as squares, with various colors and size.
+     * Draw cells as squares, with various colors and sizes.
      *
-     * @param {Array.<import("../Dataset").Cell>} cells
+     * @param {Array.<import("../Dataset.js").Cell>} cells
      * @param {number} r
-     * @param {import("../GeoCanvas").GeoCanvas} cg
+     * @param {import("../GeoCanvas.js").GeoCanvas} cg
      */
     draw(cells, r, cg) {
         //filter
@@ -59,87 +46,56 @@ export class ShapeColorSizeStyle extends Style {
         //zoom factor
         const zf = cg.getZf()
 
-        let statSize
-        if (this.sizeCol) {
-            //if size is used, sort cells by size so that the biggest are drawn first
-            cells.sort((c1, c2) => c2[this.sizeCol] - c1[this.sizeCol])
-            //and compute size variable statistics
-            statSize = Style.getStatistics(cells, (c) => c[this.sizeCol], true)
-        }
+        //get view scale
+        const vs = this.viewScale ? this.viewScale(cells, r, zf) : undefined
 
-        let statColor
-        if (this.colorCol) {
-            //compute color variable statistics
-            statColor = Style.getStatistics(cells, (c) => c[this.colorCol], true)
-        }
-
-        let statAlpha
-        if (this.alphaCol) {
-            //compute color alpha variable statistics
-            statAlpha = Style.getStatistics(cells, (c) => c[this.alphaCol], true)
-        }
-
-        //draw with HTML canvas
-        //in geo coordinates
+        //draw with HTML canvas in geo coordinates
         cg.setCanvasTransform()
 
         const r2 = r * 0.5
-        for (let cell of cells) {
+        for (let c of cells) {
             //color
-            let col = this.color ? this.color(cell[this.colorCol], r, statColor, zf) : undefined
+            let col = this.color ? this.color(c, r, zf, vs) : "black"
             if (!col || col === 'none') continue
 
-            //alpha
-            if (this.alphaCol && this.alphaF) {
-                //get alpha
-                const alpha = this.alphaF(cell[this.alphaCol], r, statAlpha, zf)
-                if (alpha == 0) continue
-                //apply alpha to color col
-                const col_ = color(col);
-                if (col_) col = `rgba(${col_.r}, ${col_.g}, ${col_.b}, ${alpha})`;
-                else console.warn("Could not decode color " + col + " in ShapeColorSizeStyle")
-            }
+            //size
+            const size = this.size ? this.size(c, r, zf, vs) : r
+            if (!size) continue
 
             //shape
-            const shape = this.shape ? this.shape(cell) : 'square'
+            const shape = this.shape ? this.shape(c, r, zf, vs) : 'square'
             if (shape === 'none') continue
 
-            //size
-            /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-            let s_ = this.size || (() => r)
-            //size - in geo unit
-            const sG = s_(cell[this.sizeCol], r, statSize, zf)
-
             //get offset
-            const offset = this.offset(cell, r, zf)
+            const offset = this.offset(c, r, zf)
 
             cg.ctx.fillStyle = col
             if (shape === 'square') {
                 //draw square
-                const d = r * (1 - sG / r) * 0.5
-                cg.ctx.fillRect(cell.x + d + offset.dx, cell.y + d + offset.dy, sG, sG)
+                const d = r * (1 - size / r) * 0.5
+                cg.ctx.fillRect(c.x + d + offset.dx, c.y + d + offset.dy, size, size)
             } else if (shape === 'circle') {
                 //draw circle
                 cg.ctx.beginPath()
-                cg.ctx.arc(cell.x + r2 + offset.dx, cell.y + r2 + offset.dy, sG * 0.5, 0, 2 * Math.PI, false)
+                cg.ctx.arc(c.x + r2 + offset.dx, c.y + r2 + offset.dy, size * 0.5, 0, 2 * Math.PI, false)
                 cg.ctx.fill()
             } else if (shape === 'donut') {
                 //draw donut
-                const xc = cell.x + r2 + offset.dx,
-                    yc = cell.y + r2 + offset.dy
+                const xc = c.x + r2 + offset.dx,
+                    yc = c.y + r2 + offset.dy
                 cg.ctx.beginPath()
                 cg.ctx.moveTo(xc, yc)
                 cg.ctx.arc(xc, yc, r2, 0, 2 * Math.PI)
-                cg.ctx.arc(xc, yc, (1 - sG / r) * r2, 0, 2 * Math.PI, true)
+                cg.ctx.arc(xc, yc, (1 - size / r) * r2, 0, 2 * Math.PI, true)
                 cg.ctx.closePath()
                 cg.ctx.fill()
             } else if (shape === 'diamond') {
-                const s2 = sG * 0.5
+                const s2 = size * 0.5
                 cg.ctx.beginPath()
-                cg.ctx.moveTo(cell.x + r2 - s2, cell.y + r2)
-                cg.ctx.lineTo(cell.x + r2, cell.y + r2 + s2)
-                cg.ctx.lineTo(cell.x + r2 + s2, cell.y + r2)
-                cg.ctx.lineTo(cell.x + r2, cell.y + r2 - s2)
+                cg.ctx.moveTo(c.x + r2 - s2, c.y + r2)
+                cg.ctx.lineTo(c.x + r2, c.y + r2 + s2)
+                cg.ctx.lineTo(c.x + r2 + s2, c.y + r2)
+                cg.ctx.lineTo(c.x + r2, c.y + r2 - s2)
                 cg.ctx.fill()
             } else {
                 throw new Error('Unexpected shape:' + shape)
@@ -147,6 +103,6 @@ export class ShapeColorSizeStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf, sSize: statSize, sColor: statColor, sAlpha: statAlpha })
+        this.updateLegends({ style: this, r: r, zf: zf, viewScale: vs })
     }
 }
