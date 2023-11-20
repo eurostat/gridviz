@@ -142,7 +142,7 @@
             color: getColorDict(),
             type: () => 'ring',
             size: (c, r, zf, scale) => scale(+c.ind),
-            viewScale: gviz.sizeQuantileScale({ valueFunction: (c) => +c.ind, classNumber: 9, minSizePix: 8, maxSizeFactor: 1 }),
+            viewScale: gviz.sizeQuantileScale({ valueFunction: (c) => +c.ind, classNumber: 9, minSizePix: 8 }),
             agePyramidHeight: (c, r) => 0.95 * r,
         })
         s.size_ = (c, r, zf) => r - 1.5 * zf
