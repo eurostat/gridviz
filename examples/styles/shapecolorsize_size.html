@@ -25,8 +25,6 @@
                 [
                     new gviz.ShapeColorSizeStyle({
                         color: () => 'purple',
-                        //sizeCol: 'TOT_P_2021',
-                        //size: (v, r, s, zf) => 1.4 * r * gviz.sPow(v / s.max, 0.2),
                         size: (c, r, zf, scale) => scale(+c.TOT_P_2021),
                         viewScale: gviz.sizeContinuousScale({ valueFunction: (c) => +c.TOT_P_2021, maxSizeFactor: 1.4, stretching: gviz.powerScale(0.2) }),
                         shape: () => 'circle',
