@@ -19,7 +19,7 @@ export class Button {
     constructor(opts) {
         opts = opts || {}
 
-        this.app = opts.app
+        this.map = opts.map
         this.parentNode = opts.parentNode || opts.map.container
 
         // the div element

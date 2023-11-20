@@ -43,7 +43,7 @@ export class FullscreenButton extends Button {
         </svg>
         `
 
-        //save initial app dimensions
+        //save initial map dimensions
         this.defaultHeight = this.map.h
         this.defaultWidth = this.map.w
 

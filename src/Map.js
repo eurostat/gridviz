@@ -673,7 +673,7 @@ export class Map {
      * @returns {this}
      */
     addFullscreenButton(opts) {
-        // * opts.app - the gridviz app
+        // * opts.map - the gridviz map
         // * opts.id
         // * opts.x
         // * opts.y
@@ -712,7 +712,7 @@ export class Map {
                     if (!Array.isArray(entries) || !entries.length) {
                         return
                     }
-                    // update the app and canvas size
+                    // update the map and canvas size
                     if (this.h !== container.clientHeight || this.w !== container.clientWidth) {
                         this.h = container.clientHeight
                         this.w = container.clientWidth
@@ -734,8 +734,8 @@ export class Map {
     }
 
     /**
-     * @description Destroy the app and it's event listeners
-     * This should significantly reduce the memory used when creating and destroying gridviz app instances (for example in leaflet-gridviz)
+     * @description Destroy the map and it's event listeners
+     * This should significantly reduce the memory used when creating and destroying gridviz map instances (for example in leaflet-gridviz)
      * @memberof App
      */
     destroy() {

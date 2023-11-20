@@ -20,17 +20,17 @@ import { json, csv } from 'd3-fetch'
 export class TiledGrid extends DatasetComponent {
     /**
      * @param {string} url The URL of the dataset.
-     * @param {Map} app The application.
+     * @param {Map} map The map.
      * @param {{preprocess?:(function(import("../Dataset").Cell):boolean) }} opts
      */
-    constructor(url, app, opts = {}) {
+    constructor(url, map, opts = {}) {
         super(url, 0, opts)
 
         /**
-         * The app being used.
+         * The map being used.
          * @type {Map}
          */
-        this.app = app
+        this.map = map
 
         /**
          * The grid info object, from the info.json file.

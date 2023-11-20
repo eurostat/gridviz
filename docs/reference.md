@@ -5,8 +5,8 @@
 - [Gridviz API reference](#gridviz-api-reference)
   - [Table of contents](#table-of-contents)
   - [Usage](#usage)
-  - [App Configuration](#app-configuration)
-    - [App options object](#app-options-object)
+  - [Map Configuration](#map-configuration)
+    - [Map options object](#map-options-object)
   - [Multi layer, multi style and multi scale mapping](#multi-layer-multi-style-and-multi-scale-mapping)
   - [Adding data](#adding-data)
     - [Single CSV file](#single-csv-file)
@@ -64,7 +64,7 @@ Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/grid
 
 ## Usage
 
-Create a [Gridviz](https://github.com/eurostat/gridviz/) application using `const map = new gviz.Map();` and customise it with the methods described in the documentation below.
+Create a [Gridviz](https://github.com/eurostat/gridviz/) map using `const map = new gviz.Map();` and customise it with the methods described in the documentation below.
 
 Here's a basic example that loads a CSV file on Europe population (5km resolution):
 
@@ -95,28 +95,28 @@ new gviz.Map(containerDiv)
 
 [Gridviz](https://github.com/eurostat/gridviz/) can display several layers on top of each others. Each layer is based on a single [multi-resolution dataset](#adding-data), which can be displayed with several [cartographic styles](#basic-styles). For more information, see the [examples](#examples).
 
-## App Configuration
+## Map Configuration
 
-The following methods allow further configuration of a [Gridviz](https://github.com/eurostat/gridviz/) application:
+The following methods allow further configuration of a [Gridviz](https://github.com/eurostat/gridviz/) map:
 
 | Method                                                                      | Type                                                                           | Default       | Description                                                                                        |
 | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------------- | -------------------------------------------------------------------------------------------------- |
-| _app_.**getGeoCenter**()<br />_app_.**setGeoCenter**([value])               | { x:number, y:number }                                                         | { x:0, y:0 }  | Get/set the geographical coordinates of the view center.                                           |
-| _app_.**getZoomFactor**()<br />_app_.**setZoomFactor**([value])             | number                                                                         | 1             | Get/set the view zoom. This zoom factor is expressed as the size of a pixel in ground distance.    |
-| _app_.**getZoomFactorExtent**()<br />_app_.**setZoomFactorExtent**([value]) | Array(number)                                                                  | [0, Infinity] | Get/set the view zoom extent, in order to prevent the user to zoom in/out beyond some zoom levels. |
-| _app_.**getBackgroundColor**()<br />_app_.**setBackgroundColor**([value])   | string                                                                         | "white"       | Get/set the map background color.                                                                  |
-| _app_.**getBoundaryLayer**()<br />_app_.**setBoundaryLayer**([value])       | LineLayer / object                                                             | undefined     | A layer for boundary lines, see [here](#showing-boundaries).                                       |
-| _app_.**getLabelLayer**()<br />_app_.**setLabelLayer**([value])             | LabelLayer / object                                                            | undefined     | A layer for labels (such as placenames), see [here](#showing-labels).                              |
-| _app_.**addBackgroundLayer**([options])                                     | object                                                                         |               | Add a background image layer, see [here](#background-layer).                                       |
-| _app_.**addZoomButtons**([options])                                         | All properties are optional <br> {  **id**: `HTML element id`, **class**: `HTML element CSS class`, **x**: `CSS 'left' property`,  **y**: ```CSS 'top' property```,  **onZoom**: `Custom event handler when user clicks zoom in or out`,  <br /> **delta**: `The delta applied to each zoom event.`  } | {  **id**: 'gridviz-zoom-buttons',  **x**: app width - 50,   **y**: 10,  **onZoom**: undefined,  **delta**: 0.2  }| Add zoom in and zoom out buttons to the viewer. |
-| _app_.**addFullscreenButton**([options])                                         | All properties are optional <br>  {  **id**: `HTML element id`, **class**: `HTML element CSS class` **x**: `CSS 'left' property`,  **y**: ```CSS 'top' property``` } | {  **id**: 'gridviz-zoom-buttons',  **x**: app width - 50,  **y**: 10  }| Add a button to the viewer that toggles fullscreen mode. |
-| _app_.**setViewFromURL**() | | | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_. |
-| _app_.**redraw**() | | | Force the map to redraw. |
-| _app_.**destroy**() | | | Destroy the app, canvas, legend and tooltip and remove their event listeners. |
+| _map_.**getGeoCenter**()<br />_map_.**setGeoCenter**([value])               | { x:number, y:number }                                                         | { x:0, y:0 }  | Get/set the geographical coordinates of the view center.                                           |
+| _map_.**getZoomFactor**()<br />_map_.**setZoomFactor**([value])             | number                                                                         | 1             | Get/set the view zoom. This zoom factor is expressed as the size of a pixel in ground distance.    |
+| _map_.**getZoomFactorExtent**()<br />_map_.**setZoomFactorExtent**([value]) | Array(number)                                                                  | [0, Infinity] | Get/set the view zoom extent, in order to prevent the user to zoom in/out beyond some zoom levels. |
+| _map_.**getBackgroundColor**()<br />_map_.**setBackgroundColor**([value])   | string                                                                         | "white"       | Get/set the map background color.                                                                  |
+| _map_.**getBoundaryLayer**()<br />_map_.**setBoundaryLayer**([value])       | LineLayer / object                                                             | undefined     | A layer for boundary lines, see [here](#showing-boundaries).                                       |
+| _map_.**getLabelLayer**()<br />_map_.**setLabelLayer**([value])             | LabelLayer / object                                                            | undefined     | A layer for labels (such as placenames), see [here](#showing-labels).                              |
+| _map_.**addBackgroundLayer**([options])                                     | object                                                                         |               | Add a background image layer, see [here](#background-layer).                                       |
+| _map_.**addZoomButtons**([options])                                         | All properties are optional <br> {  **id**: `HTML element id`, **class**: `HTML element CSS class`, **x**: `CSS 'left' property`,  **y**: ```CSS 'top' property```,  **onZoom**: `Custom event handler when user clicks zoom in or out`,  <br /> **delta**: `The delta applied to each zoom event.`  } | {  **id**: 'gridviz-zoom-buttons',  **x**: map width - 50,   **y**: 10,  **onZoom**: undefined,  **delta**: 0.2  }| Add zoom in and zoom out buttons to the viewer. |
+| _map_.**addFullscreenButton**([options])                                         | All properties are optional <br>  {  **id**: `HTML element id`, **class**: `HTML element CSS class` **x**: `CSS 'left' property`,  **y**: ```CSS 'top' property``` } | {  **id**: 'gridviz-zoom-buttons',  **x**: map width - 50,  **y**: 10  }| Add a button to the viewer that toggles fullscreen mode. |
+| _map_.**setViewFromURL**() | | | Set view geo center and zoom from URL parameters _x_, _y_ and _z_. For example, using the URL _myPage.html?x=1000&y=2000&z=45_ will force the viex to center to geographical coordinates _(1000, 2000)_ and zoom _45_. |
+| _map_.**redraw**() | | | Force the map to redraw. |
+| _map_.**destroy**() | | | Destroy the map, canvas, legend and tooltip and remove their event listeners. |
 
-### App options object
+### Map options object
 
-When building a gridviz app, in addition to the container element you can also specify an options object with the properties outlined in the table below.
+When building a gridviz map, in addition to the container element you can also specify an options object with the properties outlined in the table below.
 
 For example:
 
@@ -162,7 +162,7 @@ new gviz.Map(containerDiv, {
 
 ## Multi layer, multi style and multi scale mapping
 
-A [Gridviz](https://github.com/eurostat/gridviz/) map is organised as a stack of layers accessible through **myApp.layers** property. Each layer shows data from one single dataset **myLayer.dataset**, following a list of styles **myLayer.styles**. The map can adapt to the visualisation scale/zoom level with the following mechanisms:
+A [Gridviz](https://github.com/eurostat/gridviz/) map is organised as a stack of layers accessible through **myMap.layers** property. Each layer shows data from one single dataset **myLayer.dataset**, following a list of styles **myLayer.styles**. The map can adapt to the visualisation scale/zoom level with the following mechanisms:
 
 -   Multi-resolution datasets can be defined, so that different grid resolutions can be shown depending to the zoom level, see [the multi-scale datasets in the next section](#adding-data).
 -   The layers and styles can be restricted to some scale, using their **minZoom** and **maxZoom** properties to define the zoom ranges for which they will be shown.
@@ -221,7 +221,7 @@ new gviz.Map(containerDiv)
 
 ### Tiled data
 
-For large datasets, it is recommended that you decompose them into different data chunks and index them by geographical location, as specified in the [tiled format specification](tiledformat.md). The [Gridviz](https://github.com/eurostat/gridviz/) application can then automatically retrieve only the useful data that falls into the viewer's geographical extent. Here is an example of how to load such data:
+For large datasets, it is recommended that you decompose them into different data chunks and index them by geographical location, as specified in the [tiled format specification](tiledformat.md). The [Gridviz](https://github.com/eurostat/gridviz/) map can then automatically retrieve only the useful data that falls into the viewer's geographical extent. Here is an example of how to load such data:
 
 ```javascript
 new gviz.Map(containerDiv)
@@ -278,24 +278,24 @@ new gviz.Map(containerDiv)
 
 | Method                                        | Arguments                                  | Description                                        |
 | --------------------------------------------- | ------------------------------------------ | -------------------------------------------------- |
-| _app_.**addCSVGridLayer**([args])             | See [example](#single-csv-file)            | Add a layer from a CSV grid dataset.               |
-| _app_.**addMultiScaleCSVGridLayer**([args])   | See [example](#multi-scale-csv-data)       | Add a layer from a multi scale CSV grid dataset.   |
-| _app_.**addTiledGridLayer**([args])           | See [example](#tiled-csv-data)             | Add a layer from a tiled grid dataset.             |
-| _app_.**addMultiScaleTiledGridLayer**([args]) | See [example](#multi-scale-tiled-csv-data) | Add a layer from a multi scale tiled grid dataset. |
+| _map_.**addCSVGridLayer**([args])             | See [example](#single-csv-file)            | Add a layer from a CSV grid dataset.               |
+| _map_.**addMultiScaleCSVGridLayer**([args])   | See [example](#multi-scale-csv-data)       | Add a layer from a multi scale CSV grid dataset.   |
+| _map_.**addTiledGridLayer**([args])           | See [example](#tiled-csv-data)             | Add a layer from a tiled grid dataset.             |
+| _map_.**addMultiScaleTiledGridLayer**([args]) | See [example](#multi-scale-tiled-csv-data) | Add a layer from a multi scale tiled grid dataset. |
 
 To manage creation of datasets and their possible reuse accross different layers (so that the data is loaded and stored once), the following methods are also available:
 
 | Method                                           | Arguments | Description                            |
 | ------------------------------------------------ | --------- | -------------------------------------- |
-| _app_.**addLayerFromDataset**([args])            | -         | Add a layer to the map.                |
-| _app_.**makeCSVGridDataset**([args])             | -         | Make a CSV grid dataset.               |
-| _app_.**makeTiledGridDataset**([args])           | -         | Make a tiled grid dataset.             |
-| _app_.**makeMultiScaleCSVGridDataset**([args])   | -         | Make a multi scale CSV grid dataset.   |
-| _app_.**makeMultiScaleTiledGridDataset**([args]) | -         | Make a multi scale tiled grid dataset. |
+| _map_.**addLayerFromDataset**([args])            | -         | Add a layer to the map.                |
+| _map_.**makeCSVGridDataset**([args])             | -         | Make a CSV grid dataset.               |
+| _map_.**makeTiledGridDataset**([args])           | -         | Make a tiled grid dataset.             |
+| _map_.**makeMultiScaleCSVGridDataset**([args])   | -         | Make a multi scale CSV grid dataset.   |
+| _map_.**makeMultiScaleTiledGridDataset**([args]) | -         | Make a multi scale tiled grid dataset. |
 
 ### Data pre-processing and filtering
 
-Input data can be processed/transformed before it is being used by the [Gridviz](https://github.com/eurostat/gridviz/) application in order to, for example:
+Input data can be processed/transformed before it is being used by the [Gridviz](https://github.com/eurostat/gridviz/) map in order to, for example:
 
 -   Filter/simplify the data to keep only the necessary one. This allows saving client memory,
 -   Extract/compute each cell coordinates into the **x** and **y** columns, in case the input data does not contain such columns explicitelly,
@@ -1183,7 +1183,7 @@ new gviz.Map(containerDiv)
 
 By default, the **cellInfoHTML** function is a function returning a list of all cell properties. In case several layers are defined, the **cellInfoHTML** function of the top layer is used. If it is not defined, then the layer the **cellInfoHTML** function of the layer below is used instead. If no **cellInfoHTML** function is defined for all layers, then no tooltip is shown.
 
-You can adjust the tooltip settings by specifying a tooltip object in the [app options](#app-options-object), using the following properties:
+You can adjust the tooltip settings by specifying a tooltip object in the [map options](#app-options-object), using the following properties:
 
 | Property                      | Type        | Default                        | Description                                                                           |
 | ----------------------------- | ----------- | ------------------------------ | ------------------------------------------------------------------------------------- |
@@ -1226,7 +1226,7 @@ let gridvizLayer = new L.GridvizLayer(AppOptions)
 // add it to the map
 gridvizLayer.addTo(map)
 
-//then customize it as you wish by using the gridviz app attached to our GridvizLayer...
+//then customize it as you wish by using the gridviz map attached to our GridvizLayer...
 gridvizLayer.map.addMultiScaleTiledGridLayer(etc)
 ```
 
