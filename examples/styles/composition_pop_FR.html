@@ -141,11 +141,11 @@
         const s = new gviz.CompositionStyle({
             color: getColorDict(),
             type: () => 'ring',
-            sizeCol: 'ind',
-            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
+            size: (c, r, zf, scale) => scale(+c.ind),
+            viewScale: gviz.sizeQuantileScale({ valueFunction: (c) => +c.ind, classNumber: 9, minSizePix: 8, maxSizeFactor: 1 }),
             agePyramidHeight: (c, r) => 0.95 * r,
         })
-        s.size_ = (v, r, s, zf) => r - 1.5 * zf
+        s.size_ = (c, r, zf) => r - 1.5 * zf
 
         map.addMultiScaleTiledGridLayer(
             [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
