@@ -1,7 +1,11 @@
+finalise shapecolorsize
+document shapecolorsize, composition, joyplot
+
 app -> map
 
 
-revamp layers, API - see lflt
+
+revamp layers
 static image background layer
 merge geocanvas and app
 change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coords by default (!)
@@ -189,5 +193,5 @@ Census 2021:
 - Gender (males, females)
 - Age (under 15, 15 to 64, 65 and over)
 - Employment
-- Place of birth (in the reporting country, in another EU country, outside EU)
 - Usual residence 12 months before (unchanged, within reporting country, outside of the reporting country).
+- Place of birth (in the reporting country, in another EU country, outside EU)
