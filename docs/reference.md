@@ -64,7 +64,7 @@ Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/grid
 
 ## Usage
 
-Create a [Gridviz](https://github.com/eurostat/gridviz/) application using `const app = new gviz.Map();` and customise it with the methods described in the documentation below.
+Create a [Gridviz](https://github.com/eurostat/gridviz/) application using `const map = new gviz.Map();` and customise it with the methods described in the documentation below.
 
 Here's a basic example that loads a CSV file on Europe population (5km resolution):
 

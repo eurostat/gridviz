@@ -64,7 +64,7 @@ import { App, SquareColorWGLStyle } from 'gridviz'
 Here’s a basic example that loads a CSV file of a European population grid (5km resolution):
 
 ```javascript
-let myApp = new gviz.Map(containerDiv)
+let map = new gviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoomFactor(3000)

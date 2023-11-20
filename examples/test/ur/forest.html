@@ -148,7 +148,7 @@
             const bgLayerURL = 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/' //"https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/background/elevation_shading/"
 
             let containerDiv = document.getElementById('vizAcc')
-            const app = new gviz.Map(containerDiv, { legendDivId: 'legendAcc' })
+            const map = new gviz.Map(containerDiv, { legendDivId: 'legendAcc' })
                 .setGeoCenter({ x: 4313947, y: 3100000 })
                 .setZoomFactor(8000)
                 .setZoomFactorExtent([40, 8000])

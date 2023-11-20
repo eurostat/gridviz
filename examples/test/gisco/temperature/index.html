@@ -71,7 +71,7 @@
             const bgLayerURL = 'https://ec.europa.eu/eurostat/cache/GISCO/mbkg/elevation_shading/'
 
             let containerDiv = document.getElementById('viz-container')
-            const app = new gviz.Map(containerDiv, { legendDivId: 'gridviz-legend' })
+            const map = new gviz.Map(containerDiv, { legendDivId: 'gridviz-legend' })
                 .setGeoCenter({ x: 4500000, y: 3300000 })
                 .setZoomFactor(6000)
                 .setLabelLayer(
@@ -233,7 +233,7 @@
                         // have to remove previous canvas and rebuild otherwise gridviz just keeps appending new ones
                         let existing = containerDiv.querySelector('canvas')
                         containerDiv.removeChild(existing)
-                        app = buildApp(defaultHeight, defaultWidth)
+                        map = buildApp(defaultHeight, defaultWidth)
                         update()
                         fullscreen = false
                     } else {
@@ -242,7 +242,7 @@
                         // have to remove previous canvas otherwise gridviz just keeps appending new ones
                         let existing = containerDiv.querySelector('canvas')
                         containerDiv.removeChild(existing)
-                        app = buildApp(window.screen.height, window.screen.width)
+                        map = buildApp(window.screen.height, window.screen.width)
                         update()
                         fullscreen = true
                         //"cut and paste" tooltip into containerDiv for fullscreen mode
@@ -296,7 +296,7 @@
                     // have to remove previous canvas and rebuild otherwise gridviz just keeps appending new ones
                     let existing = containerDiv.querySelector('canvas')
                     containerDiv.removeChild(existing)
-                    app = buildApp(defaultHeight, defaultWidth)
+                    map = buildApp(defaultHeight, defaultWidth)
                     update()
                     fullscreen = false
                 }

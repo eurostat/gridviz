@@ -15,7 +15,7 @@
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
         <script>
             let containerDiv = document.getElementById('viz-container')
-            const app = new gviz.Map(containerDiv)
+            const map = new gviz.Map(containerDiv)
                 .setGeoCenter({ x: 4000000, y: 2960000 })
                 .setZoomFactor(100)
                 .setZoomFactorExtent([50, 11000])

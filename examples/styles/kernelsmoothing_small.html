@@ -41,7 +41,7 @@
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
         <script>
             let containerDiv = document.getElementById('viz-container')
-            const app = new gviz.Map(containerDiv).setGeoCenter({ x: 0, y: 0 }).setZoomFactor(0.02)
+            const map = new gviz.Map(containerDiv).setGeoCenter({ x: 0, y: 0 }).setZoomFactor(0.02)
 
             //add layer
             app.addCSVGridLayer(

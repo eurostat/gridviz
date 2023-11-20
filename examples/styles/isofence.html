@@ -33,7 +33,7 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
         const col = d3.interpolateSpectral
-        const app = new gviz.Map(containerDiv)
+        const map = new gviz.Map(containerDiv)
             .setGeoCenter({ x: 3951000, y: 2255603 })
             .setZoomFactor(10)
             .addMultiScaleTiledGridLayer(
