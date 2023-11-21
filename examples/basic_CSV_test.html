@@ -4,21 +4,22 @@
 <script>
     let containerDiv = document.getElementById('map')
 
+    //make map
     const map = new gviz.Map(containerDiv, { backgroundColor: '#ffffff' })
         .setGeoCenter({ x: 4500000, y: 2900000 })
         .setZoomFactor(3000)
 
-    const dataset = new gviz.Dataset([new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)])
+    //make dataset
+    const dataset = new gviz.MultiResolutionDataset([new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)])
 
-    const layer = new gviz.Layer(
-        dataset,
-        [
-            new gviz.ShapeColorSizeStyle({
-                color: (c) => c.population > 50000 ? "red" : c.population > 10000 ? "orange" : c.population > 3000 ? "yellow" : "#5555aa"
-            }),
-        ])
+    //TODO make it possible that a layer can handle a multi scale dataset and a simple dataset the same way.
 
-    //map.layers = [layer]
-    map.layers.push(layer)
+    //make style
+    const style = new gviz.ShapeColorSizeStyle({
+        color: (c) => c.population > 50000 ? "red" : c.population > 10000 ? "orange" : c.population > 3000 ? "yellow" : "#5555aa"
+    })
+
+    //add layer
+    map.layers = [new gviz.Layer(dataset, [style])]
 
 </script>
