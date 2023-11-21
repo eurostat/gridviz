@@ -1,10 +1,11 @@
-finalise shapecolorsize
-document shapecolorsize, composition, joyplot
+check and document shapecolorsize, composition
+| **height**    | function(c,r,z,vs):number  | (v) => Math.sqrt(v)           | A function computing the height of a cell **c** in geographical unit, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |
 
-app -> map
+make demos with simple CSV files.
 
+move viewScale things at style level ?
 
-
+change stretching codes in webglcolorstyle
 revamp layers
 static image background layer
 merge geocanvas and app
@@ -16,6 +17,12 @@ API changes for v3:
 map.addLayer
 zoom factor -> zoom
 layer.addTo(map)
+
+
+Done:
+app -> map
+style based on cell directly, with viewscale (see scale functions)
+stretching: new functions
 
 
 

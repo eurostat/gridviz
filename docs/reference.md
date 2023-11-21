@@ -690,8 +690,7 @@ See [this an example with random colors](https://eurostat.github.io/gridviz/exam
 
 | Property      | Type                       | Default                       | Description                                                                                                                                   |
 | ------------- | -------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| **heightCol** | string                     | undefined                     | The name of the column used for the line height.                                                                                              |
-| **height**    | function(v,r,s,zf):number  | (v) => Math.sqrt(v)           | A function computing the height of a cell, from its **heightCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
+| **height**    | function(c,r,z,vs):number  | (v) => Math.sqrt(v)           | A function computing the height of a cell **c** in geographical unit, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |
 | **lineColor** | function(y,ys,r,zf):string | (y, ys, r, zf) => "#BBB"      | A function computing the line color from its **y** coordinate, statistics **ys**, the resolution **r** and zoom factor **zf**.                |
 | **lineWidth** | function(y,ys,r,zf):number | (y, ys, r, zf) => zf          | A function computing the line width from its **y** coordinate, statistics **ys**, the resolution **r** and zoom factor **zf**.                |
 | **fillColor** | function(y,ys,r,zf):string | (y, ys, r, zf) => "#c08c5968" | A function computing the line fill color from its **y** coordinate, statistics **ys**, the resolution **r** and zoom factor **zf**.           |
