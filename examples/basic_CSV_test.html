@@ -1,0 +1,27 @@
+<div id="map" style="height: 500px; width: 800px"></div>
+
+<script src="../dist/gridviz.js"></script>
+<script>
+    let containerDiv = document.getElementById('map')
+
+    const map = new gviz.Map(containerDiv, { backgroundColor: '#ffffff' })
+        .setGeoCenter({ x: 4500000, y: 2900000 })
+        .setZoomFactor(3000)
+
+    const dataset = new gviz.Dataset(
+        [new gviz.CSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000).getData(undefined, () => {
+            map.cg.redraw()
+        })])
+
+    const layer = new gviz.Layer(
+        dataset,
+        [
+            new gviz.ShapeColorSizeStyle({
+                color: (c) => c.population > 50000 ? "red" : c.population > 10000 ? "orange" : c.population > 3000 ? "yellow" : "#5555aa"
+            }),
+        ])
+
+        //map.layers = [layer]
+        map.layers.push(layer)
+
+</script>
