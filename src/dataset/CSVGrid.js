@@ -17,8 +17,8 @@ export class CSVGrid extends DatasetComponent {
      * @param {number} resolution The dataset resolution in geographical unit.
      * @param {{preprocess?:(function(import("../Dataset").Cell):boolean)}} opts
      */
-    constructor(url, resolution, opts = {}) {
-        super(url, resolution, opts)
+    constructor(map, url, resolution, opts = {}) {
+        super(map, url, resolution, opts)
 
         /**
          * @private
@@ -29,55 +29,56 @@ export class CSVGrid extends DatasetComponent {
          * @type {string}
          * @private  */
         this.infoLoadingStatus = 'notLoaded'
+
+        //get data
+        this.getData(undefined)
     }
 
     /**
      * Request data within a geographic envelope.
-     *
      * @param {import("../Dataset").Envelope|undefined} e
-     * @param {function():void} redraw
      */
-    getData(e, redraw) {
+    getData(e) {
         //check if data already loaded
         if (this.infoLoadingStatus != 'notLoaded') return this
 
         //load data
         this.infoLoadingStatus = 'loading'
-        ;(async () => {
-            try {
-                const data = await csv(this.url)
+            ; (async () => {
+                try {
+                    const data = await csv(this.url)
 
-                //convert coordinates in numbers
-                for (const c of data) {
-                    c.x = +c.x
-                    c.y = +c.y
-                }
-
-                //preprocess/filter
-                if (this.preprocess) {
-                    this.cells = []
+                    //convert coordinates in numbers
                     for (const c of data) {
-                        const b = this.preprocess(c)
-                        if (b == false) continue
-                        this.cells.push(c)
+                        c.x = +c.x
+                        c.y = +c.y
                     }
-                } else {
-                    this.cells = data
+
+                    //preprocess/filter
+                    if (this.preprocess) {
+                        this.cells = []
+                        for (const c of data) {
+                            const b = this.preprocess(c)
+                            if (b == false) continue
+                            this.cells.push(c)
+                        }
+                    } else {
+                        this.cells = data
+                    }
+
+                    //TODO check if redraw is necessary
+                    //that is if the dataset belongs to a layer which is visible at the current zoom level
+
+                    //execute the callback, usually a draw function
+                    if (this.map) this.map.redraw()
+
+                    this.infoLoadingStatus = 'loaded'
+                } catch (error) {
+                    //mark as failed
+                    this.infoLoadingStatus = 'failed'
+                    this.cells = []
                 }
-
-                //TODO check if redraw is necessary
-                //that is if the dataset belongs to a layer which is visible at the current zoom level
-
-                //execute the callback, usually a draw function
-                if (redraw) redraw()
-
-                this.infoLoadingStatus = 'loaded'
-            } catch (error) {
-                //mark as failed
-                this.infoLoadingStatus = 'failed'
-                this.cells = []
-            }
-        })()
+            })()
 
         return this
     }

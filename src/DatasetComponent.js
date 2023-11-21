@@ -9,13 +9,20 @@
  */
 export class DatasetComponent {
     /**
+     * @param {import("./Map")} map The map.
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution, in the CRS geographical unit.
      * @param {{preprocess?:function(import("./Dataset").Cell):boolean}} opts
      * @abstract
      */
-    constructor(url, resolution, opts = {}) {
+    constructor(map, url, resolution, opts = {}) {
         opts = opts || {}
+
+        /**
+         * The map.
+         * @protected
+         * @type {import("./Map")} */
+        this.map = map
 
         /**
          * The url of the dataset.
@@ -45,10 +52,9 @@ export class DatasetComponent {
      *
      * @abstract
      * @param {import("./Dataset").Envelope|undefined} extGeo
-     * @param {function():void} callback
      * @returns {this}
      */
-    getData(extGeo, callback) {
+    getData(extGeo = undefined) {
         throw new Error('Method getData not implemented.')
     }
 

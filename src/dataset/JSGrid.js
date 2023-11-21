@@ -16,7 +16,7 @@ export class JSGrid extends DatasetComponent {
      * @param {Array.<Object>} cells The cells.
      */
     constructor(resolution, cells) {
-        super("", resolution)
+        super(undefined,"", resolution)
 
         /**
          * @private
@@ -28,9 +28,8 @@ export class JSGrid extends DatasetComponent {
      * Request data within a geographic envelope.
      *
      * @param {import("../Dataset.js").Envelope|undefined} e
-     * @param {function():void} redraw
      */
-    getData(e, redraw) { return this }
+    getData(e) { return this }
 
     /**
      * Fill the view cache with all cells which are within a geographical envelope.

@@ -8,10 +8,7 @@
         .setGeoCenter({ x: 4500000, y: 2900000 })
         .setZoomFactor(3000)
 
-    const dataset = new gviz.Dataset(
-        [new gviz.CSVGrid("https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000).getData(undefined, () => {
-            map.cg.redraw()
-        })])
+    const dataset = new gviz.Dataset([new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)])
 
     const layer = new gviz.Layer(
         dataset,
@@ -21,7 +18,7 @@
             }),
         ])
 
-        //map.layers = [layer]
-        map.layers.push(layer)
+    //map.layers = [layer]
+    map.layers.push(layer)
 
 </script>

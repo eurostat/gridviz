@@ -62,11 +62,11 @@ export class Layer {
     /**
      * Return the relevant dataset component for a specified zoom factor.
      *
-     * @param {number} zf
+     * @param {number} z
      * @returns {import("./DatasetComponent").DatasetComponent|undefined}
      * */
-    getDatasetComponent(zf) {
-        if (zf < this.minZoom || zf > this.maxZoom) return
+    getDatasetComponent(z) {
+        if (z < this.minZoom || z > this.maxZoom) return
 
         //special case whith single component dataset
         if (this.dataset.datasetComponents.length == 1) return this.dataset.datasetComponents[0]
@@ -74,7 +74,7 @@ export class Layer {
         const rs = this.dataset.resolutions
         let i = 0
         let z = rs[i] / this.pixNb
-        while (z < zf && i < rs.length) {
+        while (z < z && i < rs.length) {
             i++
             z = rs[i] / this.pixNb
         }
