@@ -5,17 +5,12 @@
     let containerDiv = document.getElementById('map')
 
     new gviz.Map(containerDiv)
-        //set position and zoom
         .setGeoCenter({ x: 4500000, y: 2900000 })
         .setZoomFactor(1000)
-        //add multi scale tiled layer
         .addTiledGridLayer(
-            //data URL
             'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/5000m/',
-            //the styles
             [
                 new gviz.ShapeColorSizeStyle({
-                    //set the color depending on the 'TOT_P_2021' value
                     color: (c) => c.TOT_P_2021 > 50000 ? "red" : c.TOT_P_2021 > 10000 ? "orange" : c.TOT_P_2021 > 3000 ? "yellow" : "#5555aa"
                 }),
             ]

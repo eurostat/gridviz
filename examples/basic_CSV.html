@@ -5,19 +5,13 @@
     let containerDiv = document.getElementById('map')
 
     new gviz.Map(containerDiv, { backgroundColor: '#ffffff' })
-        //set position and zoom
         .setGeoCenter({ x: 4500000, y: 2900000 })
         .setZoomFactor(3000)
-        //add CSV layer
         .addCSVGridLayer(
-            //data URL
             'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv',
-            //resolution, in CRS unit
             10000,
-            //the style
             [
                 new gviz.ShapeColorSizeStyle({
-                    //set the color depending on the 'population' value
                     color: (c) => c.population > 50000 ? "red" : c.population>10000? "orange" : c.population>3000? "yellow" : "#5555aa"
                 }),
             ]
