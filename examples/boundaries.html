@@ -34,25 +34,25 @@
                         else if (zf < 2000) return p.lvl == 1 ? 1.8 : 2.5
                         else return 1.2
                     },
-                    lineDash: (f, zf) => {
+                    lineDash: (f, z) => {
                         const p = f.properties
                         if (p.co === 'T') return []
-                        if (zf < 400)
+                        if (z < 400)
                             return p.lvl == 3
-                                ? [2 * zf, 2 * zf]
+                                ? [2 * z, 2 * z]
                                 : p.lvl == 2
-                                ? [5 * zf, 2 * zf]
+                                ? [5 * z, 2 * z]
                                 : p.lvl == 1
-                                ? [5 * zf, 2 * zf]
-                                : [10 * zf, 3 * zf]
-                        else if (zf < 1000)
+                                ? [5 * z, 2 * z]
+                                : [10 * z, 3 * z]
+                        else if (z < 1000)
                             return p.lvl == 2
-                                ? [5 * zf, 2 * zf]
+                                ? [5 * z, 2 * z]
                                 : p.lvl == 1
-                                ? [5 * zf, 2 * zf]
-                                : [10 * zf, 3 * zf]
-                        else if (zf < 2000) return p.lvl == 1 ? [5 * zf, 2 * zf] : [10 * zf, 3 * zf]
-                        else return [10 * zf, 3 * zf]
+                                ? [5 * z, 2 * z]
+                                : [10 * z, 3 * z]
+                        else if (z < 2000) return p.lvl == 1 ? [5 * z, 2 * z] : [10 * z, 3 * z]
+                        else return [10 * z, 3 * z]
                     },
                 })
                 .redraw()
