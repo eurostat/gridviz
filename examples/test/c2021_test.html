@@ -150,7 +150,7 @@
             //set layer
             if (layCode === 'pop') {
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     dataset,
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -172,7 +172,7 @@
                     }
                 )
             } else if (layCode === 'sex') {
-                map.addLayerFromDataset(
+                map.addLayer(
                     dataset,
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -193,7 +193,7 @@
                 )
 
             } else if (layCode === 'emp') {
-                map.addLayerFromDataset(
+                map.addLayer(
                     dataset,
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -216,7 +216,7 @@
 
             } else if (layCode === 'age') {
                 const colAge = d3.interpolateSpectral
-                map.addLayerFromDataset(
+                map.addLayer(
                     dataset,
                     [
                         new gviz.CompositionStyle({
@@ -241,7 +241,7 @@
                 )
 
             } else if (layCode === 'mobility') {
-                map.addLayerFromDataset(
+                map.addLayer(
                     dataset,
                     [
                         new gviz.CompositionStyle({
@@ -264,7 +264,7 @@
                 )
 
             } else if (layCode === 'pob') {
-                map.addLayerFromDataset(
+                map.addLayer(
                     dataset,
                     [
                         new gviz.CompositionStyle({

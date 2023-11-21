@@ -215,7 +215,7 @@
                 const colR = d3.interpolateOrRd
 
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -255,7 +255,7 @@
                 map.setBackgroundColor("black")
 
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -289,7 +289,7 @@
                 )
             } else if (layCode == 'size') {
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -332,7 +332,7 @@
                 )
             } else if (layCode == 'dots') {
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz.DotDensityStyle({
@@ -349,7 +349,7 @@
                 )
             } else if (layCode == 'pillar') {
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz.PillarStyle({
@@ -368,7 +368,7 @@
                 )
             } else if (layCode == 'joyplot') {
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz.JoyPlotStyle({
@@ -390,7 +390,7 @@
                 const colR = d3.interpolateOrRd
 
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz_sm.KernelSmoothingStyle({
@@ -447,7 +447,7 @@
             } else if (layCode == 'colorCh') {
                 const streC = 0.22
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -500,7 +500,7 @@
                 const sigma = document.querySelector('#sigmaCCH').value
 
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz_sm.KernelSmoothingStyle({
@@ -564,7 +564,7 @@
                     })
                 )
             } else if (layCode == 'sizeCh') {
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -623,7 +623,7 @@
                 const maxAngle = 60
                 const per = "p" + y1 + "_" + y2
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz.SegmentStyle({
@@ -697,7 +697,7 @@
                 const ts = ["ind2015", "ind2017", "ind2019"]
 
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz.TimeSeriesStyle({

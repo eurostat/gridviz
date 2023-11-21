@@ -287,7 +287,7 @@ To manage creation of datasets and their possible reuse accross different layers
 
 | Method                                           | Arguments | Description                            |
 | ------------------------------------------------ | --------- | -------------------------------------- |
-| _map_.**addLayerFromDataset**([args])            | -         | Add a layer to the map.                |
+| _map_.**addLayer**([args])            | -         | Add a layer to the map.                |
 | _map_.**makeCSVGridDataset**([args])             | -         | Make a CSV grid dataset.               |
 | _map_.**makeTiledGridDataset**([args])           | -         | Make a tiled grid dataset.             |
 | _map_.**makeMultiScaleCSVGridDataset**([args])   | -         | Make a multi scale CSV grid dataset.   |

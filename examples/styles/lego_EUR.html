@@ -159,7 +159,7 @@
                     ])
                     for (let t = 0; t <= 1; t += 1 / 10) colors.push(colFun(t))
 
-                    map.addLayerFromDataset(
+                    map.addLayer(
                         ds.el,
                         gviz.LegoStyle.get('elevation', {
                             colors: colors,
@@ -280,7 +280,7 @@
                         48: 'No data',
                     }
 
-                    map.addLayerFromDataset(
+                    map.addLayer(
                         ds.lc,
                         gviz.LegoStyle.getCat('clc', {
                             color: clcColors,
@@ -293,7 +293,7 @@
                 } else if (layCode === 'pop') {
                     //population
 
-                    map.addLayerFromDataset(
+                    map.addLayer(
                         ds.pop,
                         gviz.LegoStyle.get('TOT_P_2021', {
                             color: d3.interpolateOrRd,

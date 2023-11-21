@@ -22,7 +22,7 @@ export class Dataset {
      * @param {Array.<number>} resolutions The resolutions of the dataset components, in CRS geographical unit
      * @param { {preprocess?:function(Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values. Can be used also to select cells to keep.
      */
-    constructor(datasetComponents, resolutions, opts = {}) {
+    constructor(datasetComponents, resolutions =[], opts = {}) {
         opts = opts || {}
 
         /** The dataset components.

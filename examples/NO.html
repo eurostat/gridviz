@@ -164,7 +164,7 @@
                 const y = document.querySelector('#year').value
 
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     //set dataset: population dataset on year y
                     ds["pop" + y],
                     [
@@ -206,7 +206,7 @@
                 const colR = d3.interpolateYlOrRd
                 const nb = 5
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     //set dataset: population dataset on year y
                     ds["pop" + y],
                     [
@@ -254,7 +254,7 @@
                 //get selected year
                 const y = document.querySelector('#year').value
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds["popf" + y],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -313,7 +313,7 @@
                 const y = document.querySelector('#year').value
 
                 //age
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds["popf" + y],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -351,7 +351,7 @@
                 const ts = []; for (let i = 2002; i <= 2022; i++) ts.push("y" + i)
 
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     //use dataset on population time series
                     ds.popTS,
                     //define style

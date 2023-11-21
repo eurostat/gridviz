@@ -206,7 +206,7 @@
             //set layer
             if (layCode === 'pop') {
                 //population
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].inc[year],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -245,7 +245,7 @@
             } else if (layCode === 'popAge') {
                 //population by age
                 const col = d3.interpolateSpectral
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].ind[year],
                     [
                         new gviz.CompositionStyle({
@@ -333,7 +333,7 @@
             } else if (layCode === 'popAge3') {
                 //population by age (3 age groups)
                 const col = d3.interpolateSpectral
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].ind[year],
                     [
                         new gviz.CompositionStyle({
@@ -384,7 +384,7 @@
                 )
             } else if (layCode === 'ageR') {
                 //young VS elderly
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].ind[year],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -429,7 +429,7 @@
                 )
             } else if (layCode === 'income') {
                 //income
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].inc[year],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -459,7 +459,7 @@
                 //)
             } else if (layCode === 'poverty') {
                 //poverty
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -502,7 +502,7 @@
                 )
             } else if (layCode === 'men_size') {
                 //houshold size
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].men[year],
                     [
                         new gviz.CompositionStyle({
@@ -552,7 +552,7 @@
                 )
             } else if (layCode === 'men_mono') {
                 //single-parent
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -594,7 +594,7 @@
                 )
             } else if (layCode === 'men_owner') {
                 //owners
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].men[year],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -635,7 +635,7 @@
                 )
             } else if (layCode === 'men_house_surf') {
                 //housing surface per houshold
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].men[year],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -669,7 +669,7 @@
                 )
             } else if (layCode === 'men_house_collective') {
                 //housing type: house/collective
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].men[year],
                     [
                         new gviz.CompositionStyle({
@@ -715,7 +715,7 @@
             } else if (layCode === 'log_age') {
                 //housing age
                 const col = d3.interpolateViridis
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].log[year],
                     [
                         new gviz.CompositionStyle({
@@ -782,7 +782,7 @@
                 )
             } else if (layCode === 'log_soc_nb') {
                 //social housing
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].log[year],
                     [
                         new gviz.CompositionStyle({
@@ -834,7 +834,7 @@
                 )
             } else if (layCode === 'log_soc_per') {
                 //social housing percentage
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds[geo].log[year],
                     [
                         new gviz.SquareColorWGLStyle({

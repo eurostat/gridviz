@@ -450,7 +450,7 @@ export class Map {
      * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset.js').Cell):string}} opts The layer options.
      * @returns {this}
      */
-    addLayerFromDataset(dataset, styles, opts) {
+    addLayer(dataset, styles, opts) {
         const lay = new Layer(dataset, styles, opts)
         this.layers.push(lay)
         return this
@@ -564,7 +564,7 @@ export class Map {
      */
     addCSVGridLayer(url, resolution, styles, opts) {
         const ds = this.makeCSVGridDataset(url, resolution, opts)
-        return this.addLayerFromDataset(ds, styles, opts)
+        return this.addLayer(ds, styles, opts)
     }
 
     /**
@@ -576,7 +576,7 @@ export class Map {
      */
     addTiledGridLayer(url, styles, opts) {
         const ds = this.makeTiledGridDataset(url, opts)
-        return this.addLayerFromDataset(ds, styles, opts)
+        return this.addLayer(ds, styles, opts)
     }
 
     /**
@@ -590,7 +590,7 @@ export class Map {
      */
     addMultiScaleCSVGridLayer(resolutions, resToURL, styles, opts) {
         const ds = this.makeMultiScaleCSVGridDataset(resolutions, resToURL, opts)
-        return this.addLayerFromDataset(ds, styles, opts)
+        return this.addLayer(ds, styles, opts)
     }
 
     /**
@@ -602,7 +602,7 @@ export class Map {
      */
     addMultiScaleTiledGridLayer(resolutions, resToURL, styles, opts) {
         const ds = this.makeMultiScaleTiledGridDataset(resolutions, resToURL, opts)
-        return this.addLayerFromDataset(ds, styles, opts)
+        return this.addLayer(ds, styles, opts)
     }
 
     /**

@@ -231,7 +231,7 @@
             //select layer and style
             if (layCode === 'y2006' || layCode === 'y2011' || layCode === 'y2018' || layCode === 'y2021') {
                 const layCode_ = "TOT_P_" + layCode.replace('y', '')
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.pop,
                     [
                         new gviz.SquareColorWGLStyle({
@@ -270,7 +270,7 @@
                 if (yIni != yFin) {
                     const layCode_ = 'd' + yIni + '_' + yFin
 
-                    map.addLayerFromDataset(
+                    map.addLayer(
                         ds.pop,
                         [
                             new gviz.ShapeColorSizeStyle({
@@ -317,7 +317,7 @@
 
                 //urbanisation
             } else if (layCode === 'degurba') {
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.pop,
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -344,7 +344,7 @@
                     NA: 'gray',
                 }
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.degurba,
                     [
                         new gviz.CompositionStyle({
@@ -466,7 +466,7 @@
 
                 //road transport performence
             } else if (layCode === 'rtp') {
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.rtp,
                     [
                         new gviz.SquareColorWGLStyle({
@@ -543,7 +543,7 @@
                     })
                 )
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.acc,
                     [
                         new gviz.SquareColorCatWGLStyle({
@@ -558,7 +558,7 @@
                         cellInfoHTML: cHTML,
                     }
                 )
-                map.addLayerFromDataset(ds.acc, [popStyle], {
+                map.addLayer(ds.acc, [popStyle], {
                     pixNb: 1.5,
                     maxZoom: 300,
                     cellInfoHTML: cHTML,
@@ -621,7 +621,7 @@
                     })
                 )
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.acc,
                     [
                         new gviz.SquareColorCatWGLStyle({
@@ -636,7 +636,7 @@
                         cellInfoHTML: cHTML,
                     }
                 )
-                map.addLayerFromDataset(ds.acc, [popStyle], {
+                map.addLayer(ds.acc, [popStyle], {
                     pixNb: 1.5,
                     maxZoom: 300,
                     cellInfoHTML: cHTML,

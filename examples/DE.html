@@ -224,7 +224,7 @@
 
             //set layer
             if (layCode === 'pop') {
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.INSGESAMT,
                     [
                         new gviz.SquareColorWGLStyle({
@@ -256,7 +256,7 @@
                 const colR = d3.interpolateYlOrRd
                 const nb = 5
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.INSGESAMT,
                     [
                         new gviz_sm.KernelSmoothingStyle({
@@ -305,7 +305,7 @@
             } else if (layCode === 'popSex') {
                 const fs = d3.format('.1f')
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     //ds.demo,
                     ds.GESCHLECHT,
                     [
@@ -368,7 +368,7 @@
                 ND 8 No data
                 */
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.FAMSTND_AUSF,
                     [
                         new gviz.CompositionStyle({
@@ -432,7 +432,7 @@
                 /*population by age (5 age groups)  ALTER_KURZ   1 Under 18     2 18 - 29    3 30 - 49    4 50 - 64   5 65 and over */
 
                 //const col = d3.interpolateSpectral
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.ALTER_KURZ,
                     [
                         new gviz.CompositionStyle({
@@ -494,7 +494,7 @@
                 )
             } else if (layCode === 'ageR') {
                 //young VS elderly
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.ALTER_KURZ,
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -548,7 +548,7 @@
 
                 const sized = document.querySelector('#popCoBCitCB').checked
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.GEBURTLAND_GRP,
                     [
                         new gviz.CompositionStyle({
@@ -616,7 +616,7 @@
 
                 const sized = document.querySelector('#popCoBCitCB').checked
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.STAATSANGE_GRP,
                     [
                         new gviz.CompositionStyle({
@@ -686,7 +686,7 @@
 
                 const sized = document.querySelector('#popReligCB').checked
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.RELIGION_KURZ,
                     [
                         new gviz.CompositionStyle({
@@ -745,7 +745,7 @@
  3	 Gereihtes Haus
  4	 Anderer Gebäudetyp */
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.GEBTYPBAUWEISE,
                     [
                         new gviz.CompositionStyle({
@@ -834,7 +834,7 @@
                 const col = d3.interpolateViridis
                 const colsDict = {}; for (let i = 1; i <= 10; i++) colsDict["" + i] = col((i - 1) / 9)
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.BAUJAHR_MZ,
                     [
                         new gviz.CompositionStyle({
@@ -883,7 +883,7 @@
 5	 Einzel-/Mehrraumöfen (auch Nachtspeicherheizung)			  Chauffages pour une ou plusieurs pièces (également chauffage à accumulation de nuit)
 6	 Keine Heizung im Gebäude oder in den Wohnungen			  Pas de chauffage dans l'immeuble ni dans les appartements */
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     ds.HEIZTYP,
                     [
                         new gviz.CompositionStyle({

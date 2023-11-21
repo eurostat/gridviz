@@ -271,7 +271,7 @@
 
                 if (style == 'color') {
                     //add layer
-                    map.addLayerFromDataset(
+                    map.addLayer(
                         popDataset,
                         [
                             new gviz.SquareColorWGLStyle({
@@ -303,7 +303,7 @@
                     )
                 } else if (style == 'pillar') {
                     //add layer
-                    map.addLayerFromDataset(
+                    map.addLayer(
                         popDataset,
                         [
                             new gviz.PillarStyle({
@@ -322,7 +322,7 @@
                     )
                 } else if (style == 'joyplot') {
                     //add layer
-                    map.addLayerFromDataset(
+                    map.addLayer(
                         popDataset,
                         [
                             new gviz.JoyPlotStyle({

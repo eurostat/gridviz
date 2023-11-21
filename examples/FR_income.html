@@ -199,7 +199,7 @@
 
             if (layCode == 'color') {
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     incDataset[geo][year_],
                     [
                         new gviz.SquareColorWGLStyle({
@@ -226,7 +226,7 @@
 
             } else if (layCode == 'size') {
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     incDataset[geo][year_],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -277,7 +277,7 @@
             } else if (layCode == 'alpha') {
                 const str = -10
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     incDataset[geo][year_],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -320,7 +320,7 @@
                 const colR = d3.scaleQuantize([0, 1], [d3.schemeCategory10[4], d3.schemeCategory10[0], d3.schemeCategory10[2], d3.schemeCategory10[1], d3.schemeCategory10[3]]);
 
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     incTsDataset[geo],
                     [
                         new gviz.TimeSeriesStyle({
@@ -422,7 +422,7 @@
                 const nb = 8
 
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     incDataset[geo][year_],
                     [
                         new gviz_sm.KernelSmoothingStyle({
@@ -471,7 +471,7 @@
             } else if (layCode == 'colorCh') {
                 const streC = 0.22
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -524,7 +524,7 @@
                 const sigma = document.querySelector('#sigmaCCH').value
 
                 //add layer
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz_sm.KernelSmoothingStyle({
@@ -588,7 +588,7 @@
                     })
                 )
             } else if (layCode == 'sizeCh') {
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz.ShapeColorSizeStyle({
@@ -647,7 +647,7 @@
                 const maxAngle = 60
                 const per = "p" + y1 + "_" + y2
 
-                map.addLayerFromDataset(
+                map.addLayer(
                     popDataset[geo],
                     [
                         new gviz.SegmentStyle({

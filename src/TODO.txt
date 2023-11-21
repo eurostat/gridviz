@@ -1,8 +1,8 @@
 move viewScale things at style level ?
 
+revamp layers
 make demos with simple CSV files. more minimalistics, with only the tested parameters.
 change stretching codes in webglcolorstyle
-revamp layers
 static image background layer
 merge geocanvas and app
 change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coords by default (!)
@@ -21,7 +21,7 @@ Done:
 app -> map
 style based on cell directly, with viewscale (see scale functions)
 stretching: new functions
-
+addLayerFromDataset -> addLayer
 
 
 style value by alpha: Document

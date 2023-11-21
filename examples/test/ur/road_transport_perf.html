@@ -208,7 +208,7 @@
             ttFun = (c) => '<b>' + c.rp + '</b> road transport performance'
 
             //road transport performance layer
-            map.addLayerFromDataset(
+            map.addLayer(
                 ds,
                 [
                     new gviz.SquareColorWGLStyle({
@@ -230,7 +230,7 @@
             )
 
             //population layer
-            map.addLayerFromDataset(
+            map.addLayer(
                 ds,
                 [
                     new gviz.ShapeColorSizeStyle({
