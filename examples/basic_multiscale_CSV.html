@@ -15,9 +15,6 @@
                     color: (c, r) => { const d = 100000 * c.population / (r * r); return d > 50 ? "red" : d > 10 ? "orange" : d > 3 ? "yellow" : "#5555aa" }
                 }),
             ],
-            {
-                //the maximum pixel size before jumping to a lower resolution
-                pixNb: 3,
-            }
+            { pixNb: 3 }
         )
 </script>

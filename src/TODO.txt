@@ -9,6 +9,7 @@ change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coor
 extract modules ?
 stretching: transition to new functions - clean stretching lib
 zf -> z
+pixNb -> something better
 
 API changes for v3:
 map.addLayer
