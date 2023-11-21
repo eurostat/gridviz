@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { DatasetComponent } from '../DatasetComponent.js'
+import { Dataset } from '../Dataset.js'
 
 /**
  * @todo
@@ -10,7 +10,7 @@ import { DatasetComponent } from '../DatasetComponent.js'
  *
  * @author Joseph Davies, Julien Gaffuri
  */
-export class COGeo extends DatasetComponent {
+export class COGeo extends Dataset {
     /**
      *
      * @param {String} url

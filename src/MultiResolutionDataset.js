@@ -2,15 +2,8 @@
 'use strict'
 
 /**
- * A grid cell.
- * @typedef {{x: number, y: number}} Cell */
-/**
- * An envelope.
- * @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
-
-/**
  * A multi resolution dataset of grid cells.
- * It consists of different {@link DatasetComponent}s for each resolution.
+ * It consists of different {@link Dataset}s for each resolution.
  *
  * @abstract
  *
@@ -18,22 +11,22 @@
  */
 export class MultiResolutionDataset {
     /**
-     * @param {Array.<import("./Dataset").DatasetComponent>} datasetComponents The dataset components
-     * @param {Array.<number>} resolutions The resolutions of the dataset components, in CRS geographical unit
+     * @param {Array.<import("./Dataset").Dataset>} datasets The datasets
+     * @param {Array.<number>} resolutions The resolutions of the datasets, in CRS geographical unit
      * @param { {preprocess?:function(Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values. Can be used also to select cells to keep.
      */
-    constructor(datasetComponents, resolutions =[], opts = {}) {
+    constructor(datasets, resolutions =[], opts = {}) {
         opts = opts || {}
 
-        /** The dataset components.
-         * @type {Array.<import("./Dataset").DatasetComponent>} */
-        this.datasetComponents = datasetComponents
+        /** The dataset.
+         * @type {Array.<import("./Dataset").Dataset>} */
+        this.datasetComponents = datasets
 
-        /** The resolutions of the dataset components, in CRS geographical unit.
+        /** The resolutions of the datasets, in CRS geographical unit.
          * @type {Array.<number>} */
         this.resolutions = resolutions
 
-        //there must be as many dataset components as resolutions
+        //there must be as many datasets as resolutions
         if (this.datasetComponents.length > 1 && this.datasetComponents.length != this.resolutions.length)
             throw new Error(
                 'Uncompatible number of datasets and resolutions: ' +
@@ -47,7 +40,7 @@ export class MultiResolutionDataset {
     }
 
     /**
-     * Set a preprocess function for all dataset components.
+     * Set a preprocess function for all datasets.
      * This is a function applied on each cell after it has been loaded.
      *
      * @param {function(Cell):boolean} preprocess
@@ -59,18 +52,18 @@ export class MultiResolutionDataset {
     }
 
     /**
-     * A function to ease the creation of datasets from their components.
+     * A function to ease the creation of multi resolution datasets.
      *
-     * @param {Array.<number>} resolutions The resolutions of the dataset components, in CRS geographical unit
-     * @param {function(number):import("./Dataset").DatasetComponent} resToDatasetComponent Function returning a dataset component from a resolution
+     * @param {Array.<number>} resolutions The resolutions of the datasets, in CRS geographical unit
+     * @param {function(number):import("./Dataset").Dataset} resToDataset Function returning a dataset from a resolution
      * @param { {preprocess?:function(Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values
      * @returns {MultiResolutionDataset}
      */
-    static make(resolutions, resToDatasetComponent, opts) {
-        //make dataset components
+    static make(resolutions, resToDataset, opts) {
+        //make datasets
         const dsc = []
-        for (const res of resolutions) dsc.push(resToDatasetComponent(res))
-        //make dataset
+        for (const res of resolutions) dsc.push(resToDataset(res))
+        //make multi resolution dataset
         return new MultiResolutionDataset(dsc, resolutions, opts)
     }
 }

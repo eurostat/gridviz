@@ -10,7 +10,7 @@ export class Layer {
     /**
      * @param {import("./MultiResolutionDataset").MultiResolutionDataset} dataset The multi resolution dataset to show.
      * @param {Array.<import("./Style").Style>} styles The styles, ordered in drawing order.
-     * @param {{visible?:boolean,alpha?:number,blendOperation?:GlobalCompositeOperation,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import("./MultiResolutionDataset").Cell):string}} opts
+     * @param {{visible?:boolean,alpha?:number,blendOperation?:GlobalCompositeOperation,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import("./Dataset").Cell):string}} opts
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(dataset, styles, opts = {}) {
@@ -55,7 +55,7 @@ export class Layer {
         /**
          * The function returning cell information as HTML.
          * This is typically used for tooltip information.
-         * @type {function(import("./MultiResolutionDataset").Cell, number):string} */
+         * @type {function(import("./Dataset").Cell, number):string} */
         this.cellInfoHTML = opts.cellInfoHTML || Layer.defaultCellInfoHTML
     }
 
@@ -88,7 +88,7 @@ export class Layer {
      * The default function returning cell information as HTML.
      * This is typically used for tooltip information.
      *
-     * @param {import("./MultiResolutionDataset").Cell} cell
+     * @param {import("./Dataset").Cell} cell
      * @returns {string}
      */
     static defaultCellInfoHTML(cell) {

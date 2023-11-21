@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { DatasetComponent } from '../DatasetComponent.js'
+import { Dataset } from '../Dataset.js'
 //import { fromUrl } from "geotiff"
 
 /**
@@ -10,7 +10,7 @@ import { DatasetComponent } from '../DatasetComponent.js'
  *
  * @author Joseph Davies, Julien Gaffuri
  */
-export class GeoTIFF extends DatasetComponent {
+export class GeoTIFF extends Dataset {
     /**
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.

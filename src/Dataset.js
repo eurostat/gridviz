@@ -2,6 +2,13 @@
 'use strict'
 
 /**
+ * A grid cell.
+ * @typedef {{x: number, y: number}} Cell */
+/**
+ * An envelope.
+ * @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
+
+/**
  * A dataset component, of grid cells.
  * @abstract
  *
@@ -12,7 +19,7 @@ export class Dataset {
      * @param {import("./Map")} map The map.
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution, in the CRS geographical unit.
-     * @param {{preprocess?:function(import("./MultiResolutionDataset").Cell):boolean}} opts
+     * @param {{preprocess?:function(Cell):boolean}} opts
      * @abstract
      */
     constructor(map, url, resolution, opts = {}) {
@@ -38,12 +45,12 @@ export class Dataset {
 
         /**
          * A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column. And also to determine which cells to keep after loading.
-         * @type {(function(import("./MultiResolutionDataset").Cell):boolean )| undefined } */
+         * @type {(function(Cell):boolean )| undefined } */
         this.preprocess = opts.preprocess || undefined
 
         /** The cells within the view
          * @protected
-         * @type {Array.<import("./MultiResolutionDataset").Cell>} */
+         * @type {Array.<Cell>} */
         this.cellsViewCache = []
     }
 
@@ -51,7 +58,7 @@ export class Dataset {
      * Request data within a geographic envelope.
      *
      * @abstract
-     * @param {import("./MultiResolutionDataset").Envelope|undefined} extGeo
+     * @param {Envelope|undefined} extGeo
      * @returns {this}
      */
     getData(extGeo = undefined) {
@@ -61,7 +68,7 @@ export class Dataset {
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      * @abstract
-     * @param {import("./MultiResolutionDataset").Envelope} extGeo The view geographical envelope.
+     * @param {Envelope} extGeo The view geographical envelope.
      * @returns {void}
      */
     updateViewCache(extGeo) {
@@ -72,8 +79,8 @@ export class Dataset {
      * Get a cell under a given position, if any.
      *
      * @param {{x:number,y:number}} posGeo
-     * @param {Array.<import("./MultiResolutionDataset").Cell>} cells Some cells from the dataset (a subset if necessary, usually the view cache).
-     * @returns {import("./MultiResolutionDataset").Cell|undefined}
+     * @param {Array.<Cell>} cells Some cells from the dataset (a subset if necessary, usually the view cache).
+     * @returns {Cell|undefined}
      */
     getCellFromPosition(posGeo, cells) {
         //compute candidate cell position
@@ -112,7 +119,7 @@ export class Dataset {
         return this.resolution
     }
 
-    /** @returns {Array.<import("./MultiResolutionDataset").Cell>} */
+    /** @returns {Array.<Cell>} */
     getViewCache() {
         return this.cellsViewCache
     }
