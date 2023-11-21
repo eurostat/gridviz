@@ -6,11 +6,11 @@
 import { DatasetComponent } from '../DatasetComponent.js'
 
 /**
- * A dataset composed of a single CSV file (not tiled).
+ * A dataset composed of cells defined in javascript, or loaded outside of gridviz map.
  *
  * @author Joseph Davies, Julien Gaffuri
  */
-export class LGrid extends DatasetComponent {
+export class JSGrid extends DatasetComponent {
     /**
      * @param {number} resolution The dataset resolution in geographical unit.
      * @param {Array.<Object>} cells The cells.
