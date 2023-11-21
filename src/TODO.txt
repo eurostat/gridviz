@@ -1,9 +1,6 @@
-check and document shapecolorsize
-| **height**    | function(c,r,z,vs):number  | (v) => Math.sqrt(v)           | A function computing the height of a cell **c** in geographical unit, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |
-
 move viewScale things at style level ?
 
-make demos with simple CSV files.
+make demos with simple CSV files. more minimalistics, with only the tested parameters.
 change stretching codes in webglcolorstyle
 revamp layers
 static image background layer
