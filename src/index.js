@@ -13,7 +13,7 @@ export { DatasetComponent } from './DatasetComponent.js'
 export { TiledGrid } from './dataset/TiledGrid.js'
 export { GridTile } from './dataset/GridTile.js'
 export { CSVGrid } from './dataset/CSVGrid.js'
-export { LGrid } from './dataset/LGrid.js'
+export { JSGrid } from './dataset/JSGrid.js'
 //export { GeoTIFF } from "./dataset/GeoTIFF"
 
 // export styles
