@@ -19,7 +19,7 @@ export class JoyPlotStyle extends Style {
 
         /** A function returning the height of a cell in geographical unit.
          * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
-        this.height = opts.height //(c,r,z,vs) => {}
+        this.height = opts.height || ((c, r) => r * Math.random()) //(c,r,z,vs) => {}
 
         /**
          * @type {function(number,{min:number, max:number},number,number):string} */

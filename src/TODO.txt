@@ -12,6 +12,7 @@ merge geocanvas and app
 change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coords by default (!)
 extract modules ?
 stretching: transition to new functions - clean stretching lib
+zf -> z
 
 API changes for v3:
 map.addLayer
