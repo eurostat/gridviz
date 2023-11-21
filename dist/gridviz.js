@@ -6837,7 +6837,7 @@ class BackgroundLayer {
         this.z0 = opts.z0 || 0
 
         /** @type {function(number):string} */
-        this.filterColor = opts.filterColor // (zf) => "#eee7"
+        this.filterColor = opts.filterColor // (z) => "#eee7"
     }
 
     /**
