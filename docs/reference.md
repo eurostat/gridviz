@@ -441,7 +441,7 @@ See [this example showing population of France by age group](https://eurostat.gi
 | Property                         | Type                        | Default         | Description                                                                                                                                                                                                       |
 | -------------------------------- | --------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **color**                        | Object, string -> color     | undefined       | The dictionary (string -> color) which give the color of each category.                                                                                                                                           |
-| **type**                         | function(c,r,z,vs):CompositionType | () => "flag     | A function returning the symbol type of a cell **c**. CompositionType are among _"flag", "piechart", "ring", "segment", "radar", "agepyramid", "halftone"_                                                        |
+| **type**                         | function(c,r,z,vs):CompositionType | () => "flag     | A function returning the symbol type of a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. CompositionType are among _"flag", "piechart", "ring", "segment", "radar", "agepyramid", "halftone"_                                                        |
 | **size**    | function(c,r,z,vs):number  | ((c,r) => r)  | A function computing the size of a cell **c** in geographical unit, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |
 | **stripesOrientation**           | function(c,r,z,vs):number     | () => 0         | For style types with stripes (flag, segment), a function returning the symbol stripes orientation (0 for horizontal, other for vertical) for a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |
 | **offsetAngle**                  | function(c,r,z,vs):number     | () => 0         | For radar, halftone or pie chart style, a function returning the offset angle for a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. The angle is specified in degree. The rotation is anti-clockwise. |
@@ -538,7 +538,7 @@ See [this example with random colors](https://eurostat.github.io/gridviz/example
 [![pillars style](img/styles/pillar.png)](https://eurostat.github.io/gridviz/examples/styles/pillar.html)
 [![pillars style](img/styles/pillar_simple.png)](https://eurostat.github.io/gridviz/examples/styles/pillar_simple.html)
 
-This style shows the grid cells as 3D pillars or, with changeable heigth, width and color.
+This style shows the grid cells as 3D pillars or, with changeable height, width and color.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/pillar.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/pillar.html)).
 
