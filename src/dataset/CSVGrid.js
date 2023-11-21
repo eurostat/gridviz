@@ -1,28 +1,29 @@
 //@ts-check
 'use strict'
 
-/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../Dataset").Envelope }} GridInfo */
+/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../MultiResolutionDataset.js").Envelope }} GridInfo */
 
 import { csv } from 'd3-fetch'
-import { DatasetComponent } from '../DatasetComponent.js'
+import { Dataset } from '../Dataset.js'
 
 /**
  * A dataset composed of a single CSV file (not tiled).
  *
  * @author Joseph Davies, Julien Gaffuri
  */
-export class CSVGrid extends DatasetComponent {
+export class CSVGrid extends Dataset {
     /**
+     * @param {import("../Map")} map The map.
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {{preprocess?:(function(import("../Dataset").Cell):boolean)}} opts
+     * @param {{preprocess?:(function(import("../MultiResolutionDataset.js").Cell):boolean)}} opts
      */
     constructor(map, url, resolution, opts = {}) {
         super(map, url, resolution, opts)
 
         /**
          * @private
-         * @type {Array.<import("../Dataset").Cell>} */
+         * @type {Array.<import("../MultiResolutionDataset.js").Cell>} */
         this.cells = []
 
         /**
@@ -36,7 +37,7 @@ export class CSVGrid extends DatasetComponent {
 
     /**
      * Request data within a geographic envelope.
-     * @param {import("../Dataset").Envelope|undefined} e
+     * @param {import("../MultiResolutionDataset.js").Envelope|undefined} e
      */
     getData(e) {
         //check if data already loaded
@@ -86,7 +87,7 @@ export class CSVGrid extends DatasetComponent {
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      *
-     * @param {import("../Dataset").Envelope} extGeo
+     * @param {import("../MultiResolutionDataset.js").Envelope} extGeo
      * @returns {void}
      */
     updateViewCache(extGeo) {

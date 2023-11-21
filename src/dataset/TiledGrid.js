@@ -1,12 +1,11 @@
 //@ts-check
 'use strict'
 
-/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../Dataset").Envelope, format:import("../DatasetComponent").Format }} GridInfo */
+/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../MultiResolutionDataset.js").Envelope, format:import("../Dataset.js").Format }} GridInfo */
 
 // internal
 import { GridTile } from './GridTile.js'
-import { Map } from '../Map.js'
-import { DatasetComponent } from '../DatasetComponent.js'
+import { Dataset } from '../Dataset.js'
 import { monitor, monitorDuration } from '../utils/Utils.js'
 
 // external
@@ -17,20 +16,14 @@ import { json, csv } from 'd3-fetch'
  *
  * @author Joseph Davies, Julien Gaffuri
  */
-export class TiledGrid extends DatasetComponent {
+export class TiledGrid extends Dataset {
     /**
+     * @param {import("../Map")} map The map.
      * @param {string} url The URL of the dataset.
-     * @param {Map} map The map.
-     * @param {{preprocess?:(function(import("../Dataset").Cell):boolean) }} opts
+     * @param {{preprocess?:(function(import("../MultiResolutionDataset.js").Cell):boolean) }} opts
      */
-    constructor(url, map, opts = {}) {
-        super(url, 0, opts)
-
-        /**
-         * The map being used.
-         * @type {Map}
-         */
-        this.map = map
+    constructor(map, url, opts = {}) {
+        super(map, url, 0, opts)
 
         /**
          * The grid info object, from the info.json file.
@@ -83,8 +76,8 @@ export class TiledGrid extends DatasetComponent {
      * Compute a tiling envelope from a geographical envelope.
      * This is the function to use to know which tiles to download for a geographical view.
      *
-     * @param {import("../Dataset").Envelope} e
-     * @returns {import("../Dataset").Envelope|undefined}
+     * @param {import("../MultiResolutionDataset.js").Envelope} e
+     * @returns {import("../MultiResolutionDataset.js").Envelope|undefined}
      */
     getTilingEnvelope(e) {
         if (!this.info) {
@@ -107,7 +100,7 @@ export class TiledGrid extends DatasetComponent {
     /**
      * Request data within a geographic envelope.
      *
-     * @param {import("../Dataset").Envelope} extGeo
+     * @param {import("../MultiResolutionDataset.js").Envelope} extGeo
      * @param {function():void} redrawFun
      * @returns {this}
      */
@@ -118,12 +111,12 @@ export class TiledGrid extends DatasetComponent {
         if (!this.info) return this
 
         //tiles within the scope
-        /** @type {import("../Dataset").Envelope|undefined} */
+        /** @type {import("../MultiResolutionDataset.js").Envelope|undefined} */
         const tb = this.getTilingEnvelope(extGeo)
         if (!tb) return this
 
         //grid bounds
-        /** @type {import("../Dataset").Envelope} */
+        /** @type {import("../MultiResolutionDataset.js").Envelope} */
         const gb = this.info.tilingBounds
 
         for (let xT = Math.max(tb.xMin, gb.xMin); xT <= Math.min(tb.xMax, gb.xMax); xT++) {
@@ -140,11 +133,11 @@ export class TiledGrid extends DatasetComponent {
                 this.cache[xT][yT] = "loading";
                 (async () => {
                     //request tile
-                    /** @type {Array.<import("../Dataset").Cell>}  */
+                    /** @type {Array.<import("../MultiResolutionDataset.js").Cell>}  */
                     let cells
 
                     try {
-                        /** @type {Array.<import("../Dataset").Cell>}  */
+                        /** @type {Array.<import("../MultiResolutionDataset.js").Cell>}  */
                         // @ts-ignore
                         const data = await csv(this.url + xT + '/' + yT + '.csv')
 
@@ -221,7 +214,7 @@ export class TiledGrid extends DatasetComponent {
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      * @abstract
-     * @param {import("../Dataset").Envelope} extGeo
+     * @param {import("../MultiResolutionDataset.js").Envelope} extGeo
      * @returns {void}
      */
     updateViewCache(extGeo) {
@@ -232,12 +225,12 @@ export class TiledGrid extends DatasetComponent {
         if (!this.info) return
 
         //tiles within the scope
-        /** @type {import("../Dataset").Envelope|undefined} */
+        /** @type {import("../MultiResolutionDataset.js").Envelope|undefined} */
         const tb = this.getTilingEnvelope(extGeo)
         if (!tb) return
 
         //grid bounds
-        /** @type {import("../Dataset").Envelope} */
+        /** @type {import("../MultiResolutionDataset.js").Envelope} */
         const gb = this.info.tilingBounds
 
         for (let xT = Math.max(tb.xMin, gb.xMin); xT <= Math.min(tb.xMax, gb.xMax); xT++) {

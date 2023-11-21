@@ -2,75 +2,118 @@
 'use strict'
 
 /**
- * A grid cell.
- * @typedef {{x: number, y: number}} Cell */
-/**
- * An envelope.
- * @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
-
-/**
- * A multi resolution dataset of grid cells.
- * It consists of different {@link DatasetComponent}s for each resolution.
- *
+ * A dataset component, of grid cells.
  * @abstract
  *
  * @author Joseph Davies, Julien Gaffuri
  */
 export class Dataset {
     /**
-     * @param {Array.<import("./DatasetComponent").DatasetComponent>} datasetComponents The dataset components
-     * @param {Array.<number>} resolutions The resolutions of the dataset components, in CRS geographical unit
-     * @param { {preprocess?:function(Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values. Can be used also to select cells to keep.
+     * @param {import("./Map")} map The map.
+     * @param {string} url The URL of the dataset.
+     * @param {number} resolution The dataset resolution, in the CRS geographical unit.
+     * @param {{preprocess?:function(import("./MultiResolutionDataset").Cell):boolean}} opts
+     * @abstract
      */
-    constructor(datasetComponents, resolutions =[], opts = {}) {
+    constructor(map, url, resolution, opts = {}) {
         opts = opts || {}
 
-        /** The dataset components.
-         * @type {Array.<import("./DatasetComponent").DatasetComponent>} */
-        this.datasetComponents = datasetComponents
+        /**
+         * The map.
+         * @protected
+         * @type {import("./Map")} */
+        this.map = map
 
-        /** The resolutions of the dataset components, in CRS geographical unit.
-         * @type {Array.<number>} */
-        this.resolutions = resolutions
+        /**
+         * The url of the dataset.
+         * @protected
+         * @type {string} */
+        this.url = url
 
-        //there must be as many dataset components as resolutions
-        if (this.datasetComponents.length > 1 && this.datasetComponents.length != this.resolutions.length)
-            throw new Error(
-                'Uncompatible number of datasets and resolutions: ' +
-                    this.datasetComponents.length +
-                    ' ' +
-                    this.resolutions.length
-            )
+        /**
+         * The dataset resolution in geographical unit.
+         * @protected
+         * @type {number} */
+        this.resolution = resolution
 
-        //set dataset preprocesses if specified
-        if (opts.preprocess) this.setPrepocesses(opts.preprocess)
+        /**
+         * A preprocess to run on each cell after loading. It can be used to apply some specific treatment before or compute a new column. And also to determine which cells to keep after loading.
+         * @type {(function(import("./MultiResolutionDataset").Cell):boolean )| undefined } */
+        this.preprocess = opts.preprocess || undefined
+
+        /** The cells within the view
+         * @protected
+         * @type {Array.<import("./MultiResolutionDataset").Cell>} */
+        this.cellsViewCache = []
     }
 
     /**
-     * Set a preprocess function for all dataset components.
-     * This is a function applied on each cell after it has been loaded.
+     * Request data within a geographic envelope.
      *
-     * @param {function(Cell):boolean} preprocess
+     * @abstract
+     * @param {import("./MultiResolutionDataset").Envelope|undefined} extGeo
      * @returns {this}
      */
-    setPrepocesses(preprocess) {
-        for (let ds of this.datasetComponents) ds.preprocess = preprocess
-        return this
+    getData(extGeo = undefined) {
+        throw new Error('Method getData not implemented.')
     }
 
     /**
-     * A function to ease the creation of datasets from their components.
-     *
-     * @param {Array.<number>} resolutions The resolutions of the dataset components, in CRS geographical unit
-     * @param {function(number):import("./DatasetComponent").DatasetComponent} resToDatasetComponent Function returning a dataset component from a resolution
-     * @param { {preprocess?:function(Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values
-     * @returns {Dataset}
+     * Fill the view cache with all cells which are within a geographical envelope.
+     * @abstract
+     * @param {import("./MultiResolutionDataset").Envelope} extGeo The view geographical envelope.
+     * @returns {void}
      */
-    static make(resolutions, resToDatasetComponent, opts) {
-        //make dataset components
-        const dsc = []
-        for (const res of resolutions) dsc.push(resToDatasetComponent(res))
-        //make dataset
-        return new Dataset(dsc, resolutions, opts)
+    updateViewCache(extGeo) {
+        throw new Error('Method updateViewCache not implemented.')
+    }
+
+    /**
+     * Get a cell under a given position, if any.
+     *
+     * @param {{x:number,y:number}} posGeo
+     * @param {Array.<import("./MultiResolutionDataset").Cell>} cells Some cells from the dataset (a subset if necessary, usually the view cache).
+     * @returns {import("./MultiResolutionDataset").Cell|undefined}
+     */
+    getCellFromPosition(posGeo, cells) {
+        //compute candidate cell position
+        /** @type {number} */
+        //const r = this.getResolution()
+        /** @type {number} */
+        //const cellX = r * Math.floor(posGeo.x / r)
+        /** @type {number} */
+        //const cellY = r * Math.floor(posGeo.y / r)
+
+        /*/get cell
+        for (const cell of cells) {
+            if (cell.x != cellX) continue
+            if (cell.y != cellY) continue
+            return cell
+        }
+        return undefined*/
+
+        /** @type {number} */
+        const r = this.getResolution()
+        for (const cell of cells) {
+            if (posGeo.x < cell.x) continue
+            else if (cell.x + r < posGeo.x) continue
+            else if (posGeo.y < cell.y) continue
+            else if (cell.y + r < posGeo.y) continue
+            else return cell
+        }
+        return undefined
+
+    }
+
+    //getters and setters
+
+    /** @returns {number} */
+    getResolution() {
+        return this.resolution
+    }
+
+    /** @returns {Array.<import("./MultiResolutionDataset").Cell>} */
+    getViewCache() {
+        return this.cellsViewCache
     }
 }

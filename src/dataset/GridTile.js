@@ -8,13 +8,13 @@
  */
 export class GridTile {
     /**
-     * @param {Array.<import("../Dataset").Cell>} cells The tile cells.
+     * @param {Array.<import("../MultiResolutionDataset").Cell>} cells The tile cells.
      * @param {number} xT The X position of the tile.
      * @param {number} yT The Y position of the tile.
      * @param {import("./CSVGrid").GridInfo} gridInfo The grid info object.
      */
     constructor(cells, xT, yT, gridInfo) {
-        /** @type {Array.<import("../Dataset").Cell>} */
+        /** @type {Array.<import("../MultiResolutionDataset").Cell>} */
         this.cells = cells
         /** @type {number} */
         this.x = xT
@@ -24,7 +24,7 @@ export class GridTile {
         const r = gridInfo.resolutionGeo
         const s = gridInfo.tileSizeCell
 
-        /** @type {import("../Dataset").Envelope} */
+        /** @type {import("../MultiResolutionDataset").Envelope} */
         this.extGeo = {
             xMin: gridInfo.originPoint.x + r * s * this.x,
             xMax: gridInfo.originPoint.x + r * s * (this.x + 1),

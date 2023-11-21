@@ -22,6 +22,8 @@ app -> map
 style based on cell directly, with viewscale (see scale functions)
 stretching: new functions
 addLayerFromDataset -> addLayer
+Dataset -> multiresolution dataset
+dataset component: dataset
 
 
 style value by alpha: Document

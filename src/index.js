@@ -6,8 +6,8 @@ export { Map } from './Map.js'
 export { GeoCanvas } from './GeoCanvas.js'
 export { Style } from './Style.js'
 export { Layer } from './Layer.js'
+export { MultiResolutionDataset } from './MultiResolutionDataset.js'
 export { Dataset } from './Dataset.js'
-export { DatasetComponent } from './DatasetComponent.js'
 
 // export dataset types
 export { TiledGrid } from './dataset/TiledGrid.js'

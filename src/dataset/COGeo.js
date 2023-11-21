@@ -16,8 +16,8 @@ export class COGeo extends DatasetComponent {
      * @param {String} url
      * @param {{preprocess?:(function(import("../Dataset").Cell):boolean)}} opts
      */
-    constructor(url, opts = {}) {
-        super(url, 0, opts)
+    constructor(map, url, opts = {}) {
+        super(map, url, 0, opts)
     }
 
     //TODO Use https://geotiffjs.github.io/
