@@ -21,15 +21,15 @@ export class ShapeColorSizeStyle extends Style {
 
         /** A function returning the color of the cell.
          * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
-        this.color = opts.color //(c,r,z,vs) => {}
+        this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
          * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
-        this.size = opts.size //(c,r,z,vs) => {}
+        this.size = opts.size || ((c,r) => r) //(c,r,z,vs) => {}
 
         /** A function returning the shape of a cell.
          * @type {function(import("../Dataset.js").Cell,number, number,object):import("../Style.js").Shape} */
-        this.shape = opts.shape //(c,r,z,vs) => {}
+        this.shape = opts.shape || (() => "square") //(c,r,z,vs) => {}
     }
 
     /**

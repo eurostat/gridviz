@@ -385,11 +385,9 @@ See [this example with random shape, color and size](https://eurostat.github.io/
 
 | Property     | Type                      | Default                 | Description                                                                                                                           |
 | ------------ | ------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| **colorCol** | string                    | undefined               | The name of the column used for the color.                                                                                            |
-| **color**    | function(v,r,s,zf):string | (v,r,s,zf) => "#EA6BAC" | A function computing the cell color from its **colorCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**. |
-| **sizeCol**  | string                    | undefined               | The name of the column used for the size.                                                                                             |
-| **size**     | function(v,r,s,zf):number | (v,r,s,zf) => r         | A function computing the cell size from its **sizeCol** value **v**, the resolution **r**, statistics **s** and zoom factor **zf**.   |
-| **shape**    | function(c):string        | () => "square"          | A function computing the shape of cell **c**. Expected values are within _{"square", "circle", "diamond", "donut", "none"}_           |
+| **color**    | function(c,r,z,vs):string | () => "#EA6BAC" | A function computing the color of a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |
+| **size**     | function(c,r,z,vs):number | (c,r) => r         | A function computing the size of a cell **c** in geographical unit, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. |
+| **shape**    | function(c,r,z,vs):string        | () => "square"          | A function computing the shape of a cell **c**, depending on its resolution **r**, the zoom **z** and an optional view scale object **vs**. Expected values are within _{"square", "circle", "diamond", "donut", "none"}_        |
 
 ### Square color WebGL Style
 
