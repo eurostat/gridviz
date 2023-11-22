@@ -20,17 +20,17 @@ export class MultiResolutionDataset {
 
         /** The dataset.
          * @type {Array.<import("./Dataset").Dataset>} */
-        this.datasetComponents = datasets
+        this.datasets = datasets
 
         /** The resolutions of the datasets, in CRS geographical unit.
          * @type {Array.<number>} */
         this.resolutions = resolutions
 
         //there must be as many datasets as resolutions
-        if (this.datasetComponents.length > 1 && this.datasetComponents.length != this.resolutions.length)
+        if (this.datasets.length > 1 && this.datasets.length != this.resolutions.length)
             throw new Error(
                 'Uncompatible number of datasets and resolutions: ' +
-                this.datasetComponents.length +
+                this.datasets.length +
                 ' ' +
                 this.resolutions.length
             )
@@ -48,8 +48,8 @@ export class MultiResolutionDataset {
      * */
     getDataset(z, pixNb) {
 
-        //special case whith single component dataset
-        if (this.datasetComponents.length == 1) return this.datasetComponents[0]
+        //special case whith single dataset
+        if (this.datasets.length == 1) return this.datasets[0]
 
         const rs = this.resolutions
         let i = 0
@@ -58,10 +58,10 @@ export class MultiResolutionDataset {
             i++
             z_ = rs[i] / pixNb
         }
-        //if (i == 0) return this.dataset.datasetComponents[0];
-        //return this.dataset.datasetComponents[i - 1];
-        if (i == rs.length) return this.datasetComponents[rs.length - 1]
-        return this.datasetComponents[i]
+        //if (i == 0) return this.dataset.datasets[0];
+        //return this.dataset.datasets[i - 1];
+        if (i == rs.length) return this.datasets[rs.length - 1]
+        return this.datasets[i]
     }
 
 
@@ -74,7 +74,7 @@ export class MultiResolutionDataset {
      * @returns {this}
      */
     setPrepocesses(preprocess) {
-        for (let ds of this.datasetComponents) ds.preprocess = preprocess
+        for (let ds of this.datasets) ds.preprocess = preprocess
         return this
     }
 

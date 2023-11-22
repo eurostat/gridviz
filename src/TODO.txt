@@ -15,6 +15,7 @@ extract modules ?
 stretching: transition to new functions - clean stretching lib
 zf -> z
 pixNb -> something better
+population.csv files: make 2021 ones
 
 API changes for v3:
 map.addLayer

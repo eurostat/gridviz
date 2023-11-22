@@ -4,6 +4,34 @@
 <script>
     let containerDiv = document.getElementById('map')
 
+    //define map
+    const map = new gviz.Map(containerDiv)
+        .setGeoCenter({ x: 4500000, y: 2900000 })
+        .setZoomFactor(3000)
+
+    //define dataset
+    const dataset = new gviz.TiledGrid(map, "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/10000m/")
+
+    //define color for each cell c
+    const colorFunction = (c) => {
+        if (c.TOT_P_2021 > 150000) return "#993404"
+        else if (c.TOT_P_2021 > 60000) return "#d95f0e"
+        else if (c.TOT_P_2021 > 20000) return "#fe9929"
+        else if (c.TOT_P_2021 > 6000) return "#fec44f"
+        else if (c.TOT_P_2021 > 1500) return "#fee391"
+        else return "#ffffd4"
+    }
+
+    //define style
+    const style = new gviz.ShapeColorSizeStyle({ color: colorFunction })
+
+    //add layer to map
+    map.layers = [new gviz.Layer(dataset, [style])]
+
+
+
+
+    /*
     new gviz.Map(containerDiv)
         .setGeoCenter({ x: 4500000, y: 2900000 })
         .setZoomFactor(5000)
@@ -16,5 +44,5 @@
                 }),
             ],
             { pixNb: 3 }
-        )
+        )*/
 </script>
