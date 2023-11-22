@@ -26,21 +26,21 @@ export class Layer {
         this.visible = opts.visible === false ? false : true
 
         /** A function returning the alpha (transparency/opacity), between 0.0 (fully transparent) and 1.0 (fully opaque).
-         *  The function parameter is the zoom factor.
+         *  The function parameter is the .
          * (see CanvasRenderingContext2D: globalAlpha property)
          * @type {function(number):number|undefined} */
         this.alpha = opts.alpha
 
-        /** A function returning the blend operation. The function parameter is the zoom factor.
+        /** A function returning the blend operation. The function parameter is the .
          * (see CanvasRenderingContext2D: globalCompositeOperation property)
          * @type {GlobalCompositeOperation} */
         this.blendOperation = opts.blendOperation || (zf => "source-over")
 
-        /** The minimum zoom factor: Below this level, the layer is not shown.
+        /** The minimum : Below this level, the layer is not shown.
          * @type {number} */
         this.minZoom = opts.minZoom || 0
 
-        /** The maximum zoom factor: Above this level, the layer is not shown.
+        /** The maximum : Above this level, the layer is not shown.
          * @type {number} */
         this.maxZoom = opts.maxZoom || Infinity
 

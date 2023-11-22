@@ -6802,11 +6802,11 @@ class BackgroundLayer {
          * @type {boolean} */
         this.visible = opts.visible == false ? false : true
 
-        /** The minimum zoom factor: Below this level, the layer is not shown.
+        /** The minimum : Below this level, the layer is not shown.
          * @type {number} */
         this.minZoom = opts.minZoom || 0
 
-        /** The maximum zoom factor: Above this level, the layer is not shown.
+        /** The maximum : Above this level, the layer is not shown.
          * @type {number} */
         this.maxZoom = opts.maxZoom || Infinity
 
@@ -6996,11 +6996,11 @@ class BackgroundLayerWMS {
          * @type {boolean} */
         this.visible = opts.visible == false ? false : true
 
-        /** The minimum zoom factor: Below this level, the layer is not shown.
+        /** The minimum : Below this level, the layer is not shown.
          * @type {number} */
         this.minZoom = opts.minZoom || 0
 
-        /** The maximum zoom factor: Above this level, the layer is not shown.
+        /** The maximum : Above this level, the layer is not shown.
          * @type {number} */
         this.maxZoom = opts.maxZoom || Infinity
 
@@ -7292,7 +7292,7 @@ class GeoCanvas {
      * @constructor
      * @param {HTMLCanvasElement} canvas
      * @param {object} center Geographical coordinates of the center
-     * @param {number} zf The zoom factor (pixel size, in ground m)
+     * @param {number} zf The  (pixel size, in ground m)
      * @param {object} opts
      */
     constructor(canvas, center, zf, opts) {
@@ -7317,7 +7317,7 @@ class GeoCanvas {
         // set geo coordinates of the center
         this.center = center || { x: this.w * 0.5, y: this.h * 0.5 }
 
-        // zoom factor: pixel size, in m/pix
+        // : pixel size, in m/pix
         /** @type {number} */
         this.zf = zf
 
@@ -7419,12 +7419,12 @@ class GeoCanvas {
         return this.center
     }
 
-    /** @param {number} v The zoom factor (pixel size, in ground m) */
+    /** @param {number} v The  (pixel size, in ground m) */
     setZf(v) {
         this.zf = v
         if (this.slider) this.slider.attr('value', +this.zf)
     }
-    /** @returns {number} The zoom factor (pixel size, in ground m) */
+    /** @returns {number} The  (pixel size, in ground m) */
     getZf() {
         return this.zf
     }
@@ -7498,7 +7498,7 @@ class GeoCanvas {
 
     /**
      * Zoom.
-     * @param {number} f The zoom factor, within ]0, Infinity]. 1 is for no change. <1 to zoom-in, >1 to zoom-out.
+     * @param {number} f The , within ]0, Infinity]. 1 is for no change. <1 to zoom-in, >1 to zoom-out.
      * @param {number} xGeo The x geo position fixed in the screen.
      * @param {number} yGeo The y geo position fixed in the screen.
      */
@@ -7803,7 +7803,7 @@ class LabelLayer {
             return
         }
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         //text align
@@ -7941,21 +7941,21 @@ class Layer {
         this.visible = opts.visible === false ? false : true
 
         /** A function returning the alpha (transparency/opacity), between 0.0 (fully transparent) and 1.0 (fully opaque).
-         *  The function parameter is the zoom factor.
+         *  The function parameter is the .
          * (see CanvasRenderingContext2D: globalAlpha property)
          * @type {function(number):number|undefined} */
         this.alpha = opts.alpha
 
-        /** A function returning the blend operation. The function parameter is the zoom factor.
+        /** A function returning the blend operation. The function parameter is the .
          * (see CanvasRenderingContext2D: globalCompositeOperation property)
          * @type {GlobalCompositeOperation} */
         this.blendOperation = opts.blendOperation || (zf => "source-over")
 
-        /** The minimum zoom factor: Below this level, the layer is not shown.
+        /** The minimum : Below this level, the layer is not shown.
          * @type {number} */
         this.minZoom = opts.minZoom || 0
 
-        /** The maximum zoom factor: Above this level, the layer is not shown.
+        /** The maximum : Above this level, the layer is not shown.
          * @type {number} */
         this.maxZoom = opts.maxZoom || Infinity
 
@@ -8184,7 +8184,7 @@ class LineLayer {
 
         //TODO sort lines by width ?
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         //draw in geo coordinates
@@ -9059,22 +9059,22 @@ class Style {
         this.visible = opts.visible === false ? false : true
 
         /** A function returning the alpha (transparency/opacity), between 0.0 (fully transparent) and 1.0 (fully opaque).
-         *  The function parameter is the zoom factor.
+         *  The function parameter is the .
          * (see CanvasRenderingContext2D: globalAlpha property)
          * @type {function(number):number|undefined} */
         this.alpha = opts.alpha
 
-        /** A function returning the blend operation. The function parameter is the zoom factor.
+        /** A function returning the blend operation. The function parameter is the .
          * (see CanvasRenderingContext2D: globalCompositeOperation property)
          * @type {function(number):GlobalCompositeOperation} */
         this.blendOperation = opts.blendOperation || (zf => "source-over")
 
-        /** The minimum zoom factor: Below this level, the layer is not shown.
+        /** The minimum : Below this level, the layer is not shown.
          * @type {number}
          * */
         this.minZoom = opts.minZoom || 0
 
-        /** The maximum zoom factor: Above this level, the layer is not shown.
+        /** The maximum : Above this level, the layer is not shown.
          * @type {number}
          * */
         this.maxZoom = opts.maxZoom || Infinity
@@ -11055,7 +11055,7 @@ class CompositionStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         //get view scale
@@ -11422,7 +11422,7 @@ class DotDensityStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         let stat
@@ -11603,7 +11603,7 @@ class IsoFenceStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         let stat
@@ -11863,7 +11863,7 @@ class JoyPlotStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
 
         cg.ctx.lineJoin = 'round'
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         //get view scale
@@ -12141,7 +12141,7 @@ class MosaicStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         let statColor
@@ -12266,7 +12266,7 @@ class NinjaStarStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         let statSize
@@ -12432,7 +12432,7 @@ class PillarStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         let statHeight
@@ -12659,7 +12659,7 @@ class SegmentStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         let statColor
@@ -12805,7 +12805,7 @@ class ShapeColorSizeStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         //get view scale
@@ -12930,7 +12930,7 @@ class SideCatStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
 
         if (!cells || cells.length == 0) return
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         /**  @type {Array.<Side>} */
@@ -13123,7 +13123,7 @@ class SideStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         //compute stats on cell values
@@ -13370,7 +13370,7 @@ class SquareColorCatWGLStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Styl
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         //add vertice and fragment data
@@ -13525,7 +13525,7 @@ class SquareColorWGLStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         //compute color variable statistics
@@ -13658,7 +13658,7 @@ class StrokeStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         let statColor
@@ -13984,7 +13984,7 @@ class TextStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         let statText
@@ -14146,7 +14146,7 @@ class TimeSeriesStyle extends _Style_js__WEBPACK_IMPORTED_MODULE_0__.Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         let statWidth

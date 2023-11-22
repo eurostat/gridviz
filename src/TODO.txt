@@ -22,7 +22,7 @@ API changes for v3:
 
 Done:
 removal of map.addLayer
-zoom factor -> zoom
+ -> zoom
 add map.setView(x,y,z)
 App -> Map
 style based on cell directly, with viewscale (see scale functions)

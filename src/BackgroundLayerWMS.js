@@ -18,11 +18,11 @@ export class BackgroundLayerWMS {
          * @type {boolean} */
         this.visible = opts.visible == false ? false : true
 
-        /** The minimum zoom factor: Below this level, the layer is not shown.
+        /** The minimum : Below this level, the layer is not shown.
          * @type {number} */
         this.minZoom = opts.minZoom || 0
 
-        /** The maximum zoom factor: Above this level, the layer is not shown.
+        /** The maximum : Above this level, the layer is not shown.
          * @type {number} */
         this.maxZoom = opts.maxZoom || Infinity
 

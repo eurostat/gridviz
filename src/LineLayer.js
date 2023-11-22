@@ -64,7 +64,7 @@ export class LineLayer {
 
         //TODO sort lines by width ?
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         //draw in geo coordinates

@@ -45,7 +45,7 @@ export class JoyPlotStyle extends Style {
 
         cg.ctx.lineJoin = 'round'
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         //get view scale

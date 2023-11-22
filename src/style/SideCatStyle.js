@@ -45,7 +45,7 @@ export class SideCatStyle extends Style {
 
         if (!cells || cells.length == 0) return
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         /**  @type {Array.<Side>} */

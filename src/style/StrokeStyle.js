@@ -53,7 +53,7 @@ export class StrokeStyle extends Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         let statColor

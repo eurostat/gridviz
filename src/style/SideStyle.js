@@ -51,7 +51,7 @@ export class SideStyle extends Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         //compute stats on cell values

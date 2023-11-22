@@ -16,7 +16,7 @@ export class GeoCanvas {
      * @constructor
      * @param {HTMLCanvasElement} canvas
      * @param {object} center Geographical coordinates of the center
-     * @param {number} zf The zoom factor (pixel size, in ground m)
+     * @param {number} zf The  (pixel size, in ground m)
      * @param {object} opts
      */
     constructor(canvas, center, zf, opts) {
@@ -41,7 +41,7 @@ export class GeoCanvas {
         // set geo coordinates of the center
         this.center = center || { x: this.w * 0.5, y: this.h * 0.5 }
 
-        // zoom factor: pixel size, in m/pix
+        // : pixel size, in m/pix
         /** @type {number} */
         this.zf = zf
 
@@ -143,12 +143,12 @@ export class GeoCanvas {
         return this.center
     }
 
-    /** @param {number} v The zoom factor (pixel size, in ground m) */
+    /** @param {number} v The  (pixel size, in ground m) */
     setZf(v) {
         this.zf = v
         if (this.slider) this.slider.attr('value', +this.zf)
     }
-    /** @returns {number} The zoom factor (pixel size, in ground m) */
+    /** @returns {number} The  (pixel size, in ground m) */
     getZf() {
         return this.zf
     }
@@ -222,7 +222,7 @@ export class GeoCanvas {
 
     /**
      * Zoom.
-     * @param {number} f The zoom factor, within ]0, Infinity]. 1 is for no change. <1 to zoom-in, >1 to zoom-out.
+     * @param {number} f The , within ]0, Infinity]. 1 is for no change. <1 to zoom-in, >1 to zoom-out.
      * @param {number} xGeo The x geo position fixed in the screen.
      * @param {number} yGeo The y geo position fixed in the screen.
      */

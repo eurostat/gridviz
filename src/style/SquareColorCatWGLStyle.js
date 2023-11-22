@@ -64,7 +64,7 @@ export class SquareColorCatWGLStyle extends Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         //add vertice and fragment data

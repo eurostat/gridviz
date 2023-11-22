@@ -92,7 +92,7 @@ export class LabelLayer {
             return
         }
 
-        //zoom factor
+        //
         const zf = cg.getZf()
 
         //text align
