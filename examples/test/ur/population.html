@@ -159,8 +159,8 @@
             let containerDiv = document.getElementById('vizPop')
             const map = new gviz.Map(containerDiv, { legendDivId: 'legendPop' })
                 .setGeoCenter({ x: 4313947, y: 3100000 })
-                .setZoomFactor(8000)
-                .setZoomFactorExtent([40, 8000])
+                .setZoom(8000)
+                .setZoomExtent([40, 8000])
                 .setLabelLayer(
                     gviz_es.getEuronymeLabelLayer('EUR', 50, {
                         ccIn: [
@@ -351,10 +351,10 @@
             //zoom
             document
                 .querySelector('#zoomin')
-                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 0.8).redraw())
+                .addEventListener('click', () => map.setZoom(map.getZoom() * 0.8).redraw())
             document
                 .querySelector('#zoomout')
-                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 1.2).redraw())
+                .addEventListener('click', () => map.setZoom(map.getZoom() * 1.2).redraw())
 
             //initialise
             update()

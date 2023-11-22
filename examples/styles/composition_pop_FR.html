@@ -69,8 +69,8 @@
         let containerDiv = document.getElementById('viz-container')
         const map = new gviz.Map(containerDiv)
             .setGeoCenter({ x: 3763437, y: 2891045 })
-            .setZoomFactor(100)
-            .setZoomFactorExtent([5, 1500])
+            .setZoom(100)
+            .setZoomExtent([5, 1500])
             .setLabelLayer(
                 gviz_es.getEuronymeLabelLayer('FR', '20', {
                     haloWidth: () => 5,

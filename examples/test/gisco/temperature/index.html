@@ -73,7 +73,7 @@
             let containerDiv = document.getElementById('viz-container')
             const map = new gviz.Map(containerDiv, { legendDivId: 'gridviz-legend' })
                 .setGeoCenter({ x: 4500000, y: 3300000 })
-                .setZoomFactor(6000)
+                .setZoom(6000)
                 .setLabelLayer(
                     gviz_es.getEuronymeLabelLayer('EUR', 50, {
                         ccIn: [
@@ -135,7 +135,7 @@
                     origin: [0, 6000000],
                     filterColor: (zf) => '#ffffffc0',
                 })
-                .setZoomFactorExtent([0, 9000])
+                .setZoomExtent([0, 9000])
 
             const colors = [
                 '#75174C',
@@ -217,10 +217,10 @@
             //zoom
             document
                 .querySelector('#zoomin')
-                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 0.8).redraw())
+                .addEventListener('click', () => map.setZoom(map.getZoom() * 0.8).redraw())
             document
                 .querySelector('#zoomout')
-                .addEventListener('click', () => map.setZoomFactor(map.getZoomFactor() * 1.2).redraw())
+                .addEventListener('click', () => map.setZoom(map.getZoom() * 1.2).redraw())
 
             //fullscreen
             let fsbtn = document.getElementById('gridviz-fullscreen')

@@ -72,7 +72,7 @@ Here's a basic example that loads a CSV file on Europe population (5km resolutio
 new gviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
-    .setZoomFactor(3000)
+    .setZoom(3000)
     //add CSV layer
     .addCSVGridLayer(
         //data URL
@@ -102,8 +102,8 @@ The following methods allow further configuration of a [Gridviz](https://github.
 | Method                                                                      | Type                                                                           | Default       | Description                                                                                        |
 | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------------- | -------------------------------------------------------------------------------------------------- |
 | _map_.**getGeoCenter**()<br />_map_.**setGeoCenter**([value])               | { x:number, y:number }                                                         | { x:0, y:0 }  | Get/set the geographical coordinates of the view center.                                           |
-| _map_.**getZoomFactor**()<br />_map_.**setZoomFactor**([value])             | number                                                                         | 1             | Get/set the view zoom. This zoom factor is expressed as the size of a pixel in ground distance.    |
-| _map_.**getZoomFactorExtent**()<br />_map_.**setZoomFactorExtent**([value]) | Array(number)                                                                  | [0, Infinity] | Get/set the view zoom extent, in order to prevent the user to zoom in/out beyond some zoom levels. |
+| _map_.**getZoom**()<br />_map_.**setZoom**([value])             | number                                                                         | 1             | Get/set the view zoom. This zoom factor is expressed as the size of a pixel in ground distance.    |
+| _map_.**getZoomExtent**()<br />_map_.**setZoomExtent**([value]) | Array(number)                                                                  | [0, Infinity] | Get/set the view zoom extent, in order to prevent the user to zoom in/out beyond some zoom levels. |
 | _map_.**getBackgroundColor**()<br />_map_.**setBackgroundColor**([value])   | string                                                                         | "white"       | Get/set the map background color.                                                                  |
 | _map_.**getBoundaryLayer**()<br />_map_.**setBoundaryLayer**([value])       | LineLayer / object                                                             | undefined     | A layer for boundary lines, see [here](#showing-boundaries).                                       |
 | _map_.**getLabelLayer**()<br />_map_.**setLabelLayer**([value])             | LabelLayer / object                                                            | undefined     | A layer for labels (such as placenames), see [here](#showing-labels).                              |
@@ -193,7 +193,7 @@ When several CSV files contain the data with different resolutions, it is possib
 new gviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
-    .setZoomFactor(3000)
+    .setZoom(3000)
     //add multiscale CSV layer
     .addMultiScaleCSVGridLayer(
         //array of resolutions, in CRS unit (m)
@@ -227,7 +227,7 @@ For large datasets, it is recommended that you decompose them into different dat
 new gviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
-    .setZoomFactor(3000)
+    .setZoom(3000)
     //add multi scale tiled layer
     .addTiledGridLayer(
         //data URL
@@ -252,7 +252,7 @@ Multi scale tiled data based on the [tiled format](tiledformat.md) can also be s
 new gviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
-    .setZoomFactor(3000)
+    .setZoom(3000)
     //add multi scale tiled layer
     .addMultiScaleTiledGridLayer(
         //array of resolutions, in CRS unit (m)
@@ -310,7 +310,7 @@ Here is an example showing how to compute a new column on population change, as 
 ```javascript
 new gviz.Map(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 })
-    .setZoomFactor(3000)
+    .setZoom(3000)
     .addMultiScaleTiledGridLayer(
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
         (r) =>
@@ -349,7 +349,7 @@ Here is an example showing how to keep only the cells with specific values **41*
 ```javascript
 new gviz.Map(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 })
-    .setZoomFactor(3000)
+    .setZoom(3000)
     .addMultiScaleTiledGridLayer(
         [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
         (r) => 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/' + r + 'm/',
@@ -1158,7 +1158,7 @@ A 'tooltip' shows information related to the selected grid cell. The information
 ```javascript
 new gviz.Map(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 })
-    .setZoomFactor(500)
+    .setZoom(500)
     .addCSVGridLayer(
         'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv',
         5000,

@@ -55,8 +55,8 @@
 
         const map = new gviz.Map(containerDiv)
             .setGeoCenter({ x: 3763437, y: 2891045 })
-            .setZoomFactor(22)
-            .setZoomFactorExtent([7, 2000])
+            .setZoom(22)
+            .setZoomExtent([7, 2000])
             .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
             .setViewFromURL()
             .setLabelLayer(

@@ -44,8 +44,8 @@
         let containerDiv = document.getElementById('viz-container')
         const map = new gviz.Map(containerDiv)
             .setGeoCenter({ x: 3951000, y: 2255603 })
-            .setZoomFactor(10)
-            .setZoomFactorExtent([4, 2000])
+            .setZoom(10)
+            .setZoomExtent([4, 2000])
             //.setBackgroundColor("black")
             .addMultiScaleTiledGridLayer(
                 [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],

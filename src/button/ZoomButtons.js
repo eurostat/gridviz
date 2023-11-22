@@ -83,13 +83,13 @@ export class ZoomButtons extends Button {
 
     /* Zoom in */
     zoomIn(e) {
-        this.map.setZoomFactor(this.map.getZoomFactor() * (1 - this.delta)).redraw()
+        this.map.setZoom(this.map.getZoom() * (1 - this.delta)).redraw()
         if (this.onZoom) this.onZoom(e)
     }
 
     /* Zoom out */
     zoomOut(e) {
-        this.map.setZoomFactor(this.map.getZoomFactor() * (1 + this.delta)).redraw()
+        this.map.setZoom(this.map.getZoom() * (1 + this.delta)).redraw()
         if (this.onZoom) this.onZoom(e)
     }
 }

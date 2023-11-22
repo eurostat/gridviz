@@ -26,7 +26,7 @@
             let containerDiv = document.getElementById('viz-container')
             const map = new gviz.Map(containerDiv)
                 .setGeoCenter({ x: 135000, y: 456000 })
-                .setZoomFactor(1)
+                .setZoom(1)
                 .setLabelLayer(gviz_es.getEuronymeLabelLayer())
 
             const colorDict = {

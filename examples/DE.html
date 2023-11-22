@@ -94,7 +94,7 @@
 
         const map = new gviz.Map(containerDiv)
             .setGeoCenter({ x: 4301000, y: 3050000 })
-            .setZoomFactor(400)
+            .setZoom(400)
             .setLabelLayer(gviz_es.getEuronymeLabelLayer('DE', '20'))
             .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
             .addBackgroundLayerWMS({

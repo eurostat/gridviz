@@ -71,8 +71,8 @@
             let containerDiv = document.getElementById('viz-container')
             const map = new gviz.Map(containerDiv)
                 .setGeoCenter({ x: 4313947, y: 2970049 })
-                .setZoomFactor(1500)
-                .setZoomFactorExtent([25, 7500])
+                .setZoom(1500)
+                .setZoomExtent([25, 7500])
                 .setViewFromURL()
 
                 .setLabelLayer(

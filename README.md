@@ -67,7 +67,7 @@ Here’s a basic example that loads a CSV file of a European population grid (5k
 let map = new gviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
-    .setZoomFactor(3000)
+    .setZoom(3000)
     //add CSV layer
     .addCSVGridLayer(
         //data URL

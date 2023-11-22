@@ -106,7 +106,7 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
         const map = new gviz.Map(containerDiv)
-            .setZoomFactorExtent([3, 2000])
+            .setZoomExtent([3, 2000])
             .setViewFromURL()
 
         //create datasets, indexed by geo, theme and year
@@ -886,7 +886,7 @@
             //metropolitan france
             if (geo == "met") {
                 map.setGeoCenter({ x: 3760000, y: 2750000 }) //{ x: 3763437, y: 2891045 })
-                    .setZoomFactor(300)
+                    .setZoom(300)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
                     .setLabelLayer(gviz_es.getEuronymeLabelLayer('FR', '20'))
                     .addBackgroundLayer({
@@ -907,7 +907,7 @@
             //reunion
             else if (geo == "reun") {
                 map.setGeoCenter({ x: 350000, y: 7660000 })
-                    .setZoomFactor(75)
+                    .setZoom(75)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "RE", crs: "32740", scale: "01M" }))
                     .setLabelLayer(gviz_es.getEuronymeLabelLayer('RE', '20', {
                         //https://spatialreference.org/ref/epsg/wgs-84-utm-zone-40s/html/
@@ -923,7 +923,7 @@
             //martinique
             else if (geo == "mart") {
                 map.setGeoCenter({ x: 710000, y: 1620000 })
-                    .setZoomFactor(75)
+                    .setZoom(75)
                     .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ geo: "MQ", crs: "32620", scale: "01M" }))
                     .setLabelLayer(gviz_es.getEuronymeLabelLayer('MQ', '20', {
                         //https://spatialreference.org/ref/epsg/wgs-84-utm-zone-20n/html/

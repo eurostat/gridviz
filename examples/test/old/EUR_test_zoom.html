@@ -17,8 +17,8 @@
             let containerDiv = document.getElementById('viz-container')
             const map = new gviz.Map(containerDiv)
                 .setGeoCenter({ x: 4000000, y: 2960000 })
-                .setZoomFactor(100)
-                .setZoomFactorExtent([50, 11000])
+                .setZoom(100)
+                .setZoomExtent([50, 11000])
                 .setLabelLayer(gviz_es.getEuronymeLabelLayer())
                 .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
 

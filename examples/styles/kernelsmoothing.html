@@ -47,7 +47,7 @@
             let containerDiv = document.getElementById('viz-container')
             const map = new gviz.Map(containerDiv)
                 .setGeoCenter({ x: 4000000, y: 2960000 })
-                .setZoomFactor(1000)
+                .setZoom(1000)
 
             //add layer with initial kernel smoothing style
             map.addMultiScaleTiledGridLayer(

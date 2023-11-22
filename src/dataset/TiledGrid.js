@@ -179,7 +179,7 @@ export class TiledGrid extends Dataset {
                     // 1. the dataset belongs to a layer which is visible at the current zoom level
                     let redraw = false
                     //go through the layers
-                    const zf = this.map.getZoomFactor()
+                    const zf = this.map.getZoom()
                     for (const lay of this.map.layers) {
                         if (!lay.visible) continue
                         if (lay.getDataset(zf) != this) continue

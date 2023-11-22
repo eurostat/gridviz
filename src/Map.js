@@ -76,7 +76,7 @@ export class Map {
             this.cg.initCanvasTransform()
             this.cg.clear(this.cg.backgroundColor)
 
-            const zf = this.getZoomFactor()
+            const zf = this.getZoom()
             this.updateExtentGeo()
 
             //go through the background layers
@@ -277,7 +277,7 @@ export class Map {
 
                 //draw image saved + draw rectangle
                 const rectWPix = this.selectionRectangleWidthPix
-                    ? this.selectionRectangleWidthPix(focus.resolution, this.getZoomFactor())
+                    ? this.selectionRectangleWidthPix(focus.resolution, this.getZoom())
                     : 4
                 this.cg.initCanvasTransform()
                 this.cg.ctx.strokeStyle = this.selectionRectangleColor
@@ -287,8 +287,8 @@ export class Map {
                 this.cg.ctx.rect(
                     this.cg.geoToPixX(focus.cell.x) - rectWPix / 2,
                     this.cg.geoToPixY(focus.cell.y) + rectWPix / 2,
-                    focus.resolution / this.getZoomFactor() + rectWPix,
-                    -focus.resolution / this.getZoomFactor() - rectWPix
+                    focus.resolution / this.getZoom() + rectWPix,
+                    -focus.resolution / this.getZoom() - rectWPix
                 )
                 this.cg.ctx.stroke()
             } else {
@@ -347,7 +347,7 @@ export class Map {
      */
     getCellFocusInfo(posGeo) {
         //go through the layers, starting from top
-        const zf = this.getZoomFactor()
+        const zf = this.getZoom()
         for (let i = this.layers.length - 1; i >= 0; i--) {
             /** @type {Layer} */
             const layer = this.layers[i]
@@ -368,6 +368,15 @@ export class Map {
         }
     }
 
+
+
+    setView(x, y, z = undefined) {
+        this.cg.setCenter({ x: x, y: y })
+        if (z != undefined) this.setZoom(z)
+        return this
+    }
+
+
     //getters and setters
 
     /** @returns {{x:number,y:number}} */
@@ -381,24 +390,27 @@ export class Map {
     }
 
     /** @returns {number} */
-    getZoomFactor() {
+    getZoom() {
         return this.cg.getZf()
     }
     /** @param {number} val @returns {this} */
-    setZoomFactor(val) {
+    setZoom(val) {
         this.cg.setZf(val)
         return this
     }
 
+
     /** @returns {Array.<number>} */
-    getZoomFactorExtent() {
+    getZoomExtent() {
         return this.cg.getZfExtent()
     }
     /** @param {Array.<number>} val @returns {this} */
-    setZoomFactorExtent(val) {
+    setZoomExtent(val) {
         this.cg.setZfExtent(val)
         return this
     }
+
+
 
     /** @returns {string} */
     getBackgroundColor() {

@@ -61,8 +61,8 @@
 
             const map = new gviz.Map(containerDiv)
                 .setGeoCenter({ x: 4500000, y: 2960000 })
-                .setZoomFactor(1500)
-                .setZoomFactorExtent([30, 7000])
+                .setZoom(1500)
+                .setZoomExtent([30, 7000])
                 .setViewFromURL()
                 .setLabelLayer(
                     gviz_es.getEuronymeLabelLayer('EUR', 50, {

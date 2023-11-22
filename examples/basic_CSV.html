@@ -6,8 +6,7 @@
 
     //define map
     const map = new gviz.Map(containerDiv)
-        .setGeoCenter({ x: 4500000, y: 2900000 })
-        .setZoomFactor(3000)
+        .setView(4500000, 2900000, 3000)
 
     //define dataset
     const dataset = new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)

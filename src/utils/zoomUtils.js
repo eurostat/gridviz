@@ -26,18 +26,18 @@ export function zoomTo(
         factor = 1.01
     }
 
-    const zfIni = map.getZoomFactor()
+    const zfIni = map.getZoom()
     if (zfTarget == zfIni) return
     if (zfTarget < zfIni) factor = 1 / factor
     let zf = zfIni
     let timer = setInterval(() => {
         //compute new zoom level
-        zf = map.getZoomFactor() * factor
+        zf = map.getZoom() * factor
         if (zfTarget > zfIni && zf > zfTarget) zf = zfTarget
         if (zfTarget < zfIni && zf < zfTarget) zf = zfTarget
 
         //set new zoom level
-        map.setZoomFactor(zf)
+        map.setZoom(zf)
         map.redraw()
 
         //target reached
@@ -76,7 +76,7 @@ export function goToStraight(
     delayBeforeCallBackMs = 0
 ) {
     //store initial position/zoom
-    const zfIni = map.getZoomFactor()
+    const zfIni = map.getZoom()
     const cIni = map.getGeoCenter()
 
     //default
@@ -114,12 +114,12 @@ export function goToStraight(
 
         //compute and set new zoom
         if (r != 1) {
-            const zf = map.getZoomFactor()
+            const zf = map.getZoom()
             let nzf = zoomFactor * zf
             //if went too far, stop at target values
             if (nzf < zfTarget && zfTarget < zf) nzf = zfTarget
             if (zf < zfTarget && zfTarget < nzf) nzf = zfTarget
-            map.setZoomFactor(nzf)
+            map.setZoom(nzf)
             if (nzf == zfTarget) r = 1
         }
 
