@@ -11,7 +11,6 @@ export { MultiResolutionDataset } from './MultiResolutionDataset.js'
 
 // export dataset types
 export { TiledGrid } from './dataset/TiledGrid.js'
-export { GridTile } from './dataset/GridTile.js'
 export { CSVGrid } from './dataset/CSVGrid.js'
 export { JSGrid } from './dataset/JSGrid.js'
 //export { GeoTIFF } from "./dataset/GeoTIFF"
