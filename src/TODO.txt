@@ -1,9 +1,5 @@
 v3: focus on (main) API changes.
 
-map.setView(x,y,z)
-map.setView({x,y,z})
-map.setZoom(z)
-
 move viewScale things at style level ?
 
 make everything in opts
@@ -22,13 +18,13 @@ merge geocanvas and map
 remove GridTile class - not necessary
 
 API changes for v3:
-map.addLayer
-zoom factor -> zoom
-layer.addTo(map)
 
 
 Done:
-app -> map
+removal of map.addLayer
+zoom factor -> zoom
+add map.setView(x,y,z)
+App -> Map
 style based on cell directly, with viewscale (see scale functions)
 stretching: new functions
 addLayerFromDataset -> addLayer
