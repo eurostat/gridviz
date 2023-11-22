@@ -4,7 +4,6 @@
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../Dataset.js").Envelope }} GridInfo */
 
 // internal
-import { GridTile } from './GridTile.js'
 import { Dataset } from '../Dataset.js'
 //import { monitor, monitorDuration } from '../utils/Utils.js'
 
@@ -166,7 +165,7 @@ export class TiledGrid extends Dataset {
                         console.error('Tile info inknown')
                         return
                     }
-                    const tile_ = new GridTile(cells, xT, yT, this.info)
+                    const tile_ = getGridTile(cells, xT, yT, this.info)
                     this.cache[xT][yT] = tile_
 
                     //if (monitor) monitorDuration('storage')
@@ -253,4 +252,35 @@ export class TiledGrid extends Dataset {
             }
         }
     }
+}
+
+function getGridTile(cells, xT, yT, gridInfo) {
+
+    const tile = {}
+
+    /** @type {Array.<import("../Dataset").Cell>} */
+    tile.cells = cells
+    /** @type {number} */
+    tile.x = xT
+    /** @type {number} */
+    tile.y = yT
+
+    const r = gridInfo.resolutionGeo
+    const s = gridInfo.tileSizeCell
+
+    /** @type {import("../Dataset").Envelope} */
+    tile.extGeo = {
+        xMin: gridInfo.originPoint.x + r * s * tile.x,
+        xMax: gridInfo.originPoint.x + r * s * (tile.x + 1),
+        yMin: gridInfo.originPoint.y + r * s * tile.y,
+        yMax: gridInfo.originPoint.y + r * s * (tile.y + 1),
+    }
+
+    //convert cell coordinates into geographical coordinates
+    for (let cell of tile.cells) {
+        cell.x = tile.extGeo.xMin + cell.x * r
+        cell.y = tile.extGeo.yMin + cell.y * r
+    }
+
+    return tile
 }
