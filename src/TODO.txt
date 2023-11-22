@@ -1,3 +1,8 @@
+map.setView(x,y,z)
+map.setView({x,y,z})
+map.panTo(x,y)
+map.setZoom(z)
+
 move viewScale things at style level ?
 
 revamp layers
