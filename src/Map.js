@@ -3,7 +3,7 @@
 
 // internal imports
 import { GeoCanvas } from './GeoCanvas.js'
-import { Layer } from './Layer.js'
+import { Layer } from './GridLayer.js'
 import { Tooltip } from './Tooltip.js'
 import { BackgroundLayer } from './BackgroundLayer.js'
 import { BackgroundLayerWMS } from './BackgroundLayerWMS.js'

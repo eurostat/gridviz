@@ -5,7 +5,7 @@
 export { Map } from './Map.js'
 export { GeoCanvas } from './GeoCanvas.js'
 export { Style } from './Style.js'
-export { Layer } from './Layer.js'
+export { GridLayer } from './GridLayer.js'
 export { Dataset } from './Dataset.js'
 export { MultiResolutionDataset } from './MultiResolutionDataset.js'
 

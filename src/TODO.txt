@@ -23,6 +23,7 @@ stretching: new functions
 addLayerFromDataset -> addLayer
 Dataset -> multiresolution dataset
 dataset component: dataset
+Layer -> GridLayer
 remove GridTile class
 clean stretching lib
 get rid of "map.addXXXLayer" methods
