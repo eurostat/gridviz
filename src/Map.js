@@ -422,57 +422,12 @@ export class Map {
         return this
     }
 
-    /** @returns {LineLayer | undefined} */
-    getBoundaryLayer() {
-        return this.boundaryLayer
-    }
-    /** @param {object} opts @returns {this} */
-    setBoundaryLayer(opts) {
-        this.boundaryLayer = new LineLayer(opts)
-        return this
-    }
-
-    /** @returns {LabelLayer | undefined} */
-    getLabelLayer() {
-        return this.labelLayer
-    }
-    /** @param {object} opts @returns {this} */
-    setLabelLayer(opts) {
-        this.labelLayer = new LabelLayer(opts)
-        return this
-    }
-
     /** @returns {this} */
     redraw() {
         this.cg.redraw()
         return this
     }
 
-
-
-    /**
-     * Add a background layer to the map.
-     *
-     * @param {object} opts
-     * @returns {this}
-     */
-    addBackgroundLayer(opts) {
-        this.bgLayers.push(new BackgroundLayer(opts))
-        this.redraw()
-        return this
-    }
-
-    /**
-     * Add a WMS background layer to the map.
-     *
-     * @param {object} opts
-     * @returns {this}
-     */
-    addBackgroundLayerWMS(opts) {
-        this.bgLayers.push(new BackgroundLayerWMS(opts))
-        this.redraw()
-        return this
-    }
 
     /**
      *

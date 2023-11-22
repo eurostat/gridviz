@@ -1,20 +1,17 @@
 v3: focus on (main) API changes.
 
+revamp layers
+pixNb -> something better
+change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coords by default (!)
+merge geocanvas and map
 move viewScale things at style level ?
 
 make everything in opts
-revamp layers
 make demos with simple CSV files. more minimalistics, with only the tested parameters.
 change stretching codes in webglcolorstyle
-static image background layer
-merge geocanvas and app
-change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coords by default (!)
 extract modules ?
-stretching: transition to new functions - clean stretching lib
 zf -> z
-pixNb -> something better
 population.csv files: make 2021 ones
-merge geocanvas and map
 
 API changes for v3:
 
@@ -30,8 +27,11 @@ addLayerFromDataset -> addLayer
 Dataset -> multiresolution dataset
 dataset component: dataset
 remove GridTile class
+clean stretching lib
+get rid of "map.addXXXLayer" methods
 
 
+static image background layer
 
 
 
