@@ -12,12 +12,12 @@
     const dataset = new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
     //define color for each cell c
-    const colorFunction = (c) => {
-        if (c.population > 150000) return "#993404"
-        else if (c.population > 60000) return "#d95f0e"
-        else if (c.population > 20000) return "#fe9929"
-        else if (c.population > 6000) return "#fec44f"
-        else if (c.population > 1500) return "#fee391"
+    const colorFunction = (cell) => {
+        if (cell.population > 150000) return "#993404"
+        else if (cell.population > 60000) return "#d95f0e"
+        else if (cell.population > 20000) return "#fe9929"
+        else if (cell.population > 6000) return "#fec44f"
+        else if (cell.population > 1500) return "#fee391"
         else return "#ffffd4"
     }
 

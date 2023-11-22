@@ -15,8 +15,8 @@
     )
 
     //define color for each cell c
-    const colorFunction = (c, resolution) => {
-        const density = 1000000 * c.population / (resolution * resolution)
+    const colorFunction = (cell, resolution) => {
+        const density = 1000000 * cell.population / (resolution * resolution)
         if (density > 1500) return "#993404"
         else if (density > 600) return "#d95f0e"
         else if (density > 200) return "#fe9929"
