@@ -24,10 +24,6 @@ export class GridLayer extends Layer {
         /** @type {Array.<import("../Style").Style>} */
         this.styles = styles
 
-        /** An attribute to specify if a layer should be drawn or not
-         * @type {boolean} */
-        this.visible = opts.visible === false ? false : true
-
         /** A function returning the alpha (transparency/opacity), between 0.0 (fully transparent) and 1.0 (fully opaque).
          *  The function parameter is the .
          * (see CanvasRenderingContext2D: globalAlpha property)
@@ -38,18 +34,6 @@ export class GridLayer extends Layer {
          * (see CanvasRenderingContext2D: globalCompositeOperation property)
          * @type {GlobalCompositeOperation} */
         this.blendOperation = opts.blendOperation || (zf => "source-over")
-
-        /** The minimum : Below this level, the layer is not shown.
-         * @type {number} */
-        this.minZoom = opts.minZoom || 0
-
-        /** The maximum : Above this level, the layer is not shown.
-         * @type {number} */
-        this.maxZoom = opts.maxZoom || Infinity
-
-        //ensure acceptable values for the zoom limits.
-        if (this.minZoom >= this.maxZoom)
-            throw new Error('Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.')
 
         /** Unit: number of pixels
          * @type {number} */

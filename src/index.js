@@ -5,7 +5,7 @@
 export { Map } from './Map.js'
 export { GeoCanvas } from './GeoCanvas.js'
 export { Style } from './Style.js'
-export { GridLayer } from './layer/GridLayer.js'
+export { Layer } from './Layer.js'
 export { Dataset } from './Dataset.js'
 export { MultiResolutionDataset } from './MultiResolutionDataset.js'
 
@@ -37,6 +37,7 @@ export { TimeSeriesStyle } from './style/TimeSeriesStyle.js'
 export { IsoFenceStyle } from './style/IsoFenceStyle.js'
 
 // export additional layers
+export { GridLayer } from './layer/GridLayer.js'
 export { BackgroundLayer } from './layer/BackgroundLayer.js'
 export { BackgroundLayerWMS } from './layer/BackgroundLayerWMS.js'
 export { LabelLayer } from './layer/LabelLayer.js'
