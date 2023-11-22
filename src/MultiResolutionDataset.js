@@ -1,8 +1,6 @@
 //@ts-check
 'use strict'
 
-//import { Dataset } from "./Dataset"
-
 /**
  * A multi resolution dataset of grid cells.
  * It consists of different {@link Dataset}s for each resolution.
