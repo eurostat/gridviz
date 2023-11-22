@@ -5,15 +5,12 @@ pixNb -> something better
 change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coords by default (!)
 merge geocanvas and map
 move viewScale things at style level ?
-
 make everything in opts
 make demos with simple CSV files. more minimalistics, with only the tested parameters.
 change stretching codes in webglcolorstyle
 extract modules ?
 zf -> z
 population.csv files: make 2021 ones
-
-API changes for v3:
 
 
 Done:
@@ -31,13 +28,9 @@ clean stretching lib
 get rid of "map.addXXXLayer" methods
 
 
-static image background layer
 
 
-
-
-
-
+static image background layer - for map background in oversea territories
 
 style value by alpha: Document
 
