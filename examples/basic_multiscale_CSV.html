@@ -2,15 +2,18 @@
 
 <script src="../dist/gridviz.js"></script>
 <script>
-    let containerDiv = document.getElementById('map')
 
     //define map
-    const map = new gviz.Map(containerDiv)
-        .setView(4500000, 2900000, 3000)
+    const map = new gviz.Map(document.getElementById('map'))
 
-    //define dataset
+    //set initial view
+    map.setView(4500000, 2900000, 3000)
+
+    //define multi resolution dataset
     const dataset = new gviz.MultiResolutionDataset(
+        //the resolutions
         [5000, 10000, 20000, 50000, 100000],
+        //the function returning each dataset from the resolution
         resolution => new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_" + Math.round(resolution / 1000) + "km.csv", resolution)
     )
 

@@ -2,11 +2,12 @@
 
 <script src="../dist/gridviz.js"></script>
 <script>
-    let containerDiv = document.getElementById('map')
 
     //define map
-    const map = new gviz.Map(containerDiv)
-        .setView(4500000, 2900000, 3000)
+    const map = new gviz.Map(document.getElementById('map'))
+
+    //set initial view
+    map.setView(4500000, 2900000, 3000)
 
     //define dataset
     const dataset = new gviz.TiledGrid(map, "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/10000m/")

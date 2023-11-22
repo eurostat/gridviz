@@ -2,15 +2,18 @@
 
 <script src="../dist/gridviz.js"></script>
 <script>
-    let containerDiv = document.getElementById('map')
 
     //define map
-    const map = new gviz.Map(containerDiv)
-        .setView(4500000, 2900000, 3000)
+    const map = new gviz.Map(document.getElementById('map'))
 
-    //define dataset
+    //set initial view
+    map.setView(4500000, 2900000, 3000)
+
+    //define multi resolution dataset
     const dataset = new gviz.MultiResolutionDataset(
+        //the resolutions
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+        //the function returning each dataset from the resolution
         resolution => new gviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/')
     )
 
@@ -31,20 +34,4 @@
     //add layer to map
     map.layers = [new gviz.Layer(dataset, [style])]
 
-
-    /*
-        new gviz.Map(containerDiv)
-            .setGeoCenter({ x: 4500000, y: 2900000 })
-            .setZoom(3000)
-            .addMultiScaleTiledGridLayer(
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                (r) => 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + r + 'm/',
-                [
-                    new gviz.ShapeColorSizeStyle({
-                        color: (c, r) => { const d = 100000 * c.TOT_P_2021 / (r * r); return d > 50 ? "red" : d > 10 ? "orange" : d > 3 ? "yellow" : "#5555aa" }
-                    }),
-                ],
-                { pixNb: 3 }
-            )
-    */
 </script>
