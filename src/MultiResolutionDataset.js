@@ -1,6 +1,8 @@
 //@ts-check
 'use strict'
 
+import { Dataset } from "./Dataset"
+
 /**
  * A multi resolution dataset of grid cells.
  * It consists of different {@link Dataset}s for each resolution.
@@ -11,20 +13,20 @@
  */
 export class MultiResolutionDataset {
     /**
-     * @param {Array.<import("./Dataset").Dataset>} datasets The datasets
-     * @param {Array.<number>} resolutions The resolutions of the datasets, in CRS geographical unit
+     * @param {Array.<number>} resolutions The resolutions of the datasets, in CRS geographical unit.
+     * @param {Array.<Dataset>|function(number):Dataset} datasets The datasets list, one per resolution. Or a function that returns a dataset from a resolution value.
      * @param { {preprocess?:function(import("./Dataset").Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values. Can be used also to select cells to keep.
      */
-    constructor(datasets, resolutions = [], opts = {}) {
+    constructor(resolutions, datasets, opts = {}) {
         opts = opts || {}
-
-        /** The dataset.
-         * @type {Array.<import("./Dataset").Dataset>} */
-        this.datasets = datasets
 
         /** The resolutions of the datasets, in CRS geographical unit.
          * @type {Array.<number>} */
         this.resolutions = resolutions
+
+        /** The datasets. If the list is not explictely defined, build it from the resolution list with the function
+         * @type {Array.<import("./Dataset").Dataset>} */
+        this.datasets = (typeof datasets === 'function') ? this.resolutions.map(datasets) : datasets
 
         //there must be as many datasets as resolutions
         if (this.datasets.length > 1 && this.datasets.length != this.resolutions.length)
@@ -86,11 +88,11 @@ export class MultiResolutionDataset {
      * @param { {preprocess?:function(import("./Dataset").Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values
      * @returns {MultiResolutionDataset}
      */
-    static make(resolutions, resToDataset, opts) {
+    /*static make(resolutions, resToDataset, opts) {
         //make datasets
         const dsc = []
         for (const res of resolutions) dsc.push(resToDataset(res))
         //make multi resolution dataset
         return new MultiResolutionDataset(dsc, resolutions, opts)
-    }
+    }*/
 }

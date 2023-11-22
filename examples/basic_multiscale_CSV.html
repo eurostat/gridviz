@@ -10,15 +10,25 @@
         .setZoomFactor(3000)
 
     //define dataset
-    const dataset = new gviz.TiledGrid(map, "https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/10000m/")
+    const dataset = new gviz.MultiResolutionDataset(
+        [5000, 10000, 20000, 50000, 100000],
+        [
+            new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv", 5000),
+            new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000),
+            new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_20km.csv", 20000),
+            new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_50km.csv", 50000),
+            new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_100km.csv", 100000),
+        ]
+    )
 
     //define color for each cell c
-    const colorFunction = (c) => {
-        if (c.TOT_P_2021 > 150000) return "#993404"
-        else if (c.TOT_P_2021 > 60000) return "#d95f0e"
-        else if (c.TOT_P_2021 > 20000) return "#fe9929"
-        else if (c.TOT_P_2021 > 6000) return "#fec44f"
-        else if (c.TOT_P_2021 > 1500) return "#fee391"
+    const colorFunction = (c, resolution) => {
+        const density = 1000000 * c.population / (resolution * resolution)
+        if (density > 1500) return "#993404"
+        else if (density > 600) return "#d95f0e"
+        else if (density > 200) return "#fe9929"
+        else if (density > 60) return "#fec44f"
+        else if (density > 15) return "#fee391"
         else return "#ffffd4"
     }
 
@@ -28,21 +38,4 @@
     //add layer to map
     map.layers = [new gviz.Layer(dataset, [style])]
 
-
-
-
-    /*
-    new gviz.Map(containerDiv)
-        .setGeoCenter({ x: 4500000, y: 2900000 })
-        .setZoomFactor(5000)
-        .addMultiScaleCSVGridLayer(
-            [5000, 10000, 20000, 50000, 100000],
-            (r) => 'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_' + Math.round(r / 1000) + 'km.csv',
-            [
-                new gviz.ShapeColorSizeStyle({
-                    color: (c, r) => { const d = 100000 * c.population / (r * r); return d > 50 ? "red" : d > 10 ? "orange" : d > 3 ? "yellow" : "#5555aa" }
-                }),
-            ],
-            { pixNb: 3 }
-        )*/
 </script>
