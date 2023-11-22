@@ -8,17 +8,17 @@
  */
 export class GridLayer {
     /**
-     * @param {import("./MultiResolutionDataset").MultiResolutionDataset} dataset The multi resolution dataset to show.
-     * @param {Array.<import("./Style").Style>} styles The styles, ordered in drawing order.
-     * @param {{visible?:boolean,alpha?:number,blendOperation?:GlobalCompositeOperation,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import("./Dataset").Cell):string}} opts
+     * @param {import("../MultiResolutionDataset").MultiResolutionDataset} dataset The multi resolution dataset to show.
+     * @param {Array.<import("../Style").Style>} styles The styles, ordered in drawing order.
+     * @param {{visible?:boolean,alpha?:number,blendOperation?:GlobalCompositeOperation,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import("../Dataset").Cell):string}} opts
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(dataset, styles, opts = {}) {
         opts = opts || {}
 
-        /** @type {import("./MultiResolutionDataset").MultiResolutionDataset} */
+        /** @type {import("../MultiResolutionDataset").MultiResolutionDataset} */
         this.dataset = dataset
-        /** @type {Array.<import("./Style").Style>} */
+        /** @type {Array.<import("../Style").Style>} */
         this.styles = styles
 
         /** An attribute to specify if a layer should be drawn or not
@@ -55,7 +55,7 @@ export class GridLayer {
         /**
          * The function returning cell information as HTML.
          * This is typically used for tooltip information.
-         * @type {function(import("./Dataset").Cell, number):string} */
+         * @type {function(import("../Dataset").Cell, number):string} */
         this.cellInfoHTML = opts.cellInfoHTML || GridLayer.defaultCellInfoHTML
     }
 
@@ -63,7 +63,7 @@ export class GridLayer {
      * Return the relevant dataset component for a specified zoom.
      *
      * @param {number} z
-     * @returns {import("./Dataset").Dataset|undefined}
+     * @returns {import("../Dataset").Dataset|undefined}
      * */
     getDataset(z) {
         if (z < this.minZoom || z > this.maxZoom) return
@@ -74,7 +74,7 @@ export class GridLayer {
      * The default function returning cell information as HTML.
      * This is typically used for tooltip information.
      *
-     * @param {import("./Dataset").Cell} cell
+     * @param {import("../Dataset").Cell} cell
      * @returns {string}
      */
     static defaultCellInfoHTML(cell) {

@@ -90,7 +90,7 @@ export class BackgroundLayer {
     }
 
     /**
-     * @param {import("./GeoCanvas").GeoCanvas} cg The canvas where to draw the layer.
+     * @param {import("../GeoCanvas").GeoCanvas} cg The canvas where to draw the layer.
      * @returns {void}
      */
     draw(cg) {

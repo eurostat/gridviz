@@ -82,7 +82,7 @@ export class LabelLayer {
     /**
      * Draw the label layer.
      *
-     * @param {import("./GeoCanvas").GeoCanvas} cg The canvas where to draw the layer.
+     * @param {import("../GeoCanvas").GeoCanvas} cg The canvas where to draw the layer.
      * @returns {void}
      */
     draw(cg) {
