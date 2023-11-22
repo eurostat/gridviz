@@ -104,7 +104,7 @@ export class Map {
 
                 //get layer dataset component
                 /** @type {import('./Dataset.js').Dataset|undefined} */
-                const dsc = layer.getDatasetComponent(zf)
+                const dsc = layer.getDataset(zf)
                 if (!dsc) continue
 
                 //launch data download, if necessary
@@ -360,7 +360,7 @@ export class Map {
             if (!layer.visible) continue
             if (!layer.cellInfoHTML) continue
             //if (layer.cellInfoHTML === 'none') continue
-            const dsc = layer.getDatasetComponent(zf)
+            const dsc = layer.getDataset(zf)
             if (!dsc) continue
 
             //get cell at mouse position

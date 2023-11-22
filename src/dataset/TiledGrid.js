@@ -183,7 +183,7 @@ export class TiledGrid extends Dataset {
                     const zf = this.map.getZoomFactor()
                     for (const lay of this.map.layers) {
                         if (!lay.visible) continue
-                        if (lay.getDatasetComponent(zf) != this) continue
+                        if (lay.getDataset(zf) != this) continue
                         //found one layer. No need to seek more.
                         redraw = true
                         break

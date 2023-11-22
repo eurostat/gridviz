@@ -65,7 +65,7 @@ export class Layer {
      * @param {number} z
      * @returns {import("./Dataset").Dataset|undefined}
      * */
-    getDatasetComponent(z) {
+    getDataset(z) {
         if (z < this.minZoom || z > this.maxZoom) return
 
         //special case whith single component dataset
