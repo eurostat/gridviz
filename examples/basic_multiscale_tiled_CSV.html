@@ -4,17 +4,48 @@
 <script>
     let containerDiv = document.getElementById('map')
 
-    new gviz.Map(containerDiv)
+    //define map
+    const map = new gviz.Map(containerDiv)
         .setGeoCenter({ x: 4500000, y: 2900000 })
         .setZoomFactor(3000)
-        .addMultiScaleTiledGridLayer(
-            [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-            (r) => 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + r + 'm/',
-            [
-                new gviz.ShapeColorSizeStyle({
-                    color: (c, r) => { const d = 100000 * c.TOT_P_2021 / (r * r); return d > 50 ? "red" : d > 10 ? "orange" : d > 3 ? "yellow" : "#5555aa" }
-                }),
-            ],
-            { pixNb: 3 }
-        )
+
+    //define dataset
+    const dataset = new gviz.MultiResolutionDataset(
+        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+        resolution => new gviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/')
+    )
+
+    //define color for each cell c
+    const colorFunction = (c, resolution) => {
+        const density = 1000000 * c.TOT_P_2021 / (resolution * resolution)
+        if (density > 1500) return "#993404"
+        else if (density > 600) return "#d95f0e"
+        else if (density > 200) return "#fe9929"
+        else if (density > 60) return "#fec44f"
+        else if (density > 15) return "#fee391"
+        else return "#ffffd4"
+    }
+
+    //define style
+    const style = new gviz.ShapeColorSizeStyle({ color: colorFunction })
+
+    //add layer to map
+    map.layers = [new gviz.Layer(dataset, [style])]
+
+
+    /*
+        new gviz.Map(containerDiv)
+            .setGeoCenter({ x: 4500000, y: 2900000 })
+            .setZoomFactor(3000)
+            .addMultiScaleTiledGridLayer(
+                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+                (r) => 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + r + 'm/',
+                [
+                    new gviz.ShapeColorSizeStyle({
+                        color: (c, r) => { const d = 100000 * c.TOT_P_2021 / (r * r); return d > 50 ? "red" : d > 10 ? "orange" : d > 3 ? "yellow" : "#5555aa" }
+                    }),
+                ],
+                { pixNb: 3 }
+            )
+    */
 </script>

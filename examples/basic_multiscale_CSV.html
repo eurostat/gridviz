@@ -12,13 +12,7 @@
     //define dataset
     const dataset = new gviz.MultiResolutionDataset(
         [5000, 10000, 20000, 50000, 100000],
-        [
-            new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv", 5000),
-            new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000),
-            new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_20km.csv", 20000),
-            new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_50km.csv", 50000),
-            new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_100km.csv", 100000),
-        ]
+        resolution => new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_" + Math.round(resolution/1000) + "km.csv", resolution)
     )
 
     //define color for each cell c
