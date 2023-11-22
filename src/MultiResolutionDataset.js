@@ -13,7 +13,7 @@ export class MultiResolutionDataset {
     /**
      * @param {Array.<import("./Dataset").Dataset>} datasets The datasets
      * @param {Array.<number>} resolutions The resolutions of the datasets, in CRS geographical unit
-     * @param { {preprocess?:function(Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values. Can be used also to select cells to keep.
+     * @param { {preprocess?:function(import("./Dataset").Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values. Can be used also to select cells to keep.
      */
     constructor(datasets, resolutions =[], opts = {}) {
         opts = opts || {}
@@ -43,7 +43,7 @@ export class MultiResolutionDataset {
      * Set a preprocess function for all datasets.
      * This is a function applied on each cell after it has been loaded.
      *
-     * @param {function(Cell):boolean} preprocess
+     * @param {function(import("./Dataset").Cell):boolean} preprocess
      * @returns {this}
      */
     setPrepocesses(preprocess) {
@@ -56,7 +56,7 @@ export class MultiResolutionDataset {
      *
      * @param {Array.<number>} resolutions The resolutions of the datasets, in CRS geographical unit
      * @param {function(number):import("./Dataset").Dataset} resToDataset Function returning a dataset from a resolution
-     * @param { {preprocess?:function(Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values
+     * @param { {preprocess?:function(import("./Dataset").Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values
      * @returns {MultiResolutionDataset}
      */
     static make(resolutions, resToDataset, opts) {
