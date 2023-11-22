@@ -67,21 +67,7 @@ export class Layer {
      * */
     getDataset(z) {
         if (z < this.minZoom || z > this.maxZoom) return
-
-        //special case whith single component dataset
-        if (this.dataset.datasetComponents.length == 1) return this.dataset.datasetComponents[0]
-
-        const rs = this.dataset.resolutions
-        let i = 0
-        let z_ = rs[i] / this.pixNb
-        while (z_ < z && i < rs.length) {
-            i++
-            z_ = rs[i] / this.pixNb
-        }
-        //if (i == 0) return this.dataset.datasetComponents[0];
-        //return this.dataset.datasetComponents[i - 1];
-        if (i == rs.length) return this.dataset.datasetComponents[rs.length - 1]
-        return this.dataset.datasetComponents[i]
+        return this.dataset.getDataset(z, this.pixNb);
     }
 
     /**

@@ -123,4 +123,15 @@ export class Dataset {
     getViewCache() {
         return this.cellsViewCache
     }
+
+    /**
+     * Return the relevant dataset for a specified zoom.
+     * @param {number} z
+     * @param {number} pixNb
+     * @returns {Dataset|undefined}
+     * */
+    getDataset(z, pixNb) {
+        return this
+    }
+
 }

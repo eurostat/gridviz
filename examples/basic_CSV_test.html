@@ -10,9 +10,7 @@
         .setZoomFactor(3000)
 
     //make dataset
-    const dataset = new gviz.MultiResolutionDataset([new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)])
-
-    //TODO make it possible that a layer can handle a multi scale dataset and a simple dataset the same way.
+    const dataset = new gviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
     //make style
     const style = new gviz.ShapeColorSizeStyle({
