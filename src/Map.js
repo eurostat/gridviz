@@ -6,9 +6,6 @@ import { GeoCanvas } from './GeoCanvas.js'
 import { Layer } from './Layer.js'
 import { MultiResolutionDataset } from './MultiResolutionDataset.js'
 import { Tooltip } from './Tooltip.js'
-import { CSVGrid } from './dataset/CSVGrid.js'
-import { JSGrid } from './dataset/JSGrid.js'
-import { TiledGrid } from './dataset/TiledGrid.js'
 import { BackgroundLayer } from './BackgroundLayer.js'
 import { BackgroundLayerWMS } from './BackgroundLayerWMS.js'
 import { LabelLayer } from './LabelLayer.js'
@@ -246,7 +243,7 @@ export class Map {
                 x: this.cg.pixToGeoX(e.offsetX + this.tooltip.xMouseOffset),
                 y: this.cg.pixToGeoY(e.offsetY + this.tooltip.yMouseOffset),
             }
-            /** @type {{cell:import('./MultiResolutionDataset.js').Cell,html:string,resolution:number} | undefined} */
+            /** @type {{cell:import('./Dataset.js').Cell,html:string,resolution:number} | undefined} */
             const focus = this.getCellFocusInfo(mousePositionGeo)
 
             // transparent background (e.g. leaflet) 'red painting' fix
@@ -336,7 +333,7 @@ export class Map {
 
     /**
      * @param {number} marginPx
-     * @returns {import('./MultiResolutionDataset.js').Envelope}
+     * @returns {import('./Dataset.js').Envelope}
      * @public
      */
     updateExtentGeo(marginPx = 20) {
@@ -348,7 +345,7 @@ export class Map {
      * This is usefull for user interactions, to show this info where the user clicks for example.
      *
      * @param {{x:number,y:number}} posGeo
-     * @returns {{cell:import('./MultiResolutionDataset.js').Cell,html:string,resolution:number} | undefined}
+     * @returns {{cell:import('./Dataset.js').Cell,html:string,resolution:number} | undefined}
      * @protected
      */
     getCellFocusInfo(posGeo) {
@@ -364,7 +361,7 @@ export class Map {
             if (!dsc) continue
 
             //get cell at mouse position
-            /** @type {import('./MultiResolutionDataset.js').Cell|undefined} */
+            /** @type {import('./Dataset.js').Cell|undefined} */
             const cell = dsc.getCellFromPosition(posGeo, dsc.getViewCache())
             //console.log(cell, dsc.resolution)
             if (!cell) return undefined
@@ -447,7 +444,7 @@ export class Map {
      *
      * @param {MultiResolutionDataset} dataset The dataset of the layer
      * @param {Array.<import('./Style.js').Style>} styles The styles of the layer
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./MultiResolutionDataset.js').Cell):string}} opts The layer options.
+     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset.js').Cell):string}} opts The layer options.
      * @returns {this}
      */
     addLayer(dataset, styles, opts) {
@@ -456,154 +453,6 @@ export class Map {
         return this
     }
 
-    //dataset creation
-
-    /**
-     * Make a local grid dataset.
-     *
-     * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {Array} cells The cells.
-     * @param {object=} opts The parameters of the dataset.
-     * @returns {MultiResolutionDataset}
-     */
-    makeLGridDataset(resolution, cells, opts) {
-        return new MultiResolutionDataset([new JSGrid(resolution, cells)], [], opts)
-    }
-
-    /**
-     * Make a CSV grid dataset.
-     *
-     * @param {string} url The URL of the dataset.
-     * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {object=} opts The parameters of the dataset.
-     * @returns {MultiResolutionDataset}
-     */
-    makeCSVGridDataset(url, resolution, opts) {
-        return new MultiResolutionDataset(
-            [
-                new CSVGrid(url, resolution, opts).getData(undefined, () => {
-                    this.cg.redraw()
-                }),
-            ],
-            [],
-            opts
-        )
-    }
-
-    /**
-     * Make a tiled grid dataset.
-     *
-     * @param {string} url
-     * @param {{preprocess?:function(import('./MultiResolutionDataset.js').Cell):boolean}} opts
-     * @returns {MultiResolutionDataset}
-     */
-    makeTiledGridDataset(url, opts) {
-        return new MultiResolutionDataset(
-            [
-                new TiledGrid(this, url, opts).loadInfo(() => {
-                    this.cg.redraw()
-                }),
-            ],
-            [],
-            opts
-        )
-    }
-
-    //multi scale dataset creation
-
-    /**
-     * Make a multi scale CSV grid dataset.
-     *
-     * @param {Array.<number>} resolutions
-     * @param {function(number):string} resToURL
-     * @param {{preprocess?:function(import('./MultiResolutionDataset.js').Cell):boolean}} opts
-     * @returns {MultiResolutionDataset}
-     */
-    makeMultiScaleCSVGridDataset(resolutions, resToURL, opts) {
-        return MultiResolutionDataset.make(
-            resolutions,
-            (res) =>
-                new CSVGrid(resToURL(res), res, opts).getData(undefined, () => {
-                    this.cg.redraw()
-                }),
-            opts
-        )
-    }
-
-    //tiled multiscale
-
-    /**
-     * Make a multi scale tiled grid dataset.
-     *
-     * @param {Array.<number>} resolutions
-     * @param {function(number):string} resToURL
-     * @param {{preprocess?:function(import('./MultiResolutionDataset.js').Cell):boolean}} opts
-     * @returns {MultiResolutionDataset}
-     */
-    makeMultiScaleTiledGridDataset(resolutions, resToURL, opts) {
-        return MultiResolutionDataset.make(
-            resolutions,
-            (res) =>
-                new TiledGrid(this, resToURL(res), opts).loadInfo(() => {
-                    this.cg.redraw()
-                }),
-            opts
-        )
-    }
-
-    // direct layer creation
-
-    /**
-     * Add a layer from a CSV grid dataset.
-     *
-     * @param {string} url The URL of the dataset.
-     * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {Array.<import('./Style.js').Style>} styles The styles, ordered in drawing order.
-     * @param {object=} opts The parameters of the dataset and layer.
-     * @returns {this}
-     */
-    addCSVGridLayer(url, resolution, styles, opts) {
-        const ds = this.makeCSVGridDataset(url, resolution, opts)
-        return this.addLayer(ds, styles, opts)
-    }
-
-    /**
-     *
-     * @param {string} url
-     * @param {Array.<import('./Style.js').Style>} styles
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./MultiResolutionDataset.js').Cell):string, preprocess?:function(import('./MultiResolutionDataset.js').Cell):boolean}} opts
-     * @returns {this}
-     */
-    addTiledGridLayer(url, styles, opts) {
-        const ds = this.makeTiledGridDataset(url, opts)
-        return this.addLayer(ds, styles, opts)
-    }
-
-    /**
-     * Add a layer from a CSV grid dataset.
-     *
-     * @param {Array.<number>} resolutions
-     * @param {function(number):string} resToURL
-     * @param {Array.<import('./Style.js').Style>} styles The styles, ordered in drawing order.
-     * @param {object=} opts The parameters of the dataset and layer.
-     * @returns {this}
-     */
-    addMultiScaleCSVGridLayer(resolutions, resToURL, styles, opts) {
-        const ds = this.makeMultiScaleCSVGridDataset(resolutions, resToURL, opts)
-        return this.addLayer(ds, styles, opts)
-    }
-
-    /**
-     * @param {Array.<number>} resolutions
-     * @param {function(number):string} resToURL
-     * @param {Array.<import('./Style.js').Style>} styles
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./MultiResolutionDataset.js').Cell):string, preprocess?:function(import('./MultiResolutionDataset.js').Cell):boolean}} opts
-     * @returns {this}
-     */
-    addMultiScaleTiledGridLayer(resolutions, resToURL, styles, opts) {
-        const ds = this.makeMultiScaleTiledGridDataset(resolutions, resToURL, opts)
-        return this.addLayer(ds, styles, opts)
-    }
 
     /**
      * Add a background layer to the map.
