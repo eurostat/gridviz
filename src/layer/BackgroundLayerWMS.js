@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Layer } from "../Layer"
+import { Layer } from "../Layer.js"
 
 /**
  *

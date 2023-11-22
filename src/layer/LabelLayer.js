@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Layer } from "../Layer"
+import { Layer } from "../Layer.js"
 import { csv } from 'd3-fetch'
 
 /** A label. The name is the text to show. (x,y) are the coordinates in the same CRS as the grid.
