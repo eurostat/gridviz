@@ -3,7 +3,7 @@
 
 // internal imports
 import { GeoCanvas } from './GeoCanvas.js'
-import { Layer } from './layer/GridLayer.js'
+import { GridLayer } from './layer/GridLayer.js'
 import { Tooltip } from './Tooltip.js'
 import { BackgroundLayer } from './layer/BackgroundLayer.js'
 import { BackgroundLayerWMS } from './layer/BackgroundLayerWMS.js'
@@ -31,7 +31,7 @@ export class Map {
 
         /**
          * The layers.
-         * @type {Array.<Layer>}
+         * @type {Array.<GridLayer>}
          * */
         this.layers = []
 
@@ -349,7 +349,7 @@ export class Map {
         //go through the layers, starting from top
         const zf = this.getZoom()
         for (let i = this.layers.length - 1; i >= 0; i--) {
-            /** @type {Layer} */
+            /** @type {GridLayer} */
             const layer = this.layers[i]
             if (!layer.visible) continue
             if (!layer.cellInfoHTML) continue

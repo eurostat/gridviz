@@ -1,12 +1,14 @@
 //@ts-check
 'use strict'
 
+import { Layer } from "../Layer"
+
 /**
  * A layer, which specifies a dataset to be shown with specified styles.
  *
  * @author Joseph Davies, Julien Gaffuri
  */
-export class GridLayer {
+export class GridLayer extends Layer {
     /**
      * @param {import("../MultiResolutionDataset").MultiResolutionDataset} dataset The multi resolution dataset to show.
      * @param {Array.<import("../Style").Style>} styles The styles, ordered in drawing order.
@@ -14,6 +16,7 @@ export class GridLayer {
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(dataset, styles, opts = {}) {
+        super(opts)
         opts = opts || {}
 
         /** @type {import("../MultiResolutionDataset").MultiResolutionDataset} */

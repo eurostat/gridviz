@@ -1,16 +1,18 @@
 //@ts-check
 'use strict'
 
+import { Layer } from "../Layer"
 import { json } from 'd3-fetch'
 
 /**
  * @author Joseph Davies, Julien Gaffuri
  */
-export class LineLayer {
+export class LineLayer extends Layer {
     /**
      * @param {object} opts
      */
     constructor(opts) {
+        super(opts)
         opts = opts || {}
 
         /**

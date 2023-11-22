@@ -1,17 +1,20 @@
 //@ts-check
 'use strict'
 
+import { Layer } from "../Layer"
+
 /**
  *
  * A map WMS background layer.
  * 
  * @author Julien Gaffuri
  */
-export class BackgroundLayerWMS {
+export class BackgroundLayerWMS extends Layer {
     /**
      * @param {object} opts
      */
     constructor(opts) {
+        super(opts)
         opts = opts || {}
 
         /** An attribute to specify if a layer should be drawn or not

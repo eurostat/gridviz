@@ -1,6 +1,8 @@
 //@ts-check
 'use strict'
 
+import { Layer } from "../Layer"
+
 /**
  *
  * A map background layer in "Slippy map" XYZ standard.
@@ -9,11 +11,12 @@
  * 
  * @author Julien Gaffuri
  */
-export class BackgroundLayer {
+export class BackgroundLayer extends Layer {
     /**
      * @param {object} opts
      */
     constructor(opts) {
+        super(opts)
         opts = opts || {}
 
         /** An attribute to specify if a layer should be drawn or not

@@ -1,6 +1,7 @@
 //@ts-check
 'use strict'
 
+import { Layer } from "../Layer"
 import { csv } from 'd3-fetch'
 
 /** A label. The name is the text to show. (x,y) are the coordinates in the same CRS as the grid.
@@ -14,11 +15,12 @@ import { csv } from 'd3-fetch'
  *
  * @author Joseph Davies, Julien Gaffuri
  */
-export class LabelLayer {
+export class LabelLayer extends Layer {
     /**
      * @param {object} opts
      */
     constructor(opts) {
+        super(opts)
         opts = opts || {}
 
         /**
