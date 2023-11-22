@@ -15,19 +15,19 @@
 export class Style {
     /**
      * @abstract
-     * @param {{filter?:function(import('./MultiResolutionDataset').Cell):boolean,offset?:function(import('./MultiResolutionDataset').Cell,number,number):{dx:number,dy:number},visible?:boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,minZoom?:number,maxZoom?:number,drawFun?:function}} opts
+     * @param {{filter?:function(import('./Dataset').Cell):boolean,offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},visible?:boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,minZoom?:number,maxZoom?:number,drawFun?:function}} opts
      */
     constructor(opts) {
         opts = opts || {}
 
         /** A filter function to apply to the cell list, to filter out some cells not to be drawn (such as for example the cells with value=0).
          * @protected
-         * @type {function(import('./MultiResolutionDataset').Cell):boolean} */
+         * @type {function(import('./Dataset').Cell):boolean} */
         this.filter = opts.filter || (() => true)
 
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
          * @protected
-         * @type {function(import('./MultiResolutionDataset').Cell,number,number):{dx:number,dy:number}} */
+         * @type {function(import('./Dataset').Cell,number,number):{dx:number,dy:number}} */
         this.offset = opts.offset || ((c, r, zf) => ({ dx: 0, dy: 0 }))
 
         /** An attribute to specify if a style should be drawn or not
@@ -72,7 +72,7 @@ export class Style {
     /**
      * Draw cells.
      *
-     * @param {Array.<import('./MultiResolutionDataset').Cell>} cells The cells to draw.
+     * @param {Array.<import('./Dataset').Cell>} cells The cells to draw.
      * @param {number} resolution Their resolution (in geographic unit)
      * @param {import("./GeoCanvas").GeoCanvas} cg The canvas where to draw them.
      * @abstract
@@ -84,11 +84,11 @@ export class Style {
 
     //getters and setters
 
-    /** @returns {function(import('./MultiResolutionDataset').Cell,number,number):{dx:number,dy:number}} */
+    /** @returns {function(import('./Dataset').Cell,number,number):{dx:number,dy:number}} */
     getOffset() {
         return this.offset
     }
-    /** @param {function(import('./MultiResolutionDataset').Cell,number,number):{dx:number,dy:number}} val @returns {this} */
+    /** @param {function(import('./Dataset').Cell,number,number):{dx:number,dy:number}} val @returns {this} */
     setOffset(val) {
         this.offset = val
         return this
@@ -107,8 +107,8 @@ export class Style {
      * This is used to define how to draw specifically the cells within the view.
      * TODO: compute median ?
      *
-     * @param {Array.<import('./MultiResolutionDataset').Cell>} cells
-     * @param {function(import('./MultiResolutionDataset').Cell):number} valFun
+     * @param {Array.<import('./Dataset').Cell>} cells
+     * @param {function(import('./Dataset').Cell):number} valFun
      * @param {boolean} ignoreZeros
      * @returns {Stat | undefined}
      */

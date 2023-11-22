@@ -4,7 +4,6 @@
 // internal imports
 import { GeoCanvas } from './GeoCanvas.js'
 import { Layer } from './Layer.js'
-import { MultiResolutionDataset } from './MultiResolutionDataset.js'
 import { Tooltip } from './Tooltip.js'
 import { BackgroundLayer } from './BackgroundLayer.js'
 import { BackgroundLayerWMS } from './BackgroundLayerWMS.js'
@@ -439,19 +438,6 @@ export class Map {
         return this
     }
 
-    /**
-     * Add a layer to the map.
-     *
-     * @param {MultiResolutionDataset} dataset The dataset of the layer
-     * @param {Array.<import('./Style.js').Style>} styles The styles of the layer
-     * @param {{visible?:boolean,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import('./Dataset.js').Cell):string}} opts The layer options.
-     * @returns {this}
-     */
-    addLayer(dataset, styles, opts) {
-        const lay = new Layer(dataset, styles, opts)
-        this.layers.push(lay)
-        return this
-    }
 
 
     /**
