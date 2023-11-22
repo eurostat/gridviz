@@ -105,9 +105,7 @@ export class Map {
 
                 //launch data download, if necessary
                 if (strong)
-                    dsc.getData(this.cg.extGeo, () => {
-                        this.cg.redraw()
-                    })
+                    dsc.getData(this.cg.extGeo)
 
                 //update dataset view cache
                 if (strong) dsc.updateViewCache(this.cg.extGeo)

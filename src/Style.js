@@ -105,8 +105,6 @@ export class Style {
     /**
      * Compute some statistics on a value of some cells.
      * This is used to define how to draw specifically the cells within the view.
-     * TODO: compute median ?
-     *
      * @param {Array.<import('./Dataset').Cell>} cells
      * @param {function(import('./Dataset').Cell):number} valFun
      * @param {boolean} ignoreZeros

@@ -20,6 +20,7 @@ zf -> z
 pixNb -> something better
 population.csv files: make 2021 ones
 merge geocanvas and map
+remove GridTile class - not necessary
 
 API changes for v3:
 map.addLayer

@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Dataset } from "./Dataset"
+//import { Dataset } from "./Dataset"
 
 /**
  * A multi resolution dataset of grid cells.
@@ -14,7 +14,7 @@ import { Dataset } from "./Dataset"
 export class MultiResolutionDataset {
     /**
      * @param {Array.<number>} resolutions The resolutions of the datasets, in CRS geographical unit.
-     * @param {Array.<Dataset>|function(number):Dataset} datasets The datasets list, one per resolution. Or a function that returns a dataset from a resolution value.
+     * @param {Array.<import("./Dataset").Dataset>|function(number):import("./Dataset").Dataset} datasets The datasets list, one per resolution. Or a function that returns a dataset from a resolution value.
      * @param { {preprocess?:function(import("./Dataset").Cell):boolean} } opts Options. preprocess: A function to apply on each dataset cell to prepare its values. Can be used also to select cells to keep.
      */
     constructor(resolutions, datasets, opts = {}) {
