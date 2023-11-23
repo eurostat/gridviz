@@ -75,7 +75,7 @@ export class Map {
             this.updateExtentGeo()
 
             //go through the background layers
-            if (this.showBgLayers)
+            /*if (this.showBgLayers)
                 for (const layer of this.bgLayers) {
                     //check if layer is visible
                     if (!layer.visible) continue
@@ -84,7 +84,7 @@ export class Map {
 
                     //draw layer
                     layer.draw(this.cg)
-                }
+                }*/
 
             //go through the layers
             for (const layer of this.layers) {
@@ -161,11 +161,11 @@ export class Map {
 
             //draw boundary layer
             //if (strong)
-            if (this.showBoundaries && this.boundaryLayer) this.boundaryLayer.draw(this.cg)
+            //if (this.showBoundaries && this.boundaryLayer) this.boundaryLayer.draw(this.cg)
 
             //draw label layer
             //if (strong)
-            if (this.showLabels && this.labelLayer) this.labelLayer.draw(this.cg)
+            //if (this.showLabels && this.labelLayer) this.labelLayer.draw(this.cg)
 
             //
             this.canvasSave = null
@@ -179,19 +179,19 @@ export class Map {
         }
 
         /** @type {Array.<BackgroundLayer|BackgroundLayerWMS>} */
-        this.bgLayers = []
+        //this.bgLayers = []
         /** @type {boolean} */
-        this.showBgLayers = true
+        //this.showBgLayers = true
 
         /** @type {LabelLayer | undefined} */
-        this.labelLayer = undefined
+        //this.labelLayer = undefined
         /** @type {boolean} */
-        this.showLabels = true
+        //this.showLabels = true
 
         /** @type {LineLayer | undefined} */
-        this.boundaryLayer = undefined
+        //this.boundaryLayer = undefined
         /** @type {boolean} */
-        this.showBoundaries = true
+        //this.showBoundaries = true
 
         // legend div
         this.legendDivId = opts.legendDivId || 'gvizLegend'

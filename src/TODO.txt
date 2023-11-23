@@ -14,8 +14,9 @@ population.csv files: make 2021 ones
 
 
 Done:
+layers grouping: one layers stack par map. no more - showBgLayers showLabels showBoundaries
 removal of map.addLayer
- -> zoom
+zoom factor -> zoom
 add map.setView(x,y,z)
 App -> Map
 style based on cell directly, with viewscale (see scale functions)
