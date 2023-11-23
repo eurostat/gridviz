@@ -3,12 +3,7 @@
 
 // internal imports
 import { GeoCanvas } from './GeoCanvas.js'
-import { GridLayer } from './layer/GridLayer.js'
 import { Tooltip } from './Tooltip.js'
-import { BackgroundLayer } from './layer/BackgroundLayer.js'
-import { BackgroundLayerWMS } from './layer/BackgroundLayerWMS.js'
-import { LabelLayer } from './layer/LabelLayer.js'
-import { LineLayer } from './layer/LineLayer.js'
 import { monitor, monitorDuration } from './utils/Utils.js'
 import { ZoomButtons } from './button/ZoomButtons.js'
 import { FullscreenButton } from './button/FullscreenButton.js'
@@ -31,7 +26,7 @@ export class Map {
 
         /**
          * The layers.
-         * @type {Array.<GridLayer>}
+         * @type {Array.<import("./Layer.js").Layer>}
          * */
         this.layers = []
 
