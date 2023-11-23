@@ -58,7 +58,7 @@ export class TextStyle extends Style {
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.getZf()
+        const zf = cg.view.z
 
         let statText
         if (this.textCol) {

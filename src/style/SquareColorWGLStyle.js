@@ -82,7 +82,7 @@ export class SquareColorWGLStyle extends Style {
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.getZf()
+        const zf = cg.view.z
 
         //compute color variable statistics
         const statColor = Style.getStatistics(cells, (c) => c[this.colorCol], true)

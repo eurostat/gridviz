@@ -73,7 +73,7 @@ export class TimeSeriesStyle extends Style {
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.getZf()
+        const zf = cg.view.z
 
         let statWidth
         if (this.lineWidthCol) {

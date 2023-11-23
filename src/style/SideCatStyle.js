@@ -46,7 +46,7 @@ export class SideCatStyle extends Style {
         if (!cells || cells.length == 0) return
 
         //
-        const zf = cg.getZf()
+        const zf = cg.view.z
 
         /**  @type {Array.<Side>} */
         const sides = []

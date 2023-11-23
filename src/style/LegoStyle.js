@@ -91,7 +91,7 @@ class LegoTopStyle extends Style {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        cg.ctx.lineWidth = 0.6 * cg.getZf()
+        cg.ctx.lineWidth = 0.6 * cg.view.z
 
         //dark part
         cg.ctx.strokeStyle = this.colDark

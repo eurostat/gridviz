@@ -44,7 +44,7 @@ export class MosaicStyle extends Style {
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.getZf()
+        const zf = cg.view.z
 
         let statColor
         if (this.colorCol) {

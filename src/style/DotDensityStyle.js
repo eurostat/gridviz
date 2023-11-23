@@ -53,7 +53,7 @@ export class DotDensityStyle extends Style {
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.getZf()
+        const zf = cg.view.z
 
         let stat
         if (this.nbCol) stat = Style.getStatistics(cells, (c) => c[this.nbCol], true)
