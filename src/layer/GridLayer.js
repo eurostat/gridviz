@@ -10,7 +10,7 @@ import { Layer } from "../Layer.js"
  */
 export class GridLayer extends Layer {
     /**
-     * @param {import("../MultiResolutionDataset").MultiResolutionDataset} dataset The multi resolution dataset to show.
+     * @param {import("../Dataset").Dataset|import("../MultiResolutionDataset").MultiResolutionDataset} dataset The dataset to show.
      * @param {Array.<import("../Style").Style>} styles The styles, ordered in drawing order.
      * @param {{visible?:boolean,alpha?:number,blendOperation?:GlobalCompositeOperation,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import("../Dataset").Cell):string}} opts
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
@@ -19,21 +19,10 @@ export class GridLayer extends Layer {
         super(opts)
         opts = opts || {}
 
-        /** @type {import("../MultiResolutionDataset").MultiResolutionDataset} */
+        /** @type {import("../Dataset").Dataset|import("../MultiResolutionDataset").MultiResolutionDataset} */
         this.dataset = dataset
         /** @type {Array.<import("../Style").Style>} */
         this.styles = styles
-
-        /** A function returning the alpha (transparency/opacity), between 0.0 (fully transparent) and 1.0 (fully opaque).
-         *  The function parameter is the .
-         * (see CanvasRenderingContext2D: globalAlpha property)
-         * @type {function(number):number|undefined} */
-        this.alpha = opts.alpha
-
-        /** A function returning the blend operation. The function parameter is the .
-         * (see CanvasRenderingContext2D: globalCompositeOperation property)
-         * @type {GlobalCompositeOperation} */
-        this.blendOperation = opts.blendOperation || (zf => "source-over")
 
         /** Unit: number of pixels
          * @type {number} */
