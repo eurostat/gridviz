@@ -1,61 +1,57 @@
-<!DOCTYPE html>
-<html lang="en" style="height: 100%">
-    <head>
-        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-        <title>Gridviz - example</title>
-    </head>
+<div id="map" style="height: 500px; width: 800px"></div>
 
-    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
-        <div id="viz-container" style="height: 100%; width: 100%"></div>
+<script src="../dist/gridviz.js"></script>
+<script>
 
-        <script src="../dist/gridviz.js"></script>
-        <script>
-            let containerDiv = document.getElementById('viz-container')
+    //define map
+    const map = new gviz.Map(document.getElementById('map'))
 
-            new gviz.Map(containerDiv)
-                .setGeoCenter({ x: 4626953, y: 2826791 })
-                .setZoom(700)
-                .setBackgroundColor('#eee')
-                .setBoundaryLayer({
-                    url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2021/3035/03M/nutsbn_3.json',
-                    color: (f, zf) => {
-                        const p = f.properties
-                        if (p.co === 'T') return '#888'
-                        if (zf < 400) return '#888'
-                        else if (zf < 1000) return p.lvl >= 3 ? '' : '#888'
-                        else if (zf < 2000) return p.lvl >= 2 ? '' : '#888'
-                        else return p.lvl >= 1 ? '' : '#888'
-                    },
-                    width: (f, zf) => {
-                        const p = f.properties
-                        if (p.co === 'T') return 0.5
-                        if (zf < 400) return p.lvl == 3 ? 2.2 : p.lvl == 2 ? 2.2 : p.lvl == 1 ? 2.2 : 4
-                        else if (zf < 1000) return p.lvl == 2 ? 1.8 : p.lvl == 1 ? 1.8 : 2.5
-                        else if (zf < 2000) return p.lvl == 1 ? 1.8 : 2.5
-                        else return 1.2
-                    },
-                    lineDash: (f, z) => {
-                        const p = f.properties
-                        if (p.co === 'T') return []
-                        if (z < 400)
-                            return p.lvl == 3
-                                ? [2 * z, 2 * z]
-                                : p.lvl == 2
-                                ? [5 * z, 2 * z]
-                                : p.lvl == 1
-                                ? [5 * z, 2 * z]
-                                : [10 * z, 3 * z]
-                        else if (z < 1000)
-                            return p.lvl == 2
-                                ? [5 * z, 2 * z]
-                                : p.lvl == 1
-                                ? [5 * z, 2 * z]
-                                : [10 * z, 3 * z]
-                        else if (z < 2000) return p.lvl == 1 ? [5 * z, 2 * z] : [10 * z, 3 * z]
-                        else return [10 * z, 3 * z]
-                    },
-                })
-                .redraw()
-        </script>
-    </body>
-</html>
+    //set initial view
+    map.setView(4500000, 2900000, 1000)
+
+    //make boundary layer, with a different style depending on the zoom level and line type.
+    const boundaryLayer = new gviz.BoundaryLayer({
+        url: 'https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2021/3035/03M/nutsbn_3.json',
+        color: (f, zoom) => {
+            const p = f.properties
+            if (p.co === 'T') return '#888'
+            if (zoom < 400) return '#888'
+            else if (zoom < 1000) return p.lvl >= 3 ? '' : '#888'
+            else if (zoom < 2000) return p.lvl >= 2 ? '' : '#888'
+            else return p.lvl >= 1 ? '' : '#888'
+        },
+        width: (f, zoom) => {
+            const p = f.properties
+            if (p.co === 'T') return 0.5
+            if (zoom < 400) return p.lvl == 3 ? 2.2 : p.lvl == 2 ? 2.2 : p.lvl == 1 ? 2.2 : 4
+            else if (zoom < 1000) return p.lvl == 2 ? 1.8 : p.lvl == 1 ? 1.8 : 2.5
+            else if (zoom < 2000) return p.lvl == 1 ? 1.8 : 2.5
+            else return 1.2
+        },
+        lineDash: (f, zoom) => {
+            const p = f.properties
+            if (p.co === 'T') return []
+            if (zoom < 400)
+                return p.lvl == 3
+                    ? [2 * zoom, 2 * zoom]
+                    : p.lvl == 2
+                        ? [5 * zoom, 2 * zoom]
+                        : p.lvl == 1
+                            ? [5 * zoom, 2 * zoom]
+                            : [10 * zoom, 3 * zoom]
+            else if (zoom < 1000)
+                return p.lvl == 2
+                    ? [5 * zoom, 2 * zoom]
+                    : p.lvl == 1
+                        ? [5 * zoom, 2 * zoom]
+                        : [10 * zoom, 3 * zoom]
+            else if (zoom < 2000) return p.lvl == 1 ? [5 * zoom, 2 * zoom] : [10 * zoom, 3 * zoom]
+            else return [10 * zoom, 3 * zoom]
+        },
+    })
+
+    //add layer to map
+    map.layers = [boundaryLayer]
+    map.redraw()
+
+</script>
