@@ -4,7 +4,6 @@
 // internal imports
 import { GeoCanvas } from './GeoCanvas.js'
 import { Tooltip } from './Tooltip.js'
-import { monitor, monitorDuration } from './utils/Utils.js'
 import { ZoomButtons } from './button/ZoomButtons.js'
 import { FullscreenButton } from './button/FullscreenButton.js'
 
@@ -61,7 +60,6 @@ export class Map {
          * @private */
         this.cg = new GeoCanvas(canvas, undefined, 1, opts)
         this.cg.redraw = (strong = true) => {
-            if (monitor) monitorDuration('Start redraw')
             //console.log("?x=" + this.cg.getCenter().x + "&y=" + this.cg.getCenter().y + "&z=" + this.cg.getZf())
 
             //remove legend elements
@@ -74,18 +72,6 @@ export class Map {
             const z = this.getZoom()
             this.updateExtentGeo()
 
-            //go through the background layers
-            /*if (this.showBgLayers)
-                for (const layer of this.bgLayers) {
-                    //check if layer is visible
-                    if (!layer.visible) continue
-                    if (zf > layer.maxZoom) continue
-                    if (zf < layer.minZoom) continue
-
-                    //draw layer
-                    layer.draw(this.cg)
-                }*/
-
             //go through the layers
             for (const layer of this.layers) {
                 //check if layer is visible
@@ -93,105 +79,27 @@ export class Map {
                 if (z > layer.maxZoom) continue
                 if (z < layer.minZoom) continue
 
-                //get layer dataset component
-                /** @type {import('./Dataset.js').Dataset|undefined} */
-                const dsc = layer.getDataset(z)
-                if (!dsc) continue
-
-                //launch data download, if necessary
-                if (strong)
-                    dsc.getData(this.cg.extGeo)
-
-                //update dataset view cache
-                if (strong) dsc.updateViewCache(this.cg.extGeo)
-
                 //set layer alpha and blend mode
                 this.cg.ctx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
                 this.cg.ctx.globalCompositeOperation = layer.blendOperation(z)
 
-                //draw cells, style by style
-                if (strong)
-                    for (const s of layer.styles) {
-                        //check if style is visible
-                        if (!s.visible) continue
-                        if (z > s.maxZoom) continue
-                        if (z < s.minZoom) continue
-
-                        //set style alpha and blend mode
-                        //TODO: multiply by layer alpha ?
-                        this.cg.ctx.globalAlpha = s.alpha ? s.alpha(z) : 1.0
-                        this.cg.ctx.globalCompositeOperation = s.blendOperation(z)
-
-                        s.draw(dsc.getViewCache(), dsc.getResolution(), this.cg)
-                    }
-
-                //add legend element
-                if (this.legend && strong) {
-                    for (const s of layer.styles) {
-                        if (z > s.maxZoom) continue
-                        if (z < s.minZoom) continue
-                        for (const lg of s.legends) {
-                            //console.log(s, lg)
-                            //this.legend.append(lg.div)
-                            //s1.node().appendChild(s2.node())
-                            this.legend.node().append(lg.div.node())
-                        }
-
-                        //case for styles of styles, like kernel smoothing
-                        //TODO do better
-                        if (s['styles']) {
-                            for (const s2 of s.styles) {
-                                if (z > s2.maxZoom) continue
-                                if (z < s2.minZoom) continue
-                                for (const lg of s2.legends) {
-                                    //console.log(s, lg)
-                                    //this.legend.append(lg.div)
-                                    //s1.node().appendChild(s2.node())
-                                    this.legend.node().append(lg.div.node())
-                                }
-                            }
-                        }
-                    }
-                }
+                //draw layer
+                layer.draw(this.cg, z, true, this.legend)
 
                 //restore default alpha and blend operation
                 this.cg.ctx.globalAlpha = 1.0
                 this.cg.ctx.globalCompositeOperation = this.defaultGlobalCompositeOperation
+
             }
-
-            //draw boundary layer
-            //if (strong)
-            //if (this.showBoundaries && this.boundaryLayer) this.boundaryLayer.draw(this.cg)
-
-            //draw label layer
-            //if (strong)
-            //if (this.showLabels && this.labelLayer) this.labelLayer.draw(this.cg)
 
             //
             this.canvasSave = null
-
-            if (monitor) monitorDuration('End redraw')
 
             // listen for resize events on the App's container and handle them
             this.defineResizeObserver(this.container, canvas)
 
             return this
         }
-
-        /** @type {Array.<BackgroundLayer|BackgroundLayerWMS>} */
-        //this.bgLayers = []
-        /** @type {boolean} */
-        //this.showBgLayers = true
-
-        /** @type {LabelLayer | undefined} */
-        //this.labelLayer = undefined
-        /** @type {boolean} */
-        //this.showLabels = true
-
-        /** @type {LineLayer | undefined} */
-        //this.boundaryLayer = undefined
-        /** @type {boolean} */
-        //this.showBoundaries = true
 
         // legend div
         this.legendDivId = opts.legendDivId || 'gvizLegend'

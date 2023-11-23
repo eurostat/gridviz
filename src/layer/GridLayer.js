@@ -35,6 +35,70 @@ export class GridLayer extends Layer {
         this.cellInfoHTML = opts.cellInfoHTML || GridLayer.defaultCellInfoHTML
     }
 
+
+    draw(cg, z, strong) {
+
+        //get layer dataset component
+        /** @type {import('../Dataset.js').Dataset|undefined} */
+        const dsc = this.getDataset(z)
+        if (!dsc) return
+
+        //launch data download, if necessary
+        if (strong)
+            dsc.getData(cg.extGeo)
+
+        //update dataset view cache
+        if (strong) dsc.updateViewCache(cg.extGeo)
+
+        //draw cells, style by style
+        if (strong)
+            for (const s of this.styles) {
+                //check if style is visible
+                if (!s.visible) continue
+                if (z > s.maxZoom) continue
+                if (z < s.minZoom) continue
+
+                //set style alpha and blend mode
+                //TODO: multiply by layer alpha ?
+                cg.ctx.globalAlpha = s.alpha ? s.alpha(z) : 1.0
+                cg.ctx.globalCompositeOperation = s.blendOperation(z)
+
+                s.draw(dsc.getViewCache(), dsc.getResolution(), cg)
+            }
+
+        //add legend element
+        if (this.legend && strong) {
+            for (const s of this.styles) {
+                if (z > s.maxZoom) continue
+                if (z < s.minZoom) continue
+                for (const lg of s.legends) {
+                    //console.log(s, lg)
+                    //this.legend.append(lg.div)
+                    //s1.node().appendChild(s2.node())
+                    this.legend.node().append(lg.div.node())
+                }
+
+                //case for styles of styles, like kernel smoothing
+                //TODO do better
+                if (s['styles']) {
+                    for (const s2 of s.styles) {
+                        if (z > s2.maxZoom) continue
+                        if (z < s2.minZoom) continue
+                        for (const lg of s2.legends) {
+                            //console.log(s, lg)
+                            //this.legend.append(lg.div)
+                            //s1.node().appendChild(s2.node())
+                            this.legend.node().append(lg.div.node())
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+
+
     /**
      * Return the relevant dataset component for a specified zoom.
      *
