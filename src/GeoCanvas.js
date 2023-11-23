@@ -152,17 +152,6 @@ export class GeoCanvas {
     getView() { return this.view }
 
 
-
-    /** @param {{x:number,y:number}} v Geographical coordinates of the center */
-    setCenter(v) {
-        this.view.x = v.x
-        this.view.y = v.y
-    }
-    /** @returns {{x:number,y:number}} Geographical coordinates of the center */
-    getCenter() {
-        return { x: this.view.x, y: this.view.y }
-    }
-
     /** @param {Array.<number>} v */
     setZExtent(v) {
         this.zExtent = v

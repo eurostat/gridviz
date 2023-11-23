@@ -291,11 +291,12 @@ export class Map {
 
     /** @returns {{x:number,y:number}} */
     getGeoCenter() {
-        return this.cg.getCenter()
+        return this.cg.view
     }
     /** @param {{x:number,y:number}} val @returns {this} */
     setGeoCenter(val) {
-        this.cg.setCenter(val)
+        this.cg.view.x = val.x
+        this.cg.view.y = val.y
         return this
     }
 
