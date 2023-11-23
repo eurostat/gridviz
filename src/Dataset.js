@@ -55,7 +55,7 @@ export class Dataset {
      * Request data within a geographic envelope.
      *
      * @abstract
-     * @param {Envelope|undefined} extGeo
+     * @param {import("./GeoCanvas").Envelope|undefined} extGeo
      * @returns {this}
      */
     getData(extGeo = undefined) {
@@ -65,7 +65,7 @@ export class Dataset {
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      * @abstract
-     * @param {Envelope} extGeo The view geographical envelope.
+     * @param {import("./GeoCanvas").Envelope} extGeo The view geographical envelope.
      * @returns {void}
      */
     updateViewCache(extGeo) {

@@ -11,13 +11,9 @@ import { Dataset } from '../Dataset.js'
  * @author Joseph Davies, Julien Gaffuri
  */
 export class GeoTIFF extends Dataset {
-    /**
-     * @param {string} url The URL of the dataset.
-     * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {{preprocess?:(function(import("../Dataset").Cell):boolean)}} opts
-     */
-    constructor(url, resolution, opts = {}) {
-        super(url, resolution, opts)
+
+    constructor(map, url, resolution, opts = {}) {
+        super(map, url, resolution, opts)
 
         /**
          * @private
@@ -34,9 +30,8 @@ export class GeoTIFF extends Dataset {
      * Request data within a geographic envelope.
      *
      * @param {import("../GeoCanvas.js").Envelope|undefined} e
-     * @param {function():void} redraw
      */
-    getData(e, redraw) {
+    getData(e) {
         //check if data already loaded
         if (this.infoLoadingStatus != 'notLoaded') return this
 

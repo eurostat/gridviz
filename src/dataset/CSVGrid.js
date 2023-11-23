@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../MultiResolutionDataset.js").Envelope }} GridInfo */
+/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../GeoCanvas.js").Envelope }} GridInfo */
 
 import { csv } from 'd3-fetch'
 import { Dataset } from '../Dataset.js'
@@ -16,14 +16,14 @@ export class CSVGrid extends Dataset {
      * @param {import("../Map")} map The map.
      * @param {string} url The URL of the dataset.
      * @param {number} resolution The dataset resolution in geographical unit.
-     * @param {{preprocess?:(function(import("../MultiResolutionDataset.js").Cell):boolean)}} opts
+     * @param {{preprocess?:(function(import("../Dataset.js").Cell):boolean)}} opts
      */
     constructor(map, url, resolution, opts = {}) {
         super(map, url, resolution, opts)
 
         /**
          * @private
-         * @type {Array.<import("../MultiResolutionDataset.js").Cell>} */
+         * @type {Array.<import("../Dataset.js").Cell>} */
         this.cells = []
 
         /**
@@ -37,7 +37,7 @@ export class CSVGrid extends Dataset {
 
     /**
      * Request data within a geographic envelope.
-     * @param {import("../MultiResolutionDataset.js").Envelope|undefined} e
+     * @param {import("../GeoCanvas.js").Envelope|undefined} e
      */
     getData(e) {
         //check if data already loaded
@@ -87,7 +87,7 @@ export class CSVGrid extends Dataset {
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      *
-     * @param {import("../MultiResolutionDataset.js").Envelope} extGeo
+     * @param {import("../GeoCanvas.js").Envelope} extGeo
      * @returns {void}
      */
     updateViewCache(extGeo) {

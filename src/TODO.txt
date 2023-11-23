@@ -1,6 +1,7 @@
 v3: focus on (main) API changes.
 
 pixNb -> something better? At layer level? zoomResolutionJump ?
+Enveloppe
 filterColor: move to layer level ?
 make everything in opts ?
 see legend update on layer style change
