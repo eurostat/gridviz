@@ -49,43 +49,43 @@ export class BackgroundLayerWMS extends Layer {
 
 
     /**
-     * @param {import("../GeoCanvas").GeoCanvas} cg The canvas where to draw the layer.
+     * @param {import("../GeoCanvas").GeoCanvas} canvas The canvas where to draw the layer.
      * @returns {void}
      */
-    draw(cg) {
+    draw(canvas) {
 
         //update map extent
-        cg.updateExtentGeo(0)
+        canvas.updateExtentGeo(0)
 
-        if (!this.hasMoved(cg.extGeo) && this.img) {
+        if (!this.hasMoved(canvas.extGeo) && this.img) {
             //the map did not move and the image was already downloaded: draw the image
-            cg.ctx.drawImage(this.img, 0, 0, cg.w, cg.h)
+            canvas.ctx.drawImage(this.img, 0, 0, canvas.w, canvas.h)
 
         } else {
             //the map moved: retrieve new image
 
             //
-            this.xMin = cg.extGeo.xMin
-            this.xMax = cg.extGeo.xMax
-            this.yMin = cg.extGeo.yMin
-            this.yMax = cg.extGeo.yMax
+            this.xMin = canvas.extGeo.xMin
+            this.xMax = canvas.extGeo.xMax
+            this.yMin = canvas.extGeo.yMin
+            this.yMax = canvas.extGeo.yMax
 
             //build WMS URL
             const url = []
             url.push(this.url)
             url.push("&width=")
-            url.push(cg.w)
+            url.push(canvas.w)
             url.push("&height=")
-            url.push(cg.h)
+            url.push(canvas.h)
             //bbox: xmin ymin xmax ymax
             url.push("&bbox=")
-            url.push(cg.extGeo.xMin)
+            url.push(canvas.extGeo.xMin)
             url.push(",")
-            url.push(cg.extGeo.yMin)
+            url.push(canvas.extGeo.yMin)
             url.push(",")
-            url.push(cg.extGeo.xMax)
+            url.push(canvas.extGeo.xMax)
             url.push(",")
-            url.push(cg.extGeo.yMax)
+            url.push(canvas.extGeo.yMax)
 
             const urlS = url.join("")
             //console.log(urlS)
@@ -93,7 +93,7 @@ export class BackgroundLayerWMS extends Layer {
             if (!this.img) {
                 this.img = new Image()
                 this.img.onload = () => {
-                    cg.redraw()
+                    canvas.redraw()
                 }
                 this.img.onerror = () => {
                     //case when no image
@@ -106,12 +106,12 @@ export class BackgroundLayerWMS extends Layer {
         }
 
         //apply filter
-        const zf = cg.getZf()
+        const zf = canvas.getZf()
         if (this.filterColor) {
             const fc = this.filterColor(zf)
             if (fc && fc != 'none') {
-                cg.ctx.fillStyle = fc
-                cg.ctx.fillRect(0, 0, cg.w, cg.h)
+                canvas.ctx.fillStyle = fc
+                canvas.ctx.fillRect(0, 0, canvas.w, canvas.h)
             }
         }
     }
