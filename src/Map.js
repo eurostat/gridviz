@@ -27,7 +27,7 @@ export class Map {
          * The layers.
          * @type {Array.<import("./Layer.js").Layer>}
          * */
-        this.layers = []
+        this.layers = opts.layers || []
 
         //get container element
         this.container = container || document.getElementById('gridviz')
@@ -59,11 +59,11 @@ export class Map {
          * @type {GeoCanvas}
          * @private */
         this.cg = new GeoCanvas(canvas, undefined, 1, opts)
-        this.cg.redraw = (strong = true) => {
+        this.cg.redraw = () => {
             //console.log("?x=" + this.cg.getCenter().x + "&y=" + this.cg.getCenter().y + "&z=" + this.cg.getZf())
 
             //remove legend elements
-            if (this.legend && strong) this.legend.selectAll('*').remove()
+            if (this.legend) this.legend.selectAll('*').remove()
 
             //clear
             this.cg.initCanvasTransform()

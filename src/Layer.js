@@ -47,7 +47,7 @@ export class Layer {
      * @returns {void}
      * @abstract
      */
-    draw(cg, z = -1, strong = true, legend = undefined) {
+    draw(cg, z = -1, legend = undefined) {
         throw new Error('Method draw not implemented.')
     }
 
