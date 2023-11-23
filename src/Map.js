@@ -83,7 +83,7 @@ export class Map {
                 this.cg.ctx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
                 this.cg.ctx.globalCompositeOperation = layer.blendOperation(z)
 
-                //set affin transform to draw in geographical coordinates
+                //set affin transform to draw with geographical coordinates
                 this.cg.setCanvasTransform()
 
                 //draw layer
