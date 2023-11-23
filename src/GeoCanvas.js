@@ -256,7 +256,7 @@ export class GeoCanvas {
         if (newZf < this.zExtent[0]) f = this.zExtent[0] / this.getZf()
         if (newZf > this.zExtent[1]) f = this.zExtent[1] / this.getZf()
 
-        this.setZf(f * this.getZf())
+        this.view.z *= f
         const dxGeo = (xGeo - this.view.x) * (1 - f)
         this.view.x += dxGeo
         const dyGeo = (yGeo - this.view.y) * (1 - f)
