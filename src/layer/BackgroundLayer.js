@@ -81,7 +81,7 @@ export class BackgroundLayer extends Layer {
      * @returns {void}
      */
     draw(canvas) {
-        
+
         if (!this.resolutions || this.resolutions.length == 0) {
             console.error('No resolutions provided for background layer')
             return
@@ -147,6 +147,7 @@ export class BackgroundLayer extends Layer {
                 const xGeo = x0 + x * sizeG
                 const yGeo = y0 - y * sizeG
                 try {
+                    canvas.initCanvasTransform()
                     canvas.ctx.drawImage(img, canvas.geoToPixX(xGeo), canvas.geoToPixY(yGeo), size, size)
                     //cg.ctx.drawImage(img, xGeo, yGeo, sizeG, -sizeG)
                 } catch (error) {

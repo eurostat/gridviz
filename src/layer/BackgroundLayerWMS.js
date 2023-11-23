@@ -59,6 +59,7 @@ export class BackgroundLayerWMS extends Layer {
 
         if (!this.hasMoved(canvas.extGeo) && this.img) {
             //the map did not move and the image was already downloaded: draw the image
+            canvas.initCanvasTransform()
             canvas.ctx.drawImage(this.img, 0, 0, canvas.w, canvas.h)
 
         } else {
