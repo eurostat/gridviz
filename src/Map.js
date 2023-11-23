@@ -287,12 +287,6 @@ export class Map {
     /** @returns {import('./GeoCanvas.js').View} */
     getView() { return this.cg.getView() }
 
-    //getters and setters
-
-    /** @returns {{x:number,y:number}} */
-    getGeoCenter() {
-        return this.cg.view
-    }
     /** @param {{x:number,y:number}} val @returns {this} */
     setGeoCenter(val) {
         this.cg.view.x = val.x

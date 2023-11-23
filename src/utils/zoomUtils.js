@@ -77,7 +77,7 @@ export function goToStraight(
 ) {
     //store initial position/zoom
     const zfIni = map.getZoom()
-    const cIni = map.getGeoCenter()
+    const cIni = map.getView()
 
     //default
     xTarget = isNaN(xTarget) ? cIni.x : xTarget
@@ -100,7 +100,7 @@ export function goToStraight(
     let timer = setInterval(() => {
         //compute and set new position
         if (d > 0) {
-            const c = map.getGeoCenter()
+            const c = map.getView()
             let nx = c.x + ddx
             let ny = c.y + ddy
             //if went too far, stop at target values
