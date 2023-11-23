@@ -142,9 +142,6 @@ export class SideStyle extends Style {
         //compute stats on sides
         const statSides = SideStyle.getSideStatistics(sides, true)
 
-        //draw in geo coordinates
-        cg.setCanvasTransform()
-
         //draw cells, if fillColor specified
         if (this.fillColor)
             for (let c of cells) {

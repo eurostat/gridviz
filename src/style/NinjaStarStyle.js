@@ -63,10 +63,6 @@ export class NinjaStarStyle extends Style {
             statColor = Style.getStatistics(cells, (c) => c[this.colorCol], true)
         }
 
-        //draw with HTML canvas
-        //in geo coordinates
-        cg.setCanvasTransform()
-
         const r2 = r * 0.5
         for (let cell of cells) {
             //color

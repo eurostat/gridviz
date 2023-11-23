@@ -49,9 +49,6 @@ export class ShapeColorSizeStyle extends Style {
         //get view scale
         const vs = this.viewScale ? this.viewScale(cells, r, zf) : undefined
 
-        //draw with HTML canvas in geo coordinates
-        cg.setCanvasTransform()
-
         const r2 = r * 0.5
         for (let c of cells) {
             //color

@@ -105,9 +105,6 @@ export class PillarStyle extends Style {
 
         cg.ctx.lineCap = this.simple ? 'butt' : 'round'
 
-        //draw in geo coordinates
-        cg.setCanvasTransform()
-
         //draw shadows
         cg.ctx.strokeStyle = this.shadowColor
         cg.ctx.fillStyle = this.shadowColor

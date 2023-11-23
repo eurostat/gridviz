@@ -76,9 +76,6 @@ export class CompositionStyle extends Style {
         //nb categories - used for radar and agepyramid
         const nbCat = Object.entries(this.color).length
 
-        //draw in geo coordinates
-        cg.setCanvasTransform()
-
         //draw calls
         for (let cell of cells) {
 

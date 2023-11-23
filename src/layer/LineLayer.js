@@ -69,9 +69,6 @@ export class LineLayer extends Layer {
         //
         const zf = cg.getZf()
 
-        //draw in geo coordinates
-        cg.setCanvasTransform()
-
         for (const f of this.fs) {
             const cs = f.geometry.coordinates
             if (cs.length < 2) continue

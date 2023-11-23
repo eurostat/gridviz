@@ -65,10 +65,6 @@ export class StrokeStyle extends Style {
         let statWidth
         if (this.strokeWidthCol) statWidth = Style.getStatistics(cells, (c) => c[this.strokeWidthCol], true)
 
-        //draw with HTML canvas
-        //in geo coordinates
-        cg.setCanvasTransform()
-
         const r2 = r * 0.5
         for (let cell of cells) {
             //color

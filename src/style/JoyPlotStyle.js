@@ -74,9 +74,6 @@ export class JoyPlotStyle extends Style {
         /**  @type {{min:number, max:number}} */
         const ys = { min: yMin, max: yMax }
 
-        //draw in geo coordinates
-        cg.setCanvasTransform()
-
         //draw lines, row by row, stating from the top
         for (let y = yMax; y >= yMin; y -= r) {
             //get row

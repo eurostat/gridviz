@@ -169,9 +169,6 @@ export class IsoFenceStyle extends Style {
             cg.ctx.stroke()
         }
 
-        //draw in geo coordinates
-        cg.setCanvasTransform()
-
         //draw sides
         cg.ctx.lineCap = "round";
         for (let s of sides) {

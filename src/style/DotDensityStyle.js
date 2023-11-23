@@ -121,11 +121,6 @@ export class DotDensityStyle extends Style {
 
             if (monitor) monitorDuration(' canvas drawing')
         } else {
-            //draw with HTML canvas
-
-            //draw in geo coordinates
-            cg.setCanvasTransform()
-
             for (let c of cells) {
                 //get color
                 const col = this.color(c)

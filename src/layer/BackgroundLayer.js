@@ -113,9 +113,6 @@ export class BackgroundLayer extends Layer {
         const yMax = yGeoToTMS(cg.extGeo.yMin)
         const yMin = yGeoToTMS(cg.extGeo.yMax) - 1
 
-        //TODO ?
-        //cg.setCanvasTransform()
-
         //handle images
         for (let x = xMin; x < xMax; x++) {
             for (let y = yMin; y < yMax; y++) {

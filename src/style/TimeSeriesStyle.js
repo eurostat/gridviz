@@ -111,10 +111,6 @@ export class TimeSeriesStyle extends Style {
 
         const nb = this.ts.length
 
-        //draw with HTML canvas
-        //in geo coordinates
-        cg.setCanvasTransform()
-
         cg.ctx.lineCap = "butt"
         for (let c of cells) {
 

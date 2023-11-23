@@ -799,8 +799,6 @@ const customStyle = new gviz.Style({
 
 //define draw function
 drawFun : (cells, resolution, cg) => {
-    //draw with HTML canvas in geo coordinates
-    cg.setCanvasTransform()
 
     //draw each cell as an arrow
     //with a fill color depending on the property "population"

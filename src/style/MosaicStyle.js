@@ -64,9 +64,6 @@ export class MosaicStyle extends Style {
             return { x: Math.random() * d, y: Math.random() * d }
         }
 
-        //draw with HTML canvas in geo coordinates
-        cg.setCanvasTransform()
-
         for (let cell of cells) {
             //set fill color
             const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined

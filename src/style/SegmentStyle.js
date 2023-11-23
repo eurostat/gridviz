@@ -83,9 +83,6 @@ export class SegmentStyle extends Style {
         //conversion factor degree -> radian
         const f = Math.PI / 180
 
-        //draw in geo coordinates
-        cg.setCanvasTransform()
-
         for (let c of cells) {
             //color
             /** @type {string|undefined} */

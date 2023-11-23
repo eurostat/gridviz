@@ -102,9 +102,6 @@ export class SideCatStyle extends Style {
         //
         if (sides.length == 0) return
 
-        //draw in geo coordinates
-        cg.setCanvasTransform()
-
         //draw cells, if fillColor specified
         if (this.fillColor)
             for (let c of cells) {
