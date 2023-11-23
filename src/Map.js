@@ -250,14 +250,14 @@ export class Map {
      */
     getCellFocusInfo(posGeo) {
         //go through the layers, starting from top
-        const zf = this.getZoom()
+        const z = this.getZoom()
         for (let i = this.layers.length - 1; i >= 0; i--) {
-            /** @type {GridLayer} */
+            /** @type {import("./Layer").Layer} */
             const layer = this.layers[i]
             if (!layer.visible) continue
             if (!layer.cellInfoHTML) continue
             //if (layer.cellInfoHTML === 'none') continue
-            const dsc = layer.getDataset(zf)
+            const dsc = layer.getDataset(z)
             if (!dsc) continue
 
             //get cell at mouse position
