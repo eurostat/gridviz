@@ -1,8 +1,8 @@
 v3: focus on (main) API changes.
 
+change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coords by default (!)
 revamp layers - see legends
 pixNb -> something better
-change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coords by default (!)
 merge geocanvas and map
 move viewScale things at style level ?
 make everything in opts
