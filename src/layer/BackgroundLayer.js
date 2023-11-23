@@ -81,29 +81,30 @@ export class BackgroundLayer extends Layer {
      * @returns {void}
      */
     draw(canvas) {
+        
         if (!this.resolutions || this.resolutions.length == 0) {
             console.error('No resolutions provided for background layer')
             return
         }
 
         //
-        const zf = canvas.view.z
+        const z = canvas.view.z
         const x0 = this.origin[0],
             y0 = this.origin[1]
 
         //get zoom level and resolution
-        let z = 0
-        for (z = 0; z < this.resolutions.length; z++) if (this.resolutions[z] < zf) break
-        z -= 1
-        z = Math.max(0, z)
-        z = Math.min(z, this.resolutions.length - 1)
+        let z_ = 0
+        for (z_ = 0; z_ < this.resolutions.length; z_++) if (this.resolutions[z_] < z) break
+        z_ -= 1
+        z_ = Math.max(0, z_)
+        z_ = Math.min(z_, this.resolutions.length - 1)
         //console.log(this.resolutions.length, z)
-        const res = this.resolutions[z]
+        const res = this.resolutions[z_]
 
-        z += this.z0
+        z_ += this.z0
 
         const sizeG = this.nbPix * res
-        const size = sizeG / zf
+        const size = sizeG / z
 
         //get tile numbers
         const xGeoToTMS = (x) => Math.ceil((x - x0) / sizeG)
@@ -117,20 +118,20 @@ export class BackgroundLayer extends Layer {
         for (let x = xMin; x < xMax; x++) {
             for (let y = yMin; y < yMax; y++) {
                 //get image
-                let img = this.get(z, x, y)
+                let img = this.get(z_, x, y)
 
                 //load image
                 if (!img) {
                     const img = new Image()
-                    this.put(img, z, x, y)
+                    this.put(img, z_, x, y)
                     img.onload = () => {
                         canvas.redraw()
                     }
                     img.onerror = () => {
                         //case when no image
-                        this.put('failed', z, x, y)
+                        this.put('failed', z_, x, y)
                     }
-                    img.src = this.urlFun(x, y, z)
+                    img.src = this.urlFun(x, y, z_)
                     continue
                 }
 
@@ -156,7 +157,7 @@ export class BackgroundLayer extends Layer {
 
         //apply filter
         if (this.filterColor) {
-            const fc = this.filterColor(zf)
+            const fc = this.filterColor(z)
             if (fc && fc != 'none') {
                 canvas.ctx.fillStyle = fc
                 canvas.ctx.fillRect(0, 0, canvas.w, canvas.h)
