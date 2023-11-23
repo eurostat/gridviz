@@ -4,7 +4,7 @@
 /** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
 import { select } from 'd3-selection'
-import { zoom, zoomIdentity } from 'd3-zoom'
+import { zoom as d3zoom, zoomIdentity } from 'd3-zoom'
 
 /**
  * A HTML canvas for geo data display, enhanced with zoom and pan capabilities.
@@ -66,7 +66,7 @@ export class GeoCanvas {
         //rely on d3 zoom for pan/zoom
         if (!opts.disableZoom) {
             let tP = zoomIdentity
-            const z = zoom()
+            const z = d3zoom()
                 //to make the zooming a bit faster
                 .wheelDelta((e) => -e.deltaY * (e.deltaMode === 1 ? 0.07 : e.deltaMode ? 1 : 0.004))
                 .on('zoom', (e) => {
