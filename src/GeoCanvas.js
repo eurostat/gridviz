@@ -79,7 +79,7 @@ export class GeoCanvas {
                         //pan
                         const dx = tP.x - t.x
                         const dy = tP.y - t.y
-                        this.pan(dx * this.getZf(), -dy * this.getZf())
+                        this.pan(dx * this.view.z, -dy * this.view.z)
                     } else {
                         const se = e.sourceEvent
                         if (se instanceof WheelEvent) {
@@ -184,16 +184,16 @@ export class GeoCanvas {
 
     /** Initialise canvas transform with geo to screen transformation, so that geo objects can be drawn directly in geo coordinates. */
     setCanvasTransform() {
-        const k = 1 / this.getZf()
-        const tx = -this.view.x / this.getZf() + this.w * 0.5
-        const ty = this.view.y / this.getZf() + this.h * 0.5
+        const k = 1 / this.view.z
+        const tx = -this.view.x / this.view.z + this.w * 0.5
+        const ty = this.view.y / this.view.z + this.h * 0.5
         this.ctx.setTransform(k, 0, 0, -k, tx, ty)
     }
 
     /** Get the transformation matrix to webGL screen coordinates, within [-1,1]*[-1,1] */
     getWebGLTransform() {
-        const kx = 2.0 / (this.w * this.getZf())
-        const ky = 2.0 / (this.h * this.getZf())
+        const kx = 2.0 / (this.w * this.view.z)
+        const ky = 2.0 / (this.h * this.view.z)
         return [kx, 0.0, 0.0, 0.0, ky, 0.0, -kx * this.view.x, -ky * this.view.y, 1.0]
     }
 
@@ -226,8 +226,8 @@ export class GeoCanvas {
         this.updateExtentGeo()
 
         if (this.canvasSave.c) {
-            this.canvasSave.dx -= dxGeo / this.getZf()
-            this.canvasSave.dy += dyGeo / this.getZf()
+            this.canvasSave.dx -= dxGeo / this.view.z
+            this.canvasSave.dy += dyGeo / this.view.z
             this.clear(this.backgroundColor)
             // this doesnt work on mobile https://github.com/eurostat/gridviz/issues/98
             this.ctx.drawImage(this.canvasSave.c, this.canvasSave.dx, this.canvasSave.dy)
@@ -244,13 +244,13 @@ export class GeoCanvas {
         //TODO force geo extend to remain
 
         //trying to zoom in/out beyond limit
-        if (this.zExtent[0] == this.getZf() && f <= 1) return
-        if (this.zExtent[1] == this.getZf() && f >= 1) return
+        if (this.zExtent[0] == this.view.z && f <= 1) return
+        if (this.zExtent[1] == this.view.z && f >= 1) return
 
         //ensure zoom extent preserved
-        const newZf = f * this.getZf()
-        if (newZf < this.zExtent[0]) f = this.zExtent[0] / this.getZf()
-        if (newZf > this.zExtent[1]) f = this.zExtent[1] / this.getZf()
+        const newZf = f * this.view.z
+        if (newZf < this.zExtent[0]) f = this.zExtent[0] / this.view.z
+        if (newZf > this.zExtent[1]) f = this.zExtent[1] / this.view.z
 
         this.view.z *= f
         const dxGeo = (xGeo - this.view.x) * (1 - f)
@@ -310,28 +310,28 @@ export class GeoCanvas {
      * @returns {number} Screen x coordinate, in pix.
      */
     geoToPixX(xGeo) {
-        return (xGeo - this.view.x) / this.getZf() + this.w * 0.5
+        return (xGeo - this.view.x) / this.view.z + this.w * 0.5
     }
     /**
      * @param {number} yGeo Geo y coordinate, in m.
      * @returns {number} Screen y coordinate, in pix.
      */
     geoToPixY(yGeo) {
-        return -(yGeo - this.view.y) / this.getZf() + this.h * 0.5
+        return -(yGeo - this.view.y) / this.view.z + this.h * 0.5
     }
     /**
      * @param {number} x Screen x coordinate, in pix.
      * @returns {number} Geo x coordinate, in m.
      */
     pixToGeoX(x) {
-        return (x - this.w * 0.5) * this.getZf() + this.view.x
+        return (x - this.w * 0.5) * this.view.z + this.view.x
     }
     /**
      * @param {number} y Screen y coordinate, in pix.
      * @returns {number} Geo y coordinate, in m.
      */
     pixToGeoY(y) {
-        return -(y - this.h * 0.5) * this.getZf() + this.view.y
+        return -(y - this.h * 0.5) * this.view.z + this.view.y
     }
 
     /** Get x,y,z elements from URL and assign them to the view. */
