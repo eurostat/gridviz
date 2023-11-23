@@ -33,7 +33,7 @@ export class GeoTIFF extends Dataset {
     /**
      * Request data within a geographic envelope.
      *
-     * @param {import("../Dataset").Envelope|undefined} e
+     * @param {import("../GeoCanvas.js").Envelope|undefined} e
      * @param {function():void} redraw
      */
     getData(e, redraw) {
@@ -108,7 +108,7 @@ export class GeoTIFF extends Dataset {
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      *
-     * @param {import("../Dataset").Envelope} extGeo
+     * @param {import("../GeoCanvas.js").Envelope} extGeo
      * @returns {void}
      */
     updateViewCache(extGeo) {

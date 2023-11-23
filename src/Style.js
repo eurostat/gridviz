@@ -28,7 +28,7 @@ export class Style {
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
          * @protected
          * @type {function(import('./Dataset').Cell,number,number):{dx:number,dy:number}} */
-        this.offset = opts.offset || ((c, r, zf) => ({ dx: 0, dy: 0 }))
+        this.offset = opts.offset || ((c, r, z) => ({ dx: 0, dy: 0 }))
 
         /** An attribute to specify if a style should be drawn or not
          * @type {boolean} */
@@ -43,7 +43,7 @@ export class Style {
         /** A function returning the blend operation. The function parameter is the .
          * (see CanvasRenderingContext2D: globalCompositeOperation property)
          * @type {function(number):GlobalCompositeOperation} */
-        this.blendOperation = opts.blendOperation || (zf => "source-over")
+        this.blendOperation = opts.blendOperation || (z => "source-over")
 
         /** The minimum : Below this level, the layer is not shown.
          * @type {number}

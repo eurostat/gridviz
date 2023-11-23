@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../Dataset.js").Envelope }} GridInfo */
+/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../GeoCanvas.js").Envelope }} GridInfo */
 
 // internal
 import { Dataset } from '../Dataset.js'
@@ -75,8 +75,8 @@ export class TiledGrid extends Dataset {
      * Compute a tiling envelope from a geographical envelope.
      * This is the function to use to know which tiles to download for a geographical view.
      *
-     * @param {import("../Dataset.js").Envelope} e
-     * @returns {import("../Dataset.js").Envelope|undefined}
+     * @param {import("../GeoCanvas.js").Envelope} e
+     * @returns {import("../GeoCanvas.js").Envelope|undefined}
      */
     getTilingEnvelope(e) {
         if (!this.info) {
@@ -99,7 +99,7 @@ export class TiledGrid extends Dataset {
     /**
      * Request data within a geographic envelope.
      *
-     * @param {import(import('../Dataset.js').Envelope} extGeo
+     * @param {import('../GeoCanvas.js').Envelope} extGeo
      * @returns {this}
      */
     getData(extGeo) {
@@ -109,12 +109,12 @@ export class TiledGrid extends Dataset {
         if (!this.info) return this
 
         //tiles within the scope
-        /** @type {import("../Dataset.js").Envelope|undefined} */
+        /** @type {import("../GeoCanvas.js").Envelope|undefined} */
         const tb = this.getTilingEnvelope(extGeo)
         if (!tb) return this
 
         //grid bounds
-        /** @type {import("../Dataset.js").Envelope} */
+        /** @type {import("../GeoCanvas.js").Envelope} */
         const gb = this.info.tilingBounds
 
         for (let xT = Math.max(tb.xMin, gb.xMin); xT <= Math.min(tb.xMax, gb.xMax); xT++) {
@@ -123,7 +123,7 @@ export class TiledGrid extends Dataset {
                 if (!this.cache[xT]) this.cache[xT] = {}
 
                 //check if tile exists in the cache
-                /** @type {GridTile} */
+                /** @type {object} */
                 let tile = this.cache[xT][yT]
                 if (tile) continue
 
@@ -178,10 +178,10 @@ export class TiledGrid extends Dataset {
                     // 1. the dataset belongs to a layer which is visible at the current zoom level
                     let redraw = false
                     //go through the layers
-                    const zf = this.map.getZoom()
+                    const z = this.map.getZoom()
                     for (const lay of this.map.layers) {
                         if (!lay.visible) continue
-                        if (lay.getDataset(zf) != this) continue
+                        if (lay.getDataset(z) != this) continue
                         //found one layer. No need to seek more.
                         redraw = true
                         break
@@ -212,7 +212,7 @@ export class TiledGrid extends Dataset {
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      * @abstract
-     * @param {import("../Dataset.js").Envelope} extGeo
+     * @param {import("../GeoCanvas.js").Envelope} extGeo
      * @returns {void}
      */
     updateViewCache(extGeo) {
@@ -223,19 +223,19 @@ export class TiledGrid extends Dataset {
         if (!this.info) return
 
         //tiles within the scope
-        /** @type {import("../Dataset.js").Envelope|undefined} */
+        /** @type {import("../GeoCanvas.js").Envelope|undefined} */
         const tb = this.getTilingEnvelope(extGeo)
         if (!tb) return
 
         //grid bounds
-        /** @type {import("../Dataset.js").Envelope} */
+        /** @type {import("../GeoCanvas.js").Envelope} */
         const gb = this.info.tilingBounds
 
         for (let xT = Math.max(tb.xMin, gb.xMin); xT <= Math.min(tb.xMax, gb.xMax); xT++) {
             if (!this.cache[xT]) continue
             for (let yT = Math.max(tb.yMin, gb.yMin); yT <= Math.min(tb.yMax, gb.yMax); yT++) {
                 //get tile
-                /** @type {GridTile} */
+                /** @type {object} */
                 const tile = this.cache[xT][yT]
                 if (!tile || typeof tile === 'string') continue
 
@@ -268,7 +268,7 @@ function getGridTile(cells, xT, yT, gridInfo) {
     const r = gridInfo.resolutionGeo
     const s = gridInfo.tileSizeCell
 
-    /** @type {import("../Dataset").Envelope} */
+    /** @type {import("../GeoCanvas").Envelope} */
     tile.extGeo = {
         xMin: gridInfo.originPoint.x + r * s * tile.x,
         xMax: gridInfo.originPoint.x + r * s * (tile.x + 1),

@@ -1,11 +1,9 @@
 v3: focus on (main) API changes.
 
-use getView everywhere
-
+pixNb -> something better? At layer level? zoomResolutionJump ?
 filterColor: move to layer level ?
 make everything in opts ?
 see legend update on layer style change
-pixNb -> something better? At layer level?
 move viewScale things at style level ?
 change stretching codes in webglcolorstyle
 extract modules ?

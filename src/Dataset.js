@@ -4,9 +4,6 @@
 /**
  * A grid cell.
  * @typedef {{x: number, y: number}} Cell */
-/**
- * An envelope.
- * @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
 /**
  * A dataset component, of grid cells.

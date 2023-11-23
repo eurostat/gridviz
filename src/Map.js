@@ -223,7 +223,7 @@ export class Map {
         this.canvasSave = null
 
         this.selectionRectangleColor = opts.selectionRectangleColor || 'red'
-        this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || (() => 4) //(r,zf) => {}
+        this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || (() => 4) //(r,z) => {}
 
         //
         //canvas.addEventListener("keydown", e => { console.log(arguments) });
@@ -235,7 +235,7 @@ export class Map {
 
     /**
      * @param {number} marginPx
-     * @returns {import('./Dataset.js').Envelope}
+     * @returns {import('./GeoCanvas.js').Envelope}
      * @public
      */
     updateExtentGeo(marginPx = 20) {
