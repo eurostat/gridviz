@@ -137,6 +137,22 @@ export class GeoCanvas {
         this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
     }
 
+    /** 
+     * @param {number} x
+     * @param {number} y
+     * @param {number|undefined} z
+     */
+    setView(x, y, z = undefined) {
+        this.view.x = x
+        this.view.y = y
+        if (z != undefined) this.view.z = z
+    }
+
+    /** @returns {View} */
+    getView() { return this.view }
+
+
+
     /** @param {{x:number,y:number}} v Geographical coordinates of the center */
     setCenter(v) {
         this.view.x = v.x
@@ -156,15 +172,12 @@ export class GeoCanvas {
         return this.view.z
     }
 
-    /** @returns {View} */
-    getView() { return this.view }
-
     /** @param {Array.<number>} v */
-    setZfExtent(v) {
+    setZExtent(v) {
         this.zExtent = v
     }
     /** @returns {Array.<number>} */
-    getZfExtent() {
+    getZExtent() {
         return this.zExtent
     }
 

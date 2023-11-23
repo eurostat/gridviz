@@ -275,13 +275,18 @@ export class Map {
     }
 
 
-
+    /** 
+     * @param {number} x
+     * @param {number} y
+     * @param {number|undefined} z
+     */
     setView(x, y, z = undefined) {
-        this.cg.setCenter({ x: x, y: y })
-        if (z != undefined) this.setZoom(z)
+        this.cg.setView(x, y, z)
         return this
     }
 
+    /** @returns {import('./GeoCanvas.js').View} */
+    getView() { return this.cg.getView() }
 
     //getters and setters
 
@@ -297,22 +302,22 @@ export class Map {
 
     /** @returns {number} */
     getZoom() {
-        return this.cg.getZf()
+        return this.cg.view.z
     }
-    /** @param {number} val @returns {this} */
-    setZoom(val) {
-        this.cg.setZf(val)
+    /** @param {number} z @returns {this} */
+    setZoom(z) {
+        this.cg.view.z = z
         return this
     }
 
 
     /** @returns {Array.<number>} */
     getZoomExtent() {
-        return this.cg.getZfExtent()
+        return this.cg.getZExtent()
     }
     /** @param {Array.<number>} val @returns {this} */
     setZoomExtent(val) {
-        this.cg.setZfExtent(val)
+        this.cg.setZExtent(val)
         return this
     }
 
