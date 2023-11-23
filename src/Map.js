@@ -71,7 +71,7 @@ export class Map {
             this.cg.initCanvasTransform()
             this.cg.clear(this.cg.backgroundColor)
 
-            const zf = this.getZoom()
+            const z = this.getZoom()
             this.updateExtentGeo()
 
             //go through the background layers
@@ -90,12 +90,12 @@ export class Map {
             for (const layer of this.layers) {
                 //check if layer is visible
                 if (!layer.visible) continue
-                if (zf > layer.maxZoom) continue
-                if (zf < layer.minZoom) continue
+                if (z > layer.maxZoom) continue
+                if (z < layer.minZoom) continue
 
                 //get layer dataset component
                 /** @type {import('./Dataset.js').Dataset|undefined} */
-                const dsc = layer.getDataset(zf)
+                const dsc = layer.getDataset(z)
                 if (!dsc) continue
 
                 //launch data download, if necessary
@@ -106,21 +106,21 @@ export class Map {
                 if (strong) dsc.updateViewCache(this.cg.extGeo)
 
                 //set layer alpha and blend mode
-                this.cg.ctx.globalAlpha = layer.alpha ? layer.alpha(zf) : 1.0
-                this.cg.ctx.globalCompositeOperation = layer.blendOperation(zf)
+                this.cg.ctx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
+                this.cg.ctx.globalCompositeOperation = layer.blendOperation(z)
 
                 //draw cells, style by style
                 if (strong)
                     for (const s of layer.styles) {
                         //check if style is visible
                         if (!s.visible) continue
-                        if (zf > s.maxZoom) continue
-                        if (zf < s.minZoom) continue
+                        if (z > s.maxZoom) continue
+                        if (z < s.minZoom) continue
 
                         //set style alpha and blend mode
                         //TODO: multiply by layer alpha ?
-                        this.cg.ctx.globalAlpha = s.alpha ? s.alpha(zf) : 1.0
-                        this.cg.ctx.globalCompositeOperation = s.blendOperation(zf)
+                        this.cg.ctx.globalAlpha = s.alpha ? s.alpha(z) : 1.0
+                        this.cg.ctx.globalCompositeOperation = s.blendOperation(z)
 
                         s.draw(dsc.getViewCache(), dsc.getResolution(), this.cg)
                     }
@@ -128,8 +128,8 @@ export class Map {
                 //add legend element
                 if (this.legend && strong) {
                     for (const s of layer.styles) {
-                        if (zf > s.maxZoom) continue
-                        if (zf < s.minZoom) continue
+                        if (z > s.maxZoom) continue
+                        if (z < s.minZoom) continue
                         for (const lg of s.legends) {
                             //console.log(s, lg)
                             //this.legend.append(lg.div)
@@ -141,8 +141,8 @@ export class Map {
                         //TODO do better
                         if (s['styles']) {
                             for (const s2 of s.styles) {
-                                if (zf > s2.maxZoom) continue
-                                if (zf < s2.minZoom) continue
+                                if (z > s2.maxZoom) continue
+                                if (z < s2.minZoom) continue
                                 for (const lg of s2.legends) {
                                     //console.log(s, lg)
                                     //this.legend.append(lg.div)
