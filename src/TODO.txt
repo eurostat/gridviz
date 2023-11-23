@@ -1,6 +1,7 @@
 v3: focus on (main) API changes.
 
 change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coords by default (!)
+use getView everywhere
 
 filterColor: move to layer level ?
 make everything in opts ?

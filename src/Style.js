@@ -75,7 +75,7 @@ export class Style {
      * @param {Array.<import('./Dataset').Cell>} cells The cells to draw.
      * @param {import("./GeoCanvas").GeoCanvas} canvas The canvas where to draw them.
      * @param {number} resolution Their resolution (in geographic unit)
-     * @param {import('./Map').View} view The map view
+     * @param {import('./GeoCanvas').View} view The map view
      * @abstract
      */
     draw(cells, canvas, resolution, view) {
