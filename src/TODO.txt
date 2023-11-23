@@ -30,7 +30,7 @@ Layer -> GridLayer
 remove GridTile class
 clean stretching lib
 get rid of "map.addXXXLayer" methods
-
+getGeoCenter setGeoCenter replaced by getView setView
 
 
 
