@@ -163,10 +163,6 @@ export class GeoCanvas {
         return { x: this.view.x, y: this.view.y }
     }
 
-    /** @param {number} v The  (pixel size, in ground m) */
-    setZf(v) {
-        this.view.z = v
-    }
     /** @returns {number} The  (pixel size, in ground m) */
     getZf() {
         return this.view.z
