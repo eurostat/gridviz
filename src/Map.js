@@ -285,7 +285,7 @@ export class Map {
     }
 
     /** @returns {import('./GeoCanvas.js').View} */
-    getView() { return this.cg.getView() }
+    getView() { return this.cg.view }
 
     /** @returns {number} */
     getZoom() {
