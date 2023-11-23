@@ -36,7 +36,9 @@ export class GridLayer extends Layer {
     }
 
 
-    draw(canvas, z) {
+    draw(canvas, legend) {
+
+        const z = canvas.view.z
 
         //get layer dataset component
         /** @type {import('../Dataset.js').Dataset|undefined} */
@@ -66,7 +68,7 @@ export class GridLayer extends Layer {
         }
 
         //add legend element
-        if (this.legend) {
+        if (legend) {
             for (const s of this.styles) {
                 if (z > s.maxZoom) continue
                 if (z < s.minZoom) continue
@@ -74,7 +76,7 @@ export class GridLayer extends Layer {
                     //console.log(s, lg)
                     //this.legend.append(lg.div)
                     //s1.node().appendChild(s2.node())
-                    this.legend.node().append(lg.div.node())
+                    legend.node().append(lg.div.node())
                 }
 
                 //case for styles of styles, like kernel smoothing
@@ -87,7 +89,7 @@ export class GridLayer extends Layer {
                             //console.log(s, lg)
                             //this.legend.append(lg.div)
                             //s1.node().appendChild(s2.node())
-                            this.legend.node().append(lg.div.node())
+                            legend.node().append(lg.div.node())
                         }
                     }
                 }

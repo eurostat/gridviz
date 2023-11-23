@@ -14,7 +14,7 @@ export class Layer {
 
         /** An attribute to specify if a layer should be drawn or not
         * @type {boolean} */
-        this.visible = opts.visible == false ? false : true
+        this.visible = opts.visible != false
 
         /** The minimum : Below this level, the layer is not shown.
          * @type {number} */
@@ -43,11 +43,13 @@ export class Layer {
 
     /**
      * Draw layer.
+     * 
      * @param {import("./GeoCanvas").GeoCanvas} canvas The canvas where to draw the layer.
+     * @param {object} legend
      * @returns {void}
      * @abstract
      */
-    draw(canvas, z = -1, legend = undefined) {
+    draw(canvas, legend = undefined) {
         throw new Error('Method draw not implemented.')
     }
 

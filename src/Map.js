@@ -58,15 +58,15 @@ export class Map {
         /** Make geo canvas
          * @type {GeoCanvas}
          * @private */
-        this.cg = new GeoCanvas(canvas, opts.x, opts.y, opts.z, opts)
-        this.cg.redraw = () => {
+        this.canvas = new GeoCanvas(canvas, opts.x, opts.y, opts.z, opts)
+        this.canvas.redraw = () => {
 
             //remove legend elements
             if (this.legend) this.legend.selectAll('*').remove()
 
             //clear
-            this.cg.initCanvasTransform()
-            this.cg.clear(this.cg.backgroundColor)
+            this.canvas.initCanvasTransform()
+            this.canvas.clear(this.canvas.backgroundColor)
 
             const z = this.getZoom()
             this.updateExtentGeo()
@@ -79,18 +79,18 @@ export class Map {
                 if (z < layer.minZoom) continue
 
                 //set layer alpha and blend mode
-                this.cg.ctx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
-                this.cg.ctx.globalCompositeOperation = layer.blendOperation(z)
+                this.canvas.ctx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
+                this.canvas.ctx.globalCompositeOperation = layer.blendOperation(z)
 
                 //set affin transform to draw with geographical coordinates
-                this.cg.setCanvasTransform()
+                this.canvas.setCanvasTransform()
 
                 //draw layer
-                layer.draw(this.cg, z, true, this.legend)
+                layer.draw(this.canvas, this.legend)
 
                 //restore default alpha and blend operation
-                this.cg.ctx.globalAlpha = 1.0
-                this.cg.ctx.globalCompositeOperation = this.defaultGlobalCompositeOperation
+                this.canvas.ctx.globalAlpha = 1.0
+                this.canvas.ctx.globalCompositeOperation = this.defaultGlobalCompositeOperation
 
             }
 
@@ -142,8 +142,8 @@ export class Map {
         const focusCell = (e) => {
             //compute mouse geo position
             const mousePositionGeo = {
-                x: this.cg.pixToGeoX(e.offsetX + this.tooltip.xMouseOffset),
-                y: this.cg.pixToGeoY(e.offsetY + this.tooltip.yMouseOffset),
+                x: this.canvas.pixToGeoX(e.offsetX + this.tooltip.xMouseOffset),
+                y: this.canvas.pixToGeoY(e.offsetY + this.tooltip.yMouseOffset),
             }
             /** @type {{cell:import('./Dataset.js').Cell,html:string,resolution:number} | undefined} */
             const focus = this.getCellFocusInfo(mousePositionGeo)
@@ -160,8 +160,8 @@ export class Map {
                 this.canvasSave = document.createElement('canvas')
                 this.canvasSave.setAttribute('width', '' + this.w)
                 this.canvasSave.setAttribute('height', '' + this.h)
-                this.canvasSave.getContext('2d').drawImage(this.cg.canvas, 0, 0)
-                this.cg.initCanvasTransform()
+                this.canvasSave.getContext('2d').drawImage(this.canvas.canvas, 0, 0)
+                this.canvas.initCanvasTransform()
                 return
             }
 
@@ -175,30 +175,30 @@ export class Map {
                     this.canvasSave = document.createElement('canvas')
                     this.canvasSave.setAttribute('width', '' + this.w)
                     this.canvasSave.setAttribute('height', '' + this.h)
-                    this.canvasSave.getContext('2d').drawImage(this.cg.canvas, 0, 0)
+                    this.canvasSave.getContext('2d').drawImage(this.canvas.canvas, 0, 0)
                 } else {
-                    this.cg.ctx.drawImage(this.canvasSave, 0, 0)
+                    this.canvas.ctx.drawImage(this.canvasSave, 0, 0)
                 }
 
                 //draw image saved + draw rectangle
                 const rectWPix = this.selectionRectangleWidthPix
                     ? this.selectionRectangleWidthPix(focus.resolution, this.getZoom())
                     : 4
-                this.cg.initCanvasTransform()
-                this.cg.ctx.strokeStyle = this.selectionRectangleColor
-                this.cg.ctx.lineWidth = rectWPix
-                this.cg.ctx.beginPath()
+                this.canvas.initCanvasTransform()
+                this.canvas.ctx.strokeStyle = this.selectionRectangleColor
+                this.canvas.ctx.lineWidth = rectWPix
+                this.canvas.ctx.beginPath()
 
-                this.cg.ctx.rect(
-                    this.cg.geoToPixX(focus.cell.x) - rectWPix / 2,
-                    this.cg.geoToPixY(focus.cell.y) + rectWPix / 2,
+                this.canvas.ctx.rect(
+                    this.canvas.geoToPixX(focus.cell.x) - rectWPix / 2,
+                    this.canvas.geoToPixY(focus.cell.y) + rectWPix / 2,
                     focus.resolution / this.getZoom() + rectWPix,
                     -focus.resolution / this.getZoom() - rectWPix
                 )
-                this.cg.ctx.stroke()
+                this.canvas.ctx.stroke()
             } else {
                 this.tooltip.hide()
-                if (this.canvasSave) this.cg.ctx.drawImage(this.canvasSave, 0, 0)
+                if (this.canvasSave) this.canvas.ctx.drawImage(this.canvasSave, 0, 0)
             }
         }
 
@@ -206,12 +206,12 @@ export class Map {
         this.mouseOverHandler = (e) => focusCell(e)
         this.mouseMoveHandler = (e) => focusCell(e)
         this.mouseOutHandler = (e) => this.tooltip.hide()
-        this.cg.canvas.addEventListener('mouseover', this.mouseOverHandler)
-        this.cg.canvas.addEventListener('mousemove', this.mouseMoveHandler)
-        this.cg.canvas.addEventListener('mouseout', this.mouseOutHandler)
+        this.canvas.canvas.addEventListener('mouseover', this.mouseOverHandler)
+        this.canvas.canvas.addEventListener('mousemove', this.mouseMoveHandler)
+        this.canvas.canvas.addEventListener('mouseout', this.mouseOutHandler)
 
         // add extra logic to onZoomStartFun
-        this.cg.onZoomStartFun = (e) => {
+        this.canvas.onZoomStartFun = (e) => {
             if (opts.onZoomStartFun) opts.onZoomStartFun(e)
             this.tooltip.hide()
         }
@@ -230,7 +230,7 @@ export class Map {
 
         //set default globalCompositeOperation
         this.defaultGlobalCompositeOperation =
-            opts.defaultGlobalCompositeOperation || this.cg.ctx.globalCompositeOperation
+            opts.defaultGlobalCompositeOperation || this.canvas.ctx.globalCompositeOperation
     }
 
     /**
@@ -239,7 +239,7 @@ export class Map {
      * @public
      */
     updateExtentGeo(marginPx = 20) {
-        return this.cg.updateExtentGeo(marginPx)
+        return this.canvas.updateExtentGeo(marginPx)
     }
 
     /**
@@ -280,31 +280,31 @@ export class Map {
      * @param {number|undefined} z
      */
     setView(x, y, z = undefined) {
-        this.cg.setView(x, y, z)
+        this.canvas.setView(x, y, z)
         return this
     }
 
     /** @returns {import('./GeoCanvas.js').View} */
-    getView() { return this.cg.view }
+    getView() { return this.canvas.view }
 
     /** @returns {number} */
     getZoom() {
-        return this.cg.view.z
+        return this.canvas.view.z
     }
     /** @param {number} z @returns {this} */
     setZoom(z) {
-        this.cg.view.z = z
+        this.canvas.view.z = z
         return this
     }
 
 
     /** @returns {Array.<number>} */
     getZoomExtent() {
-        return this.cg.getZExtent()
+        return this.canvas.getZExtent()
     }
     /** @param {Array.<number>} val @returns {this} */
     setZoomExtent(val) {
-        this.cg.setZExtent(val)
+        this.canvas.setZExtent(val)
         return this
     }
 
@@ -312,17 +312,17 @@ export class Map {
 
     /** @returns {string} */
     getBackgroundColor() {
-        return this.cg.backgroundColor
+        return this.canvas.backgroundColor
     }
     /** @param {string} val @returns {this} */
     setBackgroundColor(val) {
-        this.cg.backgroundColor = val
+        this.canvas.backgroundColor = val
         return this
     }
 
     /** @returns {this} */
     redraw() {
-        this.cg.redraw()
+        this.canvas.redraw()
         return this
     }
 
@@ -334,7 +334,7 @@ export class Map {
      * @returns {this}
      */
     addZoomSlider(id, opts) {
-        this.cg.addZoomSlider(id, opts)
+        this.canvas.addZoomSlider(id, opts)
         return this
     }
 
@@ -389,7 +389,7 @@ export class Map {
 
     /** @returns {this} */
     setViewFromURL() {
-        this.cg.setViewFromURL()
+        this.canvas.setViewFromURL()
         return this
     }
 
@@ -414,8 +414,8 @@ export class Map {
                     if (this.h !== container.clientHeight || this.w !== container.clientWidth) {
                         this.h = container.clientHeight
                         this.w = container.clientWidth
-                        this.cg.h = container.clientHeight
-                        this.cg.w = container.clientWidth
+                        this.canvas.h = container.clientHeight
+                        this.canvas.w = container.clientWidth
                         canvas.setAttribute('width', '' + this.w)
                         canvas.setAttribute('height', '' + this.h)
                         this.redraw()
@@ -447,7 +447,7 @@ export class Map {
         this.container.removeEventListener('mouseout', this.mouseOutHandler)
 
         // remove canvas
-        this.cg.canvas.remove()
+        this.canvas.canvas.remove()
 
         // remove legend
         this.legend?.remove()
