@@ -67,7 +67,7 @@ export class LineLayer extends Layer {
         //TODO sort lines by width ?
 
         //
-        const zf = canvas.getZf()
+        const zf = canvas.view.z
 
         for (const f of this.fs) {
             const cs = f.geometry.coordinates

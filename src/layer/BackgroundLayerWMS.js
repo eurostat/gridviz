@@ -106,7 +106,7 @@ export class BackgroundLayerWMS extends Layer {
         }
 
         //apply filter
-        const zf = canvas.getZf()
+        const zf = canvas.view.z
         if (this.filterColor) {
             const fc = this.filterColor(zf)
             if (fc && fc != 'none') {

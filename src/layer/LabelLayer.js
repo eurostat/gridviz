@@ -95,7 +95,7 @@ export class LabelLayer extends Layer {
         }
 
         //
-        const zf = canvas.getZf()
+        const zf = canvas.view.z
 
         //text align
         canvas.ctx.textAlign = this.textAlign || 'start'

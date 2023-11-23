@@ -60,7 +60,6 @@ export class Map {
          * @private */
         this.cg = new GeoCanvas(canvas, opts.x, opts.y, opts.z, opts)
         this.cg.redraw = () => {
-            //console.log("?x=" + this.cg.getCenter().x + "&y=" + this.cg.getCenter().y + "&z=" + this.cg.getZf())
 
             //remove legend elements
             if (this.legend) this.legend.selectAll('*').remove()

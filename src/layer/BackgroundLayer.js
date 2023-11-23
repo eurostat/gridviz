@@ -87,7 +87,7 @@ export class BackgroundLayer extends Layer {
         }
 
         //
-        const zf = canvas.getZf()
+        const zf = canvas.view.z
         const x0 = this.origin[0],
             y0 = this.origin[1]
 
