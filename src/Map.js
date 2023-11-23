@@ -58,7 +58,7 @@ export class Map {
         /** Make geo canvas
          * @type {GeoCanvas}
          * @private */
-        this.cg = new GeoCanvas(canvas, undefined, 1, opts)
+        this.cg = new GeoCanvas(canvas, opts.x, opts.y, opts.z, opts)
         this.cg.redraw = () => {
             //console.log("?x=" + this.cg.getCenter().x + "&y=" + this.cg.getCenter().y + "&z=" + this.cg.getZf())
 

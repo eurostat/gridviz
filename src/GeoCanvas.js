@@ -19,11 +19,12 @@ export class GeoCanvas {
     /**
      * @constructor
      * @param {HTMLCanvasElement} canvas
-     * @param {object} center Geographical coordinates of the center
-     * @param {number} zf The  (pixel size, in ground m)
+     * @param {number} x The x coordinate of the view
+     * @param {number} y The y coordinate of the view
+     * @param {number} z The zoom level of the view (pixel size, in ground m)
      * @param {object} opts
      */
-    constructor(canvas, center, zf, opts) {
+    constructor(canvas, x = 0, y = 0, z = 0, opts = undefined) {
         this.opts = opts || {}
 
         /** @type {HTMLCanvasElement} */
@@ -42,12 +43,10 @@ export class GeoCanvas {
         /**@type {CanvasRenderingContext2D} */
         this.ctx = ctx
 
-        // set geo coordinates of the center
-        this.center = center || { x: this.w * 0.5, y: this.h * 0.5 }
-
-        // : pixel size, in m/pix
-        /** @type {number} */
-        this.zf = zf
+        /** 
+         * z: pixel size, in m/pix
+         * @type {View}  */
+        this.view = { x: x, y: y, z: z }
 
         /** Background color.
          * @type {string} */
@@ -131,7 +130,7 @@ export class GeoCanvas {
 
         /** Zoom extent, to limit zoom in and out
          *  @type {Array.<number>} */
-        this.zfExtent = [0, Infinity]
+        this.zExtent = [0, Infinity]
 
         /** Canvas state, to be used to avoid unnecessary redraws on zoom/pan
          *  @type {{c:HTMLCanvasElement|null,dx:number,dy:number,f:number}} */
@@ -140,32 +139,33 @@ export class GeoCanvas {
 
     /** @param {{x:number,y:number}} v Geographical coordinates of the center */
     setCenter(v) {
-        this.center = v
+        this.view.x = v.x
+        this.view.y = v.y
     }
     /** @returns {{x:number,y:number}} Geographical coordinates of the center */
     getCenter() {
-        return this.center
+        return { x: this.view.x, y: this.view.y }
     }
 
     /** @param {number} v The  (pixel size, in ground m) */
     setZf(v) {
-        this.zf = v
+        this.view.z = v
     }
     /** @returns {number} The  (pixel size, in ground m) */
     getZf() {
-        return this.zf
+        return this.view.z
     }
 
     /** @returns {View} */
-    getView() { return { x: this.center.x, y: this.center.y, z: this.zf } }
+    getView() { return this.view }
 
     /** @param {Array.<number>} v */
     setZfExtent(v) {
-        this.zfExtent = v
+        this.zExtent = v
     }
     /** @returns {Array.<number>} */
     getZfExtent() {
-        return this.zfExtent
+        return this.zExtent
     }
 
     /** Initialise canvas transform with identity transformation. */
@@ -176,8 +176,8 @@ export class GeoCanvas {
     /** Initialise canvas transform with geo to screen transformation, so that geo objects can be drawn directly in geo coordinates. */
     setCanvasTransform() {
         const k = 1 / this.getZf()
-        const tx = -this.center.x / this.getZf() + this.w * 0.5
-        const ty = this.center.y / this.getZf() + this.h * 0.5
+        const tx = -this.view.x / this.getZf() + this.w * 0.5
+        const ty = this.view.y / this.getZf() + this.h * 0.5
         this.ctx.setTransform(k, 0, 0, -k, tx, ty)
     }
 
@@ -185,7 +185,7 @@ export class GeoCanvas {
     getWebGLTransform() {
         const kx = 2.0 / (this.w * this.getZf())
         const ky = 2.0 / (this.h * this.getZf())
-        return [kx, 0.0, 0.0, 0.0, ky, 0.0, -kx * this.center.x, -ky * this.center.y, 1.0]
+        return [kx, 0.0, 0.0, 0.0, ky, 0.0, -kx * this.view.x, -ky * this.view.y, 1.0]
     }
 
     /** The function specifying how to draw the map. */
@@ -212,8 +212,8 @@ export class GeoCanvas {
      */
     pan(dxGeo = 0, dyGeo = 0) {
         //TODO force extend to remain
-        this.center.x += dxGeo
-        this.center.y += dyGeo
+        this.view.x += dxGeo
+        this.view.y += dyGeo
         this.updateExtentGeo()
 
         if (this.canvasSave.c) {
@@ -231,23 +231,23 @@ export class GeoCanvas {
      * @param {number} xGeo The x geo position fixed in the screen.
      * @param {number} yGeo The y geo position fixed in the screen.
      */
-    zoom(f = 1, xGeo = this.center.x, yGeo = this.center.y) {
+    zoom(f = 1, xGeo = this.view.x, yGeo = this.view.y) {
         //TODO force geo extend to remain
 
         //trying to zoom in/out beyond limit
-        if (this.zfExtent[0] == this.getZf() && f <= 1) return
-        if (this.zfExtent[1] == this.getZf() && f >= 1) return
+        if (this.zExtent[0] == this.getZf() && f <= 1) return
+        if (this.zExtent[1] == this.getZf() && f >= 1) return
 
         //ensure zoom extent preserved
         const newZf = f * this.getZf()
-        if (newZf < this.zfExtent[0]) f = this.zfExtent[0] / this.getZf()
-        if (newZf > this.zfExtent[1]) f = this.zfExtent[1] / this.getZf()
+        if (newZf < this.zExtent[0]) f = this.zExtent[0] / this.getZf()
+        if (newZf > this.zExtent[1]) f = this.zExtent[1] / this.getZf()
 
         this.setZf(f * this.getZf())
-        const dxGeo = (xGeo - this.center.x) * (1 - f)
-        this.center.x += dxGeo
-        const dyGeo = (yGeo - this.center.y) * (1 - f)
-        this.center.y += dyGeo
+        const dxGeo = (xGeo - this.view.x) * (1 - f)
+        this.view.x += dxGeo
+        const dyGeo = (yGeo - this.view.y) * (1 - f)
+        this.view.y += dyGeo
         this.updateExtentGeo()
 
         //TODO
@@ -301,39 +301,38 @@ export class GeoCanvas {
      * @returns {number} Screen x coordinate, in pix.
      */
     geoToPixX(xGeo) {
-        return (xGeo - this.center.x) / this.getZf() + this.w * 0.5
+        return (xGeo - this.view.x) / this.getZf() + this.w * 0.5
     }
     /**
      * @param {number} yGeo Geo y coordinate, in m.
      * @returns {number} Screen y coordinate, in pix.
      */
     geoToPixY(yGeo) {
-        return -(yGeo - this.center.y) / this.getZf() + this.h * 0.5
+        return -(yGeo - this.view.y) / this.getZf() + this.h * 0.5
     }
     /**
      * @param {number} x Screen x coordinate, in pix.
      * @returns {number} Geo x coordinate, in m.
      */
     pixToGeoX(x) {
-        return (x - this.w * 0.5) * this.getZf() + this.center.x
+        return (x - this.w * 0.5) * this.getZf() + this.view.x
     }
     /**
      * @param {number} y Screen y coordinate, in pix.
      * @returns {number} Geo y coordinate, in m.
      */
     pixToGeoY(y) {
-        return -(y - this.h * 0.5) * this.getZf() + this.center.y
+        return -(y - this.h * 0.5) * this.getZf() + this.view.y
     }
 
-    /** Get x,y,z elements from URL and assign them to the view center and zoom level. */
+    /** Get x,y,z elements from URL and assign them to the view. */
     setViewFromURL() {
         const x = GeoCanvas.getParameterByName('x'),
             y = GeoCanvas.getParameterByName('y'),
             z = GeoCanvas.getParameterByName('z')
-        const c = this.getCenter()
-        if (x != null && x != undefined && !isNaN(+x)) c.x = +x
-        if (y != null && y != undefined && !isNaN(+y)) c.y = +y
-        if (z != null && z != undefined && !isNaN(+z)) this.setZf(+z)
+        if (x != null && x != undefined && !isNaN(+x)) this.view.x = +x
+        if (y != null && y != undefined && !isNaN(+y)) this.view.y = +y
+        if (z != null && z != undefined && !isNaN(+z)) this.view.z = +z
     }
 
     /**
