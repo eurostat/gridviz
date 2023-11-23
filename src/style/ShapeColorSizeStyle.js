@@ -34,72 +34,68 @@ export class ShapeColorSizeStyle extends Style {
 
     /**
      * Draw cells as squares, with various colors and sizes.
-     *
-     * @param {Array.<import("../Dataset.js").Cell>} cells
-     * @param {number} r
-     * @param {import("../GeoCanvas.js").GeoCanvas} cg
      */
-    draw(cells, r, cg) {
+    draw(cells, canvas, resolution, view) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        //
-        const zf = cg.getZf()
+        //zoom
+        const z = view.z
 
         //get view scale
-        const vs = this.viewScale ? this.viewScale(cells, r, zf) : undefined
+        const vs = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
-        const r2 = r * 0.5
+        const r2 = resolution * 0.5
         for (let c of cells) {
             //color
-            let col = this.color ? this.color(c, r, zf, vs) : "black"
+            let col = this.color ? this.color(c, resolution, z, vs) : "black"
             if (!col || col === 'none') continue
 
             //size
-            const size = this.size ? this.size(c, r, zf, vs) : r
+            const size = this.size ? this.size(c, resolution, z, vs) : resolution
             if (!size) continue
 
             //shape
-            const shape = this.shape ? this.shape(c, r, zf, vs) : 'square'
+            const shape = this.shape ? this.shape(c, resolution, z, vs) : 'square'
             if (shape === 'none') continue
 
             //get offset
-            const offset = this.offset(c, r, zf)
+            const offset = this.offset(c, resolution, z)
 
-            cg.ctx.fillStyle = col
+            canvas.ctx.fillStyle = col
             if (shape === 'square') {
                 //draw square
-                const d = r * (1 - size / r) * 0.5
-                cg.ctx.fillRect(c.x + d + offset.dx, c.y + d + offset.dy, size, size)
+                const d = resolution * (1 - size / resolution) * 0.5
+                canvas.ctx.fillRect(c.x + d + offset.dx, c.y + d + offset.dy, size, size)
             } else if (shape === 'circle') {
                 //draw circle
-                cg.ctx.beginPath()
-                cg.ctx.arc(c.x + r2 + offset.dx, c.y + r2 + offset.dy, size * 0.5, 0, 2 * Math.PI, false)
-                cg.ctx.fill()
+                canvas.ctx.beginPath()
+                canvas.ctx.arc(c.x + r2 + offset.dx, c.y + r2 + offset.dy, size * 0.5, 0, 2 * Math.PI, false)
+                canvas.ctx.fill()
             } else if (shape === 'donut') {
                 //draw donut
                 const xc = c.x + r2 + offset.dx,
                     yc = c.y + r2 + offset.dy
-                cg.ctx.beginPath()
-                cg.ctx.moveTo(xc, yc)
-                cg.ctx.arc(xc, yc, r2, 0, 2 * Math.PI)
-                cg.ctx.arc(xc, yc, (1 - size / r) * r2, 0, 2 * Math.PI, true)
-                cg.ctx.closePath()
-                cg.ctx.fill()
+                canvas.ctx.beginPath()
+                canvas.ctx.moveTo(xc, yc)
+                canvas.ctx.arc(xc, yc, r2, 0, 2 * Math.PI)
+                canvas.ctx.arc(xc, yc, (1 - size / resolution) * r2, 0, 2 * Math.PI, true)
+                canvas.ctx.closePath()
+                canvas.ctx.fill()
             } else if (shape === 'diamond') {
                 const s2 = size * 0.5
-                cg.ctx.beginPath()
-                cg.ctx.moveTo(c.x + r2 - s2, c.y + r2)
-                cg.ctx.lineTo(c.x + r2, c.y + r2 + s2)
-                cg.ctx.lineTo(c.x + r2 + s2, c.y + r2)
-                cg.ctx.lineTo(c.x + r2, c.y + r2 - s2)
-                cg.ctx.fill()
+                canvas.ctx.beginPath()
+                canvas.ctx.moveTo(c.x + r2 - s2, c.y + r2)
+                canvas.ctx.lineTo(c.x + r2, c.y + r2 + s2)
+                canvas.ctx.lineTo(c.x + r2 + s2, c.y + r2)
+                canvas.ctx.lineTo(c.x + r2, c.y + r2 - s2)
+                canvas.ctx.fill()
             } else {
                 throw new Error('Unexpected shape:' + shape)
             }
         }
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf, viewScale: vs })
+        this.updateLegends({ style: this, r: resolution, zf: z, viewScale: vs })
     }
 }

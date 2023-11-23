@@ -32,24 +32,17 @@ export class JoyPlotStyle extends Style {
         this.fillColor = opts.fillColor || ((y, ys, r, zf) => '#c08c5968')
     }
 
-    /**
-     * Draw cells as squares depending on their value.
-     *
-     * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {number} r
-     * @param {import("../GeoCanvas").GeoCanvas} cg
-     * */
-    draw(cells, r, cg) {
+    draw(cells, canvas, resolution, view) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
-        cg.ctx.lineJoin = 'round'
+        canvas.ctx.lineJoin = 'round'
 
         //
-        const zf = cg.getZf()
+        const zf = view.z
 
         //get view scale
-        const vs = this.viewScale ? this.viewScale(cells, r, zf) : undefined
+        const vs = this.viewScale ? this.viewScale(cells, resolution, zf) : undefined
 
         //index cells by y and x
         /**  @type {object} */
@@ -60,22 +53,22 @@ export class JoyPlotStyle extends Style {
                 row = {}
                 ind[cell.y] = row
             }
-            row[cell.x] = this.height(cell, r, zf, vs)
+            row[cell.x] = this.height(cell, resolution, zf, vs)
         }
 
         //compute extent
-        const e = cg.extGeo
+        const e = canvas.extGeo
         if (!e) return
-        const xMin = Math.floor(e.xMin / r) * r
-        const xMax = Math.floor(e.xMax / r) * r
-        const yMin = Math.floor(e.yMin / r) * r
-        const yMax = Math.floor(e.yMax / r) * r
+        const xMin = Math.floor(e.xMin / resolution) * resolution
+        const xMax = Math.floor(e.xMax / resolution) * resolution
+        const yMin = Math.floor(e.yMin / resolution) * resolution
+        const yMax = Math.floor(e.yMax / resolution) * resolution
 
         /**  @type {{min:number, max:number}} */
         const ys = { min: yMin, max: yMax }
 
         //draw lines, row by row, stating from the top
-        for (let y = yMax; y >= yMin; y -= r) {
+        for (let y = yMax; y >= yMin; y -= resolution) {
             //get row
             const row = ind[y]
 
@@ -83,15 +76,15 @@ export class JoyPlotStyle extends Style {
             if (!row) continue
 
             //place first point
-            cg.ctx.beginPath()
-            cg.ctx.moveTo(xMin - r / 2, y)
+            canvas.ctx.beginPath()
+            canvas.ctx.moveTo(xMin - resolution / 2, y)
 
             //store the previous height
             /** @type {number|undefined} */
             let hG_
 
             //go through the line cells
-            for (let x = xMin; x <= xMax; x += r) {
+            for (let x = xMin; x <= xMax; x += resolution) {
                 //get column value
                 /** @type {number} */
                 let hG = row[x]
@@ -100,32 +93,32 @@ export class JoyPlotStyle extends Style {
                 if (hG || hG_) {
                     //draw line only when at least one of both values is non-null
                     //TODO test bezierCurveTo
-                    cg.ctx.lineTo(x + r / 2, y + hG)
+                    canvas.ctx.lineTo(x + resolution / 2, y + hG)
                 } else {
                     //else move the point
-                    cg.ctx.moveTo(x + r / 2, y)
+                    canvas.ctx.moveTo(x + resolution / 2, y)
                 }
                 //store the previous value
                 hG_ = hG
             }
 
             //last point
-            if (hG_) cg.ctx.lineTo(xMax + r / 2, y)
+            if (hG_) canvas.ctx.lineTo(xMax + resolution / 2, y)
 
             //draw fill
-            const fc = this.fillColor(y, ys, r, zf)
+            const fc = this.fillColor(y, ys, resolution, zf)
             if (fc && fc != 'none') {
-                cg.ctx.fillStyle = fc
-                cg.ctx.fill()
+                canvas.ctx.fillStyle = fc
+                canvas.ctx.fill()
             }
 
             //draw line
-            const lc = this.lineColor(y, ys, r, zf)
-            const lw = this.lineWidth(y, ys, r, zf)
+            const lc = this.lineColor(y, ys, resolution, zf)
+            const lw = this.lineWidth(y, ys, resolution, zf)
             if (lc && lc != 'none' && lw > 0) {
-                cg.ctx.strokeStyle = lc
-                cg.ctx.lineWidth = lw
-                cg.ctx.stroke()
+                canvas.ctx.strokeStyle = lc
+                canvas.ctx.lineWidth = lw
+                canvas.ctx.stroke()
             }
         }
     }
