@@ -61,7 +61,8 @@ export class GridLayer extends Layer {
             canvas.ctx.globalAlpha = s.alpha ? s.alpha(z) : 1.0
             canvas.ctx.globalCompositeOperation = s.blendOperation(z)
 
-            s.draw(dsc.getViewCache(), dsc.getResolution(), canvas)
+            //draw with style
+            s.draw(dsc.getViewCache(), canvas, dsc.getResolution(), canvas.getView())
         }
 
         //add legend element

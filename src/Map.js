@@ -1,11 +1,6 @@
 //@ts-check
 'use strict'
 
-/**
- * A viewshed.
- * @typedef {{x: number, y: number, z: number}} View */
-
-
 // internal imports
 import { GeoCanvas } from './GeoCanvas.js'
 import { Tooltip } from './Tooltip.js'

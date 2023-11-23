@@ -3,6 +3,10 @@
 
 /** @typedef { {xMin: number, xMax: number, yMin: number, yMax: number} } Envelope */
 
+/**
+ * A viewshed.
+ * @typedef {{x: number, y: number, z: number}} View */
+
 import { select } from 'd3-selection'
 import { zoom as d3zoom, zoomIdentity } from 'd3-zoom'
 
@@ -151,6 +155,9 @@ export class GeoCanvas {
     getZf() {
         return this.zf
     }
+
+    /** @returns {View} */
+    getView() { return { x: this.center.x, y: this.center.y, z: this.zf } }
 
     /** @param {Array.<number>} v */
     setZfExtent(v) {
