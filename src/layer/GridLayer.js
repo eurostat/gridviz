@@ -35,7 +35,7 @@ export class GridLayer extends Layer {
         this.cellInfoHTML = opts.cellInfoHTML || GridLayer.defaultCellInfoHTML
     }
 
-
+    /** */
     draw(canvas, legend) {
 
         const z = canvas.view.z
@@ -82,7 +82,7 @@ export class GridLayer extends Layer {
                 //case for styles of styles, like kernel smoothing
                 //TODO do better
                 if (s['styles']) {
-                    for (const s2 of s.styles) {
+                    for (const s2 of s['styles']) {
                         if (z > s2.maxZoom) continue
                         if (z < s2.minZoom) continue
                         for (const lg of s2.legends) {
