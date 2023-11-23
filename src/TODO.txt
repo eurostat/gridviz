@@ -2,17 +2,17 @@ v3: focus on (main) API changes.
 
 change draw signature: draw(cells, canvas, view(x,y,z), opts) - draw in geo coords by default (!)
 
-merge geocanvas and map
 filterColor: move to layer level ?
+make everything in opts ?
 see legend update on layer style change
-pixNb -> something better
+pixNb -> something better? At layer level?
 move viewScale things at style level ?
-make everything in opts
-make demos with simple CSV files. more minimalistics, with only the tested parameters.
 change stretching codes in webglcolorstyle
 extract modules ?
 zf -> z
 population.csv files: make 2021 ones
+make demos with simple CSV files. more minimalistics, with only the tested parameters.
+merge geocanvas and map (?)
 
 
 Done:

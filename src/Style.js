@@ -56,7 +56,7 @@ export class Style {
         this.maxZoom = opts.maxZoom || Infinity
 
         /** A draw function for the style.
-         * @type {function} */
+         * @type {function|undefined} */
         this.drawFun = opts.drawFun
 
         //ensure acceptable values for the zoom limits.
@@ -73,12 +73,13 @@ export class Style {
      * Draw cells.
      *
      * @param {Array.<import('./Dataset').Cell>} cells The cells to draw.
+     * @param {import("./GeoCanvas").GeoCanvas} canvas The canvas where to draw them.
      * @param {number} resolution Their resolution (in geographic unit)
-     * @param {import("./GeoCanvas").GeoCanvas} cg The canvas where to draw them.
+     * @param {import('./Map').View} view The map view
      * @abstract
      */
-    draw(cells, resolution, cg) {
-        if (this.drawFun) this.drawFun(cells, resolution, cg)
+    draw(cells, canvas, resolution, view) {
+        if (this.drawFun) this.drawFun(cells, canvas, resolution, view)
         else throw new Error('Method draw not implemented.')
     }
 
