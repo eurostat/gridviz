@@ -27,6 +27,10 @@ export class GridLayer extends Layer {
         /** 
          * This parameter is used when the dataset is a MultiResolutionDataset.
          * It defines the minimum number of pixels a grid cell should have to select the dataset to display based on its resolution.
+         * A low value, means that the map will be more detailled (smaller cells).
+         * A high value, means that the map will be less detailled (larger cells).
+         * This value should be higher than 1, otherwise it means a grid cell is smaller than the screen resolution.
+         * For more complex cell representations that require some more map space, this value should be higher.
          * @type {number} */
         this.minPixelsPerCell = opts.minPixelsPerCell || 3
 
