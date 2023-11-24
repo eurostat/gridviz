@@ -23,7 +23,7 @@ export class SideStyle extends Style {
          * For horizontal sides, v1 is the value of the cell below and v2 the value of the cell above.
          * For vertical sides, v1 is the value of the cell left and v2 the value of the cell right.
          * @type {function(number|undefined,number|undefined,number,import("../Style").Stat|undefined,number):number} */
-        this.value = opts.value || ((v1, v2, r, s, zf) => 1)
+        this.value = opts.value || ((v1, v2, r, s, z) => 1)
 
         /** A function returning the color of a cell side.
          * @type {function(Side,number,import("../Style").Stat|undefined,number):string} */
@@ -31,7 +31,7 @@ export class SideStyle extends Style {
 
         /** A function returning the width of a cell side, in geo unit
          * @type {function(Side,number,import("../Style").Stat|undefined,number):number} */
-        this.width = opts.width || ((side, r, s, zf) => (r * side.value) / 5)
+        this.width = opts.width || ((side, r, s, z) => (r * side.value) / 5)
 
         /** orientation. Set to 90 to show sides as slope lines for example.
          * @type {number} */
@@ -44,15 +44,15 @@ export class SideStyle extends Style {
 
     /**
      * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {number} r
-     * @param {import("../GeoCanvas").GeoCanvas} cg
+     * @param {number} resolution
+     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
      */
-    draw(cells, r, cg) {
+    draw(cells, geoCanvas, resolution) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.view.z
+        const z = geoCanvas.view.z
 
         //compute stats on cell values
         let statValue
@@ -71,29 +71,29 @@ export class SideStyle extends Style {
         for (let i = 1; i < cells.length; i++) {
             let c2 = cells[i]
 
-            if ((c1.y + r == c2.y) && (c1.x == c2.x))
+            if ((c1.y + resolution == c2.y) && (c1.x == c2.x))
                 //cells in same column and touch along horizontal side
                 //make shared side
                 sides.push({
                     x: c1.x,
                     y: c2.y,
                     or: 'h',
-                    value: this.value(c1[this.valueCol], c2[this.valueCol], r, statValue, zf),
+                    value: this.value(c1[this.valueCol], c2[this.valueCol], resolution, statValue, z),
                 })
             else {
                 //cells do not touch along horizontal side
                 //make two sides: top one for c1, bottom for c2
                 sides.push({
                     x: c1.x,
-                    y: c1.y + r,
+                    y: c1.y + resolution,
                     or: 'h',
-                    value: this.value(c1[this.valueCol], undefined, r, statValue, zf),
+                    value: this.value(c1[this.valueCol], undefined, resolution, statValue, z),
                 })
                 sides.push({
                     x: c2.x,
                     y: c2.y,
                     or: 'h',
-                    value: this.value(undefined, c2[this.valueCol], r, statValue, zf),
+                    value: this.value(undefined, c2[this.valueCol], resolution, statValue, z),
                 })
             }
 
@@ -107,29 +107,29 @@ export class SideStyle extends Style {
         for (let i = 1; i < cells.length; i++) {
             let c2 = cells[i]
 
-            if ((c1.x + r == c2.x) && (c1.y == c2.y))
+            if ((c1.x + resolution == c2.x) && (c1.y == c2.y))
                 //cells in same row and touch along vertical side
                 //make shared side
                 sides.push({
-                    x: c1.x + r,
+                    x: c1.x + resolution,
                     y: c1.y,
                     or: 'v',
-                    value: this.value(c1[this.valueCol], c2[this.valueCol], r, statValue, zf),
+                    value: this.value(c1[this.valueCol], c2[this.valueCol], resolution, statValue, z),
                 })
             else {
                 //cells do not touch along vertical side
                 //make two sides: right one for c1, left for c2
                 sides.push({
-                    x: c1.x + r,
+                    x: c1.x + resolution,
                     y: c1.y,
                     or: 'v',
-                    value: this.value(c1[this.valueCol], undefined, r, statValue, zf),
+                    value: this.value(c1[this.valueCol], undefined, resolution, statValue, z),
                 })
                 sides.push({
                     x: c2.x,
                     y: c2.y,
                     or: 'v',
-                    value: this.value(undefined, c2[this.valueCol], r, statValue, zf),
+                    value: this.value(undefined, c2[this.valueCol], resolution, statValue, z),
                 })
             }
 
@@ -147,43 +147,43 @@ export class SideStyle extends Style {
             for (let c of cells) {
                 const fc = this.fillColor(c)
                 if (!fc || fc == 'none') continue
-                cg.ctx.fillStyle = fc
-                cg.ctx.fillRect(c.x, c.y, r, r)
+                geoCanvas.ctx.fillStyle = fc
+                geoCanvas.ctx.fillRect(c.x, c.y, resolution, resolution)
             }
 
         //draw sides
-        cg.ctx.lineCap = 'butt'
-        const r2 = r / 2
+        geoCanvas.ctx.lineCap = 'butt'
+        const r2 = resolution / 2
         for (let s of sides) {
             //color
             /** @type {string|undefined} */
-            const col = this.color ? this.color(s, r, statSides, zf) : undefined
+            const col = this.color ? this.color(s, resolution, statSides, z) : undefined
             if (!col || col == 'none') continue
 
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(s, r, statSides, zf) : undefined
+            const wG = this.width ? this.width(s, resolution, statSides, z) : undefined
             if (!wG || wG <= 0) continue
 
             //set color and width
-            cg.ctx.strokeStyle = col
-            cg.ctx.lineWidth = wG
+            geoCanvas.ctx.strokeStyle = col
+            geoCanvas.ctx.lineWidth = wG
 
             //draw segment with correct orientation
-            cg.ctx.beginPath()
+            geoCanvas.ctx.beginPath()
             if (this.orientation == 90) {
-                cg.ctx.moveTo(s.x + r2, s.y + r2)
-                if (s.or === 'h') cg.ctx.lineTo(s.x + r2, s.y - r2)
-                else cg.ctx.lineTo(s.x - r2, s.y + r2)
+                geoCanvas.ctx.moveTo(s.x + r2, s.y + r2)
+                if (s.or === 'h') geoCanvas.ctx.lineTo(s.x + r2, s.y - r2)
+                else geoCanvas.ctx.lineTo(s.x - r2, s.y + r2)
             } else {
-                cg.ctx.moveTo(s.x, s.y)
-                cg.ctx.lineTo(s.x + (s.or === 'h' ? r : 0), s.y + (s.or === 'v' ? r : 0))
+                geoCanvas.ctx.moveTo(s.x, s.y)
+                geoCanvas.ctx.lineTo(s.x + (s.or === 'h' ? resolution : 0), s.y + (s.or === 'v' ? resolution : 0))
             }
-            cg.ctx.stroke()
+            geoCanvas.ctx.stroke()
         }
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf })
+        this.updateLegends({ style: this, r: resolution, zf: z })
     }
 
     /**

@@ -36,17 +36,17 @@ export class SideCatStyle extends Style {
 
     /**
      * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {number} r
-     * @param {import("../GeoCanvas").GeoCanvas} cg
+     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
+     * @param {number} resolution
      */
-    draw(cells, r, cg) {
+    draw(cells, geoCanvas, resolution) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
         if (!cells || cells.length == 0) return
 
         //
-        const zf = cg.view.z
+        const z = geoCanvas.view.z
 
         /**  @type {Array.<Side>} */
         const sides = []
@@ -60,14 +60,14 @@ export class SideCatStyle extends Style {
             let c2 = cells[i]
             let v2 = c2[this.col]
 
-            if (c1.y + r == c2.y && c1.x == c2.x) {
+            if (c1.y + resolution == c2.y && c1.x == c2.x) {
                 //cells in same column and touch along horizontal side
                 //make shared side
                 if (v1 != v2) sides.push({ x: c1.x, y: c2.y, or: 'h', v1: v1, v2: v2 })
             } else {
                 //cells do not touch along horizontal side
                 //make two sides: top one for c1, bottom for c2
-                sides.push({ x: c1.x, y: c1.y + r, or: 'h', v1: v1, v2: undefined })
+                sides.push({ x: c1.x, y: c1.y + resolution, or: 'h', v1: v1, v2: undefined })
                 sides.push({ x: c2.x, y: c2.y, or: 'h', v1: undefined, v2: v2 })
             }
 
@@ -84,14 +84,14 @@ export class SideCatStyle extends Style {
             let c2 = cells[i]
             let v2 = c2[this.col]
 
-            if (c1.x + r == c2.x && c1.y == c2.y) {
+            if (c1.x + resolution == c2.x && c1.y == c2.y) {
                 //cells in same row and touch along vertical side
                 //make shared side
-                if (v1 != v2) sides.push({ x: c1.x + r, y: c1.y, or: 'v', v1: v1, v2: v2 })
+                if (v1 != v2) sides.push({ x: c1.x + resolution, y: c1.y, or: 'v', v1: v1, v2: v2 })
             } else {
                 //cells do not touch along vertical side
                 //make two sides: right one for c1, left for c2
-                sides.push({ x: c1.x + r, y: c1.y, or: 'v', v1: v1, v2: undefined })
+                sides.push({ x: c1.x + resolution, y: c1.y, or: 'v', v1: v1, v2: undefined })
                 sides.push({ x: c2.x, y: c2.y, or: 'v', v1: undefined, v2: v2 })
             }
 
@@ -107,63 +107,63 @@ export class SideCatStyle extends Style {
             for (let c of cells) {
                 const fc = this.fillColor(c)
                 if (!fc || fc == 'none') continue
-                cg.ctx.fillStyle = fc
-                cg.ctx.fillRect(c.x, c.y, r, r)
+                geoCanvas.ctx.fillStyle = fc
+                geoCanvas.ctx.fillRect(c.x, c.y, resolution, resolution)
             }
 
         //draw sides
-        cg.ctx.lineCap = 'butt'
+        geoCanvas.ctx.lineCap = 'butt'
         for (let s of sides) {
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(s, r, zf) : undefined
+            const wG = this.width ? this.width(s, resolution, z) : undefined
             if (!wG || wG <= 0) continue
             const w2 = wG * 0.5
 
             //set color and width
-            cg.ctx.lineWidth = wG
+            geoCanvas.ctx.lineWidth = wG
 
             //draw segment with correct orientation
             if (s.or === 'h') {
                 //top line
                 if (s.v2) {
-                    cg.ctx.beginPath()
-                    cg.ctx.strokeStyle = this.color[s.v2]
-                    cg.ctx.moveTo(s.x, s.y + w2)
-                    cg.ctx.lineTo(s.x + r, s.y + w2)
-                    cg.ctx.stroke()
+                    geoCanvas.ctx.beginPath()
+                    geoCanvas.ctx.strokeStyle = this.color[s.v2]
+                    geoCanvas.ctx.moveTo(s.x, s.y + w2)
+                    geoCanvas.ctx.lineTo(s.x + resolution, s.y + w2)
+                    geoCanvas.ctx.stroke()
                 }
 
                 //bottom line
                 if (s.v1) {
-                    cg.ctx.beginPath()
-                    cg.ctx.strokeStyle = this.color[s.v1]
-                    cg.ctx.moveTo(s.x, s.y - w2)
-                    cg.ctx.lineTo(s.x + r, s.y - w2)
-                    cg.ctx.stroke()
+                    geoCanvas.ctx.beginPath()
+                    geoCanvas.ctx.strokeStyle = this.color[s.v1]
+                    geoCanvas.ctx.moveTo(s.x, s.y - w2)
+                    geoCanvas.ctx.lineTo(s.x + resolution, s.y - w2)
+                    geoCanvas.ctx.stroke()
                 }
             } else {
                 //right line
                 if (s.v2) {
-                    cg.ctx.beginPath()
-                    cg.ctx.strokeStyle = this.color[s.v2]
-                    cg.ctx.moveTo(s.x + w2, s.y)
-                    cg.ctx.lineTo(s.x + w2, s.y + r)
-                    cg.ctx.stroke()
+                    geoCanvas.ctx.beginPath()
+                    geoCanvas.ctx.strokeStyle = this.color[s.v2]
+                    geoCanvas.ctx.moveTo(s.x + w2, s.y)
+                    geoCanvas.ctx.lineTo(s.x + w2, s.y + resolution)
+                    geoCanvas.ctx.stroke()
                 }
 
                 //left line
                 if (s.v1) {
-                    cg.ctx.beginPath()
-                    cg.ctx.strokeStyle = this.color[s.v1]
-                    cg.ctx.moveTo(s.x - w2, s.y)
-                    cg.ctx.lineTo(s.x - w2, s.y + r)
-                    cg.ctx.stroke()
+                    geoCanvas.ctx.beginPath()
+                    geoCanvas.ctx.strokeStyle = this.color[s.v1]
+                    geoCanvas.ctx.moveTo(s.x - w2, s.y)
+                    geoCanvas.ctx.lineTo(s.x - w2, s.y + resolution)
+                    geoCanvas.ctx.stroke()
                 }
             }
         }
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf })
+        this.updateLegends({ style: this, r: resolution, zf: z })
     }
 }

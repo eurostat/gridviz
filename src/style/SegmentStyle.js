@@ -47,15 +47,15 @@ export class SegmentStyle extends Style {
      * Draw cells as segments.
      *
      * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {number} r
-     * @param {import("../GeoCanvas").GeoCanvas} cg
+     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
+     * @param {number} resolution
      */
-    draw(cells, r, cg) {
+    draw(cells, geoCanvas, resolution) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.view.z
+        const z = geoCanvas.view.z
 
         let statColor
         if (this.colorCol) {
@@ -78,7 +78,7 @@ export class SegmentStyle extends Style {
         }
 
         //
-        cg.ctx.lineCap = 'butt'
+        geoCanvas.ctx.lineCap = 'butt'
 
         //conversion factor degree -> radian
         const f = Math.PI / 180
@@ -86,17 +86,17 @@ export class SegmentStyle extends Style {
         for (let c of cells) {
             //color
             /** @type {string|undefined} */
-            const col = this.color ? this.color(c[this.colorCol], r, statColor) : undefined
+            const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined
             if (!col) continue
 
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(c[this.widthCol], r, statWidth, zf) : undefined
+            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, z) : undefined
             if (!wG || wG < 0) continue
 
             //length
             /** @type {number|undefined} */
-            const lG = this.length ? this.length(c[this.lengthCol], r, statLength, zf) : undefined
+            const lG = this.length ? this.length(c[this.lengthCol], resolution, statLength, z) : undefined
             if (!lG || lG < 0) continue
 
             //orientation (in radian)
@@ -105,32 +105,32 @@ export class SegmentStyle extends Style {
             if (or === undefined || isNaN(or)) continue
 
             //get offset
-            const offset = this.offset(c, r, zf)
+            const offset = this.offset(c, resolution, z)
 
             //set color and width
-            cg.ctx.strokeStyle = col
-            cg.ctx.lineWidth = wG
+            geoCanvas.ctx.strokeStyle = col
+            geoCanvas.ctx.lineWidth = wG
 
             //compute segment centre postition
-            const cx = c.x + r / 2 + offset.dx
-            const cy = c.y + r / 2 + offset.dy
+            const cx = c.x + resolution / 2 + offset.dx
+            const cy = c.y + resolution / 2 + offset.dy
 
             //compute segment direction
             const dx = 0.5 * Math.cos(or) * lG
             const dy = 0.5 * Math.sin(or) * lG
 
             //draw segment
-            cg.ctx.beginPath()
-            cg.ctx.moveTo(cx - dx, cy - dy)
-            cg.ctx.lineTo(cx + dx, cy + dy)
-            cg.ctx.stroke()
+            geoCanvas.ctx.beginPath()
+            geoCanvas.ctx.moveTo(cx - dx, cy - dy)
+            geoCanvas.ctx.lineTo(cx + dx, cy + dy)
+            geoCanvas.ctx.stroke()
         }
 
         //update legend, if any
         this.updateLegends({
             widthFun: this.width,
-            r: r,
-            zf: zf,
+            r: resolution,
+            zf: z,
             sColor: statColor,
             //sLength: statLength,
             sWidth: statWidth,

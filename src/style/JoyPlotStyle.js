@@ -19,13 +19,13 @@ export class JoyPlotStyle extends Style {
 
         /**
          * @type {function(number,{min:number, max:number},number,number):string} */
-        this.lineColor = opts.lineColor || ((y, ys, r, zf) => '#BBB')
+        this.lineColor = opts.lineColor || ((y, ys, r, z) => '#BBB')
         /**
          * @type {function(number,{min:number, max:number},number,number):number} */
-        this.lineWidth = opts.lineWidth || ((y, ys, r, zf) => zf)
+        this.lineWidth = opts.lineWidth || ((y, ys, r, z) => z)
         /**
          * @type {function(number,{min:number, max:number},number,number):string} */
-        this.fillColor = opts.fillColor || ((y, ys, r, zf) => '#c08c5968')
+        this.fillColor = opts.fillColor || ((y, ys, r, z) => '#c08c5968')
     }
 
     draw(cells, geoCanvas, resolution) {

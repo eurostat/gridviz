@@ -46,15 +46,15 @@ export class StrokeStyle extends Style {
      * Draw cells as squares, with various colors and size.
      *
      * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {number} r
-     * @param {import("../GeoCanvas").GeoCanvas} cg
+     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
+     * @param {number} resolution
      */
-    draw(cells, r, cg) {
+    draw(cells, geoCanvas, resolution) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.view.z
+        const z = geoCanvas.view.z
 
         let statColor
         if (this.strokeColorCol) statColor = Style.getStatistics(cells, (c) => c[this.strokeColorCol], true)
@@ -65,55 +65,55 @@ export class StrokeStyle extends Style {
         let statWidth
         if (this.strokeWidthCol) statWidth = Style.getStatistics(cells, (c) => c[this.strokeWidthCol], true)
 
-        const r2 = r * 0.5
+        const r2 = resolution * 0.5
         for (let cell of cells) {
             //color
             const col = this.strokeColor
-                ? this.strokeColor(cell[this.strokeColorCol], r, statColor)
+                ? this.strokeColor(cell[this.strokeColorCol], resolution, statColor)
                 : undefined
             if (!col || col === 'none') continue
-            cg.ctx.strokeStyle = col
+            geoCanvas.ctx.strokeStyle = col
 
             //size
             /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-            let s_ = this.size || (() => r)
+            let s_ = this.size || (() => resolution)
             //size - in geo unit
-            const sG = s_(cell[this.sizeCol], r, statSize, zf)
+            const sG = s_(cell[this.sizeCol], resolution, statSize, z)
 
             //width
             const wi = this.strokeWidth
-                ? this.strokeWidth(cell[this.strokeWidthCol], r, statWidth, zf)
-                : 1 * zf
+                ? this.strokeWidth(cell[this.strokeWidthCol], resolution, statWidth, z)
+                : 1 * z
             if (!wi || wi <= 0) continue
-            cg.ctx.lineWidth = wi
+            geoCanvas.ctx.lineWidth = wi
 
             //shape
             const shape = this.shape ? this.shape(cell) : 'square'
             if (shape === 'none') continue
 
             //get offset
-            const offset = this.offset(cell, r, zf)
+            const offset = this.offset(cell, resolution, z)
 
             if (shape === 'square') {
                 //draw square
-                const d = r * (1 - sG / r) * 0.5
-                cg.ctx.beginPath()
-                cg.ctx.rect(cell.x + d + offset.dx, cell.y + d + offset.dy, sG, sG)
-                cg.ctx.stroke()
+                const d = resolution * (1 - sG / resolution) * 0.5
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.rect(cell.x + d + offset.dx, cell.y + d + offset.dy, sG, sG)
+                geoCanvas.ctx.stroke()
             } else if (shape === 'circle') {
                 //draw circle
-                cg.ctx.beginPath()
-                cg.ctx.arc(cell.x + r2 + offset.dx, cell.y + r2 + offset.dy, sG * 0.5, 0, 2 * Math.PI, false)
-                cg.ctx.stroke()
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.arc(cell.x + r2 + offset.dx, cell.y + r2 + offset.dy, sG * 0.5, 0, 2 * Math.PI, false)
+                geoCanvas.ctx.stroke()
             } else if (shape === 'diamond') {
                 const s2 = sG * 0.5
-                cg.ctx.beginPath()
-                cg.ctx.moveTo(cell.x + r2 - s2, cell.y + r2)
-                cg.ctx.lineTo(cell.x + r2, cell.y + r2 + s2)
-                cg.ctx.lineTo(cell.x + r2 + s2, cell.y + r2)
-                cg.ctx.lineTo(cell.x + r2, cell.y + r2 - s2)
-                cg.ctx.lineTo(cell.x + r2 - s2, cell.y + r2)
-                cg.ctx.stroke()
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.moveTo(cell.x + r2 - s2, cell.y + r2)
+                geoCanvas.ctx.lineTo(cell.x + r2, cell.y + r2 + s2)
+                geoCanvas.ctx.lineTo(cell.x + r2 + s2, cell.y + r2)
+                geoCanvas.ctx.lineTo(cell.x + r2, cell.y + r2 - s2)
+                geoCanvas.ctx.lineTo(cell.x + r2 - s2, cell.y + r2)
+                geoCanvas.ctx.stroke()
             } else if (shape === 'donut') {
                 console.error('Not implemented')
             } else {
@@ -122,6 +122,6 @@ export class StrokeStyle extends Style {
         }
 
         //update legends
-        //this.updateLegends({ style: this, r: resolution, zf: zf, sSize: statSize, sColor: statColor });
+        //TODO
     }
 }

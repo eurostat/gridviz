@@ -36,15 +36,15 @@ export class MosaicStyle extends Style {
     /**
      *
      * @param {Array.<import("../Dataset").Cell>} cells
+     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
      * @param {number} resolution
-     * @param {import("../GeoCanvas").GeoCanvas} cg
      */
-    draw(cells, resolution, cg) {
+    draw(cells, geoCanvas, resolution) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.view.z
+        const z = geoCanvas.view.z
 
         let statColor
         if (this.colorCol) {
@@ -53,10 +53,10 @@ export class MosaicStyle extends Style {
         }
 
         //set stroke style, for shadow
-        cg.ctx.strokeStyle = this.shadowColor
-        cg.ctx.lineWidth = this.shadowFactor * resolution
-        cg.ctx.lineJoin = 'round'
-        cg.ctx.lineCap = 'butt'
+        geoCanvas.ctx.strokeStyle = this.shadowColor
+        geoCanvas.ctx.lineWidth = this.shadowFactor * resolution
+        geoCanvas.ctx.lineJoin = 'round'
+        geoCanvas.ctx.lineCap = 'butt'
 
         //function to compute position mosaic effect
         const d = resolution * this.mosaicFactor
@@ -68,10 +68,10 @@ export class MosaicStyle extends Style {
             //set fill color
             const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined
             if (!col || col === 'none') continue
-            cg.ctx.fillStyle = col
+            geoCanvas.ctx.fillStyle = col
 
             //get offset
-            const offset = this.offset(cell, resolution, zf)
+            const offset = this.offset(cell, resolution, z)
 
             //compute position mosaic effect
             const ll = mosaic(),
@@ -81,24 +81,24 @@ export class MosaicStyle extends Style {
 
             //stroke
             if (this.shadowFactor > 0) {
-                cg.ctx.beginPath()
-                cg.ctx.moveTo(cell.x + offset.dx + ll.x, cell.y + offset.dy + ll.y)
-                cg.ctx.lineTo(cell.x + offset.dx + resolution - lr.x, cell.y + offset.dy + lr.y)
-                cg.ctx.lineTo(cell.x + offset.dx + resolution - ur.x, cell.y + offset.dy + resolution - ur.y)
-                cg.ctx.stroke()
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.moveTo(cell.x + offset.dx + ll.x, cell.y + offset.dy + ll.y)
+                geoCanvas.ctx.lineTo(cell.x + offset.dx + resolution - lr.x, cell.y + offset.dy + lr.y)
+                geoCanvas.ctx.lineTo(cell.x + offset.dx + resolution - ur.x, cell.y + offset.dy + resolution - ur.y)
+                geoCanvas.ctx.stroke()
             }
 
             //fill
 
-            cg.ctx.beginPath()
-            cg.ctx.moveTo(cell.x + offset.dx + ll.x, cell.y + offset.dy + ll.y)
-            cg.ctx.lineTo(cell.x + offset.dx + resolution - lr.x, cell.y + offset.dy + lr.y)
-            cg.ctx.lineTo(cell.x + offset.dx + resolution - ur.x, cell.y + offset.dy + resolution - ur.y)
-            cg.ctx.lineTo(cell.x + offset.dx + ul.x, cell.y + offset.dy + resolution - ul.y)
-            cg.ctx.fill()
+            geoCanvas.ctx.beginPath()
+            geoCanvas.ctx.moveTo(cell.x + offset.dx + ll.x, cell.y + offset.dy + ll.y)
+            geoCanvas.ctx.lineTo(cell.x + offset.dx + resolution - lr.x, cell.y + offset.dy + lr.y)
+            geoCanvas.ctx.lineTo(cell.x + offset.dx + resolution - ur.x, cell.y + offset.dy + resolution - ur.y)
+            geoCanvas.ctx.lineTo(cell.x + offset.dx + ul.x, cell.y + offset.dy + resolution - ul.y)
+            geoCanvas.ctx.fill()
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: zf, sColor: statColor })
+        this.updateLegends({ style: this, r: resolution, zf: z, sColor: statColor })
     }
 }

@@ -45,7 +45,7 @@ export class SquareColorCatWGLStyle extends Style {
         /**
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
          * @type {function(number,number):number} */
-        this.size = opts.size // (resolution, zf) => ...
+        this.size = opts.size // (resolution, z) => ...
 
         /**
          * @private
@@ -55,20 +55,20 @@ export class SquareColorCatWGLStyle extends Style {
 
     /**
      * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {number} r
-     * @param {import("../GeoCanvas").GeoCanvas} cg
+     * @param {number} resolution
+     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
      */
-    draw(cells, r, cg) {
+    draw(cells, geoCanvas, resolution) {
         if (monitor) monitorDuration('*** SquareColorCatWGLStyle draw')
 
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.view.z
+        const z = geoCanvas.view.z
 
         //add vertice and fragment data
-        const r2 = r / 2
+        const r2 = resolution / 2
         let c,
             nb = cells.length
         const verticesBuffer = []
@@ -93,7 +93,7 @@ export class SquareColorCatWGLStyle extends Style {
         if (monitor) monitorDuration('   webgl program inputs preparation')
 
         //create canvas and webgl renderer
-        const cvWGL = makeWebGLCanvas(cg.w + '', cg.h + '')
+        const cvWGL = makeWebGLCanvas(geoCanvas.w + '', geoCanvas.h + '')
         if (!cvWGL) {
             console.error('No webGL')
             return
@@ -101,19 +101,19 @@ export class SquareColorCatWGLStyle extends Style {
         if (monitor) monitorDuration('   web GL canvas creation')
 
         //draw
-        const sizeGeo = this.size ? this.size(r, zf) : r + 0.2 * zf
-        this.wgp.draw(cvWGL.gl, verticesBuffer, iBuffer, cg.getWebGLTransform(), sizeGeo / zf)
+        const sizeGeo = this.size ? this.size(resolution, z) : resolution + 0.2 * z
+        this.wgp.draw(cvWGL.gl, verticesBuffer, iBuffer, geoCanvas.getWebGLTransform(), sizeGeo / z)
 
         if (monitor) monitorDuration('   webgl drawing')
 
         //draw in canvas geo
-        cg.initCanvasTransform()
-        cg.ctx.drawImage(cvWGL.canvas, 0, 0)
+        geoCanvas.initCanvasTransform()
+        geoCanvas.ctx.drawImage(cvWGL.canvas, 0, 0)
 
         if (monitor) monitorDuration('   canvas drawing')
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf })
+        this.updateLegends({ style: this, r: resolution, zf: z })
 
         if (monitor) monitorDuration('*** SquareColorCatWGLStyle end draw')
     }
