@@ -150,10 +150,9 @@ export class Map {
 
         //go through the layers
         for (const layer of this.layers) {
+
             //check if layer is visible
-            if (!layer.visible) continue
-            if (z > layer.maxZoom) continue
-            if (z < layer.minZoom) continue
+            if (layer.visible && !layer.visible(z)) continue
 
             //set layer alpha and blend mode
             this.geoCanvas.ctx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
@@ -172,7 +171,6 @@ export class Map {
             //restore default alpha and blend operation
             this.geoCanvas.ctx.globalAlpha = 1.0
             this.geoCanvas.ctx.globalCompositeOperation = this.defaultGlobalCompositeOperation
-
         }
 
         //

@@ -14,9 +14,10 @@ export class Drawable {
     constructor(opts) {
         opts = opts || {}
 
-        /** An attribute to specify if the object should be drawn or not
-        * @type {boolean} */
-        this.visible = opts.visible != false
+        /** A function specifying if the element should be visible or not.
+         * The function parameter is the zoom level.
+        * @type {function(number):boolean} */
+        this.visible = opts.visible
 
         /** The minimum : Below this level, the object is not drawn.
          * @type {number} */
