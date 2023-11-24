@@ -9,6 +9,8 @@
  */
 
 
+//TODO use special cases - for Math.sqrt, etc.
+
 /**
  * @param {number} exponent 
  * @returns {function(number):number}
@@ -40,7 +42,8 @@ export const exponentialScale = (base = 3) => {
  */
 export const logarithmicScale = (base = 3) => {
     if (base == 0) return t => t
-    return t => 1 - (1 / base) * Math.log(Math.exp(base) * (1 - t) + t)
+    const a = Math.exp(base)
+    return t => 1 - (1 / base) * Math.log(a * (1 - t) + t)
 }
 
 
