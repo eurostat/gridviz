@@ -31,15 +31,15 @@ export class LineLayer extends Layer {
         /**
          * @private
          * @type {function(object,number):string} */
-        this.color = opts.color || ((f, zf) => 'gray')
+        this.color = opts.color || ((f, z) => 'gray')
         /**
          * @private
          * @type {function(object,number):number} */
-        this.width = opts.width || ((f, zf) => 2)
+        this.width = opts.width || ((f, z) => 2)
         /**
          * @private
          * @type {function(object,number):Array.<number>|undefined} */
-        this.lineDash = opts.lineDash || ((f, zf) => undefined)
+        this.lineDash = opts.lineDash || ((f, z) => undefined)
 
         /**
          * @private
@@ -67,24 +67,24 @@ export class LineLayer extends Layer {
         //TODO sort lines by width ?
 
         //
-        const zf = geoCanvas.view.z
+        const z = geoCanvas.view.z
 
         for (const f of this.fs) {
             const cs = f.geometry.coordinates
             if (cs.length < 2) continue
 
             //set color
-            const col = this.color(f, zf)
+            const col = this.color(f, z)
             if (!col || col == 'none') continue
             geoCanvas.ctx.strokeStyle = col
 
             //set linewidth
-            const wP = this.width(f, zf)
+            const wP = this.width(f, z)
             if (!wP || wP < 0) continue
-            geoCanvas.ctx.lineWidth = wP * zf
+            geoCanvas.ctx.lineWidth = wP * z
 
             //set line dash
-            const ldP = this.lineDash(f, zf)
+            const ldP = this.lineDash(f, z)
             if (ldP) geoCanvas.ctx.setLineDash(ldP)
 
             //draw line

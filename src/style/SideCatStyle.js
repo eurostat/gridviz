@@ -164,6 +164,6 @@ export class SideCatStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: z })
+        this.updateLegends({ style: this, r: resolution, z: z })
     }
 }

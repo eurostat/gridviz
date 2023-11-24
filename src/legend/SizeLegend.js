@@ -45,7 +45,7 @@ export class SizeLegend extends Legend {
     }
 
     /**
-     * @param {{ style: import("../style/ShapeColorSizeStyle").ShapeColorSizeStyle, r: number, zf: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts
+     * @param {{ style: import("../style/ShapeColorSizeStyle").ShapeColorSizeStyle, r: number, z: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts
      */
     update(opts) {
         //could happen when data is still loading
@@ -90,7 +90,7 @@ export class SizeLegend extends Legend {
         }
 
         //compute size of symbol, in pix
-        const size = opts.style.size(value, opts.r, opts.sSize, opts.zf) / opts.zf
+        const size = opts.style.size(value, opts.r, opts.sSize, opts.z) / opts.z
 
         const svg = d
             .append('svg')

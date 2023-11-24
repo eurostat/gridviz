@@ -222,6 +222,6 @@ export class PillarStyle extends Style {
         geoCanvas.ctx.lineCap = 'butt'
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: z, sColor: statColor })
+        this.updateLegends({ style: this, r: resolution, z: z, sColor: statColor })
     }
 }

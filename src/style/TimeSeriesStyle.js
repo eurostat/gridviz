@@ -243,7 +243,7 @@ export class TimeSeriesStyle extends Style {
         this.updateLegends({
             widthFun: this.lineWidth,
             r: resolution,
-            zf: z,
+            z: z,
             sColor: statColor,
             //sLength: statLength,
             sWidth: statWidth,

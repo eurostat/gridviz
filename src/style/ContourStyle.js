@@ -22,10 +22,10 @@ export class ContourStyle extends SideStyle {
         opts.breaks = opts.breaks || [100, 1000, 10000, 100000, 1000000]
 
         /** @type {function(Side,number,number):string} */
-        opts.width = opts.width || (() => 1) //(s, r, zf) => ...
+        opts.width = opts.width || (() => 1) //(s, r, z) => ...
 
         /** @type {function(Side,number,number):string} */
-        opts.color = opts.color || (() => '#E7A935') //(s, r, zf) => ...
+        opts.color = opts.color || (() => '#E7A935') //(s, r, z) => ...
 
         //override method for contour drawing
 
@@ -35,7 +35,7 @@ export class ContourStyle extends SideStyle {
             return opts.breaks.length
         }
 
-        this.value = (v1, v2, r, s, zf) => {
+        this.value = (v1, v2, r, s, z) => {
             //if (!v1 || !v2) return 0
             return Math.abs(getClass(v2) - getClass(v1))
 
@@ -46,9 +46,9 @@ export class ContourStyle extends SideStyle {
         }
 
         //same color for all
-        this.color = (side, r, s, zf) => (side.value ? opts.color(side, r, zf) : undefined)
+        this.color = (side, r, s, z) => (side.value ? opts.color(side, r, z) : undefined)
 
         //width: multiple of
-        this.width = (side, r, s, zf) => side.value * zf * opts.width(side, r, zf)
+        this.width = (side, r, s, z) => side.value * z * opts.width(side, r, z)
     }
 }

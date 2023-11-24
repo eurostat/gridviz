@@ -116,6 +116,6 @@ export class NinjaStarStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: z, sSize: statSize, sColor: statColor })
+        this.updateLegends({ style: this, r: resolution, z: z, sSize: statSize, sColor: statColor })
     }
 }

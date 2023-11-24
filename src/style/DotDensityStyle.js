@@ -24,7 +24,7 @@ export class DotDensityStyle extends Style {
 
         /** A function returning the number of dots for a cell value.
          * @type {function(number,number,import("../Style").Stat,number):number} */
-        this.nb = opts.nb || ((v, r, s, zf) => (((0.3 * r * r) / (zf * zf)) * v) / s.max)
+        this.nb = opts.nb || ((v, r, s, z) => (((0.3 * r * r) / (z * z)) * v) / s.max)
 
         /** The color of the dots. Same color for all dots within a cell.
          * @type {function(import("../Dataset").Cell):string} */
@@ -32,56 +32,56 @@ export class DotDensityStyle extends Style {
 
         /** A function returning the size of the dots, in geo unit.
          * @type {function(number,number):number} */
-        this.dotSize = opts.dotSize //|| ((r, zf) => ...
+        this.dotSize = opts.dotSize //|| ((r, z) => ...
 
         /** A function returning the sigma of the distribution from the resolution, in geo unit.
          * @type {function(number,number):number} */
-        this.sigma = opts.sigma //|| ((r,zf) => ...
+        this.sigma = opts.sigma //|| ((r,z) => ...
     }
 
     /**
      * Draw cells as text.
      *
      * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {number} r
-     * @param {import("../GeoCanvas").GeoCanvas} cg
+     * @param {number} resolution
+     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
      */
-    draw(cells, r, cg) {
+    draw(cells, geoCanvas, resolution) {
         if (monitor) monitorDuration('*** DotDensityStyle draw')
 
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.view.z
+        const z = geoCanvas.view.z
 
         let stat
         if (this.nbCol) stat = Style.getStatistics(cells, (c) => c[this.nbCol], true)
         if (!stat) return
 
         //size of the dots
-        const sGeo = this.dotSize ? this.dotSize(r, zf) : 2 * zf
+        const sGeo = this.dotSize ? this.dotSize(resolution, z) : 2 * z
 
         //make random function
-        const sig = this.sigma ? this.sigma(r, zf) : r * 0.4
+        const sig = this.sigma ? this.sigma(resolution, z) : resolution * 0.4
         const rand = randomNormal(0, sig)
 
         if (monitor) monitorDuration(' preparation')
 
         if (checkWebGLSupport()) {
             //create canvas and webgl renderer
-            const cvWGL = makeWebGLCanvas(cg.w + '', cg.h + '')
+            const cvWGL = makeWebGLCanvas(geoCanvas.w + '', geoCanvas.h + '')
             if (!cvWGL) {
                 console.error('No webGL')
                 return
             }
 
             //create webGL program
-            const prog = new WebGLSquareColoring(cvWGL.gl, sGeo / zf)
+            const prog = new WebGLSquareColoring(cvWGL.gl, sGeo / z)
 
             if (monitor) monitorDuration(' webgl creation')
 
-            const r2 = r / 2
+            const r2 = resolution / 2
 
             let col, offset, nb, cx, cy, cc
             for (let c of cells) {
@@ -90,10 +90,10 @@ export class DotDensityStyle extends Style {
                 if (!col || col === 'none') continue
 
                 //get offset
-                offset = this.offset(c, r, zf)
+                offset = this.offset(c, resolution, z)
 
                 //number of dots
-                nb = this.nb(c[this.nbCol], r, stat, zf)
+                nb = this.nb(c[this.nbCol], resolution, stat, z)
 
                 //cell center
                 cx = c.x + offset.dx + r2
@@ -111,13 +111,13 @@ export class DotDensityStyle extends Style {
             if (monitor) monitorDuration(' data preparation')
 
             //draw
-            prog.draw(cg.getWebGLTransform())
+            prog.draw(geoCanvas.getWebGLTransform())
 
             if (monitor) monitorDuration(' webgl drawing')
 
             //draw in canvas geo
-            cg.initCanvasTransform()
-            cg.ctx.drawImage(cvWGL.canvas, 0, 0)
+            geoCanvas.initCanvasTransform()
+            geoCanvas.ctx.drawImage(cvWGL.canvas, 0, 0)
 
             if (monitor) monitorDuration(' canvas drawing')
         } else {
@@ -126,25 +126,25 @@ export class DotDensityStyle extends Style {
                 const col = this.color(c)
                 if (!col || col === 'none') continue
                 //set color
-                cg.ctx.fillStyle = col
+                geoCanvas.ctx.fillStyle = col
 
                 //get offset
-                const offset = this.offset(c, r, zf)
+                const offset = this.offset(c, resolution, z)
 
                 //number of dots
-                const nb = this.nb(c[this.nbCol], r, stat, zf)
+                const nb = this.nb(c[this.nbCol], resolution, stat, z)
 
                 //draw random dots
-                const cx = c.x + offset.dx + r / 2,
-                    cy = c.y + offset.dy + r / 2
+                const cx = c.x + offset.dx + resolution / 2,
+                    cy = c.y + offset.dy + resolution / 2
                 for (let i = 0; i <= nb; i++) {
-                    cg.ctx.fillRect(cx + rand(), cy + rand(), sGeo, sGeo)
+                    geoCanvas.ctx.fillRect(cx + rand(), cy + rand(), sGeo, sGeo)
                 }
             }
         }
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf })
+        this.updateLegends({ style: this, r: resolution, z: z })
 
         if (monitor) monitorDuration('*** DotDensityStyle end draw')
     }

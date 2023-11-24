@@ -141,7 +141,7 @@ export class CompositionStyle extends Style {
 
                         //compute category radius - in geo
                         /** @type {number} */
-                        //const rG = this.radius(val, r, stat, cellStat, zf)
+                        //const rG = this.radius(val, r, stat, cellStat, z)
                         const rG = (sG / 2) * Math.sqrt(val / maxVal)
 
                         //draw angular sector
@@ -281,6 +281,6 @@ export class CompositionStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: z, viewScale: viewScale })
+        this.updateLegends({ style: this, r: resolution, z: z, viewScale: viewScale })
     }
 }

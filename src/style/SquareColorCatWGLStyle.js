@@ -113,7 +113,7 @@ export class SquareColorCatWGLStyle extends Style {
         if (monitor) monitorDuration('   canvas drawing')
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: z })
+        this.updateLegends({ style: this, r: resolution, z: z })
 
         if (monitor) monitorDuration('*** SquareColorCatWGLStyle end draw')
     }

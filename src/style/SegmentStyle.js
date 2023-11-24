@@ -130,7 +130,7 @@ export class SegmentStyle extends Style {
         this.updateLegends({
             widthFun: this.width,
             r: resolution,
-            zf: z,
+            z: z,
             sColor: statColor,
             //sLength: statLength,
             sWidth: statWidth,

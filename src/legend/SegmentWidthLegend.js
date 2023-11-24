@@ -33,12 +33,12 @@ export class SegmentWidthLegend extends Legend {
         this.labelFontSize = opts.labelFontSize || '0.8em'
         this.labelUnitText = opts.labelUnitText || ''
 
-        //segment length in geo unit - a function of the resolution r and zoom level zf
+        //segment length in geo unit - a function of the resolution r and zoom level z
         this.lengthFun = opts.lengthExaggerationFactor || ((r, zf) => r)
     }
 
     /**
-     * @param {{ style: import("../style/SegmentStyle").SegmentStyle, r: number, zf: number, sColor: import("../Style").Stat, sLength: import("../Style").Stat, sWidth: import("../Style").Stat }} opts
+     * @param {{ style: import("../style/SegmentStyle").SegmentStyle, r: number, z: number, sColor: import("../Style").Stat, sLength: import("../Style").Stat, sWidth: import("../Style").Stat }} opts
      */
     update(opts) {
         //could happen when data is still loading

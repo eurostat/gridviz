@@ -45,9 +45,9 @@ export const sizeContinuousScale = (opts) => {
     const minSizePix = opts.minSizePix || 0
     const maxSizeFactor = opts.maxSizeFactor || 1
     const stretching = opts.stretching
-    return (cells, r, zf) => {
+    return (cells, r, z) => {
         const domain = [minValue, max(cells, valueFunction)]
-        const range = [minSizePix * zf, r * maxSizeFactor]
+        const range = [minSizePix * z, r * maxSizeFactor]
         const scale = t => {
             //scale to [0,1]
             t = (t - domain[0]) / (domain[1] - domain[0])
@@ -68,9 +68,9 @@ export const sizeQuantileScale = (opts) => {
     const minSizePix = opts.minSizePix || 1
     const maxSizeFactor = opts.maxSizeFactor || 1
     const scale = scaleQuantile()
-    return (cells, r, zf) => {
+    return (cells, r, z) => {
         scale.domain(cells.map(valueFunction))
-        const minSizeGeo = minSizePix * zf, maxSizeGeo = r * maxSizeFactor
+        const minSizeGeo = minSizePix * z, maxSizeGeo = r * maxSizeFactor
         scale.range(Array.from({ length: classNumber }, (_, i) => minSizeGeo + i * (maxSizeGeo - minSizeGeo) / (classNumber - 1)))
         return scale;
     }
@@ -80,9 +80,9 @@ export const sizeQuantileScale = (opts) => {
 //combine scales
 export const viewScaleCombination = (obj) => {
     //obj: prop and a function to call
-    return (cells, r, zf) => {
+    return (cells, r, z) => {
         const out = {}
-        for (const p in obj) { out[p] = obj[p](cells, r, zf) }
+        for (const p in obj) { out[p] = obj[p](cells, r, z) }
         return out
     }
 }
