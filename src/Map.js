@@ -58,26 +58,8 @@ export class Map {
         // legend div
         this.legendDivId = opts.legendDivId || 'gvizLegend'
         this.legend = select('#' + this.legendDivId)
-        if (this.legend.empty()) {
-            this.legend = select(
-                this.container.id && this.container.id != '' ? '#' + this.container.id : 'body'
-            )
-                .append('div')
-                .attr('id', this.legendDivId)
-                .style('position', 'absolute')
-                .style('width', 'auto')
-                .style('height', 'auto')
-                .style('background', '#FFFFFF')
-                //.style("padding", this.padding)
-                .style('border', '0px')
-                //.style('border-radius', '5px')
-                .style('box-shadow', '3px 3px 3px grey, -3px -3px 3px #ddd')
-                .style('font-family', 'Helvetica, Arial, sans-serif')
-                .style('bottom', '15px')
-                .style('right', '15px')
-            //hide
-            //.style("visibility", "hidden")
-        }
+        if (this.legend.empty()) this.initialiseLegend()
+
 
         //tooltip
 
@@ -131,6 +113,26 @@ export class Map {
         canvas.setAttribute('height', '' + this.h)
         this.container.appendChild(canvas)
         return canvas
+    }
+
+
+    initialiseLegend() {
+        this.legend = select(this.container.id && this.container.id != '' ? '#' + this.container.id : 'body')
+            .append('div')
+            .attr('id', this.legendDivId)
+            .style('position', 'absolute')
+            .style('width', 'auto')
+            .style('height', 'auto')
+            .style('background', '#FFFFFF')
+            //.style("padding", this.padding)
+            .style('border', '0px')
+            //.style('border-radius', '5px')
+            .style('box-shadow', '3px 3px 3px grey, -3px -3px 3px #ddd')
+            .style('font-family', 'Helvetica, Arial, sans-serif')
+            .style('bottom', '15px')
+            .style('right', '15px')
+        //hide
+        //.style("visibility", "hidden")
     }
 
 
