@@ -15,17 +15,13 @@ export class ShapeColorSizeStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** A function returning the view scale.
-         * @type {function(Array.<import('../Dataset.js').Cell>,number, number):object} */
-        this.viewScale = opts.viewScale //(cells,r,z) => {}
-
         /** A function returning the color of the cell.
          * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
         this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
          * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
-        this.size = opts.size || ((c,r) => r) //(c,r,z,vs) => {}
+        this.size = opts.size || ((cell, resolution) => resolution) //(c,r,z,vs) => {}
 
         /** A function returning the shape of a cell.
          * @type {function(import("../Dataset.js").Cell,number, number,object):import("../Style.js").Shape} */
@@ -43,20 +39,20 @@ export class ShapeColorSizeStyle extends Style {
         const z = geoCanvas.view.z
 
         //get view scale
-        const vs = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         const r2 = resolution * 0.5
         for (let c of cells) {
             //color
-            let col = this.color ? this.color(c, resolution, z, vs) : "black"
+            let col = this.color ? this.color(c, resolution, z, viewScale) : "black"
             if (!col || col === 'none') continue
 
             //size
-            const size = this.size ? this.size(c, resolution, z, vs) : resolution
+            const size = this.size ? this.size(c, resolution, z, viewScale) : resolution
             if (!size) continue
 
             //shape
-            const shape = this.shape ? this.shape(c, resolution, z, vs) : 'square'
+            const shape = this.shape ? this.shape(c, resolution, z, viewScale) : 'square'
             if (shape === 'none') continue
 
             //get offset
@@ -96,6 +92,6 @@ export class ShapeColorSizeStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: z, viewScale: vs })
+        this.updateLegends({ style: this, r: resolution, zf: z, viewScale: viewScale })
     }
 }

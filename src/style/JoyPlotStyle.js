@@ -13,10 +13,6 @@ export class JoyPlotStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** A function returning the view scale.
-         * @type {function(Array.<import('../Dataset.js').Cell>,number, number):object} */
-        this.viewScale = opts.viewScale
-
         /** A function returning the height of a cell in geographical unit.
          * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
         this.height = opts.height || ((c, r) => r * Math.random()) //(c,r,z,vs) => {}
@@ -42,7 +38,7 @@ export class JoyPlotStyle extends Style {
         const z = geoCanvas.view.z
 
         //get view scale
-        const vs = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         //index cells by y and x
         /**  @type {object} */
@@ -53,7 +49,7 @@ export class JoyPlotStyle extends Style {
                 row = {}
                 ind[cell.y] = row
             }
-            row[cell.x] = this.height(cell, resolution, z, vs)
+            row[cell.x] = this.height(cell, resolution, z, viewScale)
         }
 
         //compute extent

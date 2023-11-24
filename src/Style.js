@@ -6,6 +6,10 @@
  * @typedef {{min:number,max:number}} Stat */
 
 /** @typedef {"square"|"circle"|"diamond"|"donut"|"none"} Shape */
+/**
+ * viewScale type
+ * Returns an object from a list of cells, 
+ * @typedef {function(Array.<import('./Dataset.js').Cell>,number, number):object} ViewScale */
 
 /**
  * A style, to show a grid dataset.
@@ -15,7 +19,7 @@
 export class Style {
     /**
      * @abstract
-     * @param {{filter?:function(import('./Dataset').Cell):boolean,offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},visible?:boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,minZoom?:number,maxZoom?:number,drawFun?:function}} opts
+     * @param {{filter?:function(import('./Dataset').Cell):boolean,offset?:function(import('./Dataset').Cell,number,number):{dx:number,dy:number},visible?:boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,minZoom?:number,maxZoom?:number,drawFun?:function,viewScale?:ViewScale}} opts
      */
     constructor(opts) {
         opts = opts || {}
@@ -23,10 +27,6 @@ export class Style {
         /** An attribute to specify if a style should be drawn or not
          * @type {boolean} */
         this.visible = opts.visible === false ? false : true
-
-        /** A function returning the view scale.
-         * @type {function(Array.<import('./Dataset.js').Cell>,number, number):object} */
-        this.viewScale = opts.viewScale
 
         /** A filter function to apply to the cell list, to filter out some cells not to be drawn (such as for example the cells with value=0).
          * @protected

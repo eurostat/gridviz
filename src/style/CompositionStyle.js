@@ -67,7 +67,7 @@ export class CompositionStyle extends Style {
         const z = geoCanvas.view.z
 
         //get view scale
-        const vs = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         //nb categories - used for radar and agepyramid
         const nbCat = Object.entries(this.color).length
@@ -76,21 +76,21 @@ export class CompositionStyle extends Style {
         for (let cell of cells) {
 
             //size
-            const sG = this.size ? this.size(cell, resolution, z, vs) : resolution
+            const sG = this.size ? this.size(cell, resolution, z, viewScale) : resolution
             if (!sG) continue
 
             //get offset
             const offset = this.offset(cell, resolution, z)
 
             //get symbol type
-            const type_ = this.type ? this.type(cell, resolution, z, vs) : 'flag'
+            const type_ = this.type ? this.type(cell, resolution, z, viewScale) : 'flag'
 
             //compute center position
             const xc = cell.x + offset.dx + (type_ === 'agepyramid' ? 0 : resolution * 0.5)
             const yc = cell.y + offset.dy + (type_ === 'agepyramid' ? 0 : resolution * 0.5)
 
             //compute offset angle, when relevant
-            const offAng = this.offsetAngle ? (this.offsetAngle(cell, resolution, z, vs) * Math.PI) / 180 : 0
+            const offAng = this.offsetAngle ? (this.offsetAngle(cell, resolution, z, viewScale) * Math.PI) / 180 : 0
 
             if (type_ === 'agepyramid' || type_ === 'radar' || type_ === 'halftone') {
                 //get cell category max value
@@ -103,13 +103,13 @@ export class CompositionStyle extends Style {
                 //cumul
                 let cumul = 0
                 if (type_ === 'agepyramid' && this.agePyramidHeight)
-                    cumul = (resolution - this.agePyramidHeight(cell, resolution, z, vs)) / 2
+                    cumul = (resolution - this.agePyramidHeight(cell, resolution, z, viewScale)) / 2
                 if (type_ === 'radar' || type_ === 'halftone') cumul = Math.PI / 2 + offAng
 
                 //compute the increment, which is the value to increment the cumul for each category
                 const incr =
                     type_ === 'agepyramid'
-                        ? (this.agePyramidHeight ? this.agePyramidHeight(cell, resolution, z, vs) : resolution) / nbCat
+                        ? (this.agePyramidHeight ? this.agePyramidHeight(cell, resolution, z, viewScale) : resolution) / nbCat
                         : type_ === 'radar' || type_ === 'halftone'
                             ? (2 * Math.PI) / nbCat
                             : undefined
@@ -194,7 +194,7 @@ export class CompositionStyle extends Style {
                 //draw decomposition symbol
                 let cumul = 0
                 const d = resolution * (1 - sG / resolution) * 0.5
-                const ori = this.stripesOrientation(cell, resolution, z, vs)
+                const ori = this.stripesOrientation(cell, resolution, z, viewScale)
 
                 for (let [column, color] of Object.entries(this.color)) {
                     //get share
@@ -281,6 +281,6 @@ export class CompositionStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, zf: z, viewScale: vs })
+        this.updateLegends({ style: this, r: resolution, zf: z, viewScale: viewScale })
     }
 }
