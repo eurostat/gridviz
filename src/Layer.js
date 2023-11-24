@@ -39,6 +39,8 @@ export class Layer {
          * @type {GlobalCompositeOperation} */
         this.blendOperation = opts.blendOperation || (z => "source-over")
 
+        /** @type {function(number):string} */
+        this.filterColor = opts.filterColor // (z) => "#eee7"
     }
 
     /**
@@ -51,6 +53,20 @@ export class Layer {
      */
     draw(geoCanvas, legend = undefined) {
         throw new Error('Method draw not implemented.')
+    }
+
+    /**
+     * Draw layer filter.
+     * 
+     * @param {import("./GeoCanvas").GeoCanvas} geoCanvas The canvas where to draw the layer.
+     * @returns {void}
+     * @abstract
+     */
+    drawFilter(geoCanvas) {
+        const fc = this.filterColor(geoCanvas.view.z)
+        if (!fc || fc == 'none') return
+        geoCanvas.ctx.fillStyle = fc
+        geoCanvas.ctx.fillRect(0, 0, geoCanvas.w, geoCanvas.h)
     }
 
 }

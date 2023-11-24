@@ -1,9 +1,7 @@
 v3: focus on (main) API changes.
 
-canvas -> geocanvas
-pixNb -> something better? At layer level? zoomResolutionJump ?
-Enveloppe
 filterColor: move to layer level ?
+pixNb -> something better? At layer level? zoomResolutionJump ?
 make everything in opts ?
 see legend update on layer style change
 move viewScale things at style level ?
@@ -16,6 +14,8 @@ merge geocanvas and map (?)
 
 
 Done:
+Enveloppe
+canvas -> geocanvas
 layers grouping: one layers stack par map. no more - showBgLayers showLabels showBoundaries
 removal of map.addLayer
 zoom factor -> zoom

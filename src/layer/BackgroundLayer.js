@@ -40,9 +40,6 @@ export class BackgroundLayer extends Layer {
         this.origin = opts.origin || [0, 0]
         /** @type {number} */
         this.z0 = opts.z0 || 0
-
-        /** @type {function(number):string} */
-        this.filterColor = opts.filterColor // (z) => "#eee7"
     }
 
     /**
@@ -156,13 +153,5 @@ export class BackgroundLayer extends Layer {
             }
         }
 
-        //apply filter
-        if (this.filterColor) {
-            const fc = this.filterColor(z)
-            if (fc && fc != 'none') {
-                geoCanvas.ctx.fillStyle = fc
-                geoCanvas.ctx.fillRect(0, 0, geoCanvas.w, geoCanvas.h)
-            }
-        }
     }
 }

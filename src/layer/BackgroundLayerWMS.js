@@ -21,9 +21,6 @@ export class BackgroundLayerWMS extends Layer {
          * @type {string} */
         this.url = opts.url
 
-        /** @type {function(number):string} */
-        this.filterColor = opts.filterColor // (zf) => "#eee7"
-
         /** @type {HTMLImageElement|undefined} */
         this.img = undefined;
 
@@ -106,14 +103,5 @@ export class BackgroundLayerWMS extends Layer {
             this.img.src = urlS
         }
 
-        //apply filter
-        const zf = geoCanvas.view.z
-        if (this.filterColor) {
-            const fc = this.filterColor(zf)
-            if (fc && fc != 'none') {
-                geoCanvas.ctx.fillStyle = fc
-                geoCanvas.ctx.fillRect(0, 0, geoCanvas.w, geoCanvas.h)
-            }
-        }
     }
 }

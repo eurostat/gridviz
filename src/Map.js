@@ -88,6 +88,10 @@ export class Map {
                 //draw layer
                 layer.draw(this.geoCanvas, this.legend)
 
+                //draw layer filter
+                if (layer.filterColor)
+                    layer.drawFilter(this.geoCanvas)
+
                 //restore default alpha and blend operation
                 this.geoCanvas.ctx.globalAlpha = 1.0
                 this.geoCanvas.ctx.globalCompositeOperation = this.defaultGlobalCompositeOperation
