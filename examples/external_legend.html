@@ -1,51 +1,44 @@
-<!DOCTYPE html>
-<html lang="en" style="height: 100%">
-    <head>
-        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-        <title>Gridviz - example</title>
-    </head>
+<div id="map" style="height: 500px; width: 800px"></div>
+<div id="ext_legend"></div>
 
-    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
-        <div id="viz-container" style="height: 100%; width: 100%"></div>
-        <div id="ext_legend"></div>
+<script src="../dist/gridviz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+<script>
 
-        <script src="../dist/gridviz.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-        <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-        <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
-        <script>
-            let containerDiv = document.getElementById('viz-container')
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000, legendDivId: 'ext_legend' })
 
-            let map = new gridviz.Map(containerDiv, { legendDivId: 'ext_legend' })
-                //set position and zoom
-                .setGeoCenter({ x: 4500000, y: 2900000 })
-                .setZoom(3000)
-                //add CSV layer
-                .addCSVGridLayer(
-                    //data URL
-                    'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv',
-                    //resolution, in CRS unit
-                    5000,
-                    //the styles
-                    [
-                        new gridviz.ShapeColorSizeStyle({
-                            colorCol: 'population',
-                            color: (v, r, s) => d3.interpolateOrRd(gridviz.sPow(v / s.max, 0.25)),
-                            shape: () => 'circle',
-                        }),
-                    ]
-                )
+    //define dataset
+    const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
-            //add legend
-            map.layers[0].styles[0].legends.push(
-                new gridviz.ColorLegend({
-                    title: 'Number of inhabitants',
-                    width: 400,
-                    ticks: 6,
-                    colorRamp: d3.interpolateOrRd,
-                    fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25),
-                })
-            )
-        </script>
-    </body>
-</html>
+    //define color style
+    const style = new gridviz.ShapeColorSizeStyle({
+        color: (c, r, zf, scale) => scale(c.population),
+        viewScale: gridviz.colorContinuousScale({ valueFunction: (c) => +c.population, colorRamp: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
+        //viewScale: gridviz.colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
+        //size
+        //size: (c, r, zf, scale) => scale(+c.T),
+        //shape: () => "circle",
+        //viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.T, stretching: gridviz.logarithmicScale(-8) }),
+        //viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 }),
+        //blendOperation: (zf) => zf < 100 ? "multiply" : "source-over",
+    })
+
+
+    /*/add legend
+    style.legends.push(
+        new gridviz.ColorLegend({
+            title: 'Number of inhabitants',
+            width: 400,
+            ticks: 6,
+            colorRamp: d3.interpolateOrRd,
+            fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25),
+        })
+    )*/
+
+    //add layer to map
+    map.layers = [new gridviz.GridLayer(dataset, [style])]
+
+</script>

@@ -28,9 +28,27 @@ export class Style {
          * @type {boolean} */
         this.visible = opts.visible === false ? false : true
 
+        /** The minimum : Below this level, the layer is not shown.
+         * @type {number}
+         * */
+        this.minZoom = opts.minZoom || 0
+
+        /** The maximum : Above this level, the layer is not shown.
+         * @type {number}
+         * */
+        this.maxZoom = opts.maxZoom || Infinity
+
+        //ensure acceptable values for the zoom limits.
+        if (this.minZoom >= this.maxZoom)
+            throw new Error('Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.')
+
+        /**
+        * @type {ViewScale|undefined} */
+        this.viewScale = opts.viewScale
+
         /** A filter function to apply to the cell list, to filter out some cells not to be drawn (such as for example the cells with value=0).
-         * @protected
-         * @type {function(import('./Dataset').Cell):boolean} */
+        * @protected
+        * @type {function(import('./Dataset').Cell):boolean} */
         this.filter = opts.filter || (() => true)
 
         /** An offset. This is to alter the position of all symbols in a given direction. In geographical unit.
@@ -49,23 +67,9 @@ export class Style {
          * @type {function(number):GlobalCompositeOperation} */
         this.blendOperation = opts.blendOperation || (z => "source-over")
 
-        /** The minimum : Below this level, the layer is not shown.
-         * @type {number}
-         * */
-        this.minZoom = opts.minZoom || 0
-
-        /** The maximum : Above this level, the layer is not shown.
-         * @type {number}
-         * */
-        this.maxZoom = opts.maxZoom || Infinity
-
         /** A draw function for the style.
          * @type {function|undefined} */
         this.drawFun = opts.drawFun
-
-        //ensure acceptable values for the zoom limits.
-        if (this.minZoom >= this.maxZoom)
-            throw new Error('Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.')
 
         /**
          * @public
