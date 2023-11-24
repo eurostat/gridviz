@@ -12,7 +12,7 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            new gviz.Map(containerDiv)
+            new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4000000, y: 2960000 })
                 .setZoom(2000)
                 .addMultiScaleTiledGridLayer(
@@ -22,7 +22,7 @@
                         r +
                         'm/',
                     [
-                        new gviz.DotDensityStyle({
+                        new gridviz.DotDensityStyle({
                             nbCol: 'TOT_P_2021',
                             nb: (v, r, s, zf) => (((10 * r * r) / (zf * zf)) * v) / s.max,
                             dotSize: (r, zf) => 1.2 * zf,

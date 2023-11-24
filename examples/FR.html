@@ -105,7 +105,7 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
     <script>
         let containerDiv = document.getElementById('viz-container')
-        const map = new gviz.Map(containerDiv)
+        const map = new gridviz.Map(containerDiv)
             .setZoomExtent([3, 2000])
             .setViewFromURL()
 
@@ -209,14 +209,14 @@
                 map.addLayer(
                     ds[geo].inc[year],
                     [
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: 'ind',
                             color: d3.interpolateYlOrRd,
                             stretching: { fun: 'expRev', alpha: -7 },
                             blendOperation: (zf) => zf < 20 ? "multiply" : "source-over"
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 15 }),
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.StrokeStyle({ maxZoom: 15 }),
+                        new gridviz.ShapeColorSizeStyle({
                             colorCol: 'imputed',
                             color: (v, r, s) => (+v ? '#666' : ''),
                             shape: () => 'circle',
@@ -236,10 +236,10 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: "Nombre d'individus",
                         colorRamp: d3.interpolateYlOrRd,
-                        fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                        fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
                     })
                 )
             } else if (layCode === 'popAge') {
@@ -248,7 +248,7 @@
                 map.addLayer(
                     ds[geo].ind[year],
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 ind_0_3: col(0 / 80),
                                 ind_4_5: col(2 / 80),
@@ -264,7 +264,7 @@
                             },
                             type: () => 'agepyramid',
                             sizeCol: 'ind',
-                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
+                            size: (v, r, s, zf) => r * gridviz.sPow(v / s.max, 0.1, 0),
                             agePyramidHeight: (c, r) => 0.95 * r,
                         }),
                     ],
@@ -314,7 +314,7 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Age',
                         colCat: [
                             [col(0 / 80), '<= 3'],
@@ -336,7 +336,7 @@
                 map.addLayer(
                     ds[geo].ind[year],
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 ind_0_17: col(0.2),
                                 ind_18_64: col(0.4),
@@ -344,7 +344,7 @@
                             },
                             type: () => 'agepyramid',
                             sizeCol: 'ind',
-                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
+                            size: (v, r, s, zf) => r * gridviz.sPow(v / s.max, 0.1, 0),
                             agePyramidHeight: (c, r) => 0.95 * r,
                         }),
                     ],
@@ -373,7 +373,7 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Age',
                         colCat: [
                             [col(0.2), '<= 17'],
@@ -387,7 +387,7 @@
                 map.addLayer(
                     ds[geo].ind[year],
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             sizeCol: "ind",
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: 'age_ratio',
@@ -412,14 +412,14 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         shape: 'circle',
                         labelUnitText: 'individus',
                         fillColor: '#ccc',
                     })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: 'Equilibre jeunes/âgés',
                         ticks: 2,
                         tickFormat: 'text',
@@ -432,7 +432,7 @@
                 map.addLayer(
                     ds[geo].inc[year],
                     [
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: 'rIncome',
                             color: d3.interpolateSpectral,
                             tFun: (v, r, s) => {
@@ -442,7 +442,7 @@
                             },
                             blendOperation: (zf) => zf < 20 ? "multiply" : "source-over"
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 15 }),
+                        new gridviz.StrokeStyle({ maxZoom: 15 }),
                     ],
                     {
                         minPixelsPerCell: 2,
@@ -455,21 +455,21 @@
                 )
                 //legend
                 //map.layers[0].styles[0].legends.push(
-                //    new gviz.ColorLegend({ title: "Revenu par mois et par 'individu'", colorRamp: d3.interpolateSpectral, fun: (t, r, s) => t })
+                //    new gridviz.ColorLegend({ title: "Revenu par mois et par 'individu'", colorRamp: d3.interpolateSpectral, fun: (t, r, s) => t })
                 //)
             } else if (layCode === 'poverty') {
                 //poverty
                 map.addLayer(
                     ds[geo].men[year],
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             sizeCol: 'men',
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: 'rPoverty',
                             color: (v, r, s) => {
                                 if (!v) return '#bbb'
                                 //return d3.interpolateYlOrRd(Math.pow((v - s.min) / (s.max - s.min), 0.7))
-                                return d3.interpolateYlOrRd(gviz.sPow(v, 0.65))
+                                return d3.interpolateYlOrRd(gridviz.sPow(v, 0.65))
                             },
                             shape: () => 'circle',
                             blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
@@ -491,10 +491,10 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
+                    new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: 'Part des ménages pauvres (%)',
                         colorRamp: d3.interpolateYlOrRd,
                         fun: (t) => 100 * Math.pow(t, 1 / 0.65),
@@ -505,7 +505,7 @@
                 map.addLayer(
                     ds[geo].men[year],
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 men_1ind: '#e31a1c',
                                 men_2_4ind: '#ffff99',
@@ -514,7 +514,7 @@
                             type: () => 'ring',
                             stripesOrientation: () => 90,
                             sizeCol: "men",
-                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.15, 0),
+                            size: (v, r, s, zf) => 1.3 * r * gridviz.sPow(v / s.max, 0.15, 0),
                             //blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                     ],
@@ -538,10 +538,10 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
+                    new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Taille des ménages',
                         colCat: [
                             ['#e31a1c', 'Un seul individu'],
@@ -555,12 +555,12 @@
                 map.addLayer(
                     ds[geo].men[year],
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             sizeCol: "men",
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: 'rMenFmp',
                             color: (v, r, s) =>
-                                v == 0 ? '#ccc' : d3.interpolateYlOrRd(gviz.sPow(v, 0.4)),
+                                v == 0 ? '#ccc' : d3.interpolateYlOrRd(gridviz.sPow(v, 0.4)),
                             shape: () => 'circle',
                             blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
@@ -583,10 +583,10 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
+                    new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: 'Part des ménages monoparentaux (%)',
                         colorRamp: d3.interpolateYlOrRd,
                         fun: (t) => 100 * Math.pow(t, 1 / 0.4),
@@ -597,11 +597,11 @@
                 map.addLayer(
                     ds[geo].men[year],
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             sizeCol: "men",
-                            size: (v, r, s) => 1.4 * r * gviz.sPow(v / s.max, 0.2),
+                            size: (v, r, s) => 1.4 * r * gridviz.sPow(v / s.max, 0.2),
                             colorCol: 'rMen_prop',
-                            color: (v) => d3.interpolatePuBuGn(1 - gviz.sPow(1 - v, 0.6)),
+                            color: (v) => d3.interpolatePuBuGn(1 - gridviz.sPow(1 - v, 0.6)),
                             shape: () => 'circle',
                             blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
@@ -624,10 +624,10 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
+                    new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'ménages', fillColor: '#ccc' })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: 'Part des ménages propriétaires (%)',
                         colorRamp: d3.interpolatePuBuGn,
                         fun: (t) => 100 * (1 - Math.pow(1 - t, 1 / 0.6)),
@@ -638,13 +638,13 @@
                 map.addLayer(
                     ds[geo].men[year],
                     [
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: 'rMenSurf',
                             color: d3.interpolateSpectral,
                             tFun: (v, r, s) => 1 - (v - s.min) / (s.max - s.min),
                             blendOperation: (zf) => zf < 20 ? "multiply" : "source-over"
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 15 }),
+                        new gridviz.StrokeStyle({ maxZoom: 15 }),
                     ],
                     {
                         minPixelsPerCell: 2,
@@ -661,7 +661,7 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: 'Surface moyenne des logements de ménages (m²)',
                         colorRamp: d3.interpolateSpectral,
                         fun: (t, r, s) => s.min + (1 - t) * (s.max - s.min),
@@ -672,7 +672,7 @@
                 map.addLayer(
                     ds[geo].men[year],
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 men_coll: 'green',
                                 men_mais: 'orange',
@@ -680,7 +680,7 @@
                             type: () => 'flag',
                             stripesOrientation: () => 90,
                             sizeCol: "men",
-                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.15, 0),
+                            size: (v, r, s, zf) => r * gridviz.sPow(v / s.max, 0.15, 0),
                             blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                     ],
@@ -701,10 +701,10 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({ shape: 'square', labelUnitText: 'ménages', fillColor: '#ccc' })
+                    new gridviz.SizeLegend({ shape: 'square', labelUnitText: 'ménages', fillColor: '#ccc' })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Type de logement',
                         colCat: [
                             ['green', 'Logement collectif'],
@@ -718,7 +718,7 @@
                 map.addLayer(
                     ds[geo].log[year],
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 log_av45: col(0 / 3),
                                 log_45_70: col(1 / 3),
@@ -729,7 +729,7 @@
                             type: () => 'flag',
                             //stripesOrientation: () => 90,
                             sizeCol: "log",
-                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
+                            size: (v, r, s, zf) => r * gridviz.sPow(v / s.max, 0.1, 0),
                             blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                     ],
@@ -762,14 +762,14 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         shape: 'square',
                         labelUnitText: 'logements',
                         fillColor: '#ccc',
                     })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Année de construction',
                         colCat: [
                             [col(0 / 3), 'avant 1945'],
@@ -785,14 +785,14 @@
                 map.addLayer(
                     ds[geo].log[year],
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 log_nsoc: '#ccc',
                                 log_soc: '#33a02c',
                             },
                             type: () => 'ring',
                             sizeCol: "log",
-                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.15, 0),
+                            size: (v, r, s, zf) => 1.3 * r * gridviz.sPow(v / s.max, 0.15, 0),
                             blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                     ],
@@ -817,14 +817,14 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         shape: 'circle',
                         labelUnitText: 'logements',
                         fillColor: '#fff',
                     })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Logement social',
                         colCat: [
                             ['#33a02c', 'logements sociaux'],
@@ -837,14 +837,14 @@
                 map.addLayer(
                     ds[geo].log[year],
                     [
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: 'rLogSoc',
                             color: d3.interpolatePuBuGn,
                             tFun: (v, r, s) => (+v == 0 ? null : v),
                             //if (!v) return "#ccc"
                             blendOperation: (zf) => zf < 20 ? "multiply" : "source-over"
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 15 }),
+                        new gridviz.StrokeStyle({ maxZoom: 15 }),
                     ],
                     {
                         minPixelsPerCell: 2,
@@ -858,7 +858,7 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: 'Part des logements sociaux (%)',
                         colorRamp: d3.interpolatePuBuGn,
                         fun: (t, r, s) => 100 * t,
@@ -966,13 +966,13 @@
         })
 
         //select layer from URL
-        let ls = gviz.getParameterByName('lay')
+        let ls = gridviz.getParameterByName('lay')
         if (ls) {
             const b = document.querySelector('#' + ls)
             if (b) b.checked = true
         }
         //select geo from URL
-        ls = gviz.getParameterByName('geo')
+        ls = gridviz.getParameterByName('geo')
         if (ls) document.querySelector('#geo').value = ls
 
         //initialise

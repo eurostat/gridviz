@@ -84,7 +84,7 @@
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
         <script>
             let containerDiv = document.getElementById('viz-container')
-            const map = new gviz.Map(containerDiv)
+            const map = new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4806935, y: 2446234 })
                 .setZoom(400.1)
                 .setZoomExtent([20, 2000])
@@ -240,18 +240,18 @@
 
                 const col = d3.interpolateSpectral
                 const col2 = d3.schemeCategory10
-                const sStroke = new gviz.StrokeStyle({ maxZoom: 100 })
+                const sStroke = new gridviz.StrokeStyle({ maxZoom: 100 })
 
                 if (layCode === 'pop') {
                     map.addLayer(
                         ds.pop,
                         [
-                            new gviz.SquareColorWGLStyle({
+                            new gridviz.SquareColorWGLStyle({
                                 colorCol: 'TOTAL',
                                 color: d3.interpolateOrRd,
                                 stretching: { fun: 'expRev', alpha: -7 },
                             }),
-                            new gviz.SideStyle({
+                            new gridviz.SideStyle({
                                 valueCol: 'TOTAL',
                                 value: (v1, v2) => {
                                     return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0)
@@ -267,7 +267,7 @@
                                         (0.02 +
                                             0.2 *
                                                 (side.or === 'v' ? 0.6 : 1) *
-                                                gviz.sPow(Math.abs(side.value) / max, 0.5))
+                                                gridviz.sPow(Math.abs(side.value) / max, 0.5))
                                     )
                                 },
                             }),
@@ -279,27 +279,27 @@
                     )
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorLegend({
+                        new gridviz.ColorLegend({
                             title: 'Number of inhabitants',
                             ticks: 5,
                             colorRamp: d3.interpolateOrRd,
-                            fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                            fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
                         })
                     )
                 } else if (layCode === 'popSex') {
                     map.addLayer(
                         ds.pop,
                         [
-                            new gviz.ShapeColorSizeStyle({
+                            new gridviz.ShapeColorSizeStyle({
                                 colorCol: 'DIFF_MEN_WOMEN',
                                 color: (v, r, s) => {
                                     const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                    const t = (Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
+                                    const t = (Math.sign(v) * gridviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
                                     return d3.interpolateSpectral(1 - t)
                                 },
                                 shape: () => 'circle',
                                 sizeCol: 'TOTAL',
-                                size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.2),
+                                size: (v, r, s, zf) => 1.3 * r * gridviz.sPow(v / s.max, 0.2),
                             }),
                         ],
                         {
@@ -322,10 +322,10 @@
                     )
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
+                        new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
                     )
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorLegend({
+                        new gridviz.ColorLegend({
                             title: 'Men / women difference (%)',
                             ticks: 7,
                             tickFormat: '.1f',
@@ -333,7 +333,7 @@
                             invert: true,
                             fun: (t, r, s) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
+                                return (t < 0.5 ? -1 : 1) * max * gridviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
                             },
                         })
                     )
@@ -341,7 +341,7 @@
                     map.addLayer(
                         ds.pop,
                         [
-                            new gviz.CompositionStyle({
+                            new gridviz.CompositionStyle({
                                 color: {
                                     TOTAL_0_14: col(0.2),
                                     TOTAL_15_64: col(0.4),
@@ -349,7 +349,7 @@
                                 },
                                 type: () => 'agepyramid',
                                 sizeCol: 'TOTAL',
-                                size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
+                                size: (v, r, s, zf) => r * gridviz.sPow(v / s.max, 0.1, 0),
                                 agePyramidHeight: (c, r) => 0.95 * r,
                             }),
                         ],
@@ -374,7 +374,7 @@
                     )
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorCategoryLegend({
+                        new gridviz.ColorCategoryLegend({
                             title: 'Age group',
                             colCat: [
                                 [col(0.2), '<= 14'],
@@ -387,7 +387,7 @@
                     map.addLayer(
                         ds.pop,
                         [
-                            new gviz.CompositionStyle({
+                            new gridviz.CompositionStyle({
                                 color: {
                                     OTHER_EDUC: 'gray',
                                     TERTIARY_EDUCATION: col(0.9),
@@ -396,7 +396,7 @@
                                 },
                                 type: () => 'ring',
                                 sizeCol: 'TOTAL',
-                                size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
+                                size: (v, r, s, zf) => r * gridviz.sPow(v / s.max, 0.1, 0),
                                 agePyramidHeight: (c, r) => 0.95 * r,
                             }),
                         ],
@@ -424,10 +424,10 @@
                     )
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
+                        new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
                     )
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorCategoryLegend({
+                        new gridviz.ColorCategoryLegend({
                             title: 'Education level',
                             colCat: [
                                 [col(0.2), 'basic or less'],
@@ -441,7 +441,7 @@
                     map.addLayer(
                         ds.pop,
                         [
-                            new gviz.CompositionStyle({
+                            new gridviz.CompositionStyle({
                                 color: {
                                     OTHER_LABOR: 'gray',
                                     LABOUR_FORCE: col(0.2),
@@ -449,7 +449,7 @@
                                 },
                                 type: () => 'flag',
                                 sizeCol: 'TOTAL',
-                                size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.1, 0),
+                                size: (v, r, s, zf) => r * gridviz.sPow(v / s.max, 0.1, 0),
                                 stripesOrientation: () => 90,
                             }),
                         ],
@@ -474,10 +474,10 @@
                     )
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({ shape: 'square', labelUnitText: 'inhab.', fillColor: '#ccc' })
+                        new gridviz.SizeLegend({ shape: 'square', labelUnitText: 'inhab.', fillColor: '#ccc' })
                     )
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorCategoryLegend({
+                        new gridviz.ColorCategoryLegend({
                             title: 'Labor status',
                             colCat: [
                                 [col(0.9), 'labour force'],
@@ -490,7 +490,7 @@
                     map.addLayer(
                         ds.pop,
                         [
-                            new gviz.SquareColorWGLStyle({
+                            new gridviz.SquareColorWGLStyle({
                                 colorCol: 'INACT_RATE',
                                 color: d3.interpolateOrRd,
                             }),
@@ -512,7 +512,7 @@
                     )
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorLegend({
+                        new gridviz.ColorLegend({
                             title: 'Inactivity rate (%)',
                             ticks: 6,
                             colorRamp: d3.interpolateOrRd,
@@ -523,7 +523,7 @@
                     map.addLayer(
                         ds.bus,
                         [
-                            new gviz.CompositionStyle({
+                            new gridviz.CompositionStyle({
                                 color: {
                                     s1: '#1b9e77',
                                     s2: '#d95f02',
@@ -531,7 +531,7 @@
                                 },
                                 type: () => 'piechart',
                                 sizeCol: 'TOTAL',
-                                size: (v, r, s, zf) => 1.25 * r * gviz.sPow(v / s.max, 0.1),
+                                size: (v, r, s, zf) => 1.25 * r * gridviz.sPow(v / s.max, 0.1),
                             }),
                         ],
                         {
@@ -555,14 +555,14 @@
                     )
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({
+                        new gridviz.SizeLegend({
                             shape: 'circle',
                             labelUnitText: 'businesses',
                             fillColor: '#ccc',
                         })
                     )
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorCategoryLegend({
+                        new gridviz.ColorCategoryLegend({
                             title: 'Sector',
                             colCat: [
                                 ['#1b9e77', 'Primary'],
@@ -575,7 +575,7 @@
                     map.addLayer(
                         ds.tou,
                         [
-                            new gviz.SquareColorWGLStyle({
+                            new gridviz.SquareColorWGLStyle({
                                 colorCol: 'ESTABLISHMENTS - TOTAL',
                                 color: d3.interpolateOrRd,
                                 stretching: { fun: 'pow', alpha: 0.2 },
@@ -592,18 +592,18 @@
                     )
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorLegend({
+                        new gridviz.ColorLegend({
                             title: 'Tourism - number of establishments',
                             ticks: 5,
                             colorRamp: d3.interpolateOrRd,
-                            fun: (t, r, s) => s.max * gviz.sPowInverse(t, 0.2),
+                            fun: (t, r, s) => s.max * gridviz.sPowInverse(t, 0.2),
                         })
                     )
                 } else if (layCode === 'tourAccUnits') {
                     map.addLayer(
                         ds.tou,
                         [
-                            new gviz.SquareColorWGLStyle({
+                            new gridviz.SquareColorWGLStyle({
                                 colorCol: 'ACCOMMODATION UNITS (ROOMS APARTMENTS CAMPING SITES) - TOTAL',
                                 color: d3.interpolateOrRd,
                                 stretching: { fun: 'pow', alpha: 0.2 },
@@ -620,18 +620,18 @@
                     )
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorLegend({
+                        new gridviz.ColorLegend({
                             title: 'Tourism - number of units',
                             ticks: 5,
                             colorRamp: d3.interpolateOrRd,
-                            fun: (t, r, s) => s.max * gviz.sPowInverse(t, 0.2),
+                            fun: (t, r, s) => s.max * gridviz.sPowInverse(t, 0.2),
                         })
                     )
                 } else if (layCode === 'tourAccBeds') {
                     map.addLayer(
                         ds.tou,
                         [
-                            new gviz.SquareColorWGLStyle({
+                            new gridviz.SquareColorWGLStyle({
                                 colorCol: 'NUMBER OF PERMANENT BEDS',
                                 color: d3.interpolateOrRd,
                                 stretching: { fun: 'pow', alpha: 0.2 },
@@ -648,18 +648,18 @@
                     )
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorLegend({
+                        new gridviz.ColorLegend({
                             title: 'Tourism - number of beds',
                             ticks: 5,
                             colorRamp: d3.interpolateOrRd,
-                            fun: (t, r, s) => s.max * gviz.sPowInverse(t, 0.2),
+                            fun: (t, r, s) => s.max * gridviz.sPowInverse(t, 0.2),
                         })
                     )
                 } else if (layCode === 'tourOriginArr') {
                     map.addLayer(
                         ds.tou,
                         [
-                            new gviz.CompositionStyle({
+                            new gridviz.CompositionStyle({
                                 color: {
                                     'A_DOMESTIC TOURISTS - TOTAL': col2[0],
                                     'A_AUSTRIAN TOURISTS': col2[1],
@@ -670,7 +670,7 @@
                                 },
                                 type: () => 'piechart',
                                 sizeCol: 'TOTAL ARRIVALS',
-                                size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.1),
+                                size: (v, r, s, zf) => 1.2 * r * gridviz.sPow(v / s.max, 0.1),
                             }),
                         ],
                         {
@@ -698,10 +698,10 @@
                     )
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'arrivals', fillColor: '#ccc' })
+                        new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'arrivals', fillColor: '#ccc' })
                     )
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorCategoryLegend({
+                        new gridviz.ColorCategoryLegend({
                             title: 'Tourist origin',
                             colCat: [
                                 [col2[0], 'Croatian'],
@@ -717,7 +717,7 @@
                     map.addLayer(
                         ds.tou,
                         [
-                            new gviz.CompositionStyle({
+                            new gridviz.CompositionStyle({
                                 color: {
                                     'N_DOMESTIC TOURISTS - TOTAL': col2[0],
                                     'N_AUSTRIAN TOURISTS': col2[1],
@@ -728,7 +728,7 @@
                                 },
                                 type: () => 'piechart',
                                 sizeCol: 'TOTAL NIGHTS',
-                                size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.1),
+                                size: (v, r, s, zf) => 1.2 * r * gridviz.sPow(v / s.max, 0.1),
                             }),
                         ],
                         {
@@ -756,10 +756,10 @@
                     )
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'nights', fillColor: '#ccc' })
+                        new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'nights', fillColor: '#ccc' })
                     )
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorCategoryLegend({
+                        new gridviz.ColorCategoryLegend({
                             title: 'Tourist origin',
                             colCat: [
                                 [col2[0], 'Croatian'],
@@ -796,7 +796,7 @@
             })
 
             //select layer from URL
-            const ls = gviz.getParameterByName('lay')
+            const ls = gridviz.getParameterByName('lay')
             if (ls) {
                 const b = document.querySelector('#' + ls)
                 if (b) b.checked = true

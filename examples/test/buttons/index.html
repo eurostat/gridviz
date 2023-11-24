@@ -12,7 +12,7 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            new gviz.Map(containerDiv, {transparentBackground:true})
+            new gridviz.Map(containerDiv, {transparentBackground:true})
                 .addZoomButtons()
                 .addFullscreenButton()
                 //set position and zoom
@@ -26,9 +26,9 @@
                     5000,
                     //the styles
                     [
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: 'population',
-                            tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15),
+                            tFun: (value) => gridviz.sExp(Math.min(value / 100000, 1), -15),
                         }),
                     ]
                 )

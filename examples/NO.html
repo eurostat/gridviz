@@ -92,7 +92,7 @@
 
         //define map
         let containerDiv = document.getElementById('viz-container')
-        const map = new gviz.Map(containerDiv)
+        const map = new gridviz.Map(containerDiv)
             .setGeoCenter({ x: 2179500, y: 6783250 })
             .setZoom(500)
             .setLabelLayer(gviz_es.getEuronymeLabelLayer('NO', '20', { proj: proj }))
@@ -169,7 +169,7 @@
                     ds["pop" + y],
                     [
                         //define style
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: 'p',
                             color: d3.interpolateYlOrRd,
                             stretching: { fun: 'expRev', alpha: -7 },
@@ -178,7 +178,7 @@
                             //blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                         //show stroke for low resolutions
-                        new gviz.StrokeStyle({ maxZoom: 7 }),
+                        new gridviz.StrokeStyle({ maxZoom: 7 }),
                     ],
                     {
                         minPixelsPerCell: 1.5,
@@ -187,10 +187,10 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: "Population",
                         colorRamp: d3.interpolateYlOrRd,
-                        fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                        fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
                     })
                 )
 
@@ -216,11 +216,11 @@
                             sigma: (r, zf) => (r * +sig) / 10,
                             factor: 2,
                             styles: [
-                                new gviz.SquareColorWGLStyle({
+                                new gridviz.SquareColorWGLStyle({
                                     colorCol: 'ksmval',
                                     color: colR,
                                     tFun: (v, r, s) => {
-                                        const v_ = gviz.sExpRev(v / s.max, -10)
+                                        const v_ = gridviz.sExpRev(v / s.max, -10)
                                         const cl = Math.floor(nb * v_) / nb
                                         return cl
                                     },
@@ -239,7 +239,7 @@
 
                 //legend
                 map.layers[0].styles[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: 'Population',
                         colorRamp: (t) => colR(Math.floor(t * nb) / nb),
                         width: 200,
@@ -257,16 +257,16 @@
                 map.addLayer(
                     ds["popf" + y],
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             colorCol: 'Isex',
                             color: (v, r, s) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                const t = (Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
+                                const t = (Math.sign(v) * gridviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
                                 return d3.interpolateSpectral(1 - t)
                             },
                             shape: () => 'circle',
                             sizeCol: 'p',
-                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.2),
+                            size: (v, r, s, zf) => 1.3 * r * gridviz.sPow(v / s.max, 0.2),
                             blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
                         }),
                     ],
@@ -287,10 +287,10 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
+                    new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: 'Men / women difference',
                         ticks: 3,
                         //ticks: 5,
@@ -301,7 +301,7 @@
                         fun: (t, r, s) => (t == 0 ? 'More women' : t == 0.5 ? 'Balanced' : 'More men'),
                         /*fun: (t, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
+                            return (t < 0.5 ? -1 : 1) * max * gridviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
                         },*/
                     })
                 )
@@ -316,7 +316,7 @@
                 map.addLayer(
                     ds["popf" + y],
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             sizeCol: 'p',
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: 'aa',
@@ -356,11 +356,11 @@
                     ds.popTS,
                     //define style
                     [
-                        new gviz.TimeSeriesStyle({
+                        new gridviz.TimeSeriesStyle({
                             ts: ts,
                             color: () => "black",
                             lineWidthCol: "y2018",
-                            lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.4) * 4) * z },
+                            lineWidth: (v, r, s, z) => { return (1 + gridviz.sPow(v / s.max, 0.4) * 4) * z },
                             //offsetX: (c, r, z) => r / 2,
                             //offsetY: (c, r, z) => r / 2,
                             //width: (c, r, z) => 1.5*r,
@@ -431,7 +431,7 @@
                 )
 
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SegmentWidthLegend({
+                    new gridviz.SegmentWidthLegend({
                         title: "Population (2018)",
                         labelUnitText: 'inhabitants',
                         exaggerationFactor: 0.8,
@@ -466,7 +466,7 @@
         })
 
         //select layer from URL
-        const ls = gviz.getParameterByName('lay')
+        const ls = gridviz.getParameterByName('lay')
         if (ls) {
             const b = document.getElementById(ls)
             if (b) b.checked = true

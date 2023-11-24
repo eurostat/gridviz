@@ -12,7 +12,7 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            new gviz.Map(containerDiv)
+            new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4000000, y: 2960000 })
                 .setZoom(1000)
                 .addMultiScaleTiledGridLayer(
@@ -21,8 +21,8 @@
                         'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
                         r +
                         'm/',
-                    gviz.TanakaStyle.get('TOT_P_2021', {
-                        tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
+                    gridviz.TanakaStyle.get('TOT_P_2021', {
+                        tFun: (v, r, s, zf) => gridviz.sExpRev((v - s.min) / (s.max - s.min), -7),
                     }),
                     {
                         minPixelsPerCell: 6,

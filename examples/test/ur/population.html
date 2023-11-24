@@ -157,7 +157,7 @@
             const boundaryColor = '#888'
 
             let containerDiv = document.getElementById('vizPop')
-            const map = new gviz.Map(containerDiv, { legendDivId: 'legendPop' })
+            const map = new gridviz.Map(containerDiv, { legendDivId: 'legendPop' })
                 .setGeoCenter({ x: 4313947, y: 3100000 })
                 .setZoom(8000)
                 .setZoomExtent([40, 8000])
@@ -274,12 +274,12 @@
                     map.addLayer(
                         popDataset,
                         [
-                            new gviz.SquareColorWGLStyle({
+                            new gridviz.SquareColorWGLStyle({
                                 colorCol: year,
                                 color: d3.interpolateOrRd,
                                 stretching: { fun: 'expRev', alpha: -7 },
                             }),
-                            new gviz.StrokeStyle({
+                            new gridviz.StrokeStyle({
                                 strokeColorCol: year,
                                 strokeColor: (v) => (+v ? '#666' : ''),
                                 maxZoom: 80,
@@ -293,12 +293,12 @@
 
                     //add legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorLegend({
+                        new gridviz.ColorLegend({
                             title: 'Number of inhabitants',
                             width: 400,
                             ticks: 5,
                             colorRamp: d3.interpolateOrRd,
-                            fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                            fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
                         })
                     )
                 } else if (style == 'pillar') {
@@ -306,10 +306,10 @@
                     map.addLayer(
                         popDataset,
                         [
-                            new gviz.PillarStyle({
+                            new gridviz.PillarStyle({
                                 heightCol: year,
-                                //height: (v, r, s, z) => 15 * r * gviz.sPow(v / s.max, 0.7),
-                                height: (v, r, s, z) => 10 * r * gviz.sExpRev(v / s.max, -5),
+                                //height: (v, r, s, z) => 15 * r * gridviz.sPow(v / s.max, 0.7),
+                                height: (v, r, s, z) => 10 * r * gridviz.sExpRev(v / s.max, -5),
                                 color: () => col + 'aa',
                                 simple: true,
                                 viewHeightFactor: 1,
@@ -325,7 +325,7 @@
                     map.addLayer(
                         popDataset,
                         [
-                            new gviz.JoyPlotStyle({
+                            new gridviz.JoyPlotStyle({
                                 heightCol: year,
                                 height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
                                 fillColor: () => col + 'bb',

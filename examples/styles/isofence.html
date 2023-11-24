@@ -33,7 +33,7 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
         const col = d3.interpolateSpectral
-        const map = new gviz.Map(containerDiv)
+        const map = new gridviz.Map(containerDiv)
             .setGeoCenter({ x: 3951000, y: 2255603 })
             .setZoom(10)
             .addMultiScaleTiledGridLayer(
@@ -43,7 +43,7 @@
                     r +
                     'm/',
                 [
-                    new gviz.IsoFenceStyle({
+                    new gridviz.IsoFenceStyle({
                         color: {
                             ind_0_24: col(0.2),
                             ind_25_64: col(0.4),
@@ -51,7 +51,7 @@
                         },
                         angle: 50,
                         heightCol: 'ind',
-                        height: (v, r, s, zf) => r * gviz.sExpRev(v / s.max, -7, 0),
+                        height: (v, r, s, zf) => r * gridviz.sExpRev(v / s.max, -7, 0),
                         //cornerLineWidth: (c, r, zf, a) => 10 * zf,
                         //cornerLineStrokeColor: (c, r, zf, a) => "#00000022",
                         //offset: (c, r, zf) => { return { dx: 0, dy: -r * 0.5 } },
@@ -80,7 +80,7 @@
         //height exageration selection
         document.getElementById('exa').oninput = function () {
             //set orientation
-            map.layers[0].styles[0].height = (v, r, s, zf) => this.value * r * gviz.sExpRev(v / s.max, -7, 0)
+            map.layers[0].styles[0].height = (v, r, s, zf) => this.value * r * gridviz.sExpRev(v / s.max, -7, 0)
             //redraw
             map.cg.redraw()
         }

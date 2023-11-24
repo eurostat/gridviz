@@ -16,7 +16,7 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-        const map = new gviz.Map(containerDiv, {
+        const map = new gridviz.Map(containerDiv, {
             transparentBackground: false,
             tooltip: {
                 yMouseOffset: -5,
@@ -34,9 +34,9 @@
                     r +
                     'm/',
                 [
-                    new gviz.NinjaStarStyle({
+                    new gridviz.NinjaStarStyle({
                         sizeCol: 'ind',
-                        size: (v, r, s, zf) => gviz.sPow(v / s.max, 0.26),
+                        size: (v, r, s, zf) => gridviz.sPow(v / s.max, 0.26),
                         colorCol: 'age_ratio',
                         color: (v, r, s) => d3.interpolateSpectral(1 - v),
                         shape: () => 'p',

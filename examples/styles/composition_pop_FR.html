@@ -67,7 +67,7 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
         let containerDiv = document.getElementById('viz-container')
-        const map = new gviz.Map(containerDiv)
+        const map = new gridviz.Map(containerDiv)
             .setGeoCenter({ x: 3763437, y: 2891045 })
             .setZoom(100)
             .setZoomExtent([5, 1500])
@@ -138,11 +138,11 @@
         }
 
         //style
-        const s = new gviz.CompositionStyle({
+        const s = new gridviz.CompositionStyle({
             color: getColorDict(),
             type: () => 'ring',
             size: (c, r, zf, scale) => scale(+c.ind),
-            viewScale: gviz.sizeQuantileScale({ valueFunction: (c) => +c.ind, classNumber: 9, minSizePix: 8 }),
+            viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.ind, classNumber: 9, minSizePix: 8 }),
             agePyramidHeight: (c, r) => 0.95 * r,
         })
         s.size_ = (c, r, zf) => r - 1.5 * zf
@@ -244,7 +244,7 @@
                 ].reverse()
             return opts
         }
-        s.legends.push(new gviz.ColorCategoryLegend(getLegendOpts()))
+        s.legends.push(new gridviz.ColorCategoryLegend(getLegendOpts()))
 
         const updateStyle = () => {
             const ssel = getStyle()
@@ -275,7 +275,7 @@
             s.color = getColorDict()
 
             //update legend
-            s.legends = [new gviz.ColorCategoryLegend(getLegendOpts())]
+            s.legends = [new gridviz.ColorCategoryLegend(getLegendOpts())]
 
             map.cg.redraw()
         })

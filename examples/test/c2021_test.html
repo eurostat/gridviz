@@ -89,7 +89,7 @@
         */
 
         //build application
-        const map = new gviz.Map(containerDiv)
+        const map = new gridviz.Map(containerDiv)
             .setGeoCenter({ x: 4598000, y: 2715000 })
             .setZoom(700)
             .setLabelLayer(gviz_es.getEuronymeLabelLayer())
@@ -153,18 +153,18 @@
                 map.addLayer(
                     dataset,
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             color: (c, r, zf, scale) => scale(c.T),
-                            viewScale: gviz.colorContinuousScale({ valueFunction: (c) => +c.T, colorRamp: d3.interpolateYlOrRd, stretching: gviz.logarithmicScale(-7) }),
-                            //viewScale: gviz.colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
+                            viewScale: gridviz.colorContinuousScale({ valueFunction: (c) => +c.T, colorRamp: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
+                            //viewScale: gridviz.colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
                             //size
                             //size: (c, r, zf, scale) => scale(+c.T),
                             //shape: () => "circle",
-                            //viewScale: gviz.sizeContinuousScale({ valueFunction: (c) => +c.T, stretching: gviz.logarithmicScale(-8) }),
-                            //viewScale: gviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 }),
+                            //viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.T, stretching: gridviz.logarithmicScale(-8) }),
+                            //viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 }),
                             blendOperation: (zf) => zf < 100 ? "multiply" : "source-over",
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 70 }),
+                        new gridviz.StrokeStyle({ maxZoom: 70 }),
                     ],
                     {
                         minPixelsPerCell: 1.5, //8,
@@ -175,12 +175,12 @@
                 map.addLayer(
                     dataset,
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             color: (c, r, zf, viewScale) => viewScale.color(c.indMF),
                             size: (c, r, zf, viewScale) => viewScale.size(c.T),
-                            viewScale: gviz.viewScaleCombination({
-                                color: gviz.colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
-                                size: gviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 6, minSizePix: 3, maxSizeFactor: 1.1 })
+                            viewScale: gridviz.viewScaleCombination({
+                                color: gridviz.colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
+                                size: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 6, minSizePix: 3, maxSizeFactor: 1.1 })
                             }),
                             shape: () => 'circle',
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
@@ -196,17 +196,17 @@
                 map.addLayer(
                     dataset,
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             color: (c, r, zf, viewScale) => viewScale.color(c.remp),
                             size: (c, r, zf, viewScale) => viewScale.size(c.T),
-                            viewScale: gviz.viewScaleCombination({
-                                color: gviz.colorQuantileScale({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
-                                size: gviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1.1 })
+                            viewScale: gridviz.viewScaleCombination({
+                                color: gridviz.colorQuantileScale({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
+                                size: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1.1 })
                             }),
                             shape: () => 'circle',
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 7 }),
+                        new gridviz.StrokeStyle({ maxZoom: 7 }),
                     ],
                     {
                         minPixelsPerCell: 5,
@@ -219,7 +219,7 @@
                 map.addLayer(
                     dataset,
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 Y_LT15: colAge(0.2),
                                 "Y15-64": colAge(0.4),
@@ -227,8 +227,8 @@
                             },
                             type: () => 'flag',
                             size: (c, r, zf, scale) => scale(+c.T),
-                            viewScale: gviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
-                            //viewScale: gviz.sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
+                            viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
+                            //viewScale: gridviz.sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
                             stripesOrientation: () => 90,
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
                         })
@@ -244,7 +244,7 @@
                 map.addLayer(
                     dataset,
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 SAME: "#fed9a6", //light mostard
                                 CHG_IN: "#7570b3", //blueish
@@ -252,10 +252,10 @@
                             },
                             type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             size: (c, r, zf, scale) => scale(+c.T),
-                            viewScale: gviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
+                            viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 7 }),
+                        new gridviz.StrokeStyle({ maxZoom: 7 }),
                     ],
                     {
                         minPixelsPerCell: 12,
@@ -267,7 +267,7 @@
                 map.addLayer(
                     dataset,
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 NAT: "#fed9a6", //light mostard
                                 EU_OTH: "#7570b3", //blueish
@@ -275,10 +275,10 @@
                             },
                             type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             size: (c, r, zf, scale) => scale(+c.T),
-                            viewScale: gviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
+                            viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over",
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 7 }),
+                        new gridviz.StrokeStyle({ maxZoom: 7 }),
                     ],
                     {
                         minPixelsPerCell: 12,
@@ -315,7 +315,7 @@
         })
 
         //select layer from URL
-        const ls = gviz.getParameterByName('lay')
+        const ls = gridviz.getParameterByName('lay')
         if (ls) {
             const b = document.querySelector('#' + ls)
             if (b) b.checked = true

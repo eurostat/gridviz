@@ -142,7 +142,7 @@
             }
 
             let containerDiv = document.getElementById('vizDegurba')
-            const map = new gviz.Map(containerDiv, { legendDivId: 'legendDegurba' })
+            const map = new gridviz.Map(containerDiv, { legendDivId: 'legendDegurba' })
                 .setGeoCenter({ x: 4313947, y: 3100000 })
                 .setZoom(8000)
                 .setZoomExtent([40, 8000])
@@ -250,10 +250,10 @@
             map.addLayer(
                 ds,
                 [
-                    new gviz.ShapeColorSizeStyle({
+                    new gridviz.ShapeColorSizeStyle({
                         color: () => '#666',
                         sizeCol: 'TOT_P',
-                        size: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, zf) => 0.8 * r * gridviz.sPow(v / s.max, 0.3),
                         shape: () => 'circle',
                     }),
                 ],
@@ -267,21 +267,21 @@
             map.addLayer(
                 ds,
                 [
-                    new gviz.CompositionStyle({
+                    new gridviz.CompositionStyle({
                         color: degurbaColors,
                         type: () => 'flag',
                         //stripesOrientation: () => 0,
                         sizeCol: 'TOT',
-                        size: (v, r, s, z) => 1 * r * gviz.sPow(v / s.max, 0.5) + (z < 500 ? 0.8 * z : 0),
+                        size: (v, r, s, z) => 1 * r * gridviz.sPow(v / s.max, 0.5) + (z < 500 ? 0.8 * z : 0),
                         minZoom: 80,
                     }),
-                    /*new gviz.SquareColorCatWGLStyle({
+                    /*new gridviz.SquareColorCatWGLStyle({
                     colorCol: "c",
                     color: degurbaColors,
                     maxZoom: 400,
                     minZoom: 120,
                 }),*/
-                    new gviz.SideCatStyle({
+                    new gridviz.SideCatStyle({
                         col: 'c',
                         color: degurbaColors,
                         width: (side, r, z) => z * 3,
@@ -341,11 +341,11 @@
 
             //population legend
             map.layers[0].styles[0].legends.push(
-                new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhabitants', fillColor: '#666d' })
+                new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhabitants', fillColor: '#666d' })
             )
 
             //degurba legend
-            const catLeg = new gviz.ColorCategoryLegend({
+            const catLeg = new gridviz.ColorCategoryLegend({
                 title: 'Degree of urbanisation level 2',
                 colCat: [
                     ['#286eb4', 'City'],

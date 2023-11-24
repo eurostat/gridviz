@@ -13,7 +13,7 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-        new gviz.Map(containerDiv)
+        new gridviz.Map(containerDiv)
             .setGeoCenter({ x: 4000000, y: 2960000 })
             .setZoom(2000)
             .addMultiScaleTiledGridLayer(
@@ -23,10 +23,10 @@
                     r +
                     'm/',
                 [
-                    new gviz.NinjaStarStyle({
+                    new gridviz.NinjaStarStyle({
                         color: () => 'purple',
                         sizeCol: 'TOT_P_2021',
-                        size: (v, r, s, zf) => gviz.sPow(v / s.max, 0.2),
+                        size: (v, r, s, zf) => gridviz.sPow(v / s.max, 0.2),
                     }),
                 ],
                 {

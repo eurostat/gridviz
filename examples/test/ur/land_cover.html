@@ -203,7 +203,7 @@
             }
 
             let containerDiv = document.getElementById('vizLC')
-            const map = new gviz.Map(containerDiv, { legendDivId: 'legendLC' })
+            const map = new gridviz.Map(containerDiv, { legendDivId: 'legendLC' })
                 .setGeoCenter({ x: 4313947, y: 3100000 })
                 .setZoom(8000)
                 .setZoomExtent([40, 8000])
@@ -277,12 +277,12 @@
                     [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                     (r) => tiledGridsURL + 'clc/' + r + 'm/',
                     [
-                        new gviz.SquareColorCatWGLStyle({
+                        new gridviz.SquareColorCatWGLStyle({
                             colorCol: 'clc',
                             color: clcColors,
                             minZoom: 100,
                         }),
-                        new gviz.SideCatStyle({
+                        new gridviz.SideCatStyle({
                             col: 'clc',
                             color: clcColors,
                             width: (side, r, z) => z * 3,
@@ -318,7 +318,7 @@
         }
 
         //make legend and link to styles
-        const catLeg = new gviz.ColorCategoryLegend({ title: "Land cover", colCat: legData, shape: "square", })
+        const catLeg = new gridviz.ColorCategoryLegend({ title: "Land cover", colCat: legData, shape: "square", })
         map.layers[0].styles[0].legends.push(catLeg)
         map.layers[0].styles[1].legends.push(catLeg)*/
 

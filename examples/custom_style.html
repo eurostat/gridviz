@@ -14,7 +14,7 @@
         let containerDiv = document.getElementById('viz-container')
 
         //create custom style
-        const customStyle = new gviz.Style({
+        const customStyle = new gridviz.Style({
             //define draw function
             drawFun : (cells, resolution, cg) => {
 
@@ -46,7 +46,7 @@
         })
 
         //make map with custom style
-        new gviz.Map(containerDiv)
+        new gridviz.Map(containerDiv)
             .setGeoCenter({ x: 4000000, y: 2960000 })
             .setZoom(700)
             .addCSVGridLayer(

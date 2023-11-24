@@ -115,7 +115,7 @@
             const bgLayerURL = 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/' //"https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/background/elevation_shading/"
 
             let containerDiv = document.getElementById('vizRTP')
-            const map = new gviz.Map(containerDiv, { legendDivId: 'legendRTP' })
+            const map = new gridviz.Map(containerDiv, { legendDivId: 'legendRTP' })
                 .setGeoCenter({ x: 4313947, y: 3100000 })
                 .setZoom(8000)
                 .setZoomExtent([40, 8000])
@@ -211,13 +211,13 @@
             map.addLayer(
                 ds,
                 [
-                    new gviz.SquareColorWGLStyle({
+                    new gridviz.SquareColorWGLStyle({
                         colorCol: 'rp', // pp ra rp
                         color: d3.interpolateGnBu,
                         tFun: (v, r, s) => Math.min(v, 100) / 100,
                         stretching: { fun: 'expRev', alpha: 2 },
                     }),
-                    new gviz.StrokeStyle({
+                    new gridviz.StrokeStyle({
                         strokeColorCol: 'rp',
                         strokeColor: (v) => (+v ? '#666' : ''),
                         maxZoom: 100,
@@ -233,10 +233,10 @@
             map.addLayer(
                 ds,
                 [
-                    new gviz.ShapeColorSizeStyle({
+                    new gridviz.ShapeColorSizeStyle({
                         color: () => '#666',
                         sizeCol: 'TOT_P',
-                        size: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, zf) => 0.8 * r * gridviz.sPow(v / s.max, 0.3),
                         shape: () => 'circle',
                     }),
                 ],
@@ -252,7 +252,7 @@
 
             //perf legend
             map.layers[0].styles[0].legends.push(
-                new gviz.ColorLegend({
+                new gridviz.ColorLegend({
                     title: 'Road transport performance',
                     width: 200,
                     ticks: 2,
@@ -264,7 +264,7 @@
 
             //population legend
             map.layers[1].styles[0].legends.push(
-                new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhabitants', fillColor: '#666d' })
+                new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhabitants', fillColor: '#666d' })
             )
 
             //zoom

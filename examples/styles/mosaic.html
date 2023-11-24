@@ -15,7 +15,7 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            new gviz.Map(containerDiv)
+            new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4000000, y: 2960000 })
                 .setZoom(1000)
                 .addMultiScaleTiledGridLayer(
@@ -25,9 +25,9 @@
                         r +
                         'm/',
                     [
-                        new gviz.MosaicStyle({
+                        new gridviz.MosaicStyle({
                             colorCol: 'TOT_P_2021',
-                            color: (v, r, s) => d3.interpolateSpectral(1 - gviz.sExp(v / s.max, -50)),
+                            color: (v, r, s) => d3.interpolateSpectral(1 - gridviz.sExp(v / s.max, -50)),
                         }),
                     ],
                     {

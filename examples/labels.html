@@ -4,10 +4,10 @@
 <script>
 
     //define map with initial view
-    const map = new gviz.Map(document.getElementById('map'), { x: 2, y: 46, z: 0.03 })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 2, y: 46, z: 0.03 })
 
     //define label layer
-    const labelLayer = new gviz.LabelLayer({
+    const labelLayer = new gridviz.LabelLayer({
         //input csv file with label data
         url: 'https://raw.githubusercontent.com/eurostat/euronym/main/pub/v2/UTF/50/EUR.csv',
         //set x,y position for each label

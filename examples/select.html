@@ -15,7 +15,7 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            new gviz.Map(containerDiv)
+            new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4500000, y: 2900000 })
                 .setZoom(1000)
                 .addMultiScaleTiledGridLayer(
@@ -25,7 +25,7 @@
                         r +
                         'm/',
                     [
-                        new gviz.SquareColorCatWGLStyle({
+                        new gridviz.SquareColorCatWGLStyle({
                             colorCol: 'clc',
                             color: { 41: 'blue' },
                         }),

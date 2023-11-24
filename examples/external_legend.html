@@ -16,7 +16,7 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            let map = new gviz.Map(containerDiv, { legendDivId: 'ext_legend' })
+            let map = new gridviz.Map(containerDiv, { legendDivId: 'ext_legend' })
                 //set position and zoom
                 .setGeoCenter({ x: 4500000, y: 2900000 })
                 .setZoom(3000)
@@ -28,9 +28,9 @@
                     5000,
                     //the styles
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             colorCol: 'population',
-                            color: (v, r, s) => d3.interpolateOrRd(gviz.sPow(v / s.max, 0.25)),
+                            color: (v, r, s) => d3.interpolateOrRd(gridviz.sPow(v / s.max, 0.25)),
                             shape: () => 'circle',
                         }),
                     ]
@@ -38,7 +38,7 @@
 
             //add legend
             map.layers[0].styles[0].legends.push(
-                new gviz.ColorLegend({
+                new gridviz.ColorLegend({
                     title: 'Number of inhabitants',
                     width: 400,
                     ticks: 6,

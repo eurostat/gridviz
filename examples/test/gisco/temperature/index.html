@@ -71,7 +71,7 @@
             const bgLayerURL = 'https://ec.europa.eu/eurostat/cache/GISCO/mbkg/elevation_shading/'
 
             let containerDiv = document.getElementById('viz-container')
-            const map = new gviz.Map(containerDiv, { legendDivId: 'gridviz-legend' })
+            const map = new gridviz.Map(containerDiv, { legendDivId: 'gridviz-legend' })
                 .setGeoCenter({ x: 4500000, y: 3300000 })
                 .setZoom(6000)
                 .setLabelLayer(
@@ -175,7 +175,7 @@
                 25000,
                 //the style
                 [
-                    new gviz.SquareColorCatWGLStyle({
+                    new gridviz.SquareColorCatWGLStyle({
                         colorCol: 'value',
                         color: {
                             1: colors[0],
@@ -205,7 +205,7 @@
             let colCat = colors.map((color, i) => [color, categories[i]])
 
             map.layers[0].styles[0].legends.push(
-                new gviz.ColorCategoryLegend({
+                new gridviz.ColorCategoryLegend({
                     title: 'Ranking since 1991',
                     colCat: colCat,
                     shape: 'square',

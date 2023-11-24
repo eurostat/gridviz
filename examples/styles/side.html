@@ -12,7 +12,7 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            new gviz.Map(containerDiv)
+            new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4000000, y: 2960000 })
                 .setZoom(2000)
                 .addMultiScaleTiledGridLayer(
@@ -22,7 +22,7 @@
                         r +
                         'm/',
                     [
-                        new gviz.SideStyle({
+                        new gridviz.SideStyle({
                             valueCol: 'TOT_P_2021',
                             value: (v1, v2) => {
                                 return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0)
@@ -38,7 +38,7 @@
                                     (0.01 +
                                         (side.or === 'v' ? 0.6 : 1) *
                                             0.333 *
-                                            gviz.sPow(Math.abs(side.value) / max, 0.3))
+                                            gridviz.sPow(Math.abs(side.value) / max, 0.3))
                                 )
                             },
                             fillColor: (c) => '#e2c9b2',

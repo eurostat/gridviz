@@ -1,5 +1,6 @@
 v3: focus on (main) API changes.
 
+gviz - gridviz
 upgrade examples
 make everything in opts ?
 see legend update on layer style change

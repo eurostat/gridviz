@@ -21,7 +21,7 @@
         <script>
             //map 1
 
-            const map1 = new gviz.Map(document.getElementById('viz1'), { legendDivId: 'legend1' })
+            const map1 = new gridviz.Map(document.getElementById('viz1'), { legendDivId: 'legend1' })
                 .setGeoCenter({ x: 4500000, y: 2900000 })
                 .setZoom(3000)
                 .addMultiScaleTiledGridLayer(
@@ -31,9 +31,9 @@
                         r +
                         'm/',
                     [
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: 'TOT_P_2021',
-                            tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
+                            tFun: (value, resolution, stats) => gridviz.sExp(value / stats.max, -50),
                         }),
                     ],
                     {
@@ -43,11 +43,11 @@
 
             //legend
             map1.layers[0].styles[0].legends.push(
-                new gviz.ColorLegend({
+                new gridviz.ColorLegend({
                     title: 'Number of inhabitants',
                     ticks: 5,
                     colorRamp: d3.interpolateOrRd,
-                    fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, 7),
+                    fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, 7),
                 })
             )
 
@@ -64,7 +64,7 @@
                 NA: 'gray',
             }
 
-            new gviz.Map(document.getElementById('viz2'))
+            new gridviz.Map(document.getElementById('viz2'))
                 .setGeoCenter({ x: 4000000, y: 2960000 })
                 .setZoom(600)
                 .setZoomExtent([40, 7500])
@@ -77,15 +77,15 @@
                         r +
                         'm/',
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: degurbaColors,
                             type: () => 'flag',
                             //stripesOrientation: () => 0,
                             sizeCol: 'TOT',
-                            size: (v, r, s, z) => 1 * r * gviz.sPow(v / s.max, 0.5),
+                            size: (v, r, s, z) => 1 * r * gridviz.sPow(v / s.max, 0.5),
                             minZoom: 120,
                         }),
-                        new gviz.SideCatStyle({
+                        new gridviz.SideCatStyle({
                             col: 'c',
                             color: degurbaColors,
                             width: (side, r, z) => z * 3,

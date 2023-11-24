@@ -92,7 +92,7 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-        const map = new gviz.Map(containerDiv)
+        const map = new gridviz.Map(containerDiv)
             .setGeoCenter({ x: 4301000, y: 3050000 })
             .setZoom(400)
             .setLabelLayer(gviz_es.getEuronymeLabelLayer('DE', '20'))
@@ -227,7 +227,7 @@
                 map.addLayer(
                     ds.INSGESAMT,
                     [
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: '0',
                             color: d3.interpolateYlOrRd,
                             stretching: { fun: 'expRev', alpha: -7 },
@@ -235,7 +235,7 @@
                             //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
                             blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
-                        new gviz.StrokeStyle({ maxZoom: 7 }),
+                        new gridviz.StrokeStyle({ maxZoom: 7 }),
                     ],
                     {
                         minPixelsPerCell: 1.5,
@@ -244,10 +244,10 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: "Population",
                         colorRamp: d3.interpolateYlOrRd,
-                        fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                        fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
                     })
                 )
 
@@ -265,12 +265,12 @@
                             sigma: (r, zf) => (r * +sig) / 10,
                             factor: 2,
                             styles: [
-                                new gviz.SquareColorWGLStyle({
+                                new gridviz.SquareColorWGLStyle({
                                     colorCol: 'ksmval',
                                     color: colR,
                                     //stretching: { fun: 'expRev', alpha: -7 },
                                     tFun: (v, r, s) => {
-                                        const v_ = gviz.sExpRev(v / s.max, -10)
+                                        const v_ = gridviz.sExpRev(v / s.max, -10)
                                         const cl = Math.floor(nb * v_) / nb
                                         return cl
                                     },
@@ -289,12 +289,12 @@
 
                 //legend
                 map.layers[0].styles[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: 'Population',
                         colorRamp: (t) => colR(Math.floor(t * nb) / nb),
                         //width: 500,
                         //ticks: 6,
-                        //fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sExpRevInverse(t, -7),
+                        //fun: (t, r, s) => s.min + (s.max - s.min) * gridviz.sExpRevInverse(t, -7),
                         width: 200,
                         ticks: 2,
                         tickFormat: 'text',
@@ -309,16 +309,16 @@
                     //ds.demo,
                     ds.GESCHLECHT,
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             colorCol: 'I',
                             color: (v, r, s) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                const t = (Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
+                                const t = (Math.sign(v) * gridviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
                                 return d3.interpolateSpectral(1 - t)
                             },
                             shape: () => 'circle',
                             sizeCol: 'TOT',
-                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.2),
+                            size: (v, r, s, zf) => 1.3 * r * gridviz.sPow(v / s.max, 0.2),
                             blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
                         }),
                     ],
@@ -339,10 +339,10 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
+                    new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: 'Men / women difference',
                         ticks: 3,
                         //ticks: 5,
@@ -353,7 +353,7 @@
                         fun: (t, r, s) => (t == 0 ? 'More women' : t == 0.5 ? 'Balanced' : 'More men'),
                         /*fun: (t, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
+                            return (t < 0.5 ? -1 : 1) * max * gridviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
                         },*/
                     })
                 )
@@ -371,7 +371,7 @@
                 map.addLayer(
                     ds.FAMSTND_AUSF,
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 S: "#33a02c", //green
                                 M: "#ff7f00", //orange
@@ -381,7 +381,7 @@
                             },
                             type: () => 'segment', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             sizeCol: 'TOT',
-                            size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
+                            size: (v, r, s, zf) => 1 * r * gridviz.sPow(v / s.max, 0.25, 0),
                             stripesOrientation: () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
                             blendOperation: (zf) => zf < 6 ? "multiply" : "source-over"
@@ -408,7 +408,7 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         shape: 'square',
                         labelUnitText: 'people',
                         fillColor: '#ccc',
@@ -416,7 +416,7 @@
                     })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Marital status',
                         shape: "square",
                         colCat: [
@@ -435,7 +435,7 @@
                 map.addLayer(
                     ds.ALTER_KURZ,
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 1: "#984ea3", //col(0.1),
                                 2: "#377eb8", //col(0.3),
@@ -445,7 +445,7 @@
                             },
                             type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             sizeCol: 'TOT',
-                            size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25, 0),
+                            size: (v, r, s, zf) => r * gridviz.sPow(v / s.max, 0.25, 0),
                             stripesOrientation: () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
                             blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
@@ -472,7 +472,7 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         shape: 'square',
                         labelUnitText: 'people',
                         fillColor: '#ccc',
@@ -480,7 +480,7 @@
                     })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Age',
                         shape: "square",
                         colCat: [
@@ -497,7 +497,7 @@
                 map.addLayer(
                     ds.ALTER_KURZ,
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             sizeCol: 'TOT',
                             size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: 'age_ratio',
@@ -521,14 +521,14 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         shape: 'circle',
                         labelUnitText: 'people',
                         fillColor: '#ccc',
                     })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: 'Balance young / old',
                         ticks: 2,
                         tickFormat: 'text',
@@ -551,7 +551,7 @@
                 map.addLayer(
                     ds.GEBURTLAND_GRP,
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 1: "#fed9a6", //light mostard
                                 21: "#7570b3", //blueish
@@ -561,7 +561,7 @@
                             },
                             type: sized ? () => 'halftone' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             sizeCol: 'TOT',
-                            size: sized ? (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
+                            size: sized ? (v, r, s, zf) => 1.3 * r * gridviz.sPow(v / s.max, 0.25, 0) : undefined,
                             stripesOrientation: sized ? undefined : () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
                             blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "source-over"
@@ -589,7 +589,7 @@
                 //legend
                 if (sized)
                     map.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({
+                        new gridviz.SizeLegend({
                             shape: 'circle',
                             labelUnitText: 'people',
                             fillColor: '#ccc',
@@ -597,7 +597,7 @@
                         })
                     )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Birth place',
                         shape: sized ? 'circle' : "square",
                         colCat: [
@@ -619,7 +619,7 @@
                 map.addLayer(
                     ds.STAATSANGE_GRP,
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 1: "#fed9a6", //light mostard
                                 21: "#7570b3", //blueish
@@ -629,7 +629,7 @@
                             },
                             type: sized ? () => 'halftone' : () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             sizeCol: 'TOT',
-                            size: sized ? (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
+                            size: sized ? (v, r, s, zf) => 1.3 * r * gridviz.sPow(v / s.max, 0.25, 0) : undefined,
                             stripesOrientation: sized ? undefined : () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
                             blendOperation: sized ? undefined : (zf) => zf < 6 ? "multiply" : "source-over"
@@ -657,7 +657,7 @@
                 //legend
                 if (sized)
                     map.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({
+                        new gridviz.SizeLegend({
                             shape: 'circle',
                             labelUnitText: 'people',
                             fillColor: '#ccc',
@@ -665,7 +665,7 @@
                         })
                     )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Citizenship',
                         shape: sized ? 'circle' : "square",
                         colCat: [
@@ -689,7 +689,7 @@
                 map.addLayer(
                     ds.RELIGION_KURZ,
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 1: "#7570b3", //blueish
                                 2: "#1b9e77", //greenish,
@@ -697,7 +697,7 @@
                             },
                             type: () => 'segment', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             sizeCol: 'TOT',
-                            size: sized ? (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0) : undefined,
+                            size: sized ? (v, r, s, zf) => 1 * r * gridviz.sPow(v / s.max, 0.25, 0) : undefined,
                             stripesOrientation: () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
                             blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
@@ -719,7 +719,7 @@
                 //legend
                 if (sized)
                     map.layers[0].styles[0].legends.push(
-                        new gviz.SizeLegend({
+                        new gridviz.SizeLegend({
                             shape: 'square',
                             labelUnitText: 'people',
                             fillColor: '#ccc',
@@ -727,7 +727,7 @@
                         })
                     )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Religion',
                         shape: "square",
                         colCat: [
@@ -748,7 +748,7 @@
                 map.addLayer(
                     ds.GEBTYPBAUWEISE,
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 1: "#33a02c", //green Detached house
                                 2: "#1f78b4", //blue Semi-detached houses
@@ -757,7 +757,7 @@
                             },
                             type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             sizeCol: 'TOT',
-                            size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
+                            size: (v, r, s, zf) => 1 * r * gridviz.sPow(v / s.max, 0.25, 0),
                             stripesOrientation: () => 90,
                             blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
                         }),
@@ -780,7 +780,7 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         shape: 'square',
                         labelUnitText: 'habitations',
                         fillColor: '#ccc',
@@ -788,7 +788,7 @@
                     })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Building type',
                         colCat: [
                             ["#33a02c", "Detached house"],
@@ -837,11 +837,11 @@
                 map.addLayer(
                     ds.BAUJAHR_MZ,
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: colsDict,
                             type: () => 'flag', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             sizeCol: 'TOT',
-                            size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.25, 0),
+                            size: (v, r, s, zf) => 1 * r * gridviz.sPow(v / s.max, 0.25, 0),
                             stripesOrientation: () => 90,
                             blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
                         }),
@@ -858,7 +858,7 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         shape: 'square',
                         labelUnitText: 'habitations',
                         fillColor: '#ccc',
@@ -867,7 +867,7 @@
                 )
                 const colCats = []; for (let i = 1; i <= 10; i++) colCats.push([col((i - 1) / 9), labels[i - 1]])
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Construction date',
                         shape: "square",
                         colCat: colCats,//.reverse(),
@@ -886,7 +886,7 @@
                 map.addLayer(
                     ds.HEIZTYP,
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: {
                                 "fernw": "#1f78b4",
                                 "sonst": "rgb(180, 180, 180)",
@@ -895,7 +895,7 @@
                             },
                             type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
                             sizeCol: 'TOT',
-                            size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.25, 0),
+                            size: (v, r, s, zf) => 1.2 * r * gridviz.sPow(v / s.max, 0.25, 0),
                             //stripesOrientation: () => 90,
                             //agePyramidHeight: (c, r) => 0.95 * r,
                             blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
@@ -919,7 +919,7 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         shape: 'circle',
                         labelUnitText: 'habitations',
                         fillColor: '#ccc',
@@ -927,7 +927,7 @@
                     })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         title: 'Heating system',
                         colCat: [
                             ["#33a02c", "Central heating"], //zentral
@@ -968,7 +968,7 @@
         })
 
         //select layer from URL
-        const ls = gviz.getParameterByName('lay')
+        const ls = gridviz.getParameterByName('lay')
         if (ls) {
             const b = document.querySelector('#' + ls)
             if (b) b.checked = true

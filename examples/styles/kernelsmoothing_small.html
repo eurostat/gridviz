@@ -41,7 +41,7 @@
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
         <script>
             let containerDiv = document.getElementById('viz-container')
-            const map = new gviz.Map(containerDiv).setGeoCenter({ x: 0, y: 0 }).setZoom(0.02)
+            const map = new gridviz.Map(containerDiv).setGeoCenter({ x: 0, y: 0 }).setZoom(0.02)
 
             //add layer
             map.addCSVGridLayer(
@@ -55,11 +55,11 @@
                         factor: 30,
                         filterSm: (v) => v > 0.0005,
                         styles: [
-                            new gviz.ShapeColorSizeStyle({
+                            new gridviz.ShapeColorSizeStyle({
                                 colorCol: 'ksmval',
                                 color: (v, r, s) => d3.interpolateSpectral(1 - v / s.max),
                             }),
-                            new gviz.TextStyle({
+                            new gridviz.TextStyle({
                                 textCol: 'ksmval',
                                 text: (v, r, s, z) => Math.floor(1000 * v) / 1000,
                                 color: () => 'black',

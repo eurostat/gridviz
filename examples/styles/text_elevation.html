@@ -15,7 +15,7 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            new gviz.Map(containerDiv)
+            new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4000000, y: 2960000 })
                 .setZoom(200)
                 .setBackgroundColor('black')
@@ -26,7 +26,7 @@
                         r +
                         'm/',
                     [
-                        new gviz.TextStyle({
+                        new gridviz.TextStyle({
                             textCol: 'elevation',
                             text: (v, r, s, z) => v,
                             colorCol: 'elevation',

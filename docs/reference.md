@@ -64,12 +64,12 @@ Anything unclear or missing? Feel free to [ask](https://github.com/eurostat/grid
 
 ## Usage
 
-Create a [Gridviz](https://github.com/eurostat/gridviz/) map using `const map = new gviz.Map();` and customise it with the methods described in the documentation below.
+Create a [Gridviz](https://github.com/eurostat/gridviz/) map using `const map = new gridviz.Map();` and customise it with the methods described in the documentation below.
 
 Here's a basic example that loads a CSV file on Europe population (5km resolution):
 
 ```javascript
-new gviz.Map(containerDiv)
+new gridviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoom(3000)
@@ -81,11 +81,11 @@ new gviz.Map(containerDiv)
         5000,
         //the style
         [
-            new gviz.SquareColorWGLStyle({
+            new gridviz.SquareColorWGLStyle({
                 //the CSV column to show
                 colorCol: 'Population',
                 //value to [0,1] mapping function, see [below](#stretching)
-                tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15),
+                tFun: (value) => gridviz.sExp(Math.min(value / 100000, 1), -15),
             }),
         ]
     )
@@ -121,7 +121,7 @@ When building a gridviz map, in addition to the container element you can also s
 For example:
 
 ```javascript
-new gviz.Map(containerDiv, {
+new gridviz.Map(containerDiv, {
     w: 600,
     h: 600,
     legendDivId: 'myLegendDiv',
@@ -190,7 +190,7 @@ This is the simplest case, when a unique CSV file is loaded. See the [basic exam
 When several CSV files contain the data with different resolutions, it is possible to define a multi-scale dataset from those files. The change of dataset depending on the zoom level is controled with the **minPixelsPerCell** parameter:
 
 ```javascript
-new gviz.Map(containerDiv)
+new gridviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoom(3000)
@@ -205,9 +205,9 @@ new gviz.Map(containerDiv)
             'km.csv',
         //the styles
         [
-            new gviz.SquareColorWGLStyle({
+            new gridviz.SquareColorWGLStyle({
                 colorCol: 'population',
-                tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
+                tFun: (value, resolution, stats) => gridviz.sExp(value / stats.max, -50),
             }),
         ],
         {
@@ -224,7 +224,7 @@ new gviz.Map(containerDiv)
 For large datasets, it is recommended that you decompose them into different data chunks and index them by geographical location, as specified in the [tiled format specification](tiledformat.md). The [Gridviz](https://github.com/eurostat/gridviz/) map can then automatically retrieve only the useful data that falls into the viewer's geographical extent. Here is an example of how to load such data:
 
 ```javascript
-new gviz.Map(containerDiv)
+new gridviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoom(3000)
@@ -234,9 +234,9 @@ new gviz.Map(containerDiv)
         'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/5000m/',
         //the styles
         [
-            new gviz.SquareColorWGLStyle({
+            new gridviz.SquareColorWGLStyle({
                 colorCol: 'TOT_P_2021',
-                tFun: (value) => gviz.sExp(Math.min(value / 100000, 1), -15),
+                tFun: (value) => gridviz.sExp(Math.min(value / 100000, 1), -15),
             }),
         ]
     )
@@ -249,7 +249,7 @@ new gviz.Map(containerDiv)
 Multi scale tiled data based on the [tiled format](tiledformat.md) can also be simply loaded with the example below. Here again, the change of dataset depending on the zoom level is controled with the **minPixelsPerCell** parameter:
 
 ```javascript
-new gviz.Map(containerDiv)
+new gridviz.Map(containerDiv)
     //set position and zoom
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoom(3000)
@@ -262,9 +262,9 @@ new gviz.Map(containerDiv)
             'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + r + 'm/',
         //the styles
         [
-            new gviz.SquareColorWGLStyle({
+            new gridviz.SquareColorWGLStyle({
                 colorCol: 'TOT_P_2018',
-                tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
+                tFun: (value, resolution, stats) => gridviz.sExp(value / stats.max, -50),
             }),
         ],
         {
@@ -308,7 +308,7 @@ This process is run on each cell individually, only once, after the data has bee
 Here is an example showing how to compute a new column on population change, as the difference between two columns _TOT_P_2021_ and _TOT_P_2011_. This new column is then used directly to be shown on the map:
 
 ```javascript
-new gviz.Map(containerDiv)
+new gridviz.Map(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoom(3000)
     .addMultiScaleTiledGridLayer(
@@ -316,7 +316,7 @@ new gviz.Map(containerDiv)
         (r) =>
             'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + r + 'm/',
         [
-            new gviz.ShapeColorSizeStyle({
+            new gridviz.ShapeColorSizeStyle({
                 /* style construction ... */
             }),
         ],
@@ -347,7 +347,7 @@ The **preprocess** function can also be used to remove/filter unnecessary cells 
 Here is an example showing how to keep only the cells with specific values **41**:
 
 ```javascript
-new gviz.Map(containerDiv)
+new gridviz.Map(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoom(3000)
     .addMultiScaleTiledGridLayer(
@@ -795,7 +795,7 @@ Any need or idea for a new style ? feel free to [ask](https://github.com/eurosta
 
 ```javascript
 //create custom style
-const customStyle = new gviz.Style({
+const customStyle = new gridviz.Style({
 
 //define draw function
 drawFun : (cells, resolution, cg) => {
@@ -849,7 +849,7 @@ To add a legend, simply push it to the corresponding legends array of that style
 
 ```javascript
 map.layers[0].styles[0].legends.push(
-    new gviz.SizeLegend({
+    new gridviz.SizeLegend({
         title: 'Number of inhabitants',
         exaggerationFactor: 0.8,
         shape: 'circle',
@@ -865,7 +865,7 @@ For styling legends see [Legend Styling](#legend-styling).
 ![](img/legends/color_category_legend.png)
 
 ```javascript
-new gviz.ColorCategoryLegend({
+new gridviz.ColorCategoryLegend({
     title: 'Dominant leaf type',
     colCat: [
         ['#c6df58', 'None'],
@@ -881,7 +881,7 @@ new gviz.ColorCategoryLegend({
 ![](img/legends/color_discrete_legend.png)
 
 ```javascript
-new gviz.ColorDiscreteLegend({
+new gridviz.ColorDiscreteLegend({
     title: 'Travel time to nearest health service, in minutes',
     colors: ['#FDFECC', '#B2E3AA', '#6AC5A4', '#4FA1A2', '#427C9A', '#3E5791', '#3D3562', '#281A2C'],
     breaksText: [5, 10, 15, 20, 30, 45, 60, 90],
@@ -894,12 +894,12 @@ new gviz.ColorDiscreteLegend({
 ![](img/legends/color_legend.png)
 
 ```javascript
-new gviz.ColorLegend({
+new gridviz.ColorLegend({
     title: 'Number of inhabitants',
     width: 400,
     ticks: 5,
     colorRamp: d3.interpolateOrRd,
-    fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+    fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
 })
 ```
 
@@ -908,7 +908,7 @@ new gviz.ColorLegend({
 ![](img/legends/segment_orientation_legend.png)
 
 ```javascript
-new gviz.SegmentOrientationLegend({
+new gridviz.SegmentOrientationLegend({
     title: 'Population change',
     labelUnitText: 'Strong increase',
     color: '#d13c4b',
@@ -921,7 +921,7 @@ new gviz.SegmentOrientationLegend({
 ![](img/legends/segment_width_legend.png)
 
 ```javascript
-new gviz.SegmentWidthLegend({
+new gridviz.SegmentWidthLegend({
     title: 'Population in 2021',
     labelUnitText: 'inhab.',
 })
@@ -932,7 +932,7 @@ new gviz.SegmentWidthLegend({
 ![](img/legends/size_legend.png)
 
 ```javascript
-new gviz.SizeLegend({
+new gridviz.SizeLegend({
     title: 'Number of inhabitants',
     exaggerationFactor: 0.8,
     shape: 'circle',
@@ -945,7 +945,7 @@ new gviz.SizeLegend({
 You can style each legend by using the 'D3-like' style() function after constructing your legend, like so:
 
 ```javascript
-new gviz.SizeLegend({
+new gridviz.SizeLegend({
     title: 'Number of inhabitants',
     exaggerationFactor: 0.8,
     shape: 'circle',
@@ -981,7 +981,7 @@ For more information on these functions and an overview of how they differ, see:
 To add a background layer to a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **addBackgroundLayer** method:
 
 ```javascript
-new gviz.Map(containerDiv)
+new gridviz.Map(containerDiv)
     (...)
     .addBackgroundLayer({
         url: "https://gisco-services.ec.europa.eu/maps/tiles/NaturalEarth/EPSG3035/",
@@ -1016,7 +1016,7 @@ For more information, [see the code](../src/BackgroundLayer.js).
 To add a WMS background layer to a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **addBackgroundLayerWMS** method:
 
 ```javascript
-new gviz.Map(containerDiv)
+new gridviz.Map(containerDiv)
     (...)
     .addBackgroundLayerWMS({
         url: 'https://sgx.geodatenzentrum.de/wms_basemapde?&service=WMS&request=GetMap&layers=de_basemapde_web_raster_grau&styles=&format=image%2Fjpeg&transparent=false&version=1.1.1&srs=EPSG%3A3035',
@@ -1046,7 +1046,7 @@ For more information, [see the code](../src/BackgroundLayerWMS.js).
 To show labels on top of a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **setLabelLayer** method:
 
 ```javascript
-new gviz.Map(containerDiv)
+new gridviz.Map(containerDiv)
     (...)
     .setLabelLayer({
         url: "https://raw.githubusercontent.com/eurostat/euronym/main/pub/v2/UTF/50/EUR.csv",
@@ -1096,7 +1096,7 @@ For more information, [see the code](../src/LabelLayer.js).
 To show boundaries on top of a [Gridviz](https://github.com/eurostat/gridviz/) map, use the following **setBoundaryLayer** method:
 
 ```javascript
-new gviz.Map(containerDiv)
+new gridviz.Map(containerDiv)
     (...)
     .setBoundaryLayer({
         url: "https://raw.githubusercontent.com/eurostat/Nuts2json/master/pub/v2/2021/3035/03M/nutsbn_3.json",
@@ -1154,14 +1154,14 @@ For more information, [see the code](../src/LineLayer.js).
 A 'tooltip' shows information related to the selected grid cell. The information shown for each selected cell can be specified at layer level using the **cellInfoHTML** parameter. See for example:
 
 ```javascript
-new gviz.Map(containerDiv)
+new gridviz.Map(containerDiv)
     .setGeoCenter({ x: 4500000, y: 2900000 })
     .setZoom(500)
     .addCSVGridLayer(
         'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv',
         5000,
         [
-            new gviz.SquareColorWGLStyle({
+            new gridviz.SquareColorWGLStyle({
                 colorCol: 'population',
                 tFun: (value) => Math.min(value / 50000, 1),
             }),

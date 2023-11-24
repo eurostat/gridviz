@@ -145,7 +145,7 @@
             const bgLayerURL = 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/' //"https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/background/elevation_shading/"
 
             let containerDiv = document.getElementById('vizAcc')
-            const map = new gviz.Map(containerDiv, { legendDivId: 'legendAcc' })
+            const map = new gridviz.Map(containerDiv, { legendDivId: 'legendAcc' })
                 .setGeoCenter({ x: 4313947, y: 3100000 })
                 .setZoom(8000)
                 .setZoomExtent([40, 8000])
@@ -223,14 +223,14 @@
             const colorsH = {},
                 colorsH_ = []
             for (let cid = 0; cid < breaksH.length + 1; cid++) {
-                colorsH[cid] = d3.interpolateSpectral(gviz.sPow(1 - cid / breaksH.length, 2))
+                colorsH[cid] = d3.interpolateSpectral(gridviz.sPow(1 - cid / breaksH.length, 2))
                 colorsH_.push(colorsH[cid])
             }
             colorsH.NA = '#0002'
             const colorsE = {},
                 colorsE_ = []
             for (let cid = 0; cid < breaksE.length + 1; cid++) {
-                colorsE[cid] = d3.interpolateSpectral(gviz.sPow(1 - cid / breaksE.length, 2))
+                colorsE[cid] = d3.interpolateSpectral(gridviz.sPow(1 - cid / breaksE.length, 2))
                 colorsE_.push(colorsE[cid])
             }
             colorsE.NA = '#0002'
@@ -253,26 +253,26 @@
                         if (!keep) return false
                         //classify
                         c.cH =
-                            c.avg_time_nearest_h == 'NA' ? 'NA' : gviz.getClass(c.avg_time_nearest_h, breaksH)
+                            c.avg_time_nearest_h == 'NA' ? 'NA' : gridviz.getClass(c.avg_time_nearest_h, breaksH)
                         c.cE =
                             c.avg_time_nearest_ep == 'NA'
                                 ? 'NA'
-                                : gviz.getClass(c.avg_time_nearest_ep, breaksE)
+                                : gridviz.getClass(c.avg_time_nearest_ep, breaksE)
                     },
                 }
             )
 
             //common styles
-            const strokeStyle = new gviz.StrokeStyle({ maxZoom: 70 })
-            const popStyle = new gviz.ShapeColorSizeStyle({
+            const strokeStyle = new gridviz.StrokeStyle({ maxZoom: 70 })
+            const popStyle = new gridviz.ShapeColorSizeStyle({
                 color: () => '#000000aa',
                 sizeCol: 'TOT_P',
-                size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
+                size: (v, r, s, zf) => 1.2 * r * gridviz.sPow(v / s.max, 0.3),
                 shape: () => 'circle',
             })
             //set legend
             popStyle.legends.push(
-                new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhabitants', fillColor: '#000000dd' })
+                new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhabitants', fillColor: '#000000dd' })
             )
 
             //
@@ -301,7 +301,7 @@
                     map.addLayer(
                         ds,
                         [
-                            new gviz.SquareColorCatWGLStyle({
+                            new gridviz.SquareColorCatWGLStyle({
                                 colorCol: 'cH',
                                 color: colorsH,
                             }),
@@ -320,7 +320,7 @@
 
                     //legends
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorDiscreteLegend({
+                        new gridviz.ColorDiscreteLegend({
                             title: 'Travel time to nearest health service, in minutes',
                             colors: colorsH_,
                             breaksText: breaksH,
@@ -328,7 +328,7 @@
                         })
                     )
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorCategoryLegend({
+                        new gridviz.ColorCategoryLegend({
                             colCat: [[colorsH.NA, 'No data']],
                             shape: 'square',
                         })
@@ -351,7 +351,7 @@
                     map.addLayer(
                         ds,
                         [
-                            new gviz.SquareColorCatWGLStyle({
+                            new gridviz.SquareColorCatWGLStyle({
                                 colorCol: 'cE',
                                 color: colorsE,
                             }),
@@ -370,7 +370,7 @@
 
                     //legends
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorDiscreteLegend({
+                        new gridviz.ColorDiscreteLegend({
                             title: 'Travel time to nearest primary education service, in minutes',
                             colors: colorsE_,
                             breaksText: breaksE,
@@ -378,7 +378,7 @@
                         })
                     )
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorCategoryLegend({
+                        new gridviz.ColorCategoryLegend({
                             colCat: [[colorsH.NA, 'No data']],
                             shape: 'square',
                         })

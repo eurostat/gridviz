@@ -17,7 +17,7 @@
             const bgLayerURL = 'https://ec.europa.eu/eurostat/cache/GISCO/mbkg/elevation_shading/'
 
             let containerDiv = document.getElementById('viz-container')
-            const map = new gviz.Map(containerDiv)
+            const map = new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4500000, y: 2900000 })
                 .setZoom(3000)
                 .setLabelLayer(
@@ -139,13 +139,13 @@
                 //the style
                 [
                     // no pan for ShapeColorSizeStyle
-                    // new gviz.ShapeColorSizeStyle({
+                    // new gridviz.ShapeColorSizeStyle({
                     //     colorCol: 'value',
                     //     color: COLORFUNCTION,
                     // }),
 
                     // no tooltip for SquareColorWGLStyle
-                    // new gviz.SquareColorWGLStyle({
+                    // new gridviz.SquareColorWGLStyle({
                     //     colorCol: DATAFIELD,
                     //     tFun: (value) => {
                     //         //recode the values into 1 to 12. values 11-16 need to become class 5
@@ -164,7 +164,7 @@
                     //     colors: colors,
                     // }),
 
-                    new gviz.SquareColorCatWGLStyle({
+                    new gridviz.SquareColorCatWGLStyle({
                         colorCol: 'value',
                         color: {
                             1: colors[0],
@@ -224,14 +224,14 @@
             let colCat = colors.map((color,i)=> [color,categories[i]])
 
             map.layers[0].styles[0].legends.push(
-                new gviz.ColorCategoryLegend({
+                new gridviz.ColorCategoryLegend({
                 title: 'Ranking since 1991',
                 colCat: colCat,
                 shape: 'square',
             }))
 
             // map.layers[0].styles[0].legends.push(
-            //     new gviz.ColorDiscreteLegend({
+            //     new gridviz.ColorDiscreteLegend({
             //         title: 'Ranking since 1991',
             //         titleFontSize: '15px',
             //         labelFontSize: '15px',

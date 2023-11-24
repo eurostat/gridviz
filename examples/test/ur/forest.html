@@ -148,7 +148,7 @@
             const bgLayerURL = 'https://raw.githubusercontent.com/jgaffuri/mbxyz/main/pub/elevation_shading/' //"https://ec.europa.eu/eurostat/cache/GISCO/urbanrural/background/elevation_shading/"
 
             let containerDiv = document.getElementById('vizAcc')
-            const map = new gviz.Map(containerDiv, { legendDivId: 'legendAcc' })
+            const map = new gridviz.Map(containerDiv, { legendDivId: 'legendAcc' })
                 .setGeoCenter({ x: 4313947, y: 3100000 })
                 .setZoom(8000)
                 .setZoomExtent([40, 8000])
@@ -241,7 +241,7 @@
                 )
 
             //DLT legend
-            const dltLeg = new gviz.ColorCategoryLegend({
+            const dltLeg = new gridviz.ColorCategoryLegend({
                 title: 'Dominant leaf type',
                 colCat: [
                     ['#c6df58', 'None'],
@@ -261,7 +261,7 @@
                 if (style == 'c') {
                     //set style
                     lay.styles = [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             sizeCol: 'tcd',
                             size: (v, r, s, zf) => 1.2 * r * Math.sqrt(v / 100),
                             colorCol: 'dlt',
@@ -275,7 +275,7 @@
                             },
                             shape: () => 'circle',
                         }),
-                        new gviz.StrokeStyle({
+                        new gridviz.StrokeStyle({
                             sizeCol: 'tcd',
                             size: (v, r, s, zf) => 1.2 * r * Math.sqrt(v / 100),
                             strokeColor: () => '#000',
@@ -288,7 +288,7 @@
                     //set legend
                     lay.styles[0].legends = [
                         dltLeg,
-                        new gviz.SizeLegend({
+                        new gridviz.SizeLegend({
                             shape: 'circle',
                             value: 100,
                             labelUnitText: '% tree cover density',
@@ -298,18 +298,18 @@
                 } else if (style == 'tcd') {
                     //set style
                     lay.styles = [
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: 'tcd',
                             color: (t) => d3.interpolateBuGn(0.2 + 0.8 * t),
                             tFun: (v) => v / 100,
                         }),
-                        new gviz.StrokeStyle({ strokeColor: () => '#666', maxZoom: 100 }),
+                        new gridviz.StrokeStyle({ strokeColor: () => '#666', maxZoom: 100 }),
                     ]
                     lay.minPixelsPerCell = 1.5
 
                     //set legend
                     lay.styles[0].legends = [
-                        new gviz.ColorLegend({
+                        new gridviz.ColorLegend({
                             title: 'Tree cover density (%)',
                             width: 250,
                             ticks: 5,
@@ -320,7 +320,7 @@
                 } else if (style == 'dlt') {
                     //set style
                     lay.styles = [
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: 'dlt',
                             color: (t) => {
                                 //none
@@ -331,7 +331,7 @@
                                 return '#9fd045'
                             },
                         }),
-                        new gviz.StrokeStyle({ strokeColor: () => '#666', maxZoom: 100 }),
+                        new gridviz.StrokeStyle({ strokeColor: () => '#666', maxZoom: 100 }),
                     ]
                     lay.minPixelsPerCell = 1.5
 

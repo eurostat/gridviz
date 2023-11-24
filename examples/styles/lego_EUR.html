@@ -69,7 +69,7 @@
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
         <script>
             let containerDiv = document.getElementById('viz-container')
-            const map = new gviz.Map(containerDiv)
+            const map = new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4313947, y: 2970049 })
                 .setZoom(1500)
                 .setZoomExtent([25, 7500])
@@ -161,9 +161,9 @@
 
                     map.addLayer(
                         ds.el,
-                        gviz.LegoStyle.get('elevation', {
+                        gridviz.LegoStyle.get('elevation', {
                             colors: colors,
-                            tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.6),
+                            tFun: (v, r, s, zf) => gridviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.6),
                         }),
                         {
                             minPixelsPerCell: 10,
@@ -173,11 +173,11 @@
 
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorLegend({
+                        new gridviz.ColorLegend({
                             title: 'Elevation (m)',
                             ticks: 5,
                             colorRamp: colFun,
-                            fun: (t, r, s) => s.min + (s.max - s.min) * gviz.sPowInverse(t, 0.6),
+                            fun: (t, r, s) => s.min + (s.max - s.min) * gridviz.sPowInverse(t, 0.6),
                             width: 300,
                         })
                     )
@@ -282,7 +282,7 @@
 
                     map.addLayer(
                         ds.lc,
-                        gviz.LegoStyle.getCat('clc', {
+                        gridviz.LegoStyle.getCat('clc', {
                             color: clcColors,
                         }),
                         {
@@ -295,10 +295,10 @@
 
                     map.addLayer(
                         ds.pop,
-                        gviz.LegoStyle.get('TOT_P_2021', {
+                        gridviz.LegoStyle.get('TOT_P_2021', {
                             color: d3.interpolateOrRd,
                             nb: 15,
-                            tFun: (v, r, s) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
+                            tFun: (v, r, s) => gridviz.sExpRev((v - s.min) / (s.max - s.min), -7),
                             widthFactor: 0.04,
                         }),
                         {
@@ -310,11 +310,11 @@
 
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorLegend({
+                        new gridviz.ColorLegend({
                             title: 'Number of inhabitants',
                             ticks: 5,
                             colorRamp: d3.interpolateOrRd,
-                            fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                            fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
                             width: 500,
                         })
                     )
@@ -343,7 +343,7 @@
             })
 
             //select layer from URL
-            const ls = gviz.getParameterByName('lay')
+            const ls = gridviz.getParameterByName('lay')
             if (ls) {
                 const b = document.querySelector('#' + ls)
                 if (b) b.checked = true

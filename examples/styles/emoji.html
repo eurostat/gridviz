@@ -12,9 +12,9 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            const tsFun = gviz.TextStyle.getCharLegendFun(['👨‍🦲', '🙍‍♂️', '🙍', '👩‍👦', '👨‍👧', '👪', '👨‍👩‍👦‍👦'])
+            const tsFun = gridviz.TextStyle.getCharLegendFun(['👨‍🦲', '🙍‍♂️', '🙍', '👩‍👦', '👨‍👧', '👪', '👨‍👩‍👦‍👦'])
 
-            new gviz.Map(containerDiv)
+            new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4000000, y: 2960000 })
                 .setZoom(2000)
                 .addMultiScaleTiledGridLayer(
@@ -24,10 +24,10 @@
                         r +
                         'm/',
                     [
-                        new gviz.TextStyle({
+                        new gridviz.TextStyle({
                             textCol: 'TOT_P_2021',
                             text: (v, r, s, z) => {
-                                const t = gviz.sPow(v / s.max, 0.25)
+                                const t = gridviz.sPow(v / s.max, 0.25)
                                 return tsFun(t)
                             },
                             color: (v, r, s) => '#333',

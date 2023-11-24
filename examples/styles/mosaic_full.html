@@ -59,7 +59,7 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            const map = new gviz.Map(containerDiv)
+            const map = new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4500000, y: 2960000 })
                 .setZoom(1500)
                 .setZoomExtent([30, 7000])
@@ -89,10 +89,10 @@
                         r +
                         'm/',
                     [
-                        new gviz.MosaicStyle({
+                        new gridviz.MosaicStyle({
                             colorCol: 'TOT_P_2021',
                             color: (v, r, s) =>
-                                !+v ? undefined : d3.interpolateYlOrBr(gviz.sExpRev(v / s.max, -7)),
+                                !+v ? undefined : d3.interpolateYlOrBr(gridviz.sExpRev(v / s.max, -7)),
                             mosaicFactor: 0.2,
                             shadowFactor: 0.25,
                             shadowColor: '#aaa',
@@ -116,13 +116,13 @@
 
             //legend
             map.layers[0].styles[0].legends.push(
-                new gviz.ColorLegend({
+                new gridviz.ColorLegend({
                     title: 'Number of inhabitants',
                     'font-family': 'mf',
                     width: 450,
                     ticks: 6,
                     colorRamp: d3.interpolateYlOrBr,
-                    fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                    fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
                 })
             )
 

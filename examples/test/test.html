@@ -15,7 +15,7 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            const map = new gviz.Map(containerDiv, {
+            const map = new gridviz.Map(containerDiv, {
                 onZoomStartFun: (e) => {
                     console.log(event)
                 },
@@ -32,9 +32,9 @@
                         r +
                         'm/',
                     [
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: 'TOT_P_2021',
-                            tFun: (value, resolution, stats) => gviz.sExp(value / stats.max, -50),
+                            tFun: (value, resolution, stats) => gridviz.sExp(value / stats.max, -50),
                             color: d3.interpolateYlOrRd,
                         }),
                     ],
@@ -45,12 +45,12 @@
 
             //add legend
             map.layers[0].styles[0].legends.push(
-                new gviz.ColorLegend({
+                new gridviz.ColorLegend({
                     title: 'Number of inhabitants',
                     width: 400,
                     ticks: 5,
                     colorRamp: d3.interpolateYlOrRd,
-                    fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                    fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
                 })
             )
 

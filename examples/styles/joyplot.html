@@ -13,7 +13,7 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-        new gviz.Map(containerDiv)
+        new gridviz.Map(containerDiv)
             .setGeoCenter({ x: 4000000, y: 2960000 })
             .setZoom(2000)
             .setBackgroundColor('black')
@@ -24,9 +24,9 @@
                     r +
                     'm/',
                 [
-                    new gviz.JoyPlotStyle({
+                    new gridviz.JoyPlotStyle({
                         height: (c, r, z, scale) => scale(c.TOT_P_2021),
-                        viewScale: gviz.sizeContinuousScale({ valueFunction: (c) => +c.TOT_P_2021, maxSizeFactor: 5, stretching: gviz.powerScale(0.5) }),
+                        viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.TOT_P_2021, maxSizeFactor: 5, stretching: gridviz.powerScale(0.5) }),
                         lineColor: () => 'white',
                         lineWidth: (y, ys, r, zf) => 0.15 * r,
                         fillColor: () => 'black',

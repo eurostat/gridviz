@@ -12,7 +12,7 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            new gviz.Map(containerDiv)
+            new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4000000, y: 2960000 })
                 .setZoom(1500)
                 .addMultiScaleTiledGridLayer(
@@ -22,9 +22,9 @@
                         r +
                         'm/',
                     [
-                        new gviz.PillarStyle({
+                        new gridviz.PillarStyle({
                             heightCol: 'TOT_P_2021',
-                            height: (v, r, s, z) => 15 * r * gviz.sExpRev(v / s.max, -5),
+                            height: (v, r, s, z) => 15 * r * gridviz.sExpRev(v / s.max, -5),
                         }),
                     ],
                     {

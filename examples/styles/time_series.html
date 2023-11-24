@@ -13,7 +13,7 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-        new gviz.Map(containerDiv)
+        new gridviz.Map(containerDiv)
             //set position and zoom
             .setGeoCenter({ x: 4500000, y: 2900000 })
             .setZoom(30)
@@ -28,11 +28,11 @@
                     'm/',
                 //the styles
                 [
-                    new gviz.TimeSeriesStyle({
+                    new gridviz.TimeSeriesStyle({
                         ts: ["TOT_P_2006", "TOT_P_2011", "TOT_P_2018", "TOT_P_2021"],
                         color: () => "black",
                         lineWidthCol: "TOT_P_2021",
-                        lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.4) * 7) * z },
+                        lineWidth: (v, r, s, z) => { return (1 + gridviz.sPow(v / s.max, 0.4) * 7) * z },
                         //offsetX: (c, r, z) => r / 2,
                         //offsetY: (c, r, z) => r / 2,
                         //width: (c, r, z) => 1.5*r,

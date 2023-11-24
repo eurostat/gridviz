@@ -15,7 +15,7 @@
         <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
         <script>
             let containerDiv = document.getElementById('viz-container')
-            const map = new gviz.Map(containerDiv)
+            const map = new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4000000, y: 2960000 })
                 .setZoom(100)
                 .setZoomExtent([50, 11000])
@@ -23,7 +23,7 @@
                 .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
 
             //style data
-            const s = new gviz.SquareColorWGLStyle({
+            const s = new gridviz.SquareColorWGLStyle({
                 colorCol: 'TOT_P_2021',
                 color: d3.interpolateOrRd,
             })
@@ -65,10 +65,10 @@
             //map.goToStraight(4050000, 2900000, 200, 10, 100);
 
             /*
-                gviz.zoomTo(app, 1000, 1.05, 0, () => {
-                    gviz.zoomTo(app, 110, 1.05, 0, () => {
-                        gviz.zoomTo(app, 1000, 1.05, 0, () => {
-                            gviz.zoomTo(app, 110, 1.05, 0, () => {
+                gridviz.zoomTo(app, 1000, 1.05, 0, () => {
+                    gridviz.zoomTo(app, 110, 1.05, 0, () => {
+                        gridviz.zoomTo(app, 1000, 1.05, 0, () => {
+                            gridviz.zoomTo(app, 110, 1.05, 0, () => {
         
                             }, 1000)
                         }, 1000)

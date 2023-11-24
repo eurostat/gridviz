@@ -12,7 +12,7 @@
         <script>
             let containerDiv = document.getElementById('viz-container')
 
-            new gviz.Map(containerDiv)
+            new gridviz.Map(containerDiv)
                 .setGeoCenter({ x: 4000000, y: 2960000 })
                 .setZoom(2000)
                 .addMultiScaleTiledGridLayer(
@@ -22,12 +22,12 @@
                         r +
                         'm/',
                     [
-                        new gviz.SegmentStyle({
+                        new gridviz.SegmentStyle({
                             orientation: () => 45,
                             color: (v, r, s) => '#c08c59',
                             length: (v, r) => r * 1.4142,
                             widthCol: 'TOT_P_2021',
-                            width: (v, r, s, zf) => (r * gviz.sPow(v / s.max, 0.25)) / 1.4142,
+                            width: (v, r, s, zf) => (r * gridviz.sPow(v / s.max, 0.25)) / 1.4142,
                         }),
                     ],
                     {

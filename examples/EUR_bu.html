@@ -17,7 +17,7 @@
     <script>
         let containerDiv = document.getElementById('viz-container')
 
-        new gviz.Map(containerDiv)
+        new gridviz.Map(containerDiv)
             .setGeoCenter({ x: 3763437, y: 2891045 })
             .setZoom(150)
             .setLabelLayer(gviz_es.getEuronymeLabelLayer('EUR', '20'))
@@ -49,41 +49,41 @@
 
                     //x,y,TOT_P_2021,agri,comm_serv,indus,res
 
-                    new gviz.ShapeColorSizeStyle({
+                    new gridviz.ShapeColorSizeStyle({
                         //sizeCol: 'TOT_P_2021',
                         sizeCol: 'res',
-                        size: (v, r, s, zf) => 1.4 * r * gviz.sExpRev(v / s.max, -12),
+                        size: (v, r, s, zf) => 1.4 * r * gridviz.sExpRev(v / s.max, -12),
                         shape: () => 'circle',
 
                         //colorCol: 'res',
-                        //tFun: (v, r, s) => gviz.sExpRev(v / s.max, -10),
+                        //tFun: (v, r, s) => gridviz.sExpRev(v / s.max, -10),
 
                         colorCol: 'habPer100m2',
                         color: (v, r, s) => {
                             if (v === -999) return
                             if (v === 0) return "gray"
-                            return d3.interpolateSpectral(1 - gviz.sExpRev(v / 8, -3.5))
+                            return d3.interpolateSpectral(1 - gridviz.sExpRev(v / 8, -3.5))
                         },
-                        //tFun: (v, r, s) => gviz.sExpRev(v / 8, -3.5),
+                        //tFun: (v, r, s) => gridviz.sExpRev(v / 8, -3.5),
 
                         /*colorCol: 'resSurfPerHab',
                         tFun: (value, resolution, stats) => {
                             if (value == -999) return;
-                            return gviz.sExp(value / stats.max, -25)
+                            return gridviz.sExp(value / stats.max, -25)
                         },*/
                         blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                     }),
 
-                    /*new gviz.SquareColorCatWGLStyle({
+                    /*new gridviz.SquareColorCatWGLStyle({
                         colorCol: "valid",
                         color: { nonPopRes:"blue", "nonResPop": "red", ok: "lightgray" },
                     }),*/
 
                     /*
-                    new gviz.ShapeColorSizeStyle({
+                    new gridviz.ShapeColorSizeStyle({
                         //sizeCol: 'TOT_P_2021',
                         sizeCol: 'res',
-                        size: (v, r, s, zf) => 1.4 * r * gviz.sPow(v / s.max, 0.13),
+                        size: (v, r, s, zf) => 1.4 * r * gridviz.sPow(v / s.max, 0.13),
                         colorCol: 'valid',
                         color: (v, r, s) => v == "nonPopRes"? "blue" : v == "nonResPop"? "red" : "lightgray",
                         shape: () => 'circle',

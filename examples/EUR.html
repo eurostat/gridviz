@@ -88,7 +88,7 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
         let containerDiv = document.getElementById('viz-container')
-        const map = new gviz.Map(containerDiv)
+        const map = new gridviz.Map(containerDiv)
             .setGeoCenter({ x: 4313947, y: 2970049 })
             .setZoom(600)
             .setZoomExtent([15, 7500])
@@ -172,11 +172,11 @@
                     if (!keep) return false
                     //classify
                     c.cH =
-                        c.avg_time_nearest_h == 'NA' ? 'NA' : gviz.getClass(c.avg_time_nearest_h, breaksH)
+                        c.avg_time_nearest_h == 'NA' ? 'NA' : gridviz.getClass(c.avg_time_nearest_h, breaksH)
                     c.cE =
                         c.avg_time_nearest_ep == 'NA'
                             ? 'NA'
-                            : gviz.getClass(c.avg_time_nearest_ep, breaksE)
+                            : gridviz.getClass(c.avg_time_nearest_ep, breaksE)
                 },
             }
         )
@@ -234,13 +234,13 @@
                 map.addLayer(
                     ds.pop,
                     [
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: layCode_,
                             color: d3.interpolateOrRd,
                             stretching: { fun: 'expRev', alpha: -7 },
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                         }),
-                        new gviz.StrokeStyle({
+                        new gridviz.StrokeStyle({
                             strokeColorCol: layCode_,
                             strokeColor: (v) => (+v ? '#666' : ''),
                             maxZoom: 80,
@@ -256,11 +256,11 @@
                 )
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: 'Number of inhabitants',
                         ticks: 5,
                         colorRamp: d3.interpolateOrRd,
-                        fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
+                        fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
                     })
                 )
             } else if (layCode === 'popChange') {
@@ -273,17 +273,17 @@
                     map.addLayer(
                         ds.pop,
                         [
-                            new gviz.ShapeColorSizeStyle({
+                            new gridviz.ShapeColorSizeStyle({
                                 colorCol: layCode_,
                                 color: (v, r, s) => {
                                     const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                    const t = (Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
+                                    const t = (Math.sign(v) * gridviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
                                     return d3.interpolateSpectral(1 - t)
                                 },
                                 shape: () => 'square',
                                 blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                             }),
-                            new gviz.StrokeStyle({ maxZoom: 80 }),
+                            new gridviz.StrokeStyle({ maxZoom: 80 }),
                         ],
                         {
                             minPixelsPerCell: 2,
@@ -302,14 +302,14 @@
                     )
                     //legend
                     map.layers[0].styles[0].legends.push(
-                        new gviz.ColorLegend({
+                        new gridviz.ColorLegend({
                             title: 'Population change',
                             ticks: 5,
                             colorRamp: d3.interpolateSpectral,
                             invert: true,
                             fun: (t, r, s) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
+                                return (t < 0.5 ? -1 : 1) * max * gridviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
                             },
                         })
                     )
@@ -320,10 +320,10 @@
                 map.addLayer(
                     ds.pop,
                     [
-                        new gviz.ShapeColorSizeStyle({
+                        new gridviz.ShapeColorSizeStyle({
                             color: () => '#666',
                             sizeCol: 'TOT_P_2018',
-                            size: (v, r, s, zf) => 0.8 * r * gviz.sPow(v / s.max, 0.3),
+                            size: (v, r, s, zf) => 0.8 * r * gridviz.sPow(v / s.max, 0.3),
                             shape: () => 'circle',
                         }),
                     ],
@@ -347,22 +347,22 @@
                 map.addLayer(
                     ds.degurba,
                     [
-                        new gviz.CompositionStyle({
+                        new gridviz.CompositionStyle({
                             color: degurbaColors,
                             type: () => 'flag',
                             //stripesOrientation: () => 0,
                             sizeCol: 'TOT',
                             size: (v, r, s, z) =>
-                                1 * r * gviz.sPow(v / s.max, 0.5) + (z < 500 ? 0.8 * z : 0),
+                                1 * r * gridviz.sPow(v / s.max, 0.5) + (z < 500 ? 0.8 * z : 0),
                             minZoom: 80,
                         }),
-                        /*new gviz.SquareColorCatWGLStyle({
+                        /*new gridviz.SquareColorCatWGLStyle({
                         colorCol: "c",
                         color: degurbaColors,
                         maxZoom: 400,
                         minZoom: 120,
                     }),*/
-                        new gviz.SideCatStyle({
+                        new gridviz.SideCatStyle({
                             col: 'c',
                             color: degurbaColors,
                             width: (side, r, z) => z * 3,
@@ -439,11 +439,11 @@
 
                 //population legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'persons', fillColor: '#666d' })
+                    new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'persons', fillColor: '#666d' })
                 )
 
                 //degurba legend
-                const catLeg = new gviz.ColorCategoryLegend({
+                const catLeg = new gridviz.ColorCategoryLegend({
                     title: 'Degree of urbanisation',
                     colCat: [
                         /*["#286eb4", "City"],
@@ -469,14 +469,14 @@
                 map.addLayer(
                     ds.rtp,
                     [
-                        new gviz.SquareColorWGLStyle({
+                        new gridviz.SquareColorWGLStyle({
                             colorCol: 'rp', // pp ra rp
                             color: d3.interpolateGnBu,
                             tFun: (v, r, s) => Math.min(v, 100) / 100,
                             stretching: { fun: 'expRev', alpha: 2 },
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                         }),
-                        new gviz.StrokeStyle({
+                        new gridviz.StrokeStyle({
                             strokeColorCol: 'rp',
                             strokeColor: (v) => (+v ? '#666' : ''),
                             maxZoom: 100,
@@ -491,12 +491,12 @@
 
                 //legend
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorLegend({
+                    new gridviz.ColorLegend({
                         title: 'Road transport performance',
                         width: 300,
                         ticks: 9,
                         colorRamp: d3.interpolateGnBu,
-                        fun: (t, r, s) => 100 * gviz.sExpRevInverse(t, 2),
+                        fun: (t, r, s) => 100 * gridviz.sExpRevInverse(t, 2),
                     })
                 )
 
@@ -506,7 +506,7 @@
                 const colorsH = {},
                     colorsH_ = []
                 for (let cid = 0; cid < breaksH.length + 1; cid++) {
-                    colorsH[cid] = d3.interpolateSpectral(gviz.sPow(1 - cid / breaksH.length, 2))
+                    colorsH[cid] = d3.interpolateSpectral(gridviz.sPow(1 - cid / breaksH.length, 2))
                     colorsH_.push(colorsH[cid])
                 }
                 colorsH.NA = '#0002'
@@ -526,17 +526,17 @@
                 }
 
                 //common styles
-                const strokeStyle = new gviz.StrokeStyle({ maxZoom: 70 })
-                const popStyle = new gviz.ShapeColorSizeStyle({
+                const strokeStyle = new gridviz.StrokeStyle({ maxZoom: 70 })
+                const popStyle = new gridviz.ShapeColorSizeStyle({
                     color: () => '#000000aa',
                     sizeCol: 'TOT_P',
-                    size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
+                    size: (v, r, s, zf) => 1.2 * r * gridviz.sPow(v / s.max, 0.3),
                     shape: () => 'circle',
                     blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                 })
                 //set legend
                 popStyle.legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         shape: 'circle',
                         labelUnitText: 'inhabitants',
                         fillColor: '#000000dd',
@@ -546,7 +546,7 @@
                 map.addLayer(
                     ds.acc,
                     [
-                        new gviz.SquareColorCatWGLStyle({
+                        new gridviz.SquareColorCatWGLStyle({
                             colorCol: 'cH',
                             color: colorsH,
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
@@ -566,7 +566,7 @@
 
                 //legends
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorDiscreteLegend({
+                    new gridviz.ColorDiscreteLegend({
                         title: 'Travel time to nearest health service, in minutes',
                         colors: colorsH_,
                         breaksText: breaksH,
@@ -574,7 +574,7 @@
                     })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         colCat: [[colorsH.NA, 'No data']],
                         shape: 'square',
                     })
@@ -584,7 +584,7 @@
                 const colorsE = {},
                     colorsE_ = []
                 for (let cid = 0; cid < breaksE.length + 1; cid++) {
-                    colorsE[cid] = d3.interpolateSpectral(gviz.sPow(1 - cid / breaksE.length, 2))
+                    colorsE[cid] = d3.interpolateSpectral(gridviz.sPow(1 - cid / breaksE.length, 2))
                     colorsE_.push(colorsE[cid])
                 }
                 colorsE.NA = '#0002'
@@ -604,17 +604,17 @@
                 }
 
                 //common styles
-                const strokeStyle = new gviz.StrokeStyle({ maxZoom: 70 })
-                const popStyle = new gviz.ShapeColorSizeStyle({
+                const strokeStyle = new gridviz.StrokeStyle({ maxZoom: 70 })
+                const popStyle = new gridviz.ShapeColorSizeStyle({
                     color: () => '#000000aa',
                     sizeCol: 'TOT_P',
-                    size: (v, r, s, zf) => 1.2 * r * gviz.sPow(v / s.max, 0.3),
+                    size: (v, r, s, zf) => 1.2 * r * gridviz.sPow(v / s.max, 0.3),
                     shape: () => 'circle',
                     blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                 })
                 //set legend
                 popStyle.legends.push(
-                    new gviz.SizeLegend({
+                    new gridviz.SizeLegend({
                         shape: 'circle',
                         labelUnitText: 'inhabitants',
                         fillColor: '#000000dd',
@@ -624,7 +624,7 @@
                 map.addLayer(
                     ds.acc,
                     [
-                        new gviz.SquareColorCatWGLStyle({
+                        new gridviz.SquareColorCatWGLStyle({
                             colorCol: 'cE',
                             color: colorsE,
                             blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
@@ -644,7 +644,7 @@
 
                 //legends
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorDiscreteLegend({
+                    new gridviz.ColorDiscreteLegend({
                         title: 'Travel time to nearest primary education service, in minutes',
                         colors: colorsE_,
                         breaksText: breaksE,
@@ -652,7 +652,7 @@
                     })
                 )
                 map.layers[0].styles[0].legends.push(
-                    new gviz.ColorCategoryLegend({
+                    new gridviz.ColorCategoryLegend({
                         colCat: [[colorsE.NA, 'No data']],
                         shape: 'square',
                     })
@@ -699,7 +699,7 @@
         })
 
         //select layer from URL
-        const ls = gviz.getParameterByName('lay')
+        const ls = gridviz.getParameterByName('lay')
         if (ls) {
             const b = document.querySelector('#' + ls)
             if (b) b.checked = true
