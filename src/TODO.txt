@@ -1,15 +1,14 @@
 v3: focus on (main) API changes.
 
-pixNb -> something better? At layer level? zoomResolutionJump ?
+move viewScale things at style level ?
+pixNb -> minPixelsPerCell something better? At layer level? zoomResolutionJump ?
 make everything in opts ?
 see legend update on layer style change
-move viewScale things at style level ?
 change stretching codes in webglcolorstyle
 extract modules ?
 zf -> z
-population.csv files: make 2021 ones
-make demos with simple CSV files. more minimalistics, with only the tested parameters.
 merge geocanvas and map (?)
+population.csv files: make 2021 ones
 
 
 Done:
