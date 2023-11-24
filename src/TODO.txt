@@ -1,7 +1,6 @@
 v3: focus on (main) API changes.
 
 move viewScale things at style level ?
-minPixelsPerCell -> minPixelsPerCell something better? At layer level? zoomResolutionJump ?
 make everything in opts ?
 see legend update on layer style change
 change stretching codes in webglcolorstyle
@@ -12,6 +11,7 @@ population.csv files: make 2021 ones
 
 
 Done:
+minPixelsPerCell -> minPixelsPerCell. zoomResolutionJump ?
 filterColor: for all layers
 Enveloppe
 canvas -> geocanvas
