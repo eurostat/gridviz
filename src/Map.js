@@ -273,7 +273,7 @@ export class Map {
         for (let i = this.layers.length - 1; i >= 0; i--) {
             /** @type {import("./Layer").Layer} */
             const layer = this.layers[i]
-            if (!layer.visible) continue
+            if (layer.visible && !layer.visible(z)) continue
             if (!layer.cellInfoHTML) continue
             //if (layer.cellInfoHTML === 'none') continue
             const dsc = layer.getDataset(z)

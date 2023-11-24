@@ -43,7 +43,7 @@ export class Drawable {
          * @type {function(number):GlobalCompositeOperation} */
         this.blendOperation = opts.blendOperation || (z => "source-over")
 
-        /** @type {function(number):string} */
+        /** @type {(function(number):string)|undefined} */
         this.filterColor = opts.filterColor // (z) => "#eee7"
     }
 

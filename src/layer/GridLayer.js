@@ -12,7 +12,7 @@ export class GridLayer extends Layer {
     /**
      * @param {import("../Dataset").Dataset|import("../MultiResolutionDataset").MultiResolutionDataset} dataset The dataset to show.
      * @param {Array.<import("../Style").Style>} styles The styles, ordered in drawing order.
-     * @param {{visible?:boolean,alpha?:number,blendOperation?:GlobalCompositeOperation,minZoom?:number,maxZoom?:number,minPixelsPerCell?:number,cellInfoHTML?:function(import("../Dataset").Cell):string}} opts
+     * @param {{visible?:function(number):boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,minPixelsPerCell?:number,cellInfoHTML?:function(import("../Dataset").Cell):string}} opts
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(dataset, styles, opts = {}) {
@@ -60,10 +60,9 @@ export class GridLayer extends Layer {
 
         //draw cells, style by style
         for (const s of this.styles) {
+
             //check if style is visible
-            if (!s.visible) continue
-            if (z > s.maxZoom) continue
-            if (z < s.minZoom) continue
+            if (s.visible && !s.visible(z)) continue
 
             //set style alpha and blend mode
             //TODO: multiply by layer alpha ?
@@ -72,13 +71,17 @@ export class GridLayer extends Layer {
 
             //draw with style
             s.draw(dsc.getViewCache(), geoCanvas, dsc.getResolution())
+
+            //draw style filter
+            if (s.filterColor)
+                s.drawFilter(geoCanvas)
         }
 
         //add legend element
         if (legend) {
             for (const s of this.styles) {
-                if (z > s.maxZoom) continue
-                if (z < s.minZoom) continue
+                //check if style is visible
+                if (s.visible && !s.visible(z)) continue
                 for (const lg of s.legends) {
                     //console.log(s, lg)
                     //this.legend.append(lg.div)
