@@ -232,8 +232,6 @@ export class GeoCanvas {
         this.view.y += dyGeo
         this.updateExtentGeo()
 
-        //TODO
-        //this.redraw(false)
         if (this.canvasSave.c) {
             this.clear(this.backgroundColor)
             this.canvasSave.f /= f

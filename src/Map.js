@@ -47,65 +47,19 @@ export class Map {
 
         //create canvas element if user doesnt specify one
         /** @type {HTMLCanvasElement} */
-        let canvas = opts.canvas || null
-        if (!canvas) {
-            canvas = document.createElement('canvas')
-            canvas.setAttribute('width', '' + this.w)
-            canvas.setAttribute('height', '' + this.h)
-            this.container.appendChild(canvas)
+        this.canvas = opts.canvas || null
+        if (!this.canvas) {
+            this.canvas = document.createElement('canvas')
+            this.canvas.setAttribute('width', '' + this.w)
+            this.canvas.setAttribute('height', '' + this.h)
+            this.container.appendChild(this.canvas)
         }
 
         /** Make geo canvas
          * @type {GeoCanvas}
          * @private */
-        this.geoCanvas = new GeoCanvas(canvas, opts.x, opts.y, opts.z, opts)
-        this.geoCanvas.redraw = () => {
-
-            //remove legend elements
-            if (this.legend) this.legend.selectAll('*').remove()
-
-            //clear
-            this.geoCanvas.initCanvasTransform()
-            this.geoCanvas.clear(this.geoCanvas.backgroundColor)
-
-            const z = this.geoCanvas.view.z
-            this.updateExtentGeo()
-
-            //go through the layers
-            for (const layer of this.layers) {
-                //check if layer is visible
-                if (!layer.visible) continue
-                if (z > layer.maxZoom) continue
-                if (z < layer.minZoom) continue
-
-                //set layer alpha and blend mode
-                this.geoCanvas.ctx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
-                this.geoCanvas.ctx.globalCompositeOperation = layer.blendOperation(z)
-
-                //set affin transform to draw with geographical coordinates
-                this.geoCanvas.setCanvasTransform()
-
-                //draw layer
-                layer.draw(this.geoCanvas, this.legend)
-
-                //draw layer filter
-                if (layer.filterColor)
-                    layer.drawFilter(this.geoCanvas)
-
-                //restore default alpha and blend operation
-                this.geoCanvas.ctx.globalAlpha = 1.0
-                this.geoCanvas.ctx.globalCompositeOperation = this.defaultGlobalCompositeOperation
-
-            }
-
-            //
-            this.canvasSave = null
-
-            // listen for resize events on the App's container and handle them
-            this.defineResizeObserver(this.container, canvas)
-
-            return this
-        }
+        this.geoCanvas = new GeoCanvas(this.canvas, opts.x, opts.y, opts.z, opts)
+        this.geoCanvas.redraw = () => { this.redraw() }
 
         // legend div
         this.legendDivId = opts.legendDivId || 'gvizLegend'
@@ -237,6 +191,56 @@ export class Map {
             opts.defaultGlobalCompositeOperation || this.geoCanvas.ctx.globalCompositeOperation
     }
 
+
+    /** @returns {this} */
+    redraw() {
+        //remove legend elements
+        if (this.legend) this.legend.selectAll('*').remove()
+
+        //clear
+        this.geoCanvas.initCanvasTransform()
+        this.geoCanvas.clear(this.geoCanvas.backgroundColor)
+
+        const z = this.geoCanvas.view.z
+        this.updateExtentGeo()
+
+        //go through the layers
+        for (const layer of this.layers) {
+            //check if layer is visible
+            if (!layer.visible) continue
+            if (z > layer.maxZoom) continue
+            if (z < layer.minZoom) continue
+
+            //set layer alpha and blend mode
+            this.geoCanvas.ctx.globalAlpha = layer.alpha ? layer.alpha(z) : 1.0
+            this.geoCanvas.ctx.globalCompositeOperation = layer.blendOperation(z)
+
+            //set affin transform to draw with geographical coordinates
+            this.geoCanvas.setCanvasTransform()
+
+            //draw layer
+            layer.draw(this.geoCanvas, this.legend)
+
+            //draw layer filter
+            if (layer.filterColor)
+                layer.drawFilter(this.geoCanvas)
+
+            //restore default alpha and blend operation
+            this.geoCanvas.ctx.globalAlpha = 1.0
+            this.geoCanvas.ctx.globalCompositeOperation = this.defaultGlobalCompositeOperation
+
+        }
+
+        //
+        this.canvasSave = null
+
+        // listen for resize events on the App's container and handle them
+        this.defineResizeObserver(this.container, this.canvas)
+
+        return this
+    }
+
+
     /**
      * @param {number} marginPx
      * @returns {import('./GeoCanvas.js').Envelope}
@@ -323,12 +327,6 @@ export class Map {
     /** @param {string} val @returns {this} */
     setBackgroundColor(val) {
         this.geoCanvas.backgroundColor = val
-        return this
-    }
-
-    /** @returns {this} */
-    redraw() {
-        this.geoCanvas.redraw()
         return this
     }
 
