@@ -47,8 +47,7 @@ export class Map {
 
         //create canvas element if user doesnt specify one
         /** @type {HTMLCanvasElement} */
-        this._canvas = opts.canvas || null
-        if (!this._canvas) initialiseCanvas()
+        this._canvas = opts.canvas || this.initialiseCanvas()
 
         /** Make geo canvas
          * @type {GeoCanvas}
@@ -122,12 +121,16 @@ export class Map {
             opts.defaultGlobalCompositeOperation || this.geoCanvas.ctx.globalCompositeOperation
     }
 
-    /** @protected */
+    /** 
+     * @protected 
+     * @returns {HTMLCanvasElement}
+    */
     initialiseCanvas() {
-        this._canvas = document.createElement('canvas')
-        this._canvas.setAttribute('width', '' + this.w)
-        this._canvas.setAttribute('height', '' + this.h)
-        this.container.appendChild(this._canvas)
+        const canvas = document.createElement('canvas')
+        canvas.setAttribute('width', '' + this.w)
+        canvas.setAttribute('height', '' + this.h)
+        this.container.appendChild(canvas)
+        return canvas
     }
 
 
