@@ -1,5 +1,6 @@
 v3: focus on (main) API changes.
 
+visible as a function of zoom z - remove maxzoom/minzoom
 reorganise map - simplify constructor
 legends
 upgrade examples
@@ -12,6 +13,7 @@ population.csv files: make 2021 ones
 doc: only basic CSV and tiled multiscale
 
 Done:
+Drawable class
 gviz to gridviz
 generalisation of opts
 viewScale at style level
