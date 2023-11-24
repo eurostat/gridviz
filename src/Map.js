@@ -45,7 +45,7 @@ export class Map {
         /** @type {number} */
         this.h = opts.h || this.container.offsetHeight
 
-        //create canvas element if user doesnt specify one
+        //create canvas element if not specified
         /** @type {HTMLCanvasElement} */
         this._canvas = opts.canvas || this.initialiseCanvas()
 
