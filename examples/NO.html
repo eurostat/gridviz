@@ -172,7 +172,7 @@
                         new gridviz.SquareColorWGLStyle({
                             colorCol: 'p',
                             color: d3.interpolateYlOrRd,
-                            stretching: { fun: 'expRev', alpha: -7 },
+                            stretching: { fun: 'log', alpha: -7 },
                             //set alpha and blend operation
                             //alpha: (z) => z < 70 ? 0.75 : 1.0,
                             //blendOperation: (z) => z < 10 ? "multiply" : "source-over"

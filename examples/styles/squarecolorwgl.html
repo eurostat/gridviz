@@ -25,7 +25,7 @@
                         new gridviz.SquareColorWGLStyle({
                             colorCol: 'TOT_P_2021',
                             tFun: (value, resolution, stats) => value / stats.max,
-                            stretching: { fun: 'expRev', alpha: -7 },
+                            stretching: { fun: 'log', alpha: -7 },
                         }),
                     ],
                     {

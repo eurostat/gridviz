@@ -215,7 +215,7 @@
                         colorCol: 'rp', // pp ra rp
                         color: d3.interpolateGnBu,
                         tFun: (v, r, s) => Math.min(v, 100) / 100,
-                        stretching: { fun: 'expRev', alpha: 2 },
+                        stretching: { fun: 'log', alpha: 2 },
                     }),
                     new gridviz.StrokeStyle({
                         strokeColorCol: 'rp',

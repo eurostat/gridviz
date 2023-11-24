@@ -230,7 +230,7 @@
                         new gridviz.SquareColorWGLStyle({
                             colorCol: '0',
                             color: d3.interpolateYlOrRd,
-                            stretching: { fun: 'expRev', alpha: -7 },
+                            stretching: { fun: 'log', alpha: -7 },
                             //set alpha and blend operation
                             //alpha: (z) => z < 70 ? 0.75 : 1.0,
                             blendOperation: (z) => z < 10 ? "multiply" : "source-over"
@@ -268,7 +268,7 @@
                                 new gridviz.SquareColorWGLStyle({
                                     colorCol: 'ksmval',
                                     color: colR,
-                                    //stretching: { fun: 'expRev', alpha: -7 },
+                                    //stretching: { fun: 'log', alpha: -7 },
                                     tFun: (v, r, s) => {
                                         const v_ = gridviz.sExpRev(v / s.max, -10)
                                         const cl = Math.floor(nb * v_) / nb

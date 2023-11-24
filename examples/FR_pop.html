@@ -221,7 +221,7 @@
                         new gridviz.SquareColorWGLStyle({
                             colorCol: year,
                             color: colR,
-                            stretching: { fun: 'expRev', alpha: -7 },
+                            stretching: { fun: 'log', alpha: -7 },
                             blendOperation: (z) => z < 25 ? "multiply" : "source-over"
                         }),
                         new gridviz.StrokeStyle({
@@ -261,7 +261,7 @@
                         new gridviz.SquareColorWGLStyle({
                             colorCol: year,
                             color: colR,
-                            stretching: { fun: 'expRev', alpha: -7 },
+                            stretching: { fun: 'log', alpha: -7 },
                             //blendOperation: (z) => z < 25 ? "multiply" : "source-over"
                         }),
                         new gridviz.StrokeStyle({

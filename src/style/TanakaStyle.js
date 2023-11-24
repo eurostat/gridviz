@@ -81,7 +81,7 @@ export class TanakaStyle {
                 const c = getClass(t)
                 return c / (nb - 1)
             },
-            //stretching: { fun: "expRev", alpha: -7 },
+            //stretching: { fun: "log", alpha: -7 },
             size: (r, z) => r + 0.5 * z, //that is to ensure no gap between same class cells is visible
             filter: opts.filter,
         })

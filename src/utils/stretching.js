@@ -12,21 +12,6 @@
 //TODO use special cases - for Math.sqrt, etc.
 
 /**
- * @param {number} exponent 
- * @returns {function(number):number}
- */
-export const powerScale = (exponent = 3) => t => Math.pow(t, exponent)
-
-/**
- * @param {number} exponent 
- * @returns {function(number):number}
- */
-export const powerInverseScale = (exponent = 3) => t => 1 - Math.pow(1 - t, 1 / exponent)
-
-
-
-
-/**
  * @param {number} base 
  * @returns {function(number):number}
  */
@@ -46,6 +31,28 @@ export const logarithmicScale = (base = 3) => {
     return t => 1 - Math.log(a + t * b) / base
 }
 
+
+
+
+
+/**
+ * @param {number} exponent 
+ * @returns {function(number):number}
+ */
+export const powerScale = (exponent = 3) => {
+    if (exponent == 0.5) return Math.sqrt
+    return t => Math.pow(t, exponent)
+}
+
+/**
+ * @param {number} exponent 
+ * @returns {function(number):number}
+ */
+export const powerInverseScale = (exponent = 3) => {
+    if (exponent == 2) return t => 1 - Math.sqrt(1 - t)
+    const a = 1 / exponent
+    return t => 1 - Math.pow(1 - t, a)
+}
 
 
 

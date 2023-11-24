@@ -237,7 +237,7 @@
                         new gridviz.SquareColorWGLStyle({
                             colorCol: layCode_,
                             color: d3.interpolateOrRd,
-                            stretching: { fun: 'expRev', alpha: -7 },
+                            stretching: { fun: 'log', alpha: -7 },
                             blendOperation: (z) => z < 50 ? "multiply" : "source-over"
                         }),
                         new gridviz.StrokeStyle({
@@ -473,7 +473,7 @@
                             colorCol: 'rp', // pp ra rp
                             color: d3.interpolateGnBu,
                             tFun: (v, r, s) => Math.min(v, 100) / 100,
-                            stretching: { fun: 'expRev', alpha: 2 },
+                            stretching: { fun: 'log', alpha: 2 },
                             blendOperation: (z) => z < 50 ? "multiply" : "source-over"
                         }),
                         new gridviz.StrokeStyle({

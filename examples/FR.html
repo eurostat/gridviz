@@ -212,7 +212,7 @@
                         new gridviz.SquareColorWGLStyle({
                             colorCol: 'ind',
                             color: d3.interpolateYlOrRd,
-                            stretching: { fun: 'expRev', alpha: -7 },
+                            stretching: { fun: 'log', alpha: -7 },
                             blendOperation: (z) => z < 20 ? "multiply" : "source-over"
                         }),
                         new gridviz.StrokeStyle({ maxZoom: 15 }),
