@@ -8,6 +8,7 @@ see legend update on layer style change
 extract modules ?
 population.csv files: make 2021 ones
 doc: only basic CSV and tiled multiscale
+bug in stretching.html
 
 Done:
 visible as a function of zoom z - remove maxzoom/minzoom
