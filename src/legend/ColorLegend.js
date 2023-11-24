@@ -38,7 +38,7 @@ export class ColorLegend extends Legend {
     }
 
     /**
-     * @param {{ style: import("../Style").Style, r: number, zf: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat, sAlpha: import("../Style").Stat }} opts
+     * @param {{ style: import("../Style").Style, r: number, z: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat, sAlpha: import("../Style").Stat }} opts
      */
     update(opts) {
         //could happen when data is still loading

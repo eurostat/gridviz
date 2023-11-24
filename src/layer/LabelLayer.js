@@ -95,7 +95,7 @@ export class LabelLayer extends Layer {
         }
 
         //
-        const zf = geoCanvas.view.z
+        const z = geoCanvas.view.z
 
         //text align
         geoCanvas.ctx.textAlign = this.textAlign || 'start'
@@ -110,7 +110,7 @@ export class LabelLayer extends Layer {
         //draw labels, one by one
         for (const lb of this.labels) {
             //get label style
-            const st = this.style(lb, zf)
+            const st = this.style(lb, z)
             if (!st) continue
             geoCanvas.ctx.font = st
 
@@ -123,8 +123,8 @@ export class LabelLayer extends Layer {
 
             //label stroke, for the halo
             if (this.haloColor && this.haloWidth) {
-                const hc = this.haloColor(lb, zf)
-                const hw = this.haloWidth(lb, zf)
+                const hc = this.haloColor(lb, z)
+                const hw = this.haloWidth(lb, z)
                 if (hc && hw && hw > 0) {
                     geoCanvas.ctx.strokeStyle = hc
                     geoCanvas.ctx.lineWidth = hw
@@ -134,7 +134,7 @@ export class LabelLayer extends Layer {
 
             //label fill
             if (this.color) {
-                const col = this.color(lb, zf)
+                const col = this.color(lb, z)
                 if (col) {
                     geoCanvas.ctx.fillStyle = col
                     geoCanvas.ctx.fillText(lb.name, xP, yP)

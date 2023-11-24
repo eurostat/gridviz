@@ -34,7 +34,7 @@ export class SegmentWidthLegend extends Legend {
         this.labelUnitText = opts.labelUnitText || ''
 
         //segment length in geo unit - a function of the resolution r and zoom level z
-        this.lengthFun = opts.lengthExaggerationFactor || ((r, zf) => r)
+        this.lengthFun = opts.lengthExaggerationFactor || ((r, z) => r)
     }
 
     /**
@@ -73,8 +73,8 @@ export class SegmentWidthLegend extends Legend {
         else if (value * 1.5 <= value_) value *= 1.5
 
         //compute segment width and length, in pix
-        const sWidth = opts.widthFun(value, opts.r, opts.sWidth, opts.zf) / opts.zf
-        const sLength = this.lengthFun(opts.r, opts.zf) / opts.zf
+        const sWidth = opts.widthFun(value, opts.r, opts.sWidth, opts.z) / opts.z
+        const sLength = this.lengthFun(opts.r, opts.z) / opts.z
 
         //TODO use orientation
 

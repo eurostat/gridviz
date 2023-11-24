@@ -37,7 +37,7 @@ export class ColorCategoryLegend extends Legend {
     }
 
     /**
-     * @param {{ style: import("../Style").Style, r: number, zf: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts
+     * @param {{ style: import("../Style").Style, r: number, z: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts
      */
     update(opts) {
         //clear
