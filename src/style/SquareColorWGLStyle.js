@@ -4,7 +4,7 @@
 import { Style } from '../Style.js'
 import { makeWebGLCanvas } from '../utils/webGLUtils.js'
 import { WebGLSquareColoringAdvanced } from '../utils/WebGLSquareColoringAdvanced.js'
-import { monitor, monitorDuration } from '../utils/Utils.js'
+//import { monitor, monitorDuration } from '../utils/Utils.js'
 
 /**
  * Style based on webGL
@@ -20,14 +20,9 @@ export class SquareColorWGLStyle extends Style {
         opts = opts || {}
 
         /**
-         * The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         * @type {string} */
-        this.colorCol = opts.colorCol
-
-        /**
-         * A function returning the t value (within [0,1]) of the cell.
-         * @type {function(number,number,import("../Style").Stat):number} */
-        this.tFun = opts.tFun || ((v, r, s) => v / s.max)
+         * A function returning a t value (within [0,1]) for a cell.
+         * @type {function(import('../Dataset.js').Cell,number,number,object):number} */
+        this.tFun = opts.tFun //(c,r,z,vs) => {}
 
         /**
          * Distribution stretching method.
@@ -76,7 +71,7 @@ export class SquareColorWGLStyle extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
-        if (monitor) monitorDuration('*** SquareColorWGLStyle draw')
+        //if (monitor) monitorDuration('*** SquareColorWGLStyle draw')
 
         //filter
         if (this.filter) cells = cells.filter(this.filter)
@@ -84,11 +79,12 @@ export class SquareColorWGLStyle extends Style {
         //
         const z = geoCanvas.view.z
 
-        //compute color variable statistics
-        const statColor = Style.getStatistics(cells, (c) => c[this.colorCol], true)
-        if (monitor) monitorDuration('   color stats computation')
+        //get view scale
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
-        if (!statColor) return
+        //if (monitor) monitorDuration('   color stats computation')
+
+
 
         //create canvas and webgl renderer
         //for opacity control, see: https://webglfundamentals.org/webgl/lessons/webgl-and-alpha.html
@@ -101,20 +97,20 @@ export class SquareColorWGLStyle extends Style {
             console.error('No webGL')
             return
         }
-        if (monitor) monitorDuration('   web GL canvas creation')
+        //if (monitor) monitorDuration('   web GL canvas creation')
 
         //add vertice and fragment data
         const r2 = resolution / 2
         const verticesBuffer = []
         const tBuffer = []
-        for (let c of cells) {
-            const t = this.tFun(c[this.colorCol], resolution, statColor)
+        for (let cell of cells) {
+            const t = this.tFun(cell, resolution, z, viewScale)
             if (t == null || t == undefined) continue
-            verticesBuffer.push(c.x + r2, c.y + r2)
+            verticesBuffer.push(cell.x + r2, cell.y + r2)
             tBuffer.push(t > 1 ? 1 : t < 0 ? 0 : t)
         }
 
-        if (monitor) monitorDuration('   webgl drawing data preparation')
+        //if (monitor) monitorDuration('   webgl drawing data preparation')
 
         //compute pixel size
         const sizeGeo = this.size ? this.size(resolution, z) : resolution + 0.2 * z
@@ -125,22 +121,22 @@ export class SquareColorWGLStyle extends Style {
         //
         const wgp = new WebGLSquareColoringAdvanced(cvWGL.gl, this.colors, this.stretching, sizeGeo / z, op)
 
-        if (monitor) monitorDuration('   webgl program preparation')
+        //if (monitor) monitorDuration('   webgl program preparation')
 
         //draw
         wgp.draw(verticesBuffer, tBuffer, geoCanvas.getWebGLTransform())
 
-        if (monitor) monitorDuration('   webgl drawing')
+        //if (monitor) monitorDuration('   webgl drawing')
 
         //draw in canvas geo
         geoCanvas.initCanvasTransform()
         geoCanvas.ctx.drawImage(cvWGL.canvas, 0, 0)
 
-        if (monitor) monitorDuration('   canvas drawing')
+        //if (monitor) monitorDuration('   canvas drawing')
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, z: z, sColor: statColor })
+        this.updateLegends({ style: this, r: resolution, z: z, viewScale: viewScale })
 
-        if (monitor) monitorDuration('*** SquareColorWGLStyle end draw')
+        //if (monitor) monitorDuration('*** SquareColorWGLStyle end draw')
     }
 }

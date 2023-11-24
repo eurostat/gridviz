@@ -1,5 +1,4 @@
 <div id="map" style="height: 500px; width: 800px"></div>
-<div id="ext_legend"></div>
 
 <script src="../dist/gridviz.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
@@ -8,14 +7,14 @@
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000, legendDivId: 'ext_legend' })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000 })
 
     //define dataset
     const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
     //define color style
     const style = new gridviz.ShapeColorSizeStyle({
-        color: (c, r, z, [min,max]) => d3.interpolateYlOrRd((c.population - min) / (max - min)),
+        color: (c, r, z, [min, max]) => d3.interpolateYlOrRd((c.population - min) / (max - min)),
         viewScale: (cells) => {
             let max, min
             for (let cell of cells) {
