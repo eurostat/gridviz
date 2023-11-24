@@ -79,13 +79,13 @@
             )
             .setBoundaryLayer(
                 gviz_es.getEurostatBoundariesLayer({
-                    color: (f, zf) => {
+                    color: (f, z) => {
                         const p = f.properties
                         const col = '#888'
                         if (p.co === 'T') return col //"#007577"
-                        if (zf < 400) return col
-                        else if (zf < 1000) return p.lvl >= 3 ? '' : col
-                        else if (zf < 2000) return p.lvl >= 2 ? '' : col
+                        if (z < 400) return col
+                        else if (z < 1000) return p.lvl >= 3 ? '' : col
+                        else if (z < 2000) return p.lvl >= 2 ? '' : col
                         else return p.lvl >= 1 ? '' : col
                     },
                     lineDash: () => [],
@@ -141,11 +141,11 @@
         const s = new gridviz.CompositionStyle({
             color: getColorDict(),
             type: () => 'ring',
-            size: (c, r, zf, scale) => scale(+c.ind),
+            size: (c, r, z, scale) => scale(+c.ind),
             viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.ind, classNumber: 9, minSizePix: 8 }),
             agePyramidHeight: (c, r) => 0.95 * r,
         })
-        s.size_ = (c, r, zf) => r - 1.5 * zf
+        s.size_ = (c, r, z) => r - 1.5 * z
 
         map.addMultiScaleTiledGridLayer(
             [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],

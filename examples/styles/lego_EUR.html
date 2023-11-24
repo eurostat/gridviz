@@ -101,7 +101,7 @@
                         9783.93962050256, 4891.96981025128, 2445.98490512564,
                     ],
                     origin: [0, 6000000],
-                    filterColor: (zf) => '#ffffffd3',
+                    filterColor: (z) => '#ffffffd3',
                 })
 
             //prepare datasets
@@ -163,7 +163,7 @@
                         ds.el,
                         gridviz.LegoStyle.get('elevation', {
                             colors: colors,
-                            tFun: (v, r, s, zf) => gridviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.6),
+                            tFun: (v, r, s, z) => gridviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.6),
                         }),
                         {
                             minPixelsPerCell: 10,

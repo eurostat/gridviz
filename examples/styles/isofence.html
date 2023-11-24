@@ -51,10 +51,10 @@
                         },
                         angle: 50,
                         heightCol: 'ind',
-                        height: (v, r, s, zf) => r * gridviz.sExpRev(v / s.max, -7, 0),
-                        //cornerLineWidth: (c, r, zf, a) => 10 * zf,
-                        //cornerLineStrokeColor: (c, r, zf, a) => "#00000022",
-                        //offset: (c, r, zf) => { return { dx: 0, dy: -r * 0.5 } },
+                        height: (v, r, s, z) => r * gridviz.sExpRev(v / s.max, -7, 0),
+                        //cornerLineWidth: (c, r, z, a) => 10 * z,
+                        //cornerLineStrokeColor: (c, r, z, a) => "#00000022",
+                        //offset: (c, r, z) => { return { dx: 0, dy: -r * 0.5 } },
                         //sVert: false
                     }),
                 ],
@@ -80,7 +80,7 @@
         //height exageration selection
         document.getElementById('exa').oninput = function () {
             //set orientation
-            map.layers[0].styles[0].height = (v, r, s, zf) => this.value * r * gridviz.sExpRev(v / s.max, -7, 0)
+            map.layers[0].styles[0].height = (v, r, s, z) => this.value * r * gridviz.sExpRev(v / s.max, -7, 0)
             //redraw
             map.cg.redraw()
         }

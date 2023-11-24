@@ -36,7 +36,7 @@
                 [
                     new gridviz.NinjaStarStyle({
                         sizeCol: 'ind',
-                        size: (v, r, s, zf) => gridviz.sPow(v / s.max, 0.26),
+                        size: (v, r, s, z) => gridviz.sPow(v / s.max, 0.26),
                         colorCol: 'age_ratio',
                         color: (v, r, s) => d3.interpolateSpectral(1 - v),
                         shape: () => 'p',

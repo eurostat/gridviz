@@ -56,7 +56,7 @@
                         r +
                         'm/',
                     gridviz.TanakaStyle.get('TOT_P_2021', {
-                        tFun: (v, r, s, zf) => gridviz.sExpRev((v - s.min) / (s.max - s.min), -7),
+                        tFun: (v, r, s, z) => gridviz.sExpRev((v - s.min) / (s.max - s.min), -7),
                         nb: 6,
                         color: (t) => d3.interpolateInferno(t * 0.9 + 0.1),
                         colDark: '#333',
@@ -74,7 +74,7 @@
                         9783.93962050256, 4891.96981025128, 2445.98490512564,
                     ],
                     origin: [0, 6000000],
-                    filterColor: (zf) => '#000000e1',
+                    filterColor: (z) => '#000000e1',
                 })
         </script>
     </body>

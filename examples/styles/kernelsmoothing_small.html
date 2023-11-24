@@ -51,7 +51,7 @@
                 [
                     new gviz_sm.KernelSmoothingStyle({
                         value: (c) => +c.value,
-                        sigma: (r, zf) => (r * 10) / 10,
+                        sigma: (r, z) => (r * 10) / 10,
                         factor: 30,
                         filterSm: (v) => v > 0.0005,
                         styles: [
@@ -73,7 +73,7 @@
             //sigma selection
             document.getElementById('sigma').oninput = function () {
                 //set sigma
-                map.layers[0].styles[0].sigma = (r, zf) => (r * +this.value) / 10
+                map.layers[0].styles[0].sigma = (r, z) => (r * +this.value) / 10
                 //redraw
                 map.cg.redraw()
             }

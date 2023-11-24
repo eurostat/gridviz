@@ -45,12 +45,12 @@
                     new gridviz.JoyPlotStyle({
                         height: (c, r, z, scale) => scale(c.TOT_P_2021),
                         viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.TOT_P_2021, maxSizeFactor: 5, stretching: gridviz.powerScale(0.4) }),
-                        lineColor: (y, ys, r, zf) => {
+                        lineColor: (y, ys, r, z) => {
                             const t = 255 - (255 * (y - ys.min)) / (ys.max - ys.min)
                             return 'rgb(' + t + ',' + t + ',' + t + ')'
                         },
-                        lineWidth: (y, ys, r, zf) => 0.1 * r,
-                        fillColor: (y, ys, r, zf) =>
+                        lineWidth: (y, ys, r, z) => 0.1 * r,
+                        fillColor: (y, ys, r, z) =>
                             'rgba(0,0,0,' + (0.0 + (1 - (y - ys.min) / (ys.max - ys.min)) * 0.9) + ')',
                     }),
                 ],
@@ -67,7 +67,7 @@
                     9783.93962050256, 4891.96981025128, 2445.98490512564,
                 ],
                 origin: [0, 6000000],
-                filterColor: (zf) => '#ffffffd3',
+                filterColor: (z) => '#ffffffd3',
             })
     </script>
 </body>

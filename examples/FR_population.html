@@ -126,13 +126,13 @@
                     new gridviz.ShapeColorSizeStyle({
                         color: () => '#c08c59cc',
                         sizeCol: 'ind',
-                        size: (v, r, s, zf) => 1 * r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, z) => 1 * r * gridviz.sPow(v / s.max, 0.3),
                         shape: () => 'square',
                     }),
                     new gridviz.StrokeStyle({
                         maxZoom: 15,
                         sizeCol: 'ind',
-                        size: (v, r, s, zf) => 1 * r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, z) => 1 * r * gridviz.sPow(v / s.max, 0.3),
                     }),
                 ],
                 minPixelsPerCell: 10,
@@ -142,13 +142,13 @@
                     new gridviz.ShapeColorSizeStyle({
                         color: () => '#c08c59cc',
                         sizeCol: 'ind',
-                        size: (v, r, s, zf) => 1.5 * r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, z) => 1.5 * r * gridviz.sPow(v / s.max, 0.3),
                         shape: () => 'circle',
                     }),
                     new gridviz.StrokeStyle({
                         maxZoom: 15,
                         sizeCol: 'ind',
-                        size: (v, r, s, zf) => 1.5 * r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, z) => 1.5 * r * gridviz.sPow(v / s.max, 0.3),
                         shape: () => 'circle',
                     }),
                 ],
@@ -159,13 +159,13 @@
                     new gridviz.ShapeColorSizeStyle({
                         color: () => '#c08c59cc',
                         sizeCol: 'ind',
-                        size: (v, r, s, zf) => 1.5 * r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, z) => 1.5 * r * gridviz.sPow(v / s.max, 0.3),
                         shape: () => 'diamond',
                     }),
                     new gridviz.StrokeStyle({
                         maxZoom: 15,
                         sizeCol: 'ind',
-                        size: (v, r, s, zf) => 1.5 * r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, z) => 1.5 * r * gridviz.sPow(v / s.max, 0.3),
                         shape: () => 'diamond',
                     }),
                 ],
@@ -175,7 +175,7 @@
                 style: [
                     new gridviz.ShapeColorSizeStyle({
                         sizeCol: 'ind',
-                        size: (v, r, s, zf) => r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, z) => r * gridviz.sPow(v / s.max, 0.3),
                         color: () => '#c08c59',
                         shape: () => 'donut',
                     }),
@@ -190,7 +190,7 @@
                         color: (v, r, s) => '#c08c59',
                         length: (v, r) => r,
                         widthCol: 'ind',
-                        width: (v, r, s, zf) => r * gridviz.sPow(v / s.max, 0.25),
+                        width: (v, r, s, z) => r * gridviz.sPow(v / s.max, 0.25),
                     }),
                 ],
                 minPixelsPerCell: 10,
@@ -202,7 +202,7 @@
                         color: (v, r, s) => '#c08c59',
                         length: (v, r) => r,
                         widthCol: 'ind',
-                        width: (v, r, s, zf) => r * gridviz.sPow(v / s.max, 0.25),
+                        width: (v, r, s, z) => r * gridviz.sPow(v / s.max, 0.25),
                     }),
                 ],
                 minPixelsPerCell: 10,
@@ -214,7 +214,7 @@
                         color: (v, r, s) => '#c08c59',
                         length: (v, r) => r * 1.4142,
                         widthCol: 'ind',
-                        width: (v, r, s, zf) => (r * gridviz.sPow(v / s.max, 0.25)) / 1.4142,
+                        width: (v, r, s, z) => (r * gridviz.sPow(v / s.max, 0.25)) / 1.4142,
                     }),
                 ],
                 minPixelsPerCell: 10,
@@ -224,7 +224,7 @@
                 style: [
                     new gridviz.JoyPlotStyle({
                         heightCol: 'ind',
-                        height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
+                        height: (v, r, s, z) => 5 * r * Math.sqrt(v / s.max),
                         fillColor: () => '#c08c59bb',
                     }),
                 ],
@@ -258,13 +258,13 @@
             },
             tanaka: {
                 style: gridviz.TanakaStyle.get('ind', {
-                    tFun: (v, r, s, zf) => gridviz.sExpRev((v - s.min) / (s.max - s.min), -7),
+                    tFun: (v, r, s, z) => gridviz.sExpRev((v - s.min) / (s.max - s.min), -7),
                 }),
                 minPixelsPerCell: 7,
             },
             lego: {
                 style: gridviz.LegoStyle.get('ind', {
-                    tFun: (v, r, s, zf) => gridviz.sPow((v - s.min) / (s.max - s.min), 0.2),
+                    tFun: (v, r, s, z) => gridviz.sPow((v - s.min) / (s.max - s.min), 0.2),
                 }),
                 minPixelsPerCell: 15,
             },
@@ -281,8 +281,8 @@
                 style: [
                     new gridviz.DotDensityStyle({
                         nbCol: 'ind',
-                        nb: (v, r, s, zf) => (((5 * r * r) / (zf * zf)) * v) / s.max,
-                        dotSize: (r, zf) => 1.2 * zf,
+                        nb: (v, r, s, z) => (((5 * r * r) / (z * z)) * v) / s.max,
+                        dotSize: (r, z) => 1.2 * z,
                         color: () => '#FF5733',
                     }),
                 ],

@@ -78,7 +78,7 @@
 
                 //set sigma
                 const sig = document.querySelector('#sigma').value
-                s.sigma = (r, zf) => (r * +sig) / 10
+                s.sigma = (r, z) => (r * +sig) / 10
 
                 //set selected style
                 const sty = document.querySelector('#style').value
@@ -114,7 +114,7 @@
                         new gridviz.ShapeColorSizeStyle({
                             color: () => 'black',
                             sizeCol: 'ksmval',
-                            size: (v, r, s, zf) => 1.3 * r * Math.pow(v / s.max, 0.3),
+                            size: (v, r, s, z) => 1.3 * r * Math.pow(v / s.max, 0.3),
                             shape: () => 'circle',
                         }),
                     ]
@@ -123,7 +123,7 @@
                     s.styles = [
                         new gridviz.JoyPlotStyle({
                             heightCol: 'ksmval',
-                            height: (v, r, s, zf) => {
+                            height: (v, r, s, z) => {
                                 console.log(5 * r * Math.sqrt(v / s.max))
                                 return 5 * r * Math.sqrt(v / s.max)
                             },
@@ -132,7 +132,7 @@
                 } else if (sty == 'lego') {
                     s.factor = 10
                     s.styles = gridviz.LegoStyle.get('ksmval', {
-                        tFun: (v, r, s, zf) => gridviz.sExpRev((v - s.min) / (s.max - s.min), -7),
+                        tFun: (v, r, s, z) => gridviz.sExpRev((v - s.min) / (s.max - s.min), -7),
                         colors: colsLego,
                     })
                 } else if (sty == 'side') {

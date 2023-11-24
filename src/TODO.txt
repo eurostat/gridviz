@@ -1,6 +1,5 @@
 v3: focus on (main) API changes.
 
-visible as a function of zoom z - remove maxzoom/minzoom
 reorganise map - simplify constructor
 legends
 upgrade examples
@@ -8,12 +7,13 @@ upgrade style examples
 upgrade demos
 see legend update on layer style change
 extract modules ?
-zf -> z
+
 population.csv files: make 2021 ones
 doc: only basic CSV and tiled multiscale
 
 Done:
-Drawable class
+visible as a function of zoom z - remove maxzoom/minzoom
+Drawable class, common to layer and style
 gviz to gridviz
 generalisation of opts
 viewScale at style level

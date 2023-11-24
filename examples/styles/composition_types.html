@@ -62,7 +62,7 @@
                         },
                         type: () => 'ring',
                         stripesOrientation: () => 0,
-                        size: (c, r, zf, scale) => scale(+c.men),
+                        size: (c, r, z, scale) => scale(+c.men),
                         viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.men, classNumber: 5, minSizePix: 8 }),
                         offsetAngle: () => 90,
                     }),
@@ -114,7 +114,7 @@
         document.querySelector('#size').addEventListener('change', function () {
             //set size
             s.size = this.checked
-                ? (c, r, zf, scale) => scale(+c.men)
+                ? (c, r, z, scale) => scale(+c.men)
                 : (c, r) => r
             //redraw
             map.cg.redraw()

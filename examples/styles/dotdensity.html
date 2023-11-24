@@ -24,8 +24,8 @@
                     [
                         new gridviz.DotDensityStyle({
                             nbCol: 'TOT_P_2021',
-                            nb: (v, r, s, zf) => (((10 * r * r) / (zf * zf)) * v) / s.max,
-                            dotSize: (r, zf) => 1.2 * zf,
+                            nb: (v, r, s, z) => (((10 * r * r) / (z * z)) * v) / s.max,
+                            dotSize: (r, z) => 1.2 * z,
                             color: () => '#FF5733',
                         }),
                     ],

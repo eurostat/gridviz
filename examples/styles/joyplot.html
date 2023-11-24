@@ -28,7 +28,7 @@
                         height: (c, r, z, scale) => scale(c.TOT_P_2021),
                         viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.TOT_P_2021, maxSizeFactor: 5, stretching: gridviz.powerScale(0.5) }),
                         lineColor: () => 'white',
-                        lineWidth: (y, ys, r, zf) => 0.15 * r,
+                        lineWidth: (y, ys, r, z) => 0.15 * r,
                         fillColor: () => 'black',
                     }),
                 ],

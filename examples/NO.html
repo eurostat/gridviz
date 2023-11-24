@@ -174,8 +174,8 @@
                             color: d3.interpolateYlOrRd,
                             stretching: { fun: 'expRev', alpha: -7 },
                             //set alpha and blend operation
-                            //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
-                            //blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
+                            //alpha: (z) => z < 70 ? 0.75 : 1.0,
+                            //blendOperation: (z) => z < 10 ? "multiply" : "source-over"
                         }),
                         //show stroke for low resolutions
                         new gridviz.StrokeStyle({ maxZoom: 7 }),
@@ -213,7 +213,7 @@
                         new gviz_sm.KernelSmoothingStyle({
                             value: (c) => +c.p,
                             filterSm: (v) => v > 0.001,
-                            sigma: (r, zf) => (r * +sig) / 10,
+                            sigma: (r, z) => (r * +sig) / 10,
                             factor: 2,
                             styles: [
                                 new gridviz.SquareColorWGLStyle({
@@ -227,8 +227,8 @@
                                 })
                             ],
                             //set alpha and blend operation
-                            //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
-                            //blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
+                            //alpha: (z) => z < 70 ? 0.75 : 1.0,
+                            //blendOperation: (z) => z < 50 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -266,8 +266,8 @@
                             },
                             shape: () => 'circle',
                             sizeCol: 'p',
-                            size: (v, r, s, zf) => 1.3 * r * gridviz.sPow(v / s.max, 0.2),
-                            blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
+                            size: (v, r, s, z) => 1.3 * r * gridviz.sPow(v / s.max, 0.2),
+                            blendOperation: (z) => z < 4 ? "multiply" : "source-over"
                         }),
                     ],
                     {
@@ -318,7 +318,7 @@
                     [
                         new gridviz.ShapeColorSizeStyle({
                             sizeCol: 'p',
-                            size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
+                            size: (v, r, s, z) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: 'aa',
                             color: (v, r, s) => {
                                 if (v == 0) return "gray";
