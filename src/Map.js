@@ -68,7 +68,7 @@ export class Map {
             this.geoCanvas.initCanvasTransform()
             this.geoCanvas.clear(this.geoCanvas.backgroundColor)
 
-            const z = this.getZoom()
+            const z = this.geoCanvas.view.z
             this.updateExtentGeo()
 
             //go through the layers
@@ -186,7 +186,7 @@ export class Map {
 
                 //draw image saved + draw rectangle
                 const rectWPix = this.selectionRectangleWidthPix
-                    ? this.selectionRectangleWidthPix(focus.resolution, this.getZoom())
+                    ? this.selectionRectangleWidthPix(focus.resolution, this.geoCanvas.view.z)
                     : 4
                 this.geoCanvas.initCanvasTransform()
                 this.geoCanvas.ctx.strokeStyle = this.selectionRectangleColor
@@ -196,8 +196,8 @@ export class Map {
                 this.geoCanvas.ctx.rect(
                     this.geoCanvas.geoToPixX(focus.cell.x) - rectWPix / 2,
                     this.geoCanvas.geoToPixY(focus.cell.y) + rectWPix / 2,
-                    focus.resolution / this.getZoom() + rectWPix,
-                    -focus.resolution / this.getZoom() - rectWPix
+                    focus.resolution / this.geoCanvas.view.z + rectWPix,
+                    -focus.resolution / this.geoCanvas.view.z - rectWPix
                 )
                 this.geoCanvas.ctx.stroke()
             } else {
@@ -256,7 +256,7 @@ export class Map {
      */
     getCellFocusInfo(posGeo) {
         //go through the layers, starting from top
-        const z = this.getZoom()
+        const z = this.geoCanvas.view.z
         for (let i = this.layers.length - 1; i >= 0; i--) {
             /** @type {import("./Layer").Layer} */
             const layer = this.layers[i]

@@ -1,7 +1,6 @@
 v3: focus on (main) API changes.
 
 upgrade examples
-make everything in opts ?
 see legend update on layer style change
 change stretching codes in webglcolorstyle
 extract modules ?
@@ -12,6 +11,7 @@ doc: only basic CSV and tiled multiscale
 
 Done:
 gviz to gridviz
+generalisation of opts
 viewScale at style level
 minPixelsPerCell -> minPixelsPerCell. zoomResolutionJump ?
 filterColor: for all layers

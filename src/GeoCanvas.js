@@ -130,7 +130,7 @@ export class GeoCanvas {
 
         /** Zoom extent, to limit zoom in and out
          *  @type {Array.<number>} */
-        this.zExtent = [0, Infinity]
+        this.zExtent = opts.zExtent || [0, Infinity]
 
         /** Canvas state, to be used to avoid unnecessary redraws on zoom/pan
          *  @type {{c:HTMLCanvasElement|null,dx:number,dy:number,f:number}} */
