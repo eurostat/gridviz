@@ -1,11 +1,12 @@
 v3: focus on (main) API changes.
 
+reorganise map - simplify constructor
 upgrade examples
+upgrade style examples
+upgrade demos
 see legend update on layer style change
-change stretching codes in webglcolorstyle
 extract modules ?
 zf -> z
-merge geocanvas and map (?)
 population.csv files: make 2021 ones
 doc: only basic CSV and tiled multiscale
 

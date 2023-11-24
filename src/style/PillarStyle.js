@@ -65,15 +65,15 @@ export class PillarStyle extends Style {
      * Draw cells as segments.
      *
      * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {number} r
-     * @param {import("../GeoCanvas").GeoCanvas} cg
+     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
+     * @param {number} resolution
      */
-    draw(cells, r, cg) {
+    draw(cells, geoCanvas, resolution) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.view.z
+        const z = geoCanvas.view.z
 
         let statHeight
         if (this.heightCol) {
@@ -94,48 +94,48 @@ export class PillarStyle extends Style {
         }
 
         //get view center geo position
-        const cvx = cg.view.x + this.viewSX * cg.w * zf
-        const cvy = cg.view.y + this.viewSY * cg.h * zf
+        const cvx = geoCanvas.view.x + this.viewSX * geoCanvas.w * z
+        const cvy = geoCanvas.view.y + this.viewSY * geoCanvas.h * z
         //get view height
-        const H = this.viewHeightFactor * (cg.w + cg.h) * 0.5 * zf
+        const H = this.viewHeightFactor * (geoCanvas.w + geoCanvas.h) * 0.5 * z
 
         //sort cells by y and x
         //const distToViewCenter = (c) => { const dx = cvx - c.x, dy = cvy - c.y; return Math.sqrt(dx * dx + dy * dy) }
         cells.sort((c1, c2) => 100000000 * (c2.y - c1.y) + c1.x - c2.x)
 
-        cg.ctx.lineCap = this.simple ? 'butt' : 'round'
+        geoCanvas.ctx.lineCap = this.simple ? 'butt' : 'round'
 
         //draw shadows
-        cg.ctx.strokeStyle = this.shadowColor
-        cg.ctx.fillStyle = this.shadowColor
+        geoCanvas.ctx.strokeStyle = this.shadowColor
+        geoCanvas.ctx.fillStyle = this.shadowColor
         for (let c of cells) {
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(c[this.widthCol], r, statWidth, zf) : undefined
+            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, z) : undefined
             if (!wG || wG < 0) continue
 
             //height
             /** @type {number|undefined} */
-            const hG = this.height ? this.height(c[this.heightCol], r, statHeight, zf) : undefined
+            const hG = this.height ? this.height(c[this.heightCol], resolution, statHeight, z) : undefined
             if (!hG || hG < 0) continue
 
             //get offset
             //TODO use that
-            const offset = this.offset(c, r, zf)
+            const offset = this.offset(c, resolution, z)
 
             //set width
-            cg.ctx.lineWidth = wG
+            geoCanvas.ctx.lineWidth = wG
 
             //compute cell centre postition
-            const cx = c.x + r / 2
-            const cy = c.y + r / 2
+            const cx = c.x + resolution / 2
+            const cy = c.y + resolution / 2
             const ls = hG * this.shadowFactor
 
             //draw segment
-            cg.ctx.beginPath()
-            cg.ctx.moveTo(cx, cy)
-            cg.ctx.lineTo(cx + ls * Math.cos(this.shadowDirection), cy + ls * Math.sin(this.shadowDirection))
-            cg.ctx.stroke()
+            geoCanvas.ctx.beginPath()
+            geoCanvas.ctx.moveTo(cx, cy)
+            geoCanvas.ctx.lineTo(cx + ls * Math.cos(this.shadowDirection), cy + ls * Math.sin(this.shadowDirection))
+            geoCanvas.ctx.stroke()
 
             /*
             if (this.simple) {
@@ -154,26 +154,26 @@ export class PillarStyle extends Style {
         for (let c of cells) {
             //color
             /** @type {string|undefined} */
-            const col = this.color ? this.color(c[this.colorCol], r, statColor) : undefined
+            const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined
             if (!col) continue
 
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(c[this.widthCol], r, statWidth, zf) : undefined
+            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, z) : undefined
             if (!wG || wG < 0) continue
 
             //height
             /** @type {number|undefined} */
-            const hG = this.height ? this.height(c[this.heightCol], r, statHeight, zf) : undefined
+            const hG = this.height ? this.height(c[this.heightCol], resolution, statHeight, z) : undefined
             if (!hG || hG < 0) continue
 
             //get offset
             //TODO use that
-            const offset = this.offset(c, r, zf)
+            const offset = this.offset(c, resolution, z)
 
             //compute cell centre postition
-            const cx = c.x + r / 2
-            const cy = c.y + r / 2
+            const cx = c.x + resolution / 2
+            const cy = c.y + resolution / 2
 
             //compute angle
             const dx = cx - cvx,
@@ -184,44 +184,44 @@ export class PillarStyle extends Style {
 
             if (this.simple) {
                 //draw segment
-                cg.ctx.strokeStyle = col
-                cg.ctx.lineWidth = wG
-                cg.ctx.beginPath()
-                cg.ctx.moveTo(cx, cy)
-                cg.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
-                cg.ctx.stroke()
+                geoCanvas.ctx.strokeStyle = col
+                geoCanvas.ctx.lineWidth = wG
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.moveTo(cx, cy)
+                geoCanvas.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
+                geoCanvas.ctx.stroke()
             } else {
                 //draw background segment
-                cg.ctx.strokeStyle = this.outlineCol
-                cg.ctx.lineWidth = wG + 2 * this.outlineWidthPix * zf
-                cg.ctx.beginPath()
-                cg.ctx.moveTo(cx, cy)
-                cg.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
-                cg.ctx.stroke()
+                geoCanvas.ctx.strokeStyle = this.outlineCol
+                geoCanvas.ctx.lineWidth = wG + 2 * this.outlineWidthPix * z
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.moveTo(cx, cy)
+                geoCanvas.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
+                geoCanvas.ctx.stroke()
 
                 //draw segment
-                cg.ctx.strokeStyle = col
-                cg.ctx.lineWidth = wG
-                cg.ctx.beginPath()
-                cg.ctx.moveTo(cx, cy)
-                cg.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
-                cg.ctx.stroke()
+                geoCanvas.ctx.strokeStyle = col
+                geoCanvas.ctx.lineWidth = wG
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.moveTo(cx, cy)
+                geoCanvas.ctx.lineTo(cx + d * Math.cos(a), cy + d * Math.sin(a))
+                geoCanvas.ctx.stroke()
 
                 //draw top circle
-                cg.ctx.strokeStyle = this.outlineCol
+                geoCanvas.ctx.strokeStyle = this.outlineCol
                 //cg.ctx.fillStyle = "#c08c59"
-                cg.ctx.lineWidth = this.outlineWidthPix * zf
-                cg.ctx.beginPath()
-                cg.ctx.arc(cx + d * Math.cos(a), cy + d * Math.sin(a), wG * 0.5, 0, 2 * Math.PI, false)
-                cg.ctx.stroke()
+                geoCanvas.ctx.lineWidth = this.outlineWidthPix * z
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.arc(cx + d * Math.cos(a), cy + d * Math.sin(a), wG * 0.5, 0, 2 * Math.PI, false)
+                geoCanvas.ctx.stroke()
                 //cg.ctx.fill();
             }
         }
 
         //in case...
-        cg.ctx.lineCap = 'butt'
+        geoCanvas.ctx.lineCap = 'butt'
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf, sColor: statColor })
+        this.updateLegends({ style: this, r: resolution, zf: z, sColor: statColor })
     }
 }
