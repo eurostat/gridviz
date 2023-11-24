@@ -1,6 +1,5 @@
 v3: focus on (main) API changes.
 
-gviz - gridviz
 upgrade examples
 make everything in opts ?
 see legend update on layer style change
@@ -12,6 +11,7 @@ population.csv files: make 2021 ones
 doc: only basic CSV and tiled multiscale
 
 Done:
+gviz to gridviz
 viewScale at style level
 minPixelsPerCell -> minPixelsPerCell. zoomResolutionJump ?
 filterColor: for all layers
