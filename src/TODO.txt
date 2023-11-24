@@ -1,5 +1,4 @@
 v3: focus on (main) API changes.
-
 reorganise map - simplify constructor
 legends
 upgrade examples
@@ -7,7 +6,6 @@ upgrade style examples
 upgrade demos
 see legend update on layer style change
 extract modules ?
-
 population.csv files: make 2021 ones
 doc: only basic CSV and tiled multiscale
 

@@ -1,37 +1,20 @@
-<!DOCTYPE html>
-<html lang="en" style="height: 100%">
+<div id="map" style="height: 500px; width: 800px"></div>
 
-<head>
-    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-    <title></title>
-</head>
+<script src="../dist/gridviz.js"></script>
+<script>
 
-<body>
-    <h1>Test - GridViz tooltip</h1>
-    <div id="viz-container" style="height: 600px; width: 800px; float: left;"></div>
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 4000 })
 
-    <script src="../dist/gridviz.js"></script>
-    <script>
-        let containerDiv = document.getElementById('viz-container')
+    //define dataset
+    const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
-        new gridviz.Map(containerDiv)
-            .setGeoCenter({ x: 4500000, y: 2900000 })
-            .setZoom(500)
-            .addCSVGridLayer(
-                'https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_5km.csv',
-                5000,
-                [
-                    new gridviz.SquareColorWGLStyle({
-                        colorCol: 'population',
-                        tFun: (value) => Math.min(value / 50000, 1),
-                    }),
-                ],
-                {
-                    //tooltip text configuration
-                    cellInfoHTML: (c) => 'The population of this cell is: <b>' + c.population + '</b> !',
-                }
-            )
-    </script>
-</body>
+    //define style
+    const style = new gridviz.ShapeColorSizeStyle({ color: () => "#333" })
 
-</html>
+    //add layer to map
+    map.layers = [new gridviz.GridLayer(dataset, [style], {
+        cellInfoHTML: (c) => 'The population of this cell is: <b>' + c.population + '</b> !',
+    })]
+
+</script>
