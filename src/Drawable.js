@@ -19,18 +19,6 @@ export class Drawable {
         * @type {function(number):boolean} */
         this.visible = opts.visible
 
-        /** The minimum : Below this level, the object is not drawn.
-         * @type {number} */
-        this.minZoom = opts.minZoom || 0
-
-        /** The maximum : Above this level, the object is not drawn.
-         * @type {number} */
-        this.maxZoom = opts.maxZoom || Infinity
-
-        //ensure acceptable values for the zoom limits.
-        if (this.minZoom >= this.maxZoom)
-            throw new Error('Unexpected zoom limits for element. Zoom min should be smaller than zoom max.')
-
         /** A function returning the alpha (transparency/opacity), between 0.0 (fully transparent) and 1.0 (fully opaque).
          *  The function parameter is the zoom level.
          * (see CanvasRenderingContext2D: globalAlpha property)
