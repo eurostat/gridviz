@@ -247,7 +247,7 @@
                         }),
                     ],
                     {
-                        pixNb: 2,
+                        minPixelsPerCell: 2,
                         cellInfoHTML: (c) =>
                             +c[layCode_]
                                 ? '<b>' + c[layCode_] + '</b> inhabitant(s) in ' + (layCode.replace('y', ''))
@@ -286,7 +286,7 @@
                             new gviz.StrokeStyle({ maxZoom: 80 }),
                         ],
                         {
-                            pixNb: 2,
+                            minPixelsPerCell: 2,
                             cellInfoHTML: (c) =>
                                 '2011: ' +
                                 c.TOT_P_2011 +
@@ -328,7 +328,7 @@
                         }),
                     ],
                     {
-                        pixNb: 8,
+                        minPixelsPerCell: 8,
                         maxZoom: 80,
                     }
                 )
@@ -371,7 +371,7 @@
                         }),
                     ],
                     {
-                        pixNb: 3.5,
+                        minPixelsPerCell: 3.5,
                         cellInfoHTML: (c) => {
                             if (!c.TOT) return 'No information'
                             if (c.TOT == 1)
@@ -483,7 +483,7 @@
                         }),
                     ],
                     {
-                        pixNb: 1,
+                        minPixelsPerCell: 1,
                         cellInfoHTML: (c) => '<b>' + c.rp + '</b> road transport performance',
                         preprocess: (c) => c.rp != '',
                     }
@@ -554,12 +554,12 @@
                         strokeStyle,
                     ],
                     {
-                        pixNb: 1.5,
+                        minPixelsPerCell: 1.5,
                         cellInfoHTML: cHTML,
                     }
                 )
                 map.addLayer(ds.acc, [popStyle], {
-                    pixNb: 1.5,
+                    minPixelsPerCell: 1.5,
                     maxZoom: 300,
                     cellInfoHTML: cHTML,
                 })
@@ -632,12 +632,12 @@
                         strokeStyle,
                     ],
                     {
-                        pixNb: 1.5,
+                        minPixelsPerCell: 1.5,
                         cellInfoHTML: cHTML,
                     }
                 )
                 map.addLayer(ds.acc, [popStyle], {
-                    pixNb: 1.5,
+                    minPixelsPerCell: 1.5,
                     maxZoom: 300,
                     cellInfoHTML: cHTML,
                 })

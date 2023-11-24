@@ -19,10 +19,6 @@ export class CompositionStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** A function returning the view scale.
-         * @type {function(Array.<import('../Dataset.js').Cell>,number, number):object} */
-        this.viewScale = opts.viewScale
-
         /**
          * The dictionary (string -> color) which give the color of each category.
          * @type {object} */

@@ -20,6 +20,14 @@ export class Style {
     constructor(opts) {
         opts = opts || {}
 
+        /** An attribute to specify if a style should be drawn or not
+         * @type {boolean} */
+        this.visible = opts.visible === false ? false : true
+
+        /** A function returning the view scale.
+         * @type {function(Array.<import('./Dataset.js').Cell>,number, number):object} */
+        this.viewScale = opts.viewScale
+
         /** A filter function to apply to the cell list, to filter out some cells not to be drawn (such as for example the cells with value=0).
          * @protected
          * @type {function(import('./Dataset').Cell):boolean} */
@@ -29,10 +37,6 @@ export class Style {
          * @protected
          * @type {function(import('./Dataset').Cell,number,number):{dx:number,dy:number}} */
         this.offset = opts.offset || ((c, r, z) => ({ dx: 0, dy: 0 }))
-
-        /** An attribute to specify if a style should be drawn or not
-         * @type {boolean} */
-        this.visible = opts.visible === false ? false : true
 
         /** A function returning the alpha (transparency/opacity), between 0.0 (fully transparent) and 1.0 (fully opaque).
          *  The function parameter is the .

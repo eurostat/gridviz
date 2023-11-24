@@ -41,7 +41,7 @@
                         new gviz.StrokeStyle({ maxZoom: 15 }),
                     ],
                     {
-                        pixNb: 1.5,
+                        minPixelsPerCell: 1.5,
                         cellInfoHTML: (c) => '<b>' + c.ind + '</b> inhabitant' + (c.ind == 1 ? '' : 's'),
                     }
                 )

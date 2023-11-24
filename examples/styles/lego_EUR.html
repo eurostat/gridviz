@@ -166,7 +166,7 @@
                             tFun: (v, r, s, zf) => gviz.sPow((Math.max(v, 0) - s.min) / (s.max - s.min), 0.6),
                         }),
                         {
-                            pixNb: 10,
+                            minPixelsPerCell: 10,
                             cellInfoHTML: (c) => '<b>' + c.elevation + '</b> m',
                         }
                     )
@@ -286,7 +286,7 @@
                             color: clcColors,
                         }),
                         {
-                            pixNb: 10,
+                            minPixelsPerCell: 10,
                             cellInfoHTML: (c) => clcLabels[c.clc],
                         }
                     )
@@ -302,7 +302,7 @@
                             widthFactor: 0.04,
                         }),
                         {
-                            pixNb: 10,
+                            minPixelsPerCell: 10,
                             cellInfoHTML: (c) =>
                                 +c.TOT_P_2021 ? '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)' : undefined,
                         }

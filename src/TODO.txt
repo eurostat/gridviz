@@ -1,7 +1,7 @@
 v3: focus on (main) API changes.
 
 move viewScale things at style level ?
-pixNb -> minPixelsPerCell something better? At layer level? zoomResolutionJump ?
+minPixelsPerCell -> minPixelsPerCell something better? At layer level? zoomResolutionJump ?
 make everything in opts ?
 see legend update on layer style change
 change stretching codes in webglcolorstyle

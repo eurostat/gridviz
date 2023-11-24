@@ -43,20 +43,20 @@ export class MultiResolutionDataset {
     /**
      * Return the relevant dataset for a specified zoom.
      * @param {number} z
-     * @param {number} pixNb
+     * @param {number} minPixelsPerCell
      * @returns {import("./Dataset").Dataset|undefined}
      * */
-    getDataset(z, pixNb) {
+    getDataset(z, minPixelsPerCell) {
 
         //special case whith single dataset
         if (this.datasets.length == 1) return this.datasets[0]
 
         const rs = this.resolutions
         let i = 0
-        let z_ = rs[i] / pixNb
+        let z_ = rs[i] / minPixelsPerCell
         while (z_ < z && i < rs.length) {
             i++
-            z_ = rs[i] / pixNb
+            z_ = rs[i] / minPixelsPerCell
         }
         //if (i == 0) return this.dataset.datasets[0];
         //return this.dataset.datasets[i - 1];

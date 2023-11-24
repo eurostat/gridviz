@@ -107,7 +107,7 @@
                     }),
                     new gviz.StrokeStyle({ maxZoom: 15 }),
                 ],
-                pixNb: 2,
+                minPixelsPerCell: 2,
             },
             ccolor: {
                 style: [
@@ -118,7 +118,7 @@
                     }),
                     new gviz.StrokeStyle({ maxZoom: 15, shape: () => 'circle' }),
                 ],
-                pixNb: 7,
+                minPixelsPerCell: 7,
             },
 
             square: {
@@ -135,7 +135,7 @@
                         size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.3),
                     }),
                 ],
-                pixNb: 10,
+                minPixelsPerCell: 10,
             },
             circle: {
                 style: [
@@ -152,7 +152,7 @@
                         shape: () => 'circle',
                     }),
                 ],
-                pixNb: 10,
+                minPixelsPerCell: 10,
             },
             diamond: {
                 style: [
@@ -169,7 +169,7 @@
                         shape: () => 'diamond',
                     }),
                 ],
-                pixNb: 10,
+                minPixelsPerCell: 10,
             },
             donut: {
                 style: [
@@ -180,7 +180,7 @@
                         shape: () => 'donut',
                     }),
                 ],
-                pixNb: 15,
+                minPixelsPerCell: 15,
             },
 
             segmentH: {
@@ -193,7 +193,7 @@
                         width: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25),
                     }),
                 ],
-                pixNb: 10,
+                minPixelsPerCell: 10,
             },
             segmentV: {
                 style: [
@@ -205,7 +205,7 @@
                         width: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25),
                     }),
                 ],
-                pixNb: 10,
+                minPixelsPerCell: 10,
             },
             segmentO: {
                 style: [
@@ -217,7 +217,7 @@
                         width: (v, r, s, zf) => (r * gviz.sPow(v / s.max, 0.25)) / 1.4142,
                     }),
                 ],
-                pixNb: 10,
+                minPixelsPerCell: 10,
             },
 
             joyplot: {
@@ -228,7 +228,7 @@
                         fillColor: () => '#c08c59bb',
                     }),
                 ],
-                pixNb: 7,
+                minPixelsPerCell: 7,
             },
             side: {
                 style: [
@@ -254,19 +254,19 @@
                         fillColor: (c) => '#e2c9b2',
                     }),
                 ],
-                pixNb: 7,
+                minPixelsPerCell: 7,
             },
             tanaka: {
                 style: gviz.TanakaStyle.get('ind', {
                     tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
                 }),
-                pixNb: 7,
+                minPixelsPerCell: 7,
             },
             lego: {
                 style: gviz.LegoStyle.get('ind', {
                     tFun: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2),
                 }),
-                pixNb: 15,
+                minPixelsPerCell: 15,
             },
             pillar: {
                 style: [
@@ -275,7 +275,7 @@
                         height: (v, r, s, z) => 15 * r * gviz.sPow(v / s.max, 0.7),
                     }),
                 ],
-                pixNb: 18,
+                minPixelsPerCell: 18,
             },
             dot: {
                 style: [
@@ -286,7 +286,7 @@
                         color: () => '#FF5733',
                     }),
                 ],
-                pixNb: 7,
+                minPixelsPerCell: 7,
             },
             text: {
                 style: [
@@ -300,7 +300,7 @@
                         fontSize: (v, r, s, z) => 1.2 * r,
                     }),
                 ],
-                pixNb: 10,
+                minPixelsPerCell: 10,
             },
         }
 
@@ -312,7 +312,7 @@
                 'm/',
             sd.scolor.style,
             {
-                pixNb: sd.scolor.pixNb,
+                minPixelsPerCell: sd.scolor.minPixelsPerCell,
                 cellInfoHTML: (c) => '<b>' + c.ind + '</b> inhabitant(s)',
             }
         )
@@ -361,7 +361,7 @@
             lay.styles = sd[value].style
 
             //set new zoom breaks
-            lay.pixNb = sd[value].pixNb
+            lay.minPixelsPerCell = sd[value].minPixelsPerCell
 
             //redraw
             map.cg.redraw()

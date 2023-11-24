@@ -225,7 +225,7 @@
                         }),
                     ],
                     {
-                        pixNb: 2,
+                        minPixelsPerCell: 2,
                         cellInfoHTML: (c) =>
                             '<b>' +
                             c.ind +
@@ -269,7 +269,7 @@
                         }),
                     ],
                     {
-                        pixNb: 16,
+                        minPixelsPerCell: 16,
                         cellInfoHTML: (c) =>
                             '<b>' +
                             c.ind +
@@ -349,7 +349,7 @@
                         }),
                     ],
                     {
-                        pixNb: 11,
+                        minPixelsPerCell: 11,
                         cellInfoHTML: (c) =>
                             '<b>' +
                             c.ind +
@@ -397,7 +397,7 @@
                         }),
                     ],
                     {
-                        pixNb: 6,
+                        minPixelsPerCell: 6,
                         cellInfoHTML: (c) =>
                             '<b>' +
                             f1(c.yyy) +
@@ -445,7 +445,7 @@
                         new gviz.StrokeStyle({ maxZoom: 15 }),
                     ],
                     {
-                        pixNb: 2,
+                        minPixelsPerCell: 2,
                         cellInfoHTML: (c) =>
                             '<b>' +
                             Math.floor(c.rIncome) +
@@ -476,7 +476,7 @@
                         }),
                     ],
                     {
-                        pixNb: 6,
+                        minPixelsPerCell: 6,
                         cellInfoHTML: (c) =>
                             (c.rPoverty == 0
                                 ? 'Pas'
@@ -519,7 +519,7 @@
                         }),
                     ],
                     {
-                        pixNb: 10,
+                        minPixelsPerCell: 10,
                         cellInfoHTML: (c) =>
                             c.men +
                             ' ménage' +
@@ -566,7 +566,7 @@
                         }),
                     ],
                     {
-                        pixNb: 6,
+                        minPixelsPerCell: 6,
                         cellInfoHTML: (c) =>
                             c.men +
                             ' ménage' +
@@ -607,7 +607,7 @@
                         }),
                     ],
                     {
-                        pixNb: 6,
+                        minPixelsPerCell: 6,
                         cellInfoHTML: (c) =>
                             c.men +
                             ' ménage' +
@@ -647,7 +647,7 @@
                         new gviz.StrokeStyle({ maxZoom: 15 }),
                     ],
                     {
-                        pixNb: 2,
+                        minPixelsPerCell: 2,
                         cellInfoHTML: (c) =>
                             '<b>' +
                             f1(Math.floor(10 * c.rMenSurf) / 10) +
@@ -685,7 +685,7 @@
                         }),
                     ],
                     {
-                        pixNb: 8,
+                        minPixelsPerCell: 8,
                         cellInfoHTML: (c) =>
                             c.men +
                             ' ménage' +
@@ -734,7 +734,7 @@
                         }),
                     ],
                     {
-                        pixNb: 8,
+                        minPixelsPerCell: 8,
                         cellInfoHTML: (c) =>
                             f1(c.log) +
                             ' logement' +
@@ -797,7 +797,7 @@
                         }),
                     ],
                     {
-                        pixNb: 8,
+                        minPixelsPerCell: 8,
                         cellInfoHTML: (c) =>
                             f1(c.log) +
                             ' logement' +
@@ -847,7 +847,7 @@
                         new gviz.StrokeStyle({ maxZoom: 15 }),
                     ],
                     {
-                        pixNb: 2,
+                        minPixelsPerCell: 2,
                         cellInfoHTML: (c) =>
                             (c.rLogSoc == 0
                                 ? 'Pas'

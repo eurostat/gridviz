@@ -238,7 +238,7 @@
                         new gviz.StrokeStyle({ maxZoom: 7 }),
                     ],
                     {
-                        pixNb: 1.5,
+                        minPixelsPerCell: 1.5,
                         cellInfoHTML: (c) => '<b>' + c["0"] + '</b> person' + (+c["0"] == 1 ? '' : 's')
                     }
                 )
@@ -282,7 +282,7 @@
                         }),
                     ],
                     {
-                        pixNb: 1.5,
+                        minPixelsPerCell: 1.5,
                         cellInfoHTML: (c) => '<b>' + c["0"] + '</b> person' + (+c["0"] == 1 ? '' : 's')
                     }
                 )
@@ -323,7 +323,7 @@
                         }),
                     ],
                     {
-                        pixNb: 8,
+                        minPixelsPerCell: 8,
                         cellInfoHTML: (c) => {
                             return (
                                 c["1"] +
@@ -388,7 +388,7 @@
                         }),
                     ],
                     {
-                        pixNb: 12,
+                        minPixelsPerCell: 12,
                         cellInfoHTML: (c) =>
                             'Single: ' +
                             (c.S) +
@@ -452,7 +452,7 @@
                         }),
                     ],
                     {
-                        pixNb: 15,
+                        minPixelsPerCell: 15,
                         cellInfoHTML: (c) =>
                             ' < 18 : ' +
                             (c["1"]) +
@@ -507,7 +507,7 @@
                         }),
                     ],
                     {
-                        pixNb: 7,
+                        minPixelsPerCell: 7,
                         cellInfoHTML: (c) =>
                             '<b>' +
                             (c.yyy) +
@@ -568,7 +568,7 @@
                         }),
                     ],
                     {
-                        pixNb: sized ? 22 : 5,
+                        minPixelsPerCell: sized ? 22 : 5,
                         cellInfoHTML: (c) =>
                             'Germany: ' +
                             (c["1"]) +
@@ -636,7 +636,7 @@
                         }),
                     ],
                     {
-                        pixNb: sized ? 22 : 5,
+                        minPixelsPerCell: sized ? 22 : 5,
                         cellInfoHTML: (c) =>
                             'Germany: ' +
                             (c["1"]) +
@@ -704,7 +704,7 @@
                         }),
                     ],
                     {
-                        pixNb: sized ? 10 : 4,
+                        minPixelsPerCell: sized ? 10 : 4,
                         cellInfoHTML: (c) =>
                             'Roman catholic church: ' +
                             (c["1"]) +
@@ -763,7 +763,7 @@
                         }),
                     ],
                     {
-                        pixNb: 12,
+                        minPixelsPerCell: 12,
                         cellInfoHTML: (c) =>
                             'Detached house: ' +
                             (c["1"]) +
@@ -847,7 +847,7 @@
                         }),
                     ],
                     {
-                        pixNb: 12,
+                        minPixelsPerCell: 12,
                         cellInfoHTML: (c) => {
                             const sb = []
                             for (let i = 1; i <= 10; i++)
@@ -902,7 +902,7 @@
                         }),
                     ],
                     {
-                        pixNb: 12,
+                        minPixelsPerCell: 12,
                         cellInfoHTML: (c) =>
                             'Central heating: ' +
                             (c.zentral) +

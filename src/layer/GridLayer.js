@@ -12,7 +12,7 @@ export class GridLayer extends Layer {
     /**
      * @param {import("../Dataset").Dataset|import("../MultiResolutionDataset").MultiResolutionDataset} dataset The dataset to show.
      * @param {Array.<import("../Style").Style>} styles The styles, ordered in drawing order.
-     * @param {{visible?:boolean,alpha?:number,blendOperation?:GlobalCompositeOperation,minZoom?:number,maxZoom?:number,pixNb?:number,cellInfoHTML?:function(import("../Dataset").Cell):string}} opts
+     * @param {{visible?:boolean,alpha?:number,blendOperation?:GlobalCompositeOperation,minZoom?:number,maxZoom?:number,minPixelsPerCell?:number,cellInfoHTML?:function(import("../Dataset").Cell):string}} opts
      *      minZoom: The minimum zoom level when to show the layer. maxZoom: The maximum zoom level when to show the layer
      */
     constructor(dataset, styles, opts = {}) {
@@ -26,7 +26,7 @@ export class GridLayer extends Layer {
 
         /** Unit: number of pixels
          * @type {number} */
-        this.pixNb = opts.pixNb || 3
+        this.minPixelsPerCell = opts.minPixelsPerCell || 3
 
         /**
          * The function returning cell information as HTML.
@@ -109,7 +109,7 @@ export class GridLayer extends Layer {
      * */
     getDataset(z) {
         if (z < this.minZoom || z > this.maxZoom) return
-        return this.dataset.getDataset(z, this.pixNb);
+        return this.dataset.getDataset(z, this.minPixelsPerCell);
     }
 
     /**

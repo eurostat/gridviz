@@ -258,7 +258,7 @@
                     }),
                 ],
                 {
-                    pixNb: 8,
+                    minPixelsPerCell: 8,
                     maxZoom: 80,
                 }
             )
@@ -290,7 +290,7 @@
                     }),
                 ],
                 {
-                    pixNb: 3.5,
+                    minPixelsPerCell: 3.5,
                     cellInfoHTML: (c, r) => {
                         if (!c.TOT) return 'No information'
                         if (c.TOT == 1)

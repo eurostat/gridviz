@@ -187,7 +187,7 @@ This is the simplest case, when a unique CSV file is loaded. See the [basic exam
 
 ### Multi scale CSV data
 
-When several CSV files contain the data with different resolutions, it is possible to define a multi-scale dataset from those files. The change of dataset depending on the zoom level is controled with the **pixNb** parameter:
+When several CSV files contain the data with different resolutions, it is possible to define a multi-scale dataset from those files. The change of dataset depending on the zoom level is controled with the **minPixelsPerCell** parameter:
 
 ```javascript
 new gviz.Map(containerDiv)
@@ -212,7 +212,7 @@ new gviz.Map(containerDiv)
         ],
         {
             //the maximum pixel size before jumping to a lower resolution
-            pixNb: 3,
+            minPixelsPerCell: 3,
         }
     )
 ```
@@ -246,7 +246,7 @@ new gviz.Map(containerDiv)
 
 ### Multi scale tiled data
 
-Multi scale tiled data based on the [tiled format](tiledformat.md) can also be simply loaded with the example below. Here again, the change of dataset depending on the zoom level is controled with the **pixNb** parameter:
+Multi scale tiled data based on the [tiled format](tiledformat.md) can also be simply loaded with the example below. Here again, the change of dataset depending on the zoom level is controled with the **minPixelsPerCell** parameter:
 
 ```javascript
 new gviz.Map(containerDiv)
@@ -269,7 +269,7 @@ new gviz.Map(containerDiv)
         ],
         {
             //the maximum pixel size before jumping to a lower resolution
-            pixNb: 3,
+            minPixelsPerCell: 3,
         }
     )
 ```
@@ -333,7 +333,7 @@ new gviz.Map(containerDiv)
                 delete c.TOT_P_2018
                 delete c.TOT_P_2021
             },
-            pixNb: 3,
+            minPixelsPerCell: 3,
         }
     )
 ```
@@ -357,7 +357,7 @@ new gviz.Map(containerDiv)
             /* define the style) */
         ],
         {
-            pixNb: 3,
+            minPixelsPerCell: 3,
             //select cells with clc=41
             preprocess: (c) => +c.clc == 41,
         }

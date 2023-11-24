@@ -181,7 +181,7 @@
                         new gviz.StrokeStyle({ maxZoom: 7 }),
                     ],
                     {
-                        pixNb: 1.5,
+                        minPixelsPerCell: 1.5,
                         cellInfoHTML: (c) => '<b>' + c.p + '</b> person' + (+c.p == 1 ? '' : 's')
                     }
                 )
@@ -232,7 +232,7 @@
                         }),
                     ],
                     {
-                        pixNb: 1.5,
+                        minPixelsPerCell: 1.5,
                         cellInfoHTML: (c) => '<b>' + c.p + '</b> person' + (+c.p == 1 ? '' : 's')
                     }
                 )
@@ -271,7 +271,7 @@
                         }),
                     ],
                     {
-                        pixNb: 8,
+                        minPixelsPerCell: 8,
                         cellInfoHTML: (c) => {
                             return (
                                 c.m +
@@ -329,7 +329,7 @@
                         }),
                     ],
                     {
-                        pixNb: 6,
+                        minPixelsPerCell: 6,
                         /*cellInfoHTML: (c) =>
                             '<b>' +
                             f1(c.yyy) +
@@ -368,7 +368,7 @@
                             //anchorModeY: (c, r, z) => "first"
                         })],
                     {
-                        pixNb: 10,
+                        minPixelsPerCell: 10,
                         cellInfoHTML: (c) => {
 
                             //prepare chart data

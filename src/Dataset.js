@@ -124,10 +124,10 @@ export class Dataset {
     /**
      * Return the relevant dataset for a specified zoom.
      * @param {number} z
-     * @param {number} pixNb
+     * @param {number} minPixelsPerCell
      * @returns {Dataset|undefined}
      * */
-    getDataset(z, pixNb) {
+    getDataset(z, minPixelsPerCell) {
         return this
     }
 
