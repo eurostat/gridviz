@@ -119,7 +119,7 @@ export class GeoCanvas {
                     if (this.onZoomStartFun) this.onZoomStartFun(e)
                 })
                 .on('end', (e) => {
-                    this.redraw(true)
+                    this.redraw()
                     this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
 
                     if (this.onZoomEndFun) this.onZoomEndFun(e)
@@ -135,17 +135,6 @@ export class GeoCanvas {
         /** Canvas state, to be used to avoid unnecessary redraws on zoom/pan
          *  @type {{c:HTMLCanvasElement|null,dx:number,dy:number,f:number}} */
         this.canvasSave = { c: null, dx: 0, dy: 0, f: 1 }
-    }
-
-    /** 
-     * @param {number} x
-     * @param {number} y
-     * @param {number|undefined} z
-     */
-    setView(x, y, z = undefined) {
-        this.view.x = x
-        this.view.y = y
-        if (z != undefined) this.view.z = z
     }
 
     /** @returns {View} */

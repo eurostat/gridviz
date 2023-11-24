@@ -1,5 +1,7 @@
 v3: focus on (main) API changes.
 
+draw(cells, canvas, resolution) - remove view parameter
+canvas -> geocanvas
 pixNb -> something better? At layer level? zoomResolutionJump ?
 Enveloppe
 filterColor: move to layer level ?

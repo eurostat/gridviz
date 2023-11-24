@@ -36,9 +36,9 @@ export class GridLayer extends Layer {
     }
 
     /** */
-    draw(canvas, legend) {
+    draw(geoCanvas, legend) {
 
-        const z = canvas.view.z
+        const z = geoCanvas.view.z
 
         //get layer dataset component
         /** @type {import('../Dataset.js').Dataset|undefined} */
@@ -46,10 +46,10 @@ export class GridLayer extends Layer {
         if (!dsc) return
 
         //launch data download, if necessary
-        dsc.getData(canvas.extGeo)
+        dsc.getData(geoCanvas.extGeo)
 
         //update dataset view cache
-        dsc.updateViewCache(canvas.extGeo)
+        dsc.updateViewCache(geoCanvas.extGeo)
 
         //draw cells, style by style
         for (const s of this.styles) {
@@ -60,11 +60,11 @@ export class GridLayer extends Layer {
 
             //set style alpha and blend mode
             //TODO: multiply by layer alpha ?
-            canvas.ctx.globalAlpha = s.alpha ? s.alpha(z) : 1.0
-            canvas.ctx.globalCompositeOperation = s.blendOperation(z)
+            geoCanvas.ctx.globalAlpha = s.alpha ? s.alpha(z) : 1.0
+            geoCanvas.ctx.globalCompositeOperation = s.blendOperation(z)
 
             //draw with style
-            s.draw(dsc.getViewCache(), canvas, dsc.getResolution(), canvas.getView())
+            s.draw(dsc.getViewCache(), geoCanvas, dsc.getResolution())
         }
 
         //add legend element

@@ -280,7 +280,9 @@ export class Map {
      * @param {number|undefined} z
      */
     setView(x, y, z = undefined) {
-        this.canvas.setView(x, y, z)
+        this.canvas.view.x = x
+        this.canvas.view.y = y
+        if (z != undefined) this.canvas.view.z = z
         return this
     }
 

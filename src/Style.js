@@ -73,13 +73,12 @@ export class Style {
      * Draw cells.
      *
      * @param {Array.<import('./Dataset').Cell>} cells The cells to draw.
-     * @param {import("./GeoCanvas").GeoCanvas} canvas The canvas where to draw them.
+     * @param {import("./GeoCanvas").GeoCanvas} geoCanvas The canvas where to draw them.
      * @param {number} resolution Their resolution (in geographic unit)
-     * @param {import('./GeoCanvas').View} view The map view
      * @abstract
      */
-    draw(cells, canvas, resolution, view) {
-        if (this.drawFun) this.drawFun(cells, canvas, resolution, view)
+    draw(cells, geoCanvas, resolution) {
+        if (this.drawFun) this.drawFun(cells, geoCanvas, resolution)
         else throw new Error('Method draw not implemented.')
     }
 

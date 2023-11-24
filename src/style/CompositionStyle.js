@@ -60,15 +60,15 @@ export class CompositionStyle extends Style {
      * Draw cells as squares depending on their value.
      *
      * @param {Array.<import("../Dataset.js").Cell>} cells
+     * @param {import("../GeoCanvas.js").GeoCanvas} geoCanvas
      * @param {number} r
-     * @param {import("../GeoCanvas.js").GeoCanvas} cg
      */
-    draw(cells, r, cg) {
+    draw(cells, geoCanvas, r) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.view.z
+        const zf = geoCanvas.view.z
 
         //get view scale
         const vs = this.viewScale ? this.viewScale(cells, r, zf) : undefined
@@ -122,7 +122,7 @@ export class CompositionStyle extends Style {
                 for (let [column, color] of Object.entries(this.color)) {
                     if (type_ === 'agepyramid') {
                         //set category color
-                        cg.ctx.fillStyle = color
+                        geoCanvas.ctx.fillStyle = color
 
                         //get category value
                         const val = cell[column]
@@ -132,13 +132,13 @@ export class CompositionStyle extends Style {
                         const wG = (sG * val) / maxVal
 
                         //draw bar
-                        cg.ctx.fillRect(xc + (r - wG) / 2, yc + cumul, wG, incr)
+                        geoCanvas.ctx.fillRect(xc + (r - wG) / 2, yc + cumul, wG, incr)
 
                         //next height
                         cumul += incr
                     } else if (type_ === 'radar') {
                         //set category color
-                        cg.ctx.fillStyle = color
+                        geoCanvas.ctx.fillStyle = color
 
                         //get categroy value
                         const val = cell[column]
@@ -149,17 +149,17 @@ export class CompositionStyle extends Style {
                         const rG = (sG / 2) * Math.sqrt(val / maxVal)
 
                         //draw angular sector
-                        cg.ctx.beginPath()
-                        cg.ctx.moveTo(xc, yc)
-                        cg.ctx.arc(xc, yc, rG, cumul - incr, cumul)
-                        cg.ctx.lineTo(xc, yc)
-                        cg.ctx.fill()
+                        geoCanvas.ctx.beginPath()
+                        geoCanvas.ctx.moveTo(xc, yc)
+                        geoCanvas.ctx.arc(xc, yc, rG, cumul - incr, cumul)
+                        geoCanvas.ctx.lineTo(xc, yc)
+                        geoCanvas.ctx.fill()
 
                         //next angular sector
                         cumul += incr
                     } else if (type_ === 'halftone') {
                         //set category color
-                        cg.ctx.fillStyle = color
+                        geoCanvas.ctx.fillStyle = color
 
                         //get categroy value
                         const val = cell[column]
@@ -169,15 +169,15 @@ export class CompositionStyle extends Style {
                         const rG = sG * 0.333 * Math.sqrt(val / maxVal)
 
                         //draw circle
-                        cg.ctx.beginPath()
-                        cg.ctx.arc(
+                        geoCanvas.ctx.beginPath()
+                        geoCanvas.ctx.arc(
                             xc + r * 0.25 * Math.cos(cumul),
                             yc + r * 0.25 * Math.sin(cumul),
                             rG,
                             0,
                             2 * Math.PI
                         )
-                        cg.ctx.fill()
+                        geoCanvas.ctx.fill()
 
                         //next angular sector
                         cumul += incr
@@ -206,14 +206,14 @@ export class CompositionStyle extends Style {
                     if (!share || isNaN(share)) continue
 
                     //set color
-                    cg.ctx.fillStyle = color
+                    geoCanvas.ctx.fillStyle = color
 
                     //draw symbol part
                     if (type_ === 'flag') {
                         //draw flag stripe
                         if (ori == 0) {
                             //horizontal
-                            cg.ctx.fillRect(
+                            geoCanvas.ctx.fillRect(
                                 cell.x + d + offset.dx,
                                 cell.y + d + cumul * sG + offset.dy,
                                 sG,
@@ -221,7 +221,7 @@ export class CompositionStyle extends Style {
                             )
                         } else {
                             //vertical
-                            cg.ctx.fillRect(
+                            geoCanvas.ctx.fillRect(
                                 cell.x + d + cumul * sG + offset.dx,
                                 cell.y + d + offset.dy,
                                 share * sG,
@@ -236,11 +236,11 @@ export class CompositionStyle extends Style {
                         const a2 = (cumul + share) * 2 * Math.PI
 
                         //draw
-                        cg.ctx.beginPath()
-                        cg.ctx.moveTo(xc, yc)
-                        cg.ctx.arc(xc, yc, sG * 0.5, a1 + offAng, a2 + offAng)
+                        geoCanvas.ctx.beginPath()
+                        geoCanvas.ctx.moveTo(xc, yc)
+                        geoCanvas.ctx.arc(xc, yc, sG * 0.5, a1 + offAng, a2 + offAng)
                         if (this.pieChartInternalRadiusFactor)
-                            cg.ctx.arc(
+                            geoCanvas.ctx.arc(
                                 xc,
                                 yc,
                                 sG * 0.5 * this.pieChartInternalRadiusFactor,
@@ -248,19 +248,19 @@ export class CompositionStyle extends Style {
                                 a2 + offAng,
                                 true
                             )
-                        cg.ctx.closePath()
-                        cg.ctx.fill()
+                        geoCanvas.ctx.closePath()
+                        geoCanvas.ctx.fill()
                     } else if (type_ === 'ring') {
                         //draw ring
-                        cg.ctx.beginPath()
-                        cg.ctx.arc(xc, yc, Math.sqrt(1 - cumul) * sG * 0.5, 0, 2 * Math.PI)
-                        cg.ctx.fill()
+                        geoCanvas.ctx.beginPath()
+                        geoCanvas.ctx.arc(xc, yc, Math.sqrt(1 - cumul) * sG * 0.5, 0, 2 * Math.PI)
+                        geoCanvas.ctx.fill()
                     } else if (type_ === 'segment') {
                         //draw segment sections
                         const wG = (sG * sG) / r
                         if (ori == 0) {
                             //horizontal
-                            cg.ctx.fillRect(
+                            geoCanvas.ctx.fillRect(
                                 cell.x + offset.dx,
                                 cell.y + (r - wG) / 2 + cumul * wG + offset.dy,
                                 r,
@@ -268,7 +268,7 @@ export class CompositionStyle extends Style {
                             )
                         } else {
                             //vertical
-                            cg.ctx.fillRect(
+                            geoCanvas.ctx.fillRect(
                                 cell.x + cumul * r + offset.dx,
                                 cell.y + (r - wG) / 2 + offset.dy,
                                 share * r,

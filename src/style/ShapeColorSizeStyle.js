@@ -35,12 +35,12 @@ export class ShapeColorSizeStyle extends Style {
     /**
      * Draw cells as squares, with various colors and sizes.
      */
-    draw(cells, canvas, resolution, view) {
+    draw(cells, canvas, resolution) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
         //zoom
-        const z = view.z
+        const z = canvas.view.z
 
         //get view scale
         const vs = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
