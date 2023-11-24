@@ -42,8 +42,8 @@ export const exponentialScale = (base = 3) => {
  */
 export const logarithmicScale = (base = 3) => {
     if (base == 0) return t => t
-    const a = Math.exp(base)
-    return t => 1 - (1 / base) * Math.log(a * (1 - t) + t)
+    const a = Math.exp(base), b = 1 - a
+    return t => 1 - Math.log(a + t * b) / base
 }
 
 
