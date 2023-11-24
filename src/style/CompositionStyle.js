@@ -61,9 +61,9 @@ export class CompositionStyle extends Style {
      *
      * @param {Array.<import("../Dataset.js").Cell>} cells
      * @param {import("../GeoCanvas.js").GeoCanvas} geoCanvas
-     * @param {number} r
+     * @param {number} resolution
      */
-    draw(cells, geoCanvas, r) {
+    draw(cells, geoCanvas, resolution) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
@@ -71,7 +71,7 @@ export class CompositionStyle extends Style {
         const z = geoCanvas.view.z
 
         //get view scale
-        const vs = this.viewScale ? this.viewScale(cells, r, z) : undefined
+        const vs = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         //nb categories - used for radar and agepyramid
         const nbCat = Object.entries(this.color).length
@@ -80,21 +80,21 @@ export class CompositionStyle extends Style {
         for (let cell of cells) {
 
             //size
-            const sG = this.size ? this.size(cell, r, z, vs) : r
+            const sG = this.size ? this.size(cell, resolution, z, vs) : resolution
             if (!sG) continue
 
             //get offset
-            const offset = this.offset(cell, r, z)
+            const offset = this.offset(cell, resolution, z)
 
             //get symbol type
-            const type_ = this.type ? this.type(cell, r, z, vs) : 'flag'
+            const type_ = this.type ? this.type(cell, resolution, z, vs) : 'flag'
 
             //compute center position
-            const xc = cell.x + offset.dx + (type_ === 'agepyramid' ? 0 : r * 0.5)
-            const yc = cell.y + offset.dy + (type_ === 'agepyramid' ? 0 : r * 0.5)
+            const xc = cell.x + offset.dx + (type_ === 'agepyramid' ? 0 : resolution * 0.5)
+            const yc = cell.y + offset.dy + (type_ === 'agepyramid' ? 0 : resolution * 0.5)
 
             //compute offset angle, when relevant
-            const offAng = this.offsetAngle ? (this.offsetAngle(cell, r, z, vs) * Math.PI) / 180 : 0
+            const offAng = this.offsetAngle ? (this.offsetAngle(cell, resolution, z, vs) * Math.PI) / 180 : 0
 
             if (type_ === 'agepyramid' || type_ === 'radar' || type_ === 'halftone') {
                 //get cell category max value
@@ -107,13 +107,13 @@ export class CompositionStyle extends Style {
                 //cumul
                 let cumul = 0
                 if (type_ === 'agepyramid' && this.agePyramidHeight)
-                    cumul = (r - this.agePyramidHeight(cell, r, z, vs)) / 2
+                    cumul = (resolution - this.agePyramidHeight(cell, resolution, z, vs)) / 2
                 if (type_ === 'radar' || type_ === 'halftone') cumul = Math.PI / 2 + offAng
 
                 //compute the increment, which is the value to increment the cumul for each category
                 const incr =
                     type_ === 'agepyramid'
-                        ? (this.agePyramidHeight ? this.agePyramidHeight(cell, r, z, vs) : r) / nbCat
+                        ? (this.agePyramidHeight ? this.agePyramidHeight(cell, resolution, z, vs) : resolution) / nbCat
                         : type_ === 'radar' || type_ === 'halftone'
                             ? (2 * Math.PI) / nbCat
                             : undefined
@@ -132,7 +132,7 @@ export class CompositionStyle extends Style {
                         const wG = (sG * val) / maxVal
 
                         //draw bar
-                        geoCanvas.ctx.fillRect(xc + (r - wG) / 2, yc + cumul, wG, incr)
+                        geoCanvas.ctx.fillRect(xc + (resolution - wG) / 2, yc + cumul, wG, incr)
 
                         //next height
                         cumul += incr
@@ -171,8 +171,8 @@ export class CompositionStyle extends Style {
                         //draw circle
                         geoCanvas.ctx.beginPath()
                         geoCanvas.ctx.arc(
-                            xc + r * 0.25 * Math.cos(cumul),
-                            yc + r * 0.25 * Math.sin(cumul),
+                            xc + resolution * 0.25 * Math.cos(cumul),
+                            yc + resolution * 0.25 * Math.sin(cumul),
                             rG,
                             0,
                             2 * Math.PI
@@ -197,8 +197,8 @@ export class CompositionStyle extends Style {
 
                 //draw decomposition symbol
                 let cumul = 0
-                const d = r * (1 - sG / r) * 0.5
-                const ori = this.stripesOrientation(cell, r, z, vs)
+                const d = resolution * (1 - sG / resolution) * 0.5
+                const ori = this.stripesOrientation(cell, resolution, z, vs)
 
                 for (let [column, color] of Object.entries(this.color)) {
                     //get share
@@ -257,21 +257,21 @@ export class CompositionStyle extends Style {
                         geoCanvas.ctx.fill()
                     } else if (type_ === 'segment') {
                         //draw segment sections
-                        const wG = (sG * sG) / r
+                        const wG = (sG * sG) / resolution
                         if (ori == 0) {
                             //horizontal
                             geoCanvas.ctx.fillRect(
                                 cell.x + offset.dx,
-                                cell.y + (r - wG) / 2 + cumul * wG + offset.dy,
-                                r,
+                                cell.y + (resolution - wG) / 2 + cumul * wG + offset.dy,
+                                resolution,
                                 share * wG
                             )
                         } else {
                             //vertical
                             geoCanvas.ctx.fillRect(
-                                cell.x + cumul * r + offset.dx,
-                                cell.y + (r - wG) / 2 + offset.dy,
-                                share * r,
+                                cell.x + cumul * resolution + offset.dx,
+                                cell.y + (resolution - wG) / 2 + offset.dy,
+                                share * resolution,
                                 wG
                             )
                         }
@@ -285,6 +285,6 @@ export class CompositionStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: z, viewScale: vs })
+        this.updateLegends({ style: this, r: resolution, zf: z, viewScale: vs })
     }
 }

@@ -38,6 +38,7 @@ export class GridLayer extends Layer {
     /** */
     draw(geoCanvas, legend) {
 
+        //get zoom level
         const z = geoCanvas.view.z
 
         //get layer dataset component
