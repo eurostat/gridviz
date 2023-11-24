@@ -41,7 +41,7 @@
                 color: colorDict,
                 type: () => 'agepyramid',
                 sizeCol: 'Inhabitants',
-                size: (v, r, s, zf) => r * Math.sqrt(v / s.max),
+                size: (v, r, s, z) => r * Math.sqrt(v / s.max),
             })
 
             map.addCSVGridLayer(
