@@ -4,7 +4,6 @@
 import { Style } from '../Style.js'
 import { makeWebGLCanvas } from '../utils/webGLUtils.js'
 import { WebGLSquareColoringAdvanced } from '../utils/WebGLSquareColoringAdvanced.js'
-//import { monitor, monitorDuration } from '../utils/Utils.js'
 
 /**
  * Style based on webGL
@@ -71,7 +70,6 @@ export class SquareColorWGLStyle extends Style {
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
-        //if (monitor) monitorDuration('*** SquareColorWGLStyle draw')
 
         //filter
         if (this.filter) cells = cells.filter(this.filter)
@@ -81,10 +79,6 @@ export class SquareColorWGLStyle extends Style {
 
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
-
-        //if (monitor) monitorDuration('   color stats computation')
-
-
 
         //create canvas and webgl renderer
         //for opacity control, see: https://webglfundamentals.org/webgl/lessons/webgl-and-alpha.html
@@ -97,7 +91,6 @@ export class SquareColorWGLStyle extends Style {
             console.error('No webGL')
             return
         }
-        //if (monitor) monitorDuration('   web GL canvas creation')
 
         //add vertice and fragment data
         const r2 = resolution / 2
@@ -110,8 +103,6 @@ export class SquareColorWGLStyle extends Style {
             tBuffer.push(t > 1 ? 1 : t < 0 ? 0 : t)
         }
 
-        //if (monitor) monitorDuration('   webgl drawing data preparation')
-
         //compute pixel size
         const sizeGeo = this.size ? this.size(resolution, z) : resolution + 0.2 * z
 
@@ -121,22 +112,14 @@ export class SquareColorWGLStyle extends Style {
         //
         const wgp = new WebGLSquareColoringAdvanced(cvWGL.gl, this.colors, this.stretching, sizeGeo / z, op)
 
-        //if (monitor) monitorDuration('   webgl program preparation')
-
         //draw
         wgp.draw(verticesBuffer, tBuffer, geoCanvas.getWebGLTransform())
-
-        //if (monitor) monitorDuration('   webgl drawing')
 
         //draw in canvas geo
         geoCanvas.initCanvasTransform()
         geoCanvas.ctx.drawImage(cvWGL.canvas, 0, 0)
 
-        //if (monitor) monitorDuration('   canvas drawing')
-
         //update legends
         this.updateLegends({ style: this, r: resolution, z: z, viewScale: viewScale })
-
-        //if (monitor) monitorDuration('*** SquareColorWGLStyle end draw')
     }
 }
