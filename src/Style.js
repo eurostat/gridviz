@@ -42,7 +42,19 @@ export class Style {
         if (this.minZoom >= this.maxZoom)
             throw new Error('Unexpected zoom limits for layer. Zoom min should be smaller than zoom max.')
 
-        /**
+        /** A function returning the alpha (transparency/opacity), between 0.0 (fully transparent) and 1.0 (fully opaque).
+         *  The function parameter is the .
+         * (see CanvasRenderingContext2D: globalAlpha property)
+         * @type {(function(number):number)|undefined} */
+        this.alpha = opts.alpha
+
+        /** A function returning the blend operation. The function parameter is the .
+         * (see CanvasRenderingContext2D: globalCompositeOperation property)
+         * @type {function(number):GlobalCompositeOperation} */
+        this.blendOperation = opts.blendOperation || (z => "source-over")
+
+
+            /**
         * @type {ViewScale|undefined} */
         this.viewScale = opts.viewScale
 
@@ -55,17 +67,6 @@ export class Style {
          * @protected
          * @type {function(import('./Dataset').Cell,number,number):{dx:number,dy:number}} */
         this.offset = opts.offset || ((c, r, z) => ({ dx: 0, dy: 0 }))
-
-        /** A function returning the alpha (transparency/opacity), between 0.0 (fully transparent) and 1.0 (fully opaque).
-         *  The function parameter is the .
-         * (see CanvasRenderingContext2D: globalAlpha property)
-         * @type {function(number):number|undefined} */
-        this.alpha = opts.alpha
-
-        /** A function returning the blend operation. The function parameter is the .
-         * (see CanvasRenderingContext2D: globalCompositeOperation property)
-         * @type {function(number):GlobalCompositeOperation} */
-        this.blendOperation = opts.blendOperation || (z => "source-over")
 
         /** A draw function for the style.
          * @type {function|undefined} */
