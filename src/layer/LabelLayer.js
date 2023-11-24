@@ -84,51 +84,51 @@ export class LabelLayer extends Layer {
     /**
      * Draw the label layer.
      *
-     * @param {import("../GeoCanvas").GeoCanvas} canvas The canvas where to draw the layer.
+     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas The canvas where to draw the layer.
      * @returns {void}
      */
-    draw(canvas) {
+    draw(geoCanvas) {
         //load labels, if not done yet.
         if (!this.labels) {
-            this.load(canvas.redraw)
+            this.load(geoCanvas.redraw)
             return
         }
 
         //
-        const zf = canvas.view.z
+        const zf = geoCanvas.view.z
 
         //text align
-        canvas.ctx.textAlign = this.textAlign || 'start'
+        geoCanvas.ctx.textAlign = this.textAlign || 'start'
 
         //line join and cap
-        canvas.ctx.lineJoin = 'bevel' //|| "round" || "miter";
-        canvas.ctx.lineCap = 'butt' //|| "round" || "square";
+        geoCanvas.ctx.lineJoin = 'bevel' //|| "round" || "miter";
+        geoCanvas.ctx.lineCap = 'butt' //|| "round" || "square";
 
         //draw in pix coordinates
-        canvas.initCanvasTransform()
+        geoCanvas.initCanvasTransform()
 
         //draw labels, one by one
         for (const lb of this.labels) {
             //get label style
             const st = this.style(lb, zf)
             if (!st) continue
-            canvas.ctx.font = st
+            geoCanvas.ctx.font = st
 
             //check label within the view, to be drawn
-            if (!canvas.toDraw(lb)) continue
+            if (!geoCanvas.toDraw(lb)) continue
 
             //position
-            const xP = canvas.geoToPixX(lb.x) + this.offsetPix[0]
-            const yP = canvas.geoToPixY(lb.y) - this.offsetPix[1]
+            const xP = geoCanvas.geoToPixX(lb.x) + this.offsetPix[0]
+            const yP = geoCanvas.geoToPixY(lb.y) - this.offsetPix[1]
 
             //label stroke, for the halo
             if (this.haloColor && this.haloWidth) {
                 const hc = this.haloColor(lb, zf)
                 const hw = this.haloWidth(lb, zf)
                 if (hc && hw && hw > 0) {
-                    canvas.ctx.strokeStyle = hc
-                    canvas.ctx.lineWidth = hw
-                    canvas.ctx.strokeText(lb.name, xP, yP)
+                    geoCanvas.ctx.strokeStyle = hc
+                    geoCanvas.ctx.lineWidth = hw
+                    geoCanvas.ctx.strokeText(lb.name, xP, yP)
                 }
             }
 
@@ -136,8 +136,8 @@ export class LabelLayer extends Layer {
             if (this.color) {
                 const col = this.color(lb, zf)
                 if (col) {
-                    canvas.ctx.fillStyle = col
-                    canvas.ctx.fillText(lb.name, xP, yP)
+                    geoCanvas.ctx.fillStyle = col
+                    geoCanvas.ctx.fillText(lb.name, xP, yP)
                 }
             }
         }

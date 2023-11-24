@@ -35,12 +35,12 @@ export class ShapeColorSizeStyle extends Style {
     /**
      * Draw cells as squares, with various colors and sizes.
      */
-    draw(cells, canvas, resolution) {
+    draw(cells, geoCanvas, resolution) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
         //zoom
-        const z = canvas.view.z
+        const z = geoCanvas.view.z
 
         //get view scale
         const vs = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
@@ -62,34 +62,34 @@ export class ShapeColorSizeStyle extends Style {
             //get offset
             const offset = this.offset(c, resolution, z)
 
-            canvas.ctx.fillStyle = col
+            geoCanvas.ctx.fillStyle = col
             if (shape === 'square') {
                 //draw square
                 const d = resolution * (1 - size / resolution) * 0.5
-                canvas.ctx.fillRect(c.x + d + offset.dx, c.y + d + offset.dy, size, size)
+                geoCanvas.ctx.fillRect(c.x + d + offset.dx, c.y + d + offset.dy, size, size)
             } else if (shape === 'circle') {
                 //draw circle
-                canvas.ctx.beginPath()
-                canvas.ctx.arc(c.x + r2 + offset.dx, c.y + r2 + offset.dy, size * 0.5, 0, 2 * Math.PI, false)
-                canvas.ctx.fill()
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.arc(c.x + r2 + offset.dx, c.y + r2 + offset.dy, size * 0.5, 0, 2 * Math.PI, false)
+                geoCanvas.ctx.fill()
             } else if (shape === 'donut') {
                 //draw donut
                 const xc = c.x + r2 + offset.dx,
                     yc = c.y + r2 + offset.dy
-                canvas.ctx.beginPath()
-                canvas.ctx.moveTo(xc, yc)
-                canvas.ctx.arc(xc, yc, r2, 0, 2 * Math.PI)
-                canvas.ctx.arc(xc, yc, (1 - size / resolution) * r2, 0, 2 * Math.PI, true)
-                canvas.ctx.closePath()
-                canvas.ctx.fill()
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.moveTo(xc, yc)
+                geoCanvas.ctx.arc(xc, yc, r2, 0, 2 * Math.PI)
+                geoCanvas.ctx.arc(xc, yc, (1 - size / resolution) * r2, 0, 2 * Math.PI, true)
+                geoCanvas.ctx.closePath()
+                geoCanvas.ctx.fill()
             } else if (shape === 'diamond') {
                 const s2 = size * 0.5
-                canvas.ctx.beginPath()
-                canvas.ctx.moveTo(c.x + r2 - s2, c.y + r2)
-                canvas.ctx.lineTo(c.x + r2, c.y + r2 + s2)
-                canvas.ctx.lineTo(c.x + r2 + s2, c.y + r2)
-                canvas.ctx.lineTo(c.x + r2, c.y + r2 - s2)
-                canvas.ctx.fill()
+                geoCanvas.ctx.beginPath()
+                geoCanvas.ctx.moveTo(c.x + r2 - s2, c.y + r2)
+                geoCanvas.ctx.lineTo(c.x + r2, c.y + r2 + s2)
+                geoCanvas.ctx.lineTo(c.x + r2 + s2, c.y + r2)
+                geoCanvas.ctx.lineTo(c.x + r2, c.y + r2 - s2)
+                geoCanvas.ctx.fill()
             } else {
                 throw new Error('Unexpected shape:' + shape)
             }

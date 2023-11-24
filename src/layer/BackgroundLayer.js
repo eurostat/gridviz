@@ -77,10 +77,10 @@ export class BackgroundLayer extends Layer {
     }
 
     /**
-     * @param {import("../GeoCanvas").GeoCanvas} canvas The canvas where to draw the layer.
+     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas The canvas where to draw the layer.
      * @returns {void}
      */
-    draw(canvas) {
+    draw(geoCanvas) {
 
         if (!this.resolutions || this.resolutions.length == 0) {
             console.error('No resolutions provided for background layer')
@@ -88,7 +88,7 @@ export class BackgroundLayer extends Layer {
         }
 
         //
-        const z = canvas.view.z
+        const z = geoCanvas.view.z
         const x0 = this.origin[0],
             y0 = this.origin[1]
 
@@ -109,10 +109,10 @@ export class BackgroundLayer extends Layer {
         //get tile numbers
         const xGeoToTMS = (x) => Math.ceil((x - x0) / sizeG)
         const yGeoToTMS = (y) => Math.ceil(-(y - y0) / sizeG)
-        const xMin = xGeoToTMS(canvas.extGeo.xMin) - 1
-        const xMax = xGeoToTMS(canvas.extGeo.xMax)
-        const yMax = yGeoToTMS(canvas.extGeo.yMin)
-        const yMin = yGeoToTMS(canvas.extGeo.yMax) - 1
+        const xMin = xGeoToTMS(geoCanvas.extGeo.xMin) - 1
+        const xMax = xGeoToTMS(geoCanvas.extGeo.xMax)
+        const yMax = yGeoToTMS(geoCanvas.extGeo.yMin)
+        const yMin = yGeoToTMS(geoCanvas.extGeo.yMax) - 1
 
         //handle images
         for (let x = xMin; x < xMax; x++) {
@@ -125,7 +125,7 @@ export class BackgroundLayer extends Layer {
                     const img = new Image()
                     this.put(img, z_, x, y)
                     img.onload = () => {
-                        canvas.redraw()
+                        geoCanvas.redraw()
                     }
                     img.onerror = () => {
                         //case when no image
@@ -147,8 +147,8 @@ export class BackgroundLayer extends Layer {
                 const xGeo = x0 + x * sizeG
                 const yGeo = y0 - y * sizeG
                 try {
-                    canvas.initCanvasTransform()
-                    canvas.ctx.drawImage(img, canvas.geoToPixX(xGeo), canvas.geoToPixY(yGeo), size, size)
+                    geoCanvas.initCanvasTransform()
+                    geoCanvas.ctx.drawImage(img, geoCanvas.geoToPixX(xGeo), geoCanvas.geoToPixY(yGeo), size, size)
                     //cg.ctx.drawImage(img, xGeo, yGeo, sizeG, -sizeG)
                 } catch (error) {
                     console.error(error)
@@ -160,8 +160,8 @@ export class BackgroundLayer extends Layer {
         if (this.filterColor) {
             const fc = this.filterColor(z)
             if (fc && fc != 'none') {
-                canvas.ctx.fillStyle = fc
-                canvas.ctx.fillRect(0, 0, canvas.w, canvas.h)
+                geoCanvas.ctx.fillStyle = fc
+                geoCanvas.ctx.fillRect(0, 0, geoCanvas.w, geoCanvas.h)
             }
         }
     }

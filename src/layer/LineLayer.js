@@ -54,20 +54,20 @@ export class LineLayer extends Layer {
 
     /**
      * Draw the layer.
-     * @param {import("../GeoCanvas").GeoCanvas} canvas The canvas where to draw the layer.
+     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas The canvas where to draw the layer.
      * @returns {void}
      */
-    draw(canvas) {
+    draw(geoCanvas) {
         //load data, if not done yet.
         if (!this.fs) {
-            this.load(canvas.redraw)
+            this.load(geoCanvas.redraw)
             return
         }
 
         //TODO sort lines by width ?
 
         //
-        const zf = canvas.view.z
+        const zf = geoCanvas.view.z
 
         for (const f of this.fs) {
             const cs = f.geometry.coordinates
@@ -76,26 +76,26 @@ export class LineLayer extends Layer {
             //set color
             const col = this.color(f, zf)
             if (!col || col == 'none') continue
-            canvas.ctx.strokeStyle = col
+            geoCanvas.ctx.strokeStyle = col
 
             //set linewidth
             const wP = this.width(f, zf)
             if (!wP || wP < 0) continue
-            canvas.ctx.lineWidth = wP * zf
+            geoCanvas.ctx.lineWidth = wP * zf
 
             //set line dash
             const ldP = this.lineDash(f, zf)
-            if (ldP) canvas.ctx.setLineDash(ldP)
+            if (ldP) geoCanvas.ctx.setLineDash(ldP)
 
             //draw line
-            canvas.ctx.beginPath()
-            canvas.ctx.moveTo(cs[0][0], cs[0][1])
-            for (let i = 1; i < cs.length; i++) canvas.ctx.lineTo(cs[i][0], cs[i][1])
-            canvas.ctx.stroke()
+            geoCanvas.ctx.beginPath()
+            geoCanvas.ctx.moveTo(cs[0][0], cs[0][1])
+            for (let i = 1; i < cs.length; i++) geoCanvas.ctx.lineTo(cs[i][0], cs[i][1])
+            geoCanvas.ctx.stroke()
         }
 
         //...
-        canvas.ctx.setLineDash([])
+        geoCanvas.ctx.setLineDash([])
     }
 
     /**

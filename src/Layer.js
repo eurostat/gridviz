@@ -44,12 +44,12 @@ export class Layer {
     /**
      * Draw layer.
      * 
-     * @param {import("./GeoCanvas").GeoCanvas} canvas The canvas where to draw the layer.
+     * @param {import("./GeoCanvas").GeoCanvas} geoCanvas The canvas where to draw the layer.
      * @param {object} legend
      * @returns {void}
      * @abstract
      */
-    draw(canvas, legend = undefined) {
+    draw(geoCanvas, legend = undefined) {
         throw new Error('Method draw not implemented.')
     }
 

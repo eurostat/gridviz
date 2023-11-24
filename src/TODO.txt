@@ -1,6 +1,5 @@
 v3: focus on (main) API changes.
 
-draw(cells, canvas, resolution) - remove view parameter
 canvas -> geocanvas
 pixNb -> something better? At layer level? zoomResolutionJump ?
 Enveloppe
@@ -32,6 +31,7 @@ remove GridTile class
 clean stretching lib
 get rid of "map.addXXXLayer" methods
 getGeoCenter setGeoCenter replaced by getView setView
+style: draw(cells, canvas, resolution)
 
 
 
