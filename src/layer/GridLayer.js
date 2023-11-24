@@ -24,7 +24,9 @@ export class GridLayer extends Layer {
         /** @type {Array.<import("../Style").Style>} */
         this.styles = styles
 
-        /** Unit: number of pixels
+        /** 
+         * This parameter is used when the dataset is a MultiResolutionDataset.
+         * It defines the minimum number of pixels a grid cell should have to select the dataset to display based on its resolution.
          * @type {number} */
         this.minPixelsPerCell = opts.minPixelsPerCell || 3
 
