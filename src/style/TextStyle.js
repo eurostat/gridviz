@@ -50,15 +50,15 @@ export class TextStyle extends Style {
      * Draw cells as text.
      *
      * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {number} r
-     * @param {import("../GeoCanvas").GeoCanvas} cg
+     * @param {number} resolution
+     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
      */
-    draw(cells, r, cg) {
+    draw(cells, geoCanvas, resolution) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
         //
-        const zf = cg.view.z
+        const z = geoCanvas.view.z
 
         let statText
         if (this.textCol) {
@@ -82,41 +82,41 @@ export class TextStyle extends Style {
 
         //draw with HTML canvas
         //in screen coordinates
-        cg.initCanvasTransform()
+        geoCanvas.initCanvasTransform()
 
         for (let cell of cells) {
             //get cell text
-            const text = this.text ? this.text(cell[this.textCol], r, statText, zf) : undefined
+            const text = this.text ? this.text(cell[this.textCol], resolution, statText, z) : undefined
             if (text == undefined || text == null || text + '' === '') continue
 
             //color
-            const col = this.color ? this.color(cell[this.colorCol], r, statColor, zf) : undefined
+            const col = this.color ? this.color(cell[this.colorCol], resolution, statColor, z) : undefined
             if (!col) continue
-            cg.ctx.fillStyle = col
+            geoCanvas.ctx.fillStyle = col
 
             //font size
             //size - in pixel unit
-            const fontSizePix = this.fontSize(cell[this.fontSizeCol], r, statFontSize, zf) / zf
+            const fontSizePix = this.fontSize(cell[this.fontSizeCol], resolution, statFontSize, z) / z
 
             //set font
             const fontFamily = this.fontFamily || 'Arial'
             const fontWeight = this.fontWeight || 'bold'
-            cg.ctx.font = fontWeight + ' ' + fontSizePix + 'px ' + fontFamily
+            geoCanvas.ctx.font = fontWeight + ' ' + fontSizePix + 'px ' + fontFamily
 
             //get offset
-            const offset = this.offset(cell, r, zf)
+            const offset = this.offset(cell, resolution, z)
 
             //text position
-            cg.ctx.textAlign = 'center'
-            const tx = cg.geoToPixX(cell.x + r * 0.5 + offset.dx)
-            const ty = cg.geoToPixY(cell.y + r * 0.5 + offset.dy) + fontSizePix * 0.3 //it should be 0.5 but 0.3 seems to work better
+            geoCanvas.ctx.textAlign = 'center'
+            const tx = geoCanvas.geoToPixX(cell.x + resolution * 0.5 + offset.dx)
+            const ty = geoCanvas.geoToPixY(cell.y + resolution * 0.5 + offset.dy) + fontSizePix * 0.3 //it should be 0.5 but 0.3 seems to work better
 
             //draw the text
-            cg.ctx.fillText(text, tx, ty)
+            geoCanvas.ctx.fillText(text, tx, ty)
         }
 
         //update legends
-        this.updateLegends({ style: this, r: r, zf: zf, sColor: statColor })
+        this.updateLegends({ style: this, r: resolution, zf: z, sColor: statColor })
     }
 
     /**

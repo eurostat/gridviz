@@ -82,7 +82,7 @@ export class TanakaStyle {
                 return c / (nb - 1)
             },
             //stretching: { fun: "expRev", alpha: -7 },
-            size: (r, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
+            size: (r, z) => r + 0.5 * z, //that is to ensure no gap between same class cells is visible
             filter: opts.filter,
         })
 
@@ -91,20 +91,20 @@ export class TanakaStyle {
             const colStyle = new ShapeColorSizeStyle({
                 colorCol: col,
                 //the color corresponding to the class
-                color: (v, r, s, zf) => {
+                color: (v, r, s, z) => {
                     if (v == 0 && opts.tFun && isNaN(opts.tFun(v, r, s)))
                         return undefined
                     return opts.colors[getClass(opts.tFun ? opts.tFun(v, r, s) : v)]
                 },
                 shape: () => "square",
-                size: (v, r, s, zf) => r + 0.5 * zf, //that is to ensure no gap between same class cells is visible
+                size: (v, r, s, z) => r + 0.5 * z, //that is to ensure no gap between same class cells is visible
             })
         */
 
         /** The side style, for the shadow effect */
         const sideStyle = new SideStyle({
             valueCol: col,
-            value: (v1, v2, r, s, zf) => {
+            value: (v1, v2, r, s, z) => {
                 //compute the number of classes of difference
                 if (v1 === undefined && v2 === undefined) return 0
                 else if (v2 === undefined) {
