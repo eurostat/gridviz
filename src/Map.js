@@ -47,18 +47,13 @@ export class Map {
 
         //create canvas element if user doesnt specify one
         /** @type {HTMLCanvasElement} */
-        this.canvas = opts.canvas || null
-        if (!this.canvas) {
-            this.canvas = document.createElement('canvas')
-            this.canvas.setAttribute('width', '' + this.w)
-            this.canvas.setAttribute('height', '' + this.h)
-            this.container.appendChild(this.canvas)
-        }
+        this._canvas = opts.canvas || null
+        if (!this._canvas) initialiseCanvas()
 
         /** Make geo canvas
          * @type {GeoCanvas}
          * @private */
-        this.geoCanvas = new GeoCanvas(this.canvas, opts.x, opts.y, opts.z, opts)
+        this.geoCanvas = new GeoCanvas(this._canvas, opts.x, opts.y, opts.z, opts)
         this.geoCanvas.redraw = () => { this.redraw() }
 
         // legend div
@@ -96,73 +91,9 @@ export class Map {
          * @type {Tooltip} */
         this.tooltip = new Tooltip(opts.tooltip)
 
-        /** @param {MouseEvent} e */
-        const focusCell = (e) => {
-            //compute mouse geo position
-            const mousePositionGeo = {
-                x: this.geoCanvas.pixToGeoX(e.offsetX + this.tooltip.xMouseOffset),
-                y: this.geoCanvas.pixToGeoY(e.offsetY + this.tooltip.yMouseOffset),
-            }
-            /** @type {{cell:import('./Dataset.js').Cell,html:string,resolution:number} | undefined} */
-            const focus = this.getCellFocusInfo(mousePositionGeo)
-
-            // transparent background (e.g. leaflet) 'red painting' fix
-            if (opts.transparentBackground) {
-                if (focus) {
-                    this.tooltip.html(focus.html)
-                    this.tooltip.setPosition(e)
-                    this.tooltip.show()
-                } else {
-                    this.tooltip.hide()
-                }
-                this.canvasSave = document.createElement('canvas')
-                this.canvasSave.setAttribute('width', '' + this.w)
-                this.canvasSave.setAttribute('height', '' + this.h)
-                this.canvasSave.getContext('2d').drawImage(this.geoCanvas.canvas, 0, 0)
-                this.geoCanvas.initCanvasTransform()
-                return
-            }
-
-            if (focus) {
-                this.tooltip.html(focus.html)
-                this.tooltip.setPosition(e)
-                this.tooltip.show()
-
-                //show cell position as a rectangle
-                if (!this.canvasSave) {
-                    this.canvasSave = document.createElement('canvas')
-                    this.canvasSave.setAttribute('width', '' + this.w)
-                    this.canvasSave.setAttribute('height', '' + this.h)
-                    this.canvasSave.getContext('2d').drawImage(this.geoCanvas.canvas, 0, 0)
-                } else {
-                    this.geoCanvas.ctx.drawImage(this.canvasSave, 0, 0)
-                }
-
-                //draw image saved + draw rectangle
-                const rectWPix = this.selectionRectangleWidthPix
-                    ? this.selectionRectangleWidthPix(focus.resolution, this.geoCanvas.view.z)
-                    : 4
-                this.geoCanvas.initCanvasTransform()
-                this.geoCanvas.ctx.strokeStyle = this.selectionRectangleColor
-                this.geoCanvas.ctx.lineWidth = rectWPix
-                this.geoCanvas.ctx.beginPath()
-
-                this.geoCanvas.ctx.rect(
-                    this.geoCanvas.geoToPixX(focus.cell.x) - rectWPix / 2,
-                    this.geoCanvas.geoToPixY(focus.cell.y) + rectWPix / 2,
-                    focus.resolution / this.geoCanvas.view.z + rectWPix,
-                    -focus.resolution / this.geoCanvas.view.z - rectWPix
-                )
-                this.geoCanvas.ctx.stroke()
-            } else {
-                this.tooltip.hide()
-                if (this.canvasSave) this.geoCanvas.ctx.drawImage(this.canvasSave, 0, 0)
-            }
-        }
-
         // add event listeners to container
-        this.mouseOverHandler = (e) => focusCell(e)
-        this.mouseMoveHandler = (e) => focusCell(e)
+        this.mouseOverHandler = (e) => this.focusCell(e)
+        this.mouseMoveHandler = (e) => this.focusCell(e)
         this.mouseOutHandler = (e) => this.tooltip.hide()
         this.geoCanvas.canvas.addEventListener('mouseover', this.mouseOverHandler)
         this.geoCanvas.canvas.addEventListener('mousemove', this.mouseMoveHandler)
@@ -183,12 +114,20 @@ export class Map {
         this.selectionRectangleColor = opts.selectionRectangleColor || 'red'
         this.selectionRectangleWidthPix = opts.selectionRectangleWidthPix || (() => 4) //(r,z) => {}
 
-        //
-        //canvas.addEventListener("keydown", e => { console.log(arguments) });
+        // transparent background (e.g. leaflet) 'red painting' fix
+        this.transparentBackground = opts.transparentBackground
 
         //set default globalCompositeOperation
         this.defaultGlobalCompositeOperation =
             opts.defaultGlobalCompositeOperation || this.geoCanvas.ctx.globalCompositeOperation
+    }
+
+    /** @protected */
+    initialiseCanvas() {
+        this._canvas = document.createElement('canvas')
+        this._canvas.setAttribute('width', '' + this.w)
+        this._canvas.setAttribute('height', '' + this.h)
+        this.container.appendChild(this._canvas)
     }
 
 
@@ -235,7 +174,7 @@ export class Map {
         this.canvasSave = null
 
         // listen for resize events on the App's container and handle them
-        this.defineResizeObserver(this.container, this.canvas)
+        this.defineResizeObserver(this.container, this._canvas)
 
         return this
     }
@@ -249,6 +188,73 @@ export class Map {
     updateExtentGeo(marginPx = 20) {
         return this.geoCanvas.updateExtentGeo(marginPx)
     }
+
+
+
+    /** @param {MouseEvent} e */
+    focusCell(e) {
+        //compute mouse geo position
+        const mousePositionGeo = {
+            x: this.geoCanvas.pixToGeoX(e.offsetX + this.tooltip.xMouseOffset),
+            y: this.geoCanvas.pixToGeoY(e.offsetY + this.tooltip.yMouseOffset),
+        }
+        /** @type {{cell:import('./Dataset.js').Cell,html:string,resolution:number} | undefined} */
+        const focus = this.getCellFocusInfo(mousePositionGeo)
+
+        // transparent background (e.g. leaflet) 'red painting' fix
+        if (this.transparentBackground) {
+            if (focus) {
+                this.tooltip.html(focus.html)
+                this.tooltip.setPosition(e)
+                this.tooltip.show()
+            } else {
+                this.tooltip.hide()
+            }
+            this.canvasSave = document.createElement('canvas')
+            this.canvasSave.setAttribute('width', '' + this.w)
+            this.canvasSave.setAttribute('height', '' + this.h)
+            this.canvasSave.getContext('2d').drawImage(this.geoCanvas.canvas, 0, 0)
+            this.geoCanvas.initCanvasTransform()
+            return
+        }
+
+        if (focus) {
+            this.tooltip.html(focus.html)
+            this.tooltip.setPosition(e)
+            this.tooltip.show()
+
+            //show cell position as a rectangle
+            if (!this.canvasSave) {
+                this.canvasSave = document.createElement('canvas')
+                this.canvasSave.setAttribute('width', '' + this.w)
+                this.canvasSave.setAttribute('height', '' + this.h)
+                this.canvasSave.getContext('2d').drawImage(this.geoCanvas.canvas, 0, 0)
+            } else {
+                this.geoCanvas.ctx.drawImage(this.canvasSave, 0, 0)
+            }
+
+            //draw image saved + draw rectangle
+            const rectWPix = this.selectionRectangleWidthPix
+                ? this.selectionRectangleWidthPix(focus.resolution, this.geoCanvas.view.z)
+                : 4
+            this.geoCanvas.initCanvasTransform()
+            this.geoCanvas.ctx.strokeStyle = this.selectionRectangleColor
+            this.geoCanvas.ctx.lineWidth = rectWPix
+            this.geoCanvas.ctx.beginPath()
+
+            this.geoCanvas.ctx.rect(
+                this.geoCanvas.geoToPixX(focus.cell.x) - rectWPix / 2,
+                this.geoCanvas.geoToPixY(focus.cell.y) + rectWPix / 2,
+                focus.resolution / this.geoCanvas.view.z + rectWPix,
+                -focus.resolution / this.geoCanvas.view.z - rectWPix
+            )
+            this.geoCanvas.ctx.stroke()
+        } else {
+            this.tooltip.hide()
+            if (this.canvasSave) this.geoCanvas.ctx.drawImage(this.canvasSave, 0, 0)
+        }
+    }
+
 
     /**
      * Return the cell HTML info at a given geo position.
