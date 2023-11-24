@@ -3,11 +3,8 @@
 <script src="../dist/gridviz.js"></script>
 <script>
 
-    //define map
-    const map = new gviz.Map(document.getElementById('map'))
-
-    //set initial view
-    map.setView(2, 46, 0.03)
+    //define map with initial view
+    const map = new gviz.Map(document.getElementById('map'), { x: 2, y: 46, z: 0.03 })
 
     //define label layer
     const labelLayer = new gviz.LabelLayer({

@@ -3,11 +3,8 @@
 <script src="../dist/gridviz.js"></script>
 <script>
 
-    //define map
-    const map = new gviz.Map(document.getElementById('map'))
-
-    //set initial view
-    map.setView(4500000, 2900000, 3000)
+    //define map with initial view
+    const map = new gviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
 
     //define multi resolution dataset
     const dataset = new gviz.MultiResolutionDataset(

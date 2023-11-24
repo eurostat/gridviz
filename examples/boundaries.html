@@ -3,11 +3,8 @@
 <script src="../dist/gridviz.js"></script>
 <script>
 
-    //define map
-    const map = new gviz.Map(document.getElementById('map'))
-
-    //set initial view
-    map.setView(4500000, 2900000, 1000)
+    //define map with initial view
+    const map = new gviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000 })
 
     //make boundary layer, with a different style depending on the zoom level and line type.
     const boundaryLayer = new gviz.BoundaryLayer({

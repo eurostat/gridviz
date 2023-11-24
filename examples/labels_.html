@@ -5,11 +5,8 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-geo@3"></script>
 <script>
 
-    //define map
-    const map = new gviz.Map(document.getElementById('map'))
-
-    //set initial view and background color
-    map.setView(4700000, 2800000, 1000).setBackgroundColor('#eee')
+    //define map with initial view
+    const map = new gviz.Map(document.getElementById('map'), { x: 4700000, y: 2800000, z: 1000 })
 
     //define background layer
     const backgroundLayer = new gviz.BackgroundLayer({
