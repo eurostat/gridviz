@@ -1,6 +1,7 @@
 v3: focus on (main) API changes.
 
 reorganise map - simplify constructor
+legends
 upgrade examples
 upgrade style examples
 upgrade demos
