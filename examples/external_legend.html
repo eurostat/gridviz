@@ -17,17 +17,9 @@
     const style = new gridviz.ShapeColorSizeStyle({
         color: (c, r, zf, scale) => scale(c.population),
         viewScale: gridviz.colorContinuousScale({ valueFunction: (c) => +c.population, colorRamp: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
-        //viewScale: gridviz.colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
-        //size
-        //size: (c, r, zf, scale) => scale(+c.T),
-        //shape: () => "circle",
-        //viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.T, stretching: gridviz.logarithmicScale(-8) }),
-        //viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 }),
-        //blendOperation: (zf) => zf < 100 ? "multiply" : "source-over",
     })
 
-
-    /*/add legend
+    //add legend
     style.legends.push(
         new gridviz.ColorLegend({
             title: 'Number of inhabitants',
@@ -36,7 +28,7 @@
             colorRamp: d3.interpolateOrRd,
             fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25),
         })
-    )*/
+    )
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
