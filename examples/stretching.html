@@ -23,7 +23,7 @@ font-family: Arial, Helvetica, sans-serif;
         <option value="circleInv">Circular inverse</option>
     </select>
     <div id="alphaText">Base: -10</div>
-    <input type="range" min="-20" max="20" step="1" value="-7" id="alphaExp" style="width: 300px; display: initial" />
+    <input type="range" min="-20" max="20" step="1" value="-10" id="alphaExp" style="width: 300px; display: initial" />
     <input type="range" min="0.02" max="20" step="0.02" value="0.3" id="alphaPow" style="width: 300px; display: none" />
     <input type="range" min="0" max="1" step="0.02" value="0.3" id="alphaCir" style="width: 300px; display: none" />
 </div>
@@ -46,8 +46,8 @@ font-family: Arial, Helvetica, sans-serif;
     )
 
     const s = new gridviz.SquareColorWGLStyle({
-        viewScale: (cells) => d3.extent(cells, c => c.TOT_P_2021),
-        tFun: (c, r, z, [min, max]) => (c.TOT_P_2021 - min) / (max - min),
+        viewScale: (cells) => d3.extent(cells, c => +c.TOT_P_2021),
+        tFun: (c, r, z, [min, max]) => (+c.TOT_P_2021 - min) / (max - min),
         color: d3.interpolateMagma,
         //stretching: { fun: 'log', alpha: -7 },
     })
@@ -69,22 +69,23 @@ font-family: Arial, Helvetica, sans-serif;
             document.getElementById('alphaPow').style.display = 'none'
             document.getElementById('alphaCir').style.display = 'none'
             a = +document.querySelector('#alphaExp').value
+            document.getElementById('alphaText').textContent = 'Base: ' + a
         } else if (fun == 'pow' || fun == 'powInv') {
             document.getElementById('alphaExp').style.display = 'none'
             document.getElementById('alphaPow').style.display = 'initial'
             document.getElementById('alphaCir').style.display = 'none'
             a = +document.querySelector('#alphaPow').value
+            document.getElementById('alphaText').textContent = 'Exponent: ' + a
         } else if (fun == 'circle' || fun == 'circleInv') {
             document.getElementById('alphaExp').style.display = 'none'
             document.getElementById('alphaPow').style.display = 'none'
             document.getElementById('alphaCir').style.display = 'initial'
             a = +document.querySelector('#alphaCir').value
+            document.getElementById('alphaText').textContent = 'Curvature: ' + a
         }
 
         //set style stretching function
         s.stretching = { fun: fun, alpha: a }
-
-        document.getElementById('alphaText').textContent = 'Stretching parameter: ' + a
 
         //redraw
         map.redraw()

@@ -58,23 +58,23 @@ export const powerInverseScale = (exponent = 3) => {
 
 
 /**
- * @param {number} alpha 
+ * @param {number} curvature 
  * @returns {function(number):number}
  */
-export const circularScale = (alpha = 0.8) => {
-    if (alpha == 0) return t => t
-    if (alpha == 1) return t => Math.sqrt(t * (2 - t))
+export const circularScale = (curvature = 0.8) => {
+    if (curvature == 0) return t => t
+    if (curvature == 1) return t => Math.sqrt(t * (2 - t))
     else {
-        const a = alpha / (1 - alpha)
+        const a = curvature / (1 - curvature)
         return t => Math.sqrt(1 / (a * a) + t * (2 / a + 2 - t)) - 1 / a
     }
 }
 
 /**
- * @param {number} alpha 
+ * @param {number} curvature 
  * @returns {function(number):number}
  */
-export const circularInverseScale = (alpha = 0.8) => {
-    const f = circularScale(alpha)
+export const circularInverseScale = (curvature = 0.8) => {
+    const f = circularScale(curvature)
     return t => 1 - f(1 - t)
 }
