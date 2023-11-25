@@ -2,6 +2,7 @@ v3: focus on (main) API changes.
 
 fix demos to v2
     <script src="https://cdn.jsdelivr.net/npm/gridviz@2.1.17"></script>
+test
 
 style filter ?
 rename preprocess: into preprocess/filter ?
