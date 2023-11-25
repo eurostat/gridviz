@@ -86,153 +86,153 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
     <script>
         let containerDiv = document.getElementById('viz-container')
-        const map = new gridviz.Map(containerDiv)
+        const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 3763437, y: 2891045 })
-            .setZoom(50.1)
-            .setZoomExtent([10, 1500])
+            .setZoomFactor(50.1)
+            .setZoomFactorExtent([10, 1500])
             .setLabelLayer(gviz_es.getEuronymeLabelLayer('FR', '20'))
             .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer())
             .setViewFromURL()
 
-        const tsFun = gridviz.TextStyle.getCharLegendFun(['.', '-', '~', '+', '=', '#', '€', '@'])
+        const tsFun = gviz.TextStyle.getCharLegendFun(['.', '-', '~', '+', '=', '#', '€', '@'])
 
         //style data
         const sd = {
             scolor: {
                 style: [
-                    new gridviz.SquareColorWGLStyle({
+                    new gviz.SquareColorWGLStyle({
                         colorCol: 'ind',
                         color: d3.interpolateOrRd,
-                        stretching: { fun: 'log', alpha: -7 },
+                        stretching: { fun: 'expRev', alpha: -7 },
                     }),
-                    new gridviz.StrokeStyle({ maxZoom: 15 }),
+                    new gviz.StrokeStyle({ maxZoom: 15 }),
                 ],
-                minPixelsPerCell: 2,
+                pixNb: 2,
             },
             ccolor: {
                 style: [
-                    new gridviz.ShapeColorSizeStyle({
+                    new gviz.ShapeColorSizeStyle({
                         colorCol: 'ind',
-                        color: (v, r, s) => d3.interpolateOrRd(gridviz.sPow(v / s.max, 0.25)),
+                        color: (v, r, s) => d3.interpolateOrRd(gviz.sPow(v / s.max, 0.25)),
                         shape: () => 'circle',
                     }),
-                    new gridviz.StrokeStyle({ maxZoom: 15, shape: () => 'circle' }),
+                    new gviz.StrokeStyle({ maxZoom: 15, shape: () => 'circle' }),
                 ],
-                minPixelsPerCell: 7,
+                pixNb: 7,
             },
 
             square: {
                 style: [
-                    new gridviz.ShapeColorSizeStyle({
+                    new gviz.ShapeColorSizeStyle({
                         color: () => '#c08c59cc',
                         sizeCol: 'ind',
-                        size: (v, r, s, z) => 1 * r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.3),
                         shape: () => 'square',
                     }),
-                    new gridviz.StrokeStyle({
+                    new gviz.StrokeStyle({
                         maxZoom: 15,
                         sizeCol: 'ind',
-                        size: (v, r, s, z) => 1 * r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, zf) => 1 * r * gviz.sPow(v / s.max, 0.3),
                     }),
                 ],
-                minPixelsPerCell: 10,
+                pixNb: 10,
             },
             circle: {
                 style: [
-                    new gridviz.ShapeColorSizeStyle({
+                    new gviz.ShapeColorSizeStyle({
                         color: () => '#c08c59cc',
                         sizeCol: 'ind',
-                        size: (v, r, s, z) => 1.5 * r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, zf) => 1.5 * r * gviz.sPow(v / s.max, 0.3),
                         shape: () => 'circle',
                     }),
-                    new gridviz.StrokeStyle({
+                    new gviz.StrokeStyle({
                         maxZoom: 15,
                         sizeCol: 'ind',
-                        size: (v, r, s, z) => 1.5 * r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, zf) => 1.5 * r * gviz.sPow(v / s.max, 0.3),
                         shape: () => 'circle',
                     }),
                 ],
-                minPixelsPerCell: 10,
+                pixNb: 10,
             },
             diamond: {
                 style: [
-                    new gridviz.ShapeColorSizeStyle({
+                    new gviz.ShapeColorSizeStyle({
                         color: () => '#c08c59cc',
                         sizeCol: 'ind',
-                        size: (v, r, s, z) => 1.5 * r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, zf) => 1.5 * r * gviz.sPow(v / s.max, 0.3),
                         shape: () => 'diamond',
                     }),
-                    new gridviz.StrokeStyle({
+                    new gviz.StrokeStyle({
                         maxZoom: 15,
                         sizeCol: 'ind',
-                        size: (v, r, s, z) => 1.5 * r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, zf) => 1.5 * r * gviz.sPow(v / s.max, 0.3),
                         shape: () => 'diamond',
                     }),
                 ],
-                minPixelsPerCell: 10,
+                pixNb: 10,
             },
             donut: {
                 style: [
-                    new gridviz.ShapeColorSizeStyle({
+                    new gviz.ShapeColorSizeStyle({
                         sizeCol: 'ind',
-                        size: (v, r, s, z) => r * gridviz.sPow(v / s.max, 0.3),
+                        size: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.3),
                         color: () => '#c08c59',
                         shape: () => 'donut',
                     }),
                 ],
-                minPixelsPerCell: 15,
+                pixNb: 15,
             },
 
             segmentH: {
                 style: [
-                    new gridviz.SegmentStyle({
+                    new gviz.SegmentStyle({
                         orientation: () => 0,
                         color: (v, r, s) => '#c08c59',
                         length: (v, r) => r,
                         widthCol: 'ind',
-                        width: (v, r, s, z) => r * gridviz.sPow(v / s.max, 0.25),
+                        width: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25),
                     }),
                 ],
-                minPixelsPerCell: 10,
+                pixNb: 10,
             },
             segmentV: {
                 style: [
-                    new gridviz.SegmentStyle({
+                    new gviz.SegmentStyle({
                         orientation: () => 90,
                         color: (v, r, s) => '#c08c59',
                         length: (v, r) => r,
                         widthCol: 'ind',
-                        width: (v, r, s, z) => r * gridviz.sPow(v / s.max, 0.25),
+                        width: (v, r, s, zf) => r * gviz.sPow(v / s.max, 0.25),
                     }),
                 ],
-                minPixelsPerCell: 10,
+                pixNb: 10,
             },
             segmentO: {
                 style: [
-                    new gridviz.SegmentStyle({
+                    new gviz.SegmentStyle({
                         orientation: () => 45,
                         color: (v, r, s) => '#c08c59',
                         length: (v, r) => r * 1.4142,
                         widthCol: 'ind',
-                        width: (v, r, s, z) => (r * gridviz.sPow(v / s.max, 0.25)) / 1.4142,
+                        width: (v, r, s, zf) => (r * gviz.sPow(v / s.max, 0.25)) / 1.4142,
                     }),
                 ],
-                minPixelsPerCell: 10,
+                pixNb: 10,
             },
 
             joyplot: {
                 style: [
-                    new gridviz.JoyPlotStyle({
+                    new gviz.JoyPlotStyle({
                         heightCol: 'ind',
-                        height: (v, r, s, z) => 5 * r * Math.sqrt(v / s.max),
+                        height: (v, r, s, zf) => 5 * r * Math.sqrt(v / s.max),
                         fillColor: () => '#c08c59bb',
                     }),
                 ],
-                minPixelsPerCell: 7,
+                pixNb: 7,
             },
             side: {
                 style: [
-                    new gridviz.SideStyle({
+                    new gviz.SideStyle({
                         valueCol: 'ind',
                         value: (v1, v2) => {
                             return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0)
@@ -248,63 +248,63 @@
                                 (0.01 +
                                     0.333 *
                                     (side.or === 'v' ? 0.6 : 1) *
-                                    gridviz.sPow(Math.abs(side.value) / max, 0.3))
+                                    gviz.sPow(Math.abs(side.value) / max, 0.3))
                             )
                         },
                         fillColor: (c) => '#e2c9b2',
                     }),
                 ],
-                minPixelsPerCell: 7,
+                pixNb: 7,
             },
             tanaka: {
-                style: gridviz.TanakaStyle.get('ind', {
-                    tFun: (v, r, s, z) => gridviz.sExpRev((v - s.min) / (s.max - s.min), -7),
+                style: gviz.TanakaStyle.get('ind', {
+                    tFun: (v, r, s, zf) => gviz.sExpRev((v - s.min) / (s.max - s.min), -7),
                 }),
-                minPixelsPerCell: 7,
+                pixNb: 7,
             },
             lego: {
-                style: gridviz.LegoStyle.get('ind', {
-                    tFun: (v, r, s, z) => gridviz.sPow((v - s.min) / (s.max - s.min), 0.2),
+                style: gviz.LegoStyle.get('ind', {
+                    tFun: (v, r, s, zf) => gviz.sPow((v - s.min) / (s.max - s.min), 0.2),
                 }),
-                minPixelsPerCell: 15,
+                pixNb: 15,
             },
             pillar: {
                 style: [
-                    new gridviz.PillarStyle({
+                    new gviz.PillarStyle({
                         heightCol: 'ind',
-                        height: (v, r, s, z) => 15 * r * gridviz.sPow(v / s.max, 0.7),
+                        height: (v, r, s, z) => 15 * r * gviz.sPow(v / s.max, 0.7),
                     }),
                 ],
-                minPixelsPerCell: 18,
+                pixNb: 18,
             },
             dot: {
                 style: [
-                    new gridviz.DotDensityStyle({
+                    new gviz.DotDensityStyle({
                         nbCol: 'ind',
-                        nb: (v, r, s, z) => (((5 * r * r) / (z * z)) * v) / s.max,
-                        dotSize: (r, z) => 1.2 * z,
+                        nb: (v, r, s, zf) => (((5 * r * r) / (zf * zf)) * v) / s.max,
+                        dotSize: (r, zf) => 1.2 * zf,
                         color: () => '#FF5733',
                     }),
                 ],
-                minPixelsPerCell: 7,
+                pixNb: 7,
             },
             text: {
                 style: [
-                    new gridviz.TextStyle({
+                    new gviz.TextStyle({
                         textCol: 'ind',
                         text: (v, r, s, z) => {
-                            const t = gridviz.sPow(v / s.max, 0.25)
+                            const t = gviz.sPow(v / s.max, 0.25)
                             return tsFun(t)
                         },
                         color: (v, r, s) => '#c08c59',
                         fontSize: (v, r, s, z) => 1.2 * r,
                     }),
                 ],
-                minPixelsPerCell: 10,
+                pixNb: 10,
             },
         }
 
-        map.addMultiScaleTiledGridLayer(
+        app.addMultiScaleTiledGridLayer(
             [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
             (r) =>
                 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/inc/2019/' +
@@ -312,22 +312,22 @@
                 'm/',
             sd.scolor.style,
             {
-                minPixelsPerCell: sd.scolor.minPixelsPerCell,
+                pixNb: sd.scolor.pixNb,
                 cellInfoHTML: (c) => '<b>' + c.ind + '</b> inhabitant(s)',
             }
         )
 
         //legends
         sd.scolor.style[0].legends.push(
-            new gridviz.ColorLegend({
+            new gviz.ColorLegend({
                 title: 'Number of inhabitants',
                 ticks: 6,
                 colorRamp: d3.interpolateOrRd,
-                fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
+                fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
             })
         )
         sd.ccolor.style[0].legends.push(
-            new gridviz.ColorLegend({
+            new gviz.ColorLegend({
                 title: 'Number of inhabitants',
                 ticks: 6,
                 colorRamp: d3.interpolateOrRd,
@@ -335,19 +335,19 @@
             })
         )
         sd.square.style[0].legends.push(
-            new gridviz.SizeLegend({ shape: 'square', labelUnitText: 'inhab.', fillColor: '#c08c59cc' })
+            new gviz.SizeLegend({ shape: 'square', labelUnitText: 'inhab.', fillColor: '#c08c59cc' })
         )
         sd.circle.style[0].legends.push(
-            new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#c08c59cc' })
+            new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#c08c59cc' })
         )
         sd.segmentH.style[0].legends.push(
-            new gridviz.SegmentWidthLegend({ labelUnitText: 'inhab.', color: '#c08c59', orientation: 0 })
+            new gviz.SegmentWidthLegend({ labelUnitText: 'inhab.', color: '#c08c59', orientation: 0 })
         )
         sd.segmentV.style[0].legends.push(
-            new gridviz.SegmentWidthLegend({ labelUnitText: 'inhab.', color: '#c08c59', orientation: 90 })
+            new gviz.SegmentWidthLegend({ labelUnitText: 'inhab.', color: '#c08c59', orientation: 90 })
         )
         sd.segmentO.style[0].legends.push(
-            new gridviz.SegmentWidthLegend({ labelUnitText: 'inhab.', color: '#c08c59', orientation: 45 })
+            new gviz.SegmentWidthLegend({ labelUnitText: 'inhab.', color: '#c08c59', orientation: 45 })
         )
 
         //style selector
@@ -355,28 +355,28 @@
             //get checked value
             const value = document.querySelector('input[name="style"]:checked').value
 
-            const lay = map.layers[0]
+            const lay = app.layers[0]
 
             //set new style
             lay.styles = sd[value].style
 
             //set new zoom breaks
-            lay.minPixelsPerCell = sd[value].minPixelsPerCell
+            lay.pixNb = sd[value].pixNb
 
             //redraw
-            map.cg.redraw()
+            app.cg.redraw()
         })
 
         // show/hide labels
         document.querySelector('#label').addEventListener('change', function () {
-            map.showLabels = this.checked
-            map.cg.redraw()
+            app.showLabels = this.checked
+            app.cg.redraw()
         })
 
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
-            map.showBoundaries = this.checked
-            map.cg.redraw()
+            app.showBoundaries = this.checked
+            app.cg.redraw()
         })
     </script>
 

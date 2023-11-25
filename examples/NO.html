@@ -90,11 +90,11 @@
             .scale(6378137)//0.9996
             .translate([2500000, -27000])
 
-        //define map
+        //define application
         let containerDiv = document.getElementById('viz-container')
-        const map = new gridviz.Map(containerDiv)
+        const app = new gviz.App(containerDiv)
             .setGeoCenter({ x: 2179500, y: 6783250 })
-            .setZoom(500)
+            .setZoomFactor(500)
             .setLabelLayer(gviz_es.getEuronymeLabelLayer('NO', '20', { proj: proj }))
             .setBoundaryLayer(gviz_es.getEurostatBoundariesLayer({ crs: "4326", proj: proj }))
 
@@ -117,7 +117,7 @@
 
         //generic function to make multi-resolution dataset for Norway
         const makeDataset = (code, short, preprocess) => {
-            return map.makeMultiScaleTiledGridDataset(
+            return app.makeMultiScaleTiledGridDataset(
                 short ? [1000, 2000, 5000, 10000, 20000, 50000, 100000] : [250, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
                 (r) => baseURL + code + 'csv/' + r + 'm/',
                 { preprocess: preprocess }
@@ -152,7 +152,7 @@
             const layCode = document.querySelector('input[name="layer"]:checked').value
 
             //remove layers
-            map.layers = []
+            app.layers = []
 
             //formater
             //const f1 = d3.format('.1f')
@@ -164,33 +164,33 @@
                 const y = document.querySelector('#year').value
 
                 //add layer
-                map.addLayer(
+                app.addLayerFromDataset(
                     //set dataset: population dataset on year y
                     ds["pop" + y],
                     [
                         //define style
-                        new gridviz.SquareColorWGLStyle({
+                        new gviz.SquareColorWGLStyle({
                             colorCol: 'p',
                             color: d3.interpolateYlOrRd,
-                            stretching: { fun: 'log', alpha: -7 },
+                            stretching: { fun: 'expRev', alpha: -7 },
                             //set alpha and blend operation
-                            //alpha: (z) => z < 70 ? 0.75 : 1.0,
-                            //blendOperation: (z) => z < 10 ? "multiply" : "source-over"
+                            //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
+                            //blendOperation: (zf) => zf < 10 ? "multiply" : "source-over"
                         }),
                         //show stroke for low resolutions
-                        new gridviz.StrokeStyle({ maxZoom: 7 }),
+                        new gviz.StrokeStyle({ maxZoom: 7 }),
                     ],
                     {
-                        minPixelsPerCell: 1.5,
+                        pixNb: 1.5,
                         cellInfoHTML: (c) => '<b>' + c.p + '</b> person' + (+c.p == 1 ? '' : 's')
                     }
                 )
                 //legend
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.ColorLegend({
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorLegend({
                         title: "Population",
                         colorRamp: d3.interpolateYlOrRd,
-                        fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
+                        fun: (t, r, s) => s.max * gviz.sExpRevInverse(t, -7),
                     })
                 )
 
@@ -206,40 +206,40 @@
                 const colR = d3.interpolateYlOrRd
                 const nb = 5
 
-                map.addLayer(
+                app.addLayerFromDataset(
                     //set dataset: population dataset on year y
                     ds["pop" + y],
                     [
                         new gviz_sm.KernelSmoothingStyle({
                             value: (c) => +c.p,
                             filterSm: (v) => v > 0.001,
-                            sigma: (r, z) => (r * +sig) / 10,
+                            sigma: (r, zf) => (r * +sig) / 10,
                             factor: 2,
                             styles: [
-                                new gridviz.SquareColorWGLStyle({
+                                new gviz.SquareColorWGLStyle({
                                     colorCol: 'ksmval',
                                     color: colR,
                                     tFun: (v, r, s) => {
-                                        const v_ = gridviz.sExpRev(v / s.max, -10)
+                                        const v_ = gviz.sExpRev(v / s.max, -10)
                                         const cl = Math.floor(nb * v_) / nb
                                         return cl
                                     },
                                 })
                             ],
                             //set alpha and blend operation
-                            //alpha: (z) => z < 70 ? 0.75 : 1.0,
-                            //blendOperation: (z) => z < 50 ? "multiply" : "source-over"
+                            //alpha: (zf) => zf < 70 ? 0.75 : 1.0,
+                            //blendOperation: (zf) => zf < 50 ? "multiply" : "source-over"
                         }),
                     ],
                     {
-                        minPixelsPerCell: 1.5,
+                        pixNb: 1.5,
                         cellInfoHTML: (c) => '<b>' + c.p + '</b> person' + (+c.p == 1 ? '' : 's')
                     }
                 )
 
                 //legend
-                map.layers[0].styles[0].styles[0].legends.push(
-                    new gridviz.ColorLegend({
+                app.layers[0].styles[0].styles[0].legends.push(
+                    new gviz.ColorLegend({
                         title: 'Population',
                         colorRamp: (t) => colR(Math.floor(t * nb) / nb),
                         width: 200,
@@ -254,24 +254,24 @@
                 //get selected year
                 const y = document.querySelector('#year').value
 
-                map.addLayer(
+                app.addLayerFromDataset(
                     ds["popf" + y],
                     [
-                        new gridviz.ShapeColorSizeStyle({
+                        new gviz.ShapeColorSizeStyle({
                             colorCol: 'Isex',
                             color: (v, r, s) => {
                                 const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                                const t = (Math.sign(v) * gridviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
+                                const t = (Math.sign(v) * gviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
                                 return d3.interpolateSpectral(1 - t)
                             },
                             shape: () => 'circle',
                             sizeCol: 'p',
-                            size: (v, r, s, z) => 1.3 * r * gridviz.sPow(v / s.max, 0.2),
-                            blendOperation: (z) => z < 4 ? "multiply" : "source-over"
+                            size: (v, r, s, zf) => 1.3 * r * gviz.sPow(v / s.max, 0.2),
+                            blendOperation: (zf) => zf < 4 ? "multiply" : "source-over"
                         }),
                     ],
                     {
-                        minPixelsPerCell: 8,
+                        pixNb: 8,
                         cellInfoHTML: (c) => {
                             return (
                                 c.m +
@@ -286,11 +286,11 @@
                     }
                 )
                 //legend
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
+                app.layers[0].styles[0].legends.push(
+                    new gviz.SizeLegend({ shape: 'circle', labelUnitText: 'inhab.', fillColor: '#ccc' })
                 )
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.ColorLegend({
+                app.layers[0].styles[0].legends.push(
+                    new gviz.ColorLegend({
                         title: 'Men / women difference',
                         ticks: 3,
                         //ticks: 5,
@@ -301,7 +301,7 @@
                         fun: (t, r, s) => (t == 0 ? 'More women' : t == 0.5 ? 'Balanced' : 'More men'),
                         /*fun: (t, r, s) => {
                             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-                            return (t < 0.5 ? -1 : 1) * max * gridviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
+                            return (t < 0.5 ? -1 : 1) * max * gviz.sPow(Math.abs(2 * t - 1), 1 / 0.2)
                         },*/
                     })
                 )
@@ -313,12 +313,12 @@
                 const y = document.querySelector('#year').value
 
                 //age
-                map.addLayer(
+                app.addLayerFromDataset(
                     ds["popf" + y],
                     [
-                        new gridviz.ShapeColorSizeStyle({
+                        new gviz.ShapeColorSizeStyle({
                             sizeCol: 'p',
-                            size: (v, r, s, z) => 1.4 * r * Math.pow(v / s.max, 0.2),
+                            size: (v, r, s, zf) => 1.4 * r * Math.pow(v / s.max, 0.2),
                             colorCol: 'aa',
                             color: (v, r, s) => {
                                 if (v == 0) return "gray";
@@ -329,7 +329,7 @@
                         }),
                     ],
                     {
-                        minPixelsPerCell: 6,
+                        pixNb: 6,
                         /*cellInfoHTML: (c) =>
                             '<b>' +
                             f1(c.yyy) +
@@ -351,16 +351,16 @@
                 const ts = []; for (let i = 2002; i <= 2022; i++) ts.push("y" + i)
 
                 //add layer
-                map.addLayer(
+                app.addLayerFromDataset(
                     //use dataset on population time series
                     ds.popTS,
                     //define style
                     [
-                        new gridviz.TimeSeriesStyle({
+                        new gviz.TimeSeriesStyle({
                             ts: ts,
                             color: () => "black",
                             lineWidthCol: "y2018",
-                            lineWidth: (v, r, s, z) => { return (1 + gridviz.sPow(v / s.max, 0.4) * 4) * z },
+                            lineWidth: (v, r, s, z) => { return (1 + gviz.sPow(v / s.max, 0.4) * 4) * z },
                             //offsetX: (c, r, z) => r / 2,
                             //offsetY: (c, r, z) => r / 2,
                             //width: (c, r, z) => 1.5*r,
@@ -368,7 +368,7 @@
                             //anchorModeY: (c, r, z) => "first"
                         })],
                     {
-                        minPixelsPerCell: 10,
+                        pixNb: 10,
                         cellInfoHTML: (c) => {
 
                             //prepare chart data
@@ -430,8 +430,8 @@
                     }
                 )
 
-                map.layers[0].styles[0].legends.push(
-                    new gridviz.SegmentWidthLegend({
+                app.layers[0].styles[0].legends.push(
+                    new gviz.SegmentWidthLegend({
                         title: "Population (2018)",
                         labelUnitText: 'inhabitants',
                         exaggerationFactor: 0.8,
@@ -442,7 +442,7 @@
             } else console.error('Unexpected layer code: ' + layCode)
 
             //redraw
-            map.cg.redraw()
+            app.cg.redraw()
         }
 
 
@@ -455,18 +455,18 @@
 
         // show/hide labels
         document.getElementById('label').addEventListener('change', function () {
-            map.showLabels = this.checked
-            map.cg.redraw()
+            app.showLabels = this.checked
+            app.cg.redraw()
         })
 
         // show/hide boundaries
         document.querySelector('#boundary').addEventListener('change', function () {
-            map.showBoundaries = this.checked
-            map.cg.redraw()
+            app.showBoundaries = this.checked
+            app.cg.redraw()
         })
 
         //select layer from URL
-        const ls = gridviz.getParameterByName('lay')
+        const ls = gviz.getParameterByName('lay')
         if (ls) {
             const b = document.getElementById(ls)
             if (b) b.checked = true
