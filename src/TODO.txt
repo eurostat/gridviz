@@ -1,7 +1,6 @@
 v3: focus on (main) API changes.
 
 fix demos to v2
-bug in stretching.html: exclude 0 values !?
 style filter ?
 rename preprocess: into preprocess/filter ?
 reorganise map - simplify constructor
