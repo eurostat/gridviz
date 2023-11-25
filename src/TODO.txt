@@ -1,4 +1,8 @@
 v3: focus on (main) API changes.
+
+bug in stretching.html: exclude 0 values !?
+style filter ?
+rename preprocess: into preprocess/filter ?
 reorganise map - simplify constructor
 legends
 upgrade examples
@@ -8,7 +12,6 @@ see legend update on layer style change
 extract modules ?
 population.csv files: make 2021 ones
 doc: only basic CSV and tiled multiscale
-bug in stretching.html
 
 Done:
 visible as a function of zoom z - remove maxzoom/minzoom
