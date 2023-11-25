@@ -23,9 +23,9 @@ font-family: Arial, Helvetica, sans-serif;
         <option value="circleInv">Circular inverse</option>
     </select>
     <div id="alphaText">Base: -10</div>
-    <input type="range" min="-20" max="20" step="1" value="-10" id="alphaExp" style="width: 300px; display: initial" />
-    <input type="range" min="0.02" max="20" step="0.02" value="0.3" id="alphaPow" style="width: 300px; display: none" />
-    <input type="range" min="0" max="1" step="0.02" value="0.3" id="alphaCir" style="width: 300px; display: none" />
+    <input type="range" min="-30" max="0" step="1" value="-10" id="base" style="width: 300px; display: initial" />
+    <input type="range" min="0" max="1" step="0.02" value="0.3" id="exponent" style="width: 300px; display: none" />
+    <input type="range" min="0" max="1" step="0.02" value="0.3" id="circularity" style="width: 300px; display: none" />
 </div>
 
 <script src="../dist/gridviz.js"></script>
@@ -65,23 +65,23 @@ font-family: Arial, Helvetica, sans-serif;
         //get alpha
         let a
         if (fun == 'exp' || fun == 'log') {
-            document.getElementById('alphaExp').style.display = 'initial'
-            document.getElementById('alphaPow').style.display = 'none'
-            document.getElementById('alphaCir').style.display = 'none'
-            a = +document.querySelector('#alphaExp').value
+            document.getElementById('base').style.display = 'initial'
+            document.getElementById('exponent').style.display = 'none'
+            document.getElementById('circularity').style.display = 'none'
+            a = +document.querySelector('#base').value
             document.getElementById('alphaText').textContent = 'Base: ' + a
         } else if (fun == 'pow' || fun == 'powInv') {
-            document.getElementById('alphaExp').style.display = 'none'
-            document.getElementById('alphaPow').style.display = 'initial'
-            document.getElementById('alphaCir').style.display = 'none'
-            a = +document.querySelector('#alphaPow').value
+            document.getElementById('base').style.display = 'none'
+            document.getElementById('exponent').style.display = 'initial'
+            document.getElementById('circularity').style.display = 'none'
+            a = +document.querySelector('#exponent').value
             document.getElementById('alphaText').textContent = 'Exponent: ' + a
         } else if (fun == 'circle' || fun == 'circleInv') {
-            document.getElementById('alphaExp').style.display = 'none'
-            document.getElementById('alphaPow').style.display = 'none'
-            document.getElementById('alphaCir').style.display = 'initial'
-            a = +document.querySelector('#alphaCir').value
-            document.getElementById('alphaText').textContent = 'Curvature: ' + a
+            document.getElementById('base').style.display = 'none'
+            document.getElementById('exponent').style.display = 'none'
+            document.getElementById('circularity').style.display = 'initial'
+            a = +document.querySelector('#circularity').value
+            document.getElementById('alphaText').textContent = 'Circularity: ' + a
         }
 
         //set style stretching function
@@ -93,9 +93,9 @@ font-family: Arial, Helvetica, sans-serif;
 
     //
     document.getElementById('fun').addEventListener('change', update)
-    document.getElementById('alphaExp').addEventListener('input', update)
-    document.getElementById('alphaPow').addEventListener('input', update)
-    document.getElementById('alphaCir').addEventListener('input', update)
+    document.getElementById('base').addEventListener('input', update)
+    document.getElementById('exponent').addEventListener('input', update)
+    document.getElementById('circularity').addEventListener('input', update)
 
     update()
 
