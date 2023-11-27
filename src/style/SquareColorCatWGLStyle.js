@@ -18,10 +18,10 @@ export class SquareColorCatWGLStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** A function returning the color of the cell.
-         * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
-        this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
-
+        /**
+         * The name of the column/attribute of the tabular data where to retrieve the category of the cell, for coloring.
+         * @type {string} */
+        this.colorCol = opts.colorCol
 
         /**
          * The dictionary (string -> color) which give the color of each category.
@@ -67,8 +67,7 @@ export class SquareColorCatWGLStyle extends Style {
 
         //add vertice and fragment data
         const r2 = resolution / 2
-        let c,
-            nb = cells.length
+        let c, nb = cells.length
         const verticesBuffer = []
         const iBuffer = []
         for (let i = 0; i < nb; i++) {

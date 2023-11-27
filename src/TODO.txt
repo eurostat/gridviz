@@ -43,7 +43,8 @@ upgrade demos to v3
 static image background layer - for map background in oversea territories
 
 style value by alpha: Document
-
+style: rounded squares
+style: ammalgamated circles (with buffer out/in)
 style: spider net diagram
 style: flower - for composition
 style: bi-symbol map

@@ -9,18 +9,22 @@
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
         [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        resolution => 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/' + resolution + 'm/',
+        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/' + resolution + 'm/')
     )
 
     //define color style
     const style = new gridviz.SquareColorCatWGLStyle({
+        colorCol: 'clc',
         color: { 41: 'blue' },
     })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style], {
         //select only the cells with 'clc' property equal to '41'
-        preprocess: (cell) => +cell.clc == 41
+        preprocess: (cell) => {
+            console.log(cell.clc)
+            return +cell.clc == 41
+        }
     })]
 
 </script>
