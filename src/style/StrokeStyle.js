@@ -13,33 +13,21 @@ export class StrokeStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         * @type {string} */
-        this.strokeColorCol = opts.strokeColorCol
-
-        /** A function returning the color of the stroke.
-         * @type {function(number,number,import("../Style").Stat|undefined):string} */
-        this.strokeColor = opts.strokeColor || (() => '#666')
-
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for size.
-         * @type {string} */
-        this.sizeCol = opts.sizeCol
+        /** A function returning the color of the cell.
+         * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
+        this.strokeColor = opts.strokeColor || (() => "#666") //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
-         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-        this.size = opts.size
-
-        /** The stroke line width, in pixels.
-         * @type {string} */
-        this.strokeWidthCol = opts.strokeWidthCol
+         * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
+        this.size = opts.size || ((cell, resolution) => resolution) //(c,r,z,vs) => {}
 
         /** The stroke line width in geographical unit.
          * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
         this.strokeWidth = opts.strokeWidth // (v,r,s,z)=>...
 
         /** A function returning the shape of a cell.
-         * @type {function(import("../Dataset").Cell):import("../Style").Shape} */
-        this.shape = opts.shape || (() => 'square')
+        * @type {function(import("../Dataset.js").Cell,number, number,object):import("../Style.js").Shape} */
+        this.shape = opts.shape || (() => "square") //(c,r,z,vs) => {}
     }
 
     /**
@@ -56,14 +44,8 @@ export class StrokeStyle extends Style {
         //
         const z = geoCanvas.view.z
 
-        let statColor
-        if (this.strokeColorCol) statColor = Style.getStatistics(cells, (c) => c[this.strokeColorCol], true)
-
-        let statSize
-        if (this.sizeCol) statSize = Style.getStatistics(cells, (c) => c[this.sizeCol], true)
-
-        let statWidth
-        if (this.strokeWidthCol) statWidth = Style.getStatistics(cells, (c) => c[this.strokeWidthCol], true)
+        //get view scale
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         const r2 = resolution * 0.5
         for (let cell of cells) {
