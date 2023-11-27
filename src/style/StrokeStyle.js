@@ -14,19 +14,19 @@ export class StrokeStyle extends Style {
         opts = opts || {}
 
         /** A function returning the color of the cell.
-         * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
+         * @type {function(import('../Dataset.js').Cell,number,number,object):string} */
         this.strokeColor = opts.strokeColor || (() => "#666") //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
-         * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
+         * @type {function(import('../Dataset.js').Cell,number,number,object):number} */
         this.size = opts.size || ((cell, resolution) => resolution) //(c,r,z,vs) => {}
 
         /** The stroke line width in geographical unit.
-         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
+         * @type {function(import('../Dataset.js').Cell,number,number,object):number} */
         this.strokeWidth = opts.strokeWidth // (v,r,s,z)=>...
 
         /** A function returning the shape of a cell.
-        * @type {function(import("../Dataset.js").Cell,number, number,object):import("../Style.js").Shape} */
+        * @type {function(import("../Dataset.js").Cell,number,number,object):import("../Style.js").Shape} */
         this.shape = opts.shape || (() => "square") //(c,r,z,vs) => {}
     }
 
@@ -50,27 +50,20 @@ export class StrokeStyle extends Style {
         const r2 = resolution * 0.5
         for (let cell of cells) {
             //color
-            const col = this.strokeColor
-                ? this.strokeColor(cell[this.strokeColorCol], resolution, statColor)
-                : undefined
+            const col = this.strokeColor ? this.strokeColor(cell, resolution, z, viewScale) : undefined
             if (!col || col === 'none') continue
             geoCanvas.ctx.strokeStyle = col
 
-            //size
-            /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-            let s_ = this.size || (() => resolution)
             //size - in geo unit
-            const sG = s_(cell[this.sizeCol], resolution, statSize, z)
+            const sG = this.size(cell, resolution, z, viewScale)
 
             //width
-            const wi = this.strokeWidth
-                ? this.strokeWidth(cell[this.strokeWidthCol], resolution, statWidth, z)
-                : 1 * z
+            const wi = this.strokeWidth ? this.strokeWidth(cell, resolution, z, viewScale) : 1 * z
             if (!wi || wi <= 0) continue
             geoCanvas.ctx.lineWidth = wi
 
             //shape
-            const shape = this.shape ? this.shape(cell) : 'square'
+            const shape = this.shape ? this.shape(cell, resolution, z, viewScale) : 'square'
             if (shape === 'none') continue
 
             //get offset
