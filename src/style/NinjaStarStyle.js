@@ -13,23 +13,15 @@ export class NinjaStarStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         * @type {string} */
-        this.colorCol = opts.colorCol
-
         /** A function returning the color of the cell.
-         * @type {function(number,number,import("../Style").Stat|undefined,number):string} */
-        this.color = opts.color || (() => '#EA6BAC') //(v,r,s,z) => {}
-
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for size.
-         * @type {string} */
-        this.sizeCol = opts.sizeCol
+         * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
+        this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell, within [0,1]:
          *  - 0, nothing shown
          *  - 1, entire square
-         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-        this.size = opts.size
+          * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
+        this.size = opts.size || ((cell, resolution) => resolution) //(c,r,z,vs) => {}
 
         /** A function returning the shape.
          * @type {function(import("../Dataset").Cell):string} */
@@ -49,36 +41,22 @@ export class NinjaStarStyle extends Style {
         //
         const z = geoCanvas.view.z
 
-        let statSize
-        if (this.sizeCol) {
-            //if size is used, sort cells by size so that the biggest are drawn first
-            cells.sort((c1, c2) => c2[this.sizeCol] - c1[this.sizeCol])
-            //and compute size variable statistics
-            statSize = Style.getStatistics(cells, (c) => c[this.sizeCol], true)
-        }
-
-        let statColor
-        if (this.colorCol) {
-            //compute color variable statistics
-            statColor = Style.getStatistics(cells, (c) => c[this.colorCol], true)
-        }
+        //get view scale
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         const r2 = resolution * 0.5
         for (let cell of cells) {
             //color
-            const col = this.color ? this.color(cell[this.colorCol], resolution, statColor, z) : undefined
+            const col = this.color ? this.color(cell, resolution, z, viewScale) : undefined
             if (!col || col === 'none') continue
             geoCanvas.ctx.fillStyle = col
+
+            //size - in geo unit
+            const sG2 = this.size(cell, resolution, z, viewScale) * r2
 
             //shape
             const shape = this.shape ? this.shape(cell) : 'o'
             if (shape === 'none') continue
-
-            //size
-            /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-            let s_ = this.size || (() => 0.5)
-            //size - in geo unit
-            const sG2 = s_(cell[this.sizeCol], resolution, statSize, z) * r2
 
             //get offset
             //TODO use
@@ -116,6 +94,6 @@ export class NinjaStarStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, z: z, sSize: statSize, sColor: statColor })
+        this.updateLegends({ style: this, r: resolution, z: z, viewScale: viewScale })
     }
 }
