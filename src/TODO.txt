@@ -8,6 +8,7 @@ population.csv files: make 2021 ones
 doc: only basic CSV and tiled multiscale
 
 Done:
+zExtent -> zoomExtent
 visible as a function of zoom z - remove maxzoom/minzoom
 Drawable class, common to layer and style
 gviz to gridviz

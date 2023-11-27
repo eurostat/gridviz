@@ -1,10 +1,12 @@
 <div id="map" style="height: 500px; width: 800px"></div>
 
 <script src="../../dist/gridviz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridviz-eurostat@1.0.0"></script>
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4000000, y: 2960000, z: 1000 })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4000000, y: 2960000, z: 1000, zoomExtent: [30, 7000] })
+        .setViewFromURL()
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
@@ -31,36 +33,23 @@
         cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
     })]
 
-/*
 
-        new gridviz.Map(containerDiv)
-            .setZoomExtent([30, 7000])
-            .setViewFromURL()
-            .setLabelLayer(
-                gviz_es.getEuronymeLabelLayer('EUR', 50, {
-                    ex: 1.8,
-                    exSize: 1,
-                    color: () => 'black',
-                    haloColor: () => '#ffffff',
-                    haloWidth: () => 3,
-                })
-            )
-            .setBoundaryLayer(
-                gviz_es.getEurostatBoundariesLayer({
-                    scale: '10M',
-                    col: '#00000044',
-                    lineDash: () => [],
-                })
-            )
-            .addBackgroundLayer({
-                url: 'https://gisco-services.ec.europa.eu/maps/tiles/GreyEarth/EPSG3035/',
-                resolutions: [
-                    156543.03392804097, 78271.51696402048, 39135.75848201024, 19567.87924100512,
-                    9783.93962050256, 4891.96981025128, 2445.98490512564,
-                ],
-                origin: [0, 6000000],
-                filterColor: (z) => '#ffffffd3',
-            })
-
-*/
+    /*
+                .setLabelLayer(
+                    gviz_es.getEuronymeLabelLayer('EUR', 50, {
+                        ex: 1.8,
+                        exSize: 1,
+                        color: () => 'black',
+                        haloColor: () => '#ffffff',
+                        haloWidth: () => 3,
+                    })
+                )
+                .setBoundaryLayer(
+                    gviz_es.getEurostatBoundariesLayer({
+                        scale: '10M',
+                        col: '#00000044',
+                        lineDash: () => [],
+                    })
+                )
+    */
 </script>
