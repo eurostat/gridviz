@@ -1,46 +1,42 @@
 <div id="map" style="height: 500px; width: 800px"></div>
 
 <script src="../dist/gridviz.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000 })
 
     //define multi resolution dataset
-    const dataset = new gridviz.MultiResolutionDataset(
-        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/',
-            {
-                preprocess: (c) => {
-                    //for each cell, compute 2011 -> 2021 change and store it in a new "change" column
-                    if (!c.TOT_P_2011 && !c.TOT_P_2021) c.change = 0
-                    else if (!c.TOT_P_2011 && c.TOT_P_2021) c.change = +c.TOT_P_2021
-                    else if (c.TOT_P_2011 && !c.TOT_P_2021) c.change = -c.TOT_P_2011
-                    else c.change = c.TOT_P_2021 - c.TOT_P_2011
-                    //remove unused information
-                    delete c.TOT_P_2006
-                    delete c.TOT_P_2011
-                    delete c.TOT_P_2018
-                    delete c.TOT_P_2021
-                }
+    const dataset = new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/5000m/',
+        {
+            preprocess: (c) => {
+                //for each cell, compute 2011 -> 2021 change and store it in a new "change" column
+                if (!c.TOT_P_2011 && !c.TOT_P_2021) c.change = 0
+                else if (!c.TOT_P_2011 && c.TOT_P_2021) c.change = +c.TOT_P_2021
+                else if (c.TOT_P_2011 && !c.TOT_P_2021) c.change = -c.TOT_P_2011
+                else c.change = c.TOT_P_2021 - c.TOT_P_2011
+                //remove unused information
+                delete c.TOT_P_2006
+                delete c.TOT_P_2011
+                delete c.TOT_P_2018
+                delete c.TOT_P_2021
+                delete c.CNTR_ID
             }
-        )
+        }
     )
 
     //define color style
     const style = new gridviz.ShapeColorSizeStyle({
         colorCol: 'change',
-        color: (v, r, s) => {
-            const max = Math.max(Math.abs(s.min), Math.abs(s.max))
-            const t = (Math.sign(v) * gridviz.sPow(Math.abs(v) / max, 0.2)) / 2 + 0.5
-            return d3.interpolateSpectral(1 - t)
+        color: (cell, resolution, z) => {
+            //use new "change" property for coloring
+            if (cell.change < -100) return "blue"
+            else if (cell.change < -30) return "lightblue"
+            else if (cell.change < 30) return "lightgray"
+            else if (cell.change < 100) return "orange"
+            else return "red"
         },
-        shape: () => 'square',
     })
-
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
