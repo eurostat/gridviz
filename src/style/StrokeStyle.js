@@ -23,7 +23,7 @@ export class StrokeStyle extends Style {
 
         /** The stroke line width in geographical unit.
          * @type {function(import('../Dataset.js').Cell,number,number,object):number} */
-        this.strokeWidth = opts.strokeWidth // (v,r,s,z)=>...
+        this.strokeWidth = opts.strokeWidth || ((cell, resolution, z) => z * 1.5) //(c,r,z,vs) => {}
 
         /** A function returning the shape of a cell.
         * @type {function(import("../Dataset.js").Cell,number,number,object):import("../Style.js").Shape} */
@@ -49,13 +49,14 @@ export class StrokeStyle extends Style {
 
         const r2 = resolution * 0.5
         for (let cell of cells) {
+
             //color
             const col = this.strokeColor ? this.strokeColor(cell, resolution, z, viewScale) : undefined
             if (!col || col === 'none') continue
             geoCanvas.ctx.strokeStyle = col
 
             //size - in geo unit
-            const sG = this.size(cell, resolution, z, viewScale)
+            const sG = this.size ? this.size(cell, resolution, z, viewScale) : resolution
 
             //width
             const wi = this.strokeWidth ? this.strokeWidth(cell, resolution, z, viewScale) : 1 * z
