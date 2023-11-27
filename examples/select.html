@@ -14,11 +14,13 @@
 
     //define color style
     const style = new gridviz.SquareColorCatWGLStyle({
-        colorCol: 'clc',
         color: { 41: 'blue' },
     })
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style], { preprocess: (cell) => +cell.clc == 41 })]
+    map.layers = [new gridviz.GridLayer(dataset, [style], {
+        //select only the cells with 'clc' property equal to '41'
+        preprocess: (cell) => +cell.clc == 41
+    })]
 
 </script>

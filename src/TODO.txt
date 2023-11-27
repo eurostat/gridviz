@@ -1,16 +1,11 @@
 v3: focus on (main) API changes.
 
-fix demos to v2
-    <script src="https://cdn.jsdelivr.net/npm/gridviz@2.1.17"></script>
-test
-
+upgrade examples
+upgrade style examples
 style filter ?
 rename preprocess: into preprocess/filter ?
 reorganise map - simplify constructor
 legends
-upgrade examples
-upgrade style examples
-upgrade demos
 see legend update on layer style change
 extract modules ?
 population.csv files: make 2021 ones
@@ -44,7 +39,7 @@ getGeoCenter setGeoCenter replaced by getView setView
 style: draw(cells, canvas, resolution)
 
 
-
+upgrade demos to v3
 static image background layer - for map background in oversea territories
 
 style value by alpha: Document
