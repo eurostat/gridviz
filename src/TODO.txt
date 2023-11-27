@@ -1,13 +1,9 @@
 v3: focus on (main) API changes.
 
-upgrade examples
 upgrade style examples
 style filter ?
-rename preprocess: into preprocess/filter ?
 reorganise map - simplify constructor
-legends
-see legend update on layer style change
-extract modules ?
+legends - see legend update on layer style change
 population.csv files: make 2021 ones
 doc: only basic CSV and tiled multiscale
 
@@ -42,6 +38,7 @@ style: draw(cells, canvas, resolution)
 upgrade demos to v3
 static image background layer - for map background in oversea territories
 
+extract modules ?
 style value by alpha: Document
 style: rounded squares
 style: ammalgamated circles (with buffer out/in)

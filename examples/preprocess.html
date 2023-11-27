@@ -30,10 +30,11 @@
         colorCol: 'change',
         color: (cell, resolution, z) => {
             //use new "change" property for coloring
-            if (cell.change < -100) return "blue"
-            else if (cell.change < -30) return "lightblue"
-            else if (cell.change < 30) return "lightgray"
-            else if (cell.change < 100) return "orange"
+            if (cell.change < -120) return "darkblue"
+            else if (cell.change < -50) return "blue"
+            else if (cell.change < 0) return "lightblue"
+            else if (cell.change < 50) return "yellow"
+            else if (cell.change < 120) return "orange"
             else return "red"
         },
     })
