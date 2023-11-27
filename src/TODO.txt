@@ -1,5 +1,6 @@
 v3: focus on (main) API changes.
 
+review scale.js: rename sizeContinuousScale ?
 upgrade style examples
 style filter ?
 reorganise map - simplify constructor
