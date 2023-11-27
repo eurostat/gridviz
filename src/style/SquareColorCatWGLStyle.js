@@ -4,12 +4,11 @@
 import { Style } from '../Style.js'
 import { makeWebGLCanvas } from '../utils/webGLUtils.js'
 import { WebGLSquareColoringCatAdvanced } from '../utils/WebGLSquareColoringCatAdvanced.js'
-import { monitor, monitorDuration } from '../utils/Utils.js'
 
 /**
  * Style based on webGL
  * To show cells as colored squares, from categories.
- * Alls squares with the same size
+ * All cells are drawn as squares, with the same size
  *
  * @author Julien Gaffuri
  */
@@ -19,10 +18,10 @@ export class SquareColorCatWGLStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /**
-         * The name of the column/attribute of the tabular data where to retrieve the category of the cell, for coloring.
-         * @type {string} */
-        this.colorCol = opts.colorCol
+        /** A function returning the color of the cell.
+         * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
+        this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
+
 
         /**
          * The dictionary (string -> color) which give the color of each category.
@@ -59,7 +58,6 @@ export class SquareColorCatWGLStyle extends Style {
      * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
      */
     draw(cells, geoCanvas, resolution) {
-        if (monitor) monitorDuration('*** SquareColorCatWGLStyle draw')
 
         //filter
         if (this.filter) cells = cells.filter(this.filter)
@@ -90,31 +88,22 @@ export class SquareColorCatWGLStyle extends Style {
             iBuffer.push(+i_)
         }
 
-        if (monitor) monitorDuration('   webgl program inputs preparation')
-
         //create canvas and webgl renderer
         const cvWGL = makeWebGLCanvas(geoCanvas.w + '', geoCanvas.h + '')
         if (!cvWGL) {
             console.error('No webGL')
             return
         }
-        if (monitor) monitorDuration('   web GL canvas creation')
 
         //draw
         const sizeGeo = this.size ? this.size(resolution, z) : resolution + 0.2 * z
         this.wgp.draw(cvWGL.gl, verticesBuffer, iBuffer, geoCanvas.getWebGLTransform(), sizeGeo / z)
 
-        if (monitor) monitorDuration('   webgl drawing')
-
         //draw in canvas geo
         geoCanvas.initCanvasTransform()
         geoCanvas.ctx.drawImage(cvWGL.canvas, 0, 0)
 
-        if (monitor) monitorDuration('   canvas drawing')
-
         //update legends
         this.updateLegends({ style: this, r: resolution, z: z })
-
-        if (monitor) monitorDuration('*** SquareColorCatWGLStyle end draw')
     }
 }
