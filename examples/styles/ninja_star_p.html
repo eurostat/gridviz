@@ -26,8 +26,8 @@
 
     //define style
     const style = new gridviz.NinjaStarStyle({
-        viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.ind, stretching: gridviz.powerScale(0.26) }),
-        size: (c, r, z, viewScale) => 0.001 * viewScale(c.ind),
+        viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.ind, stretching: gridviz.powerScale(0.26), range: [0, 1] }),
+        size: (c, r, z, viewScale) => viewScale(c.ind),
         color: (c) => d3.interpolateSpectral(1 - c.age_ratio),
         shape: () => 'p',
     })

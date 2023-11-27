@@ -45,9 +45,11 @@ export const sizeContinuousScale = (opts) => {
     const minSizePix = opts.minSizePix || 0
     const maxSizeFactor = opts.maxSizeFactor || 1
     const stretching = opts.stretching
+    const range_ = opts.range
+    const domain_ = opts.domain
     return (cells, r, z) => {
-        const domain = [minValue, max(cells, valueFunction)]
-        const range = [minSizePix * z, r * maxSizeFactor]
+        const domain = domain_ || [minValue, max(cells, valueFunction)]
+        const range = range_ || [minSizePix * z, r * maxSizeFactor]
         const scale = t => {
             //scale to [0,1]
             t = (t - domain[0]) / (domain[1] - domain[0])
