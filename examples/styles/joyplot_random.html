@@ -8,9 +8,7 @@
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
-        //the resolutions
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        //the function returning each dataset from the resolution
         resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/')
     )
 

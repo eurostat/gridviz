@@ -319,11 +319,11 @@ export class Map {
 
     /** @returns {Array.<number>} */
     getZoomExtent() {
-        return this.geoCanvas.getZExtent()
+        return this.geoCanvas.getZoomExtent()
     }
     /** @param {Array.<number>} val @returns {this} */
     setZoomExtent(val) {
-        this.geoCanvas.setZExtent(val)
+        this.geoCanvas.setZoomExtent(val)
         return this
     }
 

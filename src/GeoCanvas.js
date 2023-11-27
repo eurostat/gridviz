@@ -130,7 +130,7 @@ export class GeoCanvas {
 
         /** Zoom extent, to limit zoom in and out
          *  @type {Array.<number>} */
-        this.zExtent = opts.zExtent || [0, Infinity]
+        this.zoomExtent = opts.zoomExtent || [0, Infinity]
 
         /** Canvas state, to be used to avoid unnecessary redraws on zoom/pan
          *  @type {{c:HTMLCanvasElement|null,dx:number,dy:number,f:number}} */
@@ -142,12 +142,12 @@ export class GeoCanvas {
 
 
     /** @param {Array.<number>} v */
-    setZExtent(v) {
-        this.zExtent = v
+    setZoomExtent(v) {
+        this.zoomExtent = v
     }
     /** @returns {Array.<number>} */
-    getZExtent() {
-        return this.zExtent
+    getZoomExtent() {
+        return this.zoomExtent
     }
 
     /** Initialise canvas transform with identity transformation. */
@@ -217,13 +217,13 @@ export class GeoCanvas {
         //TODO force geo extend to remain
 
         //trying to zoom in/out beyond limit
-        if (this.zExtent[0] == this.view.z && f <= 1) return
-        if (this.zExtent[1] == this.view.z && f >= 1) return
+        if (this.zoomExtent[0] == this.view.z && f <= 1) return
+        if (this.zoomExtent[1] == this.view.z && f >= 1) return
 
         //ensure zoom extent preserved
         const newZf = f * this.view.z
-        if (newZf < this.zExtent[0]) f = this.zExtent[0] / this.view.z
-        if (newZf > this.zExtent[1]) f = this.zExtent[1] / this.view.z
+        if (newZf < this.zoomExtent[0]) f = this.zoomExtent[0] / this.view.z
+        if (newZf > this.zoomExtent[1]) f = this.zoomExtent[1] / this.view.z
 
         this.view.z *= f
         const dxGeo = (xGeo - this.view.x) * (1 - f)
