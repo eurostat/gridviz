@@ -1,6 +1,5 @@
 <div>
-    <input type="range" min="-180" max="180" value="50" class="slider" id="orientation" style="width: 250px" />
-    <br />
+    <input type="range" min="-180" max="180" value="50" class="slider" id="orientation" style="width: 250px" /><br />
     <input type="range" min="0" max="5" step="0.05" value="1.5" class="slider" id="exa" style="width: 250px" />
 </div>
 <div id="map" style="height: 500px; width: 800px"></div>
@@ -14,14 +13,16 @@
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
         [200, 400, 600, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        (resolution) => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2019/' + resolution + 'm/'), {
-        preprocess: (c) => {
-            //aggregate to 3 age groups only
-            c.ind_0_24 = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
-            c.ind_25_64 = +c.ind_25_39 + +c.ind_40_54 + +c.ind_55_64
-            c.ind_65p = +c.ind_65_79 + +c.ind_80p
+        (resolution) => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiled-grid-france-filosofi/main/out/csv/met/ind/2019/' + resolution + 'm/'),
+        {
+            preprocess: (c) => {
+                //aggregate to 3 age groups only
+                c.ind_0_24 = +c.ind_0_3 + +c.ind_4_5 + +c.ind_6_10 + +c.ind_11_17 + +c.ind_18_24
+                c.ind_25_64 = +c.ind_25_39 + +c.ind_40_54 + +c.ind_55_64
+                c.ind_65p = +c.ind_65_79 + +c.ind_80p
+            }
         }
-    })
+    )
 
     //define style
     const style = new gridviz.IsoFenceStyle({
@@ -32,14 +33,11 @@
         },
         angle: 50,
         viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.ind, stretching: gridviz.logarithmicScale(-7) }),
-        height: (c, r, z, scale) => 1.5 * scale(c.ind)
+        height: (c, r, z, viewScale) => 1.5 * viewScale(c.ind)
     })
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style], {
-        minPixelsPerCell: 25,
-        cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
-    })]
+    map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 25 })]
 
     //orientation selection
     document.getElementById('orientation').oninput = function () {
@@ -52,7 +50,7 @@
     //height exageration selection
     document.getElementById('exa').oninput = function () {
         //set exageration
-        style.height = (c, r, z, scale) => this.value * scale(c.ind)
+        style.height = (c, r, z, viewScale) => this.value * viewScale(c.ind)
         //redraw
         map.redraw()
     }
