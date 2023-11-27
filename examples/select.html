@@ -4,27 +4,18 @@
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 1000 })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4200000, y: 2600000, z: 300 })
 
-    //define multi resolution dataset
-    const dataset = new gridviz.MultiResolutionDataset(
-        [500, 1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/' + resolution + 'm/')
-    )
-
-    //define color style
-    const style = new gridviz.SquareColorCatWGLStyle({
-        colorCol: 'clc',
-        color: { 41: 'blue' },
+    //define dataset
+    const dataset = new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/clc/500m/', {
+        //select only the cells with 'clc' property equal to '41'
+        preprocess: (cell) => cell.clc == "41"
     })
 
+    //define color style
+    const style = new gridviz.SquareColorCatWGLStyle({ colorCol: 'clc', color: { 41: 'blue' } })
+
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style], {
-        //select only the cells with 'clc' property equal to '41'
-        preprocess: (cell) => {
-            console.log(cell.clc)
-            return +cell.clc == 41
-        }
-    })]
+    map.layers = [new gridviz.GridLayer(dataset, [style])]
 
 </script>
