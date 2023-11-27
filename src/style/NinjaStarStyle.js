@@ -52,7 +52,9 @@ export class NinjaStarStyle extends Style {
             geoCanvas.ctx.fillStyle = col
 
             //size - in geo unit
-            const sG2 = this.size(cell, resolution, z, viewScale) * r2
+            let k = this.size(cell, resolution, z, viewScale)
+            k = k < 0 ? -k : k > 1 ? 1 : k
+            const sG2 = k * r2
 
             //shape
             const shape = this.shape ? this.shape(cell) : 'o'
