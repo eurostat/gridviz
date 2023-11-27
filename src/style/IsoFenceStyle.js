@@ -20,13 +20,9 @@ export class IsoFenceStyle extends Style {
          * @type {object} */
         this.color = opts.color
 
-        /** The column where to get the height values.
-         * @type {string} */
-        this.heightCol = opts.heightCol
-
-        /** A function returning the height of a cell.
-         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-        this.height = opts.height || ((v, r, s, z) => r * 0.4)
+        /** A function returning the height of a cell in geographical unit.
+         * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
+        this.height = opts.height || ((cell, resolution, z, scale) => resolution * 0.4)
 
         /** The perspective angle, in degree, within [-180,180], from [O,x] axis.
          * @type {number} */
@@ -65,13 +61,8 @@ export class IsoFenceStyle extends Style {
         //
         const z = geoCanvas.view.z
 
-        let stat
-        if (this.heightCol) {
-            //if size is used, sort cells by size so that the biggest are drawn first
-            cells.sort((c1, c2) => c2[this.heightCol] - c1[this.heightCol])
-            //and compute statistics
-            stat = Style.getStatistics(cells, (c) => c[this.heightCol], true)
-        }
+        //get view scale
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         //nb categories - used for radar and agepyramid
         const cats = Object.keys(this.color)
@@ -82,10 +73,6 @@ export class IsoFenceStyle extends Style {
         //get offset
         // @ts-ignore
         const offset = this.offset(undefined, resolution, z), dx = offset.dx, dy = offset.dy
-
-        //height
-        /** @type {function(number,number,import("../Style").Stat|undefined,number):number} */
-        let h_ = this.height
 
         //make sides
         /**  @type {Array.<Side>} */
@@ -150,22 +137,22 @@ export class IsoFenceStyle extends Style {
         sides.sort((s1, s2) => (Math.hypot(s2.x - xCorner, s2.y - yCorner) - Math.hypot(s1.x - xCorner, s1.y - yCorner)))
 
         //prepare function to draw corner line for a cell *c*
-        const drawCornerLine = (c) => {
+        const drawCornerLine = (cell) => {
 
-            if (!c) return
+            if (!cell) return
             //line style
-            const lw = this.cornerLineWidth ? this.cornerLineWidth(c, resolution, z, this.angle) : 0.8 * z
+            const lw = this.cornerLineWidth ? this.cornerLineWidth(cell, resolution, z, this.angle) : 0.8 * z
             if (lw == 0) return
-            geoCanvas.ctx.strokeStyle = this.cornerLineStrokeColor ? this.cornerLineStrokeColor(c, resolution, z, this.angle) : "#333"
+            geoCanvas.ctx.strokeStyle = this.cornerLineStrokeColor ? this.cornerLineStrokeColor(cell, resolution, z, this.angle) : "#333"
             geoCanvas.ctx.lineWidth = lw
 
             //height - in geo
-            const hG = h_(c[this.heightCol], resolution, stat, z)
+            const hG = this.height(cell, resolution, z, viewScale)
 
             //draw line
             geoCanvas.ctx.beginPath()
-            geoCanvas.ctx.moveTo(c.x + r2 + dx, c.y + r2 + dy)
-            geoCanvas.ctx.lineTo(c.x + r2 + hG * cos + dx, c.y + r2 + hG * sin + dy)
+            geoCanvas.ctx.moveTo(cell.x + r2 + dx, cell.y + r2 + dy)
+            geoCanvas.ctx.lineTo(cell.x + r2 + hG * cos + dx, cell.y + r2 + hG * sin + dy)
             geoCanvas.ctx.stroke()
         }
 
@@ -174,8 +161,8 @@ export class IsoFenceStyle extends Style {
         for (let s of sides) {
 
             //heights - in geo
-            const hG1 = s.c1 ? h_(s.c1[this.heightCol], resolution, stat, z) : 0,
-                hG2 = s.c2 ? h_(s.c2[this.heightCol], resolution, stat, z) : 0
+            const hG1 = s.c1 ? this.height(s.c1, resolution, z, viewScale) : 0,
+                hG2 = s.c2 ? this.height(s.c2, resolution, z, viewScale) : 0
 
             //compute totals for both cells
             const total1 = computeTotal(s.c1, cats),
@@ -241,7 +228,7 @@ export class IsoFenceStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, z: z, sSize: stat })
+        this.updateLegends({ style: this, r: resolution, z: z, viewScale: viewScale })
     }
 }
 
