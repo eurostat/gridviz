@@ -53,7 +53,7 @@ export class NinjaStarStyle extends Style {
 
             //size - in geo unit
             let k = this.size(cell, resolution, z, viewScale)
-            k = k < 0 ? -k : k > 1 ? 1 : k
+            k = k < 0 ? 0 : k > 1 ? 1 : k
             const sG2 = k * r2
 
             //shape

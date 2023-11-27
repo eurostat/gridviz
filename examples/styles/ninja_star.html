@@ -12,7 +12,7 @@
     //define style
     const style = new gridviz.NinjaStarStyle({
         color: () => 'purple',
-        size: (c, r, z) => c.population / 20000 //gridviz.powerScale(c.population / 20000, 1) //gridviz.sPow(v / s.max, 0.2),
+        size: (c, r, z) => gridviz.powerScale(0.4)(c.population / 300000)
     })
 
     //add layer to map
