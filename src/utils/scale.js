@@ -50,7 +50,7 @@ export const sizeContinuousScale = (opts) => {
     return (cells, r, z) => {
         const domain = domain_ || [minValue, max(cells, valueFunction)]
         const range = range_ || [minSizePix * z, r * maxSizeFactor]
-        const scale = t => {
+        return t => {
             //scale to [0,1]
             t = (t - domain[0]) / (domain[1] - domain[0])
             //stretch
@@ -58,7 +58,6 @@ export const sizeContinuousScale = (opts) => {
             //scale to range
             return range[0] + t * (range[1] - range[0])
         }
-        return scale;
     }
 }
 
