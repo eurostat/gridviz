@@ -22,7 +22,7 @@ export class IsoFenceStyle extends Style {
 
         /** A function returning the height of a cell in geographical unit.
          * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
-        this.height = opts.height || ((cell, resolution, z, scale) => resolution * 0.4)
+        this.height = opts.height || ((cell, resolution, z, viewScale) => resolution * 0.4)
 
         /** The perspective angle, in degree, within [-180,180], from [O,x] axis.
          * @type {number} */
@@ -48,11 +48,10 @@ export class IsoFenceStyle extends Style {
     }
 
     /**
-     * Draw cells as segments.
-     *
      * @param {Array.<import("../Dataset.js").Cell>} cells
-     * @param {number} resolution
      * @param {import("../GeoCanvas.js").GeoCanvas} geoCanvas
+     * @param {number} resolution
+     * @override
      */
     draw(cells, geoCanvas, resolution) {
         //filter

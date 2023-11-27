@@ -28,6 +28,13 @@ export class JoyPlotStyle extends Style {
         this.fillColor = opts.fillColor || ((y, ys, r, z) => '#c08c5968')
     }
 
+
+    /**
+     * @param {Array.<import("../Dataset.js").Cell>} cells
+     * @param {import("../GeoCanvas.js").GeoCanvas} geoCanvas
+     * @param {number} resolution
+     * @override
+     */
     draw(cells, geoCanvas, resolution) {
         //filter
         if (this.filter) cells = cells.filter(this.filter)

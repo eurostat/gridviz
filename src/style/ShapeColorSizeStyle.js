@@ -30,6 +30,11 @@ export class ShapeColorSizeStyle extends Style {
 
     /**
      * Draw cells as squares, with various colors and sizes.
+     * 
+     * @param {Array.<import("../Dataset.js").Cell>} cells
+     * @param {import("../GeoCanvas.js").GeoCanvas} geoCanvas
+     * @param {number} resolution
+     * @override
      */
     draw(cells, geoCanvas, resolution) {
         //filter
