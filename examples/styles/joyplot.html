@@ -1,43 +1,23 @@
-<!DOCTYPE html>
-<html lang="en" style="height: 100%">
+<div id="map" style="height: 500px; width: 800px"></div>
 
-<head>
-    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-    <title>Gridviz - Joyplot style</title>
-</head>
+<script src="../../dist/gridviz.js"></script>
+<script>
 
-<body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
-    <div id="viz-container" style="height: 100%; width: 100%"></div>
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4000000, y: 2960000, z: 1000, backgroundColor: "black" })
 
-    <script src="../../dist/gridviz.js"></script>
-    <script>
-        let containerDiv = document.getElementById('viz-container')
+    //define dataset
+    const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
-        new gridviz.Map(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2960000 })
-            .setZoom(2000)
-            .setBackgroundColor('black')
-            .addMultiScaleTiledGridLayer(
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                (r) =>
-                    'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
-                    r +
-                    'm/',
-                [
-                    new gridviz.JoyPlotStyle({
-                        height: (c, r, z, scale) => scale(c.TOT_P_2021),
-                        viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.TOT_P_2021, maxSizeFactor: 5, stretching: gridviz.powerScale(0.5) }),
-                        lineColor: () => 'white',
-                        lineWidth: (y, ys, r, z) => 0.15 * r,
-                        fillColor: () => 'black',
-                    }),
-                ],
-                {
-                    minPixelsPerCell: 7,
-                    cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
-                }
-            )
-    </script>
-</body>
+    //define style
+    const style = new gridviz.JoyPlotStyle({
+        height: (c) => Math.sqrt(c.population) * 50,
+        lineColor: () => 'white',
+        lineWidth: (y, ys, r, z) => z < 2000 ? 2 * z : 1 * z,
+        fillColor: () => 'black',
+    })
 
-</html>
+    //add layer to map
+    map.layers = [new gridviz.GridLayer(dataset, [style])]
+
+</script>
