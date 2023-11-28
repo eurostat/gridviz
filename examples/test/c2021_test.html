@@ -155,7 +155,7 @@
                         //viewScale: gridviz.quantileViewScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 }),
                         blendOperation: (z) => z < 100 ? "multiply" : "source-over",
                     }),
-                    new gridviz.StrokeStyle({ visible: (z) => z < 70 }),
+                    new gridviz.StrokeStyle({ visible: (z) => z < 50 }),
                 ]
 
                 layer.minPixelsPerCell = 1.5
