@@ -146,8 +146,8 @@
                 layer.styles = [
                     new gridviz.ShapeColorSizeStyle({
                         color: (c, r, z, scale) => scale(c.T),
-                        viewScale: gridviz.viewScaleColor({ valueFunction: (c) => +c.T, colorRamp: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
-                        //viewScale: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
+                        viewScale: gridviz.viewScaleColor({ valueFunction: (c) => +c.T, colorScale: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
+                        //viewScale: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.T, classNumber: 12, colorScale: d3.interpolateYlOrRd }),
                         //size
                         //size: (c, r, z, scale) => scale(+c.T),
                         //shape: () => "circle",
@@ -162,6 +162,7 @@
                     new gridviz.ColorLegend({
                         title: "Population",
                         colorScale: d3.interpolateYlOrRd,
+                        ticks:4,
                         textScale: (t, vs) => vs.invert(t)
                     })
                 ]
@@ -175,12 +176,21 @@
                         color: (c, r, z, viewScale) => viewScale.color(c.indMF),
                         size: (c, r, z, viewScale) => viewScale.size(c.T),
                         viewScale: gridviz.viewScaleCombination({
-                            color: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
+                            color: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.indMF, classNumber: 12, colorScale: d3.interpolateSpectral }),
                             size: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: 6, minSizePix: 3, maxSizeFactor: 1.1 })
                         }),
                         shape: () => 'circle',
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     }),
+                ]
+
+                layer.styles[0].legends = [
+                    new gridviz.ColorLegend({
+                        title: "Sex balance",
+                        colorScale: d3.interpolateSpectral,
+                        //ticks:4,
+                        //textScale: (t, vs) => vs.invert(t)
+                    })
                 ]
 
                 layer.minPixelsPerCell = 5
@@ -192,7 +202,7 @@
                         color: (c, r, z, viewScale) => viewScale.color(c.remp),
                         size: (c, r, z, viewScale) => viewScale.size(c.T),
                         viewScale: gridviz.viewScaleCombination({
-                            color: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
+                            color: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.remp, classNumber: 12, colorScale: d3.interpolateYlOrRd }),
                             size: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1.1 })
                         }),
                         shape: () => 'circle',
