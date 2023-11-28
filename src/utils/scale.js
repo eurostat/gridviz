@@ -5,9 +5,11 @@ import { extent, max } from "d3-array"
 import { scaleQuantile } from "d3-scale"
 
 /**
+ * A scale is simply a function that map a domain to a range.
  * @typedef {function(number):number} Scale */
 
 /**
+ * A scale whose range is a color (string).
 * @typedef {function(number):string} ColorScale */
 
 

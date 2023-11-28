@@ -1,10 +1,14 @@
 v3: focus on (main) API changes.
 
-review scale.js: rename sizeContinuousScale ?
+review scale.js
+based on c2021 example - add legend !?
+rename sizeContinuousScale ?
+
+
 upgrade style examples
+legends - see legend update on layer style change
 style filter ?
 reorganise map - simplify constructor
-legends - see legend update on layer style change
 population.csv files: make 2021 ones
 doc: only basic CSV and tiled multiscale
 
