@@ -11,51 +11,9 @@ import { scaleQuantile } from "d3-scale"
 * @typedef {function(number):string} ColorScale */
 
 
-/**
- * Generic function for continuous color maps
- * 
- * @param {{ valueFunction:function(import("../Dataset").Cell):number, colorRamp?:function(number):string, stretching?:function(number):number }} opts 
- * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
- */
-export const colorContinuousScale = (opts) => {
-    const valueFunction = opts.valueFunction
-    const colorRamp = opts.colorRamp || (() => "purple")
-    const stretching = opts.stretching
-    return (cells) => {
-        /** @type {[undefined, undefined] | [number, number]} */
-        const domain = extent(cells, valueFunction)
-        const scale = t => {
-            //scale to [0,1]
-            t = (t - domain[0]) / (domain[1] - domain[0])
-            //stretch
-            if (stretching) t = stretching(t)
-            return colorRamp(t)
-        }
-        //scale.domain(d3.extent(cells, valueFunction))
-        return scale;
-    }
-}
 
 /**
- * Generic function for quantile color maps
- * 
- * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, colorRamp?:function(number):string }} opts 
- * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
- */
-export const colorQuantileScale = (opts) => {
-    const valueFunction = opts.valueFunction
-    const classNumber = opts.classNumber || 12
-    const colorRamp = opts.colorRamp || (() => "purple")
-    const scale = scaleQuantile().range(Array.from({ length: classNumber }, (_, i) => colorRamp(i / (classNumber - 1))))
-    return (cells) => {
-        scale.domain(cells.map(valueFunction));
-        return scale;
-    }
-}
-
-
-/**
- * Generic function for size maps
+ * Generic function for view scale - continuous
  * 
  * @param {{ valueFunction:function(import("../Dataset").Cell):number, minValue?:number, minSizePix?:number, maxSizeFactor?:number, range?:[number, number], domain?:[number, number], stretching?:function(number):number }} opts 
  * @returns {function(Array.<import("../Dataset").Cell>):Scale}
@@ -82,8 +40,13 @@ export const sizeContinuousScale = (opts) => {
     }
 }
 
-//generic function for size map - quantile
-//valueFunction, classNumber, minSizePix, maxSizeFactor
+
+/**
+ * Generic function for view scale - quantile
+ * 
+ * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, minSizePix?:number, maxSizeFactor?:number }} opts 
+ * @returns {function(Array.<import("../Dataset").Cell>):Scale}
+ */
 export const sizeQuantileScale = (opts) => {
     const valueFunction = opts.valueFunction
     const classNumber = opts.classNumber || 12
@@ -99,7 +62,61 @@ export const sizeQuantileScale = (opts) => {
 }
 
 
-//combine scales
+
+
+
+
+/**
+ * Generic function for color view scale - continuous
+ * 
+ * @param {{ valueFunction:function(import("../Dataset").Cell):number, colorRamp?:function(number):string, stretching?:function(number):number }} opts 
+ * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
+ */
+export const colorContinuousScale = (opts) => {
+    const valueFunction = opts.valueFunction
+    const colorRamp = opts.colorRamp || (() => "purple")
+    const stretching = opts.stretching
+    return (cells) => {
+        /** @type {[undefined, undefined] | [number, number]} */
+        const domain = extent(cells, valueFunction)
+        const scale = t => {
+            //scale to [0,1]
+            t = (t - domain[0]) / (domain[1] - domain[0])
+            //stretch
+            if (stretching) t = stretching(t)
+            return colorRamp(t)
+        }
+        //scale.domain(d3.extent(cells, valueFunction))
+        return scale;
+    }
+}
+
+/**
+ * Generic function for color view scale - quantile
+ * 
+ * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, colorRamp?:function(number):string }} opts 
+ * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
+ */
+export const colorQuantileScale = (opts) => {
+    const valueFunction = opts.valueFunction
+    const classNumber = opts.classNumber || 12
+    const colorRamp = opts.colorRamp || (() => "purple")
+    const scale = scaleQuantile().range(Array.from({ length: classNumber }, (_, i) => colorRamp(i / (classNumber - 1))))
+    return (cells) => {
+        scale.domain(cells.map(valueFunction));
+        return scale;
+    }
+}
+
+
+
+
+/**
+ * combine view scale functions
+ * 
+ * @param {*} obj 
+ * @returns 
+ */
 export const viewScaleCombination = (obj) => {
     //obj: prop and a function to call
     return (cells, r, z) => {
