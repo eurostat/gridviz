@@ -20,7 +20,7 @@ import { scaleQuantile } from "d3-scale"
  * @param {{ valueFunction:function(import("../Dataset").Cell):number, minValue?:number, minSizePix?:number, maxSizeFactor?:number, range?:[number, number], domain?:[number, number], stretching?:function(number):number }} opts 
  * @returns {function(Array.<import("../Dataset").Cell>):Scale}
  */
-export const sizeContinuousScale = (opts) => {
+export const viewScale = (opts) => {
     const valueFunction = opts.valueFunction
     const minValue = opts.minValue || 0
     const minSizePix = opts.minSizePix || 0
@@ -49,7 +49,7 @@ export const sizeContinuousScale = (opts) => {
  * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, minSizePix?:number, maxSizeFactor?:number }} opts 
  * @returns {function(Array.<import("../Dataset").Cell>):Scale}
  */
-export const sizeQuantileScale = (opts) => {
+export const quantileViewScale = (opts) => {
     const valueFunction = opts.valueFunction
     const classNumber = opts.classNumber || 12
     const minSizePix = opts.minSizePix || 1
@@ -74,7 +74,7 @@ export const sizeQuantileScale = (opts) => {
  * @param {{ valueFunction:function(import("../Dataset").Cell):number, colorRamp?:function(number):string, stretching?:function(number):number }} opts 
  * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
  */
-export const colorContinuousScale = (opts) => {
+export const colorViewScale = (opts) => {
     const valueFunction = opts.valueFunction
     const colorRamp = opts.colorRamp || (() => "purple")
     const stretching = opts.stretching
@@ -99,7 +99,7 @@ export const colorContinuousScale = (opts) => {
  * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, colorRamp?:function(number):string }} opts 
  * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
  */
-export const colorQuantileScale = (opts) => {
+export const colorQuantileViewScale = (opts) => {
     const valueFunction = opts.valueFunction
     const classNumber = opts.classNumber || 12
     const colorRamp = opts.colorRamp || (() => "purple")
