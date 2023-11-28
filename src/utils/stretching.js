@@ -102,7 +102,7 @@ export const circularInverseScale = (circularity = 0.8) => {
 
 
 //test
-
+/*
 const test = (f, fun, a, err = 1e-12) => {
     for (let t = 0; t <= 1; t += 1 / 50) {
         const er = t - f.invert(f(t))
@@ -125,4 +125,4 @@ for (let fun of [exponentialScale, logarithmicScale])
         const f = fun(base)
         test(f, fun, base, 1e-10)
     }
-
+*/
