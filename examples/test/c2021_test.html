@@ -193,8 +193,7 @@
                         }),
                         shape: () => 'circle',
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
-                    }),
-                    new gridviz.StrokeStyle({ maxZoom: 7 }),
+                    })
                 ]
 
                 layer = new gridviz.GridLayer(dataset, styles, {
@@ -240,8 +239,7 @@
                         size: (c, r, z, scale) => scale(+c.T),
                         viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
-                    }),
-                    new gridviz.StrokeStyle({ maxZoom: 7 }),
+                    })
                 ]
 
                 layer = new gridviz.GridLayer(dataset, styles, {
@@ -262,8 +260,7 @@
                         size: (c, r, z, scale) => scale(+c.T),
                         viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
-                    }),
-                    new gridviz.StrokeStyle({ maxZoom: 7 }),
+                    })
                 ]
 
                 layer = new gridviz.GridLayer(dataset, styles, {
