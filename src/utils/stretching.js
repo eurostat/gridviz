@@ -80,7 +80,7 @@ export const powerInverseScale = (exponent = 3) => {
  * @returns {function(number):number}
  */
 export const circularScale = (circularity = 0.8) => {
-    if (circularity == 0) return t => t
+    if (circularity == 0) return identity
     if (circularity == 1) return t => Math.sqrt(t * (2 - t))
     else {
         const a = circularity / (1 - circularity)
@@ -93,6 +93,7 @@ export const circularScale = (circularity = 0.8) => {
  * @returns {function(number):number}
  */
 export const circularInverseScale = (circularity = 0.8) => {
+    if (circularity == 0) return identity
     const f = circularScale(circularity)
     return t => 1 - f(1 - t)
 }
