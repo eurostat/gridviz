@@ -4,6 +4,12 @@ review scale.js
 based on c2021 example - add legend !?
 rename sizeContinuousScale ?
 
+sizeContinuousScale -> viewScale
+sizeQuantileScale -> quantileViewscale
+colorContinuousScale -> colorViewScale
+colorQuantileScale -> colorQuantileViewScale
+
+
 
 upgrade style examples
 legends - see legend update on layer style change
