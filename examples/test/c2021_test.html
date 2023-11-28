@@ -162,7 +162,7 @@
                     new gridviz.ColorLegend({
                         title: "Population",
                         colorScale: d3.interpolateYlOrRd,
-                        textScale: (t, vs) => vs.textScale(t)
+                        textScale: (t, vs) => vs.invert(t)
                     })
                 ]
 

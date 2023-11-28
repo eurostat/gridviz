@@ -89,9 +89,8 @@ export const viewScaleColor = (opts) => {
             if (stretching) t = stretching(t)
             return colorRamp(t)
         }
-        //scale.domain(d3.extent(cells, valueFunction))
-
-        scale.textScale = t => {
+        //function that return the domain value from the [0,1] range.
+        scale.invert = t => {
             if (stretching) t = stretching.invert(t)
             return domain[0] + t * amplitude
         }
