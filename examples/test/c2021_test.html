@@ -135,75 +135,69 @@
             //read GUI selection
             const layCode = document.querySelector('input[name="layer"]:checked').value
 
-            let layer;
+            const layer = new gridviz.GridLayer(dataset, [], {
+                cellInfoHTML: (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
+            })
+
 
             //set layer
             if (layCode === 'pop') {
 
-                const styles = [
+                layer.styles = [
                     new gridviz.ShapeColorSizeStyle({
                         color: (c, r, z, scale) => scale(c.T),
-                        viewScale: gridviz.colorContinuousScale({ valueFunction: (c) => +c.T, colorRamp: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
-                        //viewScale: gridviz.colorQuantileScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
+                        viewScale: gridviz.colorViewScale({ valueFunction: (c) => +c.T, colorRamp: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
+                        //viewScale: gridviz.colorQuantileViewScale({ valueFunction: (c) => +c.T, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
                         //size
                         //size: (c, r, z, scale) => scale(+c.T),
                         //shape: () => "circle",
-                        //viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.T, stretching: gridviz.logarithmicScale(-8) }),
-                        //viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 }),
+                        //viewScale: gridviz.viewScale({ valueFunction: (c) => +c.T, stretching: gridviz.logarithmicScale(-8) }),
+                        //viewScale: gridviz.quantileViewscale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 }),
                         blendOperation: (z) => z < 100 ? "multiply" : "source-over",
                     }),
                     new gridviz.StrokeStyle({ visible: (z) => z < 70 }),
                 ]
 
-                layer = new gridviz.GridLayer(dataset, styles, {
-                    minPixelsPerCell: 1.5, //8,
-                    cellInfoHTML: (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
-                })
+                layer.minPixelsPerCell = 1.5
 
             } else if (layCode === 'sex') {
 
-                const styles = [
+                layer.styles = [
                     new gridviz.ShapeColorSizeStyle({
                         color: (c, r, z, viewScale) => viewScale.color(c.indMF),
                         size: (c, r, z, viewScale) => viewScale.size(c.T),
                         viewScale: gridviz.viewScaleCombination({
-                            color: gridviz.colorQuantileScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
-                            size: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 6, minSizePix: 3, maxSizeFactor: 1.1 })
+                            color: gridviz.colorQuantileViewScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
+                            size: gridviz.quantileViewscale({ valueFunction: (c) => +c.T, classNumber: 6, minSizePix: 3, maxSizeFactor: 1.1 })
                         }),
                         shape: () => 'circle',
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     }),
                 ]
 
-                layer = new gridviz.GridLayer(dataset, styles, {
-                    minPixelsPerCell: 5,
-                    cellInfoHTML: (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
-                })
+                layer.minPixelsPerCell = 5
 
             } else if (layCode === 'emp') {
 
-                const styles = [
+                layer.styles = [
                     new gridviz.ShapeColorSizeStyle({
                         color: (c, r, z, viewScale) => viewScale.color(c.remp),
                         size: (c, r, z, viewScale) => viewScale.size(c.T),
                         viewScale: gridviz.viewScaleCombination({
-                            color: gridviz.colorQuantileScale({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
-                            size: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1.1 })
+                            color: gridviz.colorQuantileViewScale({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
+                            size: gridviz.quantileViewscale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1.1 })
                         }),
                         shape: () => 'circle',
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     })
                 ]
 
-                layer = new gridviz.GridLayer(dataset, styles, {
-                    minPixelsPerCell: 5,
-                    cellInfoHTML: (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
-                })
+                layer.minPixelsPerCell = 5
 
             } else if (layCode === 'age') {
 
                 const colAge = d3.interpolateSpectral
-                const styles = [
+                layer.styles = [
                     new gridviz.CompositionStyle({
                         color: {
                             Y_LT15: colAge(0.2),
@@ -212,7 +206,7 @@
                         },
                         type: () => 'flag',
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
+                        viewScale: gridviz.quantileViewscale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
                         //viewScale: gridviz.sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
                         stripesOrientation: () => 90,
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
@@ -220,14 +214,11 @@
                     ,
                 ]
 
-                layer = new gridviz.GridLayer(dataset, styles, {
-                    minPixelsPerCell: 12,
-                    cellInfoHTML: (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
-                })
+                layer.minPixelsPerCell = 12
 
             } else if (layCode === 'mobility') {
 
-                const styles = [
+                layer.styles = [
                     new gridviz.CompositionStyle({
                         color: {
                             SAME: "#fed9a6", //light mostard
@@ -236,19 +227,16 @@
                         },
                         type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
+                        viewScale: gridviz.quantileViewscale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     })
                 ]
 
-                layer = new gridviz.GridLayer(dataset, styles, {
-                    minPixelsPerCell: 12,
-                    cellInfoHTML: (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
-                })
+                layer.minPixelsPerCell = 12
 
             } else if (layCode === 'pob') {
 
-                const styles = [
+                layer.styles = [
                     new gridviz.CompositionStyle({
                         color: {
                             NAT: "#fed9a6", //light mostard
@@ -257,15 +245,12 @@
                         },
                         type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.sizeQuantileScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
+                        viewScale: gridviz.quantileViewscale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     })
                 ]
 
-                layer = new gridviz.GridLayer(dataset, styles, {
-                    minPixelsPerCell: 12,
-                    cellInfoHTML: (c) => '<b>' + c.T + '</b> person' + (+c.T == 1 ? '' : 's')
-                })
+                layer.minPixelsPerCell = 12
 
             } else console.error('Unexpected layer code: ' + layCode)
 

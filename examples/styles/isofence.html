@@ -32,7 +32,7 @@
             ind_65p: "rgb(66, 136, 181)"
         },
         angle: 50,
-        viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.ind, stretching: gridviz.logarithmicScale(-7) }),
+        viewScale: gridviz.viewScale({ valueFunction: (c) => +c.ind, stretching: gridviz.logarithmicScale(-7) }),
         height: (c, r, z, viewScale) => 1.5 * viewScale(c.ind)
     })
 

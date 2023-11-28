@@ -55,7 +55,7 @@
                             return d3.interpolateSpectral(1 - t)
                         },
                         size: (c, r, z, viewScale) => 1.41 * viewScale(c.ind),
-                        viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.ind, stretching: gridviz.powerScale(0.13) }),
+                        viewScale: gridviz.viewScale({ valueFunction: (c) => +c.ind, stretching: gridviz.powerScale(0.13) }),
                         shape: () => "circle"
                     }),
                 ],

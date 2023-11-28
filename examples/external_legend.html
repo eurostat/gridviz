@@ -16,7 +16,7 @@
     //define color style
     const style = new gridviz.ShapeColorSizeStyle({
         color: (c, r, z, scale) => scale(c.population),
-        viewScale: gridviz.colorContinuousScale({ valueFunction: (c) => +c.population, colorRamp: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
+        viewScale: gridviz.colorViewScale({ valueFunction: (c) => +c.population, colorRamp: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
     })
 
     //add legend

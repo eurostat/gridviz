@@ -26,7 +26,7 @@
                     new gridviz.ShapeColorSizeStyle({
                         color: () => 'purple',
                         size: (c, r, z, scale) => scale(+c.TOT_P_2021),
-                        viewScale: gridviz.sizeContinuousScale({ valueFunction: (c) => +c.TOT_P_2021, maxSizeFactor: 1.41, stretching: gridviz.powerScale(0.2) }),
+                        viewScale: gridviz.viewScale({ valueFunction: (c) => +c.TOT_P_2021, maxSizeFactor: 1.41, stretching: gridviz.powerScale(0.2) }),
                         shape: () => 'circle',
                     }),
                 ],

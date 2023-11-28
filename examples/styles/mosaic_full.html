@@ -101,7 +101,7 @@
         //define style
         const style =
             new gridviz.MosaicStyle({
-                viewScale: gridviz.colorContinuousScale({ valueFunction: (c) => +c.TOT_P_2021, colorRamp: d3.interpolateYlOrBr, stretching: gridviz.logarithmicScale(-7) }),
+                viewScale: gridviz.colorViewScale({ valueFunction: (c) => +c.TOT_P_2021, colorRamp: d3.interpolateYlOrBr, stretching: gridviz.logarithmicScale(-7) }),
                 color: (c, r, z, scale) => scale(+c.TOT_P_2021),
                 mosaicFactor: 0.2,
                 shadowFactor: 0.25,
