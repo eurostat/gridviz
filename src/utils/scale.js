@@ -4,8 +4,19 @@
 import { extent, max } from "d3-array"
 import { scaleQuantile } from "d3-scale"
 
-//generic function for continuous color maps
-//valueFunction, colorRamp, stretching
+/**
+ * @typedef {function(number):number} NumericalScale */
+
+/**
+* @typedef {function(number):string} ColorScale */
+
+
+/**
+ * Generic function for continuous color maps
+ * 
+ * @param {{ valueFunction:function(import("../Dataset").Cell):number, colorRamp?:function(number):string, stretching?:function(number):number }} opts 
+ * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
+ */
 export const colorContinuousScale = (opts) => {
     const valueFunction = opts.valueFunction
     const colorRamp = opts.colorRamp || (() => "purple")
@@ -24,8 +35,12 @@ export const colorContinuousScale = (opts) => {
     }
 }
 
-//generic function for quantile color maps
-//valueFunction, classNumber, colorRamp
+/**
+ * Generic function for quantile color maps
+ * 
+ * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, colorRamp?:function(number):string }} opts 
+ * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
+ */
 export const colorQuantileScale = (opts) => {
     const valueFunction = opts.valueFunction
     const classNumber = opts.classNumber || 12
@@ -39,6 +54,13 @@ export const colorQuantileScale = (opts) => {
 
 //generic function for size map
 //valueFunction, minValue, minSizePix, maxSizeFactor, stretching
+
+/**
+ * Generic function for size maps
+ * 
+ * @param {{ valueFunction:function(import("../Dataset").Cell):number, minValue?:number, minSizePix?:number, maxSizeFactor?:number, stretching?:function(number):number }} opts 
+ * @returns {function(Array.<import("../Dataset").Cell>):NumericalScale}
+ */
 export const sizeContinuousScale = (opts) => {
     const valueFunction = opts.valueFunction
     const minValue = opts.minValue || 0

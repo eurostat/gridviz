@@ -3,15 +3,11 @@
 
 import { Drawable } from './Drawable.js'
 
-/**
- * Statistics of a set of values
- * @typedef {{min:number,max:number}} Stat */
-
 /** @typedef {"square"|"circle"|"diamond"|"donut"|"none"} Shape */
 /**
  * viewScale type
  * Returns an object from a list of cells, 
- * @typedef {function(Array.<import('./Dataset.js').Cell>,number, number):object} ViewScale */
+ * @typedef {function(Array.<import('./Dataset.js').Cell>,number, number):import('./utils/scale.js').Scale} ViewScale */
 
 /**
  * A style, to show a grid dataset.

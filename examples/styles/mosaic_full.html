@@ -116,8 +116,8 @@
         })]
 
 
-        /*/legend
-        map.layers[0].styles[0].legends.push(
+        //legend
+        style.legends.push(
             new gridviz.ColorLegend({
                 title: 'Number of inhabitants',
                 'font-family': 'mf',
@@ -126,7 +126,7 @@
                 colorRamp: d3.interpolateYlOrBr,
                 fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
             })
-        )*/
+        )
 
         /*/convert to roman numbers - source: https://stackoverflow.com/a/9083076/413912
     function romanize(num) {
