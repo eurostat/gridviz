@@ -63,7 +63,7 @@
                         type: () => 'ring',
                         stripesOrientation: () => 0,
                         size: (c, r, z, scale) => scale(+c.men),
-                        viewScale: gridviz.quantileViewScale({ valueFunction: (c) => +c.men, classNumber: 5, minSizePix: 8 }),
+                        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.men, classNumber: 5, minSizePix: 8 }),
                         offsetAngle: () => 90,
                     }),
                 ],

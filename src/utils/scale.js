@@ -49,7 +49,7 @@ export const viewScale = (opts) => {
  * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, minSizePix?:number, maxSizeFactor?:number }} opts 
  * @returns {function(Array.<import("../Dataset").Cell>):Scale}
  */
-export const quantileViewScale = (opts) => {
+export const viewScaleQuantile = (opts) => {
     const valueFunction = opts.valueFunction
     const classNumber = opts.classNumber || 12
     const minSizePix = opts.minSizePix || 1
@@ -74,7 +74,7 @@ export const quantileViewScale = (opts) => {
  * @param {{ valueFunction:function(import("../Dataset").Cell):number, colorRamp?:function(number):string, stretching?:function(number):number }} opts 
  * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
  */
-export const colorViewScale = (opts) => {
+export const viewScaleColor = (opts) => {
     const valueFunction = opts.valueFunction
     const colorRamp = opts.colorRamp || (() => "purple")
     const stretching = opts.stretching
@@ -99,7 +99,7 @@ export const colorViewScale = (opts) => {
  * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, colorRamp?:function(number):string }} opts 
  * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
  */
-export const colorQuantileViewScale = (opts) => {
+export const viewScaleColorQuantile = (opts) => {
     const valueFunction = opts.valueFunction
     const classNumber = opts.classNumber || 12
     const colorRamp = opts.colorRamp || (() => "purple")
