@@ -5,7 +5,7 @@ import { extent, max } from "d3-array"
 import { scaleQuantile } from "d3-scale"
 
 /**
- * @typedef {function(number):number} NumericalScale */
+ * @typedef {function(number):number} Scale */
 
 /**
 * @typedef {function(number):string} ColorScale */
@@ -22,6 +22,7 @@ export const colorContinuousScale = (opts) => {
     const colorRamp = opts.colorRamp || (() => "purple")
     const stretching = opts.stretching
     return (cells) => {
+        /** @type {[undefined, undefined] | [number, number]} */
         const domain = extent(cells, valueFunction)
         const scale = t => {
             //scale to [0,1]
@@ -52,14 +53,12 @@ export const colorQuantileScale = (opts) => {
     }
 }
 
-//generic function for size map
-//valueFunction, minValue, minSizePix, maxSizeFactor, stretching
 
 /**
  * Generic function for size maps
  * 
- * @param {{ valueFunction:function(import("../Dataset").Cell):number, minValue?:number, minSizePix?:number, maxSizeFactor?:number, stretching?:function(number):number }} opts 
- * @returns {function(Array.<import("../Dataset").Cell>):NumericalScale}
+ * @param {{ valueFunction:function(import("../Dataset").Cell):number, minValue?:number, minSizePix?:number, maxSizeFactor?:number, range?:[number, number], domain?:[number, number], stretching?:function(number):number }} opts 
+ * @returns {function(Array.<import("../Dataset").Cell>):Scale}
  */
 export const sizeContinuousScale = (opts) => {
     const valueFunction = opts.valueFunction
