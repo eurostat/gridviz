@@ -20,7 +20,7 @@ export class ColorLegend extends Legend {
         this.colorScale = opts.colorScale
 
         //function (t[0,1]) -> value (for label text)
-        this.textScale = opts.textScale
+        this.textScale = opts.textScale || (t => t)
 
         this.title = opts.title
         this.tickSize = opts.tickSize || 6
