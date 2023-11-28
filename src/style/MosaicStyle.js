@@ -12,13 +12,9 @@ export class MosaicStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         * @type {string} */
-        this.colorCol = opts.colorCol
-
         /** A function returning the color of the cell.
-         * @type {function(number,number,import("../Style").Stat|undefined):string} */
-        this.color = opts.color || (() => '#EA6BAC')
+         * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
+        this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
 
         /** The mosaic factor, within [0,0.5]. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect.
          * @type {number} */
@@ -46,11 +42,8 @@ export class MosaicStyle extends Style {
         //
         const z = geoCanvas.view.z
 
-        let statColor
-        if (this.colorCol) {
-            //compute color variable statistics
-            statColor = Style.getStatistics(cells, (c) => c[this.colorCol], true)
-        }
+        //get view scale
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         //set stroke style, for shadow
         geoCanvas.ctx.strokeStyle = this.shadowColor
@@ -66,7 +59,7 @@ export class MosaicStyle extends Style {
 
         for (let cell of cells) {
             //set fill color
-            const col = this.color ? this.color(cell[this.colorCol], resolution, statColor) : undefined
+            const col = this.color ? this.color(cell, resolution, z, viewScale) : undefined
             if (!col || col === 'none') continue
             geoCanvas.ctx.fillStyle = col
 
@@ -99,6 +92,6 @@ export class MosaicStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, z: z, sColor: statColor })
+        this.updateLegends({ style: this, r: resolution, z: z, viewScale: viewScale })
     }
 }
