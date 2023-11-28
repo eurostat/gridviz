@@ -8,17 +8,21 @@
  * @see https://observablehq.com/@jgaffuri/stretching
  */
 
+//identity function
+const identity = t => t
+identity.invert = t => t
 
-//TODO use special cases - for Math.sqrt, etc.
 
 /**
  * @param {number} base 
  * @returns {function(number):number}
  */
 export const exponentialScale = (base = 3) => {
-    if (base == 0) return t => t
+    if (base == 0) return identity
     const a = (Math.exp(base) - 1)
-    return t => (Math.exp(t * base) - 1) / a
+    const f = t => (Math.exp(t * base) - 1) / a
+    f.invert = t => Math.log(a * t + 1) / base
+    return f
 }
 
 /**
@@ -26,9 +30,11 @@ export const exponentialScale = (base = 3) => {
  * @returns {function(number):number}
  */
 export const logarithmicScale = (base = 3) => {
-    if (base == 0) return t => t
+    if (base == 0) return identity
     const a = Math.exp(base), b = 1 - a
-    return t => 1 - Math.log(a + t * b) / base
+    const f = t => 1 - Math.log(a + t * b) / base
+    f.invert = t => (Math.exp((1 - t) * base) - a) / b
+    return f
 }
 
 
@@ -40,9 +46,12 @@ export const logarithmicScale = (base = 3) => {
  * @returns {function(number):number}
  */
 export const powerScale = (exponent = 3) => {
-    if (exponent == 1) return t => t
-    if (exponent == 0.5) return Math.sqrt
-    return t => Math.pow(t, exponent)
+    if (exponent == 1) return identity
+    //TODO if (exponent == 0.5) return Math.sqrt
+    const f = t => Math.pow(t, exponent)
+    const a = 1 / exponent
+    f.invert = t => Math.pow(t, a)
+    return f
 }
 
 /**
@@ -50,10 +59,12 @@ export const powerScale = (exponent = 3) => {
  * @returns {function(number):number}
  */
 export const powerInverseScale = (exponent = 3) => {
-    if (exponent == 1) return t => t
-    if (exponent == 2) return t => 1 - Math.sqrt(1 - t)
+    if (exponent == 1) return identity
+    //TODO if (exponent == 2) return t => 1 - Math.sqrt(1 - t)
     const a = 1 / exponent
-    return t => 1 - Math.pow(1 - t, a)
+    const f = t => 1 - Math.pow(1 - t, a)
+    f.invert = t => 1 - Math.pow(1 - t, exponent)
+    return f
 }
 
 
