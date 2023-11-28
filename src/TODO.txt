@@ -1,10 +1,8 @@
 v3: focus on (main) API changes.
 
-check... simple enough?
-legends: test all
-legends: add scale.invert everywhere
+legends: test all. based on c2021 example - add legends
+legends: add scale.invert everywhere ?
 review scale.js
-based on c2021 example - add legends
 colorRamp to colorScale (?)
 
 upgrade style examples

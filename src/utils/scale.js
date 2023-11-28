@@ -71,12 +71,12 @@ export const viewScaleQuantile = (opts) => {
 /**
  * Generic function for color view scale - continuous
  * 
- * @param {{ valueFunction:function(import("../Dataset").Cell):number, colorRamp?:function(number):string, stretching?:function(number):number }} opts 
+ * @param {{ valueFunction:function(import("../Dataset").Cell):number, colorScale?:function(number):string, stretching?:function(number):number }} opts 
  * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
  */
 export const viewScaleColor = (opts) => {
     const valueFunction = opts.valueFunction
-    const colorRamp = opts.colorRamp || (() => "purple")
+    const colorScale = opts.colorScale || (() => "purple")
     const stretching = opts.stretching
     return (cells) => {
         /** @type {[undefined, undefined] | [number, number]} */
@@ -87,7 +87,7 @@ export const viewScaleColor = (opts) => {
             t = (t - domain[0]) / amplitude
             //stretch
             if (stretching) t = stretching(t)
-            return colorRamp(t)
+            return colorScale(t)
         }
         //function that return the domain value from the [0,1] range.
         scale.invert = t => {
@@ -102,14 +102,14 @@ export const viewScaleColor = (opts) => {
 /**
  * Generic function for color view scale - quantile
  * 
- * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, colorRamp?:function(number):string }} opts 
+ * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, colorScale?:function(number):string }} opts 
  * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
  */
 export const viewScaleColorQuantile = (opts) => {
     const valueFunction = opts.valueFunction
     const classNumber = opts.classNumber || 12
-    const colorRamp = opts.colorRamp || (() => "purple")
-    const scale = scaleQuantile().range(Array.from({ length: classNumber }, (_, i) => colorRamp(i / (classNumber - 1))))
+    const colorScale = opts.colorScale || (() => "purple")
+    const scale = scaleQuantile().range(Array.from({ length: classNumber }, (_, i) => colorScale(i / (classNumber - 1))))
     return (cells) => {
         scale.domain(cells.map(valueFunction));
         return scale;

@@ -16,7 +16,7 @@
     //define color style
     const style = new gridviz.ShapeColorSizeStyle({
         color: (c, r, z, scale) => scale(c.population),
-        viewScale: gridviz.viewScaleColor({ valueFunction: (c) => +c.population, colorRamp: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
+        viewScale: gridviz.viewScaleColor({ valueFunction: (c) => +c.population, colorScale: d3.interpolateYlOrRd, stretching: gridviz.logarithmicScale(-7) }),
     })
 
     //add legend
@@ -25,7 +25,7 @@
             title: 'Number of inhabitants',
             width: 400,
             ticks: 6,
-            colorRamp: d3.interpolateOrRd,
+            colorScale: d3.interpolateOrRd,
             fun: (t, r, s) => s.max * Math.pow(t, 1 / 0.25),
         })
     )

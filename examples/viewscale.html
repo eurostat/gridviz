@@ -20,7 +20,7 @@
         color: (c, r, z, scale) => scale(c.TOT_P_2021),
         viewScale: gridviz.viewScaleColor({
             valueFunction: (c) => +c.TOT_P_2021,
-            colorRamp: d3.interpolateYlOrRd,
+            colorScale: d3.interpolateYlOrRd,
             stretching: gridviz.logarithmicScale(-7)
         }),
     })

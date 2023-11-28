@@ -898,7 +898,7 @@ new gridviz.ColorLegend({
     title: 'Number of inhabitants',
     width: 400,
     ticks: 5,
-    colorRamp: d3.interpolateOrRd,
+    colorScale: d3.interpolateOrRd,
     fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
 })
 ```
