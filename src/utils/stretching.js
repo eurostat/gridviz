@@ -2,6 +2,11 @@
 'use strict'
 
 
+//TODO invert for circular
+//TODO use Math.sqrt
+//TODO validate
+
+
 /**
  * Some function [0,1]->[0,1] to stretch range of values.
  * @see https://github.com/eurostat/gridviz/blob/master/docs/reference.md#stretching
@@ -10,7 +15,7 @@
 
 //identity function
 const identity = t => t
-identity.invert = t => t
+identity.invert = identity
 
 
 /**

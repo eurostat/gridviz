@@ -92,9 +92,7 @@ export const viewScaleColor = (opts) => {
         //scale.domain(d3.extent(cells, valueFunction))
 
         scale.textScale = t => {
-            console.log(t)
             if (stretching) t = stretching.invert(t)
-            console.log(t)
             return domain[0] + t * amplitude
         }
 
