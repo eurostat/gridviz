@@ -81,14 +81,22 @@ export const viewScaleColor = (opts) => {
     return (cells) => {
         /** @type {[undefined, undefined] | [number, number]} */
         const domain = extent(cells, valueFunction)
+        const amplitude = domain[1] - domain[0]
         const scale = t => {
             //scale to [0,1]
-            t = (t - domain[0]) / (domain[1] - domain[0])
+            t = (t - domain[0]) / amplitude
             //stretch
             if (stretching) t = stretching(t)
             return colorRamp(t)
         }
         //scale.domain(d3.extent(cells, valueFunction))
+
+        scale.textScale = t => {
+            //TODO
+            t = t //stretchingInvert(t)
+            return domain[0] + t * amplitude
+        }
+
         return scale;
     }
 }

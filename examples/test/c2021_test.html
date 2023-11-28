@@ -158,6 +158,14 @@
                     new gridviz.StrokeStyle({ visible: (z) => z < 50 }),
                 ]
 
+                layer.styles[0].legends = [
+                    new gridviz.ColorLegend({
+                        title: "Population",
+                        colorScale: d3.interpolateYlOrRd,
+                        textScale: (t, vs) => vs.textScale(t)
+                    })
+                ]
+
                 layer.minPixelsPerCell = 1.5
 
             } else if (layCode === 'sex') {

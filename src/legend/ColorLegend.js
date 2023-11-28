@@ -16,10 +16,11 @@ export class ColorLegend extends Legend {
         super(opts)
         opts = opts || {}
 
-        this.colorRamp = opts.colorRamp
+        //a function [0,1]->color
+        this.colorScale = opts.colorScale
 
         //function (t[0,1], r, s) -> v (for label text)
-        this.fun = opts.fun
+        this.textScale = opts.textScale //|| (t=>t)
 
         this.title = opts.title
         this.tickSize = opts.tickSize || 6
@@ -32,17 +33,14 @@ export class ColorLegend extends Legend {
 
         this.fontSize = opts.fontSize || '0.8em'
         this.invert = opts.invert
-
-        //to be used as opts => opts.sAlpha to show legend on alpha channel
-        this.getStats = opts.getStats || (opts => opts.sColor)
     }
 
     /**
-     * @param {{ style: import("../Style").Style, resolution: number, z: number, viewScale:import('../Style').ViewScale }} opts
+     * @param {import('../Style').ViewScale } viewScale
      */
-    update(opts) {
+    update(viewScale) {
         //could happen when data is still loading
-        if (!opts.sColor) return
+        //if (!opts.sColor) return
 
         //clear
         this.div.selectAll('*').remove()
@@ -81,7 +79,7 @@ export class ColorLegend extends Legend {
                 .attr('y', 0)
                 .attr('width', step)
                 .attr('height', h)
-                .style('fill', this.colorRamp(t))
+                .style('fill', this.colorScale(t))
         }
 
         for (let i = 0; i < this.ticks; i++) {
@@ -114,11 +112,10 @@ export class ColorLegend extends Legend {
 
         //label text format
         const f = this.tickFormat && this.tickFormat != 'text' ? format(this.tickFormat) : (v) => v
-        const stat = this.getStats(opts)
         for (let i = 0; i < this.ticks; i++) {
             let t = i / (this.ticks - 1)
 
-            const v = this.fun(t, opts.r, stat)
+            const v = this.textScale(t, viewScale)
             const text = (v ? f(v) : '0') + (this.tickUnit ? this.tickUnit : '')
 
             //tick label
