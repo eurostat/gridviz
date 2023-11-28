@@ -152,7 +152,7 @@
                         //size: (c, r, z, scale) => scale(+c.T),
                         //shape: () => "circle",
                         //viewScale: gridviz.viewScale({ valueFunction: (c) => +c.T, stretching: gridviz.logarithmicScale(-8) }),
-                        //viewScale: gridviz.quantileViewscale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 }),
+                        //viewScale: gridviz.quantileViewScale({ valueFunction: (c) => +c.T, classNumber: 10, minSizePix: 3, maxSizeFactor: 1.1 }),
                         blendOperation: (z) => z < 100 ? "multiply" : "source-over",
                     }),
                     new gridviz.StrokeStyle({ visible: (z) => z < 70 }),
@@ -168,7 +168,7 @@
                         size: (c, r, z, viewScale) => viewScale.size(c.T),
                         viewScale: gridviz.viewScaleCombination({
                             color: gridviz.colorQuantileViewScale({ valueFunction: (c) => +c.indMF, classNumber: 12, colorRamp: d3.interpolateSpectral }),
-                            size: gridviz.quantileViewscale({ valueFunction: (c) => +c.T, classNumber: 6, minSizePix: 3, maxSizeFactor: 1.1 })
+                            size: gridviz.quantileViewScale({ valueFunction: (c) => +c.T, classNumber: 6, minSizePix: 3, maxSizeFactor: 1.1 })
                         }),
                         shape: () => 'circle',
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
@@ -185,7 +185,7 @@
                         size: (c, r, z, viewScale) => viewScale.size(c.T),
                         viewScale: gridviz.viewScaleCombination({
                             color: gridviz.colorQuantileViewScale({ valueFunction: (c) => +c.remp, classNumber: 12, colorRamp: d3.interpolateYlOrRd }),
-                            size: gridviz.quantileViewscale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1.1 })
+                            size: gridviz.quantileViewScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 3, maxSizeFactor: 1.1 })
                         }),
                         shape: () => 'circle',
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
@@ -206,7 +206,7 @@
                         },
                         type: () => 'flag',
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.quantileViewscale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
+                        viewScale: gridviz.quantileViewScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
                         //viewScale: gridviz.sizeScale({ valueFunction: (c) => +c.T, exponent: 0.1 }),
                         stripesOrientation: () => 90,
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
@@ -227,7 +227,7 @@
                         },
                         type: () => 'piechart', //flag, piechart, ring, segment, radar, agepyramid, halftone
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.quantileViewscale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
+                        viewScale: gridviz.quantileViewScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     })
                 ]
@@ -245,7 +245,7 @@
                         },
                         type: () => 'halftone', //flag, piechart, ring, segment, radar, agepyramid, halftone
                         size: (c, r, z, scale) => scale(+c.T),
-                        viewScale: gridviz.quantileViewscale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
+                        viewScale: gridviz.quantileViewScale({ valueFunction: (c) => +c.T, classNumber: 5, minSizePix: 8 }),
                         blendOperation: (z) => z < 50 ? "multiply" : "source-over",
                     })
                 ]

@@ -3,6 +3,7 @@ v3: focus on (main) API changes.
 review scale.js
 based on c2021 example - add legend !?
 
+quantileViewScale -> viewScaleQuantile
 
 
 upgrade style examples
