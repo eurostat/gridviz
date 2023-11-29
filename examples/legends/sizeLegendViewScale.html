@@ -2,6 +2,7 @@
 
 <script src="../../dist/gridviz.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
 <script>
 
     //define map with initial view
@@ -22,25 +23,19 @@
     })
 
 
-    //make "make nice" function. Move to util.js
-
-    /*
-    //compute 'nice value
-
-    //get max value
-    const value_ = opts.max * this.exaggerationFactor
-
     //take 'nice' value (power of ten, or multiple)
-    let pow10 = Math.log10(value_)
-    pow10 = Math.floor(pow10)
-    value = Math.pow(10, pow10)
-    if (value * 8 <= value_) value *= 8
-    else if (value * 6 <= value_) value *= 6
-    else if (value * 5 <= value_) value *= 5
-    else if (value * 4 <= value_) value *= 4
-    else if (value * 2.5 <= value_) value *= 2.5
-    else if (value * 2 <= value_) value *= 2
-*/
+    const makeNiceValue = (v) => {
+        let pow10 = Math.log10(v)
+        pow10 = Math.floor(pow10)
+        const v_ = Math.pow(10, pow10)
+        if (value * 8 <= value_) value *= 8
+        else if (value * 6 <= value_) value *= 6
+        else if (value * 5 <= value_) value *= 5
+        else if (value * 4 <= value_) value *= 4
+        else if (value * 2.5 <= value_) value *= 2.5
+        else if (value * 2 <= value_) value *= 2
+        return v_
+    }
 
 
 
@@ -50,6 +45,7 @@
         new gridviz.SizeLegend({
             title: "Population",
             label: (cells) => 0.7 * d3.max(cells, cell => +cell.TOT_P_2021),
+            //labelFormat: d3.format(',.2r'),
             fillColor: "black"
         })
     )

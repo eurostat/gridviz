@@ -4,6 +4,7 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-scale@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-format@3"></script>
 <script>
 
     //define map with initial view
@@ -30,8 +31,9 @@
         style.legends.push(
             new gridviz.SizeLegend({
                 title: i == size.length - 1 ? "Population" : undefined,
-                label: () => i == 0 ? "< " + breaks[0] : breaks[i - 1],
                 sizePix: (z) => size[i] / z,
+                label: () => i == 0 ? "< " + breaks[0] : breaks[i - 1],
+                labelFormat: d3.format(',.2r'),
                 fillColor: "black"
             })
         )

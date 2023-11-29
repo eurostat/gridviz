@@ -111,7 +111,7 @@ export const viewScaleColorQuantile = (opts) => {
 
     let colors = opts.colors
     if (opts.colorScale) colors = discreteColors(opts.colorScale, classNumber)
-    colors = colors || Array.from({ length: classNumber }, (_, i) => "rgb(" + Math.ceil(255 * i / (classNumber - 1)) + ",150,150)")
+    colors = colors || Array.from({ length: classNumber }, (_, i) => "rgb(" + Math.floor(255 * i / (classNumber - 1)) + ",150,150)")
 
     const scale = scaleQuantile().range(colors)
     return (cells) => {
