@@ -12,22 +12,25 @@
     //define dataset
     const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
-    //define style
+    //define classes
     //8 classes
-    const colors = ["rgb(255, 255, 204)", "rgb(255, 234, 154)", "rgb(254, 205, 106)", "rgb(254, 162, 70)", "rgb(252, 105, 50)", "rgb(233, 42, 33)", "rgb(192, 6, 36)", "rgb(128, 0, 38)"]
-    const breaks = [1000, 2000, 5000, 7000, 15000, 25000, 50000]
-    const classifier = gridviz.getClassifier(breaks)
+    const classifier = gridviz.colorClassifier(
+        //the class breaks
+        [1000, 2000, 5000, 7000, 15000, 25000, 50000],
+        //the colors, for each class
+        ["rgb(255, 255, 204)", "rgb(255, 234, 154)", "rgb(254, 205, 106)", "rgb(254, 162, 70)", "rgb(252, 105, 50)", "rgb(233, 42, 33)", "rgb(192, 6, 36)", "rgb(128, 0, 38)"]
+    )
 
     const style = new gridviz.ShapeColorSizeStyle({
-        color: (cell) => colors[classifier(cell.population)]
+        color: (cell) => classifier(cell.population)
     })
 
     //define legend
     const legend = new gridviz.ColorDiscreteLegend({
         title: "Population",
         width: 450,
-        colors: colors,
-        breaks: breaks,
+        colors: classifier.colors,
+        breaks: classifier.breaks,
     })
 
     //link legend to style

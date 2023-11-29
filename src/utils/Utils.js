@@ -22,9 +22,9 @@ export function getClass(v, breaks) {
  * The classifier function returns the class id (from 0 to breaks.length) from a value to classifiy.
  * @param {Array.<number>} breaks the breaks
  */
-export function getClassifier(breaks) {
+export function classifier(breaks) {
     const bl = breaks.length
-    return value => {
+    const classifier = value => {
         let i = 0
         while (i < bl) {
             const break_ = breaks[i]
@@ -33,8 +33,26 @@ export function getClassifier(breaks) {
         }
         return i
     }
+    classifier.breaks = breaks
+    return classifier
 }
 
+
+
+/**
+ * Return a color classifier function from break values.
+ * The classifier function returns the color from a value to classifiy.
+ * There should be one color more than break values.
+ * @param {Array.<number>} breaks the breaks
+ * @param {Array.<string>} colors the colors
+ */
+export function colorClassifier(breaks, colors) {
+    const classifier_ = classifier(breaks)
+    const colorClissifier = value => colors[classifier_(value)]
+    colorClissifier.breaks = breaks
+    colorClissifier.colors = colors
+    return colorClissifier
+}
 
 
 
