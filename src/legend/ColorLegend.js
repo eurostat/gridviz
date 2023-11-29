@@ -16,7 +16,8 @@ export class ColorLegend extends Legend {
         super(opts)
         opts = opts || {}
 
-        //a function [0,1]->color
+        //a function [0,1]->color for continuous colors
+        //or array of colors for discrete colors
         this.colorScale = opts.colorScale
 
         //function (t[0,1]) -> value (for label text)
@@ -79,7 +80,7 @@ export class ColorLegend extends Legend {
                 .attr('y', 0)
                 .attr('width', step)
                 .attr('height', h)
-                .style('fill', this.colorScale(t))
+                .style('fill', this.colorScale(t, viewScale))
         }
 
         for (let i = 0; i < this.ticks; i++) {
