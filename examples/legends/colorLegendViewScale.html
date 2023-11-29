@@ -18,7 +18,7 @@
         color: (cell) => colorScale(cell.population / 20000)
     })
 
-    //define legend
+    /*/define legend
     const legend = new gridviz.ColorLegend({
         title: "Population",
         colorScale: colorScale,
@@ -27,7 +27,7 @@
     })
 
     //link legend to style
-    style.legends = [legend]
+    style.legends = [legend]*/
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
