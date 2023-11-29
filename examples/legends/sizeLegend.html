@@ -14,21 +14,21 @@
 
     //define style
     const style = new gridviz.ShapeColorSizeStyle({
-        size: (cell) => 20*Math.sqrt(cell.population),
+        size: (cell) => 20 * Math.sqrt(cell.population),
         color: () => "black",
-        shape: () => "circle",
+        shape: () => "circle"
     })
 
-    /*/define legend
-    const legend = new gridviz.ColorLegend({
+    //define legend
+    const legend = new gridviz.SizeLegend({
         title: "Population",
-        colorScale: d3.interpolateYlOrRd,
-        ticks: 5,
-        textScale: (t) => t * 20000
+        value: () => 1000,
+        size: () => 20 * Math.sqrt(1000),
+        fillColor: "black"
     })
 
     //link legend to style
-    style.legends = [legend]*/
+    style.legends = [legend]
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]

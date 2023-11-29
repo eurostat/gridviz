@@ -18,8 +18,12 @@ export class SizeLegend extends Legend {
         //exageration
         this.exaggerationFactor = opts.exaggerationFactor || 0.8
 
-        //if value is to be forced
+        //if value is to be shown
         this.value = opts.value || undefined
+        //if size corresponding to the value
+        this.size = opts.size || undefined
+
+        console.log(this)
 
         //title
         this.title = opts.title
@@ -45,18 +49,20 @@ export class SizeLegend extends Legend {
     }
 
     /**
-     * @param {{ style: import("../style/ShapeColorSizeStyle").ShapeColorSizeStyle, r: number, z: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts
+     * @param {{  }} opts
      */
     update(opts) {
-        //could happen when data is still loading
-        if (!opts.sSize) return
 
         //clear
         this.div.selectAll('*').remove()
 
+        //compute size of symbol, in pix
+        const size = this.size
+        if (!size) return
+
         //get value
         let value = this.value
-        if (value == undefined) {
+        /*if (value == undefined) {
             //compute 'nice value
 
             //get max value
@@ -72,9 +78,7 @@ export class SizeLegend extends Legend {
             else if (value * 4 <= value_) value *= 4
             else if (value * 2.5 <= value_) value *= 2.5
             else if (value * 2 <= value_) value *= 2
-        }
-
-        if (!value) return
+        }*/
 
         const d = this.div.append('div')
         //to enable vertical centering
@@ -88,9 +92,6 @@ export class SizeLegend extends Legend {
                 .style('font-weight', this.titleFontWeight)
                 .text(this.title)
         }
-
-        //compute size of symbol, in pix
-        const size = opts.style.size(value, opts.r, opts.sSize, opts.z) / opts.z
 
         const svg = d
             .append('svg')
