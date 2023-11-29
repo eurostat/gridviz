@@ -35,6 +35,6 @@
     style.legends = [legend]
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style])]
+    map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 2 })]
 
 </script>
