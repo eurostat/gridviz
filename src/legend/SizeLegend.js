@@ -21,7 +21,7 @@ export class SizeLegend extends Legend {
         //if value is to be shown
         this.value = opts.value || undefined
         //if size corresponding to the value
-        this.size = opts.size || undefined
+        this.sizePix = opts.sizePix || undefined
 
         //title
         this.title = opts.title
@@ -54,11 +54,9 @@ export class SizeLegend extends Legend {
         //clear
         this.div.selectAll('*').remove()
 
-        console.log(opts)
-
         //compute size of symbol, in pix
-        const size = this.size() / opts.z
-        if (!size) return
+        const sizePix = this.sizePix() / opts.z
+        if (!sizePix) return
 
         //get value
         let value = this.value()
@@ -95,23 +93,23 @@ export class SizeLegend extends Legend {
 
         const svg = d
             .append('svg')
-            .attr('width', size + this.strokeWidth + 2)
-            .attr('height', size + this.strokeWidth + 2)
+            .attr('width', sizePix + this.strokeWidth + 2)
+            .attr('height', sizePix + this.strokeWidth + 2)
             .style('', 'inline-block')
 
         if (this.shape === 'square') {
             svg.append('rect')
                 .attr('x', 0)
                 .attr('y', 0)
-                .attr('width', size)
-                .attr('height', size)
+                .attr('width', sizePix)
+                .attr('height', sizePix)
                 .style('fill', this.fillColor)
                 .style('stroke', this.strokeColor)
                 .style('stroke-width', this.strokeWidth)
             //TODO test
         } else if (this.shape === 'circle') {
             // <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
-            const r = (size + this.strokeWidth) * 0.5
+            const r = (sizePix + this.strokeWidth) * 0.5
             svg.append('circle')
                 .attr('cx', r + 1)
                 .attr('cy', r + 1)

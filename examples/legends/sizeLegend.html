@@ -26,7 +26,7 @@
             new gridviz.SizeLegend({
                 title: value == 500000 ? "Population" : undefined,
                 value: () => value,
-                size: () => 20 * Math.sqrt(value),
+                sizePix: () => 20 * Math.sqrt(value),
                 fillColor: "black"
             })
         )
