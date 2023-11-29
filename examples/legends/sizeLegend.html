@@ -19,16 +19,17 @@
         shape: () => "circle"
     })
 
-    //define legend
-    const legend = new gridviz.SizeLegend({
-        title: "Population",
-        value: () => 250000,
-        size: () => 20 * Math.sqrt(250000),
-        fillColor: "black"
-    })
-
-    //link legend to style
-    style.legends = [legend]
+    //define legends
+    style.legends = []
+    for (let value of [500000, 200000, 10000])
+        style.legends.push(
+            new gridviz.SizeLegend({
+                title: value == 500000 ? "Population" : undefined,
+                value: () => value,
+                size: () => 20 * Math.sqrt(value),
+                fillColor: "black"
+            })
+        )
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
