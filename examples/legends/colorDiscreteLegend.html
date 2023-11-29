@@ -6,6 +6,20 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script>
 
+    //todo: move to util
+    const getClassifier = breaks =>
+        value => {
+            let i = 0
+            while (i < breaks.length) {
+                const break_ = breaks[i]
+                if (value <= break_) return i
+                i++
+            }
+            return i
+        }
+
+
+
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
 
@@ -13,17 +27,21 @@
     const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
     //define style
-    const colorScale = d3.interpolateYlOrRd
+    //8 classes
+    const colors = ["rgb(255, 255, 204)", "rgb(255, 234, 154)", "rgb(254, 205, 106)", "rgb(254, 162, 70)", "rgb(252, 105, 50)", "rgb(233, 42, 33)", "rgb(192, 6, 36)", "rgb(128, 0, 38)"]
+    const breaks = [1000, 2000, 5000, 7000, 15000, 25000, 50000]
+    const classifier = getClassifier(breaks)
+
     const style = new gridviz.ShapeColorSizeStyle({
-        color: (cell) => colorScale(cell.population / 20000)
+        color: (cell) => colors[classifier(cell.population)]
     })
 
     //define legend
-    const legend = new gridviz.ColorLegend({
+    const legend = new gridviz.ColorDiscreteLegend({
         title: "Population",
-        colorScale: colorScale,
-        ticks: 5,
-        textScale: (t) => t * 20000
+        width: 400,
+        colors: colors,
+        breaks: breaks,
     })
 
     //link legend to style

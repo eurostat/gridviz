@@ -18,7 +18,7 @@ export class ColorDiscreteLegend extends Legend {
         /** @private @type {Array.<Array.<string>>} */
         this.colors = opts.colors
         /** @private @type {Array.<Array.<string>>} */
-        this.breaksText = opts.breaksText
+        this.breaks = opts.breaks
 
         this.width = opts.width || 300
         this.height = opts.height || 15
@@ -97,7 +97,7 @@ export class ColorDiscreteLegend extends Legend {
                 .style('alignment-baseline', 'top')
                 .style('dominant-baseline', 'hanging')
                 .style('pointer-events', 'none')
-                .text(this.breaksText[i - 1])
+                .text(this.breaks[i - 1])
         }
     }
 }
