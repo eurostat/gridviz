@@ -17,20 +17,19 @@
 
     //define style
     const classNumber = 8
-    const colors = gridviz.discreteColors(d3.interpolateYlOrRd, classNumber)
+    const colors = d3.schemeYlOrRd[classNumber]
+    //const colors = gridviz.discreteColors(d3.interpolateYlOrRd, classNumber)
     const style = new gridviz.ShapeColorSizeStyle({
         color: (c, r, z, scale) => scale(c.TOT_P_2021),
         viewScale: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.TOT_P_2021, classNumber: classNumber, colors: colors }),
     })
-
-    //TODO
 
     //define legend
     const legend = new gridviz.ColorDiscreteLegend({
         title: "Population",
         width: 450,
         colors: () => colors,
-        breaks: (vs) => vs.breaks.map(b=>Math.round(b)),
+        breaks: (vs) => vs.breaks.map(b => Math.round(b)),
     })
 
     //link legend to style
