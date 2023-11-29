@@ -2,7 +2,6 @@
 'use strict'
 
 import { Legend } from '../Legend.js'
-import { format } from 'd3-format'
 
 /**
  * A legend element for continuous color style.
@@ -29,7 +28,7 @@ export class ColorLegend extends Legend {
         this.height = opts.height || 15
         this.margin = opts.margin || 5
         this.ticks = opts.ticks || Math.floor(this.width / 50)
-        this.tickFormat = opts.tickFormat || ',.0f'
+        this.tickFormat = opts.tickFormat
         this.tickUnit = opts.tickUnit
 
         this.fontSize = opts.fontSize || '0.8em'
@@ -112,7 +111,7 @@ export class ColorLegend extends Legend {
         //update tick labels
 
         //label text format
-        const f = this.tickFormat && this.tickFormat != 'text' ? format(this.tickFormat) : (v) => v
+        const f = this.tickFormat && this.tickFormat != 'text' ? this.tickFormat : (v) => v
         for (let i = 0; i < this.ticks; i++) {
             let t = i / (this.ticks - 1)
 

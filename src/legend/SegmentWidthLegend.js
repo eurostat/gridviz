@@ -2,7 +2,6 @@
 'use strict'
 
 import { Legend } from '../Legend.js'
-import { format } from 'd3-format'
 
 /**
  * A legend element for segment width.
@@ -32,6 +31,7 @@ export class SegmentWidthLegend extends Legend {
         //label
         this.labelFontSize = opts.labelFontSize || '0.8em'
         this.labelUnitText = opts.labelUnitText || ''
+        this.labelFormat = opts.labelFormat
 
         //segment length in geo unit - a function of the resolution r and zoom level z
         this.lengthFun = opts.lengthExaggerationFactor || ((r, z) => r)
@@ -60,6 +60,7 @@ export class SegmentWidthLegend extends Legend {
 
         //get segment max value
         const value_ = opts.sWidth.max * this.exaggerationFactor
+        //TODO use gridviz.nice function
         //make 'nice' value (power of ten, or multiple)
         let pow10 = Math.log10(value_)
         pow10 = Math.floor(pow10)
@@ -89,7 +90,7 @@ export class SegmentWidthLegend extends Legend {
             .style('stroke', this.color)
             .style('stroke-width', sWidth)
 
-        const valueT = format(',.2r')(value)
+        const valueT = this.labelFormat? this.labelFormat(value) : value
         d.append('div')
             //show on right of graphic
             .style('display', 'inline')
