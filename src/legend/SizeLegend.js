@@ -55,7 +55,7 @@ export class SizeLegend extends Legend {
         this.div.selectAll('*').remove()
 
         //compute size of symbol, in pix
-        const sizePix = this.sizePix() / opts.z
+        const sizePix = this.sizePix(opts.z)
         if (!sizePix) return
 
         //get value

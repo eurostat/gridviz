@@ -1,9 +1,9 @@
 <div id="map" style="height: 500px; width: 800px"></div>
 
 <script src="../../dist/gridviz.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-scale@4"></script>
 <script>
 
     //define map with initial view
@@ -12,21 +12,26 @@
     //define dataset
     const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
-    //define style
+    //define classifier, using d3 scaleThreshold
+    const breaks = [5000, 25000, 100000, 200000, 500000]
+    const size = [1500, 3000, 6000, 8500, 11000, 14000]
+    const classifier = d3.scaleThreshold(breaks, size)
+
+    //define style, based on the classifier
     const style = new gridviz.ShapeColorSizeStyle({
-        size: (cell) => 20 * Math.sqrt(cell.population),
-        color: () => "black",
-        shape: () => "circle"
+        size: (cell) => classifier(cell.population),
+        shape: () => "circle",
+        color: () => "black"
     })
 
     //define legends
     style.legends = []
-    for (let value of [500000, 200000, 10000])
+    for (let i = size.length - 1; i > 0; i--)
         style.legends.push(
             new gridviz.SizeLegend({
-                title: value == 500000 ? "Population" : undefined,
-                value: () => value,
-                sizePix: (z) => 20 * Math.sqrt(value) / z,
+                title: i == size.length - 1 ? "Population" : undefined,
+                value: () => breaks[i-1],
+                sizePix: (z) => size[i] / z,
                 fillColor: "black"
             })
         )
