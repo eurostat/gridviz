@@ -1,8 +1,5 @@
 v3: focus on (main) API changes.
 
-ex: exlude zero population - for correct quantile
-
-discrete color: show min/max values
 legends: test all. based on c2021 example - add legends
 legends: add scale.invert everywhere ?
 review scale.js

@@ -12,7 +12,8 @@
     //define dataset
     const dataset = new gridviz.MultiResolutionDataset(
         [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/')
+        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/'),
+        { preprocess: cell => +cell.TOT_P_2021 == 0 ? false : true }
     )
 
     //define style
