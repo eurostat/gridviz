@@ -18,8 +18,8 @@ export class SizeLegend extends Legend {
         //exageration
         this.exaggerationFactor = opts.exaggerationFactor || 0.8
 
-        //if value is to be shown
-        this.value = opts.value || undefined
+        //if label is to be shown
+        this.label = opts.label || undefined
         //if size corresponding to the value
         this.sizePix = opts.sizePix || undefined
 
@@ -58,8 +58,8 @@ export class SizeLegend extends Legend {
         const sizePix = this.sizePix(opts.z)
         if (!sizePix) return
 
-        //get value
-        let value = this.value()
+        //get label
+        let label = this.label()
         /*if (value == undefined) {
             //compute 'nice value
 
@@ -125,7 +125,9 @@ export class SizeLegend extends Legend {
             throw new Error('Unexpected shape:' + this.shape)
         }
 
-        const valueT = format(this.labelFormat)(value)
+        //format label text
+        if (!isNaN(+label)) label = format(this.labelFormat)(label)
+
         d.append('div')
             //show on right of graphic
             .style('display', 'inline')
@@ -135,6 +137,6 @@ export class SizeLegend extends Legend {
 
             .style('padding-left', '5px')
             .style('font-size', this.labelFontSize)
-            .text(valueT + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
+            .text(label + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
     }
 }

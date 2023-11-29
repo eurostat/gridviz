@@ -26,11 +26,11 @@
 
     //define legends
     style.legends = []
-    for (let i = size.length - 1; i > 0; i--)
+    for (let i = size.length - 1; i >= 0; i--)
         style.legends.push(
             new gridviz.SizeLegend({
                 title: i == size.length - 1 ? "Population" : undefined,
-                value: () => breaks[i-1],
+                label: () => i == 0 ? "< " + breaks[0] : breaks[i - 1],
                 sizePix: (z) => size[i] / z,
                 fillColor: "black"
             })
