@@ -23,16 +23,19 @@
         color: () => "black"
     })
 
-    /*/define legend
-    const legend = new gridviz.ColorLegend({
-        title: "Population",
-        colorScale: d3.interpolateYlOrRd,
-        ticks: 4,
-        textScale: (t, vs) => vs.invert(t)
-    })
-
-    //link legend to style
-    style.legends = [legend]*/
+    /*
+    //define legends
+    style.legends = []
+    for (let value of [500000, 200000, 10000])
+        style.legends.push(
+            new gridviz.SizeLegend({
+                title: value == 500000 ? "Population" : undefined,
+                label: () => value,
+                sizePix: (z) => 20 * Math.sqrt(value) / z,
+                fillColor: "black"
+            })
+        )
+*/
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 5 })]
