@@ -97,7 +97,7 @@ export class ColorDiscreteLegend extends Legend {
                 .style('font-size', this.labelFontSize)
                 //.style("font-weight", "bold")
                 //.style("font-family", "Arial")
-                .style('text-anchor', i == 0 ? 'start' : i == this.ticks - 1 ? 'end' : 'middle')
+                .style('text-anchor', 'middle')
                 .style('alignment-baseline', 'top')
                 .style('dominant-baseline', 'hanging')
                 .style('pointer-events', 'none')
