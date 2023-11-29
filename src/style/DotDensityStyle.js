@@ -6,7 +6,7 @@ import { randomNormal } from 'd3-random'
 import { checkWebGLSupport, makeWebGLCanvas } from '../utils/webGLUtils.js'
 import { WebGLSquareColoring } from '../utils/WebGLSquareColoring.js'
 import { color } from 'd3-color'
-import { monitor, monitorDuration } from '../utils/Utils.js'
+import { monitor, monitorDuration } from '../utils/utils.js'
 
 /**
  *

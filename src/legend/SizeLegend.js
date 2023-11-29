@@ -58,7 +58,7 @@ export class SizeLegend extends Legend {
         //compute size of symbol, in pix
         let sizePix
         if (this.sizePix)
-            sizePix = this.sizePix(opts.z, label, opts.viewScale)
+            sizePix = this.sizePix(opts.z)
         else
             sizePix = opts.viewScale(+label) / opts.z
         if (!sizePix) return
