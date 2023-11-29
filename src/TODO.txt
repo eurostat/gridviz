@@ -1,8 +1,6 @@
 v3: focus on (main) API changes.
 
-label format
-//|| ',.2r'
-
+sizeQuantileViewScale
 
 legends: test all. based on c2021 example - add legends
 legends: add scale.invert everywhere ?
