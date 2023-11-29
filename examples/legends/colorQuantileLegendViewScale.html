@@ -16,7 +16,7 @@
     )
 
     //define style
-    const classNumber = 5
+    const classNumber = 8
     const colors = gridviz.discreteColors(d3.interpolateYlOrRd, classNumber)
     const style = new gridviz.ShapeColorSizeStyle({
         color: (c, r, z, scale) => scale(c.TOT_P_2021),
@@ -24,19 +24,17 @@
     })
 
     //TODO
-    //make it posible that the break values and colors can be retrieved from the quantile view scale
-    //make it possible that breaks (and colors ?) are based on view scale object
 
-    /*/define legend
+    //define legend
     const legend = new gridviz.ColorDiscreteLegend({
         title: "Population",
-        //width: 450,
-        //colors: classifier.colors,
-        //breaks: classifier.breaks,
+        width: 450,
+        colors: () => colors,
+        breaks: (vs) => vs.breaks.map(b=>Math.round(b)),
     })
 
     //link legend to style
-    style.legends = [legend]*/
+    style.legends = [legend]
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]

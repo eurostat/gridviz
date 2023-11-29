@@ -15,9 +15,9 @@ export class ColorDiscreteLegend extends Legend {
         super(opts)
         opts = opts || {}
 
-        /** @private @type {Array.<Array.<string>>} */
+        /** @private @type {function(import('../Style').ViewScale):Array.<string>} */
         this.colors = opts.colors
-        /** @private @type {Array.<Array.<string>>} */
+        /** @private @type {function(import('../Style').ViewScale):Array.<number>} */
         this.breaks = opts.breaks
 
         this.width = opts.width || 300
@@ -52,8 +52,12 @@ export class ColorDiscreteLegend extends Legend {
                 .style('margin-bottom', '7px')
                 .text(this.title)
 
+        //get colors and breaks
+        const colors = this.colors(viewScale)
+        const breaks = this.breaks(viewScale)
+
         //classes
-        const nb = this.colors.length
+        const nb = colors.length
         if (nb == 0) return
         const w = this.width / nb
 
@@ -70,7 +74,7 @@ export class ColorDiscreteLegend extends Legend {
                 .attr('y', 0)
                 .attr('width', w)
                 .attr('height', this.height)
-                .style('fill', this.colors[i])
+                .style('fill', colors[i])
         }
 
         //tick line
@@ -97,7 +101,7 @@ export class ColorDiscreteLegend extends Legend {
                 .style('alignment-baseline', 'top')
                 .style('dominant-baseline', 'hanging')
                 .style('pointer-events', 'none')
-                .text(this.breaks[i - 1])
+                .text(breaks[i - 1])
         }
     }
 }

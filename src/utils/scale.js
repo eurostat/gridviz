@@ -116,6 +116,8 @@ export const viewScaleColorQuantile = (opts) => {
     const scale = scaleQuantile().range(colors)
     return (cells) => {
         scale.domain(cells.map(valueFunction));
+        scale.breaks = scale.quantiles()
+        scale.colors = colors
         return scale;
     }
 }
