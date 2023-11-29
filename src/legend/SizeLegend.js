@@ -47,36 +47,24 @@ export class SizeLegend extends Legend {
     }
 
     /**
-     * @param {{ z:number }} opts
+     * @param {{ viewScale:import('../Style').ViewScale, z:number, cells:Array.<import('../Dataset.js').Cell> }} opts
      */
     update(opts) {
 
         //clear
         this.div.selectAll('*').remove()
 
+
+        //get label. May not be a number (!)
+        let label = this.label(opts.cells)
+
         //compute size of symbol, in pix
-        const sizePix = this.sizePix(opts.z)
+        const sizePix = this.sizePix(opts.z, label, opts.viewScale)
         if (!sizePix) return
 
-        //get label
-        let label = this.label()
-        /*if (value == undefined) {
-            //compute 'nice value
+        //format label text
+        if (!isNaN(+label)) label = format(this.labelFormat)(label)
 
-            //get max value
-            const value_ = opts.sSize.max * this.exaggerationFactor
-
-            //take 'nice' value (power of ten, or multiple)
-            let pow10 = Math.log10(value_)
-            pow10 = Math.floor(pow10)
-            value = Math.pow(10, pow10)
-            if (value * 8 <= value_) value *= 8
-            else if (value * 6 <= value_) value *= 6
-            else if (value * 5 <= value_) value *= 5
-            else if (value * 4 <= value_) value *= 4
-            else if (value * 2.5 <= value_) value *= 2.5
-            else if (value * 2 <= value_) value *= 2
-        }*/
 
         const d = this.div.append('div')
         //to enable vertical centering
@@ -91,6 +79,7 @@ export class SizeLegend extends Legend {
                 .text(this.title)
         }
 
+        //shape
         const svg = d
             .append('svg')
             .attr('width', sizePix + this.strokeWidth + 2)
@@ -125,9 +114,7 @@ export class SizeLegend extends Legend {
             throw new Error('Unexpected shape:' + this.shape)
         }
 
-        //format label text
-        if (!isNaN(+label)) label = format(this.labelFormat)(label)
-
+        //label
         d.append('div')
             //show on right of graphic
             .style('display', 'inline')

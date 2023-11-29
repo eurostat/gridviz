@@ -23,19 +23,45 @@
         color: () => "black"
     })
 
+
+    //transmit cells to legend
+    //make label dependant on cells
+    //compute label as: get max time a ratio + make nice
+    //make "make nice" function. Move to util.js
+
     /*
+    //compute 'nice value
+
+    //get max value
+    const value_ = opts.max * this.exaggerationFactor
+
+    //take 'nice' value (power of ten, or multiple)
+    let pow10 = Math.log10(value_)
+    pow10 = Math.floor(pow10)
+    value = Math.pow(10, pow10)
+    if (value * 8 <= value_) value *= 8
+    else if (value * 6 <= value_) value *= 6
+    else if (value * 5 <= value_) value *= 5
+    else if (value * 4 <= value_) value *= 4
+    else if (value * 2.5 <= value_) value *= 2.5
+    else if (value * 2 <= value_) value *= 2
+*/
+
+
+
     //define legends
     style.legends = []
-    for (let value of [500000, 200000, 10000])
-        style.legends.push(
-            new gridviz.SizeLegend({
-                title: value == 500000 ? "Population" : undefined,
-                label: () => value,
-                sizePix: (z) => 20 * Math.sqrt(value) / z,
-                fillColor: "black"
-            })
-        )
-*/
+    //for (let value of [500000, 200000, 10000])
+    style.legends.push(
+        new gridviz.SizeLegend({
+            title: "Population",
+            //label: (cells) => maxValue,
+            //default ?
+            sizePix: (z, value, viewScale) => viewScale(value) / z,
+            fillColor: "black"
+        })
+    )
+
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 5 })]
