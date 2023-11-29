@@ -2,7 +2,6 @@
 'use strict'
 
 import { Legend } from '../Legend.js'
-import { format } from 'd3-format'
 
 /**
  * A legend element for proportional symbols.
