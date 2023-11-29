@@ -35,9 +35,9 @@ export class ColorDiscreteLegend extends Legend {
     }
 
     /**
-     * @param {import('../Style').ViewScale } viewScale
+     * @param {{viewScale:import('../Style').ViewScale} } opts
      */
-    update(viewScale) {
+    update(opts) {
         //clear
         this.div.selectAll('*').remove()
 
@@ -53,8 +53,8 @@ export class ColorDiscreteLegend extends Legend {
                 .text(this.title)
 
         //get colors and breaks
-        const colors = this.colors(viewScale)
-        const breaks = this.breaks(viewScale)
+        const colors = this.colors(opts.viewScale)
+        const breaks = this.breaks(opts.viewScale)
 
         //classes
         const nb = colors.length

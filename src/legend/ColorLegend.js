@@ -37,9 +37,9 @@ export class ColorLegend extends Legend {
     }
 
     /**
-     * @param {import('../Style').ViewScale } viewScale
+     * @param {{viewScale:import('../Style').ViewScale} } opts
      */
-    update(viewScale) {
+    update(opts) {
         //could happen when data is still loading
         //if (!opts.sColor) return
 
@@ -80,7 +80,7 @@ export class ColorLegend extends Legend {
                 .attr('y', 0)
                 .attr('width', step)
                 .attr('height', h)
-                .style('fill', this.colorScale(t, viewScale))
+                .style('fill', this.colorScale(t, opts.viewScale))
         }
 
         for (let i = 0; i < this.ticks; i++) {
@@ -116,7 +116,7 @@ export class ColorLegend extends Legend {
         for (let i = 0; i < this.ticks; i++) {
             let t = i / (this.ticks - 1)
 
-            const v = this.textScale(t, viewScale)
+            const v = this.textScale(t, opts.viewScale)
             const text = (v ? f(v) : '0') + (this.tickUnit ? this.tickUnit : '')
 
             //tick label

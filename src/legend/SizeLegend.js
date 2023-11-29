@@ -23,8 +23,6 @@ export class SizeLegend extends Legend {
         //if size corresponding to the value
         this.size = opts.size || undefined
 
-        console.log(this)
-
         //title
         this.title = opts.title
         this.titleFontSize = opts.titleFontSize || '0.8em'
@@ -49,19 +47,21 @@ export class SizeLegend extends Legend {
     }
 
     /**
-     * @param {{  }} opts
+     * @param {{ z:number }} opts
      */
     update(opts) {
 
         //clear
         this.div.selectAll('*').remove()
 
+        console.log(opts)
+
         //compute size of symbol, in pix
-        const size = this.size
+        const size = this.size() / opts.z
         if (!size) return
 
         //get value
-        let value = this.value
+        let value = this.value()
         /*if (value == undefined) {
             //compute 'nice value
 
