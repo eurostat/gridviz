@@ -13,15 +13,14 @@
     const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
     //define style
-    const colorScale = d3.interpolateYlOrRd
     const style = new gridviz.ShapeColorSizeStyle({
-        color: (cell) => colorScale(cell.population / 20000)
+        color: (cell) => d3.interpolateYlOrRd(cell.population / 20000)
     })
 
     //define legend
     const legend = new gridviz.ColorLegend({
         title: "Population",
-        colorScale: colorScale,
+        colorScale: d3.interpolateYlOrRd,
         ticks: 5,
         textScale: (t) => t * 20000
     })

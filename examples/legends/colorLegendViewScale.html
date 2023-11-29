@@ -15,19 +15,20 @@
     //define style
     const colorScale = d3.interpolateYlOrRd
     const style = new gridviz.ShapeColorSizeStyle({
-        color: (cell) => colorScale(cell.population / 20000)
+        color: (c, r, z, scale) => scale(c.population),
+        viewScale: gridviz.viewScaleColor({ valueFunction: (c) => +c.population, colorScale: colorScale, stretching: gridviz.logarithmicScale(-7) }),
     })
 
-    /*/define legend
+    //define legend
     const legend = new gridviz.ColorLegend({
         title: "Population",
         colorScale: colorScale,
-        ticks: 5,
-        textScale: (t) => t * 20000
+        ticks: 4,
+        textScale: (t, vs) => vs.invert(t)
     })
 
     //link legend to style
-    style.legends = [legend]*/
+    style.legends = [legend]
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
