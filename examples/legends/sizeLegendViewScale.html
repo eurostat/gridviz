@@ -1,9 +1,7 @@
 <div id="map" style="height: 500px; width: 800px"></div>
 
 <script src="../../dist/gridviz.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script>
 
     //define map with initial view
@@ -24,9 +22,6 @@
     })
 
 
-    //transmit cells to legend
-    //make label dependant on cells
-    //compute label as: get max time a ratio + make nice
     //make "make nice" function. Move to util.js
 
     /*
@@ -51,13 +46,10 @@
 
     //define legends
     style.legends = []
-    //for (let value of [500000, 200000, 10000])
     style.legends.push(
         new gridviz.SizeLegend({
             title: "Population",
-            //label: (cells) => maxValue,
-            //default ?
-            sizePix: (z, value, viewScale) => viewScale(value) / z,
+            label: (cells) => 0.7 * d3.max(cells, cell => +cell.TOT_P_2021),
             fillColor: "black"
         })
     )

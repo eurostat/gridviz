@@ -15,9 +15,6 @@ export class SizeLegend extends Legend {
         super(opts)
         opts = opts || {}
 
-        //exageration
-        this.exaggerationFactor = opts.exaggerationFactor || 0.8
-
         //if label is to be shown
         this.label = opts.label || undefined
         //if size corresponding to the value
@@ -40,7 +37,7 @@ export class SizeLegend extends Legend {
         //label
         this.labelFontSize = opts.labelFontSize || '0.8em'
         this.labelUnitText = opts.labelUnitText || ''
-        this.labelFormat = opts.labelFormat || ',.2r'
+        this.labelFormat = opts.labelFormat
 
         //
         //this.div.style("text-align", "center")
@@ -59,11 +56,15 @@ export class SizeLegend extends Legend {
         let label = this.label(opts.cells)
 
         //compute size of symbol, in pix
-        const sizePix = this.sizePix(opts.z, label, opts.viewScale)
+        let sizePix
+        if (this.sizePix)
+            sizePix = this.sizePix(opts.z, label, opts.viewScale)
+        else
+            sizePix = opts.viewScale(+label) / opts.z
         if (!sizePix) return
 
-        //format label text
-        if (!isNaN(+label)) label = format(this.labelFormat)(label)
+        //format label text with format function
+        if (this.labelFormat && !isNaN(+label)) label = this.labelFormat(label)
 
 
         const d = this.div.append('div')
