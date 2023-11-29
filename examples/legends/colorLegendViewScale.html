@@ -10,13 +10,16 @@
     const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
 
     //define dataset
-    const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
+    const dataset = new gridviz.MultiResolutionDataset(
+        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/')
+    )
 
     //define style
     const colorScale = d3.interpolateYlOrRd
     const style = new gridviz.ShapeColorSizeStyle({
-        color: (c, r, z, scale) => scale(c.population),
-        viewScale: gridviz.viewScaleColor({ valueFunction: (c) => +c.population, colorScale: colorScale, stretching: gridviz.logarithmicScale(-7) }),
+        color: (c, r, z, scale) => scale(c.TOT_P_2021),
+        viewScale: gridviz.viewScaleColor({ valueFunction: (c) => +c.TOT_P_2021, colorScale: colorScale, stretching: gridviz.logarithmicScale(-7) }),
     })
 
     //define legend
