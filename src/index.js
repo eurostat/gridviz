@@ -55,7 +55,7 @@ export { SegmentOrientationLegend } from './legend/SegmentOrientationLegend.js'
 export * from './utils/stretching.js'
 export * from './utils/scale.js'
 
-export { getClass } from './utils/Utils.js'
+export { getClassifier } from './utils/Utils.js'
 
 
 

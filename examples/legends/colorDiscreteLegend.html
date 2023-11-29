@@ -6,20 +6,6 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 <script>
 
-    //todo: move to util
-    const getClassifier = breaks =>
-        value => {
-            let i = 0
-            while (i < breaks.length) {
-                const break_ = breaks[i]
-                if (value <= break_) return i
-                i++
-            }
-            return i
-        }
-
-
-
     //define map with initial view
     const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
 
@@ -30,7 +16,7 @@
     //8 classes
     const colors = ["rgb(255, 255, 204)", "rgb(255, 234, 154)", "rgb(254, 205, 106)", "rgb(254, 162, 70)", "rgb(252, 105, 50)", "rgb(233, 42, 33)", "rgb(192, 6, 36)", "rgb(128, 0, 38)"]
     const breaks = [1000, 2000, 5000, 7000, 15000, 25000, 50000]
-    const classifier = getClassifier(breaks)
+    const classifier = gridviz.getClassifier(breaks)
 
     const style = new gridviz.ShapeColorSizeStyle({
         color: (cell) => colors[classifier(cell.population)]
@@ -39,7 +25,7 @@
     //define legend
     const legend = new gridviz.ColorDiscreteLegend({
         title: "Population",
-        width: 400,
+        width: 450,
         colors: colors,
         breaks: breaks,
     })
