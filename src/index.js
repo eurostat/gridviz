@@ -54,6 +54,7 @@ export { SegmentOrientationLegend } from './legend/SegmentOrientationLegend.js'
 // export { goToStraight, zoomTo } from "./utils/zoomUtils"
 export * from './utils/stretching.js'
 export * from './utils/scale.js'
+export { nice } from './utils/utils.js'
 
 import { GeoCanvas } from './GeoCanvas.js'
 export const getParameterByName = GeoCanvas.getParameterByName

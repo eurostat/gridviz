@@ -23,21 +23,6 @@
     })
 
 
-    //take 'nice' value (power of ten, or multiple)
-    const makeNiceValue = (v) => {
-        let pow10 = Math.log10(v)
-        pow10 = Math.floor(pow10)
-        const v_ = Math.pow(10, pow10)
-        if (value * 8 <= value_) value *= 8
-        else if (value * 6 <= value_) value *= 6
-        else if (value * 5 <= value_) value *= 5
-        else if (value * 4 <= value_) value *= 4
-        else if (value * 2.5 <= value_) value *= 2.5
-        else if (value * 2 <= value_) value *= 2
-        return v_
-    }
-
-
 
     //define legends
     style.legends = []
