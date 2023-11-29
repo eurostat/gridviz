@@ -35,9 +35,9 @@ export class ColorDiscreteLegend extends Legend {
     }
 
     /**
-     * @param {{ style: import("../Style").Style, r: number, z: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts
+     * @param {import('../Style').ViewScale } viewScale
      */
-    update(opts) {
+    update(viewScale) {
         //clear
         this.div.selectAll('*').remove()
 

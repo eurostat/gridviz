@@ -102,14 +102,18 @@ export const viewScaleColor = (opts) => {
 /**
  * Generic function for color view scale - quantile
  * 
- * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, colorScale?:function(number):string }} opts 
+ * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, colors?:Array.<string>, colorScale?:function(number):string }} opts 
  * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
  */
 export const viewScaleColorQuantile = (opts) => {
     const valueFunction = opts.valueFunction
     const classNumber = opts.classNumber || 12
-    const colorScale = opts.colorScale || (() => "purple")
-    const scale = scaleQuantile().range(Array.from({ length: classNumber }, (_, i) => colorScale(i / (classNumber - 1))))
+
+    let colors = opts.colors
+    if (opts.colorScale) colors = discreteColors(opts.colorScale, classNumber)
+    colors = colors || Array.from({ length: classNumber }, (_, i) => "rgb(" + Math.ceil(255 * i / (classNumber - 1)) + ",150,150)")
+
+    const scale = scaleQuantile().range(colors)
     return (cells) => {
         scale.domain(cells.map(valueFunction));
         return scale;
@@ -134,3 +138,58 @@ export const viewScaleCombination = (obj) => {
     }
 }
 
+
+
+
+
+
+/**
+ * Return a classifier function from break values.
+ * The classifier function returns the class id (from 0 to breaks.length) from a value to classifiy.
+ * @param {Array.<number>} breaks the breaks
+ */
+export function classifier(breaks) {
+    const bl = breaks.length
+    const classifier = value => {
+        let i = 0
+        while (i < bl) {
+            const break_ = breaks[i]
+            if (value <= break_) return i
+            i++
+        }
+        return i
+    }
+    classifier.breaks = breaks
+    return classifier
+}
+
+
+
+/**
+ * Return a color classifier function from break values.
+ * The classifier function returns the color from a value to classifiy.
+ * There should be one color more than break values.
+ * @param {Array.<number>} breaks the breaks
+ * @param {Array.<string>} colors the colors
+ */
+export function colorClassifier(breaks, colors) {
+    const classifier_ = classifier(breaks)
+    const colorClissifier = value => colors[classifier_(value)]
+    colorClissifier.breaks = breaks
+    colorClissifier.colors = colors
+    return colorClissifier
+}
+
+/**
+ * Make array of colors from a colorScale
+ * 
+ * @param {function(number):string} colorScale 
+ * @param {number} nb 
+ */
+export function discreteColors(colorScale, nb) {
+    if (nb == 1) return [colorScale(0.5)]
+    const out = []
+    for (let i = 0; i < nb; i++)
+        out.push(colorScale(i / (nb - 1)))
+    return out
+}

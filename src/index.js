@@ -55,10 +55,6 @@ export { SegmentOrientationLegend } from './legend/SegmentOrientationLegend.js'
 export * from './utils/stretching.js'
 export * from './utils/scale.js'
 
-export { classifier, colorClassifier } from './utils/Utils.js'
-
-
-
 import { GeoCanvas } from './GeoCanvas.js'
 export const getParameterByName = GeoCanvas.getParameterByName
 
