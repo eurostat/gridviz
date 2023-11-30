@@ -1,6 +1,7 @@
 <div id="map" style="height: 500px; width: 800px"></div>
 
 <script src="../../dist/gridviz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script>
 
     //define map with initial view
@@ -11,8 +12,7 @@
 
     //define style
     const style = new gridviz.SquareColorWGLStyle({
-        colorCol: 'population',
-        tFun: (value, resolution, stats) => value / stats.max,
+        tFun: (cell) => cell.population / 300000,
         stretching: { fun: 'log', alpha: -7 },
     })
 
