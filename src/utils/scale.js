@@ -60,7 +60,7 @@ export const viewScaleQuantile = (opts) => {
         const minSizeGeo = minSizePix * z, maxSizeGeo = r * maxSizeFactor
         scale.range(Array.from({ length: classNumber }, (_, i) => minSizeGeo + i * (maxSizeGeo - minSizeGeo) / (classNumber - 1)))
         scale.breaks = scale.quantiles()
-        console.log(scale.breaks)
+        scale.values = scale.range()
         return scale;
     }
 }
