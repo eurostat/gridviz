@@ -147,7 +147,7 @@ export function sizeDiscreteLegend(breaks, sizes, opts) {
     const legends = []
     for (let i = sizes.length - 1; i >= 0; i--)
         legends.push(
-            new gridviz.SizeLegend({
+            new SizeLegend({
                 title: i == sizes.length - 1 ? opts.title : undefined,
                 sizePix: (vs, z) => sizes[i] / z,
                 label: () => labelText(breaks[i - 1], breaks[i]),
