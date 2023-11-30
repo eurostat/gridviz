@@ -41,6 +41,7 @@ clean stretching lib
 get rid of "map.addXXXLayer" methods
 getGeoCenter setGeoCenter replaced by getView setView
 style: draw(cells, canvas, resolution)
+change in legends. With examples.
 
 
 upgrade demos to v3

@@ -15,8 +15,8 @@
 
     //define classifier, using d3 scaleThreshold
     const breaks = [5000, 25000, 100000, 200000, 500000]
-    const size = [1500, 3000, 6000, 8500, 11000, 14000]
-    const classifier = d3.scaleThreshold(breaks, size)
+    const sizes = [1500, 3000, 6000, 8500, 11000, 14000]
+    const classifier = d3.scaleThreshold(breaks, sizes)
 
     //define style, based on the classifier
     const style = new gridviz.ShapeColorSizeStyle({
@@ -25,18 +25,23 @@
         color: () => "black"
     })
 
+    const sizeDiscreteLegend = (breaks, sizes) => {
+        const legends = []
+        for (let i = sizes.length - 1; i >= 0; i--)
+            legends.push(
+                new gridviz.SizeLegend({
+                    title: i == sizes.length - 1 ? "Population" : undefined,
+                    sizePix: (vs, z) => sizes[i] / z,
+                    label: () => i == 0 ? "< " + breaks[0] : breaks[i - 1],
+                    labelFormat: d3.format(',.2r'),
+                    fillColor: "black"
+                })
+            )
+        return legends
+    }
+
     //define legends
     style.legends = []
-    for (let i = size.length - 1; i >= 0; i--)
-        style.legends.push(
-            new gridviz.SizeLegend({
-                title: i == size.length - 1 ? "Population" : undefined,
-                sizePix: (vs, z) => size[i] / z,
-                label: () => i == 0 ? "< " + breaks[0] : breaks[i - 1],
-                labelFormat: d3.format(',.2r'),
-                fillColor: "black"
-            })
-        )
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
