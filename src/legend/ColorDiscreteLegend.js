@@ -89,7 +89,11 @@ export class ColorDiscreteLegend extends Legend {
 
         //labels
         for (let i = 1; i < nb; i++) {
-            //prepare label
+
+            let label = breaks[i - 1]
+            if (isNaN(label) || label == undefined) continue
+
+            //label
             svg.append('text')
                 .attr('id', 'ticklabel_' + i)
                 .attr('x', w * i)
@@ -101,7 +105,7 @@ export class ColorDiscreteLegend extends Legend {
                 .style('alignment-baseline', 'top')
                 .style('dominant-baseline', 'hanging')
                 .style('pointer-events', 'none')
-                .text(breaks[i - 1] || "")
+                .text(label)
         }
     }
 }

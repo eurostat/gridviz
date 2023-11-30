@@ -139,11 +139,7 @@ export class SizeLegend extends Legend {
  */
 export function sizeDiscreteLegend(breaks, sizes, opts) {
     const f = opts.labelFormat || (x => x)
-    const labelText = opts.labelText || ((v0, v1) => {
-        if (v1 == undefined) return "< " + f(v0)
-        if (v0 == undefined) return "> " + f(v1)
-        return f(v0) + " - " + f(v1)
-    })
+    const labelText = opts.labelText || defaultLabelText(f)
     const legends = []
     for (let i = sizes.length - 1; i >= 0; i--)
         legends.push(
@@ -158,20 +154,15 @@ export function sizeDiscreteLegend(breaks, sizes, opts) {
     return legends
 }
 
-
 /**
  * A function which return a stack of size legends for a discrete classification using a viewscale.
- * @param {*} classNumber 
+ * @param {number} classNumber 
  * @param {*} opts 
  * @returns 
  */
 export function sizeDiscreteViewScaleLegend(classNumber, opts) {
     const f = opts.labelFormat || (x => x)
-    const labelText = opts.labelText || ((v0, v1) => {
-        if (v1 == undefined) return "< " + f(v0)
-        if (v0 == undefined) return "> " + f(v1)
-        return f(v0) + " - " + f(v1)
-    })
+    const labelText = opts.labelText || defaultLabelText(f)
     const legends = []
     for (let i = classNumber - 1; i >= 0; i--) {
         legends.push(
@@ -185,4 +176,14 @@ export function sizeDiscreteViewScaleLegend(classNumber, opts) {
         )
     }
     return legends
+}
+
+
+function defaultLabelText(f) {
+    return (v0, v1) => {
+        if (v0 == undefined && v1 == undefined) return ""
+        if (v1 == undefined) return "< " + f(v0)
+        if (v0 == undefined) return "> " + f(v1)
+        return f(v0) + " - " + f(v1)
+    }
 }
