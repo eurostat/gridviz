@@ -31,16 +31,11 @@
         style.legends.push(
             new gridviz.SizeLegend({
                 title: i == classNumber - 1 ? "Population" : undefined,
-                label: (viewScale) => i == 0 ? viewScale.breaks[0]/2 : viewScale.breaks[i - 1],
+                label: (viewScale) => i == 0 ? viewScale.breaks[0] / 2 : viewScale.breaks[i - 1],
+                size: //TODO the scale.domain values. use z
                 //labelFormat: d3.format(',.2r'),
                 fillColor: "black"
             })
-            /*
-                        new gridviz.SizeLegend({
-                            title: "population", //i == 4 ? "Population" : undefined,
-                            label: (viewScale) => Math.round(viewScale.breaks[i]),
-                            fillColor: "black"
-                        })*/
         )
     }
 
