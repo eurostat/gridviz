@@ -26,7 +26,7 @@
         style.legends.push(
             new gridviz.SizeLegend({
                 title: value == 500000 ? "Population" : undefined,
-                sizePix: (z) => 20 * Math.sqrt(value) / z,
+                sizePix: (vs, z) => 20 * Math.sqrt(value) / z,
                 label: () => value,
                 labelFormat: d3.format(',.2r'),
                 fillColor: "black"

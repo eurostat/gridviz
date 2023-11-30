@@ -31,7 +31,7 @@
         style.legends.push(
             new gridviz.SizeLegend({
                 title: i == size.length - 1 ? "Population" : undefined,
-                sizePix: (z) => size[i] / z,
+                sizePix: (vs, z) => size[i] / z,
                 label: () => i == 0 ? "< " + breaks[0] : breaks[i - 1],
                 labelFormat: d3.format(',.2r'),
                 fillColor: "black"
