@@ -25,23 +25,8 @@
         color: () => "black"
     })
 
-    const sizeDiscreteLegend = (breaks, sizes) => {
-        const legends = []
-        for (let i = sizes.length - 1; i >= 0; i--)
-            legends.push(
-                new gridviz.SizeLegend({
-                    title: i == sizes.length - 1 ? "Population" : undefined,
-                    sizePix: (vs, z) => sizes[i] / z,
-                    label: () => i == 0 ? "< " + breaks[0] : breaks[i - 1],
-                    labelFormat: d3.format(',.2r'),
-                    fillColor: "black"
-                })
-            )
-        return legends
-    }
-
     //define legends
-    style.legends = []
+    style.legends = gridviz.sizeDiscreteLegend(breaks, sizes, { title: "Population", labelFormat: d3.format(',.2r'), fillColor: "black" })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
