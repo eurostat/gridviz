@@ -43,8 +43,16 @@ export class Drawable {
      * @abstract
      */
     drawFilter(geoCanvas) {
+        //no filter: return
+        if (!this.filterColor) return
+
+        //get filter
         const fc = this.filterColor(geoCanvas.view.z)
+
+        //no filter: return
         if (!fc || fc == 'none') return
+
+        //draw filter
         geoCanvas.ctx.fillStyle = fc
         geoCanvas.ctx.fillRect(0, 0, geoCanvas.w, geoCanvas.h)
     }
