@@ -101,7 +101,7 @@ export class ColorDiscreteLegend extends Legend {
                 .style('alignment-baseline', 'top')
                 .style('dominant-baseline', 'hanging')
                 .style('pointer-events', 'none')
-                .text(breaks[i - 1])
+                .text(breaks[i - 1] || "")
         }
     }
 }
