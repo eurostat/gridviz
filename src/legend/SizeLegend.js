@@ -127,3 +127,33 @@ export class SizeLegend extends Legend {
             .text(label + (this.labelUnitText ? ' ' : '') + this.labelUnitText)
     }
 }
+
+
+
+/**
+ * A function which return a stack of size legends for a discrete classification.
+ * @param {*} breaks 
+ * @param {*} sizes 
+ * @param {*} opts 
+ * @returns 
+ */
+export function sizeDiscreteLegend(breaks, sizes, opts) {
+    const f = opts.labelFormat || (x => x)
+    const labelText = opts.labelText || ((v0, v1) => {
+        if (v1 == undefined) return "< " + f(v0)
+        if (v0 == undefined) return "> " + f(v1)
+        return f(v0) + " - " + f(v1)
+    })
+    const legends = []
+    for (let i = sizes.length - 1; i >= 0; i--)
+        legends.push(
+            new gridviz.SizeLegend({
+                title: i == sizes.length - 1 ? opts.title : undefined,
+                sizePix: (vs, z) => sizes[i] / z,
+                label: () => labelText(breaks[i - 1], breaks[i]),
+                fillColor: opts.fillColor || "white",
+                shape: opts.shape
+            })
+        )
+    return legends
+}

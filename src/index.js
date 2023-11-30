@@ -47,7 +47,7 @@ export { LineLayer as BoundaryLayer } from './layer/LineLayer.js'
 export { ColorLegend } from './legend/ColorLegend.js'
 export { ColorDiscreteLegend } from './legend/ColorDiscreteLegend.js'
 export { ColorCategoryLegend } from './legend/ColorCategoryLegend.js'
-export { SizeLegend } from './legend/SizeLegend.js'
+export { SizeLegend, sizeDiscreteLegend } from './legend/SizeLegend.js'
 export { SegmentWidthLegend } from './legend/SegmentWidthLegend.js'
 export { SegmentOrientationLegend } from './legend/SegmentOrientationLegend.js'
 
