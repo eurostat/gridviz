@@ -154,6 +154,28 @@ export function sizeLegend(values, size, opts = {}) {
 }
 
 
+/**
+ * 
+ * @param {function} value 
+ * @param {*} opts 
+ * @returns 
+ */
+export function sizeLegendViewScale(value, opts = {}) {
+    const k = opts.k || [0.9, 0.5, 0.2, 0.05]
+    const legends = []
+    for (let k_ of k)
+        legends.push(
+            new SizeLegend({
+                title: k_ == k[0] ? opts.title : undefined,
+                label: (viewScale, cells) => gridviz.nice(k_ * d3.max(cells, value)),
+                labelFormat: opts.labelFormat,
+                fillColor: opts.fillColor || "white"
+            })
+        )
+    return legends
+}
+
+
 
 /**
  * A function which return a stack of size legends for a discrete classification.
