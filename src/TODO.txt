@@ -1,7 +1,5 @@
 v3: focus on (main) API changes.
 
-legend for discrete maps: show ranges.
-
 legends: test all. based on c2021 example - add legends
 legends: add scale.invert everywhere ?
 review scale.js
@@ -15,6 +13,7 @@ population.csv files: make 2021 ones
 doc: only basic CSV and tiled multiscale
 
 Done:
+change in legends. With examples.
 zExtent -> zoomExtent
 visible as a function of zoom z - remove maxzoom/minzoom
 Drawable class, common to layer and style
@@ -41,7 +40,6 @@ clean stretching lib
 get rid of "map.addXXXLayer" methods
 getGeoCenter setGeoCenter replaced by getView setView
 style: draw(cells, canvas, resolution)
-change in legends. With examples.
 
 
 upgrade demos to v3
