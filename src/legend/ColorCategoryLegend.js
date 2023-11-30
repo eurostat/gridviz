@@ -37,9 +37,8 @@ export class ColorCategoryLegend extends Legend {
     }
 
     /**
-     * @param {{ style: import("../Style").Style, r: number, z: number, sSize: import("../Style").Stat, sColor: import("../Style").Stat }} opts
      */
-    update(opts) {
+    update() {
         //clear
         this.div.selectAll('*').remove()
 
