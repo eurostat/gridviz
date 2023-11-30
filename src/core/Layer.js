@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Drawable } from "././Drawable"
+import { Drawable } from "./Drawable.js"
 
 /**
  * @abstract
