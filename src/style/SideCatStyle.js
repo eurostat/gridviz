@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Style } from '../Style.js'
+import { Style } from '../core/Style.js'
 
 /** @typedef {{x:number,y:number,or:"v"|"h",v1:string|undefined,v2:string|undefined}} Side */
 

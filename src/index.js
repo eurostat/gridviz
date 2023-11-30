@@ -2,11 +2,11 @@
 'use strict'
 
 // the application
-export { Map } from './Map.js'
+export { Map } from './core/Map.js'
 //export { GeoCanvas } from './GeoCanvas.js'
-export { Style } from './Style.js'
-export { Layer } from './Layer.js'
-export { MultiResolutionDataset } from './MultiResolutionDataset.js'
+export { Style } from './core/Style.js'
+export { Layer } from './core/Layer.js'
+export { MultiResolutionDataset } from './core/MultiResolutionDataset.js'
 
 // export dataset types
 //export { Dataset } from './Dataset.js'
@@ -56,7 +56,7 @@ export * from './utils/stretching.js'
 export * from './utils/scale.js'
 export { nice } from './utils/utils.js'
 
-import { GeoCanvas } from './GeoCanvas.js'
+import { GeoCanvas } from './core/GeoCanvas.js'
 export const getParameterByName = GeoCanvas.getParameterByName
 
 // set default d3 locale

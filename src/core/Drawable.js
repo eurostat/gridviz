@@ -38,7 +38,7 @@ export class Drawable {
     /**
      * Draw layer filter.
      * 
-     * @param {import("./GeoCanvas").GeoCanvas} geoCanvas The canvas where to draw the layer.
+     * @param {import("./GeoCanvas.js").GeoCanvas} geoCanvas The canvas where to draw the layer.
      * @returns {void}
      * @abstract
      */

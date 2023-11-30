@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Style } from '../Style.js'
+import { Style } from '../core/Style.js'
 
 /**
  * A very generic style that shows grid cells with specific color, size and shape.

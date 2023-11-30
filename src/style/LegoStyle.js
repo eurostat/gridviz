@@ -4,7 +4,7 @@
 import { TanakaStyle } from './TanakaStyle.js'
 import { StrokeStyle } from './StrokeStyle.js'
 import { SquareColorCatWGLStyle } from './SquareColorCatWGLStyle.js'
-import { Style } from '../Style.js'
+import { Style } from '../core/Style.js'
 
 /**
  * @author Julien Gaffuri

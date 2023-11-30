@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Legend } from '../Legend.js'
+import { Legend } from '../core/Legend.js'
 
 /**
  * A legend element for segment width.

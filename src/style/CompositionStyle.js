@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Style } from '../Style.js'
+import { Style } from '../core/Style.js'
 
 /** @typedef {"flag"|"piechart"|"ring"|"segment"|"radar"|"agepyramid"|"halftone"} CompositionType */
 

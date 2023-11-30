@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Drawable } from './Drawable.js'
+import { Drawable } from '././Drawable'
 
 /** @typedef {"square"|"circle"|"diamond"|"donut"|"none"} Shape */
 /**

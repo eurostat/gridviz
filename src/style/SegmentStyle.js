@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Style } from '../Style.js'
+import { Style } from '../core/Style.js'
 
 /**
  * A style where each cell is represented by a segment whose length, width, color and orientation can vary according to statistical values.

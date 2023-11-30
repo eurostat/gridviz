@@ -271,7 +271,7 @@ export class Map {
         //go through the layers, starting from top
         const z = this.geoCanvas.view.z
         for (let i = this.layers.length - 1; i >= 0; i--) {
-            /** @type {import("./Layer").Layer} */
+            /** @type {import("./Layer.js").Layer} */
             const layer = this.layers[i]
             if (layer.visible && !layer.visible(z)) continue
             if (!layer.cellInfoHTML) continue
@@ -336,18 +336,6 @@ export class Map {
     /** @param {string} val @returns {this} */
     setBackgroundColor(val) {
         this.geoCanvas.backgroundColor = val
-        return this
-    }
-
-
-    /**
-     *
-     * @param {string} id
-     * @param {object} opts
-     * @returns {this}
-     */
-    addZoomSlider(id, opts) {
-        this.geoCanvas.addZoomSlider(id, opts)
         return this
     }
 
