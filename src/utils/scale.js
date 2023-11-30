@@ -59,6 +59,7 @@ export const viewScaleQuantile = (opts) => {
         scale.domain(cells.map(valueFunction))
         const minSizeGeo = minSizePix * z, maxSizeGeo = r * maxSizeFactor
         scale.range(Array.from({ length: classNumber }, (_, i) => minSizeGeo + i * (maxSizeGeo - minSizeGeo) / (classNumber - 1)))
+        scale.breaks = scale.quantiles()
         return scale;
     }
 }

@@ -27,7 +27,7 @@
     style.legends.push(
         new gridviz.SizeLegend({
             title: "Population",
-            label: (cells) => gridviz.nice(0.7 * d3.max(cells, cell => +cell.TOT_P_2021)),
+            label: (viewScale, cells) => gridviz.nice(0.7 * d3.max(cells, cell => +cell.TOT_P_2021)),
             labelFormat: d3.format(',.2r'),
             fillColor: "black"
         })

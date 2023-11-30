@@ -52,7 +52,7 @@ export class SizeLegend extends Legend {
 
 
         //get label. May not be a number (!)
-        let label = this.label(opts.cells)
+        let label = this.label(opts.viewScale, opts.cells)
 
         //compute size of symbol, in pix
         let sizePix
