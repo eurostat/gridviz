@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Layer } from "../Layer.js"
+import { Layer } from '../core/Layer.js'
 import { json } from 'd3-fetch'
 
 /**

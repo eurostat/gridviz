@@ -4,7 +4,7 @@
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../GeoCanvas.js").Envelope }} GridInfo */
 
 // internal
-import { Dataset } from '../Dataset.js'
+import { Dataset } from '../core/Dataset.js'
 //import { monitor, monitorDuration } from '../utils/Utils.js'
 
 // external
@@ -17,9 +17,9 @@ import { json, csv } from 'd3-fetch'
  */
 export class TiledGrid extends Dataset {
     /**
-     * @param {import("../Map")} map The map.
+     * @param {import("../core/Map")} map The map.
      * @param {string} url The URL of the dataset.
-     * @param {{preprocess?:(function(import("../Dataset.js").Cell):boolean) }} opts
+     * @param {{preprocess?:(function(import("../core/Dataset.js").Cell):boolean) }} opts
      */
     constructor(map, url, opts = {}) {
         super(map, url, 0, opts)
@@ -75,8 +75,8 @@ export class TiledGrid extends Dataset {
      * Compute a tiling envelope from a geographical envelope.
      * This is the function to use to know which tiles to download for a geographical view.
      *
-     * @param {import("../GeoCanvas.js").Envelope} e
-     * @returns {import("../GeoCanvas.js").Envelope|undefined}
+     * @param {import("../core/GeoCanvas.js").Envelope} e
+     * @returns {import("../core/GeoCanvas.js").Envelope|undefined}
      */
     getTilingEnvelope(e) {
         if (!this.info) {

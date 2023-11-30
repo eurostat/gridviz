@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Layer } from "../Layer.js"
+import { Layer } from '../core/Layer.js'
 
 /**
  * A layer, which specifies a dataset to be shown with specified styles.

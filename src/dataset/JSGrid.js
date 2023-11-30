@@ -3,7 +3,7 @@
 
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../GeoCanvas.js").Envelope }} GridInfo */
 
-import { Dataset } from '../Dataset.js'
+import { Dataset } from '../core/Dataset.js'
 
 /**
  * A dataset composed of cells defined in javascript, or loaded outside of gridviz map.

@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-import { Dataset } from '../Dataset.js'
+import { Dataset } from '../core/Dataset.js'
 //import { fromUrl } from "geotiff"
 
 /**

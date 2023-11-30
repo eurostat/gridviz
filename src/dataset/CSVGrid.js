@@ -4,7 +4,7 @@
 /** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../GeoCanvas.js").Envelope }} GridInfo */
 
 import { csv } from 'd3-fetch'
-import { Dataset } from '../Dataset.js'
+import { Dataset } from '../core/Dataset.js'
 
 /**
  * A dataset composed of a single CSV file (not tiled).
