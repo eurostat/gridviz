@@ -426,17 +426,15 @@ See [this basic example](https://eurostat.github.io/gridviz/examples/styles/squa
 
 ### Composition style
 
-[![composition style](img/styles/composition_flag.png)](https://eurostat.github.io/gridviz/examples/styles/composition_pop_FR.html)
+![composition style](img/styles/composition_flag.png)
 [![composition style](img/styles/composition_piechart.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
-[![composition style](img/styles/composition_ring.png)](https://eurostat.github.io/gridviz/examples/styles/composition_pop_FR.html)
+![composition style](img/styles/composition_ring.png)
 [![composition style](img/styles/composition_halftone.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 [![composition style](img/styles/composition_random.png)](https://eurostat.github.io/gridviz/examples/styles/composition_types.html)
 
 This style shows a composition at cell level in various different ways: Flags, pie charts, rings, segments, radar, age pyramid and halftone.
 
 See [this basic example](https://eurostat.github.io/gridviz/examples/styles/composition_types.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/composition_types.html)).
-
-See [this example showing population of France by age group](https://eurostat.github.io/gridviz/examples/styles/composition_pop_FR.html) ([code](https://github.com/eurostat/gridviz/blob/master/examples/styles/composition_pop_FR.html)).
 
 | Property                         | Type                        | Default         | Description                                                                                                                                                                                                       |
 | -------------------------------- | --------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
