@@ -1,57 +1,31 @@
-<!DOCTYPE html>
-<html lang="en" style="height: 100%">
-    <head>
-        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-        <title>Gridviz - Shape/color/size style</title>
-    </head>
+<div id="map" style="height: 500px; width: 800px"></div>
 
-    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
-        <div id="viz-container" style="height: 100%; width: 100%"></div>
+<script src="../../dist/gridviz.js"></script>
+<script>
 
-        <script src="../../dist/gridviz.js"></script>
-        <script>
-            let containerDiv = document.getElementById('viz-container')
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 500 })
 
-            new gridviz.Map(containerDiv)
-                .setGeoCenter({ x: 4000000, y: 2960000 })
-                .setZoom(2000)
-                .addMultiScaleTiledGridLayer(
-                    [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                    (r) =>
-                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
-                        r +
-                        'm/',
-                    [
-                        new gridviz.ShapeColorSizeStyle({
-                            //set random color
-                            color: () =>
-                                'rgb(' +
-                                255 * Math.random() +
-                                ',' +
-                                255 * Math.random() +
-                                ',' +
-                                255 * Math.random() +
-                                ')',
-                            //set random size
-                            size: (v, r, s, z) => r * Math.random(),
-                            //set random shape
-                            shape: () => {
-                                const r = Math.random()
-                                return r < 1 / 4
-                                    ? 'circle'
-                                    : r < 2 / 4
-                                    ? 'square'
-                                    : r < 3 / 4
-                                    ? 'diamond'
-                                    : 'donut'
-                            },
-                        }),
-                    ],
-                    {
-                        minPixelsPerCell: 15,
-                        cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
-                    }
-                )
-        </script>
-    </body>
-</html>
+    //define dataset
+    const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
+
+    //define style
+    const style = new gridviz.ShapeColorSizeStyle({
+        //set random color
+        color: () => 'rgb(' + 255 * Math.random() + ',' + 255 * Math.random() + ',' + 255 * Math.random() + ')',
+        //set random size
+        size: (cell, resolution) => resolution * (0.2 + 0.8 * Math.random()),
+        //set random shape
+        shape: () => {
+            const r = Math.random()
+            if (r < 1 / 4) return "circle"
+            if (r < 2 / 4) return "square"
+            if (r < 3 / 4) return "diamond"
+            return "donut"
+        },
+    })
+
+    //add layer to map
+    map.layers = [new gridviz.GridLayer(dataset, [style])]
+
+</script>
