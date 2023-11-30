@@ -4,8 +4,8 @@
 // internal imports
 import { GeoCanvas } from './GeoCanvas.js'
 import { Tooltip } from './Tooltip.js'
-import { ZoomButtons } from './button/ZoomButtons.js'
-import { FullscreenButton } from './button/FullscreenButton.js'
+import { ZoomButtons } from '../button/ZoomButtons.js'
+import { FullscreenButton } from '../button/FullscreenButton.js'
 
 // external imports
 import { select } from 'd3-selection'

@@ -7,7 +7,7 @@ import { Drawable } from './Drawable.js'
 /**
  * viewScale type
  * Returns an object from a list of cells, 
- * @typedef {function(Array.<import('./Dataset.js').Cell>,number, number):import('./utils/scale.js').Scale} ViewScale */
+ * @typedef {function(Array.<import('./Dataset.js').Cell>,number, number):import('../utils/scale.js').Scale} ViewScale */
 
 /**
  * A style, to show a grid dataset.
