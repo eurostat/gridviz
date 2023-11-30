@@ -10,17 +10,17 @@ import { Layer } from '../core/Layer.js'
  */
 export class GridLayer extends Layer {
     /**
-     * @param {import("../Dataset").Dataset|import("../MultiResolutionDataset").MultiResolutionDataset} dataset The dataset to show.
-     * @param {Array.<import("../Style").Style>} styles The styles, ordered in drawing order.
-     * @param {{visible?:function(number):boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,minPixelsPerCell?:number,cellInfoHTML?:function(import("../Dataset").Cell):string}} opts
+     * @param {import("../core/Dataset").Dataset|import("../core/MultiResolutionDataset").MultiResolutionDataset} dataset The dataset to show.
+     * @param {Array.<import("../core/Style").Style>} styles The styles, ordered in drawing order.
+     * @param {{visible?:function(number):boolean,alpha?:function(number):number,blendOperation?:function(number):GlobalCompositeOperation,minPixelsPerCell?:number,cellInfoHTML?:function(import("../core/Dataset").Cell):string}} opts
      */
     constructor(dataset, styles, opts = {}) {
         super(opts)
         opts = opts || {}
 
-        /** @type {import("../Dataset").Dataset|import("../MultiResolutionDataset").MultiResolutionDataset} */
+        /** @type {import("../core/Dataset").Dataset|import("../core/MultiResolutionDataset").MultiResolutionDataset} */
         this.dataset = dataset
-        /** @type {Array.<import("../Style").Style>} */
+        /** @type {Array.<import("../core/Style").Style>} */
         this.styles = styles
 
         /** 
@@ -36,7 +36,7 @@ export class GridLayer extends Layer {
         /**
          * The function returning cell information as HTML.
          * This is typically used for tooltip information.
-         * @type {function(import("../Dataset").Cell, number):string} */
+         * @type {function(import("../core/Dataset").Cell, number):string} */
         this.cellInfoHTML = opts.cellInfoHTML || GridLayer.defaultCellInfoHTML
     }
 
@@ -47,7 +47,7 @@ export class GridLayer extends Layer {
         const z = geoCanvas.view.z
 
         //get layer dataset component
-        /** @type {import('../Dataset.js').Dataset|undefined} */
+        /** @type {import('../core/Dataset.js').Dataset|undefined} */
         const dsc = this.getDataset(z)
         if (!dsc) return
 
@@ -112,7 +112,7 @@ export class GridLayer extends Layer {
      * Return the relevant dataset component for a specified zoom.
      *
      * @param {number} z
-     * @returns {import("../Dataset").Dataset|undefined}
+     * @returns {import("../core/Dataset").Dataset|undefined}
      * */
     getDataset(z) {
         return this.dataset.getDataset(z, this.minPixelsPerCell);
@@ -122,7 +122,7 @@ export class GridLayer extends Layer {
      * The default function returning cell information as HTML.
      * This is typically used for tooltip information.
      *
-     * @param {import("../Dataset").Cell} cell
+     * @param {import("../core/Dataset").Cell} cell
      * @returns {string}
      */
     static defaultCellInfoHTML(cell) {

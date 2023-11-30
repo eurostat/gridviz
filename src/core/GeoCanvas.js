@@ -52,13 +52,13 @@ export class GeoCanvas {
          * @type {string} */
         this.backgroundColor = opts.backgroundColor || 'white'
 
-        /** @type {function():void} */
+        /** @type {function(object|undefined):void} */
         this.onZoomStartFun = opts.onZoomStartFun
 
-        /** @type {function():void} */
+        /** @type {function(object|undefined):void} */
         this.onZoomEndFun = opts.onZoomEndFun
 
-        /** @type {function():void} */
+        /** @type {function(object|undefined):void} */
         this.onZoomFun = opts.onZoomFun
 
         //current extent
@@ -109,12 +109,12 @@ export class GeoCanvas {
                 })
                 .on('start', (e) => {
                     this.canvasSave.c = document.createElement('canvas')
-                    this.canvasSave.c.setAttribute('width', '' + this.w)
-                    this.canvasSave.c.setAttribute('height', '' + this.h)
-                    this.canvasSave.c.getContext('2d').drawImage(this.canvas, 0, 0)
-                    this.canvasSave.dx = 0
-                    this.canvasSave.dy = 0
-                    this.canvasSave.f = 1
+                    this.canvasSave.c.setAttribute('width', '' + this.w);
+                    this.canvasSave.c.setAttribute('height', '' + this.h);
+                    this.canvasSave.c.getContext('2d')?.drawImage(this.canvas, 0, 0);
+                    this.canvasSave.dx = 0;
+                    this.canvasSave.dy = 0;
+                    this.canvasSave.f = 1;
 
                     if (this.onZoomStartFun) this.onZoomStartFun(e)
                 })

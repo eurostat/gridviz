@@ -46,7 +46,7 @@ export class BackgroundLayerWMS extends Layer {
 
 
     /**
-     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas The canvas where to draw the layer.
+     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas The canvas where to draw the layer.
      * @returns {void}
      */
     draw(geoCanvas) {

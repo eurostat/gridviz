@@ -216,7 +216,7 @@ export class Map {
             this.canvasSave = document.createElement('canvas')
             this.canvasSave.setAttribute('width', '' + this.w)
             this.canvasSave.setAttribute('height', '' + this.h)
-            this.canvasSave.getContext('2d').drawImage(this.geoCanvas.canvas, 0, 0)
+            this.canvasSave.getContext('2d')?.drawImage(this.geoCanvas.canvas, 0, 0)
             this.geoCanvas.initCanvasTransform()
             return
         }
@@ -231,7 +231,7 @@ export class Map {
                 this.canvasSave = document.createElement('canvas')
                 this.canvasSave.setAttribute('width', '' + this.w)
                 this.canvasSave.setAttribute('height', '' + this.h)
-                this.canvasSave.getContext('2d').drawImage(this.geoCanvas.canvas, 0, 0)
+                this.canvasSave.getContext('2d')?.drawImage(this.geoCanvas.canvas, 0, 0)
             } else {
                 this.geoCanvas.ctx.drawImage(this.canvasSave, 0, 0)
             }
@@ -276,6 +276,7 @@ export class Map {
             if (layer.visible && !layer.visible(z)) continue
             if (!layer.cellInfoHTML) continue
             //if (layer.cellInfoHTML === 'none') continue
+            if (!layer.getDataset) continue
             const dsc = layer.getDataset(z)
             if (!dsc) continue
 
