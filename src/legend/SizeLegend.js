@@ -130,6 +130,31 @@ export class SizeLegend extends Legend {
 
 
 
+
+/**
+ * 
+ * @param {Array.<number>} values 
+ * @param {function} size 
+ * @param {*} opts 
+ * @returns 
+ */
+export function sizeLegend(values, size, opts = {}) {
+    const legends = []
+    for (let value of values)
+        legends.push(
+            new SizeLegend({
+                title: value == values[0] ? opts.title : undefined,
+                sizePix: (vs, z) => size(value) / z,
+                label: () => value,
+                labelFormat: opts.labelFormat,
+                fillColor: opts.fillColor || "white"
+            })
+        )
+    return legends
+}
+
+
+
 /**
  * A function which return a stack of size legends for a discrete classification.
  * @param {*} breaks 
@@ -137,7 +162,7 @@ export class SizeLegend extends Legend {
  * @param {*} opts 
  * @returns 
  */
-export function sizeDiscreteLegend(breaks, sizes, opts) {
+export function sizeDiscreteLegend(breaks, sizes, opts = {}) {
     const f = opts.labelFormat || (x => x)
     const labelText = opts.labelText || defaultLabelText(f)
     const legends = []
@@ -160,7 +185,7 @@ export function sizeDiscreteLegend(breaks, sizes, opts) {
  * @param {*} opts 
  * @returns 
  */
-export function sizeDiscreteViewScaleLegend(classNumber, opts) {
+export function sizeDiscreteViewScaleLegend(classNumber, opts = {}) {
     const f = opts.labelFormat || (x => x)
     const labelText = opts.labelText || defaultLabelText(f)
     const legends = []

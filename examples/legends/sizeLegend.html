@@ -21,17 +21,13 @@
     })
 
     //define legends
-    style.legends = []
-    for (let value of [500000, 200000, 10000])
-        style.legends.push(
-            new gridviz.SizeLegend({
-                title: value == 500000 ? "Population" : undefined,
-                sizePix: (vs, z) => 20 * Math.sqrt(value) / z,
-                label: () => value,
-                labelFormat: d3.format(',.2r'),
-                fillColor: "black"
-            })
-        )
+    style.legends = gridviz.sizeLegend(
+        [500000, 200000, 10000],
+        v => 20 * Math.sqrt(v), {
+        title: "Population",
+        labelFormat: d3.format(',.2r'),
+        fillColor: "black"
+    })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
