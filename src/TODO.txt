@@ -1,6 +1,6 @@
 v3: focus on (main) API changes.
 
-sizeQuantileViewScale
+legend for discrete maps: show ranges.
 
 legends: test all. based on c2021 example - add legends
 legends: add scale.invert everywhere ?
