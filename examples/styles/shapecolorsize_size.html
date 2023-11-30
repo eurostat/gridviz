@@ -1,41 +1,30 @@
-<!DOCTYPE html>
-<html lang="en" style="height: 100%">
+<div id="map" style="height: 500px; width: 800px"></div>
 
-<head>
-    <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-    <title>Gridviz - Shape/color/size style</title>
-</head>
+<script src="../../dist/gridviz.js"></script>
+<script>
 
-<body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
-    <div id="viz-container" style="height: 100%; width: 100%"></div>
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 700 })
 
-    <script src="../../dist/gridviz.js"></script>
-    <script>
-        let containerDiv = document.getElementById('viz-container')
+    //define dataset
+    const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
-        new gridviz.Map(containerDiv)
-            .setGeoCenter({ x: 4000000, y: 2960000 })
-            .setZoom(2000)
-            .addMultiScaleTiledGridLayer(
-                [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                (r) =>
-                    'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
-                    r +
-                    'm/',
-                [
-                    new gridviz.ShapeColorSizeStyle({
-                        color: () => 'purple',
-                        size: (c, r, z, scale) => scale(+c.TOT_P_2021),
-                        viewScale: gridviz.viewScale({ valueFunction: (c) => +c.TOT_P_2021, maxSizeFactor: 1.41, stretching: gridviz.powerScale(0.2) }),
-                        shape: () => 'circle',
-                    }),
-                ],
-                {
-                    minPixelsPerCell: 8,
-                    cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
-                }
-            )
-    </script>
-</body>
+    //define size for each cell
+    const sizeFunction = (cell) => {
+        if (cell.population > 150000) return 13000
+        else if (cell.population > 60000) return 11000
+        else if (cell.population > 6000) return 8000
+        else return 5000
+    }
 
-</html>
+    //define style
+    const style = new gridviz.ShapeColorSizeStyle({
+        size: sizeFunction,
+        shape: () => 'circle',
+        color: () => 'purple',
+    })
+
+    //add layer to map
+    map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 8 })]
+
+</script>
