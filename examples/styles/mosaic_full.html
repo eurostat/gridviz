@@ -99,14 +99,27 @@
         )
 
         //define style
-        const style =
-            new gridviz.MosaicStyle({
-                viewScale: gridviz.viewScaleColor({ valueFunction: (c) => +c.TOT_P_2021, colorRamp: d3.interpolateYlOrBr, stretching: gridviz.logarithmicScale(-7) }),
-                color: (c, r, z, scale) => scale(+c.TOT_P_2021),
-                mosaicFactor: 0.2,
-                shadowFactor: 0.25,
-                shadowColor: '#aaa',
-            })
+        const classNumber = 6
+        const colors = d3.schemeYlOrRd[classNumber]
+        const style = new gridviz.MosaicStyle({
+            viewScale: gridviz.viewScaleColorQuantile({ valueFunction: (c) => +c.TOT_P_2021, classNumber: classNumber, colors: colors }),
+            color: (c, r, z, scale) => scale(+c.TOT_P_2021),
+            mosaicFactor: 0.2,
+            shadowFactor: 0.25,
+            shadowColor: '#aaa',
+        })
+
+        //define legend
+        const legend = new gridviz.ColorDiscreteLegend({
+            title: 'Number of inhabitants',
+            width: 450,
+            colors: () => colors,
+            breaks: (vs) => vs.breaks.map(b => Math.round(b)),
+            'font-family': 'mf',
+        })
+
+        //link legend to style
+        style.legends = [legend]
 
         //add layer to map
         map.layers = [new gridviz.GridLayer(dataset, [style], {
@@ -116,17 +129,6 @@
         })]
 
 
-        /*/legend
-        style.legends.push(
-            new gridviz.ColorLegend({
-                title: 'Number of inhabitants',
-                'font-family': 'mf',
-                width: 450,
-                ticks: 6,
-                colorRamp: d3.interpolateYlOrBr,
-                fun: (t, r, s) => s.max * gridviz.sExpRevInverse(t, -7),
-            })
-        )*/
 
         /*/convert to roman numbers - source: https://stackoverflow.com/a/9083076/413912
     function romanize(num) {
