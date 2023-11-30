@@ -17,12 +17,12 @@
     //define style
     const style = new gridviz.ShapeColorSizeStyle({
         size: (c, r, z, viewScale) => viewScale(c.TOT_P_2021),
-        viewScale: gridviz.viewScale({ valueFunction: (c) => +c.TOT_P_2021, maxSizeFactor: 1.3, stretching: gridviz.logarithmicScale(-8) }),
+        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.TOT_P_2021, classNumber: 5, minSizePix: 3, maxSizeFactor: 1.1 }),
         shape: () => "circle",
         color: () => "black"
     })
 
-    //define legends
+    /*/define legends
     style.legends = []
     style.legends.push(
         new gridviz.SizeLegend({
@@ -31,7 +31,7 @@
             labelFormat: d3.format(',.2r'),
             fillColor: "black"
         })
-    )
+    )*/
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 5 })]
