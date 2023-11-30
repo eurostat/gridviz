@@ -114,7 +114,7 @@
             title: 'Number of inhabitants',
             width: 450,
             colors: () => colors,
-            breaks: (vs) => vs.breaks.map(b => Math.round(b)),
+            breaks: (viewScale) => viewScale.breaks.map(b => Math.round(b)),
             'font-family': 'mf',
         })
 
