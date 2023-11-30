@@ -31,8 +31,8 @@
         style.legends.push(
             new gridviz.SizeLegend({
                 title: i == classNumber - 1 ? "Population" : undefined,
-                label: (viewScale) => i == 0 ? viewScale.breaks[0] : viewScale.breaks[i - 1],
-                size: (viewScale, z) => 10, //TODO the scale.domain values. use z
+                sizePix: (viewScale, z) => 10, //TODO the scale.domain values. use z
+                label: (viewScale) => i == 0 ? "< " + Math.round(viewScale.breaks[0]) : Math.round(viewScale.breaks[i - 1]),
                 //labelFormat: d3.format(',.2r'),
                 fillColor: "black"
             })
