@@ -17,8 +17,8 @@ import { scaleQuantile } from "d3-scale"
 /**
  * Generic function for view scale - continuous
  * 
- * @param {{ valueFunction:function(import("../Dataset").Cell):number, minValue?:number, minSizePix?:number, maxSizeFactor?:number, range?:[number, number], domain?:[number, number], stretching?:function(number):number }} opts 
- * @returns {function(Array.<import("../Dataset").Cell>):Scale}
+ * @param {{ valueFunction:function(import("../core/Dataset").Cell):number, minValue?:number, minSizePix?:number, maxSizeFactor?:number, range?:[number, number], domain?:[number, number], stretching?:function(number):number }} opts 
+ * @returns {function(Array.<import("../core/Dataset").Cell>):Scale}
  */
 export const viewScale = (opts) => {
     const valueFunction = opts.valueFunction
@@ -46,8 +46,8 @@ export const viewScale = (opts) => {
 /**
  * Generic function for view scale - quantile
  * 
- * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, minSizePix?:number, maxSizeFactor?:number }} opts 
- * @returns {function(Array.<import("../Dataset").Cell>):Scale}
+ * @param {{ valueFunction:function(import("../core/Dataset").Cell):number, classNumber?:number, minSizePix?:number, maxSizeFactor?:number }} opts 
+ * @returns {function(Array.<import("../core/Dataset").Cell>):Scale}
  */
 export const viewScaleQuantile = (opts) => {
     const valueFunction = opts.valueFunction
@@ -73,8 +73,8 @@ export const viewScaleQuantile = (opts) => {
 /**
  * Generic function for color view scale - continuous
  * 
- * @param {{ valueFunction:function(import("../Dataset").Cell):number, colorScale?:function(number):string, stretching?:function(number):number }} opts 
- * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
+ * @param {{ valueFunction:function(import("../core/Dataset").Cell):number, colorScale?:function(number):string, stretching?:function(number):number }} opts 
+ * @returns {function(Array.<import("../core/Dataset").Cell>):ColorScale}
  */
 export const viewScaleColor = (opts) => {
     const valueFunction = opts.valueFunction
@@ -104,8 +104,8 @@ export const viewScaleColor = (opts) => {
 /**
  * Generic function for color view scale - quantile
  * 
- * @param {{ valueFunction:function(import("../Dataset").Cell):number, classNumber?:number, colors?:Array.<string>, colorScale?:function(number):string }} opts 
- * @returns {function(Array.<import("../Dataset").Cell>):ColorScale}
+ * @param {{ valueFunction:function(import("../core/Dataset").Cell):number, classNumber?:number, colors?:Array.<string>, colorScale?:function(number):string }} opts 
+ * @returns {function(Array.<import("../core/Dataset").Cell>):ColorScale}
  */
 export const viewScaleColorQuantile = (opts) => {
     const valueFunction = opts.valueFunction

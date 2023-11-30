@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../GeoCanvas.js").Envelope }} GridInfo */
+/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../core/GeoCanvas.js").Envelope }} GridInfo */
 
 import { Dataset } from '../core/Dataset.js'
 
@@ -20,21 +20,21 @@ export class JSGrid extends Dataset {
 
         /**
          * @private
-         * @type {Array.<import("../MultiResolutionDataset.js").Cell>} */
+         * @type {Array.<import("../core/MultiResolutionDataset.js").Cell>} */
         this.cells = cells || []
     }
 
     /**
      * Request data within a geographic envelope.
      *
-     * @param {import("../GeoCanvas.js").Envelope|undefined} e
+     * @param {import("../core/GeoCanvas.js").Envelope|undefined} e
      */
     getData(e) { return this }
 
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      *
-     * @param {import("../GeoCanvas.js").Envelope} extGeo
+     * @param {import("../core/GeoCanvas.js").Envelope} extGeo
      * @returns {void}
      */
     updateViewCache(extGeo) {

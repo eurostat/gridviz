@@ -1,7 +1,7 @@
 //@ts-check
 'use strict'
 
-/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../GeoCanvas.js").Envelope }} GridInfo */
+/** @typedef {{ dims: object, crs: string, tileSizeCell: number, originPoint: {x:number,y:number}, resolutionGeo: number, tilingBounds:import("../core/GeoCanvas.js").Envelope }} GridInfo */
 
 // internal
 import { Dataset } from '../core/Dataset.js'
@@ -17,7 +17,7 @@ import { json, csv } from 'd3-fetch'
  */
 export class TiledGrid extends Dataset {
     /**
-     * @param {import("../core/Map")} map The map.
+     * @param {import("../core/Map.js").Map} map The map.
      * @param {string} url The URL of the dataset.
      * @param {{preprocess?:(function(import("../core/Dataset.js").Cell):boolean) }} opts
      */
@@ -99,7 +99,7 @@ export class TiledGrid extends Dataset {
     /**
      * Request data within a geographic envelope.
      *
-     * @param {import('../GeoCanvas.js').Envelope} extGeo
+     * @param {import('../core/GeoCanvas.js').Envelope} extGeo
      * @returns {this}
      */
     getData(extGeo) {
@@ -109,12 +109,12 @@ export class TiledGrid extends Dataset {
         if (!this.info) return this
 
         //tiles within the scope
-        /** @type {import("../GeoCanvas.js").Envelope|undefined} */
+        /** @type {import("../core/GeoCanvas.js").Envelope|undefined} */
         const tb = this.getTilingEnvelope(extGeo)
         if (!tb) return this
 
         //grid bounds
-        /** @type {import("../GeoCanvas.js").Envelope} */
+        /** @type {import("../core/GeoCanvas.js").Envelope} */
         const gb = this.info.tilingBounds
 
         for (let xT = Math.max(tb.xMin, gb.xMin); xT <= Math.min(tb.xMax, gb.xMax); xT++) {
@@ -131,11 +131,11 @@ export class TiledGrid extends Dataset {
                 this.cache[xT][yT] = "loading";
                 (async () => {
                     //request tile
-                    /** @type {Array.<import("../Dataset.js").Cell>}  */
+                    /** @type {Array.<import("../core/Dataset.js").Cell>}  */
                     let cells
 
                     try {
-                        /** @type {Array.<import("../Dataset.js").Cell>}  */
+                        /** @type {Array.<import("../core/Dataset.js").Cell>}  */
                         // @ts-ignore
                         const data = await csv(this.url + xT + '/' + yT + '.csv')
 
@@ -213,7 +213,7 @@ export class TiledGrid extends Dataset {
     /**
      * Fill the view cache with all cells which are within a geographical envelope.
      * @abstract
-     * @param {import("../GeoCanvas.js").Envelope} extGeo
+     * @param {import("../core/GeoCanvas.js").Envelope} extGeo
      * @returns {void}
      */
     updateViewCache(extGeo) {
@@ -224,12 +224,12 @@ export class TiledGrid extends Dataset {
         if (!this.info) return
 
         //tiles within the scope
-        /** @type {import("../GeoCanvas.js").Envelope|undefined} */
+        /** @type {import("../core/GeoCanvas.js").Envelope|undefined} */
         const tb = this.getTilingEnvelope(extGeo)
         if (!tb) return
 
         //grid bounds
-        /** @type {import("../GeoCanvas.js").Envelope} */
+        /** @type {import("../core/GeoCanvas.js").Envelope} */
         const gb = this.info.tilingBounds
 
         for (let xT = Math.max(tb.xMin, gb.xMin); xT <= Math.min(tb.xMax, gb.xMax); xT++) {
@@ -259,7 +259,7 @@ function getGridTile(cells, xT, yT, gridInfo) {
 
     const tile = {}
 
-    /** @type {Array.<import("../Dataset").Cell>} */
+    /** @type {Array.<import("../core/Dataset").Cell>} */
     tile.cells = cells
     /** @type {number} */
     tile.x = xT
@@ -269,7 +269,7 @@ function getGridTile(cells, xT, yT, gridInfo) {
     const r = gridInfo.resolutionGeo
     const s = gridInfo.tileSizeCell
 
-    /** @type {import("../GeoCanvas").Envelope} */
+    /** @type {import("../core/GeoCanvas").Envelope} */
     tile.extGeo = {
         xMin: gridInfo.originPoint.x + r * s * tile.x,
         xMax: gridInfo.originPoint.x + r * s * (tile.x + 1),
