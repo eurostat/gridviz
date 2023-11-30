@@ -35,15 +35,17 @@
     )
 
     //define style
-    const style = new gridviz.ShapeColorSizeStyle({
-        color: (cell) => {
-            let t = (cell.revind - 1200) / (3700 - 1200)
-            t = t > 1 ? 1 : t < 0 ? 0 : t
-            return d3.interpolateSpectral(1 - t)
+    const style = new gridviz.CompositionStyle({
+        color: {
+            men_1ind: '#7570b3',  //blue
+            men_2_4ind: '#1b9e77', //green
+            men_5ind: '#d95f02', //orange
         },
-        size: (cell, resolution, z, viewScale) => 1.41 * viewScale(cell.ind),
-        viewScale: gridviz.viewScale({ valueFunction: (cell) => +cell.ind, stretching: gridviz.powerScale(0.13) }),
-        shape: () => "circle"
+        type: () => 'ring',
+        stripesOrientation: () => 0,
+        size: (c, r, z, scale) => scale(+c.men),
+        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.men, classNumber: 5, minSizePix: 8 }),
+        offsetAngle: () => 90,
     })
 
     //add layer to map
