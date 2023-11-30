@@ -26,24 +26,24 @@ export class CompositionStyle extends Style {
 
         /**
          * A function returning the type of decomposition symbol of a cell, @see CompositionType
-         * @type {function(import("../Dataset.js").Cell,number, number,object):CompositionType} */
+         * @type {function(import("../core/Dataset.js").Cell,number, number,object):CompositionType} */
         this.type = opts.type || (() => "flag") //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
-         * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
         this.size = opts.size || ((c, r) => r) //(c,r,z,vs) => {}
 
         /** For style types with stripes (flag, segment), the orientation of the stripes (0 for horizontal, other for vertical).
-         * @type {function(import("../Dataset.js").Cell,number,number,object):number} */
+         * @type {function(import("../core/Dataset.js").Cell,number,number,object):number} */
         this.stripesOrientation = opts.stripesOrientation || (() => 0) //(c,r,z,vs) => ...
 
         /** The function specifying an offset angle for a radar, halftone or pie chart style.
          * The angle is specified in degree. The rotation is anti-clockwise.
-         * @type {function(import("../Dataset.js").Cell,number,number,object):number} */
+         * @type {function(import("../core/Dataset.js").Cell,number,number,object):number} */
         this.offsetAngle = opts.offsetAngle || (() => 0) //(c,r,z,vs) => ...
 
         /** The function specifying the height of the age pyramid, in geo unit.
-         * @type {function(import("../Dataset.js").Cell,number,number,object):number} */
+         * @type {function(import("../core/Dataset.js").Cell,number,number,object):number} */
         this.agePyramidHeight = opts.agePyramidHeight || ((c, r) => r) //(c,r,z,vs) => ...
 
         /** For pie chart, this is parameter for internal radius, so that the pie chart looks like a donut.
@@ -55,8 +55,8 @@ export class CompositionStyle extends Style {
     /**
      * Draw cells as squares depending on their value.
      *
-     * @param {Array.<import("../Dataset.js").Cell>} cells
-     * @param {import("../GeoCanvas.js").GeoCanvas} geoCanvas
+     * @param {Array.<import("../core/Dataset.js").Cell>} cells
+     * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {

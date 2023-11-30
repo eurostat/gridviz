@@ -22,15 +22,15 @@ export class SideStyle extends Style {
         /** A function returning the value of a cell side. This value is computed from the two adjacent cell values.
          * For horizontal sides, v1 is the value of the cell below and v2 the value of the cell above.
          * For vertical sides, v1 is the value of the cell left and v2 the value of the cell right.
-         * @type {function(number|undefined,number|undefined,number,import("../Style").Stat|undefined,number):number} */
+         * @type {function(number|undefined,number|undefined,number,import("../core/Style").Stat|undefined,number):number} */
         this.value = opts.value || ((v1, v2, r, s, z) => 1)
 
         /** A function returning the color of a cell side.
-         * @type {function(Side,number,import("../Style").Stat|undefined,number):string} */
+         * @type {function(Side,number,import("../core/Style").Stat|undefined,number):string} */
         this.color = opts.color || (() => '#EA6BAC')
 
         /** A function returning the width of a cell side, in geo unit
-         * @type {function(Side,number,import("../Style").Stat|undefined,number):number} */
+         * @type {function(Side,number,import("../core/Style").Stat|undefined,number):number} */
         this.width = opts.width || ((side, r, s, z) => (r * side.value) / 5)
 
         /** orientation. Set to 90 to show sides as slope lines for example.
@@ -38,14 +38,14 @@ export class SideStyle extends Style {
         this.orientation = opts.orientation || 0
 
         /** A fill color for the cells.
-         * @type {function(import("../Dataset").Cell):string} */
+         * @type {function(import("../core/Dataset").Cell):string} */
         this.fillColor = opts.fillColor
     }
 
     /**
-     * @param {Array.<import("../Dataset").Cell>} cells
+     * @param {Array.<import("../core/Dataset").Cell>} cells
      * @param {number} resolution
-     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
+     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
      */
     draw(cells, geoCanvas, resolution) {
         //filter
@@ -192,7 +192,7 @@ export class SideStyle extends Style {
      *
      * @param {Array.<Side>} sides
      * @param {boolean} ignoreZeros
-     * @returns {import("../Style").Stat | undefined}
+     * @returns {import("../core/Style").Stat | undefined}
      */
     static getSideStatistics(sides, ignoreZeros) {
         if (!sides || sides.length == 0) return undefined

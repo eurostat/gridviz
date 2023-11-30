@@ -18,21 +18,21 @@ export class PillarStyle extends Style {
         this.heightCol = opts.heightCol
 
         /** A function returning the height of the line representing a cell, in geo unit
-         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
+         * @type {function(number,number,import("../core/Style").Stat|undefined,number):number} */
         this.height = opts.height
 
         /** @type {string} */
         this.colorCol = opts.colorCol
 
         /** A function returning the color of the line representing a cell.
-         * @type {function(number,number,import("../Style").Stat|undefined):string} */
+         * @type {function(number,number,import("../core/Style").Stat|undefined):string} */
         this.color = opts.color || (() => '#c08c59') //bb
 
         /** @type {string} */
         this.widthCol = opts.widthCol
 
         /** A function returning the width of the line representing a cell, in geo unit
-         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
+         * @type {function(number,number,import("../core/Style").Stat|undefined,number):number} */
         this.width = opts.width || ((v, r) => 0.5 * r)
 
         /** @type {boolean} */
@@ -64,8 +64,8 @@ export class PillarStyle extends Style {
     /**
      * Draw cells as segments.
      *
-     * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
+     * @param {Array.<import("../core/Dataset").Cell>} cells
+     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {

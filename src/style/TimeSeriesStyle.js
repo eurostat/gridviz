@@ -27,18 +27,18 @@ export class TimeSeriesStyle extends Style {
 
         //x
         /** in geo unit
-         * @type {function(import("../Dataset.js").Cell,number,number):number} */
+         * @type {function(import("../core/Dataset.js").Cell,number,number):number} */
         this.offsetX = opts.offsetX || ((c, r, z) => 0)
-        /** @type {function(import("../Dataset.js").Cell,number,number):number} */
+        /** @type {function(import("../core/Dataset.js").Cell,number,number):number} */
         this.width = opts.width || ((c, r, z) => r)
 
         //y
         /** in geo unit
-         * @type {function(import("../Dataset.js").Cell,number,number):number} */
+         * @type {function(import("../core/Dataset.js").Cell,number,number):number} */
         this.offsetY = opts.offsetY || ((c, r, z) => 0)
-        /** @type {function(import("../Dataset.js").Cell,number,number):number} */
+        /** @type {function(import("../core/Dataset.js").Cell,number,number):number} */
         this.height = opts.height || ((c, r, z) => r)
-        /** @type {function(import("../Dataset.js").Cell,number,number):AnchorModeYEnum} */
+        /** @type {function(import("../core/Dataset.js").Cell,number,number):AnchorModeYEnum} */
         this.anchorModeY = opts.anchorModeY || ((c, r, z) => "center")
 
 
@@ -47,7 +47,7 @@ export class TimeSeriesStyle extends Style {
         this.lineWidthCol = opts.lineWidthCol
 
         /** A function returning the width of the line, in geo unit
-         * @type {function(number,number,import("../Style.js").Stat|undefined,number):number} */
+         * @type {function(number,number,import("../core/Style.js").Stat|undefined,number):number} */
         this.lineWidth = opts.lineWidth || ((v, r, s, z) => 1.5 * z)
 
         /**
@@ -55,7 +55,7 @@ export class TimeSeriesStyle extends Style {
         this.colorCol = opts.colorCol
 
         /** A function returning the color of the cell.
-         * @type {function(number,number,import("../Style.js").Stat|undefined,number):string} */
+         * @type {function(number,number,import("../core/Style.js").Stat|undefined,number):string} */
         this.color = opts.color || ((v, r, s, z) => 'black')
 
     }
@@ -63,8 +63,8 @@ export class TimeSeriesStyle extends Style {
     /**
      * Draw cells as text.
      *
-     * @param {Array.<import("../Dataset.js").Cell>} cells
-     * @param {import("../GeoCanvas.js").GeoCanvas} geoCanvas
+     * @param {Array.<import("../core/Dataset.js").Cell>} cells
+     * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {

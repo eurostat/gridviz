@@ -14,7 +14,7 @@ export class TanakaStyle {
     /**
      * @param {string} col
      * @param {object} opts
-     * @returns {Array.<import("../Style").Style>}
+     * @returns {Array.<import("../core/Style").Style>}
      */
     static get(col, opts) {
         opts = opts || {}
@@ -40,7 +40,7 @@ export class TanakaStyle {
         const nb = opts.colors.length
 
         /** A function to compute 't' from the value v
-         * @type {function(number,number,import("../Style").Stat):number} */
+         * @type {function(number,number,import("../core/Style").Stat):number} */
         opts.tFun = opts.tFun || ((v, r, s) => (v - s.min) / (s.max - s.min))
 
         //shadow colors

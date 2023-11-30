@@ -14,17 +14,17 @@ export class NinjaStarStyle extends Style {
         opts = opts || {}
 
         /** A function returning the color of the cell.
-         * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
         this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell, within [0,1]:
          *  - 0, nothing shown
          *  - 1, entire square
-          * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
+          * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
         this.size = opts.size || ((cell, resolution) => resolution) //(c,r,z,vs) => {}
 
         /** A function returning the shape.
-         * @type {function(import("../Dataset").Cell):string} */
+         * @type {function(import("../core/Dataset").Cell):string} */
         this.shape = opts.shape || (() => 'o')
     }
 

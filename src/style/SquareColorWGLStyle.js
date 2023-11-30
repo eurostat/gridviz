@@ -20,7 +20,7 @@ export class SquareColorWGLStyle extends Style {
 
         /**
          * A function returning a t value (within [0,1]) for a cell.
-         * @type {function(import('../Dataset.js').Cell,number,number,object):number} */
+         * @type {function(import('../core/Dataset.js').Cell,number,number,object):number} */
         this.tFun = opts.tFun //(c,r,z,vs) => {}
 
         /**
@@ -65,8 +65,8 @@ export class SquareColorWGLStyle extends Style {
     }
 
     /**
-     * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
+     * @param {Array.<import("../core/Dataset").Cell>} cells
+     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {

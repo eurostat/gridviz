@@ -13,7 +13,7 @@ export class MosaicStyle extends Style {
         opts = opts || {}
 
         /** A function returning the color of the cell.
-         * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
         this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
 
         /** The mosaic factor, within [0,0.5]. Set to 0 for no mosaic effect. Set to 0.5 for strong mosaic effect.
@@ -31,8 +31,8 @@ export class MosaicStyle extends Style {
 
     /**
      *
-     * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
+     * @param {Array.<import("../core/Dataset").Cell>} cells
+     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {

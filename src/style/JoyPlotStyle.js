@@ -14,7 +14,7 @@ export class JoyPlotStyle extends Style {
         opts = opts || {}
 
         /** A function returning the height of a cell in geographical unit.
-         * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
         this.height = opts.height || ((c, r) => r * Math.random()) //(c,r,z,vs) => {}
 
         /**
@@ -30,8 +30,8 @@ export class JoyPlotStyle extends Style {
 
 
     /**
-     * @param {Array.<import("../Dataset.js").Cell>} cells
-     * @param {import("../GeoCanvas.js").GeoCanvas} geoCanvas
+     * @param {Array.<import("../core/Dataset.js").Cell>} cells
+     * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas
      * @param {number} resolution
      * @override
      */

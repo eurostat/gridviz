@@ -30,13 +30,13 @@ export class SideCatStyle extends Style {
         this.width = opts.width || ((side, r, z) => r * 0.2)
 
         /** A fill color for the cells.
-         * @type {function(import("../Dataset").Cell):string} */
+         * @type {function(import("../core/Dataset").Cell):string} */
         this.fillColor = opts.fillColor
     }
 
     /**
-     * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
+     * @param {Array.<import("../core/Dataset").Cell>} cells
+     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {

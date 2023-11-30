@@ -14,27 +14,27 @@ export class StrokeStyle extends Style {
         opts = opts || {}
 
         /** A function returning the color of the cell.
-         * @type {function(import('../Dataset.js').Cell,number,number,object):string} */
+         * @type {function(import('../core/Dataset.js').Cell,number,number,object):string} */
         this.strokeColor = opts.strokeColor || (() => "#666") //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
-         * @type {function(import('../Dataset.js').Cell,number,number,object):number} */
+         * @type {function(import('../core/Dataset.js').Cell,number,number,object):number} */
         this.size = opts.size || ((cell, resolution) => resolution) //(c,r,z,vs) => {}
 
         /** The stroke line width in geographical unit.
-         * @type {function(import('../Dataset.js').Cell,number,number,object):number} */
+         * @type {function(import('../core/Dataset.js').Cell,number,number,object):number} */
         this.strokeWidth = opts.strokeWidth || ((cell, resolution, z) => z * 1.5) //(c,r,z,vs) => {}
 
         /** A function returning the shape of a cell.
-        * @type {function(import("../Dataset.js").Cell,number,number,object):import("../Style.js").Shape} */
+        * @type {function(import("../core/Dataset.js").Cell,number,number,object):import("../core/Style.js").Shape} */
         this.shape = opts.shape || (() => "square") //(c,r,z,vs) => {}
     }
 
     /**
      * Draw cells as squares, with various colors and size.
      *
-     * @param {Array.<import("../Dataset").Cell>} cells
-     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
+     * @param {Array.<import("../core/Dataset").Cell>} cells
+     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
      * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {

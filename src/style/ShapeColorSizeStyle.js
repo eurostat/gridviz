@@ -16,23 +16,23 @@ export class ShapeColorSizeStyle extends Style {
         opts = opts || {}
 
         /** A function returning the color of the cell.
-         * @type {function(import('../Dataset.js').Cell,number, number,object):string} */
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
         this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
-         * @type {function(import('../Dataset.js').Cell,number, number,object):number} */
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
         this.size = opts.size || ((cell, resolution) => resolution) //(c,r,z,vs) => {}
 
         /** A function returning the shape of a cell.
-         * @type {function(import("../Dataset.js").Cell,number, number,object):import("../Style.js").Shape} */
+         * @type {function(import("../core/Dataset.js").Cell,number, number,object):import("../core/Style.js").Shape} */
         this.shape = opts.shape || (() => "square") //(c,r,z,vs) => {}
     }
 
     /**
      * Draw cells as squares, with various colors and sizes.
      * 
-     * @param {Array.<import("../Dataset.js").Cell>} cells
-     * @param {import("../GeoCanvas.js").GeoCanvas} geoCanvas
+     * @param {Array.<import("../core/Dataset.js").Cell>} cells
+     * @param {import("../core/GeoCanvas.js").GeoCanvas} geoCanvas
      * @param {number} resolution
      * @override
      */

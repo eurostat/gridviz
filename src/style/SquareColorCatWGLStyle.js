@@ -53,9 +53,9 @@ export class SquareColorCatWGLStyle extends Style {
     }
 
     /**
-     * @param {Array.<import("../Dataset").Cell>} cells
+     * @param {Array.<import("../core/Dataset").Cell>} cells
      * @param {number} resolution
-     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
+     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
      */
     draw(cells, geoCanvas, resolution) {
 

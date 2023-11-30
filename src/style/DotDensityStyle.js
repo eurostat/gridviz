@@ -23,11 +23,11 @@ export class DotDensityStyle extends Style {
         this.nbCol = opts.nbCol
 
         /** A function returning the number of dots for a cell value.
-         * @type {function(number,number,import("../Style").Stat,number):number} */
+         * @type {function(number,number,import("../core/Style").Stat,number):number} */
         this.nb = opts.nb || ((v, r, s, z) => (((0.3 * r * r) / (z * z)) * v) / s.max)
 
         /** The color of the dots. Same color for all dots within a cell.
-         * @type {function(import("../Dataset").Cell):string} */
+         * @type {function(import("../core/Dataset").Cell):string} */
         this.color = opts.color || (() => '#FF5733')
 
         /** A function returning the size of the dots, in geo unit.
@@ -42,9 +42,9 @@ export class DotDensityStyle extends Style {
     /**
      * Draw cells as text.
      *
-     * @param {Array.<import("../Dataset").Cell>} cells
+     * @param {Array.<import("../core/Dataset").Cell>} cells
      * @param {number} resolution
-     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
+     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
      */
     draw(cells, geoCanvas, resolution) {
         if (monitor) monitorDuration('*** DotDensityStyle draw')

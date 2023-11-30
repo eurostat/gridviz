@@ -18,7 +18,7 @@ export class TextStyle extends Style {
         this.textCol = opts.textCol
 
         /** A function returning the text of a cell.
-         * @type {function(number,number,import("../Style").Stat|undefined,number):string} */
+         * @type {function(number,number,import("../core/Style").Stat|undefined,number):string} */
         this.text = opts.text || ((v, r, s, z) => 'X')
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
@@ -26,7 +26,7 @@ export class TextStyle extends Style {
         this.colorCol = opts.colorCol
 
         /** A function returning the color of the cell.
-         * @type {function(number,number,import("../Style").Stat|undefined,number):string} */
+         * @type {function(number,number,import("../core/Style").Stat|undefined,number):string} */
         this.color = opts.color || (() => '#EA6BAC')
 
         /** The name of the column/attribute of the tabular data where to retrieve the variable for font size.
@@ -34,7 +34,7 @@ export class TextStyle extends Style {
         this.fontSizeCol = opts.fontSizeCol
 
         /** A function returning the font size of a cell in geo unit.
-         * @type {function(number,number,import("../Style").Stat|undefined,number):number} */
+         * @type {function(number,number,import("../core/Style").Stat|undefined,number):number} */
         this.fontSize = opts.fontSize || ((v, r, s, z) => r * 0.8)
 
         /** The text font family.
@@ -49,9 +49,9 @@ export class TextStyle extends Style {
     /**
      * Draw cells as text.
      *
-     * @param {Array.<import("../Dataset").Cell>} cells
+     * @param {Array.<import("../core/Dataset").Cell>} cells
      * @param {number} resolution
-     * @param {import("../GeoCanvas").GeoCanvas} geoCanvas
+     * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
      */
     draw(cells, geoCanvas, resolution) {
         //filter
