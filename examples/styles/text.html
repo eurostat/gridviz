@@ -15,11 +15,11 @@
     //define style
     const style = new gridviz.TextStyle({
         text: (cell) => {
-            const t = gridviz.sPow(v / s.max, 0.25)
+            const t = gridviz.powerScale(0.25)(cell.population / 50000)
             return scale(t)
         },
-        color: () => '#333',
-        fontSize: (cell, resolution) => 1.2 * r,
+        //color: () => '#333',
+        //fontSize: (cell, resolution) => 1.2 * r,
     })
 
     //add layer to map

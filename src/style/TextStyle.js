@@ -99,6 +99,6 @@ export class TextStyle extends Style {
      */
     static textScale(chars) {
         const nb = chars.length
-        return (t) => (t == 0 ? "" : t == 1 ? chars[nb - 1] : chars[Math.floor(t * nb)])
+        return (t) => t == 0 ? "" : t >= 1 ? chars[nb - 1] : chars[Math.floor(t * nb)]
     }
 }
