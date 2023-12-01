@@ -1,44 +1,28 @@
-<!DOCTYPE html>
-<html lang="en" style="height: 100%">
-    <head>
-        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-        <title>Gridviz - Text style</title>
-    </head>
+<div id="map" style="height: 500px; width: 800px"></div>
 
-    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
-        <div id="viz-container" style="height: 100%; width: 100%"></div>
+<script src="../../dist/gridviz.js"></script>
+<script>
 
-        <script src="../../dist/gridviz.js"></script>
-        <script>
-            let containerDiv = document.getElementById('viz-container')
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 500 })
 
-            const tsFun = gridviz.TextStyle.getCharLegendFun(['.', '-', '~', '+', '=', '#', '€', '@'])
+    //define dataset
+    const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
-            new gridviz.Map(containerDiv)
-                .setGeoCenter({ x: 4000000, y: 2960000 })
-                .setZoom(2000)
-                .addMultiScaleTiledGridLayer(
-                    [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                    (r) =>
-                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
-                        r +
-                        'm/',
-                    [
-                        new gridviz.TextStyle({
-                            textCol: 'TOT_P_2021',
-                            text: (v, r, s, z) => {
-                                const t = gridviz.sPow(v / s.max, 0.25)
-                                return tsFun(t)
-                            },
-                            color: (v, r, s) => '#333',
-                            fontSize: (v, r, s, z) => 1.2 * r,
-                        }),
-                    ],
-                    {
-                        minPixelsPerCell: 10,
-                        cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
-                    }
-                )
-        </script>
-    </body>
-</html>
+    //define characters
+    const scale = gridviz.TextStyle.textScale(['.', '-', '~', '+', '=', '#', '€', '@'])
+
+    //define style
+    const style = new gridviz.TextStyle({
+        text: (cell) => {
+            const t = gridviz.sPow(v / s.max, 0.25)
+            return scale(t)
+        },
+        color: () => '#333',
+        fontSize: (cell, resolution) => 1.2 * r,
+    })
+
+    //add layer to map
+    map.layers = [new gridviz.GridLayer(dataset, [style])]
+
+</script>

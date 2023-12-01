@@ -38,8 +38,8 @@ export class TextStyle extends Style {
      * Draw cells as text.
      *
      * @param {Array.<import("../core/Dataset").Cell>} cells
-     * @param {number} resolution
      * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
+     * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
         //filter
@@ -97,8 +97,8 @@ export class TextStyle extends Style {
      * @param {Array.<string>} chars
      * @returns {function(number):string}
      */
-    static getCharLegendFun(chars) {
+    static textScale(chars) {
         const nb = chars.length
-        return (t) => (t == 0 ? '' : t == 1 ? chars[nb - 1] : chars[Math.floor(t * nb)])
+        return (t) => (t == 0 ? "" : t == 1 ? chars[nb - 1] : chars[Math.floor(t * nb)])
     }
 }
