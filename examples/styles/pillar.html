@@ -14,6 +14,7 @@
     const max = 300000
     const style = new gridviz.PillarStyle({
         height: (cell, resolution, z) => 15 * resolution * scale(cell.population / max),
+        simple: (resolution, z) => z>1000
     })
 
 

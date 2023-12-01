@@ -25,8 +25,9 @@ export class PillarStyle extends Style {
          * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
         this.width = opts.width || ((cell, resolution) => 0.5 * resolution)
 
-        /** @type {boolean} */
-        this.simple = opts.simple == true
+        /** A function returning the width of the line representing a cell, in geo unit
+         * @type {function(number, number,object):boolean} */
+        this.simple = opts.simple || (() => false)
 
         /** @type {number} */
         this.viewHeightFactor = opts.viewHeightFactor || 1.5
@@ -78,7 +79,8 @@ export class PillarStyle extends Style {
         //const distToViewCenter = (c) => { const dx = cvx - c.x, dy = cvy - c.y; return Math.sqrt(dx * dx + dy * dy) }
         cells.sort((c1, c2) => 100000000 * (c2.y - c1.y) + c1.x - c2.x)
 
-        const simple = this.simple
+        //get simple information
+        const simple = this.simple(resolution, z, viewScale)
 
         geoCanvas.ctx.lineCap = simple ? 'butt' : 'round'
 
