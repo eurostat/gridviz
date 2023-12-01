@@ -41,23 +41,13 @@ export class TimeSeriesStyle extends Style {
         /** @type {function(import("../core/Dataset.js").Cell,number,number):AnchorModeYEnum} */
         this.anchorModeY = opts.anchorModeY || ((c, r, z) => "center")
 
-
-        /**
-         * @type {string} */
-        this.lineWidthCol = opts.lineWidthCol
-
         /** A function returning the width of the line, in geo unit
-         * @type {function(number,number,import("../core/Style.js").Stat|undefined,number):number} */
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
         this.lineWidth = opts.lineWidth || ((v, r, s, z) => 1.5 * z)
 
-        /**
-         * @type {string} */
-        this.colorCol = opts.colorCol
-
-        /** A function returning the color of the cell.
-         * @type {function(number,number,import("../core/Style.js").Stat|undefined,number):string} */
-        this.color = opts.color || ((v, r, s, z) => 'black')
-
+        /** A function returning the color of the chart.
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
+        this.color = opts.color || (() => "black") //(c,r,z,vs) => {}
     }
 
     /**
@@ -75,17 +65,8 @@ export class TimeSeriesStyle extends Style {
         //
         const z = geoCanvas.view.z
 
-        let statWidth
-        if (this.lineWidthCol) {
-            //and compute size variable statistics
-            statWidth = Style.getStatistics(cells, (c) => c[this.lineWidthCol], true)
-        }
-
-        let statColor
-        if (this.colorCol) {
-            //compute color variable statistics
-            statColor = Style.getStatistics(cells, (c) => c[this.colorCol], true)
-        }
+        //get view scale
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         //compute cell amplitude
         const getAmplitude = c => {
@@ -116,12 +97,12 @@ export class TimeSeriesStyle extends Style {
 
             //line width
             /** @type {number|undefined} */
-            const wG = this.lineWidth ? this.lineWidth(c[this.lineWidthCol], resolution, statWidth, z) : undefined
+            const wG = this.lineWidth ? this.lineWidth(c, resolution, z, viewScale) : undefined
             if (!wG || wG < 0) continue
 
             //line color
             /** @type {string|undefined} */
-            const col = this.color ? this.color(c[this.colorCol], resolution, statColor, z) : undefined
+            const col = this.color ? this.color(c, resolution, z, viewScale) : undefined
             if (!col) continue
 
 
@@ -241,12 +222,10 @@ export class TimeSeriesStyle extends Style {
 
         //update legend, if any
         this.updateLegends({
-            widthFun: this.lineWidth,
-            r: resolution,
+            style: this,
+            resolution: resolution,
             z: z,
-            sColor: statColor,
-            //sLength: statLength,
-            sWidth: statWidth,
+            viewScale: viewScale
         })
 
     }
