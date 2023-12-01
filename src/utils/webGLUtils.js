@@ -11,6 +11,7 @@ export function makeWebGLCanvas(width, height, opts={}) {
     const canvas = document.createElement('canvas')
     canvas.setAttribute('width', width)
     canvas.setAttribute('height', height)
+    /** @type {WebGLRenderingContext} */
     const gl = canvas.getContext('webgl', opts)
     if (!gl) {
         throw new Error('Unable to initialize WebGL. Your browser or machine may not support it.')
@@ -61,10 +62,8 @@ export function createShader(gl, type, ...sources) {
 export function checkWebGLSupport() {
     try {
         const canvas = document.createElement('canvas')
-        return !!window.WebGLRenderingContext &&
-            (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
-            ? true
-            : false
+        return !!(!!window.WebGLRenderingContext &&
+            (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')))
     } catch (err) {
         return false
     }
