@@ -4,16 +4,14 @@
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 200 })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 500 })
 
     //define dataset
     const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
     //define style
-    const scale = gridviz.logarithmicScale(-5)
-    const max = 300000
     const style = new gridviz.PillarStyle({
-        height: (cell, resolution, z) => 15 * resolution * scale(cell.population / max),
+        height: (cell, resolution, z) => 15 * resolution * cell.population / 500000,
         simple: (resolution, z) => z>1000
     })
 
