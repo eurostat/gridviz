@@ -22,15 +22,15 @@ export class TextStyle extends Style {
         this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
 
         /** A function returning the font size of a cell in geo unit.
-         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number,object):string} */
         this.fontSize = opts.fontSize || ((cell, resolution) => resolution * 0.8) //(c,r,z,vs) => {}
 
         /** The text font family.
-         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
         this.fontFamily = opts.fontFamily || 'Arial'
 
         /** The text font weight.
-         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
         this.fontWeight = opts.fontWeight || 'bold'
     }
 
@@ -48,25 +48,8 @@ export class TextStyle extends Style {
         //
         const z = geoCanvas.view.z
 
-        let statText
-        if (this.textCol) {
-            //compute text variable statistics
-            statText = Style.getStatistics(cells, (c) => c[this.textCol], true)
-        }
-
-        let statColor
-        if (this.colorCol) {
-            //compute color variable statistics
-            statColor = Style.getStatistics(cells, (c) => c[this.colorCol], true)
-        }
-
-        let statFontSize
-        if (this.fontSizeCol) {
-            //if size is used, sort cells by size so that the biggest are drawn first
-            cells.sort((c1, c2) => c2[this.fontSizeCol] - c1[this.fontSizeCol])
-            //and compute size variable statistics
-            statFontSize = Style.getStatistics(cells, (c) => c[this.fontSizeCol], true)
-        }
+        //get view scale
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         //draw with HTML canvas
         //in screen coordinates
@@ -74,17 +57,17 @@ export class TextStyle extends Style {
 
         for (let cell of cells) {
             //get cell text
-            const text = this.text ? this.text(cell[this.textCol], resolution, statText, z) : undefined
+            const text = this.text ? this.text(cell, resolution, z, viewScale) : undefined
             if (text == undefined || text == null || text + '' === '') continue
 
             //color
-            const col = this.color ? this.color(cell[this.colorCol], resolution, statColor, z) : undefined
+            const col = this.color ? this.color(cell, resolution, z, viewScale) : undefined
             if (!col) continue
             geoCanvas.ctx.fillStyle = col
 
             //font size
             //size - in pixel unit
-            const fontSizePix = this.fontSize(cell[this.fontSizeCol], resolution, statFontSize, z) / z
+            const fontSizePix = this.fontSize(cell, resolution, z, viewScale) / z
 
             //set font
             const fontFamily = this.fontFamily || 'Arial'
