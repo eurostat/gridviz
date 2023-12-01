@@ -6,7 +6,6 @@ import { randomNormal } from 'd3-random'
 import { checkWebGLSupport, makeWebGLCanvas } from '../utils/webGLUtils.js'
 import { WebGLSquareColoring } from '../utils/WebGLSquareColoring.js'
 import { color } from 'd3-color'
-import { monitor, monitorDuration } from '../utils/utils.js'
 
 /**
  *
@@ -30,9 +29,9 @@ export class DotDensityStyle extends Style {
          * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
         this.dotSize = opts.dotSize || ((cell, resolution, z) => z) //(c,r,z,vs) => {}
 
-        /** A function returning the sigma of the dots distribution of a cell.
-         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
-        this.sigma = opts.sigma || ((cell, resolution, z) => resolution)//(c,r,z,vs) => {}
+        /** A function returning the sigma of the dots distribution. Same value for all the cells.
+         * @type {function(number, number,object):number} */
+        this.sigma = opts.sigma || ((resolution, z) => resolution)//(c,r,z,vs) => {}
     }
 
     /**
@@ -43,7 +42,6 @@ export class DotDensityStyle extends Style {
      * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
      */
     draw(cells, geoCanvas, resolution) {
-        if (monitor) monitorDuration('*** DotDensityStyle draw')
 
         //filter
         if (this.filter) cells = cells.filter(this.filter)
@@ -54,14 +52,9 @@ export class DotDensityStyle extends Style {
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
-        //size of the dots
-        const sGeo = this.dotSize ? this.dotSize(resolution, z) : 2 * z
-
         //make random function
-        const sig = this.sigma ? this.sigma(resolution, z) : resolution * 0.4
+        const sig = this.sigma ? this.sigma(resolution, z, viewScale) : resolution * 0.4
         const rand = randomNormal(0, sig)
-
-        if (monitor) monitorDuration(' preparation')
 
         if (checkWebGLSupport()) {
             //create canvas and webgl renderer
@@ -74,73 +67,71 @@ export class DotDensityStyle extends Style {
             //create webGL program
             const prog = new WebGLSquareColoring(cvWGL.gl, sGeo / z)
 
-            if (monitor) monitorDuration(' webgl creation')
-
             const r2 = resolution / 2
 
-            let col, offset, nb, cx, cy, cc
-            for (let c of cells) {
+            for (let cell of cells) {
                 //get color
-                col = this.color(c)
+                const col = this.color(cell, resolution, z, viewScale)
                 if (!col || col === 'none') continue
 
-                //get offset
-                offset = this.offset(c, resolution, z)
+                //get size
+                //TODO not used ?
+                const sGeo = this.dotSize ? this.dotSize(cell, resolution, z, viewScale) : z
 
                 //number of dots
-                nb = this.dotNumber(c[this.nbCol], resolution, stat, z)
+                const dotNumber = this.dotNumber(cell, resolution, z, viewScale)
+
+                //get offset
+                const offset = this.offset(cell, resolution, z)
 
                 //cell center
-                cx = c.x + offset.dx + r2
-                cy = c.y + offset.dy + r2
+                const cx = cell.x + offset.dx + r2
+                const cy = cell.y + offset.dy + r2
 
                 //convert color
-                cc = color(col)
+                const cc = color(col)
                 if (!cc) return
 
                 //random points
-                for (let i = 0; i <= nb; i++)
+                for (let i = 0; i <= dotNumber; i++)
                     prog.addPointData2(cx + rand(), cy + rand(), cc.r, cc.g, cc.b, cc.opacity)
             }
 
-            if (monitor) monitorDuration(' data preparation')
-
             //draw
             prog.draw(geoCanvas.getWebGLTransform())
-
-            if (monitor) monitorDuration(' webgl drawing')
 
             //draw in canvas geo
             geoCanvas.initCanvasTransform()
             geoCanvas.ctx.drawImage(cvWGL.canvas, 0, 0)
 
-            if (monitor) monitorDuration(' canvas drawing')
         } else {
-            for (let c of cells) {
+            for (let cell of cells) {
+
                 //get color
-                const col = this.color(c)
+                const col = this.color(cell, resolution, z, viewScale)
                 if (!col || col === 'none') continue
                 //set color
                 geoCanvas.ctx.fillStyle = col
 
-                //get offset
-                const offset = this.offset(c, resolution, z)
+                //get size
+                const sGeo = this.dotSize ? this.dotSize(cell, resolution, z, viewScale) : z
 
                 //number of dots
-                const nb = this.dotNumber(c[this.nbCol], resolution, stat, z)
+                const dotNumber = this.dotNumber(cell, resolution, z, viewScale)
+
+                //get offset
+                const offset = this.offset(cell, resolution, z)
 
                 //draw random dots
-                const cx = c.x + offset.dx + resolution / 2,
-                    cy = c.y + offset.dy + resolution / 2
-                for (let i = 0; i <= nb; i++) {
+                const cx = cell.x + offset.dx + resolution / 2,
+                    cy = cell.y + offset.dy + resolution / 2
+                for (let i = 0; i <= dotNumber; i++) {
                     geoCanvas.ctx.fillRect(cx + rand(), cy + rand(), sGeo, sGeo)
                 }
             }
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, z: z })
-
-        if (monitor) monitorDuration('*** DotDensityStyle end draw')
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 }
