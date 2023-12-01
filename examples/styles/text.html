@@ -4,22 +4,20 @@
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 500 })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 900 })
 
     //define dataset
     const dataset = new gridviz.CSVGrid(map, "https://raw.githubusercontent.com/eurostat/gridviz/master/assets/csv/Europe/pop_2018_10km.csv", 10000)
 
-    //define characters
-    const scale = gridviz.TextStyle.textScale(['.', '-', '~', '+', '=', '#', '€', '@'])
+    //define text scale: a function [0,1] => text
+    const textScale = gridviz.TextStyle.textScale(
+        ['.', '-', '~', '+', '=', '#', '€', '@'],
+        gridviz.powerScale(0.5)
+    )
 
     //define style
     const style = new gridviz.TextStyle({
-        text: (cell) => {
-            const t = gridviz.powerScale(0.25)(cell.population / 50000)
-            return scale(t)
-        },
-        //color: () => '#333',
-        //fontSize: (cell, resolution) => 1.2 * r,
+        text: (cell) => textScale(cell.population / 150000),
     })
 
     //add layer to map

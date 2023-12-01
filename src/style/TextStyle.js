@@ -19,11 +19,11 @@ export class TextStyle extends Style {
 
         /** A function returning the color of the cell.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
-        this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
+        this.color = opts.color || (() => "black") //(c,r,z,vs) => {}
 
         /** A function returning the font size of a cell in geo unit.
          * @type {function(import('../core/Dataset.js').Cell, number, number,object):number} */
-        this.fontSize = opts.fontSize || ((cell, resolution) => resolution * 0.8) //(c,r,z,vs) => {}
+        this.fontSize = opts.fontSize || ((cell, resolution) => resolution) //(c,r,z,vs) => {}
 
         /** The text font family.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
@@ -95,10 +95,16 @@ export class TextStyle extends Style {
      * Build a function [0,1]->string for characters legend
      *
      * @param {Array.<string>} chars
+     * @param {(function(number):number)|undefined} scale
      * @returns {function(number):string}
      */
-    static textScale(chars) {
+    static textScale(chars, scale = undefined) {
         const nb = chars.length
-        return (t) => t == 0 ? "" : t >= 1 ? chars[nb - 1] : chars[Math.floor(t * nb)]
+        return (t) => {
+            if (scale) t = scale(t)
+            if (t == 0) return ""
+            if (t >= 1) return chars[nb - 1]
+            return chars[Math.floor(t * nb)]
+        }
     }
 }
