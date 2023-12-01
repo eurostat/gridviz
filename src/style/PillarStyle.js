@@ -23,8 +23,8 @@ export class PillarStyle extends Style {
         this.color = opts.color || (() => "#c08c59") //(c,r,z,vs) => {}
 
         /** A function returning the width of the line representing a cell, in geo unit
-         * @type {function(number,number,import("../core/Style").Stat|undefined,number):number} */
-        this.width = opts.width || ((v, r) => 0.5 * r)
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
+        this.width = opts.width || ((cell, resolution) => 0.5 * resolution)
 
         /** @type {boolean} */
         this.simple = opts.simple == true
@@ -87,17 +87,17 @@ export class PillarStyle extends Style {
         for (let c of cells) {
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, z) : undefined
+            const wG = this.width ? this.width(c, resolution, z, viewScale) : undefined
             if (!wG || wG < 0) continue
 
             //height
             /** @type {number|undefined} */
-            const hG = this.height ? this.height(c[this.heightCol], resolution, statHeight, z) : undefined
+            const hG = this.height ? this.height(c, resolution, z, viewScale) : undefined
             if (!hG || hG < 0) continue
 
             //get offset
             //TODO use that
-            const offset = this.offset(c, resolution, z)
+            //const offset = this.offset(c, resolution, z)
 
             //set width
             geoCanvas.ctx.lineWidth = wG
@@ -130,22 +130,22 @@ export class PillarStyle extends Style {
         for (let c of cells) {
             //color
             /** @type {string|undefined} */
-            const col = this.color ? this.color(c[this.colorCol], resolution, statColor) : undefined
+            const col = this.color ? this.color(c, resolution, z, viewScale) : undefined
             if (!col) continue
 
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(c[this.widthCol], resolution, statWidth, z) : undefined
+            const wG = this.width ? this.width(c, resolution, z, viewScale) : undefined
             if (!wG || wG < 0) continue
 
             //height
             /** @type {number|undefined} */
-            const hG = this.height ? this.height(c[this.heightCol], resolution, statHeight, z) : undefined
+            const hG = this.height ? this.height(c, resolution, z, viewScale) : undefined
             if (!hG || hG < 0) continue
 
             //get offset
             //TODO use that
-            const offset = this.offset(c, resolution, z)
+            //const offset = this.offset(c, resolution, z)
 
             //compute cell centre postition
             const cx = c.x + resolution / 2
@@ -198,6 +198,6 @@ export class PillarStyle extends Style {
         geoCanvas.ctx.lineCap = 'butt'
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, z: z, sColor: statColor })
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 }
