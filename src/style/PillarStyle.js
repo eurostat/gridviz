@@ -7,7 +7,6 @@ import { Style } from '../core/Style.js'
  * @author Julien Gaffuri
  */
 export class PillarStyle extends Style {
-    //TODO make a webGL version ?
 
     /** @param {object} opts */
     constructor(opts) {
