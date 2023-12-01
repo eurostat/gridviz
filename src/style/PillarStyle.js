@@ -14,22 +14,13 @@ export class PillarStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** @type {string} */
-        this.heightCol = opts.heightCol
-
         /** A function returning the height of the line representing a cell, in geo unit
          * @type {function(number,number,import("../core/Style").Stat|undefined,number):number} */
         this.height = opts.height
 
-        /** @type {string} */
-        this.colorCol = opts.colorCol
-
         /** A function returning the color of the line representing a cell.
          * @type {function(number,number,import("../core/Style").Stat|undefined):string} */
         this.color = opts.color || (() => '#c08c59') //bb
-
-        /** @type {string} */
-        this.widthCol = opts.widthCol
 
         /** A function returning the width of the line representing a cell, in geo unit
          * @type {function(number,number,import("../core/Style").Stat|undefined,number):number} */
@@ -75,23 +66,8 @@ export class PillarStyle extends Style {
         //
         const z = geoCanvas.view.z
 
-        let statHeight
-        if (this.heightCol) {
-            //compute size variable statistics
-            statHeight = Style.getStatistics(cells, (c) => c[this.heightCol], true)
-        }
-
-        let statColor
-        if (this.colorCol) {
-            //compute color variable statistics
-            statColor = Style.getStatistics(cells, (c) => c[this.colorCol], true)
-        }
-
-        let statWidth
-        if (this.widthCol) {
-            //and compute size variable statistics
-            statWidth = Style.getStatistics(cells, (c) => c[this.widthCol], true)
-        }
+        //get view scale
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
 
         //get view center geo position
         const cvx = geoCanvas.view.x + this.viewSX * geoCanvas.w * z
