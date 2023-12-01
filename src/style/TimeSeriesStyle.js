@@ -42,11 +42,11 @@ export class TimeSeriesStyle extends Style {
         this.anchorModeY = opts.anchorModeY || ((c, r, z) => "center")
 
         /** A function returning the width of the line, in geo unit
-         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
         this.lineWidth = opts.lineWidth || ((v, r, s, z) => 1.5 * z)
 
         /** A function returning the color of the chart.
-         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
         this.color = opts.color || (() => "black") //(c,r,z,vs) => {}
     }
 

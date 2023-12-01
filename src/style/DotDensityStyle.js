@@ -18,11 +18,11 @@ export class DotDensityStyle extends Style {
         opts = opts || {}
 
         /** A function returning the number of dots for a cell value.
-         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
         this.dotNumber = opts.dotNumber || ((cell, resolution) => resolution / 100)//(c,r,z,vs) => {}
 
         /** The color of the dots. Same color for all dots within a cell.
-         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
         this.color = opts.color || (() => '#FF5733') //(c,r,z,vs) => {}
 
         /** A function returning the size of the dots, in geo unit. Same size for all cells.

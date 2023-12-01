@@ -14,11 +14,11 @@ export class TextStyle extends Style {
         opts = opts || {}
 
         /** A function returning the text of a cell.
-         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
         this.text = opts.text || (() => 'X') //(c,r,z,vs) => {}
 
         /** A function returning the color of the cell.
-         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
         this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
 
         /** A function returning the font size of a cell in geo unit.

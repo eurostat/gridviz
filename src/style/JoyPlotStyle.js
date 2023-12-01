@@ -14,7 +14,7 @@ export class JoyPlotStyle extends Style {
         opts = opts || {}
 
         /** A function returning the height of a cell in geographical unit.
-         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
         this.height = opts.height || ((c, r) => r * Math.random()) //(c,r,z,vs) => {}
 
         /**

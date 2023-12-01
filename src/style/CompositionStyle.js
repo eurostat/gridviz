@@ -30,7 +30,7 @@ export class CompositionStyle extends Style {
         this.type = opts.type || (() => "flag") //(c,r,z,vs) => {}
 
         /** A function returning the size of a cell in geographical unit.
-         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):number} */
         this.size = opts.size || ((c, r) => r) //(c,r,z,vs) => {}
 
         /** For style types with stripes (flag, segment), the orientation of the stripes (0 for horizontal, other for vertical).
