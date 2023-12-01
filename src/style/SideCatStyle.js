@@ -3,7 +3,7 @@
 
 import { Style } from '../core/Style.js'
 
-/** @typedef {{x:number,y:number,or:"v"|"h",v1:string|undefined,v2:string|undefined}} Side */
+/** @typedef {{x:number, y:number, or:"v"|"h", v1:string|undefined, v2:string|undefined}} Side */
 
 /**
  * A style to show the sides of grid cells based on their different categories.

@@ -3,7 +3,10 @@
 
 import { Style } from '../core/Style.js'
 
-/** @typedef {{x:number,y:number,or:"v"|"h",value:number}} Side */
+/** @typedef {{ x:number, y:number, or:"v"|"h", c1:import('../core/Dataset').Cell, c2:import('../core/Dataset').Cell }} Side */
+
+/**
+ * @typedef {function(Array.<Side>,number, number):*} SideViewScale */
 
 /**
  *
@@ -15,30 +18,24 @@ export class SideStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for the cell values.
-         * @type {string} */
-        this.valueCol = opts.valueCol
-
-        /** A function returning the value of a cell side. This value is computed from the two adjacent cell values.
-         * For horizontal sides, v1 is the value of the cell below and v2 the value of the cell above.
-         * For vertical sides, v1 is the value of the cell left and v2 the value of the cell right.
-         * @type {function(number|undefined,number|undefined,number,import("../core/Style").Stat|undefined,number):number} */
-        this.value = opts.value || ((v1, v2, r, s, z) => 1)
+        /**
+        * @type {SideViewScale|undefined} */
+        this.sideViewScale = opts.sideViewScale
 
         /** A function returning the color of a cell side.
-         * @type {function(Side,number,import("../core/Style").Stat|undefined,number):string} */
-        this.color = opts.color || (() => '#EA6BAC')
+         * @type {function(Side, number, number, object):string} */
+        this.color = opts.color || ((side, resolution, z, sideViewScale) => '#EA6BAC')
 
         /** A function returning the width of a cell side, in geo unit
-         * @type {function(Side,number,import("../core/Style").Stat|undefined,number):number} */
-        this.width = opts.width || ((side, r, s, z) => (r * side.value) / 5)
+         * @type {function(Side, number, number, object):number} */
+        this.width = opts.width || ((side, resolution, z, sideViewScale) => resolution / 5)
 
         /** orientation. Set to 90 to show sides as slope lines for example.
          * @type {number} */
         this.orientation = opts.orientation || 0
 
         /** A fill color for the cells.
-         * @type {function(import("../core/Dataset").Cell):string} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
         this.fillColor = opts.fillColor
     }
 
@@ -48,18 +45,12 @@ export class SideStyle extends Style {
      * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
      */
     draw(cells, geoCanvas, resolution) {
+
         //filter
         if (this.filter) cells = cells.filter(this.filter)
 
         //
         const z = geoCanvas.view.z
-
-        //compute stats on cell values
-        let statValue
-        if (this.valueCol) {
-            //compute color variable statistics
-            statValue = Style.getStatistics(cells, (c) => c[this.valueCol], true)
-        }
 
         /**  @type {Array.<Side>} */
         const sides = []
@@ -78,7 +69,9 @@ export class SideStyle extends Style {
                     x: c1.x,
                     y: c2.y,
                     or: 'h',
-                    value: this.value(c1[this.valueCol], c2[this.valueCol], resolution, statValue, z),
+                    c1: c1,
+                    c2: c2
+                    //value: this.value(c1[this.valueCol], c2[this.valueCol], resolution, statValue, z),
                 })
             else {
                 //cells do not touch along horizontal side
@@ -87,13 +80,17 @@ export class SideStyle extends Style {
                     x: c1.x,
                     y: c1.y + resolution,
                     or: 'h',
-                    value: this.value(c1[this.valueCol], undefined, resolution, statValue, z),
+                    c1: c1,
+                    c2: c2
+                    //value: this.value(c1[this.valueCol], undefined, resolution, statValue, z),
                 })
                 sides.push({
                     x: c2.x,
                     y: c2.y,
                     or: 'h',
-                    value: this.value(undefined, c2[this.valueCol], resolution, statValue, z),
+                    c1: c1,
+                    c2: c2
+                    //value: this.value(undefined, c2[this.valueCol], resolution, statValue, z),
                 })
             }
 
@@ -114,7 +111,9 @@ export class SideStyle extends Style {
                     x: c1.x + resolution,
                     y: c1.y,
                     or: 'v',
-                    value: this.value(c1[this.valueCol], c2[this.valueCol], resolution, statValue, z),
+                    c1: c1,
+                    c2: c2
+                    //value: this.value(c1[this.valueCol], c2[this.valueCol], resolution, statValue, z),
                 })
             else {
                 //cells do not touch along vertical side
@@ -123,13 +122,17 @@ export class SideStyle extends Style {
                     x: c1.x + resolution,
                     y: c1.y,
                     or: 'v',
-                    value: this.value(c1[this.valueCol], undefined, resolution, statValue, z),
+                    c1: c1,
+                    c2: c2
+                    //value: this.value(c1[this.valueCol], undefined, resolution, statValue, z),
                 })
                 sides.push({
                     x: c2.x,
                     y: c2.y,
                     or: 'v',
-                    value: this.value(undefined, c2[this.valueCol], resolution, statValue, z),
+                    c1: c1,
+                    c2: c2
+                    //value: this.value(undefined, c2[this.valueCol], resolution, statValue, z),
                 })
             }
 
@@ -139,30 +142,37 @@ export class SideStyle extends Style {
         //
         if (sides.length == 0) return
 
-        //compute stats on sides
-        const statSides = SideStyle.getSideStatistics(sides, true)
+
 
         //draw cells, if fillColor specified
+        //get view scale
+        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
         if (this.fillColor)
-            for (let c of cells) {
-                const fc = this.fillColor(c)
+            for (let cell of cells) {
+                const fc = this.fillColor ? this.fillColor(cell, resolution, z, viewScale) : undefined
                 if (!fc || fc == 'none') continue
                 geoCanvas.ctx.fillStyle = fc
-                geoCanvas.ctx.fillRect(c.x, c.y, resolution, resolution)
+                geoCanvas.ctx.fillRect(cell.x, cell.y, resolution, resolution)
+
             }
 
+
         //draw sides
+
+        //get side view scale
+        const sideViewScale = this.sideViewScale ? this.sideViewScale(sides, resolution, z) : undefined
+
         geoCanvas.ctx.lineCap = 'butt'
         const r2 = resolution / 2
         for (let s of sides) {
             //color
             /** @type {string|undefined} */
-            const col = this.color ? this.color(s, resolution, statSides, z) : undefined
+            const col = this.color ? this.color(s, resolution, z, sideViewScale) : undefined
             if (!col || col == 'none') continue
 
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(s, resolution, statSides, z) : undefined
+            const wG = this.width ? this.width(s, resolution, z, sideViewScale) : undefined
             if (!wG || wG <= 0) continue
 
             //set color and width
@@ -183,31 +193,7 @@ export class SideStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, z: z })
+        this.updateLegends({ style: this, resolution: resolution, z: z, sideViewScale: sideViewScale, viewScale: viewScale })
     }
 
-    /**
-     * Compute some statistics on a value of some sides.
-     * This is used to define how to draw specifically the sides within the view.
-     *
-     * @param {Array.<Side>} sides
-     * @param {boolean} ignoreZeros
-     * @returns {import("../core/Style").Stat | undefined}
-     */
-    static getSideStatistics(sides, ignoreZeros) {
-        if (!sides || sides.length == 0) return undefined
-        let min = Infinity
-        let max = -Infinity
-        //let sum = 0
-        //let nb = 0
-        for (const s of sides) {
-            const v = s.value
-            if (ignoreZeros && !v) continue
-            if (v < min) min = v
-            if (v > max) max = v
-            //sum += v
-            //nb++
-        }
-        return { min: min, max: max }
-    }
 }
