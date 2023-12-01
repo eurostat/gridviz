@@ -18,25 +18,21 @@ export class DotDensityStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for dot number.
-         * @type {string} */
-        this.nbCol = opts.nbCol
-
         /** A function returning the number of dots for a cell value.
-         * @type {function(number,number,import("../core/Style").Stat,number):number} */
-        this.nb = opts.nb || ((v, r, s, z) => (((0.3 * r * r) / (z * z)) * v) / s.max)
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
+        this.dotNumber = opts.dotNumber || ((cell, resolution) => resolution / 100)
 
         /** The color of the dots. Same color for all dots within a cell.
-         * @type {function(import("../core/Dataset").Cell):string} */
-        this.color = opts.color || (() => '#FF5733')
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
+        this.color = opts.color || (() => '#FF5733') //(c,r,z,vs) => {}
 
-        /** A function returning the size of the dots, in geo unit.
-         * @type {function(number,number):number} */
-        this.dotSize = opts.dotSize //|| ((r, z) => ...
+        /** A function returning the size of the dots, in geo unit. Same size for all dots within a cell.
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
+        this.dotSize = opts.dotSize || ((cell, resolution, z) => z) //(c,r,z,vs) => {}
 
-        /** A function returning the sigma of the distribution from the resolution, in geo unit.
-         * @type {function(number,number):number} */
-        this.sigma = opts.sigma //|| ((r,z) => ...
+        /** A function returning the sigma of the dots distribution of a cell.
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
+        this.sigma = opts.sigma || ((cell, resolution, z) => resolution)
     }
 
     /**
@@ -93,7 +89,7 @@ export class DotDensityStyle extends Style {
                 offset = this.offset(c, resolution, z)
 
                 //number of dots
-                nb = this.nb(c[this.nbCol], resolution, stat, z)
+                nb = this.dotNumber(c[this.nbCol], resolution, stat, z)
 
                 //cell center
                 cx = c.x + offset.dx + r2
@@ -132,7 +128,7 @@ export class DotDensityStyle extends Style {
                 const offset = this.offset(c, resolution, z)
 
                 //number of dots
-                const nb = this.nb(c[this.nbCol], resolution, stat, z)
+                const nb = this.dotNumber(c[this.nbCol], resolution, stat, z)
 
                 //draw random dots
                 const cx = c.x + offset.dx + resolution / 2,

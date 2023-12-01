@@ -13,6 +13,7 @@ population.csv files: make 2021 ones
 doc: only basic CSV and tiled multiscale
 
 Done:
+core folder
 change in legends. With examples.
 zExtent -> zoomExtent
 visible as a function of zoom z - remove maxzoom/minzoom
