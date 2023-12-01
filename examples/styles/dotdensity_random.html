@@ -18,7 +18,7 @@
     const map = new gridviz.Map(document.getElementById('map'), {
         x: 4000000,
         y: 2960000,
-        z: 2000,
+        z: 400,
         zoomExtent: [30, 7000],
         backgroundColor: "#eaeaea"
     })
@@ -35,7 +35,7 @@
     //define style
     const style = new gridviz.DotDensityStyle({
         viewScale: (cells) => d3.max(cells, cell => cell.TOT_P_2021),
-        dotNumber: (c, r, z, max) => (((15 * r * r) / (z * z)) * c.TOT_P_2021) / max,
+        dotNumber: (c, r, z, max) => 10000 * c.TOT_P_2021 / max / z,
         dotSize: (r, z) => 1.6 * z,
         color: () => d3.schemeCategory10[Math.floor(10 * Math.random())],
         sigma: (r, z) => 0.25 * r,
