@@ -27,11 +27,11 @@ export class DotDensityStyle extends Style {
 
         /** A function returning the size of the dots, in geo unit. Same size for all cells.
          * @type {function(number, number,object):number} */
-        this.dotSize = opts.dotSize || ((resolution, z) => z) //(c,r,z,vs) => {}
+        this.dotSize = opts.dotSize || ((resolution, z) => 1.5 * z) //(c,r,z,vs) => {}
 
         /** A function returning the sigma of the dots distribution. Same value for all cells.
          * @type {function(number, number,object):number} */
-        this.sigma = opts.sigma || ((resolution, z) => resolution)//(c,r,z,vs) => {}
+        this.sigma = opts.sigma || ((resolution, z) => resolution / 2)//(c,r,z,vs) => {}
     }
 
     /**
