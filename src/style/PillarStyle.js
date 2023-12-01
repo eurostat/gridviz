@@ -78,20 +78,22 @@ export class PillarStyle extends Style {
         //const distToViewCenter = (c) => { const dx = cvx - c.x, dy = cvy - c.y; return Math.sqrt(dx * dx + dy * dy) }
         cells.sort((c1, c2) => 100000000 * (c2.y - c1.y) + c1.x - c2.x)
 
-        geoCanvas.ctx.lineCap = this.simple ? 'butt' : 'round'
+        const simple = this.simple
+
+        geoCanvas.ctx.lineCap = simple ? 'butt' : 'round'
 
         //draw shadows
         geoCanvas.ctx.strokeStyle = this.shadowColor
         geoCanvas.ctx.fillStyle = this.shadowColor
-        for (let c of cells) {
+        for (let cell of cells) {
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(c, resolution, z, viewScale) : undefined
+            const wG = this.width ? this.width(cell, resolution, z, viewScale) : undefined
             if (!wG || wG < 0) continue
 
             //height
             /** @type {number|undefined} */
-            const hG = this.height ? this.height(c, resolution, z, viewScale) : undefined
+            const hG = this.height ? this.height(cell, resolution, z, viewScale) : undefined
             if (!hG || hG < 0) continue
 
             //get offset
@@ -102,8 +104,8 @@ export class PillarStyle extends Style {
             geoCanvas.ctx.lineWidth = wG
 
             //compute cell centre postition
-            const cx = c.x + resolution / 2
-            const cy = c.y + resolution / 2
+            const cx = cell.x + resolution / 2
+            const cy = cell.y + resolution / 2
             const ls = hG * this.shadowFactor
 
             //draw segment
@@ -126,20 +128,20 @@ export class PillarStyle extends Style {
         }
 
         //draw pillars
-        for (let c of cells) {
+        for (let cell of cells) {
             //color
             /** @type {string|undefined} */
-            const col = this.color ? this.color(c, resolution, z, viewScale) : undefined
+            const col = this.color ? this.color(cell, resolution, z, viewScale) : undefined
             if (!col) continue
 
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(c, resolution, z, viewScale) : undefined
+            const wG = this.width ? this.width(cell, resolution, z, viewScale) : undefined
             if (!wG || wG < 0) continue
 
             //height
             /** @type {number|undefined} */
-            const hG = this.height ? this.height(c, resolution, z, viewScale) : undefined
+            const hG = this.height ? this.height(cell, resolution, z, viewScale) : undefined
             if (!hG || hG < 0) continue
 
             //get offset
@@ -147,8 +149,8 @@ export class PillarStyle extends Style {
             //const offset = this.offset(c, resolution, z)
 
             //compute cell centre postition
-            const cx = c.x + resolution / 2
-            const cy = c.y + resolution / 2
+            const cx = cell.x + resolution / 2
+            const cy = cell.y + resolution / 2
 
             //compute angle
             const dx = cx - cvx,
@@ -157,7 +159,7 @@ export class PillarStyle extends Style {
             const D = Math.sqrt(dx * dx + dy * dy)
             const d = (D * hG) / (H - hG)
 
-            if (this.simple) {
+            if (simple) {
                 //draw segment
                 geoCanvas.ctx.strokeStyle = col
                 geoCanvas.ctx.lineWidth = wG
