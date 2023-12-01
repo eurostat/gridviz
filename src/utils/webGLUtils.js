@@ -7,7 +7,7 @@
  * @param {object} opts
  * @returns {{canvas:HTMLCanvasElement, gl:WebGLRenderingContext}}
  */
-export function makeWebGLCanvas(width, height, opts) {
+export function makeWebGLCanvas(width, height, opts={}) {
     const canvas = document.createElement('canvas')
     canvas.setAttribute('width', width)
     canvas.setAttribute('height', height)

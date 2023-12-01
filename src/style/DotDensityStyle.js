@@ -25,11 +25,11 @@ export class DotDensityStyle extends Style {
          * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
         this.color = opts.color || (() => '#FF5733') //(c,r,z,vs) => {}
 
-        /** A function returning the size of the dots, in geo unit. Same size for all dots within a cell.
-         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
-        this.dotSize = opts.dotSize || ((cell, resolution, z) => z) //(c,r,z,vs) => {}
+        /** A function returning the size of the dots, in geo unit. Same size for all cells.
+         * @type {function(number, number,object):number} */
+        this.dotSize = opts.dotSize || ((resolution, z) => z) //(c,r,z,vs) => {}
 
-        /** A function returning the sigma of the dots distribution. Same value for all the cells.
+        /** A function returning the sigma of the dots distribution. Same value for all cells.
          * @type {function(number, number,object):number} */
         this.sigma = opts.sigma || ((resolution, z) => resolution)//(c,r,z,vs) => {}
     }
@@ -38,8 +38,8 @@ export class DotDensityStyle extends Style {
      * Draw cells as text.
      *
      * @param {Array.<import("../core/Dataset").Cell>} cells
-     * @param {number} resolution
      * @param {import("../core/GeoCanvas").GeoCanvas} geoCanvas
+     * @param {number} resolution
      */
     draw(cells, geoCanvas, resolution) {
 
@@ -51,6 +51,9 @@ export class DotDensityStyle extends Style {
 
         //get view scale
         const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
+
+        //get size
+        const sGeo = this.dotSize ? this.dotSize(resolution, z, viewScale) : z
 
         //make random function
         const sig = this.sigma ? this.sigma(resolution, z, viewScale) : resolution * 0.4
@@ -73,10 +76,6 @@ export class DotDensityStyle extends Style {
                 //get color
                 const col = this.color(cell, resolution, z, viewScale)
                 if (!col || col === 'none') continue
-
-                //get size
-                //TODO not used ?
-                const sGeo = this.dotSize ? this.dotSize(cell, resolution, z, viewScale) : z
 
                 //number of dots
                 const dotNumber = this.dotNumber(cell, resolution, z, viewScale)
@@ -112,9 +111,6 @@ export class DotDensityStyle extends Style {
                 if (!col || col === 'none') continue
                 //set color
                 geoCanvas.ctx.fillStyle = col
-
-                //get size
-                const sGeo = this.dotSize ? this.dotSize(cell, resolution, z, viewScale) : z
 
                 //number of dots
                 const dotNumber = this.dotNumber(cell, resolution, z, viewScale)
