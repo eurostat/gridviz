@@ -22,16 +22,16 @@ export class TextStyle extends Style {
         this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
 
         /** A function returning the font size of a cell in geo unit.
-         * @type {function(import('../core/Dataset.js').Cell, number, number,object):string} */
+         * @type {function(import('../core/Dataset.js').Cell, number, number,object):number} */
         this.fontSize = opts.fontSize || ((cell, resolution) => resolution * 0.8) //(c,r,z,vs) => {}
 
         /** The text font family.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
-        this.fontFamily = opts.fontFamily || 'Arial'
+        this.fontFamily = opts.fontFamily || (() => 'Arial')
 
         /** The text font weight.
          * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
-        this.fontWeight = opts.fontWeight || 'bold'
+        this.fontWeight = opts.fontWeight || (() => 'bold')
     }
 
     /**
@@ -68,10 +68,11 @@ export class TextStyle extends Style {
             //font size
             //size - in pixel unit
             const fontSizePix = this.fontSize(cell, resolution, z, viewScale) / z
+            if (!fontSizePix) continue
 
             //set font
-            const fontFamily = this.fontFamily || 'Arial'
-            const fontWeight = this.fontWeight || 'bold'
+            const fontFamily = this.fontFamily ? this.fontFamily(cell, resolution, z, viewScale) : 'Arial'
+            const fontWeight = this.fontWeight ? this.fontWeight(cell, resolution, z, viewScale) : 'bold'
             geoCanvas.ctx.font = fontWeight + ' ' + fontSizePix + 'px ' + fontFamily
 
             //get offset
@@ -87,7 +88,7 @@ export class TextStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, z: z, sColor: statColor })
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 
     /**
