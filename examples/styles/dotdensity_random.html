@@ -34,8 +34,8 @@
 
     //define style
     const style = new gridviz.DotDensityStyle({
-        viewScale: (cells) => d3.max(cells, cell => cell.TOT_P_2021),
-        dotNumber: (c, r, z, max) => 10000 * c.TOT_P_2021 / max / z,
+        //viewScale: (cells) => d3.max(cells, cell => cell.TOT_P_2021),
+        dotNumber: (c, r, z, max) => c.TOT_P_2021 / z *2, //10000 * c.TOT_P_2021 / z,
         dotSize: (r, z) => 1.6 * z,
         color: () => d3.schemeCategory10[Math.floor(10 * Math.random())],
         sigma: (r, z) => 0.25 * r,
