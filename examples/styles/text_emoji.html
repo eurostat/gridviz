@@ -1,44 +1,35 @@
-<!DOCTYPE html>
-<html lang="en" style="height: 100%">
-    <head>
-        <meta name="viewport" content="maximum-scale=1.0, user-scalable=no" />
-        <title>Gridviz - Text style</title>
-    </head>
+<div id="map" style="height: 500px; width: 800px"></div>
 
-    <body style="margin: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; overflow: hidden">
-        <div id="viz-container" style="height: 100%; width: 100%"></div>
+<script src="../../dist/gridviz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
+<script>
 
-        <script src="../../dist/gridviz.js"></script>
-        <script>
-            let containerDiv = document.getElementById('viz-container')
+    //define map with initial view
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 900 })
 
-            const tsFun = gridviz.TextStyle.getCharLegendFun(['👨‍🦲', '🙍‍♂️', '🙍', '👩‍👦', '👨‍👧', '👪', '👨‍👩‍👦‍👦'])
+    //define multi resolution dataset
+    const dataset = new gridviz.MultiResolutionDataset(
+        [1000, 2000, 5000, 10000, 20000, 50000, 100000],
+        resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' + resolution + 'm/'),
+        { preprocess: cell => +cell.TOT_P_2021 > 0 }
+    )
 
-            new gridviz.Map(containerDiv)
-                .setGeoCenter({ x: 4000000, y: 2960000 })
-                .setZoom(2000)
-                .addMultiScaleTiledGridLayer(
-                    [1000, 2000, 5000, 10000, 20000, 50000, 100000],
-                    (r) =>
-                        'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/population2/' +
-                        r +
-                        'm/',
-                    [
-                        new gridviz.TextStyle({
-                            textCol: 'TOT_P_2021',
-                            text: (v, r, s, z) => {
-                                const t = gridviz.sPow(v / s.max, 0.25)
-                                return tsFun(t)
-                            },
-                            color: (v, r, s) => '#333',
-                            fontSize: (v, r, s, z) => 1.2 * r,
-                        }),
-                    ],
-                    {
-                        minPixelsPerCell: 10,
-                        cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
-                    }
-                )
-        </script>
-    </body>
-</html>
+    //define text scale: a function [0,1] => text
+    const textScale = gridviz.TextStyle.textScale(
+        ['👨‍🦲', '🙍‍♂️', '🙍', '👩‍👦', '👨‍👧', '👪', '👨‍👩‍👦‍👦'],
+        gridviz.powerScale(0.25)
+    )
+
+    //define style
+    const style = new gridviz.TextStyle({
+        viewScale: (cells) => d3.max(cells, cell => +cell.TOT_P_2021),
+        text: (cell, resolution, z, max) => textScale(cell.TOT_P_2021 / max),
+    })
+
+    //add layer to map
+    map.layers = [new gridviz.GridLayer(dataset, [style], {
+        minPixelsPerCell: 10,
+        cellInfoHTML: (c) => '<b>' + c.TOT_P_2021 + '</b> inhabitant(s)',
+    })]
+
+</script>
