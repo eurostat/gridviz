@@ -19,27 +19,26 @@ export class SquareColorCatWGLStyle extends Style {
         opts = opts || {}
 
         /**
-         * The name of the column/attribute of the tabular data where to retrieve the category of the cell, for coloring.
+         * The name of the column/attribute of the tabular data where to retrieve the category code of the cell, for coloring.
          * @type {string} */
-        this.colorCol = opts.colorCol
+        this.code = opts.code
 
         /**
-         * The dictionary (string -> color) which give the color of each category.
+         * The dictionary (code -> color) which gives the color of each category code.
          * @type {object} */
         opts.color = opts.color || undefined
 
-        /** @type { Array.<string> } @private */
-        const keys = Object.keys(opts.color)
+        /** @type { Array.<string> } */
+        const codes = Object.keys(opts.color)
 
         /** @type { object } @private */
         this.catToI = {}
-        for (let i = 0; i < keys.length; i++) this.catToI[keys[i]] = i + ''
+        for (let i = 0; i < codes.length; i++) this.catToI[codes[i]] = i + ''
 
         /** @type { Array.<string> } @private */
         this.colors = []
-        for (let i = 0; i < keys.length; i++) {
-            this.colors.push(opts.color['' + keys[i]])
-        }
+        for (const code of codes)
+            this.colors.push(opts.color['' + code])
 
         /**
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
@@ -72,7 +71,7 @@ export class SquareColorCatWGLStyle extends Style {
         const iBuffer = []
         for (let i = 0; i < nb; i++) {
             c = cells[i]
-            const cat = c[this.colorCol]
+            const cat = c[this.code]
             if (cat == undefined) {
                 console.log('Unexpected category: ' + cat)
                 continue
