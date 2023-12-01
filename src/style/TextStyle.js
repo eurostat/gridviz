@@ -13,36 +13,24 @@ export class TextStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for text.
-         * @type {string} */
-        this.textCol = opts.textCol
-
         /** A function returning the text of a cell.
-         * @type {function(number,number,import("../core/Style").Stat|undefined,number):string} */
-        this.text = opts.text || ((v, r, s, z) => 'X')
-
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for color.
-         * @type {string} */
-        this.colorCol = opts.colorCol
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
+        this.text = opts.text || (() => 'X') //(c,r,z,vs) => {}
 
         /** A function returning the color of the cell.
-         * @type {function(number,number,import("../core/Style").Stat|undefined,number):string} */
-        this.color = opts.color || (() => '#EA6BAC')
-
-        /** The name of the column/attribute of the tabular data where to retrieve the variable for font size.
-         * @type {string} */
-        this.fontSizeCol = opts.fontSizeCol
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
+        this.color = opts.color || (() => "#EA6BAC") //(c,r,z,vs) => {}
 
         /** A function returning the font size of a cell in geo unit.
-         * @type {function(number,number,import("../core/Style").Stat|undefined,number):number} */
-        this.fontSize = opts.fontSize || ((v, r, s, z) => r * 0.8)
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
+        this.fontSize = opts.fontSize || ((cell, resolution) => resolution * 0.8) //(c,r,z,vs) => {}
 
         /** The text font family.
-         * @type {string} */
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
         this.fontFamily = opts.fontFamily || 'Arial'
 
         /** The text font weight.
-         * @type {string} */
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
         this.fontWeight = opts.fontWeight || 'bold'
     }
 
