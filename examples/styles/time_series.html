@@ -1,10 +1,11 @@
 <div id="map" style="height: 500px; width: 800px"></div>
 
 <script src="../../dist/gridviz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 3000 })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2900000, z: 300 })
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
@@ -15,7 +16,8 @@
     //define style
     const style = new gridviz.TimeSeriesStyle({
         ts: ["TOT_P_2006", "TOT_P_2011", "TOT_P_2018", "TOT_P_2021"],
-        lineWidth: (cell, resolution, z) => { return z * (1 + 7 * (cell.TOT_P_2021 / 500000)) },
+        lineWidth: (cell, resolution, z, max) => { return z * (1 + 7 * (cell.TOT_P_2021 / max)) },
+        viewScale: (cells) => d3.max(cells, cell => +cell.TOT_P_2021),
     })
 
     //add layer to map
