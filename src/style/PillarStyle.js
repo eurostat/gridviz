@@ -15,12 +15,12 @@ export class PillarStyle extends Style {
         opts = opts || {}
 
         /** A function returning the height of the line representing a cell, in geo unit
-         * @type {function(number,number,import("../core/Style").Stat|undefined,number):number} */
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):number} */
         this.height = opts.height
 
         /** A function returning the color of the line representing a cell.
-         * @type {function(number,number,import("../core/Style").Stat|undefined):string} */
-        this.color = opts.color || (() => '#c08c59') //bb
+         * @type {function(import('../core/Dataset.js').Cell,number, number,object):string} */
+        this.color = opts.color || (() => "#c08c59") //(c,r,z,vs) => {}
 
         /** A function returning the width of the line representing a cell, in geo unit
          * @type {function(number,number,import("../core/Style").Stat|undefined,number):number} */
