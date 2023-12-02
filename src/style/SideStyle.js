@@ -104,7 +104,7 @@ export class SideStyle extends Style {
      * @param {number} resolution 
      * @returns { Array.<Side> }
      */
-    static aaa = (cells, resolution) => {
+    static buildSides(cells, resolution) {
         const sides = []
 
         //make horizontal sides
