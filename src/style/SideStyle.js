@@ -3,7 +3,7 @@
 
 import { Style } from '../core/Style.js'
 
-/** @typedef {{ x:number, y:number, or:"v"|"h", c1:import('../core/Dataset').Cell, c2:import('../core/Dataset').Cell }} Side */
+/** @typedef {{ x:number, y:number, or:"v"|"h", c1:(import('../core/Dataset').Cell)|undefined, c2:(import('../core/Dataset').Cell)|undefined }} Side */
 
 /**
  * @typedef {function(Array.<Side>,number, number):*} SideViewScale */
@@ -18,10 +18,6 @@ export class SideStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /**
-        * @type {SideViewScale|undefined} */
-        this.sideViewScale = opts.sideViewScale
-
         /** A function returning the color of a cell side.
          * @type {function(Side, number, number, object):string} */
         this.color = opts.color || ((side, resolution, z, sideViewScale) => '#EA6BAC')
@@ -30,13 +26,9 @@ export class SideStyle extends Style {
          * @type {function(Side, number, number, object):number} */
         this.width = opts.width || ((side, resolution, z, sideViewScale) => resolution / 5)
 
-        /** orientation. Set to 90 to show sides as slope lines for example.
-         * @type {number} */
-        this.orientation = opts.orientation || 0
-
-        /** A fill color for the cells.
-         * @type {function(import('../core/Dataset.js').Cell, number, number, object):string} */
-        this.fillColor = opts.fillColor
+        /** A function returning the length of a cell side, in geo unit
+         * @type {function(Side, number, number, object):number} */
+        this.length = opts.length || ((side, resolution, z, sideViewScale) => resolution)
     }
 
     /**
@@ -53,6 +45,66 @@ export class SideStyle extends Style {
         const z = geoCanvas.view.z
 
         /**  @type {Array.<Side>} */
+        const sides = SideStyle.buildSides(cells, resolution)
+        if (sides.length == 0) return
+
+        //draw sides
+
+        //get side view scale
+        const viewScale = this.viewScale ? this.viewScale(sides, resolution, z) : undefined
+
+        geoCanvas.ctx.lineCap = 'butt'
+        //const r2 = resolution / 2
+        for (let s of sides) {
+
+            //color
+            /** @type {string|undefined} */
+            const col = this.color ? this.color(s, resolution, z, viewScale) : undefined
+            if (!col || col == 'none') continue
+
+            //width
+            /** @type {number|undefined} */
+            const wG = this.width ? this.width(s, resolution, z, viewScale) : undefined
+            if (!wG || wG <= 0) continue
+
+            //length
+            /** @type {number|undefined} */
+            const lG = this.length ? this.length(s, resolution, z, viewScale) : undefined
+            if (!lG || lG <= 0) continue
+
+            //set color and width
+            geoCanvas.ctx.strokeStyle = col
+            geoCanvas.ctx.lineWidth = wG
+
+            //draw segment with correct orientation
+            geoCanvas.ctx.beginPath()
+            /*if (this.orientation == 90) {
+                geoCanvas.ctx.moveTo(s.x + r2, s.y + r2)
+                if (s.or === 'h') geoCanvas.ctx.lineTo(s.x + r2, s.y - r2)
+                else geoCanvas.ctx.lineTo(s.x - r2, s.y + r2)
+            } else {
+                geoCanvas.ctx.moveTo(s.x, s.y)
+                geoCanvas.ctx.lineTo(s.x + (s.or === 'h' ? resolution : 0), s.y + (s.or === 'v' ? resolution : 0))
+            }*/
+            //TODO use lG/2 somewhere
+            geoCanvas.ctx.moveTo(s.x, s.y)
+            geoCanvas.ctx.lineTo(s.x + (s.or === 'h' ? resolution : 0), s.y + (s.or === 'v' ? resolution : 0))
+            geoCanvas.ctx.stroke()
+        }
+
+        //update legends
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
+    }
+
+
+
+    /**
+     * 
+     * @param {Array.<import('../core/Dataset').Cell>} cells 
+     * @param {number} resolution 
+     * @returns { Array.<Side> }
+     */
+    static aaa = (cells, resolution) => {
         const sides = []
 
         //make horizontal sides
@@ -81,14 +133,14 @@ export class SideStyle extends Style {
                     y: c1.y + resolution,
                     or: 'h',
                     c1: c1,
-                    c2: c2
+                    c2: undefined
                     //value: this.value(c1[this.valueCol], undefined, resolution, statValue, z),
                 })
                 sides.push({
                     x: c2.x,
                     y: c2.y,
                     or: 'h',
-                    c1: c1,
+                    c1: undefined,
                     c2: c2
                     //value: this.value(undefined, c2[this.valueCol], resolution, statValue, z),
                 })
@@ -123,14 +175,14 @@ export class SideStyle extends Style {
                     y: c1.y,
                     or: 'v',
                     c1: c1,
-                    c2: c2
+                    c2: undefined
                     //value: this.value(c1[this.valueCol], undefined, resolution, statValue, z),
                 })
                 sides.push({
                     x: c2.x,
                     y: c2.y,
                     or: 'v',
-                    c1: c1,
+                    c1: undefined,
                     c2: c2
                     //value: this.value(undefined, c2[this.valueCol], resolution, statValue, z),
                 })
@@ -138,62 +190,7 @@ export class SideStyle extends Style {
 
             c1 = c2
         }
-
-        //
-        if (sides.length == 0) return
-
-
-
-        //draw cells, if fillColor specified
-        //get view scale
-        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
-        if (this.fillColor)
-            for (let cell of cells) {
-                const fc = this.fillColor ? this.fillColor(cell, resolution, z, viewScale) : undefined
-                if (!fc || fc == 'none') continue
-                geoCanvas.ctx.fillStyle = fc
-                geoCanvas.ctx.fillRect(cell.x, cell.y, resolution, resolution)
-
-            }
-
-
-        //draw sides
-
-        //get side view scale
-        const sideViewScale = this.sideViewScale ? this.sideViewScale(sides, resolution, z) : undefined
-
-        geoCanvas.ctx.lineCap = 'butt'
-        const r2 = resolution / 2
-        for (let s of sides) {
-            //color
-            /** @type {string|undefined} */
-            const col = this.color ? this.color(s, resolution, z, sideViewScale) : undefined
-            if (!col || col == 'none') continue
-
-            //width
-            /** @type {number|undefined} */
-            const wG = this.width ? this.width(s, resolution, z, sideViewScale) : undefined
-            if (!wG || wG <= 0) continue
-
-            //set color and width
-            geoCanvas.ctx.strokeStyle = col
-            geoCanvas.ctx.lineWidth = wG
-
-            //draw segment with correct orientation
-            geoCanvas.ctx.beginPath()
-            if (this.orientation == 90) {
-                geoCanvas.ctx.moveTo(s.x + r2, s.y + r2)
-                if (s.or === 'h') geoCanvas.ctx.lineTo(s.x + r2, s.y - r2)
-                else geoCanvas.ctx.lineTo(s.x - r2, s.y + r2)
-            } else {
-                geoCanvas.ctx.moveTo(s.x, s.y)
-                geoCanvas.ctx.lineTo(s.x + (s.or === 'h' ? resolution : 0), s.y + (s.or === 'v' ? resolution : 0))
-            }
-            geoCanvas.ctx.stroke()
-        }
-
-        //update legends
-        this.updateLegends({ style: this, resolution: resolution, z: z, sideViewScale: sideViewScale, viewScale: viewScale })
+        return sides
     }
 
 }
