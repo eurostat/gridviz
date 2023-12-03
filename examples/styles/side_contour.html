@@ -24,8 +24,8 @@
     }
 
     const isContourInterval = (v1, v2, interval) => {
-        v1 = v1 || 0
-        v2 = v2 || 0
+        if(v1 == undefined && v2 != undefined) return 1
+        if(v1 != undefined && v2 == undefined) return -1
         const int1 = Math.floor(v1 / interval)
         const int2 = Math.floor(v2 / interval)
         return int2 - int1
@@ -36,15 +36,16 @@
     const color = "#ffad42"
     const style = new gridviz.SideStyle({
         color: (side, resolution) => {
-            if (isContour(side.c1?.elevation, side.c2?.elevation, breaks).length > 0)
+            if (isContourInterval(side.c1?.elevation, side.c2?.elevation, interval) != 0)
                 return color
         },
         width: (side, resolution, z) => {
+            const nb = Math.abs(isContourInterval(side.c1?.elevation, side.c2?.elevation, interval))
+            if (nb == 0) return 0
             const min = z
             const max = resolution * 0.6
-            const step = (max - min) / 3
-            const cn = isContour(side.c1?.elevation, side.c2?.elevation, breaks)
-            return min + cn.length * step
+            const step = (max - min) / 5
+            return min + (nb - 1) * step
         }
     })
 
