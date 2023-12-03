@@ -48,6 +48,7 @@ upgrade demos to v3
 static image background layer - for map background in oversea territories
 getCellFocusInfo should be moved to gridlayer ?
 hillshading style
+contour style
 
 extract modules ?
 style value by alpha: Document
