@@ -12,35 +12,45 @@
         resolution => new gridviz.TiledGrid(map, 'https://raw.githubusercontent.com/jgaffuri/tiledgrids/main/data/europe/elevation/' + resolution + 'm/')
     )
 
+    //const breaks = [0.1, 100, 200, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500, 3000, 3500, 4000]
     const isContour = (v1, v2, breaks) => {
         const out = []
+        v1 = v1 || 0
+        v2 = v2 || 0
         for (let b of breaks)
             if ((v1 < b && v2 >= b) || (v2 < b && v1 >= b))
                 out.push(b)
         return out
     }
 
+    const isContourInterval = (v1, v2, interval) => {
+        v1 = v1 || 0
+        v2 = v2 || 0
+        const int1 = Math.floor(v1 / interval)
+        const int2 = Math.floor(v2 / interval)
+        return int2 - int1
+    }
+
     //define style
-    const breaks = [100, 200, 500, 750, 1000, 1250, 1500, 1750, 2000, 2500, 3000, 3500, 4000]
+    const interval = 200
     const color = "#ffad42"
     const style = new gridviz.SideStyle({
         color: (side, resolution) => {
-            const z1 = side.c1?.elevation
-            const z2 = side.c2?.elevation
-            if (!z1 && !z2) return
-            if (z1 && !z2) return color
-            if (!z1 && z2) return color
-            if (isContour(z1, z2, breaks).length > 0)
+            if (isContour(side.c1?.elevation, side.c2?.elevation, breaks).length > 0)
                 return color
         },
         width: (side, resolution, z) => {
-            return z * 1.5
+            const min = z
+            const max = resolution * 0.6
+            const step = (max - min) / 3
+            const cn = isContour(side.c1?.elevation, side.c2?.elevation, breaks)
+            return min + cn.length * step
         }
     })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style], {
-        minPixelsPerCell: 1.5,
+        minPixelsPerCell: 5,
         cellInfoHTML: (cell) => cell.elevation + ' m',
     })]
 
