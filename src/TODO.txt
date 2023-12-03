@@ -1,8 +1,8 @@
 v3: focus on (main) API changes.
 
+IsoFenceStyle: extent sidestyle
 lego tanaka
 legends
-IsoFenceStyle: extent sidestyle
 legends: test all. based on c2021 example - add legends
 legends: add scale.invert everywhere ?
 review scale.js

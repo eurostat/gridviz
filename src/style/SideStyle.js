@@ -101,9 +101,11 @@ export class SideStyle extends Style {
      * 
      * @param {Array.<import('../core/Dataset').Cell>} cells 
      * @param {number} resolution 
+     * @param {boolean} withHorizontal 
+     * @param {boolean} withVertical 
      * @returns { Array.<Side> }
      */
-    static buildSides(cells, resolution) {
+    static buildSides(cells, resolution, withHorizontal = true, withVertical = true) {
         /** @type { Array.<Side> } */
         const sides = []
 
