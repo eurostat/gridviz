@@ -120,31 +120,22 @@ export class SideStyle extends Style {
                 //cells in same column and touch along horizontal side
                 //make shared side
                 sides.push({
-                    x: c1.x,
-                    y: c2.y,
                     or: 'h',
-                    c1: c1,
-                    c2: c2
-                    //value: this.value(c1[this.valueCol], c2[this.valueCol], resolution, statValue, z),
+                    x: c1.x, y: c2.y,
+                    c1: c1, c2: c2
                 })
             else {
                 //cells do not touch along horizontal side
                 //make two sides: top one for c1, bottom for c2
                 sides.push({
-                    x: c1.x,
-                    y: c1.y + resolution,
                     or: 'h',
-                    c1: c1,
-                    c2: undefined
-                    //value: this.value(c1[this.valueCol], undefined, resolution, statValue, z),
+                    x: c1.x, y: c1.y + resolution,
+                    c1: c1, c2: undefined
                 })
                 sides.push({
-                    x: c2.x,
-                    y: c2.y,
                     or: 'h',
-                    c1: undefined,
-                    c2: c2
-                    //value: this.value(undefined, c2[this.valueCol], resolution, statValue, z),
+                    x: c2.x, y: c2.y,
+                    c1: undefined, c2: c2
                 })
             }
 
@@ -162,31 +153,22 @@ export class SideStyle extends Style {
                 //cells in same row and touch along vertical side
                 //make shared side
                 sides.push({
-                    x: c1.x + resolution,
-                    y: c1.y,
                     or: 'v',
-                    c1: c1,
-                    c2: c2
-                    //value: this.value(c1[this.valueCol], c2[this.valueCol], resolution, statValue, z),
+                    x: c1.x + resolution, y: c1.y,
+                    c1: c1, c2: c2
                 })
             else {
                 //cells do not touch along vertical side
                 //make two sides: right one for c1, left for c2
                 sides.push({
-                    x: c1.x + resolution,
-                    y: c1.y,
                     or: 'v',
-                    c1: c1,
-                    c2: undefined
-                    //value: this.value(c1[this.valueCol], undefined, resolution, statValue, z),
+                    x: c1.x + resolution, y: c1.y,
+                    c1: c1, c2: undefined
                 })
                 sides.push({
-                    x: c2.x,
-                    y: c2.y,
                     or: 'v',
-                    c1: undefined,
-                    c2: c2
-                    //value: this.value(undefined, c2[this.valueCol], resolution, statValue, z),
+                    x: c2.x, y: c2.y,
+                    c1: undefined, c2: c2
                 })
             }
 
