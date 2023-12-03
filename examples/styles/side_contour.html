@@ -4,7 +4,7 @@
 <script>
 
     //define map with initial view
-    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2960000, z: 200 })
+    const map = new gridviz.Map(document.getElementById('map'), { x: 4500000, y: 2960000, z: 500 })
 
     //define multi resolution dataset
     const dataset = new gridviz.MultiResolutionDataset(
@@ -13,9 +13,11 @@
     )
 
     const isContour = (v1, v2, breaks) => {
+        const out = []
         for (let b of breaks)
-            if ((v1 < b && v2 >= b) || (v2 < b && v1 >= b)) return true
-        return false
+            if ((v1 < b && v2 >= b) || (v2 < b && v1 >= b))
+                out.push(b)
+        return out
     }
 
     //define style
@@ -28,16 +30,17 @@
             if (!z1 && !z2) return
             if (z1 && !z2) return color
             if (!z1 && z2) return color
-            if (isContour(z1, z2, breaks)) return color
+            if (isContour(z1, z2, breaks).length > 0)
+                return color
         },
         width: (side, resolution, z) => {
-            return z*1.5
+            return z * 1.5
         }
     })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style], {
-        minPixelsPerCell: 2,
+        minPixelsPerCell: 1.5,
         cellInfoHTML: (cell) => cell.elevation + ' m',
     })]
 
