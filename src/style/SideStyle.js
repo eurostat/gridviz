@@ -44,32 +44,34 @@ export class SideStyle extends Style {
         //
         const z = geoCanvas.view.z
 
+        //build sides
+
         /**  @type {Array.<Side>} */
         const sides = SideStyle.buildSides(cells, resolution)
         if (sides.length == 0) return
 
-        //draw sides
-
         //get side view scale
         const viewScale = this.viewScale ? this.viewScale(sides, resolution, z) : undefined
 
+        //draw sides
+
         geoCanvas.ctx.lineCap = 'butt'
         const r2 = resolution * 0.5
-        for (let s of sides) {
+        for (let side of sides) {
 
             //color
             /** @type {string|undefined} */
-            const col = this.color ? this.color(s, resolution, z, viewScale) : undefined
+            const col = this.color ? this.color(side, resolution, z, viewScale) : undefined
             if (!col || col == 'none') continue
 
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(s, resolution, z, viewScale) : undefined
+            const wG = this.width ? this.width(side, resolution, z, viewScale) : undefined
             if (!wG || wG <= 0) continue
 
             //length
             /** @type {number|undefined} */
-            const lG = this.length ? this.length(s, resolution, z, viewScale) : undefined
+            const lG = this.length ? this.length(side, resolution, z, viewScale) : undefined
             if (!lG || lG <= 0) continue
             const lG2 = lG * 0.5
 
@@ -79,12 +81,12 @@ export class SideStyle extends Style {
 
             //draw segment with correct orientation
             geoCanvas.ctx.beginPath()
-            if (s.or === "v") {
-                geoCanvas.ctx.moveTo(s.x, s.y + r2 - lG2)
-                geoCanvas.ctx.lineTo(s.x, s.y + r2 + lG2)
+            if (side.or === "v") {
+                geoCanvas.ctx.moveTo(side.x, side.y + r2 - lG2)
+                geoCanvas.ctx.lineTo(side.x, side.y + r2 + lG2)
             } else {
-                geoCanvas.ctx.moveTo(s.x + r2 - lG2, s.y)
-                geoCanvas.ctx.lineTo(s.x + r2 + lG2, s.y)
+                geoCanvas.ctx.moveTo(side.x + r2 - lG2, side.y)
+                geoCanvas.ctx.lineTo(side.x + r2 + lG2, side.y)
             }
             geoCanvas.ctx.stroke()
         }
