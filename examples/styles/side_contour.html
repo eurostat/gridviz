@@ -24,8 +24,8 @@
     }
 
     const isContourInterval = (v1, v2, interval) => {
-        if(v1 == undefined && v2 != undefined) return 1
-        if(v1 != undefined && v2 == undefined) return -1
+        if (v1 == undefined && v2 != undefined) return 1
+        if (v1 != undefined && v2 == undefined) return -1
         const int1 = Math.floor(v1 / interval)
         const int2 = Math.floor(v2 / interval)
         return int2 - int1
@@ -35,6 +35,12 @@
     const interval = 200
     const color = "#ffad42"
     const style = new gridviz.SideStyle({
+        viewScale: (sides) => {
+            const ext = d3.extent(sides, side => {
+                
+            })
+
+        },
         color: (side, resolution) => {
             if (isContourInterval(side.c1?.elevation, side.c2?.elevation, interval) != 0)
                 return color
