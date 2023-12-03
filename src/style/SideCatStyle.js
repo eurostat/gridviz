@@ -53,6 +53,11 @@ export class SideCatStyle extends SideStyle {
         geoCanvas.ctx.lineCap = 'butt'
         for (let side of sides) {
 
+            //get category codes for both cells
+            const code1 = side.c1 ? this.code(side.c1, resolution, z) : undefined
+            const code2 = side.c2 ? this.code(side.c2, resolution, z) : undefined
+            if (code1 == code2) continue
+
             //width
             /** @type {number|undefined} */
             const wG = this.width ? this.width(side, resolution, z, viewScale) : undefined
@@ -61,10 +66,6 @@ export class SideCatStyle extends SideStyle {
 
             //set width
             geoCanvas.ctx.lineWidth = wG
-
-            //get category codes for both cells
-            const code1 = side.c1 ? this.code(side.c1, resolution, z) : undefined
-            const code2 = side.c2 ? this.code(side.c2, resolution, z) : undefined
 
             //draw segment with correct orientation
             if (side.or === 'h') {
