@@ -15,11 +15,12 @@
         value: (v1, v2) => {
             return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0)
         },
-        color: (side, r, s, z) =>
+        color: (side) =>
             (side.value > 0 && side.or === 'h') || (side.value < 0 && side.or === 'v')
                 ? 'black'
                 : 'white',
-        width: (side, r, s, z) => {
+        width: (side, resolution) => {
+            return resolution * 0.2;
             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
             return (
                 r *
