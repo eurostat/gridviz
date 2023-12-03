@@ -46,9 +46,9 @@ export class ContourStyle extends SideStyle {
         }
 
         //same color for all
-        this.color = (side, r, s, z) => (side.value ? opts.color(side, r, z) : undefined)
+        this.color = (side, r, z) => (side.value ? opts.color(side, r, z) : undefined)
 
         //width: multiple of
-        this.width = (side, r, s, z) => side.value * z * opts.width(side, r, z)
+        this.width = (side, r, z) => side.value * z * opts.width(side, r, z)
     }
 }
