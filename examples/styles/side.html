@@ -18,10 +18,10 @@
             if (value < 0 && side.or === 'v') return 'black'
             return 'white'
         },
-        width: (side, resolution) => {
+        width: (side, resolution, z) => {
             const value = sideValue(side)
             const max = 80000
-            return resolution * (0.01 + (side.or === 'v' ? 0.6 : 1) * 0.333 * gridviz.powerScale(0.5)(Math.abs(value) / max))
+            return 200 + resolution * (side.or === 'v' ? 0.05 : 0.1) * gridviz.powerScale(0.5)(Math.abs(value) / max)
         },
         fillColor: (c) => '#e2c9b2',
     })
