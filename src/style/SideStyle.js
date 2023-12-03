@@ -54,7 +54,6 @@ export class SideStyle extends Style {
         const viewScale = this.viewScale ? this.viewScale(sides, resolution, z) : undefined
 
         geoCanvas.ctx.lineCap = 'butt'
-        //const r2 = resolution / 2
         for (let s of sides) {
 
             //color
