@@ -1,6 +1,7 @@
 <div id="map" style="height: 500px; width: 800px"></div>
 
 <script src="../../dist/gridviz.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script>
 
     //define map with initial view
@@ -35,23 +36,19 @@
     const interval = 200
     const color = "#ffad42"
     const style = new gridviz.SideStyle({
-        viewScale: (sides) => {
-            const ext = d3.extent(sides, side => {
-                
-            })
-
-        },
+        viewScale: (sides) => d3.extent(sides, side => side.c1?.elevation),
         color: (side, resolution) => {
             if (isContourInterval(side.c1?.elevation, side.c2?.elevation, interval) != 0)
                 return color
         },
-        width: (side, resolution, z) => {
+        width: (side, resolution, z, [min, max]) => {
+            console.log(min, max)
             const nb = Math.abs(isContourInterval(side.c1?.elevation, side.c2?.elevation, interval))
             if (nb == 0) return 0
-            const min = z
-            const max = resolution * 0.6
-            const step = (max - min) / 5
-            return min + (nb - 1) * step
+            const minG = z
+            const maxG = resolution * 0.6
+            const step = (maxG - minG) / 5
+            return minG + (nb - 1) * step
         }
     })
 
