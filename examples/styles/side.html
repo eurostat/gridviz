@@ -23,6 +23,7 @@
             const max = 80000
             return 200 + resolution * (side.or === 'v' ? 0.05 : 0.1) * gridviz.powerScale(0.5)(Math.abs(value) / max)
         },
+        length: (side, resolution) => resolution * 0.9,
         fillColor: (c) => '#e2c9b2',
     })
 
