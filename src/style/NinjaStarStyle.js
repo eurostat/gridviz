@@ -96,6 +96,6 @@ export class NinjaStarStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, z: z, viewScale: viewScale })
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 }

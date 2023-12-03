@@ -2,6 +2,7 @@
 'use strict'
 
 import { Style } from '../core/Style.js'
+import { SideStyle } from './SideStyle.js'
 
 /** @typedef {{x:number,y:number,or:"v"|"h",c1:import('../core/Dataset.js').Cell|undefined,c2:import('../core/Dataset.js').Cell|undefined}} Side */
 
@@ -75,7 +76,9 @@ export class IsoFenceStyle extends Style {
 
         //make sides
         /**  @type {Array.<Side>} */
-        const sides = []
+        const sides = SideStyle.buildSides(cells, resolution, this.angle % 180 != 90 && this.sVert, this.angle % 180 != 0 && this.sHor)
+
+        /*const sides = []
 
         //make horizontal sides - except when angle%180=0
         //sort cells by x and y
@@ -121,7 +124,7 @@ export class IsoFenceStyle extends Style {
 
                 c1 = c2
             }
-        }
+        }*/
 
         //
         if (sides.length == 0) return
@@ -227,7 +230,7 @@ export class IsoFenceStyle extends Style {
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, z: z, viewScale: viewScale })
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 }
 

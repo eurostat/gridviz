@@ -102,6 +102,6 @@ export class SquareColorCatWGLStyle extends Style {
         geoCanvas.ctx.drawImage(cvWGL.canvas, 0, 0)
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, z: z })
+        this.updateLegends({ style: this, resolution: resolution, z: z })
     }
 }
