@@ -37,11 +37,13 @@
     const color = "#ffad42"
     const style = new gridviz.SideStyle({
         viewScale: (sides) => {
-            const [min, max] = d3.extent(sides, side => side.c1?.elevation)
-            const den = max - min
-            const pow10 = Math.pow(10, Math.floor(Math.log10(den)))
-            const nb = den / pow10
-            if (nb < 5) return pow10 / 5
+            //compute automatically a suitable contour interval
+            const [min, max] = d3.extent(sides, side => +side.c1?.elevation)
+            const diff = Math.abs(max - min)
+            const pow10 = Math.pow(10, Math.floor(Math.log10(diff)))
+            const nb = diff / pow10
+            for (let i of [1, 2, 5])
+                if (nb <= i) return pow10 / (2 * i)
             return pow10
         },
         color: (side, resolution, z, interval) => {
@@ -60,7 +62,7 @@
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style], {
-        minPixelsPerCell: 5,
+        minPixelsPerCell: 2,
         cellInfoHTML: (cell) => cell.elevation + ' m',
     })]
 
