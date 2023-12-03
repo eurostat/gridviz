@@ -19,10 +19,9 @@
             return 'white'
         },
         width: (side, resolution) => {
-            const max = 80000
             const value = sideValue(side)
+            const max = 80000
             return resolution * (0.01 + (side.or === 'v' ? 0.6 : 1) * 0.333 * gridviz.powerScale(0.5)(Math.abs(value) / max))
-
         },
         fillColor: (c) => '#e2c9b2',
     })
