@@ -103,11 +103,14 @@ export class SideStyle extends Style {
      * @param {number} resolution 
      * @param {boolean} withHorizontal 
      * @param {boolean} withVertical 
+     * @param {boolean} shift 
      * @returns { Array.<Side> }
      */
-    static buildSides(cells, resolution, withHorizontal = true, withVertical = true) {
+    static buildSides(cells, resolution, withHorizontal = true, withVertical = true, shift = false) {
         /** @type { Array.<Side> } */
         const sides = []
+
+        const r2 = shift ? resolution / 2 : 0
 
         //make horizontal sides
         //sort cells by x and y
@@ -121,7 +124,7 @@ export class SideStyle extends Style {
                 //make shared side
                 sides.push({
                     or: 'h',
-                    x: c1.x, y: c2.y,
+                    x: c1.x + r2, y: c2.y,
                     c1: c1, c2: c2
                 })
             else {
@@ -129,12 +132,12 @@ export class SideStyle extends Style {
                 //make two sides: top one for c1, bottom for c2
                 sides.push({
                     or: 'h',
-                    x: c1.x, y: c1.y + resolution,
+                    x: c1.x + r2, y: c1.y + resolution,
                     c1: c1, c2: undefined
                 })
                 sides.push({
                     or: 'h',
-                    x: c2.x, y: c2.y,
+                    x: c2.x + r2, y: c2.y,
                     c1: undefined, c2: c2
                 })
             }
@@ -154,7 +157,7 @@ export class SideStyle extends Style {
                 //make shared side
                 sides.push({
                     or: 'v',
-                    x: c1.x + resolution, y: c1.y,
+                    x: c1.x + resolution, y: c1.y + r2,
                     c1: c1, c2: c2
                 })
             else {
@@ -162,12 +165,12 @@ export class SideStyle extends Style {
                 //make two sides: right one for c1, left for c2
                 sides.push({
                     or: 'v',
-                    x: c1.x + resolution, y: c1.y,
+                    x: c1.x + resolution, y: c1.y + r2,
                     c1: c1, c2: undefined
                 })
                 sides.push({
                     or: 'v',
-                    x: c2.x, y: c2.y,
+                    x: c2.x, y: c2.y + r2,
                     c1: undefined, c2: c2
                 })
             }

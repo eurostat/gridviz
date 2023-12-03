@@ -76,7 +76,9 @@ export class IsoFenceStyle extends Style {
 
         //make sides
         /**  @type {Array.<Side>} */
-        const sides = SideStyle.buildSides(cells, resolution, this.angle % 180 != 90 && this.sVert, this.angle % 180 != 0 && this.sHor)
+        const sides = SideStyle.buildSides(cells, resolution, this.angle % 180 != 90 && this.sVert, this.angle % 180 != 0 && this.sHor, true)
+
+
 
         /*const sides = []
 
