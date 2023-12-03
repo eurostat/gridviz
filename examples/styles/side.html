@@ -13,6 +13,7 @@
     const sideValue = side => (+side.c2?.population || 0) - (+side.c1?.population || 0)
     const style = new gridviz.SideStyle({
         color: (side) => {
+            //color is either black or white depending on the value difference and the segment orientation
             const value = sideValue(side)
             if (value > 0 && side.or === 'h') return 'black'
             if (value < 0 && side.or === 'v') return 'black'
@@ -21,7 +22,7 @@
         width: (side, resolution, z) => {
             const value = sideValue(side)
             const max = 80000
-            return 200 + resolution * (side.or === 'v' ? 0.05 : 0.1) * gridviz.powerScale(0.5)(Math.abs(value) / max)
+            return 200 + resolution * (side.or === 'v' ? 0.05 : 0.1) * gridviz.powerScale(0.6)(Math.abs(value) / max)
         },
         length: (side, resolution) => resolution * 0.9,
         fillColor: (c) => '#e2c9b2',
