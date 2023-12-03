@@ -21,6 +21,7 @@
             return 'white'
         },
         width: (side, resolution, z) => {
+            //the larger the difference, the wider the segment
             const t = Math.abs(sideValue(side)) / 80000
             return 200 + resolution * (side.or === 'v' ? 0.05 : 0.1) * scale(t)
         },
