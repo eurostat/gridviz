@@ -54,6 +54,7 @@ export class SideStyle extends Style {
         const viewScale = this.viewScale ? this.viewScale(sides, resolution, z) : undefined
 
         geoCanvas.ctx.lineCap = 'butt'
+        const r2 = resolution * 0.5
         for (let s of sides) {
 
             //color
@@ -70,6 +71,7 @@ export class SideStyle extends Style {
             /** @type {number|undefined} */
             const lG = this.length ? this.length(s, resolution, z, viewScale) : undefined
             if (!lG || lG <= 0) continue
+            const lG2 = lG * 0.5
 
             //set color and width
             geoCanvas.ctx.strokeStyle = col
@@ -77,17 +79,13 @@ export class SideStyle extends Style {
 
             //draw segment with correct orientation
             geoCanvas.ctx.beginPath()
-            /*if (this.orientation == 90) {
-                geoCanvas.ctx.moveTo(s.x + r2, s.y + r2)
-                if (s.or === 'h') geoCanvas.ctx.lineTo(s.x + r2, s.y - r2)
-                else geoCanvas.ctx.lineTo(s.x - r2, s.y + r2)
+            if (s.or === "v") {
+                geoCanvas.ctx.moveTo(s.x, s.y + r2 - lG2)
+                geoCanvas.ctx.lineTo(s.x, s.y + r2 + lG2)
             } else {
-                geoCanvas.ctx.moveTo(s.x, s.y)
-                geoCanvas.ctx.lineTo(s.x + (s.or === 'h' ? resolution : 0), s.y + (s.or === 'v' ? resolution : 0))
-            }*/
-            //TODO use lG/2 somewhere
-            geoCanvas.ctx.moveTo(s.x, s.y)
-            geoCanvas.ctx.lineTo(s.x + (s.or === 'h' ? resolution : 0), s.y + (s.or === 'v' ? resolution : 0))
+                geoCanvas.ctx.moveTo(s.x + r2 - lG2, s.y)
+                geoCanvas.ctx.lineTo(s.x + r2 + lG2, s.y)
+            }
             geoCanvas.ctx.stroke()
         }
 
