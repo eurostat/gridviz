@@ -11,14 +11,13 @@
 
     //define style
     const style = new gviz.SideStyle({
-        valueCol: 'TOT_P_2021',
-        value: (v1, v2) => {
-            return (v2 != undefined ? +v2 : 0) - (v1 != undefined ? +v1 : 0)
+        color: (side) => {
+            const v1 = side.c1?.population || 0
+            const v2 = side.c2?.population || 0
+            if (+v1 < +v2 && side.or === 'h') return 'black'
+            if (+v1 > +v2 && side.or === 'v') return 'black'
+            return 'white'
         },
-        color: (side) =>
-            (side.value > 0 && side.or === 'h') || (side.value < 0 && side.or === 'v')
-                ? 'black'
-                : 'white',
         width: (side, resolution) => {
             return resolution * 0.2;
             const max = Math.max(Math.abs(s.min), Math.abs(s.max))
