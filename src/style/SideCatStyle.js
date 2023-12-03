@@ -51,58 +51,62 @@ export class SideCatStyle extends SideStyle {
         //draw sides
 
         geoCanvas.ctx.lineCap = 'butt'
-        for (let s of sides) {
+        for (let side of sides) {
 
             //width
             /** @type {number|undefined} */
-            const wG = this.width ? this.width(s, resolution, z) : undefined
+            const wG = this.width ? this.width(side, resolution, z, viewScale) : undefined
             if (!wG || wG <= 0) continue
             const w2 = wG * 0.5
 
-            //set color and width
+            //set width
             geoCanvas.ctx.lineWidth = wG
 
+            //get category codes for both cells
+            const code1 = side.c1 ? this.code(side.c1, resolution, z) : undefined
+            const code2 = side.c2 ? this.code(side.c2, resolution, z) : undefined
+
             //draw segment with correct orientation
-            if (s.or === 'h') {
+            if (side.or === 'h') {
                 //top line
-                if (s.v2) {
+                if (code2) {
                     geoCanvas.ctx.beginPath()
-                    geoCanvas.ctx.strokeStyle = this.color[s.v2]
-                    geoCanvas.ctx.moveTo(s.x, s.y + w2)
-                    geoCanvas.ctx.lineTo(s.x + resolution, s.y + w2)
+                    geoCanvas.ctx.strokeStyle = this.color[code2]
+                    geoCanvas.ctx.moveTo(side.x, side.y + w2)
+                    geoCanvas.ctx.lineTo(side.x + resolution, side.y + w2)
                     geoCanvas.ctx.stroke()
                 }
 
                 //bottom line
-                if (s.v1) {
+                if (code1) {
                     geoCanvas.ctx.beginPath()
-                    geoCanvas.ctx.strokeStyle = this.color[s.v1]
-                    geoCanvas.ctx.moveTo(s.x, s.y - w2)
-                    geoCanvas.ctx.lineTo(s.x + resolution, s.y - w2)
+                    geoCanvas.ctx.strokeStyle = this.color[code1]
+                    geoCanvas.ctx.moveTo(side.x, side.y - w2)
+                    geoCanvas.ctx.lineTo(side.x + resolution, side.y - w2)
                     geoCanvas.ctx.stroke()
                 }
             } else {
                 //right line
-                if (s.v2) {
+                if (code2) {
                     geoCanvas.ctx.beginPath()
-                    geoCanvas.ctx.strokeStyle = this.color[s.v2]
-                    geoCanvas.ctx.moveTo(s.x + w2, s.y)
-                    geoCanvas.ctx.lineTo(s.x + w2, s.y + resolution)
+                    geoCanvas.ctx.strokeStyle = this.color[code2]
+                    geoCanvas.ctx.moveTo(side.x + w2, side.y)
+                    geoCanvas.ctx.lineTo(side.x + w2, side.y + resolution)
                     geoCanvas.ctx.stroke()
                 }
 
                 //left line
-                if (s.v1) {
+                if (code1) {
                     geoCanvas.ctx.beginPath()
-                    geoCanvas.ctx.strokeStyle = this.color[s.v1]
-                    geoCanvas.ctx.moveTo(s.x - w2, s.y)
-                    geoCanvas.ctx.lineTo(s.x - w2, s.y + resolution)
+                    geoCanvas.ctx.strokeStyle = this.color[code1]
+                    geoCanvas.ctx.moveTo(side.x - w2, side.y)
+                    geoCanvas.ctx.lineTo(side.x - w2, side.y + resolution)
                     geoCanvas.ctx.stroke()
                 }
             }
         }
 
         //update legends
-        this.updateLegends({ style: this, r: resolution, z: z })
+        this.updateLegends({ style: this, resolution: resolution, z: z, viewScale: viewScale })
     }
 }
