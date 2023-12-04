@@ -24,8 +24,13 @@ export class TanakaStyle {
         opts.colorDark = opts.colorDark || '#111'
         opts.colorBright = opts.colorBright || '#ddd'
 
-        /** @type { function(number, number):number }         */
-        opts.width = opts.width || ((resolution, z) => 2 * z)
+        /** @type { function(number, number):number } */
+        opts.width = opts.width || ((sideValue, resolution, z) => {
+            const minWG = 1 * z
+            const maxWG = 4 * z
+            const step = (maxWG - minWG) / 4
+            return Math.min(minWG + (sideValue - 1) * step, maxWG)
+        })
 
         //make classifiers
         const classifier = clFun(breaks)
@@ -36,30 +41,21 @@ export class TanakaStyle {
         const getSideValue = (side) => {
             const cl1 = side.c1 ? classifier(value(side.c1)) : 0
             const cl2 = side.c2 ? classifier(value(side.c2)) : 0
-            return cl2 - cl1
+            return cl1 - cl2
         }
 
         /** The side style, for the shadow effect */
-        const sideStyle = new SideStyle(//{
-            /*/white or black, depending on orientation and value
+        const sideStyle = new SideStyle({
+            //white or black, depending on orientation and value
             color: (side) => {
-                return "gray"
                 const v = getSideValue(side)
                 if (v === 0) return
                 if (side.or === 'v') return v < 0 ? opts.colorBright : opts.colorDark
                 return v < 0 ? opts.colorDark : opts.colorBright
             },
             //width depends on the value, that is the number of classes of difference
-            width: (side, resolution, z) => {
-                return 2*z
-                const minWG = 1.5 * z
-                const maxWG = 4 * z
-                const step = (maxWG / minWG) / 4
-                const v = Math.abs(getSideValue(side))
-                return Math.min(minWG + (v - 1) * step, maxWG)
-            }*/
-            //}
-        )
+            width: (side, resolution, z) => opts.width(Math.abs(getSideValue(side)), resolution, z)
+        })
 
         return [cellStyle, sideStyle]
     }
