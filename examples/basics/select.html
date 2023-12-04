@@ -13,7 +13,7 @@
     })
 
     //define color style
-    const style = new gridviz.SquareColorCatWGLStyle({ colorCol: (cell) => cell.clc, color: { 41: 'blue' } })
+    const style = new gridviz.SquareColorCatWGLStyle({ color: () => '#1ca3ec' })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
