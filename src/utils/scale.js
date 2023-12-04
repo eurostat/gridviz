@@ -178,10 +178,10 @@ export function classifier(breaks) {
  */
 export function colorClassifier(breaks, colors) {
     const classifier_ = classifier(breaks)
-    const colorClissifier = value => colors[classifier_(value)]
-    colorClissifier.breaks = breaks
-    colorClissifier.colors = colors
-    return colorClissifier
+    const colorClassifier = value => colors[classifier_(value)]
+    colorClassifier.breaks = breaks
+    colorClassifier.colors = colors
+    return colorClassifier
 }
 
 /**
