@@ -1,7 +1,6 @@
 v3: focus on (main) API changes.
 
 legends
-legends: add scale.invert everywhere ?
 legends - see legend update on layer style change
 PUBLISH v3.0.0
 use/test in observablehq
@@ -51,6 +50,7 @@ tanaka style
 example for style level cells filtering
 reorganise map - simplify constructor
 population.csv files: make 2021 ones
+legends: add scale.invert everywhere ?
 
 extract modules ?
 style value by alpha: Document

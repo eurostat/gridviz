@@ -38,11 +38,9 @@ export class SegmentWidthLegend extends Legend {
     }
 
     /**
-     * @param {{ style: import("../style/SegmentStyle").SegmentStyle, r: number, z: number, sColor: import("../Style").Stat, sLength: import("../Style").Stat, sWidth: import("../Style").Stat }} opts
+     * @param {{  }} opts
      */
     update(opts) {
-        //could happen when data is still loading
-        if (!opts.sWidth) return
 
         //clear
         this.div.selectAll('*').remove()
@@ -90,7 +88,7 @@ export class SegmentWidthLegend extends Legend {
             .style('stroke', this.color)
             .style('stroke-width', sWidth)
 
-        const valueT = this.labelFormat? this.labelFormat(value) : value
+        const valueT = this.labelFormat ? this.labelFormat(value) : value
         d.append('div')
             //show on right of graphic
             .style('display', 'inline')
