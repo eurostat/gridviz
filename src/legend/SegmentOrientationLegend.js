@@ -35,11 +35,9 @@ export class SegmentOrientationLegend extends Legend {
     }
 
     /**
-     * @param {{ style: import("../style/SegmentStyle").SegmentStyle, r: number, z: number, sColor: import("../Style").Stat, sLength: import("../Style").Stat, sWidth: import("../Style").Stat }} opts
+     * @param {{ style: import("../style/SegmentStyle").SegmentStyle, resolution: number, z: number, viewScale:object }} opts
      */
     update(opts) {
-        //could happen when data is still loading
-        if (!opts.sWidth) return
 
         //clear
         this.div.selectAll('*').remove()
@@ -57,7 +55,7 @@ export class SegmentOrientationLegend extends Legend {
 
         //compute segment width and length, in pix
         const sWidth = this.widthPix
-        const sLength = (1 * opts.r) / opts.z
+        const sLength = (1 * opts.resolution) / opts.z
 
         //draw SVG segment
         const svgS = Math.max(sLength, sWidth)
