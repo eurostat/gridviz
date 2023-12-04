@@ -30,8 +30,8 @@ export class SegmentOrientationLegend extends Legend {
         this.widthPix = opts.widthPix || 3
 
         //label
+        this.label = opts.label || ''
         this.labelFontSize = opts.labelFontSize || '0.8em'
-        this.labelUnitText = opts.labelUnitText || ''
     }
 
     /**
@@ -80,6 +80,6 @@ export class SegmentOrientationLegend extends Legend {
             .style('padding-left', '5px')
             .style('font-size', this.labelFontSize)
             //.style("font-weight", "bold")
-            .text(this.labelUnitText)
+            .text(this.label)
     }
 }

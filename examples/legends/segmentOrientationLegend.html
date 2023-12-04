@@ -22,12 +22,18 @@
     })
 
     //define legend
-    const legend = new gridviz.SegmentOrientationLegend({
-        title: "Population density",
+    const makeLegend = (title, orientation, label) => new gridviz.SegmentOrientationLegend({
+        title: title,
+        label: label,
+        color: black,
+        orientation: orientation,
     })
 
     //link legend to style
-    style.legends = [legend]
+    style.legends = [
+        makeLegend("Population density", 0, "Very low"),
+        makeLegend(undefined, 20, "Low")
+    ]
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
