@@ -23,8 +23,12 @@
     //define legend
     const legend = new gridviz.ColorCategoryLegend({
         title: "Population density",
-        colorLabel: [["#ffffd4", "aaa"], ["#fec44f", "bbb"], ["#fe9929", "ccc"], ["#d95f0e", "ddd"]],
-        //width: 450,
+        colorLabel: [
+            ["#d95f0e", "Very high"],
+            ["#fe9929", "High"],
+            ["#fec44f", "Low"],
+            ["#ffffd4", "Very low"],
+        ]
     })
 
     //link legend to style
