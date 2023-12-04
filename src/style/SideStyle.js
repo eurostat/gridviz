@@ -99,18 +99,18 @@ export class SideStyle extends Style {
 
     /**
      * 
-     * @param {Array.<import('../core/Dataset').Cell>} cells 
-     * @param {number} resolution 
-     * @param {boolean} withHorizontal 
-     * @param {boolean} withVertical 
-     * @param {boolean} shift 
+     * @param {Array.<import('../core/Dataset').Cell>} cells The cells to use to build the sides. The side x,y coordinates are those of the left point for horizontal sides, and of the bottom point for vertical sides.
+     * @param {number} resolution The cells resolution
+     * @param {boolean} withHorizontal Set to true to build horizontal sides, false otherwise.
+     * @param {boolean} withVertical Set to true to build vertical sides, false otherwise.
+     * @param {boolean} center Set to true so that the side coordinate are those of its center point rather than its left/bottom point.
      * @returns { Array.<Side> }
      */
-    static buildSides(cells, resolution, withHorizontal = true, withVertical = true, shift = false) {
+    static buildSides(cells, resolution, withHorizontal = true, withVertical = true, center = false) {
         /** @type { Array.<Side> } */
         const sides = []
 
-        const r2 = shift ? resolution / 2 : 0
+        const r2 = center ? resolution / 2 : 0
 
         //make horizontal sides
         //sort cells by x and y
