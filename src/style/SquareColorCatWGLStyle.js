@@ -23,25 +23,8 @@ export class SquareColorCatWGLStyle extends Style {
         this.color = opts.color
 
         /**
-         * The dictionary (code -> color) which gives the color of each category code.
-         * @type {object} */
-        //opts.color = opts.color || undefined
-
-        /** @type { Array.<string> } */
-        //const codes = Object.keys(opts.color)
-
-        /** @type { object } @private */
-        /*this.catToI = {}
-        for (let i = 0; i < codes.length; i++) this.catToI[codes[i]] = i + ''*/
-
-        /** @type { Array.<string> } @private */
-        /*this.colors = []
-        for (const code of codes)
-            this.colors.push(opts.color['' + code])*/
-
-        /**
          * A function returning the size of the cells, in geographical unit. All cells have the same size.
-         * @type {function(number,number):number} */
+         * @type {function(number,number,object):number} */
         this.size = opts.size // (resolution, z) => ...
     }
 
@@ -107,7 +90,7 @@ export class SquareColorCatWGLStyle extends Style {
         const wgp = new WebGLSquareColoringCatAdvanced(colors)
 
         //draw
-        const sizeGeo = this.size ? this.size(resolution, z) : resolution + 0.2 * z
+        const sizeGeo = this.size ? this.size(resolution, z, viewScale) : resolution + 0.2 * z
         wgp.draw(cvWGL.gl, verticesBuffer, iBuffer, geoCanvas.getWebGLTransform(), sizeGeo / z)
 
         //draw in canvas geo
