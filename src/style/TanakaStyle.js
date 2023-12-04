@@ -45,8 +45,8 @@ export class TanakaStyle {
             color: (side) => {
                 const v = getSideValue(side)
                 if (v === 0) return
-                if (side.or === 'v') return v < 0 ? opts.colBright : opts.colDark
-                return v < 0 ? opts.colDark : opts.colBright
+                if (side.or === 'v') return v < 0 ? opts.colorBright : opts.colorDark
+                return v < 0 ? opts.colorDark : opts.colorBright
             },
             //width depends on the value, that is the number of classes of difference
             width: (side, resolution, z) => {
