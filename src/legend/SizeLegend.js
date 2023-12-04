@@ -231,8 +231,8 @@ export function sizeDiscreteViewScaleLegend(classNumber, opts = {}) {
 function defaultLabelText(f) {
     return (v0, v1) => {
         if (v0 == undefined && v1 == undefined) return ""
-        if (v1 == undefined) return "< " + f(v0)
-        if (v0 == undefined) return "> " + f(v1)
+        if (v1 == undefined) return "> " + f(v0)
+        if (v0 == undefined) return "< " + f(v1)
         return f(v0) + " - " + f(v1)
     }
 }
