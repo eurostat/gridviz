@@ -8,7 +8,7 @@ import { Legend } from '../core/Legend.js'
  *
  * @author Joseph Davies, Julien Gaffuri
  */
-export class SegmentOrientationLegend extends Legend {
+export class OrientationLegend extends Legend {
     /** @param {Object} opts */
     constructor(opts) {
         super(opts)
@@ -34,7 +34,7 @@ export class SegmentOrientationLegend extends Legend {
     }
 
     /**
-     * @param {{ style: import("../style/SegmentStyle").SegmentStyle, resolution: number, z: number, viewScale:object }} opts
+     * @param {{ style: import("../style/SegmentStyle.js").SegmentStyle, resolution: number, z: number, viewScale:object }} opts
      */
     update(opts) {
 

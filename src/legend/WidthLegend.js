@@ -8,7 +8,7 @@ import { Legend } from '../core/Legend.js'
  *
  * @author Joseph Davies, Julien Gaffuri
  */
-export class SegmentWidthLegend extends Legend {
+export class WidthLegend extends Legend {
     /** @param {Object} opts */
     constructor(opts) {
         super(opts)
