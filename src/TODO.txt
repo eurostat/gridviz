@@ -10,7 +10,7 @@ legends - see legend update on layer style change
 style filter ?
 reorganise map - simplify constructor
 population.csv files: make 2021 ones
-PUBLISH v3
+PUBLISH v3.0.0
 use/test in observablehq
 upgrade modules
 use/test modules
