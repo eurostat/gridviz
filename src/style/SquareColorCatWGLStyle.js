@@ -20,12 +20,11 @@ export class SquareColorCatWGLStyle extends Style {
 
         /** A function that returns a cell color.
          * @type {function(import('../core/Dataset').Cell, number, number, object):string} */
-        this.color = opts.color
+        this.color = opts.color || (() => "#1ca3ec")
 
-        /**
-         * A function returning the size of the cells, in geographical unit. All cells have the same size.
+        /** A function returning the size of the cells, in geographical unit. All cells have the same size.
          * @type {function(number,number,object):number} */
-        this.size = opts.size // (resolution, z) => ...
+        this.size = opts.size || ((resolution) => resolution) // (resolution, z) => ...
     }
 
     /**
