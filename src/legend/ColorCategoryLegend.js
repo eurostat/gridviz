@@ -18,11 +18,11 @@ export class ColorCategoryLegend extends Legend {
         /**
          * @private
          * @type {Array.<Array.<string>>} */
-        this.colCat = opts.colCat || [['gray', '-']]
+        this.colorLabel = opts.colorLabel || [['gray', '-']]
 
         /**
          * @private
-         * @type {import("../Style").Shape} */
+         * @type {import("../core/Style.js").Shape} */
         this.shape = opts.shape || 'circle'
         this.dimension = opts.dimension || { r: 8 }
         this.strokeColor = opts.strokeColor || 'gray'
@@ -54,11 +54,11 @@ export class ColorCategoryLegend extends Legend {
                 .text(this.title)
 
         //categories
-        const nb = this.colCat.length
+        const nb = this.colorToLabel.length
         if (nb == 0) return
 
         for (let i = 0; i < nb; i++) {
-            const cat = this.colCat[i]
+            const cat = this.colorToLabel[i]
 
             //make div for category
             const d = this.div.append('div')
