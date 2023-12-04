@@ -28,7 +28,7 @@ export class TanakaStyle {
         opts.width = opts.width || ((sideValue, resolution, z) => {
             const minWG = 1 * z
             const maxWG = 4 * z
-            const step = (maxWG - minWG) / 4
+            const step = (maxWG - minWG) / 3
             return Math.min(minWG + (sideValue - 1) * step, maxWG)
         })
 
