@@ -16,7 +16,7 @@
     )
 
     //define style
-    const classNumber = 12
+    const classNumber = 10
     const style = new gridviz.SegmentStyle({
         width: (cell, resolution, z, viewScale) => viewScale(cell.TOT_P_2021),
         viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.TOT_P_2021, classNumber: classNumber, minSizePix: 1, maxSizeFactor: 0.8 }),
