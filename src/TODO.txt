@@ -1,6 +1,6 @@
 v3: focus on (main) API changes.
 
-legends
+legend segment size
 legends - see legend update on layer style change
 PUBLISH v3.0.0
 use/test in observablehq
