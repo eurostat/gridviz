@@ -81,8 +81,10 @@ export const viewScaleColor = (opts) => {
     const colorScale = opts.colorScale || (() => "purple")
     const stretching = opts.stretching
     return (cells) => {
+        if (cells.length == 0 || !cells) return
         /** @type {[undefined, undefined] | [number, number]} */
         const domain = extent(cells, valueFunction)
+        if (domain[0] == undefined) return
         const amplitude = domain[1] - domain[0]
         const scale = t => {
             //scale to [0,1]
