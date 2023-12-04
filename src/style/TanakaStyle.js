@@ -31,7 +31,7 @@ export class TanakaStyle {
         const classifier = clFun(breaks)
         const colorClassifier = cclFun(breaks, colors)
 
-        const colStyle = new SquareColorCatWGLStyle({ color: (cell) => colorClassifier(value(cell)) })
+        const cellStyle = new SquareColorCatWGLStyle({ color: (cell) => colorClassifier(value(cell)) })
 
         const getSideValue = (side) => {
             const cl1 = side.c1 ? classifier(value(side.c1)) : 0
@@ -40,7 +40,7 @@ export class TanakaStyle {
         }
 
         /** The side style, for the shadow effect */
-        const sideStyle = new SideStyle({
+        const sideStyle = new SideStyle(//{
             /*/white or black, depending on orientation and value
             color: (side) => {
                 return "gray"
@@ -57,10 +57,10 @@ export class TanakaStyle {
                 const step = (maxWG / minWG) / 4
                 const v = Math.abs(getSideValue(side))
                 return Math.min(minWG + (v - 1) * step, maxWG)
-
             }*/
-        })
+            //}
+        )
 
-        return [colStyle, sideStyle]
+        return [cellStyle, sideStyle]
     }
 }

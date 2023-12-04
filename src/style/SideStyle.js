@@ -14,9 +14,8 @@ import { Style } from '../core/Style.js'
  */
 export class SideStyle extends Style {
     /** @param {object} opts */
-    constructor(opts) {
+    constructor(opts = {}) {
         super(opts)
-        opts = opts || {}
 
         /** A function returning the color of a cell side.
          * @type {function(Side, number, number, object):string} */
@@ -49,6 +48,8 @@ export class SideStyle extends Style {
         /**  @type {Array.<Side>} */
         const sides = SideStyle.buildSides(cells, resolution)
         if (sides.length == 0) return
+
+        console.log(sides)
 
         //get side view scale
         const viewScale = this.viewScale ? this.viewScale(sides, resolution, z) : undefined
