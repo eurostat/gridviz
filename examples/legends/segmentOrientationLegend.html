@@ -25,14 +25,16 @@
     const makeLegend = (title, orientation, label) => new gridviz.SegmentOrientationLegend({
         title: title,
         label: label,
-        color: black,
+        color: "black",
         orientation: orientation,
     })
 
     //link legend to style
     style.legends = [
-        makeLegend("Population density", 0, "Very low"),
-        makeLegend(undefined, 20, "Low")
+        makeLegend("Population density", 60, "Very high"),
+        makeLegend(undefined, 40, "High"),
+        makeLegend(undefined, 20, "Low"),
+        makeLegend(undefined, 0, "Very low"),
     ]
 
     //add layer to map
