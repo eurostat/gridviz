@@ -25,8 +25,9 @@
     const makeLegend = (title, orientation, label) => new gridviz.SegmentOrientationLegend({
         title: title,
         label: label,
-        color: "black",
         orientation: orientation,
+        color: () => "black",
+        width: (resolution, z) => resolution * 0.25
     })
 
     //link legend to style
