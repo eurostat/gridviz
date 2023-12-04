@@ -22,14 +22,14 @@
 
     //define style
     const style = new gridviz.SquareColorWGLStyle({
-        viewScale: (cells) => d3.max(cells, cell => cell.TOT_P_2021),
+        viewScale: (cells) => d3.max(cells, cell => +cell.TOT_P_2021),
         tFun: (cell, resolution, z, max) => cell.TOT_P_2021 / max,
         color: d3.interpolateMagma,
         stretching: { fun: 'log', alpha: -7 },
     })
 
     //define stoke style
-    const strokeStyle = new gridviz.StrokeStyle({ maxZoom: 15 })
+    const strokeStyle = new gridviz.StrokeStyle({ visible: (z) => z < 80 })
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style, strokeStyle], {
