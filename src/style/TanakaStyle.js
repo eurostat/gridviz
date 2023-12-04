@@ -41,8 +41,9 @@ export class TanakaStyle {
 
         /** The side style, for the shadow effect */
         const sideStyle = new SideStyle({
-            //white or black, depending on orientation and value
+            /*/white or black, depending on orientation and value
             color: (side) => {
+                return "gray"
                 const v = getSideValue(side)
                 if (v === 0) return
                 if (side.or === 'v') return v < 0 ? opts.colorBright : opts.colorDark
@@ -50,13 +51,14 @@ export class TanakaStyle {
             },
             //width depends on the value, that is the number of classes of difference
             width: (side, resolution, z) => {
+                return 2*z
                 const minWG = 1.5 * z
                 const maxWG = 4 * z
                 const step = (maxWG / minWG) / 4
                 const v = Math.abs(getSideValue(side))
                 return Math.min(minWG + (v - 1) * step, maxWG)
 
-            }
+            }*/
         })
 
         return [colStyle, sideStyle]
