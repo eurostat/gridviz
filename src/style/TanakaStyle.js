@@ -83,10 +83,8 @@ export class TanakaStyle {
             filter: opts.filter,
         })*/
 
-        
-        const colStyle = new SquareColorCatWGLStyle({
-            
-        })
+
+        const colStyle = new SquareColorCatWGLStyle({ color: color })
 
 
         /*
