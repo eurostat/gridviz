@@ -15,23 +15,24 @@
     )
 
     //define style
-    const style = new gridviz.ShapeColorSizeStyle({
-        size: (c, r, z, viewScale) => viewScale(c.TOT_P_2021),
-        viewScale: gridviz.viewScale({ valueFunction: (c) => +c.TOT_P_2021, maxSizeFactor: 1.3, stretching: gridviz.logarithmicScale(-8) }),
-        shape: () => "circle",
-        color: () => "black"
+    const style = new gridviz.SegmentStyle({
+        width: (cell, resolution, z, viewScale) => viewScale(cell.TOT_P_2021),
+        viewScale: gridviz.viewScale({ valueFunction: (c) => +c.TOT_P_2021, stretching: gridviz.logarithmicScale(-5) }),
+        orientation: () => 0,
+        color: () => "black",
+        length: (cell, resolution) => resolution
     })
 
-    style.legends = gridviz.sizeLegendViewScale(
+    /*style.legends = gridviz.sizeLegendViewScale(
         cell => +cell.TOT_P_2021,
         {
             k: [0.8, 0.2, 0.01, 0.002],
             title: "Population",
             labelFormat: d3.format(',.2r'),
             fillColor: "black"
-        })
+        })*/
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 5 })]
+    map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 6 })]
 
 </script>
