@@ -18,13 +18,37 @@ export class SquareColorCatWGLStyle extends Style {
         super(opts)
         opts = opts || {}
 
-        /** A function that returns a cell color.
-         * @type {function(import('../core/Dataset').Cell, number, number, object):string} */
-        this.color = opts.color || (() => "#1ca3ec")
+        /**
+         * The name of the column/attribute of the tabular data where to retrieve the category code of the cell, for coloring.
+         * @type {string} */
+        this.code = opts.code
 
-        /** A function returning the size of the cells, in geographical unit. All cells have the same size.
-         * @type {function(number,number,object):number} */
-        this.size = opts.size || ((resolution) => resolution) // (resolution, z) => ...
+        /**
+         * The dictionary (code -> color) which gives the color of each category code.
+         * @type {object} */
+        opts.color = opts.color || undefined
+
+        /** @type { Array.<string> } */
+        const codes = Object.keys(opts.color)
+
+        /** @type { object } @private */
+        this.catToI = {}
+        for (let i = 0; i < codes.length; i++) this.catToI[codes[i]] = i + ''
+
+        /** @type { Array.<string> } @private */
+        this.colors = []
+        for (const code of codes)
+            this.colors.push(opts.color['' + code])
+
+        /**
+         * A function returning the size of the cells, in geographical unit. All cells have the same size.
+         * @type {function(number,number):number} */
+        this.size = opts.size // (resolution, z) => ...
+
+        /**
+         * @private
+         * @type { WebGLSquareColoringCatAdvanced } */
+        this.wgp = new WebGLSquareColoringCatAdvanced(this.colors)
     }
 
     /**
@@ -40,41 +64,25 @@ export class SquareColorCatWGLStyle extends Style {
         //
         const z = geoCanvas.view.z
 
-        //get view scale
-        const viewScale = this.viewScale ? this.viewScale(cells, resolution, z) : undefined
-
-        //get list of colors
-        /** @type { Array.<string> } */
-        const colors = []
-        for (const cell of cells) {
-            const color = this.color(cell, resolution, z, viewScale)
-            if (colors.includes(color)) continue
-            colors.push(color)
-        }
-
-        //make index: color -> i
-        const index = {}
-        for (let i = 0; i < colors.length; i++) index[colors[i]] = i + ''
-
         //add vertice and fragment data
         const r2 = resolution / 2
-        let cell, nb = cells.length
+        let c, nb = cells.length
         const verticesBuffer = []
         const iBuffer = []
         for (let i = 0; i < nb; i++) {
-            cell = cells[i]
-            const color = this.color(cell, resolution, z, viewScale)
-            if (color == undefined) {
-                console.log('Unexpected color: ' + color)
+            c = cells[i]
+            const cat = c[this.code]
+            if (cat == undefined) {
+                console.log('Unexpected category: ' + cat)
                 continue
             }
             /** @type {number} */
-            const i_ = index[color]
+            const i_ = this.catToI[cat]
             if (isNaN(+i_)) {
-                console.log('Unexpected color index: ' + color + ' ' + i_)
+                console.log('Unexpected category index: ' + cat + ' ' + i_)
                 continue
             }
-            verticesBuffer.push(cell.x + r2, cell.y + r2)
+            verticesBuffer.push(c.x + r2, c.y + r2)
             iBuffer.push(+i_)
         }
 
@@ -85,12 +93,9 @@ export class SquareColorCatWGLStyle extends Style {
             return
         }
 
-        /** @type { WebGLSquareColoringCatAdvanced } */
-        const wgp = new WebGLSquareColoringCatAdvanced(colors)
-
         //draw
-        const sizeGeo = this.size ? this.size(resolution, z, viewScale) : resolution + 0.2 * z
-        wgp.draw(cvWGL.gl, verticesBuffer, iBuffer, geoCanvas.getWebGLTransform(), sizeGeo / z)
+        const sizeGeo = this.size ? this.size(resolution, z) : resolution + 0.2 * z
+        this.wgp.draw(cvWGL.gl, verticesBuffer, iBuffer, geoCanvas.getWebGLTransform(), sizeGeo / z)
 
         //draw in canvas geo
         geoCanvas.initCanvasTransform()
