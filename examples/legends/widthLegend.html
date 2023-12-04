@@ -17,10 +17,10 @@
     const style = new gridviz.ShapeColorSizeStyle({
         size: (cell) => 20 * Math.sqrt(cell.population),
         color: () => "black",
-        shape: () => "circle"
+        orientation: () => 0
     })
 
-    //define legends
+    /*/define legends
     style.legends = gridviz.sizeLegend(
         [500000, 200000, 10000],
         v => 20 * Math.sqrt(v),
@@ -29,7 +29,7 @@
             labelFormat: d3.format(',.2r'),
             fillColor: "black"
         }
-    )
+    )*/
 
     //add layer to map
     map.layers = [new gridviz.GridLayer(dataset, [style])]
