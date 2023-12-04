@@ -45,13 +45,12 @@ export class SizeLegend extends Legend {
     }
 
     /**
-     * @param {{ viewScale:import('../core/Style').ViewScale, z:number, cells:Array.<import('../core/Dataset.js').Cell> }} opts
+     * @param {{ viewScale:object, z:number, cells:Array.<import('../core/Dataset.js').Cell> }} opts
      */
     update(opts) {
 
         //clear
         this.div.selectAll('*').remove()
-
 
         //get label. May not be a number (!)
         let label = this.label(opts.viewScale, opts.cells)

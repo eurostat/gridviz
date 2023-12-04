@@ -80,7 +80,7 @@ export class Legend {
      * @param {Object} opts
      * @abstract
      */
-    update(opts) {
+    update(opts={}) {
         console.error('Legend update not implemented yet.')
     }
 }
