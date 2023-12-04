@@ -16,25 +16,25 @@
     )
 
     //define style
-    const classNumber = 5
-    const style = new gridviz.ShapeColorSizeStyle({
-        size: (c, r, z, viewScale) => viewScale(c.TOT_P_2021),
-        //TODO adjust size - use sqrt stretching
-        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.TOT_P_2021, classNumber: classNumber, minSizePix: 3, maxSizeFactor: 1.1 }),
-        shape: () => "circle",
-        color: () => "black"
+    const classNumber = 12
+    const style = new gridviz.SegmentStyle({
+        width: (cell, resolution, z, viewScale) => viewScale(cell.TOT_P_2021),
+        viewScale: gridviz.viewScaleQuantile({ valueFunction: (c) => +c.TOT_P_2021, classNumber: classNumber, minSizePix: 1, maxSizeFactor: 0.8 }),
+        orientation: () => 0,
+        color: () => "black",
+        length: (cell, resolution) => resolution
     })
 
-    //define legends
+    /*/define legends
     style.legends = gridviz.sizeDiscreteViewScaleLegend(
         classNumber,
         {
             title: "Population",
             labelFormat: Math.round,
             fillColor: "black"
-        })
+        })*/
 
     //add layer to map
-    map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 5 })]
+    map.layers = [new gridviz.GridLayer(dataset, [style], { minPixelsPerCell: 6 })]
 
 </script>
