@@ -2,6 +2,8 @@
 'use strict'
 
 import { Legend } from '../core/Legend.js'
+import { nice } from '../utils/utils.js'
+import { max } from 'd3-array'
 
 /**
  * A legend element for proportional symbols.
@@ -27,7 +29,7 @@ export class SizeLegend extends Legend {
         //symbol
         /**
          * @private
-         * @type {import("../Style").Shape} */
+         * @type {import("../core/Style").Shape} */
         this.shape = opts.shape || 'circle'
         this.fillColor = opts.fillColor || 'none'
         this.strokeColor = opts.strokeColor || 'gray'
@@ -43,7 +45,7 @@ export class SizeLegend extends Legend {
     }
 
     /**
-     * @param {{ viewScale:import('../Style').ViewScale, z:number, cells:Array.<import('../Dataset.js').Cell> }} opts
+     * @param {{ viewScale:import('../core/Style').ViewScale, z:number, cells:Array.<import('../core/Dataset.js').Cell> }} opts
      */
     update(opts) {
 
@@ -167,7 +169,7 @@ export function sizeLegendViewScale(value, opts = {}) {
         legends.push(
             new SizeLegend({
                 title: k_ == k[0] ? opts.title : undefined,
-                label: (viewScale, cells) => gridviz.nice(k_ * d3.max(cells, value)),
+                label: (viewScale, cells) => nice(k_ * max(cells, value)),
                 labelFormat: opts.labelFormat,
                 fillColor: opts.fillColor || "white"
             })

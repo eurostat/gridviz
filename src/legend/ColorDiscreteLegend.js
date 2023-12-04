@@ -15,9 +15,9 @@ export class ColorDiscreteLegend extends Legend {
         super(opts)
         opts = opts || {}
 
-        /** @private @type {function(import('../Style').ViewScale):Array.<string>} */
+        /** @private @type {function(import('../core/Style').ViewScale):Array.<string>} */
         this.colors = opts.colors
-        /** @private @type {function(import('../Style').ViewScale):Array.<number>} */
+        /** @private @type {function(import('../core/Style').ViewScale):Array.<number>} */
         this.breaks = opts.breaks
 
         this.width = opts.width || 300
@@ -35,7 +35,7 @@ export class ColorDiscreteLegend extends Legend {
     }
 
     /**
-     * @param {{viewScale:import('../Style').ViewScale} } opts
+     * @param {{viewScale:import('../core/Style').ViewScale} } opts
      */
     update(opts) {
         //clear

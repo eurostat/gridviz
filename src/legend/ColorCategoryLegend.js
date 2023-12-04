@@ -17,7 +17,7 @@ export class ColorCategoryLegend extends Legend {
         //col/categories array, in display order
         /**
          * @private
-         * @type {Array.<Array.<string>>} */
+         * @type {Array.<[string,string]>} */
         this.colorLabel = opts.colorLabel || [['gray', '-']]
 
         /**
@@ -44,6 +44,8 @@ export class ColorCategoryLegend extends Legend {
 
         //build
 
+        console.log(this.colorLabel)
+
         //title
         if (this.title)
             this.div
@@ -54,11 +56,11 @@ export class ColorCategoryLegend extends Legend {
                 .text(this.title)
 
         //categories
-        const nb = this.colorToLabel.length
+        const nb = this.colorLabel.length
         if (nb == 0) return
 
         for (let i = 0; i < nb; i++) {
-            const cat = this.colorToLabel[i]
+            const cat = this.colorLabel[i]
 
             //make div for category
             const d = this.div.append('div')

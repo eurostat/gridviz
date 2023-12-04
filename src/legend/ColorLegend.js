@@ -36,7 +36,7 @@ export class ColorLegend extends Legend {
     }
 
     /**
-     * @param {{viewScale:import('../Style').ViewScale} } opts
+     * @param {{viewScale:import('../core/Style').ViewScale} } opts
      */
     update(opts) {
         //could happen when data is still loading
