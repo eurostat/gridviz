@@ -187,7 +187,8 @@ export function colorClassifier(breaks, colors) {
 }
 
 /**
- * Make array of colors from a colorScale
+ * Make array of colors from a colorScale.
+ * It is a kind of sampling, or un-interpolation
  * 
  * @param {function(number):string} colorScale 
  * @param {number} nb 
